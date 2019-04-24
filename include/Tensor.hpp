@@ -1,0 +1,342 @@
+#ifndef _H_Tensor_
+#define _H_Tensor_
+#include "Type.hpp"
+#include "tor10_error.hpp"
+#include "Storage.hpp"
+#include "Device.hpp"
+#include "intrusive_ptr_base.hpp"
+#include "utils/utils_internal.hpp"
+#include <iostream>
+#include <vector>
+#include <initializer_list>
+
+namespace tor10{
+
+
+    // real implementation
+    class Tensor_impl: public intrusive_ptr_base<Tensor_impl>{
+        private:
+            boost::intrusive_ptr<Storage_base> _storage;
+            std::vector<tor10_uint64> _shape;
+
+            // psudo-perm info
+            std::vector<tor10_uint64> _mapper;
+            std::vector<tor10_uint64> _invmapper;
+            bool _contiguous;
+
+        public:
+            Tensor_impl():_storage(new Storage_base()), _contiguous(true){};
+            
+            void Init(const std::vector<tor10_uint64> &shape, const unsigned int &dtype, int device=-1);
+
+            //copy&assignment constr., use intrusive_ptr's
+            Tensor_impl(const Tensor_impl &rhs);
+            Tensor_impl& operator=(Tensor_impl &rhs);
+            
+            unsigned int dtype_id(){
+                return this->_storage->dtype_id;
+            }
+            int device_id(){
+                return this->_storage->device;
+            }
+            std::string dtype(){
+                return tor10type.getname(this->_storage->dtype_id);
+            }
+            std::string device(){
+                return tor10device.getname(this->_storage->device);
+            }
+            const std::vector<tor10_uint64>& shape(){
+                return _shape;
+            }
+            const bool& is_contiguous(){
+                return this->_contiguous;
+            }
+            const std::vector<tor10_uint64>& _get_mapper(){
+                return _mapper;
+            }
+            const std::vector<tor10_uint64> & _get_invmapper(){
+                return _invmapper;
+            }
+            boost::intrusive_ptr<Storage_base>& _get_storage(){
+                return _storage;
+            }
+            boost::intrusive_ptr<Tensor_impl> copy(){
+                boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
+                out->_storage = this->_storage->copy();
+                out->_mapper = this->_mapper;
+                out->_invmapper = this->_invmapper;
+                out->_shape = this->_shape;
+                out->_contiguous = this->_contiguous;
+                return out;
+            }
+
+            void to_(const int &device){
+                this->_storage->to_(device);
+            }
+            boost::intrusive_ptr<Tensor_impl> to(const int &device){
+                if(this->device==device){
+                    return this;
+                }else{
+                    boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
+                    out->_storage = this->_storage->to(device);
+                    out->_mapper = this->_mapper;
+                    out->_invmapper = this->_invmapper;
+                    out->_shape = this->_shape;
+                    out->_contiguous = this->_contiguous;
+                    return out;
+                }
+            }
+
+            void permute_(const std::vector<tor10_uint64> &rnks);
+
+
+            boost::intrusive_ptr<Tensor_impl> permute(const std::vector<tor10_uint64> &rnks){
+                boost::intrusive_ptr<Tensor_impl> out = this->copy();
+                out->permute_(rnks);
+                return out;
+            }            
+ 
+            template<class T> 
+            T& at(const std::vector<tor10_uint64> &locator){
+                tor10_error_msg(locator.size() != this->_shape.size(), "%s", "The input indexes rank is not match Tensor's rank.");
+
+                tor10_uint64 RealRank,mtplyr;
+                std::vector<tor10_uint64> c_shape(this->_shape.size());
+                std::vector<tor10_uint64> c_loc(this->_shape.size());
+
+                RealRank=0;
+                mtplyr = 1;
+
+                for(tor10_int64 i=this->_shape.size()-1; i>=0; i--){
+                    if(locator[i]>=this->_shape[i]){
+                        tor10_error_msg(true, "%s", "The dimension of rank that trying to access is exceed Tensor's dimension.");
+                    }
+                    c_shape[i] = this->_shape[this->_invmapper[i]];
+                    c_loc[i] = locator[this->_invmapper[i]];
+                    RealRank += mtplyr*c_loc[i];
+                    mtplyr *= c_shape[i];
+                }
+                return this->_storage->at<T>(RealRank);
+            }
+
+            boost::intrusive_ptr<Tensor_impl> Contiguous(){
+                // return new instance if act on non-contiguous tensor
+                // return self if act on contiguous tensor
+                if(this->_contiguous){
+                    boost::intrusive_ptr<Tensor_impl> out(this);
+                    return out;
+                }else{
+                    boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
+                    std::vector<tor10_uint64> oldshape(this->_shape.size());
+                    for(tor10_uint64 i=0;i<this->_shape.size();i++){
+                        oldshape[i] = this->_shape[this->_invmapper[i]];
+                    }
+        
+                    out->_storage = this->_storage->Move_memory(oldshape,this->_mapper, this->_invmapper);
+                    out->_invmapper = utils_internal::range_cpu(this->_invmapper.size());
+                    out->_mapper = out->_invmapper;
+                    out->_shape = this->_shape;
+                    out->_contiguous = true;
+                    return out;
+                }
+            }
+            
+            void Contiguous_(){
+                // return new instance if act on non-contiguous tensor
+                // return self if act on contiguous tensor
+                if(!this->_contiguous){
+                    std::vector<tor10_uint64> oldshape(this->_shape.size());
+                    for(tor10_uint64 i=0;i<this->_shape.size();i++){
+                        oldshape[i] = this->_shape[this->_invmapper[i]];
+                    }
+                    this->_storage->Move_memory_(oldshape,this->_mapper, this->_invmapper);
+                    this->_mapper = utils_internal::range_cpu(this->_invmapper.size());
+                    this->_invmapper = this->_mapper;
+                    this->_contiguous = true;
+                }
+            }
+
+            void Reshape_(const std::vector<tor10_int64> &new_shape){
+                if(!this->_contiguous){
+                    this->Contiguous_();
+                }
+                std::vector<tor10_uint64> result_shape(new_shape.size());
+                tor10_uint64 new_N = 1;
+                bool has_undetermine = false;
+                unsigned int Udet_id = 0;
+                for(int i=0;i<new_shape.size();i++){
+                    if(new_shape[i]<0){
+                        if(new_shape[i]!=-1) tor10_error_msg(new_shape[i]!=-1,"%s","[ERROR] Reshape can only have dimension > 0 and one undetermine rank specify as -1");
+                        if(has_undetermine) tor10_error_msg(new_shape[i]!=-1,"%s","[ERROR] Reshape can only have dimension > 0 and one undetermine rank specify as -1");
+                        Udet_id = i;
+                        has_undetermine = true;
+                    }else{
+                        new_N *= new_shape[i];
+                        result_shape[i] = new_shape[i];
+                    }
+                }
+
+                            
+                if(has_undetermine){
+                    tor10_error_msg(new_N >= this->_storage->len,"%s","[ERROR] new shape exceed the total number of elements.");
+                    tor10_error_msg(this->_storage->len%new_N,"%s","[ERROR] unmatch size when reshape with undetermine dimension");
+                    result_shape[Udet_id] = this->_storage->len/new_N;
+                }else{
+                    tor10_error_msg(new_N != this->_storage->len,"%s","[ERROR] new shape does not match the number of elements.");
+                }
+            
+                this->_shape = result_shape;
+                this->_mapper = utils_internal::range_cpu(result_shape.size());
+                this->_invmapper = this->_mapper; 
+            }
+
+
+            boost::intrusive_ptr<Tensor_impl> Reshape(const std::vector<tor10_int64> &new_shape){
+                boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
+                if(!this->_contiguous){
+                    out = this->Contiguous();
+                }else{
+                    out = this->copy();
+                }
+
+                out->Reshape_(new_shape);
+                return out;
+            }
+
+
+    };
+
+
+    // wrapping around, API
+    class Tensor{
+        private:
+        public:
+
+            boost::intrusive_ptr<Tensor_impl> _impl;
+            Tensor():_impl(new Tensor_impl()){};
+            Tensor(const Tensor &rhs){
+                _impl = rhs._impl;
+            }
+            Tensor& operator=(Tensor &rhs){
+                _impl = rhs._impl;
+            }
+             
+            //default device==tor10device.cpu (-1)
+            void Init(const std::vector<tor10_uint64> &shape, const unsigned int &dtype, int device=-1){
+                _impl->Init(shape,dtype,device);
+            }
+            void Init(const std::initializer_list<tor10_uint64> &shape,const unsigned int &dtype, int device=-1){
+                std::vector<tor10_uint64> args = shape;
+                _impl->Init(args,dtype,device);
+            }
+
+            Tensor(const std::vector<tor10_uint64> &shape, const unsigned int &dtype, int device=-1){
+                this->Init(shape,dtype,device);
+            }
+            Tensor(const std::initializer<tor10_uint64> &shape, const unsigned int &dtype,int device=-1){
+                this->Init(shape,dtype,device);
+            }
+
+            unsigned int dtype_id(){return _impl->dtype_id();}
+            int device_id(){ return this->_impl->device_id();}
+            std::string dtype(){ return _impl->dtype();}
+            std::string device(){ return this->_impl->device();}
+
+            const std::vector<tor10_uint64>& shape(){
+                return this->_impl->shape();
+            }
+
+            Tensor copy(){
+                Tensor out;
+                out._impl = this->_impl->copy();
+                return out;
+            }
+            Tensor to(const int &device){
+                Tensor out;
+                out._impl = this->_impl->to(device);
+                return out;
+            }
+            void to_(const int &device){
+                this->_impl->to_(device);
+            }
+            
+            const bool& is_contiguous(){
+                return this->_impl->is_contiguous();
+            }
+
+            void permute_(const std::vector<tor10_uint64> &rnks){
+                this->_impl->permute_(rnks);
+            }
+            void permute_(const std::initializer_list<tor10_uint64> &rnks){
+                std::vector<tor10_uint64> args = rnks;
+                this->_impl->permute_(args);
+            }
+
+            Tensor permute(const std::vector<tor10_uint64> &rnks){
+                Tensor out;
+                out._impl = this->_impl->permute(rnks);
+                return out;
+            }
+
+            Tensor permute(const std::initializer_list<tor10_uint64> &rnks){
+                Tensor out;
+                std::vector<tor10_uint64> args = rnks;
+                out._impl = this->_impl->permute(args);
+                return out;
+            }
+
+            Tensor Contiguous(){
+                Tensor out;
+                out._impl = this->_impl->Contiguous();
+                return out;
+            }
+            void Contiguous_(){
+                this->_impl->Contiguous_();
+            }
+
+            void Reshape_(const std::vector<tor10_int64> &new_shape){
+                this->_impl->Reshape_(new_shape);
+            }
+
+            void Reshape_(const std::initializer_list<tor10_int64> &new_shape){
+                std::vector<tor10_int64> args = new_shape;
+                this->_impl->Reshape_(args);
+            }
+
+            Tensor Reshape(const std::vector<tor10_int64> &new_shape){
+                Tensor out;
+                out._impl = this->_impl->Reshape(new_shape);
+                return out;
+            }
+
+            Tensor Reshape(const std::initializer_list<tor10_int64> &new_shape){
+                std::vector<tor10_int64> args = new_shape;
+                return this->Reshape(args);
+            }
+
+
+            template<class T>
+            T& at(const std::vector<tor10_uint64> &locator){
+                return this->_impl->at<T>(locator);
+            }
+            template<class T>
+            T& at(const std::initializer_list<tor10_uint64> &locator){
+                std::vector<tor10_uint64> args = locator;
+                return this->_impl->at<T>(args);
+            }
+            template<class T>
+            T& operator[](const std::vector<tor10_uint64> &locator){
+                return this->_impl->at<T>(locator);
+            }
+            template<class T>
+            T& operator[](const std::initializer_list<tor10_uint64> &locator){
+                std::vector<tor10_uint64> args = locator;
+                return this->_impl->at<T>(args);
+            }
+    };// class Tensor
+
+    std::ostream& operator<<(std::ostream& os, Tensor &in);
+
+}
+
+#endif
