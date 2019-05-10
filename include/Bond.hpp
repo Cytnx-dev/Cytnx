@@ -17,7 +17,7 @@ namespace tor10{
         private:
             tor10_uint64 _dim;
             bondType _type;
-            std::vector<std::vector<tor10_int64> > _qnums;
+            std::vector< std::vector<tor10_int64> > _qnums;
             std::vector<Symmetry> _syms;
 
         public:
