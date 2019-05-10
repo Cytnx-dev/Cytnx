@@ -3,14 +3,14 @@
 using namespace std;
 namespace tor10{
 
-    Bond::Bond(tor10_uint64 dim, const std::initializer_list<std::initializer_list<tor10_int64> > &in_qnums,const std::initializer_list<Symmetry> &in_syms){
+    Bond::Bond(tor10_uint64 dim, const std::initializer_list<std::initializer_list<tor10_int64> > &in_qnums,const std::initializer_list<Symmetry> &in_syms,const bondType &bd_type){
 
         tor10_error_msg(dim==0,"%s","[ERROR] Bond cannot have 0 or negative dimension.");
-        this->_type = bondType.BD_REGULAR;
 
         if(in_qnums.size()!=dim){
             tor10_error_msg(true,"%s","[ERROR] invalid qnums. the # of row of qnums list should match the dimension.");
         }
+
 
         tor10_int32 Nsym = in_qnums.begin()[0].size();
         std::vector< std::vector<tor10_int64> > in_vec_qnums(dim);
@@ -25,6 +25,7 @@ namespace tor10{
         this->_dim = dim;
         this->_qnums = in_vec_qnums;
         this->_syms = in_syms;
+        this->_type = bd_type;
 
         //check qnums match the rule of each symmetry type
         for(tor10_uint64 i=0;i<dim;i++)
@@ -33,9 +34,8 @@ namespace tor10{
 
     }
 
-    Bond::Bond(tor10_uint64 dim, const std::vector<std::vector<tor10_int64> > &in_qnums, const std::vector<Symmetry> &in_syms){
+    Bond::Bond(tor10_uint64 dim, const std::vector<std::vector<tor10_int64> > &in_qnums, const std::vector<Symmetry> &in_syms,const bondType &bd_type){
         tor10_error_msg(dim==0,"%s","[ERROR] Bond cannot have 0 or negative dimension.");
-        this->_type = bondType::BD_REGULAR;
 
         if(in_qnums.size()!=dim){
             tor10_error_msg(true,"%s","[ERROR] invalid qnums. the # of row of qnums list should match the dimension.");
@@ -51,6 +51,7 @@ namespace tor10{
         this->_dim = dim;
         this->_qnums = in_qnums;
         this->_syms = in_syms;
+        this->_type = bd_type;
 
         //check qnums match the rule of each symmetry type
         for(tor10_uint64 i=0;i<dim;i++)
@@ -63,7 +64,7 @@ namespace tor10{
 
     std::ostream& operator<<(std::ostream &os,const Bond &bin){
         os << "Dim = " << bin.dim() << " |";
-        if(bin.get_type()==bondType::BD_REGULAR){
+        if(bin.get_type()==bondType::BD_REG){
             os << "type: REGULAR " << std::endl;
         }else if(bin.get_type()==bondType::BD_BRA){
             os << "type: <BRA     " << std::endl;

@@ -8,9 +8,9 @@
 namespace tor10{
 
     enum bondType: int{
-        BD_BRA = -1,
-        BD_KET = 1,
-        BD_REGULAR =0
+        BD_KET = -1,
+        BD_BRA = 1,
+        BD_REG =0
     };
 
     class Bond{
@@ -22,14 +22,14 @@ namespace tor10{
 
         public:
 
-            Bond(): _type(bondType::BD_REGULAR) {};   
-            Bond(tor10_uint64 dim, const std::initializer_list<std::initializer_list<tor10_int64> > &in_qnums, const std::initializer_list<Symmetry> &in_syms={});
-            Bond(tor10_uint64 dim, const std::vector<std::vector<tor10_int64> > &in_qnums, const std::vector<Symmetry> &in_syms={});
+            Bond(): _type(bondType::BD_REG) {};   
+            Bond(tor10_uint64 dim, const std::initializer_list<std::initializer_list<tor10_int64> > &in_qnums, const std::initializer_list<Symmetry> &in_syms={}, const bondType &bd_type=bondType::BD_REG);
+            Bond(tor10_uint64 dim, const std::vector<std::vector<tor10_int64> > &in_qnums, const std::vector<Symmetry> &in_syms={}, const bondType &bd_type=bondType::BD_REG);
 
             //Initialize with non-sym
             Bond(tor10_uint64 dim){
                 tor10_error_msg(dim==0,"%s","[ERROR] Bond cannot have 0 dimension.");
-                this->_type = bondType::BD_REGULAR;
+                this->_type = bondType::BD_REG;
             }
 
             bondType                                get_type() const& {return this->_type;};
@@ -44,7 +44,7 @@ namespace tor10{
             }
 
             void clear_type(){
-                this->_type = bondType::BD_REGULAR;
+                this->_type = bondType::BD_REG;
             }
 
             Bond(const Bond &rhs){

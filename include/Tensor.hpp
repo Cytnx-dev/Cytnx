@@ -74,7 +74,7 @@ namespace tor10{
                 this->_storage->to_(device);
             }
             boost::intrusive_ptr<Tensor_impl> to(const int &device){
-                if(this->device==device){
+                if(this->device_id()==device){
                     return this;
                 }else{
                     boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
@@ -233,7 +233,7 @@ namespace tor10{
             Tensor(const std::vector<tor10_uint64> &shape, const unsigned int &dtype, int device=-1){
                 this->Init(shape,dtype,device);
             }
-            Tensor(const std::initializer<tor10_uint64> &shape, const unsigned int &dtype,int device=-1){
+            Tensor(const std::initializer_list<tor10_uint64> &shape, const unsigned int &dtype,int device=-1){
                 this->Init(shape,dtype,device);
             }
 
@@ -321,15 +321,6 @@ namespace tor10{
             }
             template<class T>
             T& at(const std::initializer_list<tor10_uint64> &locator){
-                std::vector<tor10_uint64> args = locator;
-                return this->_impl->at<T>(args);
-            }
-            template<class T>
-            T& operator[](const std::vector<tor10_uint64> &locator){
-                return this->_impl->at<T>(locator);
-            }
-            template<class T>
-            T& operator[](const std::initializer_list<tor10_uint64> &locator){
                 std::vector<tor10_uint64> args = locator;
                 return this->_impl->at<T>(args);
             }
