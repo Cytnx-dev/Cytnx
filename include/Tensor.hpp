@@ -13,10 +13,18 @@
 namespace tor10{
 
 
+
     // real implementation
     class Tensor_impl: public intrusive_ptr_base<Tensor_impl>{
         private:
+
+            //Interface:
+            Storage_init_interface __SII;
+
+            //Memory:
             boost::intrusive_ptr<Storage_base> _storage;
+
+            //tensor shape
             std::vector<tor10_uint64> _shape;
 
             // psudo-perm info
@@ -33,14 +41,14 @@ namespace tor10{
             Tensor_impl(const Tensor_impl &rhs);
             Tensor_impl& operator=(Tensor_impl &rhs);
             
-            unsigned int dtype_id(){
-                return this->_storage->dtype_id;
+            unsigned int dtype(){
+                return this->_storage->dtype;
             }
             int device_id(){
                 return this->_storage->device;
             }
-            std::string dtype(){
-                return tor10type.getname(this->_storage->dtype_id);
+            std::string dtype_str(){
+                return tor10type.getname(this->_storage->dtype);
             }
             std::string device(){
                 return tor10device.getname(this->_storage->device);
@@ -237,9 +245,9 @@ namespace tor10{
                 this->Init(shape,dtype,device);
             }
 
-            unsigned int dtype_id(){return _impl->dtype_id();}
+            unsigned int dtype(){return _impl->dtype();}
             int device_id(){ return this->_impl->device_id();}
-            std::string dtype(){ return _impl->dtype();}
+            std::string dtype_str(){ return _impl->dtype_str();}
             std::string device(){ return this->_impl->device();}
 
             const std::vector<tor10_uint64>& shape(){

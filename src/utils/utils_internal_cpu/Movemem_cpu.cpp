@@ -11,7 +11,7 @@ namespace tor10{
         
         boost::intrusive_ptr<Storage_base> Movemem_cpu_cd(boost::intrusive_ptr<Storage_base> &in, const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64>&mapper, const std::vector<tor10_uint64> &invmapper, const bool is_inplace){
             #ifdef UNI_DEBUG
-            tor10_error_msg(in->dtype_id != tor10type.ComplexDouble,"[DEBUG][internal error] in.dtype is [%s] but call Movemem_cpu with type ComplexDouble",in->dtype().c_str());
+            tor10_error_msg(in->dtype != tor10type.ComplexDouble,"[DEBUG][internal error] in.dtype_str is [%s] but call Movemem_cpu with type ComplexDouble",in->dtype_str().c_str());
             #endif
 
             std::vector<tor10_uint64> newshape(old_shape.size());
@@ -67,7 +67,7 @@ namespace tor10{
 
         boost::intrusive_ptr<Storage_base> Movemem_cpu_cf(boost::intrusive_ptr<Storage_base> &in, const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64>&mapper, const std::vector<tor10_uint64> &invmapper, const bool is_inplace){
             #ifdef UNI_DEBUG
-            tor10_error_msg(in->dtype_id != tor10type.ComplexFloat,"[DEBUG][internal error] in.dtype is [%s] but call Movemem_cpu with type ComplexFloat",in->dtype().c_str());
+            tor10_error_msg(in->dtype != tor10type.ComplexFloat,"[DEBUG][internal error] in.dtype_str is [%s] but call Movemem_cpu with type ComplexFloat",in->dtype_str().c_str());
             #endif
 
             std::vector<tor10_uint64> newshape(old_shape.size());
@@ -124,7 +124,7 @@ namespace tor10{
         
         boost::intrusive_ptr<Storage_base> Movemem_cpu_d(boost::intrusive_ptr<Storage_base> &in, const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64>&mapper, const std::vector<tor10_uint64> &invmapper, const bool is_inplace){
             #ifdef UNI_DEBUG
-            tor10_error_msg(in->dtype_id != tor10type.Double,"[DEBUG][internal error] in.dtype is [%s] but call Movemem_cpu with type Double",in->dtype().c_str());
+            tor10_error_msg(in->dtype != tor10type.Double,"[DEBUG][internal error] in.dtype_str is [%s] but call Movemem_cpu with type Double",in->dtype_str().c_str());
             #endif
 
             std::vector<tor10_uint64> newshape(old_shape.size());
@@ -181,7 +181,7 @@ namespace tor10{
         
         boost::intrusive_ptr<Storage_base> Movemem_cpu_f(boost::intrusive_ptr<Storage_base> &in, const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64>&mapper, const std::vector<tor10_uint64> &invmapper, const bool is_inplace){
             #ifdef UNI_DEBUG
-            tor10_error_msg(in->dtype_id != tor10type.Float,"[DEBUG][internal error] in.dtype is [%s] but call Movemem_cpu with type Float",in->dtype().c_str());
+            tor10_error_msg(in->dtype != tor10type.Float,"[DEBUG][internal error] in.dtype_str is [%s] but call Movemem_cpu with type Float",in->dtype_str().c_str());
             #endif
 
             std::vector<tor10_uint64> newshape(old_shape.size());
@@ -238,7 +238,7 @@ namespace tor10{
 
         boost::intrusive_ptr<Storage_base> Movemem_cpu_i64(boost::intrusive_ptr<Storage_base> &in, const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64>&mapper, const std::vector<tor10_uint64> &invmapper, const bool is_inplace){
             #ifdef UNI_DEBUG
-            tor10_error_msg(in->dtype_id != tor10type.Int64,"[DEBUG][internal error] in.dtype is [%s] but call Movemem_cpu with type Int64",in->dtype().c_str());
+            tor10_error_msg(in->dtype != tor10type.Int64,"[DEBUG][internal error] in.dtype_str is [%s] but call Movemem_cpu with type Int64",in->dtype_str().c_str());
             #endif
 
             std::vector<tor10_uint64> newshape(old_shape.size());
@@ -295,7 +295,7 @@ namespace tor10{
 
         boost::intrusive_ptr<Storage_base> Movemem_cpu_u64(boost::intrusive_ptr<Storage_base> &in, const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64>&mapper, const std::vector<tor10_uint64> &invmapper, const bool is_inplace){
             #ifdef UNI_DEBUG
-            tor10_error_msg(in->dtype_id != tor10type.Uint64,"[DEBUG][internal error] in.dtype is [%s] but call Movemem_cpu with type Uint64",in->dtype().c_str());
+            tor10_error_msg(in->dtype != tor10type.Uint64,"[DEBUG][internal error] in.dtype_str is [%s] but call Movemem_cpu with type Uint64",in->dtype_str().c_str());
             #endif
 
             std::vector<tor10_uint64> newshape(old_shape.size());
@@ -351,7 +351,7 @@ namespace tor10{
 
         boost::intrusive_ptr<Storage_base> Movemem_cpu_i32(boost::intrusive_ptr<Storage_base> &in, const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64>&mapper, const std::vector<tor10_uint64> &invmapper, const bool is_inplace){
             #ifdef UNI_DEBUG
-            tor10_error_msg(in->dtype_id != tor10type.Int32,"[DEBUG][internal error] in.dtype is [%s] but call Movemem_cpu with type Int32",in->dtype().c_str());
+            tor10_error_msg(in->dtype != tor10type.Int32,"[DEBUG][internal error] in.dtype_str is [%s] but call Movemem_cpu with type Int32",in->dtype_str().c_str());
             #endif
 
             std::vector<tor10_uint64> newshape(old_shape.size());
@@ -407,7 +407,7 @@ namespace tor10{
 
         boost::intrusive_ptr<Storage_base> Movemem_cpu_u32(boost::intrusive_ptr<Storage_base> &in, const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64>&mapper, const std::vector<tor10_uint64> &invmapper, const bool is_inplace){
             #ifdef UNI_DEBUG
-            tor10_error_msg(in->dtype_id != tor10type.Uint32,"[DEBUG][internal error] in.dtype is [%s] but call Movemem_cpu with type Uint32",in->dtype().c_str());
+            tor10_error_msg(in->dtype != tor10type.Uint32,"[DEBUG][internal error] in.dtype_str is [%s] but call Movemem_cpu with type Uint32",in->dtype_str().c_str());
             #endif
 
             std::vector<tor10_uint64> newshape(old_shape.size());

@@ -4,14 +4,14 @@
 #include <vector>
 #include "Type.hpp"
 
-typedef void (*Addfunc_oii)(void*,void*,void*,const unsigned long long & len);
+typedef void (*Arithmicfunc_oii)(void*,void*,void*,const unsigned long long & len, const char &type);
 
 
 
 class linalg_internal_interface{
 
     public:
-        std::vector<std::vector<Addfunc_oii>> add_internal;
+        std::vector<std::vector<Arithmicfunc_oii>> arithmic_internal;
 
     linalg_internal_interface();
         

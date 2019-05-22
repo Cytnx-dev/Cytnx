@@ -2,11 +2,11 @@ Tor10PATH=.
 CUDA_PATH=/usr/local/cuda
 INCFLAGS :=-I$(Tor10PATH)/include
 
-CC:= g++-6
+CC:= g++
 CCFLAGS := -std=c++11 -g -Wformat=0
 LDFLAGS :=  -llapack -lblas
 
-GPU_Enable=1
+GPU_Enable=0
 OMP_Enable=1
 DEBUG_Enable=1
 
@@ -48,7 +48,7 @@ endif
 OBJS = Storage_base.o Uint32Storage.o Int32Storage.o Uint64Storage.o Int64Storage.o FloatStorage.o DoubleStorage.o ComplexFloatStorage.o ComplexDoubleStorage.o Type.o Device.o
 
 
-OBJS += Bond.o Tensor.o Symmetry.o
+OBJS += Storage.o Bond.o Tensor.o Symmetry.o
 
 ## Utils
 OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o
@@ -89,6 +89,9 @@ Bond.o : $(Tor10PATH)/src/Bond.cpp $(Tor10PATH)/include/Bond.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 Symmetry.o: $(Tor10PATH)/src/Symmetry.cpp $(Tor10PATH)/include/Symmetry.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+
+Storage.o: $(Tor10PATH)/src/Storage.cpp $(Tor10PATH)/include/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 

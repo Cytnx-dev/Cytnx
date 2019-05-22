@@ -14,7 +14,7 @@ namespace tor10{
             tor10_error_msg(shape[i]==0,"%s","[ERROR] shape cannot have 0 dimension in any rank.");
             Nelem *= shape[i]; 
         }
-        this->_storage = Storage_init.USIInit[dtype]();
+        this->_storage = __SII.USIInit[dtype]();
         this->_storage->Init(Nelem,device);
         this->_shape = shape;
         this->_mapper = utils_internal::range_cpu(shape.size());

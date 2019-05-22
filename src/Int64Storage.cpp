@@ -9,7 +9,7 @@ namespace tor10{
 
         //check:
         tor10_error_msg(len_in < 1, "%s", "[ERROR] cannot init a Storage with zero element");
-        this->dtype_id = tor10type.Int64;
+        this->dtype = tor10type.Int64;
         if (device == tor10device.cpu){
             this->Mem = utils_internal::Calloc_cpu(this->len,sizeof(tor10_int64));
         }else{
@@ -31,7 +31,7 @@ namespace tor10{
     # ifdef UNI_DEBUG
         tor10_error_msg(len_in < 1, "%s", "[ERROR] _Init_by_ptr cannot have len_in < 1.");
     # endif
-        this->dtype_id = tor10type.Int64;
+        this->dtype = tor10type.Int64;
         this->device = device;
     }
 
@@ -190,7 +190,7 @@ namespace tor10{
 
             os << std::endl << "Total elem: " << this->len << "\n";
 
-            os << "type  : " << tor10type.getname(this->dtype_id) << std::endl;
+            os << "type  : " << tor10type.getname(this->dtype) << std::endl;
 
 
             int atDevice = this->device;
@@ -325,4 +325,14 @@ namespace tor10{
 
         }//len==0
     }
+
+    void Int64Storage::print_elems(){
+        tor10_int64* elem_ptr_ = static_cast<tor10_int64*>(this->Mem);
+        cout << "[ ";
+        for(unsigned long long cnt=0;cnt<this->len;cnt++){
+            printf("%+19d ",elem_ptr_[cnt]);
+        }
+        cout << " ]" << endl;
+    }
+
 }//tor10

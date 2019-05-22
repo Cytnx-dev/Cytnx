@@ -58,8 +58,14 @@ int main(int argc, char *argv[]){
     boost::intrusive_ptr<Storage_base> arrayX(new FloatStorage() );
     arrayX->_Init_byptr_safe(tt,4);
     */
+    Storage s;
+    s.Init(12,tor10type.Double,tor10device.cpu);
+    s.at<double>(4) = 3;
+    cout << s << endl;    
+
+
     Tensor t;
-    t.Init({3,4,5},tor10type.Double,tor10device.cuda); 
+    t.Init({3,4,5},tor10type.Double,tor10device.cpu); 
     Tensor v = t;
     v.at<double>({2,1,3}) = 1;
     cout << t << endl;

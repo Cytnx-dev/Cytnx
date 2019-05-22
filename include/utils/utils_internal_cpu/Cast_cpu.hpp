@@ -12,12 +12,15 @@ namespace tor10{
     namespace utils_internal{
         
         typedef void (*ElemCast_io)(const boost::intrusive_ptr<Storage_base>&,boost::intrusive_ptr<Storage_base>&,const unsigned long long &, const bool &);
+
+        
         class Cast_cpu_interface{
             public:
                 std::vector<std::vector<ElemCast_io> > UElemCast_cpu;
                 Cast_cpu_interface();
         };
         extern Cast_cpu_interface Cast_cpu;
+        
 
         void Cast_cpu_cdtcd(const boost::intrusive_ptr<Storage_base>& in, boost::intrusive_ptr<Storage_base>& out, const unsigned long long &len_in, const bool &is_alloc);
         void Cast_cpu_cdtcf(const boost::intrusive_ptr<Storage_base>& in, boost::intrusive_ptr<Storage_base>& out, const unsigned long long &len_in, const bool &is_alloc);
