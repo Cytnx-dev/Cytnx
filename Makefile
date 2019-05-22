@@ -2,7 +2,7 @@ Tor10PATH=.
 CUDA_PATH=/usr/local/cuda
 INCFLAGS :=-I$(Tor10PATH)/include
 
-CC:= g++
+CC:= g++-6
 CCFLAGS := -std=c++11 -g -Wformat=0 -fPIC
 LDFLAGS :=  -llapack -lblas
 
