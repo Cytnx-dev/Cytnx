@@ -5,8 +5,8 @@
 #include <cstdlib>
 #include <stdint.h>
 #include <climits>
-#include "Type.hpp"
-#include "tor10_error.hpp"
+#include "../../Type.hpp"
+#include "../../tor10_error.hpp"
 
 namespace tor10{
     namespace utils_internal{

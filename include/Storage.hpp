@@ -263,7 +263,9 @@ namespace tor10{
                 this->_impl = __SII.USIInit[dtype]();
                 this->_impl->Init(size,device);
             }
-
+            Storage(const unsigned long long &size, const unsigned int &dtype, int device=-1){
+                this->Init(size,dtype,device);
+            }
             Storage(): _impl(new Storage_base()){};
             Storage(boost::intrusive_ptr<Storage_base> in_impl){
                 this->_impl = in_impl;

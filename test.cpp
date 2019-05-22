@@ -63,7 +63,6 @@ int main(int argc, char *argv[]){
     s.at<double>(4) = 3;
     cout << s << endl;    
 
-
     Tensor t;
     t.Init({3,4,5},tor10type.Double,tor10device.cpu); 
     Tensor v = t;

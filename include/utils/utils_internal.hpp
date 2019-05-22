@@ -1,15 +1,15 @@
 #ifndef _H_utils_internal_
 #define _H_utils_internal_
 
-#include "utils/utils_internal_cpu/Cast_cpu.hpp"
-#include "utils/utils_internal_cpu/Movemem_cpu.hpp"
-#include "utils/utils_internal_cpu/Alloc_cpu.hpp"
-#include "utils/utils_internal_cpu/Range_cpu.hpp"
+#include "utils_internal_cpu/Cast_cpu.hpp"
+#include "utils_internal_cpu/Movemem_cpu.hpp"
+#include "utils_internal_cpu/Alloc_cpu.hpp"
+#include "utils_internal_cpu/Range_cpu.hpp"
 
 #ifdef UNI_GPU
-    #include "utils/utils_internal_gpu/cuCast_gpu.hpp"
-    #include "utils/utils_internal_gpu/cuAlloc_gpu.hpp"
-    #include "utils/utils_internal_gpu/cuMovemem_gpu.hpp"
+    #include "utils_internal_gpu/cuCast_gpu.hpp"
+    #include "utils_internal_gpu/cuAlloc_gpu.hpp"
+    #include "utils_internal_gpu/cuMovemem_gpu.hpp"
 #endif
 
 

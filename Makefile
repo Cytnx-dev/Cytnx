@@ -3,9 +3,11 @@ CUDA_PATH=/usr/local/cuda
 INCFLAGS :=-I$(Tor10PATH)/include
 
 CC:= g++
-CCFLAGS := -std=c++11 -g -Wformat=0
+CCFLAGS := -std=c++11 -g -Wformat=0 -fPIC
 LDFLAGS :=  -llapack -lblas
 
+
+PY_Enable=1
 GPU_Enable=0
 OMP_Enable=1
 DEBUG_Enable=1
@@ -66,12 +68,18 @@ endif
 
 
 
-all: test
+all: test 
+
+ifeq ($(PY_Enable),1)
+  all += pyobj
+endif
+
 
 test: test.o $(ALLOBJS)
 	$(CC) $^ $(CCFLAGS) $(LDFLAGS) -o $@
 
-
+pyobj: $(ALLOBJS)
+	$(CC) $(CCFLAGS) $(LDFLAGS) $^ -shared $(shell python3 -m pybind11 --includes) pybind/pytor10.cpp -o pytor10$(shell python3-config --extension-suffix)
 
 
 
