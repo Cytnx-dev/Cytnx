@@ -2,6 +2,14 @@
 #define _H_Device_
 #include <vector>
 #include <string>
+
+struct __device{
+    enum __pybind_device{
+        cpu=-1,
+        cuda=0
+    };
+};
+
 namespace tor10{
     class Device{
         public:

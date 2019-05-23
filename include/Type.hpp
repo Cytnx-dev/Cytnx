@@ -57,6 +57,12 @@ namespace tor10{
     };
 
     extern Type tor10type;
+
 }//namespace tor10
+
+
+
+
+
 
 #endif

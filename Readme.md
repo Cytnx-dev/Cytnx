@@ -14,5 +14,13 @@
 ## ubuntu
     sudo apt-get install libboost-all-dev
 
+## Objects:
+    * Storage
+    * Tensor
+    * Bond
 
-
+## linalg
+    * Add, +=, +
+    * Mul,
+    * Sub,
+    * Div

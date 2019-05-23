@@ -4,6 +4,7 @@
 #include "tor10_error.hpp"
 #include "Storage.hpp"
 #include "Device.hpp"
+//#include "linalg/linalg.hpp"
 #include "intrusive_ptr_base.hpp"
 #include "utils/utils_internal.hpp"
 #include <iostream>
@@ -20,6 +21,7 @@ namespace tor10{
 
             //Interface:
             Storage_init_interface __SII;
+            
 
             //Memory:
             boost::intrusive_ptr<Storage_base> _storage;
@@ -41,33 +43,40 @@ namespace tor10{
             Tensor_impl(const Tensor_impl &rhs);
             Tensor_impl& operator=(Tensor_impl &rhs);
             
-            unsigned int dtype(){
+            const unsigned int dtype() const{
                 return this->_storage->dtype;
             }
-            int device_id(){
+            const int device() const {
                 return this->_storage->device;
             }
-            std::string dtype_str(){
+
+            const std::string dtype_str() const {
                 return tor10type.getname(this->_storage->dtype);
             }
-            std::string device(){
+            const std::string device_str() const{
                 return tor10device.getname(this->_storage->device);
             }
-            const std::vector<tor10_uint64>& shape(){
+
+            const std::vector<tor10_uint64>& shape() const{
                 return _shape;
             }
-            const bool& is_contiguous(){
+            const bool& is_contiguous() const{
                 return this->_contiguous;
             }
-            const std::vector<tor10_uint64>& _get_mapper(){
+            const std::vector<tor10_uint64>& _get_mapper() const{
                 return _mapper;
             }
-            const std::vector<tor10_uint64> & _get_invmapper(){
+            const std::vector<tor10_uint64> & _get_invmapper() const{
                 return _invmapper;
             }
             boost::intrusive_ptr<Storage_base>& _get_storage(){
                 return _storage;
             }
+
+            const boost::intrusive_ptr<Storage_base> _get_storage() const{
+                return _storage;
+            }
+
             boost::intrusive_ptr<Tensor_impl> copy(){
                 boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
                 out->_storage = this->_storage->copy();
@@ -82,7 +91,7 @@ namespace tor10{
                 this->_storage->to_(device);
             }
             boost::intrusive_ptr<Tensor_impl> to(const int &device){
-                if(this->device_id()==device){
+                if(this->device()==device){
                     return this;
                 }else{
                     boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
@@ -212,6 +221,9 @@ namespace tor10{
             }
 
 
+            //Arithmic:
+            
+
     };
 
 
@@ -225,7 +237,7 @@ namespace tor10{
             Tensor(const Tensor &rhs){
                 _impl = rhs._impl;
             }
-            Tensor& operator=(Tensor &rhs){
+            Tensor& operator=(const Tensor &rhs){
                 _impl = rhs._impl;
             }
              
@@ -238,19 +250,19 @@ namespace tor10{
                 _impl->Init(args,dtype,device);
             }
 
-            Tensor(const std::vector<tor10_uint64> &shape, const unsigned int &dtype, int device=-1){
+            Tensor(const std::vector<tor10_uint64> &shape, const unsigned int &dtype, int device=-1): _impl(new Tensor_impl()){
                 this->Init(shape,dtype,device);
             }
-            Tensor(const std::initializer_list<tor10_uint64> &shape, const unsigned int &dtype,int device=-1){
+            Tensor(const std::initializer_list<tor10_uint64> &shape, const unsigned int &dtype,int device=-1): _impl(new Tensor_impl()){
                 this->Init(shape,dtype,device);
             }
 
-            unsigned int dtype(){return _impl->dtype();}
-            int device_id(){ return this->_impl->device_id();}
-            std::string dtype_str(){ return _impl->dtype_str();}
-            std::string device(){ return this->_impl->device();}
+            const unsigned int dtype() const {return this->_impl->dtype();}
+            const int device() const { return this->_impl->device();}
+            const std::string dtype_str() const { return this->_impl->dtype_str();}
+            const std::string device_str() const{ return this->_impl->device_str();}
 
-            const std::vector<tor10_uint64>& shape(){
+            const std::vector<tor10_uint64>& shape() const{
                 return this->_impl->shape();
             }
 
@@ -332,6 +344,33 @@ namespace tor10{
                 std::vector<tor10_uint64> args = locator;
                 return this->_impl->at<T>(args);
             }
+
+           template<class T>
+           Tensor& operator+=(const T &rc){
+                *this = Add(*this,rc);
+                return *this;
+           } 
+
+           template<class T>
+           Tensor& operator-=(const T &rc){
+                *this = Sub(*this,rc);
+                return *this;
+           } 
+
+           template<class T>
+           Tensor& operator*=(const T &rc){
+                *this = Mul(*this,rc);
+                return *this;
+           } 
+
+           template<class T>
+           Tensor& operator/=(const T &rc){
+                *this = Div(*this,rc);
+                return *this;
+           } 
+
+
+
     };// class Tensor
 
     std::ostream& operator<<(std::ostream& os, Tensor &in);

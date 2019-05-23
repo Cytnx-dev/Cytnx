@@ -253,18 +253,18 @@ namespace tor10{
         private:
             //Interface:
             Storage_init_interface __SII;
-            boost::intrusive_ptr<Storage_base> _impl;
 
         public:
             
+            boost::intrusive_ptr<Storage_base> _impl;
 
             void Init(const unsigned long long &size,const unsigned int &dtype, int device=-1){
                 tor10_error_msg(dtype>=N_Type,"%s","[ERROR] invalid argument: dtype");
                 this->_impl = __SII.USIInit[dtype]();
                 this->_impl->Init(size,device);
             }
-            Storage(const unsigned long long &size, const unsigned int &dtype, int device=-1){
-                this->Init(size,dtype,device);
+            Storage(const unsigned long long &size, const unsigned int &dtype, int device=-1): _impl(new Storage_base()){
+                Init(size,dtype,device);
             }
             Storage(): _impl(new Storage_base()){};
             Storage(boost::intrusive_ptr<Storage_base> in_impl){

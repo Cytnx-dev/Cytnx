@@ -53,10 +53,20 @@ OBJS = Storage_base.o Uint32Storage.o Int32Storage.o Uint64Storage.o Int64Storag
 OBJS += Storage.o Bond.o Tensor.o Symmetry.o
 
 ## Utils
-OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o
+OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o
 ifeq ($(GPU_Enable),1)
   OBJS += cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o
 endif
+
+## Linalg_internal
+OBJS += linalg_internal_interface.o
+OBJS += Add_internal_cpu.o Sub_internal_cpu.o Mul_internal_cpu.o Div_internal_cpu.o Arithmic_internal_cpu.o
+ifeq ($(GPU_Enable),1)
+  OBJS += 
+endif
+
+## Linalg
+OBJS += Add.o Div.o Sub.o Mul.o
 
 
 ALLOBJS = $(OBJS)
@@ -79,7 +89,7 @@ test: test.o $(ALLOBJS)
 	$(CC) $^ $(CCFLAGS) $(LDFLAGS) -o $@
 
 pyobj: $(ALLOBJS)
-	$(CC) $(CCFLAGS) $(LDFLAGS) $^ -shared $(shell python3 -m pybind11 --includes) pybind/pytor10.cpp -o pytor10$(shell python3-config --extension-suffix)
+	$(CC) $(INCFLAGS) $(CCFLAGS) $(shell python3 -m pybind11 --includes)  pybind/pytor10.cpp $^ $(LDFLAGS) -shared -o pytor10$(shell python3-config --extension-suffix)
 
 
 
@@ -131,9 +141,24 @@ ComplexDoubleStorage.o: $(Tor10PATH)/src/ComplexDoubleStorage.cpp $(Tor10PATH)/i
 
 ## linalg_internal
 ###########################
-#linalg_internal_interface.o : $(Tor10PATH)/src/linalg_internal_interface.cpp $(Tor10PATH)/include/linalg_internal_interface.hpp
+linalg_internal_interface.o : $(Tor10PATH)/src/linalg/linalg_internal_interface.cpp $(Tor10PATH)/include/linalg/linalg_internal_interface.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 
-#	$(CC) $(INCFLAGS) -c $<
+Arithmic_internal_cpu.o :  $(Tor10PATH)/src/linalg/linalg_internal_cpu/Arithmic_internal_cpu.cpp $(Tor10PATH)/include/linalg/linalg_internal_cpu/Arithmic_internal_cpu.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+
+Add_internal_cpu.o :  $(Tor10PATH)/src/linalg/linalg_internal_cpu/Add_internal_cpu.cpp $(Tor10PATH)/include/linalg/linalg_internal_cpu/Add_internal_cpu.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+
+Mul_internal_cpu.o :  $(Tor10PATH)/src/linalg/linalg_internal_cpu/Mul_internal_cpu.cpp $(Tor10PATH)/include/linalg/linalg_internal_cpu/Mul_internal_cpu.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+
+Sub_internal_cpu.o :  $(Tor10PATH)/src/linalg/linalg_internal_cpu/Sub_internal_cpu.cpp $(Tor10PATH)/include/linalg/linalg_internal_cpu/Sub_internal_cpu.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+
+Div_internal_cpu.o :  $(Tor10PATH)/src/linalg/linalg_internal_cpu/Div_internal_cpu.cpp $(Tor10PATH)/include/linalg/linalg_internal_cpu/Div_internal_cpu.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+
 
 
 ## Misc
@@ -159,6 +184,9 @@ Alloc_cpu.o: $(Tor10PATH)/src/utils/utils_internal_cpu/Alloc_cpu.cpp $(Tor10PATH
 Range_cpu.o: $(Tor10PATH)/src/utils/utils_internal_cpu/Range_cpu.cpp $(Tor10PATH)/include/utils/utils_internal_cpu/Range_cpu.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
+complex_arithmic.o: $(Tor10PATH)/src/utils/complex_arithmic.cpp $(Tor10PATH)/include/utils/complex_arithmic.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+
 ifeq ($(GPU_Enable),1)
 cuAlloc_gpu.o: $(Tor10PATH)/src/utils/utils_internal_gpu/cuAlloc_gpu.cu $(Tor10PATH)/include/utils/utils_internal_gpu/cuAlloc_gpu.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
@@ -169,8 +197,16 @@ cuMovemem_gpu.o: $(Tor10PATH)/src/utils/utils_internal_gpu/cuMovemem_gpu.cu $(To
 endif
 
 
-
-
+## Linalg:
+########################
+Add.o: $(Tor10PATH)/src/linalg/Add.cpp $(Tor10PATH)/include/linalg/linalg.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+Mul.o: $(Tor10PATH)/src/linalg/Mul.cpp $(Tor10PATH)/include/linalg/linalg.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+Sub.o: $(Tor10PATH)/src/linalg/Sub.cpp $(Tor10PATH)/include/linalg/linalg.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+Div.o: $(Tor10PATH)/src/linalg/Div.cpp $(Tor10PATH)/include/linalg/linalg.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 test.o: test.cpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<

@@ -1,6 +1,4 @@
-#include "Storage.hpp"
-#include "Tensor.hpp"
-#include "Bond.hpp"
+#include "tor10.hpp"
 #include <complex>
 
 using namespace std;
@@ -63,12 +61,32 @@ int main(int argc, char *argv[]){
     s.at<double>(4) = 3;
     cout << s << endl;    
 
-    Tensor t;
-    t.Init({3,4,5},tor10type.Double,tor10device.cpu); 
+    Tensor a({3,4,5},tor10type.Double,tor10device.cpu);
+    Tensor b = a.copy();
+    Tensor c = Add(1,a);
+    Tensor d = c + c;
+    Tensor e = d + 3;
+    Tensor f = 3 + d;
+    f+=3;
+    f+=f;
+    cout << f << endl;
+    
+    Tensor g = c * c;
+
+    /*
+    Tensor h = g - 3.;
+    Tensor i = 3. - g;
+    i-=3.;
+    i-=i;
+    cout << i << endl;
+    return 0;
+    //Tensor t;
+    //t.Init({3,4,5},tor10type.Double,tor10device.cpu); 
+    Tensor t({3,4,5},tor10type.Double,tor10device.cpu);
     Tensor v = t;
     v.at<double>({2,1,3}) = 1;
     cout << t << endl;
-
+    return 0;
     t.permute_({1,0,2});
     cout << t << endl;
     cout << t.is_contiguous() << endl;
@@ -96,5 +114,6 @@ int main(int argc, char *argv[]){
                        ,bondType::BD_KET);
 
     cout << bd_in << endl;
+    */
     return 0;
 }

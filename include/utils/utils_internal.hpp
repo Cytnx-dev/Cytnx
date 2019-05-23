@@ -5,6 +5,7 @@
 #include "utils_internal_cpu/Movemem_cpu.hpp"
 #include "utils_internal_cpu/Alloc_cpu.hpp"
 #include "utils_internal_cpu/Range_cpu.hpp"
+#include "complex_arithmic.hpp"
 
 #ifdef UNI_GPU
     #include "utils_internal_gpu/cuCast_gpu.hpp"
