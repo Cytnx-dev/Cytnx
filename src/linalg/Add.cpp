@@ -7,7 +7,8 @@ namespace tor10{
         
         tor10_error_msg(Lt.shape() != Rt.shape(),"[Add] error, the two tensor does not have the same type.%s","\n");
         tor10_error_msg(Lt.device() != Rt.device(),"[Add] error, two tensor cannot on different devices.%s","\n");
-
+        tor10_error_msg(!(Lt.is_contiguous() && Rt.is_contiguous()), "[Add] error two tensors must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
+ 
         Tensor out(Lt.shape(),Lt.dtype() < Rt.dtype()?Lt.dtype():Rt.dtype(),Lt.device());
 
         if(Lt.device() == tor10device.cpu){

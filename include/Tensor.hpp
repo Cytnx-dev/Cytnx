@@ -63,6 +63,7 @@ namespace tor10{
             const bool& is_contiguous() const{
                 return this->_contiguous;
             }
+
             const std::vector<tor10_uint64>& _get_mapper() const{
                 return _mapper;
             }
@@ -280,7 +281,7 @@ namespace tor10{
                 this->_impl->to_(device);
             }
             
-            const bool& is_contiguous(){
+            const bool& is_contiguous() const{
                 return this->_impl->is_contiguous();
             }
 
