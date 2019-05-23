@@ -1,5 +1,5 @@
 #include "linalg/linalg.hpp"
-
+#include <iostream>
 
 namespace tor10{
 
@@ -8,10 +8,9 @@ namespace tor10{
         tor10_error_msg(Lt.shape() != Rt.shape(),"[Sub] error, the two tensor does not have the same type.%s","\n");
         tor10_error_msg(Lt.device() != Rt.device(),"[Sub] error, two tensor cannot on different devices.%s","\n");
 
-        Tensor out(Lt.shape(),Lt.dtype() < Rt.dtype()?Lt.dtype():Rt.dtype(),Lt.device());
-
+        Tensor out(Rt.shape(),Lt.dtype() < Rt.dtype()?Lt.dtype():Rt.dtype(),Rt.device());
         if(Lt.device() == tor10device.cpu){
-            linalg_internal::lii.Ari_iicpu[Lt.dtype()][Rt.dtype()](out._impl->_get_storage(),Lt._impl->_get_storage(),Rt._impl->_get_storage(),Lt._impl->_get_storage()->size(),2);
+            linalg_internal::lii.Ari_iicpu[Lt.dtype()][Rt.dtype()](out._impl->_get_storage(),Lt._impl->_get_storage(),Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),2);
         }else{
             #ifdef UNI_GPU
                 linalg_internal::lii.Ari_iigpu[Lt.dtype()][Rt.dtype()](out._impl->_get_storage(),Lt._impl->_get_storage(),Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),2);
@@ -339,8 +338,8 @@ namespace tor10{
         return out;
     }
 
-    Tensor operator-(const Tensor &Lt,const Tensor &Rc){
-        Sub(Lt,Rc);
+    Tensor operator-(const Tensor &Lt,const Tensor &Rt){
+        return Sub(Lt,Rt);
     }
 
 }

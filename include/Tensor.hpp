@@ -41,7 +41,7 @@ namespace tor10{
 
             //copy&assignment constr., use intrusive_ptr's
             Tensor_impl(const Tensor_impl &rhs);
-            Tensor_impl& operator=(Tensor_impl &rhs);
+            Tensor_impl& operator=(const Tensor_impl &rhs); // add const
             
             const unsigned int dtype() const{
                 return this->_storage->dtype;

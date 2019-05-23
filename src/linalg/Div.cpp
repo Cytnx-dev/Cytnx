@@ -339,8 +339,8 @@ namespace tor10{
         return out;
     }
 
-    Tensor operator/(const Tensor &Lt,const Tensor &Rc){
-        Div(Lt,Rc);
+    Tensor operator/(const Tensor &Lt,const Tensor &Rt){
+        return Div(Lt,Rt);
     }
 
 }

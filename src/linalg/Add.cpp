@@ -219,8 +219,8 @@ namespace tor10{
         return Add(rc,Lc);
     }
 
-    Tensor operator+(const Tensor &Lc, const Tensor &Rc){
-        return Add(Lc,Rc);
+    Tensor operator+(const Tensor &Lt, const Tensor &Rt){
+        return Add(Lt,Rt);
     }
 
 }

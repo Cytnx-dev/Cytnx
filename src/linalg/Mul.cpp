@@ -219,8 +219,8 @@ namespace tor10{
         return Mul(rc,Lc);
     }
 
-    Tensor operator*(const Tensor &Lc, const Tensor &Rc){
-        return Mul(Lc,Rc);
+    Tensor operator*(const Tensor &Lt, const Tensor &Rt){
+        return Mul(Lt,Rt);
     }
 
 

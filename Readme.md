@@ -21,6 +21,6 @@
 
 ## linalg
     * Add, +=, +
-    * Mul,
-    * Sub,
-    * Div
+    * Mul, *=, *
+    * Sub, -=, -
+    * Div  /=, /

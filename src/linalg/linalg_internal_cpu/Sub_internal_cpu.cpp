@@ -1,6 +1,6 @@
 #include "linalg/linalg_internal_cpu/Sub_internal_cpu.hpp"
 #include "utils/utils_internal.hpp"
-
+#include <iostream>
 #ifdef UNI_OMP
     #include <omp.h>
 #endif

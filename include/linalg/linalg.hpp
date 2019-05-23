@@ -12,74 +12,74 @@ namespace tor10{
 
     // Add:
     Tensor Add(const Tensor &Lt, const Tensor &Rt);
-    Tensor operator+(const Tensor &Lc, const Tensor &Rc);
+    Tensor operator+(const Tensor &Lt, const Tensor &Rt);
 
     template<class T>
     Tensor Add(const T &lc, const Tensor &Rt);    
     template<class T>
-    Tensor operator+(const T &lc, const Tensor &Rc){
-        return Add(lc,Rc);
+    Tensor operator+(const T &lc, const Tensor &Rt){
+        return Add(lc,Rt);
     }
 
     template<class T>
-    Tensor Add(const Tensor &Lc, const T &rc);
+    Tensor Add(const Tensor &Lt, const T &rc);
     template<class T>
-    Tensor operator+(const Tensor &Lc, const T &rc){
-       return Add(Lc,rc);
+    Tensor operator+(const Tensor &Lt, const T &rc){
+       return Add(Lt,rc);
     }
 
     // Sub:
     Tensor Sub(const Tensor &Lt, const Tensor &Rt);
-    Tensor operator-(const Tensor &Lc, const Tensor &Rc);
+    Tensor operator-(const Tensor &Lt, const Tensor &Rt);
 
     template<class T>
     Tensor Sub(const T &lc, const Tensor &Rt);    
     template<class T>
-    Tensor operator-(const T &lc, const Tensor &Rc){
-        return Sub(lc,Rc);
+    Tensor operator-(const T &lc, const Tensor &Rt){
+        return Sub(lc,Rt);
     }
 
     template<class T>
-    Tensor Sub(const Tensor &Lc, const T &rc);
+    Tensor Sub(const Tensor &Lt, const T &rc);
     template<class T>
-    Tensor operator-(const Tensor &Lc, const T &rc){
-       return Sub(Lc,rc);
+    Tensor operator-(const Tensor &Lt, const T &rc){
+       return Sub(Lt,rc);
     }
 
     // Mul:
     Tensor Mul(const Tensor &Lt, const Tensor &Rt);
-    Tensor operator*(const Tensor &Lc, const Tensor &Rc);
+    Tensor operator*(const Tensor &Lt, const Tensor &Rt);
 
     template<class T>
     Tensor Mul(const T &lc, const Tensor &Rt);    
     template<class T>
-    Tensor operator*(const T &lc, const Tensor &Rc){
-        return Mul(lc,Rc);
+    Tensor operator*(const T &lc, const Tensor &Rt){
+        return Mul(lc,Rt);
     }
 
     template<class T>
-    Tensor Mul(const Tensor &Lc, const T &rc);
+    Tensor Mul(const Tensor &Lt, const T &rc);
     template<class T>
-    Tensor operator*(const Tensor &Lc, const T &rc){
-       return Mul(Lc,rc);
+    Tensor operator*(const Tensor &Lt, const T &rc){
+       return Mul(Lt,rc);
     }
 
     // Div:
     Tensor Div(const Tensor &Lt, const Tensor &Rt);
-    Tensor operator/(const Tensor &Lc, const Tensor &Rc);
+    Tensor operator/(const Tensor &Lt, const Tensor &Rt);
 
     template<class T>
     Tensor Div(const T &lc, const Tensor &Rt);    
     template<class T>
-    Tensor operator/(const T &lc, const Tensor &Rc){
-        return Div(lc,Rc);
+    Tensor operator/(const T &lc, const Tensor &Rt){
+        return Div(lc,Rt);
     }
 
     template<class T>
-    Tensor Div(const Tensor &Lc, const T &rc);
+    Tensor Div(const Tensor &Lt, const T &rc);
     template<class T>
-    Tensor operator/(const Tensor &Lc, const T &rc){
-       return Div(Lc,rc);
+    Tensor operator/(const Tensor &Lt, const T &rc){
+       return Div(Lt,rc);
     }
 }
 
