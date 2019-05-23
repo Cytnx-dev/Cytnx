@@ -273,8 +273,9 @@ namespace tor10{
             Storage(const Storage &rhs){
                 this->_impl = rhs._impl;
             }
-            Storage& operator=(Storage &rhs){
+            Storage& operator=(const Storage &rhs){
                 this->_impl = rhs._impl;
+                return *this;
             }
 
             const unsigned int &dtype(){

@@ -5,8 +5,11 @@
 
 #include "Type.hpp"
 #include "Storage.hpp"
-#include "linalg/linalg_internal_cpu/Arithmic_internal_cpu.hpp"
+#include "linalg/linalg_internal_cpu/Arithmic_internal.hpp"
 
+#ifdef UNI_GPU
+    #include "linalg/linalg_internal_gpu/cuArithmic_internal.hpp"
+#endif
 
 namespace tor10{
     namespace linalg_internal{
@@ -14,10 +17,10 @@ namespace tor10{
         class linalg_internal_interface{
 
             public:
-                std::vector<std::vector<Arithmicfunc_oii> > Ari_iicpu;
+                std::vector<std::vector<Arithmicfunc_oii> > Ari_ii;
 
                 #ifdef UNI_GPU
-                std::vector<std::vector<Arithmicfunc_oii> > Ari_iigpu;
+                std::vector<std::vector<Arithmicfunc_oii> > cuAri_ii;
                 #endif
 
             linalg_internal_interface();

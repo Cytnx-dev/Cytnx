@@ -11,10 +11,10 @@ namespace tor10{
         Tensor out(Lt.shape(),Lt.dtype() < Rt.dtype()?Lt.dtype():Rt.dtype(),Lt.device());
 
         if(Lt.device() == tor10device.cpu){
-            linalg_internal::lii.Ari_iicpu[Lt.dtype()][Rt.dtype()](out._impl->_get_storage(),Lt._impl->_get_storage(),Rt._impl->_get_storage(),Lt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.Ari_ii[Lt.dtype()][Rt.dtype()](out._impl->_get_storage(),Lt._impl->_get_storage(),Rt._impl->_get_storage(),Lt._impl->_get_storage()->size(),3);
         }else{
             #ifdef UNI_GPU
-                linalg_internal::lii.Ari_iigpu[Lt.dtype()][Rt.dtype()](out._impl->_get_storage(),Lt._impl->_get_storage(),Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
+                linalg_internal::lii.cuAri_ii[Lt.dtype()][Rt.dtype()](out._impl->_get_storage(),Lt._impl->_get_storage(),Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
             #else
                 tor10_error_msg(true,"[Div] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
             #endif
@@ -33,10 +33,10 @@ namespace tor10{
         Tensor out(Rt.shape(),tor10type.ComplexDouble,Rt.device());
 
         if(Rt.device()==tor10device.cpu){
-            linalg_internal::lii.Ari_iicpu[tor10type.ComplexDouble][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.Ari_ii[tor10type.ComplexDouble][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
         }else{
             #ifdef UNI_GPU
-                linalg_internal::lii.Ari_iigpu[tor10type.ComplexDouble][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
+                linalg_internal::lii.cuAri_ii[tor10type.ComplexDouble][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
             #else
                 tor10_error_msg(true,"[Div] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
             #endif 
@@ -53,10 +53,10 @@ namespace tor10{
         Tensor out(Rt.shape(),tor10type.ComplexFloat < Rt.dtype()?tor10type.ComplexFloat:Rt.dtype(),Rt.device());
 
         if(Rt.device()==tor10device.cpu){
-            linalg_internal::lii.Ari_iicpu[tor10type.ComplexFloat][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.Ari_ii[tor10type.ComplexFloat][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
         }else{
             #ifdef UNI_GPU
-                linalg_internal::lii.Ari_iigpu[tor10type.ComplexFloat][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
+                linalg_internal::lii.cuAri_ii[tor10type.ComplexFloat][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
             #else
                 tor10_error_msg(true,"[Div] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
             #endif 
@@ -73,10 +73,10 @@ namespace tor10{
         Tensor out(Rt.shape(),tor10type.Double < Rt.dtype()?tor10type.Double:Rt.dtype(),Rt.device());
 
         if(Rt.device()==tor10device.cpu){
-            linalg_internal::lii.Ari_iicpu[tor10type.Double][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.Ari_ii[tor10type.Double][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
         }else{
             #ifdef UNI_GPU
-                linalg_internal::lii.Ari_iigpu[tor10type.Double][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
+                linalg_internal::lii.cuAri_ii[tor10type.Double][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
             #else
                 tor10_error_msg(true,"[Div] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
             #endif 
@@ -93,10 +93,10 @@ namespace tor10{
         Tensor out(Rt.shape(),tor10type.Float < Rt.dtype()?tor10type.Float:Rt.dtype(),Rt.device());
 
         if(Rt.device()==tor10device.cpu){
-            linalg_internal::lii.Ari_iicpu[tor10type.Float][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.Ari_ii[tor10type.Float][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
         }else{
             #ifdef UNI_GPU
-                linalg_internal::lii.Ari_iigpu[tor10type.Float][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
+                linalg_internal::lii.cuAri_ii[tor10type.Float][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
             #else
                 tor10_error_msg(true,"[Div] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
             #endif 
@@ -113,10 +113,10 @@ namespace tor10{
         Tensor out(Rt.shape(),tor10type.Int64 < Rt.dtype()?tor10type.Int64:Rt.dtype(),Rt.device());
 
         if(Rt.device()==tor10device.cpu){
-            linalg_internal::lii.Ari_iicpu[tor10type.Int64][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.Ari_ii[tor10type.Int64][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
         }else{
             #ifdef UNI_GPU
-                linalg_internal::lii.Ari_iigpu[tor10type.Int64][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
+                linalg_internal::lii.cuAri_ii[tor10type.Int64][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
             #else
                 tor10_error_msg(true,"[Div] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
             #endif 
@@ -133,10 +133,10 @@ namespace tor10{
         Tensor out(Rt.shape(),tor10type.Uint64 < Rt.dtype()?tor10type.Uint64:Rt.dtype(),Rt.device());
 
         if(Rt.device()==tor10device.cpu){
-            linalg_internal::lii.Ari_iicpu[tor10type.Uint64][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.Ari_ii[tor10type.Uint64][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
         }else{
             #ifdef UNI_GPU
-                linalg_internal::lii.Ari_iigpu[tor10type.Uint64][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
+                linalg_internal::lii.cuAri_ii[tor10type.Uint64][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
             #else
                 tor10_error_msg(true,"[Div] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
             #endif 
@@ -153,10 +153,10 @@ namespace tor10{
         Tensor out(Rt.shape(),tor10type.Int32 < Rt.dtype()?tor10type.Int32:Rt.dtype(),Rt.device());
 
         if(Rt.device()==tor10device.cpu){
-            linalg_internal::lii.Ari_iicpu[tor10type.Int32][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.Ari_ii[tor10type.Int32][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
         }else{
             #ifdef UNI_GPU
-                linalg_internal::lii.Ari_iigpu[tor10type.Int32][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
+                linalg_internal::lii.cuAri_ii[tor10type.Int32][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
             #else
                 tor10_error_msg(true,"[Div] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
             #endif 
@@ -173,10 +173,10 @@ namespace tor10{
         Tensor out(Rt.shape(),tor10type.Uint32 < Rt.dtype()?tor10type.Uint32:Rt.dtype(),Rt.device());
 
         if(Rt.device()==tor10device.cpu){
-            linalg_internal::lii.Ari_iicpu[tor10type.Uint32][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.Ari_ii[tor10type.Uint32][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
         }else{
             #ifdef UNI_GPU
-                linalg_internal::lii.Ari_iigpu[tor10type.Uint32][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
+                linalg_internal::lii.cuAri_ii[tor10type.Uint32][Rt.dtype()](out._impl->_get_storage(),Cnst._impl,Rt._impl->_get_storage(),Rt._impl->_get_storage()->size(),3);
             #else
                 tor10_error_msg(true,"[Div] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
             #endif 
@@ -194,10 +194,10 @@ namespace tor10{
         Tensor out(Lt.shape(),tor10type.ComplexDouble,Lt.device());
 
         if(Lt.device()==tor10device.cpu){
-            linalg_internal::lii.Ari_iicpu[Lt.dtype()][tor10type.ComplexDouble](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.Ari_ii[Lt.dtype()][tor10type.ComplexDouble](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
         }else{
             #ifdef UNI_GPU
-            linalg_internal::lii.Ari_iigpu[Lt.dtype()][tor10type.ComplexDouble](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.cuAri_ii[Lt.dtype()][tor10type.ComplexDouble](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
             #else
                 tor10_error_msg(true,"[Div] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
             #endif 
@@ -213,10 +213,10 @@ namespace tor10{
         Tensor out(Lt.shape(),tor10type.ComplexFloat < Lt.dtype()?tor10type.ComplexFloat:Lt.dtype(),Lt.device());
 
         if(Lt.device()==tor10device.cpu){
-            linalg_internal::lii.Ari_iicpu[Lt.dtype()][tor10type.ComplexFloat](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.Ari_ii[Lt.dtype()][tor10type.ComplexFloat](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
         }else{
             #ifdef UNI_GPU
-            linalg_internal::lii.Ari_iigpu[Lt.dtype()][tor10type.ComplexFloat](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.cuAri_ii[Lt.dtype()][tor10type.ComplexFloat](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
             #else
                 tor10_error_msg(true,"[Div] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
             #endif 
@@ -232,10 +232,10 @@ namespace tor10{
         Tensor out(Lt.shape(),tor10type.Double < Lt.dtype()?tor10type.Double:Lt.dtype(),Lt.device());
 
         if(Lt.device()==tor10device.cpu){
-            linalg_internal::lii.Ari_iicpu[Lt.dtype()][tor10type.Double](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.Ari_ii[Lt.dtype()][tor10type.Double](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
         }else{
             #ifdef UNI_GPU
-            linalg_internal::lii.Ari_iigpu[Lt.dtype()][tor10type.Double](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.cuAri_ii[Lt.dtype()][tor10type.Double](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
             #else
                 tor10_error_msg(true,"[Div] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
             #endif 
@@ -251,10 +251,10 @@ namespace tor10{
         Tensor out(Lt.shape(),tor10type.Float < Lt.dtype()?tor10type.Float:Lt.dtype(),Lt.device());
 
         if(Lt.device()==tor10device.cpu){
-            linalg_internal::lii.Ari_iicpu[Lt.dtype()][tor10type.Float](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.Ari_ii[Lt.dtype()][tor10type.Float](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
         }else{
             #ifdef UNI_GPU
-            linalg_internal::lii.Ari_iigpu[Lt.dtype()][tor10type.Float](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.cuAri_ii[Lt.dtype()][tor10type.Float](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
             #else
                 tor10_error_msg(true,"[Div] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
             #endif 
@@ -270,10 +270,10 @@ namespace tor10{
         Tensor out(Lt.shape(),tor10type.Int64 < Lt.dtype()?tor10type.Int64:Lt.dtype(),Lt.device());
 
         if(Lt.device()==tor10device.cpu){
-            linalg_internal::lii.Ari_iicpu[Lt.dtype()][tor10type.Int64](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.Ari_ii[Lt.dtype()][tor10type.Int64](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
         }else{
             #ifdef UNI_GPU
-            linalg_internal::lii.Ari_iigpu[Lt.dtype()][tor10type.Int64](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.cuAri_ii[Lt.dtype()][tor10type.Int64](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
             #else
                 tor10_error_msg(true,"[Div] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
             #endif 
@@ -289,10 +289,10 @@ namespace tor10{
         Tensor out(Lt.shape(),tor10type.Uint64 < Lt.dtype()?tor10type.Uint64:Lt.dtype(),Lt.device());
 
         if(Lt.device()==tor10device.cpu){
-            linalg_internal::lii.Ari_iicpu[Lt.dtype()][tor10type.Uint64](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.Ari_ii[Lt.dtype()][tor10type.Uint64](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
         }else{
             #ifdef UNI_GPU
-            linalg_internal::lii.Ari_iigpu[Lt.dtype()][tor10type.Uint64](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.cuAri_ii[Lt.dtype()][tor10type.Uint64](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
             #else
                 tor10_error_msg(true,"[Div] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
             #endif 
@@ -308,10 +308,10 @@ namespace tor10{
         Tensor out(Lt.shape(),tor10type.Int32 < Lt.dtype()?tor10type.Int32:Lt.dtype(),Lt.device());
 
         if(Lt.device()==tor10device.cpu){
-            linalg_internal::lii.Ari_iicpu[Lt.dtype()][tor10type.Int32](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.Ari_ii[Lt.dtype()][tor10type.Int32](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
         }else{
             #ifdef UNI_GPU
-            linalg_internal::lii.Ari_iigpu[Lt.dtype()][tor10type.Int32](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.cuAri_ii[Lt.dtype()][tor10type.Int32](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
             #else
                 tor10_error_msg(true,"[Div] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
             #endif 
@@ -327,10 +327,10 @@ namespace tor10{
         Tensor out(Lt.shape(),tor10type.Uint32 < Lt.dtype()?tor10type.Uint32:Lt.dtype(),Lt.device());
 
         if(Lt.device()==tor10device.cpu){
-            linalg_internal::lii.Ari_iicpu[Lt.dtype()][tor10type.Uint32](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.Ari_ii[Lt.dtype()][tor10type.Uint32](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
         }else{
             #ifdef UNI_GPU
-            linalg_internal::lii.Ari_iigpu[Lt.dtype()][tor10type.Uint32](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
+            linalg_internal::lii.cuAri_ii[Lt.dtype()][tor10type.Uint32](out._impl->_get_storage(),Lt._impl->_get_storage(),Cnst._impl,Lt._impl->_get_storage()->size(),3);
             #else
                 tor10_error_msg(true,"[Div] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
             #endif 

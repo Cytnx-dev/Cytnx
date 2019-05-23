@@ -8,7 +8,7 @@ LDFLAGS :=  -llapack -lblas
 
 
 PY_Enable=1
-GPU_Enable=0
+GPU_Enable=1
 OMP_Enable=1
 DEBUG_Enable=1
 
@@ -60,9 +60,9 @@ endif
 
 ## Linalg_internal
 OBJS += linalg_internal_interface.o
-OBJS += Add_internal_cpu.o Sub_internal_cpu.o Mul_internal_cpu.o Div_internal_cpu.o Arithmic_internal_cpu.o
+OBJS += Add_internal.o Sub_internal.o Mul_internal.o Div_internal.o Arithmic_internal.o
 ifeq ($(GPU_Enable),1)
-  OBJS += 
+  OBJS += cuAdd_internal.o cuSub_internal.o cuMul_internal.o cuDiv_internal.o cuArithmic_internal.o 
 endif
 
 ## Linalg
@@ -144,20 +144,40 @@ ComplexDoubleStorage.o: $(Tor10PATH)/src/ComplexDoubleStorage.cpp $(Tor10PATH)/i
 linalg_internal_interface.o : $(Tor10PATH)/src/linalg/linalg_internal_interface.cpp $(Tor10PATH)/include/linalg/linalg_internal_interface.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 
-Arithmic_internal_cpu.o :  $(Tor10PATH)/src/linalg/linalg_internal_cpu/Arithmic_internal_cpu.cpp $(Tor10PATH)/include/linalg/linalg_internal_cpu/Arithmic_internal_cpu.hpp
+Arithmic_internal.o :  $(Tor10PATH)/src/linalg/linalg_internal_cpu/Arithmic_internal.cpp $(Tor10PATH)/include/linalg/linalg_internal_cpu/Arithmic_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 
-Add_internal_cpu.o :  $(Tor10PATH)/src/linalg/linalg_internal_cpu/Add_internal_cpu.cpp $(Tor10PATH)/include/linalg/linalg_internal_cpu/Add_internal_cpu.hpp
+Add_internal.o :  $(Tor10PATH)/src/linalg/linalg_internal_cpu/Add_internal.cpp $(Tor10PATH)/include/linalg/linalg_internal_cpu/Add_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 
-Mul_internal_cpu.o :  $(Tor10PATH)/src/linalg/linalg_internal_cpu/Mul_internal_cpu.cpp $(Tor10PATH)/include/linalg/linalg_internal_cpu/Mul_internal_cpu.hpp
+Mul_internal.o :  $(Tor10PATH)/src/linalg/linalg_internal_cpu/Mul_internal.cpp $(Tor10PATH)/include/linalg/linalg_internal_cpu/Mul_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 
-Sub_internal_cpu.o :  $(Tor10PATH)/src/linalg/linalg_internal_cpu/Sub_internal_cpu.cpp $(Tor10PATH)/include/linalg/linalg_internal_cpu/Sub_internal_cpu.hpp
+Sub_internal.o :  $(Tor10PATH)/src/linalg/linalg_internal_cpu/Sub_internal.cpp $(Tor10PATH)/include/linalg/linalg_internal_cpu/Sub_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 
-Div_internal_cpu.o :  $(Tor10PATH)/src/linalg/linalg_internal_cpu/Div_internal_cpu.cpp $(Tor10PATH)/include/linalg/linalg_internal_cpu/Div_internal_cpu.hpp
+Div_internal.o :  $(Tor10PATH)/src/linalg/linalg_internal_cpu/Div_internal.cpp $(Tor10PATH)/include/linalg/linalg_internal_cpu/Div_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+
+ifeq ($(GPU_Enable),1)
+
+cuArithmic_internal.o :  $(Tor10PATH)/src/linalg/linalg_internal_gpu/cuArithmic_internal.cu $(Tor10PATH)/include/linalg/linalg_internal_gpu/cuArithmic_internal.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+
+cuAdd_internal.o :  $(Tor10PATH)/src/linalg/linalg_internal_gpu/cuAdd_internal.cu $(Tor10PATH)/include/linalg/linalg_internal_gpu/cuAdd_internal.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+
+cuMul_internal.o :  $(Tor10PATH)/src/linalg/linalg_internal_gpu/cuMul_internal.cu $(Tor10PATH)/include/linalg/linalg_internal_gpu/cuMul_internal.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+
+cuSub_internal.o :  $(Tor10PATH)/src/linalg/linalg_internal_gpu/cuSub_internal.cu $(Tor10PATH)/include/linalg/linalg_internal_gpu/cuSub_internal.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+
+cuDiv_internal.o :  $(Tor10PATH)/src/linalg/linalg_internal_gpu/cuDiv_internal.cu $(Tor10PATH)/include/linalg/linalg_internal_gpu/cuDiv_internal.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+
+
+endif
 
 
 
@@ -207,6 +227,7 @@ Sub.o: $(Tor10PATH)/src/linalg/Sub.cpp $(Tor10PATH)/include/linalg/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Div.o: $(Tor10PATH)/src/linalg/Div.cpp $(Tor10PATH)/include/linalg/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+
 
 test.o: test.cpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
