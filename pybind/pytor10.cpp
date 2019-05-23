@@ -34,6 +34,11 @@ PYBIND11_MODULE(pytor10,m){
 		.value("Int32", tor10::__type::__pybind_type::Int32  ) 	
 		.export_values();
 
+    py::enum_<tor10::__device::__pybind_device>(m,"tor10device")
+        .value("cpu", tor10::__device::__pybind_device::cpu)
+		.value("cuda", tor10::__device::__pybind_device::cuda)	
+		.export_values();
+
 
     py::class_<tor10::Storage>(m,"Storage")
                 //construction

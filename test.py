@@ -1,6 +1,6 @@
 import pytor10
 
-a = pytor10.Storage(10,pytor10.tor10type.Double,pytor10.tor10device.cpu);
+a = pytor10.Storage(10,pytor10.tor10type.Double,pytor10.tor10device.cuda);
 
 print(a[3])
 print(a.dtype)

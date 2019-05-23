@@ -7,10 +7,9 @@ CCFLAGS := -std=c++11 -g -Wformat=0 -fPIC
 LDFLAGS :=  -llapack -lblas
 
 
-PY_Enable=1
-GPU_Enable=1
-OMP_Enable=1
-DEBUG_Enable=1
+GPU_Enable=0
+OMP_Enable=0
+DEBUG_Enable=0
 
 
 NVCC:= $(CUDA_PATH)/bin/nvcc -ccbin $(CC)
@@ -80,9 +79,6 @@ endif
 
 all: test 
 
-ifeq ($(PY_Enable),1)
-  all += pyobj
-endif
 
 
 test: test.o $(ALLOBJS)
@@ -234,7 +230,10 @@ test.o: test.cpp
 
 
 
-.phony : clean
+.phony : clean cleanpy
 
 clean:
 	rm *.o test
+
+cleanpy:
+	rm *.so

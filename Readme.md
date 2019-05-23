@@ -10,9 +10,35 @@
     [CUDA support]
     * CUDA v10+
     * cuDNN
-    
+
+    [OpenMp support]
+    * openmp
+
 ## ubuntu
     sudo apt-get install libboost-all-dev
+
+
+## compile
+    * compile
+    $make -Bj4
+
+    * turn on DEBUG mode:
+    $make -Bj4 DEBUG_Enable=1
+
+    * turn on OpenMp accelerate
+    $make -Bj4 OMP_Enable=1 
+
+    * turn on GPU accelerate
+    $make -Bj4 GPU_Enable=1
+
+    * turn on GPU+OpenMp accelerate
+    $make -Bj4 GPU_Enable=1 OMP_Enable=1
+
+    * compile python wrapper
+    $make pyobj -Bj4 <args>
+
+    <args> can be OMP_Enable, GPU_Enable, DEBUG_Enable.
+   
 
 ## Objects:
     * Storage
