@@ -83,6 +83,16 @@ namespace tor10{
             Ari_ii[tor10type.Uint32][tor10type.Int32        ] = Arithmic_internal_u32ti32;
             Ari_ii[tor10type.Uint32][tor10type.Uint32       ] = Arithmic_internal_u32tu32;
 
+            //=====================
+            Svd_ii = vector<Svdfunc_oii>(5);
+
+            Svd_ii[tor10type.ComplexDouble] = Svd_internal_cd;
+            Svd_ii[tor10type.ComplexFloat ] = Svd_internal_cf;
+            Svd_ii[tor10type.Double       ] = Svd_internal_d;
+            Svd_ii[tor10type.Float        ] = Svd_internal_f;
+
+
+
             #ifdef UNI_GPU
                 cuAri_ii = vector<vector<Arithmicfunc_oii> >(N_Type,vector<Arithmicfunc_oii>(N_Type));
 
@@ -157,6 +167,15 @@ namespace tor10{
                 cuAri_ii[tor10type.Uint32][tor10type.Uint64       ] = cuArithmic_internal_u32tu64;
                 cuAri_ii[tor10type.Uint32][tor10type.Int32        ] = cuArithmic_internal_u32ti32;
                 cuAri_ii[tor10type.Uint32][tor10type.Uint32       ] = cuArithmic_internal_u32tu32;
+            
+                // Svd
+                cuSvd_ii = vector<Svdfunc_oii>(5);
+
+                cuSvd_ii[tor10type.ComplexDouble] = cuSvd_internal_cd;
+                cuSvd_ii[tor10type.ComplexFloat ] = cuSvd_internal_cf;
+                cuSvd_ii[tor10type.Double       ] = cuSvd_internal_d;
+                cuSvd_ii[tor10type.Float        ] = cuSvd_internal_f;
+
             #endif
         }
 

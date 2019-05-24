@@ -126,7 +126,7 @@
       -,-=[tn]|   x       |  Y  |  Y
       *,*=[tn]|   x       |  Y  |  Y
       /,/=[tn]|   x       |  Y  |  Y
-
+      Svd     |   x       |  Y  |  N
      
 ## Example
     

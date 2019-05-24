@@ -6,21 +6,26 @@
 #include "Type.hpp"
 #include "Storage.hpp"
 #include "linalg/linalg_internal_cpu/Arithmic_internal.hpp"
-
+#include "linalg/linalg_internal_cpu/Svd_internal.hpp"
 #ifdef UNI_GPU
     #include "linalg/linalg_internal_gpu/cuArithmic_internal.hpp"
+    #include "linalg/linalg_internal_cpu/cuSvd_internal.hpp"
 #endif
 
 namespace tor10{
     namespace linalg_internal{
         typedef void (*Arithmicfunc_oii)(boost::intrusive_ptr<Storage_base> &,boost::intrusive_ptr<Storage_base> &,boost::intrusive_ptr<Storage_base> &,const unsigned long long & len, const char &type);
+        typedef void (*Svdfunc_oii)(const boost::intrusive_ptr<Storage_base> &, boost::intrusive_ptr<Storage_base> &,boost::intrusive_ptr<Storage_base> &,  boost::intrusive_ptr<Storage_base> &, const tor10_int32 &, const tor10_int32&);
+
         class linalg_internal_interface{
 
             public:
                 std::vector<std::vector<Arithmicfunc_oii> > Ari_ii;
+                std::vector<Svdfunc_oii> Svd_ii;
 
                 #ifdef UNI_GPU
                 std::vector<std::vector<Arithmicfunc_oii> > cuAri_ii;
+                std::vector<Svdfunc_oii> cuSvd_ii;
                 #endif
 
             linalg_internal_interface();

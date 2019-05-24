@@ -59,13 +59,13 @@ endif
 
 ## Linalg_internal
 OBJS += linalg_internal_interface.o
-OBJS += Add_internal.o Sub_internal.o Mul_internal.o Div_internal.o Arithmic_internal.o
+OBJS += Add_internal.o Sub_internal.o Mul_internal.o Div_internal.o Arithmic_internal.o Svd_internal.o
 ifeq ($(GPU_Enable),1)
   OBJS += cuAdd_internal.o cuSub_internal.o cuMul_internal.o cuDiv_internal.o cuArithmic_internal.o 
 endif
 
 ## Linalg
-OBJS += Add.o Div.o Sub.o Mul.o
+OBJS += Add.o Div.o Sub.o Mul.o Svd.o
 
 
 ALLOBJS = $(OBJS)
@@ -155,6 +155,9 @@ Sub_internal.o :  $(Tor10PATH)/src/linalg/linalg_internal_cpu/Sub_internal.cpp $
 Div_internal.o :  $(Tor10PATH)/src/linalg/linalg_internal_cpu/Div_internal.cpp $(Tor10PATH)/include/linalg/linalg_internal_cpu/Div_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 
+Svd_internal.o :  $(Tor10PATH)/src/linalg/linalg_internal_cpu/Svd_internal.cpp $(Tor10PATH)/include/linalg/linalg_internal_cpu/Svd_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+
 ifeq ($(GPU_Enable),1)
 
 cuArithmic_internal.o :  $(Tor10PATH)/src/linalg/linalg_internal_gpu/cuArithmic_internal.cu $(Tor10PATH)/include/linalg/linalg_internal_gpu/cuArithmic_internal.hpp
@@ -223,7 +226,8 @@ Sub.o: $(Tor10PATH)/src/linalg/Sub.cpp $(Tor10PATH)/include/linalg/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Div.o: $(Tor10PATH)/src/linalg/Div.cpp $(Tor10PATH)/include/linalg/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
-
+Svd.o: $(Tor10PATH)/src/linalg/Svd.cpp $(Tor10PATH)/include/linalg/linalg.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 test.o: test.cpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<

@@ -81,6 +81,13 @@ namespace tor10{
     Tensor operator/(const Tensor &Lt, const T &rc){
        return Div(Lt,rc);
     }
+
+
+    // Svd:
+    std::vector<Tensor> Svd(const Tensor &Tin, const bool &is_U=true, const bool &is_vT=true);
+
+
+
 }
 
 

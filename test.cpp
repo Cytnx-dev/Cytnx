@@ -62,9 +62,9 @@ int main(int argc, char *argv[]){
     s.at<double>(4) = 3;
     cout << s << endl;    
 
-    Tensor a({3,4,5},tor10type.Double,tor10device.cpu);
-    Tensor b = a.copy();
-    Tensor c = Add(1,a);
+    Tensor x({3,4,5},tor10type.Double,tor10device.cpu);
+    Tensor b = x.copy();
+    Tensor c = Add(1,x);
     Tensor d = c + c;
     Tensor e = d + 3;
     Tensor f = 3 + d;
@@ -78,6 +78,13 @@ int main(int argc, char *argv[]){
     i-=3.;
     i-=i;
     cout << i << endl;
+
+    Tensor a({2,3},tor10type.Double);
+    a.at<double>({0,0}) = 3; a.at<double>({0,1}) = 2; a.at<double>({0,2}) = 2;
+    a.at<double>({1,0}) = 2; a.at<double>({1,1}) = 3; a.at<double>({1,2}) = -2;
+
+    vector<Tensor> out = Svd(a,false,false);
+    cout << out[0] ;
     return 0;
 /*
     //Tensor t;

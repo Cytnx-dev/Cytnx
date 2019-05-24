@@ -222,8 +222,12 @@ namespace tor10{
             }
 
 
-            //Arithmic:
             
+            boost::intrusive_ptr<Tensor_impl> astype(const int& new_type) const {
+                boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
+                out->_storage = this->_storage->astype(new_type);
+                return out;
+            }
 
     };
 
@@ -335,6 +339,12 @@ namespace tor10{
                 return this->Reshape(args);
             }
 
+
+            Tensor astype(const int &new_type) const{
+                Tensor out;
+                out._impl = this->_impl->astype(new_type);
+                return out;
+            }
 
             template<class T>
             T& at(const std::vector<tor10_uint64> &locator){
