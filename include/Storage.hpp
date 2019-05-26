@@ -106,7 +106,7 @@ namespace cytnx{
             virtual void to_(const int &device);
             virtual boost::intrusive_ptr<Storage_base> to(const int &device);
 
-            virtual boost::intrusive_ptr<Storage_base> copy();
+            virtual boost::intrusive_ptr<Storage_base> clone();
 
             // this will perform permute on the underlying memory. 
             virtual boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
@@ -122,7 +122,7 @@ namespace cytnx{
             void Init(const unsigned long long &len_in, const int &device=-1);
             void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
-            boost::intrusive_ptr<Storage_base> copy();
+            boost::intrusive_ptr<Storage_base> clone();
             boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
             void Move_memory_(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper); 
             void to_(const int &device);
@@ -137,7 +137,7 @@ namespace cytnx{
             void Init(const unsigned long long &len_in,const int &device=-1);
             void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
-            boost::intrusive_ptr<Storage_base> copy();
+            boost::intrusive_ptr<Storage_base> clone();
             boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
             void Move_memory_(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper); 
             void to_(const int &device);
@@ -154,7 +154,7 @@ namespace cytnx{
             void Init(const unsigned long long &len_in, const int &device=-1);
             void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
-            boost::intrusive_ptr<Storage_base> copy();
+            boost::intrusive_ptr<Storage_base> clone();
             boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
             void Move_memory_(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper); 
             void to_(const int &device);
@@ -169,7 +169,7 @@ namespace cytnx{
             void Init(const unsigned long long &len_in,const int &device=-1);
             void _Init_byptr(void *rawptr, const unsigned long long &len_in,const int &device=-1);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
-            boost::intrusive_ptr<Storage_base> copy();
+            boost::intrusive_ptr<Storage_base> clone();
             boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
             void Move_memory_(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper); 
             void to_(const int &device);
@@ -184,7 +184,7 @@ namespace cytnx{
             void Init(const unsigned long long &len_in, const int &device=-1);
             void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
-            boost::intrusive_ptr<Storage_base> copy();
+            boost::intrusive_ptr<Storage_base> clone();
             boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
             void Move_memory_(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper); 
             void to_(const int &device);
@@ -199,7 +199,7 @@ namespace cytnx{
             void Init(const unsigned long long &len_in, const int &device=-1);
             void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
-            boost::intrusive_ptr<Storage_base> copy();
+            boost::intrusive_ptr<Storage_base> clone();
             boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
             void Move_memory_(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper); 
             void to_(const int &device);
@@ -214,7 +214,7 @@ namespace cytnx{
             void Init(const unsigned long long &len_in, const int &device=-1);
             void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
-            boost::intrusive_ptr<Storage_base> copy();
+            boost::intrusive_ptr<Storage_base> clone();
             boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
             void Move_memory_(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper); 
             void to_(const int &device);
@@ -230,7 +230,7 @@ namespace cytnx{
             void Init(const unsigned long long &len_in, const int &device=-1);
             void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
-            boost::intrusive_ptr<Storage_base> copy();
+            boost::intrusive_ptr<Storage_base> clone();
             boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
             void Move_memory_(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper); 
             void to_(const int &device);
@@ -299,8 +299,8 @@ namespace cytnx{
             Storage to(const int &device){
                 return Storage(this->_impl->to(device));
             }
-            Storage copy(){
-                return Storage(this->_impl->copy());
+            Storage clone(){
+                return Storage(this->_impl->clone());
             }
             const unsigned long long &size(){
                 return this->_impl->len;

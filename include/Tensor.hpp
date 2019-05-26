@@ -1,5 +1,6 @@
 #ifndef _H_Tensor_
 #define _H_Tensor_
+
 #include "Type.hpp"
 #include "cytnx_error.hpp"
 #include "Storage.hpp"
@@ -38,7 +39,7 @@ namespace cytnx{
             
             void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype, int device=-1);
 
-            //copy&assignment constr., use intrusive_ptr's
+            //clone&assignment constr., use intrusive_ptr's
             Tensor_impl(const Tensor_impl &rhs);
             Tensor_impl& operator=(const Tensor_impl &rhs); // add const
             
@@ -77,9 +78,9 @@ namespace cytnx{
                 return _storage;
             }
 
-            boost::intrusive_ptr<Tensor_impl> copy(){
+            boost::intrusive_ptr<Tensor_impl> clone(){
                 boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
-                out->_storage = this->_storage->copy();
+                out->_storage = this->_storage->clone();
                 out->_mapper = this->_mapper;
                 out->_invmapper = this->_invmapper;
                 out->_shape = this->_shape;
@@ -108,7 +109,7 @@ namespace cytnx{
 
 
             boost::intrusive_ptr<Tensor_impl> permute(const std::vector<cytnx_uint64> &rnks){
-                boost::intrusive_ptr<Tensor_impl> out = this->copy();
+                boost::intrusive_ptr<Tensor_impl> out = this->clone();
                 out->permute_(rnks);
                 return out;
             }            
@@ -213,7 +214,7 @@ namespace cytnx{
                 if(!this->_contiguous){
                     out = this->Contiguous();
                 }else{
-                    out = this->copy();
+                    out = this->clone();
                 }
 
                 out->Reshape_(new_shape);
@@ -270,9 +271,9 @@ namespace cytnx{
                 return this->_impl->shape();
             }
 
-            Tensor copy(){
+            Tensor clone() const{
                 Tensor out;
-                out._impl = this->_impl->copy();
+                out._impl = this->_impl->clone();
                 return out;
             }
             Tensor to(const int &device){
@@ -354,87 +355,58 @@ namespace cytnx{
                 std::vector<cytnx_uint64> args = locator;
                 return this->_impl->at<T>(args);
             }
-
-
-            // Arithmic:
-            /*           
-           template<class T>
-           Tensor& operator+=(const T &rc){
-                *this = cytnx::linalg::Add(*this,rc);
-                return *this;
-           }
+        
            
+            // Arithmic:
+           template<class T>           
+           Tensor& operator+=(const T &rc);
+           template<class T>           
+           Tensor& operator-=(const T &rc);
+           template<class T>           
+           Tensor& operator*=(const T &rc);
+           template<class T>           
+           Tensor& operator/=(const T &rc);
            
            template<class T>
            Tensor Add(const T &rhs){
-                return cytnx::linalg::Add(*this,rhs); 
+                return *this + rhs;
            }
            template<class T>
            Tensor& Add_(const T &rhs){
-                *this = cytnx::linalg::Add(*this,rhs);
-                return *this;
+                return *this += rhs;
            }
-           
-           
-           template<class T>
-           Tensor& operator-=(const T &rc){
-                *this = cytnx::linalg::Sub(*this,rc);
-                return *this;
-           } 
-           
-           
+            
            template<class T>
            Tensor Sub(const T &rhs){
-                return cytnx::linalg::Sub(*this,rhs); 
+                return *this - rhs;
            }
            template<class T>
            Tensor& Sub_(const T &rhs){
-                *this = cytnx::linalg::Sub(*this,rhs);
-                return *this;
+                return *this -= rhs;
            }
-           
-           
-           template<class T>
-           Tensor& operator*=(const T &rc){
-                *this = cytnx::linalg::Mul(*this,rc);
-                return *this;
-           } 
-           
-           
+            
            template<class T>
            Tensor Mul(const T &rhs){
-                return cytnx::linalg::Mul(*this,rhs); 
+                return *this * rhs;
            }
            template<class T>
            Tensor& Mul_(const T &rhs){
-                *this = cytnx::linalg::Mul(*this,rhs);
-                return *this;
+                return *this *= rhs;
            }
-           
-           
-           template<class T>
-           Tensor& operator/=(const T &rc){
-                *this = cytnx::linalg::Div(*this,rc);
-                return *this;
-           }
-            
            
            template<class T>
            Tensor Div(const T &rhs){
-                return cytnx::linalg::Div(*this,rhs); 
+                return *this / rhs;
            }
            template<class T>
            Tensor& Div_(const T &rhs){
-                *this = cytnx::linalg::Div(*this,rhs);
-                return *this;
+                return *this /= rhs; 
            }
-           */
-            
+           
             // linalg:
-            //std::vector<Tensor> Svd(const bool &is_U, const bool &is_vT){
-            //    return linalg::Svd(*this,is_U,is_vT);
-            //}
-            
+            std::vector<Tensor> Svd(const bool &is_U, const bool &is_vT);
+            Tensor& Inv_();
+            Tensor Inv(); 
 
 
 

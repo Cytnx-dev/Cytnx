@@ -5,8 +5,8 @@ namespace cytnx{
     namespace linalg{
         std::vector<Tensor> Svd(const Tensor &Tin, const bool &is_U, const bool &is_vT){
             
-            cytnx_error_msg(Tin.shape().size() != 2,"[Add] error, Svd can only operate on rank-2 Tensor.%s","\n");
-            cytnx_error_msg(!Tin.is_contiguous(), "[Add] error tensor must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
+            cytnx_error_msg(Tin.shape().size() != 2,"[Svd] error, Svd can only operate on rank-2 Tensor.%s","\n");
+            cytnx_error_msg(!Tin.is_contiguous(), "[Svd] error tensor must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
             
             cytnx_uint64 n_singlu = std::max(cytnx_uint64(1),std::min(Tin.shape()[0],Tin.shape()[1])); 
 

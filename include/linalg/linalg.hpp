@@ -43,6 +43,11 @@ namespace cytnx{
         // Svd:
         std::vector<Tensor> Svd(const Tensor &Tin, const bool &is_U=true, const bool &is_vT=true);
 
+        // Inv:
+        Tensor Inv(const Tensor &Tin);
+        void Inv_(Tensor &Tin);
+
+
     }// namespace linalg
     
 

@@ -75,6 +75,8 @@ namespace cytnx{
 
     boost::intrusive_ptr<Storage_base> Storage_base::astype(const unsigned int &dtype){
         boost::intrusive_ptr<Storage_base> out(new Storage_base());
+        if(dtype == this->dtype) return boost::intrusive_ptr<Storage_base>(this);
+
         if(this->device==cytnxdevice.cpu){
             if(utils_internal::Cast_cpu.UElemCast_cpu[this->dtype][dtype]==NULL){
                 cytnx_error_msg(1, "[ERROR] not support type with dtype=%d",dtype);
@@ -100,7 +102,7 @@ namespace cytnx{
         cytnx_error_msg(1,"%s","[ERROR] call _create_new_sametype in base");
     }
 
-    boost::intrusive_ptr<Storage_base> Storage_base::copy(){
+    boost::intrusive_ptr<Storage_base> Storage_base::clone(){
         boost::intrusive_ptr<Storage_base> out(new Storage_base());
         return out;
     }

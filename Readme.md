@@ -116,17 +116,20 @@
 
 ## Avaliable linear-algebra function (Keep updating):
 
-      func    |  inplace  | CPU | GPU
-    ----------|-----------|-----|------
-      Add     |   x       |  Y  |  Y
-      Sub     |   x       |  Y  |  Y
-      Mul     |   x       |  Y  |  Y
-      Div     |   x       |  Y  |  Y
-      +,+=[tn]|   x       |  Y  |  Y
-      -,-=[tn]|   x       |  Y  |  Y
-      *,*=[tn]|   x       |  Y  |  Y
-      /,/=[tn]|   x       |  Y  |  Y
-      Svd     |   x       |  Y  |  Y
+      func    |   inplace | CPU | GPU  | callby tn 
+    ----------|-----------|-----|------|-----------
+      Add     |   x       |  Y  |  Y   |    Y
+      Sub     |   x       |  Y  |  Y   |    Y
+      Mul     |   x       |  Y  |  Y   |    Y
+      Div     |   x       |  Y  |  Y   |    Y
+      +,+=[tn]|   x       |  Y  |  Y   |    Y (Add_)
+      -,-=[tn]|   x       |  Y  |  Y   |    Y (Sub_)
+      *,*=[tn]|   x       |  Y  |  Y   |    Y (Mul_)
+      /,/=[tn]|   x       |  Y  |  Y   |    Y (Div_)
+      Svd     |   x       |  Y  |  Y   |    Y
+      Inv     |   Inv_    |  Y  |  Y   |    Y
+
+
      
 ## Example
     

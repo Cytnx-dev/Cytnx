@@ -44,7 +44,7 @@ namespace cytnx{
     }
 
 
-    boost::intrusive_ptr<Storage_base> FloatStorage::copy(){
+    boost::intrusive_ptr<Storage_base> FloatStorage::clone(){
         boost::intrusive_ptr<Storage_base> out(new FloatStorage());
         out->Init(this->len,this->device);
         if(this->device==cytnxdevice.cpu){
@@ -53,7 +53,7 @@ namespace cytnx{
             #ifdef UNI_GPU
                 checkCudaErrors(cudaMemcpy(out->Mem,this->Mem,sizeof(float)*this->len,cudaMemcpyDeviceToDevice));
             #else
-                cytnx_error_msg(1,"%s","[ERROR] cannot copy a Storage on gpu without CUDA support.");
+                cytnx_error_msg(1,"%s","[ERROR] cannot clone a Storage on gpu without CUDA support.");
             #endif
         }
         return out;
@@ -132,7 +132,7 @@ namespace cytnx{
     }
     boost::intrusive_ptr<Storage_base> FloatStorage::to(const int &device){
         // Here, we follow pytorch scheme. if the device is the same as this->device, then return this (python self)
-        // otherwise, return a copy on different device.
+        // otherwise, return a clone on different device.
         if(this->device == device){
             return this;
         }else{

@@ -52,20 +52,20 @@ OBJS = Storage_base.o Uint32Storage.o Int32Storage.o Uint64Storage.o Int64Storag
 OBJS += Storage.o Bond.o Tensor.o Symmetry.o
 
 ## Utils
-OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o
+OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o is_same.o
 ifeq ($(GPU_Enable),1)
   OBJS += cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o
 endif
 
 ## Linalg_internal
 OBJS += linalg_internal_interface.o
-OBJS += Add_internal.o Sub_internal.o Mul_internal.o Div_internal.o Arithmic_internal.o Svd_internal.o
+OBJS += Add_internal.o Sub_internal.o Mul_internal.o Div_internal.o Arithmic_internal.o Svd_internal.o Inv_inplace_internal.o
 ifeq ($(GPU_Enable),1)
-  OBJS += cuAdd_internal.o cuSub_internal.o cuMul_internal.o cuDiv_internal.o cuArithmic_internal.o cuSvd_internal.o 
+  OBJS += cuAdd_internal.o cuSub_internal.o cuMul_internal.o cuDiv_internal.o cuArithmic_internal.o cuSvd_internal.o cuInv_inplace_internal.o 
 endif
 
 ## Linalg
-OBJS += Add.o Div.o Sub.o Mul.o Svd.o
+OBJS += Add.o Div.o Sub.o Mul.o Svd.o Inv.o Inv_.o
 
 
 ALLOBJS = $(OBJS)
@@ -158,6 +158,9 @@ Div_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Div_internal.cpp $
 Svd_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Svd_internal.cpp $(CytnxPATH)/include/linalg/linalg_internal_cpu/Svd_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 
+Inv_inplace_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Inv_inplace_internal.cpp $(CytnxPATH)/include/linalg/linalg_internal_cpu/Inv_inplace_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+
 ifeq ($(GPU_Enable),1)
 
 cuArithmic_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuArithmic_internal.cu $(CytnxPATH)/include/linalg/linalg_internal_gpu/cuArithmic_internal.hpp
@@ -176,6 +179,9 @@ cuDiv_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuDiv_internal.c
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
 cuSvd_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuSvd_internal.cu $(CytnxPATH)/include/linalg/linalg_internal_gpu/cuSvd_internal.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+
+cuInv_inplace_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuInv_inplace_internal.cu $(CytnxPATH)/include/linalg/linalg_internal_gpu/cuInv_inplace_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
 endif
@@ -208,6 +214,10 @@ Range_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/Range_cpu.cpp $(CytnxPATH
 complex_arithmic.o: $(CytnxPATH)/src/utils/complex_arithmic.cpp $(CytnxPATH)/include/utils/complex_arithmic.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
+is_same.o: $(CytnxPATH)/src/utils/is_same.cpp $(CytnxPATH)/include/utils/is_same.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+
+
 ifeq ($(GPU_Enable),1)
 cuAlloc_gpu.o: $(CytnxPATH)/src/utils/utils_internal_gpu/cuAlloc_gpu.cu $(CytnxPATH)/include/utils/utils_internal_gpu/cuAlloc_gpu.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
@@ -229,6 +239,10 @@ Sub.o: $(CytnxPATH)/src/linalg/Sub.cpp $(CytnxPATH)/include/linalg/linalg.hpp
 Div.o: $(CytnxPATH)/src/linalg/Div.cpp $(CytnxPATH)/include/linalg/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Svd.o: $(CytnxPATH)/src/linalg/Svd.cpp $(CytnxPATH)/include/linalg/linalg.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+Inv.o: $(CytnxPATH)/src/linalg/Inv.cpp $(CytnxPATH)/include/linalg/linalg.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+Inv_.o: $(CytnxPATH)/src/linalg/Inv_.cpp $(CytnxPATH)/include/linalg/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 test.o: test.cpp

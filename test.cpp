@@ -10,6 +10,8 @@ void func(boost::intrusive_ptr<Storage_base> &a){
 
 int main(int argc, char *argv[]){
     
+
+
     //cytnxdevice.Print_Property();
     /*
     boost::intrusive_ptr<Storage_base> array1(new FloatStorage() );
@@ -63,11 +65,13 @@ int main(int argc, char *argv[]){
     cout << s << endl;    
 
     Tensor x({3,4,5},cytnxtype.Double,cytnxdevice.cpu);
-    Tensor b = x.copy();
+    Tensor b = x.clone();
     Tensor c = linalg::Add(1,x);
     Tensor d = c + c;
     Tensor e = d + 3;
     Tensor f = 3 + d;
+    f += 3;
+    f += 3.;
     //f+=3;
     //f+=f;
     cout << f << endl;
