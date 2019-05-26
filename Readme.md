@@ -129,7 +129,7 @@
       Svd     |   x       |  Y  |  Y   |    Y
       Inv     |   Inv_    |  Y  |  Y   |    Y
       Conj    |   Conj_   |  Y  |  Y   |    Y 
-
+      Exp     |   Exp_    |  Y  |  Y   |    Y
      
 ## Example
     

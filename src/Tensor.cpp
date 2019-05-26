@@ -243,6 +243,15 @@ namespace cytnx{
         return linalg::Conj(*this); 
     }
 
+    Tensor& Tensor::Exp_(){
+        linalg::Exp_(*this);
+        return *this;
+    }
+    Tensor Tensor::Exp(){
+        return linalg::Exp(*this); 
+    }
+
+
 }//namespace cytnx
 
 

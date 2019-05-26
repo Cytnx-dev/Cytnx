@@ -52,6 +52,11 @@ namespace cytnx{
         Tensor Conj(const Tensor &Tin);
         void Conj_(Tensor &Tin);
 
+        // Exp:
+        Tensor Exp(const Tensor &Tin);
+        void Exp_(Tensor &Tin);
+
+
     }// namespace linalg
     
 

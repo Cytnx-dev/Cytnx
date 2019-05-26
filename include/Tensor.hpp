@@ -409,7 +409,8 @@ namespace cytnx{
             Tensor Inv(); 
             Tensor& Conj_();
             Tensor Conj();
-
+            Tensor& Exp_();
+            Tensor Exp();
 
     };// class Tensor
 
