@@ -3,7 +3,7 @@
 
 using namespace std;
 
-namespace tor10{
+namespace cytnx{
 
     //Storage Init interface.    
     //=============================
@@ -75,21 +75,21 @@ namespace tor10{
 
     boost::intrusive_ptr<Storage_base> Storage_base::astype(const unsigned int &dtype){
         boost::intrusive_ptr<Storage_base> out(new Storage_base());
-        if(this->device==tor10device.cpu){
+        if(this->device==cytnxdevice.cpu){
             if(utils_internal::Cast_cpu.UElemCast_cpu[this->dtype][dtype]==NULL){
-                tor10_error_msg(1, "[ERROR] not support type with dtype=%d",dtype);
+                cytnx_error_msg(1, "[ERROR] not support type with dtype=%d",dtype);
             }else{
                 utils_internal::Cast_cpu.UElemCast_cpu[this->dtype][dtype](this,out,this->len,1);
             }
         }else{
             #ifdef UNI_GPU
                 if(utils_internal::cuCast_gpu.UElemCast_gpu[this->dtype][dtype]==NULL){
-                    tor10_error_msg(1,"[ERROR] not support type with dtype=%d",dtype);
+                    cytnx_error_msg(1,"[ERROR] not support type with dtype=%d",dtype);
                 }else{
                     utils_internal::cuCast_gpu.UElemCast_gpu[this->dtype][dtype](this,out,this->len,this->device);
                 }
             #else
-                tor10_error_msg(1,"%s","[ERROR][Internal Error] enter GPU section without CUDA support @ Storage.astype()");
+                cytnx_error_msg(1,"%s","[ERROR][Internal Error] enter GPU section without CUDA support @ Storage.astype()");
             #endif
 
         }
@@ -97,7 +97,7 @@ namespace tor10{
     }
 
     boost::intrusive_ptr<Storage_base> Storage_base::_create_new_sametype(){
-        tor10_error_msg(1,"%s","[ERROR] call _create_new_sametype in base");
+        cytnx_error_msg(1,"%s","[ERROR] call _create_new_sametype in base");
     }
 
     boost::intrusive_ptr<Storage_base> Storage_base::copy(){
@@ -106,58 +106,58 @@ namespace tor10{
     }
 
     string Storage_base::dtype_str(){
-        return tor10type.getname(this->dtype);
+        return cytnxtype.getname(this->dtype);
     }
 
     void Storage_base::_Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device){
-        tor10_error_msg(1,"%s","[ERROR] call _Init_byptr in base");
+        cytnx_error_msg(1,"%s","[ERROR] call _Init_byptr in base");
     }
 
     Storage_base::~Storage_base(){
         //cout << "delet" << endl;
         if(Mem != NULL){
-            if(this->device==tor10device.cpu){
+            if(this->device==cytnxdevice.cpu){
                 free(Mem);
             }else{
                 #ifdef UNI_GPU
                     cudaFree(Mem);
                 #else
-                    tor10_error_msg(1,"%s","[ERROR] trying to free an GPU memory without CUDA install");
+                    cytnx_error_msg(1,"%s","[ERROR] trying to free an GPU memory without CUDA install");
                 #endif
             }
         }
     }
 
 
-    void Storage_base::Move_memory_(const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64> &mapper, const std::vector<tor10_uint64> &invmapper){
-        tor10_error_msg(1,"%s","[ERROR] call Move_memory_ directly on Void Storage.");
+    void Storage_base::Move_memory_(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper){
+        cytnx_error_msg(1,"%s","[ERROR] call Move_memory_ directly on Void Storage.");
     }
 
-    boost::intrusive_ptr<Storage_base> Storage_base::Move_memory(const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64> &mapper, const std::vector<tor10_uint64> &invmapper){
-        tor10_error_msg(1,"%s","[ERROR] call Move_memory_ directly on Void Storage.");
+    boost::intrusive_ptr<Storage_base> Storage_base::Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper){
+        cytnx_error_msg(1,"%s","[ERROR] call Move_memory_ directly on Void Storage.");
     }
 
     void Storage_base::to_(const int &device){
-        tor10_error_msg(1,"%s","[ERROR] call to_ directly on Void Storage.");
+        cytnx_error_msg(1,"%s","[ERROR] call to_ directly on Void Storage.");
     }
 
     boost::intrusive_ptr<Storage_base> Storage_base::to(const int &device){
-        tor10_error_msg(1,"%s","[ERROR] call to directly on Void Storage.");
+        cytnx_error_msg(1,"%s","[ERROR] call to directly on Void Storage.");
     }
 
 
-    void Storage_base::PrintElem_byShape(std::ostream &os, const std::vector<tor10_uint64> &shape, const std::vector<tor10_uint64> &mapper){
-        tor10_error_msg(1,"%s","[ERROR] call PrintElem_byShape directly on Void Storage.");
+    void Storage_base::PrintElem_byShape(std::ostream &os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper){
+        cytnx_error_msg(1,"%s","[ERROR] call PrintElem_byShape directly on Void Storage.");
     }
 
 
     void Storage_base::print_info(){
         cout << "dtype : " << this->dtype_str() << endl;
-        cout << "device: " << tor10device.getname(this->device) << endl;
+        cout << "device: " << cytnxdevice.getname(this->device) << endl;
         cout << "size  : " << this->len << endl;
     }
     void Storage_base::print_elems(){
-        tor10_error_msg(1,"%s","[ERROR] call print_elems directly on Void Storage.");
+        cytnx_error_msg(1,"%s","[ERROR] call print_elems directly on Void Storage.");
     }
     void Storage_base::print(){
         this->print_info();
@@ -171,7 +171,7 @@ namespace tor10{
     float* Storage_base::data<float>(){
 
         //check type 
-        tor10_error_msg(dtype != tor10type.Float, "[ERROR] type mismatch. try to get <float> type from raw data of type %s", tor10type.getname(dtype).c_str());
+        cytnx_error_msg(dtype != cytnxtype.Float, "[ERROR] type mismatch. try to get <float> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -180,7 +180,7 @@ namespace tor10{
     template<>
     double* Storage_base::data<double>(){
 
-        tor10_error_msg(dtype != tor10type.Double, "[ERROR] type mismatch. try to get <double> type from raw data of type %s", tor10type.getname(dtype).c_str());
+        cytnx_error_msg(dtype != cytnxtype.Double, "[ERROR] type mismatch. try to get <double> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -190,9 +190,9 @@ namespace tor10{
     template<>
     std::complex<double>* Storage_base::data<std::complex<double> >(){
 
-        tor10_error_msg(dtype != tor10type.ComplexDouble, "[ERROR] type mismatch. try to get < complex<double> > type from raw data of type %s", tor10type.getname(dtype).c_str());
+        cytnx_error_msg(dtype != cytnxtype.ComplexDouble, "[ERROR] type mismatch. try to get < complex<double> > type from raw data of type %s", cytnxtype.getname(dtype).c_str());
     #ifdef UNI_GPU
-        tor10_error_msg(this->device!=tor10device.cpu, "%s","[ERROR] the Storage is on GPU but try to get with CUDA complex type complex<double>. use type <cuDoubleComplex>  instead.");
+        cytnx_error_msg(this->device!=cytnxdevice.cpu, "%s","[ERROR] the Storage is on GPU but try to get with CUDA complex type complex<double>. use type <cuDoubleComplex>  instead.");
         cudaDeviceSynchronize();
     #endif
         return static_cast<std::complex<double>*>(this->Mem);
@@ -201,9 +201,9 @@ namespace tor10{
     template<>
     std::complex<float>* Storage_base::data<std::complex<float> >(){
 
-        tor10_error_msg(dtype != tor10type.ComplexFloat, "[ERROR] type mismatch. try to get < complex<float> > type from raw data of type %s", tor10type.getname(dtype).c_str());
+        cytnx_error_msg(dtype != cytnxtype.ComplexFloat, "[ERROR] type mismatch. try to get < complex<float> > type from raw data of type %s", cytnxtype.getname(dtype).c_str());
     #ifdef UNI_GPU
-        tor10_error_msg(this->device!=tor10device.cpu, "%s","[ERROR] the Storage is on GPU but try to get with CUDA complex type complex<float>. use type <cuFloatComplex>  instead.");
+        cytnx_error_msg(this->device!=cytnxdevice.cpu, "%s","[ERROR] the Storage is on GPU but try to get with CUDA complex type complex<float>. use type <cuFloatComplex>  instead.");
         cudaDeviceSynchronize();
     #endif
         return static_cast<std::complex<float>*>(this->Mem);
@@ -212,7 +212,7 @@ namespace tor10{
     template<>
     uint32_t* Storage_base::data<uint32_t>(){
 
-        tor10_error_msg(dtype != tor10type.Uint32, "[ERROR] type mismatch. try to get <uint32_t> type from raw data of type %s", tor10type.getname(dtype).c_str());
+        cytnx_error_msg(dtype != cytnxtype.Uint32, "[ERROR] type mismatch. try to get <uint32_t> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -222,7 +222,7 @@ namespace tor10{
     template<>
     int32_t* Storage_base::data<int32_t>(){
 
-        tor10_error_msg(dtype != tor10type.Int32, "[ERROR] type mismatch. try to get <int32_t> type from raw data of type %s", tor10type.getname(dtype).c_str());
+        cytnx_error_msg(dtype != cytnxtype.Int32, "[ERROR] type mismatch. try to get <int32_t> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -232,7 +232,7 @@ namespace tor10{
     template<>
     uint64_t* Storage_base::data<uint64_t>(){
 
-        tor10_error_msg(dtype != tor10type.Uint64, "[ERROR] type mismatch. try to get <uint64_t> type from raw data of type %s", tor10type.getname(dtype).c_str());
+        cytnx_error_msg(dtype != cytnxtype.Uint64, "[ERROR] type mismatch. try to get <uint64_t> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -242,7 +242,7 @@ namespace tor10{
     template<>
     int64_t* Storage_base::data<int64_t>(){
 
-        tor10_error_msg(dtype != tor10type.Int64, "[ERROR] type mismatch. try to get <int64_t> type from raw data of type %s", tor10type.getname(dtype).c_str());
+        cytnx_error_msg(dtype != cytnxtype.Int64, "[ERROR] type mismatch. try to get <int64_t> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -253,16 +253,16 @@ namespace tor10{
     #ifdef UNI_GPU
     template<>
     cuDoubleComplex* Storage_base::data<cuDoubleComplex>(){
-        tor10_error_msg(dtype != tor10type.ComplexDouble, "[ERROR] type mismatch. try to get <cuDoubleComplex> type from raw data of type %s", tor10type.getname(dtype).c_str());
-        tor10_error_msg(this->device==tor10device.cpu, "%s","[ERROR] the Storage is on CPU(Host) but try to get with CUDA complex type cuDoubleComplex. use type <tor10_complex128> or < complex<double> > instead.");
+        cytnx_error_msg(dtype != cytnxtype.ComplexDouble, "[ERROR] type mismatch. try to get <cuDoubleComplex> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
+        cytnx_error_msg(this->device==cytnxdevice.cpu, "%s","[ERROR] the Storage is on CPU(Host) but try to get with CUDA complex type cuDoubleComplex. use type <cytnx_complex128> or < complex<double> > instead.");
         cudaDeviceSynchronize();
         return static_cast<cuDoubleComplex*>(this->Mem);
 
     }
     template<>
     cuFloatComplex* Storage_base::data<cuFloatComplex>(){
-        tor10_error_msg(dtype != tor10type.ComplexFloat, "[ERROR] type mismatch. try to get <cuFloatComplex> type from raw data of type %s", tor10type.getname(dtype).c_str());
-        tor10_error_msg(this->device==tor10device.cpu, "%s","[ERROR] the Storage is on CPU(Host) but try to get with CUDA complex type cuFloatComplex. use type <tor10_complex64> or < complex<float> > instead.");
+        cytnx_error_msg(dtype != cytnxtype.ComplexFloat, "[ERROR] type mismatch. try to get <cuFloatComplex> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
+        cytnx_error_msg(this->device==cytnxdevice.cpu, "%s","[ERROR] the Storage is on CPU(Host) but try to get with CUDA complex type cuFloatComplex. use type <cytnx_complex64> or < complex<float> > instead.");
         cudaDeviceSynchronize();
         return static_cast<cuFloatComplex*>(this->Mem);
 
@@ -273,7 +273,7 @@ namespace tor10{
     //====================================================
     template<>
     float& Storage_base::at<float>(const unsigned int &idx){
-        tor10_error_msg(dtype != tor10type.Float, "[ERROR] type mismatch. try to get <float> type from raw data of type %s", tor10type.getname(dtype).c_str());
+        cytnx_error_msg(dtype != cytnxtype.Float, "[ERROR] type mismatch. try to get <float> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -281,7 +281,7 @@ namespace tor10{
     }
     template<>
     double& Storage_base::at<double>(const unsigned int &idx){
-        tor10_error_msg(dtype != tor10type.Double, "[ERROR] type mismatch. try to get <double> type from raw data of type %s", tor10type.getname(dtype).c_str());
+        cytnx_error_msg(dtype != cytnxtype.Double, "[ERROR] type mismatch. try to get <double> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -290,7 +290,7 @@ namespace tor10{
 
     template<>
     std::complex<float>& Storage_base::at<std::complex<float> >(const unsigned int &idx){
-        tor10_error_msg(dtype != tor10type.ComplexFloat, "[ERROR] type mismatch. try to get < complex<float> > type from raw data of type %s", tor10type.getname(dtype).c_str());
+        cytnx_error_msg(dtype != cytnxtype.ComplexFloat, "[ERROR] type mismatch. try to get < complex<float> > type from raw data of type %s", cytnxtype.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -299,7 +299,7 @@ namespace tor10{
     }
     template<>
     std::complex<double>& Storage_base::at<std::complex<double> >(const unsigned int &idx){
-        tor10_error_msg(dtype != tor10type.ComplexDouble, "[ERROR] type mismatch. try to get < complex<double> > type from raw data of type %s", tor10type.getname(dtype).c_str());
+        cytnx_error_msg(dtype != cytnxtype.ComplexDouble, "[ERROR] type mismatch. try to get < complex<double> > type from raw data of type %s", cytnxtype.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -308,7 +308,7 @@ namespace tor10{
 
     template<>
     uint32_t& Storage_base::at<uint32_t>(const unsigned int &idx){
-        tor10_error_msg(dtype != tor10type.Uint32, "[ERROR] type mismatch. try to get <uint32_t> type from raw data of type %s", tor10type.getname(dtype).c_str());
+        cytnx_error_msg(dtype != cytnxtype.Uint32, "[ERROR] type mismatch. try to get <uint32_t> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -317,7 +317,7 @@ namespace tor10{
 
     template<>
     int32_t& Storage_base::at<int32_t>(const unsigned int &idx){
-        tor10_error_msg(dtype != tor10type.Int32, "[ERROR] type mismatch. try to get <int32_t> type from raw data of type %s", tor10type.getname(dtype).c_str());
+        cytnx_error_msg(dtype != cytnxtype.Int32, "[ERROR] type mismatch. try to get <int32_t> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -326,7 +326,7 @@ namespace tor10{
 
     template<>
     uint64_t& Storage_base::at<uint64_t>(const unsigned int &idx){
-        tor10_error_msg(dtype != tor10type.Uint64, "[ERROR] type mismatch. try to get <uint64_t> type from raw data of type %s", tor10type.getname(dtype).c_str());
+        cytnx_error_msg(dtype != cytnxtype.Uint64, "[ERROR] type mismatch. try to get <uint64_t> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -335,11 +335,11 @@ namespace tor10{
 
     template<>
     int64_t& Storage_base::at<int64_t>(const unsigned int &idx){
-        tor10_error_msg(dtype != tor10type.Int64, "[ERROR] type mismatch. try to get <int64_t> type from raw data of type %s", tor10type.getname(dtype).c_str());
+        cytnx_error_msg(dtype != cytnxtype.Int64, "[ERROR] type mismatch. try to get <int64_t> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
         return static_cast<int64_t*>(this->Mem)[idx];
     }
 
-}//namespace tor10;
+}//namespace cytnx;

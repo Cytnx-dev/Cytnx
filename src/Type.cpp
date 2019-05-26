@@ -1,8 +1,8 @@
 #include "Type.hpp"
-#include "tor10_error.hpp"
+#include "cytnx_error.hpp"
 using namespace std;
 
-std::string tor10::Type::getname(const unsigned int &type_id){
+std::string cytnx::Type::getname(const unsigned int &type_id){
 
 
     switch (type_id){
@@ -26,11 +26,11 @@ std::string tor10::Type::getname(const unsigned int &type_id){
             return string("Uint32");
 
         default:
-            tor10_error_msg(1,"%s","[ERROR] invalid type");
+            cytnx_error_msg(1,"%s","[ERROR] invalid type");
     }
 
 }
         
-namespace tor10{
-    Type tor10type;
+namespace cytnx{
+    Type cytnxtype;
 }

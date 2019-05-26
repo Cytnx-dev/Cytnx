@@ -1,5 +1,5 @@
-#ifndef _H_tor10_error_
-#define _H_tor10_error_
+#ifndef _H_cytnx_error_
+#define _H_cytnx_error_
 
     #include <cstdio>
     #include <cstdlib>
@@ -15,7 +15,7 @@
 
 
 
-    #define tor10_error_msg(is_true, format, ...) {error_msg ( __PRETTY_FUNCTION__,  __FILE__, __LINE__, (is_true), (format), __VA_ARGS__);}
+    #define cytnx_error_msg(is_true, format, ...) {error_msg ( __PRETTY_FUNCTION__,  __FILE__, __LINE__, (is_true), (format), __VA_ARGS__);}
     static inline void error_msg( char const *const func, const char *const file, int const line, bool is_true, char const* format, ...){
       try{
         if (is_true)
@@ -34,7 +34,7 @@
       }
 
     }
-    #define tor10_warning_msg(is_true, format, ...) {warning_msg ( __PRETTY_FUNCTION__,  __FILE__, __LINE__, (is_true), (format), __VA_ARGS__);}
+    #define cytnx_warning_msg(is_true, format, ...) {warning_msg ( __PRETTY_FUNCTION__,  __FILE__, __LINE__, (is_true), (format), __VA_ARGS__);}
     static inline void warning_msg( char const *const func, const char *const file, int const line, bool is_true, char const* format, ...){
       if (is_true)
       {

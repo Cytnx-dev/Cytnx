@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 
-namespace tor10{
+namespace cytnx{
 
 
     struct __device{
@@ -26,6 +26,6 @@ namespace tor10{
             void Print_Property();
             std::string getname(const int &device_id);
     };
-    extern Device tor10device;
-}//namespace tor10
+    extern Device cytnxdevice;
+}//namespace cytnx
 #endif

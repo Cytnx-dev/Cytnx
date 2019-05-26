@@ -7,14 +7,14 @@
 
 using namespace std;
 
-namespace tor10{
+namespace cytnx{
     namespace utils_internal{
     #ifdef UNI_GPU
         template<class T>
-        __global__ void cuMovemem_kernel(T* ddes, T*dsrc, tor10_uint64* accu_old, tor10_uint64* permuted_accu_new, tor10_uint32 rank, tor10_uint64 Nelem){
-                extern __shared__ tor10_uint64 SHaccu[];
+        __global__ void cuMovemem_kernel(T* ddes, T*dsrc, cytnx_uint64* accu_old, cytnx_uint64* permuted_accu_new, cytnx_uint32 rank, cytnx_uint64 Nelem){
+                extern __shared__ cytnx_uint64 SHaccu[];
 
-                tor10_uint64 ids;
+                cytnx_uint64 ids;
                 ///copy to share mem:
                 if(rank<=blockDim.x){
                     if(threadIdx.x<rank){
@@ -22,9 +22,9 @@ namespace tor10{
                         SHaccu[threadIdx.x+rank] = permuted_accu_new[threadIdx.x];
                     }
                 }else{
-                    tor10_uint32 Np=rank/blockDim.x;
+                    cytnx_uint32 Np=rank/blockDim.x;
                     if(rank%blockDim.x) Np+=1;
-                    for(tor10_uint32 i=0;i<Np;i++){
+                    for(cytnx_uint32 i=0;i<Np;i++){
                         ids = i*blockDim.x + threadIdx.x;
                         if(ids < rank){
                             SHaccu[ids] = accu_old[ids];
@@ -34,9 +34,9 @@ namespace tor10{
                 }
                 __syncthreads();
 
-                tor10_uint64 tid = blockIdx.x*blockDim.x + threadIdx.x;
+                cytnx_uint64 tid = blockIdx.x*blockDim.x + threadIdx.x;
                 ids = 0;
-                for(tor10_uint32 i=0;i<rank;i++){
+                for(cytnx_uint32 i=0;i<rank;i++){
                     ids += (tid/SHaccu[i])*SHaccu[rank+i];
                     tid = tid%SHaccu[i];
                 }
@@ -44,55 +44,55 @@ namespace tor10{
 
         }
         
-        boost::intrusive_ptr<Storage_base> cuMovemem_gpu_cd(boost::intrusive_ptr<Storage_base> &in, const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64>&mapper, const std::vector<tor10_uint64> &invmapper, const bool is_inplace){
+        boost::intrusive_ptr<Storage_base> cuMovemem_gpu_cd(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace){
             #ifdef UNI_DEBUG
-            tor10_error_msg(in->dtype != tor10type.ComplexDouble,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type ComplexDouble",in->dtype_str().c_str());
-            tor10_error_msg(in->device == tor10device.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
+            cytnx_error_msg(in->dtype != cytnxtype.ComplexDouble,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type ComplexDouble",in->dtype_str().c_str());
+            cytnx_error_msg(in->device == cytnxdevice.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
             #endif
 
             
 
-            std::vector<tor10_uint64> newshape(old_shape.size());
-            for(tor10_uint64 i=0;i<old_shape.size();i++)
+            std::vector<cytnx_uint64> newshape(old_shape.size());
+            for(cytnx_uint64 i=0;i<old_shape.size();i++)
                 newshape[i] = old_shape[mapper[i]];
 
-            std::vector<tor10_uint64> shifter_old(old_shape.size());
-            std::vector<tor10_uint64> shifter_new(old_shape.size());
+            std::vector<cytnx_uint64> shifter_old(old_shape.size());
+            std::vector<cytnx_uint64> shifter_new(old_shape.size());
 
-            tor10_uint64 accu_old=1,accu_new=1;
-            for(tor10_int64 i=old_shape.size()-1;i>=0;i--){
+            cytnx_uint64 accu_old=1,accu_new=1;
+            for(cytnx_int64 i=old_shape.size()-1;i>=0;i--){
                 shifter_old[i] = accu_old;
                 shifter_new[i] = accu_new;
                 accu_old*=old_shape[i];
                 accu_new*=newshape[i];
             }
-            std::vector<tor10_uint64> old_inds(old_shape.size());
+            std::vector<cytnx_uint64> old_inds(old_shape.size());
 
-            std::vector<tor10_uint64> permuted_shifter_new(old_shape.size());
+            std::vector<cytnx_uint64> permuted_shifter_new(old_shape.size());
             for(unsigned int i=0;i<old_shape.size();i++)
                 permuted_shifter_new[i] = shifter_new[invmapper[i]];
 
             ///allocate a GPU for psn-vec/so-vec/tmp des-vec
-            tor10_uint64 *dshifter_old, *dperm_shifter_new;
+            cytnx_uint64 *dshifter_old, *dperm_shifter_new;
             cuDoubleComplex *dtmp;
-            tor10_uint64 Nelem = accu_old;        
+            cytnx_uint64 Nelem = accu_old;        
 
             cudaSetDevice(in->device); // ensure the following allocation on the same device as src.
-            checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(tor10_uint64)*shifter_old.size()));
-            checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(tor10_uint64)*permuted_shifter_new.size()));
+            checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(cytnx_uint64)*shifter_old.size()));
+            checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(cytnx_uint64)*permuted_shifter_new.size()));
             dtmp = (cuDoubleComplex*)cuMalloc_gpu(sizeof(cuDoubleComplex)*Nelem); 
 
             /// copy psn-vec/so-vec to device
-            checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(tor10_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
-            checkCudaErrors(cudaMemcpy(dshifter_old, &shifter_old[0], sizeof(tor10_uint64)*shifter_old.size(),cudaMemcpyHostToDevice));
+            checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(cytnx_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
+            checkCudaErrors(cudaMemcpy(dshifter_old, &shifter_old[0], sizeof(cytnx_uint64)*shifter_old.size(),cudaMemcpyHostToDevice));
 
 
             ///calculate how many blocks, and shared mem size, thpb fixed at 256 (need fine tune)
-            tor10_uint64 NBlocks = Nelem/256;
+            cytnx_uint64 NBlocks = Nelem/256;
             if(Nelem%256){
                 NBlocks+=1;
             }
-            cuMovemem_kernel<<< NBlocks,256,shifter_old.size()*2*sizeof(tor10_uint64) >>>(dtmp,(cuDoubleComplex*)in->Mem,dshifter_old,dperm_shifter_new,old_shape.size(),Nelem);
+            cuMovemem_kernel<<< NBlocks,256,shifter_old.size()*2*sizeof(cytnx_uint64) >>>(dtmp,(cuDoubleComplex*)in->Mem,dshifter_old,dperm_shifter_new,old_shape.size(),Nelem);
 
 
             ///house keeping:
@@ -103,7 +103,7 @@ namespace tor10{
             if(is_inplace){
 
                 ///cpy back:
-                checkCudaErrors(cudaMemcpy(in->Mem,dtmp, sizeof(tor10_complex128)*Nelem,cudaMemcpyDeviceToDevice));
+                checkCudaErrors(cudaMemcpy(in->Mem,dtmp, sizeof(cytnx_complex128)*Nelem,cudaMemcpyDeviceToDevice));
                 cudaFree(dtmp);
                 return out;
 
@@ -115,55 +115,55 @@ namespace tor10{
 
         }
 
-        boost::intrusive_ptr<Storage_base> cuMovemem_gpu_cf(boost::intrusive_ptr<Storage_base> &in, const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64>&mapper, const std::vector<tor10_uint64> &invmapper, const bool is_inplace){
+        boost::intrusive_ptr<Storage_base> cuMovemem_gpu_cf(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace){
             #ifdef UNI_DEBUG
-            tor10_error_msg(in->dtype != tor10type.ComplexFloat,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type ComplexFloat",in->dtype_str().c_str());
-            tor10_error_msg(in->device == tor10device.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
+            cytnx_error_msg(in->dtype != cytnxtype.ComplexFloat,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type ComplexFloat",in->dtype_str().c_str());
+            cytnx_error_msg(in->device == cytnxdevice.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
             #endif
 
             
 
-            std::vector<tor10_uint64> newshape(old_shape.size());
-            for(tor10_uint64 i=0;i<old_shape.size();i++)
+            std::vector<cytnx_uint64> newshape(old_shape.size());
+            for(cytnx_uint64 i=0;i<old_shape.size();i++)
                 newshape[i] = old_shape[mapper[i]];
 
-            std::vector<tor10_uint64> shifter_old(old_shape.size());
-            std::vector<tor10_uint64> shifter_new(old_shape.size());
+            std::vector<cytnx_uint64> shifter_old(old_shape.size());
+            std::vector<cytnx_uint64> shifter_new(old_shape.size());
 
-            tor10_uint64 accu_old=1,accu_new=1;
-            for(tor10_int64 i=old_shape.size()-1;i>=0;i--){
+            cytnx_uint64 accu_old=1,accu_new=1;
+            for(cytnx_int64 i=old_shape.size()-1;i>=0;i--){
                 shifter_old[i] = accu_old;
                 shifter_new[i] = accu_new;
                 accu_old*=old_shape[i];
                 accu_new*=newshape[i];
             }
-            std::vector<tor10_uint64> old_inds(old_shape.size());
+            std::vector<cytnx_uint64> old_inds(old_shape.size());
 
-            std::vector<tor10_uint64> permuted_shifter_new(old_shape.size());
+            std::vector<cytnx_uint64> permuted_shifter_new(old_shape.size());
             for(unsigned int i=0;i<old_shape.size();i++)
                 permuted_shifter_new[i] = shifter_new[invmapper[i]];
 
             ///allocate a GPU for psn-vec/so-vec/tmp des-vec
-            tor10_uint64 *dshifter_old, *dperm_shifter_new;
+            cytnx_uint64 *dshifter_old, *dperm_shifter_new;
             cuFloatComplex *dtmp;
-            tor10_uint64 Nelem = accu_old;        
+            cytnx_uint64 Nelem = accu_old;        
 
             cudaSetDevice(in->device); // ensure the following allocation on the same device as src.
-            checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(tor10_uint64)*shifter_old.size()));
-            checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(tor10_uint64)*permuted_shifter_new.size()));
+            checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(cytnx_uint64)*shifter_old.size()));
+            checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(cytnx_uint64)*permuted_shifter_new.size()));
             dtmp = (cuFloatComplex*)cuMalloc_gpu(sizeof(cuFloatComplex)*Nelem); 
 
             /// copy psn-vec/so-vec to device
-            checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(tor10_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
-            checkCudaErrors(cudaMemcpy(dshifter_old, &shifter_old[0], sizeof(tor10_uint64)*shifter_old.size(),cudaMemcpyHostToDevice));
+            checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(cytnx_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
+            checkCudaErrors(cudaMemcpy(dshifter_old, &shifter_old[0], sizeof(cytnx_uint64)*shifter_old.size(),cudaMemcpyHostToDevice));
 
 
             ///calculate how many blocks, and shared mem size, thpb fixed at 256 (need fine tune)
-            tor10_uint64 NBlocks = Nelem/256;
+            cytnx_uint64 NBlocks = Nelem/256;
             if(Nelem%256){
                 NBlocks+=1;
             }
-            cuMovemem_kernel<<< NBlocks,256,shifter_old.size()*2*sizeof(tor10_uint64) >>>(dtmp,(cuFloatComplex*)in->Mem,dshifter_old,dperm_shifter_new,old_shape.size(),Nelem);
+            cuMovemem_kernel<<< NBlocks,256,shifter_old.size()*2*sizeof(cytnx_uint64) >>>(dtmp,(cuFloatComplex*)in->Mem,dshifter_old,dperm_shifter_new,old_shape.size(),Nelem);
 
 
             ///house keeping:
@@ -174,7 +174,7 @@ namespace tor10{
             if(is_inplace){
 
                 ///cpy back:
-                checkCudaErrors(cudaMemcpy(in->Mem,dtmp, sizeof(tor10_complex64)*Nelem,cudaMemcpyDeviceToDevice));
+                checkCudaErrors(cudaMemcpy(in->Mem,dtmp, sizeof(cytnx_complex64)*Nelem,cudaMemcpyDeviceToDevice));
                 cudaFree(dtmp);
                 return out;
 
@@ -186,55 +186,55 @@ namespace tor10{
 
         }
         
-        boost::intrusive_ptr<Storage_base> cuMovemem_gpu_d(boost::intrusive_ptr<Storage_base> &in, const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64>&mapper, const std::vector<tor10_uint64> &invmapper, const bool is_inplace){
+        boost::intrusive_ptr<Storage_base> cuMovemem_gpu_d(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace){
             #ifdef UNI_DEBUG
-            tor10_error_msg(in->dtype != tor10type.Double,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Double",in->dtype_str().c_str());
-            tor10_error_msg(in->device == tor10device.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
+            cytnx_error_msg(in->dtype != cytnxtype.Double,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Double",in->dtype_str().c_str());
+            cytnx_error_msg(in->device == cytnxdevice.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
             #endif
 
             
 
-            std::vector<tor10_uint64> newshape(old_shape.size());
-            for(tor10_uint64 i=0;i<old_shape.size();i++)
+            std::vector<cytnx_uint64> newshape(old_shape.size());
+            for(cytnx_uint64 i=0;i<old_shape.size();i++)
                 newshape[i] = old_shape[mapper[i]];
 
-            std::vector<tor10_uint64> shifter_old(old_shape.size());
-            std::vector<tor10_uint64> shifter_new(old_shape.size());
+            std::vector<cytnx_uint64> shifter_old(old_shape.size());
+            std::vector<cytnx_uint64> shifter_new(old_shape.size());
 
-            tor10_uint64 accu_old=1,accu_new=1;
-            for(tor10_int64 i=old_shape.size()-1;i>=0;i--){
+            cytnx_uint64 accu_old=1,accu_new=1;
+            for(cytnx_int64 i=old_shape.size()-1;i>=0;i--){
                 shifter_old[i] = accu_old;
                 shifter_new[i] = accu_new;
                 accu_old*=old_shape[i];
                 accu_new*=newshape[i];
             }
-            std::vector<tor10_uint64> old_inds(old_shape.size());
+            std::vector<cytnx_uint64> old_inds(old_shape.size());
 
-            std::vector<tor10_uint64> permuted_shifter_new(old_shape.size());
+            std::vector<cytnx_uint64> permuted_shifter_new(old_shape.size());
             for(unsigned int i=0;i<old_shape.size();i++)
                 permuted_shifter_new[i] = shifter_new[invmapper[i]];
 
             ///allocate a GPU for psn-vec/so-vec/tmp des-vec
-            tor10_uint64 *dshifter_old, *dperm_shifter_new;
+            cytnx_uint64 *dshifter_old, *dperm_shifter_new;
             double *dtmp;
-            tor10_uint64 Nelem = accu_old;        
+            cytnx_uint64 Nelem = accu_old;        
 
             cudaSetDevice(in->device); // ensure the following allocation on the same device as src.
-            checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(tor10_uint64)*shifter_old.size()));
-            checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(tor10_uint64)*permuted_shifter_new.size()));
+            checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(cytnx_uint64)*shifter_old.size()));
+            checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(cytnx_uint64)*permuted_shifter_new.size()));
             dtmp = (double*)cuMalloc_gpu(sizeof(double)*Nelem); 
 
             /// copy psn-vec/so-vec to device
-            checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(tor10_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
-            checkCudaErrors(cudaMemcpy(dshifter_old, &shifter_old[0], sizeof(tor10_uint64)*shifter_old.size(),cudaMemcpyHostToDevice));
+            checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(cytnx_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
+            checkCudaErrors(cudaMemcpy(dshifter_old, &shifter_old[0], sizeof(cytnx_uint64)*shifter_old.size(),cudaMemcpyHostToDevice));
 
 
             ///calculate how many blocks, and shared mem size, thpb fixed at 256 (need fine tune)
-            tor10_uint64 NBlocks = Nelem/256;
+            cytnx_uint64 NBlocks = Nelem/256;
             if(Nelem%256){
                 NBlocks+=1;
             }
-            cuMovemem_kernel<<< NBlocks,256,shifter_old.size()*2*sizeof(tor10_uint64) >>>(dtmp,(double*)in->Mem,dshifter_old,dperm_shifter_new,old_shape.size(),Nelem);
+            cuMovemem_kernel<<< NBlocks,256,shifter_old.size()*2*sizeof(cytnx_uint64) >>>(dtmp,(double*)in->Mem,dshifter_old,dperm_shifter_new,old_shape.size(),Nelem);
 
 
             ///house keeping:
@@ -256,55 +256,55 @@ namespace tor10{
             }
         }
         
-        boost::intrusive_ptr<Storage_base> cuMovemem_gpu_f(boost::intrusive_ptr<Storage_base> &in, const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64>&mapper, const std::vector<tor10_uint64> &invmapper, const bool is_inplace){
+        boost::intrusive_ptr<Storage_base> cuMovemem_gpu_f(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace){
             #ifdef UNI_DEBUG
-            tor10_error_msg(in->dtype != tor10type.Float,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Float",in->dtype_str().c_str());
-            tor10_error_msg(in->device == tor10device.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
+            cytnx_error_msg(in->dtype != cytnxtype.Float,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Float",in->dtype_str().c_str());
+            cytnx_error_msg(in->device == cytnxdevice.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
             #endif
 
             
 
-            std::vector<tor10_uint64> newshape(old_shape.size());
-            for(tor10_uint64 i=0;i<old_shape.size();i++)
+            std::vector<cytnx_uint64> newshape(old_shape.size());
+            for(cytnx_uint64 i=0;i<old_shape.size();i++)
                 newshape[i] = old_shape[mapper[i]];
 
-            std::vector<tor10_uint64> shifter_old(old_shape.size());
-            std::vector<tor10_uint64> shifter_new(old_shape.size());
+            std::vector<cytnx_uint64> shifter_old(old_shape.size());
+            std::vector<cytnx_uint64> shifter_new(old_shape.size());
 
-            tor10_uint64 accu_old=1,accu_new=1;
-            for(tor10_int64 i=old_shape.size()-1;i>=0;i--){
+            cytnx_uint64 accu_old=1,accu_new=1;
+            for(cytnx_int64 i=old_shape.size()-1;i>=0;i--){
                 shifter_old[i] = accu_old;
                 shifter_new[i] = accu_new;
                 accu_old*=old_shape[i];
                 accu_new*=newshape[i];
             }
-            std::vector<tor10_uint64> old_inds(old_shape.size());
+            std::vector<cytnx_uint64> old_inds(old_shape.size());
 
-            std::vector<tor10_uint64> permuted_shifter_new(old_shape.size());
+            std::vector<cytnx_uint64> permuted_shifter_new(old_shape.size());
             for(unsigned int i=0;i<old_shape.size();i++)
                 permuted_shifter_new[i] = shifter_new[invmapper[i]];
 
             ///allocate a GPU for psn-vec/so-vec/tmp des-vec
-            tor10_uint64 *dshifter_old, *dperm_shifter_new;
+            cytnx_uint64 *dshifter_old, *dperm_shifter_new;
             float *dtmp;
-            tor10_uint64 Nelem = accu_old;        
+            cytnx_uint64 Nelem = accu_old;        
 
             cudaSetDevice(in->device); // ensure the following allocation on the same device as src.
-            checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(tor10_uint64)*shifter_old.size()));
-            checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(tor10_uint64)*permuted_shifter_new.size()));
+            checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(cytnx_uint64)*shifter_old.size()));
+            checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(cytnx_uint64)*permuted_shifter_new.size()));
             dtmp = (float*)cuMalloc_gpu(sizeof(float)*Nelem); 
 
             /// copy psn-vec/so-vec to device
-            checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(tor10_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
-            checkCudaErrors(cudaMemcpy(dshifter_old, &shifter_old[0], sizeof(tor10_uint64)*shifter_old.size(),cudaMemcpyHostToDevice));
+            checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(cytnx_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
+            checkCudaErrors(cudaMemcpy(dshifter_old, &shifter_old[0], sizeof(cytnx_uint64)*shifter_old.size(),cudaMemcpyHostToDevice));
 
 
             ///calculate how many blocks, and shared mem size, thpb fixed at 256 (need fine tune)
-            tor10_uint64 NBlocks = Nelem/256;
+            cytnx_uint64 NBlocks = Nelem/256;
             if(Nelem%256){
                 NBlocks+=1;
             }
-            cuMovemem_kernel<<< NBlocks,256,shifter_old.size()*2*sizeof(tor10_uint64) >>>(dtmp,(float*)in->Mem,dshifter_old,dperm_shifter_new,old_shape.size(),Nelem);
+            cuMovemem_kernel<<< NBlocks,256,shifter_old.size()*2*sizeof(cytnx_uint64) >>>(dtmp,(float*)in->Mem,dshifter_old,dperm_shifter_new,old_shape.size(),Nelem);
 
 
             ///house keeping:
@@ -327,55 +327,55 @@ namespace tor10{
 
         }
 
-        boost::intrusive_ptr<Storage_base> cuMovemem_gpu_i64(boost::intrusive_ptr<Storage_base> &in, const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64>&mapper, const std::vector<tor10_uint64> &invmapper, const bool is_inplace){
+        boost::intrusive_ptr<Storage_base> cuMovemem_gpu_i64(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace){
             #ifdef UNI_DEBUG
-            tor10_error_msg(in->dtype != tor10type.Int64,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Int64",in->dtype_str().c_str());
-            tor10_error_msg(in->device == tor10device.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
+            cytnx_error_msg(in->dtype != cytnxtype.Int64,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Int64",in->dtype_str().c_str());
+            cytnx_error_msg(in->device == cytnxdevice.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
             #endif
 
             
 
-            std::vector<tor10_uint64> newshape(old_shape.size());
-            for(tor10_uint64 i=0;i<old_shape.size();i++)
+            std::vector<cytnx_uint64> newshape(old_shape.size());
+            for(cytnx_uint64 i=0;i<old_shape.size();i++)
                 newshape[i] = old_shape[mapper[i]];
 
-            std::vector<tor10_uint64> shifter_old(old_shape.size());
-            std::vector<tor10_uint64> shifter_new(old_shape.size());
+            std::vector<cytnx_uint64> shifter_old(old_shape.size());
+            std::vector<cytnx_uint64> shifter_new(old_shape.size());
 
-            tor10_uint64 accu_old=1,accu_new=1;
-            for(tor10_int64 i=old_shape.size()-1;i>=0;i--){
+            cytnx_uint64 accu_old=1,accu_new=1;
+            for(cytnx_int64 i=old_shape.size()-1;i>=0;i--){
                 shifter_old[i] = accu_old;
                 shifter_new[i] = accu_new;
                 accu_old*=old_shape[i];
                 accu_new*=newshape[i];
             }
-            std::vector<tor10_uint64> old_inds(old_shape.size());
+            std::vector<cytnx_uint64> old_inds(old_shape.size());
 
-            std::vector<tor10_uint64> permuted_shifter_new(old_shape.size());
+            std::vector<cytnx_uint64> permuted_shifter_new(old_shape.size());
             for(unsigned int i=0;i<old_shape.size();i++)
                 permuted_shifter_new[i] = shifter_new[invmapper[i]];
 
             ///allocate a GPU for psn-vec/so-vec/tmp des-vec
-            tor10_uint64 *dshifter_old, *dperm_shifter_new;
-            tor10_int64 *dtmp;
-            tor10_uint64 Nelem = accu_old;        
+            cytnx_uint64 *dshifter_old, *dperm_shifter_new;
+            cytnx_int64 *dtmp;
+            cytnx_uint64 Nelem = accu_old;        
 
             cudaSetDevice(in->device); // ensure the following allocation on the same device as src.
-            checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(tor10_uint64)*shifter_old.size()));
-            checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(tor10_uint64)*permuted_shifter_new.size()));
-            dtmp = (tor10_int64*)cuMalloc_gpu(sizeof(tor10_int64)*Nelem); 
+            checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(cytnx_uint64)*shifter_old.size()));
+            checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(cytnx_uint64)*permuted_shifter_new.size()));
+            dtmp = (cytnx_int64*)cuMalloc_gpu(sizeof(cytnx_int64)*Nelem); 
 
             /// copy psn-vec/so-vec to device
-            checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(tor10_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
-            checkCudaErrors(cudaMemcpy(dshifter_old, &shifter_old[0], sizeof(tor10_uint64)*shifter_old.size(),cudaMemcpyHostToDevice));
+            checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(cytnx_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
+            checkCudaErrors(cudaMemcpy(dshifter_old, &shifter_old[0], sizeof(cytnx_uint64)*shifter_old.size(),cudaMemcpyHostToDevice));
 
 
             ///calculate how many blocks, and shared mem size, thpb fixed at 256 (need fine tune)
-            tor10_uint64 NBlocks = Nelem/256;
+            cytnx_uint64 NBlocks = Nelem/256;
             if(Nelem%256){
                 NBlocks+=1;
             }
-            cuMovemem_kernel<<< NBlocks,256,shifter_old.size()*2*sizeof(tor10_uint64) >>>(dtmp,(tor10_int64*)in->Mem,dshifter_old,dperm_shifter_new,old_shape.size(),Nelem);
+            cuMovemem_kernel<<< NBlocks,256,shifter_old.size()*2*sizeof(cytnx_uint64) >>>(dtmp,(cytnx_int64*)in->Mem,dshifter_old,dperm_shifter_new,old_shape.size(),Nelem);
 
 
             ///house keeping:
@@ -386,7 +386,7 @@ namespace tor10{
             if(is_inplace){
 
                 ///cpy back:
-                checkCudaErrors(cudaMemcpy(in->Mem,dtmp, sizeof(tor10_int64)*Nelem,cudaMemcpyDeviceToDevice));
+                checkCudaErrors(cudaMemcpy(in->Mem,dtmp, sizeof(cytnx_int64)*Nelem,cudaMemcpyDeviceToDevice));
                 cudaFree(dtmp);
                 return out;
 
@@ -399,55 +399,55 @@ namespace tor10{
 
        }
 
-        boost::intrusive_ptr<Storage_base> cuMovemem_gpu_u64(boost::intrusive_ptr<Storage_base> &in, const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64>&mapper, const std::vector<tor10_uint64> &invmapper, const bool is_inplace){
+        boost::intrusive_ptr<Storage_base> cuMovemem_gpu_u64(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace){
             #ifdef UNI_DEBUG
-            tor10_error_msg(in->dtype != tor10type.Uint64,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Uint64",in->dtype_str().c_str());
-            tor10_error_msg(in->device == tor10device.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
+            cytnx_error_msg(in->dtype != cytnxtype.Uint64,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Uint64",in->dtype_str().c_str());
+            cytnx_error_msg(in->device == cytnxdevice.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
             #endif
 
             
 
-            std::vector<tor10_uint64> newshape(old_shape.size());
-            for(tor10_uint64 i=0;i<old_shape.size();i++)
+            std::vector<cytnx_uint64> newshape(old_shape.size());
+            for(cytnx_uint64 i=0;i<old_shape.size();i++)
                 newshape[i] = old_shape[mapper[i]];
 
-            std::vector<tor10_uint64> shifter_old(old_shape.size());
-            std::vector<tor10_uint64> shifter_new(old_shape.size());
+            std::vector<cytnx_uint64> shifter_old(old_shape.size());
+            std::vector<cytnx_uint64> shifter_new(old_shape.size());
 
-            tor10_uint64 accu_old=1,accu_new=1;
-            for(tor10_int64 i=old_shape.size()-1;i>=0;i--){
+            cytnx_uint64 accu_old=1,accu_new=1;
+            for(cytnx_int64 i=old_shape.size()-1;i>=0;i--){
                 shifter_old[i] = accu_old;
                 shifter_new[i] = accu_new;
                 accu_old*=old_shape[i];
                 accu_new*=newshape[i];
             }
-            std::vector<tor10_uint64> old_inds(old_shape.size());
+            std::vector<cytnx_uint64> old_inds(old_shape.size());
 
-            std::vector<tor10_uint64> permuted_shifter_new(old_shape.size());
+            std::vector<cytnx_uint64> permuted_shifter_new(old_shape.size());
             for(unsigned int i=0;i<old_shape.size();i++)
                 permuted_shifter_new[i] = shifter_new[invmapper[i]];
 
             ///allocate a GPU for psn-vec/so-vec/tmp des-vec
-            tor10_uint64 *dshifter_old, *dperm_shifter_new;
-            tor10_uint64 *dtmp;
-            tor10_uint64 Nelem = accu_old;        
+            cytnx_uint64 *dshifter_old, *dperm_shifter_new;
+            cytnx_uint64 *dtmp;
+            cytnx_uint64 Nelem = accu_old;        
 
             cudaSetDevice(in->device); // ensure the following allocation on the same device as src.
-            checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(tor10_uint64)*shifter_old.size()));
-            checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(tor10_uint64)*permuted_shifter_new.size()));
-            dtmp = (tor10_uint64*)cuMalloc_gpu(sizeof(tor10_uint64)*Nelem); 
+            checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(cytnx_uint64)*shifter_old.size()));
+            checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(cytnx_uint64)*permuted_shifter_new.size()));
+            dtmp = (cytnx_uint64*)cuMalloc_gpu(sizeof(cytnx_uint64)*Nelem); 
 
             /// copy psn-vec/so-vec to device
-            checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(tor10_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
-            checkCudaErrors(cudaMemcpy(dshifter_old, &shifter_old[0], sizeof(tor10_uint64)*shifter_old.size(),cudaMemcpyHostToDevice));
+            checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(cytnx_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
+            checkCudaErrors(cudaMemcpy(dshifter_old, &shifter_old[0], sizeof(cytnx_uint64)*shifter_old.size(),cudaMemcpyHostToDevice));
 
 
             ///calculate how many blocks, and shared mem size, thpb fixed at 256 (need fine tune)
-            tor10_uint64 NBlocks = Nelem/256;
+            cytnx_uint64 NBlocks = Nelem/256;
             if(Nelem%256){
                 NBlocks+=1;
             }
-            cuMovemem_kernel<<< NBlocks,256,shifter_old.size()*2*sizeof(tor10_uint64) >>>(dtmp,(tor10_uint64*)in->Mem,dshifter_old,dperm_shifter_new,old_shape.size(),Nelem);
+            cuMovemem_kernel<<< NBlocks,256,shifter_old.size()*2*sizeof(cytnx_uint64) >>>(dtmp,(cytnx_uint64*)in->Mem,dshifter_old,dperm_shifter_new,old_shape.size(),Nelem);
 
 
             ///house keeping:
@@ -458,7 +458,7 @@ namespace tor10{
             if(is_inplace){
 
                 ///cpy back:
-                checkCudaErrors(cudaMemcpy(in->Mem,dtmp, sizeof(tor10_uint64)*Nelem,cudaMemcpyDeviceToDevice));
+                checkCudaErrors(cudaMemcpy(in->Mem,dtmp, sizeof(cytnx_uint64)*Nelem,cudaMemcpyDeviceToDevice));
                 cudaFree(dtmp);
                 return out;
 
@@ -469,55 +469,55 @@ namespace tor10{
             }
         }
 
-        boost::intrusive_ptr<Storage_base> cuMovemem_gpu_i32(boost::intrusive_ptr<Storage_base> &in, const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64>&mapper, const std::vector<tor10_uint64> &invmapper, const bool is_inplace){
+        boost::intrusive_ptr<Storage_base> cuMovemem_gpu_i32(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace){
             #ifdef UNI_DEBUG
-            tor10_error_msg(in->dtype != tor10type.Int32,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Int32",in->dtype_str().c_str());
-            tor10_error_msg(in->device == tor10device.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
+            cytnx_error_msg(in->dtype != cytnxtype.Int32,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Int32",in->dtype_str().c_str());
+            cytnx_error_msg(in->device == cytnxdevice.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
             #endif
 
             
 
-            std::vector<tor10_uint64> newshape(old_shape.size());
-            for(tor10_uint64 i=0;i<old_shape.size();i++)
+            std::vector<cytnx_uint64> newshape(old_shape.size());
+            for(cytnx_uint64 i=0;i<old_shape.size();i++)
                 newshape[i] = old_shape[mapper[i]];
 
-            std::vector<tor10_uint64> shifter_old(old_shape.size());
-            std::vector<tor10_uint64> shifter_new(old_shape.size());
+            std::vector<cytnx_uint64> shifter_old(old_shape.size());
+            std::vector<cytnx_uint64> shifter_new(old_shape.size());
 
-            tor10_uint64 accu_old=1,accu_new=1;
-            for(tor10_int64 i=old_shape.size()-1;i>=0;i--){
+            cytnx_uint64 accu_old=1,accu_new=1;
+            for(cytnx_int64 i=old_shape.size()-1;i>=0;i--){
                 shifter_old[i] = accu_old;
                 shifter_new[i] = accu_new;
                 accu_old*=old_shape[i];
                 accu_new*=newshape[i];
             }
-            std::vector<tor10_uint64> old_inds(old_shape.size());
+            std::vector<cytnx_uint64> old_inds(old_shape.size());
 
-            std::vector<tor10_uint64> permuted_shifter_new(old_shape.size());
+            std::vector<cytnx_uint64> permuted_shifter_new(old_shape.size());
             for(unsigned int i=0;i<old_shape.size();i++)
                 permuted_shifter_new[i] = shifter_new[invmapper[i]];
 
             ///allocate a GPU for psn-vec/so-vec/tmp des-vec
-            tor10_uint64 *dshifter_old, *dperm_shifter_new;
-            tor10_int32 *dtmp;
-            tor10_uint64 Nelem = accu_old;        
+            cytnx_uint64 *dshifter_old, *dperm_shifter_new;
+            cytnx_int32 *dtmp;
+            cytnx_uint64 Nelem = accu_old;        
 
             cudaSetDevice(in->device); // ensure the following allocation on the same device as src.
-            checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(tor10_uint64)*shifter_old.size()));
-            checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(tor10_uint64)*permuted_shifter_new.size()));
-            dtmp = (tor10_int32*)cuMalloc_gpu(sizeof(tor10_int32)*Nelem); 
+            checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(cytnx_uint64)*shifter_old.size()));
+            checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(cytnx_uint64)*permuted_shifter_new.size()));
+            dtmp = (cytnx_int32*)cuMalloc_gpu(sizeof(cytnx_int32)*Nelem); 
 
             /// copy psn-vec/so-vec to device
-            checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(tor10_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
-            checkCudaErrors(cudaMemcpy(dshifter_old, &shifter_old[0], sizeof(tor10_uint64)*shifter_old.size(),cudaMemcpyHostToDevice));
+            checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(cytnx_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
+            checkCudaErrors(cudaMemcpy(dshifter_old, &shifter_old[0], sizeof(cytnx_uint64)*shifter_old.size(),cudaMemcpyHostToDevice));
 
 
             ///calculate how many blocks, and shared mem size, thpb fixed at 256 (need fine tune)
-            tor10_uint64 NBlocks = Nelem/256;
+            cytnx_uint64 NBlocks = Nelem/256;
             if(Nelem%256){
                 NBlocks+=1;
             }
-            cuMovemem_kernel<<< NBlocks,256,shifter_old.size()*2*sizeof(tor10_uint64) >>>(dtmp,(tor10_int32*)in->Mem,dshifter_old,dperm_shifter_new,old_shape.size(),Nelem);
+            cuMovemem_kernel<<< NBlocks,256,shifter_old.size()*2*sizeof(cytnx_uint64) >>>(dtmp,(cytnx_int32*)in->Mem,dshifter_old,dperm_shifter_new,old_shape.size(),Nelem);
 
 
             ///house keeping:
@@ -528,7 +528,7 @@ namespace tor10{
             if(is_inplace){
 
                 ///cpy back:
-                checkCudaErrors(cudaMemcpy(in->Mem,dtmp, sizeof(tor10_int32)*Nelem,cudaMemcpyDeviceToDevice));
+                checkCudaErrors(cudaMemcpy(in->Mem,dtmp, sizeof(cytnx_int32)*Nelem,cudaMemcpyDeviceToDevice));
                 cudaFree(dtmp);
                 return out;
 
@@ -539,55 +539,55 @@ namespace tor10{
             }
         }
 
-        boost::intrusive_ptr<Storage_base> cuMovemem_gpu_u32(boost::intrusive_ptr<Storage_base> &in, const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64>&mapper, const std::vector<tor10_uint64> &invmapper, const bool is_inplace){
+        boost::intrusive_ptr<Storage_base> cuMovemem_gpu_u32(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace){
             #ifdef UNI_DEBUG
-            tor10_error_msg(in->dtype != tor10type.Uint32,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Uint32",in->dtype_str().c_str());
-            tor10_error_msg(in->device == tor10device.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
+            cytnx_error_msg(in->dtype != cytnxtype.Uint32,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Uint32",in->dtype_str().c_str());
+            cytnx_error_msg(in->device == cytnxdevice.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
             #endif
 
             
 
-            std::vector<tor10_uint64> newshape(old_shape.size());
-            for(tor10_uint64 i=0;i<old_shape.size();i++)
+            std::vector<cytnx_uint64> newshape(old_shape.size());
+            for(cytnx_uint64 i=0;i<old_shape.size();i++)
                 newshape[i] = old_shape[mapper[i]];
 
-            std::vector<tor10_uint64> shifter_old(old_shape.size());
-            std::vector<tor10_uint64> shifter_new(old_shape.size());
+            std::vector<cytnx_uint64> shifter_old(old_shape.size());
+            std::vector<cytnx_uint64> shifter_new(old_shape.size());
 
-            tor10_uint64 accu_old=1,accu_new=1;
-            for(tor10_int64 i=old_shape.size()-1;i>=0;i--){
+            cytnx_uint64 accu_old=1,accu_new=1;
+            for(cytnx_int64 i=old_shape.size()-1;i>=0;i--){
                 shifter_old[i] = accu_old;
                 shifter_new[i] = accu_new;
                 accu_old*=old_shape[i];
                 accu_new*=newshape[i];
             }
-            std::vector<tor10_uint64> old_inds(old_shape.size());
+            std::vector<cytnx_uint64> old_inds(old_shape.size());
 
-            std::vector<tor10_uint64> permuted_shifter_new(old_shape.size());
+            std::vector<cytnx_uint64> permuted_shifter_new(old_shape.size());
             for(unsigned int i=0;i<old_shape.size();i++)
                 permuted_shifter_new[i] = shifter_new[invmapper[i]];
 
             ///allocate a GPU for psn-vec/so-vec/tmp des-vec
-            tor10_uint64 *dshifter_old, *dperm_shifter_new;
-            tor10_uint32 *dtmp;
-            tor10_uint64 Nelem = accu_old;        
+            cytnx_uint64 *dshifter_old, *dperm_shifter_new;
+            cytnx_uint32 *dtmp;
+            cytnx_uint64 Nelem = accu_old;        
 
             cudaSetDevice(in->device); // ensure the following allocation on the same device as src.
-            checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(tor10_uint64)*shifter_old.size()));
-            checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(tor10_uint64)*permuted_shifter_new.size()));
-            dtmp = (tor10_uint32*)cuMalloc_gpu(sizeof(tor10_uint32)*Nelem); 
+            checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(cytnx_uint64)*shifter_old.size()));
+            checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(cytnx_uint64)*permuted_shifter_new.size()));
+            dtmp = (cytnx_uint32*)cuMalloc_gpu(sizeof(cytnx_uint32)*Nelem); 
 
             /// copy psn-vec/so-vec to device
-            checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(tor10_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
-            checkCudaErrors(cudaMemcpy(dshifter_old, &shifter_old[0], sizeof(tor10_uint64)*shifter_old.size(),cudaMemcpyHostToDevice));
+            checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(cytnx_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
+            checkCudaErrors(cudaMemcpy(dshifter_old, &shifter_old[0], sizeof(cytnx_uint64)*shifter_old.size(),cudaMemcpyHostToDevice));
 
 
             ///calculate how many blocks, and shared mem size, thpb fixed at 256 (need fine tune)
-            tor10_uint64 NBlocks = Nelem/256;
+            cytnx_uint64 NBlocks = Nelem/256;
             if(Nelem%256){
                 NBlocks+=1;
             }
-            cuMovemem_kernel<<< NBlocks,256,shifter_old.size()*2*sizeof(tor10_uint64) >>>(dtmp,(tor10_uint32*)in->Mem,dshifter_old,dperm_shifter_new,old_shape.size(),Nelem);
+            cuMovemem_kernel<<< NBlocks,256,shifter_old.size()*2*sizeof(cytnx_uint64) >>>(dtmp,(cytnx_uint32*)in->Mem,dshifter_old,dperm_shifter_new,old_shape.size(),Nelem);
 
 
             ///house keeping:
@@ -598,7 +598,7 @@ namespace tor10{
             if(is_inplace){
 
                 ///cpy back:
-                checkCudaErrors(cudaMemcpy(in->Mem,dtmp, sizeof(tor10_uint32)*Nelem,cudaMemcpyDeviceToDevice));
+                checkCudaErrors(cudaMemcpy(in->Mem,dtmp, sizeof(cytnx_uint32)*Nelem,cudaMemcpyDeviceToDevice));
                 cudaFree(dtmp);
                 return out;
 
@@ -611,4 +611,4 @@ namespace tor10{
 
     #endif // UNI_GPU
     }//namespace utils_internal
-}//namespace tor10
+}//namespace cytnx

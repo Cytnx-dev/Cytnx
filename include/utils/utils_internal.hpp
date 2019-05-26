@@ -17,7 +17,7 @@
 /// Helper function to print vector with ODT:
 #include <vector>
 #include <iostream>
-namespace tor10{
+namespace cytnx{
     template<typename T>
     std::ostream& operator<<(std::ostream& os, const std::vector<T> &vec){
         os << "Vector Print:\n";

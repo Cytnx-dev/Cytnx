@@ -5,14 +5,14 @@
     #include <omp.h>
 #endif
 
-namespace tor10{
+namespace cytnx{
 
     namespace linalg_internal{
 
         //====================================================================
         //generic R+R kernel
         template<class T1,class T2,class T3>
-        __global__ void cuAdd_rconst_kernel(T1 *out, const T2 *ptr, const tor10_uint64 Nelem, const T3 val){
+        __global__ void cuAdd_rconst_kernel(T1 *out, const T2 *ptr, const cytnx_uint64 Nelem, const T3 val){
               if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                   out[blockIdx.x*blockDim.x + threadIdx.x] = ptr[blockIdx.x*blockDim.x + threadIdx.x] + val;
               }
@@ -20,7 +20,7 @@ namespace tor10{
          }
         
         template<class T1,class T2,class T3>
-        __global__ void cuAdd_lconst_kernel(T1 *out, const T2 val, const tor10_uint64 Nelem, const T3 *ptr){
+        __global__ void cuAdd_lconst_kernel(T1 *out, const T2 val, const cytnx_uint64 Nelem, const T3 *ptr){
               if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                   out[blockIdx.x*blockDim.x + threadIdx.x] = val + ptr[blockIdx.x*blockDim.x + threadIdx.x];
               }
@@ -28,7 +28,7 @@ namespace tor10{
          }
         
         template<class T1,class T2,class T3>
-        __global__ void cuAdd_tn_kernel(T1 *out, const T2 *val, const tor10_uint64 Nelem, const T3 *ptr){
+        __global__ void cuAdd_tn_kernel(T1 *out, const T2 *val, const cytnx_uint64 Nelem, const T3 *ptr){
               if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                   out[blockIdx.x*blockDim.x + threadIdx.x] = val[blockIdx.x*blockDim.x + threadIdx.x] + ptr[blockIdx.x*blockDim.x + threadIdx.x];
               }
@@ -38,19 +38,19 @@ namespace tor10{
         //=====================================================================
 
         /// cuAdd
-        __global__ void cuAdd_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const tor10_uint64 Nelem, const cuDoubleComplex val){
+        __global__ void cuAdd_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const cytnx_uint64 Nelem, const cuDoubleComplex val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(ptr[blockIdx.x*blockDim.x + threadIdx.x],val);
             }
             __syncthreads();
         }
-        __global__ void cuAdd_lconst_kernel(cuDoubleComplex *out, const cuDoubleComplex val, const tor10_uint64 Nelem, const cuDoubleComplex *ptr){
+        __global__ void cuAdd_lconst_kernel(cuDoubleComplex *out, const cuDoubleComplex val, const cytnx_uint64 Nelem, const cuDoubleComplex *ptr){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(ptr[blockIdx.x*blockDim.x + threadIdx.x],val);
             }
             __syncthreads();
         }
-        __global__ void cuAdd_tn_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const tor10_uint64 Nelem, const cuDoubleComplex *val){
+        __global__ void cuAdd_tn_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const cytnx_uint64 Nelem, const cuDoubleComplex *val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(ptr[blockIdx.x*blockDim.x + threadIdx.x],val[blockIdx.x*blockDim.x + threadIdx.x]);
             }
@@ -61,7 +61,7 @@ namespace tor10{
             cuDoubleComplex *_Lin = (cuDoubleComplex*)Lin->Mem;
             cuDoubleComplex *_Rin = (cuDoubleComplex*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
                 
            if(Lin->size()==1){
@@ -75,19 +75,19 @@ namespace tor10{
 
 
 
-        __global__ void cuAdd_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const tor10_uint64 Nelem, const cuFloatComplex val){
+        __global__ void cuAdd_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const cytnx_uint64 Nelem, const cuFloatComplex val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(ptr[blockIdx.x*blockDim.x + threadIdx.x],cuComplexFloatToDouble(val));
             }
             __syncthreads();
         }
-        __global__ void cuAdd_lconst_kernel(cuDoubleComplex *out, const cuDoubleComplex val, const tor10_uint64 Nelem, const cuFloatComplex *ptr){
+        __global__ void cuAdd_lconst_kernel(cuDoubleComplex *out, const cuDoubleComplex val, const cytnx_uint64 Nelem, const cuFloatComplex *ptr){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(val,cuComplexFloatToDouble(ptr[blockIdx.x*blockDim.x + threadIdx.x]));
             }
             __syncthreads();
         }
-        __global__ void cuAdd_tn_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const tor10_uint64 Nelem, const cuFloatComplex *val){
+        __global__ void cuAdd_tn_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const cytnx_uint64 Nelem, const cuFloatComplex *val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(ptr[blockIdx.x*blockDim.x + threadIdx.x],cuComplexFloatToDouble(val[blockIdx.x*blockDim.x + threadIdx.x]));
             }
@@ -98,7 +98,7 @@ namespace tor10{
             cuDoubleComplex *_Lin = (cuDoubleComplex*)Lin->Mem;
             cuFloatComplex *_Rin = (cuFloatComplex*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
             if(Lin->size()==1){
@@ -111,19 +111,19 @@ namespace tor10{
 
         }
 
-        __global__ void cuAdd_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const tor10_uint64 Nelem, const tor10_double val){
+        __global__ void cuAdd_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const cytnx_uint64 Nelem, const cytnx_double val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuDoubleComplex(val,0));
             }
             __syncthreads();
         }
-        __global__ void cuAdd_lconst_kernel(cuDoubleComplex *out, const cuDoubleComplex val, const tor10_uint64 Nelem, const tor10_double *ptr){
+        __global__ void cuAdd_lconst_kernel(cuDoubleComplex *out, const cuDoubleComplex val, const cytnx_uint64 Nelem, const cytnx_double *ptr){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(val,make_cuDoubleComplex(ptr[blockIdx.x*blockDim.x + threadIdx.x],0));
             }
             __syncthreads();
         }
-        __global__ void cuAdd_tn_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const tor10_uint64 Nelem, const tor10_double *val){
+        __global__ void cuAdd_tn_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const cytnx_uint64 Nelem, const cytnx_double *val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuDoubleComplex(val[blockIdx.x*blockDim.x + threadIdx.x],0));
             }
@@ -132,10 +132,10 @@ namespace tor10{
         void cuAdd_internal_cdtd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
             cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
             cuDoubleComplex *_Lin = (cuDoubleComplex*)Lin->Mem;
-            tor10_double *_Rin = (tor10_double*)Rin->Mem;
+            cytnx_double *_Rin = (cytnx_double*)Rin->Mem;
 
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
             if(Lin->size()==1){
@@ -149,19 +149,19 @@ namespace tor10{
 
         }
 
-        __global__ void cuAdd_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const tor10_uint64 Nelem, const tor10_float val){
+        __global__ void cuAdd_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const cytnx_uint64 Nelem, const cytnx_float val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuDoubleComplex(val,0));
             }
             __syncthreads();
         }
-        __global__ void cuAdd_lconst_kernel(cuDoubleComplex *out, const cuDoubleComplex val, const tor10_uint64 Nelem, const tor10_float *ptr){
+        __global__ void cuAdd_lconst_kernel(cuDoubleComplex *out, const cuDoubleComplex val, const cytnx_uint64 Nelem, const cytnx_float *ptr){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(val,make_cuDoubleComplex(ptr[blockIdx.x*blockDim.x + threadIdx.x],0));
             }
             __syncthreads();
         }
-        __global__ void cuAdd_tn_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const tor10_uint64 Nelem, const tor10_float *val){
+        __global__ void cuAdd_tn_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const cytnx_uint64 Nelem, const cytnx_float *val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuDoubleComplex(val[blockIdx.x*blockDim.x + threadIdx.x],0));
             }
@@ -170,10 +170,10 @@ namespace tor10{
         void cuAdd_internal_cdtf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
             cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
             cuDoubleComplex *_Lin = (cuDoubleComplex*)Lin->Mem;
-            tor10_float *_Rin = (tor10_float*)Rin->Mem;
+            cytnx_float *_Rin = (cytnx_float*)Rin->Mem;
 
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
             if(Lin->size()==1){
@@ -189,19 +189,19 @@ namespace tor10{
         }
 
 
-          __global__ void cuAdd_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const tor10_uint64 Nelem, const tor10_uint64 val){
+          __global__ void cuAdd_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const cytnx_uint64 Nelem, const cytnx_uint64 val){
               if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                   out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuDoubleComplex(val,0));
               }
               __syncthreads();
           }
-          __global__ void cuAdd_lconst_kernel(cuDoubleComplex *out, const cuDoubleComplex val, const tor10_uint64 Nelem, const tor10_uint64 *ptr){
+          __global__ void cuAdd_lconst_kernel(cuDoubleComplex *out, const cuDoubleComplex val, const cytnx_uint64 Nelem, const cytnx_uint64 *ptr){
               if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                   out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(val,make_cuDoubleComplex(ptr[blockIdx.x*blockDim.x + threadIdx.x],0));
               }
               __syncthreads();
           }
-          __global__ void cuAdd_tn_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const tor10_uint64 Nelem, const tor10_uint64 *val){
+          __global__ void cuAdd_tn_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const cytnx_uint64 Nelem, const cytnx_uint64 *val){
               if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                   out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuDoubleComplex(val[blockIdx.x*blockDim.x + threadIdx.x],0));
               }
@@ -211,10 +211,10 @@ namespace tor10{
         void cuAdd_internal_cdtu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
             cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
             cuDoubleComplex *_Lin = (cuDoubleComplex*)Lin->Mem;
-            tor10_uint64 *_Rin = (tor10_uint64*)Rin->Mem;
+            cytnx_uint64 *_Rin = (cytnx_uint64*)Rin->Mem;
 
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -228,19 +228,19 @@ namespace tor10{
         }
 
 
-        __global__ void cuAdd_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const tor10_uint64 Nelem, const tor10_uint32 val){
+        __global__ void cuAdd_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const cytnx_uint64 Nelem, const cytnx_uint32 val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuDoubleComplex(val,0));
             }
             __syncthreads();
         }
-        __global__ void cuAdd_lconst_kernel(cuDoubleComplex *out, const cuDoubleComplex val, const tor10_uint64 Nelem, const tor10_uint32 *ptr){
+        __global__ void cuAdd_lconst_kernel(cuDoubleComplex *out, const cuDoubleComplex val, const cytnx_uint64 Nelem, const cytnx_uint32 *ptr){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(val,make_cuDoubleComplex(ptr[blockIdx.x*blockDim.x + threadIdx.x],0));
             }
             __syncthreads();
         }
-        __global__ void cuAdd_tn_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const tor10_uint64 Nelem, const tor10_uint32 *val){
+        __global__ void cuAdd_tn_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const cytnx_uint64 Nelem, const cytnx_uint32 *val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuDoubleComplex(val[blockIdx.x*blockDim.x + threadIdx.x],0));
             }
@@ -249,9 +249,9 @@ namespace tor10{
         void cuAdd_internal_cdtu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
             cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
             cuDoubleComplex *_Lin = (cuDoubleComplex*)Lin->Mem;
-            tor10_uint32 *_Rin = (tor10_uint32*)Rin->Mem;
+            cytnx_uint32 *_Rin = (cytnx_uint32*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -266,19 +266,19 @@ namespace tor10{
 
 
 
-        __global__ void cuAdd_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const tor10_uint64 Nelem, const tor10_int64 val){
+        __global__ void cuAdd_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const cytnx_uint64 Nelem, const cytnx_int64 val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuDoubleComplex(val,0));
             }
             __syncthreads();
         }
-        __global__ void cuAdd_lconst_kernel(cuDoubleComplex *out, const cuDoubleComplex val, const tor10_uint64 Nelem, const tor10_int64 *ptr){
+        __global__ void cuAdd_lconst_kernel(cuDoubleComplex *out, const cuDoubleComplex val, const cytnx_uint64 Nelem, const cytnx_int64 *ptr){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(val,make_cuDoubleComplex(ptr[blockIdx.x*blockDim.x + threadIdx.x],0));
             }
             __syncthreads();
         }
-        __global__ void cuAdd_tn_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const tor10_uint64 Nelem, const tor10_int64 *val){
+        __global__ void cuAdd_tn_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const cytnx_uint64 Nelem, const cytnx_int64 *val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuDoubleComplex(val[blockIdx.x*blockDim.x + threadIdx.x],0));
             }
@@ -287,9 +287,9 @@ namespace tor10{
         void cuAdd_internal_cdti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
             cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
             cuDoubleComplex *_Lin = (cuDoubleComplex*)Lin->Mem;
-            tor10_int64 *_Rin = (tor10_int64*)Rin->Mem;
+            cytnx_int64 *_Rin = (cytnx_int64*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -304,19 +304,19 @@ namespace tor10{
         }
 
 
-        __global__ void cuAdd_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const tor10_uint64 Nelem, const tor10_int32 val){
+        __global__ void cuAdd_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const cytnx_uint64 Nelem, const cytnx_int32 val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuDoubleComplex(val,0));
             }
             __syncthreads();
         }
-        __global__ void cuAdd_lconst_kernel(cuDoubleComplex *out, const cuDoubleComplex val, const tor10_uint64 Nelem, const tor10_int32 *ptr){
+        __global__ void cuAdd_lconst_kernel(cuDoubleComplex *out, const cuDoubleComplex val, const cytnx_uint64 Nelem, const cytnx_int32 *ptr){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(val,make_cuDoubleComplex(ptr[blockIdx.x*blockDim.x + threadIdx.x],0));
             }
             __syncthreads();
         }
-        __global__ void cuAdd_tn_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const tor10_uint64 Nelem, const tor10_int32 *val){
+        __global__ void cuAdd_tn_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const cytnx_uint64 Nelem, const cytnx_int32 *val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuDoubleComplex(val[blockIdx.x*blockDim.x + threadIdx.x],0));
             }
@@ -325,9 +325,9 @@ namespace tor10{
         void cuAdd_internal_cdti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
             cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
             cuDoubleComplex *_Lin = (cuDoubleComplex*)Lin->Mem;
-            tor10_int32 *_Rin = (tor10_int32*)Rin->Mem;
+            cytnx_int32 *_Rin = (cytnx_int32*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -346,19 +346,19 @@ namespace tor10{
 
 	    }
 
-        __global__ void cuAdd_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const tor10_uint64 Nelem, const cuFloatComplex val){
+        __global__ void cuAdd_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const cytnx_uint64 Nelem, const cuFloatComplex val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(ptr[blockIdx.x*blockDim.x + threadIdx.x],val);
             }
             __syncthreads();
         }
-        __global__ void cuAdd_lconst_kernel(cuFloatComplex *out, const cuFloatComplex val, const tor10_uint64 Nelem, const cuFloatComplex *ptr){
+        __global__ void cuAdd_lconst_kernel(cuFloatComplex *out, const cuFloatComplex val, const cytnx_uint64 Nelem, const cuFloatComplex *ptr){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(val,ptr[blockIdx.x*blockDim.x + threadIdx.x]);
             }
             __syncthreads();
         }
-        __global__ void cuAdd_tn_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const tor10_uint64 Nelem, const cuFloatComplex *val){
+        __global__ void cuAdd_tn_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const cytnx_uint64 Nelem, const cuFloatComplex *val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(ptr[blockIdx.x*blockDim.x + threadIdx.x],val[blockIdx.x*blockDim.x + threadIdx.x]);
             }
@@ -369,7 +369,7 @@ namespace tor10{
             cuFloatComplex *_Lin = (cuFloatComplex*)Lin->Mem;
             cuFloatComplex *_Rin = (cuFloatComplex*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -383,19 +383,19 @@ namespace tor10{
         }
 
 
-        __global__ void cuAdd_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const tor10_uint64 Nelem, const tor10_double val){
+        __global__ void cuAdd_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const cytnx_uint64 Nelem, const cytnx_double val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuFloatComplex(val,0));
             }
             __syncthreads();
         }
-        __global__ void cuAdd_lconst_kernel(cuFloatComplex *out, const cuFloatComplex val, const tor10_uint64 Nelem, const tor10_double *ptr){
+        __global__ void cuAdd_lconst_kernel(cuFloatComplex *out, const cuFloatComplex val, const cytnx_uint64 Nelem, const cytnx_double *ptr){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(val,make_cuFloatComplex(ptr[blockIdx.x*blockDim.x + threadIdx.x],0));
             }
             __syncthreads();
         }
-        __global__ void cuAdd_tn_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const tor10_uint64 Nelem, const tor10_double *val){
+        __global__ void cuAdd_tn_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const cytnx_uint64 Nelem, const cytnx_double *val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuFloatComplex(val[blockIdx.x*blockDim.x + threadIdx.x],0));
             }
@@ -404,9 +404,9 @@ namespace tor10{
         void cuAdd_internal_cftd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
             cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
             cuFloatComplex *_Lin = (cuFloatComplex*)Lin->Mem;
-            tor10_double *_Rin = (tor10_double*)Rin->Mem;
+            cytnx_double *_Rin = (cytnx_double*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -421,19 +421,19 @@ namespace tor10{
 
         }
 
-        __global__ void cuAdd_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const tor10_uint64 Nelem, const tor10_float val){
+        __global__ void cuAdd_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const cytnx_uint64 Nelem, const cytnx_float val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuFloatComplex(val,0));
             }
             __syncthreads();
         }
-        __global__ void cuAdd_lconst_kernel(cuFloatComplex *out, const cuFloatComplex val, const tor10_uint64 Nelem, const tor10_float *ptr){
+        __global__ void cuAdd_lconst_kernel(cuFloatComplex *out, const cuFloatComplex val, const cytnx_uint64 Nelem, const cytnx_float *ptr){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(val,make_cuFloatComplex(ptr[blockIdx.x*blockDim.x + threadIdx.x],0));
             }
             __syncthreads();
         }
-        __global__ void cuAdd_tn_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const tor10_uint64 Nelem, const tor10_float *val){
+        __global__ void cuAdd_tn_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const cytnx_uint64 Nelem, const cytnx_float *val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuFloatComplex(val[blockIdx.x*blockDim.x + threadIdx.x],0));
             }
@@ -442,9 +442,9 @@ namespace tor10{
         void cuAdd_internal_cftf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
             cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
             cuFloatComplex *_Lin = (cuFloatComplex*)Lin->Mem;
-            tor10_float *_Rin = (tor10_float*)Rin->Mem;
+            cytnx_float *_Rin = (cytnx_float*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -458,19 +458,19 @@ namespace tor10{
         }
 
 
-        __global__ void cuAdd_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const tor10_uint64 Nelem, const tor10_uint64 val){
+        __global__ void cuAdd_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const cytnx_uint64 Nelem, const cytnx_uint64 val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuFloatComplex(val,0));
             }
             __syncthreads();
         }
-        __global__ void cuAdd_lconst_kernel(cuFloatComplex *out, const cuFloatComplex val, const tor10_uint64 Nelem, const tor10_uint64 *ptr){
+        __global__ void cuAdd_lconst_kernel(cuFloatComplex *out, const cuFloatComplex val, const cytnx_uint64 Nelem, const cytnx_uint64 *ptr){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(val,make_cuFloatComplex(ptr[blockIdx.x*blockDim.x + threadIdx.x],0));
             }
             __syncthreads();
         }
-        __global__ void cuAdd_tn_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const tor10_uint64 Nelem, const tor10_uint64 *val){
+        __global__ void cuAdd_tn_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const cytnx_uint64 Nelem, const cytnx_uint64 *val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuFloatComplex(val[blockIdx.x*blockDim.x + threadIdx.x],0));
             }
@@ -479,9 +479,9 @@ namespace tor10{
         void cuAdd_internal_cftu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
             cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
             cuFloatComplex *_Lin = (cuFloatComplex*)Lin->Mem;
-            tor10_uint64 *_Rin = (tor10_uint64*)Rin->Mem;
+            cytnx_uint64 *_Rin = (cytnx_uint64*)Rin->Mem;
             
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -495,19 +495,19 @@ namespace tor10{
         }
 
 
-        __global__ void cuAdd_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const tor10_uint32 Nelem, const tor10_uint32 val){
+        __global__ void cuAdd_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const cytnx_uint32 Nelem, const cytnx_uint32 val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuFloatComplex(val,0));
             }
             __syncthreads();
         }
-        __global__ void cuAdd_lconst_kernel(cuFloatComplex *out, const cuFloatComplex val, const tor10_uint32 Nelem, const tor10_uint32 *ptr){
+        __global__ void cuAdd_lconst_kernel(cuFloatComplex *out, const cuFloatComplex val, const cytnx_uint32 Nelem, const cytnx_uint32 *ptr){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(val,make_cuFloatComplex(ptr[blockIdx.x*blockDim.x + threadIdx.x],0));
             }
             __syncthreads();
         }
-        __global__ void cuAdd_tn_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const tor10_uint32 Nelem, const tor10_uint32 *val){
+        __global__ void cuAdd_tn_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const cytnx_uint32 Nelem, const cytnx_uint32 *val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuFloatComplex(val[blockIdx.x*blockDim.x + threadIdx.x],0));
             }
@@ -516,9 +516,9 @@ namespace tor10{
         void cuAdd_internal_cftu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
             cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
             cuFloatComplex *_Lin = (cuFloatComplex*)Lin->Mem;
-            tor10_uint32 *_Rin = (tor10_uint32*)Rin->Mem;
+            cytnx_uint32 *_Rin = (cytnx_uint32*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -533,19 +533,19 @@ namespace tor10{
         }
 
 
-        __global__ void cuAdd_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const tor10_int64 Nelem, const tor10_int64 val){
+        __global__ void cuAdd_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const cytnx_int64 Nelem, const cytnx_int64 val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuFloatComplex(val,0));
             }
             __syncthreads();
         }
-        __global__ void cuAdd_lconst_kernel(cuFloatComplex *out, const cuFloatComplex val, const tor10_int64 Nelem, const tor10_int64 *ptr){
+        __global__ void cuAdd_lconst_kernel(cuFloatComplex *out, const cuFloatComplex val, const cytnx_int64 Nelem, const cytnx_int64 *ptr){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(val,make_cuFloatComplex(ptr[blockIdx.x*blockDim.x + threadIdx.x],0));
             }
             __syncthreads();
         }
-        __global__ void cuAdd_tn_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const tor10_int64 Nelem, const tor10_int64 *val){
+        __global__ void cuAdd_tn_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const cytnx_int64 Nelem, const cytnx_int64 *val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuFloatComplex(val[blockIdx.x*blockDim.x + threadIdx.x],0));
             }
@@ -554,9 +554,9 @@ namespace tor10{
         void cuAdd_internal_cfti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
             cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
             cuFloatComplex *_Lin = (cuFloatComplex*)Lin->Mem;
-            tor10_int64 *_Rin = (tor10_int64*)Rin->Mem;
+            cytnx_int64 *_Rin = (cytnx_int64*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -571,19 +571,19 @@ namespace tor10{
         }
 
 
-        __global__ void cuAdd_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const tor10_int32 Nelem, const tor10_int32 val){
+        __global__ void cuAdd_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const cytnx_int32 Nelem, const cytnx_int32 val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuFloatComplex(val,0));
             }
             __syncthreads();
         }
-        __global__ void cuAdd_lconst_kernel(cuFloatComplex *out, const cuFloatComplex val, const tor10_int32 Nelem, const tor10_int32 *ptr){
+        __global__ void cuAdd_lconst_kernel(cuFloatComplex *out, const cuFloatComplex val, const cytnx_int32 Nelem, const cytnx_int32 *ptr){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(val,make_cuFloatComplex(ptr[blockIdx.x*blockDim.x + threadIdx.x],0));
             }
             __syncthreads();
         }
-        __global__ void cuAdd_tn_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const tor10_int32 Nelem, const tor10_int32 *val){
+        __global__ void cuAdd_tn_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const cytnx_int32 Nelem, const cytnx_int32 *val){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuFloatComplex(val[blockIdx.x*blockDim.x + threadIdx.x],0));
             }
@@ -592,9 +592,9 @@ namespace tor10{
         void cuAdd_internal_cfti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
             cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
             cuFloatComplex *_Lin = (cuFloatComplex*)Lin->Mem;
-            tor10_int32 *_Rin = (tor10_int32*)Rin->Mem;
+            cytnx_int32 *_Rin = (cytnx_int32*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -616,11 +616,11 @@ namespace tor10{
 
 
         void cuAdd_internal_dtd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
-            tor10_double *_out = (tor10_double*)out->Mem;
-            tor10_double *_Lin = (tor10_double*)Lin->Mem;
-            tor10_double *_Rin = (tor10_double*)Rin->Mem;
+            cytnx_double *_out = (cytnx_double*)out->Mem;
+            cytnx_double *_Lin = (cytnx_double*)Lin->Mem;
+            cytnx_double *_Rin = (cytnx_double*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -634,11 +634,11 @@ namespace tor10{
 
         }
         void cuAdd_internal_dtf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
-            tor10_double *_out = (tor10_double*)out->Mem;
-            tor10_double *_Lin = (tor10_double*)Lin->Mem;
-            tor10_float *_Rin = (tor10_float*)Rin->Mem;
+            cytnx_double *_out = (cytnx_double*)out->Mem;
+            cytnx_double *_Lin = (cytnx_double*)Lin->Mem;
+            cytnx_float *_Rin = (cytnx_float*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -651,11 +651,11 @@ namespace tor10{
         }
         void cuAdd_internal_dtu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
 
-            tor10_double *_out = (tor10_double*)out->Mem;
-            tor10_double *_Lin = (tor10_double*)Lin->Mem;
-            tor10_uint64 *_Rin = (tor10_uint64*)Rin->Mem;
+            cytnx_double *_out = (cytnx_double*)out->Mem;
+            cytnx_double *_Lin = (cytnx_double*)Lin->Mem;
+            cytnx_uint64 *_Rin = (cytnx_uint64*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -669,11 +669,11 @@ namespace tor10{
         }
         void cuAdd_internal_dtu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
 
-            tor10_double *_out = (tor10_double*)out->Mem;
-            tor10_double *_Lin = (tor10_double*)Lin->Mem;
-            tor10_uint32 *_Rin = (tor10_uint32*)Rin->Mem;
+            cytnx_double *_out = (cytnx_double*)out->Mem;
+            cytnx_double *_Lin = (cytnx_double*)Lin->Mem;
+            cytnx_uint32 *_Rin = (cytnx_uint32*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -686,11 +686,11 @@ namespace tor10{
         }
         void cuAdd_internal_dti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
 
-            tor10_double *_out = (tor10_double*)out->Mem;
-            tor10_double *_Lin = (tor10_double*)Lin->Mem;
-            tor10_int64 *_Rin = (tor10_int64*)Rin->Mem;
+            cytnx_double *_out = (cytnx_double*)out->Mem;
+            cytnx_double *_Lin = (cytnx_double*)Lin->Mem;
+            cytnx_int64 *_Rin = (cytnx_int64*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -704,11 +704,11 @@ namespace tor10{
         }
         void cuAdd_internal_dti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
 
-            tor10_double *_out = (tor10_double*)out->Mem;
-            tor10_double *_Lin = (tor10_double*)Lin->Mem;
-            tor10_int32 *_Rin = (tor10_int32*)Rin->Mem;
+            cytnx_double *_out = (cytnx_double*)out->Mem;
+            cytnx_double *_Lin = (cytnx_double*)Lin->Mem;
+            cytnx_int32 *_Rin = (cytnx_int32*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -731,11 +731,11 @@ namespace tor10{
              cuAdd_internal_dtf(out,Rin,Lin,len);
         }
         void cuAdd_internal_ftf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
-            tor10_float *_out = (tor10_float*)out->Mem;
-            tor10_float *_Lin = (tor10_float*)Lin->Mem;
-            tor10_float *_Rin = (tor10_float*)Rin->Mem;
+            cytnx_float *_out = (cytnx_float*)out->Mem;
+            cytnx_float *_Lin = (cytnx_float*)Lin->Mem;
+            cytnx_float *_Rin = (cytnx_float*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -748,11 +748,11 @@ namespace tor10{
 
         }
         void cuAdd_internal_ftu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
-            tor10_float *_out = (tor10_float*)out->Mem;
-            tor10_float *_Lin = (tor10_float*)Lin->Mem;
-            tor10_uint64 *_Rin = (tor10_uint64*)Rin->Mem;
+            cytnx_float *_out = (cytnx_float*)out->Mem;
+            cytnx_float *_Lin = (cytnx_float*)Lin->Mem;
+            cytnx_uint64 *_Rin = (cytnx_uint64*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -765,11 +765,11 @@ namespace tor10{
 
         }
         void cuAdd_internal_ftu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
-            tor10_float *_out = (tor10_float*)out->Mem;
-            tor10_float *_Lin = (tor10_float*)Lin->Mem;
-            tor10_uint32 *_Rin = (tor10_uint32*)Rin->Mem;
+            cytnx_float *_out = (cytnx_float*)out->Mem;
+            cytnx_float *_Lin = (cytnx_float*)Lin->Mem;
+            cytnx_uint32 *_Rin = (cytnx_uint32*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -781,11 +781,11 @@ namespace tor10{
               }
         }
         void cuAdd_internal_fti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
-            tor10_float *_out = (tor10_float*)out->Mem;
-            tor10_float *_Lin = (tor10_float*)Lin->Mem;
-            tor10_int64 *_Rin = (tor10_int64*)Rin->Mem;
+            cytnx_float *_out = (cytnx_float*)out->Mem;
+            cytnx_float *_Lin = (cytnx_float*)Lin->Mem;
+            cytnx_int64 *_Rin = (cytnx_int64*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -798,11 +798,11 @@ namespace tor10{
 
         }
         void cuAdd_internal_fti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
-            tor10_float *_out = (tor10_float*)out->Mem;
-            tor10_float *_Lin = (tor10_float*)Lin->Mem;
-            tor10_int32 *_Rin = (tor10_int32*)Rin->Mem;
+            cytnx_float *_out = (cytnx_float*)out->Mem;
+            cytnx_float *_Lin = (cytnx_float*)Lin->Mem;
+            cytnx_int32 *_Rin = (cytnx_int32*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -829,11 +829,11 @@ namespace tor10{
              cuAdd_internal_fti64(out,Rin,Lin,len);
         }
         void cuAdd_internal_i64ti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
-            tor10_int64 *_out = (tor10_int64*)out->Mem;
-            tor10_int64 *_Lin = (tor10_int64*)Lin->Mem;
-            tor10_int64 *_Rin = (tor10_int64*)Rin->Mem;
+            cytnx_int64 *_out = (cytnx_int64*)out->Mem;
+            cytnx_int64 *_Lin = (cytnx_int64*)Lin->Mem;
+            cytnx_int64 *_Rin = (cytnx_int64*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -846,11 +846,11 @@ namespace tor10{
 
         }
         void cuAdd_internal_i64tu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
-            tor10_int64 *_out = (tor10_int64*)out->Mem;
-            tor10_int64 *_Lin = (tor10_int64*)Lin->Mem;
-            tor10_uint64 *_Rin = (tor10_uint64*)Rin->Mem;
+            cytnx_int64 *_out = (cytnx_int64*)out->Mem;
+            cytnx_int64 *_Lin = (cytnx_int64*)Lin->Mem;
+            cytnx_uint64 *_Rin = (cytnx_uint64*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -862,11 +862,11 @@ namespace tor10{
               }
         }
         void cuAdd_internal_i64ti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
-            tor10_int64 *_out = (tor10_int64*)out->Mem;
-            tor10_int64 *_Lin = (tor10_int64*)Lin->Mem;
-            tor10_int32 *_Rin = (tor10_int32*)Rin->Mem;
+            cytnx_int64 *_out = (cytnx_int64*)out->Mem;
+            cytnx_int64 *_Lin = (cytnx_int64*)Lin->Mem;
+            cytnx_int32 *_Rin = (cytnx_int32*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -878,11 +878,11 @@ namespace tor10{
               }
         }
         void cuAdd_internal_i64tu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
-            tor10_int64 *_out = (tor10_int64*)out->Mem;
-            tor10_int64 *_Lin = (tor10_int64*)Lin->Mem;
-            tor10_uint32 *_Rin = (tor10_uint32*)Rin->Mem;
+            cytnx_int64 *_out = (cytnx_int64*)out->Mem;
+            cytnx_int64 *_Lin = (cytnx_int64*)Lin->Mem;
+            cytnx_uint32 *_Rin = (cytnx_uint32*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -912,11 +912,11 @@ namespace tor10{
              cuAdd_internal_i64tu64(out,Rin,Lin,len);
         }
         void cuAdd_internal_u64tu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
-            tor10_uint64 *_out = (tor10_uint64*)out->Mem;
-            tor10_uint64 *_Lin = (tor10_uint64*)Lin->Mem;
-            tor10_uint64 *_Rin = (tor10_uint64*)Rin->Mem;
+            cytnx_uint64 *_out = (cytnx_uint64*)out->Mem;
+            cytnx_uint64 *_Lin = (cytnx_uint64*)Lin->Mem;
+            cytnx_uint64 *_Rin = (cytnx_uint64*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -928,11 +928,11 @@ namespace tor10{
               }
         }
         void cuAdd_internal_u64ti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
-            tor10_uint64 *_out = (tor10_uint64*)out->Mem;
-            tor10_uint64 *_Lin = (tor10_uint64*)Lin->Mem;
-            tor10_int32 *_Rin = (tor10_int32*)Rin->Mem;
+            cytnx_uint64 *_out = (cytnx_uint64*)out->Mem;
+            cytnx_uint64 *_Lin = (cytnx_uint64*)Lin->Mem;
+            cytnx_int32 *_Rin = (cytnx_int32*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -944,11 +944,11 @@ namespace tor10{
               }
         }
         void cuAdd_internal_u64tu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
-            tor10_uint64 *_out = (tor10_uint64*)out->Mem;
-            tor10_uint64 *_Lin = (tor10_uint64*)Lin->Mem;
-            tor10_uint32 *_Rin = (tor10_uint32*)Rin->Mem;
+            cytnx_uint64 *_out = (cytnx_uint64*)out->Mem;
+            cytnx_uint64 *_Lin = (cytnx_uint64*)Lin->Mem;
+            cytnx_uint32 *_Rin = (cytnx_uint32*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -986,11 +986,11 @@ namespace tor10{
 
         }
         void cuAdd_internal_i32ti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
-            tor10_int32 *_out = (tor10_int32*)out->Mem;
-            tor10_int32 *_Lin = (tor10_int32*)Lin->Mem;
-            tor10_int32 *_Rin = (tor10_int32*)Rin->Mem;
+            cytnx_int32 *_out = (cytnx_int32*)out->Mem;
+            cytnx_int32 *_Lin = (cytnx_int32*)Lin->Mem;
+            cytnx_int32 *_Rin = (cytnx_int32*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -1003,11 +1003,11 @@ namespace tor10{
 
         }
         void cuAdd_internal_i32tu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
-            tor10_int32 *_out = (tor10_int32*)out->Mem;
-            tor10_int32 *_Lin = (tor10_int32*)Lin->Mem;
-            tor10_uint32 *_Rin = (tor10_uint32*)Rin->Mem;
+            cytnx_int32 *_out = (cytnx_int32*)out->Mem;
+            cytnx_int32 *_Lin = (cytnx_int32*)Lin->Mem;
+            cytnx_uint32 *_Rin = (cytnx_uint32*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -1050,11 +1050,11 @@ namespace tor10{
 
         }
         void cuAdd_internal_u32tu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
-            tor10_uint32 *_out = (tor10_uint32*)out->Mem;
-            tor10_uint32 *_Lin = (tor10_uint32*)Lin->Mem;
-            tor10_uint32 *_Rin = (tor10_uint32*)Rin->Mem;
+            cytnx_uint32 *_out = (cytnx_uint32*)out->Mem;
+            cytnx_uint32 *_Lin = (cytnx_uint32*)Lin->Mem;
+            cytnx_uint32 *_Rin = (cytnx_uint32*)Rin->Mem;
 
-            tor10_uint32 NBlocks = len/512;
+            cytnx_uint32 NBlocks = len/512;
             if(len%512) NBlocks += 1;
 
               if(Lin->size()==1){
@@ -1071,6 +1071,6 @@ namespace tor10{
 
 
     }//namespace linalg_internal
-}//namespace tor10
+}//namespace cytnx
 
 

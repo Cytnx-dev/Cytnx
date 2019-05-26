@@ -7,7 +7,7 @@
 #include <boost/checked_delete.hpp>
 #include <boost/detail/atomic_count.hpp>
 
-namespace tor10{
+namespace cytnx{
 template<class T>
 class intrusive_ptr_base {
     public:
@@ -66,6 +66,6 @@ private:
         mutable boost::detail::atomic_count ref_count;
 
 };
-}//tor10
+}//cytnx
 
 #endif

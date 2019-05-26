@@ -6,60 +6,60 @@
 
 using namespace std;
 
-namespace tor10{
+namespace cytnx{
     namespace utils_internal{
 
         Cast_cpu_interface::Cast_cpu_interface(){
             UElemCast_cpu = vector<vector<ElemCast_io> >(N_Type,vector<ElemCast_io>(N_Type,NULL));
 
-            UElemCast_cpu[tor10type.ComplexDouble][tor10type.ComplexDouble] = Cast_cpu_cdtcd;
-            UElemCast_cpu[tor10type.ComplexDouble][tor10type.ComplexFloat ] = Cast_cpu_cdtcf;
-            //UElemCast_cpu[tor10type.ComplexDouble][tor10type.Double       ] = Cast_cpu_invalid;
-            //UElemCast_cpu[tor10type.ComplexDouble][tor10type.Float        ] = Cast_cpu_invalid;
-            //UElemCast_cpu[tor10type.ComplexDouble][tor10type.Int64        ] = Cast_cpu_invalid;
-            //UElemCast_cpu[tor10type.ComplexDouble][tor10type.Uint64       ] = Cast_cpu_invalid;
-            //UElemCast_cpu[tor10type.ComplexDouble][tor10type.Int32        ] = Cast_cpu_invalid;
-            //UElemCast_cpu[tor10type.ComplexDouble][tor10type.Uint32       ] = Cast_cpu_invalid;
+            UElemCast_cpu[cytnxtype.ComplexDouble][cytnxtype.ComplexDouble] = Cast_cpu_cdtcd;
+            UElemCast_cpu[cytnxtype.ComplexDouble][cytnxtype.ComplexFloat ] = Cast_cpu_cdtcf;
+            //UElemCast_cpu[cytnxtype.ComplexDouble][cytnxtype.Double       ] = Cast_cpu_invalid;
+            //UElemCast_cpu[cytnxtype.ComplexDouble][cytnxtype.Float        ] = Cast_cpu_invalid;
+            //UElemCast_cpu[cytnxtype.ComplexDouble][cytnxtype.Int64        ] = Cast_cpu_invalid;
+            //UElemCast_cpu[cytnxtype.ComplexDouble][cytnxtype.Uint64       ] = Cast_cpu_invalid;
+            //UElemCast_cpu[cytnxtype.ComplexDouble][cytnxtype.Int32        ] = Cast_cpu_invalid;
+            //UElemCast_cpu[cytnxtype.ComplexDouble][cytnxtype.Uint32       ] = Cast_cpu_invalid;
 
-            UElemCast_cpu[tor10type.ComplexFloat][tor10type.ComplexDouble] = Cast_cpu_cftcd;
-            UElemCast_cpu[tor10type.ComplexFloat][tor10type.ComplexFloat ] = Cast_cpu_cftcf;
-            //UElemCast_cpu[tor10type.ComplexFloat][tor10type.Double       ] = Cast_cpu_invalid;
-            //UElemCast_cpu[tor10type.ComplexFloat][tor10type.Float        ] = Cast_cpu_invalid;
-            //UElemCast_cpu[tor10type.ComplexFloat][tor10type.Int64        ] = Cast_cpu_invalid;
-            //UElemCast_cpu[tor10type.ComplexFloat][tor10type.Uint64       ] = Cast_cpu_invalid;
-            //UElemCast_cpu[tor10type.ComplexFloat][tor10type.Int32        ] = Cast_cpu_invalid;
-            //UElemCast_cpu[tor10type.ComplexFloat][tor10type.Uint32       ] = Cast_cpu_invalid;
+            UElemCast_cpu[cytnxtype.ComplexFloat][cytnxtype.ComplexDouble] = Cast_cpu_cftcd;
+            UElemCast_cpu[cytnxtype.ComplexFloat][cytnxtype.ComplexFloat ] = Cast_cpu_cftcf;
+            //UElemCast_cpu[cytnxtype.ComplexFloat][cytnxtype.Double       ] = Cast_cpu_invalid;
+            //UElemCast_cpu[cytnxtype.ComplexFloat][cytnxtype.Float        ] = Cast_cpu_invalid;
+            //UElemCast_cpu[cytnxtype.ComplexFloat][cytnxtype.Int64        ] = Cast_cpu_invalid;
+            //UElemCast_cpu[cytnxtype.ComplexFloat][cytnxtype.Uint64       ] = Cast_cpu_invalid;
+            //UElemCast_cpu[cytnxtype.ComplexFloat][cytnxtype.Int32        ] = Cast_cpu_invalid;
+            //UElemCast_cpu[cytnxtype.ComplexFloat][cytnxtype.Uint32       ] = Cast_cpu_invalid;
 
-            UElemCast_cpu[tor10type.Double][tor10type.ComplexDouble] = Cast_cpu_dtcd;
-            UElemCast_cpu[tor10type.Double][tor10type.ComplexFloat ] = Cast_cpu_dtcf;
-            UElemCast_cpu[tor10type.Double][tor10type.Double       ] = Cast_cpu_dtd;
-            UElemCast_cpu[tor10type.Double][tor10type.Float        ] = Cast_cpu_dtf;
-            UElemCast_cpu[tor10type.Double][tor10type.Int64        ] = Cast_cpu_dti64;
-            UElemCast_cpu[tor10type.Double][tor10type.Uint64       ] = Cast_cpu_dtu64;
-            UElemCast_cpu[tor10type.Double][tor10type.Int32        ] = Cast_cpu_dti32;
-            UElemCast_cpu[tor10type.Double][tor10type.Uint32       ] = Cast_cpu_dtu32;
+            UElemCast_cpu[cytnxtype.Double][cytnxtype.ComplexDouble] = Cast_cpu_dtcd;
+            UElemCast_cpu[cytnxtype.Double][cytnxtype.ComplexFloat ] = Cast_cpu_dtcf;
+            UElemCast_cpu[cytnxtype.Double][cytnxtype.Double       ] = Cast_cpu_dtd;
+            UElemCast_cpu[cytnxtype.Double][cytnxtype.Float        ] = Cast_cpu_dtf;
+            UElemCast_cpu[cytnxtype.Double][cytnxtype.Int64        ] = Cast_cpu_dti64;
+            UElemCast_cpu[cytnxtype.Double][cytnxtype.Uint64       ] = Cast_cpu_dtu64;
+            UElemCast_cpu[cytnxtype.Double][cytnxtype.Int32        ] = Cast_cpu_dti32;
+            UElemCast_cpu[cytnxtype.Double][cytnxtype.Uint32       ] = Cast_cpu_dtu32;
 
-            UElemCast_cpu[tor10type.Float][tor10type.ComplexDouble] = Cast_cpu_ftcd;
-            UElemCast_cpu[tor10type.Float][tor10type.ComplexFloat ] = Cast_cpu_ftcf;
-            UElemCast_cpu[tor10type.Float][tor10type.Double       ] = Cast_cpu_ftd;
-            UElemCast_cpu[tor10type.Float][tor10type.Float        ] = Cast_cpu_ftf;
-            UElemCast_cpu[tor10type.Float][tor10type.Int64        ] = Cast_cpu_fti64;
-            UElemCast_cpu[tor10type.Float][tor10type.Uint64       ] = Cast_cpu_ftu64;
-            UElemCast_cpu[tor10type.Float][tor10type.Int32        ] = Cast_cpu_fti32;
-            UElemCast_cpu[tor10type.Float][tor10type.Uint32       ] = Cast_cpu_ftu32;
+            UElemCast_cpu[cytnxtype.Float][cytnxtype.ComplexDouble] = Cast_cpu_ftcd;
+            UElemCast_cpu[cytnxtype.Float][cytnxtype.ComplexFloat ] = Cast_cpu_ftcf;
+            UElemCast_cpu[cytnxtype.Float][cytnxtype.Double       ] = Cast_cpu_ftd;
+            UElemCast_cpu[cytnxtype.Float][cytnxtype.Float        ] = Cast_cpu_ftf;
+            UElemCast_cpu[cytnxtype.Float][cytnxtype.Int64        ] = Cast_cpu_fti64;
+            UElemCast_cpu[cytnxtype.Float][cytnxtype.Uint64       ] = Cast_cpu_ftu64;
+            UElemCast_cpu[cytnxtype.Float][cytnxtype.Int32        ] = Cast_cpu_fti32;
+            UElemCast_cpu[cytnxtype.Float][cytnxtype.Uint32       ] = Cast_cpu_ftu32;
 
-            UElemCast_cpu[tor10type.Int64][tor10type.ComplexDouble] = Cast_cpu_i64tcd;
-            UElemCast_cpu[tor10type.Int64][tor10type.ComplexFloat ] = Cast_cpu_i64tcf;
-            UElemCast_cpu[tor10type.Int64][tor10type.Double       ] = Cast_cpu_i64td;
-            UElemCast_cpu[tor10type.Int64][tor10type.Float        ] = Cast_cpu_i64tf;
-            UElemCast_cpu[tor10type.Int64][tor10type.Int64        ] = Cast_cpu_i64ti64;
-            UElemCast_cpu[tor10type.Int64][tor10type.Uint64       ] = Cast_cpu_i64tu64;
-            UElemCast_cpu[tor10type.Int64][tor10type.Int32        ] = Cast_cpu_i64ti32;
-            UElemCast_cpu[tor10type.Int64][tor10type.Uint32       ] = Cast_cpu_i64tu32;
+            UElemCast_cpu[cytnxtype.Int64][cytnxtype.ComplexDouble] = Cast_cpu_i64tcd;
+            UElemCast_cpu[cytnxtype.Int64][cytnxtype.ComplexFloat ] = Cast_cpu_i64tcf;
+            UElemCast_cpu[cytnxtype.Int64][cytnxtype.Double       ] = Cast_cpu_i64td;
+            UElemCast_cpu[cytnxtype.Int64][cytnxtype.Float        ] = Cast_cpu_i64tf;
+            UElemCast_cpu[cytnxtype.Int64][cytnxtype.Int64        ] = Cast_cpu_i64ti64;
+            UElemCast_cpu[cytnxtype.Int64][cytnxtype.Uint64       ] = Cast_cpu_i64tu64;
+            UElemCast_cpu[cytnxtype.Int64][cytnxtype.Int32        ] = Cast_cpu_i64ti32;
+            UElemCast_cpu[cytnxtype.Int64][cytnxtype.Uint32       ] = Cast_cpu_i64tu32;
 
-            UElemCast_cpu[tor10type.Uint64][tor10type.ComplexDouble] = Cast_cpu_u64tcd;
-            UElemCast_cpu[tor10type.Uint64][tor10type.ComplexFloat ] = Cast_cpu_u64tcf;
-            UElemCast_cpu[tor10type.Uint64][tor10type.Double       ] = Cast_cpu_u64td;
+            UElemCast_cpu[cytnxtype.Uint64][cytnxtype.ComplexDouble] = Cast_cpu_u64tcd;
+            UElemCast_cpu[cytnxtype.Uint64][cytnxtype.ComplexFloat ] = Cast_cpu_u64tcf;
+            UElemCast_cpu[cytnxtype.Uint64][cytnxtype.Double       ] = Cast_cpu_u64td;
         }
         utils_internal::Cast_cpu_interface Cast_cpu; // interface object. 
 
@@ -70,7 +70,7 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
                 out->Init(len_in);
             }
-            memcpy(out->Mem,in->Mem,sizeof(tor10_complex128)*len_in); 
+            memcpy(out->Mem,in->Mem,sizeof(cytnx_complex128)*len_in); 
         }
 
         void Cast_cpu_cdtcf(const boost::intrusive_ptr<Storage_base>& in, boost::intrusive_ptr<Storage_base>& out, const unsigned long long &len_in, const bool &is_alloc){
@@ -79,8 +79,8 @@ namespace tor10{
                 out->Init(len_in);
             }
 
-            tor10_complex128* _in = static_cast<tor10_complex128*>(in->Mem);
-            tor10_complex64*  _out= static_cast<tor10_complex64*>(out->Mem);
+            cytnx_complex128* _in = static_cast<cytnx_complex128*>(in->Mem);
+            cytnx_complex64*  _out= static_cast<cytnx_complex64*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -96,8 +96,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
                 out->Init(len_in);
             }
-            tor10_complex64* _in = static_cast<tor10_complex64*>(in->Mem);
-            tor10_complex128*  _out= static_cast<tor10_complex128*>(out->Mem);
+            cytnx_complex64* _in = static_cast<cytnx_complex64*>(in->Mem);
+            cytnx_complex128*  _out= static_cast<cytnx_complex128*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -112,7 +112,7 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
                 out->Init(len_in);
             }
-            memcpy(out->Mem,in->Mem,sizeof(tor10_complex64)*len_in); 
+            memcpy(out->Mem,in->Mem,sizeof(cytnx_complex64)*len_in); 
 
         }
 
@@ -123,8 +123,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
                 out->Init(len_in);
             }
-            tor10_double* _in = static_cast<tor10_double*>(in->Mem);
-            tor10_complex128*  _out= static_cast<tor10_complex128*>(out->Mem);
+            cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
+            cytnx_complex128*  _out= static_cast<cytnx_complex128*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -140,8 +140,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());    
                 out->Init(len_in);
             }
-            tor10_double* _in = static_cast<tor10_double*>(in->Mem);
-            tor10_complex64*  _out= static_cast<tor10_complex64*>(out->Mem);
+            cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
+            cytnx_complex64*  _out= static_cast<cytnx_complex64*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -156,7 +156,7 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new DoubleStorage());
                 out->Init(len_in);
             }
-            memcpy(out->Mem,in->Mem,sizeof(tor10_double)*len_in);
+            memcpy(out->Mem,in->Mem,sizeof(cytnx_double)*len_in);
 
         }
         void Cast_cpu_dtf(const boost::intrusive_ptr<Storage_base>& in, boost::intrusive_ptr<Storage_base>& out, const unsigned long long &len_in, const bool &is_alloc){
@@ -164,8 +164,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
                 out -> Init(len_in);
             }
-            tor10_double* _in = static_cast<tor10_double*>(in->Mem);
-            tor10_float*  _out= static_cast<tor10_float*>(out->Mem);
+            cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
+            cytnx_float*  _out= static_cast<cytnx_float*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -179,8 +179,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
                 out-> Init(len_in);
             }
-            tor10_double* _in = static_cast<tor10_double*>(in->Mem);
-            tor10_int64*  _out= static_cast<tor10_int64*>(out->Mem);
+            cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
+            cytnx_int64*  _out= static_cast<cytnx_int64*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -194,8 +194,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new Uint64Storage());
                 out->Init(len_in);
             }
-            tor10_double* _in = static_cast<tor10_double*>(in->Mem);
-            tor10_uint64*  _out= static_cast<tor10_uint64*>(out->Mem);
+            cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
+            cytnx_uint64*  _out= static_cast<cytnx_uint64*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -211,8 +211,8 @@ namespace tor10{
                 out->Init(len_in);
 
             }
-            tor10_double* _in = static_cast<tor10_double*>(in->Mem);
-            tor10_int32*  _out= static_cast<tor10_int32*>(out->Mem);
+            cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
+            cytnx_int32*  _out= static_cast<cytnx_int32*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -227,8 +227,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
                 out->Init(len_in);
             }
-            tor10_double* _in = static_cast<tor10_double*>(in->Mem);
-            tor10_uint32*  _out= static_cast<tor10_uint32*>(out->Mem);
+            cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
+            cytnx_uint32*  _out= static_cast<cytnx_uint32*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -244,8 +244,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
                 out->Init(len_in);
             }
-            tor10_float* _in = static_cast<tor10_float*>(in->Mem);
-            tor10_complex128*  _out= static_cast<tor10_complex128*>(out->Mem);
+            cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
+            cytnx_complex128*  _out= static_cast<cytnx_complex128*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -259,8 +259,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
                 out->Init(len_in);
             }
-            tor10_float* _in = static_cast<tor10_float*>(in->Mem);
-            tor10_complex64*  _out= static_cast<tor10_complex64*>(out->Mem);
+            cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
+            cytnx_complex64*  _out= static_cast<cytnx_complex64*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -274,8 +274,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new DoubleStorage());
                 out->Init(len_in);
             }
-            tor10_float* _in = static_cast<tor10_float*>(in->Mem);
-            tor10_double*  _out= static_cast<tor10_double*>(out->Mem);
+            cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
+            cytnx_double*  _out= static_cast<cytnx_double*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -289,15 +289,15 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
                 out->Init(len_in);
             }
-            memcpy(out->Mem,in->Mem,sizeof(tor10_float)*len_in);
+            memcpy(out->Mem,in->Mem,sizeof(cytnx_float)*len_in);
         }
         void Cast_cpu_fti64(const boost::intrusive_ptr<Storage_base>& in, boost::intrusive_ptr<Storage_base>& out, const unsigned long long &len_in, const bool &is_alloc){
             if(is_alloc){
                 out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
                 out->Init(len_in);
             }
-            tor10_float* _in = static_cast<tor10_float*>(in->Mem);
-            tor10_int64*  _out= static_cast<tor10_int64*>(out->Mem);
+            cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
+            cytnx_int64*  _out= static_cast<cytnx_int64*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -311,8 +311,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new Uint64Storage());
                 out->Init(len_in);
             }
-            tor10_float* _in = static_cast<tor10_float*>(in->Mem);
-            tor10_uint64*  _out= static_cast<tor10_uint64*>(out->Mem);
+            cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
+            cytnx_uint64*  _out= static_cast<cytnx_uint64*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -326,8 +326,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new Int32Storage());
                 out->Init(len_in);
             }
-            tor10_float* _in = static_cast<tor10_float*>(in->Mem);
-            tor10_int32*  _out= static_cast<tor10_int32*>(out->Mem);
+            cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
+            cytnx_int32*  _out= static_cast<cytnx_int32*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -341,8 +341,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
                 out->Init(len_in);
             }
-            tor10_float* _in = static_cast<tor10_float*>(in->Mem);
-            tor10_uint32*  _out= static_cast<tor10_uint32*>(out->Mem);
+            cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
+            cytnx_uint32*  _out= static_cast<cytnx_uint32*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -357,8 +357,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
                 out->Init(len_in);
             }
-            tor10_int64* _in = static_cast<tor10_int64*>(in->Mem);
-            tor10_complex128*  _out= static_cast<tor10_complex128*>(out->Mem);
+            cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
+            cytnx_complex128*  _out= static_cast<cytnx_complex128*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -373,8 +373,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
                 out->Init(len_in);
             }
-            tor10_int64* _in = static_cast<tor10_int64*>(in->Mem);
-            tor10_complex64*  _out= static_cast<tor10_complex64*>(out->Mem);
+            cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
+            cytnx_complex64*  _out= static_cast<cytnx_complex64*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -389,8 +389,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new DoubleStorage());
                 out->Init(len_in);
             }
-            tor10_int64* _in = static_cast<tor10_int64*>(in->Mem);
-            tor10_double*  _out= static_cast<tor10_double*>(out->Mem);
+            cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
+            cytnx_double*  _out= static_cast<cytnx_double*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -405,8 +405,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
                 out->Init(len_in);
             }
-            tor10_int64* _in = static_cast<tor10_int64*>(in->Mem);
-            tor10_float*  _out= static_cast<tor10_float*>(out->Mem);
+            cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
+            cytnx_float*  _out= static_cast<cytnx_float*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -421,7 +421,7 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
                 out->Init(len_in);
             }
-            memcpy(out->Mem,in->Mem,sizeof(tor10_int64)*len_in);
+            memcpy(out->Mem,in->Mem,sizeof(cytnx_int64)*len_in);
 
         }
         void Cast_cpu_i64tu64(const boost::intrusive_ptr<Storage_base>& in, boost::intrusive_ptr<Storage_base>& out, const unsigned long long &len_in, const bool &is_alloc){
@@ -429,8 +429,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new Uint64Storage());
                 out->Init(len_in);
             }
-            tor10_int64* _in = static_cast<tor10_int64*>(in->Mem);
-            tor10_uint64*  _out= static_cast<tor10_uint64*>(out->Mem);
+            cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
+            cytnx_uint64*  _out= static_cast<cytnx_uint64*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -444,8 +444,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new Int32Storage());
                 out->Init(len_in);
             }
-            tor10_int64* _in = static_cast<tor10_int64*>(in->Mem);
-            tor10_int32*  _out= static_cast<tor10_int32*>(out->Mem);
+            cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
+            cytnx_int32*  _out= static_cast<cytnx_int32*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -459,8 +459,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
                 out->Init(len_in);
             }
-            tor10_int64* _in = static_cast<tor10_int64*>(in->Mem);
-            tor10_uint32*  _out= static_cast<tor10_uint32*>(out->Mem);
+            cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
+            cytnx_uint32*  _out= static_cast<cytnx_uint32*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -475,8 +475,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
                 out->Init(len_in);
             }
-            tor10_uint64* _in = static_cast<tor10_uint64*>(in->Mem);
-            tor10_complex128*  _out= static_cast<tor10_complex128*>(out->Mem);
+            cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
+            cytnx_complex128*  _out= static_cast<cytnx_complex128*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -490,8 +490,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
                 out->Init(len_in);
             }
-            tor10_uint64* _in = static_cast<tor10_uint64*>(in->Mem);
-            tor10_complex64*  _out= static_cast<tor10_complex64*>(out->Mem);
+            cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
+            cytnx_complex64*  _out= static_cast<cytnx_complex64*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -505,8 +505,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new DoubleStorage());
                 out->Init(len_in);
             }
-            tor10_uint64* _in = static_cast<tor10_uint64*>(in->Mem);
-            tor10_double*  _out= static_cast<tor10_double*>(out->Mem);
+            cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
+            cytnx_double*  _out= static_cast<cytnx_double*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -520,8 +520,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
                 out->Init(len_in);
             }
-            tor10_uint64* _in = static_cast<tor10_uint64*>(in->Mem);
-            tor10_float*  _out= static_cast<tor10_float*>(out->Mem);
+            cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
+            cytnx_float*  _out= static_cast<cytnx_float*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -535,8 +535,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
                 out->Init(len_in);
             }
-            tor10_uint64* _in = static_cast<tor10_uint64*>(in->Mem);
-            tor10_int64*  _out= static_cast<tor10_int64*>(out->Mem);
+            cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
+            cytnx_int64*  _out= static_cast<cytnx_int64*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -550,7 +550,7 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new Uint64Storage());
                 out->Init(len_in);
             }
-            memcpy(out->Mem,in->Mem,sizeof(tor10_uint64)*len_in);
+            memcpy(out->Mem,in->Mem,sizeof(cytnx_uint64)*len_in);
            
         }
         void Cast_cpu_u64ti32(const boost::intrusive_ptr<Storage_base>& in, boost::intrusive_ptr<Storage_base>& out, const unsigned long long &len_in, const bool &is_alloc){
@@ -558,8 +558,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new Int32Storage());
                 out->Init(len_in);
             }
-            tor10_uint64* _in = static_cast<tor10_uint64*>(in->Mem);
-            tor10_int32*  _out= static_cast<tor10_int32*>(out->Mem);
+            cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
+            cytnx_int32*  _out= static_cast<cytnx_int32*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -573,8 +573,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
                 out->Init(len_in);
             }
-            tor10_uint64* _in = static_cast<tor10_uint64*>(in->Mem);
-            tor10_uint32*  _out= static_cast<tor10_uint32*>(out->Mem);
+            cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
+            cytnx_uint32*  _out= static_cast<cytnx_uint32*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -589,8 +589,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
                 out->Init(len_in);
             }
-            tor10_int32* _in = static_cast<tor10_int32*>(in->Mem);
-            tor10_complex128*  _out= static_cast<tor10_complex128*>(out->Mem);
+            cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
+            cytnx_complex128*  _out= static_cast<cytnx_complex128*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -604,8 +604,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
                 out->Init(len_in);
             }
-            tor10_int32* _in = static_cast<tor10_int32*>(in->Mem);
-            tor10_complex64*  _out= static_cast<tor10_complex64*>(out->Mem);
+            cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
+            cytnx_complex64*  _out= static_cast<cytnx_complex64*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -619,8 +619,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new DoubleStorage());
                 out->Init(len_in);
             }
-            tor10_int32* _in = static_cast<tor10_int32*>(in->Mem);
-            tor10_double*  _out= static_cast<tor10_double*>(out->Mem);
+            cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
+            cytnx_double*  _out= static_cast<cytnx_double*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -634,8 +634,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
                 out->Init(len_in);
             }
-            tor10_int32* _in = static_cast<tor10_int32*>(in->Mem);
-            tor10_float*  _out= static_cast<tor10_float*>(out->Mem);
+            cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
+            cytnx_float*  _out= static_cast<cytnx_float*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -649,8 +649,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
                 out->Init(len_in);
             }
-            tor10_int32* _in = static_cast<tor10_int32*>(in->Mem);
-            tor10_int64*  _out= static_cast<tor10_int64*>(out->Mem);
+            cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
+            cytnx_int64*  _out= static_cast<cytnx_int64*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -664,8 +664,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new Uint64Storage());
                 out->Init(len_in);
             }
-            tor10_int32* _in = static_cast<tor10_int32*>(in->Mem);
-            tor10_uint64*  _out= static_cast<tor10_uint64*>(out->Mem);
+            cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
+            cytnx_uint64*  _out= static_cast<cytnx_uint64*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -679,15 +679,15 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new Int32Storage());
                 out->Init(len_in);
             }
-            memcpy(out->Mem,in->Mem,sizeof(tor10_int32)*len_in);
+            memcpy(out->Mem,in->Mem,sizeof(cytnx_int32)*len_in);
         }
         void Cast_cpu_i32tu32(const boost::intrusive_ptr<Storage_base>& in, boost::intrusive_ptr<Storage_base>& out, const unsigned long long &len_in, const bool &is_alloc){
             if(is_alloc){
                 out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
                 out->Init(len_in);
             }
-            tor10_int32* _in = static_cast<tor10_int32*>(in->Mem);
-            tor10_uint32*  _out= static_cast<tor10_uint32*>(out->Mem);
+            cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
+            cytnx_uint32*  _out= static_cast<cytnx_uint32*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -702,8 +702,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
                 out->Init(len_in);
             }
-            tor10_uint32* _in = static_cast<tor10_uint32*>(in->Mem);
-            tor10_complex128*  _out= static_cast<tor10_complex128*>(out->Mem);
+            cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
+            cytnx_complex128*  _out= static_cast<cytnx_complex128*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -718,8 +718,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
                 out->Init(len_in);
             }
-            tor10_uint32* _in = static_cast<tor10_uint32*>(in->Mem);
-            tor10_complex64*  _out= static_cast<tor10_complex64*>(out->Mem);
+            cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
+            cytnx_complex64*  _out= static_cast<cytnx_complex64*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -733,8 +733,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new DoubleStorage());
                 out->Init(len_in);
             }
-            tor10_uint32* _in = static_cast<tor10_uint32*>(in->Mem);
-            tor10_double*  _out= static_cast<tor10_double*>(out->Mem);
+            cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
+            cytnx_double*  _out= static_cast<cytnx_double*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -748,8 +748,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
                 out->Init(len_in);
             }
-            tor10_uint32* _in = static_cast<tor10_uint32*>(in->Mem);
-            tor10_float*  _out= static_cast<tor10_float*>(out->Mem);
+            cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
+            cytnx_float*  _out= static_cast<cytnx_float*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -763,8 +763,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
                 out->Init(len_in);
             }
-            tor10_uint32* _in = static_cast<tor10_uint32*>(in->Mem);
-            tor10_int64*  _out= static_cast<tor10_int64*>(out->Mem);
+            cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
+            cytnx_int64*  _out= static_cast<cytnx_int64*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -778,8 +778,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new Uint64Storage());
                 out->Init(len_in);
             }
-            tor10_uint32* _in = static_cast<tor10_uint32*>(in->Mem);
-            tor10_uint64*  _out= static_cast<tor10_uint64*>(out->Mem);
+            cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
+            cytnx_uint64*  _out= static_cast<cytnx_uint64*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -793,8 +793,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new Int32Storage());
                 out->Init(len_in);
             }
-            tor10_uint32* _in = static_cast<tor10_uint32*>(in->Mem);
-            tor10_int32*  _out= static_cast<tor10_int32*>(out->Mem);
+            cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
+            cytnx_int32*  _out= static_cast<cytnx_int32*>(out->Mem);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -808,8 +808,8 @@ namespace tor10{
                 out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
                 out->Init(len_in);
             }
-            memcpy(out->Mem,in->Mem,sizeof(tor10_uint32)*len_in);
+            memcpy(out->Mem,in->Mem,sizeof(cytnx_uint32)*len_in);
 
         }
     }//namespace utils_internal
-}//namespace tor10
+}//namespace cytnx

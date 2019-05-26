@@ -10,7 +10,7 @@
 #include "linalg/linalg_internal_gpu/cuDiv_internal.hpp"
 
 
-namespace tor10{
+namespace cytnx{
     namespace linalg_internal{
         
 

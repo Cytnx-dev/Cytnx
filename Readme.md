@@ -1,4 +1,4 @@
-# TorX
+# Cytnx
 
 ## Requirements
     * Boost v1.53+ [check_deleted, atomicadd, intrusive_ptr]
@@ -53,16 +53,16 @@
 ### 1. All the Storage and Tensor can now have mulitple type support. 
         The avaliable types are :
 
-        | tor10 type       | c++ type             | Type object
+        | cytnx type       | c++ type             | Type object
         |------------------|----------------------|--------------------
-        | tor10_double     | double               | tor10type.Double
-        | tor10_float      | float                | tor10type.Float
-        | tor10_uint64     | uint64_t             | tor10type.Uint64
-        | tor10_uint32     | uint32_t             | tor10type.Uint32
-        | tor10_int64      | int64_t              | tor10type.Int64
-        | tor10_int32      | int32_t              | tor10type.Int32
-        | tor10_complex128 | std::complex<double> | tor10type.ComplexDouble
-        | tor10_complex64  | std::complex<float>  | tor10type.ComplexFloat
+        | cytnx_double     | double               | cytnxtype.Double
+        | cytnx_float      | float                | cytnxtype.Float
+        | cytnx_uint64     | uint64_t             | cytnxtype.Uint64
+        | cytnx_uint32     | uint32_t             | cytnxtype.Uint32
+        | cytnx_int64      | int64_t              | cytnxtype.Int64
+        | cytnx_int32      | int32_t              | cytnxtype.Int32
+        | cytnx_complex128 | std::complex<double> | cytnxtype.ComplexDouble
+        | cytnx_complex64  | std::complex<float>  | cytnxtype.ComplexFloat
 
 
 ### 2. Storage
@@ -70,13 +70,13 @@
         * Generic type object, the behavior is very similar to python.
 
 ```c++
-            Storage A(400,tor10type.Double);
+            Storage A(400,cytnxtype.Double);
             for(int i=0;i<400;i++)
                 A.at<double>(i) = i;
 
             Storage B = A; // A and B share same memory, this is similar as python 
             
-            Storage C = A.to(tor10device.cuda+0); 
+            Storage C = A.to(cytnxdevice.cuda+0); 
 ```
 
 
@@ -85,28 +85,28 @@
         * simple moving btwn CPU and GPU:
 
 ```c++
-            Tensor A({3,4},tor10type.Double,tor10device.cpu); // create tensor on CPU (default)
-            Tensor B({3,4},tor10type.Double,tor10device.cuda+0); // create tensor on GPU with gpu-id=0
+            Tensor A({3,4},cytnxtype.Double,cytnxdevice.cpu); // create tensor on CPU (default)
+            Tensor B({3,4},cytnxtype.Double,cytnxdevice.cuda+0); // create tensor on GPU with gpu-id=0
 
 
             Tensor C = B; // C and B share same memory.
 
             // move A to gpu
-            Tensor D = A.to(tor10device.cuda+0);
+            Tensor D = A.to(cytnxdevice.cuda+0);
 
             // inplace move A to gpu
-            A.to_(tor10device.cuda+0);
+            A.to_(cytnxdevice.cuda+0);
 ```
         * Type conversion in between avaliable:
 ```c++
-            Tensor A({3,4},tor10type.Double);
-            Tensor B = A.astype(tor10type.Uint64); // cast double to uint64_t
+            Tensor A({3,4},cytnxtype.Double);
+            Tensor B = A.astype(cytnxtype.Uint64); // cast double to uint64_t
 ```
 
         * vitual swap and permute. All the permute and swap will not change the underlying memory
         * Use Contiguous() when needed to actual moving the memory layout.
 ```c++
-            Tensor A({3,4,5,2},tor10type.Double);
+            Tensor A({3,4,5,2},cytnxtype.Double);
             A.permute({0,3,1,2}); // this will not change the memory, only the shape info is changed.
             cout << A.is_contiguous() << endl; // this will be false!
 
@@ -126,7 +126,7 @@
       -,-=[tn]|   x       |  Y  |  Y
       *,*=[tn]|   x       |  Y  |  Y
       /,/=[tn]|   x       |  Y  |  Y
-      Svd     |   x       |  Y  |  N
+      Svd     |   x       |  Y  |  Y
      
 ## Example
     

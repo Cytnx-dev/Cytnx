@@ -2,12 +2,12 @@
 
 using namespace std;
 
-namespace tor10{
+namespace cytnx{
     namespace utils_internal{
-        void* Calloc_cpu(const tor10_uint64 &N, const tor10_uint64 &perelem_bytes){
+        void* Calloc_cpu(const cytnx_uint64 &N, const cytnx_uint64 &perelem_bytes){
             return calloc(N,perelem_bytes);
         }
-        void* Malloc_cpu(const tor10_uint64 &bytes){
+        void* Malloc_cpu(const cytnx_uint64 &bytes){
             return malloc(bytes);
         }
     }

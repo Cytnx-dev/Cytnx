@@ -1,8 +1,8 @@
 #include "Device.hpp"
-#include "tor10_error.hpp"
+#include "cytnx_error.hpp"
 
 using namespace std;
-namespace tor10{
+namespace cytnx{
 Device::Device(): Ngpus(0){
     #ifdef UNI_GPU
         //get all available gpus
@@ -31,15 +31,15 @@ Device::Device(): Ngpus(0){
 };
 string Device::getname(const int &device_id){
     if(device_id==this->cpu){
-        return string("tor10 device: CPU");
+        return string("cytnx device: CPU");
     }else if(device_id>=0){
         if(device_id >= Ngpus){
-            tor10_error_msg(true,"%s","[ERROR] invalid device_id, gpuid exceed limit");
+            cytnx_error_msg(true,"%s","[ERROR] invalid device_id, gpuid exceed limit");
         }else{
-            return string("tor10 device: CUDA/GPU-id:") + to_string(device_id);
+            return string("cytnx device: CUDA/GPU-id:") + to_string(device_id);
         }
     }else{
-        tor10_error_msg(true,"%s","[ERROR] invalid device_id");
+        cytnx_error_msg(true,"%s","[ERROR] invalid device_id");
     }
 
 }
@@ -75,7 +75,7 @@ void Device::Print_Property(){
 
 
 
-Device tor10device;
+Device cytnxdevice;
 }
 
 

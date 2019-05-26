@@ -5,13 +5,13 @@
 #include <cstdlib>
 #include <stdint.h>
 #include <climits>
-#include "../../Type.hpp"
-#include "../../Storage.hpp"
-#include "../../tor10_error.hpp"
+#include "Type.hpp"
+#include "Storage.hpp"
+#include "cytnx_error.hpp"
 
-namespace tor10{
+namespace cytnx{
     namespace utils_internal{
-        std::vector<tor10_uint64> range_cpu(const tor10_uint64 &len);
+        std::vector<cytnx_uint64> range_cpu(const cytnx_uint64 &len);
     }
 }
 #endif

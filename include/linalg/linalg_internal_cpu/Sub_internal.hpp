@@ -8,7 +8,7 @@
 #include "Storage.hpp"
 #include "Type.hpp"
 
-namespace tor10{
+namespace cytnx{
 
     namespace linalg_internal{
 

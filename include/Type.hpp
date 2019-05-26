@@ -9,15 +9,15 @@
 
 
 
-namespace tor10{
-    typedef double tor10_double;
-    typedef float tor10_float;
-    typedef uint64_t tor10_uint64;
-    typedef uint32_t tor10_uint32;
-    typedef int64_t tor10_int64;
-    typedef int32_t tor10_int32;
-    typedef std::complex<float> tor10_complex64;
-    typedef std::complex<double> tor10_complex128;
+namespace cytnx{
+    typedef double cytnx_double;
+    typedef float cytnx_float;
+    typedef uint64_t cytnx_uint64;
+    typedef uint32_t cytnx_uint32;
+    typedef int64_t cytnx_int64;
+    typedef int32_t cytnx_int32;
+    typedef std::complex<float> cytnx_complex64;
+    typedef std::complex<double> cytnx_complex128;
 
 
     struct __type{
@@ -56,9 +56,9 @@ namespace tor10{
 
     };
 
-    extern Type tor10type;
+    extern Type cytnxtype;
 
-}//namespace tor10
+}//namespace cytnx
 
 
 

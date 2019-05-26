@@ -7,9 +7,9 @@
 #include <climits>
 #include "Type.hpp"
 #include "Storage.hpp"
-#include "tor10_error.hpp"
+#include "cytnx_error.hpp"
 
-namespace tor10{
+namespace cytnx{
     namespace utils_internal{
         
         typedef void (*ElemCast_io_gpu)(const boost::intrusive_ptr<Storage_base>&,boost::intrusive_ptr<Storage_base>&,const unsigned long long &, const int &);
@@ -80,7 +80,7 @@ namespace tor10{
         void cuCast_gpu_u32ti32(const boost::intrusive_ptr<Storage_base>& in, boost::intrusive_ptr<Storage_base>& out, const unsigned long long &len_in, const int &alloc_device);
         void cuCast_gpu_u32tu32(const boost::intrusive_ptr<Storage_base>& in, boost::intrusive_ptr<Storage_base>& out, const unsigned long long &len_in, const int &alloc_device);
     }//utils_internal
-}//tor10 
+}//cytnx 
 
 
 #endif

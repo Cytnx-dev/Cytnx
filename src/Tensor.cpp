@@ -1,17 +1,18 @@
 #include "Tensor.hpp"
 #include "utils/utils_internal.hpp"
+#include "linalg/linalg.hpp"
 
 using namespace std;
 
-namespace tor10{        
+namespace cytnx{        
 
-    void Tensor_impl::Init(const std::vector<tor10_uint64> &shape, const unsigned int &dtype, int device){
+    void Tensor_impl::Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype, int device){
         //check:
-        tor10_error_msg(dtype>=N_Type,"%s","[ERROR] invalid argument: dtype");
-        tor10_error_msg(shape.size()==0,"%s","[ERROR] invalid argument: shape. Must at least have one element.");
-        tor10_uint64 Nelem= 1;
+        cytnx_error_msg(dtype>=N_Type,"%s","[ERROR] invalid argument: dtype");
+        cytnx_error_msg(shape.size()==0,"%s","[ERROR] invalid argument: shape. Must at least have one element.");
+        cytnx_uint64 Nelem= 1;
         for(int i=0;i<shape.size();i++){
-            tor10_error_msg(shape[i]==0,"%s","[ERROR] shape cannot have 0 dimension in any rank.");
+            cytnx_error_msg(shape[i]==0,"%s","[ERROR] shape cannot have 0 dimension in any rank.");
             Nelem *= shape[i]; 
         }
         this->_storage = __SII.USIInit[dtype]();
@@ -23,23 +24,23 @@ namespace tor10{
 
     }
 
-    void Tensor_impl::permute_(const std::vector<tor10_uint64> &rnks){
+    void Tensor_impl::permute_(const std::vector<cytnx_uint64> &rnks){
         //check::
         if(rnks.size()!=this->_shape.size()){
-            tor10_error_msg(true,"%s","reshape a tensor with a specify shape that does not match with the shape of the incident tensor.");
+            cytnx_error_msg(true,"%s","reshape a tensor with a specify shape that does not match with the shape of the incident tensor.");
         }
 
-        std::vector<tor10_uint64> new_fwdmap(this->_shape.size());
-        std::vector<tor10_uint64> new_shape(this->_shape.size());
-        std::vector<tor10_uint64> new_idxmap(this->_shape.size());
+        std::vector<cytnx_uint64> new_fwdmap(this->_shape.size());
+        std::vector<cytnx_uint64> new_shape(this->_shape.size());
+        std::vector<cytnx_uint64> new_idxmap(this->_shape.size());
 
         //for(int i=0;i<this->_shape.size();i++)
         //    std::cout << this->_mapper[i] << " " << this->_invmapper[i] << std::endl;                
 
 
-        for(tor10_uint32 i=0;i<rnks.size();i++){
+        for(cytnx_uint32 i=0;i<rnks.size();i++){
             if(rnks[i] >= rnks.size()){
-                tor10_error_msg(1,"%s","reshape a tensor with invalid rank index.");
+                cytnx_error_msg(1,"%s","reshape a tensor with invalid rank index.");
             }
             //std::cout << this->_mapper[rnks[i]] << " " << i << std::endl;
             new_idxmap[this->_mapper[rnks[i]]] = i;
@@ -54,7 +55,7 @@ namespace tor10{
 
         ///checking if permute back to contiguous:
         bool iconti=true;
-        for(tor10_uint32 i=0;i<rnks.size();i++){
+        for(cytnx_uint32 i=0;i<rnks.size();i++){
             if(new_fwdmap[i]!=new_idxmap[i]){iconti = false; break;}
             if(new_fwdmap[i] != i){iconti=false; break;}
         }
@@ -67,7 +68,11 @@ namespace tor10{
         return os;
     }       
 
+    //===================================================================
+    //wrapper
 
-}//namespace tor10
+
+
+}//namespace cytnx
 
 

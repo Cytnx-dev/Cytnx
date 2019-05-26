@@ -17,11 +17,11 @@
 #include "Type.hpp"
 #include "Device.hpp"
 #include "intrusive_ptr_base.hpp"
-#include "tor10_error.hpp"
+#include "cytnx_error.hpp"
 
 
 
-namespace tor10{
+namespace cytnx{
 
     
     class Storage_base : public intrusive_ptr_base<Storage_base> {
@@ -81,12 +81,12 @@ namespace tor10{
             template<class T>
             void _Init_byptr_safe(T *rawptr, const unsigned long long &len_in){
                 //check:
-                if(this->dtype==tor10type.Float){
-                        tor10_error_msg(typeid(T) != typeid(float),"%s","[ERROR _Init_byptr_safe type not match]");
-                }else if(this->dtype==tor10type.Double){
-                        tor10_error_msg(typeid(T) != typeid(double),"%s","[ERROR _Init_byptr_safe type not match]");
+                if(this->dtype==cytnxtype.Float){
+                        cytnx_error_msg(typeid(T) != typeid(float),"%s","[ERROR _Init_byptr_safe type not match]");
+                }else if(this->dtype==cytnxtype.Double){
+                        cytnx_error_msg(typeid(T) != typeid(double),"%s","[ERROR _Init_byptr_safe type not match]");
                 }else{
-                    tor10_error_msg(1,"[FATAL] ERROR%s","\n");
+                    cytnx_error_msg(1,"[FATAL] ERROR%s","\n");
                 }
 
                 this->_Init_byptr((void*)rawptr,len_in);
@@ -109,40 +109,40 @@ namespace tor10{
             virtual boost::intrusive_ptr<Storage_base> copy();
 
             // this will perform permute on the underlying memory. 
-            virtual boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64> &mapper, const std::vector<tor10_uint64> &invmapper);
-            virtual void Move_memory_(const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64> &mapper, const std::vector<tor10_uint64> &invmapper); 
-            virtual void PrintElem_byShape(std::ostream& os, const std::vector<tor10_uint64> &shape, const std::vector<tor10_uint64> &mapper={});        
+            virtual boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
+            virtual void Move_memory_(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper); 
+            virtual void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             virtual void print_elems();
     };        
 
     ///////////////////////////////////                    
     class FloatStorage : public Storage_base{
         public:
-            FloatStorage(){this->dtype=tor10type.Float;};
+            FloatStorage(){this->dtype=cytnxtype.Float;};
             void Init(const unsigned long long &len_in, const int &device=-1);
             void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
             boost::intrusive_ptr<Storage_base> copy();
-            boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64> &mapper, const std::vector<tor10_uint64> &invmapper);
-            void Move_memory_(const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64> &mapper, const std::vector<tor10_uint64> &invmapper); 
+            boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
+            void Move_memory_(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper); 
             void to_(const int &device);
             boost::intrusive_ptr<Storage_base> to(const int &device);
-            void PrintElem_byShape(std::ostream& os, const std::vector<tor10_uint64> &shape, const std::vector<tor10_uint64> &mapper={});        
+            void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             void print_elems();
     };          
 
     class DoubleStorage: public Storage_base{
         public:
-            DoubleStorage(){this->dtype=tor10type.Double;};
+            DoubleStorage(){this->dtype=cytnxtype.Double;};
             void Init(const unsigned long long &len_in,const int &device=-1);
             void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
             boost::intrusive_ptr<Storage_base> copy();
-            boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64> &mapper, const std::vector<tor10_uint64> &invmapper);
-            void Move_memory_(const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64> &mapper, const std::vector<tor10_uint64> &invmapper); 
+            boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
+            void Move_memory_(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper); 
             void to_(const int &device);
             boost::intrusive_ptr<Storage_base> to(const int &device);
-            void PrintElem_byShape(std::ostream& os, const std::vector<tor10_uint64> &shape, const std::vector<tor10_uint64> &mapper={});        
+            void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             void print_elems();
     };
 
@@ -150,92 +150,92 @@ namespace tor10{
 
     class ComplexDoubleStorage: public Storage_base{
         public:
-            ComplexDoubleStorage(){this->dtype=tor10type.ComplexDouble;};
+            ComplexDoubleStorage(){this->dtype=cytnxtype.ComplexDouble;};
             void Init(const unsigned long long &len_in, const int &device=-1);
             void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
             boost::intrusive_ptr<Storage_base> copy();
-            boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64> &mapper, const std::vector<tor10_uint64> &invmapper);
-            void Move_memory_(const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64> &mapper, const std::vector<tor10_uint64> &invmapper); 
+            boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
+            void Move_memory_(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper); 
             void to_(const int &device);
             boost::intrusive_ptr<Storage_base> to(const int &device);
-            void PrintElem_byShape(std::ostream& os, const std::vector<tor10_uint64> &shape, const std::vector<tor10_uint64> &mapper={});        
+            void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             void print_elems();
     };
 
     class ComplexFloatStorage: public Storage_base{
         public:
-            ComplexFloatStorage(){this->dtype=tor10type.ComplexFloat;};
+            ComplexFloatStorage(){this->dtype=cytnxtype.ComplexFloat;};
             void Init(const unsigned long long &len_in,const int &device=-1);
             void _Init_byptr(void *rawptr, const unsigned long long &len_in,const int &device=-1);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
             boost::intrusive_ptr<Storage_base> copy();
-            boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64> &mapper, const std::vector<tor10_uint64> &invmapper);
-            void Move_memory_(const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64> &mapper, const std::vector<tor10_uint64> &invmapper); 
+            boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
+            void Move_memory_(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper); 
             void to_(const int &device);
             boost::intrusive_ptr<Storage_base> to(const int &device);
-            void PrintElem_byShape(std::ostream& os, const std::vector<tor10_uint64> &shape, const std::vector<tor10_uint64> &mapper={});        
+            void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             void print_elems();
     };
 
     class Int64Storage : public Storage_base{
         public:
-            Int64Storage(){this->dtype=tor10type.Int64;};
+            Int64Storage(){this->dtype=cytnxtype.Int64;};
             void Init(const unsigned long long &len_in, const int &device=-1);
             void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
             boost::intrusive_ptr<Storage_base> copy();
-            boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64> &mapper, const std::vector<tor10_uint64> &invmapper);
-            void Move_memory_(const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64> &mapper, const std::vector<tor10_uint64> &invmapper); 
+            boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
+            void Move_memory_(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper); 
             void to_(const int &device);
             boost::intrusive_ptr<Storage_base> to(const int &device);
-            void PrintElem_byShape(std::ostream& os, const std::vector<tor10_uint64> &shape, const std::vector<tor10_uint64> &mapper={});        
+            void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             void print_elems();
     };          
 
     class Uint64Storage : public Storage_base{
         public:
-            Uint64Storage(){this->dtype=tor10type.Uint64;};
+            Uint64Storage(){this->dtype=cytnxtype.Uint64;};
             void Init(const unsigned long long &len_in, const int &device=-1);
             void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
             boost::intrusive_ptr<Storage_base> copy();
-            boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64> &mapper, const std::vector<tor10_uint64> &invmapper);
-            void Move_memory_(const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64> &mapper, const std::vector<tor10_uint64> &invmapper); 
+            boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
+            void Move_memory_(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper); 
             void to_(const int &device);
             boost::intrusive_ptr<Storage_base> to(const int &device);
-            void PrintElem_byShape(std::ostream& os, const std::vector<tor10_uint64> &shape, const std::vector<tor10_uint64> &mapper={});        
+            void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             void print_elems();
     };          
 
     class Int32Storage : public Storage_base{
         public:
-            Int32Storage(){this->dtype=tor10type.Int32;};
+            Int32Storage(){this->dtype=cytnxtype.Int32;};
             void Init(const unsigned long long &len_in, const int &device=-1);
             void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
             boost::intrusive_ptr<Storage_base> copy();
-            boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64> &mapper, const std::vector<tor10_uint64> &invmapper);
-            void Move_memory_(const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64> &mapper, const std::vector<tor10_uint64> &invmapper); 
+            boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
+            void Move_memory_(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper); 
             void to_(const int &device);
             boost::intrusive_ptr<Storage_base> to(const int &device);
-            void PrintElem_byShape(std::ostream& os, const std::vector<tor10_uint64> &shape, const std::vector<tor10_uint64> &mapper={});        
+            void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             void print_elems();
     };          
 
 
     class Uint32Storage : public Storage_base{
         public:
-            Uint32Storage(){this->dtype=tor10type.Uint32;};
+            Uint32Storage(){this->dtype=cytnxtype.Uint32;};
             void Init(const unsigned long long &len_in, const int &device=-1);
             void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
             boost::intrusive_ptr<Storage_base> copy();
-            boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64> &mapper, const std::vector<tor10_uint64> &invmapper);
-            void Move_memory_(const std::vector<tor10_uint64> &old_shape, const std::vector<tor10_uint64> &mapper, const std::vector<tor10_uint64> &invmapper); 
+            boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
+            void Move_memory_(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper); 
             void to_(const int &device);
             boost::intrusive_ptr<Storage_base> to(const int &device);
-            void PrintElem_byShape(std::ostream& os, const std::vector<tor10_uint64> &shape, const std::vector<tor10_uint64> &mapper={});        
+            void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             void print_elems();
     };          
 
@@ -259,7 +259,7 @@ namespace tor10{
             boost::intrusive_ptr<Storage_base> _impl;
 
             void Init(const unsigned long long &size,const unsigned int &dtype, int device=-1){
-                tor10_error_msg(dtype>=N_Type,"%s","[ERROR] invalid argument: dtype");
+                cytnx_error_msg(dtype>=N_Type,"%s","[ERROR] invalid argument: dtype");
                 this->_impl = __SII.USIInit[dtype]();
                 this->_impl->Init(size,device);
             }

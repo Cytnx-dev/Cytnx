@@ -5,7 +5,7 @@
 
 using namespace std;
 
-namespace tor10{
+namespace cytnx{
 
     std::ostream& operator<<(std::ostream& os, Storage &in){
         in.print(); 
