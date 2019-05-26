@@ -407,7 +407,8 @@ namespace cytnx{
             std::vector<Tensor> Svd(const bool &is_U, const bool &is_vT);
             Tensor& Inv_();
             Tensor Inv(); 
-
+            Tensor& Conj_();
+            Tensor Conj();
 
 
     };// class Tensor

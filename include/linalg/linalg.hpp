@@ -48,6 +48,10 @@ namespace cytnx{
         void Inv_(Tensor &Tin);
 
 
+        // Conj:
+        Tensor Conj(const Tensor &Tin);
+        void Conj_(Tensor &Tin);
+
     }// namespace linalg
     
 

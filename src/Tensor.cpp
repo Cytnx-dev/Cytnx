@@ -234,7 +234,14 @@ namespace cytnx{
     Tensor Tensor::Inv(){
         return linalg::Inv(*this); 
     }
-
+    
+    Tensor& Tensor::Conj_(){
+        linalg::Conj_(*this);
+        return *this;
+    }
+    Tensor Tensor::Conj(){
+        return linalg::Conj(*this); 
+    }
 
 }//namespace cytnx
 

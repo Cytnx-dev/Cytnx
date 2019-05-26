@@ -128,7 +128,7 @@
       /,/=[tn]|   x       |  Y  |  Y   |    Y (Div_)
       Svd     |   x       |  Y  |  Y   |    Y
       Inv     |   Inv_    |  Y  |  Y   |    Y
-
+      Conj    |   Conj_   |  Y  |  Y   |    Y 
 
      
 ## Example

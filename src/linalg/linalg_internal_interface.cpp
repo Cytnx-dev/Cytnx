@@ -99,6 +99,13 @@ namespace cytnx{
             Inv_inplace_ii[cytnxtype.Double       ] = Inv_inplace_internal_d;
             Inv_inplace_ii[cytnxtype.Float        ] = Inv_inplace_internal_f;
 
+
+            //=====================
+            Conj_inplace_ii = vector<Conjinplacefunc_oii>(3);
+
+            Conj_inplace_ii[cytnxtype.ComplexDouble] = Conj_inplace_internal_cd;
+            Conj_inplace_ii[cytnxtype.ComplexFloat ] = Conj_inplace_internal_cf;
+
             #ifdef UNI_GPU
                 cuAri_ii = vector<vector<Arithmicfunc_oii> >(N_Type,vector<Arithmicfunc_oii>(N_Type));
 
@@ -188,6 +195,11 @@ namespace cytnx{
                 cuInv_inplace_ii[cytnxtype.ComplexFloat ] = cuInv_inplace_internal_cf;
                 cuInv_inplace_ii[cytnxtype.Double       ] = cuInv_inplace_internal_d;
                 cuInv_inplace_ii[cytnxtype.Float        ] = cuInv_inplace_internal_f;
+
+                cuConj_inplace_ii = vector<Conjinplacefunc_oii>(3);
+
+                cuConj_inplace_ii[cytnxtype.ComplexDouble] = cuConj_inplace_internal_cd;
+                cuConj_inplace_ii[cytnxtype.ComplexFloat ] = cuConj_inplace_internal_cf;
 
 
             #endif
