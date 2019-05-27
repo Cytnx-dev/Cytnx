@@ -26,10 +26,10 @@ namespace cytnx{
             if(Tin.device()==cytnxdevice.cpu){
 
 
-                cytnx::linalg_internal::lii.Svd_ii[in.dtype()](in._impl->_get_storage(), 
-                                                        U._impl->_get_storage(),
-                                                        vT._impl->_get_storage(),  
-                                                        S._impl->_get_storage(),in.shape()[0],in.shape()[1]);
+                cytnx::linalg_internal::lii.Svd_ii[in.dtype()](in._impl->_get_storage()._impl, 
+                                                        U._impl->_get_storage()._impl,
+                                                        vT._impl->_get_storage()._impl,  
+                                                        S._impl->_get_storage()._impl,in.shape()[0],in.shape()[1]);
 
                 std::vector<Tensor> out;
                 out.push_back(S);
@@ -40,10 +40,10 @@ namespace cytnx{
 
             }else{
                 #ifdef UNI_GPU
-                    cytnx::linalg_internal::lii.cuSvd_ii[in.dtype()](in._impl->_get_storage(),
-                                                            U._impl->_get_storage(),
-                                                            vT._impl->_get_storage(),
-                                                            S._impl->_get_storage(),in.shape()[0],in.shape()[1]);
+                    cytnx::linalg_internal::lii.cuSvd_ii[in.dtype()](in._impl->_get_storage()._impl,
+                                                            U._impl->_get_storage()._impl,
+                                                            vT._impl->_get_storage()._impl,
+                                                            S._impl->_get_storage()._impl,in.shape()[0],in.shape()[1]);
 
                     std::vector<Tensor> out;
                     out.push_back(S);

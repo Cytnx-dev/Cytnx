@@ -16,14 +16,14 @@ namespace cytnx{
             if(Tin.device()==cytnxdevice.cpu){
 
 
-                cytnx::linalg_internal::lii.Inv_inplace_ii[Tin.dtype()](Tin._impl->_get_storage(),
+                cytnx::linalg_internal::lii.Inv_inplace_ii[Tin.dtype()](Tin._impl->_get_storage()._impl,
                                                                        Tin.shape().back());
 
                 
 
             }else{
                 #ifdef UNI_GPU
-                    cytnx::linalg_internal::lii.cuInv_inplace_ii[Tin.dtype()](Tin._impl->_get_storage(),
+                    cytnx::linalg_internal::lii.cuInv_inplace_ii[Tin.dtype()](Tin._impl->_get_storage()._impl,
                                                                               Tin.shape().back()); 
                     
                 #else

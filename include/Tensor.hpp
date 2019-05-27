@@ -24,7 +24,7 @@ namespace cytnx{
             
 
             //Memory:
-            boost::intrusive_ptr<Storage_base> _storage;
+            Storage _storage;
 
             //tensor shape
             std::vector<cytnx_uint64> _shape;
@@ -35,7 +35,7 @@ namespace cytnx{
             bool _contiguous;
 
         public:
-            Tensor_impl():_storage(new Storage_base()), _contiguous(true){};
+            Tensor_impl(): _contiguous(true){};
             
             void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype, int device=-1);
 
@@ -44,17 +44,17 @@ namespace cytnx{
             Tensor_impl& operator=(const Tensor_impl &rhs); // add const
             
             const unsigned int dtype() const{
-                return this->_storage->dtype;
+                return this->_storage.dtype();
             }
             const int device() const {
-                return this->_storage->device;
+                return this->_storage.device();
             }
 
             const std::string dtype_str() const {
-                return cytnxtype.getname(this->_storage->dtype);
+                return cytnxtype.getname(this->_storage.dtype());
             }
             const std::string device_str() const{
-                return cytnxdevice.getname(this->_storage->device);
+                return cytnxdevice.getname(this->_storage.device());
             }
 
             const std::vector<cytnx_uint64>& shape() const{
@@ -70,17 +70,17 @@ namespace cytnx{
             const std::vector<cytnx_uint64> & _get_invmapper() const{
                 return _invmapper;
             }
-            boost::intrusive_ptr<Storage_base>& _get_storage(){
+            Storage& _get_storage(){
                 return _storage;
             }
 
-            const boost::intrusive_ptr<Storage_base> _get_storage() const{
+            const Storage& _get_storage() const{
                 return _storage;
             }
 
             boost::intrusive_ptr<Tensor_impl> clone(){
                 boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
-                out->_storage = this->_storage->clone();
+                out->_storage = this->_storage.clone();
                 out->_mapper = this->_mapper;
                 out->_invmapper = this->_invmapper;
                 out->_shape = this->_shape;
@@ -89,14 +89,14 @@ namespace cytnx{
             }
 
             void to_(const int &device){
-                this->_storage->to_(device);
+                this->_storage.to_(device);
             }
             boost::intrusive_ptr<Tensor_impl> to(const int &device){
                 if(this->device()==device){
                     return this;
                 }else{
                     boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
-                    out->_storage = this->_storage->to(device);
+                    out->_storage = this->_storage.to(device);
                     out->_mapper = this->_mapper;
                     out->_invmapper = this->_invmapper;
                     out->_shape = this->_shape;
@@ -134,7 +134,7 @@ namespace cytnx{
                     RealRank += mtplyr*c_loc[i];
                     mtplyr *= c_shape[i];
                 }
-                return this->_storage->at<T>(RealRank);
+                return this->_storage.at<T>(RealRank);
             }
 
             boost::intrusive_ptr<Tensor_impl> Contiguous(){
@@ -150,7 +150,7 @@ namespace cytnx{
                         oldshape[i] = this->_shape[this->_invmapper[i]];
                     }
         
-                    out->_storage = this->_storage->Move_memory(oldshape,this->_mapper, this->_invmapper);
+                    out->_storage = this->_storage._impl->Move_memory(oldshape,this->_mapper, this->_invmapper);
                     out->_invmapper = utils_internal::range_cpu(this->_invmapper.size());
                     out->_mapper = out->_invmapper;
                     out->_shape = this->_shape;
@@ -167,7 +167,7 @@ namespace cytnx{
                     for(cytnx_uint64 i=0;i<this->_shape.size();i++){
                         oldshape[i] = this->_shape[this->_invmapper[i]];
                     }
-                    this->_storage->Move_memory_(oldshape,this->_mapper, this->_invmapper);
+                    this->_storage._impl->Move_memory_(oldshape,this->_mapper, this->_invmapper);
                     this->_mapper = utils_internal::range_cpu(this->_invmapper.size());
                     this->_invmapper = this->_mapper;
                     this->_contiguous = true;
@@ -196,11 +196,11 @@ namespace cytnx{
 
                             
                 if(has_undetermine){
-                    cytnx_error_msg(new_N >= this->_storage->len,"%s","[ERROR] new shape exceed the total number of elements.");
-                    cytnx_error_msg(this->_storage->len%new_N,"%s","[ERROR] unmatch size when reshape with undetermine dimension");
-                    result_shape[Udet_id] = this->_storage->len/new_N;
+                    cytnx_error_msg(new_N >= this->_storage.size(),"%s","[ERROR] new shape exceed the total number of elements.");
+                    cytnx_error_msg(this->_storage.size()%new_N,"%s","[ERROR] unmatch size when reshape with undetermine dimension");
+                    result_shape[Udet_id] = this->_storage.size()/new_N;
                 }else{
-                    cytnx_error_msg(new_N != this->_storage->len,"%s","[ERROR] new shape does not match the number of elements.");
+                    cytnx_error_msg(new_N != this->_storage.size(),"%s","[ERROR] new shape does not match the number of elements.");
                 }
             
                 this->_shape = result_shape;
@@ -225,7 +225,7 @@ namespace cytnx{
             
             boost::intrusive_ptr<Tensor_impl> astype(const int& new_type) const {
                 boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
-                out->_storage = this->_storage->astype(new_type);
+                out->_storage = this->_storage.astype(new_type);
                 return out;
             }
 

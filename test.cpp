@@ -63,7 +63,6 @@ int main(int argc, char *argv[]){
     s.Init(12,cytnxtype.Double,cytnxdevice.cpu);
     s.at<double>(4) = 3;
     cout << s << endl;    
-
     Tensor x({3,4,5},cytnxtype.Double,cytnxdevice.cpu);
     Tensor b = x.clone();
     Tensor c = linalg::Add(1,x);

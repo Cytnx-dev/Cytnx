@@ -11,10 +11,10 @@ namespace cytnx{
 
 
             if(Tin.device() == cytnxdevice.cpu){
-                cytnx::linalg_internal::lii.Exp_ii[out.dtype()](out._impl->_get_storage(),Tin._impl->_get_storage(),Tin._impl->_get_storage()->size());
+                cytnx::linalg_internal::lii.Exp_ii[out.dtype()](out._impl->_get_storage()._impl,Tin._impl->_get_storage()._impl,Tin._impl->_get_storage()._impl->size());
             }else{
                 #ifdef UNI_GPU
-                cytnx::linalg_internal::lii.cuExp_ii[out.dtype()](out._impl->_get_storage(),Tin._impl->_get_storage(),Tin._impl->_get_storage()->size());
+                cytnx::linalg_internal::lii.cuExp_ii[out.dtype()](out._impl->_get_storage()._impl,Tin._impl->_get_storage()._impl,Tin._impl->_get_storage()._impl->size());
                 #else
                     cytnx_error_msg(true,"[Exp] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
                 #endif

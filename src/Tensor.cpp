@@ -15,8 +15,8 @@ namespace cytnx{
             cytnx_error_msg(shape[i]==0,"%s","[ERROR] shape cannot have 0 dimension in any rank.");
             Nelem *= shape[i]; 
         }
-        this->_storage = __SII.USIInit[dtype]();
-        this->_storage->Init(Nelem,device);
+        //this->_storage = __SII.USIInit[dtype]();
+        this->_storage.Init(Nelem,dtype,device);
         this->_shape = shape;
         this->_mapper = utils_internal::range_cpu(shape.size());
         this->_invmapper = this->_mapper;
@@ -63,8 +63,8 @@ namespace cytnx{
     }            
 
     std::ostream& operator<<(std::ostream& os, Tensor &in){
-        if(in.is_contiguous()) in._impl->_get_storage()->PrintElem_byShape(os,in.shape());
-        else in._impl->_get_storage()->PrintElem_byShape(os,in.shape(),in._impl->_get_invmapper());
+        if(in.is_contiguous()) in._impl->_get_storage()._impl->PrintElem_byShape(os,in.shape());
+        else in._impl->_get_storage()._impl->PrintElem_byShape(os,in.shape(),in._impl->_get_invmapper());
         return os;
     }       
 

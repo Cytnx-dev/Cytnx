@@ -45,6 +45,7 @@ namespace cytnx{
 
             //void Init(const std::initializer_list<unsigned int> &init_shape);
             std::string dtype_str();
+            std::string device_str();
             const unsigned long long &size(){
                 return this->len;
             }
@@ -255,7 +256,6 @@ namespace cytnx{
             Storage_init_interface __SII;
 
         public:
-            
             boost::intrusive_ptr<Storage_base> _impl;
 
             void Init(const unsigned long long &size,const unsigned int &dtype, int device=-1){
@@ -278,13 +278,27 @@ namespace cytnx{
                 return *this;
             }
 
-            const unsigned int &dtype(){
+            Storage astype(const unsigned int &new_type) const{
+                return this->_impl->astype(new_type);
+            }
+
+            const unsigned int &dtype() const{
                 return this->_impl->dtype;
             }
-            const std::string dtype_str(){
+            const std::string dtype_str() const{
                 std::string out = this->_impl->dtype_str();
                 return out;
             }
+
+            const int &device() const{
+                return this->_impl->device;
+            }
+    
+            const std::string device_str() const{
+                std::string out = this->_impl->device_str();
+                return out;
+            }            
+
             template<class T>
             T& at(const unsigned int &idx){
                 return this->_impl->at<T>(idx);
@@ -311,6 +325,9 @@ namespace cytnx{
             void print(){
                 this->_impl->print();
             }
+
+
+
     };
     std::ostream& operator<<(std::ostream& os, Storage &in);
 
