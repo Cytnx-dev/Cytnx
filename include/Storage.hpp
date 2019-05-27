@@ -44,19 +44,19 @@ namespace cytnx{
             
 
             //void Init(const std::initializer_list<unsigned int> &init_shape);
-            std::string dtype_str();
-            std::string device_str();
-            const unsigned long long &size(){
+            std::string dtype_str() const ;
+            std::string device_str() const;
+            const unsigned long long &size() const{
                 return this->len;
             }
             ~Storage_base();
 
 
             template<class T>
-            T& at(const unsigned int &idx);
+            T& at(const unsigned int &idx) const;
             
             template<class T>   
-            T* data();
+            T* data() const;
 
             void print();
             void print_info();
@@ -300,11 +300,11 @@ namespace cytnx{
             }            
 
             template<class T>
-            T& at(const unsigned int &idx){
+            T& at(const unsigned int &idx) const{
                 return this->_impl->at<T>(idx);
             }
             template<class T>
-            T* data(){
+            T* data() const{
                 return this->_impl->data<T>();
             }
             void to_(const int &device){
@@ -316,7 +316,7 @@ namespace cytnx{
             Storage clone(){
                 return Storage(this->_impl->clone());
             }
-            const unsigned long long &size(){
+            const unsigned long long &size() const{
                 return this->_impl->len;
             }
             void print_info(){
@@ -326,6 +326,7 @@ namespace cytnx{
                 this->_impl->print();
             }
 
+            bool operator==(const Storage &rhs);
 
 
     };

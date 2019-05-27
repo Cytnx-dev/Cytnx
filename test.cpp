@@ -63,6 +63,12 @@ int main(int argc, char *argv[]){
     s.Init(12,cytnxtype.Double,cytnxdevice.cpu);
     s.at<double>(4) = 3;
     cout << s << endl;    
+    Storage s2 = s;
+    Storage s3 = s.clone();
+    cout << is(s,s2) << is(s,s3) << endl;
+    cout << (s==s2) << (s==s3) << endl;
+    return 0;
+
     Tensor x({3,4,5},cytnxtype.Double,cytnxdevice.cpu);
     Tensor b = x.clone();
     Tensor c = linalg::Add(1,x);

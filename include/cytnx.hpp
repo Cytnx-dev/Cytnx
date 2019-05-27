@@ -1,3 +1,5 @@
+#ifndef __cytnx_H_
+#define __cytnx_H_
 #include "Device.hpp"
 #include "Type.hpp"
 #include "Storage.hpp"
@@ -6,3 +8,5 @@
 
 
 #include "linalg/linalg.hpp"
+#include "utils/utils.hpp"
+#endif

@@ -52,7 +52,7 @@ OBJS = Storage_base.o Uint32Storage.o Int32Storage.o Uint64Storage.o Int64Storag
 OBJS += Storage.o Bond.o Tensor.o Symmetry.o
 
 ## Utils
-OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o is_same.o
+OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o is.o
 ifeq ($(GPU_Enable),1)
   OBJS += cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o
 endif
@@ -228,7 +228,7 @@ Range_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/Range_cpu.cpp $(CytnxPATH
 complex_arithmic.o: $(CytnxPATH)/src/utils/complex_arithmic.cpp $(CytnxPATH)/include/utils/complex_arithmic.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
-is_same.o: $(CytnxPATH)/src/utils/is_same.cpp $(CytnxPATH)/include/utils/is_same.hpp
+is.o: $(CytnxPATH)/src/utils/is.cpp $(CytnxPATH)/include/utils/is.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 
