@@ -115,6 +115,11 @@ namespace cytnx{
             virtual void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             virtual void print_elems();
             virtual void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
+
+            //generators:
+            virtual void set_zeros();
+            
+
     };        
 
     ///////////////////////////////////                    
@@ -132,6 +137,10 @@ namespace cytnx{
             void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             void print_elems();
             void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
+
+            //generators:
+            void set_zeros();
+
     };          
 
     class DoubleStorage: public Storage_base{
@@ -148,6 +157,10 @@ namespace cytnx{
             void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             void print_elems();
             void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
+
+            //generators:
+            void set_zeros();
+
     };
 
 
@@ -166,6 +179,11 @@ namespace cytnx{
             void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             void print_elems();
             void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
+
+            //generators:
+            void set_zeros();
+
+
     };
 
     class ComplexFloatStorage: public Storage_base{
@@ -182,6 +200,11 @@ namespace cytnx{
             void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             void print_elems();
             void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
+
+            //generators:
+            void set_zeros();
+
+
     };
 
     class Int64Storage : public Storage_base{
@@ -198,6 +221,11 @@ namespace cytnx{
             void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             void print_elems();
             void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
+
+            //generators:
+            void set_zeros();
+
+
     };          
 
     class Uint64Storage : public Storage_base{
@@ -214,6 +242,13 @@ namespace cytnx{
             void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             void print_elems();
             void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
+
+
+            //generators:
+            void set_zeros();
+
+
+
     };          
 
     class Int32Storage : public Storage_base{
@@ -230,6 +265,11 @@ namespace cytnx{
             void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             void print_elems();
             void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
+
+            //generators:
+            void set_zeros();
+
+
     };          
 
 
@@ -247,6 +287,11 @@ namespace cytnx{
             void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             void print_elems();
             void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
+
+            //generators:
+            void set_zeros();
+
+
     };          
 
     typedef boost::intrusive_ptr<Storage_base> (*pStorage_init)();
@@ -334,7 +379,9 @@ namespace cytnx{
             void print(){
                 this->_impl->print();
             }
-
+            void set_zeros(){
+                this->_impl->set_zeros();
+            }
             bool operator==(const Storage &rhs);
 
 

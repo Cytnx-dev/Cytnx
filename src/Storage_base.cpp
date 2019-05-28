@@ -171,6 +171,12 @@ namespace cytnx{
         cytnx_error_msg(1,"%s","[ERROR] call GetElem_byShape directly on Void Storage.");
     }
 
+    //generators:
+    void Storage_base::set_zeros(){
+        cytnx_error_msg(1,"%s","[ERROR] call set_zeros directly on Void Storage.");
+    }
+
+
     //instantiation:
     //================================================
     template<>

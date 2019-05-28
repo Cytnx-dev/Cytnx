@@ -384,4 +384,18 @@ namespace cytnx{
         cout << " ]" << endl;
     }
 
+    void Uint64Storage::set_zeros(){
+        if(this->device == cytnxdevice.cpu){
+            utils_internal::SetZeros(this->Mem,sizeof(cytnx_uint64)*this->len);
+        }else{
+            #ifdef UNI_GPU
+                utils_internal::cuSetZeros(this->Mem,sizeof(cytnx_uint64)*this->len);
+            #else
+                cytnx_error_msg(1,"[ERROR][set_zeros] fatal, the storage is on gpu without CUDA support.%s","\n");
+            #endif
+        }
+    }
+
+
+
 }//namespace cytnx

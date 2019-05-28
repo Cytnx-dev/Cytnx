@@ -101,6 +101,7 @@ int main(int argc, char *argv[]){
     cout << out[0] ;
     
     
+    Tensor Zo = zeros(10);
 
 
     return 0;
