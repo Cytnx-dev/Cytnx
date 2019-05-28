@@ -10,7 +10,7 @@
 #include <iostream>
 #include <vector>
 #include <initializer_list>
-
+#include "Accessor.hpp"
 namespace cytnx{
 
 
@@ -70,11 +70,11 @@ namespace cytnx{
             const std::vector<cytnx_uint64> & _get_invmapper() const{
                 return _invmapper;
             }
-            Storage& _get_storage(){
+            Storage& storage(){
                 return _storage;
             }
 
-            const Storage& _get_storage() const{
+            const Storage& storage() const{
                 return _storage;
             }
 
@@ -137,6 +137,12 @@ namespace cytnx{
                 return this->_storage.at<T>(RealRank);
             }
 
+            
+            
+            
+            boost::intrusive_ptr<Tensor_impl> get_elems(const std::vector<cytnx::Accessor> &accessors);
+
+                        
             boost::intrusive_ptr<Tensor_impl> Contiguous(){
                 // return new instance if act on non-contiguous tensor
                 // return self if act on contiguous tensor
@@ -355,7 +361,23 @@ namespace cytnx{
                 std::vector<cytnx_uint64> args = locator;
                 return this->_impl->at<T>(args);
             }
-        
+
+            Tensor get_elems(const std::vector<cytnx::Accessor> &accessors){
+                Tensor out;
+                out._impl = this->_impl->get_elems(accessors);
+                return out;
+            }
+            Tensor get_elems(const std::initializer_list<cytnx::Accessor> &accessors){
+                std::vector<cytnx::Accessor> args = accessors;
+                return this->get_elems(args);
+            }
+            
+            Storage& storage(){
+                return this->_impl->storage();
+            }        
+            const Storage& storage() const{
+                return this->_impl->storage();
+            }
            
             // Arithmic:
            template<class T>           

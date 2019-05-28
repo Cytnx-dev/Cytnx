@@ -62,9 +62,49 @@ namespace cytnx{
         this->_contiguous= iconti;
     }            
 
+    
+
+    boost::intrusive_ptr<Tensor_impl> Tensor_impl::get_elems(const std::vector<cytnx::Accessor> &accessors){
+        cytnx_error_msg(accessors.size() != this->_shape.size(), "%s", "The input indexes rank is not match Tensor's rank.");
+
+        vector<cytnx_uint64> get_shape(accessors.size());
+        //vector<cytnx_uint64> new_shape;
+        std::vector<std::vector<cytnx_uint64> > locators(accessors.size());
+        for(cytnx_uint32 i=0;i<accessors.size();i++){
+            accessors[i].get_len_pos(this->_shape[i],get_shape[i],locators[i]); 
+            std::cout << this->_shape[i] << " " << get_shape[i] << "|";
+            for(int j=0;j<locators[i].size();j++) std::cout << locators[i][j] << " ";
+            std::cout << std::endl;
+        }   
+
+        boost::intrusive_ptr<Tensor_impl> out( new Tensor_impl());
+        out->Init(get_shape,this->dtype(),this->device());
+        
+        this->storage()._impl->GetElem_byShape(out->storage()._impl,this->shape(),this->_mapper,get_shape,locators);
+
+        return out;
+
+    }
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     std::ostream& operator<<(std::ostream& os, Tensor &in){
-        if(in.is_contiguous()) in._impl->_get_storage()._impl->PrintElem_byShape(os,in.shape());
-        else in._impl->_get_storage()._impl->PrintElem_byShape(os,in.shape(),in._impl->_get_invmapper());
+        if(in.is_contiguous()) in._impl->storage()._impl->PrintElem_byShape(os,in.shape());
+        else in._impl->storage()._impl->PrintElem_byShape(os,in.shape(),in._impl->_get_invmapper());
         return os;
     }       
 

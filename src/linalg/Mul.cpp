@@ -11,10 +11,10 @@ namespace cytnx{
             Tensor out(Lt.shape(),Lt.dtype() < Rt.dtype()?Lt.dtype():Rt.dtype(),Lt.device());
 
             if(Lt.device() == cytnxdevice.cpu){
-                cytnx::linalg_internal::lii.Ari_ii[Lt.dtype()][Rt.dtype()](out._impl->_get_storage()._impl,Lt._impl->_get_storage()._impl,Rt._impl->_get_storage()._impl,Lt._impl->_get_storage()._impl->size(),1);
+                cytnx::linalg_internal::lii.Ari_ii[Lt.dtype()][Rt.dtype()](out._impl->storage()._impl,Lt._impl->storage()._impl,Rt._impl->storage()._impl,Lt._impl->storage()._impl->size(),1);
             }else{
                 #ifdef UNI_GPU
-                    cytnx::linalg_internal::lii.cuAri_ii[Lt.dtype()][Rt.dtype()](out._impl->_get_storage()._impl,Lt._impl->_get_storage()._impl,Rt._impl->_get_storage()._impl,Rt._impl->_get_storage()._impl->size(),1);
+                    cytnx::linalg_internal::lii.cuAri_ii[Lt.dtype()][Rt.dtype()](out._impl->storage()._impl,Lt._impl->storage()._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),1);
                 #else
                     cytnx_error_msg(true,"[Mul] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
                 #endif
@@ -33,10 +33,10 @@ namespace cytnx{
             Tensor out(Rt.shape(),cytnxtype.ComplexDouble,Rt.device());
 
             if(Rt.device()==cytnxdevice.cpu){
-                cytnx::linalg_internal::lii.Ari_ii[cytnxtype.ComplexDouble][Rt.dtype()](out._impl->_get_storage()._impl,Cnst._impl,Rt._impl->_get_storage()._impl,Rt._impl->_get_storage()._impl->size(),1);
+                cytnx::linalg_internal::lii.Ari_ii[cytnxtype.ComplexDouble][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),1);
             }else{
                 #ifdef UNI_GPU
-                    cytnx::linalg_internal::lii.cuAri_ii[cytnxtype.ComplexDouble][Rt.dtype()](out._impl->_get_storage()._impl,Cnst._impl,Rt._impl->_get_storage()._impl,Rt._impl->_get_storage()._impl->size(),1);
+                    cytnx::linalg_internal::lii.cuAri_ii[cytnxtype.ComplexDouble][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),1);
                 #else
                     cytnx_error_msg(true,"[Mul] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
                 #endif 
@@ -53,10 +53,10 @@ namespace cytnx{
             Tensor out(Rt.shape(),cytnxtype.ComplexFloat < Rt.dtype()?cytnxtype.ComplexFloat:Rt.dtype(),Rt.device());
 
             if(Rt.device()==cytnxdevice.cpu){
-                cytnx::linalg_internal::lii.Ari_ii[cytnxtype.ComplexFloat][Rt.dtype()](out._impl->_get_storage()._impl,Cnst._impl,Rt._impl->_get_storage()._impl,Rt._impl->_get_storage()._impl->size(),1);
+                cytnx::linalg_internal::lii.Ari_ii[cytnxtype.ComplexFloat][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),1);
             }else{
                 #ifdef UNI_GPU
-                    cytnx::linalg_internal::lii.cuAri_ii[cytnxtype.ComplexFloat][Rt.dtype()](out._impl->_get_storage()._impl,Cnst._impl,Rt._impl->_get_storage()._impl,Rt._impl->_get_storage()._impl->size(),1);
+                    cytnx::linalg_internal::lii.cuAri_ii[cytnxtype.ComplexFloat][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),1);
                 #else
                     cytnx_error_msg(true,"[Mul] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
                 #endif 
@@ -73,10 +73,10 @@ namespace cytnx{
             Tensor out(Rt.shape(),cytnxtype.Double < Rt.dtype()?cytnxtype.Double:Rt.dtype(),Rt.device());
 
             if(Rt.device()==cytnxdevice.cpu){
-                cytnx::linalg_internal::lii.Ari_ii[cytnxtype.Double][Rt.dtype()](out._impl->_get_storage()._impl,Cnst._impl,Rt._impl->_get_storage()._impl,Rt._impl->_get_storage()._impl->size(),1);
+                cytnx::linalg_internal::lii.Ari_ii[cytnxtype.Double][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),1);
             }else{
                 #ifdef UNI_GPU
-                    cytnx::linalg_internal::lii.cuAri_ii[cytnxtype.Double][Rt.dtype()](out._impl->_get_storage()._impl,Cnst._impl,Rt._impl->_get_storage()._impl,Rt._impl->_get_storage()._impl->size(),1);
+                    cytnx::linalg_internal::lii.cuAri_ii[cytnxtype.Double][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),1);
                 #else
                     cytnx_error_msg(true,"[Mul] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
                 #endif 
@@ -93,10 +93,10 @@ namespace cytnx{
             Tensor out(Rt.shape(),cytnxtype.Float < Rt.dtype()?cytnxtype.Float:Rt.dtype(),Rt.device());
 
             if(Rt.device()==cytnxdevice.cpu){
-                cytnx::linalg_internal::lii.Ari_ii[cytnxtype.Float][Rt.dtype()](out._impl->_get_storage()._impl,Cnst._impl,Rt._impl->_get_storage()._impl,Rt._impl->_get_storage()._impl->size(),1);
+                cytnx::linalg_internal::lii.Ari_ii[cytnxtype.Float][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),1);
             }else{
                 #ifdef UNI_GPU
-                    cytnx::linalg_internal::lii.cuAri_ii[cytnxtype.Float][Rt.dtype()](out._impl->_get_storage()._impl,Cnst._impl,Rt._impl->_get_storage()._impl,Rt._impl->_get_storage()._impl->size(),1);
+                    cytnx::linalg_internal::lii.cuAri_ii[cytnxtype.Float][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),1);
                 #else
                     cytnx_error_msg(true,"[Mul] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
                 #endif 
@@ -113,10 +113,10 @@ namespace cytnx{
             Tensor out(Rt.shape(),cytnxtype.Int64 < Rt.dtype()?cytnxtype.Int64:Rt.dtype(),Rt.device());
 
             if(Rt.device()==cytnxdevice.cpu){
-                cytnx::linalg_internal::lii.Ari_ii[cytnxtype.Int64][Rt.dtype()](out._impl->_get_storage()._impl,Cnst._impl,Rt._impl->_get_storage()._impl,Rt._impl->_get_storage()._impl->size(),1);
+                cytnx::linalg_internal::lii.Ari_ii[cytnxtype.Int64][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),1);
             }else{
                 #ifdef UNI_GPU
-                    cytnx::linalg_internal::lii.cuAri_ii[cytnxtype.Int64][Rt.dtype()](out._impl->_get_storage()._impl,Cnst._impl,Rt._impl->_get_storage()._impl,Rt._impl->_get_storage()._impl->size(),1);
+                    cytnx::linalg_internal::lii.cuAri_ii[cytnxtype.Int64][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),1);
                 #else
                     cytnx_error_msg(true,"[Mul] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
                 #endif 
@@ -133,10 +133,10 @@ namespace cytnx{
             Tensor out(Rt.shape(),cytnxtype.Uint64 < Rt.dtype()?cytnxtype.Uint64:Rt.dtype(),Rt.device());
 
             if(Rt.device()==cytnxdevice.cpu){
-                cytnx::linalg_internal::lii.Ari_ii[cytnxtype.Uint64][Rt.dtype()](out._impl->_get_storage()._impl,Cnst._impl,Rt._impl->_get_storage()._impl,Rt._impl->_get_storage()._impl->size(),1);
+                cytnx::linalg_internal::lii.Ari_ii[cytnxtype.Uint64][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),1);
             }else{
                 #ifdef UNI_GPU
-                    cytnx::linalg_internal::lii.cuAri_ii[cytnxtype.Uint64][Rt.dtype()](out._impl->_get_storage()._impl,Cnst._impl,Rt._impl->_get_storage()._impl,Rt._impl->_get_storage()._impl->size(),1);
+                    cytnx::linalg_internal::lii.cuAri_ii[cytnxtype.Uint64][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),1);
                 #else
                     cytnx_error_msg(true,"[Mul] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
                 #endif 
@@ -153,10 +153,10 @@ namespace cytnx{
             Tensor out(Rt.shape(),cytnxtype.Int32 < Rt.dtype()?cytnxtype.Int32:Rt.dtype(),Rt.device());
 
             if(Rt.device()==cytnxdevice.cpu){
-                cytnx::linalg_internal::lii.Ari_ii[cytnxtype.Int32][Rt.dtype()](out._impl->_get_storage()._impl,Cnst._impl,Rt._impl->_get_storage()._impl,Rt._impl->_get_storage()._impl->size(),1);
+                cytnx::linalg_internal::lii.Ari_ii[cytnxtype.Int32][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),1);
             }else{
                 #ifdef UNI_GPU
-                    cytnx::linalg_internal::lii.cuAri_ii[cytnxtype.Int32][Rt.dtype()](out._impl->_get_storage()._impl,Cnst._impl,Rt._impl->_get_storage()._impl,Rt._impl->_get_storage()._impl->size(),1);
+                    cytnx::linalg_internal::lii.cuAri_ii[cytnxtype.Int32][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),1);
                 #else
                     cytnx_error_msg(true,"[Mul] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
                 #endif 
@@ -173,10 +173,10 @@ namespace cytnx{
             Tensor out(Rt.shape(),cytnxtype.Uint32 < Rt.dtype()?cytnxtype.Uint32:Rt.dtype(),Rt.device());
 
             if(Rt.device()==cytnxdevice.cpu){
-                cytnx::linalg_internal::lii.Ari_ii[cytnxtype.Uint32][Rt.dtype()](out._impl->_get_storage()._impl,Cnst._impl,Rt._impl->_get_storage()._impl,Rt._impl->_get_storage()._impl->size(),1);
+                cytnx::linalg_internal::lii.Ari_ii[cytnxtype.Uint32][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),1);
             }else{
                 #ifdef UNI_GPU
-                    cytnx::linalg_internal::lii.cuAri_ii[cytnxtype.Uint32][Rt.dtype()](out._impl->_get_storage()._impl,Cnst._impl,Rt._impl->_get_storage()._impl,Rt._impl->_get_storage()._impl->size(),1);
+                    cytnx::linalg_internal::lii.cuAri_ii[cytnxtype.Uint32][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),1);
                 #else
                     cytnx_error_msg(true,"[Mul] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
                 #endif 

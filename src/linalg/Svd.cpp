@@ -14,7 +14,7 @@ namespace cytnx{
             if(Tin.dtype() > cytnxtype.Float) in = Tin.astype(cytnxtype.Float);
             else in = Tin;
 
-            std::cout << n_singlu << std::endl;
+            //std::cout << n_singlu << std::endl;
 
             Tensor U,S,vT;
             S.Init({n_singlu},in.dtype()<=2?in.dtype()+2:in.dtype(),in.device()); // if type is complex, S should be real
@@ -26,10 +26,10 @@ namespace cytnx{
             if(Tin.device()==cytnxdevice.cpu){
 
 
-                cytnx::linalg_internal::lii.Svd_ii[in.dtype()](in._impl->_get_storage()._impl, 
-                                                        U._impl->_get_storage()._impl,
-                                                        vT._impl->_get_storage()._impl,  
-                                                        S._impl->_get_storage()._impl,in.shape()[0],in.shape()[1]);
+                cytnx::linalg_internal::lii.Svd_ii[in.dtype()](in._impl->storage()._impl, 
+                                                        U._impl->storage()._impl,
+                                                        vT._impl->storage()._impl,  
+                                                        S._impl->storage()._impl,in.shape()[0],in.shape()[1]);
 
                 std::vector<Tensor> out;
                 out.push_back(S);
@@ -40,10 +40,10 @@ namespace cytnx{
 
             }else{
                 #ifdef UNI_GPU
-                    cytnx::linalg_internal::lii.cuSvd_ii[in.dtype()](in._impl->_get_storage()._impl,
-                                                            U._impl->_get_storage()._impl,
-                                                            vT._impl->_get_storage()._impl,
-                                                            S._impl->_get_storage()._impl,in.shape()[0],in.shape()[1]);
+                    cytnx::linalg_internal::lii.cuSvd_ii[in.dtype()](in._impl->storage()._impl,
+                                                            U._impl->storage()._impl,
+                                                            vT._impl->storage()._impl,
+                                                            S._impl->storage()._impl,in.shape()[0],in.shape()[1]);
 
                     std::vector<Tensor> out;
                     out.push_back(S);

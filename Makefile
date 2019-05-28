@@ -8,7 +8,7 @@ LDFLAGS :=  -llapack -lblas
 
 
 GPU_Enable=0
-OMP_Enable=1
+OMP_Enable=0
 DEBUG_Enable=0
 
 
@@ -49,7 +49,7 @@ endif
 OBJS = Storage_base.o Uint32Storage.o Int32Storage.o Uint64Storage.o Int64Storage.o FloatStorage.o DoubleStorage.o ComplexFloatStorage.o ComplexDoubleStorage.o Type.o Device.o
 
 
-OBJS += Storage.o Bond.o Tensor.o Symmetry.o
+OBJS += Storage.o Bond.o Tensor.o Symmetry.o Accessor.o
 
 ## Utils
 OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o is.o
@@ -108,6 +108,8 @@ Symmetry.o: $(CytnxPATH)/src/Symmetry.cpp $(CytnxPATH)/include/Symmetry.hpp
 Storage.o: $(CytnxPATH)/src/Storage.cpp $(CytnxPATH)/include/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
+Accessor.o: $(CytnxPATH)/src/Accessor.cpp $(CytnxPATH)/include/Accessor.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 ## Storage 
 ###########################

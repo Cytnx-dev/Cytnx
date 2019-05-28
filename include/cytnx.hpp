@@ -1,5 +1,6 @@
 #ifndef __cytnx_H_
 #define __cytnx_H_
+#include "Accessor.hpp"
 #include "Device.hpp"
 #include "Type.hpp"
 #include "Storage.hpp"

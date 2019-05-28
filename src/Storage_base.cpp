@@ -167,7 +167,9 @@ namespace cytnx{
         this->print_info();
         this->print_elems();
     }
-
+    void Storage_base::GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators){
+        cytnx_error_msg(1,"%s","[ERROR] call GetElem_byShape directly on Void Storage.");
+    }
 
     //instantiation:
     //================================================

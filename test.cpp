@@ -8,9 +8,11 @@ void func(boost::intrusive_ptr<Storage_base> &a){
     a = boost::intrusive_ptr<Storage_base>(new FloatStorage());
 }
 
+typedef cytnx::Accessor ac;
+
 int main(int argc, char *argv[]){
     
-
+    
 
     //cytnxdevice.Print_Property();
     /*
@@ -67,7 +69,7 @@ int main(int argc, char *argv[]){
     Storage s3 = s.clone();
     cout << is(s,s2) << is(s,s3) << endl;
     cout << (s==s2) << (s==s3) << endl;
-    return 0;
+
 
     Tensor x({3,4,5},cytnxtype.Double,cytnxdevice.cpu);
     Tensor b = x.clone();
@@ -88,12 +90,19 @@ int main(int argc, char *argv[]){
     //i-=i;
     cout << i << endl;
 
+    Tensor y = x.get_elems({ac::all(),ac(2),ac::all()});
+    cout << y << endl;
+
     Tensor a({2,3},cytnxtype.Double,cytnxdevice.cpu);
     a.at<double>({0,0}) = 3; a.at<double>({0,1}) = 2; a.at<double>({0,2}) = 2;
     a.at<double>({1,0}) = 2; a.at<double>({1,1}) = 3; a.at<double>({1,2}) = -2;
 
     vector<Tensor> out = linalg::Svd(a,false,false);
     cout << out[0] ;
+    
+    
+
+
     return 0;
 /*
     //Tensor t;

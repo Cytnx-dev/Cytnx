@@ -114,6 +114,7 @@ namespace cytnx{
             virtual void Move_memory_(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper); 
             virtual void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             virtual void print_elems();
+            virtual void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
     };        
 
     ///////////////////////////////////                    
@@ -130,6 +131,7 @@ namespace cytnx{
             boost::intrusive_ptr<Storage_base> to(const int &device);
             void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             void print_elems();
+            void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
     };          
 
     class DoubleStorage: public Storage_base{
@@ -145,6 +147,7 @@ namespace cytnx{
             boost::intrusive_ptr<Storage_base> to(const int &device);
             void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             void print_elems();
+            void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
     };
 
 
@@ -162,6 +165,7 @@ namespace cytnx{
             boost::intrusive_ptr<Storage_base> to(const int &device);
             void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             void print_elems();
+            void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
     };
 
     class ComplexFloatStorage: public Storage_base{
@@ -177,6 +181,7 @@ namespace cytnx{
             boost::intrusive_ptr<Storage_base> to(const int &device);
             void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             void print_elems();
+            void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
     };
 
     class Int64Storage : public Storage_base{
@@ -192,6 +197,7 @@ namespace cytnx{
             boost::intrusive_ptr<Storage_base> to(const int &device);
             void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             void print_elems();
+            void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
     };          
 
     class Uint64Storage : public Storage_base{
@@ -207,6 +213,7 @@ namespace cytnx{
             boost::intrusive_ptr<Storage_base> to(const int &device);
             void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             void print_elems();
+            void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
     };          
 
     class Int32Storage : public Storage_base{
@@ -222,6 +229,7 @@ namespace cytnx{
             boost::intrusive_ptr<Storage_base> to(const int &device);
             void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             void print_elems();
+            void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
     };          
 
 
@@ -238,6 +246,7 @@ namespace cytnx{
             boost::intrusive_ptr<Storage_base> to(const int &device);
             void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper={});        
             void print_elems();
+            void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
     };          
 
     typedef boost::intrusive_ptr<Storage_base> (*pStorage_init)();
