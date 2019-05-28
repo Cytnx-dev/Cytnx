@@ -82,6 +82,12 @@ namespace cytnx{
         
         this->storage()._impl->GetElem_byShape(out->storage()._impl,this->shape(),this->_mapper,get_shape,locators);
 
+        vector<cytnx_int64> new_shape;
+        for(cytnx_uint32 i=0;i<accessors.size();i++)
+            if(get_shape[i]!=1) new_shape.push_back(get_shape[i]);
+
+        if(new_shape.size()==0) out->Reshape_({1});
+        else out->Reshape_(new_shape);
         return out;
 
     }

@@ -90,7 +90,7 @@ int main(int argc, char *argv[]){
     //i-=i;
     cout << i << endl;
 
-    Tensor y = x.get_elems({ac::all(),ac(2),ac::all()});
+    Tensor y = i.get_elems({ac::all(),ac(2),ac::all()});
     cout << y << endl;
 
     Tensor a({2,3},cytnxtype.Double,cytnxdevice.cpu);
