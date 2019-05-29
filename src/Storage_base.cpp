@@ -1,5 +1,5 @@
 #include "Storage.hpp"
-#include "utils/utils_internal.hpp"
+#include "utils/utils_internal_interface.hpp"
 
 using namespace std;
 
@@ -78,17 +78,17 @@ namespace cytnx{
         if(dtype == this->dtype) return boost::intrusive_ptr<Storage_base>(this);
 
         if(this->device==cytnxdevice.cpu){
-            if(utils_internal::Cast_cpu.UElemCast_cpu[this->dtype][dtype]==NULL){
+            if(utils_internal::uii.ElemCast[this->dtype][dtype]==NULL){
                 cytnx_error_msg(1, "[ERROR] not support type with dtype=%d",dtype);
             }else{
-                utils_internal::Cast_cpu.UElemCast_cpu[this->dtype][dtype](this,out,this->len,1);
+                utils_internal::uii.ElemCast[this->dtype][dtype](this,out,this->len,1);
             }
         }else{
             #ifdef UNI_GPU
-                if(utils_internal::cuCast_gpu.UElemCast_gpu[this->dtype][dtype]==NULL){
+                if(utils_internal::uii.cuElemCast[this->dtype][dtype]==NULL){
                     cytnx_error_msg(1,"[ERROR] not support type with dtype=%d",dtype);
                 }else{
-                    utils_internal::cuCast_gpu.UElemCast_gpu[this->dtype][dtype](this,out,this->len,this->device);
+                    utils_internal::uii.cuElemCast[this->dtype][dtype](this,out,this->len,this->device);
                 }
             #else
                 cytnx_error_msg(1,"%s","[ERROR][Internal Error] enter GPU section without CUDA support @ Storage.astype()");
@@ -172,6 +172,31 @@ namespace cytnx{
     }
 
     //generators:
+    void Storage_base::fill(const cytnx_complex128 &val){
+        cytnx_error_msg(1,"%s","[ERROR] call fill directly on Void Storage.");
+    }
+    void Storage_base::fill(const cytnx_complex64  &val){
+        cytnx_error_msg(1,"%s","[ERROR] call fill directly on Void Storage.");
+    }
+    void Storage_base::fill(const cytnx_double     &val){
+        cytnx_error_msg(1,"%s","[ERROR] call fill directly on Void Storage.");
+    }
+    void Storage_base::fill(const cytnx_float      &val){
+        cytnx_error_msg(1,"%s","[ERROR] call fill directly on Void Storage.");
+    }
+    void Storage_base::fill(const cytnx_int64      &val){
+        cytnx_error_msg(1,"%s","[ERROR] call fill directly on Void Storage.");
+    }
+    void Storage_base::fill(const cytnx_uint64     &val){
+        cytnx_error_msg(1,"%s","[ERROR] call fill directly on Void Storage.");
+    }
+    void Storage_base::fill(const cytnx_int32      &val){
+        cytnx_error_msg(1,"%s","[ERROR] call fill directly on Void Storage.");
+    }
+    void Storage_base::fill(const cytnx_uint32     &val){
+        cytnx_error_msg(1,"%s","[ERROR] call fill directly on Void Storage.");
+    }
+
     void Storage_base::set_zeros(){
         cytnx_error_msg(1,"%s","[ERROR] call set_zeros directly on Void Storage.");
     }

@@ -8,61 +8,6 @@ using namespace std;
 namespace cytnx{
     namespace utils_internal{
 
-        cuCast_gpu_interface::cuCast_gpu_interface(){
-            UElemCast_gpu = vector<vector<ElemCast_io_gpu> >(N_Type,vector<ElemCast_io_gpu>(N_Type,NULL));
-
-            UElemCast_gpu[cytnxtype.ComplexDouble][cytnxtype.ComplexDouble] = cuCast_gpu_cdtcd;
-            UElemCast_gpu[cytnxtype.ComplexDouble][cytnxtype.ComplexFloat ] = cuCast_gpu_cdtcf;
-            //UElemCast_gpu[cytnxtype.ComplexDouble][cytnxtype.Double       ] = cuCast_gpu_invalid;
-            //UElemCast_gpu[cytnxtype.ComplexDouble][cytnxtype.Float        ] = cuCast_gpu_invalid;
-            //UElemCast_gpu[cytnxtype.ComplexDouble][cytnxtype.Int64        ] = cuCast_gpu_invalid;
-            //UElemCast_gpu[cytnxtype.ComplexDouble][cytnxtype.Uint64       ] = cuCast_gpu_invalid;
-            //UElemCast_gpu[cytnxtype.ComplexDouble][cytnxtype.Int32        ] = cuCast_gpu_invalid;
-            //UElemCast_gpu[cytnxtype.ComplexDouble][cytnxtype.Uint32       ] = cuCast_gpu_invalid;
-
-            UElemCast_gpu[cytnxtype.ComplexFloat][cytnxtype.ComplexDouble] = cuCast_gpu_cftcd;
-            UElemCast_gpu[cytnxtype.ComplexFloat][cytnxtype.ComplexFloat ] = cuCast_gpu_cftcf;
-            //UElemCast_gpu[cytnxtype.ComplexFloat][cytnxtype.Double       ] = cuCast_gpu_invalid;
-            //UElemCast_gpu[cytnxtype.ComplexFloat][cytnxtype.Float        ] = cuCast_gpu_invalid;
-            //UElemCast_gpu[cytnxtype.ComplexFloat][cytnxtype.Int64        ] = cuCast_gpu_invalid;
-            //UElemCast_gpu[cytnxtype.ComplexFloat][cytnxtype.Uint64       ] = cuCast_gpu_invalid;
-            //UElemCast_gpu[cytnxtype.ComplexFloat][cytnxtype.Int32        ] = cuCast_gpu_invalid;
-            //UElemCast_gpu[cytnxtype.ComplexFloat][cytnxtype.Uint32       ] = cuCast_gpu_invalid;
-
-            UElemCast_gpu[cytnxtype.Double][cytnxtype.ComplexDouble] = cuCast_gpu_dtcd;
-            UElemCast_gpu[cytnxtype.Double][cytnxtype.ComplexFloat ] = cuCast_gpu_dtcf;
-            UElemCast_gpu[cytnxtype.Double][cytnxtype.Double       ] = cuCast_gpu_dtd;
-            UElemCast_gpu[cytnxtype.Double][cytnxtype.Float        ] = cuCast_gpu_dtf;
-            UElemCast_gpu[cytnxtype.Double][cytnxtype.Int64        ] = cuCast_gpu_dti64;
-            UElemCast_gpu[cytnxtype.Double][cytnxtype.Uint64       ] = cuCast_gpu_dtu64;
-            UElemCast_gpu[cytnxtype.Double][cytnxtype.Int32        ] = cuCast_gpu_dti32;
-            UElemCast_gpu[cytnxtype.Double][cytnxtype.Uint32       ] = cuCast_gpu_dtu32;
-
-            UElemCast_gpu[cytnxtype.Float][cytnxtype.ComplexDouble] = cuCast_gpu_ftcd;
-            UElemCast_gpu[cytnxtype.Float][cytnxtype.ComplexFloat ] = cuCast_gpu_ftcf;
-            UElemCast_gpu[cytnxtype.Float][cytnxtype.Double       ] = cuCast_gpu_ftd;
-            UElemCast_gpu[cytnxtype.Float][cytnxtype.Float        ] = cuCast_gpu_ftf;
-            UElemCast_gpu[cytnxtype.Float][cytnxtype.Int64        ] = cuCast_gpu_fti64;
-            UElemCast_gpu[cytnxtype.Float][cytnxtype.Uint64       ] = cuCast_gpu_ftu64;
-            UElemCast_gpu[cytnxtype.Float][cytnxtype.Int32        ] = cuCast_gpu_fti32;
-            UElemCast_gpu[cytnxtype.Float][cytnxtype.Uint32       ] = cuCast_gpu_ftu32;
-
-            UElemCast_gpu[cytnxtype.Int64][cytnxtype.ComplexDouble] = cuCast_gpu_i64tcd;
-            UElemCast_gpu[cytnxtype.Int64][cytnxtype.ComplexFloat ] = cuCast_gpu_i64tcf;
-            UElemCast_gpu[cytnxtype.Int64][cytnxtype.Double       ] = cuCast_gpu_i64td;
-            UElemCast_gpu[cytnxtype.Int64][cytnxtype.Float        ] = cuCast_gpu_i64tf;
-            UElemCast_gpu[cytnxtype.Int64][cytnxtype.Int64        ] = cuCast_gpu_i64ti64;
-            UElemCast_gpu[cytnxtype.Int64][cytnxtype.Uint64       ] = cuCast_gpu_i64tu64;
-            UElemCast_gpu[cytnxtype.Int64][cytnxtype.Int32        ] = cuCast_gpu_i64ti32;
-            UElemCast_gpu[cytnxtype.Int64][cytnxtype.Uint32       ] = cuCast_gpu_i64tu32;
-
-            UElemCast_gpu[cytnxtype.Uint64][cytnxtype.ComplexDouble] = cuCast_gpu_u64tcd;
-            UElemCast_gpu[cytnxtype.Uint64][cytnxtype.ComplexFloat ] = cuCast_gpu_u64tcf;
-            UElemCast_gpu[cytnxtype.Uint64][cytnxtype.Double       ] = cuCast_gpu_u64td;
-        }
-        utils_internal::cuCast_gpu_interface cuCast_gpu; // interface object. 
-
-        //=======================================================================
 
         __global__ void cuCastElem_kernel_cd2cf(const cuDoubleComplex *src, cuFloatComplex *des, cytnx_uint64 Nelem){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){

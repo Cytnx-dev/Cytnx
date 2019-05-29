@@ -6,7 +6,7 @@
 #include "Storage.hpp"
 #include "Device.hpp"
 #include "intrusive_ptr_base.hpp"
-#include "utils/utils_internal.hpp"
+#include "utils/utils_internal_interface.hpp"
 #include <iostream>
 #include <vector>
 #include <initializer_list>
@@ -141,7 +141,11 @@ namespace cytnx{
             
             
             boost::intrusive_ptr<Tensor_impl> get_elems(const std::vector<cytnx::Accessor> &accessors);
-
+            
+            template<class Tx>
+            void fill(const Tx& val){
+                this->storage().fill(val);
+            } 
                         
             boost::intrusive_ptr<Tensor_impl> contiguous(){
                 // return new instance if act on non-contiguous tensor
@@ -377,6 +381,11 @@ namespace cytnx{
             }        
             const Storage& storage() const{
                 return this->_impl->storage();
+            }
+            template<class T>
+            Tensor& fill(const T& val){
+                this->_impl->fill(val);
+                return *this;
             }
            
             // Arithmic:

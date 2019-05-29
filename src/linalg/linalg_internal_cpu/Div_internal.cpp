@@ -1,5 +1,5 @@
 #include "linalg/linalg_internal_cpu/Div_internal.hpp"
-#include "utils/utils_internal.hpp"
+#include "utils/utils_internal_interface.hpp"
 
 #ifdef UNI_OMP
     #include <omp.h>

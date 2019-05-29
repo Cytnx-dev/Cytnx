@@ -1,5 +1,5 @@
 #include "Tensor.hpp"
-#include "utils/utils_internal.hpp"
+#include "utils/utils_internal_interface.hpp"
 #include "linalg/linalg.hpp"
 
 using namespace std;
@@ -72,9 +72,9 @@ namespace cytnx{
         std::vector<std::vector<cytnx_uint64> > locators(accessors.size());
         for(cytnx_uint32 i=0;i<accessors.size();i++){
             accessors[i].get_len_pos(this->_shape[i],get_shape[i],locators[i]); 
-            std::cout << this->_shape[i] << " " << get_shape[i] << "|";
+            //std::cout << this->_shape[i] << " " << get_shape[i] << "|";
             for(int j=0;j<locators[i].size();j++) std::cout << locators[i][j] << " ";
-            std::cout << std::endl;
+            //std::cout << std::endl;
         }   
 
         boost::intrusive_ptr<Tensor_impl> out( new Tensor_impl());

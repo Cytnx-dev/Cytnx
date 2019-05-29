@@ -12,13 +12,6 @@
 namespace cytnx{
     namespace utils_internal{
         
-        typedef void (*ElemCast_io_gpu)(const boost::intrusive_ptr<Storage_base>&,boost::intrusive_ptr<Storage_base>&,const unsigned long long &, const int &);
-        class cuCast_gpu_interface{
-            public:
-                std::vector<std::vector<ElemCast_io_gpu> > UElemCast_gpu;
-                cuCast_gpu_interface();
-        };
-        extern cuCast_gpu_interface cuCast_gpu;
 
         void cuCast_gpu_cdtcd(const boost::intrusive_ptr<Storage_base>& in, boost::intrusive_ptr<Storage_base>& out, const unsigned long long &len_in, const int &alloc_device);
         void cuCast_gpu_cdtcf(const boost::intrusive_ptr<Storage_base>& in, boost::intrusive_ptr<Storage_base>& out, const unsigned long long &len_in, const int &alloc_device);

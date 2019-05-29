@@ -2,13 +2,13 @@ CytnxPATH=.
 CUDA_PATH=/usr/local/cuda
 INCFLAGS :=-I$(CytnxPATH)/include
 
-CC:= g++-6
+CC:= g++
 CCFLAGS := -std=c++11 -g -Wformat=0 -fPIC
 LDFLAGS :=  -llapack -lblas
 
 
 GPU_Enable=0
-OMP_Enable=0
+OMP_Enable=1
 DEBUG_Enable=0
 
 
@@ -51,10 +51,13 @@ OBJS = Storage_base.o Uint32Storage.o Int32Storage.o Uint64Storage.o Int64Storag
 
 OBJS += Storage.o Bond.o Tensor.o Symmetry.o Accessor.o Generator.o
 
+
+
 ## Utils
-OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o is.o SetZeros_cpu.o 
+OBJS += utils_internal_interface.o
+OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o is.o SetZeros_cpu.o Fill_cpu.o 
 ifeq ($(GPU_Enable),1)
-  OBJS += cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o
+  OBJS += cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o cuFill_gpu.o
 endif
 
 ## Linalg_internal
@@ -219,6 +222,10 @@ Device.o: $(CytnxPATH)/src/Device.cpp $(CytnxPATH)/include/Device.hpp
 
 ## Utils
 ##########################
+utils_internal_interface.o: $(CytnxPATH)/src/utils/utils_internal_interface.cpp $(CytnxPATH)/include/utils/utils_internal_interface.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+
+
 Cast_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/Cast_cpu.cpp $(CytnxPATH)/include/utils/utils_internal_cpu/Cast_cpu.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
@@ -232,6 +239,9 @@ Range_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/Range_cpu.cpp $(CytnxPATH
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 SetZeros_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/SetZeros_cpu.cpp $(CytnxPATH)/include/utils/utils_internal_cpu/SetZeros_cpu.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+
+Fill_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/Fill_cpu.cpp $(CytnxPATH)/include/utils/utils_internal_cpu/Fill_cpu.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 
@@ -251,7 +261,8 @@ cuMovemem_gpu.o: $(CytnxPATH)/src/utils/utils_internal_gpu/cuMovemem_gpu.cu $(Cy
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 cuSetZeros_gpu.o: $(CytnxPATH)/src/utils/utils_internal_gpu/cuSetZeros_gpu.cu $(CytnxPATH)/include/utils/utils_internal_gpu/cuSetZeros_gpu.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
-
+cuFill_gpu.o: $(CytnxPATH)/src/utils/utils_internal_gpu/cuFill_gpu.cu $(CytnxPATH)/include/utils/utils_internal_gpu/cuFill_gpu.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 endif
 
 

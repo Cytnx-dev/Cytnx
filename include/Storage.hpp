@@ -117,6 +117,14 @@ namespace cytnx{
             virtual void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
 
             //generators:
+            virtual void fill(const cytnx_complex128 &val);
+            virtual void fill(const cytnx_complex64  &val);
+            virtual void fill(const cytnx_double     &val);
+            virtual void fill(const cytnx_float      &val);
+            virtual void fill(const cytnx_int64      &val);
+            virtual void fill(const cytnx_uint64     &val);
+            virtual void fill(const cytnx_int32      &val);
+            virtual void fill(const cytnx_uint32     &val);
             virtual void set_zeros();
             
 
@@ -139,6 +147,14 @@ namespace cytnx{
             void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
 
             //generators:
+            void fill(const cytnx_complex128 &val);
+            void fill(const cytnx_complex64  &val);
+            void fill(const cytnx_double     &val);
+            void fill(const cytnx_float      &val);
+            void fill(const cytnx_int64      &val);
+            void fill(const cytnx_uint64     &val);
+            void fill(const cytnx_int32      &val);
+            void fill(const cytnx_uint32     &val);
             void set_zeros();
 
     };          
@@ -159,6 +175,14 @@ namespace cytnx{
             void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
 
             //generators:
+            void fill(const cytnx_complex128 &val);
+            void fill(const cytnx_complex64  &val);
+            void fill(const cytnx_double     &val);
+            void fill(const cytnx_float      &val);
+            void fill(const cytnx_int64      &val);
+            void fill(const cytnx_uint64     &val);
+            void fill(const cytnx_int32      &val);
+            void fill(const cytnx_uint32     &val);
             void set_zeros();
 
     };
@@ -181,6 +205,14 @@ namespace cytnx{
             void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
 
             //generators:
+            void fill(const cytnx_complex128 &val);
+            void fill(const cytnx_complex64  &val);
+            void fill(const cytnx_double     &val);
+            void fill(const cytnx_float      &val);
+            void fill(const cytnx_int64      &val);
+            void fill(const cytnx_uint64     &val);
+            void fill(const cytnx_int32      &val);
+            void fill(const cytnx_uint32     &val);
             void set_zeros();
 
 
@@ -202,6 +234,14 @@ namespace cytnx{
             void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
 
             //generators:
+            void fill(const cytnx_complex128 &val);
+            void fill(const cytnx_complex64  &val);
+            void fill(const cytnx_double     &val);
+            void fill(const cytnx_float      &val);
+            void fill(const cytnx_int64      &val);
+            void fill(const cytnx_uint64     &val);
+            void fill(const cytnx_int32      &val);
+            void fill(const cytnx_uint32     &val);
             void set_zeros();
 
 
@@ -223,6 +263,14 @@ namespace cytnx{
             void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
 
             //generators:
+            void fill(const cytnx_complex128 &val);
+            void fill(const cytnx_complex64  &val);
+            void fill(const cytnx_double     &val);
+            void fill(const cytnx_float      &val);
+            void fill(const cytnx_int64      &val);
+            void fill(const cytnx_uint64     &val);
+            void fill(const cytnx_int32      &val);
+            void fill(const cytnx_uint32     &val);
             void set_zeros();
 
 
@@ -245,6 +293,14 @@ namespace cytnx{
 
 
             //generators:
+            void fill(const cytnx_complex128 &val);
+            void fill(const cytnx_complex64  &val);
+            void fill(const cytnx_double     &val);
+            void fill(const cytnx_float      &val);
+            void fill(const cytnx_int64      &val);
+            void fill(const cytnx_uint64     &val);
+            void fill(const cytnx_int32      &val);
+            void fill(const cytnx_uint32     &val);
             void set_zeros();
 
 
@@ -267,6 +323,14 @@ namespace cytnx{
             void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
 
             //generators:
+            void fill(const cytnx_complex128 &val);
+            void fill(const cytnx_complex64  &val);
+            void fill(const cytnx_double     &val);
+            void fill(const cytnx_float      &val);
+            void fill(const cytnx_int64      &val);
+            void fill(const cytnx_uint64     &val);
+            void fill(const cytnx_int32      &val);
+            void fill(const cytnx_uint32     &val);
             void set_zeros();
 
 
@@ -289,6 +353,14 @@ namespace cytnx{
             void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
 
             //generators:
+            void fill(const cytnx_complex128 &val);
+            void fill(const cytnx_complex64  &val);
+            void fill(const cytnx_double     &val);
+            void fill(const cytnx_float      &val);
+            void fill(const cytnx_int64      &val);
+            void fill(const cytnx_uint64     &val);
+            void fill(const cytnx_int32      &val);
+            void fill(const cytnx_uint32     &val);
             void set_zeros();
 
 
@@ -384,6 +456,10 @@ namespace cytnx{
             }
             bool operator==(const Storage &rhs);
 
+            template<class T>
+            void fill(const T& val){
+                this->_impl->fill(val);
+            }
 
     };
     std::ostream& operator<<(std::ostream& os, Storage &in);

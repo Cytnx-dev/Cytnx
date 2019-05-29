@@ -73,8 +73,10 @@ int main(int argc, char *argv[]){
     
 
     Tensor x = zeros({3,4,5},cytnxtype.Double,cytnxdevice.cpu);
-    
+     
     //Tensor x = zeros({3,4,5});
+    cout << x << endl;
+    x.fill(5.);
     cout << x << endl;
     Tensor b = x.clone();
     Tensor c = linalg::Add(1,x);

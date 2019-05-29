@@ -1,5 +1,5 @@
 #include "Storage.hpp"
-#include "utils/utils_internal.hpp"
+#include "utils/utils_internal_interface.hpp"
 
 using namespace std;
 namespace cytnx{
@@ -180,7 +180,7 @@ namespace cytnx{
                 cytnx_error_msg(out->dtype != this->dtype, "%s","[ERROR][DEBUG] %s","internal, the output dtype does not match current storage dtype.\n"); 
         #endif
 
-                std::cout <<"=====" << len.size() << " " << locators.size() << std::endl;
+                //std::cout <<"=====" << len.size() << " " << locators.size() << std::endl;
                 //create new instance:
                 cytnx_uint64 TotalElem = 1;
                 for(cytnx_uint32 i=0;i<len.size();i++)
@@ -387,6 +387,85 @@ namespace cytnx{
         }
         cout << "]" << endl;
     }
+
+    void DoubleStorage::fill(const cytnx_complex128 &val){
+        cytnx_error_msg(true,"[ERROR]%s"," cannot fill complex value into real container");
+    }
+    void DoubleStorage::fill(const cytnx_complex64  &val){
+        cytnx_error_msg(true,"[ERROR]%s"," cannot fill complex value into real container");
+    }
+    void DoubleStorage::fill(const cytnx_double     &val){
+        if(this->device == cytnxdevice.cpu){
+            utils_internal::Fill_cpu_d(this->Mem, (void*)(&val), this->len);
+        }else{
+            #ifdef UNI_GPU
+                utils_internal::cuFill_gpu_d(this->Mem, (void*)(&val), this->len);
+            #else
+                cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
+            #endif
+        }
+    }
+    void DoubleStorage::fill(const cytnx_float      &val){
+        cytnx_double tmp = val;
+       if(this->device == cytnxdevice.cpu){
+            utils_internal::Fill_cpu_d(this->Mem, (void*)(&tmp), this->len);
+        }else{
+            #ifdef UNI_GPU
+                utils_internal::cuFill_gpu_d(this->Mem, (void*)(&tmp), this->len);
+            #else
+                cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
+            #endif
+        }
+    }
+    void DoubleStorage::fill(const cytnx_int64      &val){
+        cytnx_double tmp = val;
+        if(this->device == cytnxdevice.cpu){
+            utils_internal::Fill_cpu_d(this->Mem, (void*)(&tmp), this->len);
+        }else{
+            #ifdef UNI_GPU
+                utils_internal::cuFill_gpu_d(this->Mem, (void*)(&tmp), this->len);
+            #else
+                cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
+            #endif
+        }
+    }
+    void DoubleStorage::fill(const cytnx_uint64     &val){
+        cytnx_double tmp = val;
+        if(this->device == cytnxdevice.cpu){
+            utils_internal::Fill_cpu_d(this->Mem, (void*)(&tmp), this->len);
+        }else{
+            #ifdef UNI_GPU
+                utils_internal::cuFill_gpu_d(this->Mem, (void*)(&tmp), this->len);
+            #else
+                cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
+            #endif
+        }
+    }
+    void DoubleStorage::fill(const cytnx_int32      &val){
+        cytnx_double tmp = val;
+        if(this->device == cytnxdevice.cpu){
+            utils_internal::Fill_cpu_d(this->Mem, (void*)(&tmp), this->len);
+        }else{
+            #ifdef UNI_GPU
+                utils_internal::cuFill_gpu_d(this->Mem, (void*)(&tmp), this->len);
+            #else
+                cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
+            #endif
+        }
+    }
+    void DoubleStorage::fill(const cytnx_uint32     &val){
+        cytnx_double tmp = val;
+        if(this->device == cytnxdevice.cpu){
+            utils_internal::Fill_cpu_d(this->Mem, (void*)(&tmp), this->len);
+        }else{
+            #ifdef UNI_GPU
+                utils_internal::cuFill_gpu_d(this->Mem, (void*)(&tmp), this->len);
+            #else
+                cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
+            #endif
+        }
+    }
+
 
 
     void DoubleStorage::set_zeros(){
