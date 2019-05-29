@@ -1,5 +1,7 @@
 # Cytnx
 
+![alt text](./Icon.png)
+
 ## Requirements
     * Boost v1.53+ [check_deleted, atomicadd, intrusive_ptr]
     * C++11

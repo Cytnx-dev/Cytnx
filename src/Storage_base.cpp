@@ -203,9 +203,9 @@ namespace cytnx{
                 if(this->device == Device.cpu){
                     utils_internal::uii.GetElems_ii[this->dtype](out->Mem,this->Mem,offj,new_offj,locators,TotalElem);
                 }else{
-                    #ifdef UNNI_GPU
+                    #ifdef UNI_GPU
                         checkCudaErrors(cudaSetDevice(this->device));
-                        utils_internal:::uii.cuGetElems_ii[this->dtype](out->Mem,this->Mem,offj,new_offj,locators,TotalElem);
+                        utils_internal::uii.cuGetElems_ii[this->dtype](out->Mem,this->Mem,offj,new_offj,locators,TotalElem);
                     #else
                         cytnx_error_msg(true,"[ERROR][GetElem_byShape] fatal internal%s","the Storage is set on gpu without CUDA support\n");
                     #endif
