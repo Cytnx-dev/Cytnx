@@ -57,6 +57,16 @@ namespace cytnx{
             ElemCast[cytnxtype.Uint64][cytnxtype.ComplexFloat ] = Cast_cpu_u64tcf;
             ElemCast[cytnxtype.Uint64][cytnxtype.Double       ] = Cast_cpu_u64td;
 
+            //
+            SetArange_ii.resize(N_Type,NULL);
+            SetArange_ii[cytnxtype.ComplexDouble] = SetArange_cpu_cd;
+            SetArange_ii[cytnxtype.ComplexFloat ] = SetArange_cpu_cf;
+            SetArange_ii[cytnxtype.Double       ] = SetArange_cpu_d ;
+            SetArange_ii[cytnxtype.Float        ] = SetArange_cpu_f ;
+            SetArange_ii[cytnxtype.Uint64       ] = SetArange_cpu_u64;
+            SetArange_ii[cytnxtype.Int64        ] = SetArange_cpu_i64;
+            SetArange_ii[cytnxtype.Uint32       ] = SetArange_cpu_u32;
+            SetArange_ii[cytnxtype.Int32        ] = SetArange_cpu_i32;
 
             #ifdef UNI_GPU
                 cuElemCast = vector<vector<ElemCast_io> >(N_Type,vector<ElemCast_io>(N_Type,NULL));
@@ -109,6 +119,18 @@ namespace cytnx{
                 cuElemCast[cytnxtype.Uint64][cytnxtype.ComplexDouble] = cuCast_gpu_u64tcd;
                 cuElemCast[cytnxtype.Uint64][cytnxtype.ComplexFloat ] = cuCast_gpu_u64tcf;
                 cuElemCast[cytnxtype.Uint64][cytnxtype.Double       ] = cuCast_gpu_u64td;
+
+
+                cuSetArange_ii.resize(N_Type,NULL);
+                cuSetArange_ii[cytnxtype.ComplexDouble] = cuSetArange_gpu_cd;
+                cuSetArange_ii[cytnxtype.ComplexFloat ] = cuSetArange_gpu_cf;
+                cuSetArange_ii[cytnxtype.Double       ] = cuSetArange_gpu_d ;
+                cuSetArange_ii[cytnxtype.Float        ] = cuSetArange_gpu_f ;
+                cuSetArange_ii[cytnxtype.Uint64       ] = cuSetArange_gpu_u64;
+                cuSetArange_ii[cytnxtype.Int64        ] = cuSetArange_gpu_i64;
+                cuSetArange_ii[cytnxtype.Uint32       ] = cuSetArange_gpu_u32;
+                cuSetArange_ii[cytnxtype.Int32        ] = cuSetArange_gpu_i32;
+
 
             #endif
 

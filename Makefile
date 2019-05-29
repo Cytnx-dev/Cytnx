@@ -55,9 +55,9 @@ OBJS += Storage.o Bond.o Tensor.o Symmetry.o Accessor.o Generator.o
 
 ## Utils
 OBJS += utils_internal_interface.o
-OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o is.o SetZeros_cpu.o Fill_cpu.o 
+OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o is.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o 
 ifeq ($(GPU_Enable),1)
-  OBJS += cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o cuFill_gpu.o
+  OBJS += cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o cuFill_gpu.o 
 endif
 
 ## Linalg_internal
@@ -239,6 +239,9 @@ Range_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/Range_cpu.cpp $(CytnxPATH
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 SetZeros_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/SetZeros_cpu.cpp $(CytnxPATH)/include/utils/utils_internal_cpu/SetZeros_cpu.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+
+SetArange_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/SetArange_cpu.cpp $(CytnxPATH)/include/utils/utils_internal_cpu/SetArange_cpu.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 Fill_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/Fill_cpu.cpp $(CytnxPATH)/include/utils/utils_internal_cpu/Fill_cpu.hpp

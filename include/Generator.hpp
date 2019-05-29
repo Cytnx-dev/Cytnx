@@ -12,6 +12,14 @@ namespace cytnx{
     Tensor zeros(const cytnx_uint64 &Nelem, const unsigned int &dtype=cytnxtype.Double, const int &device=cytnxdevice.cpu);
     Tensor zeros(const std::vector<cytnx_uint64> &Nelem, const unsigned int &dtype=cytnxtype.Double, const int &device=cytnxdevice.cpu);
     Tensor zeros(const std::initializer_list<cytnx_uint64> &Nelem, const unsigned int &dtype=cytnxtype.Double, const int &device=cytnxdevice.cpu);
+    
+    Tensor ones(const cytnx_uint64 &Nelem, const unsigned int &dtype=cytnxtype.Double, const int &device=cytnxdevice.cpu);
+    Tensor ones(const std::vector<cytnx_uint64> &Nelem, const unsigned int &dtype=cytnxtype.Double, const int &device=cytnxdevice.cpu);
+    Tensor ones(const std::initializer_list<cytnx_uint64> &Nelem, const unsigned int &dtype=cytnxtype.Double, const int &device=cytnxdevice.cpu);
+
+    Tensor arange(const cytnx_int64 &Nelem, const unsigned int &dtype=cytnxtype.Double, const int &device=cytnxdevice.cpu);
+    Tensor arange(const cytnx_double &start, const cytnx_double &end, const cytnx_double &step, const unsigned int &dtype=cytnxtype.Double, const int &device=cytnxdevice.cpu);
+ 
 }
 
 #endif
