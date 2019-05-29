@@ -272,6 +272,10 @@ namespace cytnx{
     std::vector<Tensor> Tensor::Svd(const bool&is_U, const bool&is_vT){
         return linalg::Svd(*this, is_U, is_vT);
     }
+    std::vector<Tensor> Tensor::Eigh(const bool &is_V){
+        return linalg::Eigh(*this, is_V);
+    }
+
 
     Tensor& Tensor::Inv_(){
         linalg::Inv_(*this);
@@ -296,7 +300,7 @@ namespace cytnx{
     Tensor Tensor::Exp(){
         return linalg::Exp(*this); 
     }
-
+    
 
 }//namespace cytnx
 

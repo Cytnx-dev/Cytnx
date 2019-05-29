@@ -150,7 +150,9 @@
       Inv     |   Inv_    |  Y  |  Y   |    Y
       Conj    |   Conj_   |  Y  |  Y   |    Y 
       Exp     |   Exp_    |  Y  |  Y   |    Y
+      Eigh    |   x       |  Y  |  Y   |    Y 
 
+ 
 ## Generators 
 
     Tensor: zeros(), ones(), arange()

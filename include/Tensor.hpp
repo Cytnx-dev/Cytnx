@@ -435,13 +435,15 @@ namespace cytnx{
            }
            
             // linalg:
-            std::vector<Tensor> Svd(const bool &is_U, const bool &is_vT);
+            std::vector<Tensor> Svd(const bool &is_U=true, const bool &is_vT=true);
+            std::vector<Tensor> Eigh(const bool &is_V=false);
             Tensor& Inv_();
             Tensor Inv(); 
             Tensor& Conj_();
             Tensor Conj();
             Tensor& Exp_();
             Tensor Exp();
+
 
     };// class Tensor
 

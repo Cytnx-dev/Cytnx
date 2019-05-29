@@ -92,6 +92,14 @@ namespace cytnx{
             Svd_ii[Type.Float        ] = Svd_internal_f;
 
             //=====================
+            Eigh_ii = vector<Eighfunc_oii>(5);
+
+            Eigh_ii[Type.ComplexDouble] = Eigh_internal_cd;
+            Eigh_ii[Type.ComplexFloat ] = Eigh_internal_cf;
+            Eigh_ii[Type.Double       ] = Eigh_internal_d;
+            Eigh_ii[Type.Float        ] = Eigh_internal_f;
+
+            //=====================
             Inv_inplace_ii = vector<Invinplacefunc_oii>(5);
 
             Inv_inplace_ii[Type.ComplexDouble] = Inv_inplace_internal_cd;
@@ -188,6 +196,14 @@ namespace cytnx{
                 cuSvd_ii[Type.ComplexFloat ] = cuSvd_internal_cf;
                 cuSvd_ii[Type.Double       ] = cuSvd_internal_d;
                 cuSvd_ii[Type.Float        ] = cuSvd_internal_f;
+
+                //=====================
+                cuEigh_ii = vector<Eighfunc_oii>(5);
+
+                cuEigh_ii[Type.ComplexDouble] = cuEigh_internal_cd;
+                cuEigh_ii[Type.ComplexFloat ] = cuEigh_internal_cf;
+                cuEigh_ii[Type.Double       ] = cuEigh_internal_d;
+                cuEigh_ii[Type.Float        ] = cuEigh_internal_f;
 
                 cuInv_inplace_ii = vector<Invinplacefunc_oii>(5);
 
