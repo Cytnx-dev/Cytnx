@@ -8,6 +8,7 @@
 #include "utils_internal_cpu/Range_cpu.hpp"
 #include "utils_internal_cpu/Fill_cpu.hpp"
 #include "utils_internal_cpu/SetArange_cpu.hpp"
+#include "utils_internal_cpu/GetElems_cpu.hpp"
 #ifdef UNI_GPU
     #include "utils_internal_gpu/cuCast_gpu.hpp"
     #include "utils_internal_gpu/cuAlloc_gpu.hpp"
@@ -15,6 +16,7 @@
     #include "utils_internal_gpu/cuSetZeros_gpu.hpp"
     #include "utils_internal_gpu/cuFill_gpu.hpp"
     #include "utils_internal_gpu/cuSetArange_gpu.hpp"
+    #include "utils_internal_gpu/cuGetElems_gpu.hpp"
 #endif
 
 #include "Type.hpp"
@@ -25,16 +27,18 @@ namespace cytnx{
 
         typedef void (*ElemCast_io)(const boost::intrusive_ptr<Storage_base>&,boost::intrusive_ptr<Storage_base>&,const unsigned long long &, const int &);
         typedef void (*SetArange_io)(boost::intrusive_ptr<Storage_base>&,const double&, const double&, const double&, const cytnx_uint64 &);
+        typedef void (*GetElems_io)(void*, void*, const std::vector<cytnx_uint64>&, const std::vector<cytnx_uint64>&,const std::vector<std::vector<cytnx_uint64> >&,const cytnx_uint64 &);
         class utils_internal_interface{
             public:
 
                 //Cast
                 std::vector<std::vector<ElemCast_io> > ElemCast;            
                 std::vector<SetArange_io> SetArange_ii;
-
+                std::vector<GetElems_io> GetElems_ii;
                 #ifdef UNI_GPU
                     std::vector<std::vector<ElemCast_io> > cuElemCast;
                     std::vector<SetArange_io> cuSetArange_ii;
+                    std::vector<GetElems_io> cuGetElems_ii;
                 #endif 
 
                 utils_internal_interface();

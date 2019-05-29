@@ -40,6 +40,7 @@ namespace cytnx{
 
             }else{
                 #ifdef UNI_GPU
+                    checkCudaErrors(cudaSetDevice(in.device()));
                     cytnx::linalg_internal::lii.cuSvd_ii[in.dtype()](in._impl->storage()._impl,
                                                             U._impl->storage()._impl,
                                                             vT._impl->storage()._impl,

@@ -55,9 +55,9 @@ OBJS += Storage.o Bond.o Tensor.o Symmetry.o Accessor.o Generator.o
 
 ## Utils
 OBJS += utils_internal_interface.o
-OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o is.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o 
+OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o is.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_cpu.o
 ifeq ($(GPU_Enable),1)
-  OBJS += cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o cuFill_gpu.o cuSetArange_gpu.o 
+  OBJS += cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o cuFill_gpu.o cuSetArange_gpu.o cuGetElems_gpu.o 
 endif
 
 ## Linalg_internal
@@ -244,6 +244,9 @@ SetZeros_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/SetZeros_cpu.cpp $(Cyt
 SetArange_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/SetArange_cpu.cpp $(CytnxPATH)/include/utils/utils_internal_cpu/SetArange_cpu.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
+GetElems_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/GetElems_cpu.cpp $(CytnxPATH)/include/utils/utils_internal_cpu/GetElems_cpu.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+
 Fill_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/Fill_cpu.cpp $(CytnxPATH)/include/utils/utils_internal_cpu/Fill_cpu.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
@@ -266,6 +269,9 @@ cuSetZeros_gpu.o: $(CytnxPATH)/src/utils/utils_internal_gpu/cuSetZeros_gpu.cu $(
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 cuSetArange_gpu.o: $(CytnxPATH)/src/utils/utils_internal_gpu/cuSetArange_gpu.cu $(CytnxPATH)/include/utils/utils_internal_gpu/cuSetArange_gpu.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+cuGetElems_gpu.o: $(CytnxPATH)/src/utils/utils_internal_gpu/cuGetElems_gpu.cu $(CytnxPATH)/include/utils/utils_internal_gpu/cuGetElems_gpu.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+
 cuFill_gpu.o: $(CytnxPATH)/src/utils/utils_internal_gpu/cuFill_gpu.cu $(CytnxPATH)/include/utils/utils_internal_gpu/cuFill_gpu.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 endif

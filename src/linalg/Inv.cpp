@@ -25,6 +25,7 @@ namespace cytnx{
 
             }else{
                 #ifdef UNI_GPU
+                    checkCudaErrors(cudaSetDevice(out.device()));
                     cytnx::linalg_internal::lii.cuInv_inplace_ii[out.dtype()](out._impl->storage()._impl,
                                                                              out.shape().back()); 
                     return out;

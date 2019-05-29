@@ -48,6 +48,7 @@ namespace cytnx{
             memcpy(out->Mem,this->Mem,sizeof(cytnx_complex64)*this->len);
         }else{
             #ifdef UNI_GPU
+                checkCudaErrors(cudaSetDevice(this->device));
                 checkCudaErrors(cudaMemcpy(out->Mem,this->Mem,sizeof(cytnx_complex64)*this->len,cudaMemcpyDeviceToDevice));
             #else
                 cytnx_error_msg(1,"%s","[ERROR] cannot clone a Storage on gpu without CUDA support.");
@@ -63,6 +64,7 @@ namespace cytnx{
             utils_internal::Movemem_cpu_cf(tmp,old_shape,mapper,invmapper,1);
         }else{
             #ifdef UNI_GPU
+                checkCudaErrors(cudaSetDevice(this->device));
                 utils_internal::cuMovemem_gpu_cf(tmp,old_shape,mapper,invmapper,1); 
             #else
                 cytnx_error_msg(1,"%s","[ERROR][Internal] try to call GPU section without CUDA support");
@@ -77,6 +79,7 @@ namespace cytnx{
             return utils_internal::Movemem_cpu_cf(tmp,old_shape,mapper,invmapper,0);
         }else{
             #ifdef UNI_GPU
+                checkCudaErrors(cudaSetDevice(this->device));
                 return utils_internal::cuMovemem_gpu_cf(tmp,old_shape,mapper,invmapper,0); 
             #else
                 cytnx_error_msg(1,"%s","[ERROR][Internal] try to call GPU section without CUDA support");
@@ -329,52 +332,6 @@ namespace cytnx{
         }//len==0
     }
 
-    void ComplexFloatStorage::GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector< std::vector<cytnx_uint64> > &locators){
-        #ifdef UNI_DEBUG
-                cytnx_error_msg(shape.size() != len.size(),"%s","[ERROR][DEBUG] internal Storage, shape.size() != len.size()");
-                cytnx_error_msg(out->dtype != this->dtype, "%s","[ERROR][DEBUG] %s","internal, the output dtype does not match current storage dtype.\n");
-        #endif  
-                //create new instance:
-                cytnx_uint64 TotalElem = 1;
-                for(cytnx_uint32 i=0;i<len.size();i++)
-                    TotalElem*=len[i];
-
-                cytnx_error_msg(out->size() != TotalElem, "%s", "[ERROR] internal, the out Storage size does not match the no. of elems calculated from Accessors.%s","\n");
-
-                cytnx_complex64* elem_ptr_     = static_cast<cytnx_complex64*>(this->Mem);
-                cytnx_complex64* new_elem_ptr_ = static_cast<cytnx_complex64*>(out->Mem ); 
-
-                std::vector<cytnx_uint64> c_offj(shape.size());
-                std::vector<cytnx_uint64> new_offj(shape.size());
-
-                cytnx_uint64 accu=1;
-                for(cytnx_int32 i=shape.size()-1;i>=0;i--){
-                    c_offj[i] = accu;
-                    accu*=shape[mapper[i]];
-                }
-                accu = 1;
-                for(cytnx_int32 i=len.size()-1;i>=0;i--){
-                    new_offj[i] = accu;
-                    accu*=len[i];
-                }
-
-                //Start copy elem:
-                #ifdef UNI_OMP 
-                #pragma omp parallel for schedule(dynamic)
-                #endif
-                for(cytnx_uint64 n=0;n < TotalElem; n++){
-                    //map from mem loc of new tensor to old tensor
-                    cytnx_uint64 Loc=0;
-                    cytnx_uint64 tmpn = n;
-                    for(cytnx_uint32 r=0;r < shape.size();r++){
-                        if(locators[r].size()) Loc += locators[r][tmpn/new_offj[r]]*c_offj[mapper[r]];
-                        else cytnx_uint64(tmpn/new_offj[r])*c_offj[mapper[r]];
-                        tmpn %= new_offj[r];
-                    }
-                    new_elem_ptr_[n] = elem_ptr_[Loc];
-                }
-
-    }// GetElem_byShape
 
 
     void ComplexFloatStorage::print_elems(){
@@ -393,6 +350,7 @@ namespace cytnx{
             utils_internal::Fill_cpu_cf(this->Mem, (void*)(&tmp), this->len);
         }else{
             #ifdef UNI_GPU
+                checkCudaErrors(cudaSetDevice(this->device));
                 utils_internal::cuFill_gpu_cf(this->Mem, (void*)(&tmp), this->len);
             #else
                 cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
@@ -404,6 +362,7 @@ namespace cytnx{
             utils_internal::Fill_cpu_cf(this->Mem, (void*)(&val), this->len);
         }else{
             #ifdef UNI_GPU
+                checkCudaErrors(cudaSetDevice(this->device));
                 utils_internal::cuFill_gpu_cf(this->Mem, (void*)(&val), this->len);
             #else
                 cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
@@ -417,6 +376,7 @@ namespace cytnx{
             utils_internal::Fill_cpu_cf(this->Mem, (void*)(&tmp), this->len);
         }else{
             #ifdef UNI_GPU
+                checkCudaErrors(cudaSetDevice(this->device));
                 utils_internal::cuFill_gpu_cf(this->Mem, (void*)(&tmp), this->len);
             #else
                 cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
@@ -428,6 +388,7 @@ namespace cytnx{
             utils_internal::Fill_cpu_cf(this->Mem, (void*)(&val), this->len);
         }else{
             #ifdef UNI_GPU
+                checkCudaErrors(cudaSetDevice(this->device));
                 utils_internal::cuFill_gpu_cf(this->Mem, (void*)(&val), this->len);
             #else
                 cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
@@ -440,6 +401,7 @@ namespace cytnx{
             utils_internal::Fill_cpu_cf(this->Mem, (void*)(&tmp), this->len);
         }else{
             #ifdef UNI_GPU
+                checkCudaErrors(cudaSetDevice(this->device));
                 utils_internal::cuFill_gpu_cf(this->Mem, (void*)(&tmp), this->len);
             #else
                 cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
@@ -452,6 +414,7 @@ namespace cytnx{
             utils_internal::Fill_cpu_cf(this->Mem, (void*)(&tmp), this->len);
         }else{
             #ifdef UNI_GPU
+                checkCudaErrors(cudaSetDevice(this->device));
                 utils_internal::cuFill_gpu_cf(this->Mem, (void*)(&tmp), this->len);
             #else
                 cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
@@ -464,6 +427,7 @@ namespace cytnx{
             utils_internal::Fill_cpu_cf(this->Mem, (void*)(&tmp), this->len);
         }else{
             #ifdef UNI_GPU
+                checkCudaErrors(cudaSetDevice(this->device));
                 utils_internal::cuFill_gpu_cf(this->Mem, (void*)(&tmp), this->len);
             #else
                 cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
@@ -476,6 +440,7 @@ namespace cytnx{
             utils_internal::Fill_cpu_cf(this->Mem, (void*)(&tmp), this->len);
         }else{
             #ifdef UNI_GPU
+                checkCudaErrors(cudaSetDevice(this->device));
                 utils_internal::cuFill_gpu_cf(this->Mem, (void*)(&tmp), this->len);
             #else
                 cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
@@ -491,6 +456,7 @@ namespace cytnx{
             utils_internal::SetZeros(this->Mem,sizeof(cytnx_complex64)*this->len);
         }else{
             #ifdef UNI_GPU
+                checkCudaErrors(cudaSetDevice(this->device));
                 utils_internal::cuSetZeros(this->Mem,sizeof(cytnx_complex64)*this->len);
             #else
                 cytnx_error_msg(1,"[ERROR][set_zeros] fatal, the storage is on gpu without CUDA support.%s","\n");

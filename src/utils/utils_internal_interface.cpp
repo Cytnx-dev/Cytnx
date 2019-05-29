@@ -68,6 +68,17 @@ namespace cytnx{
             SetArange_ii[Type.Uint32       ] = SetArange_cpu_u32;
             SetArange_ii[Type.Int32        ] = SetArange_cpu_i32;
 
+            //
+            GetElems_ii.resize(N_Type,NULL);
+            GetElems_ii[Type.ComplexDouble] = GetElems_cpu_cd;
+            GetElems_ii[Type.ComplexFloat ] = GetElems_cpu_cf;
+            GetElems_ii[Type.Double       ] = GetElems_cpu_d ;
+            GetElems_ii[Type.Float        ] = GetElems_cpu_f ;
+            GetElems_ii[Type.Uint64       ] = GetElems_cpu_u64;
+            GetElems_ii[Type.Int64        ] = GetElems_cpu_i64;
+            GetElems_ii[Type.Uint32       ] = GetElems_cpu_u32;
+            GetElems_ii[Type.Int32        ] = GetElems_cpu_i32;
+
             #ifdef UNI_GPU
                 cuElemCast = vector<vector<ElemCast_io> >(N_Type,vector<ElemCast_io>(N_Type,NULL));
 
@@ -131,6 +142,15 @@ namespace cytnx{
                 cuSetArange_ii[Type.Uint32       ] = cuSetArange_gpu_u32;
                 cuSetArange_ii[Type.Int32        ] = cuSetArange_gpu_i32;
 
+                cuGetElems_ii.resize(N_Type,NULL);
+                cuGetElems_ii[Type.ComplexDouble] = cuGetElems_gpu_cd;
+                cuGetElems_ii[Type.ComplexFloat ] = cuGetElems_gpu_cf;
+                cuGetElems_ii[Type.Double       ] = cuGetElems_gpu_d ;
+                cuGetElems_ii[Type.Float        ] = cuGetElems_gpu_f ;
+                cuGetElems_ii[Type.Uint64       ] = cuGetElems_gpu_u64;
+                cuGetElems_ii[Type.Int64        ] = cuGetElems_gpu_i64;
+                cuGetElems_ii[Type.Uint32       ] = cuGetElems_gpu_u32;
+                cuGetElems_ii[Type.Int32        ] = cuGetElems_gpu_i32;
 
             #endif
 

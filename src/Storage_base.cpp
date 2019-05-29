@@ -168,7 +168,49 @@ namespace cytnx{
         this->print_elems();
     }
     void Storage_base::GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators){
-        cytnx_error_msg(1,"%s","[ERROR] call GetElem_byShape directly on Void Storage.");
+        #ifdef UNI_DEBUG
+                cytnx_error_msg(shape.size() != len.size(),"%s","[ERROR][DEBUG] internal Storage, shape.size() != len.size()");
+                cytnx_error_msg(out->dtype != this->dtype, "%s","[ERROR][DEBUG] %s","internal, the output dtype does not match current storage dtype.\n"); 
+        #endif
+
+                //std::cout <<"=====" << len.size() << " " << locators.size() << std::endl;
+                //create new instance:
+                cytnx_uint64 TotalElem = 1;
+                for(cytnx_uint32 i=0;i<len.size();i++)
+                    TotalElem*=len[i];
+
+                cytnx_error_msg(out->size() != TotalElem, "%s", "[ERROR] internal, the out Storage size does not match the no. of elems calculated from Accessors.%s","\n");
+                
+
+                std::vector<cytnx_uint64> c_offj(shape.size());
+                std::vector<cytnx_uint64> new_offj(shape.size());
+                std::vector<cytnx_uint64> offj(shape.size());
+
+                cytnx_uint64 accu=1;
+                for(cytnx_int32 i=shape.size()-1;i>=0;i--){
+                    c_offj[i] = accu;
+                    accu*=shape[mapper[i]];
+                }
+                accu = 1;
+                for(cytnx_int32 i=len.size()-1;i>=0;i--){
+                    new_offj[i] = accu;
+                    accu*=len[i];
+
+                    //count-in the mapper:
+                    offj[i] = c_offj[mapper[i]]; 
+                }
+
+                if(this->device == Device.cpu){
+                    utils_internal::uii.GetElems_ii[this->dtype](out->Mem,this->Mem,offj,new_offj,locators,TotalElem);
+                }else{
+                    #ifdef UNNI_GPU
+                        checkCudaErrors(cudaSetDevice(this->device));
+                        utils_internal:::uii.cuGetElems_ii[this->dtype](out->Mem,this->Mem,offj,new_offj,locators,TotalElem);
+                    #else
+                        cytnx_error_msg(true,"[ERROR][GetElem_byShape] fatal internal%s","the Storage is set on gpu without CUDA support\n");
+                    #endif
+
+                } 
     }
 
     //generators:

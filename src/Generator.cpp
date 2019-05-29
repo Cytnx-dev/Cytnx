@@ -52,6 +52,7 @@ namespace cytnx{
             utils_internal::uii.SetArange_ii[dtype](out._impl->storage()._impl, start, end, step, Nelem);
         }else{
             #ifdef UNI_GPU
+                checkCudaErrors(cudaSetDevice(out.device()));
                 utils_internal::uii.cuSetArange_ii[dtype](out._impl->storage()._impl, start, end, step, Nelem); 
             #else
                 cytnx_error_msg(true,"[ERROR] fatal internal, %s"," [arange] the container is on gpu without CUDA support!%s","\n")
