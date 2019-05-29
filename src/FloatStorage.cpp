@@ -14,7 +14,7 @@ namespace cytnx{
         cytnx_error_msg(len_in < 1, "%s", "[ERROR] cannot init a Storage with zero element");
         this->dtype = cytnxtype.Float;
         if(device==cytnxdevice.cpu){
-            this->Mem = utils_internal::Calloc_cpu(this->len,sizeof(float));
+            this->Mem = utils_internal::Malloc_cpu(this->len*sizeof(float));
         }else{
             #ifdef UNI_GPU
                 cytnx_error_msg(device>=cytnxdevice.Ngpus,"%s","[ERROR] invalid device.");

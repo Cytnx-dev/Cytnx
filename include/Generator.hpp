@@ -5,9 +5,11 @@
 #include "cytnx_error.hpp"
 #include "Tensor.hpp"
 #include <vector>
+#include <initializer_list>
 namespace cytnx{
 
-    Tensor zeros(const cytnx_uint64 &Nelem, const unsigned int &dtype=cytnxtype.Double, const int &device=cytnxdevice.cpu);
+    
+    //Tensor zeros(const cytnx_uint64 &Nelem, const unsigned int &dtype=cytnxtype.Double, const int &device=cytnxdevice.cpu);
     Tensor zeros(const std::vector<cytnx_uint64> &Nelem, const unsigned int &dtype=cytnxtype.Double, const int &device=cytnxdevice.cpu);
     Tensor zeros(const std::initializer_list<cytnx_uint64> &Nelem, const unsigned int &dtype=cytnxtype.Double, const int &device=cytnxdevice.cpu);
 }

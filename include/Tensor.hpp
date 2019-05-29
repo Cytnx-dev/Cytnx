@@ -143,7 +143,7 @@ namespace cytnx{
             boost::intrusive_ptr<Tensor_impl> get_elems(const std::vector<cytnx::Accessor> &accessors);
 
                         
-            boost::intrusive_ptr<Tensor_impl> Contiguous(){
+            boost::intrusive_ptr<Tensor_impl> contiguous(){
                 // return new instance if act on non-contiguous tensor
                 // return self if act on contiguous tensor
                 if(this->_contiguous){
@@ -165,7 +165,7 @@ namespace cytnx{
                 }
             }
             
-            void Contiguous_(){
+            void contiguous_(){
                 // return new instance if act on non-contiguous tensor
                 // return self if act on contiguous tensor
                 if(!this->_contiguous){
@@ -180,9 +180,9 @@ namespace cytnx{
                 }
             }
 
-            void Reshape_(const std::vector<cytnx_int64> &new_shape){
+            void reshape_(const std::vector<cytnx_int64> &new_shape){
                 if(!this->_contiguous){
-                    this->Contiguous_();
+                    this->contiguous_();
                 }
                 std::vector<cytnx_uint64> result_shape(new_shape.size());
                 cytnx_uint64 new_N = 1;
@@ -190,8 +190,8 @@ namespace cytnx{
                 unsigned int Udet_id = 0;
                 for(int i=0;i<new_shape.size();i++){
                     if(new_shape[i]<0){
-                        if(new_shape[i]!=-1) cytnx_error_msg(new_shape[i]!=-1,"%s","[ERROR] Reshape can only have dimension > 0 and one undetermine rank specify as -1");
-                        if(has_undetermine) cytnx_error_msg(new_shape[i]!=-1,"%s","[ERROR] Reshape can only have dimension > 0 and one undetermine rank specify as -1");
+                        if(new_shape[i]!=-1) cytnx_error_msg(new_shape[i]!=-1,"%s","[ERROR] reshape can only have dimension > 0 and one undetermine rank specify as -1");
+                        if(has_undetermine) cytnx_error_msg(new_shape[i]!=-1,"%s","[ERROR] reshape can only have dimension > 0 and one undetermine rank specify as -1");
                         Udet_id = i;
                         has_undetermine = true;
                     }else{
@@ -215,15 +215,15 @@ namespace cytnx{
             }
 
 
-            boost::intrusive_ptr<Tensor_impl> Reshape(const std::vector<cytnx_int64> &new_shape){
+            boost::intrusive_ptr<Tensor_impl> reshape(const std::vector<cytnx_int64> &new_shape){
                 boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
                 if(!this->_contiguous){
-                    out = this->Contiguous();
+                    out = this->contiguous();
                 }else{
                     out = this->clone();
                 }
 
-                out->Reshape_(new_shape);
+                out->reshape_(new_shape);
                 return out;
             }
 
@@ -316,33 +316,33 @@ namespace cytnx{
                 return out;
             }
 
-            Tensor Contiguous(){
+            Tensor contiguous(){
                 Tensor out;
-                out._impl = this->_impl->Contiguous();
+                out._impl = this->_impl->contiguous();
                 return out;
             }
-            void Contiguous_(){
-                this->_impl->Contiguous_();
+            void contiguous_(){
+                this->_impl->contiguous_();
             }
 
-            void Reshape_(const std::vector<cytnx_int64> &new_shape){
-                this->_impl->Reshape_(new_shape);
+            void reshape_(const std::vector<cytnx_int64> &new_shape){
+                this->_impl->reshape_(new_shape);
             }
 
-            void Reshape_(const std::initializer_list<cytnx_int64> &new_shape){
+            void reshape_(const std::initializer_list<cytnx_int64> &new_shape){
                 std::vector<cytnx_int64> args = new_shape;
-                this->_impl->Reshape_(args);
+                this->_impl->reshape_(args);
             }
 
-            Tensor Reshape(const std::vector<cytnx_int64> &new_shape){
+            Tensor reshape(const std::vector<cytnx_int64> &new_shape){
                 Tensor out;
-                out._impl = this->_impl->Reshape(new_shape);
+                out._impl = this->_impl->reshape(new_shape);
                 return out;
             }
 
-            Tensor Reshape(const std::initializer_list<cytnx_int64> &new_shape){
+            Tensor reshape(const std::initializer_list<cytnx_int64> &new_shape){
                 std::vector<cytnx_int64> args = new_shape;
-                return this->Reshape(args);
+                return this->reshape(args);
             }
 
 

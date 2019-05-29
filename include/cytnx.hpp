@@ -6,7 +6,7 @@
 #include "Storage.hpp"
 #include "Tensor.hpp"
 #include "Bond.hpp"
-
+#include "Generator.hpp"
 
 #include "linalg/linalg.hpp"
 #include "utils/utils.hpp"

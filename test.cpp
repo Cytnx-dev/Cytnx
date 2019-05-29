@@ -60,18 +60,21 @@ int main(int argc, char *argv[]){
     boost::intrusive_ptr<Storage_base> arrayX(new FloatStorage() );
     arrayX->_Init_byptr_safe(tt,4);
     */
-
+    
     Storage s;
     s.Init(12,cytnxtype.Double,cytnxdevice.cpu);
+    s.set_zeros();
     s.at<double>(4) = 3;
     cout << s << endl;    
     Storage s2 = s;
     Storage s3 = s.clone();
     cout << is(s,s2) << is(s,s3) << endl;
     cout << (s==s2) << (s==s3) << endl;
+    
 
-
-    Tensor x({3,4,5},cytnxtype.Double,cytnxdevice.cpu);
+    Tensor x = zeros({3,4,5},cytnxtype.Double,cytnxdevice.cpu);
+    //Tensor x = zeros({3,4,5});
+    cout << x << endl;
     Tensor b = x.clone();
     Tensor c = linalg::Add(1,x);
     Tensor d = c + c;
@@ -93,7 +96,8 @@ int main(int argc, char *argv[]){
     Tensor y = i.get_elems({ac::all(),ac(2),ac::all()});
     cout << y << endl;
 
-    Tensor a({2,3},cytnxtype.Double,cytnxdevice.cpu);
+    Tensor a = zeros({2,3},cytnxtype.Double,cytnxdevice.cpu);
+    //Tensor a = zeros({2,3});
     a.at<double>({0,0}) = 3; a.at<double>({0,1}) = 2; a.at<double>({0,2}) = 2;
     a.at<double>({1,0}) = 2; a.at<double>({1,1}) = 3; a.at<double>({1,2}) = -2;
 
@@ -101,7 +105,7 @@ int main(int argc, char *argv[]){
     cout << out[0] ;
     
     
-    Tensor Zo = zeros(10);
+    Tensor Zo = zeros(10,cytnxtype.Double,cytnxdevice.cpu);
 
 
     return 0;

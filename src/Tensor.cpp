@@ -86,8 +86,8 @@ namespace cytnx{
         for(cytnx_uint32 i=0;i<accessors.size();i++)
             if(get_shape[i]!=1) new_shape.push_back(get_shape[i]);
 
-        if(new_shape.size()==0) out->Reshape_({1});
-        else out->Reshape_(new_shape);
+        if(new_shape.size()==0) out->reshape_({1});
+        else out->reshape_(new_shape);
         return out;
 
     }

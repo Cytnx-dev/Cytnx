@@ -15,7 +15,7 @@ namespace cytnx{
         this->dtype = cytnxtype.ComplexDouble;
 
         if(device==cytnxdevice.cpu){
-            this->Mem = utils_internal::Calloc_cpu(this->len,sizeof(complex<double>));
+            this->Mem = utils_internal::Malloc_cpu(this->len*sizeof(complex<double>));
         }else{
             #ifdef UNI_GPU
                 cytnx_error_msg(device>=cytnxdevice.Ngpus,"%s","[ERROR] invalid device.");
