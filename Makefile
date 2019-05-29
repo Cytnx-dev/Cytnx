@@ -2,12 +2,12 @@ CytnxPATH=.
 CUDA_PATH=/usr/local/cuda
 INCFLAGS :=-I$(CytnxPATH)/include
 
-CC:= g++
+CC:= g++-6
 CCFLAGS := -std=c++11 -g -Wformat=0 -fPIC
 LDFLAGS :=  -llapack -lblas
 
 
-GPU_Enable=0
+GPU_Enable=1
 OMP_Enable=1
 DEBUG_Enable=0
 
@@ -57,7 +57,7 @@ OBJS += Storage.o Bond.o Tensor.o Symmetry.o Accessor.o Generator.o
 OBJS += utils_internal_interface.o
 OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o is.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o 
 ifeq ($(GPU_Enable),1)
-  OBJS += cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o cuFill_gpu.o 
+  OBJS += cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o cuFill_gpu.o cuSetArange_gpu.o 
 endif
 
 ## Linalg_internal
@@ -263,6 +263,8 @@ cuCast_gpu.o: $(CytnxPATH)/src/utils/utils_internal_gpu/cuCast_gpu.cu $(CytnxPAT
 cuMovemem_gpu.o: $(CytnxPATH)/src/utils/utils_internal_gpu/cuMovemem_gpu.cu $(CytnxPATH)/include/utils/utils_internal_gpu/cuMovemem_gpu.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 cuSetZeros_gpu.o: $(CytnxPATH)/src/utils/utils_internal_gpu/cuSetZeros_gpu.cu $(CytnxPATH)/include/utils/utils_internal_gpu/cuSetZeros_gpu.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+cuSetArange_gpu.o: $(CytnxPATH)/src/utils/utils_internal_gpu/cuSetArange_gpu.cu $(CytnxPATH)/include/utils/utils_internal_gpu/cuSetArange_gpu.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 cuFill_gpu.o: $(CytnxPATH)/src/utils/utils_internal_gpu/cuFill_gpu.cu $(CytnxPATH)/include/utils/utils_internal_gpu/cuFill_gpu.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@

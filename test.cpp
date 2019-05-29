@@ -14,7 +14,7 @@ int main(int argc, char *argv[]){
     
     
 
-    //cytnxdevice.Print_Property();
+    //Device.Print_Property();
     /*
     boost::intrusive_ptr<Storage_base> array1(new FloatStorage() );
     boost::intrusive_ptr<Storage_base> array2(new Storage_base() );
@@ -22,7 +22,7 @@ int main(int argc, char *argv[]){
 
 
     array1->Init(4);
-    array1->to_(cytnxdevice.cuda); 
+    array1->to_(Device.cuda); 
     array2->Init(4);  
     array3->Init(4);
     cout << array1->dtype() << endl;
@@ -34,20 +34,20 @@ int main(int argc, char *argv[]){
     array1->at<float>(2) = 3;
     array1->at<float>(3) = 4;
 
-    array2 = array1->astype(cytnxtype.ComplexDouble);
+    array2 = array1->astype(Type.ComplexDouble);
     for(int i=0;i<4;i++)
         cout << array2->at<complex<double> >(i);
    
  
     cout << array2->dtype() << endl;    
 
-    array2 = array2->astype(cytnxtype.ComplexFloat);
+    array2 = array2->astype(Type.ComplexFloat);
 
     // GET RAW POINTER
     float* A = array1->data<float>();
     
     // Convert type:
-    //boost::intrusive_ptr<Storage_base> array3 = array2->astype(cytnxtype.Float);
+    //boost::intrusive_ptr<Storage_base> array3 = array2->astype(Type.Float);
     boost::intrusive_ptr<Storage_base> array4 = array3;
 
    
@@ -62,7 +62,7 @@ int main(int argc, char *argv[]){
     */
     
     Storage s;
-    s.Init(12,cytnxtype.Double,cytnxdevice.cpu);
+    s.Init(12,Type.Double,Device.cpu);
     s.set_zeros();
     s.at<double>(4) = 3;
     cout << s << endl;    
@@ -72,7 +72,7 @@ int main(int argc, char *argv[]){
     cout << (s==s2) << (s==s3) << endl;
     
 
-    Tensor x = zeros({3,4,5},cytnxtype.Double,cytnxdevice.cpu);
+    Tensor x = zeros({3,4,5},Type.Double,Device.cpu);
      
     //Tensor x = zeros({3,4,5});
     cout << x << endl;
@@ -99,7 +99,7 @@ int main(int argc, char *argv[]){
     Tensor y = i.get_elems({ac::all(),ac(2),ac::all()});
     cout << y << endl;
 
-    Tensor a = zeros({2,3},cytnxtype.Double,cytnxdevice.cpu);
+    Tensor a = zeros({2,3},Type.Double,Device.cpu);
     //Tensor a = zeros({2,3});
     a.at<double>({0,0}) = 3; a.at<double>({0,1}) = 2; a.at<double>({0,2}) = 2;
     a.at<double>({1,0}) = 2; a.at<double>({1,1}) = 3; a.at<double>({1,2}) = -2;
@@ -108,14 +108,15 @@ int main(int argc, char *argv[]){
     cout << out[0] ;
     
     
-    Tensor Zo = zeros(10,cytnxtype.Double,cytnxdevice.cpu);
-
-
+    Tensor Zo = zeros(10,Type.Double,Device.cpu);
+    Tensor Zp = arange(10);
+    Tensor Zc = arange(0.1,0,-0.2,Type.ComplexDouble);
+    cout << Zc << endl;
     return 0;
 /*
     //Tensor t;
-    //t.Init({3,4,5},cytnxtype.Double,cytnxdevice.cpu); 
-    Tensor t({3,4,5},cytnxtype.Double,cytnxdevice.cpu);
+    //t.Init({3,4,5},Type.Double,Device.cpu); 
+    Tensor t({3,4,5},Type.Double,Device.cpu);
     Tensor v = t;
     v.at<double>({2,1,3}) = 1;
     cout << t << endl;
@@ -135,7 +136,7 @@ int main(int argc, char *argv[]){
     cout << t << endl;
     cout << t.shape() << endl;
 
-    t.to_(cytnxdevice.cpu);
+    t.to_(Device.cpu);
     cout << t << endl;
     Bond bd_in = Bond(3,{{0, 1,-1, 4},
                          {0, 2,-1,-4},

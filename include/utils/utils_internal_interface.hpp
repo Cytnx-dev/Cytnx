@@ -14,7 +14,7 @@
     #include "utils_internal_gpu/cuMovemem_gpu.hpp"
     #include "utils_internal_gpu/cuSetZeros_gpu.hpp"
     #include "utils_internal_gpu/cuFill_gpu.hpp"
-    #include "utils_internal_cpu/cuSetArange_gpu.hpp"
+    #include "utils_internal_gpu/cuSetArange_gpu.hpp"
 #endif
 
 #include "Type.hpp"
@@ -24,7 +24,7 @@ namespace cytnx{
     namespace utils_internal{
 
         typedef void (*ElemCast_io)(const boost::intrusive_ptr<Storage_base>&,boost::intrusive_ptr<Storage_base>&,const unsigned long long &, const int &);
-        typedef void (*SetArange_io)(boost::intrusive_ptr<Storage_base>&,const double&, const double&, const double&, const cytnx_uint64 &, const int &);
+        typedef void (*SetArange_io)(boost::intrusive_ptr<Storage_base>&,const double&, const double&, const double&, const cytnx_uint64 &);
         class utils_internal_interface{
             public:
 

@@ -14,7 +14,7 @@ namespace cytnx{
             out = Tin.clone();
 
 
-            if(Tin.device()==cytnxdevice.cpu){
+            if(Tin.device()==Device.cpu){
 
                 if(out.dtype()<3) cytnx::linalg_internal::lii.Inv_inplace_ii[out.dtype()](out._impl->storage()._impl,out.shape().back());
                 

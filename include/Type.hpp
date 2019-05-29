@@ -36,7 +36,7 @@ namespace cytnx{
 
 
     const int N_Type=9;
-    class Type{
+    class Type_class{
         public:
             enum:unsigned int{
                 Void,
@@ -56,7 +56,7 @@ namespace cytnx{
 
     };
 
-    extern Type cytnxtype;
+    extern Type_class Type;
 
 }//namespace cytnx
 

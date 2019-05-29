@@ -14,7 +14,7 @@ namespace cytnx{
     };
 
 
-    class Device{
+    class Device_class{
         public:
             enum:int{
                 cpu=-1,
@@ -22,10 +22,10 @@ namespace cytnx{
             };
             int Ngpus;
             std::vector<std::vector<bool> > CanAccessPeer;
-            Device();
+            Device_class();
             void Print_Property();
             std::string getname(const int &device_id);
     };
-    extern Device cytnxdevice;
+    extern Device_class Device;
 }//namespace cytnx
 #endif

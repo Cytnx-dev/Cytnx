@@ -82,9 +82,9 @@ namespace cytnx{
             template<class T>
             void _Init_byptr_safe(T *rawptr, const unsigned long long &len_in){
                 //check:
-                if(this->dtype==cytnxtype.Float){
+                if(this->dtype==Type.Float){
                         cytnx_error_msg(typeid(T) != typeid(float),"%s","[ERROR _Init_byptr_safe type not match]");
-                }else if(this->dtype==cytnxtype.Double){
+                }else if(this->dtype==Type.Double){
                         cytnx_error_msg(typeid(T) != typeid(double),"%s","[ERROR _Init_byptr_safe type not match]");
                 }else{
                     cytnx_error_msg(1,"[FATAL] ERROR%s","\n");
@@ -133,7 +133,7 @@ namespace cytnx{
     ///////////////////////////////////                    
     class FloatStorage : public Storage_base{
         public:
-            FloatStorage(){this->dtype=cytnxtype.Float;};
+            FloatStorage(){this->dtype=Type.Float;};
             void Init(const unsigned long long &len_in, const int &device=-1);
             void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
@@ -161,7 +161,7 @@ namespace cytnx{
 
     class DoubleStorage: public Storage_base{
         public:
-            DoubleStorage(){this->dtype=cytnxtype.Double;};
+            DoubleStorage(){this->dtype=Type.Double;};
             void Init(const unsigned long long &len_in,const int &device=-1);
             void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
@@ -191,7 +191,7 @@ namespace cytnx{
 
     class ComplexDoubleStorage: public Storage_base{
         public:
-            ComplexDoubleStorage(){this->dtype=cytnxtype.ComplexDouble;};
+            ComplexDoubleStorage(){this->dtype=Type.ComplexDouble;};
             void Init(const unsigned long long &len_in, const int &device=-1);
             void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
@@ -220,7 +220,7 @@ namespace cytnx{
 
     class ComplexFloatStorage: public Storage_base{
         public:
-            ComplexFloatStorage(){this->dtype=cytnxtype.ComplexFloat;};
+            ComplexFloatStorage(){this->dtype=Type.ComplexFloat;};
             void Init(const unsigned long long &len_in,const int &device=-1);
             void _Init_byptr(void *rawptr, const unsigned long long &len_in,const int &device=-1);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
@@ -249,7 +249,7 @@ namespace cytnx{
 
     class Int64Storage : public Storage_base{
         public:
-            Int64Storage(){this->dtype=cytnxtype.Int64;};
+            Int64Storage(){this->dtype=Type.Int64;};
             void Init(const unsigned long long &len_in, const int &device=-1);
             void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
@@ -278,7 +278,7 @@ namespace cytnx{
 
     class Uint64Storage : public Storage_base{
         public:
-            Uint64Storage(){this->dtype=cytnxtype.Uint64;};
+            Uint64Storage(){this->dtype=Type.Uint64;};
             void Init(const unsigned long long &len_in, const int &device=-1);
             void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
@@ -309,7 +309,7 @@ namespace cytnx{
 
     class Int32Storage : public Storage_base{
         public:
-            Int32Storage(){this->dtype=cytnxtype.Int32;};
+            Int32Storage(){this->dtype=Type.Int32;};
             void Init(const unsigned long long &len_in, const int &device=-1);
             void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
@@ -339,7 +339,7 @@ namespace cytnx{
 
     class Uint32Storage : public Storage_base{
         public:
-            Uint32Storage(){this->dtype=cytnxtype.Uint32;};
+            Uint32Storage(){this->dtype=Type.Uint32;};
             void Init(const unsigned long long &len_in, const int &device=-1);
             void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
@@ -367,7 +367,7 @@ namespace cytnx{
     };          
 
     typedef boost::intrusive_ptr<Storage_base> (*pStorage_init)();
-    class Storage_init_interface: public Type{
+    class Storage_init_interface: public Type_class{
         public:
             std::vector<pStorage_init> USIInit;
             Storage_init_interface();

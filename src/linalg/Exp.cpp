@@ -6,11 +6,11 @@ namespace cytnx{
         Tensor Exp(const Tensor &Tin){
             
             Tensor out;
-            if(Tin.dtype() > 4) out = Tin.astype(cytnxtype.Float);
+            if(Tin.dtype() > 4) out = Tin.astype(Type.Float);
             else out = Tin.clone();            
 
 
-            if(Tin.device() == cytnxdevice.cpu){
+            if(Tin.device() == Device.cpu){
                 cytnx::linalg_internal::lii.Exp_ii[out.dtype()](out._impl->storage()._impl,Tin._impl->storage()._impl,Tin._impl->storage()._impl->size());
             }else{
                 #ifdef UNI_GPU

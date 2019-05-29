@@ -12,8 +12,8 @@ namespace cytnx{
             char jobu[1], jobv[1];
 
             // if U and vT are NULL ptr, then it will not be computed. 
-            jobu[0] = ( U->dtype == cytnxtype.Void  ) ? 'N' : 'S';
-            jobv[0] = ( vT->dtype == cytnxtype.Void ) ? 'N' : 'S';
+            jobu[0] = ( U->dtype == Type.Void  ) ? 'N' : 'S';
+            jobv[0] = ( vT->dtype == Type.Void ) ? 'N' : 'S';
 
             cytnx_complex128* Mij = (cytnx_complex128*)malloc(M * N * sizeof(cytnx_complex128));
             memcpy(Mij, in->Mem, M * N * sizeof(cytnx_complex128));
@@ -46,8 +46,8 @@ namespace cytnx{
             char jobu[1], jobv[1];
 
             // if U and vT are NULL ptr, then it will not be computed. 
-            jobu[0] = ( U->dtype == cytnxtype.Void  ) ? 'N' : 'S';
-            jobv[0] = ( vT->dtype == cytnxtype.Void ) ? 'N' : 'S';
+            jobu[0] = ( U->dtype == Type.Void  ) ? 'N' : 'S';
+            jobv[0] = ( vT->dtype == Type.Void ) ? 'N' : 'S';
 
             cytnx_complex64* Mij = (cytnx_complex64*)malloc(M * N * sizeof(cytnx_complex64));
             memcpy(Mij, in->Mem, M * N * sizeof(cytnx_complex64));
@@ -79,8 +79,8 @@ namespace cytnx{
         void Svd_internal_d( const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &U, boost::intrusive_ptr<Storage_base> &vT, boost::intrusive_ptr<Storage_base> &S, const cytnx_int32 &M, const cytnx_int32 &N){
             char jobu[1], jobv[1];
 
-            jobu[0] = (U->dtype ==cytnxtype.Void) ? 'N': 'S';
-            jobv[0] = (vT->dtype==cytnxtype.Void) ? 'N': 'S';
+            jobu[0] = (U->dtype ==Type.Void) ? 'N': 'S';
+            jobv[0] = (vT->dtype==Type.Void) ? 'N': 'S';
 
             cytnx_double* Mij = (cytnx_double*)malloc(M * N * sizeof(cytnx_double));
             memcpy(Mij,in->Mem, M * N * sizeof(cytnx_double));
@@ -108,8 +108,8 @@ namespace cytnx{
 
             char jobu[1], jobv[1];
 
-            jobu[0] = (U->dtype ==cytnxtype.Void) ? 'N': 'S';
-            jobv[0] = (vT->dtype==cytnxtype.Void) ? 'N': 'S';
+            jobu[0] = (U->dtype ==Type.Void) ? 'N': 'S';
+            jobv[0] = (vT->dtype==Type.Void) ? 'N': 'S';
 
             cytnx_float* Mij = (cytnx_float*)malloc(M * N * sizeof(cytnx_float));
             memcpy(Mij,in->Mem, M * N * sizeof(cytnx_float));

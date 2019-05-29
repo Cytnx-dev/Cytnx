@@ -11,7 +11,7 @@ namespace cytnx{
             cytnx_uint64 n_singlu = std::max(cytnx_uint64(1),std::min(Tin.shape()[0],Tin.shape()[1])); 
 
             Tensor in;
-            if(Tin.dtype() > cytnxtype.Float) in = Tin.astype(cytnxtype.Float);
+            if(Tin.dtype() > Type.Float) in = Tin.astype(Type.Float);
             else in = Tin;
 
             //std::cout << n_singlu << std::endl;
@@ -23,7 +23,7 @@ namespace cytnx{
 
 
 
-            if(Tin.device()==cytnxdevice.cpu){
+            if(Tin.device()==Device.cpu){
 
 
                 cytnx::linalg_internal::lii.Svd_ii[in.dtype()](in._impl->storage()._impl, 

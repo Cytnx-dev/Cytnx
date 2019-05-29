@@ -12,8 +12,8 @@ namespace cytnx{
             signed char jobu, jobv;
 
             // if U and vT are NULL ptr, then it will not be computed. 
-            jobu = ( U->dtype == cytnxtype.Void ) ? 'N' : 'S';
-            jobv = ( vT->dtype == cytnxtype.Void ) ? 'N' : 'S';
+            jobu = ( U->dtype == Type.Void ) ? 'N' : 'S';
+            jobv = ( vT->dtype == Type.Void ) ? 'N' : 'S';
 
 
             // create handles:
@@ -63,8 +63,8 @@ namespace cytnx{
             signed char jobu, jobv;
 
             // if U and vT are NULL ptr, then it will not be computed. 
-            jobu = ( U->dtype == cytnxtype.Void ) ? 'N' : 'S';
-            jobv = ( vT->dtype == cytnxtype.Void ) ? 'N' : 'S';
+            jobu = ( U->dtype == Type.Void ) ? 'N' : 'S';
+            jobv = ( vT->dtype == Type.Void ) ? 'N' : 'S';
 
 
             // create handles:
@@ -112,8 +112,8 @@ namespace cytnx{
             signed char jobu, jobv;
 
             // if U and vT are NULL ptr, then it will not be computed. 
-            jobu = ( U->dtype == cytnxtype.Void ) ? 'N' : 'S';
-            jobv = ( vT->dtype == cytnxtype.Void ) ? 'N' : 'S';
+            jobu = ( U->dtype == Type.Void ) ? 'N' : 'S';
+            jobv = ( vT->dtype == Type.Void ) ? 'N' : 'S';
 
 
             // create handles:
@@ -161,8 +161,8 @@ namespace cytnx{
             signed char jobu, jobv;
 
             // if U and vT are NULL ptr, then it will not be computed. 
-            jobu = ( U->dtype == cytnxtype.Void ) ? 'N' : 'S';
-            jobv = ( vT->dtype == cytnxtype.Void ) ? 'N' : 'S';
+            jobu = ( U->dtype == Type.Void ) ? 'N' : 'S';
+            jobv = ( vT->dtype == Type.Void ) ? 'N' : 'S';
 
 
             // create handles:

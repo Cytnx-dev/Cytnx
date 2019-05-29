@@ -77,7 +77,7 @@ namespace cytnx{
         boost::intrusive_ptr<Storage_base> out(new Storage_base());
         if(dtype == this->dtype) return boost::intrusive_ptr<Storage_base>(this);
 
-        if(this->device==cytnxdevice.cpu){
+        if(this->device==Device.cpu){
             if(utils_internal::uii.ElemCast[this->dtype][dtype]==NULL){
                 cytnx_error_msg(1, "[ERROR] not support type with dtype=%d",dtype);
             }else{
@@ -108,10 +108,10 @@ namespace cytnx{
     }
 
     string Storage_base::dtype_str()const{
-        return cytnxtype.getname(this->dtype);
+        return Type.getname(this->dtype);
     }
     string Storage_base::device_str()const{
-        return cytnxdevice.getname(this->device);
+        return Device.getname(this->device);
     }
     void Storage_base::_Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device){
         cytnx_error_msg(1,"%s","[ERROR] call _Init_byptr in base");
@@ -120,7 +120,7 @@ namespace cytnx{
     Storage_base::~Storage_base(){
         //cout << "delet" << endl;
         if(Mem != NULL){
-            if(this->device==cytnxdevice.cpu){
+            if(this->device==Device.cpu){
                 free(Mem);
             }else{
                 #ifdef UNI_GPU
@@ -157,7 +157,7 @@ namespace cytnx{
 
     void Storage_base::print_info(){
         cout << "dtype : " << this->dtype_str() << endl;
-        cout << "device: " << cytnxdevice.getname(this->device) << endl;
+        cout << "device: " << Device.getname(this->device) << endl;
         cout << "size  : " << this->len << endl;
     }
     void Storage_base::print_elems(){
@@ -208,7 +208,7 @@ namespace cytnx{
     float* Storage_base::data<float>()const{
 
         //check type 
-        cytnx_error_msg(dtype != cytnxtype.Float, "[ERROR] type mismatch. try to get <float> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
+        cytnx_error_msg(dtype != Type.Float, "[ERROR] type mismatch. try to get <float> type from raw data of type %s", Type.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -217,7 +217,7 @@ namespace cytnx{
     template<>
     double* Storage_base::data<double>()const{
 
-        cytnx_error_msg(dtype != cytnxtype.Double, "[ERROR] type mismatch. try to get <double> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
+        cytnx_error_msg(dtype != Type.Double, "[ERROR] type mismatch. try to get <double> type from raw data of type %s", Type.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -227,9 +227,9 @@ namespace cytnx{
     template<>
     std::complex<double>* Storage_base::data<std::complex<double> >()const{
 
-        cytnx_error_msg(dtype != cytnxtype.ComplexDouble, "[ERROR] type mismatch. try to get < complex<double> > type from raw data of type %s", cytnxtype.getname(dtype).c_str());
+        cytnx_error_msg(dtype != Type.ComplexDouble, "[ERROR] type mismatch. try to get < complex<double> > type from raw data of type %s", Type.getname(dtype).c_str());
     #ifdef UNI_GPU
-        cytnx_error_msg(this->device!=cytnxdevice.cpu, "%s","[ERROR] the Storage is on GPU but try to get with CUDA complex type complex<double>. use type <cuDoubleComplex>  instead.");
+        cytnx_error_msg(this->device!=Device.cpu, "%s","[ERROR] the Storage is on GPU but try to get with CUDA complex type complex<double>. use type <cuDoubleComplex>  instead.");
         cudaDeviceSynchronize();
     #endif
         return static_cast<std::complex<double>*>(this->Mem);
@@ -238,9 +238,9 @@ namespace cytnx{
     template<>
     std::complex<float>* Storage_base::data<std::complex<float> >()const{
 
-        cytnx_error_msg(dtype != cytnxtype.ComplexFloat, "[ERROR] type mismatch. try to get < complex<float> > type from raw data of type %s", cytnxtype.getname(dtype).c_str());
+        cytnx_error_msg(dtype != Type.ComplexFloat, "[ERROR] type mismatch. try to get < complex<float> > type from raw data of type %s", Type.getname(dtype).c_str());
     #ifdef UNI_GPU
-        cytnx_error_msg(this->device!=cytnxdevice.cpu, "%s","[ERROR] the Storage is on GPU but try to get with CUDA complex type complex<float>. use type <cuFloatComplex>  instead.");
+        cytnx_error_msg(this->device!=Device.cpu, "%s","[ERROR] the Storage is on GPU but try to get with CUDA complex type complex<float>. use type <cuFloatComplex>  instead.");
         cudaDeviceSynchronize();
     #endif
         return static_cast<std::complex<float>*>(this->Mem);
@@ -249,7 +249,7 @@ namespace cytnx{
     template<>
     uint32_t* Storage_base::data<uint32_t>()const{
 
-        cytnx_error_msg(dtype != cytnxtype.Uint32, "[ERROR] type mismatch. try to get <uint32_t> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
+        cytnx_error_msg(dtype != Type.Uint32, "[ERROR] type mismatch. try to get <uint32_t> type from raw data of type %s", Type.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -259,7 +259,7 @@ namespace cytnx{
     template<>
     int32_t* Storage_base::data<int32_t>()const{
 
-        cytnx_error_msg(dtype != cytnxtype.Int32, "[ERROR] type mismatch. try to get <int32_t> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
+        cytnx_error_msg(dtype != Type.Int32, "[ERROR] type mismatch. try to get <int32_t> type from raw data of type %s", Type.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -269,7 +269,7 @@ namespace cytnx{
     template<>
     uint64_t* Storage_base::data<uint64_t>()const{
 
-        cytnx_error_msg(dtype != cytnxtype.Uint64, "[ERROR] type mismatch. try to get <uint64_t> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
+        cytnx_error_msg(dtype != Type.Uint64, "[ERROR] type mismatch. try to get <uint64_t> type from raw data of type %s", Type.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -279,7 +279,7 @@ namespace cytnx{
     template<>
     int64_t* Storage_base::data<int64_t>()const{
 
-        cytnx_error_msg(dtype != cytnxtype.Int64, "[ERROR] type mismatch. try to get <int64_t> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
+        cytnx_error_msg(dtype != Type.Int64, "[ERROR] type mismatch. try to get <int64_t> type from raw data of type %s", Type.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -290,16 +290,16 @@ namespace cytnx{
     #ifdef UNI_GPU
     template<>
     cuDoubleComplex* Storage_base::data<cuDoubleComplex>()const{
-        cytnx_error_msg(dtype != cytnxtype.ComplexDouble, "[ERROR] type mismatch. try to get <cuDoubleComplex> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
-        cytnx_error_msg(this->device==cytnxdevice.cpu, "%s","[ERROR] the Storage is on CPU(Host) but try to get with CUDA complex type cuDoubleComplex. use type <cytnx_complex128> or < complex<double> > instead.");
+        cytnx_error_msg(dtype != Type.ComplexDouble, "[ERROR] type mismatch. try to get <cuDoubleComplex> type from raw data of type %s", Type.getname(dtype).c_str());
+        cytnx_error_msg(this->device==Device.cpu, "%s","[ERROR] the Storage is on CPU(Host) but try to get with CUDA complex type cuDoubleComplex. use type <cytnx_complex128> or < complex<double> > instead.");
         cudaDeviceSynchronize();
         return static_cast<cuDoubleComplex*>(this->Mem);
 
     }
     template<>
     cuFloatComplex* Storage_base::data<cuFloatComplex>()const{
-        cytnx_error_msg(dtype != cytnxtype.ComplexFloat, "[ERROR] type mismatch. try to get <cuFloatComplex> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
-        cytnx_error_msg(this->device==cytnxdevice.cpu, "%s","[ERROR] the Storage is on CPU(Host) but try to get with CUDA complex type cuFloatComplex. use type <cytnx_complex64> or < complex<float> > instead.");
+        cytnx_error_msg(dtype != Type.ComplexFloat, "[ERROR] type mismatch. try to get <cuFloatComplex> type from raw data of type %s", Type.getname(dtype).c_str());
+        cytnx_error_msg(this->device==Device.cpu, "%s","[ERROR] the Storage is on CPU(Host) but try to get with CUDA complex type cuFloatComplex. use type <cytnx_complex64> or < complex<float> > instead.");
         cudaDeviceSynchronize();
         return static_cast<cuFloatComplex*>(this->Mem);
 
@@ -310,7 +310,7 @@ namespace cytnx{
     //====================================================
     template<>
     float& Storage_base::at<float>(const unsigned int &idx) const{
-        cytnx_error_msg(dtype != cytnxtype.Float, "[ERROR] type mismatch. try to get <float> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
+        cytnx_error_msg(dtype != Type.Float, "[ERROR] type mismatch. try to get <float> type from raw data of type %s", Type.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -318,7 +318,7 @@ namespace cytnx{
     }
     template<>
     double& Storage_base::at<double>(const unsigned int &idx)const{
-        cytnx_error_msg(dtype != cytnxtype.Double, "[ERROR] type mismatch. try to get <double> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
+        cytnx_error_msg(dtype != Type.Double, "[ERROR] type mismatch. try to get <double> type from raw data of type %s", Type.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -327,7 +327,7 @@ namespace cytnx{
 
     template<>
     std::complex<float>& Storage_base::at<std::complex<float> >(const unsigned int &idx)const{
-        cytnx_error_msg(dtype != cytnxtype.ComplexFloat, "[ERROR] type mismatch. try to get < complex<float> > type from raw data of type %s", cytnxtype.getname(dtype).c_str());
+        cytnx_error_msg(dtype != Type.ComplexFloat, "[ERROR] type mismatch. try to get < complex<float> > type from raw data of type %s", Type.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -336,7 +336,7 @@ namespace cytnx{
     }
     template<>
     std::complex<double>& Storage_base::at<std::complex<double> >(const unsigned int &idx)const{
-        cytnx_error_msg(dtype != cytnxtype.ComplexDouble, "[ERROR] type mismatch. try to get < complex<double> > type from raw data of type %s", cytnxtype.getname(dtype).c_str());
+        cytnx_error_msg(dtype != Type.ComplexDouble, "[ERROR] type mismatch. try to get < complex<double> > type from raw data of type %s", Type.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -345,7 +345,7 @@ namespace cytnx{
 
     template<>
     uint32_t& Storage_base::at<uint32_t>(const unsigned int &idx)const{
-        cytnx_error_msg(dtype != cytnxtype.Uint32, "[ERROR] type mismatch. try to get <uint32_t> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
+        cytnx_error_msg(dtype != Type.Uint32, "[ERROR] type mismatch. try to get <uint32_t> type from raw data of type %s", Type.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -354,7 +354,7 @@ namespace cytnx{
 
     template<>
     int32_t& Storage_base::at<int32_t>(const unsigned int &idx)const{
-        cytnx_error_msg(dtype != cytnxtype.Int32, "[ERROR] type mismatch. try to get <int32_t> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
+        cytnx_error_msg(dtype != Type.Int32, "[ERROR] type mismatch. try to get <int32_t> type from raw data of type %s", Type.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -363,7 +363,7 @@ namespace cytnx{
 
     template<>
     uint64_t& Storage_base::at<uint64_t>(const unsigned int &idx)const{
-        cytnx_error_msg(dtype != cytnxtype.Uint64, "[ERROR] type mismatch. try to get <uint64_t> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
+        cytnx_error_msg(dtype != Type.Uint64, "[ERROR] type mismatch. try to get <uint64_t> type from raw data of type %s", Type.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -372,7 +372,7 @@ namespace cytnx{
 
     template<>
     int64_t& Storage_base::at<int64_t>(const unsigned int &idx)const{
-        cytnx_error_msg(dtype != cytnxtype.Int64, "[ERROR] type mismatch. try to get <int64_t> type from raw data of type %s", cytnxtype.getname(dtype).c_str());
+        cytnx_error_msg(dtype != Type.Int64, "[ERROR] type mismatch. try to get <int64_t> type from raw data of type %s", Type.getname(dtype).c_str());
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif

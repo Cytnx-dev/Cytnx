@@ -55,14 +55,14 @@
 
         | cytnx type       | c++ type             | Type object
         |------------------|----------------------|--------------------
-        | cytnx_double     | double               | cytnxtype.Double
-        | cytnx_float      | float                | cytnxtype.Float
-        | cytnx_uint64     | uint64_t             | cytnxtype.Uint64
-        | cytnx_uint32     | uint32_t             | cytnxtype.Uint32
-        | cytnx_int64      | int64_t              | cytnxtype.Int64
-        | cytnx_int32      | int32_t              | cytnxtype.Int32
-        | cytnx_complex128 | std::complex<double> | cytnxtype.ComplexDouble
-        | cytnx_complex64  | std::complex<float>  | cytnxtype.ComplexFloat
+        | cytnx_double     | double               | Type.Double
+        | cytnx_float      | float                | Type.Float
+        | cytnx_uint64     | uint64_t             | Type.Uint64
+        | cytnx_uint32     | uint32_t             | Type.Uint32
+        | cytnx_int64      | int64_t              | Type.Int64
+        | cytnx_int32      | int32_t              | Type.Int32
+        | cytnx_complex128 | std::complex<double> | Type.ComplexDouble
+        | cytnx_complex64  | std::complex<float>  | Type.ComplexFloat
 
 
 ### 2. Storage
@@ -70,13 +70,13 @@
         * Generic type object, the behavior is very similar to python.
 
 ```c++
-            Storage A(400,cytnxtype.Double);
+            Storage A(400,Type.Double);
             for(int i=0;i<400;i++)
                 A.at<double>(i) = i;
 
             Storage B = A; // A and B share same memory, this is similar as python 
             
-            Storage C = A.to(cytnxdevice.cuda+0); 
+            Storage C = A.to(Device.cuda+0); 
 ```
 
 
@@ -85,34 +85,51 @@
         * simple moving btwn CPU and GPU:
 
 ```c++
-            Tensor A({3,4},cytnxtype.Double,cytnxdevice.cpu); // create tensor on CPU (default)
-            Tensor B({3,4},cytnxtype.Double,cytnxdevice.cuda+0); // create tensor on GPU with gpu-id=0
+            Tensor A({3,4},Type.Double,Device.cpu); // create tensor on CPU (default)
+            Tensor B({3,4},Type.Double,Device.cuda+0); // create tensor on GPU with gpu-id=0
 
 
             Tensor C = B; // C and B share same memory.
 
             // move A to gpu
-            Tensor D = A.to(cytnxdevice.cuda+0);
+            Tensor D = A.to(Device.cuda+0);
 
             // inplace move A to gpu
-            A.to_(cytnxdevice.cuda+0);
+            A.to_(Device.cuda+0);
 ```
         * Type conversion in between avaliable:
 ```c++
-            Tensor A({3,4},cytnxtype.Double);
-            Tensor B = A.astype(cytnxtype.Uint64); // cast double to uint64_t
+            Tensor A({3,4},Type.Double);
+            Tensor B = A.astype(Type.Uint64); // cast double to uint64_t
 ```
 
         * vitual swap and permute. All the permute and swap will not change the underlying memory
         * Use Contiguous() when needed to actual moving the memory layout.
 ```c++
-            Tensor A({3,4,5,2},cytnxtype.Double);
+            Tensor A({3,4,5,2},Type.Double);
             A.permute({0,3,1,2}); // this will not change the memory, only the shape info is changed.
             cout << A.is_contiguous() << endl; // this will be false!
 
             A.Contiguous_(); // call Configuous() to actually move the memory.
             cout << A.is_contiguous() << endl; // this will be true!
 ```
+
+        * access single element using .at
+```c++
+            Tensor A({3,4,5},Type.Double);
+            double val = A.at<double>({0,2,2});
+```
+
+        * access elements with python slices similarity:
+```c++
+            typedef Accessor ac;
+            Tensor A({3,4,5},Type.Double);
+            Tensor out = A.get_elems({ac(0),ac::all(),ac::range(1,4)}); 
+            // equivalent to python: out = A[0,:,1:4]
+```
+
+
+
 
 ## Avaliable linear-algebra function (Keep updating):
 
@@ -133,7 +150,7 @@
 
 ## Generators 
 
-    Tensor: zeros()
+    Tensor: zeros(), ones(), arange()
     
 
      

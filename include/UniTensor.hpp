@@ -116,8 +116,8 @@ namespace cytnx{
             
             const unsigned int&  dtype_id(){ return this->_dtype_id; }
             const int&          device_id(){ return this->_device;   }
-            std::string             dtype(){ return cytnxtype.getname(this->_dtype_id);}
-            std::string            device(){ return cytnxdevice.getname(this->_device);}
+            std::string             dtype(){ return Type.getname(this->_dtype_id);}
+            std::string            device(){ return Device.getname(this->_device);}
 
             const bool&     is_contiguous(){ return this->_contiguous;}
             const bool&      is_blockform(){ return this->_blockform; }
@@ -250,7 +250,7 @@ namespace cytnx{
             }
 
             
-            //default device==cytnxdevice.cpu (-1)
+            //default device==Device.cpu (-1)
             void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype, int device=-1){
                 _impl->Init(shape,dtype,device);
             }

@@ -46,8 +46,8 @@ namespace cytnx{
         
         boost::intrusive_ptr<Storage_base> cuMovemem_gpu_cd(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace){
             #ifdef UNI_DEBUG
-            cytnx_error_msg(in->dtype != cytnxtype.ComplexDouble,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type ComplexDouble",in->dtype_str().c_str());
-            cytnx_error_msg(in->device == cytnxdevice.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
+            cytnx_error_msg(in->dtype != Type.ComplexDouble,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type ComplexDouble",in->dtype_str().c_str());
+            cytnx_error_msg(in->device == Device.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
             #endif
 
             
@@ -117,8 +117,8 @@ namespace cytnx{
 
         boost::intrusive_ptr<Storage_base> cuMovemem_gpu_cf(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace){
             #ifdef UNI_DEBUG
-            cytnx_error_msg(in->dtype != cytnxtype.ComplexFloat,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type ComplexFloat",in->dtype_str().c_str());
-            cytnx_error_msg(in->device == cytnxdevice.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
+            cytnx_error_msg(in->dtype != Type.ComplexFloat,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type ComplexFloat",in->dtype_str().c_str());
+            cytnx_error_msg(in->device == Device.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
             #endif
 
             
@@ -188,8 +188,8 @@ namespace cytnx{
         
         boost::intrusive_ptr<Storage_base> cuMovemem_gpu_d(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace){
             #ifdef UNI_DEBUG
-            cytnx_error_msg(in->dtype != cytnxtype.Double,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Double",in->dtype_str().c_str());
-            cytnx_error_msg(in->device == cytnxdevice.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
+            cytnx_error_msg(in->dtype != Type.Double,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Double",in->dtype_str().c_str());
+            cytnx_error_msg(in->device == Device.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
             #endif
 
             
@@ -258,8 +258,8 @@ namespace cytnx{
         
         boost::intrusive_ptr<Storage_base> cuMovemem_gpu_f(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace){
             #ifdef UNI_DEBUG
-            cytnx_error_msg(in->dtype != cytnxtype.Float,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Float",in->dtype_str().c_str());
-            cytnx_error_msg(in->device == cytnxdevice.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
+            cytnx_error_msg(in->dtype != Type.Float,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Float",in->dtype_str().c_str());
+            cytnx_error_msg(in->device == Device.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
             #endif
 
             
@@ -329,8 +329,8 @@ namespace cytnx{
 
         boost::intrusive_ptr<Storage_base> cuMovemem_gpu_i64(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace){
             #ifdef UNI_DEBUG
-            cytnx_error_msg(in->dtype != cytnxtype.Int64,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Int64",in->dtype_str().c_str());
-            cytnx_error_msg(in->device == cytnxdevice.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
+            cytnx_error_msg(in->dtype != Type.Int64,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Int64",in->dtype_str().c_str());
+            cytnx_error_msg(in->device == Device.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
             #endif
 
             
@@ -401,8 +401,8 @@ namespace cytnx{
 
         boost::intrusive_ptr<Storage_base> cuMovemem_gpu_u64(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace){
             #ifdef UNI_DEBUG
-            cytnx_error_msg(in->dtype != cytnxtype.Uint64,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Uint64",in->dtype_str().c_str());
-            cytnx_error_msg(in->device == cytnxdevice.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
+            cytnx_error_msg(in->dtype != Type.Uint64,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Uint64",in->dtype_str().c_str());
+            cytnx_error_msg(in->device == Device.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
             #endif
 
             
@@ -471,8 +471,8 @@ namespace cytnx{
 
         boost::intrusive_ptr<Storage_base> cuMovemem_gpu_i32(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace){
             #ifdef UNI_DEBUG
-            cytnx_error_msg(in->dtype != cytnxtype.Int32,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Int32",in->dtype_str().c_str());
-            cytnx_error_msg(in->device == cytnxdevice.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
+            cytnx_error_msg(in->dtype != Type.Int32,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Int32",in->dtype_str().c_str());
+            cytnx_error_msg(in->device == Device.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
             #endif
 
             
@@ -541,8 +541,8 @@ namespace cytnx{
 
         boost::intrusive_ptr<Storage_base> cuMovemem_gpu_u32(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace){
             #ifdef UNI_DEBUG
-            cytnx_error_msg(in->dtype != cytnxtype.Uint32,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Uint32",in->dtype_str().c_str());
-            cytnx_error_msg(in->device == cytnxdevice.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
+            cytnx_error_msg(in->dtype != Type.Uint32,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Uint32",in->dtype_str().c_str());
+            cytnx_error_msg(in->device == Device.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
             #endif
 
             

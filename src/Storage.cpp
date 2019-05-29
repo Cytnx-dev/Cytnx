@@ -17,42 +17,42 @@ namespace cytnx{
         if(this->size() != rhs.size()) return false;
         
         switch(this->dtype()){
-            case cytnxtype.ComplexDouble:
+            case Type.ComplexDouble:
                 for(cytnx_uint64 i=0;i<this->size();i++){
                     if(this->at<cytnx_complex128>(i) != rhs.at<cytnx_complex128>(i)) return false;
                 }
                 break;
-            case cytnxtype.ComplexFloat:
+            case Type.ComplexFloat:
                 for(cytnx_uint64 i=0;i<this->size();i++){
                     if(this->at<cytnx_complex64>(i) != rhs.at<cytnx_complex64>(i)) return false;
                 }
                 break;
-            case cytnxtype.Double:
+            case Type.Double:
                 for(cytnx_uint64 i=0;i<this->size();i++){
                     if(this->at<cytnx_double>(i) != rhs.at<cytnx_double>(i)) return false;
                 }
                 break;
-            case cytnxtype.Float:
+            case Type.Float:
                 for(cytnx_uint64 i=0;i<this->size();i++){
                     if(this->at<cytnx_float>(i) != rhs.at<cytnx_float>(i)) return false;
                 }
                 break;
-            case cytnxtype.Int64:
+            case Type.Int64:
                 for(cytnx_uint64 i=0;i<this->size();i++){
                     if(this->at<cytnx_int64>(i) != rhs.at<cytnx_int64>(i)) return false;
                 }
                 break;
-            case cytnxtype.Uint64:
+            case Type.Uint64:
                 for(cytnx_uint64 i=0;i<this->size();i++){
                     if(this->at<cytnx_uint64>(i) != rhs.at<cytnx_uint64>(i)) return false;
                 }
                 break;
-            case cytnxtype.Int32:
+            case Type.Int32:
                 for(cytnx_uint64 i=0;i<this->size();i++){
                     if(this->at<cytnx_int32>(i) != rhs.at<cytnx_int32>(i)) return false;
                 }
                 break;
-            case cytnxtype.Uint32:
+            case Type.Uint32:
                 for(cytnx_uint64 i=0;i<this->size();i++){
                     if(this->at<cytnx_uint32>(i) != rhs.at<cytnx_uint32>(i)) return false;
                 }

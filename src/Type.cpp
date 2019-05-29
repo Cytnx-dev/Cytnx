@@ -2,7 +2,7 @@
 #include "cytnx_error.hpp"
 using namespace std;
 
-std::string cytnx::Type::getname(const unsigned int &type_id){
+std::string cytnx::Type_class::getname(const unsigned int &type_id){
 
 
     switch (type_id){
@@ -32,5 +32,5 @@ std::string cytnx::Type::getname(const unsigned int &type_id){
 }
         
 namespace cytnx{
-    Type cytnxtype;
+    Type_class Type;
 }

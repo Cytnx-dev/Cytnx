@@ -10,10 +10,10 @@ namespace cytnx{
            
             cytnx_error_msg(Tin.shape()[0] != Tin.shape()[1], "[Inv] error, the size of last two rank should be the same.%s","\n"); 
 
-            if(Tin.dtype() > 4) Tin = Tin.astype(cytnxtype.Float);
+            if(Tin.dtype() > 4) Tin = Tin.astype(Type.Float);
             
 
-            if(Tin.device()==cytnxdevice.cpu){
+            if(Tin.device()==Device.cpu){
 
 
                 cytnx::linalg_internal::lii.Inv_inplace_ii[Tin.dtype()](Tin._impl->storage()._impl,

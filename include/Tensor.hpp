@@ -51,10 +51,10 @@ namespace cytnx{
             }
 
             const std::string dtype_str() const {
-                return cytnxtype.getname(this->_storage.dtype());
+                return Type.getname(this->_storage.dtype());
             }
             const std::string device_str() const{
-                return cytnxdevice.getname(this->_storage.device());
+                return Device.getname(this->_storage.device());
             }
 
             const std::vector<cytnx_uint64>& shape() const{
@@ -256,7 +256,7 @@ namespace cytnx{
                 _impl = rhs._impl;
             }
              
-            //default device==cytnxdevice.cpu (-1)
+            //default device==Device.cpu (-1)
             void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype, int device=-1){
                 _impl->Init(shape,dtype,device);
             }

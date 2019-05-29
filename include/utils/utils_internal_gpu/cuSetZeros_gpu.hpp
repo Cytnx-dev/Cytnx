@@ -11,7 +11,7 @@ namespace cytnx{
     namespace utils_internal{
 
     #ifdef UNI_GPU   
-        void cuSetZeros_gpu(void* c_ptr, const cytnx_uint64 &bytes);
+        void cuSetZeros(void* c_ptr, const cytnx_uint64 &bytes);
     #endif
     }
 }

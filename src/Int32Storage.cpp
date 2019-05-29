@@ -10,12 +10,12 @@ namespace cytnx{
 
         //check:
         cytnx_error_msg(len_in < 1, "%s", "[ERROR] cannot init a Storage with zero element");
-        this->dtype = cytnxtype.Int32;
-        if(device==cytnxdevice.cpu){
+        this->dtype = Type.Int32;
+        if(device==Device.cpu){
             this->Mem = utils_internal::Malloc_cpu(this->len*sizeof(cytnx_int32));
         }else{
             #ifdef UNI_GPU
-                cytnx_error_msg(device>=cytnxdevice.Ngpus,"%s","[ERROR] invalid device.");
+                cytnx_error_msg(device>=Device.Ngpus,"%s","[ERROR] invalid device.");
                 cudaSetDevice(device);
                 this->Mem = utils_internal::cuMalloc_gpu(this->len*sizeof(cytnx_int32));
             #else
@@ -31,7 +31,7 @@ namespace cytnx{
     # ifdef UNI_DEBUG
         cytnx_error_msg(len_in < 1, "%s", "[ERROR] _Init_by_ptr cannot have len_in < 1.");
     # endif
-        this->dtype = cytnxtype.Int32;
+        this->dtype = Type.Int32;
         this->device = device;
     }
 
@@ -43,7 +43,7 @@ namespace cytnx{
     boost::intrusive_ptr<Storage_base> Int32Storage::clone(){
         boost::intrusive_ptr<Storage_base> out(new Int32Storage());
         out->Init(this->len,this->device);
-        if(this->device==cytnxdevice.cpu){
+        if(this->device==Device.cpu){
             memcpy(out->Mem,this->Mem,sizeof(cytnx_int32)*this->len);
         }else{
             #ifdef UNI_GPU
@@ -58,7 +58,7 @@ namespace cytnx{
 
     void Int32Storage::Move_memory_(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper){
         boost::intrusive_ptr<Storage_base> tmp(this);
-        if(this->device==cytnxdevice.cpu){
+        if(this->device==Device.cpu){
             utils_internal::Movemem_cpu_i32(tmp,old_shape,mapper,invmapper,1);
         }else{
             #ifdef UNI_GPU
@@ -72,7 +72,7 @@ namespace cytnx{
 
     boost::intrusive_ptr<Storage_base> Int32Storage::Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper){
         boost::intrusive_ptr<Storage_base> tmp(this);
-        if(this->device==cytnxdevice.cpu){
+        if(this->device==Device.cpu){
             return utils_internal::Movemem_cpu_i32(tmp,old_shape,mapper,invmapper,0);
         }else{
             #ifdef UNI_GPU
@@ -86,10 +86,10 @@ namespace cytnx{
     }
     void Int32Storage::to_(const int &device){
         if(this->device != device){
-            if(this->device==cytnxdevice.cpu){
+            if(this->device==Device.cpu){
                 //here, cpu->gpu with gid=device
                 #ifdef UNI_GPU
-                    cytnx_error_msg(device>=cytnxdevice.Ngpus,"%s","[ERROR] invalid device.");
+                    cytnx_error_msg(device>=Device.Ngpus,"%s","[ERROR] invalid device.");
                     cudaSetDevice(device);          
                     void *dtmp = utils_internal::cuMalloc_gpu(sizeof(cytnx_int32)*this->len);
                     checkCudaErrors(cudaMemcpy(dtmp,this->Mem,sizeof(cytnx_int32)*this->len,cudaMemcpyHostToDevice));
@@ -101,7 +101,7 @@ namespace cytnx{
                 #endif
             }else{
                 #ifdef UNI_GPU
-                    if(device==cytnxdevice.cpu){
+                    if(device==Device.cpu){
                         //here, gpu->cpu
                         cudaSetDevice(this->device);
                         void *htmp = malloc(sizeof(cytnx_int32)*this->len);
@@ -111,7 +111,7 @@ namespace cytnx{
                         this->device = device;
                     }else{
                         // here, gpu->gpu 
-                        cytnx_error_msg(device>=cytnxdevice.Ngpus,"%s","[ERROR] invalid device.");
+                        cytnx_error_msg(device>=Device.Ngpus,"%s","[ERROR] invalid device.");
                         cudaSetDevice(device);
                         void *dtmp = utils_internal::cuMalloc_gpu(sizeof(cytnx_int32)*this->len);
                         checkCudaErrors(cudaMemcpyPeer(dtmp,device,this->Mem,this->device,sizeof(cytnx_int32)*this->len));
@@ -131,10 +131,10 @@ namespace cytnx{
         if(this->device == device){
             return this;
         }else{
-            if(this->device==cytnxdevice.cpu){
+            if(this->device==Device.cpu){
                 //here, cpu->gpu with gid=device
                 #ifdef UNI_GPU
-                    cytnx_error_msg(device>=cytnxdevice.Ngpus,"%s","[ERROR] invalid device.");
+                    cytnx_error_msg(device>=Device.Ngpus,"%s","[ERROR] invalid device.");
                     cudaSetDevice(device);          
                     void *dtmp = utils_internal::cuMalloc_gpu(sizeof(cytnx_int32)*this->len);
                     checkCudaErrors(cudaMemcpy(dtmp,this->Mem,sizeof(cytnx_int32)*this->len,cudaMemcpyHostToDevice));
@@ -146,7 +146,7 @@ namespace cytnx{
                 #endif
             }else{
                 #ifdef UNI_GPU
-                    if(device==cytnxdevice.cpu){
+                    if(device==Device.cpu){
                         //here, gpu->cpu
                         cudaSetDevice(this->device);
                         void *htmp = malloc(sizeof(cytnx_int32)*this->len);
@@ -156,7 +156,7 @@ namespace cytnx{
                         return out;
                     }else{
                         // here, gpu->gpu 
-                        cytnx_error_msg(device>=cytnxdevice.Ngpus,"%s","[ERROR] invalid device.");
+                        cytnx_error_msg(device>=Device.Ngpus,"%s","[ERROR] invalid device.");
                         cudaSetDevice(device);
                         void *dtmp = utils_internal::cuMalloc_gpu(sizeof(cytnx_int32)*this->len);
                         checkCudaErrors(cudaMemcpyPeer(dtmp,device,this->Mem,this->device,sizeof(cytnx_int32)*this->len));
@@ -191,11 +191,11 @@ namespace cytnx{
 
             os << std::endl << "Total elem: " << this->len << "\n";
 
-            os << "type  : " << cytnxtype.getname(this->dtype) << std::endl;
+            os << "type  : " << Type.getname(this->dtype) << std::endl;
 
 
             int atDevice = this->device;
-            os << cytnxdevice.getname(this->device) << std::endl;
+            os << Device.getname(this->device) << std::endl;
 
             printf("%s","Shape :");
             printf(" (%d",shape[0]);
@@ -205,8 +205,8 @@ namespace cytnx{
             os << ")"<< std::endl;
 
             // temporary move to cpu for printing.
-            if(this->device!=cytnxdevice.cpu){
-                this->to_(cytnxdevice.cpu);
+            if(this->device!=Device.cpu){
+                this->to_(Device.cpu);
             }
 
             std::vector<cytnx_uint64> stk(shape.size(),0),stk2;
@@ -320,7 +320,7 @@ namespace cytnx{
 
             }//check if need mapping
 
-            if(atDevice!=cytnxdevice.cpu){
+            if(atDevice!=Device.cpu){
                 this->to_(atDevice);
             }
 
@@ -392,7 +392,7 @@ namespace cytnx{
     }
     void Int32Storage::fill(const cytnx_double     &val){
         cytnx_int32 tmp = val;
-        if(this->device == cytnxdevice.cpu){
+        if(this->device == Device.cpu){
             utils_internal::Fill_cpu_i32(this->Mem, (void*)(&tmp), this->len);
         }else{
             #ifdef UNI_GPU
@@ -403,7 +403,7 @@ namespace cytnx{
         }
     }
     void Int32Storage::fill(const cytnx_float      &val){
-        if(this->device == cytnxdevice.cpu){
+        if(this->device == Device.cpu){
             utils_internal::Fill_cpu_i32(this->Mem, (void*)(&val), this->len);
         }else{
             #ifdef UNI_GPU
@@ -415,7 +415,7 @@ namespace cytnx{
     }
     void Int32Storage::fill(const cytnx_int64      &val){
         cytnx_int32 tmp = val;
-        if(this->device == cytnxdevice.cpu){
+        if(this->device == Device.cpu){
             utils_internal::Fill_cpu_i32(this->Mem, (void*)(&tmp), this->len);
         }else{
             #ifdef UNI_GPU
@@ -427,7 +427,7 @@ namespace cytnx{
     }
     void Int32Storage::fill(const cytnx_uint64     &val){
         cytnx_int32 tmp = val;
-        if(this->device == cytnxdevice.cpu){
+        if(this->device == Device.cpu){
             utils_internal::Fill_cpu_i32(this->Mem, (void*)(&tmp), this->len);
         }else{
             #ifdef UNI_GPU
@@ -439,7 +439,7 @@ namespace cytnx{
     }
     void Int32Storage::fill(const cytnx_int32      &val){
         cytnx_int32 tmp = val;
-        if(this->device == cytnxdevice.cpu){
+        if(this->device == Device.cpu){
             utils_internal::Fill_cpu_i32(this->Mem, (void*)(&tmp), this->len);
         }else{
             #ifdef UNI_GPU
@@ -451,7 +451,7 @@ namespace cytnx{
     }
     void Int32Storage::fill(const cytnx_uint32     &val){
         cytnx_int32 tmp = val;
-        if(this->device == cytnxdevice.cpu){
+        if(this->device == Device.cpu){
             utils_internal::Fill_cpu_i32(this->Mem, (void*)(&tmp), this->len);
         }else{
             #ifdef UNI_GPU
@@ -465,7 +465,7 @@ namespace cytnx{
 
 
     void Int32Storage::set_zeros(){
-        if(this->device == cytnxdevice.cpu){
+        if(this->device == Device.cpu){
             utils_internal::SetZeros(this->Mem,sizeof(cytnx_int32)*this->len);
         }else{
             #ifdef UNI_GPU

@@ -3,7 +3,7 @@
 
 using namespace std;
 namespace cytnx{
-Device::Device(): Ngpus(0){
+Device_class::Device_class(): Ngpus(0){
     #ifdef UNI_GPU
         //get all available gpus
         checkCudaErrors(cudaGetDeviceCount(&Ngpus));
@@ -29,7 +29,7 @@ Device::Device(): Ngpus(0){
     #endif
 
 };
-string Device::getname(const int &device_id){
+string Device_class::getname(const int &device_id){
     if(device_id==this->cpu){
         return string("cytnx device: CPU");
     }else if(device_id>=0){
@@ -43,7 +43,7 @@ string Device::getname(const int &device_id){
     }
 
 }
-void Device::Print_Property(){
+void Device_class::Print_Property(){
     #ifdef UNI_GPU
         cout << "=== CUDA support ===" << endl;
         cout << ": Peer PCIE Access:" << endl;
@@ -75,7 +75,7 @@ void Device::Print_Property(){
 
 
 
-Device cytnxdevice;
+Device_class Device;
 }
 
 
