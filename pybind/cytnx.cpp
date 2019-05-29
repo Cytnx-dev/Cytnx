@@ -13,7 +13,7 @@
 
 namespace py = pybind11;
 using namespace pybind11::literals;
-
+using namespace cytnx;
 
 PYBIND11_MODULE(cytnx,m){
 
@@ -52,7 +52,8 @@ PYBIND11_MODULE(cytnx,m){
                 .def_property_readonly("device",&cytnx::Storage::device)
                 .def_property_readonly("dtype_str",&cytnx::Storage::device_str)
 
-
+                .def("astype", &cytnx::Storage::astype, py::arg("new_type"))
+                
                 .def("__getitem__",[](cytnx::Storage &self, const unsigned long long &idx){
                     cytnx_error_msg(idx > self.size(),"idx exceed the size of storage.%s","\n");
                     py::object out;
@@ -96,8 +97,37 @@ PYBIND11_MODULE(cytnx,m){
                     else if(self.dtype() == cytnx::Type.Int32) 
                         self.at<cytnx::cytnx_int32>(idx) = in.cast<cytnx::cytnx_int32>();
                     else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
-                 });
+                 })
+                .def("__repr__",[](cytnx::Storage &self)->std::string{
+                    std::cout << self << std::endl;
+                    return std::string("");
+                 })
+                .def("__str__",[](cytnx::Storage &self)->std::string{
+                    std::cout << self << std::endl;
+                    return std::string("");
+                 })
+                .def("__len__",[](cytnx::Storage &self)->cytnx::cytnx_uint64{return self.size();})
+                
+                .def("to_", &cytnx::Storage::to_, py::arg("device"))
+                .def("to" , &cytnx::Storage::to , py::arg("device"))
+                .def("clone", &cytnx::Storage::clone)
+                .def("size", &cytnx::Storage::size)
+                .def("print_info", &cytnx::Storage::print_info)
+                .def("set_zeros",  &cytnx::Storage::set_zeros)
+                .def("__eq__",[](cytnx::Storage &self, const cytnx::Storage &rhs)->bool{return self == rhs;})
+                
 
+                .def("fill",&cytnx::Storage::fill<cytnx::cytnx_complex128>, py::arg("val"))
+                .def("fill",&cytnx::Storage::fill<cytnx::cytnx_complex64>, py::arg("val"))
+                .def("fill",&cytnx::Storage::fill<cytnx::cytnx_double   >, py::arg("val"))
+                .def("fill",&cytnx::Storage::fill<cytnx::cytnx_float    >, py::arg("val"))
+                .def("fill",&cytnx::Storage::fill<cytnx::cytnx_int64    >, py::arg("val"))
+                .def("fill",&cytnx::Storage::fill<cytnx::cytnx_uint64   >, py::arg("val"))
+                .def("fill",&cytnx::Storage::fill<cytnx::cytnx_int32    >, py::arg("val"))
+                .def("fill",&cytnx::Storage::fill<cytnx::cytnx_uint32   >, py::arg("val"))
+                 
+
+                ;
 
 }
 
