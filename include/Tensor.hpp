@@ -366,6 +366,12 @@ namespace cytnx{
                 return this->_impl->at<T>(args);
             }
 
+            template<class T>
+            T& item(){
+                cytnx_error_msg(this->_impl->storage().size()!=1,"[ERROR][Tensor.item<T>]%s","item can only be called from a Tensor with only one element\n");
+                return this->_impl->at<T>(0);
+            }
+
             Tensor get_elems(const std::vector<cytnx::Accessor> &accessors){
                 Tensor out;
                 out._impl = this->_impl->get_elems(accessors);
