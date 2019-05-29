@@ -1,6 +1,6 @@
 import cytnx
 
-a = cytnx.Storage(10,cytnx.cytnxtype.Double,cytnx.cytnxdevice.cuda);
+a = cytnx.Storage(10,cytnx.Type.Double);
 
 print(a[3])
 print(a.dtype)
