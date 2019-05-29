@@ -3,7 +3,7 @@
 
 namespace cytnx{
 
-    
+    // degraded from initializer_list? 
     Tensor zeros(const cytnx_uint64 &Nelem, const unsigned int &dtype, const int &device){
         Tensor out({Nelem},dtype,device); // the default
         out._impl->storage().set_zeros(); 

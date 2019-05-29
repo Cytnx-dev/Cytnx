@@ -28,7 +28,6 @@ namespace cytnx{
         return os;
     }
 
-    Tensor zeros(const cytnx_uint64 &Nelem, const unsigned int &dtype=cytnxtype.Double, const int &device=cytnxdevice.cpu);
 
 
 }
