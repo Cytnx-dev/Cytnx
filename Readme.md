@@ -51,7 +51,9 @@
 ## Feature:
 
 ### Python x C++
-    Benefit from both side. One can do simple prototype on python side and easy transfer to C++ with small effort!
+    Benefit from both side. 
+    One can do simple prototype on python side 
+    and easy transfer to C++ with small effort!
 
 
 ```c++
@@ -60,7 +62,6 @@
     cytnx::Tensor A({3,4,5},cytnx::Type.Double,cytnx::Device.cpu)
 
 ```
-
 ```python
     # python version:
     import cytnx
@@ -85,7 +86,9 @@
 
 
 ### 2. Storage
-        * Memory container with GPU/CPU support. maintain type conversions (type casting btwn Storages) and moving btwn devices.
+        * Memory container with GPU/CPU support. 
+          maintain type conversions (type casting btwn Storages) 
+          and moving btwn devices.
         * Generic type object, the behavior is very similar to python.
 
 ```c++
