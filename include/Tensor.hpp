@@ -372,12 +372,12 @@ namespace cytnx{
                 return this->_impl->storage().at<T>(0);
             }
 
-            Tensor get_elems(const std::vector<cytnx::Accessor> &accessors){
+            Tensor get_elems(const std::vector<cytnx::Accessor> &accessors)const {
                 Tensor out;
                 out._impl = this->_impl->get_elems(accessors);
                 return out;
             }
-            Tensor get_elems(const std::initializer_list<cytnx::Accessor> &accessors){
+            Tensor get_elems(const std::initializer_list<cytnx::Accessor> &accessors)const{
                 std::vector<cytnx::Accessor> args = accessors;
                 return this->get_elems(args);
             }

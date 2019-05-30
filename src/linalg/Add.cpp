@@ -98,10 +98,10 @@ namespace cytnx{
             Tensor out(Rt.shape(),Type.Float < Rt.dtype()?Type.Float:Rt.dtype(),Rt.device());
 
             if(Rt.device()==Device.cpu){
-                checkCudaErrors(cudaSetDevice(Rt.device()));
                 cytnx::linalg_internal::lii.Ari_ii[Type.Float][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),0);
             }else{
                 #ifdef UNI_GPU
+                    checkCudaErrors(cudaSetDevice(Rt.device()));
                     cytnx::linalg_internal::lii.cuAri_ii[Type.Float][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),0);
                 #else
                     cytnx_error_msg(true,"[Add] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 

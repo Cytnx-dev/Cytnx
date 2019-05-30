@@ -73,7 +73,7 @@ namespace cytnx{
         for(cytnx_uint32 i=0;i<accessors.size();i++){
             accessors[i].get_len_pos(this->_shape[i],get_shape[i],locators[i]); 
             //std::cout << this->_shape[i] << " " << get_shape[i] << "|";
-            for(int j=0;j<locators[i].size();j++) std::cout << locators[i][j] << " ";
+            //for(int j=0;j<locators[i].size();j++) std::cout << locators[i][j] << " ";
             //std::cout << std::endl;
         }   
 

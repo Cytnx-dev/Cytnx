@@ -2,12 +2,12 @@ CytnxPATH=.
 CUDA_PATH=/usr/local/cuda
 INCFLAGS :=-I$(CytnxPATH)/include
 
-CC:= g++-6
+CC:= g++
 CCFLAGS := -std=c++11 -g -Wformat=0 -fPIC
 LDFLAGS :=  -llapack -lblas
 
 
-GPU_Enable=1
+GPU_Enable=0
 OMP_Enable=1
 DEBUG_Enable=0
 

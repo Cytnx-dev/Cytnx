@@ -196,6 +196,190 @@ PYBIND11_MODULE(cytnx,m){
                 .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_int32    >, py::arg("val"))
                 .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_uint32   >, py::arg("val"))
 
+                .def("__getitem__",[](const cytnx::Tensor &self, py::object locators){
+                    cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to getitem from a empty Tensor%s","\n");
+                    
+                    size_t start, stop, step, slicelength; 
+                    std::vector<cytnx::Accessor> accessors;
+                    if(py::isinstance<py::tuple>(locators)){
+                        py::tuple Args = locators.cast<py::tuple>();
+                        // mixing of slice and ints
+                        for(cytnx_uint32 axis=0;axis<self.shape().size();axis++){
+                            if(axis >= Args.size()){accessors.push_back(Accessor::all());}
+                            else{ 
+                                // check type:
+                                if(py::isinstance<py::slice>(Args[axis])){
+                                    py::slice sls = Args[axis].cast<py::slice>();
+                                    if(!sls.compute(self.shape()[axis],&start,&stop,&step, &slicelength))
+                                        throw py::error_already_set();
+                                    if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
+                                    else accessors.push_back(cytnx::Accessor::range(start,stop,step));
+                                }else{
+                                    accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
+                                }
+                            }
+                        }
+                    }else{
+                        // only int
+                        for(cytnx_uint32 i=0;i<self.shape().size();i++){
+                            if(i==0) accessors.push_back(cytnx::Accessor(locators.cast<cytnx_int64>()));
+                            else accessors.push_back(cytnx::Accessor::all());
+                        }
+                    }
+                    
+                    return self.get_elems(accessors);
+                    
+                })
+
+                //arithmetic >>
+                .def("__add__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return self.Add(rhs);})
+                .def("__add__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&rhs){return self.Add(rhs);})
+                .def("__add__",[](cytnx::Tensor &self, const cytnx::cytnx_complex64 &rhs){return self.Add(rhs);})
+                .def("__add__",[](cytnx::Tensor &self, const cytnx::cytnx_double    &rhs){return self.Add(rhs);})
+                .def("__add__",[](cytnx::Tensor &self, const cytnx::cytnx_float     &rhs){return self.Add(rhs);})
+                .def("__add__",[](cytnx::Tensor &self, const cytnx::cytnx_int64     &rhs){return self.Add(rhs);})
+                .def("__add__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &rhs){return self.Add(rhs);})
+                .def("__add__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &rhs){return self.Add(rhs);})
+                .def("__add__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &rhs){return self.Add(rhs);})
+
+                .def("__radd__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&lhs){return cytnx::linalg::Add(lhs,self);})
+                .def("__radd__",[](cytnx::Tensor &self, const cytnx::cytnx_complex64 &lhs){return cytnx::linalg::Add(lhs,self);})
+                .def("__radd__",[](cytnx::Tensor &self, const cytnx::cytnx_double    &lhs){return cytnx::linalg::Add(lhs,self);})
+                .def("__radd__",[](cytnx::Tensor &self, const cytnx::cytnx_float     &lhs){return cytnx::linalg::Add(lhs,self);})
+                .def("__radd__",[](cytnx::Tensor &self, const cytnx::cytnx_int64     &lhs){return cytnx::linalg::Add(lhs,self);})
+                .def("__radd__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &lhs){return cytnx::linalg::Add(lhs,self);})
+                .def("__radd__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &lhs){return cytnx::linalg::Add(lhs,self);})
+                .def("__radd__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &lhs){return cytnx::linalg::Add(lhs,self);})
+ 
+                .def("__iadd__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return self.Add_(rhs);}) // these will return self!
+                .def("__iadd__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&rhs){return self.Add_(rhs);})
+                .def("__iadd__",[](cytnx::Tensor &self, const cytnx::cytnx_complex64 &rhs){return self.Add_(rhs);})
+                .def("__iadd__",[](cytnx::Tensor &self, const cytnx::cytnx_double    &rhs){return self.Add_(rhs);})
+                .def("__iadd__",[](cytnx::Tensor &self, const cytnx::cytnx_float     &rhs){return self.Add_(rhs);})
+                .def("__iadd__",[](cytnx::Tensor &self, const cytnx::cytnx_int64     &rhs){return self.Add_(rhs);})
+                .def("__iadd__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &rhs){return self.Add_(rhs);})
+                .def("__iadd__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &rhs){return self.Add_(rhs);})
+                .def("__iadd__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &rhs){return self.Add_(rhs);})
+
+
+                .def("__sub__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return self.Sub(rhs);})
+                .def("__sub__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&rhs){return self.Sub(rhs);})
+                .def("__sub__",[](cytnx::Tensor &self, const cytnx::cytnx_complex64 &rhs){return self.Sub(rhs);})
+                .def("__sub__",[](cytnx::Tensor &self, const cytnx::cytnx_double    &rhs){return self.Sub(rhs);})
+                .def("__sub__",[](cytnx::Tensor &self, const cytnx::cytnx_float     &rhs){return self.Sub(rhs);})
+                .def("__sub__",[](cytnx::Tensor &self, const cytnx::cytnx_int64     &rhs){return self.Sub(rhs);})
+                .def("__sub__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &rhs){return self.Sub(rhs);})
+                .def("__sub__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &rhs){return self.Sub(rhs);})
+                .def("__sub__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &rhs){return self.Sub(rhs);})
+
+                .def("__rsub__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&lhs){return cytnx::linalg::Sub(lhs,self);})
+                .def("__rsub__",[](cytnx::Tensor &self, const cytnx::cytnx_complex64 &lhs){return cytnx::linalg::Sub(lhs,self);})
+                .def("__rsub__",[](cytnx::Tensor &self, const cytnx::cytnx_double    &lhs){return cytnx::linalg::Sub(lhs,self);})
+                .def("__rsub__",[](cytnx::Tensor &self, const cytnx::cytnx_float     &lhs){return cytnx::linalg::Sub(lhs,self);})
+                .def("__rsub__",[](cytnx::Tensor &self, const cytnx::cytnx_int64     &lhs){return cytnx::linalg::Sub(lhs,self);})
+                .def("__rsub__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &lhs){return cytnx::linalg::Sub(lhs,self);})
+                .def("__rsub__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &lhs){return cytnx::linalg::Sub(lhs,self);})
+                .def("__rsub__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &lhs){return cytnx::linalg::Sub(lhs,self);})
+ 
+                .def("__isub__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return self.Sub_(rhs);}) // these will return self!
+                .def("__isub__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&rhs){return self.Sub_(rhs);})
+                .def("__isub__",[](cytnx::Tensor &self, const cytnx::cytnx_complex64 &rhs){return self.Sub_(rhs);})
+                .def("__isub__",[](cytnx::Tensor &self, const cytnx::cytnx_double    &rhs){return self.Sub_(rhs);})
+                .def("__isub__",[](cytnx::Tensor &self, const cytnx::cytnx_float     &rhs){return self.Sub_(rhs);})
+                .def("__isub__",[](cytnx::Tensor &self, const cytnx::cytnx_int64     &rhs){return self.Sub_(rhs);})
+                .def("__isub__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &rhs){return self.Sub_(rhs);})
+                .def("__isub__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &rhs){return self.Sub_(rhs);})
+                .def("__isub__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &rhs){return self.Sub_(rhs);})
+
+                .def("__mul__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return self.Mul(rhs);})
+                .def("__mul__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&rhs){return self.Mul(rhs);})
+                .def("__mul__",[](cytnx::Tensor &self, const cytnx::cytnx_complex64 &rhs){return self.Mul(rhs);})
+                .def("__mul__",[](cytnx::Tensor &self, const cytnx::cytnx_double    &rhs){return self.Mul(rhs);})
+                .def("__mul__",[](cytnx::Tensor &self, const cytnx::cytnx_float     &rhs){return self.Mul(rhs);})
+                .def("__mul__",[](cytnx::Tensor &self, const cytnx::cytnx_int64     &rhs){return self.Mul(rhs);})
+                .def("__mul__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &rhs){return self.Mul(rhs);})
+                .def("__mul__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &rhs){return self.Mul(rhs);})
+                .def("__mul__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &rhs){return self.Mul(rhs);})
+
+                .def("__rmul__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&lhs){return cytnx::linalg::Mul(lhs,self);})
+                .def("__rmul__",[](cytnx::Tensor &self, const cytnx::cytnx_complex64 &lhs){return cytnx::linalg::Mul(lhs,self);})
+                .def("__rmul__",[](cytnx::Tensor &self, const cytnx::cytnx_double    &lhs){return cytnx::linalg::Mul(lhs,self);})
+                .def("__rmul__",[](cytnx::Tensor &self, const cytnx::cytnx_float     &lhs){return cytnx::linalg::Mul(lhs,self);})
+                .def("__rmul__",[](cytnx::Tensor &self, const cytnx::cytnx_int64     &lhs){return cytnx::linalg::Mul(lhs,self);})
+                .def("__rmul__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &lhs){return cytnx::linalg::Mul(lhs,self);})
+                .def("__rmul__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &lhs){return cytnx::linalg::Mul(lhs,self);})
+                .def("__rmul__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &lhs){return cytnx::linalg::Mul(lhs,self);})
+ 
+                .def("__imul__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return self.Mul_(rhs);}) // these will return self!
+                .def("__imul__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&rhs){return self.Mul_(rhs);})
+                .def("__imul__",[](cytnx::Tensor &self, const cytnx::cytnx_complex64 &rhs){return self.Mul_(rhs);})
+                .def("__imul__",[](cytnx::Tensor &self, const cytnx::cytnx_double    &rhs){return self.Mul_(rhs);})
+                .def("__imul__",[](cytnx::Tensor &self, const cytnx::cytnx_float     &rhs){return self.Mul_(rhs);})
+                .def("__imul__",[](cytnx::Tensor &self, const cytnx::cytnx_int64     &rhs){return self.Mul_(rhs);})
+                .def("__imul__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &rhs){return self.Mul_(rhs);})
+                .def("__imul__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &rhs){return self.Mul_(rhs);})
+                .def("__imul__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &rhs){return self.Mul_(rhs);})
+
+
+                .def("__truediv__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return self.Div(rhs);})
+                .def("__truediv__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&rhs){return self.Div(rhs);})
+                .def("__truediv__",[](cytnx::Tensor &self, const cytnx::cytnx_complex64 &rhs){return self.Div(rhs);})
+                .def("__truediv__",[](cytnx::Tensor &self, const cytnx::cytnx_double    &rhs){return self.Div(rhs);})
+                .def("__truediv__",[](cytnx::Tensor &self, const cytnx::cytnx_float     &rhs){return self.Div(rhs);})
+                .def("__truediv__",[](cytnx::Tensor &self, const cytnx::cytnx_int64     &rhs){return self.Div(rhs);})
+                .def("__truediv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &rhs){return self.Div(rhs);})
+                .def("__truediv__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &rhs){return self.Div(rhs);})
+                .def("__truediv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &rhs){return self.Div(rhs);})
+
+                .def("__rtruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&lhs){return cytnx::linalg::Div(lhs,self);})
+                .def("__rtruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_complex64 &lhs){return cytnx::linalg::Div(lhs,self);})
+                .def("__rtruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_double    &lhs){return cytnx::linalg::Div(lhs,self);})
+                .def("__rtruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_float     &lhs){return cytnx::linalg::Div(lhs,self);})
+                .def("__rtruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_int64     &lhs){return cytnx::linalg::Div(lhs,self);})
+                .def("__rtruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &lhs){return cytnx::linalg::Div(lhs,self);})
+                .def("__rtruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &lhs){return cytnx::linalg::Div(lhs,self);})
+                .def("__rtruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &lhs){return cytnx::linalg::Div(lhs,self);})
+ 
+                .def("__itruediv__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return self.Div_(rhs);}) // these will return self!
+                .def("__itruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&rhs){return self.Div_(rhs);})
+                .def("__itruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_complex64 &rhs){return self.Div_(rhs);})
+                .def("__itruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_double    &rhs){return self.Div_(rhs);})
+                .def("__itruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_float     &rhs){return self.Div_(rhs);})
+                .def("__itruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_int64     &rhs){return self.Div_(rhs);})
+                .def("__itruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &rhs){return self.Div_(rhs);})
+                .def("__itruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &rhs){return self.Div_(rhs);})
+                .def("__itruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &rhs){return self.Div_(rhs);})
+
+                .def("__floordiv__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return self.Div(rhs);})
+                .def("__floordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&rhs){return self.Div(rhs);})
+                .def("__floordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_complex64 &rhs){return self.Div(rhs);})
+                .def("__floordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_double    &rhs){return self.Div(rhs);})
+                .def("__floordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_float     &rhs){return self.Div(rhs);})
+                .def("__floordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_int64     &rhs){return self.Div(rhs);})
+                .def("__floordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &rhs){return self.Div(rhs);})
+                .def("__floordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &rhs){return self.Div(rhs);})
+                .def("__floordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &rhs){return self.Div(rhs);})
+
+                .def("__rfloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&lhs){return cytnx::linalg::Div(lhs,self);})
+                .def("__rfloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_complex64 &lhs){return cytnx::linalg::Div(lhs,self);})
+                .def("__rfloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_double    &lhs){return cytnx::linalg::Div(lhs,self);})
+                .def("__rfloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_float     &lhs){return cytnx::linalg::Div(lhs,self);})
+                .def("__rfloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_int64     &lhs){return cytnx::linalg::Div(lhs,self);})
+                .def("__rfloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &lhs){return cytnx::linalg::Div(lhs,self);})
+                .def("__rfloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &lhs){return cytnx::linalg::Div(lhs,self);})
+                .def("__rfloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &lhs){return cytnx::linalg::Div(lhs,self);})
+ 
+                .def("__ifloordiv__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return self.Div_(rhs);}) // these will return self!
+                .def("__ifloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&rhs){return self.Div_(rhs);})
+                .def("__ifloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_complex64 &rhs){return self.Div_(rhs);})
+                .def("__ifloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_double    &rhs){return self.Div_(rhs);})
+                .def("__ifloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_float     &rhs){return self.Div_(rhs);})
+                .def("__ifloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_int64     &rhs){return self.Div_(rhs);})
+                .def("__ifloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &rhs){return self.Div_(rhs);})
+                .def("__ifloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &rhs){return self.Div_(rhs);})
+                .def("__ifloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &rhs){return self.Div_(rhs);})
+
+
 
                 //linalg >>
                 .def("Svd",&cytnx::Tensor::Svd, py::arg("is_U"), py::arg("is_vT"))
