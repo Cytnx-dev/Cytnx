@@ -16,6 +16,10 @@
     [OpenMp support]
     * openmp
 
+    [Python]
+    * pybind11 2.2.4
+    * numpy >= 1.15 
+
 ## ubuntu
     sudo apt-get install libboost-all-dev
 
