@@ -369,7 +369,7 @@ namespace cytnx{
             template<class T>
             T& item(){
                 cytnx_error_msg(this->_impl->storage().size()!=1,"[ERROR][Tensor.item<T>]%s","item can only be called from a Tensor with only one element\n");
-                return this->_impl->at<T>(0);
+                return this->_impl->storage().at<T>(0);
             }
 
             Tensor get_elems(const std::vector<cytnx::Accessor> &accessors){
@@ -382,12 +382,14 @@ namespace cytnx{
                 return this->get_elems(args);
             }
             
-            Storage& storage(){
+            Storage& storage() const{
                 return this->_impl->storage();
-            }        
+            } 
+            /*       
             const Storage& storage() const{
                 return this->_impl->storage();
             }
+            */
             template<class T>
             Tensor& fill(const T& val){
                 this->_impl->fill(val);

@@ -161,7 +161,8 @@
      
 ## Example
     
-    See test.cpp for usage.
+    See test.cpp for using C++ .
+    See test.py for using python  
 
 ## Author
 

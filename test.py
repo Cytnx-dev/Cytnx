@@ -23,3 +23,20 @@ print(b)
 c = b.astype(cytnx.Type.Uint64)
 print(c)
 c.print_info()
+
+#=====================
+# Tensor
+#=====================
+Ta = cytnx.Tensor((3,4,2),dtype=cytnx.Type.Double)
+Ta_shp = Ta.shape
+print(Ta_shp)
+print(Ta.dtype_str)
+print(Ta.device_str)
+print(Ta)
+
+Ta.permute_(0,2,1)
+Tb = Ta.permute_(1,0,2)
+print(Tb is Ta)
+Tc = Ta.reshape(12,2)
+print(Tc.shape)
+

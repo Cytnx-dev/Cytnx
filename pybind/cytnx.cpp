@@ -50,7 +50,7 @@ PYBIND11_MODULE(cytnx,m){
                 .def_property_readonly("dtype",&cytnx::Storage::dtype)
                 .def_property_readonly("dtype_str",&cytnx::Storage::dtype_str)
                 .def_property_readonly("device",&cytnx::Storage::device)
-                .def_property_readonly("dtype_str",&cytnx::Storage::device_str)
+                .def_property_readonly("device_str",&cytnx::Storage::device_str)
 
                 .def("astype", &cytnx::Storage::astype, py::arg("new_type"))
                 
@@ -102,10 +102,6 @@ PYBIND11_MODULE(cytnx,m){
                     std::cout << self << std::endl;
                     return std::string("");
                  })
-                .def("__str__",[](cytnx::Storage &self)->std::string{
-                    std::cout << self << std::endl;
-                    return std::string("");
-                 })
                 .def("__len__",[](cytnx::Storage &self)->cytnx::cytnx_uint64{return self.size();})
                 
                 .def("to_", &cytnx::Storage::to_, py::arg("device"))
@@ -125,8 +121,91 @@ PYBIND11_MODULE(cytnx,m){
                 .def("fill",&cytnx::Storage::fill<cytnx::cytnx_uint64   >, py::arg("val"))
                 .def("fill",&cytnx::Storage::fill<cytnx::cytnx_int32    >, py::arg("val"))
                 .def("fill",&cytnx::Storage::fill<cytnx::cytnx_uint32   >, py::arg("val"))
-                 
+                ;
 
+    py::class_<cytnx::Tensor>(m,"Tensor")
+                //construction
+                .def(py::init<>())
+                .def(py::init<const cytnx::Tensor&>())
+                .def(py::init<const std::vector<cytnx::cytnx_uint64>&, const unsigned int&, int>(),py::arg("size"), py::arg("dtype"),py::arg("device")=-1)
+                .def_property_readonly("dtype",&cytnx::Tensor::dtype)
+                .def_property_readonly("dtype_str",&cytnx::Tensor::dtype_str)
+                .def_property_readonly("device",&cytnx::Tensor::device)
+                .def_property_readonly("device_str",&cytnx::Tensor::device_str)
+                .def_property_readonly("shape",&cytnx::Tensor::shape)
+                
+                .def("clone", &cytnx::Tensor::clone)
+                .def("to", &cytnx::Tensor::to, py::arg("device"))
+                .def("to_", &cytnx::Tensor::to_, py::arg("device"))
+                .def("is_contiguous", &cytnx::Tensor::is_contiguous)
+                .def("permute_",[](cytnx::Tensor &self, py::args args){
+                    std::vector<cytnx::cytnx_uint64> c_args = args.cast< std::vector<cytnx::cytnx_uint64> >();
+                    std::cout << c_args.size() << std::endl;
+                    self.permute_(c_args);
+                })
+                .def("permute",[](cytnx::Tensor &self, py::args args)->cytnx::Tensor{
+                    std::vector<cytnx::cytnx_uint64> c_args = args.cast< std::vector<cytnx::cytnx_uint64> >();
+                    std::cout << c_args.size() << std::endl;
+                    return self.permute(c_args);
+                })
+                .def("contiguous",&cytnx::Tensor::contiguous)
+                .def("contiguous_",&cytnx::Tensor::contiguous_)
+                .def("reshape_",[](cytnx::Tensor &self, py::args args){
+                    std::vector<cytnx::cytnx_int64> c_args = args.cast< std::vector<cytnx::cytnx_int64> >();
+                    std::cout << c_args.size() << std::endl;
+                    self.reshape_(c_args);
+                })
+                .def("reshape",[](cytnx::Tensor &self, py::args args)->cytnx::Tensor{
+                    std::vector<cytnx::cytnx_int64> c_args = args.cast< std::vector<cytnx::cytnx_int64> >();
+                    std::cout << c_args.size() << std::endl;
+                    return self.reshape(c_args);
+                })
+                .def("astype", &cytnx::Tensor::astype,py::arg("new_type"))
+                .def("item",[](cytnx::Tensor &self){
+                    py::object out;
+                    if(self.dtype() == cytnx::Type.Double) 
+                        out =  py::cast(self.item<cytnx::cytnx_double>());
+                    else if(self.dtype() == cytnx::Type.Float) 
+                        out = py::cast(self.item<cytnx::cytnx_float>());
+                    else if(self.dtype() == cytnx::Type.ComplexDouble) 
+                        out = py::cast(self.item<cytnx::cytnx_complex128>());
+                    else if(self.dtype() == cytnx::Type.ComplexFloat) 
+                        out = py::cast(self.item<cytnx::cytnx_complex64>());
+                    else if(self.dtype() == cytnx::Type.Uint64) 
+                        out = py::cast(self.item<cytnx::cytnx_uint64>());
+                    else if(self.dtype() == cytnx::Type.Int64) 
+                        out = py::cast(self.item<cytnx::cytnx_int64>());
+                    else if(self.dtype() == cytnx::Type.Uint32) 
+                        out = py::cast(self.item<cytnx::cytnx_uint32>());
+                    else if(self.dtype() == cytnx::Type.Int32) 
+                        out = py::cast(self.item<cytnx::cytnx_int32>());
+                    else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
+                    return out;
+                 })
+                .def("storage",&cytnx::Tensor::storage)
+                .def("__repr__",[](cytnx::Tensor &self)->std::string{
+                    std::cout << self << std::endl;
+                    return std::string("");
+                 })
+                .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_complex128>, py::arg("val"))
+                .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_complex64>, py::arg("val"))
+                .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_double   >, py::arg("val"))
+                .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_float    >, py::arg("val"))
+                .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_int64    >, py::arg("val"))
+                .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_uint64   >, py::arg("val"))
+                .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_int32    >, py::arg("val"))
+                .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_uint32   >, py::arg("val"))
+
+
+                //linalg >>
+                .def("Svd",&cytnx::Tensor::Svd, py::arg("is_U"), py::arg("is_vT"))
+                .def("Eigh",&cytnx::Tensor::Eigh, py::arg("is_V"))
+                .def("Inv_",&cytnx::Tensor::Inv_)
+                .def("Inv",&cytnx::Tensor::Inv_)
+                .def("Conj_",&cytnx::Tensor::Conj_)
+                .def("Conj",&cytnx::Tensor::Conj_)
+                .def("Exp_",&cytnx::Tensor::Exp_)
+                .def("Exp",&cytnx::Tensor::Exp)
                 ;
 
 }

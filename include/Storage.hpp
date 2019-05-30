@@ -422,7 +422,7 @@ namespace cytnx{
             T& at(const unsigned int &idx) const{
                 return this->_impl->at<T>(idx);
             }
-            template<class T>
+            template<class T> // this is c++ only
             T* data() const{
                 return this->_impl->data<T>();
             }
