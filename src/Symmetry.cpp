@@ -3,7 +3,7 @@
 using namespace std;
 
 
-std::string cytnx::SymmetryType::getname(const int &stype_id){
+std::string cytnx::SymmetryType_class::getname(const int &stype_id){
     if(stype_id==this->U){
         return string("U");
     }else if(stype_id==this->Z){
@@ -38,5 +38,5 @@ bool cytnx::ZnSymmetry::check_qnum(const cytnx_int64 &qnum){
 
 //++++++++++++++++++++++++
 namespace cytnx{
-    SymmetryType cytnxstype;
+    SymmetryType_class SymType;
 };

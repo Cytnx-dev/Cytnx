@@ -141,10 +141,10 @@ int main(int argc, char *argv[]){
     Bond bd_in = Bond(3,{{0, 1,-1, 4},
                          {0, 2,-1,-4},
                          {1, 0, 2, 2}}
-                       ,{Symmetry(cytnxstype.Z,2),
-                         Symmetry(cytnxstype.Z,3),
-                         Symmetry(cytnxstype.U),
-                         Symmetry(cytnxstype.U)}
+                       ,{Symmetry(SymType.Z,2),
+                         Symmetry(SymType.Z,3),
+                         Symmetry(SymType.U),
+                         Symmetry(SymType.U)}
                        ,bondType::BD_KET);
 
     cout << bd_in << endl;

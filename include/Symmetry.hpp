@@ -7,7 +7,7 @@
 #include <cstdio>
 namespace cytnx{
 
-    class SymmetryType{
+    class SymmetryType_class{
         public:
             enum : int{
                 U=-1,
@@ -15,7 +15,7 @@ namespace cytnx{
             };
             std::string getname(const int &stype);
     };
-    extern SymmetryType cytnxstype;
+    extern SymmetryType_class SymType;
 
 
     class Symmetry_base: public intrusive_ptr_base<Symmetry_base>{
@@ -40,7 +40,7 @@ namespace cytnx{
             U1Symmetry(){};
             U1Symmetry(const int &n){this->Init(n);};
             void Init(const int &n){
-                this->stype_id = cytnxstype.U;      
+                this->stype_id = SymType.U;      
                 this->n = n;
                 if(n!=0) cytnx_error_msg(1,"%s","[ERROR] U1Symmetry should set n = 0");
             }        
@@ -56,7 +56,7 @@ namespace cytnx{
             ZnSymmetry(){};
             ZnSymmetry(const int &n){this->Init(n);};
             void Init(const int &n){
-                this->stype_id = cytnxstype.Z;
+                this->stype_id = SymType.Z;
                 this->n = n;
                 if(n<=1) cytnx_error_msg(1,"%s","[ERROR] ZnSymmetry can only have n > 1");
             }
@@ -79,6 +79,13 @@ namespace cytnx{
                 this->Init(stype,n);
             }; //default is U1Symmetry
 
+            // genenrators:
+            static Symmetry U1(){
+                return Symmetry(SymType.U);
+            }
+            static Symmetry Zn(const int &n){
+                return Symmetry(SymType.Z,n);
+            }
 
             Symmetry copy(){
                 Symmetry out;
@@ -102,17 +109,17 @@ namespace cytnx{
             }
 
             const std::string stype(){
-                return cytnxstype.getname(this->_impl->stype_id) + std::to_string(this->_impl->n);
+                return SymType.getname(this->_impl->stype_id) + std::to_string(this->_impl->n);
             }
 
             void astype(const int &stype, const int &n){
                 this->Init(stype,n);
             }
             void Init(const int &stype=-1, const int &n=0){
-                if(stype==cytnxstype.U){
+                if(stype==SymType.U){
                     boost::intrusive_ptr<Symmetry_base> tmp(new U1Symmetry(n));
                     this->_impl = tmp;
-                }else if(stype==cytnxstype.Z){
+                }else if(stype==SymType.Z){
                     boost::intrusive_ptr<Symmetry_base> tmp(new ZnSymmetry(n));
                     this->_impl = tmp;
                 }else{

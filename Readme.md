@@ -53,6 +53,22 @@
 ### Python x C++
     Benefit from both side. One can do simple prototype on python side and easy transfer to C++ with small effort!
 
+
+```c++
+    // c++ version:
+    #include "cytnx.hpp"
+    cytnx::Tensor A({3,4,5},cytnx::Type.Double,cytnx::Device.cpu)
+
+```
+
+```python
+    # python version:
+    import cytnx
+    A =  cytnx.Tensor((3,4,5),dtype=cytnx.Type.Double,device=cytnx.Device.cpu)
+
+```
+
+
 ### 1. All the Storage and Tensor can now have mulitple type support. 
         The avaliable types are :
 
