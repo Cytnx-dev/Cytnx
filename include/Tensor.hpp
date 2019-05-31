@@ -141,11 +141,11 @@ namespace cytnx{
             
             
             
-            boost::intrusive_ptr<Tensor_impl> get_elems(const std::vector<cytnx::Accessor> &accessors);
-            void set_elems(const std::vector<cytnx::Accessor> &accessors, const boost::intrusive_ptr<Tensor_impl> &rhs);
+            boost::intrusive_ptr<Tensor_impl> get(const std::vector<cytnx::Accessor> &accessors);
+            void set(const std::vector<cytnx::Accessor> &accessors, const boost::intrusive_ptr<Tensor_impl> &rhs);
 
             template<class T>
-            void set_elems(const std::vector<cytnx::Accessor> &accessors, const T& rc);
+            void set(const std::vector<cytnx::Accessor> &accessors, const T& rc);
             
             template<class Tx>
             void fill(const Tx& val){
@@ -377,33 +377,33 @@ namespace cytnx{
                 return this->_impl->storage().at<T>(0);
             }
 
-            Tensor get_elems(const std::vector<cytnx::Accessor> &accessors)const {
+            Tensor get(const std::vector<cytnx::Accessor> &accessors)const {
                 Tensor out;
-                out._impl = this->_impl->get_elems(accessors);
+                out._impl = this->_impl->get(accessors);
                 return out;
             }
-            void set_elems(const std::vector<cytnx::Accessor> &accessors, const Tensor &rhs){
-                this->_impl->set_elems(accessors,rhs._impl);
+            void set(const std::vector<cytnx::Accessor> &accessors, const Tensor &rhs){
+                this->_impl->set(accessors,rhs._impl);
             }
             template<class T>
-            void set_elems(const std::vector<cytnx::Accessor> &accessors, const T &rc){
-                this->_impl->set_elems(accessors,rc);
+            void set(const std::vector<cytnx::Accessor> &accessors, const T &rc){
+                this->_impl->set(accessors,rc);
             }
 
 
-            Tensor get_elems(const std::initializer_list<cytnx::Accessor> &accessors)const{
+            Tensor get(const std::initializer_list<cytnx::Accessor> &accessors)const{
                 std::vector<cytnx::Accessor> args = accessors;
-                return this->get_elems(args);
+                return this->get(args);
             }
 
-            void set_elems(const std::initializer_list<cytnx::Accessor> &accessors, const Tensor &rhs){
+            void set(const std::initializer_list<cytnx::Accessor> &accessors, const Tensor &rhs){
                 std::vector<cytnx::Accessor> args = accessors;
-                this->set_elems(args,rhs);
+                this->set(args,rhs);
             }
             template<class T>
-            void set_elems(const std::initializer_list<cytnx::Accessor> &accessors, const T &rc){
+            void set(const std::initializer_list<cytnx::Accessor> &accessors, const T &rc){
                 std::vector<cytnx::Accessor> args = accessors;
-                this->set_elems(args,rc);
+                this->set(args,rc);
             }
 
             Storage& storage() const{

@@ -96,7 +96,7 @@ int main(int argc, char *argv[]){
     //i-=i;
     cout << i << endl;
 
-    Tensor y = i.get_elems({ac::all(),ac(2),ac::all()});
+    Tensor y = i.get({ac::all(),ac(2),ac::all()});
     cout << y << endl;
 
     Tensor a = zeros({2,3},Type.Double,Device.cpu);
@@ -115,11 +115,11 @@ int main(int argc, char *argv[]){
 
     Zp.reshape_({2,5});
     cout << Zp << endl;
-    Tensor tmp = Zp.get_elems({ac::all(),ac::range(0,2)});
+    Tensor tmp = Zp.get({ac::all(),ac::range(0,2)});
     cout << tmp;
-    Zp.set_elems({ac::all(),ac::range(1,3)}, tmp);
+    Zp.set({ac::all(),ac::range(1,3)}, tmp);
     cout << Zp;
-    Zp.set_elems({ac::all(),ac::range(1,3)}, 4);
+    Zp.set({ac::all(),ac::range(1,3)}, 4);
     cout << Zp;
     return 0;
 /*
