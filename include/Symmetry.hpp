@@ -7,6 +7,13 @@
 #include <cstdio>
 namespace cytnx{
 
+    struct __sym{
+        enum __stype{
+            U = -1,
+            Z = 0
+        };
+    };
+
     class SymmetryType_class{
         public:
             enum : int{
@@ -100,7 +107,7 @@ namespace cytnx{
                 this->_impl = rhs._impl->copy(); // let's enforce copy now
             }
 
-            int & stype_id() const {
+            int & stype() const {
                 return this->_impl->stype_id;
             }
 
@@ -108,7 +115,7 @@ namespace cytnx{
                 return this->_impl->n;
             }
 
-            const std::string stype(){
+            const std::string stype_str(){
                 return SymType.getname(this->_impl->stype_id) + std::to_string(this->_impl->n);
             }
 

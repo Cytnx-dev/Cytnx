@@ -16,7 +16,7 @@ std::string cytnx::SymmetryType_class::getname(const int &stype_id){
 
 
 bool cytnx::operator==(Symmetry &lhs, Symmetry &rhs){
-    return(lhs.stype_id() == rhs.stype_id()) && (lhs.n() == rhs.n());
+    return(lhs.stype() == rhs.stype()) && (lhs.n() == rhs.n());
 }
 
 

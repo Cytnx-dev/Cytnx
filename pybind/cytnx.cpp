@@ -76,6 +76,11 @@ PYBIND11_MODULE(cytnx,m){
 		.value("cuda", cytnx::__device::__pybind_device::cuda)	
 		.export_values();
 
+    py::enum_<cytnx::__sym::__stype>(m,"SymType")
+        .value("Z",cytnx::__sym::__stype::Z)
+        .value("U",cytnx::__sym::__stype::U)
+        .export_values();
+
 
     m.def("zeros",[](const cytnx_uint64 &Nelem, const unsigned int &dtype, const int &device)->Tensor{
                         return cytnx::zeros(Nelem,dtype,device);
@@ -94,6 +99,19 @@ PYBIND11_MODULE(cytnx,m){
                         std::vector<cytnx_uint64> tmp = Nelem.cast<std::vector<cytnx_uint64> >();
                         return cytnx::ones(tmp,dtype,device);
                   },py::arg("size"),py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
+
+    py::class_<cytnx::Symmetry>(m,"Symmetry")
+                //construction
+                .def(py::init<>())
+                //.def(py::init<const int &, const int&>())
+                .def("U1",&cytnx::Symmetry::U1)
+                .def("Zn",&cytnx::Symmetry::Zn)
+                .def("copy",&cytnx::Symmetry::copy)
+                .def("stype", &cytnx::Symmetry::stype)
+                .def("stype_str", &cytnx::Symmetry::stype_str)
+                .def("n",&cytnx::Symmetry::n)
+                .def("astype",&cytnx::Symmetry::astype)
+                ;
 
 
     py::class_<cytnx::Storage>(m,"Storage")
