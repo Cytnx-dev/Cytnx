@@ -47,7 +47,7 @@ void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc
         }
     }
     
-    self.set_elems(accessors,rc);
+    self.set(accessors,rc);
     
 }
 
@@ -75,6 +75,25 @@ PYBIND11_MODULE(cytnx,m){
         .value("cpu", cytnx::__device::__pybind_device::cpu)
 		.value("cuda", cytnx::__device::__pybind_device::cuda)	
 		.export_values();
+
+
+    m.def("zeros",[](const cytnx_uint64 &Nelem, const unsigned int &dtype, const int &device)->Tensor{
+                        return cytnx::zeros(Nelem,dtype,device);
+                  },py::arg("size"),py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
+
+    m.def("zeros",[](py::tuple Nelem, const unsigned int &dtype, const int &device)->Tensor{
+                        std::vector<cytnx_uint64> tmp = Nelem.cast<std::vector<cytnx_uint64> >();
+                        return cytnx::zeros(tmp,dtype,device);
+                  },py::arg("size"),py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
+    
+    m.def("ones",[](const cytnx_uint64 &Nelem, const unsigned int &dtype, const int &device)->Tensor{
+                        return cytnx::ones(Nelem,dtype,device);
+                  },py::arg("size"),py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
+
+    m.def("ones",[](py::tuple Nelem, const unsigned int &dtype, const int &device)->Tensor{
+                        std::vector<cytnx_uint64> tmp = Nelem.cast<std::vector<cytnx_uint64> >();
+                        return cytnx::ones(tmp,dtype,device);
+                  },py::arg("size"),py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
 
 
     py::class_<cytnx::Storage>(m,"Storage")
@@ -264,7 +283,7 @@ PYBIND11_MODULE(cytnx,m){
                         }
                     }
                     
-                    return self.get_elems(accessors);
+                    return self.get(accessors);
                     
                 })
 
@@ -299,7 +318,7 @@ PYBIND11_MODULE(cytnx,m){
                         }
                     }
                     
-                    self.set_elems(accessors,rhs);
+                    self.set(accessors,rhs);
                     
                 })
                 .def("__setitem__",&f_Tensor_setitem_scal<cytnx_complex128>) 

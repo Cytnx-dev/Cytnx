@@ -46,7 +46,6 @@ print(ele)
 print(Ta)
 Ta[1,:,0] = ele
 print(Ta)
-exit(1)
 scalar_t = Ta[0,1,1]
 print(scalar_t)
 val = scalar_t.item()
@@ -82,3 +81,23 @@ Ta_div_3 = Ta/Ta
 Ta_div_int = Ta/3
 Ta_div_int_2 = 3/Ta
 Ta_div_int_3 = Ta/Ta
+
+
+##===========================
+## Generator
+##===========================
+
+Tn = cytnx.zeros(10)
+Tn2 = cytnx.zeros(10,dtype=cytnx.Type.Float)
+Tn3 = cytnx.zeros(10,device=cytnx.Device.cpu)
+print(Tn)
+print(Tn2)
+print(Tn3)
+
+Tna = cytnx.zeros((2,3))
+Tn2a = cytnx.zeros((2,3),dtype=cytnx.Type.Float)
+Tn3a = cytnx.zeros((2,3),device=cytnx.Device.cpu)
+print(Tna)
+print(Tn2a)
+print(Tn3a)
+

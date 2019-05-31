@@ -18,7 +18,7 @@ namespace cytnx{
     Tensor ones(const std::initializer_list<cytnx_uint64> &Nelem, const unsigned int &dtype=Type.Double, const int &device=Device.cpu);
 
     Tensor arange(const cytnx_int64 &Nelem, const unsigned int &dtype=Type.Double, const int &device=Device.cpu);
-    Tensor arange(const cytnx_double &start, const cytnx_double &end, const cytnx_double &step, const unsigned int &dtype=Type.Double, const int &device=Device.cpu);
+    Tensor arange(const cytnx_double &start, const cytnx_double &end, const cytnx_double &step=1, const unsigned int &dtype=Type.Double, const int &device=Device.cpu);
  
 }
 
