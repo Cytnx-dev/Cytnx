@@ -60,6 +60,7 @@ namespace cytnx{
             const std::vector<cytnx_uint64>& shape() const{
                 return _shape;
             }
+
             const bool& is_contiguous() const{
                 return this->_contiguous;
             }
@@ -141,6 +142,10 @@ namespace cytnx{
             
             
             boost::intrusive_ptr<Tensor_impl> get_elems(const std::vector<cytnx::Accessor> &accessors);
+            void set_elems(const std::vector<cytnx::Accessor> &accessors, const boost::intrusive_ptr<Tensor_impl> &rhs);
+
+            template<class T>
+            void set_elems(const std::vector<cytnx::Accessor> &accessors, const T& rc);
             
             template<class Tx>
             void fill(const Tx& val){
@@ -377,11 +382,30 @@ namespace cytnx{
                 out._impl = this->_impl->get_elems(accessors);
                 return out;
             }
+            void set_elems(const std::vector<cytnx::Accessor> &accessors, const Tensor &rhs){
+                this->_impl->set_elems(accessors,rhs._impl);
+            }
+            template<class T>
+            void set_elems(const std::vector<cytnx::Accessor> &accessors, const T &rc){
+                this->_impl->set_elems(accessors,rc);
+            }
+
+
             Tensor get_elems(const std::initializer_list<cytnx::Accessor> &accessors)const{
                 std::vector<cytnx::Accessor> args = accessors;
                 return this->get_elems(args);
             }
-            
+
+            void set_elems(const std::initializer_list<cytnx::Accessor> &accessors, const Tensor &rhs){
+                std::vector<cytnx::Accessor> args = accessors;
+                this->set_elems(args,rhs);
+            }
+            template<class T>
+            void set_elems(const std::initializer_list<cytnx::Accessor> &accessors, const T &rc){
+                std::vector<cytnx::Accessor> args = accessors;
+                this->set_elems(args,rc);
+            }
+
             Storage& storage() const{
                 return this->_impl->storage();
             } 

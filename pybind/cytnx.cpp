@@ -15,6 +15,43 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
+template<class T>
+void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc){
+    cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to setelem to a empty Tensor%s","\n");
+    
+    size_t start, stop, step, slicelength; 
+    std::vector<cytnx::Accessor> accessors;
+    if(py::isinstance<py::tuple>(locators)){
+        py::tuple Args = locators.cast<py::tuple>();
+        // mixing of slice and ints
+        for(cytnx_uint32 axis=0;axis<self.shape().size();axis++){
+            if(axis >= Args.size()){accessors.push_back(Accessor::all());}
+            else{ 
+                // check type:
+                if(py::isinstance<py::slice>(Args[axis])){
+                    py::slice sls = Args[axis].cast<py::slice>();
+                    if(!sls.compute(self.shape()[axis],&start,&stop,&step, &slicelength))
+                        throw py::error_already_set();
+                    if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
+                    else accessors.push_back(cytnx::Accessor::range(start,stop,step));
+                }else{
+                    accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
+                }
+            }
+        }
+    }else{
+        // only int
+        for(cytnx_uint32 i=0;i<self.shape().size();i++){
+            if(i==0) accessors.push_back(cytnx::Accessor(locators.cast<cytnx_int64>()));
+            else accessors.push_back(cytnx::Accessor::all());
+        }
+    }
+    
+    self.set_elems(accessors,rc);
+    
+}
+
+
 PYBIND11_MODULE(cytnx,m){
 
     m.attr("__version__") = "0.0.0";
@@ -231,6 +268,49 @@ PYBIND11_MODULE(cytnx,m){
                     
                 })
 
+                .def("__setitem__",[](cytnx::Tensor &self, py::object locators, const cytnx::Tensor &rhs){
+                    cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to setelem to a empty Tensor%s","\n");
+                    
+                    size_t start, stop, step, slicelength; 
+                    std::vector<cytnx::Accessor> accessors;
+                    if(py::isinstance<py::tuple>(locators)){
+                        py::tuple Args = locators.cast<py::tuple>();
+                        // mixing of slice and ints
+                        for(cytnx_uint32 axis=0;axis<self.shape().size();axis++){
+                            if(axis >= Args.size()){accessors.push_back(Accessor::all());}
+                            else{ 
+                                // check type:
+                                if(py::isinstance<py::slice>(Args[axis])){
+                                    py::slice sls = Args[axis].cast<py::slice>();
+                                    if(!sls.compute(self.shape()[axis],&start,&stop,&step, &slicelength))
+                                        throw py::error_already_set();
+                                    if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
+                                    else accessors.push_back(cytnx::Accessor::range(start,stop,step));
+                                }else{
+                                    accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
+                                }
+                            }
+                        }
+                    }else{
+                        // only int
+                        for(cytnx_uint32 i=0;i<self.shape().size();i++){
+                            if(i==0) accessors.push_back(cytnx::Accessor(locators.cast<cytnx_int64>()));
+                            else accessors.push_back(cytnx::Accessor::all());
+                        }
+                    }
+                    
+                    self.set_elems(accessors,rhs);
+                    
+                })
+                .def("__setitem__",&f_Tensor_setitem_scal<cytnx_complex128>) 
+                .def("__setitem__",&f_Tensor_setitem_scal<cytnx_complex64> ) 
+                .def("__setitem__",&f_Tensor_setitem_scal<cytnx_double>) 
+                .def("__setitem__",&f_Tensor_setitem_scal<cytnx_float> ) 
+                .def("__setitem__",&f_Tensor_setitem_scal<cytnx_int64>) 
+                .def("__setitem__",&f_Tensor_setitem_scal<cytnx_uint64> ) 
+                .def("__setitem__",&f_Tensor_setitem_scal<cytnx_int32>) 
+                .def("__setitem__",&f_Tensor_setitem_scal<cytnx_uint32> )
+ 
                 //arithmetic >>
                 .def("__add__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return self.Add(rhs);})
                 .def("__add__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&rhs){return self.Add(rhs);})

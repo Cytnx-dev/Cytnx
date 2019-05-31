@@ -43,10 +43,16 @@ print(Tc.shape)
 
 ele = Ta[0,:,1]
 print(ele)
+print(Ta)
+Ta[1,:,0] = ele
+print(Ta)
+exit(1)
 scalar_t = Ta[0,1,1]
 print(scalar_t)
 val = scalar_t.item()
 print(val)
+
+
 
 # arithmetic------------
 Ta_add = Ta + 3.

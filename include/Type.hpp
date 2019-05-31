@@ -52,7 +52,7 @@ namespace cytnx{
 
             
             std::string getname(const unsigned int &type_id);
-             
+            unsigned int c_typename_to_id(const std::string &c_name);
 
     };
 

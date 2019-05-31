@@ -8,8 +8,9 @@ namespace cytnx{
     namespace utils_internal{
         vector<cytnx_uint64> range_cpu(const cytnx_uint64 &len){
             vector<cytnx_uint64> out(len);
+
             #ifdef UNI_OMP
-            #pragma omp parallel for
+            #pragma omp parallel for schedule(dynamic)
             #endif
             for(cytnx_uint64 i=0;i<len;i++){
                 out[i] = i;

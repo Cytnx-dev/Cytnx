@@ -14,12 +14,12 @@ namespace cytnx{
     }
 
     // range constr. 
-    Accessor::Accessor(const cytnx_int64 &min, const cytnx_int64 &max, const cytnx_int64 &jump){
-        cytnx_error_msg(jump==0,"[ERROR] cannot have step=0 for range%s","\n");
+    Accessor::Accessor(const cytnx_int64 &min, const cytnx_int64 &max, const cytnx_int64 &step){
+        cytnx_error_msg(step==0,"[ERROR] cannot have step=0 for range%s","\n");
         this->type = Accessor::Range;
         this->min = min;
         this->max = max;
-        this->jump = jump;
+        this->step = step;
     }
 
 
@@ -29,6 +29,7 @@ namespace cytnx{
         this->min  = rhs.min;
         this->max  = rhs.max;
         this->loc  = rhs.loc;
+        this->step = rhs.step;
     }
 
     //copy assignment:
@@ -37,6 +38,7 @@ namespace cytnx{
         this->min  = rhs.min;
         this->max  = rhs.max;
         this->loc  = rhs.loc;
+        this->step = rhs.step;
     }
 
     // get the real len from dim
@@ -61,18 +63,18 @@ namespace cytnx{
                 r_max += dim;
             }
             if(r_min < r_max){
-                cytnx_error_msg(jump<0,"%s","[ERROR] upper bound and larger bound inconsistent with step sign");
-                len = (r_max-r_min)/jump;
-                if((r_max-r_min)%jump) len+=1;
+                cytnx_error_msg(this->step<0,"%s","[ERROR] upper bound and larger bound inconsistent with step sign");
+                len = (r_max-r_min)/this->step;
+                if((r_max-r_min)%this->step) len+=1;
                 
-                for(cytnx_uint64 i = r_min; i<r_max; i+=jump){
+                for(cytnx_uint64 i = r_min; i<r_max; i+=this->step){
                     pos.push_back(i);
                 }
             }else{
-                cytnx_error_msg(jump>0,"%s","[ERROR] upper bound and larger bound inconsistent with step sign");
-                len = (r_min-r_max)/(-jump);
-                if((r_min-r_max)%(-jump)) len+=1;
-                for(cytnx_uint64 i = r_min; i>r_max; i+=jump){
+                cytnx_error_msg(step>0,"%s","[ERROR] upper bound and larger bound inconsistent with step sign");
+                len = (r_min-r_max)/(-this->step);
+                if((r_min-r_max)%(-this->step)) len+=1;
+                for(cytnx_uint64 i = r_min; i>r_max; i+=this->step){
                     pos.push_back(i);
                 }
             }

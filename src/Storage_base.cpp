@@ -213,6 +213,59 @@ namespace cytnx{
                 } 
     }
 
+    void Storage_base::SetElem_byShape(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators, const bool &is_scalar){
+        #ifdef UNI_DEBUG
+                cytnx_error_msg(shape.size() != len.size(),"%s","[ERROR][DEBUG] internal Storage, shape.size() != len.size()");
+        #endif
+
+                //std::cout <<"=====" << len.size() << " " << locators.size() << std::endl;
+                //create new instance:
+                cytnx_uint64 TotalElem = 1;
+                for(cytnx_uint32 i=0;i<len.size();i++)
+                    TotalElem*=len[i];
+
+                if(!is_scalar)
+                cytnx_error_msg(in->size() != TotalElem, "%s", "[ERROR] internal, the out Storage size does not match the no. of elems calculated from Accessors.%s","\n");
+                
+
+                std::vector<cytnx_uint64> c_offj(shape.size());
+                std::vector<cytnx_uint64> new_offj(shape.size());
+                std::vector<cytnx_uint64> offj(shape.size());
+
+                cytnx_uint64 accu=1;
+                for(cytnx_int32 i=shape.size()-1;i>=0;i--){
+                    c_offj[i] = accu;
+                    accu*=shape[mapper[i]];
+                }
+                accu = 1;
+                for(cytnx_int32 i=len.size()-1;i>=0;i--){
+                    new_offj[i] = accu;
+                    accu*=len[i];
+
+                    //count-in the mapper:
+                    offj[i] = c_offj[mapper[i]]; 
+                }
+
+                if(this->device == Device.cpu){
+                    if(utils_internal::uii.SetElems_ii[in->dtype][this->dtype] == NULL){
+                        cytnx_error_msg(true, "%s","[ERROR] %s","cannot assign complex element to real container.\n");
+                    }
+                    utils_internal::uii.SetElems_ii[in->dtype][this->dtype](in->Mem,this->Mem,offj,new_offj,locators,TotalElem,is_scalar);
+                }else{
+                    #ifdef UNI_GPU
+                        if(utils_internal::uii.cuSetElems_ii[in->dtype][this->dtype] == NULL){
+                            cytnx_error_msg(true, "%s","[ERROR] %s","cannot assign complex element to real container.\n");
+                        }
+                        checkCudaErrors(cudaSetDevice(this->device));
+                        utils_internal::uii.cuSetElems_ii[in->dtype][this->dtype](in->Mem,this->Mem,offj,new_offj,locators,TotalElem,is_scalar);
+                    #else
+                        cytnx_error_msg(true,"[ERROR][SetElem_byShape] fatal internal%s","the Storage is set on gpu without CUDA support\n");
+                    #endif
+
+                } 
+    }
+
+
     //generators:
     void Storage_base::fill(const cytnx_complex128 &val){
         cytnx_error_msg(1,"%s","[ERROR] call fill directly on Void Storage.");

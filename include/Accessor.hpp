@@ -11,11 +11,11 @@ namespace cytnx{
     class Accessor{
         private:
             cytnx_int64 type;
-            cytnx_int64 min, max, jump;
+            cytnx_int64 min, max, step;
             cytnx_int64 loc;
 
-            // if type is singl, min/max/jump     are not used
-            // if type is all  , min/max/jump/loc are not used
+            // if type is singl, min/max/step     are not used
+            // if type is all  , min/max/step/loc are not used
             // if type is range, loc              are not used.
 
         public:
@@ -35,7 +35,7 @@ namespace cytnx{
             Accessor(const std::string &str);
 
             // range constr. 
-            Accessor(const cytnx_int64 &min, const cytnx_int64 &max, const cytnx_int64 &jump);
+            Accessor(const cytnx_int64 &min, const cytnx_int64 &max, const cytnx_int64 &step);
 
 
             //copy constructor:
@@ -51,8 +51,8 @@ namespace cytnx{
 
             static Accessor range(const cytnx_int64 &min, 
                                   const cytnx_int64 &max, 
-                                  const cytnx_int64 &jump){
-                return Accessor(min,max,jump);
+                                  const cytnx_int64 &step=1){
+                return Accessor(min,max,step);
             };
 
             // get the real len from dim

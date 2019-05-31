@@ -72,7 +72,7 @@ int main(int argc, char *argv[]){
     cout << (s==s2) << (s==s3) << endl;
     
 
-    Tensor x = zeros({3,4,5},Type.Double,Device.cuda);
+    Tensor x = zeros({3,4,5},Type.Double,Device.cpu);
      
     //Tensor x = zeros({3,4,5});
     cout << x << endl;
@@ -99,7 +99,7 @@ int main(int argc, char *argv[]){
     Tensor y = i.get_elems({ac::all(),ac(2),ac::all()});
     cout << y << endl;
 
-    Tensor a = zeros({2,3},Type.Double,Device.cuda);
+    Tensor a = zeros({2,3},Type.Double,Device.cpu);
     //Tensor a = zeros({2,3});
     a.at<double>({0,0}) = 3; a.at<double>({0,1}) = 2; a.at<double>({0,2}) = 2;
     a.at<double>({1,0}) = 2; a.at<double>({1,1}) = 3; a.at<double>({1,2}) = -2;
@@ -108,10 +108,19 @@ int main(int argc, char *argv[]){
     cout << out[0] ;
     
     
-    Tensor Zo = zeros(10,Type.Double,Device.cuda);
+    Tensor Zo = zeros(10,Type.Double,Device.cpu);
     Tensor Zp = arange(10);
     Tensor Zc = arange(0.1,0,-0.2,Type.ComplexDouble);
     cout << Zc << endl;
+
+    Zp.reshape_({2,5});
+    cout << Zp << endl;
+    Tensor tmp = Zp.get_elems({ac::all(),ac::range(0,2)});
+    cout << tmp;
+    Zp.set_elems({ac::all(),ac::range(1,3)}, tmp);
+    cout << Zp;
+    Zp.set_elems({ac::all(),ac::range(1,3)}, 4);
+    cout << Zp;
     return 0;
 /*
     //Tensor t;

@@ -1,3 +1,4 @@
+#include <typeinfo>
 #include "Tensor.hpp"
 #include "utils/utils_internal_interface.hpp"
 #include "linalg/linalg.hpp"
@@ -92,14 +93,74 @@ namespace cytnx{
 
     }
     
-    
+    void Tensor_impl::set_elems(const std::vector<cytnx::Accessor> &accessors, const boost::intrusive_ptr<Tensor_impl> &rhs){
+        cytnx_error_msg(accessors.size() != this->_shape.size(), "%s", "The input indexes rank is not match Tensor's rank.");
+
+        vector<cytnx_uint64> get_shape(accessors.size());
+        //vector<cytnx_uint64> new_shape;
+
+        std::vector<std::vector<cytnx_uint64> > locators(accessors.size());
+        for(cytnx_uint32 i=0;i<accessors.size();i++){
+            accessors[i].get_len_pos(this->_shape[i],get_shape[i],locators[i]); 
+            //std::cout << this->_shape[i] << " " << get_shape[i] << "|";
+            //for(int j=0;j<locators[i].size();j++) std::cout << locators[i][j] << " ";
+            //std::cout << std::endl;
+        }   
+
+        //remove single dim
+        vector<cytnx_uint64> new_shape;
+        for(cytnx_uint32 i=0;i<accessors.size();i++)
+            if(get_shape[i]!=1) new_shape.push_back(get_shape[i]);
+
+        if(new_shape.size()==0) new_shape.push_back(1);
+        
+        // check size:
+        cytnx_error_msg(new_shape != rhs->shape(), "[ERROR][Tensor.set_elems]%s","inconsistent shape");
 
 
+        //boost::intrusive_ptr<Tensor_impl> out( new Tensor_impl());
+        //out->Init(get_shape,this->dtype(),this->device());
 
+        this->storage()._impl->SetElem_byShape(rhs->storage()._impl,this->shape(),this->_mapper,get_shape,locators,false);
+    }
 
+    template<class T>
+    void Tensor_impl::set_elems(const std::vector<cytnx::Accessor> &accessors, const T &rc){
+        cytnx_error_msg(accessors.size() != this->_shape.size(), "%s", "The input indexes rank is not match Tensor's rank.");
 
+        vector<cytnx_uint64> get_shape(accessors.size());
+        //vector<cytnx_uint64> new_shape;
 
+        std::vector<std::vector<cytnx_uint64> > locators(accessors.size());
+        for(cytnx_uint32 i=0;i<accessors.size();i++){
+            accessors[i].get_len_pos(this->_shape[i],get_shape[i],locators[i]); 
+            //std::cout << this->_shape[i] << " " << get_shape[i] << "|";
+            //for(int j=0;j<locators[i].size();j++) std::cout << locators[i][j] << " ";
+            //std::cout << std::endl;
+        }   
 
+        //remove single dim
+        vector<cytnx_uint64> new_shape;
+        for(cytnx_uint32 i=0;i<accessors.size();i++)
+            if(get_shape[i]!=1) new_shape.push_back(get_shape[i]);
+
+        if(new_shape.size()==0) new_shape.push_back(1);
+        
+        //boost::intrusive_ptr<Tensor_impl> out( new Tensor_impl());
+        //out->Init(get_shape,this->dtype(),this->device());
+
+        Storage tmp(1,Type.c_typename_to_id(typeid(T).name()),this->device());
+        tmp.at<T>(0) = rc;
+        this->storage()._impl->SetElem_byShape(tmp._impl,this->shape(),this->_mapper,get_shape,locators,true);
+    }
+    template void Tensor_impl::set_elems<cytnx_complex128>(const std::vector<cytnx::Accessor> &, const cytnx_complex128&);
+    template void Tensor_impl::set_elems<cytnx_complex64>(const std::vector<cytnx::Accessor> &, const cytnx_complex64&);
+    template void Tensor_impl::set_elems<cytnx_double>(const std::vector<cytnx::Accessor> &, const cytnx_double&);
+    template void Tensor_impl::set_elems<cytnx_float>(const std::vector<cytnx::Accessor> &, const cytnx_float&);
+    template void Tensor_impl::set_elems<cytnx_int64>(const std::vector<cytnx::Accessor> &, const cytnx_int64&);
+    template void Tensor_impl::set_elems<cytnx_uint64>(const std::vector<cytnx::Accessor> &, const cytnx_uint64&);
+    template void Tensor_impl::set_elems<cytnx_int32>(const std::vector<cytnx::Accessor> &, const cytnx_int32&);
+    template void Tensor_impl::set_elems<cytnx_uint32>(const std::vector<cytnx::Accessor> &, const cytnx_uint32&);
 
 
 
