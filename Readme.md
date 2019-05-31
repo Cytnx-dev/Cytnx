@@ -51,6 +51,7 @@
     * Tensor
     * Bond
     * Accessor
+    * Symmetry
 
 ## Feature:
 
