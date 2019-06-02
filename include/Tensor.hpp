@@ -291,7 +291,7 @@ namespace cytnx{
                 out._impl = this->_impl->clone();
                 return out;
             }
-            Tensor to(const int &device){
+            Tensor to(const int &device) const{
                 Tensor out;
                 out._impl = this->_impl->to(device);
                 return out;

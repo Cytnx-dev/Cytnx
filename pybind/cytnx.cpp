@@ -106,11 +106,10 @@ PYBIND11_MODULE(cytnx,m){
                 //.def(py::init<const int &, const int&>())
                 .def("U1",&cytnx::Symmetry::U1)
                 .def("Zn",&cytnx::Symmetry::Zn)
-                .def("copy",&cytnx::Symmetry::copy)
+                .def("clone",&cytnx::Symmetry::clone)
                 .def("stype", &cytnx::Symmetry::stype)
                 .def("stype_str", &cytnx::Symmetry::stype_str)
                 .def("n",&cytnx::Symmetry::n)
-                .def("astype",&cytnx::Symmetry::astype)
                 ;
 
 

@@ -3,7 +3,8 @@
 
 #include "complex_arithmic.hpp"
 #include "is.hpp"
-
+#include "vec_clone.hpp"
+#include "vec_unique.hpp"
 /// Helper function to print vector with ODT:
 #include <vector>
 #include <iostream>
@@ -27,6 +28,9 @@ namespace cytnx{
         }
         return os;
     }
+
+
+    
 
 
 

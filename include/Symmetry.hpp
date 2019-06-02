@@ -5,6 +5,7 @@
 #include "intrusive_ptr_base.hpp"
 #include <string>
 #include <cstdio>
+#include "utils/vec_clone.hpp"
 namespace cytnx{
 
     struct __sym{
@@ -37,7 +38,7 @@ namespace cytnx{
             Symmetry_base& operator=(const Symmetry_base &rhs);
       
             virtual void Init(const int &n){};
-            virtual boost::intrusive_ptr<Symmetry_base> copy(){};
+            virtual boost::intrusive_ptr<Symmetry_base> clone(){};
             virtual bool check_qnum(const cytnx_int64 &in_qnum); // check the passed in qnums satisfy the symmetry requirement.
             //virtual std::vector<cytnx_int64>& combine_rule(const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR);
     };
@@ -51,7 +52,7 @@ namespace cytnx{
                 this->n = n;
                 if(n!=0) cytnx_error_msg(1,"%s","[ERROR] U1Symmetry should set n = 0");
             }        
-            boost::intrusive_ptr<Symmetry_base> copy(){
+            boost::intrusive_ptr<Symmetry_base> clone(){
                 boost::intrusive_ptr<Symmetry_base> out(new U1Symmetry(this->n));
                 return out;
             }
@@ -67,7 +68,7 @@ namespace cytnx{
                 this->n = n;
                 if(n<=1) cytnx_error_msg(1,"%s","[ERROR] ZnSymmetry can only have n > 1");
             }
-            boost::intrusive_ptr<Symmetry_base> copy(){
+            boost::intrusive_ptr<Symmetry_base> clone(){
                 boost::intrusive_ptr<Symmetry_base> out(new ZnSymmetry(this->n));
                 return out;
             }
@@ -94,17 +95,18 @@ namespace cytnx{
                 return Symmetry(SymType.Z,n);
             }
 
-            Symmetry copy(){
+            Symmetry clone() const{
                 Symmetry out;
-                out._impl = this->_impl->copy();
+                out._impl = this->_impl->clone();
                 return out;
             }
 
             Symmetry& operator=(const Symmetry &rhs){
-               this->_impl = rhs._impl->copy(); // let's enforce copy now
+               this->_impl = rhs._impl; 
+                return *this;
             }
             Symmetry(const  Symmetry &rhs){
-                this->_impl = rhs._impl->copy(); // let's enforce copy now
+                this->_impl = rhs._impl; 
             }
 
             int & stype() const {
@@ -119,9 +121,6 @@ namespace cytnx{
                 return SymType.getname(this->_impl->stype_id) + std::to_string(this->_impl->n);
             }
 
-            void astype(const int &stype, const int &n){
-                this->Init(stype,n);
-            }
             void Init(const int &stype=-1, const int &n=0){
                 if(stype==SymType.U){
                     boost::intrusive_ptr<Symmetry_base> tmp(new U1Symmetry(n));

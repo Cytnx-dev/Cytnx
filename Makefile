@@ -49,13 +49,13 @@ endif
 OBJS = Storage_base.o Uint32Storage.o Int32Storage.o Uint64Storage.o Int64Storage.o FloatStorage.o DoubleStorage.o ComplexFloatStorage.o ComplexDoubleStorage.o Type.o Device.o
 
 
-OBJS += Storage.o Bond.o Tensor.o Symmetry.o Accessor.o Generator.o
+OBJS += Storage.o Bond.o Tensor.o Symmetry.o Accessor.o Generator.o UniTensor_base.o DenseUniTensor.o SparseUniTensor.o 
 
 
 
 ## Utils
 OBJS += utils_internal_interface.o
-OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o is.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_cpu.o SetElems_cpu.o
+OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o is.o vec_clone.o vec_unique.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_cpu.o SetElems_cpu.o
 ifeq ($(GPU_Enable),1)
   OBJS += cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o cuFill_gpu.o cuSetArange_gpu.o cuGetElems_gpu.o  cuSetElems_gpu.o
 endif
@@ -115,6 +115,13 @@ Accessor.o: $(CytnxPATH)/src/Accessor.cpp $(CytnxPATH)/include/Accessor.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 Generator.o: $(CytnxPATH)/src/Generator.cpp $(CytnxPATH)/include/Generator.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+
+UniTensor_base.o: $(CytnxPATH)/src/UniTensor_base.cpp $(CytnxPATH)/include/UniTensor.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+DenseUniTensor.o: $(CytnxPATH)/src/DenseUniTensor.cpp $(CytnxPATH)/include/UniTensor.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+SparseUniTensor.o: $(CytnxPATH)/src/SparseUniTensor.cpp $(CytnxPATH)/include/UniTensor.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 
@@ -262,6 +269,10 @@ complex_arithmic.o: $(CytnxPATH)/src/utils/complex_arithmic.cpp $(CytnxPATH)/inc
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 is.o: $(CytnxPATH)/src/utils/is.cpp $(CytnxPATH)/include/utils/is.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+vec_clone.o: $(CytnxPATH)/src/utils/vec_clone.cpp $(CytnxPATH)/include/utils/vec_clone.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+vec_unique.o: $(CytnxPATH)/src/utils/vec_unique.cpp $(CytnxPATH)/include/utils/vec_unique.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 

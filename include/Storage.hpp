@@ -432,7 +432,7 @@ namespace cytnx{
             Storage to(const int &device){
                 return Storage(this->_impl->to(device));
             }
-            Storage clone(){
+            Storage clone() const{
                 return Storage(this->_impl->clone());
             }
             const unsigned long long &size() const{

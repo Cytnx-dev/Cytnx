@@ -4,213 +4,16 @@
 #include "cytnx_error.hpp"
 #include "Storage.hpp"
 #include "Device.hpp"
-#include "Tensor.hpp"
-#include "Symmetry.hpp"
-#include "Bond.hpp"
 #include "intrusive_ptr_base.hpp"
-#include "utils/utils_internal_interface.hpp"
+#include "utils/utils_internal.hpp"
 #include <iostream>
 #include <vector>
 #include <initializer_list>
-#include "utils/utils.hpp"
 
 namespace cytnx{
 
-    class UniTensor_base: public intrusive_ptr_base<UniTensor_base>{
-        protected:
-            std::vector< Bond > _bonds;
-            std::vector<cytnx_int64> _labels;
-            bool _braket;
-            cytnx_int64 _Rowrank;
-            bool _is_diag;
-
-            bool _update_braket(){
-                if(_bonds.size()==0) return false;
-
-                if(this->_bonds[0].type()!= bondType::BD_REG){
-                    //check:
-                    for(unsigned int i=0;i<this->_bonds.size();i++){
-                        if(i<this->_Rowrank){
-                            if(this->_bonds[i].type()!=bondType::BD_KET) return false;
-                        }else{
-                            if(this->_bonds[i].type()!=bondType::BD_BRA) return false;
-                        }
-                    }
-                    return true;
-                }else{
-                    return false;
-                }
-            }
-
-        public:
-            UniTensor_base(): _braket(false), _Rowrank(-1), _is_diag(false){};
-
-            //copy&assignment constr., use intrusive_ptr's !!
-            UniTensor_base(const UniTensor_base &rhs);
-            UniTensor_base& operator=(UniTensor_base &rhs);
-
-            const cytnx_uint64 Rowrank() const{return this->_Rowrank;}
-            bool is_diag() const{ return this->_is_diag; }
-            const bool&     is_braket() const{
-                return this->_braket;
-            }
-            const std::vector<cytnx_int64>& labels() const{ return this->_labels;}
-            const std::vector<Bond> &bonds() const {return this->_bonds;}       
-
-
-            virtual void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1,const unsigned int &dtype=Type.Double,const int &device = Device.cpu,const bool &is_diag=false);
-            virtual const std::vector<cytnx_uint64> shape() const;
-            virtual const bool      is_blockform() const ;
-            virtual const bool     is_contiguous() const;
-            virtual void to_(const int &device);
-            virtual boost::intrusive_ptr<UniTensor_base> to(const int &device) const;
-            virtual boost::intrusive_ptr<UniTensor_base> clone() const;
-            virtual const unsigned int  dtype() const;
-            virtual const int          device() const;
-            virtual const std::string      dtype_str() const;
-            virtual const std::string     device_str() const;
-    };
-
-    class DenseUniTensor: public UniTensor_base{
-        protected:
-            Tensor _block;
-        public:
-
-            // virtual functions
-            void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
-
-            const std::vector<cytnx_uint64> shape() const{ return this->_block.shape();}
-            const bool is_blockform() const{ return false;}
-            void to_(const int &device){
-                this->_block.to_(device);
-            }
-            boost::intrusive_ptr<UniTensor_base> to(const int &device) const{
-                boost::intrusive_ptr<UniTensor_base> out = this->clone();
-                out->to_(device);
-                return out;    
-            }
-            boost::intrusive_ptr<UniTensor_base> clone() const{
-                //boost::intrusive_ptr<DenseUniTensor> out(new DenseUniTensor());
-                DenseUniTensor* tmp = new DenseUniTensor();
-
-                tmp->_block = this->_block.clone();
-                tmp->_bonds = vec_clone(this->_bonds);
-                tmp->_labels = this->_labels;
-                tmp->_braket = this->_braket;
-                tmp->_Rowrank = this->_Rowrank;
-                tmp->_is_diag = this->_is_diag;
-                
-                boost::intrusive_ptr<UniTensor_base> out(tmp);
-                return out;
-            };
-            const bool     is_contiguous() const{return this->_block.is_contiguous();}
-            const unsigned int  dtype() const{return this->_block.dtype();}
-            const int          device() const{return this->_block.device();}
-            const std::string      dtype_str() const{ return Type.getname(this->_block.dtype());}
-            const std::string     device_str() const{ return Device.getname(this->_block.device());}
-            // end virtual function              
-
-    };
-
-    class SparseUniTensor: public UniTensor_base{
-        protected:
-            std::vector<Tensor> _blocks;
-            std::vector<cytnx_uint64> _mapper;
-            std::vector<cytnx_uint64> _inv_mapper;
-            bool _contiguous;
-            
-        
-        public:
-            // virtual functions
-            void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
-
-            const std::vector<cytnx_uint64> shape() const{ 
-                std::vector<cytnx_uint64> out(this->_bonds.size());
-                for(cytnx_uint64 i=0;i<out.size();i++){
-                    out[i] = this->_bonds[i].dim();
-                }
-                return out;
-            }
-            const bool is_blockform() const{return true;}
-            void to_(const int &device){};
-            boost::intrusive_ptr<UniTensor_base> to(const int &device) const{};
-            boost::intrusive_ptr<UniTensor_base> clone() const{};
-            const bool     is_contiguous() const{};
-            const unsigned int  dtype() const{};
-            const int          device() const{};
-            const std::string      dtype_str() const{};
-            const std::string     device_str() const{};
-            // end virtual func
-    };
-
-    //wrapper:
-    class UniTensor{
-        private:
-            boost::intrusive_ptr<UniTensor_base> _impl;
-
-        public:
-            UniTensor(): _impl(new UniTensor_base()){};
-            
-            void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false){
-
-                // checking type:
-                bool is_sym = false;
-                for(cytnx_uint64 i=0;i<bonds.size();i++){
-                    //check 
-                    if(bonds[i].syms().size() != 0) is_sym = true;
-                    else cytnx_error_msg(is_sym,"[ERROR] cannot have bonds with mixing of symmetry and non-symmetry.%s","\n");
-                }
-
-                // dynamical dispatch:
-                if(is_sym){
-                    boost::intrusive_ptr<UniTensor_base> out(new SparseUniTensor());
-                    this->_impl = out;
-                }else{   
-                    boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
-                    this->_impl = out;
-                }
-                this->_impl->Init(bonds, in_labels, Rowrank, dtype, device, is_diag);
-            }
-            
-            void Init(const std::initializer_list<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1,const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false){
-                std::vector<Bond> vbonds = bonds;
-                this->Init(vbonds,in_labels,Rowrank,dtype,device,is_diag);
-            }
-            void Init(const std::vector<Bond> &bonds, const std::initializer_list<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu,const bool &is_diag=false){
-                std::vector<cytnx_int64> vin_labels = in_labels;
-                this->Init(bonds,vin_labels,Rowrank,dtype,device,is_diag);
-            }
-            void Init(const std::initializer_list<Bond> &bonds, const std::initializer_list<cytnx_int64> &in_labels={},const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu,const bool &is_diag=false){
-                std::vector<Bond> vbonds = bonds;
-                std::vector<cytnx_int64> vin_labels = in_labels;
-                this->Init(vbonds,vin_labels,Rowrank,dtype,device,is_diag);
-            }
-
-            const cytnx_uint64 Rowrank() const{return this->_impl->Rowrank();}
-            const unsigned int  dtype() const{ return this->_impl->dtype(); }
-            const int          device() const{ return this->_impl->device();   }
-            const std::string      dtype_str() const{ return this->_impl->dtype_str();}
-            const std::string     device_str() const{ return this->_impl->device_str();}
-            const bool     is_contiguous() const{ return this->_impl->is_contiguous();}
-            bool is_diag() const{ return this->_impl->is_diag(); }
-            const bool&     is_braket() const{
-                return this->_impl->is_braket();
-            }
-            const std::vector<cytnx_int64>& labels() const{ return this->_impl->labels();}
-            const std::vector<Bond> &bonds() const {return this->_impl->bonds();}       
-            const std::vector<cytnx_uint64> shape() const{return this->_impl->shape();}
-            const bool      is_blockform() const{ return this->_impl->is_blockform();}
-
-            void to_(const int &device){this->_impl->to_(device);}
-            boost::intrusive_ptr<UniTensor_base> to(const int &device) const{ return this->_impl->to(device);}
-            boost::intrusive_ptr<UniTensor_base> clone() const{return this->_impl->clone();}
-
-    };
-
-     
 
     // real implementation
-    /*
     class UniTensor_impl: public intrusive_ptr_base<UniTensor_impl>{
         private:
             std::vector< Tensor > _blocks;
@@ -290,7 +93,34 @@ namespace cytnx{
                                 
             }
             
+            void Init(const std::intializer_list<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const unsigned int &dtype=3, int device=-1){
+                std::vector<Bond> args = bonds;
+                this->Init(args,in_labels,dtype,device);
+            }
+
+            void Init(const std::vector<Bond> &bonds, const std::initializer_list<cytnx_int64> &in_labels={}, const unsigned int &dtype=3, int device=-1){
+                std::vector<cytnx_int64> args = in_labels;
+                this->Init(bonds,args,dtype,device);
+            }
+
+            void Init(const std::initializer_list<Bond> &bonds, const std::initializer_list<cytnx_int64> &in_labels={},const unsigned int &dtype=3, int device=-1){
+                std::vector<Bond> args_b = bonds;
+                std::vector<cytnx_int64> args_l = in_labels;
+                this->Init(args_b,args_l,dtype,device);
+            }
+
+
+            //copy&assignment constr., use intrusive_ptr's !!
+            UniTensor_impl(const UniTensor_impl &rhs);
+            UniTensor_impl& operator=(UniTensor_impl &rhs);
             
+            const unsigned int&  dtype_id(){ return this->_dtype_id; }
+            const int&          device_id(){ return this->_device;   }
+            std::string             dtype(){ return Type.getname(this->_dtype_id);}
+            std::string            device(){ return Device.getname(this->_device);}
+
+            const bool&     is_contiguous(){ return this->_contiguous;}
+            const bool&      is_blockform(){ return this->_blockform; }
             const std::vector<std::vector<cytnx_uint64> >& _get_mapper(){ return _mapper;}
             std::vector<Tensor>& _get_blocks(){ return this->_blocks;     }
             std::vector<Bond>&     get_bonds(){ return this->_bonds;      }   
@@ -526,9 +356,9 @@ namespace cytnx{
                 return this->_impl->at<T>(args);
             }
     };// class UniTensor
-    
+
     std::ostream& operator<<(std::ostream& os, UniTensor &in);
-    */
+
 }
 
 #endif

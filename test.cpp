@@ -11,8 +11,13 @@ void func(boost::intrusive_ptr<Storage_base> &a){
 typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]){
-    
-    
+
+    vector<cytnx_int64> A(10);
+    for(int i=0;i<10;i++){
+        A[i] = rand()%500;
+    }
+    cout << vec_unique(A) << endl; 
+
 
     //Device.Print_Property();
     /*
