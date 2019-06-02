@@ -82,6 +82,7 @@ namespace cytnx{
             virtual void contiguous_();
             virtual boost::intrusive_ptr<UniTensor_base> contiguous();            
             virtual void print_diagram(const bool &bond_info=false);
+            virtual Tensor get_block(const cytnx_uint64 &idx=0) const;
             virtual Tensor get_block(const std::vector<cytnx_int64> &qnum) const;
             virtual std::vector<Tensor> get_blocks() const;
     };
@@ -144,10 +145,11 @@ namespace cytnx{
                 }
             }
             void print_diagram(const bool &bond_info=false);         
-            Tensor get_block(const std::vector<cytnx_int64> &qnum={}) const{return this->_block;}
+            Tensor get_block(const cytnx_uint64 &idx=0) const{ return this->_block.clone(); }
+            Tensor get_block(const std::vector<cytnx_int64> &qnum) const{return this->_block.clone();}
             std::vector<Tensor> get_blocks() const {
                 std::vector<Tensor> out;
-                out.push_back(this->_block);
+                out.push_back(this->_block.clone());
                 return out; // this will share memory!!
             }
             // end virtual function              
@@ -189,7 +191,8 @@ namespace cytnx{
             void contiguous_(){};
             boost::intrusive_ptr<UniTensor_base> contiguous(){};            
             void print_diagram(const bool &bond_info=false){};
-            Tensor get_block(const std::vector<cytnx_int64> &qnum={}) const{};
+            Tensor get_block(const cytnx_uint64 &idx=0) const{};
+            Tensor get_block(const std::vector<cytnx_int64> &qnum) const{};
             std::vector<Tensor> get_blocks() const {};
             // end virtual func
     };
@@ -312,7 +315,10 @@ namespace cytnx{
             void print_diagram(const bool &bond_info=false){
                this->_impl->print_diagram(bond_info);
             }
-            Tensor get_block(const std::vector<cytnx_int64> &qnum={}) const{
+            Tensor get_block(const cytnx_uint64 &idx=0) const{
+                return this->_impl->get_block(idx);
+            };
+            Tensor get_block(const std::vector<cytnx_int64> &qnum) const{
                 return this->_impl->get_block(qnum);
             }
             std::vector<Tensor> get_blocks() const {
