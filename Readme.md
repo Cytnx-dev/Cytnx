@@ -49,12 +49,12 @@
    
 
 ## Objects:
-    * Storage
-    * Tensor
-    * Bond
-    * Accessor
-    * Symmetry
-    * UniTensor
+    * Storage   [binded]
+    * Tensor    [binded]
+    * Bond      [binded] 
+    * Accessor  [c++ only]
+    * Symmetry  [binded]
+    * UniTensor [x]
 
 ## Feature:
 
