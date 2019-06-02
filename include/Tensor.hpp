@@ -43,17 +43,17 @@ namespace cytnx{
             Tensor_impl(const Tensor_impl &rhs);
             Tensor_impl& operator=(const Tensor_impl &rhs); // add const
             
-            const unsigned int dtype() const{
+            unsigned int dtype() const{
                 return this->_storage.dtype();
             }
-            const int device() const {
+            int device() const {
                 return this->_storage.device();
             }
 
-            const std::string dtype_str() const {
+            std::string dtype_str() const {
                 return Type.getname(this->_storage.dtype());
             }
-            const std::string device_str() const{
+            std::string device_str() const{
                 return Device.getname(this->_storage.device());
             }
 

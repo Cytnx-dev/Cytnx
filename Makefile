@@ -2,14 +2,21 @@ CytnxPATH=.
 CUDA_PATH=/usr/local/cuda
 INCFLAGS :=-I$(CytnxPATH)/include
 
-CC:= g++
-CCFLAGS := -std=c++11 -g -Wformat=0 -fPIC
-LDFLAGS :=  -llapack -lblas
-
-
 GPU_Enable=0
 OMP_Enable=1
 DEBUG_Enable=0
+MKL_Enable=0
+
+ifeq ($(MKL_Enable),1)
+  CC:= icpc
+  CCFLAGS := -std=c++11 -g -Wformat=0 -fPIC -DUNI_MKL 
+  LDFLAGS := -lmkl_ilp64 -lmkl_intel_thread -lmkl_core 
+else
+  CC:= g++
+  CCFLAGS := -std=c++11 -g -Wformat=0 -fPIC
+  LDFLAGS :=  -llapack -lblas
+endif
+
 
 
 NVCC:= $(CUDA_PATH)/bin/nvcc -ccbin $(CC)

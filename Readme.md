@@ -43,7 +43,9 @@
     * compile python wrapper
     $make pyobj -Bj4 <args>
 
-    <args> can be OMP_Enable, GPU_Enable, DEBUG_Enable.
+    <args> can be OMP_Enable, GPU_Enable, DEBUG_Enable, MKL_Enable.
+
+    Note: if MKL_Enable=1, will enforce using icpc as compiler.
    
 
 ## Objects:

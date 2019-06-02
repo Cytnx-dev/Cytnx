@@ -7,13 +7,13 @@ namespace cytnx{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
 
-        const std::vector<cytnx_uint64> UniTensor_base::shape() const{
+        std::vector<cytnx_uint64> UniTensor_base::shape() const{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
-        const bool      UniTensor_base::is_blockform() const{
+        bool      UniTensor_base::is_blockform() const{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
-        const bool     UniTensor_base::is_contiguous() const{
+        bool     UniTensor_base::is_contiguous() const{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
         void UniTensor_base::to_(const int &device){
@@ -25,16 +25,16 @@ namespace cytnx{
         boost::intrusive_ptr<UniTensor_base> UniTensor_base::clone() const{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
-        const unsigned int  UniTensor_base::dtype() const{
+        unsigned int  UniTensor_base::dtype() const{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
-        const int          UniTensor_base::device() const{
+       int          UniTensor_base::device() const{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
-        const std::string      UniTensor_base::dtype_str() const{
+        std::string      UniTensor_base::dtype_str() const{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
-        const std::string     UniTensor_base::device_str() const{
+        std::string     UniTensor_base::device_str() const{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
 

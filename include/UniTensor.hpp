@@ -49,7 +49,7 @@ namespace cytnx{
             UniTensor_base(const UniTensor_base &rhs);
             UniTensor_base& operator=(UniTensor_base &rhs);
 
-            const cytnx_uint64 Rowrank() const{return this->_Rowrank;}
+            cytnx_uint64 Rowrank() const{return this->_Rowrank;}
             bool is_diag() const{ return this->_is_diag; }
             const bool&     is_braket() const{
                 return this->_braket;
@@ -59,16 +59,16 @@ namespace cytnx{
 
 
             virtual void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1,const unsigned int &dtype=Type.Double,const int &device = Device.cpu,const bool &is_diag=false);
-            virtual const std::vector<cytnx_uint64> shape() const;
-            virtual const bool      is_blockform() const ;
-            virtual const bool     is_contiguous() const;
+            virtual std::vector<cytnx_uint64> shape() const;
+            virtual bool      is_blockform() const ;
+            virtual bool     is_contiguous() const;
             virtual void to_(const int &device);
             virtual boost::intrusive_ptr<UniTensor_base> to(const int &device) const;
             virtual boost::intrusive_ptr<UniTensor_base> clone() const;
-            virtual const unsigned int  dtype() const;
-            virtual const int          device() const;
-            virtual const std::string      dtype_str() const;
-            virtual const std::string     device_str() const;
+            virtual unsigned int  dtype() const;
+            virtual int          device() const;
+            virtual std::string      dtype_str() const;
+            virtual std::string     device_str() const;
     };
 
     class DenseUniTensor: public UniTensor_base{
@@ -79,8 +79,8 @@ namespace cytnx{
             // virtual functions
             void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
 
-            const std::vector<cytnx_uint64> shape() const{ return this->_block.shape();}
-            const bool is_blockform() const{ return false;}
+            std::vector<cytnx_uint64> shape() const{ return this->_block.shape();}
+            bool is_blockform() const{ return false;}
             void to_(const int &device){
                 this->_block.to_(device);
             }
@@ -103,11 +103,11 @@ namespace cytnx{
                 boost::intrusive_ptr<UniTensor_base> out(tmp);
                 return out;
             };
-            const bool     is_contiguous() const{return this->_block.is_contiguous();}
-            const unsigned int  dtype() const{return this->_block.dtype();}
-            const int          device() const{return this->_block.device();}
-            const std::string      dtype_str() const{ return Type.getname(this->_block.dtype());}
-            const std::string     device_str() const{ return Device.getname(this->_block.device());}
+            bool     is_contiguous() const{return this->_block.is_contiguous();}
+            unsigned int  dtype() const{return this->_block.dtype();}
+            int          device() const{return this->_block.device();}
+            std::string      dtype_str() const{ return Type.getname(this->_block.dtype());}
+            std::string     device_str() const{ return Device.getname(this->_block.device());}
             // end virtual function              
 
     };
@@ -124,22 +124,22 @@ namespace cytnx{
             // virtual functions
             void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
 
-            const std::vector<cytnx_uint64> shape() const{ 
+            std::vector<cytnx_uint64> shape() const{ 
                 std::vector<cytnx_uint64> out(this->_bonds.size());
                 for(cytnx_uint64 i=0;i<out.size();i++){
                     out[i] = this->_bonds[i].dim();
                 }
                 return out;
             }
-            const bool is_blockform() const{return true;}
+            bool is_blockform() const{return true;}
             void to_(const int &device){};
             boost::intrusive_ptr<UniTensor_base> to(const int &device) const{};
             boost::intrusive_ptr<UniTensor_base> clone() const{};
-            const bool     is_contiguous() const{};
-            const unsigned int  dtype() const{};
-            const int          device() const{};
-            const std::string      dtype_str() const{};
-            const std::string     device_str() const{};
+            bool     is_contiguous() const{};
+            unsigned int  dtype() const{};
+            int          device() const{};
+            std::string      dtype_str() const{};
+            std::string     device_str() const{};
             // end virtual func
     };
 
@@ -186,20 +186,20 @@ namespace cytnx{
                 this->Init(vbonds,vin_labels,Rowrank,dtype,device,is_diag);
             }
 
-            const cytnx_uint64 Rowrank() const{return this->_impl->Rowrank();}
-            const unsigned int  dtype() const{ return this->_impl->dtype(); }
-            const int          device() const{ return this->_impl->device();   }
-            const std::string      dtype_str() const{ return this->_impl->dtype_str();}
-            const std::string     device_str() const{ return this->_impl->device_str();}
-            const bool     is_contiguous() const{ return this->_impl->is_contiguous();}
+            cytnx_uint64 Rowrank() const{return this->_impl->Rowrank();}
+            unsigned int  dtype() const{ return this->_impl->dtype(); }
+            int          device() const{ return this->_impl->device();   }
+            std::string      dtype_str() const{ return this->_impl->dtype_str();}
+            std::string     device_str() const{ return this->_impl->device_str();}
+            bool     is_contiguous() const{ return this->_impl->is_contiguous();}
             bool is_diag() const{ return this->_impl->is_diag(); }
             const bool&     is_braket() const{
                 return this->_impl->is_braket();
             }
             const std::vector<cytnx_int64>& labels() const{ return this->_impl->labels();}
             const std::vector<Bond> &bonds() const {return this->_impl->bonds();}       
-            const std::vector<cytnx_uint64> shape() const{return this->_impl->shape();}
-            const bool      is_blockform() const{ return this->_impl->is_blockform();}
+            std::vector<cytnx_uint64> shape() const{return this->_impl->shape();}
+            bool      is_blockform() const{ return this->_impl->is_blockform();}
 
             void to_(const int &device){this->_impl->to_(device);}
             boost::intrusive_ptr<UniTensor_base> to(const int &device) const{ return this->_impl->to(device);}
