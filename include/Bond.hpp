@@ -74,6 +74,9 @@ namespace cytnx{
                 this->_impl->Init(dim,bd_type,in_qnums,in_syms);
             };
 
+            Bond(const Bond&rhs){this->_impl = rhs._impl;}
+            Bond& operator=(const Bond &rhs){this->_impl = rhs._impl; return *this;}
+
             bondType                                type() const{return this->_impl->type();};
             std::vector<std::vector<cytnx_int64> > qnums() const{return this->_impl->qnums();};
             cytnx_uint64                             dim() const{return this->_impl->dim();};

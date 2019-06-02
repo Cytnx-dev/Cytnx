@@ -20,9 +20,11 @@ namespace cytnx{
         protected:
             std::vector< Bond > _bonds;
             std::vector<cytnx_int64> _labels;
-            bool _braket;
+            bool _is_braket_form;
+            bool _is_tag;
             cytnx_int64 _Rowrank;
             bool _is_diag;
+            std::string _name;
 
             bool _update_braket(){
                 if(_bonds.size()==0) return false;
@@ -42,8 +44,9 @@ namespace cytnx{
                 }
             }
 
+
         public:
-            UniTensor_base(): _braket(false), _Rowrank(-1), _is_diag(false){};
+            UniTensor_base(): _is_tag(false), _name(std::string("")), _is_braket_form(false), _Rowrank(-1), _is_diag(false){};
 
             //copy&assignment constr., use intrusive_ptr's !!
             UniTensor_base(const UniTensor_base &rhs);
@@ -51,12 +54,16 @@ namespace cytnx{
 
             cytnx_uint64 Rowrank() const{return this->_Rowrank;}
             bool is_diag() const{ return this->_is_diag; }
-            const bool&     is_braket() const{
-                return this->_braket;
+            const bool&     is_braket_form() const{
+                return this->_is_braket_form;
+            }
+            const bool& is_tag() const{
+                return this->_is_tag;
             }
             const std::vector<cytnx_int64>& labels() const{ return this->_labels;}
             const std::vector<Bond> &bonds() const {return this->_bonds;}       
-
+            const std::string& name() const { return this->_name;}
+            void set_name(const std::string &in){ this->_name = in;}
 
             virtual void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1,const unsigned int &dtype=Type.Double,const int &device = Device.cpu,const bool &is_diag=false);
             virtual std::vector<cytnx_uint64> shape() const;
@@ -69,9 +76,11 @@ namespace cytnx{
             virtual int          device() const;
             virtual std::string      dtype_str() const;
             virtual std::string     device_str() const;
-            virtual boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank=-1);
-            virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank=-1);
-            
+            virtual boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank=-1, const bool &by_label=false);
+            virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank=-1, const bool &by_label=false);
+            virtual void contiguous_();
+            virtual boost::intrusive_ptr<UniTensor_base> contiguous();            
+            virtual void print_diagram(const bool &bond_info=false);
 
     };
 
@@ -80,6 +89,17 @@ namespace cytnx{
     class DenseUniTensor: public UniTensor_base{
         protected:
             Tensor _block;
+            DenseUniTensor* clone_meta() const{
+                DenseUniTensor* tmp = new DenseUniTensor();
+                tmp->_bonds = vec_clone(this->_bonds);
+                tmp->_labels = this->_labels;
+                tmp->_is_braket_form = this->_is_braket_form;
+                tmp->_Rowrank = this->_Rowrank;
+                tmp->_is_diag = this->_is_diag;
+                tmp->_name = this->_name;
+                tmp->_is_tag = this->_is_tag; 
+                return tmp;
+            }
         public:
 
             // virtual functions
@@ -96,16 +116,8 @@ namespace cytnx{
                 return out;    
             }
             boost::intrusive_ptr<UniTensor_base> clone() const{
-                //boost::intrusive_ptr<DenseUniTensor> out(new DenseUniTensor());
-                DenseUniTensor* tmp = new DenseUniTensor();
-
+                DenseUniTensor* tmp = this->clone_meta();
                 tmp->_block = this->_block.clone();
-                tmp->_bonds = vec_clone(this->_bonds);
-                tmp->_labels = this->_labels;
-                tmp->_braket = this->_braket;
-                tmp->_Rowrank = this->_Rowrank;
-                tmp->_is_diag = this->_is_diag;
-                
                 boost::intrusive_ptr<UniTensor_base> out(tmp);
                 return out;
             };
@@ -114,9 +126,22 @@ namespace cytnx{
             int          device() const{return this->_block.device();}
             std::string      dtype_str() const{ return Type.getname(this->_block.dtype());}
             std::string     device_str() const{ return Device.getname(this->_block.device());}
-            boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank=-1);
-            void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank=-1);
-
+            boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank=-1,const bool &by_label=false);
+            void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank=-1, const bool &by_label=false);
+            void contiguous_(){ this->_block.contiguous_();}
+            boost::intrusive_ptr<UniTensor_base> contiguous(){
+                // if contiguous then return self! 
+                if(this->is_contiguous()){
+                    boost::intrusive_ptr<UniTensor_base> out(this);
+                    return out;
+                }else{
+                    DenseUniTensor* tmp = this->clone_meta();
+                    tmp->_block = this->_block.contiguous();
+                    boost::intrusive_ptr<UniTensor_base> out(tmp);
+                    return out;
+                }
+            }
+            void print_diagram(const bool &bond_info=false);         
             // end virtual function              
 
     };
@@ -128,6 +153,7 @@ namespace cytnx{
             std::vector<cytnx_uint64> _inv_mapper;
             bool _contiguous;
             
+            //boost::intrusive_ptr<UniTensor_base> clone_meta() const{};
         
         public:
             // virtual functions
@@ -149,8 +175,11 @@ namespace cytnx{
             int          device() const{};
             std::string      dtype_str() const{};
             std::string     device_str() const{};
-            boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank=-1){};
-            void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank=-1){};
+            boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank=-1, const bool &by_label=false){};
+            void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank=-1,const bool &by_label=false){};
+            void contiguous_(){};
+            boost::intrusive_ptr<UniTensor_base> contiguous(){};            
+            void print_diagram(const bool &bond_info=false){};
             // end virtual func
     };
 
@@ -163,7 +192,16 @@ namespace cytnx{
 
         public:
             UniTensor(): _impl(new UniTensor_base()){};
-            
+            UniTensor(const UniTensor &rhs){
+                this->_impl = rhs._impl;
+            }            
+            UniTensor& operator=(const UniTensor &rhs){
+                this->_impl = rhs._impl;
+                return *this;
+            }
+
+
+
             void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false){
 
                 // checking type:
@@ -199,15 +237,21 @@ namespace cytnx{
                 this->Init(vbonds,vin_labels,Rowrank,dtype,device,is_diag);
             }
 
+            void set_name(const std::string &in){
+                this->_impl->set_name(in);
+            }
+
             cytnx_uint64 Rowrank() const{return this->_impl->Rowrank();}
             unsigned int  dtype() const{ return this->_impl->dtype(); }
             int          device() const{ return this->_impl->device();   }
+            std::string name() const { return this->_impl->name();}
             std::string      dtype_str() const{ return this->_impl->dtype_str();}
             std::string     device_str() const{ return this->_impl->device_str();}
             bool     is_contiguous() const{ return this->_impl->is_contiguous();}
             bool is_diag() const{ return this->_impl->is_diag(); }
-            const bool&     is_braket() const{
-                return this->_impl->is_braket();
+            bool is_tag() const { return this->_impl->is_tag();}
+            const bool&     is_braket_form() const{
+                return this->_impl->is_braket_form();
             }
             const std::vector<cytnx_int64>& labels() const{ return this->_impl->labels();}
             const std::vector<Bond> &bonds() const {return this->_impl->bonds();}       
@@ -215,12 +259,34 @@ namespace cytnx{
             bool      is_blockform() const{ return this->_impl->is_blockform();}
 
             void to_(const int &device){this->_impl->to_(device);}
-            boost::intrusive_ptr<UniTensor_base> to(const int &device) const{ return this->_impl->to(device);}
-            boost::intrusive_ptr<UniTensor_base> clone() const{return this->_impl->clone();}
-
+            UniTensor to(const int &device) const{ 
+                UniTensor out;
+                out._impl = this->_impl->to(device);
+                return out;
+            }
+            UniTensor clone() const{
+                UniTensor out;
+                out._impl = this->_impl->clone();
+                return out;
+            }
+            UniTensor permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank=-1,const bool &by_label=false){UniTensor out; out._impl = this->_impl->permute(mapper,Rowrank,by_label); return out;}
+            void permute_(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank=-1,const bool &by_label=false){
+                this->_impl->permute_(mapper,Rowrank,by_label);
+            }
+            UniTensor contiguous(){
+                UniTensor out;
+                out._impl = this->_impl->contiguous();
+                return out;
+            }
+            void contiguous_(){
+                this->_impl->contiguous_();
+            }
+            void print_diagram(const bool &bond_info=false){
+               this->_impl->print_diagram(bond_info);
+            }
     };
 
-     
+    //std::ostream& operator<<(std::ostream& os, UniTensor &in);
 
     // real implementation
     /*
@@ -540,7 +606,6 @@ namespace cytnx{
             }
     };// class UniTensor
     
-    std::ostream& operator<<(std::ostream& os, UniTensor &in);
     */
 }
 

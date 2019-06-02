@@ -20,10 +20,10 @@ int main(int argc, char *argv[]){
 
 
     //Device.Print_Property();
-    /*
-    boost::intrusive_ptr<Storage_base> array1(new FloatStorage() );
-    boost::intrusive_ptr<Storage_base> array2(new Storage_base() );
-    boost::intrusive_ptr<Storage_base> array3(new Storage_base() );
+    
+   /* 
+    //boost::intrusive_ptr<Storage_base> array2(new Storage_base() );
+    //boost::intrusive_ptr<Storage_base> array3(new Storage_base() );
 
 
     array1->Init(4);
