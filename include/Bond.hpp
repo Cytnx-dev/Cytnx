@@ -29,17 +29,17 @@ namespace cytnx{
             //Bond_impl(const cytnx_uint64 &dim, const std::initializer_list<std::initializer_list<cytnx_int64> > &in_qnums, const std::initializer_list<Symmetry> &in_syms={}, const bondType &bd_type=bondType::BD_REG);
             //Bond_impl(const cytnx_uint64 &dim, const std::vector<std::vector<cytnx_int64> > &in_qnums, const std::vector<Symmetry> &in_syms={}, const bondType &bd_type=bondType::BD_REG);
 
-            void Init(const cytnx_uint64 &dim, const std::vector<std::vector<cytnx_int64> > &in_qnums = {{}}, const std::vector<Symmetry> &in_syms={}, const bondType &bd_type=bondType::BD_REG);
+            void Init(const cytnx_uint64 &dim, const bondType &bd_type=bondType::BD_REG, const std::vector<std::vector<cytnx_int64> > &in_qnums = {}, const std::vector<Symmetry> &in_syms={});
 
-            void Init(const cytnx_uint64 &dim, const std::initializer_list<std::initializer_list<cytnx_int64> > &in_qnums = {{}}, const std::initializer_list<Symmetry> &in_syms={}, const bondType &bd_type=bondType::BD_REG);
+            //void Init(const cytnx_uint64 &dim, const std::initializer_list<std::initializer_list<cytnx_int64> > &in_qnums = {{}}, const std::initializer_list<Symmetry> &in_syms={}, const bondType &bd_type=bondType::BD_REG);
 
 
 
-            bondType                                type() const& {return this->_type;};
-            std::vector<std::vector<cytnx_int64> > qnums() const& {return this->_qnums;};
-            cytnx_uint64                             dim() const &{return this->_dim;};
-            cytnx_uint32                            Nsym() const &{return this->_syms.size();};
-            std::vector<Symmetry>                   syms() const &{return vec_clone(this->_syms);};
+            bondType                                type() const{return this->_type;};
+            const std::vector<std::vector<cytnx_int64> >& qnums() const{return this->_qnums;}
+            const cytnx_uint64&                             dim() const{return this->_dim;}
+            cytnx_uint32                           Nsym() const{return this->_syms.size();}
+            std::vector<Symmetry>                   syms() const{return vec_clone(this->_syms);}
 
 
             void set_type(const bondType &new_bondType){
@@ -70,11 +70,8 @@ namespace cytnx{
         public:
             boost::intrusive_ptr<Bond_impl> _impl;
             Bond(): _impl(new Bond_impl()){};
-            Bond(const cytnx_uint64 &dim, const std::initializer_list<std::initializer_list<cytnx_int64> > &in_qnums={}, const std::initializer_list<Symmetry> &in_syms={}, const bondType &bd_type=bondType::BD_REG): _impl(new Bond_impl()){
-                this->_impl->Init(dim,in_qnums,in_syms,bd_type);
-            };
-            Bond(const cytnx_uint64 &dim, const std::vector<std::vector<cytnx_int64> > &in_qnums={}, const std::vector<Symmetry> &in_syms={}, const bondType &bd_type=bondType::BD_REG): _impl(new Bond_impl()){
-                this->_impl->Init(dim,in_qnums,in_syms,bd_type);
+            Bond(const cytnx_uint64 &dim, const bondType &bd_type=bondType::BD_REG, const std::vector<std::vector<cytnx_int64> > &in_qnums={}, const std::vector<Symmetry> &in_syms={}): _impl(new Bond_impl()){
+                this->_impl->Init(dim,bd_type,in_qnums,in_syms);
             };
 
             bondType                                type() const& {return this->_impl->type();};

@@ -126,42 +126,25 @@ int main(int argc, char *argv[]){
     cout << Zp;
     Zp.set({ac::all(),ac::range(1,3)}, 4);
     cout << Zp;
-    return 0;
-/*
-    //Tensor t;
-    //t.Init({3,4,5},Type.Double,Device.cpu); 
-    Tensor t({3,4,5},Type.Double,Device.cpu);
-    Tensor v = t;
-    v.at<double>({2,1,3}) = 1;
-    cout << t << endl;
-    return 0;
-    t.permute_({1,0,2});
-    cout << t << endl;
-    cout << t.is_contiguous() << endl;
-    
-    //t.permute_({1,0,2});
-    //cout << t << endl;
-    //cout << t.is_contiguous() << endl;
 
-    t.Contiguous_();
-    cout << t<< endl;
-    cout << t.is_contiguous() << endl;
-    t.Reshape_({2,3,2,5});
-    cout << t << endl;
-    cout << t.shape() << endl;
-
-    t.to_(Device.cpu);
-    cout << t << endl;
-    Bond bd_in = Bond(3,{{0, 1,-1, 4},
-                         {0, 2,-1,-4},
-                         {1, 0, 2, 2}}
-                       ,{Symmetry(SymType.Z,2),
-                         Symmetry(SymType.Z,3),
-                         Symmetry(SymType.U),
-                         Symmetry(SymType.U)}
-                       ,bondType::BD_KET);
+    Bond bd_in = Bond(3,BD_KET,{{0, 1,-1, 4},
+                                {0, 2,-1,-4},
+                                {1, 0, 2, 2}}
+                              ,{Symmetry::Zn(2),
+                                Symmetry::Zn(3),
+                                Symmetry::U1(),
+                                Symmetry::U1()});
 
     cout << bd_in << endl;
-    */
+
+    Bond bd_r = Bond(10);
+    cout << bd_r << endl;
+    
+    Bond bd_l = Bond(10,BD_KET);
+    cout << bd_l << endl;
+
+    Bond bd_dqu1 = Bond(3, BD_BRA,{{0,2},{1,2},{3,3}});
+    cout << bd_dqu1 << endl;
+
     return 0;
 }

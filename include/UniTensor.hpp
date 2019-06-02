@@ -69,8 +69,14 @@ namespace cytnx{
             virtual int          device() const;
             virtual std::string      dtype_str() const;
             virtual std::string     device_str() const;
+            virtual boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank=-1);
+            virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank=-1);
+            
+
     };
 
+
+    //======================================================================
     class DenseUniTensor: public UniTensor_base{
         protected:
             Tensor _block;
@@ -108,10 +114,13 @@ namespace cytnx{
             int          device() const{return this->_block.device();}
             std::string      dtype_str() const{ return Type.getname(this->_block.dtype());}
             std::string     device_str() const{ return Device.getname(this->_block.device());}
+            boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank=-1);
+            void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank=-1);
+
             // end virtual function              
 
     };
-
+    //======================================================================
     class SparseUniTensor: public UniTensor_base{
         protected:
             std::vector<Tensor> _blocks;
@@ -140,9 +149,13 @@ namespace cytnx{
             int          device() const{};
             std::string      dtype_str() const{};
             std::string     device_str() const{};
+            boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank=-1){};
+            void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank=-1){};
             // end virtual func
     };
 
+    //======================================================================
+    //======================================================================
     //wrapper:
     class UniTensor{
         private:

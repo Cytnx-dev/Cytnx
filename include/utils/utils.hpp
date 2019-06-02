@@ -5,6 +5,7 @@
 #include "is.hpp"
 #include "vec_clone.hpp"
 #include "vec_unique.hpp"
+#include "vec_map.hpp"
 /// Helper function to print vector with ODT:
 #include <vector>
 #include <iostream>

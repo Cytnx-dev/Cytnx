@@ -80,7 +80,34 @@ namespace cytnx{
                 }          
     }
 
+    boost::intrusive_ptr<UniTensor_base> DenseUniTensor::permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank){
+        boost::intrusive_ptr<UniTensor_base> out = this->clone();
+        out->permute_(mapper,Rowrank);
+        return out;
+    }
+    void DenseUniTensor::permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank){
+        std::vector<cytnx_uint64> mapper_u64(mapper.begin(),mapper.end());
+        if(this->_is_diag){
+            if(Rowrank>=0){
+                cytnx_error_msg(Rowrank!=1,"[ERROR] Rowrank should be =1 for UniTensor with is_diag=true%s","\n");
+            }
+            this->_bonds = vec_map(vec_clone(this->bonds()),mapper_u64);// this will check validity
+            this->_labels = vec_map(this->labels(),mapper_u64);
+            this->_update_braket();
 
+        }else{
+            
+            this->_bonds = vec_map(vec_clone(this->bonds()),mapper_u64);// this will check validity
+            this->_labels = vec_map(this->labels(),mapper_u64);
+            this->_block.permute_(mapper_u64);
+            if(Rowrank>=0){
+                cytnx_error_msg(Rowrank>=this->_bonds.size(),"[ERROR] Rowrank cannot exceed the rank of UniTensor.%s","\n");
+                this->_Rowrank = Rowrank;
+            }
+            this->_update_braket();
+        }
+
+    };
 
 
 

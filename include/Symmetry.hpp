@@ -50,7 +50,7 @@ namespace cytnx{
             void Init(const int &n){
                 this->stype_id = SymType.U;      
                 this->n = n;
-                if(n!=0) cytnx_error_msg(1,"%s","[ERROR] U1Symmetry should set n = 0");
+                if(n!=1) cytnx_error_msg(1,"%s","[ERROR] U1Symmetry should set n = 1");
             }        
             boost::intrusive_ptr<Symmetry_base> clone(){
                 boost::intrusive_ptr<Symmetry_base> out(new U1Symmetry(this->n));
@@ -89,7 +89,7 @@ namespace cytnx{
 
             // genenrators:
             static Symmetry U1(){
-                return Symmetry(SymType.U);
+                return Symmetry(SymType.U,1);
             }
             static Symmetry Zn(const int &n){
                 return Symmetry(SymType.Z,n);
@@ -123,7 +123,7 @@ namespace cytnx{
 
             void Init(const int &stype=-1, const int &n=0){
                 if(stype==SymType.U){
-                    boost::intrusive_ptr<Symmetry_base> tmp(new U1Symmetry(n));
+                    boost::intrusive_ptr<Symmetry_base> tmp(new U1Symmetry(1));
                     this->_impl = tmp;
                 }else if(stype==SymType.Z){
                     boost::intrusive_ptr<Symmetry_base> tmp(new ZnSymmetry(n));
