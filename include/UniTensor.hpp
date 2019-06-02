@@ -81,7 +81,8 @@ namespace cytnx{
             virtual void contiguous_();
             virtual boost::intrusive_ptr<UniTensor_base> contiguous();            
             virtual void print_diagram(const bool &bond_info=false);
-
+            virtual Tensor get_block(const std::vector<cytnx_int64> &qnum) const;
+            virtual std::vector<Tensor> get_blocks() const;
     };
 
 
@@ -142,6 +143,12 @@ namespace cytnx{
                 }
             }
             void print_diagram(const bool &bond_info=false);         
+            Tensor get_block(const std::vector<cytnx_int64> &qnum={}) const{return this->_block;}
+            std::vector<Tensor> get_blocks() const {
+                std::vector<Tensor> out;
+                out.push_back(this->_block);
+                return out; // this will share memory!!
+            }
             // end virtual function              
 
     };
@@ -180,6 +187,8 @@ namespace cytnx{
             void contiguous_(){};
             boost::intrusive_ptr<UniTensor_base> contiguous(){};            
             void print_diagram(const bool &bond_info=false){};
+            Tensor get_block(const std::vector<cytnx_int64> &qnum={}) const{};
+            std::vector<Tensor> get_blocks() const {};
             // end virtual func
     };
 
@@ -286,9 +295,15 @@ namespace cytnx{
             void print_diagram(const bool &bond_info=false){
                this->_impl->print_diagram(bond_info);
             }
+            Tensor get_block(const std::vector<cytnx_int64> &qnum={}) const{
+                return this->_impl->get_block(qnum);
+            }
+            std::vector<Tensor> get_blocks() const {
+                return this->_impl->get_blocks();
+            }
     };
 
-    //std::ostream& operator<<(std::ostream& os, UniTensor &in);
+    std::ostream& operator<<(std::ostream& os, const UniTensor &in);
 
     // real implementation
     /*

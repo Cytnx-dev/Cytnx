@@ -21,11 +21,10 @@ int main(int argc, char *argv[]){
 
     //Device.Print_Property();
     
-   /* 
-    //boost::intrusive_ptr<Storage_base> array2(new Storage_base() );
+    
     //boost::intrusive_ptr<Storage_base> array3(new Storage_base() );
 
-
+    /*
     array1->Init(4);
     array1->to_(Device.cuda); 
     array2->Init(4);  
@@ -152,6 +151,6 @@ int main(int argc, char *argv[]){
 
     UniTensor ut1({bd_1,bd_2,bd_3},{},2,Type.Double,Device.cpu);
     ut1.print_diagram(true); 
-
+    cout << ut1 << endl;
     return 0;
 }

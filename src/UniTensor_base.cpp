@@ -1,5 +1,5 @@
 #include "UniTensor.hpp"
-
+#include "Tensor.hpp"
 namespace cytnx{
 
 
@@ -54,6 +54,33 @@ namespace cytnx{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
 
+
+        Tensor UniTensor_base::get_block(const std::vector<cytnx_int64> &qnum) const{
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+        }
+        std::vector<Tensor> UniTensor_base::get_blocks() const{
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+        }
+
+        std::ostream& operator<<(std::ostream& os, const UniTensor &in){
+            printf("Tensor name: %s\n",in.name().c_str());
+            if(!in.is_tag()) 
+                printf("braket_form : %s\n", in.is_braket_form()?"True":"False");
+            
+            if(in.is_blockform()){
+                std::vector<Tensor> tmp = in.get_blocks();
+                for(cytnx_uint64 i=0;i<tmp.size();i++)
+                    os << tmp[i] << std::endl;
+                
+            }else{
+                printf("is_diag    : %s\n",in.is_diag()?"True":"False");
+                Tensor tmp = in.get_block();
+                os << tmp << std::endl;     
+            }         
+
+            return os;
+        }
+        
 
 }
 
