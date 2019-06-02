@@ -127,6 +127,14 @@ PYBIND11_MODULE(cytnx,m){
                 std::cout << self << std::endl;
                 return std::string("");
              })
+            .def("type",&cytnx::Bond::type)
+            .def("qnums",&cytnx::Bond::qnums)
+            .def("dim", &cytnx::Bond::dim)
+            .def("Nsym", &cytnx::Bond::Nsym)
+            .def("syms", &cytnx::Bond::syms)
+            .def("set_type", &cytnx::Bond::set_type)
+            .def("clear_type", &cytnx::Bond::clear_type)
+            .def("clone", &cytnx::Bond::clone)
             ;
     
 

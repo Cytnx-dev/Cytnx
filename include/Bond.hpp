@@ -74,11 +74,11 @@ namespace cytnx{
                 this->_impl->Init(dim,bd_type,in_qnums,in_syms);
             };
 
-            bondType                                type() const& {return this->_impl->type();};
-            std::vector<std::vector<cytnx_int64> > qnums() const& {return this->_impl->qnums();};
-            cytnx_uint64                             dim() const &{return this->_impl->dim();};
-            cytnx_uint32                            Nsym() const &{return this->_impl->syms().size();};
-            std::vector<Symmetry>                   syms() const &{return this->_impl->syms();};
+            bondType                                type() const{return this->_impl->type();};
+            std::vector<std::vector<cytnx_int64> > qnums() const{return this->_impl->qnums();};
+            cytnx_uint64                             dim() const{return this->_impl->dim();};
+            cytnx_uint32                            Nsym() const{return this->_impl->syms().size();};
+            std::vector<Symmetry>                   syms() const{return this->_impl->syms();};
 
 
             void set_type(const bondType &new_bondType){
