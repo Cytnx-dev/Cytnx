@@ -152,8 +152,9 @@
 ```c++
             typedef Accessor ac;
             Tensor A({3,4,5},Type.Double);
-            Tensor out = A.get_elems({ac(0),ac::all(),ac::range(1,4)}); 
+            Tensor out = A.get({ac(0),ac::all(),ac::range(1,4)}); 
             // equivalent to python: out = A[0,:,1:4]
+            
 ```
 
 
