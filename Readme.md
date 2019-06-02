@@ -137,10 +137,10 @@
         * Use Contiguous() when needed to actual moving the memory layout.
 ```c++
             Tensor A({3,4,5,2},Type.Double);
-            A.permute({0,3,1,2}); // this will not change the memory, only the shape info is changed.
+            A.permute_({0,3,1,2}); // this will not change the memory, only the shape info is changed.
             cout << A.is_contiguous() << endl; // this will be false!
 
-            A.Contiguous_(); // call Configuous() to actually move the memory.
+            A.contiguous_(); // call Configuous() to actually move the memory.
             cout << A.is_contiguous() << endl; // this will be true!
 ```
 
