@@ -185,8 +185,8 @@ namespace cytnx{
                 }else{
                     memset(l,0,sizeof(char)*40);
                     memset(llbl,0,sizeof(char)*40);
-                    sprintf(l,"        %s","\n");
-                    sprintf(llbl,"   %s","\n");
+                    sprintf(l,"%s","        ");
+                    sprintf(llbl,"%s","   ");
                 }
                 if(i<Nout){
                     bks = "__";
@@ -197,8 +197,8 @@ namespace cytnx{
                 }else{
                     memset(r,0,sizeof(char)*40);
                     memset(rlbl,0,sizeof(char)*40);
-                    sprintf(r,"        %s","\n");
-                    sprintf(rlbl,"   %s","\n");
+                    sprintf(r,"%s","        ");
+                    sprintf(rlbl,"%s","   ");
                 }
                 printf("   %s| %s     %s |%s\n",l,llbl,rlbl,r);
             }

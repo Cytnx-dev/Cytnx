@@ -146,5 +146,12 @@ int main(int argc, char *argv[]){
     Bond bd_dqu1 = Bond(3, BD_BRA,{{0,2},{1,2},{3,3}});
     cout << bd_dqu1 << endl;
 
+    Bond bd_1 = Bond(3);
+    Bond bd_2 = Bond(2);
+    Bond bd_3 = Bond(4);
+
+    UniTensor ut1({bd_1,bd_2,bd_3},{},2,Type.Double,Device.cpu);
+    ut1.print_diagram(true); 
+
     return 0;
 }

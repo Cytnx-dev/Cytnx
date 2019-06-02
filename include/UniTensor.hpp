@@ -200,7 +200,9 @@ namespace cytnx{
                 return *this;
             }
 
-
+            UniTensor(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false){
+                this->Init(bonds,in_labels,Rowrank,dtype,device,is_diag);
+            }
 
             void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false){
 
