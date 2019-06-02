@@ -12,6 +12,11 @@
 namespace cytnx{
     namespace utils_internal{
         std::vector<cytnx_uint64> range_cpu(const cytnx_uint64 &len);
+
+        template<class T>
+        std::vector<T> range_cpu(const T &len);
+
+
     }
 }
 #endif

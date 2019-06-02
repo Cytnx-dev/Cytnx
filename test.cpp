@@ -152,5 +152,14 @@ int main(int argc, char *argv[]){
     UniTensor ut1({bd_1,bd_2,bd_3},{},2,Type.Double,Device.cpu);
     ut1.print_diagram(true); 
     cout << ut1 << endl;
+    Tensor sss = ut1.get_block();
+    cout << sss << endl;
+    sss.at<double>({0,0,0}) = 3;
+    cout << ut1 << endl;
+       
+    UniTensor re(sss.clone(),2);
+    cout << re << endl;
+    
+     
     return 0;
 }

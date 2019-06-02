@@ -18,5 +18,19 @@ namespace cytnx{
             return out;
         }
 
+
+        template<>
+        vector<cytnx_int64> range_cpu<cytnx_int64>(const cytnx_int64 &len){
+            vector<cytnx_int64> out(len);
+            #ifdef UNI_OMP
+            #pragma omp parallel for schedule(dynamic)
+            #endif
+            for(cytnx_int64 i=0;i<len;i++){
+                out[i] = i;
+            }
+            return out;
+        }
+
+
     }//namespace utils_internal
 }//namespace cytnx

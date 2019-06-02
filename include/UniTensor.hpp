@@ -46,6 +46,7 @@ namespace cytnx{
 
 
         public:
+            friend class UniTensor; // allow wrapper to access the private elems
             UniTensor_base(): _is_tag(false), _name(std::string("")), _is_braket_form(false), _Rowrank(-1), _is_diag(false){};
 
             //copy&assignment constr., use intrusive_ptr's !!
@@ -102,7 +103,7 @@ namespace cytnx{
                 return tmp;
             }
         public:
-
+            friend class UniTensor; // allow wrapper to access the private elems
             // virtual functions
             void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
 
@@ -163,6 +164,7 @@ namespace cytnx{
             //boost::intrusive_ptr<UniTensor_base> clone_meta() const{};
         
         public:
+            friend class UniTensor; // allow wrapper to access the private elems
             // virtual functions
             void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
 
@@ -208,6 +210,21 @@ namespace cytnx{
                 this->_impl = rhs._impl;
                 return *this;
             }
+
+            UniTensor(const Tensor &in_tensor, const cytnx_uint64 &Rowrank){
+                std::vector<Bond> bds;
+                for(cytnx_uint64 i=0;i<in_tensor.shape().size();i++){
+                    bds.push_back(Bond(in_tensor.shape()[i]));
+                }
+                DenseUniTensor* tmp = new DenseUniTensor();
+                tmp->_block = in_tensor;
+                tmp->_labels = utils_internal::range_cpu<cytnx_int64>(in_tensor.shape().size());
+                tmp->_Rowrank = Rowrank;
+                boost::intrusive_ptr<UniTensor_base> out(tmp);
+                this->_impl = out;
+
+            }
+
 
             UniTensor(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false){
                 this->Init(bonds,in_labels,Rowrank,dtype,device,is_diag);
