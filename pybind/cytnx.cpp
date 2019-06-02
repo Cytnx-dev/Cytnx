@@ -80,7 +80,13 @@ PYBIND11_MODULE(cytnx,m){
         .value("Z",cytnx::__sym::__stype::Z)
         .value("U",cytnx::__sym::__stype::U)
         .export_values();
-
+    
+    py::enum_<cytnx::bondType>(m,"bondType")
+        .value("BD_BRA", cytnx::bondType::BD_BRA)
+        .value("BD_KET", cytnx::bondType::BD_KET)
+        .value("BD_REG", cytnx::bondType::BD_REG)
+        .export_values();
+    
 
     m.def("zeros",[](const cytnx_uint64 &Nelem, const unsigned int &dtype, const int &device)->Tensor{
                         return cytnx::zeros(Nelem,dtype,device);
@@ -110,7 +116,19 @@ PYBIND11_MODULE(cytnx,m){
                 .def("stype", &cytnx::Symmetry::stype)
                 .def("stype_str", &cytnx::Symmetry::stype_str)
                 .def("n",&cytnx::Symmetry::n)
+                .def("clone",&cytnx::Symmetry::clone)
                 ;
+
+    py::class_<cytnx::Bond>(m,"Bond")
+            //construction
+            .def(py::init<>())
+            .def(py::init<const cytnx_uint64 &, const bondType &, const std::vector<std::vector<cytnx_int64> > &, const std::vector<cytnx::Symmetry>& >(),py::arg("dim"),py::arg("bond_type")=cytnx::bondType::BD_REG,py::arg("qnums")=std::vector<std::vector<cytnx_int64> >(),py::arg("symmetries")=std::vector<Symmetry>())
+            .def("__repr__",[](cytnx::Bond &self){
+                std::cout << self << std::endl;
+                return std::string("");
+             })
+            ;
+    
 
 
     py::class_<cytnx::Storage>(m,"Storage")
