@@ -5,12 +5,12 @@ INCFLAGS :=-I$(CytnxPATH)/include
 GPU_Enable=0
 OMP_Enable=1
 DEBUG_Enable=0
-MKL_Enable=0
+MKL_Enable=1
 
 ifeq ($(MKL_Enable),1)
   CC:= icpc
   CCFLAGS := -std=c++11 -g -Wformat=0 -fPIC -DUNI_MKL 
-  LDFLAGS := -lmkl_ilp64 -lmkl_intel_thread -lmkl_core 
+  LDFLAGS := -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5 -ldl
 else
   CC:= g++
   CCFLAGS := -std=c++11 -g -Wformat=0 -fPIC
@@ -351,7 +351,7 @@ example.o: example/example.cpp
 .phony : clean cleanpy
 
 clean:
-	rm *.o test
+	rm *.o test *.so
 
 cleanpy:
 	rm *.so

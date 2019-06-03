@@ -287,8 +287,8 @@ namespace cytnx{
                 this->Init(shape,dtype,device);
             }
 
-            const unsigned int dtype() const {return this->_impl->dtype();}
-            const int device() const { return this->_impl->device();}
+            unsigned int dtype() const {return this->_impl->dtype();}
+            int device() const { return this->_impl->device();}
             const std::string dtype_str() const { return this->_impl->dtype_str();}
             const std::string device_str() const{ return this->_impl->device_str();}
 

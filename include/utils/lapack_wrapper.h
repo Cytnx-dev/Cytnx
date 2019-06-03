@@ -6,6 +6,8 @@
 #include <complex>
 #include <complex.h>
 #include <algorithm>
+#include "Type.hpp"
+
 
 #ifdef UNI_MKL
     #include <mkl.h>
