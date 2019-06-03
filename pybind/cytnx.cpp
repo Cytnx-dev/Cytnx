@@ -226,7 +226,7 @@ PYBIND11_MODULE(cytnx,m){
                 //construction
                 .def(py::init<>())
                 .def(py::init<const cytnx::Tensor&>())
-                .def(py::init<const std::vector<cytnx::cytnx_uint64>&, const unsigned int&, int>(),py::arg("size"), py::arg("dtype"),py::arg("device")=-1)
+                .def(py::init<const std::vector<cytnx::cytnx_uint64>&, const unsigned int&, int>(),py::arg("size"), py::arg("dtype")=Type.Double,py::arg("device")=Device.cpu)
                 .def_property_readonly("dtype",&cytnx::Tensor::dtype)
                 .def_property_readonly("dtype_str",&cytnx::Tensor::dtype_str)
                 .def_property_readonly("device",&cytnx::Tensor::device)
