@@ -38,7 +38,7 @@ namespace cytnx{
         public:
             Tensor_impl(): _contiguous(true){};
 
-            void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype, int device=-1);
+            void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype=Type.Double, const int device=-1);
 
             //clone&assignment constr., use intrusive_ptr's
             Tensor_impl(const Tensor_impl &rhs);
@@ -254,7 +254,7 @@ namespace cytnx{
         public:
 
             boost::intrusive_ptr<Tensor_impl> _impl;
-            Tensor():_impl(new Tensor_impl()){};
+            Tensor(): _impl(new Tensor_impl()){};
             Tensor(const Tensor &rhs){
                 _impl = rhs._impl;
             }
@@ -279,11 +279,13 @@ namespace cytnx{
             #### output>
             \verbinclude example/Tensor/Init.py.out
             */            
-            void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype=Type.Double, int device=-1){
-                _impl->Init(shape,dtype,device);
+            void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype=Type.Double, const int &device=-1){
+                boost::intrusive_ptr<Tensor_impl> tmp(new Tensor_impl());
+                this->_impl = tmp;
+                this->_impl->Init(shape,dtype,device);
             }
 
-            Tensor(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype=Type.Double, int device=-1): _impl(new Tensor_impl()){
+            Tensor(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype=Type.Double, const int &device=-1):_impl(new Tensor_impl()){
                 this->Init(shape,dtype,device);
             }
 

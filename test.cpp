@@ -5,20 +5,17 @@
 using namespace std;
 using namespace cytnx;
 
-void func(boost::intrusive_ptr<Storage_base> &a){
-    a = boost::intrusive_ptr<Storage_base>(new FloatStorage());
-}
 
 typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]){
-
+    /*
     vector<cytnx_int64> A(10);
     for(int i=0;i<10;i++){
         A[i] = rand()%500;
     }
     cout << vec_unique(A) << endl; 
-
+    */
 
     //Device.Print_Property();
     
@@ -65,7 +62,7 @@ int main(int argc, char *argv[]){
     boost::intrusive_ptr<Storage_base> arrayX(new FloatStorage() );
     arrayX->_Init_byptr_safe(tt,4);
     */
-    
+        
     Storage s;
     s.Init(12,Type.Double,Device.cpu);
     s.set_zeros();
@@ -77,10 +74,11 @@ int main(int argc, char *argv[]){
     cout << (s==s2) << (s==s3) << endl;
     
 
-    Tensor x = zeros({3,4,5},Type.Double,Device.cpu);
-     
+    Tensor x;
+    x  = zeros({3,4,5},Type.Double,Device.cpu);
+    
     //Tensor x = zeros({3,4,5});
-    cout << x << endl;
+    cout << x << endl; 
     x.fill(5.);
     cout << x << endl;
     Tensor b = x.clone();
@@ -100,7 +98,7 @@ int main(int argc, char *argv[]){
     //i-=3.;
     //i-=i;
     cout << i << endl;
-
+    
     Tensor y = i.get({ac::all(),ac(2),ac::all()});
     cout << y << endl;
 
@@ -114,10 +112,11 @@ int main(int argc, char *argv[]){
     
     
     Tensor Zo = zeros(10,Type.Double,Device.cpu);
+    Tensor Zo2 = zeros({3,4});
     Tensor Zp = arange(10);
     Tensor Zc = arange(0.1,0,-0.2,Type.ComplexDouble);
     cout << Zc << endl;
-
+    
     Zp.reshape_({2,5});
     cout << Zp << endl;
     Tensor tmp = Zp.get({ac::all(),ac::range(0,2)});
@@ -145,12 +144,17 @@ int main(int argc, char *argv[]){
 
     Bond bd_dqu1 = Bond(3, BD_BRA,{{0,2},{1,2},{3,3}});
     cout << bd_dqu1 << endl;
-
+    
     Bond bd_1 = Bond(3);
     Bond bd_2 = Bond(2);
     Bond bd_3 = Bond(4);
-
-    UniTensor ut1({bd_1,bd_2,bd_3},{},2,Type.Double,Device.cpu);
+    std::vector<Bond> bds = {bd_1,bd_2,bd_3}; 
+    std::vector<cytnx_int64> labels = {};
+    
+    
+    UniTensor ut1(bds,{},2);
+    //Tensor tmp = zeros({3,2,4});
+    /*
     ut1.print_diagram(true); 
     cout << ut1 << endl;
     Tensor sss = ut1.get_block(); // this will return a copied block
@@ -161,7 +165,7 @@ int main(int argc, char *argv[]){
        
     UniTensor re(sss,2); // construct by block will not copy, and share same memory.
     cout << re << endl;
-    
+    */
      
     return 0;
 }

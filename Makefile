@@ -3,9 +3,9 @@ CUDA_PATH=/usr/local/cuda
 INCFLAGS :=-I$(CytnxPATH)/include
 
 GPU_Enable=0
-OMP_Enable=1
+OMP_Enable=0
 DEBUG_Enable=0
-MKL_Enable=1
+MKL_Enable=0
 
 ifeq ($(MKL_Enable),1)
   CC:= icpc
@@ -90,10 +90,12 @@ endif
 all: test exam 
 
 
+test: test.o $(ALLOBJS)
+	$(CC) -o $@ $^ $(CCFLAGS) $(LDFLAGS)
 
-test: test.o libcytnx.so
-	$(CC) -L. $(LDFLAGS) -o $@ $< libcytnx.so
-	export LD_LIBRARY_PATH=.
+#test: test.o libcytnx.so
+#	$(CC) -L. $(LDFLAGS) -o $@ $< libcytnx.so
+#	export LD_LIBRARY_PATH=.
 exam: example.o libcytnx.so
 	$(CC) -L. $(LDFLAGS) -o $@ $< libcytnx.so	
 	export LD_LIBRARY_PATH=.

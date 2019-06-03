@@ -1,6 +1,9 @@
 #include "Generator.hpp"
+#include "Storage.hpp"
+#include "utils/utils.hpp"
 #include "utils/utils_internal_interface.hpp"
 #include <cfloat>
+#include <iostream>
 namespace cytnx{
 
     Tensor zeros(const cytnx_uint64 &Nelem, const unsigned int &dtype, const int &device){
@@ -9,11 +12,8 @@ namespace cytnx{
         return out;
     }
     Tensor zeros(const std::vector<cytnx_uint64> &Nelem, const unsigned int &dtype, const int &device){
-        Tensor out(Nelem,dtype,device);
-        out._impl->storage().set_zeros(); 
-        return out;
-    }
-    Tensor zeros(const std::initializer_list<cytnx_uint64> &Nelem, const unsigned int &dtype, const int &device){
+        //std::cout << "OK" << std::endl;
+        //std::cout << Nelem << std::endl;
         Tensor out(Nelem,dtype,device);
         out._impl->storage().set_zeros(); 
         return out;
@@ -25,11 +25,6 @@ namespace cytnx{
         return out;
     }
     Tensor ones(const std::vector<cytnx_uint64> &Nelem, const unsigned int &dtype, const int &device){
-        Tensor out(Nelem,dtype,device);
-        out._impl->storage().fill(1); 
-        return out;
-    }
-    Tensor ones(const std::initializer_list<cytnx_uint64> &Nelem, const unsigned int &dtype, const int &device){
         Tensor out(Nelem,dtype,device);
         out._impl->storage().fill(1); 
         return out;

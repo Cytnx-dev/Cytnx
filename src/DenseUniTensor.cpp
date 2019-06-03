@@ -18,7 +18,7 @@ namespace cytnx{
                     }else{
                         cytnx_error_msg(bonds[i].type() != bondType::BD_REG,"%s","[ERROR][DenseUniTensor] cannot mix tagged bond with un-tagged bond!%s","\n");
                     }
-
+                    cytnx_error_msg(bonds[i].dim()==0,"%s","[ERROR] All bonds must have dimension >=1");
                 }
                 
                 //check Rowrank
@@ -65,17 +65,17 @@ namespace cytnx{
                 //non symmetry, initialize memory.
                 if(this->_bonds.size()==0){
                     //scalar:
-                    this->_block = Tensor({1},dtype,device);
+                    this->_block = zeros({1},dtype,device);
                 }else{
                     if(is_diag){
-                        this->_block = Tensor({_bonds[0].dim()},dtype,device);
+                        this->_block = zeros({_bonds[0].dim()},dtype,device);
                         this->_is_diag = is_diag;
                     }else{
                         std::vector<cytnx_uint64> _shape(bonds.size());
                         for(unsigned int i=0;i<_shape.size();i++)
                             _shape[i] = bonds[i].dim();
 
-                        this->_block = Tensor(_shape,dtype,device);
+                        this->_block = zeros(_shape,dtype,device);
                     }
                 }          
     }

@@ -91,7 +91,7 @@ namespace cytnx{
             boost::intrusive_ptr<Symmetry_base> _impl;
             
             //Symmetry() : _impl(new U1Symmetry()){}; //default is U1Symmetry
-            Symmetry(const int &stype=-1, const int &n=0){
+            Symmetry(const int &stype=-1, const int &n=0): _impl( new Symmetry_base()){
                 this->Init(stype,n);
             }; //default is U1Symmetry
 

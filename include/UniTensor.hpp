@@ -66,8 +66,27 @@ namespace cytnx{
             const std::vector<Bond> &bonds() const {return this->_bonds;}       
             const std::string& name() const { return this->_name;}
             void set_name(const std::string &in){ this->_name = in;}
+            void set_label(const cytnx_uint64 &idx, const cytnx_int64 &new_label){
+                cytnx_error_msg(idx>=this->_labels.size(),"[ERROR] index exceed the rank of UniTensor%s","\n");
+                //check in:
+                bool is_dup =false;
+                for(cytnx_uint64 i=0;i<this->_labels.size();i++){
+                    if(new_label == this->_labels[i]){is_dup = true; break;}
+                }
+                cytnx_error_msg(is_dup,"[ERROR] alreay has a label that is the same as the input label%s","\n");
+                this->_labels[idx] = new_label;                
+            }
+            template<class T>
+            T& at(const std::vector<cytnx_uint64> &locator){
+                cytnx_error_msg(this->is_blockform(),"[ERROR] cannot access element using at<T> on a UniTensor with symmetry.\n suggestion: get_block/get_blocks first.%s","\n");
+                
+                // only non-symm can enter this
+                return this->get_block_().at<T>(locator);
+            }
+            
 
             virtual void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1,const unsigned int &dtype=Type.Double,const int &device = Device.cpu,const bool &is_diag=false);
+            virtual void Init_by_Tensor(const Tensor& in, const cytnx_uint64 &Rowrank);
             virtual std::vector<cytnx_uint64> shape() const;
             virtual bool      is_blockform() const ;
             virtual bool     is_contiguous() const;
@@ -83,9 +102,18 @@ namespace cytnx{
             virtual void contiguous_();
             virtual boost::intrusive_ptr<UniTensor_base> contiguous();            
             virtual void print_diagram(const bool &bond_info=false);
-            virtual Tensor get_block(const cytnx_uint64 &idx=0) const;
-            virtual Tensor get_block(const std::vector<cytnx_int64> &qnum) const;
+            virtual Tensor get_block(const cytnx_uint64 &idx=0) const; // return a copy of block
+            virtual Tensor get_block(const std::vector<cytnx_int64> &qnum) const; //return a copy of block
+            virtual Tensor get_block_(const cytnx_uint64 &idx=0) const; // return a share view of block, this only work for non-symm tensor.
             virtual std::vector<Tensor> get_blocks() const;
+            virtual void put_block(const Tensor &in, const cytnx_uint64 &idx=0);
+            virtual void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum);
+
+            // this will only work on non-symm tensor (DenseUniTensor)
+            virtual boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors);
+            // this will only work on non-symm tensor (DenseUniTensor)
+            virtual void set(const std::vector<Accessor> &accessors, const Tensor &rhs);
+ 
     };
     /// @endcond
 
@@ -109,7 +137,28 @@ namespace cytnx{
             friend class UniTensor; // allow wrapper to access the private elems
             // virtual functions
             void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
-
+            // this only work for non-symm tensor
+            void Init_by_Tensor(const Tensor& in_tensor, const cytnx_uint64 &Rowrank){
+                cytnx_error_msg(in_tensor.dtype() == Type.Void,"[ERROR][Init_by_Tensor] cannot init a UniTensor from an un-initialize Tensor.%s","\n");
+                if(in_tensor.storage().size() == 1){
+                    //scalalr:
+                    cytnx_error_msg(Rowrank != 0, "[ERROR][Init_by_Tensor] detect the input Tensor is a scalar with only one element. the Rowrank should be =0%s","\n");
+                    this->_bonds.clear();
+                    this->_block = in_tensor;
+                    this->_labels.clear();
+                    this->_Rowrank = Rowrank;
+                }else{
+                    std::vector<Bond> bds;
+                    for(cytnx_uint64 i=0;i<in_tensor.shape().size();i++){
+                        bds.push_back(Bond(in_tensor.shape()[i]));
+                    }
+                    this->_bonds = bds;
+                    this->_block = in_tensor;
+                    this->_labels = utils_internal::range_cpu<cytnx_int64>(in_tensor.shape().size());
+                    cytnx_error_msg(Rowrank > in_tensor.shape().size(),"[ERROR][Init_by_tensor] Rowrank exceed the rank of Tensor.%s","\n");
+                    this->_Rowrank = Rowrank;
+                }
+            }
             std::vector<cytnx_uint64> shape() const{ return this->_block.shape();}
             bool is_blockform() const{ return false;}
             void to_(const int &device){
@@ -148,11 +197,33 @@ namespace cytnx{
             }
             void print_diagram(const bool &bond_info=false);         
             Tensor get_block(const cytnx_uint64 &idx=0) const{ return this->_block.clone(); }
-            Tensor get_block(const std::vector<cytnx_int64> &qnum) const{return this->_block.clone();}
+            Tensor get_block(const std::vector<cytnx_int64> &qnum) const{cytnx_error_msg(true,"[ERROR][DenseUniTensor] try to get_block using qnum on a non-symmetry UniTensor%s","\n"); return Tensor();}
             std::vector<Tensor> get_blocks() const {
                 std::vector<Tensor> out;
                 out.push_back(this->_block.clone());
                 return out; // this will share memory!!
+            }
+            // return a share view of block, this only work for non-symm tensor.
+            Tensor get_block_(const cytnx_uint64 &idx=0) const{
+                return this->_block;
+            }
+
+            void put_block(const Tensor &in, const cytnx_uint64 &idx=0){
+                cytnx_error_msg(in.shape() != this->shape(),"[ERROR][DenseUniTensor] put_block, the input tensor shape does not match.%s","\n");
+                this->_block = in;
+            }
+            void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum){
+                cytnx_error_msg(true,"[ERROR][DenseUniTensor] try to put_block using qnum on a non-symmetry UniTensor%s","\n");
+            }
+            // this will only work on non-symm tensor (DenseUniTensor)
+            boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors){
+                boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
+                out->Init_by_Tensor(this->_block.get(accessors),0); //wrapping around. 
+                return out;
+            }
+            // this will only work on non-symm tensor (DenseUniTensor)
+            void set(const std::vector<Accessor> &accessors, const Tensor &rhs){
+                this->_block.set(accessors,rhs);
             }
             // end virtual function              
 
@@ -175,7 +246,9 @@ namespace cytnx{
             friend class UniTensor; // allow wrapper to access the private elems
             // virtual functions
             void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
-
+            void Init_by_Tensor(const Tensor& in_tensor, const cytnx_uint64 &Rowrank){
+                cytnx_error_msg(true,"[ERROR][SparseUniTensor] cannot use Init_by_tensor() on a SparseUniTensor.%s","\n");
+            }
             std::vector<cytnx_uint64> shape() const{ 
                 std::vector<cytnx_uint64> out(this->_bonds.size());
                 for(cytnx_uint64 i=0;i<out.size();i++){
@@ -199,7 +272,23 @@ namespace cytnx{
             void print_diagram(const bool &bond_info=false){};
             Tensor get_block(const cytnx_uint64 &idx=0) const{};
             Tensor get_block(const std::vector<cytnx_int64> &qnum) const{};
+            // return a share view of block, this only work for non-symm tensor.
+            Tensor get_block_(const cytnx_uint64 &idx=0) const{
+                cytnx_error_msg(true,"[ERROR][SparseUniTensor] cannot use get_block_() on a UniTensor with symmetry.\n suggestion: try get_block()/get_blocks()%s","\n");
+                return Tensor();
+            }
             std::vector<Tensor> get_blocks() const {};
+            void put_block(const Tensor &in, const cytnx_uint64 &idx=0){};
+            void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum){};
+            // this will only work on non-symm tensor (DenseUniTensor)
+            boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors){
+                cytnx_error_msg(true,"[ERROR][SparseUniTensor][get] cannot use get on a UniTensor with Symmetry.\n suggestion: try get_block()/get_blocks() first.%s","\n");
+                  
+            }
+            // this will only work on non-symm tensor (DenseUniTensor)
+            void set(const std::vector<Accessor> &accessors, const Tensor &rhs){
+                cytnx_error_msg(true,"[ERROR][SparseUniTensor][set] cannot use set on a UniTensor with Symmetry.\n suggestion: try get_block()/get_blocks() first.%s","\n");
+            }
             // end virtual func
     };
     /// @endcond
@@ -220,23 +309,19 @@ namespace cytnx{
                 return *this;
             }
 
-            UniTensor(const Tensor &in_tensor, const cytnx_uint64 &Rowrank){
-                std::vector<Bond> bds;
-                for(cytnx_uint64 i=0;i<in_tensor.shape().size();i++){
-                    bds.push_back(Bond(in_tensor.shape()[i]));
-                }
-                DenseUniTensor* tmp = new DenseUniTensor();
-                tmp->_block = in_tensor;
-                tmp->_labels = utils_internal::range_cpu<cytnx_int64>(in_tensor.shape().size());
-                tmp->_Rowrank = Rowrank;
-                boost::intrusive_ptr<UniTensor_base> out(tmp);
-                this->_impl = out;
-
+            UniTensor(const Tensor &in_tensor, const cytnx_uint64 &Rowrank): _impl(new UniTensor_base()){
+                this->Init(in_tensor,Rowrank);
             }
 
 
-            UniTensor(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false){
+            UniTensor(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false): _impl(new UniTensor_base()){
                 this->Init(bonds,in_labels,Rowrank,dtype,device,is_diag);
+            }
+
+            void Init(const Tensor &in_tensor, const cytnx_uint64 &Rowrank){
+               boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
+               out->Init_by_Tensor(in_tensor, Rowrank);
+               this->_impl = out;
             }
 
             void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false){
@@ -251,6 +336,7 @@ namespace cytnx{
 
                 // dynamical dispatch:
                 if(is_sym){
+                    cytnx_error_msg(true,"[interrupt, developing][SparseUniTensor]%s","\n");
                     boost::intrusive_ptr<UniTensor_base> out(new SparseUniTensor());
                     this->_impl = out;
                 }else{   
@@ -260,20 +346,6 @@ namespace cytnx{
                 this->_impl->Init(bonds, in_labels, Rowrank, dtype, device, is_diag);
             }
             
-            void Init(const std::initializer_list<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1,const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false){
-                std::vector<Bond> vbonds = bonds;
-                this->Init(vbonds,in_labels,Rowrank,dtype,device,is_diag);
-            }
-            void Init(const std::vector<Bond> &bonds, const std::initializer_list<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu,const bool &is_diag=false){
-                std::vector<cytnx_int64> vin_labels = in_labels;
-                this->Init(bonds,vin_labels,Rowrank,dtype,device,is_diag);
-            }
-            void Init(const std::initializer_list<Bond> &bonds, const std::initializer_list<cytnx_int64> &in_labels={},const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu,const bool &is_diag=false){
-                std::vector<Bond> vbonds = bonds;
-                std::vector<cytnx_int64> vin_labels = in_labels;
-                this->Init(vbonds,vin_labels,Rowrank,dtype,device,is_diag);
-            }
-
             void set_name(const std::string &in){
                 this->_impl->set_name(in);
             }
@@ -321,15 +393,46 @@ namespace cytnx{
             void print_diagram(const bool &bond_info=false){
                this->_impl->print_diagram(bond_info);
             }
+            
+            template<class T>
+            T& at(const std::vector<cytnx_uint64> &locator){
+                return this->_impl->at<T>(locator);
+            }
+            // return a clone of block
             Tensor get_block(const cytnx_uint64 &idx=0) const{
                 return this->_impl->get_block(idx);
             };
+            // return a clone of block
             Tensor get_block(const std::vector<cytnx_int64> &qnum) const{
                 return this->_impl->get_block(qnum);
             }
+            // this only work for non-symm tensor. return a shared view of block
+            Tensor get_block_(const cytnx_uint64 &idx=0) const{
+                return this->_impl->get_block_(idx);
+            }
+            // this return a shared view of blocks for non-symm tensor.
+            // for symmetry tensor, it call contiguous first and return a shared view of blocks. [dev]
             std::vector<Tensor> get_blocks() const {
                 return this->_impl->get_blocks();
             }
+            // the put block will have shared view with the internal block, i.e. non-clone. 
+            void put_block(const Tensor &in, const cytnx_uint64 &idx=0){
+                this->_impl->put_block(in,idx);
+            }
+            // the put block will have shared view with the internal block, i.e. non-clone. 
+            void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum){
+                this->_impl->put_block(in,qnum);
+            }
+
+            UniTensor get(const std::vector<Accessor> &accessors){
+                UniTensor out;
+                out._impl = this->_impl->get(accessors);
+                return out;
+            }
+            void set(const std::vector<Accessor> &accessors, const Tensor &rhs){
+                this->_impl->set(accessors, rhs);
+            }
+
     };
 
     std::ostream& operator<<(std::ostream& os, const UniTensor &in);
