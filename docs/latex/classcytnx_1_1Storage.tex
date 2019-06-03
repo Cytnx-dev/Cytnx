@@ -1,0 +1,91 @@
+\hypertarget{classcytnx_1_1Storage}{}\section{cytnx\+:\+:Storage Class Reference}
+\label{classcytnx_1_1Storage}\index{cytnx\+::\+Storage@{cytnx\+::\+Storage}}
+
+
+wrapping-\/up  
+
+
+
+
+{\ttfamily \#include $<$Storage.\+hpp$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Storage_a6bf182da2184ef93e9c255540203cc54}\label{classcytnx_1_1Storage_a6bf182da2184ef93e9c255540203cc54}} 
+void {\bfseries Init} (const unsigned long long \&size, const unsigned int \&dtype, int device=-\/1)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Storage_a91232518b73848515e0fdf342d4407fd}\label{classcytnx_1_1Storage_a91232518b73848515e0fdf342d4407fd}} 
+{\bfseries Storage} (const unsigned long long \&size, const unsigned int \&dtype, int device=-\/1)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Storage_ab602ecd72e5fc4224922a6b6212ff120}\label{classcytnx_1_1Storage_ab602ecd72e5fc4224922a6b6212ff120}} 
+{\bfseries Storage} (boost\+::intrusive\+\_\+ptr$<$ Storage\+\_\+base $>$ in\+\_\+impl)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Storage_a095c6d65c93d237ad4d94cf241b1555e}\label{classcytnx_1_1Storage_a095c6d65c93d237ad4d94cf241b1555e}} 
+{\bfseries Storage} (const \hyperlink{classcytnx_1_1Storage}{Storage} \&rhs)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Storage_a1ee2ea67e2197bc9d690ca8a1b878f73}\label{classcytnx_1_1Storage_a1ee2ea67e2197bc9d690ca8a1b878f73}} 
+\hyperlink{classcytnx_1_1Storage}{Storage} \& {\bfseries operator=} (const \hyperlink{classcytnx_1_1Storage}{Storage} \&rhs)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Storage_a8310d8dbb70510272ded2e3d01be25f0}\label{classcytnx_1_1Storage_a8310d8dbb70510272ded2e3d01be25f0}} 
+\hyperlink{classcytnx_1_1Storage}{Storage} {\bfseries astype} (const unsigned int \&new\+\_\+type) const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Storage_a643824801e81ab86aca055f1dd1f34d7}\label{classcytnx_1_1Storage_a643824801e81ab86aca055f1dd1f34d7}} 
+const unsigned int \& {\bfseries dtype} () const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Storage_ab6e9fb01ad4655701a2d54dc978eef17}\label{classcytnx_1_1Storage_ab6e9fb01ad4655701a2d54dc978eef17}} 
+const std\+::string {\bfseries dtype\+\_\+str} () const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Storage_a4c3e27582d7f951e6b76ccbb92f7c537}\label{classcytnx_1_1Storage_a4c3e27582d7f951e6b76ccbb92f7c537}} 
+const int \& {\bfseries device} () const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Storage_ae0d90d5275fa7e52a0a2dc10512ba71f}\label{classcytnx_1_1Storage_ae0d90d5275fa7e52a0a2dc10512ba71f}} 
+const std\+::string {\bfseries device\+\_\+str} () const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Storage_acf07db8f07fcc723e41718f604959c5b}\label{classcytnx_1_1Storage_acf07db8f07fcc723e41718f604959c5b}} 
+{\footnotesize template$<$class T $>$ }\\T \& {\bfseries at} (const unsigned int \&idx) const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Storage_af37d781719238ae66509ff145e5b1bd7}\label{classcytnx_1_1Storage_af37d781719238ae66509ff145e5b1bd7}} 
+{\footnotesize template$<$class T $>$ }\\T $\ast$ {\bfseries data} () const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Storage_a0bbf2cbefb5d0835bcb4f0d05e400870}\label{classcytnx_1_1Storage_a0bbf2cbefb5d0835bcb4f0d05e400870}} 
+void {\bfseries to\+\_\+} (const int \&device)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Storage_a2abfcaacf807934be5dd21c254fdb30e}\label{classcytnx_1_1Storage_a2abfcaacf807934be5dd21c254fdb30e}} 
+\hyperlink{classcytnx_1_1Storage}{Storage} {\bfseries to} (const int \&device)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Storage_aed0530dd20f3fb352d45653ba46a3d50}\label{classcytnx_1_1Storage_aed0530dd20f3fb352d45653ba46a3d50}} 
+\hyperlink{classcytnx_1_1Storage}{Storage} {\bfseries clone} () const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Storage_aaf36262622abdab03c90b713c454f78e}\label{classcytnx_1_1Storage_aaf36262622abdab03c90b713c454f78e}} 
+const unsigned long long \& {\bfseries size} () const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Storage_a0ae2bee5e15c651b05dadf5dbbdb36f5}\label{classcytnx_1_1Storage_a0ae2bee5e15c651b05dadf5dbbdb36f5}} 
+void {\bfseries print\+\_\+info} ()
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Storage_a4b5cc72fc3a1ce91a746047538ea18dd}\label{classcytnx_1_1Storage_a4b5cc72fc3a1ce91a746047538ea18dd}} 
+void {\bfseries print} ()
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Storage_a7e854529c99108b0acc3e5e2b185244b}\label{classcytnx_1_1Storage_a7e854529c99108b0acc3e5e2b185244b}} 
+void {\bfseries set\+\_\+zeros} ()
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Storage_ad304e00cf3d472ea0355af6b40c4529d}\label{classcytnx_1_1Storage_ad304e00cf3d472ea0355af6b40c4529d}} 
+bool {\bfseries operator==} (const \hyperlink{classcytnx_1_1Storage}{Storage} \&rhs)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Storage_a48f0424f051a4b3a821eb964be4cd5db}\label{classcytnx_1_1Storage_a48f0424f051a4b3a821eb964be4cd5db}} 
+{\footnotesize template$<$class T $>$ }\\void {\bfseries fill} (const T \&val)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Storage_a41588ac45db0467c4e277bc4e572908a}\label{classcytnx_1_1Storage_a41588ac45db0467c4e277bc4e572908a}} 
+boost\+::intrusive\+\_\+ptr$<$ Storage\+\_\+base $>$ {\bfseries \+\_\+impl}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+wrapping-\/up 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/Storage.\+hpp\end{DoxyCompactItemize}

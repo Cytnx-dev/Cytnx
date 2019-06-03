@@ -1,0 +1,59 @@
+\hypertarget{classcytnx_1_1Accessor}{}\section{cytnx\+:\+:Accessor Class Reference}
+\label{classcytnx_1_1Accessor}\index{cytnx\+::\+Accessor@{cytnx\+::\+Accessor}}
+
+
+object that mimic the python slice to access elements in C++ \mbox{[}this is for c++ A\+PI only\mbox{]}.  
+
+
+
+
+{\ttfamily \#include $<$Accessor.\+hpp$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Accessor_aae988b37daecd3e9564e507d1225f8ce}\label{classcytnx_1_1Accessor_aae988b37daecd3e9564e507d1225f8ce}} 
+enum \+: cytnx\+\_\+int64 \{ {\bfseries none}, 
+{\bfseries Singl}, 
+{\bfseries All}, 
+{\bfseries Range}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Accessor_a9f6fa9087f09756e020355a05196d384}\label{classcytnx_1_1Accessor_a9f6fa9087f09756e020355a05196d384}} 
+{\bfseries Accessor} (const cytnx\+\_\+int64 \&loc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Accessor_aefb1304726a9b229f3929e2b9d439602}\label{classcytnx_1_1Accessor_aefb1304726a9b229f3929e2b9d439602}} 
+{\bfseries Accessor} (const std\+::string \&str)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Accessor_ac0f2ae43a1a31db04ac9d4fafb70fea6}\label{classcytnx_1_1Accessor_ac0f2ae43a1a31db04ac9d4fafb70fea6}} 
+{\bfseries Accessor} (const cytnx\+\_\+int64 \&min, const cytnx\+\_\+int64 \&max, const cytnx\+\_\+int64 \&step)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Accessor_a6b7d3e3d7f2640ededbc207b468c8dc9}\label{classcytnx_1_1Accessor_a6b7d3e3d7f2640ededbc207b468c8dc9}} 
+{\bfseries Accessor} (const \hyperlink{classcytnx_1_1Accessor}{Accessor} \&rhs)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Accessor_a0eb2fc1c85e7accff2078d85c8cf1cda}\label{classcytnx_1_1Accessor_a0eb2fc1c85e7accff2078d85c8cf1cda}} 
+\hyperlink{classcytnx_1_1Accessor}{Accessor} \& {\bfseries operator=} (const \hyperlink{classcytnx_1_1Accessor}{Accessor} \&rhs)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Accessor_ad581c89553f55c4ce23de58e4499bdda}\label{classcytnx_1_1Accessor_ad581c89553f55c4ce23de58e4499bdda}} 
+void {\bfseries get\+\_\+len\+\_\+pos} (const cytnx\+\_\+uint64 \&dim, cytnx\+\_\+uint64 \&len, std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&pos) const
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Accessor_a71b8c4af7182a2c9144929bdef9ff4fd}\label{classcytnx_1_1Accessor_a71b8c4af7182a2c9144929bdef9ff4fd}} 
+static \hyperlink{classcytnx_1_1Accessor}{Accessor} {\bfseries all} ()
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Accessor_a7a5a508a58b71897c3dd162195aceaa9}\label{classcytnx_1_1Accessor_a7a5a508a58b71897c3dd162195aceaa9}} 
+static \hyperlink{classcytnx_1_1Accessor}{Accessor} {\bfseries range} (const cytnx\+\_\+int64 \&min, const cytnx\+\_\+int64 \&max, const cytnx\+\_\+int64 \&step=1)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+object that mimic the python slice to access elements in C++ \mbox{[}this is for c++ A\+PI only\mbox{]}. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/Accessor.\+hpp\end{DoxyCompactItemize}

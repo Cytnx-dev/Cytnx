@@ -1,0 +1,226 @@
+\subsection*{Requirements}
+
+
+\begin{DoxyItemize}
+\item Boost v1.\+53+ \mbox{[}check\+\_\+deleted, atomicadd, intrusive\+\_\+ptr\mbox{]}
+\item C++11
+\item lapack
+\item blas
+\item gcc v6+
+\end{DoxyItemize}
+
+\mbox{[}C\+U\+DA support\mbox{]}
+\begin{DoxyItemize}
+\item C\+U\+DA v10+
+\item cu\+D\+NN
+\end{DoxyItemize}
+
+\mbox{[}Open\+Mp support\mbox{]}
+\begin{DoxyItemize}
+\item openmp
+\end{DoxyItemize}
+
+\mbox{[}Python\mbox{]}
+\begin{DoxyItemize}
+\item pybind11 2.\+2.\+4
+\item numpy $>$= 1.\+15
+\end{DoxyItemize}
+
+\subsection*{ubuntu}
+
+sudo apt-\/get install libboost-\/all-\/dev
+
+\subsection*{compile}
+
+
+\begin{DoxyItemize}
+\item compile \$make -\/\+Bj4
+\item turn on D\+E\+B\+UG mode\+: \$make -\/\+Bj4 D\+E\+B\+U\+G\+\_\+\+Enable=1
+\item turn on Open\+Mp accelerate \$make -\/\+Bj4 O\+M\+P\+\_\+\+Enable=1
+\item turn on G\+PU accelerate \$make -\/\+Bj4 G\+P\+U\+\_\+\+Enable=1
+\item turn on G\+P\+U+\+Open\+Mp accelerate \$make -\/\+Bj4 G\+P\+U\+\_\+\+Enable=1 O\+M\+P\+\_\+\+Enable=1
+\item compile python wrapper \$make pyobj -\/\+Bj4 $<$args$>$
+\end{DoxyItemize}
+
+$<$args$>$ can be O\+M\+P\+\_\+\+Enable, G\+P\+U\+\_\+\+Enable, D\+E\+B\+U\+G\+\_\+\+Enable, M\+K\+L\+\_\+\+Enable.
+
+Note\+: if M\+K\+L\+\_\+\+Enable=1, will enforce using icpc as compiler.
+
+\subsection*{Objects\+:}
+
+
+\begin{DoxyItemize}
+\item Storage \mbox{[}binded\mbox{]}
+\item Tensor \mbox{[}binded\mbox{]}
+\item Bond \mbox{[}binded\mbox{]}
+\item Accessor \mbox{[}c++ only\mbox{]}
+\item Symmetry \mbox{[}binded\mbox{]}
+\item Uni\+Tensor \mbox{[}x\mbox{]}
+\end{DoxyItemize}
+
+\subsection*{Documentation\+:}
+
+\subsection*{Feature\+:}
+
+\subsubsection*{Python x C++}
+
+Benefit from both side. One can do simple prototype on python side and easy transfer to C++ with small effort!
+
+
+\begin{DoxyCode}
+\textcolor{comment}{// c++ version:}
+\textcolor{preprocessor}{#include "cytnx.hpp"}
+\hyperlink{classcytnx_1_1Tensor}{cytnx::Tensor} A(\{3,4,5\},cytnx::Type.Double,cytnx::Device.cpu)
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}
+\textcolor{comment}{# python version:}
+\textcolor{keyword}{import} cytnx
+A =  \hyperlink{classcytnx_1_1Tensor}{cytnx.Tensor}((3,4,5),dtype=cytnx.Type.Double,device=cytnx.Device.cpu)
+\end{DoxyCode}
+
+
+\subsubsection*{1. All the Storage and Tensor can now have mulitple type support.}
+
+The avaliable types are \+:
+
+\tabulinesep=1mm
+\begin{longtabu} spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ cytnx type }&\textbf{ c++ type }&\textbf{ Type object  }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ cytnx type }&\textbf{ c++ type }&\textbf{ Type object  }\\\cline{1-3}
+\endhead
+cytnx\+\_\+double &double &Type.\+Double \\\cline{1-3}
+cytnx\+\_\+float &float &Type.\+Float \\\cline{1-3}
+cytnx\+\_\+uint64 &uint64\+\_\+t &Type.\+Uint64 \\\cline{1-3}
+cytnx\+\_\+uint32 &uint32\+\_\+t &Type.\+Uint32 \\\cline{1-3}
+cytnx\+\_\+int64 &int64\+\_\+t &Type.\+Int64 \\\cline{1-3}
+cytnx\+\_\+int32 &int32\+\_\+t &Type.\+Int32 \\\cline{1-3}
+cytnx\+\_\+complex128 &std\+::complex$<$double$>$ &Type.\+Complex\+Double \\\cline{1-3}
+cytnx\+\_\+complex64 &std\+::complex$<$float$>$ &Type.\+Complex\+Float \\\cline{1-3}
+\end{longtabu}
+
+
+\subsubsection*{2. Storage}
+
+
+\begin{DoxyItemize}
+\item Memory container with G\+P\+U/\+C\+PU support. maintain type conversions (type casting btwn Storages) and moving btwn devices.
+\item Generic type object, the behavior is very similar to python.
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}
+Storage A(400,Type.Double);
+\textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i=0;i<400;i++)
+    A.at<\textcolor{keywordtype}{double}>(i) = i;
+
+Storage B = A; \textcolor{comment}{// A and B share same memory, this is similar as python }
+
+Storage C = A.to(Device.cuda+0); 
+\end{DoxyCode}
+
+
+\subsubsection*{3. Tensor}
+
+
+\begin{DoxyItemize}
+\item A tensor, A\+PI very similar to numpy and pytorch.
+\item simple moving btwn C\+PU and G\+PU\+:
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}
+Tensor A(\{3,4\},Type.Double,Device.cpu); \textcolor{comment}{// create tensor on CPU (default)}
+Tensor B(\{3,4\},Type.Double,Device.cuda+0); \textcolor{comment}{// create tensor on GPU with gpu-id=0}
+
+
+Tensor C = B; \textcolor{comment}{// C and B share same memory.}
+
+\textcolor{comment}{// move A to gpu}
+Tensor D = A.to(Device.cuda+0);
+
+\textcolor{comment}{// inplace move A to gpu}
+A.to\_(Device.cuda+0);
+\end{DoxyCode}
+
+\begin{DoxyItemize}
+\item Type conversion in between avaliable\+: 
+\begin{DoxyCode}
+Tensor A(\{3,4\},Type.Double);
+Tensor B = A.astype(Type.Uint64); \textcolor{comment}{// cast double to uint64\_t}
+\end{DoxyCode}
+ \begin{DoxyVerb}    * vitual swap and permute. All the permute and swap will not change the underlying memory
+    * Use Contiguous() when needed to actual moving the memory layout.
+\end{DoxyVerb}
+ 
+\begin{DoxyCode}
+Tensor A(\{3,4,5,2\},Type.Double);
+A.permute\_(\{0,3,1,2\}); \textcolor{comment}{// this will not change the memory, only the shape info is changed.}
+cout << A.is\_contiguous() << endl; \textcolor{comment}{// this will be false!}
+
+A.contiguous\_(); \textcolor{comment}{// call Configuous() to actually move the memory.}
+cout << A.is\_contiguous() << endl; \textcolor{comment}{// this will be true!}
+\end{DoxyCode}
+ \begin{DoxyVerb}    * access single element using .at
+\end{DoxyVerb}
+ 
+\begin{DoxyCode}
+Tensor A(\{3,4,5\},Type.Double);
+\textcolor{keywordtype}{double} val = A.at<\textcolor{keywordtype}{double}>(\{0,2,2\});
+\end{DoxyCode}
+ \begin{DoxyVerb}    * access elements with python slices similarity:
+\end{DoxyVerb}
+ 
+\begin{DoxyCode}
+\textcolor{keyword}{typedef} Accessor ac;
+Tensor A(\{3,4,5\},Type.Double);
+Tensor out = A.get(\{ac(0),ac::all(),ac::range(1,4)\}); 
+\textcolor{comment}{// equivalent to python: out = A[0,:,1:4]}
+\end{DoxyCode}
+
+\end{DoxyItemize}
+
+\subsection*{Avaliable linear-\/algebra function (Keep updating)\+:}
+
+\begin{DoxyVerb}  func    |   inplace | CPU | GPU  | callby tn 
+----------|-----------|-----|------|-----------
+  Add     |   x       |  Y  |  Y   |    Y
+  Sub     |   x       |  Y  |  Y   |    Y
+  Mul     |   x       |  Y  |  Y   |    Y
+  Div     |   x       |  Y  |  Y   |    Y
+  +,+=[tn]|   x       |  Y  |  Y   |    Y (Add_)
+  -,-=[tn]|   x       |  Y  |  Y   |    Y (Sub_)
+  *,*=[tn]|   x       |  Y  |  Y   |    Y (Mul_)
+  /,/=[tn]|   x       |  Y  |  Y   |    Y (Div_)
+  Svd     |   x       |  Y  |  Y   |    Y
+  Inv     |   Inv_    |  Y  |  Y   |    Y
+  Conj    |   Conj_   |  Y  |  Y   |    Y 
+  Exp     |   Exp_    |  Y  |  Y   |    Y
+  Eigh    |   x       |  Y  |  Y   |    Y 
+\end{DoxyVerb}
+
+
+\subsection*{Generators}
+
+\begin{DoxyVerb}Tensor: zeros(), ones(), arange()
+\end{DoxyVerb}
+
+
+\subsection*{Example}
+
+\begin{DoxyVerb}See test.cpp for using C++ .
+See test.py for using python  
+\end{DoxyVerb}
+
+
+\subsection*{Author}
+
+\begin{DoxyVerb}Kai-Hsin Wu kaihsinwu@gmail.com \end{DoxyVerb}
+ 

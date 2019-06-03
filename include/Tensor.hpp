@@ -37,7 +37,7 @@ namespace cytnx{
 
         public:
             Tensor_impl(): _contiguous(true){};
-            
+
             void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype, int device=-1);
 
             //clone&assignment constr., use intrusive_ptr's
@@ -263,18 +263,27 @@ namespace cytnx{
             }
              
             //default device==Device.cpu (-1)
-            void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype, int device=-1){
+            /**
+            @brief initialize a Tensor
+            @param shape the shape of tensor.
+            @param dtype the dtype of tensor. This can be any of type defined in cytnx::Type  
+            @param device the device that tensor to be created. This can be cytnx::Device.cpu or cytnx::Device.cuda+<gpuid>
+            
+            ## Example:
+            ### c++ API:
+            \include example/Tensor/Init.cpp
+            #### output>
+            \verbinclude example/Tensor/Init.cpp.out
+            ### python API:
+            \include example/Tensor/Init.py               
+            #### output>
+            \verbinclude example/Tensor/Init.py.out
+            */            
+            void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype=Type.Double, int device=-1){
                 _impl->Init(shape,dtype,device);
             }
-            void Init(const std::initializer_list<cytnx_uint64> &shape,const unsigned int &dtype, int device=-1){
-                std::vector<cytnx_uint64> args = shape;
-                _impl->Init(args,dtype,device);
-            }
 
-            Tensor(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype, int device=-1): _impl(new Tensor_impl()){
-                this->Init(shape,dtype,device);
-            }
-            Tensor(const std::initializer_list<cytnx_uint64> &shape, const unsigned int &dtype,int device=-1): _impl(new Tensor_impl()){
+            Tensor(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype=Type.Double, int device=-1): _impl(new Tensor_impl()){
                 this->Init(shape,dtype,device);
             }
 

@@ -87,12 +87,19 @@ endif
 
 
 
-all: test 
+all: test exam 
 
 
 
-test: test.o $(ALLOBJS)
-	$(CC) $^ $(CCFLAGS) $(LDFLAGS) -o $@
+test: test.o libcytnx.so
+	$(CC) -L. $(LDFLAGS) -o $@ $< libcytnx.so
+	export LD_LIBRARY_PATH=./
+exam: example.o libcytnx.so
+	$(CC) -L. $(LDFLAGS) -o $@ $< libcytnx.so	
+	export LD_LIBRARY_PATH=./
+
+libcytnx.so: $(ALLOBJS)
+	$(CC) -shared -o $@ $^ $(CCFLAGS) $(LDFLAGS)
 
 pyobj: $(ALLOBJS)
 	$(CC) $(INCFLAGS) $(CCFLAGS) $(shell python3 -m pybind11 --includes)  pybind/cytnx.cpp $^ $(LDFLAGS) -shared -o cytnx$(shell python3-config --extension-suffix)
@@ -332,9 +339,13 @@ Exp_.o: $(CytnxPATH)/src/linalg/Exp_.cpp $(CytnxPATH)/include/linalg/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Eigh.o: $(CytnxPATH)/src/linalg/Eigh.cpp $(CytnxPATH)/include/linalg/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+
+
 test.o: test.cpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
+example.o: example/example.cpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 
 .phony : clean cleanpy
