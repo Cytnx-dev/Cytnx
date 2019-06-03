@@ -2,6 +2,10 @@
 
 ![alt text](./Icon_small.png)
 
+## Documentation:
+
+    [https://kaihsin.github.io/Cytnx/](https://kaihsin.github.io/Cytnx/)
+
 ## Requirements
     * Boost v1.53+ [check_deleted, atomicadd, intrusive_ptr]
     * C++11
@@ -56,9 +60,6 @@
     * Symmetry  [binded]
     * UniTensor [x]
 
-## Documentation:
-
-    https://kaihsin.github.io/Cytnx/
 
 ## Feature:
 
