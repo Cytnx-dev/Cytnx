@@ -1,7 +1,5 @@
 # Cytnx
 
-![alt text](./Icon_small.png)
-
 ## Requirements
     * Boost v1.53+ [check_deleted, atomicadd, intrusive_ptr]
     * C++11
@@ -56,7 +54,7 @@
     * Symmetry  [binded]
     * UniTensor [x]
 
-## Documentation:
+
 
 ## Feature:
 
@@ -66,14 +64,14 @@
     and easy transfer to C++ with small effort!
 
 
-```c++
+```{.cpp}
     // c++ version:
     #include "cytnx.hpp"
     cytnx::Tensor A({3,4,5},cytnx::Type.Double,cytnx::Device.cpu)
 ```
 
 
-```python
+```{.py}
     # python version:
     import cytnx
     A =  cytnx.Tensor((3,4,5),dtype=cytnx.Type.Double,device=cytnx.Device.cpu)
@@ -101,7 +99,7 @@
           and moving btwn devices.
         * Generic type object, the behavior is very similar to python.
 
-```c++
+```{.cpp}
             Storage A(400,Type.Double);
             for(int i=0;i<400;i++)
                 A.at<double>(i) = i;
@@ -116,7 +114,7 @@
         * A tensor, API very similar to numpy and pytorch.
         * simple moving btwn CPU and GPU:
 
-```c++
+```{.cpp}
             Tensor A({3,4},Type.Double,Device.cpu); // create tensor on CPU (default)
             Tensor B({3,4},Type.Double,Device.cuda+0); // create tensor on GPU with gpu-id=0
 
@@ -130,14 +128,14 @@
             A.to_(Device.cuda+0);
 ```
         * Type conversion in between avaliable:
-```c++
+```{.cpp}
             Tensor A({3,4},Type.Double);
             Tensor B = A.astype(Type.Uint64); // cast double to uint64_t
 ```
 
         * vitual swap and permute. All the permute and swap will not change the underlying memory
         * Use Contiguous() when needed to actual moving the memory layout.
-```c++
+```{.cpp}
             Tensor A({3,4,5,2},Type.Double);
             A.permute_({0,3,1,2}); // this will not change the memory, only the shape info is changed.
             cout << A.is_contiguous() << endl; // this will be false!
@@ -147,13 +145,13 @@
 ```
 
         * access single element using .at
-```c++
+```{.cpp}
             Tensor A({3,4,5},Type.Double);
             double val = A.at<double>({0,2,2});
 ```
 
         * access elements with python slices similarity:
-```c++
+```{.cpp}
             typedef Accessor ac;
             Tensor A({3,4,5},Type.Double);
             Tensor out = A.get({ac(0),ac::all(),ac::range(1,4)}); 
