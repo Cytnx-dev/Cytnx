@@ -93,10 +93,10 @@ all: test exam
 
 test: test.o libcytnx.so
 	$(CC) -L. $(LDFLAGS) -o $@ $< libcytnx.so
-	export LD_LIBRARY_PATH=./
+	export LD_LIBRARY_PATH=.
 exam: example.o libcytnx.so
 	$(CC) -L. $(LDFLAGS) -o $@ $< libcytnx.so	
-	export LD_LIBRARY_PATH=./
+	export LD_LIBRARY_PATH=.
 
 libcytnx.so: $(ALLOBJS)
 	$(CC) -shared -o $@ $^ $(CCFLAGS) $(LDFLAGS)
