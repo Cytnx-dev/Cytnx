@@ -64,18 +64,17 @@
     and easy transfer to C++ with small effort!
 
 
-```{.cpp}
+```c++
     // c++ version:
     #include "cytnx.hpp"
     cytnx::Tensor A({3,4,5},cytnx::Type.Double,cytnx::Device.cpu)
-
 ```
 
-```{.py}
+
+```python
     # python version:
     import cytnx
     A =  cytnx.Tensor((3,4,5),dtype=cytnx.Type.Double,device=cytnx.Device.cpu)
-
 ```
 
 
