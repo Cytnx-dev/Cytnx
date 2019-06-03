@@ -25,7 +25,7 @@ C = Tensor({3,4,5},Type.Double,Device.cuda+0);
 print(C)
 
 #4. Create an empty Tensor, and init later
-Tensor D;
+D = Tensor()
 D.Init({3,4,5},Type.Double,Device.cpu);
 
 

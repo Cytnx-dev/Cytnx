@@ -14,11 +14,11 @@ void \hyperlink{classcytnx_1_1Tensor_ae03885db7cbcce60d5555442832e14dd}{Init} (c
 \mbox{\Hypertarget{classcytnx_1_1Tensor_abc069e97488d02d689a36640ced036cf}\label{classcytnx_1_1Tensor_abc069e97488d02d689a36640ced036cf}} 
 {\bfseries Tensor} (const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&shape, const unsigned int \&dtype=Type.\+Double, int device=-\/1)
 \item 
-\mbox{\Hypertarget{classcytnx_1_1Tensor_a5c6e1d98fb1a75d09fdc139cb3d52c28}\label{classcytnx_1_1Tensor_a5c6e1d98fb1a75d09fdc139cb3d52c28}} 
-const unsigned int {\bfseries dtype} () const
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}\label{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}} 
+unsigned int {\bfseries dtype} () const
 \item 
-\mbox{\Hypertarget{classcytnx_1_1Tensor_a5a6a181cf6605afbd06bcb0834009760}\label{classcytnx_1_1Tensor_a5a6a181cf6605afbd06bcb0834009760}} 
-const int {\bfseries device} () const
+\mbox{\Hypertarget{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}\label{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}} 
+int {\bfseries device} () const
 \item 
 \mbox{\Hypertarget{classcytnx_1_1Tensor_a95be7cd19b19ebbb44e781ee03eadbb4}\label{classcytnx_1_1Tensor_a95be7cd19b19ebbb44e781ee03eadbb4}} 
 const std\+::string {\bfseries dtype\+\_\+str} () const
@@ -268,7 +268,7 @@ C = Tensor(\{3,4,5\},Type.Double,Device.cuda+0);
 print(C)
 
 \textcolor{comment}{#4. Create an empty Tensor, and init later}
-Tensor D;
+D = Tensor()
 D.Init(\{3,4,5\},Type.Double,Device.cpu);
 
 
