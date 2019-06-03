@@ -15,7 +15,8 @@
 #include "utils/utils.hpp"
 
 namespace cytnx{
-
+   
+    /// @cond  
     class UniTensor_base: public intrusive_ptr_base<UniTensor_base>{
         protected:
             std::vector< Bond > _bonds;
@@ -86,9 +87,10 @@ namespace cytnx{
             virtual Tensor get_block(const std::vector<cytnx_int64> &qnum) const;
             virtual std::vector<Tensor> get_blocks() const;
     };
-
+    /// @endcond
 
     //======================================================================
+    /// @cond
     class DenseUniTensor: public UniTensor_base{
         protected:
             Tensor _block;
@@ -155,7 +157,11 @@ namespace cytnx{
             // end virtual function              
 
     };
+    /// @endcond
+
+
     //======================================================================
+    /// @cond
     class SparseUniTensor: public UniTensor_base{
         protected:
             std::vector<Tensor> _blocks;
@@ -196,8 +202,8 @@ namespace cytnx{
             std::vector<Tensor> get_blocks() const {};
             // end virtual func
     };
+    /// @endcond
 
-    //======================================================================
     //======================================================================
     //wrapper:
     class UniTensor{
@@ -329,6 +335,7 @@ namespace cytnx{
     std::ostream& operator<<(std::ostream& os, const UniTensor &in);
 
     // real implementation
+    /// @cond
     /*
     class UniTensor_impl: public intrusive_ptr_base<UniTensor_impl>{
         private:
@@ -645,8 +652,8 @@ namespace cytnx{
                 return this->_impl->at<T>(args);
             }
     };// class UniTensor
-    
     */
+    /// @endcond
 }
 
 #endif

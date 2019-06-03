@@ -19,7 +19,7 @@ namespace cytnx{
     typedef std::complex<float> cytnx_complex64;
     typedef std::complex<double> cytnx_complex128;
 
-
+    /// @cond
     struct __type{
         enum __pybind_type{
             Void,
@@ -33,7 +33,7 @@ namespace cytnx{
             Uint32
         };
     };
-
+    /// @endcond
 
     const int N_Type=9;
     class Type_class{

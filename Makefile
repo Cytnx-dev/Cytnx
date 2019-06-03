@@ -98,6 +98,8 @@ pyobj: $(ALLOBJS)
 	$(CC) $(INCFLAGS) $(CCFLAGS) $(shell python3 -m pybind11 --includes)  pybind/cytnx.cpp $^ $(LDFLAGS) -shared -o cytnx$(shell python3-config --extension-suffix)
 
 
+docs : 
+	doxygen docs.doxygen
 
 
 ifeq ($(GPU_Enable),1)

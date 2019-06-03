@@ -15,6 +15,7 @@ namespace cytnx{
 
 
 
+    ///@cond
     // real implementation
     class Tensor_impl: public intrusive_ptr_base<Tensor_impl>{
         private:
@@ -245,7 +246,7 @@ namespace cytnx{
             }
 
     };
-
+    ///@endcond
 
     // wrapping around, API
     class Tensor{

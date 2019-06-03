@@ -1,6 +1,6 @@
 # Cytnx
 
-![alt text](./Icon.png)
+![alt text](./Icon_small.png)
 
 ## Requirements
     * Boost v1.53+ [check_deleted, atomicadd, intrusive_ptr]
@@ -64,13 +64,14 @@
     and easy transfer to C++ with small effort!
 
 
-```c++
+```{.cpp}
     // c++ version:
     #include "cytnx.hpp"
     cytnx::Tensor A({3,4,5},cytnx::Type.Double,cytnx::Device.cpu)
 
 ```
-```python
+
+```{.py}
     # python version:
     import cytnx
     A =  cytnx.Tensor((3,4,5),dtype=cytnx.Type.Double,device=cytnx.Device.cpu)

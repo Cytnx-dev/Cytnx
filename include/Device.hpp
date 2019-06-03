@@ -5,13 +5,14 @@
 
 namespace cytnx{
 
-
+    /// @cond
     struct __device{
         enum __pybind_device{
             cpu=-1,
             cuda=0
         };
     };
+    /// @endcond
 
 
     class Device_class{

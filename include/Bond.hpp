@@ -15,7 +15,7 @@ namespace cytnx{
         BD_BRA = 1,
         BD_REG =0
     };
-
+    /// @cond
     class Bond_impl: public intrusive_ptr_base<Bond_impl>{
         private:
             cytnx_uint64 _dim;
@@ -63,7 +63,7 @@ namespace cytnx{
         
 
     };//Bond_impl
-
+    ///@endcond
 
     //wrapper:
     class Bond{
@@ -100,9 +100,9 @@ namespace cytnx{
 
     };
 
-
+    ///@cond
     std::ostream& operator<<(std::ostream &os,const Bond &bin);
-
+    ///@endcond
 }
 
 

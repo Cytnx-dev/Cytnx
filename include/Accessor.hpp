@@ -7,10 +7,12 @@
 #include <cstring>
 #include <string>
 namespace cytnx{
-
+    /**
+    * @brief object that mimic the python slice to access elements in C++ [this is for c++ API only]. 
+    */
     class Accessor{
         private:
-            cytnx_int64 type;
+            cytnx_int64 type; 
             cytnx_int64 min, max, step;
             cytnx_int64 loc;
 

@@ -23,7 +23,7 @@
 
 namespace cytnx{
 
-    
+    ///@cond    
     class Storage_base : public intrusive_ptr_base<Storage_base> {
         public:
             void* Mem;
@@ -130,8 +130,9 @@ namespace cytnx{
             
 
     };        
+    ///@endcond
 
-    ///////////////////////////////////                    
+    ///@cond
     class FloatStorage : public Storage_base{
         public:
             FloatStorage(){this->dtype=Type.Float;};
@@ -158,7 +159,9 @@ namespace cytnx{
             void set_zeros();
 
     };          
+    ///@endcond
 
+    ///@cond
     class DoubleStorage: public Storage_base{
         public:
             DoubleStorage(){this->dtype=Type.Double;};
@@ -185,9 +188,9 @@ namespace cytnx{
             void set_zeros();
 
     };
+    ///@endcond
 
-
-
+    ///@cond
     class ComplexDoubleStorage: public Storage_base{
         public:
             ComplexDoubleStorage(){this->dtype=Type.ComplexDouble;};
@@ -215,7 +218,9 @@ namespace cytnx{
 
 
     };
+    ///@endcond
 
+    ///@cond
     class ComplexFloatStorage: public Storage_base{
         public:
             ComplexFloatStorage(){this->dtype=Type.ComplexFloat;};
@@ -243,7 +248,9 @@ namespace cytnx{
 
 
     };
+    ///@endcond
 
+    ///@cond
     class Int64Storage : public Storage_base{
         public:
             Int64Storage(){this->dtype=Type.Int64;};
@@ -271,7 +278,9 @@ namespace cytnx{
 
 
     };          
+    ///@endcond
 
+    ///@cond
     class Uint64Storage : public Storage_base{
         public:
             Uint64Storage(){this->dtype=Type.Uint64;};
@@ -301,7 +310,8 @@ namespace cytnx{
 
 
     };          
-
+    ///@endcond
+    ///@cond
     class Int32Storage : public Storage_base{
         public:
             Int32Storage(){this->dtype=Type.Int32;};
@@ -329,8 +339,9 @@ namespace cytnx{
 
 
     };          
+    ///@endcond
 
-
+    ///@cond
     class Uint32Storage : public Storage_base{
         public:
             Uint32Storage(){this->dtype=Type.Uint32;};
@@ -358,15 +369,19 @@ namespace cytnx{
 
 
     };          
+    ///@endcond
 
+    ///@cond
     typedef boost::intrusive_ptr<Storage_base> (*pStorage_init)();
+    ///@endcond
+
+    ///@cond
     class Storage_init_interface: public Type_class{
         public:
             std::vector<pStorage_init> USIInit;
             Storage_init_interface();
     };
-    //extern Storage_init_interface Storage_init;
-
+    ///@endcond;
 
     ///wrapping-up 
     class Storage{  
@@ -455,8 +470,10 @@ namespace cytnx{
             }
 
     };
-    std::ostream& operator<<(std::ostream& os, Storage &in);
 
+    ///@cond
+    std::ostream& operator<<(std::ostream& os, Storage &in);
+    ///@endcond
 
 }
 

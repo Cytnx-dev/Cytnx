@@ -9,6 +9,7 @@
 
 namespace cytnx{
 template<class T>
+/// @cond
 class intrusive_ptr_base {
     public:
 
@@ -66,6 +67,7 @@ private:
         mutable boost::detail::atomic_count ref_count;
 
 };
+///@endcond
 }//cytnx
 
 #endif

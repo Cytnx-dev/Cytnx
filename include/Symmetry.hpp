@@ -8,13 +8,15 @@
 #include "utils/vec_clone.hpp"
 namespace cytnx{
 
+    ///@cond
     struct __sym{
         enum __stype{
             U = -1,
             Z = 0
         };
     };
-
+    ///@endcond
+    
     class SymmetryType_class{
         public:
             enum : int{
@@ -24,8 +26,9 @@ namespace cytnx{
             std::string getname(const int &stype);
     };
     extern SymmetryType_class SymType;
+   
 
-
+    ///@cond
     class Symmetry_base: public intrusive_ptr_base<Symmetry_base>{
         public:
             int stype_id;
@@ -42,7 +45,9 @@ namespace cytnx{
             virtual bool check_qnum(const cytnx_int64 &in_qnum); // check the passed in qnums satisfy the symmetry requirement.
             //virtual std::vector<cytnx_int64>& combine_rule(const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR);
     };
+    ///@endcond
 
+    ///@cond
     class U1Symmetry : public Symmetry_base{
         public:
             U1Symmetry(){};
@@ -59,6 +64,9 @@ namespace cytnx{
             bool check_qnum(const cytnx_int64 &in_qnum);
     
     };
+    ///@endcond
+
+    ///@cond
     class ZnSymmetry : public Symmetry_base{
        public:
             ZnSymmetry(){};
@@ -74,7 +82,7 @@ namespace cytnx{
             }
             bool check_qnum(const cytnx_int64 &in_qnum);
     };
-
+    ///@endcond
 
     //=====================================
     // this is API
