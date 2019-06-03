@@ -1,5 +1,7 @@
 #include "UniTensor.hpp"
 #include "utils/utils.hpp"
+#include "Generator.hpp"
+#include <vector>
 namespace cytnx{
 
 

@@ -62,7 +62,7 @@ int main(int argc, char *argv[]){
     boost::intrusive_ptr<Storage_base> arrayX(new FloatStorage() );
     arrayX->_Init_byptr_safe(tt,4);
     */
-        
+    /*        
     Storage s;
     s.Init(12,Type.Double,Device.cpu);
     s.set_zeros();
@@ -144,9 +144,10 @@ int main(int argc, char *argv[]){
 
     Bond bd_dqu1 = Bond(3, BD_BRA,{{0,2},{1,2},{3,3}});
     cout << bd_dqu1 << endl;
-    
+    */
+   
     Bond bd_1 = Bond(3);
-    Bond bd_2 = Bond(2);
+    Bond bd_2 = Bond(5);
     Bond bd_3 = Bond(4);
     std::vector<Bond> bds = {bd_1,bd_2,bd_3}; 
     std::vector<cytnx_int64> labels = {};

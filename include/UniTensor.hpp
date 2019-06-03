@@ -19,6 +19,9 @@ namespace cytnx{
     /// @cond  
     class UniTensor_base: public intrusive_ptr_base<UniTensor_base>{
         protected:
+            //Tensor _block;
+            //std::vector<Tensor> _blocks;
+
             std::vector< Bond > _bonds;
             std::vector<cytnx_int64> _labels;
             bool _is_braket_form;
@@ -113,7 +116,7 @@ namespace cytnx{
             virtual boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors);
             // this will only work on non-symm tensor (DenseUniTensor)
             virtual void set(const std::vector<Accessor> &accessors, const Tensor &rhs);
- 
+            virtual ~UniTensor_base(){};
     };
     /// @endcond
 
@@ -225,6 +228,7 @@ namespace cytnx{
             void set(const std::vector<Accessor> &accessors, const Tensor &rhs){
                 this->_block.set(accessors,rhs);
             }
+            ~DenseUniTensor(){};
             // end virtual function              
 
     };
@@ -289,6 +293,7 @@ namespace cytnx{
             void set(const std::vector<Accessor> &accessors, const Tensor &rhs){
                 cytnx_error_msg(true,"[ERROR][SparseUniTensor][set] cannot use set on a UniTensor with Symmetry.\n suggestion: try get_block()/get_blocks() first.%s","\n");
             }
+            ~SparseUniTensor(){};
             // end virtual func
     };
     /// @endcond
