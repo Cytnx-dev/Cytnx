@@ -114,3 +114,16 @@ bd_sym = cytnx.Bond(3,cytnx.bondType.BD_KET,\
                         [cytnx.Symmetry.Zn(2),\
                          cytnx.Symmetry.U1()])
 print(bd_sym)
+
+bd_1 = cytnx.Bond(3)
+bd_2 = cytnx.Bond(2)
+bd_3 = cytnx.Bond(4)
+
+U = cytnx.UniTensor([bd_1,bd_2,bd_3],Rowrank=2,dtype=cytnx.Type.Double)
+U.print_diagram()
+U.permute_(0,2,1,Rowrank=1)
+U.print_diagram()
+print(U)
+X = U[0,:,:]
+X.print_diagram()
+

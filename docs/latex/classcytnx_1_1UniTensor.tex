@@ -15,17 +15,11 @@
 \mbox{\Hypertarget{classcytnx_1_1UniTensor_acc305e7b7767843bd282a9c2cc49114c}\label{classcytnx_1_1UniTensor_acc305e7b7767843bd282a9c2cc49114c}} 
 {\bfseries Uni\+Tensor} (const std\+::vector$<$ \hyperlink{classcytnx_1_1Bond}{Bond} $>$ \&bonds, const std\+::vector$<$ cytnx\+\_\+int64 $>$ \&in\+\_\+labels=\{\}, const cytnx\+\_\+int64 \&Rowrank=-\/1, const unsigned int \&dtype=Type.\+Double, const int \&device=Device.\+cpu, const bool \&is\+\_\+diag=false)
 \item 
+\mbox{\Hypertarget{classcytnx_1_1UniTensor_ae94c74dc715d1ed3aa409a894d4dddfb}\label{classcytnx_1_1UniTensor_ae94c74dc715d1ed3aa409a894d4dddfb}} 
+void {\bfseries Init} (const \hyperlink{classcytnx_1_1Tensor}{Tensor} \&in\+\_\+tensor, const cytnx\+\_\+uint64 \&Rowrank)
+\item 
 \mbox{\Hypertarget{classcytnx_1_1UniTensor_ad6ba5c7452b4d83bfbaa9770060f8a63}\label{classcytnx_1_1UniTensor_ad6ba5c7452b4d83bfbaa9770060f8a63}} 
 void {\bfseries Init} (const std\+::vector$<$ \hyperlink{classcytnx_1_1Bond}{Bond} $>$ \&bonds, const std\+::vector$<$ cytnx\+\_\+int64 $>$ \&in\+\_\+labels=\{\}, const cytnx\+\_\+int64 \&Rowrank=-\/1, const unsigned int \&dtype=Type.\+Double, const int \&device=Device.\+cpu, const bool \&is\+\_\+diag=false)
-\item 
-\mbox{\Hypertarget{classcytnx_1_1UniTensor_affbe2fb50dea55d39b43dbabdf941a60}\label{classcytnx_1_1UniTensor_affbe2fb50dea55d39b43dbabdf941a60}} 
-void {\bfseries Init} (const std\+::initializer\+\_\+list$<$ \hyperlink{classcytnx_1_1Bond}{Bond} $>$ \&bonds, const std\+::vector$<$ cytnx\+\_\+int64 $>$ \&in\+\_\+labels=\{\}, const cytnx\+\_\+int64 \&Rowrank=-\/1, const unsigned int \&dtype=Type.\+Double, const int \&device=Device.\+cpu, const bool \&is\+\_\+diag=false)
-\item 
-\mbox{\Hypertarget{classcytnx_1_1UniTensor_ae5ad796cf963441321505478840274c6}\label{classcytnx_1_1UniTensor_ae5ad796cf963441321505478840274c6}} 
-void {\bfseries Init} (const std\+::vector$<$ \hyperlink{classcytnx_1_1Bond}{Bond} $>$ \&bonds, const std\+::initializer\+\_\+list$<$ cytnx\+\_\+int64 $>$ \&in\+\_\+labels=\{\}, const cytnx\+\_\+int64 \&Rowrank=-\/1, const unsigned int \&dtype=Type.\+Double, const int \&device=Device.\+cpu, const bool \&is\+\_\+diag=false)
-\item 
-\mbox{\Hypertarget{classcytnx_1_1UniTensor_a8888a43df956d0f10cce7039bc38ee7f}\label{classcytnx_1_1UniTensor_a8888a43df956d0f10cce7039bc38ee7f}} 
-void {\bfseries Init} (const std\+::initializer\+\_\+list$<$ \hyperlink{classcytnx_1_1Bond}{Bond} $>$ \&bonds, const std\+::initializer\+\_\+list$<$ cytnx\+\_\+int64 $>$ \&in\+\_\+labels=\{\}, const cytnx\+\_\+int64 \&Rowrank=-\/1, const unsigned int \&dtype=Type.\+Double, const int \&device=Device.\+cpu, const bool \&is\+\_\+diag=false)
 \item 
 \mbox{\Hypertarget{classcytnx_1_1UniTensor_ad2ee7e756d5fc9e05faf814b99151544}\label{classcytnx_1_1UniTensor_ad2ee7e756d5fc9e05faf814b99151544}} 
 void {\bfseries set\+\_\+name} (const std\+::string \&in)
@@ -96,14 +90,32 @@ void {\bfseries contiguous\+\_\+} ()
 \mbox{\Hypertarget{classcytnx_1_1UniTensor_a685061555097873eb172381059fda92b}\label{classcytnx_1_1UniTensor_a685061555097873eb172381059fda92b}} 
 void {\bfseries print\+\_\+diagram} (const bool \&bond\+\_\+info=false)
 \item 
+\mbox{\Hypertarget{classcytnx_1_1UniTensor_a432b37f45cd8a87ceefd45eb2d8e6330}\label{classcytnx_1_1UniTensor_a432b37f45cd8a87ceefd45eb2d8e6330}} 
+{\footnotesize template$<$class T $>$ }\\T \& {\bfseries at} (const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&locator)
+\item 
 \mbox{\Hypertarget{classcytnx_1_1UniTensor_a7d4df6dffeca0fd8eafdb9d766813f84}\label{classcytnx_1_1UniTensor_a7d4df6dffeca0fd8eafdb9d766813f84}} 
 \hyperlink{classcytnx_1_1Tensor}{Tensor} {\bfseries get\+\_\+block} (const cytnx\+\_\+uint64 \&idx=0) const
 \item 
 \mbox{\Hypertarget{classcytnx_1_1UniTensor_a9d08b8f666a998f435ccc2ac96e6c7e5}\label{classcytnx_1_1UniTensor_a9d08b8f666a998f435ccc2ac96e6c7e5}} 
 \hyperlink{classcytnx_1_1Tensor}{Tensor} {\bfseries get\+\_\+block} (const std\+::vector$<$ cytnx\+\_\+int64 $>$ \&qnum) const
 \item 
+\mbox{\Hypertarget{classcytnx_1_1UniTensor_a216d54f936554fa11b1edaff968d69d4}\label{classcytnx_1_1UniTensor_a216d54f936554fa11b1edaff968d69d4}} 
+\hyperlink{classcytnx_1_1Tensor}{Tensor} {\bfseries get\+\_\+block\+\_\+} (const cytnx\+\_\+uint64 \&idx=0) const
+\item 
 \mbox{\Hypertarget{classcytnx_1_1UniTensor_a661bc7073dc51b16a4b9802bbcc3cba2}\label{classcytnx_1_1UniTensor_a661bc7073dc51b16a4b9802bbcc3cba2}} 
 std\+::vector$<$ \hyperlink{classcytnx_1_1Tensor}{Tensor} $>$ {\bfseries get\+\_\+blocks} () const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1UniTensor_abcd3008bf05771f0623ce1ef80b1085a}\label{classcytnx_1_1UniTensor_abcd3008bf05771f0623ce1ef80b1085a}} 
+void {\bfseries put\+\_\+block} (const \hyperlink{classcytnx_1_1Tensor}{Tensor} \&in, const cytnx\+\_\+uint64 \&idx=0)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1UniTensor_a9bf19662043d456a89a8e51215c67beb}\label{classcytnx_1_1UniTensor_a9bf19662043d456a89a8e51215c67beb}} 
+void {\bfseries put\+\_\+block} (const \hyperlink{classcytnx_1_1Tensor}{Tensor} \&in, const std\+::vector$<$ cytnx\+\_\+int64 $>$ \&qnum)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1UniTensor_a2e2d7f3137bb1cfb26e6a19acbc9563e}\label{classcytnx_1_1UniTensor_a2e2d7f3137bb1cfb26e6a19acbc9563e}} 
+\hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor} {\bfseries get} (const std\+::vector$<$ \hyperlink{classcytnx_1_1Accessor}{Accessor} $>$ \&accessors) const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1UniTensor_a90ba42a96ac324dfea7436d383fecc79}\label{classcytnx_1_1UniTensor_a90ba42a96ac324dfea7436d383fecc79}} 
+void {\bfseries set} (const std\+::vector$<$ \hyperlink{classcytnx_1_1Accessor}{Accessor} $>$ \&accessors, const \hyperlink{classcytnx_1_1Tensor}{Tensor} \&rhs)
 \item 
 \mbox{\Hypertarget{classcytnx_1_1UniTensor_a456aaaa3a3872c0bae08a51336703a51}\label{classcytnx_1_1UniTensor_a456aaaa3a3872c0bae08a51336703a51}} 
 {\bfseries Uni\+Tensor} (const \hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor} \&rhs)

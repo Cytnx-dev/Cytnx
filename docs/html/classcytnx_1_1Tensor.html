@@ -81,12 +81,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a122d879973b24d961a888d615e7e2673"><td class="memItemLeft" align="right" valign="top"><a id="a122d879973b24d961a888d615e7e2673"></a>
 <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;rhs)</td></tr>
 <tr class="separator:a122d879973b24d961a888d615e7e2673"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae03885db7cbcce60d5555442832e14dd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#ae03885db7cbcce60d5555442832e14dd">Init</a> (const std::vector&lt; cytnx_uint64 &gt; &amp;shape, const unsigned int &amp;dtype=Type.Double, int device=-1)</td></tr>
-<tr class="memdesc:ae03885db7cbcce60d5555442832e14dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">initialize a <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>  <a href="#ae03885db7cbcce60d5555442832e14dd">More...</a><br /></td></tr>
-<tr class="separator:ae03885db7cbcce60d5555442832e14dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc069e97488d02d689a36640ced036cf"><td class="memItemLeft" align="right" valign="top"><a id="abc069e97488d02d689a36640ced036cf"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Tensor</b> (const std::vector&lt; cytnx_uint64 &gt; &amp;shape, const unsigned int &amp;dtype=Type.Double, int device=-1)</td></tr>
-<tr class="separator:abc069e97488d02d689a36640ced036cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afdb4470e0dc934964d80aa9c761cca48"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#afdb4470e0dc934964d80aa9c761cca48">Init</a> (const std::vector&lt; cytnx_uint64 &gt; &amp;shape, const unsigned int &amp;dtype=Type.Double, const int &amp;device=-1)</td></tr>
+<tr class="memdesc:afdb4470e0dc934964d80aa9c761cca48"><td class="mdescLeft">&#160;</td><td class="mdescRight">initialize a <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>  <a href="#afdb4470e0dc934964d80aa9c761cca48">More...</a><br /></td></tr>
+<tr class="separator:afdb4470e0dc934964d80aa9c761cca48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afdcff16b2096d10b524161be52ba767e"><td class="memItemLeft" align="right" valign="top"><a id="afdcff16b2096d10b524161be52ba767e"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Tensor</b> (const std::vector&lt; cytnx_uint64 &gt; &amp;shape, const unsigned int &amp;dtype=Type.Double, const int &amp;device=-1)</td></tr>
+<tr class="separator:afdcff16b2096d10b524161be52ba767e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4472af6f8e825a13440e832bf82fb627"><td class="memItemLeft" align="right" valign="top"><a id="a4472af6f8e825a13440e832bf82fb627"></a>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>dtype</b> () const</td></tr>
 <tr class="separator:a4472af6f8e825a13440e832bf82fb627"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -266,8 +266,8 @@ boost::intrusive_ptr&lt; Tensor_impl &gt;&#160;</td><td class="memItemRight" val
 <tr class="separator:a8ce244b54f83542eb4c66e2d6f0e7d86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ae03885db7cbcce60d5555442832e14dd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae03885db7cbcce60d5555442832e14dd">&#9670;&nbsp;</a></span>Init()</h2>
+<a id="afdb4470e0dc934964d80aa9c761cca48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afdb4470e0dc934964d80aa9c761cca48">&#9670;&nbsp;</a></span>Init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -290,7 +290,7 @@ boost::intrusive_ptr&lt; Tensor_impl &gt;&#160;</td><td class="memItemRight" val
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const int &amp;&#160;</td>
           <td class="paramname"><em>device</em> = <code>-1</code>&#160;</td>
         </tr>
         <tr>

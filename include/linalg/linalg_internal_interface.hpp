@@ -22,6 +22,7 @@
 #endif
 
 namespace cytnx{
+    
     namespace linalg_internal{
         typedef void (*Arithmicfunc_oii)(boost::intrusive_ptr<Storage_base> &,boost::intrusive_ptr<Storage_base> &,boost::intrusive_ptr<Storage_base> &,const unsigned long long & len, const char &type);
         typedef void (*Svdfunc_oii)(const boost::intrusive_ptr<Storage_base> &, boost::intrusive_ptr<Storage_base> &,boost::intrusive_ptr<Storage_base> &,  boost::intrusive_ptr<Storage_base> &, const cytnx_int32 &, const cytnx_int32&);
@@ -54,6 +55,7 @@ namespace cytnx{
         };
         extern linalg_internal_interface lii;
     }
+    
 }
 #endif
 

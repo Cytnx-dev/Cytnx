@@ -90,12 +90,12 @@ endif
 all: test exam 
 
 
-test: test.o $(ALLOBJS)
-	$(CC) -o $@ $^ $(CCFLAGS) $(LDFLAGS)
+#test: test.o $(ALLOBJS)
+#	$(CC) -o $@ $^ $(CCFLAGS) $(LDFLAGS)
 
-#test: test.o libcytnx.so
-#	$(CC) -L. $(LDFLAGS) -o $@ $< libcytnx.so
-#	export LD_LIBRARY_PATH=.
+test: test.o libcytnx.so
+	$(CC) -L. $(LDFLAGS) -o $@ $< libcytnx.so
+	export LD_LIBRARY_PATH=.
 exam: example.o libcytnx.so
 	$(CC) -L. $(LDFLAGS) -o $@ $< libcytnx.so	
 	export LD_LIBRARY_PATH=.
@@ -353,7 +353,7 @@ example.o: example/example.cpp
 .phony : clean cleanpy
 
 clean:
-	rm *.o test *.so
+	rm *.o test *.so exam
 
 cleanpy:
 	rm *.so

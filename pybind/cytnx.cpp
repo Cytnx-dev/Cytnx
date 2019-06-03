@@ -239,12 +239,12 @@ PYBIND11_MODULE(cytnx,m){
                 .def("is_contiguous", &cytnx::Tensor::is_contiguous)
                 .def("permute_",[](cytnx::Tensor &self, py::args args){
                     std::vector<cytnx::cytnx_uint64> c_args = args.cast< std::vector<cytnx::cytnx_uint64> >();
-                    std::cout << c_args.size() << std::endl;
+                    //std::cout << c_args.size() << std::endl;
                     self.permute_(c_args);
                 })
                 .def("permute",[](cytnx::Tensor &self, py::args args)->cytnx::Tensor{
                     std::vector<cytnx::cytnx_uint64> c_args = args.cast< std::vector<cytnx::cytnx_uint64> >();
-                    std::cout << c_args.size() << std::endl;
+                    //std::cout << c_args.size() << std::endl;
                     return self.permute(c_args);
                 })
                 .def("contiguous",&cytnx::Tensor::contiguous)
@@ -534,5 +534,155 @@ PYBIND11_MODULE(cytnx,m){
                 .def("Exp",&cytnx::Tensor::Exp)
                 ;
 
+    py::class_<cytnx::UniTensor>(m,"UniTensor")
+                .def(py::init<>())
+                .def(py::init<const cytnx::Tensor&, const cytnx_uint64&>())
+                .def(py::init<const std::vector<cytnx::Bond> &, const std::vector<cytnx_int64> &, const cytnx_int64 &, const unsigned int &,const int &, const bool &>(),py::arg("bonds"),py::arg("in_labels")=std::vector<cytnx_int64>(),py::arg("Rowrank")=(cytnx_int64)(-1),py::arg("dtype")=(unsigned int)(cytnx::Type.Double),py::arg("device")=(int)cytnx::Device.cpu,py::arg("is_diag")=false)
+                .def("set_name",&cytnx::UniTensor::set_name)
+                .def_property_readonly("Rowrank",&cytnx::UniTensor::Rowrank)
+                .def_property_readonly("dtype",&cytnx::UniTensor::dtype)
+                .def_property_readonly("dtype_str",&cytnx::UniTensor::dtype_str)
+                .def_property_readonly("device",&cytnx::UniTensor::device)
+                .def_property_readonly("device_str",&cytnx::UniTensor::device_str)
+                .def_property_readonly("name",&cytnx::UniTensor::name)
+
+
+                .def("__getitem__",[](const cytnx::UniTensor &self, py::object locators){
+                    cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to getitem from a empty UniTensor%s","\n");
+                    
+                    size_t start, stop, step, slicelength; 
+                    std::vector<cytnx::Accessor> accessors;
+                    if(py::isinstance<py::tuple>(locators)){
+                        py::tuple Args = locators.cast<py::tuple>();
+                        // mixing of slice and ints
+                        for(cytnx_uint32 axis=0;axis<self.shape().size();axis++){
+                            if(axis >= Args.size()){accessors.push_back(Accessor::all());}
+                            else{ 
+                                // check type:
+                                if(py::isinstance<py::slice>(Args[axis])){
+                                    py::slice sls = Args[axis].cast<py::slice>();
+                                    if(!sls.compute(self.shape()[axis],&start,&stop,&step, &slicelength))
+                                        throw py::error_already_set();
+                                    if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
+                                    else accessors.push_back(cytnx::Accessor::range(start,stop,step));
+                                }else{
+                                    accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
+                                }
+                            }
+                        }
+                    }else{
+                        // only int
+                        for(cytnx_uint32 i=0;i<self.shape().size();i++){
+                            if(i==0) accessors.push_back(cytnx::Accessor(locators.cast<cytnx_int64>()));
+                            else accessors.push_back(cytnx::Accessor::all());
+                        }
+                    }
+                    
+                    return self.get(accessors);
+                    
+                })
+                .def("__setitem__",[](cytnx::UniTensor &self, py::object locators, const cytnx::Tensor &rhs){
+                    cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to setelem to a empty UniTensor%s","\n");
+                    
+                    size_t start, stop, step, slicelength; 
+                    std::vector<cytnx::Accessor> accessors;
+                    if(py::isinstance<py::tuple>(locators)){
+                        py::tuple Args = locators.cast<py::tuple>();
+                        // mixing of slice and ints
+                        for(cytnx_uint32 axis=0;axis<self.shape().size();axis++){
+                            if(axis >= Args.size()){accessors.push_back(Accessor::all());}
+                            else{ 
+                                // check type:
+                                if(py::isinstance<py::slice>(Args[axis])){
+                                    py::slice sls = Args[axis].cast<py::slice>();
+                                    if(!sls.compute(self.shape()[axis],&start,&stop,&step, &slicelength))
+                                        throw py::error_already_set();
+                                    if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
+                                    else accessors.push_back(cytnx::Accessor::range(start,stop,step));
+                                }else{
+                                    accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
+                                }
+                            }
+                        }
+                    }else{
+                        // only int
+                        for(cytnx_uint32 i=0;i<self.shape().size();i++){
+                            if(i==0) accessors.push_back(cytnx::Accessor(locators.cast<cytnx_int64>()));
+                            else accessors.push_back(cytnx::Accessor::all());
+                        }
+                    }
+                    
+                    self.set(accessors,rhs);
+                    
+                })
+
+                .def("is_contiguous", &cytnx::UniTensor::is_contiguous)
+                .def("is_diag",&cytnx::UniTensor::is_diag)
+                .def("is_tag" ,&cytnx::UniTensor::is_tag)
+                .def("is_braket_form",&cytnx::UniTensor::is_braket_form)
+                .def("labels",&cytnx::UniTensor::labels)
+                .def("bonds",&cytnx::UniTensor::bonds)
+                .def("shape",&cytnx::UniTensor::shape)
+                .def("to_",&cytnx::UniTensor::to_)
+                .def("to",&cytnx::UniTensor::to)
+                .def("clone",&cytnx::UniTensor::clone)
+                //.def("permute",&cytnx::UniTensor::permute,py::arg("mapper"),py::arg("Rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
+                //.def("permute_",&cytnx::UniTensor::permute_,py::arg("mapper"),py::arg("Rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
+
+                .def("permute_",[](cytnx::UniTensor &self, py::args args, py::kwargs kwargs){
+                    std::vector<cytnx::cytnx_int64> c_args = args.cast< std::vector<cytnx::cytnx_int64> >();
+                    cytnx_int64 Rowrank = -1;
+                    bool by_label = false;
+                    if(kwargs){
+                        if(kwargs.contains("Rowrank")){
+                            Rowrank = kwargs["Rowrank"].cast<cytnx_int64>();
+                        }
+                        if(kwargs.contains("by_label")){ 
+                            by_label = kwargs["by_label"].cast<bool>();
+                        }
+                    }
+                    self.permute_(c_args,Rowrank,by_label);
+                })
+                .def("permute",[](cytnx::UniTensor &self, py::args args, py::kwargs kwargs)->cytnx::UniTensor{
+                    std::vector<cytnx::cytnx_int64> c_args = args.cast< std::vector<cytnx::cytnx_int64> >();
+                    cytnx_int64 Rowrank = -1;
+                    bool by_label = false;
+                    if(kwargs){
+                        if(kwargs.contains("Rowrank")){
+                            Rowrank = kwargs["Rowrank"].cast<cytnx_int64>();
+                        }
+                        if(kwargs.contains("by_label")){ 
+                            by_label = kwargs["by_label"].cast<bool>();
+                        }
+                    }
+                    return self.permute(c_args,Rowrank,by_label);
+                })
+
+                .def("contiguous",&cytnx::UniTensor::contiguous)
+                .def("contiguous_",&cytnx::UniTensor::contiguous_)
+                .def("print_diagram",&cytnx::UniTensor::print_diagram,py::arg("bond_info")=false)
+                        
+                .def("get_block", [](const cytnx::UniTensor &self, const cytnx_uint64&idx){
+                                        return self.get_block(idx);
+                                  },py::arg("idx")=(cytnx_uint64)(0))
+
+                .def("get_block", [](const cytnx::UniTensor &self, const std::vector<cytnx_int64>&qnum){
+                                        return self.get_block(qnum);
+                                  },py::arg("qnum"))
+                .def("get_block_",&cytnx::UniTensor::get_block_)
+
+                .def("put_block", [](cytnx::UniTensor &self, const cytnx::Tensor &in, const cytnx_uint64&idx){
+                                        self.put_block(in,idx);
+                                  },py::arg("in"),py::arg("idx")=(cytnx_uint64)(0))
+
+                .def("put_block", [](cytnx::UniTensor &self, const cytnx::Tensor &in, const std::vector<cytnx_int64>&qnum){
+                                        self.put_block(in,qnum);
+                                  },py::arg("in"),py::arg("qnum"))
+                .def("__repr__",[](cytnx::UniTensor &self)->std::string{
+                    std::cout << self << std::endl;
+                    return std::string("");
+                 })
+
+                ;
 }
 

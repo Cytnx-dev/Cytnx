@@ -19,50 +19,7 @@ int main(int argc, char *argv[]){
 
     //Device.Print_Property();
     
-    
-    //boost::intrusive_ptr<Storage_base> array3(new Storage_base() );
-
-    /*
-    array1->Init(4);
-    array1->to_(Device.cuda); 
-    array2->Init(4);  
-    array3->Init(4);
-    cout << array1->dtype() << endl;
-    cout << array2->dtype() << endl;
-    cout << array3->dtype() << endl;
-
-    array1->at<float>(0) = 1;
-    array1->at<float>(1) = 2;
-    array1->at<float>(2) = 3;
-    array1->at<float>(3) = 4;
-
-    array2 = array1->astype(Type.ComplexDouble);
-    for(int i=0;i<4;i++)
-        cout << array2->at<complex<double> >(i);
-   
- 
-    cout << array2->dtype() << endl;    
-
-    array2 = array2->astype(Type.ComplexFloat);
-
-    // GET RAW POINTER
-    float* A = array1->data<float>();
-    
-    // Convert type:
-    //boost::intrusive_ptr<Storage_base> array3 = array2->astype(Type.Float);
-    boost::intrusive_ptr<Storage_base> array4 = array3;
-
-   
-    cout << array3->refcount() << endl;
-    array4 = array2;
-    cout << array3->refcount() << endl;
-
-    float *tt = (float*)calloc(4,sizeof(float));
-
-    boost::intrusive_ptr<Storage_base> arrayX(new FloatStorage() );
-    arrayX->_Init_byptr_safe(tt,4);
-    */
-    /*        
+           
     Storage s;
     s.Init(12,Type.Double,Device.cpu);
     s.set_zeros();
@@ -144,7 +101,7 @@ int main(int argc, char *argv[]){
 
     Bond bd_dqu1 = Bond(3, BD_BRA,{{0,2},{1,2},{3,3}});
     cout << bd_dqu1 << endl;
-    */
+    
    
     Bond bd_1 = Bond(3);
     Bond bd_2 = Bond(5);

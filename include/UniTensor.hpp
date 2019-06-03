@@ -282,7 +282,7 @@ namespace cytnx{
                 return Tensor();
             }
             std::vector<Tensor> get_blocks() const {};
-            void put_block(const Tensor &in, const cytnx_uint64 &idx=0){};
+            void put_block(const Tensor &in,const cytnx_uint64 &idx=0){};
             void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum){};
             // this will only work on non-symm tensor (DenseUniTensor)
             boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors){
@@ -421,7 +421,7 @@ namespace cytnx{
                 return this->_impl->get_blocks();
             }
             // the put block will have shared view with the internal block, i.e. non-clone. 
-            void put_block(const Tensor &in, const cytnx_uint64 &idx=0){
+            void put_block(const Tensor &in,const cytnx_uint64 &idx=0){
                 this->_impl->put_block(in,idx);
             }
             // the put block will have shared view with the internal block, i.e. non-clone. 
@@ -429,7 +429,7 @@ namespace cytnx{
                 this->_impl->put_block(in,qnum);
             }
 
-            UniTensor get(const std::vector<Accessor> &accessors){
+            UniTensor get(const std::vector<Accessor> &accessors) const{
                 UniTensor out;
                 out._impl = this->_impl->get(accessors);
                 return out;
