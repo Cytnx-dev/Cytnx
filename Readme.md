@@ -4,7 +4,7 @@
 
 ## Documentation:
 
-    [https://kaihsin.github.io/Cytnx/](https://kaihsin.github.io/Cytnx/)
+[https://kaihsin.github.io/Cytnx/](https://kaihsin.github.io/Cytnx/)
 
 ## Requirements
     * Boost v1.53+ [check_deleted, atomicadd, intrusive_ptr]
