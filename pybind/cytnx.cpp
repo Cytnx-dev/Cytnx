@@ -151,8 +151,16 @@ PYBIND11_MODULE(cytnx,m){
                 .def("device",&cytnx::Storage::device)
                 .def("device_str",&cytnx::Storage::device_str)
 
-                .def("astype", &cytnx::Storage::astype,py::arg("new_type"))
-                
+                //[note] this is an interesting binding, since we want if new_type==self.dtype() to return self,
+                //       the pybind cannot handle this. The direct binding will make a "new" instance in terms of 
+                //       python's consideration. 
+                //       The solution is to move the definition into python side. (see cytnx/Storage_conti.py)
+                //.def("astype", &cytnx::Storage::astype,py::arg("new_type"))
+                .def("astype_different_type",[](cytnx::Storage &self, const cytnx_uint64 &new_type){
+                                    cytnx_error_msg(self.dtype()==new_type,"[ERROR][pybind][astype_diffferent_type] same type for astype() should be handle in python side.%s","\n");
+                                    return self.astype(new_type);
+                                },py::arg("new_type"))
+
                 .def("__getitem__",[](cytnx::Storage &self, const unsigned long long &idx){
                     cytnx_error_msg(idx > self.size(),"idx exceed the size of storage.%s","\n");
                     py::object out;
