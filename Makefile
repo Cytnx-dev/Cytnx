@@ -2,8 +2,8 @@ CytnxPATH=.
 CUDA_PATH=/usr/local/cuda
 INCFLAGS :=-I$(CytnxPATH)/include
 
-GPU_Enable=0
-OMP_Enable=0
+GPU_Enable=1
+OMP_Enable=1
 DEBUG_Enable=0
 MKL_Enable=0
 
@@ -12,7 +12,7 @@ ifeq ($(MKL_Enable),1)
   CCFLAGS := -std=c++11 -g -Wformat=0 -fPIC -DUNI_MKL 
   LDFLAGS := -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5 -ldl
 else
-  CC:= g++
+  CC:= g++-6
   CCFLAGS := -std=c++11 -g -Wformat=0 -fPIC
   LDFLAGS :=  -llapack -lblas
 endif
@@ -69,13 +69,14 @@ endif
 
 ## Linalg_internal
 OBJS += linalg_internal_interface.o
-OBJS += Add_internal.o Sub_internal.o Mul_internal.o Div_internal.o Arithmic_internal.o Svd_internal.o Inv_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o
+OBJS += Add_internal.o Sub_internal.o Mul_internal.o Div_internal.o Arithmic_internal.o Svd_internal.o Inv_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_internal.o
 ifeq ($(GPU_Enable),1)
-  OBJS += cuAdd_internal.o cuSub_internal.o cuMul_internal.o cuDiv_internal.o cuArithmic_internal.o cuSvd_internal.o cuInv_inplace_internal.o cuConj_inplace_internal.o cuExp_internal.o  cuEigh_internal.o
+  OBJS += cuAdd_internal.o cuSub_internal.o cuMul_internal.o cuDiv_internal.o cuArithmic_internal.o cuSvd_internal.o cuInv_inplace_internal.o cuConj_inplace_internal.o cuExp_internal.o  cuEigh_internal.o cuMatmul_internal.o
+
 endif
 
 ## Linalg
-OBJS += Add.o Div.o Sub.o Mul.o Svd.o Inv.o Inv_.o Conj.o Conj_.o Exp.o Exp_.o Eigh.o
+OBJS += Add.o Div.o Sub.o Mul.o Svd.o Inv.o Inv_.o Conj.o Conj_.o Exp.o Exp_.o Eigh.o Matmul.o
 
 
 ALLOBJS = $(OBJS)
@@ -202,6 +203,9 @@ Inv_inplace_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Inv_inplac
 Conj_inplace_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Conj_inplace_internal.cpp $(CytnxPATH)/include/linalg/linalg_internal_cpu/Conj_inplace_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 
+Matmul_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Matmul_internal.cpp $(CytnxPATH)/include/linalg/linalg_internal_cpu/Matmul_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+
 
 ifeq ($(GPU_Enable),1)
 
@@ -233,6 +237,9 @@ cuInv_inplace_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuInv_in
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
 cuConj_inplace_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuConj_inplace_internal.cu $(CytnxPATH)/include/linalg/linalg_internal_gpu/cuConj_inplace_internal.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+
+cuMatmul_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuMatmul_internal.cu $(CytnxPATH)/include/linalg/linalg_internal_gpu/cuMatmul_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
 endif
@@ -338,7 +345,8 @@ Exp_.o: $(CytnxPATH)/src/linalg/Exp_.cpp $(CytnxPATH)/include/linalg/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Eigh.o: $(CytnxPATH)/src/linalg/Eigh.cpp $(CytnxPATH)/include/linalg/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
-
+Matmul.o: $(CytnxPATH)/src/linalg/Matmul.cpp $(CytnxPATH)/include/linalg/linalg.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 test.o: test.cpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<

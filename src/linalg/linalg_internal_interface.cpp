@@ -114,6 +114,19 @@ namespace cytnx{
             Conj_inplace_ii[Type.ComplexDouble] = Conj_inplace_internal_cd;
             Conj_inplace_ii[Type.ComplexFloat ] = Conj_inplace_internal_cf;
 
+
+            //=====================
+            Matmul_ii = vector<Matmulfunc_oii>(N_Type);
+            Matmul_ii[Type.ComplexDouble] = Matmul_internal_cd ;
+            Matmul_ii[Type.ComplexFloat ] = Matmul_internal_cf ;
+            Matmul_ii[Type.Double       ] = Matmul_internal_d  ;
+            Matmul_ii[Type.Float        ] = Matmul_internal_f  ;
+            Matmul_ii[Type.Int64        ] = Matmul_internal_i64;
+            Matmul_ii[Type.Uint64       ] = Matmul_internal_u64;
+            Matmul_ii[Type.Int32        ] = Matmul_internal_i32;
+            Matmul_ii[Type.Uint32       ] = Matmul_internal_u32;
+
+
             #ifdef UNI_GPU
                 cuAri_ii = vector<vector<Arithmicfunc_oii> >(N_Type,vector<Arithmicfunc_oii>(N_Type));
 
@@ -205,6 +218,7 @@ namespace cytnx{
                 cuEigh_ii[Type.Double       ] = cuEigh_internal_d;
                 cuEigh_ii[Type.Float        ] = cuEigh_internal_f;
 
+                //=====================
                 cuInv_inplace_ii = vector<Invinplacefunc_oii>(5);
 
                 cuInv_inplace_ii[Type.ComplexDouble] = cuInv_inplace_internal_cd;
@@ -212,11 +226,23 @@ namespace cytnx{
                 cuInv_inplace_ii[Type.Double       ] = cuInv_inplace_internal_d;
                 cuInv_inplace_ii[Type.Float        ] = cuInv_inplace_internal_f;
 
+                //=====================
                 cuConj_inplace_ii = vector<Conjinplacefunc_oii>(3);
 
                 cuConj_inplace_ii[Type.ComplexDouble] = cuConj_inplace_internal_cd;
                 cuConj_inplace_ii[Type.ComplexFloat ] = cuConj_inplace_internal_cf;
 
+
+                //=====================
+                cuMatmul_ii = vector<Matmulfunc_oii>(N_Type);
+                cuMatmul_ii[Type.ComplexDouble] = cuMatmul_internal_cd ;
+                cuMatmul_ii[Type.ComplexFloat ] = cuMatmul_internal_cf ;
+                cuMatmul_ii[Type.Double       ] = cuMatmul_internal_d  ;
+                cuMatmul_ii[Type.Float        ] = cuMatmul_internal_f  ;
+                cuMatmul_ii[Type.Int64        ] = cuMatmul_internal_i64;
+                cuMatmul_ii[Type.Uint64       ] = cuMatmul_internal_u64;
+                cuMatmul_ii[Type.Int32        ] = cuMatmul_internal_i32;
+                cuMatmul_ii[Type.Uint32       ] = cuMatmul_internal_u32;
 
             #endif
         }

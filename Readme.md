@@ -184,7 +184,7 @@
       Conj    |   Conj_   |  Y  |  Y   |    Y 
       Exp     |   Exp_    |  Y  |  Y   |    Y
       Eigh    |   x       |  Y  |  Y   |    Y 
-
+      Matmul  |   x       |  Y  |  Y   |    N
  
 ## Generators 
 

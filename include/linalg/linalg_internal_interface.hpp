@@ -11,7 +11,7 @@
 #include "linalg/linalg_internal_cpu/Inv_inplace_internal.hpp"
 #include "linalg/linalg_internal_cpu/Conj_inplace_internal.hpp"
 #include "linalg/linalg_internal_cpu/Exp_internal.hpp"
-
+#include "linalg/linalg_internal_cpu/Matmul_internal.hpp"
 #ifdef UNI_GPU
     #include "linalg/linalg_internal_gpu/cuArithmic_internal.hpp"
     #include "linalg/linalg_internal_gpu/cuSvd_internal.hpp"
@@ -19,6 +19,7 @@
     #include "linalg/linalg_internal_gpu/cuInv_inplace_internal.hpp"
     #include "linalg/linalg_internal_gpu/cuConj_inplace_internal.hpp"
     #include "linalg/linalg_internal_gpu/cuExp_internal.hpp"
+    #include "linalg/linalg_internal_gpu/cuMatmul_internal.hpp"
 #endif
 
 namespace cytnx{
@@ -29,7 +30,8 @@ namespace cytnx{
         typedef void (*Eighfunc_oii)(const boost::intrusive_ptr<Storage_base> &, boost::intrusive_ptr<Storage_base> &,  boost::intrusive_ptr<Storage_base> &, const cytnx_int32&);
         typedef void (*Invinplacefunc_oii)(boost::intrusive_ptr<Storage_base> &, const cytnx_int32&);
         typedef void (*Conjinplacefunc_oii)(boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
-        typedef void (*Expfunc_oii)(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
+        typedef void (*Expfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
+        typedef void (*Matmulfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &,const boost::intrusive_ptr<Storage_base> &, const cytnx_int32 &, const cytnx_int32 &, const cytnx_int32&);
 
         class linalg_internal_interface{
             public:
@@ -39,7 +41,8 @@ namespace cytnx{
                 std::vector<Invinplacefunc_oii> Inv_inplace_ii;
                 std::vector<Conjinplacefunc_oii> Conj_inplace_ii;
                 std::vector<Expfunc_oii> Exp_ii;
-                
+                std::vector<Matmulfunc_oii> Matmul_ii;
+
                 #ifdef UNI_GPU
                 std::vector<std::vector<Arithmicfunc_oii> > cuAri_ii;
                 std::vector<Svdfunc_oii> cuSvd_ii;
@@ -47,6 +50,7 @@ namespace cytnx{
                 std::vector<Conjinplacefunc_oii> cuConj_inplace_ii;
                 std::vector<Expfunc_oii> cuExp_ii;
                 std::vector<Eighfunc_oii> cuEigh_ii;
+                std::vector<Matmulfunc_oii> cuMatmul_ii;
                 #endif
 
             linalg_internal_interface();

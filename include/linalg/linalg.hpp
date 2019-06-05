@@ -46,6 +46,9 @@ namespace cytnx{
         // Eig:
         std::vector<Tensor> Eigh(const Tensor &Tin, const bool &is_V=false);
 
+        // Matmul:
+        Tensor Matmul(const Tensor &Tin, const Tensor &Tout);
+
 
         // Inv:
         Tensor Inv(const Tensor &Tin);
@@ -59,6 +62,8 @@ namespace cytnx{
         // Exp:
         Tensor Exp(const Tensor &Tin);
         void Exp_(Tensor &Tin);
+
+
 
 
     }// namespace linalg
