@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['device_5fclass',['Device_class',['../classcytnx_1_1Device__class.html',1,'cytnx']]]
+  ['storage',['Storage',['../classcytnx_1_1Storage.html',1,'cytnx']]],
+  ['symmetry',['Symmetry',['../classcytnx_1_1Symmetry.html',1,'cytnx']]]
 ];

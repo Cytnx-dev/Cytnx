@@ -462,24 +462,6 @@ description\+:~\newline
 
 
 \begin{DoxyCodeInclude}
-\textcolor{preprocessor}{#include "cytnx.hpp"}
-\textcolor{preprocessor}{#include <iostream>}
-
-
-\textcolor{keyword}{using namespace }\hyperlink{namespacecytnx}{cytnx};
-\textcolor{keyword}{using namespace }std;
-\textcolor{keywordtype}{int} main()\{
-
-    \hyperlink{classcytnx_1_1Tensor}{Tensor} A(\{3,4,5\});
-
-    \textcolor{comment}{//move the tensor to different device by creating a clone object}
-    \hyperlink{classcytnx_1_1Tensor}{Tensor} B = A.\hyperlink{classcytnx_1_1Tensor_acf7f697a9434f9bc98a7d00a555ee982}{to}(Device.cuda+0);
-    cout << B.\hyperlink{classcytnx_1_1Tensor_a335f7625fa01784f49b2223238d0c14e}{device\_str}() << endl;
-    cout << A.device\_str() << endl;    
-
-
-    \textcolor{keywordflow}{return} 0;
-\}
 \end{DoxyCodeInclude}
  \subparagraph*{output$>$}
 
@@ -490,14 +472,6 @@ description\+:~\newline
 
 
 \begin{DoxyCodeInclude}
-\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *
-
-A = Tensor([3,4,5])
-B = A.to(Device.cuda+0);
-print(B.device\_str())
-print(A.device\_str())
-
-
 \end{DoxyCodeInclude}
  \subparagraph*{output$>$}
 

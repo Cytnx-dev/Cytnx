@@ -12,7 +12,6 @@ namespace cytnx{
             cuda=0
         };
     };
-    /// @endcond
 
 
     class Device_class{
@@ -27,6 +26,8 @@ namespace cytnx{
             void Print_Property();
             std::string getname(const int &device_id);
     };
+    /// @endcond
+
     extern Device_class Device;
 }//namespace cytnx
 #endif

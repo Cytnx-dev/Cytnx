@@ -15,7 +15,6 @@ namespace cytnx{
             Z = 0
         };
     };
-    ///@endcond
     
     class SymmetryType_class{
         public:
@@ -26,7 +25,7 @@ namespace cytnx{
             std::string getname(const int &stype);
     };
     extern SymmetryType_class SymType;
-   
+    ///@endcond
 
     ///@cond
     class Symmetry_base: public intrusive_ptr_base<Symmetry_base>{

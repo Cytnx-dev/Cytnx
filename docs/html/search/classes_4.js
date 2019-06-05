@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['tensor',['Tensor',['../classcytnx_1_1Tensor.html',1,'cytnx']]],
-  ['type_5fclass',['Type_class',['../classcytnx_1_1Type__class.html',1,'cytnx']]]
+  ['unitensor',['UniTensor',['../classcytnx_1_1UniTensor.html',1,'cytnx']]],
+  ['unitensor_5fimpl',['UniTensor_impl',['../classcytnx_1_1UniTensor__impl.html',1,'cytnx']]]
 ];

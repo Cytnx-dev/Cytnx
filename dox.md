@@ -47,12 +47,12 @@
    
 
 ## Objects:
-    * Storage   [binded]
-    * Tensor    [binded]
-    * Bond      [binded] 
-    * Accessor  [c++ only]
-    * Symmetry  [binded]
-    * UniTensor [x]
+    * \link cytnx::Storage Storage \endlink   [binded]
+    * \link cytnx::Tensor Tensor \endlink   [binded]
+    * \link cytnx::Bond Bond \endlink     [binded] 
+    * \link cytnx::Accessor Accessor \endlink [c++ only]
+    * \link cytnx::Symmetry Symmetry \endlink [binded]
+    * \link cytnx::UniTensor UniTensor \endlink [binded]
 
 
 
@@ -179,7 +179,7 @@
       Conj    |   Conj_   |  Y  |  Y   |    Y 
       Exp     |   Exp_    |  Y  |  Y   |    Y
       Eigh    |   x       |  Y  |  Y   |    Y 
-
+      Matmul  |   x       |  Y  |  Y   |    N
  
 ## Generators 
 

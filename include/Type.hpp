@@ -36,7 +36,6 @@ namespace cytnx{
             Uint32
         };
     };
-    /// @endcond
 
     const int N_Type=9;
     class Type_class{
@@ -58,6 +57,7 @@ namespace cytnx{
             unsigned int c_typename_to_id(const std::string &c_name);
 
     };
+    /// @endcond
 
     extern Type_class Type;
 

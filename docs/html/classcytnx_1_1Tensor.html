@@ -60,7 +60,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>cytnx</b></li><li class="navelem"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespacecytnx.html">cytnx</a></li><li class="navelem"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -547,9 +547,9 @@ boost::intrusive_ptr&lt; Tensor_impl &gt;&#160;</td><td class="memItemRight" val
  see also: <a class="el" href="classcytnx_1_1Tensor.html#a114a31fbb8bf4a90f150b6a67e42183a">Tensor.to_ </a> <br />
  </p><h2>Example:</h2>
 <h3>c++ API:</h3>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A({3,4,5});</div><div class="line"></div><div class="line">    <span class="comment">//move the tensor to different device by creating a clone object</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A.<a class="code" href="classcytnx_1_1Tensor.html#acf7f697a9434f9bc98a7d00a555ee982">to</a>(Device.cuda+0);</div><div class="line">    cout &lt;&lt; B.<a class="code" href="classcytnx_1_1Tensor.html#a335f7625fa01784f49b2223238d0c14e">device_str</a>() &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; A.device_str() &lt;&lt; endl;    </div><div class="line"></div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div></div><!-- fragment --> <h4>output&gt;</h4>
+<div class="fragment"></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment"></pre> <h3>python API:</h3>
-<div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line">A = Tensor([3,4,5])</div><div class="line">B = A.to(Device.cuda+0);</div><div class="line">print(B.device_str())</div><div class="line">print(A.device_str())</div><div class="line"></div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<div class="fragment"></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment"></pre> 
 </div>
 </div>
