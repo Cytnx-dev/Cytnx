@@ -251,12 +251,10 @@ PYBIND11_MODULE(cytnx,m){
                 .def("contiguous_",&cytnx::Tensor::contiguous_)
                 .def("reshape_",[](cytnx::Tensor &self, py::args args){
                     std::vector<cytnx::cytnx_int64> c_args = args.cast< std::vector<cytnx::cytnx_int64> >();
-                    std::cout << c_args.size() << std::endl;
                     self.reshape_(c_args);
                 })
                 .def("reshape",[](cytnx::Tensor &self, py::args args)->cytnx::Tensor{
                     std::vector<cytnx::cytnx_int64> c_args = args.cast< std::vector<cytnx::cytnx_int64> >();
-                    std::cout << c_args.size() << std::endl;
                     return self.reshape(c_args);
                 })
                 .def("astype", &cytnx::Tensor::astype,py::arg("new_type"))
@@ -539,6 +537,10 @@ PYBIND11_MODULE(cytnx,m){
                 .def(py::init<const cytnx::Tensor&, const cytnx_uint64&>())
                 .def(py::init<const std::vector<cytnx::Bond> &, const std::vector<cytnx_int64> &, const cytnx_int64 &, const unsigned int &,const int &, const bool &>(),py::arg("bonds"),py::arg("in_labels")=std::vector<cytnx_int64>(),py::arg("Rowrank")=(cytnx_int64)(-1),py::arg("dtype")=(unsigned int)(cytnx::Type.Double),py::arg("device")=(int)cytnx::Device.cpu,py::arg("is_diag")=false)
                 .def("set_name",&cytnx::UniTensor::set_name)
+                .def("set_label",&cytnx::UniTensor::set_label,py::arg("idx"),py::arg("new_label"))
+                .def("set_labels",&cytnx::UniTensor::set_labels,py::arg("new_labels"))
+                .def("set_Rowrank",&cytnx::UniTensor::set_Rowrank, py::arg("new_Rowrank"))
+
                 .def_property_readonly("Rowrank",&cytnx::UniTensor::Rowrank)
                 .def_property_readonly("dtype",&cytnx::UniTensor::dtype)
                 .def_property_readonly("dtype_str",&cytnx::UniTensor::dtype_str)
@@ -546,6 +548,49 @@ PYBIND11_MODULE(cytnx,m){
                 .def_property_readonly("device_str",&cytnx::UniTensor::device_str)
                 .def_property_readonly("name",&cytnx::UniTensor::name)
 
+                .def("reshape",[](cytnx::UniTensor &self, py::args args, py::kwargs kwargs)->cytnx::UniTensor{
+                    std::vector<cytnx::cytnx_int64> c_args = args.cast< std::vector<cytnx::cytnx_int64> >();
+                    cytnx_uint64 Rowrank = 0;
+                   
+                    if(kwargs){
+                        if(kwargs.contains("Rowrank")) Rowrank = kwargs["Rowrank"].cast<cytnx::cytnx_int64>();
+                    }
+ 
+                    return self.reshape(c_args,Rowrank);
+                })
+                .def("reshape_",[](cytnx::UniTensor &self, py::args args, py::kwargs kwargs){
+                    std::vector<cytnx::cytnx_int64> c_args = args.cast< std::vector<cytnx::cytnx_int64> >();
+                    cytnx_uint64 Rowrank = 0;
+                   
+                    if(kwargs){
+                        if(kwargs.contains("Rowrank")) Rowrank = kwargs["Rowrank"].cast<cytnx::cytnx_int64>();
+                    }
+ 
+                    self.reshape_(c_args,Rowrank);
+                })
+
+
+                .def("item",[](cytnx::UniTensor &self){
+                    py::object out;
+                    if(self.dtype() == cytnx::Type.Double) 
+                        out =  py::cast(self.item<cytnx::cytnx_double>());
+                    else if(self.dtype() == cytnx::Type.Float) 
+                        out = py::cast(self.item<cytnx::cytnx_float>());
+                    else if(self.dtype() == cytnx::Type.ComplexDouble) 
+                        out = py::cast(self.item<cytnx::cytnx_complex128>());
+                    else if(self.dtype() == cytnx::Type.ComplexFloat) 
+                        out = py::cast(self.item<cytnx::cytnx_complex64>());
+                    else if(self.dtype() == cytnx::Type.Uint64) 
+                        out = py::cast(self.item<cytnx::cytnx_uint64>());
+                    else if(self.dtype() == cytnx::Type.Int64) 
+                        out = py::cast(self.item<cytnx::cytnx_int64>());
+                    else if(self.dtype() == cytnx::Type.Uint32) 
+                        out = py::cast(self.item<cytnx::cytnx_uint32>());
+                    else if(self.dtype() == cytnx::Type.Int32) 
+                        out = py::cast(self.item<cytnx::cytnx_int32>());
+                    else cytnx_error_msg(true, "%s","[ERROR] try to get element from a empty UniTensor.");
+                    return out;
+                 })
 
                 .def("__getitem__",[](const cytnx::UniTensor &self, py::object locators){
                     cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to getitem from a empty UniTensor%s","\n");
@@ -682,7 +727,12 @@ PYBIND11_MODULE(cytnx,m){
                     std::cout << self << std::endl;
                     return std::string("");
                  })
-
                 ;
+
+    pybind11::module m_linalg = m.def_submodule("linalg","linear algebra related.");
+
+    m_linalg.def("Svd",&cytnx::linalg::Svd,py::arg("Tin"),py::arg("is_U")=true,py::arg("is_vT")=true);
+    m_linalg.def("Eigh",&cytnx::linalg::Eigh,py::arg("Tin"),py::arg("is_V")=false);
+
 }
 

@@ -1,3 +1,4 @@
+InstallPATH=.
 CytnxPATH=.
 CUDA_PATH=/usr/local/cuda
 INCFLAGS :=-I$(CytnxPATH)/include

@@ -58,7 +58,7 @@
     * Bond      [binded] 
     * Accessor  [c++ only]
     * Symmetry  [binded]
-    * UniTensor [x]
+    * UniTensor [binded]
 
 
 ## Feature:

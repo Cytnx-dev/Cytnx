@@ -16,7 +16,9 @@
 
 namespace cytnx{
    
-    /// @cond  
+    /// @cond 
+    //class DenseUniTensor;
+    //class SparseUniTensor; 
     class UniTensor_base: public intrusive_ptr_base<UniTensor_base>{
         protected:
             //Tensor _block;
@@ -69,6 +71,10 @@ namespace cytnx{
             const std::vector<Bond> &bonds() const {return this->_bonds;}       
             const std::string& name() const { return this->_name;}
             void set_name(const std::string &in){ this->_name = in;}
+            void set_Rowrank(const cytnx_uint64 &new_Rowrank){
+                cytnx_error_msg(new_Rowrank >= this->_labels.size(),"[ERROR] Rowrank cannot exceed the rank of UniTensor.%s","\n");
+                this->_Rowrank = new_Rowrank;
+            }
             void set_label(const cytnx_uint64 &idx, const cytnx_int64 &new_label){
                 cytnx_error_msg(idx>=this->_labels.size(),"[ERROR] index exceed the rank of UniTensor%s","\n");
                 //check in:
@@ -79,6 +85,13 @@ namespace cytnx{
                 cytnx_error_msg(is_dup,"[ERROR] alreay has a label that is the same as the input label%s","\n");
                 this->_labels[idx] = new_label;                
             }
+            void set_labels(const std::vector<cytnx_int64> &new_labels){
+                cytnx_error_msg(new_labels.size()!=this->_labels.size(),"[ERROR][set_labels][UniTensor] %s\n","the len(new_labels) does not match the rank of the UniTenosr");
+                //check duplicate:
+                std::vector<cytnx_int64> tmp = vec_unique<cytnx_int64>(new_labels);
+                cytnx_error_msg(tmp.size() != new_labels.size(), "[ERROR][set_labels][UniTensor] %s\n","the input labels cannot contain duplicated element(s).");
+                this->_labels = new_labels;
+            }
             template<class T>
             T& at(const std::vector<cytnx_uint64> &locator){
                 cytnx_error_msg(this->is_blockform(),"[ERROR] cannot access element using at<T> on a UniTensor with symmetry.\n suggestion: get_block/get_blocks first.%s","\n");
@@ -87,6 +100,7 @@ namespace cytnx{
                 return this->get_block_().at<T>(locator);
             }
             
+
 
             virtual void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1,const unsigned int &dtype=Type.Double,const int &device = Device.cpu,const bool &is_diag=false);
             virtual void Init_by_Tensor(const Tensor& in, const cytnx_uint64 &Rowrank);
@@ -116,6 +130,7 @@ namespace cytnx{
             virtual boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors);
             // this will only work on non-symm tensor (DenseUniTensor)
             virtual void set(const std::vector<Accessor> &accessors, const Tensor &rhs);
+            virtual void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank=0);
             virtual ~UniTensor_base(){};
     };
     /// @endcond
@@ -228,6 +243,15 @@ namespace cytnx{
             void set(const std::vector<Accessor> &accessors, const Tensor &rhs){
                 this->_block.set(accessors,rhs);
             }
+            void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank=0){
+                cytnx_error_msg(this->is_tag(),"[ERROR] cannot reshape a tagged UniTensor. suggestion: use untag() first.%s","\n");
+                cytnx_error_msg(Rowrank > new_shape.size(), "[ERROR] Rowrank cannot larger than the rank of reshaped UniTensor.%s","\n");
+                this->_block.reshape_(new_shape);
+                this->Init_by_Tensor(this->_block,Rowrank);
+            }
+
+
+
             ~DenseUniTensor(){};
             // end virtual function              
 
@@ -293,6 +317,9 @@ namespace cytnx{
             void set(const std::vector<Accessor> &accessors, const Tensor &rhs){
                 cytnx_error_msg(true,"[ERROR][SparseUniTensor][set] cannot use set on a UniTensor with Symmetry.\n suggestion: try get_block()/get_blocks() first.%s","\n");
             }
+            void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank=0){
+                cytnx_error_msg(true,"[ERROR] cannot reshape a UniTensor with symmetry.%s","\n");
+            }
             ~SparseUniTensor(){};
             // end virtual func
     };
@@ -354,6 +381,25 @@ namespace cytnx{
             void set_name(const std::string &in){
                 this->_impl->set_name(in);
             }
+            void set_label(const cytnx_uint64 &idx, const cytnx_int64 &new_label){
+                this->_impl->set_label(idx,new_label);
+            }
+            void set_labels(const std::vector<cytnx_int64> &new_labels){
+                this->_impl->set_labels(new_labels);
+            }
+            void set_Rowrank(const cytnx_uint64 &new_Rowrank){
+                this->_impl->set_Rowrank(new_Rowrank);
+            }
+            template<class T>
+            T& item(){
+
+                cytnx_error_msg(this->is_blockform(),"[ERROR] cannot use item on UniTensor with Symmetry.\n suggestion: use get_block()/get_blocks() first.%s","\n");
+                
+                DenseUniTensor* tmp = static_cast<DenseUniTensor*>(this->_impl.get());
+                return tmp->_block.item<T>();
+
+            }
+
 
             cytnx_uint64 Rowrank() const{return this->_impl->Rowrank();}
             unsigned int  dtype() const{ return this->_impl->dtype(); }
@@ -437,6 +483,16 @@ namespace cytnx{
             void set(const std::vector<Accessor> &accessors, const Tensor &rhs){
                 this->_impl->set(accessors, rhs);
             }
+
+            UniTensor reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank=0){
+                UniTensor out = this->clone();
+                out._impl->reshape_(new_shape,Rowrank);
+                return out;
+            }
+            void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank=0){
+                this->_impl->reshape_(new_shape,Rowrank);
+            }
+
 
     };
 

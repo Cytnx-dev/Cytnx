@@ -1,5 +1,5 @@
 import cytnx
-
+from cytnx import linalg
 
 
 #=====================
@@ -50,6 +50,7 @@ scalar_t = Ta[0,1,1]
 print(scalar_t)
 val = scalar_t.item()
 print(val)
+
 
 
 
@@ -126,4 +127,10 @@ U.print_diagram()
 print(U)
 X = U[0,:,:]
 X.print_diagram()
+
+U.reshape_(6,-1)
+U.print_diagram()
+
+
+
 

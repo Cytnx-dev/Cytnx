@@ -95,7 +95,14 @@ namespace cytnx{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
         
+       
+        void UniTensor_base::reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank){
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
 
+        }
+
+
+        //-----------------------------------------
         std::ostream& operator<<(std::ostream& os, const UniTensor &in){
             printf("Tensor name: %s\n",in.name().c_str());
             if(!in.is_tag()) 
