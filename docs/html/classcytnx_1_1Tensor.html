@@ -105,11 +105,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5e2248e9babdb786167ed349df9084ae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#a5e2248e9babdb786167ed349df9084ae">clone</a> () const</td></tr>
 <tr class="memdesc:a5e2248e9babdb786167ed349df9084ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">return a clone of the current <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>.  <a href="#a5e2248e9babdb786167ed349df9084ae">More...</a><br /></td></tr>
 <tr class="separator:a5e2248e9babdb786167ed349df9084ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf7f697a9434f9bc98a7d00a555ee982"><td class="memItemLeft" align="right" valign="top"><a id="acf7f697a9434f9bc98a7d00a555ee982"></a>
-<a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><b>to</b> (const int &amp;<a class="el" href="classcytnx_1_1Tensor.html#ac6d3310eb4defbdacf662dcd81d8fe09">device</a>) const</td></tr>
+<tr class="memitem:acf7f697a9434f9bc98a7d00a555ee982"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#acf7f697a9434f9bc98a7d00a555ee982">to</a> (const int &amp;<a class="el" href="classcytnx_1_1Tensor.html#ac6d3310eb4defbdacf662dcd81d8fe09">device</a>) const</td></tr>
+<tr class="memdesc:acf7f697a9434f9bc98a7d00a555ee982"><td class="mdescLeft">&#160;</td><td class="mdescRight">copy a tensor to new device  <a href="#acf7f697a9434f9bc98a7d00a555ee982">More...</a><br /></td></tr>
 <tr class="separator:acf7f697a9434f9bc98a7d00a555ee982"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a114a31fbb8bf4a90f150b6a67e42183a"><td class="memItemLeft" align="right" valign="top"><a id="a114a31fbb8bf4a90f150b6a67e42183a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>to_</b> (const int &amp;<a class="el" href="classcytnx_1_1Tensor.html#ac6d3310eb4defbdacf662dcd81d8fe09">device</a>)</td></tr>
+<tr class="memitem:a114a31fbb8bf4a90f150b6a67e42183a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#a114a31fbb8bf4a90f150b6a67e42183a">to_</a> (const int &amp;<a class="el" href="classcytnx_1_1Tensor.html#ac6d3310eb4defbdacf662dcd81d8fe09">device</a>)</td></tr>
+<tr class="memdesc:a114a31fbb8bf4a90f150b6a67e42183a"><td class="mdescLeft">&#160;</td><td class="mdescRight">move the current <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> to the device.  <a href="#a114a31fbb8bf4a90f150b6a67e42183a">More...</a><br /></td></tr>
 <tr class="separator:a114a31fbb8bf4a90f150b6a67e42183a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a1d9ed962b0e9a484e2bb0de15eb76d"><td class="memItemLeft" align="right" valign="top"><a id="a6a1d9ed962b0e9a484e2bb0de15eb76d"></a>
 const bool &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>is_contiguous</b> () const</td></tr>
@@ -498,6 +498,88 @@ boost::intrusive_ptr&lt; Tensor_impl &gt;&#160;</td><td class="memItemRight" val
 <p>the shape of the <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> </p>
 <dl class="section return"><dt>Returns</dt><dd>[std::vector&lt;cytnx_uint64&gt;] the shape of the <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> </dd></dl>
 
+</div>
+</div>
+<a id="acf7f697a9434f9bc98a7d00a555ee982"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf7f697a9434f9bc98a7d00a555ee982">&#9670;&nbsp;</a></span>to()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> cytnx::Tensor::to </td>
+          <td>(</td>
+          <td class="paramtype">const int &amp;&#160;</td>
+          <td class="paramname"><em>device</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>copy a tensor to new device </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">device</td><td>the device-id that is moving to. it can be any device defined in cytnx::Device </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>]</dd></dl>
+<p>description: if the device-id is the same as current <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>'s device, then return self. otherwise, return a copy of instance that located on the target device.</p>
+<p>(see also <a class="el" href="classcytnx_1_1Tensor.html#a114a31fbb8bf4a90f150b6a67e42183a" title="move the current Tensor to the device. ">Tensor.to_</a> )</p>
+<h2>Example:</h2>
+<h3>c++ API:</h3>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A({3,4,5});</div><div class="line"></div><div class="line">    <span class="comment">//move the tensor to different device by creating a clone object</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A.<a class="code" href="classcytnx_1_1Tensor.html#acf7f697a9434f9bc98a7d00a555ee982">to</a>(Device.cuda+0);</div><div class="line">    cout &lt;&lt; B.<a class="code" href="classcytnx_1_1Tensor.html#a335f7625fa01784f49b2223238d0c14e">device_str</a>() &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; A.device_str() &lt;&lt; endl;    </div><div class="line"></div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment"></pre> <h3>python API:</h3>
+<div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line">A = Tensor([3,4,5])</div><div class="line">B = A.to(Device.cuda+0);</div><div class="line">print(B.device_str())</div><div class="line">print(A.device_str())</div><div class="line"></div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment"></pre> 
+</div>
+</div>
+<a id="a114a31fbb8bf4a90f150b6a67e42183a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a114a31fbb8bf4a90f150b6a67e42183a">&#9670;&nbsp;</a></span>to_()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cytnx::Tensor::to_ </td>
+          <td>(</td>
+          <td class="paramtype">const int &amp;&#160;</td>
+          <td class="paramname"><em>device</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>move the current <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> to the device. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">device</td><td>the device-id that is moving to. it can be any device defined in cytnx::Device <pre class="fragment">(see also Tensor.to )
+</pre></td></tr>
+  </table>
+  </dd>
+</dl>
+<h2>Example:</h2>
+<h3>c++ API:</h3>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A({3,4,5});</div><div class="line"></div><div class="line">    <span class="comment">// move the instance tensor to different device</span></div><div class="line">    A.<a class="code" href="classcytnx_1_1Tensor.html#a114a31fbb8bf4a90f150b6a67e42183a">to_</a>(Device.cuda+0);</div><div class="line">    cout &lt;&lt; A.device_str() &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment"></pre> <h3>python API:</h3>
+<div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line">A = Tensor([3,4,5])</div><div class="line"></div><div class="line">A.to_(Device.cuda+0);</div><div class="line">print(A.device_str())</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment"></pre> 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>

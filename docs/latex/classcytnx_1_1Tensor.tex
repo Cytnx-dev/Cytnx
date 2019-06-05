@@ -26,12 +26,10 @@ const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \& \hyperlink{classcytnx_1_1Tensor_
 \begin{DoxyCompactList}\small\item\em the shape of the \hyperlink{classcytnx_1_1Tensor}{Tensor} \end{DoxyCompactList}\item 
 \hyperlink{classcytnx_1_1Tensor}{Tensor} \hyperlink{classcytnx_1_1Tensor_a5e2248e9babdb786167ed349df9084ae}{clone} () const
 \begin{DoxyCompactList}\small\item\em return a clone of the current \hyperlink{classcytnx_1_1Tensor}{Tensor}. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classcytnx_1_1Tensor_acf7f697a9434f9bc98a7d00a555ee982}\label{classcytnx_1_1Tensor_acf7f697a9434f9bc98a7d00a555ee982}} 
-\hyperlink{classcytnx_1_1Tensor}{Tensor} {\bfseries to} (const int \&\hyperlink{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}{device}) const
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Tensor_a114a31fbb8bf4a90f150b6a67e42183a}\label{classcytnx_1_1Tensor_a114a31fbb8bf4a90f150b6a67e42183a}} 
-void {\bfseries to\+\_\+} (const int \&\hyperlink{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}{device})
-\item 
+\hyperlink{classcytnx_1_1Tensor}{Tensor} \hyperlink{classcytnx_1_1Tensor_acf7f697a9434f9bc98a7d00a555ee982}{to} (const int \&\hyperlink{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}{device}) const
+\begin{DoxyCompactList}\small\item\em copy a tensor to new device \end{DoxyCompactList}\item 
+void \hyperlink{classcytnx_1_1Tensor_a114a31fbb8bf4a90f150b6a67e42183a}{to\+\_\+} (const int \&\hyperlink{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}{device})
+\begin{DoxyCompactList}\small\item\em move the current \hyperlink{classcytnx_1_1Tensor}{Tensor} to the device. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classcytnx_1_1Tensor_a6a1d9ed962b0e9a484e2bb0de15eb76d}\label{classcytnx_1_1Tensor_a6a1d9ed962b0e9a484e2bb0de15eb76d}} 
 const bool \& {\bfseries is\+\_\+contiguous} () const
 \item 
@@ -422,7 +420,139 @@ the shape of the \hyperlink{classcytnx_1_1Tensor}{Tensor}
 \begin{DoxyReturn}{Returns}
 \mbox{[}std\+::vector$<$cytnx\+\_\+uint64$>$\mbox{]} the shape of the \hyperlink{classcytnx_1_1Tensor}{Tensor} 
 \end{DoxyReturn}
+\mbox{\Hypertarget{classcytnx_1_1Tensor_acf7f697a9434f9bc98a7d00a555ee982}\label{classcytnx_1_1Tensor_acf7f697a9434f9bc98a7d00a555ee982}} 
+\index{cytnx\+::\+Tensor@{cytnx\+::\+Tensor}!to@{to}}
+\index{to@{to}!cytnx\+::\+Tensor@{cytnx\+::\+Tensor}}
+\subsubsection{\texorpdfstring{to()}{to()}}
+{\footnotesize\ttfamily \hyperlink{classcytnx_1_1Tensor}{Tensor} cytnx\+::\+Tensor\+::to (\begin{DoxyParamCaption}\item[{const int \&}]{device }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
+
+
+copy a tensor to new device 
+
+
+\begin{DoxyParams}{Parameters}
+{\em device} & the device-\/id that is moving to. it can be any device defined in cytnx\+::\+Device \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{[}\hyperlink{classcytnx_1_1Tensor}{Tensor}\mbox{]}
+\end{DoxyReturn}
+description\+: if the device-\/id is the same as current \hyperlink{classcytnx_1_1Tensor}{Tensor}\textquotesingle{}s device, then return self. otherwise, return a copy of instance that located on the target device.
+
+(see also \hyperlink{classcytnx_1_1Tensor_a114a31fbb8bf4a90f150b6a67e42183a}{Tensor.\+to\+\_\+} )
+
+\subsubsection*{Example\+:}
+
+\paragraph*{c++ A\+PI\+:}
+
+
+\begin{DoxyCodeInclude}
+\textcolor{preprocessor}{#include "cytnx.hpp"}
+\textcolor{preprocessor}{#include <iostream>}
+
+
+\textcolor{keyword}{using namespace }\hyperlink{namespacecytnx}{cytnx};
+\textcolor{keyword}{using namespace }std;
+\textcolor{keywordtype}{int} main()\{
+
+    \hyperlink{classcytnx_1_1Tensor}{Tensor} A(\{3,4,5\});
+
+    \textcolor{comment}{//move the tensor to different device by creating a clone object}
+    \hyperlink{classcytnx_1_1Tensor}{Tensor} B = A.\hyperlink{classcytnx_1_1Tensor_acf7f697a9434f9bc98a7d00a555ee982}{to}(Device.cuda+0);
+    cout << B.\hyperlink{classcytnx_1_1Tensor_a335f7625fa01784f49b2223238d0c14e}{device\_str}() << endl;
+    cout << A.device\_str() << endl;    
+
+
+    \textcolor{keywordflow}{return} 0;
+\}
+\end{DoxyCodeInclude}
+ \subparagraph*{output$>$}
+
+
+\begin{DoxyVerbInclude}
+\end{DoxyVerbInclude}
+ \paragraph*{python A\+PI\+:}
+
+
+\begin{DoxyCodeInclude}
+\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *
+
+A = Tensor([3,4,5])
+B = A.to(Device.cuda+0);
+print(B.device\_str())
+print(A.device\_str())
+
+
+\end{DoxyCodeInclude}
+ \subparagraph*{output$>$}
+
+
+\begin{DoxyVerbInclude}
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Tensor_a114a31fbb8bf4a90f150b6a67e42183a}\label{classcytnx_1_1Tensor_a114a31fbb8bf4a90f150b6a67e42183a}} 
+\index{cytnx\+::\+Tensor@{cytnx\+::\+Tensor}!to\+\_\+@{to\+\_\+}}
+\index{to\+\_\+@{to\+\_\+}!cytnx\+::\+Tensor@{cytnx\+::\+Tensor}}
+\subsubsection{\texorpdfstring{to\+\_\+()}{to\_()}}
+{\footnotesize\ttfamily void cytnx\+::\+Tensor\+::to\+\_\+ (\begin{DoxyParamCaption}\item[{const int \&}]{device }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+move the current \hyperlink{classcytnx_1_1Tensor}{Tensor} to the device. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em device} & the device-\/id that is moving to. it can be any device defined in cytnx\+::\+Device \begin{DoxyVerb}(see also Tensor.to )
+\end{DoxyVerb}
+\\
+\hline
+\end{DoxyParams}
+\subsubsection*{Example\+:}
+
+\paragraph*{c++ A\+PI\+:}
+
+
+\begin{DoxyCodeInclude}
+\textcolor{preprocessor}{#include "cytnx.hpp"}
+\textcolor{preprocessor}{#include <iostream>}
+
+
+\textcolor{keyword}{using namespace }\hyperlink{namespacecytnx}{cytnx};
+\textcolor{keyword}{using namespace }std;
+\textcolor{keywordtype}{int} main()\{
+
+    \hyperlink{classcytnx_1_1Tensor}{Tensor} A(\{3,4,5\});
+
+    \textcolor{comment}{// move the instance tensor to different device}
+    A.\hyperlink{classcytnx_1_1Tensor_a114a31fbb8bf4a90f150b6a67e42183a}{to\_}(Device.cuda+0);
+    cout << A.device\_str() << endl;
+
+    \textcolor{keywordflow}{return} 0;
+\}
+\end{DoxyCodeInclude}
+ \subparagraph*{output$>$}
+
+
+\begin{DoxyVerbInclude}
+\end{DoxyVerbInclude}
+ \paragraph*{python A\+PI\+:}
+
+
+\begin{DoxyCodeInclude}
+\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *
+
+A = Tensor([3,4,5])
+
+A.to\_(Device.cuda+0);
+print(A.device\_str())
+
+\end{DoxyCodeInclude}
+ \subparagraph*{output$>$}
+
+
+\begin{DoxyVerbInclude}
+\end{DoxyVerbInclude}
+ 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 

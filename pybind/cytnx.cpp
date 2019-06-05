@@ -15,6 +15,13 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
+//ref: https://developer.lsst.io/v/DM-9089/coding/python_wrappers_for_cpp_with_pybind11.html
+//ref: https://pybind11.readthedocs.io/en/stable/advanced/classes.html
+//ref: https://block.arch.ethz.ch/blog/2016/07/adding-methods-to-python-classes/
+//ref: https://medium.com/@mgarod/dynamically-add-a-method-to-a-class-in-python-c49204b85bd6
+
+
+
 template<class T>
 void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc){
     cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to setelem to a empty Tensor%s","\n");

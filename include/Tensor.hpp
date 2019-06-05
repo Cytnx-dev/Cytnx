@@ -349,11 +349,50 @@ namespace cytnx{
                 out._impl = this->_impl->clone();
                 return out;
             }
+
+            /**
+            @brief copy a tensor to new device
+            @param device the device-id that is moving to. it can be any device defined in cytnx::Device
+            @return [Tensor] 
+           
+            description:
+                if the device-id is the same as current Tensor's device, then return self.
+                otherwise, return a copy of instance that located on the target device. 
+                
+                (see also Tensor.to_ )
+
+            ## Example:
+            ### c++ API:
+            \include example/Tensor/to.cpp
+            #### output>
+            \verbinclude example/Tensor/to.cpp.out
+            ### python API:
+            \include example/Tensor/to.py               
+            #### output>
+            \verbinclude example/Tensor/to.py.out
+            */            
             Tensor to(const int &device) const{
                 Tensor out;
                 out._impl = this->_impl->to(device);
                 return out;
             }
+
+            /**
+            @brief move the current Tensor to the device.
+            @param device the device-id that is moving to. it can be any device defined in cytnx::Device
+                
+                (see also Tensor.to )
+
+            ## Example:
+            ### c++ API:
+            \include example/Tensor/to_.cpp
+            #### output>
+            \verbinclude example/Tensor/to_.cpp.out
+            ### python API:
+            \include example/Tensor/to_.py               
+            #### output>
+            \verbinclude example/Tensor/to_.py.out
+            */            
             void to_(const int &device){
                 this->_impl->to_(device);
             }
