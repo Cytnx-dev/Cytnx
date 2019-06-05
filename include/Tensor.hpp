@@ -248,7 +248,7 @@ namespace cytnx{
     };
     ///@endcond
 
-    // wrapping around, API
+    /// @brief an tensor (multi-dimensional array) 
     class Tensor{
         private:
         public:
@@ -330,8 +330,8 @@ namespace cytnx{
             @brief return a clone of the current Tensor.
             @return [Tensor] 
            
-            @description
-                In C++ API, the behavior of assignment operator is designed to have same behavior as python,
+            description:\n
+                In C++ API, the behavior of assignment operator is designed to have same behavior as python,\n
                 to have a copy of the current tensor, we call clone to return a copy.
 
             ## Example:
@@ -355,11 +355,10 @@ namespace cytnx{
             @param device the device-id that is moving to. it can be any device defined in cytnx::Device
             @return [Tensor] 
            
-            description:
-                if the device-id is the same as current Tensor's device, then return self.
-                otherwise, return a copy of instance that located on the target device. 
-                
-                (see also Tensor.to_ )
+            description:\n
+                if the device-id is the same as current Tensor's device, then return self.\n
+                otherwise, return a copy of instance that located on the target device.   \n
+                see also: \link cytnx::Tensor::to_ Tensor.to_ \endlink                    \n
 
             ## Example:
             ### c++ API:
@@ -381,7 +380,8 @@ namespace cytnx{
             @brief move the current Tensor to the device.
             @param device the device-id that is moving to. it can be any device defined in cytnx::Device
                 
-                (see also Tensor.to )
+            description:\n
+                see also: \link cytnx::Tensor::to Tensor.to \endlink\n
 
             ## Example:
             ### c++ API:

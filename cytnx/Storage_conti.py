@@ -9,4 +9,11 @@ def astype(self, new_type):
     else:
         return self.astype_different_type(new_type)
 
+@add_method(Storage)
+def to(self, device):
+    if(self.device() == device):
+        return self
+
+    else:
+        return self.to_different_device(device)
 

@@ -12,10 +12,10 @@ wrapping-\/up
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \hyperlink{classcytnx_1_1Storage_a6cf79f362c4ae68ab7623f0ebac9355e}{Init} (const unsigned long long \&size, const unsigned int \&dtype=Type.\+Double, int device=-\/1)
+void \hyperlink{classcytnx_1_1Storage_a6cf79f362c4ae68ab7623f0ebac9355e}{Init} (const unsigned long long \&\hyperlink{classcytnx_1_1Storage_aaf36262622abdab03c90b713c454f78e}{size}, const unsigned int \&\hyperlink{classcytnx_1_1Storage_a643824801e81ab86aca055f1dd1f34d7}{dtype}=Type.\+Double, int \hyperlink{classcytnx_1_1Storage_a4c3e27582d7f951e6b76ccbb92f7c537}{device}=-\/1)
 \begin{DoxyCompactList}\small\item\em initialize a \hyperlink{classcytnx_1_1Storage}{Storage} \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classcytnx_1_1Storage_a281c06bd64e9ea3338083c18c4c32eda}\label{classcytnx_1_1Storage_a281c06bd64e9ea3338083c18c4c32eda}} 
-{\bfseries Storage} (const unsigned long long \&size, const unsigned int \&dtype=Type.\+Double, int device=-\/1)
+{\bfseries Storage} (const unsigned long long \&\hyperlink{classcytnx_1_1Storage_aaf36262622abdab03c90b713c454f78e}{size}, const unsigned int \&\hyperlink{classcytnx_1_1Storage_a643824801e81ab86aca055f1dd1f34d7}{dtype}=Type.\+Double, int \hyperlink{classcytnx_1_1Storage_a4c3e27582d7f951e6b76ccbb92f7c537}{device}=-\/1)
 \item 
 \mbox{\Hypertarget{classcytnx_1_1Storage_ab602ecd72e5fc4224922a6b6212ff120}\label{classcytnx_1_1Storage_ab602ecd72e5fc4224922a6b6212ff120}} 
 {\bfseries Storage} (boost\+::intrusive\+\_\+ptr$<$ Storage\+\_\+base $>$ in\+\_\+impl)
@@ -28,51 +28,34 @@ void \hyperlink{classcytnx_1_1Storage_a6cf79f362c4ae68ab7623f0ebac9355e}{Init} (
 \item 
 \hyperlink{classcytnx_1_1Storage}{Storage} \hyperlink{classcytnx_1_1Storage_a8310d8dbb70510272ded2e3d01be25f0}{astype} (const unsigned int \&new\+\_\+type) const
 \begin{DoxyCompactList}\small\item\em cast the type of current \hyperlink{classcytnx_1_1Storage}{Storage} \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classcytnx_1_1Storage_a643824801e81ab86aca055f1dd1f34d7}\label{classcytnx_1_1Storage_a643824801e81ab86aca055f1dd1f34d7}} 
-const unsigned int \& {\bfseries dtype} () const
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Storage_ab6e9fb01ad4655701a2d54dc978eef17}\label{classcytnx_1_1Storage_ab6e9fb01ad4655701a2d54dc978eef17}} 
-const std\+::string {\bfseries dtype\+\_\+str} () const
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Storage_a4c3e27582d7f951e6b76ccbb92f7c537}\label{classcytnx_1_1Storage_a4c3e27582d7f951e6b76ccbb92f7c537}} 
-const int \& {\bfseries device} () const
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Storage_ae0d90d5275fa7e52a0a2dc10512ba71f}\label{classcytnx_1_1Storage_ae0d90d5275fa7e52a0a2dc10512ba71f}} 
-const std\+::string {\bfseries device\+\_\+str} () const
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Storage_acf07db8f07fcc723e41718f604959c5b}\label{classcytnx_1_1Storage_acf07db8f07fcc723e41718f604959c5b}} 
-{\footnotesize template$<$class T $>$ }\\T \& {\bfseries at} (const unsigned int \&idx) const
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Storage_af37d781719238ae66509ff145e5b1bd7}\label{classcytnx_1_1Storage_af37d781719238ae66509ff145e5b1bd7}} 
-{\footnotesize template$<$class T $>$ }\\T $\ast$ {\bfseries data} () const
-\item 
+const unsigned int \& \hyperlink{classcytnx_1_1Storage_a643824801e81ab86aca055f1dd1f34d7}{dtype} () const
+\begin{DoxyCompactList}\small\item\em the dtype-\/id of current \hyperlink{classcytnx_1_1Storage}{Storage} \end{DoxyCompactList}\item 
+const std\+::string \hyperlink{classcytnx_1_1Storage_ab6e9fb01ad4655701a2d54dc978eef17}{dtype\+\_\+str} () const
+\begin{DoxyCompactList}\small\item\em the dtype (std\+::string) of current \hyperlink{classcytnx_1_1Storage}{Storage} \end{DoxyCompactList}\item 
+const int \& \hyperlink{classcytnx_1_1Storage_a4c3e27582d7f951e6b76ccbb92f7c537}{device} () const
+\begin{DoxyCompactList}\small\item\em the device-\/id of current \hyperlink{classcytnx_1_1Storage}{Storage} \end{DoxyCompactList}\item 
+const std\+::string \hyperlink{classcytnx_1_1Storage_ae0d90d5275fa7e52a0a2dc10512ba71f}{device\+\_\+str} () const
+\begin{DoxyCompactList}\small\item\em the device (std\+::string) of current \hyperlink{classcytnx_1_1Storage}{Storage} \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classcytnx_1_1Storage_a0bbf2cbefb5d0835bcb4f0d05e400870}\label{classcytnx_1_1Storage_a0bbf2cbefb5d0835bcb4f0d05e400870}} 
-void {\bfseries to\+\_\+} (const int \&device)
+void {\bfseries to\+\_\+} (const int \&\hyperlink{classcytnx_1_1Storage_a4c3e27582d7f951e6b76ccbb92f7c537}{device})
 \item 
 \mbox{\Hypertarget{classcytnx_1_1Storage_a2abfcaacf807934be5dd21c254fdb30e}\label{classcytnx_1_1Storage_a2abfcaacf807934be5dd21c254fdb30e}} 
-\hyperlink{classcytnx_1_1Storage}{Storage} {\bfseries to} (const int \&device)
+\hyperlink{classcytnx_1_1Storage}{Storage} {\bfseries to} (const int \&\hyperlink{classcytnx_1_1Storage_a4c3e27582d7f951e6b76ccbb92f7c537}{device})
 \item 
 \mbox{\Hypertarget{classcytnx_1_1Storage_aed0530dd20f3fb352d45653ba46a3d50}\label{classcytnx_1_1Storage_aed0530dd20f3fb352d45653ba46a3d50}} 
 \hyperlink{classcytnx_1_1Storage}{Storage} {\bfseries clone} () const
 \item 
-\mbox{\Hypertarget{classcytnx_1_1Storage_aaf36262622abdab03c90b713c454f78e}\label{classcytnx_1_1Storage_aaf36262622abdab03c90b713c454f78e}} 
-const unsigned long long \& {\bfseries size} () const
-\item 
+const unsigned long long \& \hyperlink{classcytnx_1_1Storage_aaf36262622abdab03c90b713c454f78e}{size} () const
+\begin{DoxyCompactList}\small\item\em the size ( no. of elements ) in the \hyperlink{classcytnx_1_1Storage}{Storage} \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classcytnx_1_1Storage_a0ae2bee5e15c651b05dadf5dbbdb36f5}\label{classcytnx_1_1Storage_a0ae2bee5e15c651b05dadf5dbbdb36f5}} 
 void {\bfseries print\+\_\+info} ()
 \item 
-\mbox{\Hypertarget{classcytnx_1_1Storage_a4b5cc72fc3a1ce91a746047538ea18dd}\label{classcytnx_1_1Storage_a4b5cc72fc3a1ce91a746047538ea18dd}} 
-void {\bfseries print} ()
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Storage_a7e854529c99108b0acc3e5e2b185244b}\label{classcytnx_1_1Storage_a7e854529c99108b0acc3e5e2b185244b}} 
-void {\bfseries set\+\_\+zeros} ()
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Storage_ad304e00cf3d472ea0355af6b40c4529d}\label{classcytnx_1_1Storage_ad304e00cf3d472ea0355af6b40c4529d}} 
-bool {\bfseries operator==} (const \hyperlink{classcytnx_1_1Storage}{Storage} \&rhs)
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Storage_a48f0424f051a4b3a821eb964be4cd5db}\label{classcytnx_1_1Storage_a48f0424f051a4b3a821eb964be4cd5db}} 
-{\footnotesize template$<$class T $>$ }\\void {\bfseries fill} (const T \&val)
-\end{DoxyCompactItemize}
+void \hyperlink{classcytnx_1_1Storage_a7e854529c99108b0acc3e5e2b185244b}{set\+\_\+zeros} ()
+\begin{DoxyCompactList}\small\item\em set all the elements to zero. \end{DoxyCompactList}\item 
+bool \hyperlink{classcytnx_1_1Storage_ad304e00cf3d472ea0355af6b40c4529d}{operator==} (const \hyperlink{classcytnx_1_1Storage}{Storage} \&rhs)
+\begin{DoxyCompactList}\small\item\em compare two \hyperlink{classcytnx_1_1Storage}{Storage} \end{DoxyCompactList}\item 
+{\footnotesize template$<$class T $>$ }\\void \hyperlink{classcytnx_1_1Storage_a48f0424f051a4b3a821eb964be4cd5db}{fill} (const T \&val)
+\begin{DoxyCompactList}\small\item\em set all the elements to the assigned value val \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -129,12 +112,12 @@ description\+:
 
     \textcolor{comment}{// the type is the same as A's type, so B shares the same object with A}
     \hyperlink{classcytnx_1_1Storage}{Storage} B = A.\hyperlink{classcytnx_1_1Storage_a8310d8dbb70510272ded2e3d01be25f0}{astype}(Type.Double); 
-    cout << B.dtype\_str() << endl;
+    cout << B.\hyperlink{classcytnx_1_1Storage_ab6e9fb01ad4655701a2d54dc978eef17}{dtype\_str}() << endl;
     cout << is(B,A) << endl; \textcolor{comment}{// true}
 
     \textcolor{comment}{// cast A from Type.Double to Type.Float}
     \hyperlink{classcytnx_1_1Storage}{Storage} C = A.\hyperlink{classcytnx_1_1Storage_a8310d8dbb70510272ded2e3d01be25f0}{astype}(Type.Float);
-    cout << C.dtype\_str() << endl;
+    cout << C.\hyperlink{classcytnx_1_1Storage_ab6e9fb01ad4655701a2d54dc978eef17}{dtype\_str}() << endl;
     cout << is(C, A) << endl; \textcolor{comment}{// false}
 
 
@@ -142,7 +125,7 @@ description\+:
     \textcolor{comment}{// D is on GPU, so E is also on GPU}
     \hyperlink{classcytnx_1_1Storage}{Storage} E = D.\hyperlink{classcytnx_1_1Storage_a8310d8dbb70510272ded2e3d01be25f0}{astype}(Type.Float);
 
-    cout << E.device\_str() << endl; 
+    cout << E.\hyperlink{classcytnx_1_1Storage_ae0d90d5275fa7e52a0a2dc10512ba71f}{device\_str}() << endl; 
 
  
 
@@ -183,7 +166,78 @@ print(E.device\_str())
 
 \begin{DoxyVerbInclude}
 \end{DoxyVerbInclude}
- \mbox{\Hypertarget{classcytnx_1_1Storage_a6cf79f362c4ae68ab7623f0ebac9355e}\label{classcytnx_1_1Storage_a6cf79f362c4ae68ab7623f0ebac9355e}} 
+ \mbox{\Hypertarget{classcytnx_1_1Storage_a4c3e27582d7f951e6b76ccbb92f7c537}\label{classcytnx_1_1Storage_a4c3e27582d7f951e6b76ccbb92f7c537}} 
+\index{cytnx\+::\+Storage@{cytnx\+::\+Storage}!device@{device}}
+\index{device@{device}!cytnx\+::\+Storage@{cytnx\+::\+Storage}}
+\subsubsection{\texorpdfstring{device()}{device()}}
+{\footnotesize\ttfamily const int\& cytnx\+::\+Storage\+::device (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+the device-\/id of current \hyperlink{classcytnx_1_1Storage}{Storage} 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}cytnx\+\_\+int64\mbox{]} the device-\/id. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcytnx_1_1Storage_ae0d90d5275fa7e52a0a2dc10512ba71f}\label{classcytnx_1_1Storage_ae0d90d5275fa7e52a0a2dc10512ba71f}} 
+\index{cytnx\+::\+Storage@{cytnx\+::\+Storage}!device\+\_\+str@{device\+\_\+str}}
+\index{device\+\_\+str@{device\+\_\+str}!cytnx\+::\+Storage@{cytnx\+::\+Storage}}
+\subsubsection{\texorpdfstring{device\+\_\+str()}{device\_str()}}
+{\footnotesize\ttfamily const std\+::string cytnx\+::\+Storage\+::device\+\_\+str (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+the device (std\+::string) of current \hyperlink{classcytnx_1_1Storage}{Storage} 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}std\+::string\mbox{]} device name 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcytnx_1_1Storage_a643824801e81ab86aca055f1dd1f34d7}\label{classcytnx_1_1Storage_a643824801e81ab86aca055f1dd1f34d7}} 
+\index{cytnx\+::\+Storage@{cytnx\+::\+Storage}!dtype@{dtype}}
+\index{dtype@{dtype}!cytnx\+::\+Storage@{cytnx\+::\+Storage}}
+\subsubsection{\texorpdfstring{dtype()}{dtype()}}
+{\footnotesize\ttfamily const unsigned int\& cytnx\+::\+Storage\+::dtype (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+the dtype-\/id of current \hyperlink{classcytnx_1_1Storage}{Storage} 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}cytnx\+\_\+uint64\mbox{]} the dtype-\/id. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcytnx_1_1Storage_ab6e9fb01ad4655701a2d54dc978eef17}\label{classcytnx_1_1Storage_ab6e9fb01ad4655701a2d54dc978eef17}} 
+\index{cytnx\+::\+Storage@{cytnx\+::\+Storage}!dtype\+\_\+str@{dtype\+\_\+str}}
+\index{dtype\+\_\+str@{dtype\+\_\+str}!cytnx\+::\+Storage@{cytnx\+::\+Storage}}
+\subsubsection{\texorpdfstring{dtype\+\_\+str()}{dtype\_str()}}
+{\footnotesize\ttfamily const std\+::string cytnx\+::\+Storage\+::dtype\+\_\+str (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+the dtype (std\+::string) of current \hyperlink{classcytnx_1_1Storage}{Storage} 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}std\+::string\mbox{]} dtype name 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcytnx_1_1Storage_a48f0424f051a4b3a821eb964be4cd5db}\label{classcytnx_1_1Storage_a48f0424f051a4b3a821eb964be4cd5db}} 
+\index{cytnx\+::\+Storage@{cytnx\+::\+Storage}!fill@{fill}}
+\index{fill@{fill}!cytnx\+::\+Storage@{cytnx\+::\+Storage}}
+\subsubsection{\texorpdfstring{fill()}{fill()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+void cytnx\+::\+Storage\+::fill (\begin{DoxyParamCaption}\item[{const T \&}]{val }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+set all the elements to the assigned value val 
+
+
+\begin{DoxyParams}{Parameters}
+{\em val} & the value to set on all the elements. it can be any type defined in cytnx\+::\+Type\\
+\hline
+\end{DoxyParams}
+\mbox{[}Note\mbox{]}
+\begin{DoxyEnumerate}
+\item cannot assign a complex value into a real \hyperlink{classcytnx_1_1Storage}{Storage}. 
+\end{DoxyEnumerate}\mbox{\Hypertarget{classcytnx_1_1Storage_a6cf79f362c4ae68ab7623f0ebac9355e}\label{classcytnx_1_1Storage_a6cf79f362c4ae68ab7623f0ebac9355e}} 
 \index{cytnx\+::\+Storage@{cytnx\+::\+Storage}!Init@{Init}}
 \index{Init@{Init}!cytnx\+::\+Storage@{cytnx\+::\+Storage}}
 \subsubsection{\texorpdfstring{Init()}{Init()}}
@@ -283,7 +337,111 @@ D.Init(10,dtype=Type.Double,device=Device.cpu)
 
 \begin{DoxyVerbInclude}
 \end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Storage_ad304e00cf3d472ea0355af6b40c4529d}\label{classcytnx_1_1Storage_ad304e00cf3d472ea0355af6b40c4529d}} 
+\index{cytnx\+::\+Storage@{cytnx\+::\+Storage}!operator==@{operator==}}
+\index{operator==@{operator==}!cytnx\+::\+Storage@{cytnx\+::\+Storage}}
+\subsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily bool cytnx\+::\+Storage\+::operator== (\begin{DoxyParamCaption}\item[{const \hyperlink{classcytnx_1_1Storage}{Storage} \&}]{rhs }\end{DoxyParamCaption})}
+
+
+
+compare two \hyperlink{classcytnx_1_1Storage}{Storage} 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \hyperlink{classcytnx_1_1Storage}{Storage}} & another \hyperlink{classcytnx_1_1Storage}{Storage} to compare to\\
+\hline
+\end{DoxyParams}
+\mbox{[}Note\mbox{]} the == operator will compare the content between two storages. use cytnx\+::is() for checking two variables share the same instance.
+
+\subsubsection*{Example\+:}
+
+\paragraph*{c++ A\+PI\+:}
+
+
+\begin{DoxyCodeInclude}
+\textcolor{preprocessor}{#include "cytnx.hpp"}
+\textcolor{preprocessor}{#include <iostream>}
+
+
+\textcolor{keyword}{using namespace }\hyperlink{namespacecytnx}{cytnx};
+\textcolor{keyword}{using namespace }std;
+\textcolor{keywordtype}{int} main()\{ 
+
+    \textcolor{comment}{/*}
+\textcolor{comment}{        1. Create a Storage with }
+\textcolor{comment}{        dtype =Type.Double [default],}
+\textcolor{comment}{    */}
+    \hyperlink{classcytnx_1_1Storage}{Storage} A(10);
+    cout << A.dtype\_str() << endl;
+
+    \hyperlink{classcytnx_1_1Storage}{Storage} B = A;  
+    \hyperlink{classcytnx_1_1Storage}{Storage} C = A.clone();
+
+    cout << B == A << endl; \textcolor{comment}{// true (share same instance)}
+    cout << is(B,A) << endl; \textcolor{comment}{// true (share same instance)}
+  
+    cout << C == A << endl;  \textcolor{comment}{// true (the same content.)}
+    cout << is(C,A) << endl; \textcolor{comment}{// false (not share same instance)}
  
+
+    \textcolor{keywordflow}{return} 0;
+\}
+
+\end{DoxyCodeInclude}
+ \subparagraph*{output$>$}
+
+
+\begin{DoxyVerbInclude}
+\end{DoxyVerbInclude}
+ \paragraph*{python A\+PI\+:}
+
+
+\begin{DoxyCodeInclude}
+\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *
+
+
+A = Storage(10)
+cout << A.dtype\_str() << endl
+
+B = A
+C = A.clone()
+
+print(B == A) \textcolor{comment}{# true (share same instance)}
+print(B \textcolor{keywordflow}{is} A) \textcolor{comment}{# true (share same instance)}
+
+print(C == A)  \textcolor{comment}{# true (the same content.)}
+print(C \textcolor{keywordflow}{is} A)  \textcolor{comment}{# false (not share same instance)}
+\end{DoxyCodeInclude}
+ \subparagraph*{output$>$}
+
+
+\begin{DoxyVerbInclude}
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Storage_a7e854529c99108b0acc3e5e2b185244b}\label{classcytnx_1_1Storage_a7e854529c99108b0acc3e5e2b185244b}} 
+\index{cytnx\+::\+Storage@{cytnx\+::\+Storage}!set\+\_\+zeros@{set\+\_\+zeros}}
+\index{set\+\_\+zeros@{set\+\_\+zeros}!cytnx\+::\+Storage@{cytnx\+::\+Storage}}
+\subsubsection{\texorpdfstring{set\+\_\+zeros()}{set\_zeros()}}
+{\footnotesize\ttfamily void cytnx\+::\+Storage\+::set\+\_\+zeros (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+set all the elements to zero. 
+
+\mbox{[}Note\mbox{]} although it is also possible to use Storage.\+fill(0) to set all the elements to zero, using set\+\_\+zeros will have significant faster performance. \mbox{\Hypertarget{classcytnx_1_1Storage_aaf36262622abdab03c90b713c454f78e}\label{classcytnx_1_1Storage_aaf36262622abdab03c90b713c454f78e}} 
+\index{cytnx\+::\+Storage@{cytnx\+::\+Storage}!size@{size}}
+\index{size@{size}!cytnx\+::\+Storage@{cytnx\+::\+Storage}}
+\subsubsection{\texorpdfstring{size()}{size()}}
+{\footnotesize\ttfamily const unsigned long long\& cytnx\+::\+Storage\+::size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+the size ( no. of elements ) in the \hyperlink{classcytnx_1_1Storage}{Storage} 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}cytnx\+\_\+uint64\mbox{]} 
+\end{DoxyReturn}
+
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 

@@ -391,6 +391,8 @@ namespace cytnx{
 
         public:
             boost::intrusive_ptr<Storage_base> _impl;
+
+
             /**
             @brief initialize a Storage
             @param size the number of elements for the Storage
@@ -451,24 +453,45 @@ namespace cytnx{
                 return this->_impl->astype(new_type);
             }
 
+            /**
+            @brief the dtype-id of current Storage
+            @return [cytnx_uint64] the dtype-id.
+
+            */            
             const unsigned int &dtype() const{
                 return this->_impl->dtype;
             }
+
+            /**
+            @brief the dtype (std::string) of current Storage
+            @return [std::string] dtype name
+
+            */            
             const std::string dtype_str() const{
                 std::string out = this->_impl->dtype_str();
                 return out;
             }
+            /**
+            @brief the device-id of current Storage
+            @return [cytnx_int64] the device-id.
 
+            */            
             const int &device() const{
                 return this->_impl->device;
             }
-    
+
+            /**
+            @brief the device (std::string) of current Storage
+            @return [std::string] device name
+
+            */            
             const std::string device_str() const{
                 std::string out = this->_impl->device_str();
                 return out;
             }            
 
-            template<class T>
+            ///@cond
+            template<class T> // this is c++ only
             T& at(const unsigned int &idx) const{
                 return this->_impl->at<T>(idx);
             }
@@ -476,6 +499,8 @@ namespace cytnx{
             T* data() const{
                 return this->_impl->data<T>();
             }
+            ///@endcond
+
             void to_(const int &device){
                 this->_impl->to_(device);
             }
@@ -485,20 +510,64 @@ namespace cytnx{
             Storage clone() const{
                 return Storage(this->_impl->clone());
             }
+
+            /**
+            @brief the size ( no. of elements ) in the Storage
+            @return [cytnx_uint64]  
+                
+            */            
             const unsigned long long &size() const{
                 return this->_impl->len;
             }
+
+
             void print_info(){
                 this->_impl->print_info();
             }
+            /// @cond 
+            // this is a redundant function
             void print(){
                 this->_impl->print();
             }
+            /// @endcond
+
+            /**
+            @brief set all the elements to zero. 
+           
+            [Note] although it is also possible to use Storage.fill(0) to set all the elements to zero, 
+                   using set_zeros will have significant faster performance. 
+                
+            */            
             void set_zeros(){
                 this->_impl->set_zeros();
             }
+
+            /**
+            @brief compare two Storage
+            @param Storage another Storage to compare to
+
+            [Note] the == operator will compare the content between two storages. use cytnx::is() for checking two variables share the same instance. 
+            
+            ## Example:
+            ### c++ API:
+            \include example/Storage/eq.cpp
+            #### output>
+            \verbinclude example/Storage/eq.cpp.out
+            ### python API:
+            \include example/Storage/eq.py               
+            #### output>
+            \verbinclude example/Storage/eq.py.out
+            */
             bool operator==(const Storage &rhs);
 
+
+            /**
+            @brief set all the elements to the assigned value val
+            @param val the value to set on all the elements. it can be any type defined in cytnx::Type
+                
+            [Note] 
+                1. cannot assign a complex value into a real Storage.     
+            */            
             template<class T>
             void fill(const T& val){
                 this->_impl->fill(val);

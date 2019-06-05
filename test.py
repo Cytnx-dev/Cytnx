@@ -7,7 +7,7 @@ from cytnx import linalg
 #=====================
 # testing infrastructure--------
 a = cytnx.Storage(10,cytnx.Type.Double);
-
+bbb = a.to(cytnx.Device.cpu)
 print(a[3])
 print(a.dtype)
 print(a.dtype_str)

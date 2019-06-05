@@ -1,5 +1,14 @@
 \hypertarget{classcytnx_1_1Tensor}{}\section{cytnx\+:\+:Tensor Class Reference}
 \label{classcytnx_1_1Tensor}\index{cytnx\+::\+Tensor@{cytnx\+::\+Tensor}}
+
+
+an tensor (multi-\/dimensional array)  
+
+
+
+
+{\ttfamily \#include $<$Tensor.\+hpp$>$}
+
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -170,6 +179,9 @@ boost\+::intrusive\+\_\+ptr$<$ Tensor\+\_\+impl $>$ {\bfseries \+\_\+impl}
 \end{DoxyCompactItemize}
 
 
+\subsection{Detailed Description}
+an tensor (multi-\/dimensional array) 
+
 \subsection{Member Function Documentation}
 \mbox{\Hypertarget{classcytnx_1_1Tensor_a5e2248e9babdb786167ed349df9084ae}\label{classcytnx_1_1Tensor_a5e2248e9babdb786167ed349df9084ae}} 
 \index{cytnx\+::\+Tensor@{cytnx\+::\+Tensor}!clone@{clone}}
@@ -184,7 +196,9 @@ return a clone of the current \hyperlink{classcytnx_1_1Tensor}{Tensor}.
 \begin{DoxyReturn}{Returns}
 \mbox{[}\hyperlink{classcytnx_1_1Tensor}{Tensor}\mbox{]}
 \end{DoxyReturn}
-In C++ A\+PI, the behavior of assignment operator is designed to have same behavior as python, to have a copy of the current tensor, we call clone to return a copy.
+description\+:~\newline
+ In C++ A\+PI, the behavior of assignment operator is designed to have same behavior as python,~\newline
+ to have a copy of the current tensor, we call clone to return a copy.
 
 \subsubsection*{Example\+:}
 
@@ -438,11 +452,11 @@ copy a tensor to new device
 \begin{DoxyReturn}{Returns}
 \mbox{[}\hyperlink{classcytnx_1_1Tensor}{Tensor}\mbox{]}
 \end{DoxyReturn}
-description\+: if the device-\/id is the same as current \hyperlink{classcytnx_1_1Tensor}{Tensor}\textquotesingle{}s device, then return self. otherwise, return a copy of instance that located on the target device.
-
-(see also \hyperlink{classcytnx_1_1Tensor_a114a31fbb8bf4a90f150b6a67e42183a}{Tensor.\+to\+\_\+} )
-
-\subsubsection*{Example\+:}
+description\+:~\newline
+ if the device-\/id is the same as current \hyperlink{classcytnx_1_1Tensor}{Tensor}\textquotesingle{}s device, then return self.~\newline
+ otherwise, return a copy of instance that located on the target device. ~\newline
+ see also\+: \hyperlink{classcytnx_1_1Tensor_a114a31fbb8bf4a90f150b6a67e42183a}{Tensor.\+to\+\_\+ } ~\newline
+ \subsubsection*{Example\+:}
 
 \paragraph*{c++ A\+PI\+:}
 
@@ -502,12 +516,12 @@ move the current \hyperlink{classcytnx_1_1Tensor}{Tensor} to the device.
 
 
 \begin{DoxyParams}{Parameters}
-{\em device} & the device-\/id that is moving to. it can be any device defined in cytnx\+::\+Device \begin{DoxyVerb}(see also Tensor.to )
-\end{DoxyVerb}
-\\
+{\em device} & the device-\/id that is moving to. it can be any device defined in cytnx\+::\+Device\\
 \hline
 \end{DoxyParams}
-\subsubsection*{Example\+:}
+description\+:~\newline
+ see also\+: \hyperlink{classcytnx_1_1Tensor_acf7f697a9434f9bc98a7d00a555ee982}{Tensor.\+to }~\newline
+ \subsubsection*{Example\+:}
 
 \paragraph*{c++ A\+PI\+:}
 

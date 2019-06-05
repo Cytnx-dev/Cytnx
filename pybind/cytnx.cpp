@@ -219,9 +219,17 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__len__",[](cytnx::Storage &self)->cytnx::cytnx_uint64{return self.size();})
                 
                 .def("to_", &cytnx::Storage::to_, py::arg("device"))
-                .def("to" , &cytnx::Storage::to , py::arg("device"))
+
+                // handle same device from cytnx/Storage_conti.py
+                .def("to_different_device" ,[](cytnx::Storage &self,const cytnx_int64 &device){
+                                                    cytnx_error_msg(self.device() == device, "[ERROR][pybind][to_diffferent_device] same device for to() should be handle in python side.%s","\n");
+                                                    return self.to(device);
+                                                } , py::arg("device"))
+
+
                 .def("clone", &cytnx::Storage::clone)
                 .def("size", &cytnx::Storage::size)
+                .def("__len__",[](cytnx::Storage &self){return self.size();})
                 .def("print_info", &cytnx::Storage::print_info)
                 .def("set_zeros",  &cytnx::Storage::set_zeros)
                 .def("__eq__",[](cytnx::Storage &self, const cytnx::Storage &rhs)->bool{return self == rhs;})
@@ -249,7 +257,13 @@ PYBIND11_MODULE(cytnx,m){
                 .def("shape",&cytnx::Tensor::shape)
                 
                 .def("clone", &cytnx::Tensor::clone)
-                .def("to", &cytnx::Tensor::to, py::arg("device"))
+                //.def("to", &cytnx::Tensor::to, py::arg("device"))
+                // handle same device from cytnx/Tensor_conti.py
+                .def("to_different_device" ,[](cytnx::Tensor &self,const cytnx_int64 &device){
+                                                    cytnx_error_msg(self.device() == device, "[ERROR][pybind][to_diffferent_device] same device for to() should be handle in python side.%s","\n");
+                                                    return self.to(device);
+                                                } , py::arg("device"))
+
                 .def("to_", &cytnx::Tensor::to_, py::arg("device"))
                 .def("is_contiguous", &cytnx::Tensor::is_contiguous)
                 .def("permute_",[](cytnx::Tensor &self, py::args args){
