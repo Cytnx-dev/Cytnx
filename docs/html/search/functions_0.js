@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['init',['Init',['../classcytnx_1_1Tensor.html#afdb4470e0dc934964d80aa9c761cca48',1,'cytnx::Tensor']]]
+  ['astype',['astype',['../classcytnx_1_1Storage.html#a8310d8dbb70510272ded2e3d01be25f0',1,'cytnx::Storage']]]
 ];

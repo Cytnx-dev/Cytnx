@@ -1,12 +1,33 @@
-CYTNX_ROOT="../"
+CYTNX_ROOT=..
 CC := g++
 CCFLAGS := -std=c++11 
-INCFLAGS := -I$(CYTNX_ROOT)
+INCFLAGS := -I$(CYTNX_ROOT)/include
 LDFLAGS := -L$(CYTNX_ROOT)
 
-example: example.o
+Tensor_example = Init_ex_tn To_ex_tn clone_ex_tn
+Storage_example = Init_ex_st astype_ex_st
+all: $(Tensor_example) $(Storage_example)
 
-example.o : Init.o
 
+Init_ex_tn: ./Tensor/Init.cpp $(CYTNX_ROOT)/libcytnx.so
+	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
+
+To_ex_tn: ./Tensor/To.cpp $(CYTNX_ROOT)/libcytnx.so
+	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
+
+clone_ex_tn: ./Tensor/clone.cpp $(CYTNX_ROOT)/libcytnx.so
+	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
+
+Init_ex_st: ./Storage/Init.cpp $(CYTNX_ROOT)/libcytnx.so
+	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
+
+astype_ex_st: ./Storage/astype.cpp $(CYTNX_ROOT)/libcytnx.so
+	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
+
+
+.phony: clean
+
+clean:
+	rm $(Tensor_example) $(Storage_example)
 
 

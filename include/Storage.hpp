@@ -391,13 +391,28 @@ namespace cytnx{
 
         public:
             boost::intrusive_ptr<Storage_base> _impl;
-
-            void Init(const unsigned long long &size,const unsigned int &dtype, int device=-1){
+            /**
+            @brief initialize a Storage
+            @param size the number of elements for the Storage
+            @param dtype the dtype of the Storage instance. This can be any of type defined in cytnx::Type  
+            @param device the device of the Storage instance. This can be cytnx::Device.cpu or cytnx::Device.cuda+<gpuid>
+            
+            ## Example:
+            ### c++ API:
+            \include example/Storage/Init.cpp
+            #### output>
+            \verbinclude example/Storage/Init.cpp.out
+            ### python API:
+            \include example/Storage/Init.py               
+            #### output>
+            \verbinclude example/Storage/Init.py.out
+            */            
+            void Init(const unsigned long long &size,const unsigned int &dtype=Type.Double, int device=-1){
                 cytnx_error_msg(dtype>=N_Type,"%s","[ERROR] invalid argument: dtype");
                 this->_impl = __SII.USIInit[dtype]();
                 this->_impl->Init(size,device);
             }
-            Storage(const unsigned long long &size, const unsigned int &dtype, int device=-1): _impl(new Storage_base()){
+            Storage(const unsigned long long &size, const unsigned int &dtype=Type.Double, int device=-1): _impl(new Storage_base()){
                 Init(size,dtype,device);
             }
             Storage(): _impl(new Storage_base()){};
@@ -412,6 +427,26 @@ namespace cytnx{
                 return *this;
             }
 
+
+            /**
+            @brief cast the type of current Storage
+            @param new_type the new type of the Storage instance. This can be any of type defined in cytnx::Type  
+
+            description:
+                1. if the new_type is the same as the dtype of current Storage, then return self;
+                   otherwise, return a new instance that has the same content as current Storage with dtype=new_type
+                2. the return Stoarge will be on the same device as the current Storage.
+
+            ## Example:
+            ### c++ API:
+            \include example/Storage/astype.cpp
+            #### output>
+            \verbinclude example/Storage/astype.cpp.out
+            ### python API:
+            \include example/Storage/astype.py               
+            #### output>
+            \verbinclude example/Storage/astype.py.out
+            */            
             Storage astype(const unsigned int &new_type) const{
                 return this->_impl->astype(new_type);
             }

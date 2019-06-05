@@ -9,10 +9,10 @@
 #include "Bond.hpp"
 #include "intrusive_ptr_base.hpp"
 #include "utils/utils_internal_interface.hpp"
+#include "utils/utils.hpp"
 #include <iostream>
 #include <vector>
 #include <initializer_list>
-#include "utils/utils.hpp"
 
 namespace cytnx{
    
@@ -85,13 +85,7 @@ namespace cytnx{
                 cytnx_error_msg(is_dup,"[ERROR] alreay has a label that is the same as the input label%s","\n");
                 this->_labels[idx] = new_label;                
             }
-            void set_labels(const std::vector<cytnx_int64> &new_labels){
-                cytnx_error_msg(new_labels.size()!=this->_labels.size(),"[ERROR][set_labels][UniTensor] %s\n","the len(new_labels) does not match the rank of the UniTenosr");
-                //check duplicate:
-                std::vector<cytnx_int64> tmp = vec_unique<cytnx_int64>(new_labels);
-                cytnx_error_msg(tmp.size() != new_labels.size(), "[ERROR][set_labels][UniTensor] %s\n","the input labels cannot contain duplicated element(s).");
-                this->_labels = new_labels;
-            }
+            void set_labels(const std::vector<cytnx_int64> &new_labels);
             template<class T>
             T& at(const std::vector<cytnx_uint64> &locator){
                 cytnx_error_msg(this->is_blockform(),"[ERROR] cannot access element using at<T> on a UniTensor with symmetry.\n suggestion: get_block/get_blocks first.%s","\n");

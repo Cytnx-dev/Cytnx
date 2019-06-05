@@ -12,11 +12,10 @@ wrapping-\/up
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classcytnx_1_1Storage_a6bf182da2184ef93e9c255540203cc54}\label{classcytnx_1_1Storage_a6bf182da2184ef93e9c255540203cc54}} 
-void {\bfseries Init} (const unsigned long long \&size, const unsigned int \&dtype, int device=-\/1)
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Storage_a91232518b73848515e0fdf342d4407fd}\label{classcytnx_1_1Storage_a91232518b73848515e0fdf342d4407fd}} 
-{\bfseries Storage} (const unsigned long long \&size, const unsigned int \&dtype, int device=-\/1)
+void \hyperlink{classcytnx_1_1Storage_a6cf79f362c4ae68ab7623f0ebac9355e}{Init} (const unsigned long long \&size, const unsigned int \&dtype=Type.\+Double, int device=-\/1)
+\begin{DoxyCompactList}\small\item\em initialize a \hyperlink{classcytnx_1_1Storage}{Storage} \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classcytnx_1_1Storage_a281c06bd64e9ea3338083c18c4c32eda}\label{classcytnx_1_1Storage_a281c06bd64e9ea3338083c18c4c32eda}} 
+{\bfseries Storage} (const unsigned long long \&size, const unsigned int \&dtype=Type.\+Double, int device=-\/1)
 \item 
 \mbox{\Hypertarget{classcytnx_1_1Storage_ab602ecd72e5fc4224922a6b6212ff120}\label{classcytnx_1_1Storage_ab602ecd72e5fc4224922a6b6212ff120}} 
 {\bfseries Storage} (boost\+::intrusive\+\_\+ptr$<$ Storage\+\_\+base $>$ in\+\_\+impl)
@@ -27,9 +26,8 @@ void {\bfseries Init} (const unsigned long long \&size, const unsigned int \&dty
 \mbox{\Hypertarget{classcytnx_1_1Storage_a1ee2ea67e2197bc9d690ca8a1b878f73}\label{classcytnx_1_1Storage_a1ee2ea67e2197bc9d690ca8a1b878f73}} 
 \hyperlink{classcytnx_1_1Storage}{Storage} \& {\bfseries operator=} (const \hyperlink{classcytnx_1_1Storage}{Storage} \&rhs)
 \item 
-\mbox{\Hypertarget{classcytnx_1_1Storage_a8310d8dbb70510272ded2e3d01be25f0}\label{classcytnx_1_1Storage_a8310d8dbb70510272ded2e3d01be25f0}} 
-\hyperlink{classcytnx_1_1Storage}{Storage} {\bfseries astype} (const unsigned int \&new\+\_\+type) const
-\item 
+\hyperlink{classcytnx_1_1Storage}{Storage} \hyperlink{classcytnx_1_1Storage_a8310d8dbb70510272ded2e3d01be25f0}{astype} (const unsigned int \&new\+\_\+type) const
+\begin{DoxyCompactList}\small\item\em cast the type of current \hyperlink{classcytnx_1_1Storage}{Storage} \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classcytnx_1_1Storage_a643824801e81ab86aca055f1dd1f34d7}\label{classcytnx_1_1Storage_a643824801e81ab86aca055f1dd1f34d7}} 
 const unsigned int \& {\bfseries dtype} () const
 \item 
@@ -85,6 +83,207 @@ boost\+::intrusive\+\_\+ptr$<$ Storage\+\_\+base $>$ {\bfseries \+\_\+impl}
 
 \subsection{Detailed Description}
 wrapping-\/up 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classcytnx_1_1Storage_a8310d8dbb70510272ded2e3d01be25f0}\label{classcytnx_1_1Storage_a8310d8dbb70510272ded2e3d01be25f0}} 
+\index{cytnx\+::\+Storage@{cytnx\+::\+Storage}!astype@{astype}}
+\index{astype@{astype}!cytnx\+::\+Storage@{cytnx\+::\+Storage}}
+\subsubsection{\texorpdfstring{astype()}{astype()}}
+{\footnotesize\ttfamily \hyperlink{classcytnx_1_1Storage}{Storage} cytnx\+::\+Storage\+::astype (\begin{DoxyParamCaption}\item[{const unsigned int \&}]{new\+\_\+type }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+cast the type of current \hyperlink{classcytnx_1_1Storage}{Storage} 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+\_\+type} & the new type of the \hyperlink{classcytnx_1_1Storage}{Storage} instance. This can be any of type defined in cytnx\+::\+Type\\
+\hline
+\end{DoxyParams}
+description\+:
+\begin{DoxyEnumerate}
+\item if the new\+\_\+type is the same as the dtype of current \hyperlink{classcytnx_1_1Storage}{Storage}, then return self; otherwise, return a new instance that has the same content as current \hyperlink{classcytnx_1_1Storage}{Storage} with dtype=new\+\_\+type
+\item the return Stoarge will be on the same device as the current \hyperlink{classcytnx_1_1Storage}{Storage}.
+\end{DoxyEnumerate}
+
+\subsubsection*{Example\+:}
+
+\paragraph*{c++ A\+PI\+:}
+
+
+\begin{DoxyCodeInclude}
+\textcolor{preprocessor}{#include "cytnx.hpp"}
+\textcolor{preprocessor}{#include <iostream>}
+
+
+\textcolor{keyword}{using namespace }\hyperlink{namespacecytnx}{cytnx};
+\textcolor{keyword}{using namespace }std;
+\textcolor{keywordtype}{int} main()\{ 
+
+    \textcolor{comment}{/*}
+\textcolor{comment}{        1. Create a Storage with }
+\textcolor{comment}{        dtype =Type.Double [default],}
+\textcolor{comment}{    */}
+    \hyperlink{classcytnx_1_1Storage}{Storage} A(10);
+    cout << A.dtype\_str() << endl;
+
+    \textcolor{comment}{// the type is the same as A's type, so B shares the same object with A}
+    \hyperlink{classcytnx_1_1Storage}{Storage} B = A.\hyperlink{classcytnx_1_1Storage_a8310d8dbb70510272ded2e3d01be25f0}{astype}(Type.Double); 
+    cout << B.dtype\_str() << endl;
+    cout << is(B,A) << endl; \textcolor{comment}{// true}
+
+    \textcolor{comment}{// cast A from Type.Double to Type.Float}
+    \hyperlink{classcytnx_1_1Storage}{Storage} C = A.\hyperlink{classcytnx_1_1Storage_a8310d8dbb70510272ded2e3d01be25f0}{astype}(Type.Float);
+    cout << C.dtype\_str() << endl;
+    cout << is(C, A) << endl; \textcolor{comment}{// false}
+
+
+    \hyperlink{classcytnx_1_1Storage}{Storage} D(10,Type.Double,Device.cuda+0);
+    \textcolor{comment}{// D is on GPU, so E is also on GPU}
+    \hyperlink{classcytnx_1_1Storage}{Storage} E = D.\hyperlink{classcytnx_1_1Storage_a8310d8dbb70510272ded2e3d01be25f0}{astype}(Type.Float);
+
+    cout << E.device\_str() << endl; 
+
+ 
+
+    \textcolor{keywordflow}{return} 0;
+\}
+
+\end{DoxyCodeInclude}
+ \subparagraph*{output$>$}
+
+
+\begin{DoxyVerbInclude}
+\end{DoxyVerbInclude}
+ \paragraph*{python A\+PI\+:}
+
+
+\begin{DoxyCodeInclude}
+\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *
+
+
+A = Storage(10)
+print(A.dtype\_str())
+
+B = A.astype(Type.Double)
+print(B.dtype\_str())
+print(B \textcolor{keywordflow}{is} A)
+
+C = A.astype(Type.Float)
+print(C.dtype\_str())
+print(C \textcolor{keywordflow}{is} A)
+
+D = Storage(10,device=Device.cuda+0);
+E = D.astype(Type.Float)
+print(E.device\_str())
+
+\end{DoxyCodeInclude}
+ \subparagraph*{output$>$}
+
+
+\begin{DoxyVerbInclude}
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Storage_a6cf79f362c4ae68ab7623f0ebac9355e}\label{classcytnx_1_1Storage_a6cf79f362c4ae68ab7623f0ebac9355e}} 
+\index{cytnx\+::\+Storage@{cytnx\+::\+Storage}!Init@{Init}}
+\index{Init@{Init}!cytnx\+::\+Storage@{cytnx\+::\+Storage}}
+\subsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily void cytnx\+::\+Storage\+::\+Init (\begin{DoxyParamCaption}\item[{const unsigned long long \&}]{size,  }\item[{const unsigned int \&}]{dtype = {\ttfamily Type.Double},  }\item[{int}]{device = {\ttfamily -\/1} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+initialize a \hyperlink{classcytnx_1_1Storage}{Storage} 
+
+
+\begin{DoxyParams}{Parameters}
+{\em size} & the number of elements for the \hyperlink{classcytnx_1_1Storage}{Storage} \\
+\hline
+{\em dtype} & the dtype of the \hyperlink{classcytnx_1_1Storage}{Storage} instance. This can be any of type defined in cytnx\+::\+Type \\
+\hline
+{\em device} & the device of the \hyperlink{classcytnx_1_1Storage}{Storage} instance. This can be cytnx\+::\+Device.\+cpu or cytnx\+::\+Device.\+cuda+$<$gpuid$>$\\
+\hline
+\end{DoxyParams}
+\subsubsection*{Example\+:}
+
+\paragraph*{c++ A\+PI\+:}
+
+
+\begin{DoxyCodeInclude}
+\textcolor{preprocessor}{#include "cytnx.hpp"}
+\textcolor{preprocessor}{#include <iostream>}
+
+
+\textcolor{keyword}{using namespace }\hyperlink{namespacecytnx}{cytnx};
+\textcolor{keyword}{using namespace }std;
+\textcolor{keywordtype}{int} main()\{ 
+
+    \textcolor{comment}{/*}
+\textcolor{comment}{        1. Create a Storage with }
+\textcolor{comment}{        10 elements, }
+\textcolor{comment}{        dtype =Type.Double [default],}
+\textcolor{comment}{        device=Device.cpu [default]}
+\textcolor{comment}{    */}
+    \hyperlink{classcytnx_1_1Storage}{Storage} A(10);
+    cout << A << endl;
+
+    \textcolor{comment}{/*}
+\textcolor{comment}{        2. Create a Storage with }
+\textcolor{comment}{        10 elements, }
+\textcolor{comment}{        dtype =Type.Uint64,}
+\textcolor{comment}{        device=Device.cpu [default],}
+\textcolor{comment}{        [Note] the dtype can be any one of the supported type.}
+\textcolor{comment}{    */}
+    \hyperlink{classcytnx_1_1Storage}{Storage} B(10,Type.Uint64);
+    cout << B << endl;
+
+    \textcolor{comment}{/*}
+\textcolor{comment}{        3. Initialize a Storage with }
+\textcolor{comment}{        10 elements,}
+\textcolor{comment}{        dtype =Type.Double,}
+\textcolor{comment}{        device=Device.cuda+0, (on gpu with gpu-id=0)}
+\textcolor{comment}{        [Note] the gpu device can be set with Device.cuda+<gpu-id>}
+\textcolor{comment}{    */}
+    \hyperlink{classcytnx_1_1Storage}{Storage} C(10,Type.Double,Device.cuda+0);
+    cout << C << endl;
+
+    \textcolor{comment}{//4. Create an empty Storage, and init later}
+    \hyperlink{classcytnx_1_1Storage}{Storage} D;
+    D.\hyperlink{classcytnx_1_1Storage_a6cf79f362c4ae68ab7623f0ebac9355e}{Init}(10,Type.Double,Device.cpu);
+
+    \textcolor{keywordflow}{return} 0;
+\}
+
+\end{DoxyCodeInclude}
+ \subparagraph*{output$>$}
+
+
+\begin{DoxyVerbInclude}
+\end{DoxyVerbInclude}
+ \paragraph*{python A\+PI\+:}
+
+
+\begin{DoxyCodeInclude}
+\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *
+
+A = Storage(10);
+print(A)
+
+B = Storage(10,dtype=Type.Uint64)
+print(B)
+
+C = Storage(10,device=Device.cuda+0)
+print(C)
+
+D = Storage()
+D.Init(10,dtype=Type.Double,device=Device.cpu)
+
+
+\end{DoxyCodeInclude}
+ \subparagraph*{output$>$}
+
+
+\begin{DoxyVerbInclude}
+\end{DoxyVerbInclude}
+ 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 

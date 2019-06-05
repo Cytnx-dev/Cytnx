@@ -288,16 +288,62 @@ namespace cytnx{
             Tensor(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype=Type.Double, const int &device=-1):_impl(new Tensor_impl()){
                 this->Init(shape,dtype,device);
             }
-
+            
+            /**
+            @brief the dtype-id of the Tensor
+            @return [cytnx_uint64] the dtype_id of the Tensor
+           
+            */            
             unsigned int dtype() const {return this->_impl->dtype();}
-            int device() const { return this->_impl->device();}
-            const std::string dtype_str() const { return this->_impl->dtype_str();}
-            const std::string device_str() const{ return this->_impl->device_str();}
 
+            /**
+            @brief the device-id of the Tensor
+            @return [cytnx_int64] the device_id of the Tensor
+           
+            */            
+            int device() const { return this->_impl->device();}
+            
+            /**
+            @brief the dtype (in string) of the Tensor
+            @return [std::string] the dtype of the Tensor
+           
+            */            
+            std::string dtype_str() const { return this->_impl->dtype_str();}
+
+            /**
+            @brief the device (in string) of the Tensor
+            @return [std::string] the device of the Tensor
+           
+            */            
+            std::string device_str() const{ return this->_impl->device_str();}
+
+            /**
+            @brief the shape of the Tensor
+            @return [std::vector<cytnx_uint64>] the shape of the Tensor
+           
+            */            
             const std::vector<cytnx_uint64>& shape() const{
                 return this->_impl->shape();
             }
 
+            /**
+            @brief return a clone of the current Tensor.
+            @return [Tensor] 
+           
+            @description
+                In C++ API, the behavior of assignment operator is designed to have same behavior as python,
+                to have a copy of the current tensor, we call clone to return a copy.
+
+            ## Example:
+            ### c++ API:
+            \include example/Tensor/clone.cpp
+            #### output>
+            \verbinclude example/Tensor/clone.cpp.out
+            ### python API:
+            \include example/Tensor/clone.py               
+            #### output>
+            \verbinclude example/Tensor/clone.py.out
+            */            
             Tensor clone() const{
                 Tensor out;
                 out._impl = this->_impl->clone();
@@ -431,7 +477,12 @@ namespace cytnx{
                 this->_impl->fill(val);
                 return *this;
             }
-           
+
+            bool equiv(const Tensor &rhs){
+                if(this->shape() != rhs.shape()) return false;
+                return true; 
+            }
+               
             // Arithmic:
            template<class T>           
            Tensor& operator+=(const T &rc);

@@ -80,12 +80,12 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6bf182da2184ef93e9c255540203cc54"><td class="memItemLeft" align="right" valign="top"><a id="a6bf182da2184ef93e9c255540203cc54"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Init</b> (const unsigned long long &amp;size, const unsigned int &amp;dtype, int device=-1)</td></tr>
-<tr class="separator:a6bf182da2184ef93e9c255540203cc54"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a91232518b73848515e0fdf342d4407fd"><td class="memItemLeft" align="right" valign="top"><a id="a91232518b73848515e0fdf342d4407fd"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Storage</b> (const unsigned long long &amp;size, const unsigned int &amp;dtype, int device=-1)</td></tr>
-<tr class="separator:a91232518b73848515e0fdf342d4407fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6cf79f362c4ae68ab7623f0ebac9355e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Storage.html#a6cf79f362c4ae68ab7623f0ebac9355e">Init</a> (const unsigned long long &amp;size, const unsigned int &amp;dtype=Type.Double, int device=-1)</td></tr>
+<tr class="memdesc:a6cf79f362c4ae68ab7623f0ebac9355e"><td class="mdescLeft">&#160;</td><td class="mdescRight">initialize a <a class="el" href="classcytnx_1_1Storage.html" title="wrapping-up ">Storage</a>  <a href="#a6cf79f362c4ae68ab7623f0ebac9355e">More...</a><br /></td></tr>
+<tr class="separator:a6cf79f362c4ae68ab7623f0ebac9355e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a281c06bd64e9ea3338083c18c4c32eda"><td class="memItemLeft" align="right" valign="top"><a id="a281c06bd64e9ea3338083c18c4c32eda"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Storage</b> (const unsigned long long &amp;size, const unsigned int &amp;dtype=Type.Double, int device=-1)</td></tr>
+<tr class="separator:a281c06bd64e9ea3338083c18c4c32eda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab602ecd72e5fc4224922a6b6212ff120"><td class="memItemLeft" align="right" valign="top"><a id="ab602ecd72e5fc4224922a6b6212ff120"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Storage</b> (boost::intrusive_ptr&lt; Storage_base &gt; in_impl)</td></tr>
 <tr class="separator:ab602ecd72e5fc4224922a6b6212ff120"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -95,8 +95,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Init</b> (const unsig
 <tr class="memitem:a1ee2ea67e2197bc9d690ca8a1b878f73"><td class="memItemLeft" align="right" valign="top"><a id="a1ee2ea67e2197bc9d690ca8a1b878f73"></a>
 <a class="el" href="classcytnx_1_1Storage.html">Storage</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classcytnx_1_1Storage.html">Storage</a> &amp;rhs)</td></tr>
 <tr class="separator:a1ee2ea67e2197bc9d690ca8a1b878f73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8310d8dbb70510272ded2e3d01be25f0"><td class="memItemLeft" align="right" valign="top"><a id="a8310d8dbb70510272ded2e3d01be25f0"></a>
-<a class="el" href="classcytnx_1_1Storage.html">Storage</a>&#160;</td><td class="memItemRight" valign="bottom"><b>astype</b> (const unsigned int &amp;new_type) const</td></tr>
+<tr class="memitem:a8310d8dbb70510272ded2e3d01be25f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Storage.html">Storage</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Storage.html#a8310d8dbb70510272ded2e3d01be25f0">astype</a> (const unsigned int &amp;new_type) const</td></tr>
+<tr class="memdesc:a8310d8dbb70510272ded2e3d01be25f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">cast the type of current <a class="el" href="classcytnx_1_1Storage.html" title="wrapping-up ">Storage</a>  <a href="#a8310d8dbb70510272ded2e3d01be25f0">More...</a><br /></td></tr>
 <tr class="separator:a8310d8dbb70510272ded2e3d01be25f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a643824801e81ab86aca055f1dd1f34d7"><td class="memItemLeft" align="right" valign="top"><a id="a643824801e81ab86aca055f1dd1f34d7"></a>
 const unsigned int &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>dtype</b> () const</td></tr>
@@ -155,7 +155,108 @@ boost::intrusive_ptr&lt; Storage_base &gt;&#160;</td><td class="memItemRight" va
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>wrapping-up </p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a8310d8dbb70510272ded2e3d01be25f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8310d8dbb70510272ded2e3d01be25f0">&#9670;&nbsp;</a></span>astype()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx_1_1Storage.html">Storage</a> cytnx::Storage::astype </td>
+          <td>(</td>
+          <td class="paramtype">const unsigned int &amp;&#160;</td>
+          <td class="paramname"><em>new_type</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>cast the type of current <a class="el" href="classcytnx_1_1Storage.html" title="wrapping-up ">Storage</a> </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">new_type</td><td>the new type of the <a class="el" href="classcytnx_1_1Storage.html" title="wrapping-up ">Storage</a> instance. This can be any of type defined in cytnx::Type</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>description:</p><ol type="1">
+<li>if the new_type is the same as the dtype of current <a class="el" href="classcytnx_1_1Storage.html" title="wrapping-up ">Storage</a>, then return self; otherwise, return a new instance that has the same content as current <a class="el" href="classcytnx_1_1Storage.html" title="wrapping-up ">Storage</a> with dtype=new_type</li>
+<li>the return Stoarge will be on the same device as the current <a class="el" href="classcytnx_1_1Storage.html" title="wrapping-up ">Storage</a>.</li>
+</ol>
+<h2>Example:</h2>
+<h3>c++ API:</h3>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        1. Create a Storage with </span></div><div class="line"><span class="comment">        dtype =Type.Double [default],</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Storage.html">Storage</a> A(10);</div><div class="line">    cout &lt;&lt; A.dtype_str() &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">// the type is the same as A&#39;s type, so B shares the same object with A</span></div><div class="line">    <a class="code" href="classcytnx_1_1Storage.html">Storage</a> B = A.<a class="code" href="classcytnx_1_1Storage.html#a8310d8dbb70510272ded2e3d01be25f0">astype</a>(Type.Double); </div><div class="line">    cout &lt;&lt; B.dtype_str() &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; is(B,A) &lt;&lt; endl; <span class="comment">// true</span></div><div class="line"></div><div class="line">    <span class="comment">// cast A from Type.Double to Type.Float</span></div><div class="line">    <a class="code" href="classcytnx_1_1Storage.html">Storage</a> C = A.<a class="code" href="classcytnx_1_1Storage.html#a8310d8dbb70510272ded2e3d01be25f0">astype</a>(Type.Float);</div><div class="line">    cout &lt;&lt; C.dtype_str() &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; is(C, A) &lt;&lt; endl; <span class="comment">// false</span></div><div class="line"></div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Storage.html">Storage</a> D(10,Type.Double,Device.cuda+0);</div><div class="line">    <span class="comment">// D is on GPU, so E is also on GPU</span></div><div class="line">    <a class="code" href="classcytnx_1_1Storage.html">Storage</a> E = D.<a class="code" href="classcytnx_1_1Storage.html#a8310d8dbb70510272ded2e3d01be25f0">astype</a>(Type.Float);</div><div class="line"></div><div class="line">    cout &lt;&lt; E.device_str() &lt;&lt; endl; </div><div class="line"></div><div class="line"> </div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment"></pre> <h3>python API:</h3>
+<div class="fragment"><div class="line">from cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line"></div><div class="line">A = Storage(10)</div><div class="line">print(A.dtype_str())</div><div class="line"></div><div class="line">B = A.astype(Type.Double)</div><div class="line">print(B.dtype_str())</div><div class="line">print(B <span class="keywordflow">is</span> A)</div><div class="line"></div><div class="line">C = A.astype(Type.Float)</div><div class="line">print(C.dtype_str())</div><div class="line">print(C <span class="keywordflow">is</span> A)</div><div class="line"></div><div class="line">D = Storage(10,device=Device.cuda+0);</div><div class="line">E = D.astype(Type.Float)</div><div class="line">print(E.device_str())</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment"></pre> 
+</div>
+</div>
+<a id="a6cf79f362c4ae68ab7623f0ebac9355e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6cf79f362c4ae68ab7623f0ebac9355e">&#9670;&nbsp;</a></span>Init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cytnx::Storage::Init </td>
+          <td>(</td>
+          <td class="paramtype">const unsigned long long &amp;&#160;</td>
+          <td class="paramname"><em>size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const unsigned int &amp;&#160;</td>
+          <td class="paramname"><em>dtype</em> = <code>Type.Double</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>device</em> = <code>-1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>initialize a <a class="el" href="classcytnx_1_1Storage.html" title="wrapping-up ">Storage</a> </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">size</td><td>the number of elements for the <a class="el" href="classcytnx_1_1Storage.html" title="wrapping-up ">Storage</a> </td></tr>
+    <tr><td class="paramname">dtype</td><td>the dtype of the <a class="el" href="classcytnx_1_1Storage.html" title="wrapping-up ">Storage</a> instance. This can be any of type defined in cytnx::Type </td></tr>
+    <tr><td class="paramname">device</td><td>the device of the <a class="el" href="classcytnx_1_1Storage.html" title="wrapping-up ">Storage</a> instance. This can be cytnx::Device.cpu or cytnx::Device.cuda+&lt;gpuid&gt;</td></tr>
+  </table>
+  </dd>
+</dl>
+<h2>Example:</h2>
+<h3>c++ API:</h3>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        1. Create a Storage with </span></div><div class="line"><span class="comment">        10 elements, </span></div><div class="line"><span class="comment">        dtype =Type.Double [default],</span></div><div class="line"><span class="comment">        device=Device.cpu [default]</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Storage.html">Storage</a> A(10);</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        2. Create a Storage with </span></div><div class="line"><span class="comment">        10 elements, </span></div><div class="line"><span class="comment">        dtype =Type.Uint64,</span></div><div class="line"><span class="comment">        device=Device.cpu [default],</span></div><div class="line"><span class="comment">        [Note] the dtype can be any one of the supported type.</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Storage.html">Storage</a> B(10,Type.Uint64);</div><div class="line">    cout &lt;&lt; B &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        3. Initialize a Storage with </span></div><div class="line"><span class="comment">        10 elements,</span></div><div class="line"><span class="comment">        dtype =Type.Double,</span></div><div class="line"><span class="comment">        device=Device.cuda+0, (on gpu with gpu-id=0)</span></div><div class="line"><span class="comment">        [Note] the gpu device can be set with Device.cuda+&lt;gpu-id&gt;</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Storage.html">Storage</a> C(10,Type.Double,Device.cuda+0);</div><div class="line">    cout &lt;&lt; C &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">//4. Create an empty Storage, and init later</span></div><div class="line">    <a class="code" href="classcytnx_1_1Storage.html">Storage</a> D;</div><div class="line">    D.<a class="code" href="classcytnx_1_1Storage.html#a6cf79f362c4ae68ab7623f0ebac9355e">Init</a>(10,Type.Double,Device.cpu);</div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment"></pre> <h3>python API:</h3>
+<div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line">A = Storage(10);</div><div class="line">print(A)</div><div class="line"></div><div class="line">B = Storage(10,dtype=Type.Uint64)</div><div class="line">print(B)</div><div class="line"></div><div class="line">C = Storage(10,device=Device.cuda+0)</div><div class="line">print(C)</div><div class="line"></div><div class="line">D = Storage()</div><div class="line">D.Init(10,dtype=Type.Double,device=Device.cpu)</div><div class="line"></div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment"></pre> 
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/<a class="el" href="Storage_8hpp_source.html">Storage.hpp</a></li>
 </ul>
 </div><!-- contents -->

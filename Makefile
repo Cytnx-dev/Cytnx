@@ -1,4 +1,3 @@
-InstallPATH=.
 CytnxPATH=.
 CUDA_PATH=/usr/local/cuda
 INCFLAGS :=-I$(CytnxPATH)/include
@@ -88,7 +87,7 @@ endif
 
 
 
-all: test exam 
+all: test 
 
 
 #test: test.o $(ALLOBJS)
@@ -96,9 +95,6 @@ all: test exam
 
 test: test.o libcytnx.so
 	$(CC) -L. $(LDFLAGS) -o $@ $< libcytnx.so
-	export LD_LIBRARY_PATH=.
-exam: example.o libcytnx.so
-	$(CC) -L. $(LDFLAGS) -o $@ $< libcytnx.so	
 	export LD_LIBRARY_PATH=.
 
 libcytnx.so: $(ALLOBJS)
@@ -347,14 +343,11 @@ Eigh.o: $(CytnxPATH)/src/linalg/Eigh.cpp $(CytnxPATH)/include/linalg/linalg.hpp
 test.o: test.cpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-example.o: example/example.cpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-
 
 .phony : clean cleanpy
 
 clean:
-	rm *.o test *.so exam
+	rm *.o test *.so 
 
 cleanpy:
 	rm *.so

@@ -144,14 +144,14 @@ PYBIND11_MODULE(cytnx,m){
                 .def(py::init<>())
                 .def(py::init<const cytnx::Storage&>())
                 .def(py::init<boost::intrusive_ptr<cytnx::Storage_base> >())
-                .def(py::init<const unsigned long long &, const unsigned int&, int>(),py::arg("size"), py::arg("dtype"),py::arg("device")=-1)
+                .def(py::init<const unsigned long long &, const unsigned int&, int>(),py::arg("size"), py::arg("dtype")=(cytnx_uint64)Type.Double,py::arg("device")=-1)
 
-                .def_property_readonly("dtype",&cytnx::Storage::dtype)
-                .def_property_readonly("dtype_str",&cytnx::Storage::dtype_str)
-                .def_property_readonly("device",&cytnx::Storage::device)
-                .def_property_readonly("device_str",&cytnx::Storage::device_str)
+                .def("dtype",&cytnx::Storage::dtype)
+                .def("dtype_str",&cytnx::Storage::dtype_str)
+                .def("device",&cytnx::Storage::device)
+                .def("device_str",&cytnx::Storage::device_str)
 
-                .def("astype", &cytnx::Storage::astype, py::arg("new_type"))
+                .def("astype", &cytnx::Storage::astype,py::arg("new_type"))
                 
                 .def("__getitem__",[](cytnx::Storage &self, const unsigned long long &idx){
                     cytnx_error_msg(idx > self.size(),"idx exceed the size of storage.%s","\n");
@@ -227,11 +227,11 @@ PYBIND11_MODULE(cytnx,m){
                 .def(py::init<>())
                 .def(py::init<const cytnx::Tensor&>())
                 .def(py::init<const std::vector<cytnx::cytnx_uint64>&, const unsigned int&, int>(),py::arg("size"), py::arg("dtype")=(cytnx_uint64)cytnx::Type.Double,py::arg("device")=(int)cytnx::Device.cpu)
-                .def_property_readonly("dtype",&cytnx::Tensor::dtype)
-                .def_property_readonly("dtype_str",&cytnx::Tensor::dtype_str)
-                .def_property_readonly("device",&cytnx::Tensor::device)
-                .def_property_readonly("device_str",&cytnx::Tensor::device_str)
-                .def_property_readonly("shape",&cytnx::Tensor::shape)
+                .def("dtype",&cytnx::Tensor::dtype)
+                .def("dtype_str",&cytnx::Tensor::dtype_str)
+                .def("device",&cytnx::Tensor::device)
+                .def("device_str",&cytnx::Tensor::device_str)
+                .def("shape",&cytnx::Tensor::shape)
                 
                 .def("clone", &cytnx::Tensor::clone)
                 .def("to", &cytnx::Tensor::to, py::arg("device"))
@@ -541,12 +541,12 @@ PYBIND11_MODULE(cytnx,m){
                 .def("set_labels",&cytnx::UniTensor::set_labels,py::arg("new_labels"))
                 .def("set_Rowrank",&cytnx::UniTensor::set_Rowrank, py::arg("new_Rowrank"))
 
-                .def_property_readonly("Rowrank",&cytnx::UniTensor::Rowrank)
-                .def_property_readonly("dtype",&cytnx::UniTensor::dtype)
-                .def_property_readonly("dtype_str",&cytnx::UniTensor::dtype_str)
-                .def_property_readonly("device",&cytnx::UniTensor::device)
-                .def_property_readonly("device_str",&cytnx::UniTensor::device_str)
-                .def_property_readonly("name",&cytnx::UniTensor::name)
+                .def("Rowrank",&cytnx::UniTensor::Rowrank)
+                .def("dtype",&cytnx::UniTensor::dtype)
+                .def("dtype_str",&cytnx::UniTensor::dtype_str)
+                .def("device",&cytnx::UniTensor::device)
+                .def("device_str",&cytnx::UniTensor::device_str)
+                .def("name",&cytnx::UniTensor::name)
 
                 .def("reshape",[](cytnx::UniTensor &self, py::args args, py::kwargs kwargs)->cytnx::UniTensor{
                     std::vector<cytnx::cytnx_int64> c_args = args.cast< std::vector<cytnx::cytnx_int64> >();

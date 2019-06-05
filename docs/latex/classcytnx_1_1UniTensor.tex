@@ -24,6 +24,18 @@ void {\bfseries Init} (const std\+::vector$<$ \hyperlink{classcytnx_1_1Bond}{Bon
 \mbox{\Hypertarget{classcytnx_1_1UniTensor_ad2ee7e756d5fc9e05faf814b99151544}\label{classcytnx_1_1UniTensor_ad2ee7e756d5fc9e05faf814b99151544}} 
 void {\bfseries set\+\_\+name} (const std\+::string \&in)
 \item 
+\mbox{\Hypertarget{classcytnx_1_1UniTensor_a960547851b0811c2417eec7bdd99641d}\label{classcytnx_1_1UniTensor_a960547851b0811c2417eec7bdd99641d}} 
+void {\bfseries set\+\_\+label} (const cytnx\+\_\+uint64 \&idx, const cytnx\+\_\+int64 \&new\+\_\+label)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1UniTensor_a6e17d3849392171f61d6bebd5ac2b3f2}\label{classcytnx_1_1UniTensor_a6e17d3849392171f61d6bebd5ac2b3f2}} 
+void {\bfseries set\+\_\+labels} (const std\+::vector$<$ cytnx\+\_\+int64 $>$ \&new\+\_\+labels)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1UniTensor_ae0682945588dd82a4d97a97db49c1b51}\label{classcytnx_1_1UniTensor_ae0682945588dd82a4d97a97db49c1b51}} 
+void {\bfseries set\+\_\+\+Rowrank} (const cytnx\+\_\+uint64 \&new\+\_\+\+Rowrank)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1UniTensor_a8872f2780d7b3dd00608229599a848d2}\label{classcytnx_1_1UniTensor_a8872f2780d7b3dd00608229599a848d2}} 
+{\footnotesize template$<$class T $>$ }\\T \& {\bfseries item} ()
+\item 
 \mbox{\Hypertarget{classcytnx_1_1UniTensor_aa1463f073b58cb79d46a0974d9f6ef89}\label{classcytnx_1_1UniTensor_aa1463f073b58cb79d46a0974d9f6ef89}} 
 cytnx\+\_\+uint64 {\bfseries Rowrank} () const
 \item 
@@ -116,6 +128,12 @@ void {\bfseries put\+\_\+block} (const \hyperlink{classcytnx_1_1Tensor}{Tensor} 
 \item 
 \mbox{\Hypertarget{classcytnx_1_1UniTensor_a90ba42a96ac324dfea7436d383fecc79}\label{classcytnx_1_1UniTensor_a90ba42a96ac324dfea7436d383fecc79}} 
 void {\bfseries set} (const std\+::vector$<$ \hyperlink{classcytnx_1_1Accessor}{Accessor} $>$ \&accessors, const \hyperlink{classcytnx_1_1Tensor}{Tensor} \&rhs)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1UniTensor_a6c749dc601952c239225903371ddb669}\label{classcytnx_1_1UniTensor_a6c749dc601952c239225903371ddb669}} 
+\hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor} {\bfseries reshape} (const std\+::vector$<$ cytnx\+\_\+int64 $>$ \&new\+\_\+shape, const cytnx\+\_\+uint64 \&Rowrank=0)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1UniTensor_aa1047de2e99ac2abd79ff4f74145d543}\label{classcytnx_1_1UniTensor_aa1047de2e99ac2abd79ff4f74145d543}} 
+void {\bfseries reshape\+\_\+} (const std\+::vector$<$ cytnx\+\_\+int64 $>$ \&new\+\_\+shape, const cytnx\+\_\+uint64 \&Rowrank=0)
 \item 
 \mbox{\Hypertarget{classcytnx_1_1UniTensor_a456aaaa3a3872c0bae08a51336703a51}\label{classcytnx_1_1UniTensor_a456aaaa3a3872c0bae08a51336703a51}} 
 {\bfseries Uni\+Tensor} (const \hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor} \&rhs)

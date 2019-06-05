@@ -9,6 +9,7 @@
 /// Helper function to print vector with ODT:
 #include <vector>
 #include <iostream>
+#include <string>
 namespace cytnx{
 
 
@@ -29,10 +30,6 @@ namespace cytnx{
         }
         return os;
     }
-
-
-    
-
 
 
 }

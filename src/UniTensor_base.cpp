@@ -100,7 +100,14 @@ namespace cytnx{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
 
         }
-
+        
+        void UniTensor_base::set_labels(const std::vector<cytnx_int64> &new_labels){
+                cytnx_error_msg(new_labels.size()!=this->_labels.size(),"[ERROR][set_labels][UniTensor] %s\n","the len(new_labels) does not match the rank of the UniTenosr");
+                //check duplicate:
+                std::vector<cytnx_int64> tmp = vec_unique<cytnx_int64>(new_labels);
+                cytnx_error_msg(tmp.size() != new_labels.size(), "[ERROR][set_labels][UniTensor] %s\n","the input labels cannot contain duplicated element(s).");
+                this->_labels = new_labels;
+        }
 
         //-----------------------------------------
         std::ostream& operator<<(std::ostream& os, const UniTensor &in){

@@ -9,34 +9,28 @@
 \mbox{\Hypertarget{classcytnx_1_1Tensor_a122d879973b24d961a888d615e7e2673}\label{classcytnx_1_1Tensor_a122d879973b24d961a888d615e7e2673}} 
 \hyperlink{classcytnx_1_1Tensor}{Tensor} \& {\bfseries operator=} (const \hyperlink{classcytnx_1_1Tensor}{Tensor} \&rhs)
 \item 
-void \hyperlink{classcytnx_1_1Tensor_afdb4470e0dc934964d80aa9c761cca48}{Init} (const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&shape, const unsigned int \&dtype=Type.\+Double, const int \&device=-\/1)
+void \hyperlink{classcytnx_1_1Tensor_afdb4470e0dc934964d80aa9c761cca48}{Init} (const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&\hyperlink{classcytnx_1_1Tensor_a6d0ab6d09633ad4d6099aa822ec5335a}{shape}, const unsigned int \&\hyperlink{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}{dtype}=Type.\+Double, const int \&\hyperlink{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}{device}=-\/1)
 \begin{DoxyCompactList}\small\item\em initialize a \hyperlink{classcytnx_1_1Tensor}{Tensor} \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classcytnx_1_1Tensor_afdcff16b2096d10b524161be52ba767e}\label{classcytnx_1_1Tensor_afdcff16b2096d10b524161be52ba767e}} 
-{\bfseries Tensor} (const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&shape, const unsigned int \&dtype=Type.\+Double, const int \&device=-\/1)
+{\bfseries Tensor} (const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&\hyperlink{classcytnx_1_1Tensor_a6d0ab6d09633ad4d6099aa822ec5335a}{shape}, const unsigned int \&\hyperlink{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}{dtype}=Type.\+Double, const int \&\hyperlink{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}{device}=-\/1)
 \item 
-\mbox{\Hypertarget{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}\label{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}} 
-unsigned int {\bfseries dtype} () const
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}\label{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}} 
-int {\bfseries device} () const
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Tensor_a95be7cd19b19ebbb44e781ee03eadbb4}\label{classcytnx_1_1Tensor_a95be7cd19b19ebbb44e781ee03eadbb4}} 
-const std\+::string {\bfseries dtype\+\_\+str} () const
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Tensor_a992bc9a96010d65de5eea93652969313}\label{classcytnx_1_1Tensor_a992bc9a96010d65de5eea93652969313}} 
-const std\+::string {\bfseries device\+\_\+str} () const
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Tensor_a6d0ab6d09633ad4d6099aa822ec5335a}\label{classcytnx_1_1Tensor_a6d0ab6d09633ad4d6099aa822ec5335a}} 
-const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \& {\bfseries shape} () const
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Tensor_a5e2248e9babdb786167ed349df9084ae}\label{classcytnx_1_1Tensor_a5e2248e9babdb786167ed349df9084ae}} 
-\hyperlink{classcytnx_1_1Tensor}{Tensor} {\bfseries clone} () const
-\item 
+unsigned int \hyperlink{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}{dtype} () const
+\begin{DoxyCompactList}\small\item\em the dtype-\/id of the \hyperlink{classcytnx_1_1Tensor}{Tensor} \end{DoxyCompactList}\item 
+int \hyperlink{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}{device} () const
+\begin{DoxyCompactList}\small\item\em the device-\/id of the \hyperlink{classcytnx_1_1Tensor}{Tensor} \end{DoxyCompactList}\item 
+std\+::string \hyperlink{classcytnx_1_1Tensor_a9e09106c7529e8be90caa52e1541e498}{dtype\+\_\+str} () const
+\begin{DoxyCompactList}\small\item\em the dtype (in string) of the \hyperlink{classcytnx_1_1Tensor}{Tensor} \end{DoxyCompactList}\item 
+std\+::string \hyperlink{classcytnx_1_1Tensor_a335f7625fa01784f49b2223238d0c14e}{device\+\_\+str} () const
+\begin{DoxyCompactList}\small\item\em the device (in string) of the \hyperlink{classcytnx_1_1Tensor}{Tensor} \end{DoxyCompactList}\item 
+const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \& \hyperlink{classcytnx_1_1Tensor_a6d0ab6d09633ad4d6099aa822ec5335a}{shape} () const
+\begin{DoxyCompactList}\small\item\em the shape of the \hyperlink{classcytnx_1_1Tensor}{Tensor} \end{DoxyCompactList}\item 
+\hyperlink{classcytnx_1_1Tensor}{Tensor} \hyperlink{classcytnx_1_1Tensor_a5e2248e9babdb786167ed349df9084ae}{clone} () const
+\begin{DoxyCompactList}\small\item\em return a clone of the current \hyperlink{classcytnx_1_1Tensor}{Tensor}. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classcytnx_1_1Tensor_acf7f697a9434f9bc98a7d00a555ee982}\label{classcytnx_1_1Tensor_acf7f697a9434f9bc98a7d00a555ee982}} 
-\hyperlink{classcytnx_1_1Tensor}{Tensor} {\bfseries to} (const int \&device) const
+\hyperlink{classcytnx_1_1Tensor}{Tensor} {\bfseries to} (const int \&\hyperlink{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}{device}) const
 \item 
 \mbox{\Hypertarget{classcytnx_1_1Tensor_a114a31fbb8bf4a90f150b6a67e42183a}\label{classcytnx_1_1Tensor_a114a31fbb8bf4a90f150b6a67e42183a}} 
-void {\bfseries to\+\_\+} (const int \&device)
+void {\bfseries to\+\_\+} (const int \&\hyperlink{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}{device})
 \item 
 \mbox{\Hypertarget{classcytnx_1_1Tensor_a6a1d9ed962b0e9a484e2bb0de15eb76d}\label{classcytnx_1_1Tensor_a6a1d9ed962b0e9a484e2bb0de15eb76d}} 
 const bool \& {\bfseries is\+\_\+contiguous} () const
@@ -107,6 +101,9 @@ void {\bfseries set} (const std\+::initializer\+\_\+list$<$ \hyperlink{classcytn
 \mbox{\Hypertarget{classcytnx_1_1Tensor_a674d9dd01d4b523117cf96561de93401}\label{classcytnx_1_1Tensor_a674d9dd01d4b523117cf96561de93401}} 
 {\footnotesize template$<$class T $>$ }\\\hyperlink{classcytnx_1_1Tensor}{Tensor} \& {\bfseries fill} (const T \&val)
 \item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_aeae314f040e27b581d73c82b33ab6a59}\label{classcytnx_1_1Tensor_aeae314f040e27b581d73c82b33ab6a59}} 
+bool {\bfseries equiv} (const \hyperlink{classcytnx_1_1Tensor}{Tensor} \&rhs)
+\item 
 \mbox{\Hypertarget{classcytnx_1_1Tensor_a14586eb5096b7c98465dc6081042922b}\label{classcytnx_1_1Tensor_a14586eb5096b7c98465dc6081042922b}} 
 {\footnotesize template$<$class T $>$ }\\\hyperlink{classcytnx_1_1Tensor}{Tensor} \& {\bfseries operator+=} (const T \&rc)
 \item 
@@ -176,6 +173,125 @@ boost\+::intrusive\+\_\+ptr$<$ Tensor\+\_\+impl $>$ {\bfseries \+\_\+impl}
 
 
 \subsection{Member Function Documentation}
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a5e2248e9babdb786167ed349df9084ae}\label{classcytnx_1_1Tensor_a5e2248e9babdb786167ed349df9084ae}} 
+\index{cytnx\+::\+Tensor@{cytnx\+::\+Tensor}!clone@{clone}}
+\index{clone@{clone}!cytnx\+::\+Tensor@{cytnx\+::\+Tensor}}
+\subsubsection{\texorpdfstring{clone()}{clone()}}
+{\footnotesize\ttfamily \hyperlink{classcytnx_1_1Tensor}{Tensor} cytnx\+::\+Tensor\+::clone (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+return a clone of the current \hyperlink{classcytnx_1_1Tensor}{Tensor}. 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}\hyperlink{classcytnx_1_1Tensor}{Tensor}\mbox{]}
+\end{DoxyReturn}
+In C++ A\+PI, the behavior of assignment operator is designed to have same behavior as python, to have a copy of the current tensor, we call clone to return a copy.
+
+\subsubsection*{Example\+:}
+
+\paragraph*{c++ A\+PI\+:}
+
+
+\begin{DoxyCodeInclude}
+\textcolor{preprocessor}{#include "cytnx.hpp"}
+\textcolor{preprocessor}{#include <iostream>}
+
+
+\textcolor{keyword}{using namespace }\hyperlink{namespacecytnx}{cytnx};
+\textcolor{keyword}{using namespace }std;
+\textcolor{keywordtype}{int} main()\{ 
+
+    \hyperlink{classcytnx_1_1Tensor}{Tensor} A(\{3,4,5\});
+
+    \hyperlink{classcytnx_1_1Tensor}{Tensor} B = A; \textcolor{comment}{// B shares same object with A}
+    \hyperlink{classcytnx_1_1Tensor}{Tensor} C = A.\hyperlink{classcytnx_1_1Tensor_a5e2248e9babdb786167ed349df9084ae}{clone}(); \textcolor{comment}{// C is a copy of A}
+    
+    \textcolor{comment}{// use is() to check if two variable shares same object}
+    cout << is(B,A) << endl;
+    cout << is(C,A) << endl;
+
+    \textcolor{keywordflow}{return} 0;
+\}
+
+\end{DoxyCodeInclude}
+ \subparagraph*{output$>$}
+
+
+\begin{DoxyVerbInclude}
+\end{DoxyVerbInclude}
+ \paragraph*{python A\+PI\+:}
+
+
+\begin{DoxyCodeInclude}
+\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *
+
+A = Tensor([3,4,5])
+
+B = A
+C = A.clone()
+
+print(B \textcolor{keywordflow}{is} A)
+print(C \textcolor{keywordflow}{is} A)
+
+\end{DoxyCodeInclude}
+ \subparagraph*{output$>$}
+
+
+\begin{DoxyVerbInclude}
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}\label{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}} 
+\index{cytnx\+::\+Tensor@{cytnx\+::\+Tensor}!device@{device}}
+\index{device@{device}!cytnx\+::\+Tensor@{cytnx\+::\+Tensor}}
+\subsubsection{\texorpdfstring{device()}{device()}}
+{\footnotesize\ttfamily int cytnx\+::\+Tensor\+::device (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+the device-\/id of the \hyperlink{classcytnx_1_1Tensor}{Tensor} 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}cytnx\+\_\+int64\mbox{]} the device\+\_\+id of the \hyperlink{classcytnx_1_1Tensor}{Tensor} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a335f7625fa01784f49b2223238d0c14e}\label{classcytnx_1_1Tensor_a335f7625fa01784f49b2223238d0c14e}} 
+\index{cytnx\+::\+Tensor@{cytnx\+::\+Tensor}!device\+\_\+str@{device\+\_\+str}}
+\index{device\+\_\+str@{device\+\_\+str}!cytnx\+::\+Tensor@{cytnx\+::\+Tensor}}
+\subsubsection{\texorpdfstring{device\+\_\+str()}{device\_str()}}
+{\footnotesize\ttfamily std\+::string cytnx\+::\+Tensor\+::device\+\_\+str (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+the device (in string) of the \hyperlink{classcytnx_1_1Tensor}{Tensor} 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}std\+::string\mbox{]} the device of the \hyperlink{classcytnx_1_1Tensor}{Tensor} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}\label{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}} 
+\index{cytnx\+::\+Tensor@{cytnx\+::\+Tensor}!dtype@{dtype}}
+\index{dtype@{dtype}!cytnx\+::\+Tensor@{cytnx\+::\+Tensor}}
+\subsubsection{\texorpdfstring{dtype()}{dtype()}}
+{\footnotesize\ttfamily unsigned int cytnx\+::\+Tensor\+::dtype (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+the dtype-\/id of the \hyperlink{classcytnx_1_1Tensor}{Tensor} 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}cytnx\+\_\+uint64\mbox{]} the dtype\+\_\+id of the \hyperlink{classcytnx_1_1Tensor}{Tensor} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a9e09106c7529e8be90caa52e1541e498}\label{classcytnx_1_1Tensor_a9e09106c7529e8be90caa52e1541e498}} 
+\index{cytnx\+::\+Tensor@{cytnx\+::\+Tensor}!dtype\+\_\+str@{dtype\+\_\+str}}
+\index{dtype\+\_\+str@{dtype\+\_\+str}!cytnx\+::\+Tensor@{cytnx\+::\+Tensor}}
+\subsubsection{\texorpdfstring{dtype\+\_\+str()}{dtype\_str()}}
+{\footnotesize\ttfamily std\+::string cytnx\+::\+Tensor\+::dtype\+\_\+str (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+the dtype (in string) of the \hyperlink{classcytnx_1_1Tensor}{Tensor} 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}std\+::string\mbox{]} the dtype of the \hyperlink{classcytnx_1_1Tensor}{Tensor} 
+\end{DoxyReturn}
 \mbox{\Hypertarget{classcytnx_1_1Tensor_afdb4470e0dc934964d80aa9c761cca48}\label{classcytnx_1_1Tensor_afdb4470e0dc934964d80aa9c761cca48}} 
 \index{cytnx\+::\+Tensor@{cytnx\+::\+Tensor}!Init@{Init}}
 \index{Init@{Init}!cytnx\+::\+Tensor@{cytnx\+::\+Tensor}}
@@ -201,34 +317,48 @@ initialize a \hyperlink{classcytnx_1_1Tensor}{Tensor}
 
 
 \begin{DoxyCodeInclude}
-\{ 
-    \textcolor{comment}{//1. Create a Tensor with }
-    \textcolor{comment}{//  shape (3,4,5),}
-    \textcolor{comment}{//  dtype =Type.Double [default],}
-    \textcolor{comment}{//  device=Device.cpu [default]}
-    Tensor A(\{3,4,5\});
+\textcolor{preprocessor}{#include "cytnx.hpp"}
+\textcolor{preprocessor}{#include <iostream>}
+
+
+\textcolor{keyword}{using namespace }\hyperlink{namespacecytnx}{cytnx};
+\textcolor{keyword}{using namespace }std;
+\textcolor{keywordtype}{int} main()\{ 
+
+    \textcolor{comment}{/*}
+\textcolor{comment}{        1. Create a Tensor with }
+\textcolor{comment}{        shape (3,4,5),}
+\textcolor{comment}{        dtype =Type.Double [default],}
+\textcolor{comment}{        device=Device.cpu [default]}
+\textcolor{comment}{    */}
+    \hyperlink{classcytnx_1_1Tensor}{Tensor} A(\{3,4,5\});
     cout << A << endl;
 
-    \textcolor{comment}{//2. Create a Tensor with }
-    \textcolor{comment}{//  shape (3,4,5),}
-    \textcolor{comment}{//  dtype =Type.Uint64,}
-    \textcolor{comment}{//  device=Device.cpu [default],}
-    \textcolor{comment}{//  [Note] the dtype can be any one of the supported type.}
-    Tensor B(\{3,4,5\},Type.Uint64);
+    \textcolor{comment}{/*}
+\textcolor{comment}{        2. Create a Tensor with }
+\textcolor{comment}{        shape (3,4,5),}
+\textcolor{comment}{        dtype =Type.Uint64,}
+\textcolor{comment}{        device=Device.cpu [default],}
+\textcolor{comment}{        [Note] the dtype can be any one of the supported type.}
+\textcolor{comment}{    */}
+    \hyperlink{classcytnx_1_1Tensor}{Tensor} B(\{3,4,5\},Type.Uint64);
     cout << B << endl;
 
-    \textcolor{comment}{//3. Initialize a Tensor with }
-    \textcolor{comment}{//  shape (3,4,5),}
-    \textcolor{comment}{//  dtype =Type.Double,}
-    \textcolor{comment}{//  device=Device.cuda+0, (on gpu with gpu-id=0)}
-    \textcolor{comment}{//  [Note] the gpu device can be set with Device.cuda+<gpu-id>}
-    Tensor C(\{3,4,5\},Type.Double,Device.cuda+0);
+    \textcolor{comment}{/*}
+\textcolor{comment}{        3. Initialize a Tensor with }
+\textcolor{comment}{        shape (3,4,5),}
+\textcolor{comment}{        dtype =Type.Double,}
+\textcolor{comment}{        device=Device.cuda+0, (on gpu with gpu-id=0)}
+\textcolor{comment}{        [Note] the gpu device can be set with Device.cuda+<gpu-id>}
+\textcolor{comment}{    */}
+    \hyperlink{classcytnx_1_1Tensor}{Tensor} C(\{3,4,5\},Type.Double,Device.cuda+0);
     cout << C << endl;
 
     \textcolor{comment}{//4. Create an empty Tensor, and init later}
-    Tensor D;
-    D.Init(\{3,4,5\},Type.Double,Device.cpu);
+    \hyperlink{classcytnx_1_1Tensor}{Tensor} D;
+    D.\hyperlink{classcytnx_1_1Tensor_afdb4470e0dc934964d80aa9c761cca48}{Init}(\{3,4,5\},Type.Double,Device.cpu);
 
+    \textcolor{keywordflow}{return} 0;
 \}
 
 \end{DoxyCodeInclude}
@@ -279,7 +409,20 @@ D.Init(\{3,4,5\},Type.Double,Device.cpu);
 
 \begin{DoxyVerbInclude}
 \end{DoxyVerbInclude}
- 
+ \mbox{\Hypertarget{classcytnx_1_1Tensor_a6d0ab6d09633ad4d6099aa822ec5335a}\label{classcytnx_1_1Tensor_a6d0ab6d09633ad4d6099aa822ec5335a}} 
+\index{cytnx\+::\+Tensor@{cytnx\+::\+Tensor}!shape@{shape}}
+\index{shape@{shape}!cytnx\+::\+Tensor@{cytnx\+::\+Tensor}}
+\subsubsection{\texorpdfstring{shape()}{shape()}}
+{\footnotesize\ttfamily const std\+::vector$<$cytnx\+\_\+uint64$>$\& cytnx\+::\+Tensor\+::shape (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+the shape of the \hyperlink{classcytnx_1_1Tensor}{Tensor} 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}std\+::vector$<$cytnx\+\_\+uint64$>$\mbox{]} the shape of the \hyperlink{classcytnx_1_1Tensor}{Tensor} 
+\end{DoxyReturn}
+
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
