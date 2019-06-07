@@ -382,15 +382,16 @@ namespace cytnx{
     };
     ///@endcond;
 
-    ///wrapping-up 
+    /// an memeory storage with multi-type/multi-device support 
     class Storage{  
         private:
             //Interface:
             Storage_init_interface __SII;
 
         public:
+            ///@cond
             boost::intrusive_ptr<Storage_base> _impl;
-
+            ///@endcond
 
             /**
             @brief initialize a Storage
@@ -506,6 +507,21 @@ namespace cytnx{
             Storage to(const int &device){
                 return Storage(this->_impl->to(device));
             }
+            /**
+            @brief return a copy of current storage.
+            @return 
+                [Storage]
+            
+            ## Example:
+            ### c++ API:
+            \include example/Storage/clone.cpp
+            #### output>
+            \verbinclude example/Storage/clone.cpp.out
+            ### python API:
+            \include example/Storage/clone.py               
+            #### output>
+            \verbinclude example/Storage/clone.py.out
+            */
             Storage clone() const{
                 return Storage(this->_impl->clone());
             }

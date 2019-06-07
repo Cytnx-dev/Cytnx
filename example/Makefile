@@ -5,7 +5,7 @@ INCFLAGS := -I$(CYTNX_ROOT)/include
 LDFLAGS := -L$(CYTNX_ROOT)
 
 Tensor_example = Tensor_Init.e Tensor_to.e Tensor_to_.e Tensor_clone.e
-Storage_example = Storage_Init.e Storage_astype.e Storage_eq.e
+Storage_example = Storage_Init.e Storage_astype.e Storage_eq.e Storage_clone.e
 all: $(Tensor_example) $(Storage_example)
 
 
@@ -33,7 +33,8 @@ Storage_astype.e: ./Storage/astype.cpp $(CYTNX_ROOT)/libcytnx.so
 Storage_eq.e: ./Storage/eq.cpp $(CYTNX_ROOT)/libcytnx.so
 	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
 
-
+Storage_clone.e: ./Storage/clone.cpp $(CYTNX_ROOT)/libcytnx.so
+	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
 
 
 .phony: clean

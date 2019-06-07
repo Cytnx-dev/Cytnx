@@ -2,7 +2,7 @@
 \label{classcytnx_1_1Storage}\index{cytnx\+::\+Storage@{cytnx\+::\+Storage}}
 
 
-wrapping-\/up  
+an memeory storage with multi-\/type/multi-\/device support  
 
 
 
@@ -42,9 +42,8 @@ void {\bfseries to\+\_\+} (const int \&\hyperlink{classcytnx_1_1Storage_a4c3e275
 \mbox{\Hypertarget{classcytnx_1_1Storage_a2abfcaacf807934be5dd21c254fdb30e}\label{classcytnx_1_1Storage_a2abfcaacf807934be5dd21c254fdb30e}} 
 \hyperlink{classcytnx_1_1Storage}{Storage} {\bfseries to} (const int \&\hyperlink{classcytnx_1_1Storage_a4c3e27582d7f951e6b76ccbb92f7c537}{device})
 \item 
-\mbox{\Hypertarget{classcytnx_1_1Storage_aed0530dd20f3fb352d45653ba46a3d50}\label{classcytnx_1_1Storage_aed0530dd20f3fb352d45653ba46a3d50}} 
-\hyperlink{classcytnx_1_1Storage}{Storage} {\bfseries clone} () const
-\item 
+\hyperlink{classcytnx_1_1Storage}{Storage} \hyperlink{classcytnx_1_1Storage_aed0530dd20f3fb352d45653ba46a3d50}{clone} () const
+\begin{DoxyCompactList}\small\item\em return a copy of current storage. \end{DoxyCompactList}\item 
 const unsigned long long \& \hyperlink{classcytnx_1_1Storage_aaf36262622abdab03c90b713c454f78e}{size} () const
 \begin{DoxyCompactList}\small\item\em the size ( no. of elements ) in the \hyperlink{classcytnx_1_1Storage}{Storage} \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classcytnx_1_1Storage_a0ae2bee5e15c651b05dadf5dbbdb36f5}\label{classcytnx_1_1Storage_a0ae2bee5e15c651b05dadf5dbbdb36f5}} 
@@ -56,16 +55,10 @@ bool \hyperlink{classcytnx_1_1Storage_ad304e00cf3d472ea0355af6b40c4529d}{operato
 \begin{DoxyCompactList}\small\item\em compare two \hyperlink{classcytnx_1_1Storage}{Storage} \end{DoxyCompactList}\item 
 {\footnotesize template$<$class T $>$ }\\void \hyperlink{classcytnx_1_1Storage_a48f0424f051a4b3a821eb964be4cd5db}{fill} (const T \&val)
 \begin{DoxyCompactList}\small\item\em set all the elements to the assigned value val \end{DoxyCompactList}\end{DoxyCompactItemize}
-\subsection*{Public Attributes}
-\begin{DoxyCompactItemize}
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Storage_a41588ac45db0467c4e277bc4e572908a}\label{classcytnx_1_1Storage_a41588ac45db0467c4e277bc4e572908a}} 
-boost\+::intrusive\+\_\+ptr$<$ Storage\+\_\+base $>$ {\bfseries \+\_\+impl}
-\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
-wrapping-\/up 
+an memeory storage with multi-\/type/multi-\/device support 
 
 \subsection{Member Function Documentation}
 \mbox{\Hypertarget{classcytnx_1_1Storage_a8310d8dbb70510272ded2e3d01be25f0}\label{classcytnx_1_1Storage_a8310d8dbb70510272ded2e3d01be25f0}} 
@@ -165,6 +158,73 @@ print(C \textcolor{keywordflow}{is} A)
 D = Storage(10,device=Device.cuda+0);
 E = D.astype(Type.Float)
 print(E.device\_str())
+
+\end{DoxyCodeInclude}
+ \subparagraph*{output$>$}
+
+
+\begin{DoxyVerbInclude}
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Storage_aed0530dd20f3fb352d45653ba46a3d50}\label{classcytnx_1_1Storage_aed0530dd20f3fb352d45653ba46a3d50}} 
+\index{cytnx\+::\+Storage@{cytnx\+::\+Storage}!clone@{clone}}
+\index{clone@{clone}!cytnx\+::\+Storage@{cytnx\+::\+Storage}}
+\subsubsection{\texorpdfstring{clone()}{clone()}}
+{\footnotesize\ttfamily \hyperlink{classcytnx_1_1Storage}{Storage} cytnx\+::\+Storage\+::clone (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+return a copy of current storage. 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}\hyperlink{classcytnx_1_1Storage}{Storage}\mbox{]}
+\end{DoxyReturn}
+\subsubsection*{Example\+:}
+
+\paragraph*{c++ A\+PI\+:}
+
+
+\begin{DoxyCodeInclude}
+\textcolor{preprocessor}{#include "cytnx.hpp"}
+\textcolor{preprocessor}{#include <iostream>}
+
+
+\textcolor{keyword}{using namespace }\hyperlink{namespacecytnx}{cytnx};
+\textcolor{keyword}{using namespace }std;
+\textcolor{keywordtype}{int} main()\{ 
+
+    \hyperlink{classcytnx_1_1Storage}{Storage} A(15);
+
+    \hyperlink{classcytnx_1_1Storage}{Storage} B = A; \textcolor{comment}{// B shares same object with A}
+    \hyperlink{classcytnx_1_1Storage}{Storage} C = A.\hyperlink{classcytnx_1_1Storage_aed0530dd20f3fb352d45653ba46a3d50}{clone}(); \textcolor{comment}{// C is a copy of A}
+    
+    \textcolor{comment}{// use is() to check if two variable shares same object}
+    cout << is(B,A) << endl;
+    cout << is(C,A) << endl;
+
+    \textcolor{keywordflow}{return} 0;
+\}
+
+\end{DoxyCodeInclude}
+ \subparagraph*{output$>$}
+
+
+\begin{DoxyVerbInclude}
+1
+0
+\end{DoxyVerbInclude}
+ \paragraph*{python A\+PI\+:}
+
+
+\begin{DoxyCodeInclude}
+\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *
+
+A = Storage(15)
+
+B = A
+C = A.clone()
+
+print(B \textcolor{keywordflow}{is} A)
+print(C \textcolor{keywordflow}{is} A)
 
 \end{DoxyCodeInclude}
  \subparagraph*{output$>$}
@@ -397,7 +457,7 @@ compare two \hyperlink{classcytnx_1_1Storage}{Storage}
     cout << A.dtype\_str() << endl;
 
     \hyperlink{classcytnx_1_1Storage}{Storage} B = A;  
-    \hyperlink{classcytnx_1_1Storage}{Storage} C = A.clone();
+    \hyperlink{classcytnx_1_1Storage}{Storage} C = A.\hyperlink{classcytnx_1_1Storage_aed0530dd20f3fb352d45653ba46a3d50}{clone}();
 
     cout << (B == A) << endl; \textcolor{comment}{// true (share same instance)}
     cout << is(B,A) << endl; \textcolor{comment}{// true (share same instance)}
