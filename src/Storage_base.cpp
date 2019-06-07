@@ -88,6 +88,7 @@ namespace cytnx{
                 if(utils_internal::uii.cuElemCast[this->dtype][dtype]==NULL){
                     cytnx_error_msg(1,"[ERROR] not support type with dtype=%d",dtype);
                 }else{
+                    //std::cout << this->device << std::endl;
                     utils_internal::uii.cuElemCast[this->dtype][dtype](this,out,this->len,this->device);
                 }
             #else

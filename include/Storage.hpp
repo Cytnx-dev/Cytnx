@@ -41,7 +41,6 @@ namespace cytnx{
             Storage_base(Storage_base &Rhs);
             Storage_base& operator=(Storage_base &Rhs);
             boost::intrusive_ptr<Storage_base> astype(const unsigned int &dtype);
-            
 
             //void Init(const std::initializer_list<unsigned int> &init_shape);
             std::string dtype_str() const ;

@@ -286,7 +286,12 @@ PYBIND11_MODULE(cytnx,m){
                     std::vector<cytnx::cytnx_int64> c_args = args.cast< std::vector<cytnx::cytnx_int64> >();
                     return self.reshape(c_args);
                 })
-                .def("astype", &cytnx::Tensor::astype,py::arg("new_type"))
+                //.def("astype", &cytnx::Tensor::astype,py::arg("new_type"))
+                .def("astype_different_dtype",[](cytnx::Tensor &self, const cytnx_uint64 &dtype){
+                                                    cytnx_error_msg(self.dtype() == dtype, "[ERROR][pybind][astype_diffferent_device] same dtype for astype() should be handle in python side.%s","\n");
+                                                    return self.astype(dtype);
+                                                },py::arg("new_type"))
+
                 .def("item",[](cytnx::Tensor &self){
                     py::object out;
                     if(self.dtype() == cytnx::Type.Double) 

@@ -19,3 +19,10 @@ def to(self, device):
     else:
         return self.to_different_device(device)
 
+@add_method(Tensor)
+def astype(self,dtype):
+    if(self.dtype() == dtype):
+        return self
+    else:
+        return self.astype_different_dtype(dtype)
+

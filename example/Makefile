@@ -4,34 +4,37 @@ CCFLAGS := -std=c++11
 INCFLAGS := -I$(CYTNX_ROOT)/include
 LDFLAGS := -L$(CYTNX_ROOT)
 
-Tensor_example = Init_ex_tn to_ex_tn to_i_ex_tn clone_ex_tn
-Storage_example = Init_ex_st astype_ex_st eq_ex_st
+Tensor_example = Tensor_Init.e Tensor_to.e Tensor_to_.e Tensor_clone.e
+Storage_example = Storage_Init.e Storage_astype.e Storage_eq.e
 all: $(Tensor_example) $(Storage_example)
 
 
-Init_ex_tn: ./Tensor/Init.cpp $(CYTNX_ROOT)/libcytnx.so
+Tensor_Init.e: ./Tensor/Init.cpp $(CYTNX_ROOT)/libcytnx.so
 	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
 
-to_ex_tn: ./Tensor/to.cpp $(CYTNX_ROOT)/libcytnx.so
+Tensor_to.e: ./Tensor/to.cpp $(CYTNX_ROOT)/libcytnx.so
 	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
 
-to_i_ex_tn: ./Tensor/to_.cpp $(CYTNX_ROOT)/libcytnx.so
+Tensor_to_.e: ./Tensor/to_.cpp $(CYTNX_ROOT)/libcytnx.so
 	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
 
-clone_ex_tn: ./Tensor/clone.cpp $(CYTNX_ROOT)/libcytnx.so
+Tensor_clone.e: ./Tensor/clone.cpp $(CYTNX_ROOT)/libcytnx.so
 	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
 
 
 
 
-Init_ex_st: ./Storage/Init.cpp $(CYTNX_ROOT)/libcytnx.so
+Storage_Init.e: ./Storage/Init.cpp $(CYTNX_ROOT)/libcytnx.so
 	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
 
-astype_ex_st: ./Storage/astype.cpp $(CYTNX_ROOT)/libcytnx.so
+Storage_astype.e: ./Storage/astype.cpp $(CYTNX_ROOT)/libcytnx.so
 	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
 
-eq_ex_st: ./Storage/eq.cpp $(CYTNX_ROOT)/libcytnx.so
+Storage_eq.e: ./Storage/eq.cpp $(CYTNX_ROOT)/libcytnx.so
 	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
+
+
+
 
 .phony: clean
 

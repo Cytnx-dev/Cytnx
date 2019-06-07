@@ -16,10 +16,10 @@ int main(){
     Storage B = A;  
     Storage C = A.clone();
 
-    cout << B == A << endl; // true (share same instance)
+    cout << (B == A) << endl; // true (share same instance)
     cout << is(B,A) << endl; // true (share same instance)
   
-    cout << C == A << endl;  // true (the same content.)
+    cout << (C == A) << endl;  // true (the same content.)
     cout << is(C,A) << endl; // false (not share same instance)
  
 

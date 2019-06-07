@@ -36,6 +36,14 @@ namespace cytnx{
             bool _contiguous;
 
         public:
+            boost::intrusive_ptr<Tensor_impl> _clone_meta_only() const{
+                boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
+                out->_mapper = this->_mapper;
+                out->_invmapper = this->_invmapper;
+                out->_shape = this->_shape;
+                out->_contiguous = this->_contiguous;
+                return out;
+            }
             Tensor_impl(): _contiguous(true){};
 
             void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype=Type.Double, const int device=-1);
@@ -80,29 +88,24 @@ namespace cytnx{
                 return _storage;
             }
 
-            boost::intrusive_ptr<Tensor_impl> clone(){
-                boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
+            boost::intrusive_ptr<Tensor_impl> clone() const{
+                boost::intrusive_ptr<Tensor_impl> out = this->_clone_meta_only();
                 out->_storage = this->_storage.clone();
-                out->_mapper = this->_mapper;
-                out->_invmapper = this->_invmapper;
-                out->_shape = this->_shape;
-                out->_contiguous = this->_contiguous;
                 return out;
             }
+            
 
             void to_(const int &device){
                 this->_storage.to_(device);
             }
             boost::intrusive_ptr<Tensor_impl> to(const int &device){
                 if(this->device()==device){
+                    //boost::intrusive_ptr<Tensor_impl> out(this);
                     return this;
                 }else{
-                    boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
+                    
+                    boost::intrusive_ptr<Tensor_impl> out = this->_clone_meta_only();
                     out->_storage = this->_storage.to(device);
-                    out->_mapper = this->_mapper;
-                    out->_invmapper = this->_invmapper;
-                    out->_shape = this->_shape;
-                    out->_contiguous = this->_contiguous;
                     return out;
                 }
             }
@@ -239,10 +242,16 @@ namespace cytnx{
 
 
             
-            boost::intrusive_ptr<Tensor_impl> astype(const int& new_type) const {
-                boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
-                out->_storage = this->_storage.astype(new_type);
-                return out;
+            boost::intrusive_ptr<Tensor_impl> astype(const int& new_type){
+                //boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
+                //out->_storage = this->_storage.astype(new_type);
+                if(this->dtype() == new_type){
+                    return this;
+                }else{
+                   boost::intrusive_ptr<Tensor_impl> out = this->_clone_meta_only();
+                   out->_storage = this->_storage.astype(new_type);
+                   return out;
+                }
             }
 
     };
@@ -268,7 +277,10 @@ namespace cytnx{
             @param shape the shape of tensor.
             @param dtype the dtype of tensor. This can be any of type defined in cytnx::Type  
             @param device the device that tensor to be created. This can be cytnx::Device.cpu or cytnx::Device.cuda+<gpuid>
-            
+        
+            [Note]
+                1. the content of Tensor created will be un-initialize! See \link cytnx::zeros zeros()\endlink, \link cytnx::ones ones() \endlink or \link cytnx::arange arange() \endlink for generating an Tensor.
+ 
             ## Example:
             ### c++ API:
             \include example/Tensor/Init.cpp

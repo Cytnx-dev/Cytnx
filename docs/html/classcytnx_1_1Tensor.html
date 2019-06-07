@@ -307,7 +307,9 @@ boost::intrusive_ptr&lt; Tensor_impl &gt;&#160;</td><td class="memItemRight" val
 <h2>Example:</h2>
 <h3>c++ API:</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A({3,4,5});</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A; <span class="comment">// B shares same object with A</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> C = A.clone(); <span class="comment">// C is a copy of A</span></div><div class="line">    </div><div class="line">    <span class="comment">// use is() to check if two variable shares same object</span></div><div class="line">    cout &lt;&lt; is(B,A) &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; is(C,A) &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
-<pre class="fragment"></pre> <h3>python API:</h3>
+<pre class="fragment">1
+0
+</pre> <h3>python API:</h3>
 <div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line">A = Tensor([3,4,5])</div><div class="line"></div><div class="line">B = A</div><div class="line">C = A.clone()</div><div class="line"></div><div class="line">print(B <span class="keywordflow">is</span> A)</div><div class="line">print(C <span class="keywordflow">is</span> A)</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment"></pre> 
 </div>
@@ -473,10 +475,70 @@ boost::intrusive_ptr&lt; Tensor_impl &gt;&#160;</td><td class="memItemRight" val
   </table>
   </dd>
 </dl>
+<p>[Note]</p><ol type="1">
+<li>the content of <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> created will be un-initialize! See <a class="el" href="namespacecytnx.html#ab8a79a03fb0465f3eb2641017f3f1755">zeros()</a>, <a class="el" href="namespacecytnx.html#a83fb7bbe73368751a0d0f535d4a10a33">ones() </a> or <a class="el" href="namespacecytnx.html#a733f9931141463bc8b7c61931ccf52c3">arange() </a> for generating an <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>.</li>
+</ol>
 <h2>Example:</h2>
 <h3>c++ API:</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        1. Create a Tensor with </span></div><div class="line"><span class="comment">        shape (3,4,5),</span></div><div class="line"><span class="comment">        dtype =Type.Double [default],</span></div><div class="line"><span class="comment">        device=Device.cpu [default]</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A({3,4,5});</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        2. Create a Tensor with </span></div><div class="line"><span class="comment">        shape (3,4,5),</span></div><div class="line"><span class="comment">        dtype =Type.Uint64,</span></div><div class="line"><span class="comment">        device=Device.cpu [default],</span></div><div class="line"><span class="comment">        [Note] the dtype can be any one of the supported type.</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B({3,4,5},Type.Uint64);</div><div class="line">    cout &lt;&lt; B &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        3. Initialize a Tensor with </span></div><div class="line"><span class="comment">        shape (3,4,5),</span></div><div class="line"><span class="comment">        dtype =Type.Double,</span></div><div class="line"><span class="comment">        device=Device.cuda+0, (on gpu with gpu-id=0)</span></div><div class="line"><span class="comment">        [Note] the gpu device can be set with Device.cuda+&lt;gpu-id&gt;</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> C({3,4,5},Type.Double,Device.cuda+0);</div><div class="line">    cout &lt;&lt; C &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">//4. Create an empty Tensor, and init later</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> D;</div><div class="line">    D.<a class="code" href="classcytnx_1_1Tensor.html#afdb4470e0dc934964d80aa9c761cca48">Init</a>({3,4,5},Type.Double,Device.cpu);</div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
-<pre class="fragment"></pre> <h3>python API:</h3>
+<pre class="fragment">
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+
+
+
+Total elem: 60
+type  : Uint64
+cytnx device: CPU
+Shape : (3,4,5)
+[[[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]
+ [[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]
+ [[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]]
+
+
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CUDA/GPU-id:0
+Shape : (3,4,5)
+[[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+
+
+</pre> <h3>python API:</h3>
 <div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">#1. Create a Tensor with </span></div><div class="line"><span class="comment">#  shape (3,4,5),</span></div><div class="line"><span class="comment">#  dtype =Type.Double [default],</span></div><div class="line"><span class="comment">#  device=Device.cpu [default]</span></div><div class="line">A = Tensor([3,4,5])</div><div class="line">print(A)</div><div class="line"></div><div class="line"><span class="comment">#2. Create a Tensor with </span></div><div class="line"><span class="comment">#  shape (3,4,5),</span></div><div class="line"><span class="comment">#  dtype =Type.Uint64,</span></div><div class="line"><span class="comment">#  device=Device.cpu [default],</span></div><div class="line"><span class="comment">#  [Note] the dtype can be any one of the supported type.</span></div><div class="line">B = Tensor([3,4,5],dtype=Type.Uint64)</div><div class="line">print(B)</div><div class="line"></div><div class="line"><span class="comment">#3. Initialize a Tensor with </span></div><div class="line"><span class="comment">#  shape (3,4,5),</span></div><div class="line"><span class="comment">#  dtype =Type.Double,</span></div><div class="line"><span class="comment">#  device=Device.cuda+0, (on gpu with gpu-id=0)</span></div><div class="line"><span class="comment">#  [Note] the gpu device can be set with Device.cuda+&lt;gpu-id&gt;</span></div><div class="line">C = Tensor({3,4,5},Type.Double,Device.cuda+0);</div><div class="line">print(C)</div><div class="line"></div><div class="line"><span class="comment">#4. Create an empty Tensor, and init later</span></div><div class="line">D = Tensor()</div><div class="line">D.Init({3,4,5},Type.Double,Device.cpu);</div><div class="line"></div><div class="line"></div><div class="line"> </div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment"></pre> 
 </div>
@@ -547,9 +609,11 @@ boost::intrusive_ptr&lt; Tensor_impl &gt;&#160;</td><td class="memItemRight" val
  see also: <a class="el" href="classcytnx_1_1Tensor.html#a114a31fbb8bf4a90f150b6a67e42183a">Tensor.to_ </a> <br />
  </p><h2>Example:</h2>
 <h3>c++ API:</h3>
-<div class="fragment"></div><!-- fragment --> <h4>output&gt;</h4>
-<pre class="fragment"></pre> <h3>python API:</h3>
-<div class="fragment"></div><!-- fragment --> <h4>output&gt;</h4>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A({3,4,5});</div><div class="line"></div><div class="line">    <span class="comment">//move the tensor to different device by creating a clone object</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A.<a class="code" href="classcytnx_1_1Tensor.html#acf7f697a9434f9bc98a7d00a555ee982">to</a>(Device.cuda+0);</div><div class="line">    cout &lt;&lt; B.<a class="code" href="classcytnx_1_1Tensor.html#a335f7625fa01784f49b2223238d0c14e">device_str</a>() &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; A.device_str() &lt;&lt; endl;    </div><div class="line"></div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment">cytnx device: CUDA/GPU-id:0
+cytnx device: CPU
+</pre> <h3>python API:</h3>
+<div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line">A = Tensor([3,4,5])</div><div class="line">B = A.to(Device.cuda+0);</div><div class="line">print(B.device_str())</div><div class="line">print(A.device_str())</div><div class="line"></div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment"></pre> 
 </div>
 </div>
@@ -589,7 +653,8 @@ boost::intrusive_ptr&lt; Tensor_impl &gt;&#160;</td><td class="memItemRight" val
  </p><h2>Example:</h2>
 <h3>c++ API:</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A({3,4,5});</div><div class="line"></div><div class="line">    <span class="comment">// move the instance tensor to different device</span></div><div class="line">    A.<a class="code" href="classcytnx_1_1Tensor.html#a114a31fbb8bf4a90f150b6a67e42183a">to_</a>(Device.cuda+0);</div><div class="line">    cout &lt;&lt; A.device_str() &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div></div><!-- fragment --> <h4>output&gt;</h4>
-<pre class="fragment"></pre> <h3>python API:</h3>
+<pre class="fragment">cytnx device: CUDA/GPU-id:0
+</pre> <h3>python API:</h3>
 <div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line">A = Tensor([3,4,5])</div><div class="line"></div><div class="line">A.to_(Device.cuda+0);</div><div class="line">print(A.device_str())</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment"></pre> 
 </div>

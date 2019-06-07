@@ -127,7 +127,7 @@ namespace cytnx{
         void cuCast_gpu_dtf(const boost::intrusive_ptr<Storage_base>& in, boost::intrusive_ptr<Storage_base>& out, const unsigned long long &len_in, const int &alloc_device){
             if(alloc_device>=0){
                 out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
-                out -> Init(len_in);
+                out->Init(len_in,alloc_device);
             }
             cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
             cytnx_float*  _out= static_cast<cytnx_float*>(out->Mem);
@@ -139,7 +139,7 @@ namespace cytnx{
         void cuCast_gpu_dti64(const boost::intrusive_ptr<Storage_base>& in, boost::intrusive_ptr<Storage_base>& out, const unsigned long long &len_in, const int &alloc_device){
             if(alloc_device>=0){
                 out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
-                out-> Init(len_in);
+                out->Init(len_in,alloc_device);
             }
             cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
             cytnx_int64*  _out= static_cast<cytnx_int64*>(out->Mem);

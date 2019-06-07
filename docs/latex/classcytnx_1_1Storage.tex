@@ -137,6 +137,12 @@ description\+:
 
 
 \begin{DoxyVerbInclude}
+Double (Float64)
+Double (Float64)
+1
+Float32
+0
+cytnx device: CUDA/GPU-id:0
 \end{DoxyVerbInclude}
  \paragraph*{python A\+PI\+:}
 
@@ -311,6 +317,21 @@ initialize a \hyperlink{classcytnx_1_1Storage}{Storage}
 
 
 \begin{DoxyVerbInclude}
+dtype : Double (Float64)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+
+dtype : Uint64
+device: cytnx device: CPU
+size  : 10
+[                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0  ]
+
+dtype : Double (Float64)
+device: cytnx device: CUDA/GPU-id:0
+size  : 10
+[ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+
 \end{DoxyVerbInclude}
  \paragraph*{python A\+PI\+:}
 
@@ -378,10 +399,10 @@ compare two \hyperlink{classcytnx_1_1Storage}{Storage}
     \hyperlink{classcytnx_1_1Storage}{Storage} B = A;  
     \hyperlink{classcytnx_1_1Storage}{Storage} C = A.clone();
 
-    cout << B == A << endl; \textcolor{comment}{// true (share same instance)}
+    cout << (B == A) << endl; \textcolor{comment}{// true (share same instance)}
     cout << is(B,A) << endl; \textcolor{comment}{// true (share same instance)}
   
-    cout << C == A << endl;  \textcolor{comment}{// true (the same content.)}
+    cout << (C == A) << endl;  \textcolor{comment}{// true (the same content.)}
     cout << is(C,A) << endl; \textcolor{comment}{// false (not share same instance)}
  
 
@@ -393,6 +414,11 @@ compare two \hyperlink{classcytnx_1_1Storage}{Storage}
 
 
 \begin{DoxyVerbInclude}
+Double (Float64)
+1
+1
+1
+0
 \end{DoxyVerbInclude}
  \paragraph*{python A\+PI\+:}
 

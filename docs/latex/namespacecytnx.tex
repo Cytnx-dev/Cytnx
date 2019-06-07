@@ -19,8 +19,6 @@ class \hyperlink{classcytnx_1_1Symmetry}{Symmetry}
 class \hyperlink{classcytnx_1_1Tensor}{Tensor}
 \begin{DoxyCompactList}\small\item\em an tensor (multi-\/dimensional array) \end{DoxyCompactList}\item 
 class \hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor}
-\item 
-class \hyperlink{classcytnx_1_1UniTensor__impl}{Uni\+Tensor\+\_\+impl}
 \end{DoxyCompactItemize}
 \subsection*{Typedefs}
 \begin{DoxyCompactItemize}
@@ -61,24 +59,6 @@ enum {\bfseries bond\+Type} \+: int \{ {\bfseries B\+D\+\_\+\+K\+ET} = -\/1,
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{namespacecytnx_ab8a79a03fb0465f3eb2641017f3f1755}\label{namespacecytnx_ab8a79a03fb0465f3eb2641017f3f1755}} 
-\hyperlink{classcytnx_1_1Tensor}{Tensor} {\bfseries zeros} (const cytnx\+\_\+uint64 \&Nelem, const unsigned int \&dtype=Type.\+Double, const int \&device=Device.\+cpu)
-\item 
-\mbox{\Hypertarget{namespacecytnx_ad53947bd87534866b11080f9898d2a53}\label{namespacecytnx_ad53947bd87534866b11080f9898d2a53}} 
-\hyperlink{classcytnx_1_1Tensor}{Tensor} {\bfseries zeros} (const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&Nelem, const unsigned int \&dtype=Type.\+Double, const int \&device=Device.\+cpu)
-\item 
-\mbox{\Hypertarget{namespacecytnx_a83fb7bbe73368751a0d0f535d4a10a33}\label{namespacecytnx_a83fb7bbe73368751a0d0f535d4a10a33}} 
-\hyperlink{classcytnx_1_1Tensor}{Tensor} {\bfseries ones} (const cytnx\+\_\+uint64 \&Nelem, const unsigned int \&dtype=Type.\+Double, const int \&device=Device.\+cpu)
-\item 
-\mbox{\Hypertarget{namespacecytnx_a8e80968b20c01c839ea854c398c88ac1}\label{namespacecytnx_a8e80968b20c01c839ea854c398c88ac1}} 
-\hyperlink{classcytnx_1_1Tensor}{Tensor} {\bfseries ones} (const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&Nelem, const unsigned int \&dtype=Type.\+Double, const int \&device=Device.\+cpu)
-\item 
-\mbox{\Hypertarget{namespacecytnx_a733f9931141463bc8b7c61931ccf52c3}\label{namespacecytnx_a733f9931141463bc8b7c61931ccf52c3}} 
-\hyperlink{classcytnx_1_1Tensor}{Tensor} {\bfseries arange} (const cytnx\+\_\+int64 \&Nelem, const unsigned int \&dtype=Type.\+Double, const int \&device=Device.\+cpu)
-\item 
-\mbox{\Hypertarget{namespacecytnx_add9038b2dc354c3123dc56d5912430e0}\label{namespacecytnx_add9038b2dc354c3123dc56d5912430e0}} 
-\hyperlink{classcytnx_1_1Tensor}{Tensor} {\bfseries arange} (const cytnx\+\_\+double \&start, const cytnx\+\_\+double \&end, const cytnx\+\_\+double \&step=1, const unsigned int \&dtype=Type.\+Double, const int \&device=Device.\+cpu)
-\item 
 \mbox{\Hypertarget{namespacecytnx_a4c0d42bf5c421b1bc5e9569b857b8d27}\label{namespacecytnx_a4c0d42bf5c421b1bc5e9569b857b8d27}} 
 bool {\bfseries operator==} (\hyperlink{classcytnx_1_1Symmetry}{Symmetry} \&lhs, \hyperlink{classcytnx_1_1Symmetry}{Symmetry} \&rhs)
 \item 
@@ -87,9 +67,6 @@ std\+::ostream \& {\bfseries operator$<$$<$} (std\+::ostream \&os, const \hyperl
 \item 
 \mbox{\Hypertarget{namespacecytnx_a82ae0f76259f95cfe10256e8c3454921}\label{namespacecytnx_a82ae0f76259f95cfe10256e8c3454921}} 
 std\+::ostream \& {\bfseries operator$<$$<$} (std\+::ostream \&os, const \hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor} \&in)
-\item 
-\mbox{\Hypertarget{namespacecytnx_a12ed233b8c9409146be1b7bbcf201b83}\label{namespacecytnx_a12ed233b8c9409146be1b7bbcf201b83}} 
-std\+::ostream \& {\bfseries operator$<$$<$} (std\+::ostream \&os, \hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor} \&in)
 \item 
 \mbox{\Hypertarget{namespacecytnx_a067e7063e7cc7a80c9c91d8998ab7134}\label{namespacecytnx_a067e7063e7cc7a80c9c91d8998ab7134}} 
 \hyperlink{classcytnx_1_1Tensor}{Tensor} {\bfseries operator+} (const \hyperlink{classcytnx_1_1Tensor}{Tensor} \&Lt, const \hyperlink{classcytnx_1_1Tensor}{Tensor} \&Rt)
@@ -130,6 +107,30 @@ std\+::ostream \& {\bfseries operator$<$$<$} (std\+::ostream \&os, \hyperlink{cl
 \mbox{\Hypertarget{namespacecytnx_ab079a9e930c0508a63311bc8624c498f}\label{namespacecytnx_ab079a9e930c0508a63311bc8624c498f}} 
 {\footnotesize template$<$typename T $>$ }\\std\+::ostream \& {\bfseries operator$<$$<$} (std\+::ostream \&os, const std\+::vector$<$ T $>$ \&vec)
 \end{DoxyCompactItemize}
+\textbf{ }\par
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classcytnx_1_1Tensor}{Tensor} \hyperlink{namespacecytnx_ab8a79a03fb0465f3eb2641017f3f1755}{zeros} (const cytnx\+\_\+uint64 \&Nelem, const unsigned int \&dtype=Type.\+Double, const int \&device=Device.\+cpu)
+\begin{DoxyCompactList}\small\item\em create an rank-\/1 \hyperlink{classcytnx_1_1Tensor}{Tensor} with all the elements are initialized with zero. \end{DoxyCompactList}\item 
+\hyperlink{classcytnx_1_1Tensor}{Tensor} \hyperlink{namespacecytnx_ad53947bd87534866b11080f9898d2a53}{zeros} (const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&Nelem, const unsigned int \&dtype=Type.\+Double, const int \&device=Device.\+cpu)
+\begin{DoxyCompactList}\small\item\em create an \hyperlink{classcytnx_1_1Tensor}{Tensor} with all the elements are initialized with zero. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+\textbf{ }\par
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classcytnx_1_1Tensor}{Tensor} \hyperlink{namespacecytnx_a83fb7bbe73368751a0d0f535d4a10a33}{ones} (const cytnx\+\_\+uint64 \&Nelem, const unsigned int \&dtype=Type.\+Double, const int \&device=Device.\+cpu)
+\begin{DoxyCompactList}\small\item\em create an rank-\/1 \hyperlink{classcytnx_1_1Tensor}{Tensor} with all the elements are initialized with one. \end{DoxyCompactList}\item 
+\hyperlink{classcytnx_1_1Tensor}{Tensor} \hyperlink{namespacecytnx_a8e80968b20c01c839ea854c398c88ac1}{ones} (const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&Nelem, const unsigned int \&dtype=Type.\+Double, const int \&device=Device.\+cpu)
+\begin{DoxyCompactList}\small\item\em create an \hyperlink{classcytnx_1_1Tensor}{Tensor} with all the elements are initialized with one. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+\textbf{ }\par
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classcytnx_1_1Tensor}{Tensor} \hyperlink{namespacecytnx_a733f9931141463bc8b7c61931ccf52c3}{arange} (const cytnx\+\_\+int64 \&Nelem, const unsigned int \&dtype=Type.\+Double, const int \&device=Device.\+cpu)
+\begin{DoxyCompactList}\small\item\em create an rank-\/1 \hyperlink{classcytnx_1_1Tensor}{Tensor} with incremental unsigned integer elements start with \mbox{[}0,Nelem) \end{DoxyCompactList}\item 
+\hyperlink{classcytnx_1_1Tensor}{Tensor} \hyperlink{namespacecytnx_add9038b2dc354c3123dc56d5912430e0}{arange} (const cytnx\+\_\+double \&start, const cytnx\+\_\+double \&end, const cytnx\+\_\+double \&step=1, const unsigned int \&dtype=Type.\+Double, const int \&device=Device.\+cpu)
+\begin{DoxyCompactList}\small\item\em create an rank-\/1 \hyperlink{classcytnx_1_1Tensor}{Tensor} with elements defined in range \mbox{[}start,end) with assigned step-\/size \end{DoxyCompactList}\end{DoxyCompactItemize}
+
 \subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
@@ -143,3 +144,141 @@ Type\+\_\+class {\bfseries Type}
 
 \subsection{Detailed Description}
 Helper function to print vector with O\+DT\+: 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{namespacecytnx_a733f9931141463bc8b7c61931ccf52c3}\label{namespacecytnx_a733f9931141463bc8b7c61931ccf52c3}} 
+\index{cytnx@{cytnx}!arange@{arange}}
+\index{arange@{arange}!cytnx@{cytnx}}
+\subsubsection{\texorpdfstring{arange()}{arange()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \hyperlink{classcytnx_1_1Tensor}{Tensor} cytnx\+::arange (\begin{DoxyParamCaption}\item[{const cytnx\+\_\+int64 \&}]{Nelem,  }\item[{const unsigned int \&}]{dtype = {\ttfamily Type.Double},  }\item[{const int \&}]{device = {\ttfamily Device.cpu} }\end{DoxyParamCaption})}
+
+
+
+create an rank-\/1 \hyperlink{classcytnx_1_1Tensor}{Tensor} with incremental unsigned integer elements start with \mbox{[}0,Nelem) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Nelem} & the number of incremental elements to create. \\
+\hline
+{\em dtype} & the dtype of the \hyperlink{classcytnx_1_1Tensor}{Tensor}. It can be any type defined in \hyperlink{}{cytnx\+::\+Type } \\
+\hline
+{\em device} & the device that the \hyperlink{classcytnx_1_1Tensor}{Tensor} is put on. It can be any device defined in \hyperlink{}{cytnx\+::\+Device }\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{[}\hyperlink{classcytnx_1_1Tensor}{Tensor}\mbox{]} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecytnx_add9038b2dc354c3123dc56d5912430e0}\label{namespacecytnx_add9038b2dc354c3123dc56d5912430e0}} 
+\index{cytnx@{cytnx}!arange@{arange}}
+\index{arange@{arange}!cytnx@{cytnx}}
+\subsubsection{\texorpdfstring{arange()}{arange()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \hyperlink{classcytnx_1_1Tensor}{Tensor} cytnx\+::arange (\begin{DoxyParamCaption}\item[{const cytnx\+\_\+double \&}]{start,  }\item[{const cytnx\+\_\+double \&}]{end,  }\item[{const cytnx\+\_\+double \&}]{step = {\ttfamily 1},  }\item[{const unsigned int \&}]{dtype = {\ttfamily Type.Double},  }\item[{const int \&}]{device = {\ttfamily Device.cpu} }\end{DoxyParamCaption})}
+
+
+
+create an rank-\/1 \hyperlink{classcytnx_1_1Tensor}{Tensor} with elements defined in range \mbox{[}start,end) with assigned step-\/size 
+
+
+\begin{DoxyParams}{Parameters}
+{\em start} & the start value of the range \\
+\hline
+{\em end} & the end value of the range \\
+\hline
+{\em step} & the step-\/size of the range \\
+\hline
+{\em dtype} & the dtype of the \hyperlink{classcytnx_1_1Tensor}{Tensor}. It can be any type defined in \hyperlink{}{cytnx\+::\+Type } \\
+\hline
+{\em device} & the device that the \hyperlink{classcytnx_1_1Tensor}{Tensor} is put on. It can be any device defined in \hyperlink{}{cytnx\+::\+Device }\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{[}\hyperlink{classcytnx_1_1Tensor}{Tensor}\mbox{]} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecytnx_a83fb7bbe73368751a0d0f535d4a10a33}\label{namespacecytnx_a83fb7bbe73368751a0d0f535d4a10a33}} 
+\index{cytnx@{cytnx}!ones@{ones}}
+\index{ones@{ones}!cytnx@{cytnx}}
+\subsubsection{\texorpdfstring{ones()}{ones()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \hyperlink{classcytnx_1_1Tensor}{Tensor} cytnx\+::ones (\begin{DoxyParamCaption}\item[{const cytnx\+\_\+uint64 \&}]{Nelem,  }\item[{const unsigned int \&}]{dtype = {\ttfamily Type.Double},  }\item[{const int \&}]{device = {\ttfamily Device.cpu} }\end{DoxyParamCaption})}
+
+
+
+create an rank-\/1 \hyperlink{classcytnx_1_1Tensor}{Tensor} with all the elements are initialized with one. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Nelem} & the number of elements \\
+\hline
+{\em dtype} & the dtype of the \hyperlink{classcytnx_1_1Tensor}{Tensor}. It can be any type defined in \hyperlink{}{cytnx\+::\+Type } \\
+\hline
+{\em device} & the device that the \hyperlink{classcytnx_1_1Tensor}{Tensor} is put on. It can be any device defined in \hyperlink{}{cytnx\+::\+Device }\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{[}\hyperlink{classcytnx_1_1Tensor}{Tensor}\mbox{]} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecytnx_a8e80968b20c01c839ea854c398c88ac1}\label{namespacecytnx_a8e80968b20c01c839ea854c398c88ac1}} 
+\index{cytnx@{cytnx}!ones@{ones}}
+\index{ones@{ones}!cytnx@{cytnx}}
+\subsubsection{\texorpdfstring{ones()}{ones()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \hyperlink{classcytnx_1_1Tensor}{Tensor} cytnx\+::ones (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&}]{Nelem,  }\item[{const unsigned int \&}]{dtype = {\ttfamily Type.Double},  }\item[{const int \&}]{device = {\ttfamily Device.cpu} }\end{DoxyParamCaption})}
+
+
+
+create an \hyperlink{classcytnx_1_1Tensor}{Tensor} with all the elements are initialized with one. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Nelem} & the shape of the \hyperlink{classcytnx_1_1Tensor}{Tensor} \\
+\hline
+{\em dtype} & the dtype of the \hyperlink{classcytnx_1_1Tensor}{Tensor}. It can be any type defined in \hyperlink{}{cytnx\+::\+Type } \\
+\hline
+{\em device} & the device that the \hyperlink{classcytnx_1_1Tensor}{Tensor} is put on. It can be any device defined in \hyperlink{}{cytnx\+::\+Device }\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{[}\hyperlink{classcytnx_1_1Tensor}{Tensor}\mbox{]} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecytnx_ab8a79a03fb0465f3eb2641017f3f1755}\label{namespacecytnx_ab8a79a03fb0465f3eb2641017f3f1755}} 
+\index{cytnx@{cytnx}!zeros@{zeros}}
+\index{zeros@{zeros}!cytnx@{cytnx}}
+\subsubsection{\texorpdfstring{zeros()}{zeros()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \hyperlink{classcytnx_1_1Tensor}{Tensor} cytnx\+::zeros (\begin{DoxyParamCaption}\item[{const cytnx\+\_\+uint64 \&}]{Nelem,  }\item[{const unsigned int \&}]{dtype = {\ttfamily Type.Double},  }\item[{const int \&}]{device = {\ttfamily Device.cpu} }\end{DoxyParamCaption})}
+
+
+
+create an rank-\/1 \hyperlink{classcytnx_1_1Tensor}{Tensor} with all the elements are initialized with zero. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Nelem} & the number of elements \\
+\hline
+{\em dtype} & the dtype of the \hyperlink{classcytnx_1_1Tensor}{Tensor}. It can be any type defined in \hyperlink{}{cytnx\+::\+Type } \\
+\hline
+{\em device} & the device that the \hyperlink{classcytnx_1_1Tensor}{Tensor} is put on. It can be any device defined in \hyperlink{}{cytnx\+::\+Device }\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{[}\hyperlink{classcytnx_1_1Tensor}{Tensor}\mbox{]} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecytnx_ad53947bd87534866b11080f9898d2a53}\label{namespacecytnx_ad53947bd87534866b11080f9898d2a53}} 
+\index{cytnx@{cytnx}!zeros@{zeros}}
+\index{zeros@{zeros}!cytnx@{cytnx}}
+\subsubsection{\texorpdfstring{zeros()}{zeros()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \hyperlink{classcytnx_1_1Tensor}{Tensor} cytnx\+::zeros (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&}]{Nelem,  }\item[{const unsigned int \&}]{dtype = {\ttfamily Type.Double},  }\item[{const int \&}]{device = {\ttfamily Device.cpu} }\end{DoxyParamCaption})}
+
+
+
+create an \hyperlink{classcytnx_1_1Tensor}{Tensor} with all the elements are initialized with zero. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Nelem} & the shape of the \hyperlink{classcytnx_1_1Tensor}{Tensor} \\
+\hline
+{\em dtype} & the dtype of the \hyperlink{classcytnx_1_1Tensor}{Tensor}. It can be any type defined in \hyperlink{}{cytnx\+::\+Type } \\
+\hline
+{\em device} & the device that the \hyperlink{classcytnx_1_1Tensor}{Tensor} is put on. It can be any device defined in \hyperlink{}{cytnx\+::\+Device }\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{[}\hyperlink{classcytnx_1_1Tensor}{Tensor}\mbox{]} 
+\end{DoxyReturn}
