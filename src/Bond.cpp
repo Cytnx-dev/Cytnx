@@ -13,25 +13,22 @@ namespace cytnx{
             this->_dim = dim;
 
         }else{
-        
-            if(in_qnums.size()!=dim){
-                cytnx_error_msg(true,"%s","[ERROR] invalid qnums. the # of row of qnums list should match the dimension.");
+                
+
+            cytnx_uint64 Ndim = in_qnums.begin()[0].size();
+            for(cytnx_uint64 i=0;i<in_qnums.size();i++){
+                cytnx_error_msg(in_qnums.begin()[i].size() != Ndim,"%s","[ERROR] invalid qnums. the # of column of qnums list should be identify across each row. ");
             }
             
-            cytnx_int32 Nsym = in_qnums.begin()[0].size();
-            for(cytnx_uint64 i=0;i<dim;i++){
-                cytnx_error_msg(in_qnums.begin()[i].size() != Nsym,"%s","[ERROR] invalid qnums. the # of column of qnums list should be identify across each row. ");
-            }
-
-            cytnx_error_msg(Nsym==0,"%s","[ERROR] pass empty qnums to initialize Bond_impl is invalid.");
+            //cytnx_error_msg(Nsym==0,"%s","[ERROR] pass empty qnums to initialize Bond_impl is invalid.");
             if(in_syms.size()==0){
                 this->_syms.clear();
-                for(cytnx_uint64 i=0;i<Nsym;i++){
+                for(cytnx_uint64 i=0;i<in_qnums.size();i++){
                     this->_syms.push_back(Symmetry::U1());
                 }
                 
             }else{
-                cytnx_error_msg(in_syms.size()!=Nsym,"%s","[ERROR] the number of symmetry should match the column of passed-in qnums.");
+                cytnx_error_msg(in_syms.size()!=in_qnums.size(),"%s","[ERROR] the number of symmetry should match the # of rows of passed-in qnums.");
                 this->_syms = vec_clone(in_syms);
             }
             this->_dim = dim;
@@ -39,11 +36,11 @@ namespace cytnx{
             this->_type = bd_type;
 
             //check qnums match the rule of each symmetry type
-            for(cytnx_uint64 i=0;i<dim;i++)
-                for(cytnx_int32 j=0;j<Nsym;j++)
-                    cytnx_error_msg(!this->_syms[j].check_qnum(this->_qnums[i][j]),"[ERROR] invalid qnums @ Symmetry: %d, index %d",j,i);
+            for(cytnx_uint64 i=0;i<in_qnums.size();i++)
+                cytnx_error_msg(!this->_syms[i].check_qnums(this->_qnums[i]),"[ERROR] invalid qnums @ Symmetry: %d\n",i);
         }
     }
+
     /*
     void Bond_impl::Init(const cytnx_uint64 &dim, const std::initializer_list<std::initializer_list<cytnx_int64> > &in_qnums,const std::initializer_list<Symmetry> &in_syms,const bondType &bd_type){
 
@@ -78,7 +75,7 @@ namespace cytnx{
         for(cytnx_int32 i=0;i<bin.Nsym();i++){
             os << " " << bin.syms()[i].stype_str() << ":: ";
             for(cytnx_int32 j=0;j<bin.dim();j++){
-                printf(" %+2d",bin.qnums()[j][i]);
+                printf(" %+2d",bin.qnums()[i][j]);
             }
             os << std::endl;
         }

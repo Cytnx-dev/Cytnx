@@ -39,10 +39,15 @@ namespace cytnx{
             Symmetry_base(const Symmetry_base &rhs);
             Symmetry_base& operator=(const Symmetry_base &rhs);
       
+            std::vector<cytnx_int64> combine_rule( const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR);
+
             virtual void Init(const int &n){};
             virtual boost::intrusive_ptr<Symmetry_base> clone(){};
             virtual bool check_qnum(const cytnx_int64 &in_qnum); // check the passed in qnums satisfy the symmetry requirement.
+            virtual bool check_qnums(const std::vector<cytnx_int64> &in_qnums); 
+            virtual void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR);
             //virtual std::vector<cytnx_int64>& combine_rule(const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR);
+            
     };
     ///@endcond
 
@@ -61,7 +66,8 @@ namespace cytnx{
                 return out;
             }
             bool check_qnum(const cytnx_int64 &in_qnum);
-    
+            bool check_qnums(const std::vector<cytnx_int64> &in_qnums); 
+            void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR);
     };
     ///@endcond
 
@@ -80,6 +86,8 @@ namespace cytnx{
                 return out;
             }
             bool check_qnum(const cytnx_int64 &in_qnum);
+            bool check_qnums(const std::vector<cytnx_int64> &in_qnums); 
+            void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR);
     };
     ///@endcond
 
@@ -144,10 +152,20 @@ namespace cytnx{
             bool check_qnum(const cytnx_int64 &qnum){
                 return this->_impl->check_qnum(qnum);
             }
+            bool check_qnums(const std::vector<cytnx_int64> &qnums){
+                return this->_impl->check_qnums(qnums);
+            }
+            std::vector<cytnx_int64> combine_rule(const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR){
+                return this->_impl->combine_rule(inL,inR);
+            }            
+            void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR){
+                return this->_impl->combine_rule_(out,inL,inR);
+            }
+
 
     };
 
-    bool operator==(Symmetry &lhs, Symmetry &rhs);
+    bool operator==(const Symmetry &lhs, const Symmetry &rhs);
 
 }
 

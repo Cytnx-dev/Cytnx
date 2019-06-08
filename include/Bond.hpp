@@ -26,13 +26,8 @@ namespace cytnx{
         public:
 
             Bond_impl(): _type(bondType::BD_REG) {};   
-            //Bond_impl(const cytnx_uint64 &dim, const std::initializer_list<std::initializer_list<cytnx_int64> > &in_qnums, const std::initializer_list<Symmetry> &in_syms={}, const bondType &bd_type=bondType::BD_REG);
-            //Bond_impl(const cytnx_uint64 &dim, const std::vector<std::vector<cytnx_int64> > &in_qnums, const std::vector<Symmetry> &in_syms={}, const bondType &bd_type=bondType::BD_REG);
 
             void Init(const cytnx_uint64 &dim, const bondType &bd_type=bondType::BD_REG, const std::vector<std::vector<cytnx_int64> > &in_qnums = {}, const std::vector<Symmetry> &in_syms={});
-
-            //void Init(const cytnx_uint64 &dim, const std::initializer_list<std::initializer_list<cytnx_int64> > &in_qnums = {{}}, const std::initializer_list<Symmetry> &in_syms={}, const bondType &bd_type=bondType::BD_REG);
-
 
 
             bondType                                type() const{return this->_type;};
@@ -60,7 +55,23 @@ namespace cytnx{
                 return out;
             }
 
-        
+            void combineBond_(const boost::intrusive_ptr<Bond_impl> &bd_in){
+                //check:
+                cytnx_error_msg(this->type() != bd_in->type(),"%s\n","[ERROR] cannot combine two Bonds with different types.");
+                cytnx_error_msg(this->Nsym() != bd_in->Nsym(),"%s\n","[ERROR] cannot combine two Bonds with differnet symmetry.");
+                if(this->Nsym() != 0)
+                    cytnx_error_msg(this->syms() != bd_in->syms(),"%s\n","[ERROR] cannot combine two Bonds with differnet symmetry.");
+
+                this->_dim *= bd_in->dim();
+            
+                /// handle symmetry
+                std::vector<std::vector<cytnx_int64> > new_qnums(this->
+                for(cytnx_uint32 i=0;i<this->Nsym();i++){
+                
+                }                        
+                
+
+            }                    
 
     };//Bond_impl
     ///@endcond
@@ -97,6 +108,8 @@ namespace cytnx{
                 out._impl = this->_impl->clone();
                 return out;
             }
+
+           
 
     };
 
