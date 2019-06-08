@@ -34,14 +34,8 @@ const bool \& {\bfseries is\+\_\+contiguous} () const
 \mbox{\Hypertarget{classcytnx_1_1Tensor_a18f27d1fff73e4fb4109bc8faf3b5ace}\label{classcytnx_1_1Tensor_a18f27d1fff73e4fb4109bc8faf3b5ace}} 
 void {\bfseries permute\+\_\+} (const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&rnks)
 \item 
-\mbox{\Hypertarget{classcytnx_1_1Tensor_a675d2a131c8c49fe748525edf21cab1e}\label{classcytnx_1_1Tensor_a675d2a131c8c49fe748525edf21cab1e}} 
-void {\bfseries permute\+\_\+} (const std\+::initializer\+\_\+list$<$ cytnx\+\_\+uint64 $>$ \&rnks)
-\item 
 \mbox{\Hypertarget{classcytnx_1_1Tensor_a6bab89872014cf91dba63b38d9a2b3ea}\label{classcytnx_1_1Tensor_a6bab89872014cf91dba63b38d9a2b3ea}} 
 \hyperlink{classcytnx_1_1Tensor}{Tensor} {\bfseries permute} (const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&rnks)
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Tensor_a436838e8123d399c42e2de08ee46d687}\label{classcytnx_1_1Tensor_a436838e8123d399c42e2de08ee46d687}} 
-\hyperlink{classcytnx_1_1Tensor}{Tensor} {\bfseries permute} (const std\+::initializer\+\_\+list$<$ cytnx\+\_\+uint64 $>$ \&rnks)
 \item 
 \mbox{\Hypertarget{classcytnx_1_1Tensor_a127e50508e1ee0eadf11601d66d76988}\label{classcytnx_1_1Tensor_a127e50508e1ee0eadf11601d66d76988}} 
 \hyperlink{classcytnx_1_1Tensor}{Tensor} {\bfseries contiguous} ()
@@ -52,23 +46,14 @@ void {\bfseries contiguous\+\_\+} ()
 \mbox{\Hypertarget{classcytnx_1_1Tensor_a3723449528b9a20dd46c32c9e042b8f0}\label{classcytnx_1_1Tensor_a3723449528b9a20dd46c32c9e042b8f0}} 
 void {\bfseries reshape\+\_\+} (const std\+::vector$<$ cytnx\+\_\+int64 $>$ \&new\+\_\+shape)
 \item 
-\mbox{\Hypertarget{classcytnx_1_1Tensor_a68a1e158cc84a6109117b19882377563}\label{classcytnx_1_1Tensor_a68a1e158cc84a6109117b19882377563}} 
-void {\bfseries reshape\+\_\+} (const std\+::initializer\+\_\+list$<$ cytnx\+\_\+int64 $>$ \&new\+\_\+shape)
-\item 
 \mbox{\Hypertarget{classcytnx_1_1Tensor_a182f8f7b3ae3d0db8ed55d2adf8c6b45}\label{classcytnx_1_1Tensor_a182f8f7b3ae3d0db8ed55d2adf8c6b45}} 
 \hyperlink{classcytnx_1_1Tensor}{Tensor} {\bfseries reshape} (const std\+::vector$<$ cytnx\+\_\+int64 $>$ \&new\+\_\+shape)
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Tensor_aaea8f70a35d4f8417f988da922088ff2}\label{classcytnx_1_1Tensor_aaea8f70a35d4f8417f988da922088ff2}} 
-\hyperlink{classcytnx_1_1Tensor}{Tensor} {\bfseries reshape} (const std\+::initializer\+\_\+list$<$ cytnx\+\_\+int64 $>$ \&new\+\_\+shape)
 \item 
 \mbox{\Hypertarget{classcytnx_1_1Tensor_a7b996d3281e7375b29a7cfe4273b299f}\label{classcytnx_1_1Tensor_a7b996d3281e7375b29a7cfe4273b299f}} 
 \hyperlink{classcytnx_1_1Tensor}{Tensor} {\bfseries astype} (const int \&new\+\_\+type) const
 \item 
 \mbox{\Hypertarget{classcytnx_1_1Tensor_a697b114d1df390ca558ea9211c2d683b}\label{classcytnx_1_1Tensor_a697b114d1df390ca558ea9211c2d683b}} 
 {\footnotesize template$<$class T $>$ }\\T \& {\bfseries at} (const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&locator)
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Tensor_a55d27a38f230d115c5f0c2ee2896117f}\label{classcytnx_1_1Tensor_a55d27a38f230d115c5f0c2ee2896117f}} 
-{\footnotesize template$<$class T $>$ }\\T \& {\bfseries at} (const std\+::initializer\+\_\+list$<$ cytnx\+\_\+uint64 $>$ \&locator)
 \item 
 \mbox{\Hypertarget{classcytnx_1_1Tensor_a7b686c6641c3c1eeb2d34cb7c09e433b}\label{classcytnx_1_1Tensor_a7b686c6641c3c1eeb2d34cb7c09e433b}} 
 {\footnotesize template$<$class T $>$ }\\T \& {\bfseries item} ()
@@ -81,12 +66,6 @@ void {\bfseries set} (const std\+::vector$<$ \hyperlink{classcytnx_1_1Accessor}{
 \item 
 \mbox{\Hypertarget{classcytnx_1_1Tensor_ad93d654b978add6b2f0dfb9f91490209}\label{classcytnx_1_1Tensor_ad93d654b978add6b2f0dfb9f91490209}} 
 {\footnotesize template$<$class T $>$ }\\void {\bfseries set} (const std\+::vector$<$ \hyperlink{classcytnx_1_1Accessor}{cytnx\+::\+Accessor} $>$ \&accessors, const T \&rc)
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Tensor_ac32f5b8921f39924abb2036ee1877884}\label{classcytnx_1_1Tensor_ac32f5b8921f39924abb2036ee1877884}} 
-\hyperlink{classcytnx_1_1Tensor}{Tensor} {\bfseries get} (const std\+::initializer\+\_\+list$<$ \hyperlink{classcytnx_1_1Accessor}{cytnx\+::\+Accessor} $>$ \&accessors) const
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Tensor_a666a2352ca3b632cb8569e5013b50058}\label{classcytnx_1_1Tensor_a666a2352ca3b632cb8569e5013b50058}} 
-void {\bfseries set} (const std\+::initializer\+\_\+list$<$ \hyperlink{classcytnx_1_1Accessor}{cytnx\+::\+Accessor} $>$ \&accessors, const \hyperlink{classcytnx_1_1Tensor}{Tensor} \&rhs)
 \item 
 \mbox{\Hypertarget{classcytnx_1_1Tensor_ac04c49c32bd11a66f192ad77b5710e0a}\label{classcytnx_1_1Tensor_ac04c49c32bd11a66f192ad77b5710e0a}} 
 {\footnotesize template$<$class T $>$ }\\void {\bfseries set} (const std\+::initializer\+\_\+list$<$ \hyperlink{classcytnx_1_1Accessor}{cytnx\+::\+Accessor} $>$ \&accessors, const T \&rc)

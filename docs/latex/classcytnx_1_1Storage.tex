@@ -17,9 +17,6 @@ void \hyperlink{classcytnx_1_1Storage_a6cf79f362c4ae68ab7623f0ebac9355e}{Init} (
 \mbox{\Hypertarget{classcytnx_1_1Storage_a281c06bd64e9ea3338083c18c4c32eda}\label{classcytnx_1_1Storage_a281c06bd64e9ea3338083c18c4c32eda}} 
 {\bfseries Storage} (const unsigned long long \&\hyperlink{classcytnx_1_1Storage_aaf36262622abdab03c90b713c454f78e}{size}, const unsigned int \&\hyperlink{classcytnx_1_1Storage_a643824801e81ab86aca055f1dd1f34d7}{dtype}=Type.\+Double, int \hyperlink{classcytnx_1_1Storage_a4c3e27582d7f951e6b76ccbb92f7c537}{device}=-\/1)
 \item 
-\mbox{\Hypertarget{classcytnx_1_1Storage_ab602ecd72e5fc4224922a6b6212ff120}\label{classcytnx_1_1Storage_ab602ecd72e5fc4224922a6b6212ff120}} 
-{\bfseries Storage} (boost\+::intrusive\+\_\+ptr$<$ Storage\+\_\+base $>$ in\+\_\+impl)
-\item 
 \hyperlink{classcytnx_1_1Storage}{Storage} \hyperlink{classcytnx_1_1Storage_a8310d8dbb70510272ded2e3d01be25f0}{astype} (const unsigned int \&new\+\_\+type) const
 \begin{DoxyCompactList}\small\item\em cast the type of current \hyperlink{classcytnx_1_1Storage}{Storage} \end{DoxyCompactList}\item 
 const unsigned int \& \hyperlink{classcytnx_1_1Storage_a643824801e81ab86aca055f1dd1f34d7}{dtype} () const
@@ -30,19 +27,17 @@ const int \& \hyperlink{classcytnx_1_1Storage_a4c3e27582d7f951e6b76ccbb92f7c537}
 \begin{DoxyCompactList}\small\item\em the device-\/id of current \hyperlink{classcytnx_1_1Storage}{Storage} \end{DoxyCompactList}\item 
 const std\+::string \hyperlink{classcytnx_1_1Storage_ae0d90d5275fa7e52a0a2dc10512ba71f}{device\+\_\+str} () const
 \begin{DoxyCompactList}\small\item\em the device (std\+::string) of current \hyperlink{classcytnx_1_1Storage}{Storage} \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classcytnx_1_1Storage_a0bbf2cbefb5d0835bcb4f0d05e400870}\label{classcytnx_1_1Storage_a0bbf2cbefb5d0835bcb4f0d05e400870}} 
-void {\bfseries to\+\_\+} (const int \&\hyperlink{classcytnx_1_1Storage_a4c3e27582d7f951e6b76ccbb92f7c537}{device})
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Storage_a2abfcaacf807934be5dd21c254fdb30e}\label{classcytnx_1_1Storage_a2abfcaacf807934be5dd21c254fdb30e}} 
-\hyperlink{classcytnx_1_1Storage}{Storage} {\bfseries to} (const int \&\hyperlink{classcytnx_1_1Storage_a4c3e27582d7f951e6b76ccbb92f7c537}{device})
-\item 
+void \hyperlink{classcytnx_1_1Storage_a0bbf2cbefb5d0835bcb4f0d05e400870}{to\+\_\+} (const int \&\hyperlink{classcytnx_1_1Storage_a4c3e27582d7f951e6b76ccbb92f7c537}{device})
+\begin{DoxyCompactList}\small\item\em move the current \hyperlink{classcytnx_1_1Storage}{Storage} to different deivce. \end{DoxyCompactList}\item 
+\hyperlink{classcytnx_1_1Storage}{Storage} \hyperlink{classcytnx_1_1Storage_a2abfcaacf807934be5dd21c254fdb30e}{to} (const int \&\hyperlink{classcytnx_1_1Storage_a4c3e27582d7f951e6b76ccbb92f7c537}{device})
+\begin{DoxyCompactList}\small\item\em move a new \hyperlink{classcytnx_1_1Storage}{Storage} with same content as current \hyperlink{classcytnx_1_1Storage}{Storage} on different deivce. \end{DoxyCompactList}\item 
 \hyperlink{classcytnx_1_1Storage}{Storage} \hyperlink{classcytnx_1_1Storage_aed0530dd20f3fb352d45653ba46a3d50}{clone} () const
 \begin{DoxyCompactList}\small\item\em return a copy of current storage. \end{DoxyCompactList}\item 
 const unsigned long long \& \hyperlink{classcytnx_1_1Storage_aaf36262622abdab03c90b713c454f78e}{size} () const
 \begin{DoxyCompactList}\small\item\em the size ( no. of elements ) in the \hyperlink{classcytnx_1_1Storage}{Storage} \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classcytnx_1_1Storage_a0ae2bee5e15c651b05dadf5dbbdb36f5}\label{classcytnx_1_1Storage_a0ae2bee5e15c651b05dadf5dbbdb36f5}} 
-void {\bfseries print\+\_\+info} ()
-\item 
+void \hyperlink{classcytnx_1_1Storage_a0ae2bee5e15c651b05dadf5dbbdb36f5}{print\+\_\+info} ()
+\begin{DoxyCompactList}\small\item\em print the info of the \hyperlink{classcytnx_1_1Storage}{Storage}, including the device, dtype and size. \end{DoxyCompactList}\item 
 void \hyperlink{classcytnx_1_1Storage_a7e854529c99108b0acc3e5e2b185244b}{set\+\_\+zeros} ()
 \begin{DoxyCompactList}\small\item\em set all the elements to zero. \end{DoxyCompactList}\item 
 bool \hyperlink{classcytnx_1_1Storage_ad304e00cf3d472ea0355af6b40c4529d}{operator==} (const \hyperlink{classcytnx_1_1Storage}{Storage} \&rhs)
@@ -552,7 +547,42 @@ the size ( no. of elements ) in the \hyperlink{classcytnx_1_1Storage}{Storage}
 \begin{DoxyReturn}{Returns}
 \mbox{[}cytnx\+\_\+uint64\mbox{]} 
 \end{DoxyReturn}
+\mbox{\Hypertarget{classcytnx_1_1Storage_a2abfcaacf807934be5dd21c254fdb30e}\label{classcytnx_1_1Storage_a2abfcaacf807934be5dd21c254fdb30e}} 
+\index{cytnx\+::\+Storage@{cytnx\+::\+Storage}!to@{to}}
+\index{to@{to}!cytnx\+::\+Storage@{cytnx\+::\+Storage}}
+\subsubsection{\texorpdfstring{to()}{to()}}
+{\footnotesize\ttfamily \hyperlink{classcytnx_1_1Storage}{Storage} cytnx\+::\+Storage\+::to (\begin{DoxyParamCaption}\item[{const int \&}]{device }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
+
+
+move a new \hyperlink{classcytnx_1_1Storage}{Storage} with same content as current \hyperlink{classcytnx_1_1Storage}{Storage} on different deivce. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em device} & the device-\/id. It can be any device defined in \hyperlink{}{cytnx\+::\+Device }\\
+\hline
+\end{DoxyParams}
+\mbox{[}Note\mbox{]} if the 
+\begin{DoxyParams}{Parameters}
+{\em device} & is the same as the current \hyperlink{classcytnx_1_1Storage}{Storage}\textquotesingle{}s device, return self.\\
+\hline
+\end{DoxyParams}
+see also \hyperlink{classcytnx_1_1Storage_a0bbf2cbefb5d0835bcb4f0d05e400870}{Storage.\+to\+\_\+() } \mbox{\Hypertarget{classcytnx_1_1Storage_a0bbf2cbefb5d0835bcb4f0d05e400870}\label{classcytnx_1_1Storage_a0bbf2cbefb5d0835bcb4f0d05e400870}} 
+\index{cytnx\+::\+Storage@{cytnx\+::\+Storage}!to\+\_\+@{to\+\_\+}}
+\index{to\+\_\+@{to\+\_\+}!cytnx\+::\+Storage@{cytnx\+::\+Storage}}
+\subsubsection{\texorpdfstring{to\+\_\+()}{to\_()}}
+{\footnotesize\ttfamily void cytnx\+::\+Storage\+::to\+\_\+ (\begin{DoxyParamCaption}\item[{const int \&}]{device }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+move the current \hyperlink{classcytnx_1_1Storage}{Storage} to different deivce. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em device} & the device-\/id. It can be any device defined in \hyperlink{}{cytnx\+::\+Device }\\
+\hline
+\end{DoxyParams}
+see also \hyperlink{classcytnx_1_1Storage_a2abfcaacf807934be5dd21c254fdb30e}{Storage.\+to() } 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 

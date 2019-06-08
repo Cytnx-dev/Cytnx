@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['tensor',['Tensor',['../classcytnx_1_1Tensor.html',1,'cytnx::Tensor'],['../classcytnx_1_1Tensor.html#afdcff16b2096d10b524161be52ba767e',1,'cytnx::Tensor::Tensor()']]],
-  ['to',['to',['../classcytnx_1_1Tensor.html#acf7f697a9434f9bc98a7d00a555ee982',1,'cytnx::Tensor']]],
-  ['to_5f',['to_',['../classcytnx_1_1Tensor.html#a114a31fbb8bf4a90f150b6a67e42183a',1,'cytnx::Tensor']]]
+  ['set_5fzeros',['set_zeros',['../classcytnx_1_1Storage.html#a7e854529c99108b0acc3e5e2b185244b',1,'cytnx::Storage']]],
+  ['shape',['shape',['../classcytnx_1_1Tensor.html#a6d0ab6d09633ad4d6099aa822ec5335a',1,'cytnx::Tensor']]],
+  ['size',['size',['../classcytnx_1_1Storage.html#aaf36262622abdab03c90b713c454f78e',1,'cytnx::Storage']]],
+  ['storage',['Storage',['../classcytnx_1_1Storage.html',1,'cytnx']]],
+  ['symmetry',['Symmetry',['../classcytnx_1_1Symmetry.html',1,'cytnx']]]
 ];
