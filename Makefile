@@ -12,7 +12,7 @@ ifeq ($(MKL_Enable),1)
   CCFLAGS := -std=c++11 -g -Wformat=0 -fPIC -DUNI_MKL 
   LDFLAGS := -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5 -ldl
 else
-  CC:= g++-6
+  CC:= g++
   CCFLAGS := -std=c++11 -g -Wformat=0 -fPIC
   LDFLAGS :=  -llapack -lblas
 endif

@@ -77,11 +77,16 @@ PYBIND11_MODULE(cytnx,m){
         .value("Uint32", cytnx::__type::__pybind_type::Uint32)
 		.value("Int32", cytnx::__type::__pybind_type::Int32  ) 	
 		.export_values();
+    
+    
+    //py::enum_<cytnx::__device::__pybind_device>(m,"Device",py::arithmetic())
+    //    .value("cpu", cytnx::__device::__pybind_device::cpu)
+	//	.value("cuda", cytnx::__device::__pybind_device::cuda)	
+	//	.export_values();
 
-    py::enum_<cytnx::__device::__pybind_device>(m,"Device")
-        .value("cpu", cytnx::__device::__pybind_device::cpu)
-		.value("cuda", cytnx::__device::__pybind_device::cuda)	
-		.export_values();
+    m.attr("Device") = py::module::import("enum").attr("IntEnum")
+        ("Device", py::dict("cpu"_a=(cytnx_int64)cytnx::Device.cpu, "cuda"_a=(cytnx_int64)cytnx::Device.cuda)); 
+
 
     py::enum_<cytnx::__sym::__stype>(m,"SymType")
         .value("Z",cytnx::__sym::__stype::Z)
