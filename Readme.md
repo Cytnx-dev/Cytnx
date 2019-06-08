@@ -185,6 +185,7 @@
       Exp     |   Exp_    |  Y  |  Y   |    Y
       Eigh    |   x       |  Y  |  Y   |    Y 
       Matmul  |   x       |  Y  |  Y   |    N
+      Diag    |   x       |  Y  |  Y   |    N
  
 ## Generators 
 

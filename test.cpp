@@ -101,12 +101,18 @@ int main(int argc, char *argv[]){
     cout << bd_l << endl;
 
     Bond bd_dqu1 = Bond(3, BD_BRA,{{0,2,3},{1,2,4}});
+    Bond bd_dqu2 = Bond(5, BD_BRA,{{0,2,3,-2,-1},{1,2,4,-4,-2}});
+    Bond bd_dqu3 = bd_dqu1.combineBond(bd_dqu2);
     cout << bd_dqu1 << endl;
-    
-   
+   cout << bd_dqu2 << endl;
+    cout << bd_dqu3 << endl; 
+     
     Bond bd_1 = Bond(3);
     Bond bd_2 = Bond(5);
     Bond bd_3 = Bond(4);
+    Bond bd_4 = bd_1.combineBond(bd_2);
+    //std::cout << bd_4 << std::endl;
+
     std::vector<Bond> bds = {bd_1,bd_2,bd_3}; 
     std::vector<cytnx_int64> labels = {};
     

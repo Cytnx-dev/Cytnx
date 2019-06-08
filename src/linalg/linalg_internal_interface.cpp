@@ -100,6 +100,26 @@ namespace cytnx{
             Eigh_ii[Type.Float        ] = Eigh_internal_f;
 
             //=====================
+            Exp_ii = vector<Expfunc_oii>(5);
+
+            Exp_ii[Type.ComplexDouble] = Exp_internal_cd;
+            Exp_ii[Type.ComplexFloat ] = Exp_internal_cf;
+            Exp_ii[Type.Double       ] = Exp_internal_d;
+            Exp_ii[Type.Float        ] = Exp_internal_f;
+
+            //=====================
+            Diag_ii = vector<Expfunc_oii>(N_Type);
+
+            Diag_ii[Type.ComplexDouble] = Diag_internal_cd;
+            Diag_ii[Type.ComplexFloat ] = Diag_internal_cf;
+            Diag_ii[Type.Double       ] = Diag_internal_d;
+            Diag_ii[Type.Float        ] = Diag_internal_f;
+            Diag_ii[Type.Int64        ] = Diag_internal_i64;
+            Diag_ii[Type.Uint64       ] = Diag_internal_u64;
+            Diag_ii[Type.Int32        ] = Diag_internal_u32;
+            Diag_ii[Type.Uint32       ] = Diag_internal_u32;
+
+            //=====================
             Inv_inplace_ii = vector<Invinplacefunc_oii>(5);
 
             Inv_inplace_ii[Type.ComplexDouble] = Inv_inplace_internal_cd;
@@ -217,6 +237,26 @@ namespace cytnx{
                 cuEigh_ii[Type.ComplexFloat ] = cuEigh_internal_cf;
                 cuEigh_ii[Type.Double       ] = cuEigh_internal_d;
                 cuEigh_ii[Type.Float        ] = cuEigh_internal_f;
+
+                //=====================
+                cuExp_ii = vector<Expfunc_oii>(5);
+
+                cuExp_ii[Type.ComplexDouble] = cuExp_internal_cd;
+                cuExp_ii[Type.ComplexFloat ] = cuExp_internal_cf;
+                cuExp_ii[Type.Double       ] = cuExp_internal_d;
+                cuExp_ii[Type.Float        ] = cuExp_internal_f;
+
+                //=====================
+                cuDiag_ii = vector<Expfunc_oii>(N_Type);
+
+                cuDiag_ii[Type.ComplexDouble] = cuDiag_internal_cd;
+                cuDiag_ii[Type.ComplexFloat ] = cuDiag_internal_cf;
+                cuDiag_ii[Type.Double       ] = cuDiag_internal_d;
+                cuDiag_ii[Type.Float        ] = cuDiag_internal_f;
+                cuDiag_ii[Type.Int64        ] = cuDiag_internal_i64;
+                cuDiag_ii[Type.Uint64       ] = cuDiag_internal_u64;
+                cuDiag_ii[Type.Int32        ] = cuDiag_internal_u32;
+                cuDiag_ii[Type.Uint32       ] = cuDiag_internal_u32;
 
                 //=====================
                 cuInv_inplace_ii = vector<Invinplacefunc_oii>(5);

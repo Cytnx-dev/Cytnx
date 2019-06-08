@@ -100,7 +100,10 @@ namespace cytnx{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
 
         }
-        
+        boost::intrusive_ptr<UniTensor_base> UniTensor_base::reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank){
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+
+        }
         void UniTensor_base::set_labels(const std::vector<cytnx_int64> &new_labels){
                 cytnx_error_msg(new_labels.size()!=this->_labels.size(),"[ERROR][set_labels][UniTensor] %s\n","the len(new_labels) does not match the rank of the UniTenosr");
                 //check duplicate:
@@ -108,7 +111,15 @@ namespace cytnx{
                 cytnx_error_msg(tmp.size() != new_labels.size(), "[ERROR][set_labels][UniTensor] %s\n","the input labels cannot contain duplicated element(s).");
                 this->_labels = new_labels;
         }
-
+        boost::intrusive_ptr<UniTensor_base> UniTensor_base::to_dense(){
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+        }
+        void UniTensor_base::to_dense_(){
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+        }
+        void UniTensor_base::combineBonds(const std::vector<cytnx_int64> &indicators, const bool &by_labels){
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+        }
         //-----------------------------------------
         std::ostream& operator<<(std::ostream& os, const UniTensor &in){
             printf("Tensor name: %s\n",in.name().c_str());

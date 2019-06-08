@@ -63,7 +63,9 @@ namespace cytnx{
         Tensor Exp(const Tensor &Tin);
         void Exp_(Tensor &Tin);
 
-
+        // Diag:
+        Tensor Diag(const Tensor &Tin);
+        
 
 
     }// namespace linalg

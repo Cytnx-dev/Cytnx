@@ -69,14 +69,14 @@ endif
 
 ## Linalg_internal
 OBJS += linalg_internal_interface.o
-OBJS += Add_internal.o Sub_internal.o Mul_internal.o Div_internal.o Arithmic_internal.o Svd_internal.o Inv_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_internal.o
+OBJS += Add_internal.o Sub_internal.o Mul_internal.o Div_internal.o Arithmic_internal.o Svd_internal.o Inv_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_internal.o Diag_internal.o 
 ifeq ($(GPU_Enable),1)
-  OBJS += cuAdd_internal.o cuSub_internal.o cuMul_internal.o cuDiv_internal.o cuArithmic_internal.o cuSvd_internal.o cuInv_inplace_internal.o cuConj_inplace_internal.o cuExp_internal.o  cuEigh_internal.o cuMatmul_internal.o
+  OBJS += cuAdd_internal.o cuSub_internal.o cuMul_internal.o cuDiv_internal.o cuArithmic_internal.o cuSvd_internal.o cuInv_inplace_internal.o cuConj_inplace_internal.o cuExp_internal.o  cuEigh_internal.o cuMatmul_internal.o cuDiag_internal.o
 
 endif
 
 ## Linalg
-OBJS += Add.o Div.o Sub.o Mul.o Svd.o Inv.o Inv_.o Conj.o Conj_.o Exp.o Exp_.o Eigh.o Matmul.o
+OBJS += Add.o Div.o Sub.o Mul.o Svd.o Inv.o Inv_.o Conj.o Conj_.o Exp.o Exp_.o Eigh.o Diag.o Matmul.o
 
 
 ALLOBJS = $(OBJS)
@@ -197,6 +197,9 @@ Eigh_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Eigh_internal.cpp
 Exp_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Exp_internal.cpp $(CytnxPATH)/include/linalg/linalg_internal_cpu/Exp_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 
+Diag_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Diag_internal.cpp $(CytnxPATH)/include/linalg/linalg_internal_cpu/Diag_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+
 Inv_inplace_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Inv_inplace_internal.cpp $(CytnxPATH)/include/linalg/linalg_internal_cpu/Inv_inplace_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 
@@ -231,6 +234,9 @@ cuEigh_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuEigh_internal
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
 cuExp_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuExp_internal.cu $(CytnxPATH)/include/linalg/linalg_internal_gpu/cuExp_internal.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+
+cuDiag_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuDiag_internal.cu $(CytnxPATH)/include/linalg/linalg_internal_gpu/cuDiag_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
 cuInv_inplace_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuInv_inplace_internal.cu $(CytnxPATH)/include/linalg/linalg_internal_gpu/cuInv_inplace_internal.hpp
@@ -342,6 +348,8 @@ Conj_.o: $(CytnxPATH)/src/linalg/Conj_.cpp $(CytnxPATH)/include/linalg/linalg.hp
 Exp.o: $(CytnxPATH)/src/linalg/Exp.cpp $(CytnxPATH)/include/linalg/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Exp_.o: $(CytnxPATH)/src/linalg/Exp_.cpp $(CytnxPATH)/include/linalg/linalg.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+Diag.o: $(CytnxPATH)/src/linalg/Diag.cpp $(CytnxPATH)/include/linalg/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Eigh.o: $(CytnxPATH)/src/linalg/Eigh.cpp $(CytnxPATH)/include/linalg/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
