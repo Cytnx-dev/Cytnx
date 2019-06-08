@@ -113,9 +113,8 @@ bd_in = cytnx.Bond(10,cytnx.bondType.BD_BRA);
 print(bd_in)
 
 bd_sym = cytnx.Bond(3,cytnx.bondType.BD_KET,\
-                        [[0,2],\
-                         [1,2],\
-                         [1,3]],\
+                        [[0,1,1],\
+                         [2,2,3]],\
                         [cytnx.Symmetry.Zn(2),\
                          cytnx.Symmetry.U1()])
 print(bd_sym)

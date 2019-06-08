@@ -83,9 +83,10 @@ int main(int argc, char *argv[]){
     Zp.set({ac::all(),ac::range(1,3)}, 4);
     cout << Zp;
 
-    Bond bd_in = Bond(3,BD_KET,{{0, 1,-1, 4},
-                                {0, 2,-1,-4},
-                                {1, 0, 2, 2}}
+    Bond bd_in = Bond(3,BD_KET,{{0,0,1},
+                                {1,2,0},
+                                {-1,-1,2},
+                                {4,-4,2}}
                               ,{Symmetry::Zn(2),
                                 Symmetry::Zn(3),
                                 Symmetry::U1(),
@@ -99,7 +100,7 @@ int main(int argc, char *argv[]){
     Bond bd_l = Bond(10,BD_KET);
     cout << bd_l << endl;
 
-    Bond bd_dqu1 = Bond(3, BD_BRA,{{0,2},{1,2},{3,3}});
+    Bond bd_dqu1 = Bond(3, BD_BRA,{{0,2,3},{1,2,4}});
     cout << bd_dqu1 << endl;
     
    

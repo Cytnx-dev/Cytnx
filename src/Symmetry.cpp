@@ -72,7 +72,7 @@ namespace cytnx{
             std::vector<bool> buf(1,true);
             #pragma omp parallel
             {
-                if(omp_get_thread_num()==0) buf.assign(tmp_get_num_threads(),true);
+                if(omp_get_thread_num()==0) buf.assign(omp_get_num_threads(),true);
             }
 
             #pragma omp parallel for schedule(dynamic)
@@ -82,7 +82,7 @@ namespace cytnx{
             }
 
             for(cytnx_uint64 i=0;i<buf.size();i++){
-                buf[0] &= buf[i];
+                buf[0] = (buf[0] && buf[i]);
             }
             return buf[0];
         #else

@@ -175,7 +175,7 @@ Float32
 0
 cytnx device: CUDA/GPU-id:0
 </pre> <h3>python API:</h3>
-<div class="fragment"><div class="line">from cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line"></div><div class="line">A = Storage(10)</div><div class="line">print(A.dtype_str())</div><div class="line"></div><div class="line">B = A.astype(Type.Double)</div><div class="line">print(B.dtype_str())</div><div class="line">print(B <span class="keywordflow">is</span> A)</div><div class="line"></div><div class="line">C = A.astype(Type.Float)</div><div class="line">print(C.dtype_str())</div><div class="line">print(C <span class="keywordflow">is</span> A)</div><div class="line"></div><div class="line">D = Storage(10,device=Device.cuda+0);</div><div class="line">E = D.astype(Type.Float)</div><div class="line">print(E.device_str())</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line"></div><div class="line">A = Storage(10)</div><div class="line">print(A.dtype_str())</div><div class="line"></div><div class="line">B = A.astype(Type.Double)</div><div class="line">print(B.dtype_str())</div><div class="line">print(B <span class="keywordflow">is</span> A)</div><div class="line"></div><div class="line">C = A.astype(Type.Float)</div><div class="line">print(C.dtype_str())</div><div class="line">print(C <span class="keywordflow">is</span> A)</div><div class="line"></div><div class="line">D = Storage(10,device=Device.cuda+0);</div><div class="line">E = D.astype(Type.Float)</div><div class="line">print(E.device_str())</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">Double (Float64)
 Double (Float64)
 True
@@ -450,7 +450,7 @@ size  : 10
 dtype : Uint64
 device: cytnx device: CPU
 size  : 10
-[          -358159200          -358159200                   0                   0          -354045776          -354673168          1458571950          -354048432          1234997488         -1409130111  ]
+[          1604111520          1604111520                   0                   0          1608224944          1607601648            -8436270          1608222288           617799920          -870057238  ]
 
 dtype : Double (Float64)
 device: cytnx device: CUDA/GPU-id:0

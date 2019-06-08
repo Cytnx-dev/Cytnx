@@ -1,47 +1,296 @@
 \hypertarget{classcytnx_1_1Bond}{}\section{cytnx\+:\+:Bond Class Reference}
 \label{classcytnx_1_1Bond}\index{cytnx\+::\+Bond@{cytnx\+::\+Bond}}
+
+
+the object contains auxiliary properties for each \hyperlink{classcytnx_1_1Tensor}{Tensor} rank (bond)  
+
+
+
+
+{\ttfamily \#include $<$Bond.\+hpp$>$}
+
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classcytnx_1_1Bond_a80ee6b9a0dd288e74d885f6f288b5a0c}\label{classcytnx_1_1Bond_a80ee6b9a0dd288e74d885f6f288b5a0c}} 
-{\bfseries Bond} (const cytnx\+\_\+uint64 \&dim, const bond\+Type \&bd\+\_\+type=bond\+Type\+::\+B\+D\+\_\+\+R\+EG, const std\+::vector$<$ std\+::vector$<$ cytnx\+\_\+int64 $>$ $>$ \&in\+\_\+qnums=\{\}, const std\+::vector$<$ \hyperlink{classcytnx_1_1Symmetry}{Symmetry} $>$ \&in\+\_\+syms=\{\})
+{\bfseries Bond} (const cytnx\+\_\+uint64 \&\hyperlink{classcytnx_1_1Bond_aa072647e03a4c797479445bd41b9eacf}{dim}, const bond\+Type \&bd\+\_\+type=bond\+Type\+::\+B\+D\+\_\+\+R\+EG, const std\+::vector$<$ std\+::vector$<$ cytnx\+\_\+int64 $>$ $>$ \&in\+\_\+qnums=\{\}, const std\+::vector$<$ \hyperlink{classcytnx_1_1Symmetry}{Symmetry} $>$ \&in\+\_\+syms=\{\})
 \item 
-\mbox{\Hypertarget{classcytnx_1_1Bond_a9d7f2edc5cc41786f75021844fea43b4}\label{classcytnx_1_1Bond_a9d7f2edc5cc41786f75021844fea43b4}} 
-{\bfseries Bond} (const \hyperlink{classcytnx_1_1Bond}{Bond} \&rhs)
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Bond_a7cf807da8c8069946f59eba9348583da}\label{classcytnx_1_1Bond_a7cf807da8c8069946f59eba9348583da}} 
-\hyperlink{classcytnx_1_1Bond}{Bond} \& {\bfseries operator=} (const \hyperlink{classcytnx_1_1Bond}{Bond} \&rhs)
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Bond_a8517743cec9589ed551114ea7e55fbb1}\label{classcytnx_1_1Bond_a8517743cec9589ed551114ea7e55fbb1}} 
-bond\+Type {\bfseries type} () const
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Bond_ac33a7bc780a4c7afba2b6d2d571bf23e}\label{classcytnx_1_1Bond_ac33a7bc780a4c7afba2b6d2d571bf23e}} 
-std\+::vector$<$ std\+::vector$<$ cytnx\+\_\+int64 $>$ $>$ {\bfseries qnums} () const
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Bond_aa072647e03a4c797479445bd41b9eacf}\label{classcytnx_1_1Bond_aa072647e03a4c797479445bd41b9eacf}} 
-cytnx\+\_\+uint64 {\bfseries dim} () const
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Bond_acd46a218add6a88c1cc9035b06adb7b6}\label{classcytnx_1_1Bond_acd46a218add6a88c1cc9035b06adb7b6}} 
-cytnx\+\_\+uint32 {\bfseries Nsym} () const
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Bond_ad0adf7b134654f0390e98695ba4d416e}\label{classcytnx_1_1Bond_ad0adf7b134654f0390e98695ba4d416e}} 
-std\+::vector$<$ \hyperlink{classcytnx_1_1Symmetry}{Symmetry} $>$ {\bfseries syms} () const
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Bond_ae6957c3902bf12fd27ab881db3fe5243}\label{classcytnx_1_1Bond_ae6957c3902bf12fd27ab881db3fe5243}} 
-void {\bfseries set\+\_\+type} (const bond\+Type \&new\+\_\+bond\+Type)
-\item 
+void \hyperlink{classcytnx_1_1Bond_a707a803fa98fb6a87b5f3c3b3000509f}{Init} (const cytnx\+\_\+uint64 \&\hyperlink{classcytnx_1_1Bond_aa072647e03a4c797479445bd41b9eacf}{dim}, const bond\+Type \&bd\+\_\+type=bond\+Type\+::\+B\+D\+\_\+\+R\+EG, const std\+::vector$<$ std\+::vector$<$ cytnx\+\_\+int64 $>$ $>$ \&in\+\_\+qnums=\{\}, const std\+::vector$<$ \hyperlink{classcytnx_1_1Symmetry}{Symmetry} $>$ \&in\+\_\+syms=\{\})
+\begin{DoxyCompactList}\small\item\em init a bond object \end{DoxyCompactList}\item 
+bond\+Type \hyperlink{classcytnx_1_1Bond_a8517743cec9589ed551114ea7e55fbb1}{type} () const
+\begin{DoxyCompactList}\small\item\em return the current tag type \end{DoxyCompactList}\item 
+std\+::vector$<$ std\+::vector$<$ cytnx\+\_\+int64 $>$ $>$ \hyperlink{classcytnx_1_1Bond_ac33a7bc780a4c7afba2b6d2d571bf23e}{qnums} () const
+\begin{DoxyCompactList}\small\item\em return the current quantum number set(s) \end{DoxyCompactList}\item 
+cytnx\+\_\+uint64 \hyperlink{classcytnx_1_1Bond_aa072647e03a4c797479445bd41b9eacf}{dim} () const
+\begin{DoxyCompactList}\small\item\em return the dimension of the bond \end{DoxyCompactList}\item 
+cytnx\+\_\+uint32 \hyperlink{classcytnx_1_1Bond_acd46a218add6a88c1cc9035b06adb7b6}{Nsym} () const
+\begin{DoxyCompactList}\small\item\em return the number of symmetries \end{DoxyCompactList}\item 
+std\+::vector$<$ \hyperlink{classcytnx_1_1Symmetry}{Symmetry} $>$ \hyperlink{classcytnx_1_1Bond_ad0adf7b134654f0390e98695ba4d416e}{syms} () const
+\begin{DoxyCompactList}\small\item\em return the vector of symmetry objects \end{DoxyCompactList}\item 
+void \hyperlink{classcytnx_1_1Bond_ae6957c3902bf12fd27ab881db3fe5243}{set\+\_\+type} (const bond\+Type \&new\+\_\+bond\+Type)
+\begin{DoxyCompactList}\small\item\em change the tag-\/type of the instance \hyperlink{classcytnx_1_1Bond}{Bond} \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classcytnx_1_1Bond_a6272e30153df85944fc98bf5419dc1c8}\label{classcytnx_1_1Bond_a6272e30153df85944fc98bf5419dc1c8}} 
-void {\bfseries clear\+\_\+type} ()
+void \hyperlink{classcytnx_1_1Bond_a6272e30153df85944fc98bf5419dc1c8}{clear\+\_\+type} ()
+\begin{DoxyCompactList}\small\item\em change the tag-\/type to the default value B\+D\+\_\+\+R\+EG \end{DoxyCompactList}\item 
+\hyperlink{classcytnx_1_1Bond}{Bond} \hyperlink{classcytnx_1_1Bond_a8c4d6443ffe7c3f3ecd8c474fd9a18eb}{clone} () const
+\begin{DoxyCompactList}\small\item\em return a copy of the instance \hyperlink{classcytnx_1_1Bond}{Bond} \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classcytnx_1_1Bond_ac21ab26ec469ac56ae78c9e4bbbe7040}\label{classcytnx_1_1Bond_ac21ab26ec469ac56ae78c9e4bbbe7040}} 
+void {\bfseries combine\+Bond\+\_\+} (const \hyperlink{classcytnx_1_1Bond}{Bond} \&bd\+\_\+in)
 \item 
+\mbox{\Hypertarget{classcytnx_1_1Bond_a609c034885efa32fc244be82a56e1f8c}\label{classcytnx_1_1Bond_a609c034885efa32fc244be82a56e1f8c}} 
+\hyperlink{classcytnx_1_1Bond}{Bond} {\bfseries combine\+Bond} (const \hyperlink{classcytnx_1_1Bond}{Bond} \&bd\+\_\+in)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Bond_a4a1d060cf2d0c44d83356df757a802d1}\label{classcytnx_1_1Bond_a4a1d060cf2d0c44d83356df757a802d1}} 
+\hyperlink{classcytnx_1_1Bond}{Bond} {\bfseries combine\+Bonds} (const std\+::vector$<$ \hyperlink{classcytnx_1_1Bond}{Bond} $>$ \&bds)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Bond_a1fd655bfe0845839502b6e385d743078}\label{classcytnx_1_1Bond_a1fd655bfe0845839502b6e385d743078}} 
+void {\bfseries combine\+Bonds\+\_\+} (const std\+::vector$<$ \hyperlink{classcytnx_1_1Bond}{Bond} $>$ \&bds)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+the object contains auxiliary properties for each \hyperlink{classcytnx_1_1Tensor}{Tensor} rank (bond) 
+
+\subsection{Member Function Documentation}
 \mbox{\Hypertarget{classcytnx_1_1Bond_a8c4d6443ffe7c3f3ecd8c474fd9a18eb}\label{classcytnx_1_1Bond_a8c4d6443ffe7c3f3ecd8c474fd9a18eb}} 
-\hyperlink{classcytnx_1_1Bond}{Bond} {\bfseries clone} () const
-\end{DoxyCompactItemize}
-\subsection*{Public Attributes}
-\begin{DoxyCompactItemize}
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Bond_ab214ae754becae00b725618be195659c}\label{classcytnx_1_1Bond_ab214ae754becae00b725618be195659c}} 
-boost\+::intrusive\+\_\+ptr$<$ Bond\+\_\+impl $>$ {\bfseries \+\_\+impl}
-\end{DoxyCompactItemize}
+\index{cytnx\+::\+Bond@{cytnx\+::\+Bond}!clone@{clone}}
+\index{clone@{clone}!cytnx\+::\+Bond@{cytnx\+::\+Bond}}
+\subsubsection{\texorpdfstring{clone()}{clone()}}
+{\footnotesize\ttfamily \hyperlink{classcytnx_1_1Bond}{Bond} cytnx\+::\+Bond\+::clone (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+return a copy of the instance \hyperlink{classcytnx_1_1Bond}{Bond} 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}\hyperlink{classcytnx_1_1Bond}{Bond}\mbox{]} a new instance of \hyperlink{classcytnx_1_1Bond}{Bond} that have the same contents 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcytnx_1_1Bond_aa072647e03a4c797479445bd41b9eacf}\label{classcytnx_1_1Bond_aa072647e03a4c797479445bd41b9eacf}} 
+\index{cytnx\+::\+Bond@{cytnx\+::\+Bond}!dim@{dim}}
+\index{dim@{dim}!cytnx\+::\+Bond@{cytnx\+::\+Bond}}
+\subsubsection{\texorpdfstring{dim()}{dim()}}
+{\footnotesize\ttfamily cytnx\+\_\+uint64 cytnx\+::\+Bond\+::dim (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+return the dimension of the bond 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}cytnx\+\_\+uint64\mbox{]} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcytnx_1_1Bond_a707a803fa98fb6a87b5f3c3b3000509f}\label{classcytnx_1_1Bond_a707a803fa98fb6a87b5f3c3b3000509f}} 
+\index{cytnx\+::\+Bond@{cytnx\+::\+Bond}!Init@{Init}}
+\index{Init@{Init}!cytnx\+::\+Bond@{cytnx\+::\+Bond}}
+\subsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily void cytnx\+::\+Bond\+::\+Init (\begin{DoxyParamCaption}\item[{const cytnx\+\_\+uint64 \&}]{dim,  }\item[{const bond\+Type \&}]{bd\+\_\+type = {\ttfamily bondType\+:\+:BD\+\_\+REG},  }\item[{const std\+::vector$<$ std\+::vector$<$ cytnx\+\_\+int64 $>$ $>$ \&}]{in\+\_\+qnums = {\ttfamily \{\}},  }\item[{const std\+::vector$<$ \hyperlink{classcytnx_1_1Symmetry}{Symmetry} $>$ \&}]{in\+\_\+syms = {\ttfamily \{\}} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+init a bond object 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dim} & the dimension of the bond (rank) \\
+\hline
+{\em bond\+Type} & the tag of the bond, it can be B\+D\+\_\+\+B\+RA, B\+D\+\_\+\+K\+ET as physical tagged; or B\+D\+\_\+\+R\+EG as regular bond (rank) \\
+\hline
+{\em in\+\_\+qnums} & the quantum number(s) of the bond. it should be a 2d vector with shape (\# of symmetry, dim) \\
+\hline
+{\em in\+\_\+syms} & the symmetry object of the bond. \mbox{[}Note\mbox{]} if qnums are provided, the default symmetry type is \hyperlink{}{Symmetry\+::\+U1 }\\
+\hline
+\end{DoxyParams}
+description\+:
+\begin{DoxyEnumerate}
+\item each bond can be tagged with B\+D\+\_\+\+B\+RA or B\+D\+\_\+\+K\+ET that represent the bond is defined in Bra space or Ket space.
+\item the bond can have arbitrary multiple symmetries, with the type of each symmetry associate to the qnums are provided with the in\+\_\+syms.
+\end{DoxyEnumerate}
+
+\mbox{[}Note\mbox{]}
+\begin{DoxyEnumerate}
+\item if quantum number(s) are provided (which means the bond is with symmetry) then the bond M\+U\+ST be tagged with either B\+D\+\_\+\+B\+RA or B\+D\+\_\+\+K\+ET
+\item if the bond is non-\/symmetry, then it can be tagged with B\+D\+\_\+\+B\+RA or B\+D\+\_\+\+K\+ET, or B\+D\+\_\+\+R\+EG depending on the usage.
+\end{DoxyEnumerate}
+
+\subsubsection*{Example\+:}
+
+\paragraph*{c++ A\+PI\+:}
+
+
+\begin{DoxyCodeInclude}
+\textcolor{preprocessor}{#include "cytnx.hpp"}
+\textcolor{preprocessor}{#include <iostream>}
+
+
+\textcolor{keyword}{using namespace }\hyperlink{namespacecytnx}{cytnx};
+\textcolor{keyword}{using namespace }std;
+\textcolor{keywordtype}{int} main()\{ 
+
+    \textcolor{comment}{/* 1.}
+\textcolor{comment}{        create a non-symmetry, regular bond (BD\_REG) }
+\textcolor{comment}{        with dimension 10}
+\textcolor{comment}{    */}
+    \hyperlink{classcytnx_1_1Bond}{Bond} bd\_a = \hyperlink{classcytnx_1_1Bond}{Bond}(10);
+    cout << bd\_a << endl;
+
+    \textcolor{comment}{/* 2. }
+\textcolor{comment}{        create a non-symmetry bond tagged with BD\_KET }
+\textcolor{comment}{        with dimension 10}
+\textcolor{comment}{    */}
+    \hyperlink{classcytnx_1_1Bond}{Bond} bd\_b = \hyperlink{classcytnx_1_1Bond}{Bond}(10,BD\_KET);
+    cout << bd\_b << endl;
+
+    \textcolor{comment}{/* 3.}
+\textcolor{comment}{        crate a symmetry bond, }
+\textcolor{comment}{        with single U1 (default) symmetry and qnums = (0,2,-1,3)}
+\textcolor{comment}{    */}
+    \hyperlink{classcytnx_1_1Bond}{Bond} bd\_c = \hyperlink{classcytnx_1_1Bond}{Bond}(4,BD\_KET,\{\{0,2,-1,3\}\});
+    cout << bd\_c << endl;
+
+    \textcolor{comment}{/* 3.}
+\textcolor{comment}{        crate a symmetry bond, }
+\textcolor{comment}{        with U1 x Z2 multiple symmetry }
+\textcolor{comment}{        and qnums = U1:(0,2,-1,3) x Z2:(0,1,1,0)}
+\textcolor{comment}{    */}
+    \hyperlink{classcytnx_1_1Bond}{Bond} bd\_d = \hyperlink{classcytnx_1_1Bond}{Bond}(4,BD\_BRA,\{\{0,2,-1,3\},
+                               \{0,1, 1,0\}\},
+                              \{Symmetry::U1(),
+                               Symmetry::Zn(2)\});
+    cout << bd\_d << endl;
+
+    
+    
+
+
+\}
+
+\end{DoxyCodeInclude}
+ \subparagraph*{output$>$}
+
+
+\begin{DoxyVerbInclude}
+Dim = 10 |type: REGULAR 
+
+Dim = 10 |type: KET>     
+
+Dim = 4 |type: KET>     
+ U1::  +0 +2 -1 +3
+
+Dim = 4 |type: <BRA     
+ U1::  +0 +2 -1 +3
+ Z2::  +0 +1 +1 +0
+
+\end{DoxyVerbInclude}
+ \paragraph*{python A\+PI\+:}
+
+
+\begin{DoxyCodeInclude}
+\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *
+
+bd\_a = Bond(10)
+print(bd\_a)
+
+bd\_b = Bond(10,BD\_KET)
+print(bd\_b)
+
+bd\_c = Bond(4,BD\_KET,[[0,2,-1,3]])
+print(bd\_c)
+
+bd\_d = Bond(4,BD\_BRA,[[0,2,-1,3],
+                      [0,1, 1,0]],
+                     [Symmetry.U1(),
+                      Symmetry.Zn(2)])
+
+print(bd\_d)
+
+    
+\end{DoxyCodeInclude}
+ \subparagraph*{output$>$}
+
+
+\begin{DoxyVerbInclude}
+Dim = 10 |type: REGULAR 
+
+Dim = 10 |type: KET>     
+
+Dim = 4 |type: KET>     
+ U1::  +0 +2 -1 +3
+
+Dim = 4 |type: <BRA     
+ U1::  +0 +2 -1 +3
+ Z2::  +0 +1 +1 +0
+
+
+
+
+
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Bond_acd46a218add6a88c1cc9035b06adb7b6}\label{classcytnx_1_1Bond_acd46a218add6a88c1cc9035b06adb7b6}} 
+\index{cytnx\+::\+Bond@{cytnx\+::\+Bond}!Nsym@{Nsym}}
+\index{Nsym@{Nsym}!cytnx\+::\+Bond@{cytnx\+::\+Bond}}
+\subsubsection{\texorpdfstring{Nsym()}{Nsym()}}
+{\footnotesize\ttfamily cytnx\+\_\+uint32 cytnx\+::\+Bond\+::\+Nsym (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+return the number of symmetries 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}cytnx\+\_\+uint32\mbox{]} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcytnx_1_1Bond_ac33a7bc780a4c7afba2b6d2d571bf23e}\label{classcytnx_1_1Bond_ac33a7bc780a4c7afba2b6d2d571bf23e}} 
+\index{cytnx\+::\+Bond@{cytnx\+::\+Bond}!qnums@{qnums}}
+\index{qnums@{qnums}!cytnx\+::\+Bond@{cytnx\+::\+Bond}}
+\subsubsection{\texorpdfstring{qnums()}{qnums()}}
+{\footnotesize\ttfamily std\+::vector$<$std\+::vector$<$cytnx\+\_\+int64$>$ $>$ cytnx\+::\+Bond\+::qnums (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+return the current quantum number set(s) 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}2d vector\mbox{]} with shape\+: (\# of symmetry, dim) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcytnx_1_1Bond_ae6957c3902bf12fd27ab881db3fe5243}\label{classcytnx_1_1Bond_ae6957c3902bf12fd27ab881db3fe5243}} 
+\index{cytnx\+::\+Bond@{cytnx\+::\+Bond}!set\+\_\+type@{set\+\_\+type}}
+\index{set\+\_\+type@{set\+\_\+type}!cytnx\+::\+Bond@{cytnx\+::\+Bond}}
+\subsubsection{\texorpdfstring{set\+\_\+type()}{set\_type()}}
+{\footnotesize\ttfamily void cytnx\+::\+Bond\+::set\+\_\+type (\begin{DoxyParamCaption}\item[{const bond\+Type \&}]{new\+\_\+bond\+Type }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+change the tag-\/type of the instance \hyperlink{classcytnx_1_1Bond}{Bond} 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+\_\+bond\+Type} & the new tag-\/type, it can be B\+D\+\_\+\+B\+RA,B\+D\+\_\+\+K\+ET or B\+D\+\_\+\+R\+EG \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classcytnx_1_1Bond_ad0adf7b134654f0390e98695ba4d416e}\label{classcytnx_1_1Bond_ad0adf7b134654f0390e98695ba4d416e}} 
+\index{cytnx\+::\+Bond@{cytnx\+::\+Bond}!syms@{syms}}
+\index{syms@{syms}!cytnx\+::\+Bond@{cytnx\+::\+Bond}}
+\subsubsection{\texorpdfstring{syms()}{syms()}}
+{\footnotesize\ttfamily std\+::vector$<$\hyperlink{classcytnx_1_1Symmetry}{Symmetry}$>$ cytnx\+::\+Bond\+::syms (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+return the vector of symmetry objects 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}vector of \hyperlink{classcytnx_1_1Symmetry}{Symmetry}\mbox{]}
+\end{DoxyReturn}
+\mbox{[}Note\mbox{]} each \hyperlink{classcytnx_1_1Symmetry}{Symmetry} objects in the return vector are shared instances, which reduce the memory usage for copy a new \hyperlink{classcytnx_1_1Symmetry}{Symmetry} object. \mbox{\Hypertarget{classcytnx_1_1Bond_a8517743cec9589ed551114ea7e55fbb1}\label{classcytnx_1_1Bond_a8517743cec9589ed551114ea7e55fbb1}} 
+\index{cytnx\+::\+Bond@{cytnx\+::\+Bond}!type@{type}}
+\index{type@{type}!cytnx\+::\+Bond@{cytnx\+::\+Bond}}
+\subsubsection{\texorpdfstring{type()}{type()}}
+{\footnotesize\ttfamily bond\+Type cytnx\+::\+Bond\+::type (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+return the current tag type 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}bond\+Type\mbox{]} can be B\+D\+\_\+\+B\+RA, B\+D\+\_\+\+K\+ET or B\+D\+\_\+\+R\+EG 
+\end{DoxyReturn}
 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}

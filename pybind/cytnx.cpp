@@ -135,6 +135,8 @@ PYBIND11_MODULE(cytnx,m){
             //construction
             .def(py::init<>())
             .def(py::init<const cytnx_uint64 &, const bondType &, const std::vector<std::vector<cytnx_int64> > &, const std::vector<cytnx::Symmetry>& >(),py::arg("dim"),py::arg("bond_type")=cytnx::bondType::BD_REG,py::arg("qnums")=std::vector<std::vector<cytnx_int64> >(),py::arg("symmetries")=std::vector<Symmetry>())
+            .def("Init",&cytnx::Bond::Init,py::arg("dim"),py::arg("bond_type")=cytnx::bondType::BD_REG,py::arg("qnums")=std::vector<std::vector<cytnx_int64> >(),py::arg("symmetries")=std::vector<Symmetry>())
+
             .def("__repr__",[](cytnx::Bond &self){
                 std::cout << self << std::endl;
                 return std::string("");
@@ -147,6 +149,10 @@ PYBIND11_MODULE(cytnx,m){
             .def("set_type", &cytnx::Bond::set_type)
             .def("clear_type", &cytnx::Bond::clear_type)
             .def("clone", &cytnx::Bond::clone)
+            .def("combineBond", &cytnx::Bond::combineBond)
+            .def("combineBond_",&cytnx::Bond::combineBond_)
+            .def("combineBonds",&cytnx::Bond::combineBonds)
+            .def("combineBonds_", &cytnx::Bond::combineBonds_)
             ;
     
 

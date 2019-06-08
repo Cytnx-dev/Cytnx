@@ -66,55 +66,367 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classcytnx_1_1Bond-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">cytnx::Bond Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>the object contains auxiliary properties for each <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> rank (bond)  
+ <a href="classcytnx_1_1Bond.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="Bond_8hpp_source.html">Bond.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a80ee6b9a0dd288e74d885f6f288b5a0c"><td class="memItemLeft" align="right" valign="top"><a id="a80ee6b9a0dd288e74d885f6f288b5a0c"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Bond</b> (const cytnx_uint64 &amp;dim, const bondType &amp;bd_type=bondType::BD_REG, const std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt; &amp;in_qnums={}, const std::vector&lt; <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a> &gt; &amp;in_syms={})</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Bond</b> (const cytnx_uint64 &amp;<a class="el" href="classcytnx_1_1Bond.html#aa072647e03a4c797479445bd41b9eacf">dim</a>, const bondType &amp;bd_type=bondType::BD_REG, const std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt; &amp;in_qnums={}, const std::vector&lt; <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a> &gt; &amp;in_syms={})</td></tr>
 <tr class="separator:a80ee6b9a0dd288e74d885f6f288b5a0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d7f2edc5cc41786f75021844fea43b4"><td class="memItemLeft" align="right" valign="top"><a id="a9d7f2edc5cc41786f75021844fea43b4"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Bond</b> (const <a class="el" href="classcytnx_1_1Bond.html">Bond</a> &amp;rhs)</td></tr>
-<tr class="separator:a9d7f2edc5cc41786f75021844fea43b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7cf807da8c8069946f59eba9348583da"><td class="memItemLeft" align="right" valign="top"><a id="a7cf807da8c8069946f59eba9348583da"></a>
-<a class="el" href="classcytnx_1_1Bond.html">Bond</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classcytnx_1_1Bond.html">Bond</a> &amp;rhs)</td></tr>
-<tr class="separator:a7cf807da8c8069946f59eba9348583da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8517743cec9589ed551114ea7e55fbb1"><td class="memItemLeft" align="right" valign="top"><a id="a8517743cec9589ed551114ea7e55fbb1"></a>
-bondType&#160;</td><td class="memItemRight" valign="bottom"><b>type</b> () const</td></tr>
+<tr class="memitem:a707a803fa98fb6a87b5f3c3b3000509f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Bond.html#a707a803fa98fb6a87b5f3c3b3000509f">Init</a> (const cytnx_uint64 &amp;<a class="el" href="classcytnx_1_1Bond.html#aa072647e03a4c797479445bd41b9eacf">dim</a>, const bondType &amp;bd_type=bondType::BD_REG, const std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt; &amp;in_qnums={}, const std::vector&lt; <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a> &gt; &amp;in_syms={})</td></tr>
+<tr class="memdesc:a707a803fa98fb6a87b5f3c3b3000509f"><td class="mdescLeft">&#160;</td><td class="mdescRight">init a bond object  <a href="#a707a803fa98fb6a87b5f3c3b3000509f">More...</a><br /></td></tr>
+<tr class="separator:a707a803fa98fb6a87b5f3c3b3000509f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8517743cec9589ed551114ea7e55fbb1"><td class="memItemLeft" align="right" valign="top">bondType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Bond.html#a8517743cec9589ed551114ea7e55fbb1">type</a> () const</td></tr>
+<tr class="memdesc:a8517743cec9589ed551114ea7e55fbb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the current tag type  <a href="#a8517743cec9589ed551114ea7e55fbb1">More...</a><br /></td></tr>
 <tr class="separator:a8517743cec9589ed551114ea7e55fbb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac33a7bc780a4c7afba2b6d2d571bf23e"><td class="memItemLeft" align="right" valign="top"><a id="ac33a7bc780a4c7afba2b6d2d571bf23e"></a>
-std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>qnums</b> () const</td></tr>
+<tr class="memitem:ac33a7bc780a4c7afba2b6d2d571bf23e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Bond.html#ac33a7bc780a4c7afba2b6d2d571bf23e">qnums</a> () const</td></tr>
+<tr class="memdesc:ac33a7bc780a4c7afba2b6d2d571bf23e"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the current quantum number set(s)  <a href="#ac33a7bc780a4c7afba2b6d2d571bf23e">More...</a><br /></td></tr>
 <tr class="separator:ac33a7bc780a4c7afba2b6d2d571bf23e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa072647e03a4c797479445bd41b9eacf"><td class="memItemLeft" align="right" valign="top"><a id="aa072647e03a4c797479445bd41b9eacf"></a>
-cytnx_uint64&#160;</td><td class="memItemRight" valign="bottom"><b>dim</b> () const</td></tr>
+<tr class="memitem:aa072647e03a4c797479445bd41b9eacf"><td class="memItemLeft" align="right" valign="top">cytnx_uint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Bond.html#aa072647e03a4c797479445bd41b9eacf">dim</a> () const</td></tr>
+<tr class="memdesc:aa072647e03a4c797479445bd41b9eacf"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the dimension of the bond  <a href="#aa072647e03a4c797479445bd41b9eacf">More...</a><br /></td></tr>
 <tr class="separator:aa072647e03a4c797479445bd41b9eacf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd46a218add6a88c1cc9035b06adb7b6"><td class="memItemLeft" align="right" valign="top"><a id="acd46a218add6a88c1cc9035b06adb7b6"></a>
-cytnx_uint32&#160;</td><td class="memItemRight" valign="bottom"><b>Nsym</b> () const</td></tr>
+<tr class="memitem:acd46a218add6a88c1cc9035b06adb7b6"><td class="memItemLeft" align="right" valign="top">cytnx_uint32&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Bond.html#acd46a218add6a88c1cc9035b06adb7b6">Nsym</a> () const</td></tr>
+<tr class="memdesc:acd46a218add6a88c1cc9035b06adb7b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the number of symmetries  <a href="#acd46a218add6a88c1cc9035b06adb7b6">More...</a><br /></td></tr>
 <tr class="separator:acd46a218add6a88c1cc9035b06adb7b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0adf7b134654f0390e98695ba4d416e"><td class="memItemLeft" align="right" valign="top"><a id="ad0adf7b134654f0390e98695ba4d416e"></a>
-std::vector&lt; <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>syms</b> () const</td></tr>
+<tr class="memitem:ad0adf7b134654f0390e98695ba4d416e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Bond.html#ad0adf7b134654f0390e98695ba4d416e">syms</a> () const</td></tr>
+<tr class="memdesc:ad0adf7b134654f0390e98695ba4d416e"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the vector of symmetry objects  <a href="#ad0adf7b134654f0390e98695ba4d416e">More...</a><br /></td></tr>
 <tr class="separator:ad0adf7b134654f0390e98695ba4d416e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6957c3902bf12fd27ab881db3fe5243"><td class="memItemLeft" align="right" valign="top"><a id="ae6957c3902bf12fd27ab881db3fe5243"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>set_type</b> (const bondType &amp;new_bondType)</td></tr>
+<tr class="memitem:ae6957c3902bf12fd27ab881db3fe5243"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Bond.html#ae6957c3902bf12fd27ab881db3fe5243">set_type</a> (const bondType &amp;new_bondType)</td></tr>
+<tr class="memdesc:ae6957c3902bf12fd27ab881db3fe5243"><td class="mdescLeft">&#160;</td><td class="mdescRight">change the tag-type of the instance <a class="el" href="classcytnx_1_1Bond.html" title="the object contains auxiliary properties for each Tensor rank (bond) ">Bond</a>  <a href="#ae6957c3902bf12fd27ab881db3fe5243">More...</a><br /></td></tr>
 <tr class="separator:ae6957c3902bf12fd27ab881db3fe5243"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6272e30153df85944fc98bf5419dc1c8"><td class="memItemLeft" align="right" valign="top"><a id="a6272e30153df85944fc98bf5419dc1c8"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>clear_type</b> ()</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Bond.html#a6272e30153df85944fc98bf5419dc1c8">clear_type</a> ()</td></tr>
+<tr class="memdesc:a6272e30153df85944fc98bf5419dc1c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">change the tag-type to the default value BD_REG <br /></td></tr>
 <tr class="separator:a6272e30153df85944fc98bf5419dc1c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c4d6443ffe7c3f3ecd8c474fd9a18eb"><td class="memItemLeft" align="right" valign="top"><a id="a8c4d6443ffe7c3f3ecd8c474fd9a18eb"></a>
-<a class="el" href="classcytnx_1_1Bond.html">Bond</a>&#160;</td><td class="memItemRight" valign="bottom"><b>clone</b> () const</td></tr>
+<tr class="memitem:a8c4d6443ffe7c3f3ecd8c474fd9a18eb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Bond.html">Bond</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Bond.html#a8c4d6443ffe7c3f3ecd8c474fd9a18eb">clone</a> () const</td></tr>
+<tr class="memdesc:a8c4d6443ffe7c3f3ecd8c474fd9a18eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">return a copy of the instance <a class="el" href="classcytnx_1_1Bond.html" title="the object contains auxiliary properties for each Tensor rank (bond) ">Bond</a>  <a href="#a8c4d6443ffe7c3f3ecd8c474fd9a18eb">More...</a><br /></td></tr>
 <tr class="separator:a8c4d6443ffe7c3f3ecd8c474fd9a18eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:ab214ae754becae00b725618be195659c"><td class="memItemLeft" align="right" valign="top"><a id="ab214ae754becae00b725618be195659c"></a>
-boost::intrusive_ptr&lt; Bond_impl &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_impl</b></td></tr>
-<tr class="separator:ab214ae754becae00b725618be195659c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac21ab26ec469ac56ae78c9e4bbbe7040"><td class="memItemLeft" align="right" valign="top"><a id="ac21ab26ec469ac56ae78c9e4bbbe7040"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>combineBond_</b> (const <a class="el" href="classcytnx_1_1Bond.html">Bond</a> &amp;bd_in)</td></tr>
+<tr class="separator:ac21ab26ec469ac56ae78c9e4bbbe7040"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a609c034885efa32fc244be82a56e1f8c"><td class="memItemLeft" align="right" valign="top"><a id="a609c034885efa32fc244be82a56e1f8c"></a>
+<a class="el" href="classcytnx_1_1Bond.html">Bond</a>&#160;</td><td class="memItemRight" valign="bottom"><b>combineBond</b> (const <a class="el" href="classcytnx_1_1Bond.html">Bond</a> &amp;bd_in)</td></tr>
+<tr class="separator:a609c034885efa32fc244be82a56e1f8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a1d060cf2d0c44d83356df757a802d1"><td class="memItemLeft" align="right" valign="top"><a id="a4a1d060cf2d0c44d83356df757a802d1"></a>
+<a class="el" href="classcytnx_1_1Bond.html">Bond</a>&#160;</td><td class="memItemRight" valign="bottom"><b>combineBonds</b> (const std::vector&lt; <a class="el" href="classcytnx_1_1Bond.html">Bond</a> &gt; &amp;bds)</td></tr>
+<tr class="separator:a4a1d060cf2d0c44d83356df757a802d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1fd655bfe0845839502b6e385d743078"><td class="memItemLeft" align="right" valign="top"><a id="a1fd655bfe0845839502b6e385d743078"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>combineBonds_</b> (const std::vector&lt; <a class="el" href="classcytnx_1_1Bond.html">Bond</a> &gt; &amp;bds)</td></tr>
+<tr class="separator:a1fd655bfe0845839502b6e385d743078"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>the object contains auxiliary properties for each <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> rank (bond) </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a8c4d6443ffe7c3f3ecd8c474fd9a18eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c4d6443ffe7c3f3ecd8c474fd9a18eb">&#9670;&nbsp;</a></span>clone()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx_1_1Bond.html">Bond</a> cytnx::Bond::clone </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>return a copy of the instance <a class="el" href="classcytnx_1_1Bond.html" title="the object contains auxiliary properties for each Tensor rank (bond) ">Bond</a> </p>
+<dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Bond.html" title="the object contains auxiliary properties for each Tensor rank (bond) ">Bond</a>] a new instance of <a class="el" href="classcytnx_1_1Bond.html" title="the object contains auxiliary properties for each Tensor rank (bond) ">Bond</a> that have the same contents </dd></dl>
+
+</div>
+</div>
+<a id="aa072647e03a4c797479445bd41b9eacf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa072647e03a4c797479445bd41b9eacf">&#9670;&nbsp;</a></span>dim()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cytnx_uint64 cytnx::Bond::dim </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>return the dimension of the bond </p>
+<dl class="section return"><dt>Returns</dt><dd>[cytnx_uint64] </dd></dl>
+
+</div>
+</div>
+<a id="a707a803fa98fb6a87b5f3c3b3000509f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a707a803fa98fb6a87b5f3c3b3000509f">&#9670;&nbsp;</a></span>Init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cytnx::Bond::Init </td>
+          <td>(</td>
+          <td class="paramtype">const cytnx_uint64 &amp;&#160;</td>
+          <td class="paramname"><em>dim</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bondType &amp;&#160;</td>
+          <td class="paramname"><em>bd_type</em> = <code>bondType::BD_REG</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>in_qnums</em> = <code>{}</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>in_syms</em> = <code>{}</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>init a bond object </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dim</td><td>the dimension of the bond (rank) </td></tr>
+    <tr><td class="paramname">bondType</td><td>the tag of the bond, it can be BD_BRA, BD_KET as physical tagged; or BD_REG as regular bond (rank) </td></tr>
+    <tr><td class="paramname">in_qnums</td><td>the quantum number(s) of the bond. it should be a 2d vector with shape (# of symmetry, dim) </td></tr>
+    <tr><td class="paramname">in_syms</td><td>the symmetry object of the bond. [Note] if qnums are provided, the default symmetry type is <a class="el" href="">Symmetry::U1 </a></td></tr>
+  </table>
+  </dd>
+</dl>
+<p>description:</p><ol type="1">
+<li>each bond can be tagged with BD_BRA or BD_KET that represent the bond is defined in Bra space or Ket space.</li>
+<li>the bond can have arbitrary multiple symmetries, with the type of each symmetry associate to the qnums are provided with the in_syms.</li>
+</ol>
+<p>[Note]</p><ol type="1">
+<li>if quantum number(s) are provided (which means the bond is with symmetry) then the bond MUST be tagged with either BD_BRA or BD_KET</li>
+<li>if the bond is non-symmetry, then it can be tagged with BD_BRA or BD_KET, or BD_REG depending on the usage.</li>
+</ol>
+<h2>Example:</h2>
+<h3>c++ API:</h3>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <span class="comment">/* 1.</span></div><div class="line"><span class="comment">        create a non-symmetry, regular bond (BD_REG) </span></div><div class="line"><span class="comment">        with dimension 10</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_a = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(10);</div><div class="line">    cout &lt;&lt; bd_a &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">/* 2. </span></div><div class="line"><span class="comment">        create a non-symmetry bond tagged with BD_KET </span></div><div class="line"><span class="comment">        with dimension 10</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_b = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(10,BD_KET);</div><div class="line">    cout &lt;&lt; bd_b &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">/* 3.</span></div><div class="line"><span class="comment">        crate a symmetry bond, </span></div><div class="line"><span class="comment">        with single U1 (default) symmetry and qnums = (0,2,-1,3)</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_c = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(4,BD_KET,{{0,2,-1,3}});</div><div class="line">    cout &lt;&lt; bd_c &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">/* 3.</span></div><div class="line"><span class="comment">        crate a symmetry bond, </span></div><div class="line"><span class="comment">        with U1 x Z2 multiple symmetry </span></div><div class="line"><span class="comment">        and qnums = U1:(0,2,-1,3) x Z2:(0,1,1,0)</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_d = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(4,BD_BRA,{{0,2,-1,3},</div><div class="line">                               {0,1, 1,0}},</div><div class="line">                              {Symmetry::U1(),</div><div class="line">                               Symmetry::Zn(2)});</div><div class="line">    cout &lt;&lt; bd_d &lt;&lt; endl;</div><div class="line"></div><div class="line">    </div><div class="line">    </div><div class="line"></div><div class="line"></div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment">Dim = 10 |type: REGULAR 
+
+Dim = 10 |type: KET&gt;     
+
+Dim = 4 |type: KET&gt;     
+ U1::  +0 +2 -1 +3
+
+Dim = 4 |type: &lt;BRA     
+ U1::  +0 +2 -1 +3
+ Z2::  +0 +1 +1 +0
+
+</pre> <h3>python API:</h3>
+<div class="fragment"><div class="line">from cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line">bd_a = Bond(10)</div><div class="line">print(bd_a)</div><div class="line"></div><div class="line">bd_b = Bond(10,BD_KET)</div><div class="line">print(bd_b)</div><div class="line"></div><div class="line">bd_c = Bond(4,BD_KET,[[0,2,-1,3]])</div><div class="line">print(bd_c)</div><div class="line"></div><div class="line">bd_d = Bond(4,BD_BRA,[[0,2,-1,3],</div><div class="line">                      [0,1, 1,0]],</div><div class="line">                     [Symmetry.U1(),</div><div class="line">                      Symmetry.Zn(2)])</div><div class="line"></div><div class="line">print(bd_d)</div><div class="line"></div><div class="line">    </div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment">Dim = 10 |type: REGULAR 
+
+Dim = 10 |type: KET&gt;     
+
+Dim = 4 |type: KET&gt;     
+ U1::  +0 +2 -1 +3
+
+Dim = 4 |type: &lt;BRA     
+ U1::  +0 +2 -1 +3
+ Z2::  +0 +1 +1 +0
+
+
+
+
+
+</pre> 
+</div>
+</div>
+<a id="acd46a218add6a88c1cc9035b06adb7b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd46a218add6a88c1cc9035b06adb7b6">&#9670;&nbsp;</a></span>Nsym()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cytnx_uint32 cytnx::Bond::Nsym </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>return the number of symmetries </p>
+<dl class="section return"><dt>Returns</dt><dd>[cytnx_uint32] </dd></dl>
+
+</div>
+</div>
+<a id="ac33a7bc780a4c7afba2b6d2d571bf23e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac33a7bc780a4c7afba2b6d2d571bf23e">&#9670;&nbsp;</a></span>qnums()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::vector&lt;cytnx_int64&gt; &gt; cytnx::Bond::qnums </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>return the current quantum number set(s) </p>
+<dl class="section return"><dt>Returns</dt><dd>[2d vector] with shape: (# of symmetry, dim) </dd></dl>
+
+</div>
+</div>
+<a id="ae6957c3902bf12fd27ab881db3fe5243"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6957c3902bf12fd27ab881db3fe5243">&#9670;&nbsp;</a></span>set_type()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cytnx::Bond::set_type </td>
+          <td>(</td>
+          <td class="paramtype">const bondType &amp;&#160;</td>
+          <td class="paramname"><em>new_bondType</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>change the tag-type of the instance <a class="el" href="classcytnx_1_1Bond.html" title="the object contains auxiliary properties for each Tensor rank (bond) ">Bond</a> </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">new_bondType</td><td>the new tag-type, it can be BD_BRA,BD_KET or BD_REG </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ad0adf7b134654f0390e98695ba4d416e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0adf7b134654f0390e98695ba4d416e">&#9670;&nbsp;</a></span>syms()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a>&gt; cytnx::Bond::syms </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>return the vector of symmetry objects </p>
+<dl class="section return"><dt>Returns</dt><dd>[vector of <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a>]</dd></dl>
+<p>[Note] each <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a> objects in the return vector are shared instances, which reduce the memory usage for copy a new <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a> object. </p>
+
+</div>
+</div>
+<a id="a8517743cec9589ed551114ea7e55fbb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8517743cec9589ed551114ea7e55fbb1">&#9670;&nbsp;</a></span>type()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bondType cytnx::Bond::type </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>return the current tag type </p>
+<dl class="section return"><dt>Returns</dt><dd>[bondType] can be BD_BRA, BD_KET or BD_REG </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/<a class="el" href="Bond_8hpp_source.html">Bond.hpp</a></li>
 </ul>

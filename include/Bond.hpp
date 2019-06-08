@@ -65,52 +65,155 @@ namespace cytnx{
                 this->_dim *= bd_in->dim();
             
                 /// handle symmetry
-                std::vector<std::vector<cytnx_int64> > new_qnums(this->
+                std::vector<std::vector<cytnx_int64> > new_qnums(this->Nsym());
                 for(cytnx_uint32 i=0;i<this->Nsym();i++){
-                
+                    this->_syms[i].combine_rule_(new_qnums[i],this->_qnums[i],bd_in->qnums()[i]);
                 }                        
-                
-
+                this->_qnums = new_qnums;
             }                    
+
+            boost::intrusive_ptr<Bond_impl> combineBond(const boost::intrusive_ptr<Bond_impl> &bd_in){
+                boost::intrusive_ptr<Bond_impl> out = this->clone();
+                out->combineBond_(bd_in);
+                return out;
+            }
+
 
     };//Bond_impl
     ///@endcond
 
-    //wrapper:
+    /// @brief the object contains auxiliary properties for each Tensor rank (bond)
     class Bond{
         public:
+            ///@cond
             boost::intrusive_ptr<Bond_impl> _impl;
             Bond(): _impl(new Bond_impl()){};
-            Bond(const cytnx_uint64 &dim, const bondType &bd_type=bondType::BD_REG, const std::vector<std::vector<cytnx_int64> > &in_qnums={}, const std::vector<Symmetry> &in_syms={}): _impl(new Bond_impl()){
-                this->_impl->Init(dim,bd_type,in_qnums,in_syms);
-            };
-
             Bond(const Bond&rhs){this->_impl = rhs._impl;}
             Bond& operator=(const Bond &rhs){this->_impl = rhs._impl; return *this;}
+            ///@endcond
 
+            Bond(const cytnx_uint64 &dim, const bondType &bd_type=bondType::BD_REG, const std::vector<std::vector<cytnx_int64> > &in_qnums={}, const std::vector<Symmetry> &in_syms={}): _impl(new Bond_impl()){
+                this->_impl->Init(dim,bd_type,in_qnums,in_syms);
+            }
+            
+            /**
+            @brief init a bond object 
+            @param dim the dimension of the bond (rank)
+            @param bondType the tag of the bond, it can be BD_BRA, BD_KET as physical tagged; or BD_REG as regular bond (rank)
+            @param in_qnums the quantum number(s) of the bond. it should be a 2d vector with shape (# of symmetry, dim)
+            @param in_syms the symmetry object of the bond. [Note] if qnums are provided, the default symmetry type is \link cytnx::Symmetry::U1 Symmetry::U1 \endlink
+            
+            description:
+                1. each bond can be tagged with BD_BRA or BD_KET that represent the bond is defined in Bra space or Ket space. 
+                2. the bond can have arbitrary multiple symmetries, with the type of each symmetry associate to the qnums are provided with the in_syms.
+
+            [Note]
+                1. if quantum number(s) are provided (which means the bond is with symmetry) then the bond MUST be tagged with either BD_BRA or BD_KET
+                2. if the bond is non-symmetry, then it can be tagged with BD_BRA or BD_KET, or BD_REG depending on the usage. 
+               
+            ## Example:
+            ### c++ API:
+            \include example/Bond/Init.cpp
+            #### output>
+            \verbinclude example/Bond/Init.cpp.out
+            ### python API:
+            \include example/Bond/Init.py               
+            #### output>
+            \verbinclude example/Bond/Init.py.out
+            */
+            void Init(const cytnx_uint64 &dim, const bondType &bd_type=bondType::BD_REG, const std::vector<std::vector<cytnx_int64> > &in_qnums={}, const std::vector<Symmetry> &in_syms={}){
+                this->_impl->Init(dim,bd_type,in_qnums,in_syms);
+            }
+            
+            /**
+            @brief return the current tag type
+            @return [bondType] can be BD_BRA, BD_KET or BD_REG
+
+            */
             bondType                                type() const{return this->_impl->type();};
+            
+            /**
+            @brief return the current quantum number set(s)
+            @return [2d vector] with shape: (# of symmetry, dim) 
+
+            */
             std::vector<std::vector<cytnx_int64> > qnums() const{return this->_impl->qnums();};
+
+            /**
+            @brief return the dimension of the bond
+            @return [cytnx_uint64]
+
+            */
             cytnx_uint64                             dim() const{return this->_impl->dim();};
+
+            /**
+            @brief return the number of symmetries 
+            @return [cytnx_uint32]
+
+            */
             cytnx_uint32                            Nsym() const{return this->_impl->syms().size();};
+
+            /**
+            @brief return the vector of symmetry objects
+            @return [vector of Symmetry]
+
+            [Note] each Symmetry objects in the return vector are shared instances, which reduce the memory usage for copy a new Symmetry object. 
+
+            */
             std::vector<Symmetry>                   syms() const{return this->_impl->syms();};
 
+            /**
+            @brief change the tag-type of the instance Bond
+            @param new_bondType the new tag-type, it can be BD_BRA,BD_KET or BD_REG
 
+            */
             void set_type(const bondType &new_bondType){
                 this->_impl->set_type(new_bondType);
             }
 
+            /**
+            @brief change the tag-type to the default value BD_REG
+
+            */
             void clear_type(){
                 this->_impl->clear_type();
             }
 
+            /**
+            @brief return a copy of the instance Bond
+            @return [Bond] a new instance of Bond that have the same contents 
+
+            */
             Bond clone() const{
                 Bond out;
                 out._impl = this->_impl->clone();
                 return out;
             }
 
-           
+            void combineBond_(const Bond &bd_in){
+                this->_impl->combineBond_(bd_in._impl);
+            }           
+            
+            Bond combineBond(const Bond &bd_in){
+                Bond out;
+                out._impl = this->_impl->combineBond(bd_in._impl);
+                return out;
+            }
+            
+            Bond combineBonds(const std::vector<Bond> &bds){
+                Bond out = this->clone();
+                for(cytnx_uint64 i=0;i<bds.size();i++){
+                    out.combineBond_(bds[i]);
+                }
+                return out;
+            }
 
+            void combineBonds_(const std::vector<Bond> &bds){
+                for(cytnx_uint64 i=0;i<bds.size();i++){
+                    this->combineBond_(bds[i]);
+                }
+            }
+    
     };
 
     ///@cond
