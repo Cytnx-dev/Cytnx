@@ -253,6 +253,8 @@ print(C \textcolor{keywordflow}{is} A)
 
 
 \begin{DoxyVerbInclude}
+True
+False
 \end{DoxyVerbInclude}
  \mbox{\Hypertarget{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}\label{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}} 
 \index{cytnx\+::\+Tensor@{cytnx\+::\+Tensor}!device@{device}}
@@ -470,12 +472,12 @@ print(B)
 \textcolor{comment}{#  dtype =Type.Double,}
 \textcolor{comment}{#  device=Device.cuda+0, (on gpu with gpu-id=0)}
 \textcolor{comment}{#  [Note] the gpu device can be set with Device.cuda+<gpu-id>}
-C = Tensor(\{3,4,5\},Type.Double,Device.cuda+0);
+C = Tensor([3,4,5],dtype=Type.Double,device=Device.cuda+0);
 print(C)
 
 \textcolor{comment}{#4. Create an empty Tensor, and init later}
 D = Tensor()
-D.Init(\{3,4,5\},Type.Double,Device.cpu);
+D.Init([3,4,5],dtype=Type.Double,device=Device.cpu);
 
 
  
@@ -484,6 +486,66 @@ D.Init(\{3,4,5\},Type.Double,Device.cpu);
 
 
 \begin{DoxyVerbInclude}
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 1.06098e-153 8.19691e+247 5.39115e+228 1.23762e+224 ]
+  [2.66064e-260 7.27456e+199 2.41318e+185 7.86015e-85 3.06263e+223 ]
+  [4.90606e-109 3.94655e+180 3.75209e+199 4.96845e+180 1.18414e+224 ]
+  [7.86015e-85 7.36507e+228 2.07049e-28 5.74971e+169 6.16785e+223 ]]
+ [[2.04724e+190 9.49253e-154 1.39388e-258 7.33721e+223 1.44421e+214 ]
+  [1.28714e+272 2.13269e+102 1.67772e+243 3.91625e-27 5.36154e+276 ]
+  [1.18414e+224 5.50421e-95 2.38345e+180 8.89470e+252 5.19016e+141 ]
+  [5.04535e+223 9.03728e-91 4.27256e+180 9.00757e-96 2.15967e-27 ]]
+ [[8.04158e-96 9.69724e+189 2.33118e+30 3.39067e-09 4.66843e-10 ]
+  [5.74971e+169 6.16785e+223 1.12648e-153 7.29537e+175 1.44421e+214 ]
+  [1.28714e+272 3.25422e+97 7.10583e+159 5.38206e+228 3.06500e+169 ]
+  [1.16331e+253 7.36507e+228 2.54716e+151 2.49867e+262 1.20626e-319 ]]]
+
+
+
+Total elem: 60
+type  : Uint64
+cytnx device: CPU
+Shape : (3,4,5)
+[[[         -700818272          -700818272          -726046856           894392662          -697558016 ]
+  [         2081438952           221246347          -725995024          -725997720          1879256591 ]
+  [         -725994832          -725997888            34713300          -726098048          -725997664 ]
+  [         1647034496          -725997496          -725997552          2019459242          -726097992 ]]
+ [[         -725997384         -1210137313          -725997216          -725997272          1259917062 ]
+  [         -725997048          -725997104          1883873429          -725996880          -725996936 ]
+  [        -1256161352          -725999344          2081457000          -214618908          -725982456 ]
+  [         2081457944         -1117588437          -725982344          -726009336         -1989215784 ]]
+ [[         -725982288          -725982232          -298799098          -725984848          2081463368 ]
+  [          243657267          -725982176          -725982120         -1167856703          -725981952 ]
+  [         -725982008          -701014080          -725981784          -725981840          1603158043 ]
+  [         -725981616          -725953624          -676954723          -725981504          -725953552 ]]]
+
+
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CUDA/GPU-id:0
+Shape : (3,4,5)
+[[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+
+
+
+
+
 \end{DoxyVerbInclude}
  \mbox{\Hypertarget{classcytnx_1_1Tensor_a6d0ab6d09633ad4d6099aa822ec5335a}\label{classcytnx_1_1Tensor_a6d0ab6d09633ad4d6099aa822ec5335a}} 
 \index{cytnx\+::\+Tensor@{cytnx\+::\+Tensor}!shape@{shape}}
@@ -569,6 +631,8 @@ print(A.device\_str())
 
 
 \begin{DoxyVerbInclude}
+cytnx device: CUDA/GPU-id:0
+cytnx device: CPU
 \end{DoxyVerbInclude}
  \mbox{\Hypertarget{classcytnx_1_1Tensor_a114a31fbb8bf4a90f150b6a67e42183a}\label{classcytnx_1_1Tensor_a114a31fbb8bf4a90f150b6a67e42183a}} 
 \index{cytnx\+::\+Tensor@{cytnx\+::\+Tensor}!to\+\_\+@{to\+\_\+}}
@@ -632,6 +696,7 @@ print(A.device\_str())
 
 
 \begin{DoxyVerbInclude}
+cytnx device: CUDA/GPU-id:0
 \end{DoxyVerbInclude}
  
 

@@ -157,6 +157,7 @@ PYBIND11_MODULE(cytnx,m){
                 .def(py::init<const cytnx::Storage&>())
                 .def(py::init<boost::intrusive_ptr<cytnx::Storage_base> >())
                 .def(py::init<const unsigned long long &, const unsigned int&, int>(),py::arg("size"), py::arg("dtype")=(cytnx_uint64)Type.Double,py::arg("device")=-1)
+                .def("Init", &cytnx::Storage::Init,py::arg("size"), py::arg("dtype")=(cytnx_uint64)Type.Double,py::arg("device")=-1)
 
                 .def("dtype",&cytnx::Storage::dtype)
                 .def("dtype_str",&cytnx::Storage::dtype_str)
@@ -254,7 +255,8 @@ PYBIND11_MODULE(cytnx,m){
                 //construction
                 .def(py::init<>())
                 .def(py::init<const cytnx::Tensor&>())
-                .def(py::init<const std::vector<cytnx::cytnx_uint64>&, const unsigned int&, int>(),py::arg("size"), py::arg("dtype")=(cytnx_uint64)cytnx::Type.Double,py::arg("device")=(int)cytnx::Device.cpu)
+                .def(py::init<const std::vector<cytnx::cytnx_uint64>&, const unsigned int&, int>(),py::arg("shape"), py::arg("dtype")=(cytnx_uint64)cytnx::Type.Double,py::arg("device")=(int)cytnx::Device.cpu)
+                .def("Init", &cytnx::Tensor::Init,py::arg("shape"), py::arg("dtype")=(cytnx_uint64)cytnx::Type.Double,py::arg("device")=(int)cytnx::Device.cpu)
                 .def("dtype",&cytnx::Tensor::dtype)
                 .def("dtype_str",&cytnx::Tensor::dtype_str)
                 .def("device",&cytnx::Tensor::device)

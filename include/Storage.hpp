@@ -421,6 +421,7 @@ namespace cytnx{
             Storage(boost::intrusive_ptr<Storage_base> in_impl){
                 this->_impl = in_impl;
             }
+            ///@cond
             Storage(const Storage &rhs){
                 this->_impl = rhs._impl;
             }
@@ -428,7 +429,7 @@ namespace cytnx{
                 this->_impl = rhs._impl;
                 return *this;
             }
-
+            ///@endcond
 
             /**
             @brief cast the type of current Storage

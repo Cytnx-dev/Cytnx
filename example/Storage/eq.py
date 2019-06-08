@@ -2,7 +2,7 @@ from cytnx import *
 
 
 A = Storage(10)
-cout << A.dtype_str() << endl
+print(A.dtype_str())
 
 B = A
 C = A.clone()

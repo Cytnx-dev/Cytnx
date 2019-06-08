@@ -21,12 +21,12 @@ print(B)
 #  dtype =Type.Double,
 #  device=Device.cuda+0, (on gpu with gpu-id=0)
 #  [Note] the gpu device can be set with Device.cuda+<gpu-id>
-C = Tensor({3,4,5},Type.Double,Device.cuda+0);
+C = Tensor([3,4,5],dtype=Type.Double,device=Device.cuda+0);
 print(C)
 
 #4. Create an empty Tensor, and init later
 D = Tensor()
-D.Init({3,4,5},Type.Double,Device.cpu);
+D.Init([3,4,5],dtype=Type.Double,device=Device.cpu);
 
 
  

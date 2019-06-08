@@ -20,12 +20,6 @@ void \hyperlink{classcytnx_1_1Storage_a6cf79f362c4ae68ab7623f0ebac9355e}{Init} (
 \mbox{\Hypertarget{classcytnx_1_1Storage_ab602ecd72e5fc4224922a6b6212ff120}\label{classcytnx_1_1Storage_ab602ecd72e5fc4224922a6b6212ff120}} 
 {\bfseries Storage} (boost\+::intrusive\+\_\+ptr$<$ Storage\+\_\+base $>$ in\+\_\+impl)
 \item 
-\mbox{\Hypertarget{classcytnx_1_1Storage_a095c6d65c93d237ad4d94cf241b1555e}\label{classcytnx_1_1Storage_a095c6d65c93d237ad4d94cf241b1555e}} 
-{\bfseries Storage} (const \hyperlink{classcytnx_1_1Storage}{Storage} \&rhs)
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Storage_a1ee2ea67e2197bc9d690ca8a1b878f73}\label{classcytnx_1_1Storage_a1ee2ea67e2197bc9d690ca8a1b878f73}} 
-\hyperlink{classcytnx_1_1Storage}{Storage} \& {\bfseries operator=} (const \hyperlink{classcytnx_1_1Storage}{Storage} \&rhs)
-\item 
 \hyperlink{classcytnx_1_1Storage}{Storage} \hyperlink{classcytnx_1_1Storage_a8310d8dbb70510272ded2e3d01be25f0}{astype} (const unsigned int \&new\+\_\+type) const
 \begin{DoxyCompactList}\small\item\em cast the type of current \hyperlink{classcytnx_1_1Storage}{Storage} \end{DoxyCompactList}\item 
 const unsigned int \& \hyperlink{classcytnx_1_1Storage_a643824801e81ab86aca055f1dd1f34d7}{dtype} () const
@@ -164,6 +158,12 @@ print(E.device\_str())
 
 
 \begin{DoxyVerbInclude}
+Double (Float64)
+Double (Float64)
+True
+Float32
+False
+cytnx device: CUDA/GPU-id:0
 \end{DoxyVerbInclude}
  \mbox{\Hypertarget{classcytnx_1_1Storage_aed0530dd20f3fb352d45653ba46a3d50}\label{classcytnx_1_1Storage_aed0530dd20f3fb352d45653ba46a3d50}} 
 \index{cytnx\+::\+Storage@{cytnx\+::\+Storage}!clone@{clone}}
@@ -231,6 +231,8 @@ print(C \textcolor{keywordflow}{is} A)
 
 
 \begin{DoxyVerbInclude}
+True
+False
 \end{DoxyVerbInclude}
  \mbox{\Hypertarget{classcytnx_1_1Storage_a4c3e27582d7f951e6b76ccbb92f7c537}\label{classcytnx_1_1Storage_a4c3e27582d7f951e6b76ccbb92f7c537}} 
 \index{cytnx\+::\+Storage@{cytnx\+::\+Storage}!device@{device}}
@@ -417,6 +419,24 @@ D.Init(10,dtype=Type.Double,device=Device.cpu)
 
 
 \begin{DoxyVerbInclude}
+dtype : Double (Float64)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+
+dtype : Uint64
+device: cytnx device: CPU
+size  : 10
+[          -358159200          -358159200                   0                   0          -354045776          -354673168          1458571950          -354048432          1234997488         -1409130111  ]
+
+dtype : Double (Float64)
+device: cytnx device: CUDA/GPU-id:0
+size  : 10
+[ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+
+
+
+
 \end{DoxyVerbInclude}
  \mbox{\Hypertarget{classcytnx_1_1Storage_ad304e00cf3d472ea0355af6b40c4529d}\label{classcytnx_1_1Storage_ad304e00cf3d472ea0355af6b40c4529d}} 
 \index{cytnx\+::\+Storage@{cytnx\+::\+Storage}!operator==@{operator==}}
@@ -488,7 +508,7 @@ Double (Float64)
 
 
 A = Storage(10)
-cout << A.dtype\_str() << endl
+print(A.dtype\_str())
 
 B = A
 C = A.clone()
@@ -503,6 +523,11 @@ print(C \textcolor{keywordflow}{is} A)  \textcolor{comment}{# false (not share s
 
 
 \begin{DoxyVerbInclude}
+Double (Float64)
+True
+True
+True
+False
 \end{DoxyVerbInclude}
  \mbox{\Hypertarget{classcytnx_1_1Storage_a7e854529c99108b0acc3e5e2b185244b}\label{classcytnx_1_1Storage_a7e854529c99108b0acc3e5e2b185244b}} 
 \index{cytnx\+::\+Storage@{cytnx\+::\+Storage}!set\+\_\+zeros@{set\+\_\+zeros}}

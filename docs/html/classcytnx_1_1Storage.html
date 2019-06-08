@@ -88,12 +88,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab602ecd72e5fc4224922a6b6212ff120"><td class="memItemLeft" align="right" valign="top"><a id="ab602ecd72e5fc4224922a6b6212ff120"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Storage</b> (boost::intrusive_ptr&lt; Storage_base &gt; in_impl)</td></tr>
 <tr class="separator:ab602ecd72e5fc4224922a6b6212ff120"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a095c6d65c93d237ad4d94cf241b1555e"><td class="memItemLeft" align="right" valign="top"><a id="a095c6d65c93d237ad4d94cf241b1555e"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Storage</b> (const <a class="el" href="classcytnx_1_1Storage.html">Storage</a> &amp;rhs)</td></tr>
-<tr class="separator:a095c6d65c93d237ad4d94cf241b1555e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ee2ea67e2197bc9d690ca8a1b878f73"><td class="memItemLeft" align="right" valign="top"><a id="a1ee2ea67e2197bc9d690ca8a1b878f73"></a>
-<a class="el" href="classcytnx_1_1Storage.html">Storage</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classcytnx_1_1Storage.html">Storage</a> &amp;rhs)</td></tr>
-<tr class="separator:a1ee2ea67e2197bc9d690ca8a1b878f73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8310d8dbb70510272ded2e3d01be25f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Storage.html">Storage</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Storage.html#a8310d8dbb70510272ded2e3d01be25f0">astype</a> (const unsigned int &amp;new_type) const</td></tr>
 <tr class="memdesc:a8310d8dbb70510272ded2e3d01be25f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">cast the type of current <a class="el" href="classcytnx_1_1Storage.html" title="an memeory storage with multi-type/multi-device support ">Storage</a>  <a href="#a8310d8dbb70510272ded2e3d01be25f0">More...</a><br /></td></tr>
 <tr class="separator:a8310d8dbb70510272ded2e3d01be25f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -184,7 +178,13 @@ Float32
 cytnx device: CUDA/GPU-id:0
 </pre> <h3>python API:</h3>
 <div class="fragment"><div class="line">from cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line"></div><div class="line">A = Storage(10)</div><div class="line">print(A.dtype_str())</div><div class="line"></div><div class="line">B = A.astype(Type.Double)</div><div class="line">print(B.dtype_str())</div><div class="line">print(B <span class="keywordflow">is</span> A)</div><div class="line"></div><div class="line">C = A.astype(Type.Float)</div><div class="line">print(C.dtype_str())</div><div class="line">print(C <span class="keywordflow">is</span> A)</div><div class="line"></div><div class="line">D = Storage(10,device=Device.cuda+0);</div><div class="line">E = D.astype(Type.Float)</div><div class="line">print(E.device_str())</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
-<pre class="fragment"></pre> 
+<pre class="fragment">Double (Float64)
+Double (Float64)
+True
+Float32
+False
+cytnx device: CUDA/GPU-id:0
+</pre> 
 </div>
 </div>
 <a id="aed0530dd20f3fb352d45653ba46a3d50"></a>
@@ -219,7 +219,9 @@ cytnx device: CUDA/GPU-id:0
 0
 </pre> <h3>python API:</h3>
 <div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line">A = Storage(15)</div><div class="line"></div><div class="line">B = A</div><div class="line">C = A.clone()</div><div class="line"></div><div class="line">print(B <span class="keywordflow">is</span> A)</div><div class="line">print(C <span class="keywordflow">is</span> A)</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
-<pre class="fragment"></pre> 
+<pre class="fragment">True
+False
+</pre> 
 </div>
 </div>
 <a id="a4c3e27582d7f951e6b76ccbb92f7c537"></a>
@@ -442,7 +444,25 @@ size  : 10
 
 </pre> <h3>python API:</h3>
 <div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line">A = Storage(10);</div><div class="line">print(A)</div><div class="line"></div><div class="line">B = Storage(10,dtype=Type.Uint64)</div><div class="line">print(B)</div><div class="line"></div><div class="line">C = Storage(10,device=Device.cuda+0)</div><div class="line">print(C)</div><div class="line"></div><div class="line">D = Storage()</div><div class="line">D.Init(10,dtype=Type.Double,device=Device.cpu)</div><div class="line"></div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
-<pre class="fragment"></pre> 
+<pre class="fragment">dtype : Double (Float64)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+
+dtype : Uint64
+device: cytnx device: CPU
+size  : 10
+[          -358159200          -358159200                   0                   0          -354045776          -354673168          1458571950          -354048432          1234997488         -1409130111  ]
+
+dtype : Double (Float64)
+device: cytnx device: CUDA/GPU-id:0
+size  : 10
+[ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+
+
+
+
+</pre> 
 </div>
 </div>
 <a id="ad304e00cf3d472ea0355af6b40c4529d"></a>
@@ -478,8 +498,13 @@ size  : 10
 1
 0
 </pre> <h3>python API:</h3>
-<div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line"></div><div class="line">A = Storage(10)</div><div class="line">cout &lt;&lt; A.dtype_str() &lt;&lt; endl</div><div class="line"></div><div class="line">B = A</div><div class="line">C = A.clone()</div><div class="line"></div><div class="line">print(B == A) <span class="comment"># true (share same instance)</span></div><div class="line">print(B <span class="keywordflow">is</span> A) <span class="comment"># true (share same instance)</span></div><div class="line"></div><div class="line">print(C == A)  <span class="comment"># true (the same content.)</span></div><div class="line">print(C <span class="keywordflow">is</span> A)  <span class="comment"># false (not share same instance)</span></div></div><!-- fragment --> <h4>output&gt;</h4>
-<pre class="fragment"></pre> 
+<div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line"></div><div class="line">A = Storage(10)</div><div class="line">print(A.dtype_str())</div><div class="line"></div><div class="line">B = A</div><div class="line">C = A.clone()</div><div class="line"></div><div class="line">print(B == A) <span class="comment"># true (share same instance)</span></div><div class="line">print(B <span class="keywordflow">is</span> A) <span class="comment"># true (share same instance)</span></div><div class="line"></div><div class="line">print(C == A)  <span class="comment"># true (the same content.)</span></div><div class="line">print(C <span class="keywordflow">is</span> A)  <span class="comment"># false (not share same instance)</span></div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment">Double (Float64)
+True
+True
+True
+False
+</pre> 
 </div>
 </div>
 <a id="a7e854529c99108b0acc3e5e2b185244b"></a>
