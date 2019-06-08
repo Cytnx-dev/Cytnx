@@ -166,26 +166,27 @@
 
       func    |   inplace | CPU | GPU  | callby tn 
     ----------|-----------|-----|------|-----------
-      \link cytnx::linalg::Add Add \endlink     |   x       |  Y  |  Y   |    Y
-      \link cytnx::linalg::Sub Sub \endlink     |   x       |  Y  |  Y   |    Y
-      \link cytnx::linalg::Mul Mul \endlink     |   x       |  Y  |  Y   |    Y
-      \link cytnx::linalg::Div Div \endlink     |   x       |  Y  |  Y   |    Y
+      Add     |   x       |  Y  |  Y   |    Y
+      Sub     |   x       |  Y  |  Y   |    Y
+      Mul     |   x       |  Y  |  Y   |    Y
+      Div     |   x       |  Y  |  Y   |    Y
       +,+=[tn]|   x       |  Y  |  Y   |    Y (Add_)
       -,-=[tn]|   x       |  Y  |  Y   |    Y (Sub_)
       *,*=[tn]|   x       |  Y  |  Y   |    Y (Mul_)
       /,/=[tn]|   x       |  Y  |  Y   |    Y (Div_)
-      \link cytnx::linalg::Svd Svd \endlink     |   x       |  Y  |  Y   |    Y
-      \link cytnx::linalg::Inv Inv \endlink     |   Inv_    |  Y  |  Y   |    Y
-      \link cytnx::linalg::Conj Conj \endlink    |   Conj_   |  Y  |  Y   |    Y 
-      \link cytnx::linalg::Exp Exp \endlink     |   Exp_    |  Y  |  Y   |    Y
-      \link cytnx::linalg::Eigh Eigh \endlink    |   x       |  Y  |  Y   |    Y 
-      \link cytnx::linalg::Matmul Matmul \endlink  |   x       |  Y  |  Y   |    N
-      \link cytnx::linalg::Diag Diag \endlink    |   x       |  Y  |  Y   |    N
+      Svd     |   x       |  Y  |  Y   |    Y
+      Inv     |   Inv_    |  Y  |  Y   |    Y
+      Conj    |   Conj_   |  Y  |  Y   |    Y 
+      Exp     |   Exp_    |  Y  |  Y   |    Y
+      Eigh    |   x       |  Y  |  Y   |    Y 
+      Matmul  |   x       |  Y  |  Y   |    N
+      Diag    |   x       |  Y  |  Y   |    N
  
 ## Generators 
 
-    Tensor: \link cytnx::zeros zeros() \endlink, \link cytnx::ones ones() \endlink, \link cytnx::arange arange() \endlink
+    Tensor: zeros(), ones(), arange()
     
+
 
      
 ## Example
