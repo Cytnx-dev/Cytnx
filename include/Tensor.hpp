@@ -261,7 +261,7 @@ namespace cytnx{
     class Tensor{
         private:
         public:
-
+            ///@cond
             boost::intrusive_ptr<Tensor_impl> _impl;
             Tensor(): _impl(new Tensor_impl()){};
             Tensor(const Tensor &rhs){
@@ -270,7 +270,9 @@ namespace cytnx{
             Tensor& operator=(const Tensor &rhs){
                 _impl = rhs._impl;
             }
-             
+            ///@endcond
+
+            //@{             
             //default device==Device.cpu (-1)
             /**
             @brief initialize a Tensor
@@ -299,8 +301,9 @@ namespace cytnx{
 
             Tensor(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype=Type.Double, const int &device=-1):_impl(new Tensor_impl()){
                 this->Init(shape,dtype,device);
-            }
-            
+            } 
+            //@}
+
             /**
             @brief the dtype-id of the Tensor
             @return [cytnx_uint64] the dtype_id of the Tensor
@@ -416,21 +419,10 @@ namespace cytnx{
             void permute_(const std::vector<cytnx_uint64> &rnks){
                 this->_impl->permute_(rnks);
             }
-            void permute_(const std::initializer_list<cytnx_uint64> &rnks){
-                std::vector<cytnx_uint64> args = rnks;
-                this->_impl->permute_(args);
-            }
 
             Tensor permute(const std::vector<cytnx_uint64> &rnks){
                 Tensor out;
                 out._impl = this->_impl->permute(rnks);
-                return out;
-            }
-
-            Tensor permute(const std::initializer_list<cytnx_uint64> &rnks){
-                Tensor out;
-                std::vector<cytnx_uint64> args = rnks;
-                out._impl = this->_impl->permute(args);
                 return out;
             }
 
@@ -447,22 +439,11 @@ namespace cytnx{
                 this->_impl->reshape_(new_shape);
             }
 
-            void reshape_(const std::initializer_list<cytnx_int64> &new_shape){
-                std::vector<cytnx_int64> args = new_shape;
-                this->_impl->reshape_(args);
-            }
-
             Tensor reshape(const std::vector<cytnx_int64> &new_shape){
                 Tensor out;
                 out._impl = this->_impl->reshape(new_shape);
                 return out;
             }
-
-            Tensor reshape(const std::initializer_list<cytnx_int64> &new_shape){
-                std::vector<cytnx_int64> args = new_shape;
-                return this->reshape(args);
-            }
-
 
             Tensor astype(const int &new_type) const{
                 Tensor out;
@@ -473,11 +454,6 @@ namespace cytnx{
             template<class T>
             T& at(const std::vector<cytnx_uint64> &locator){
                 return this->_impl->at<T>(locator);
-            }
-            template<class T>
-            T& at(const std::initializer_list<cytnx_uint64> &locator){
-                std::vector<cytnx_uint64> args = locator;
-                return this->_impl->at<T>(args);
             }
 
             template<class T>
@@ -500,15 +476,6 @@ namespace cytnx{
             }
 
 
-            Tensor get(const std::initializer_list<cytnx::Accessor> &accessors)const{
-                std::vector<cytnx::Accessor> args = accessors;
-                return this->get(args);
-            }
-
-            void set(const std::initializer_list<cytnx::Accessor> &accessors, const Tensor &rhs){
-                std::vector<cytnx::Accessor> args = accessors;
-                this->set(args,rhs);
-            }
             template<class T>
             void set(const std::initializer_list<cytnx::Accessor> &accessors, const T &rc){
                 std::vector<cytnx::Accessor> args = accessors;

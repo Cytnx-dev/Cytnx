@@ -418,10 +418,10 @@ namespace cytnx{
                 Init(size,dtype,device);
             }
             Storage(): _impl(new Storage_base()){};
+            ///@cond
             Storage(boost::intrusive_ptr<Storage_base> in_impl){
                 this->_impl = in_impl;
             }
-            ///@cond
             Storage(const Storage &rhs){
                 this->_impl = rhs._impl;
             }
@@ -502,9 +502,26 @@ namespace cytnx{
             }
             ///@endcond
 
+
+            /**
+            @brief move the current Storage to different deivce. 
+            @param device the device-id. It can be any device defined in \link cytnx::Device cytnx::Device \endlink
+                
+            see also \link cytnx::Storage::to Storage.to() \endlink
+            */
             void to_(const int &device){
                 this->_impl->to_(device);
             }
+
+            /**
+            @brief move a new Storage with same content as current Storage on different deivce. 
+            @param device the device-id. It can be any device defined in \link cytnx::Device cytnx::Device \endlink
+                
+            [Note]
+                if the \param device is the same as the current Storage's device, return self. 
+            
+            see also \link cytnx::Storage::to_ Storage.to_() \endlink
+            */
             Storage to(const int &device){
                 return Storage(this->_impl->to(device));
             }
@@ -536,7 +553,10 @@ namespace cytnx{
                 return this->_impl->len;
             }
 
-
+            /**
+            @brief print the info of the Storage, including the device, dtype and size.
+  
+            */
             void print_info(){
                 this->_impl->print_info();
             }

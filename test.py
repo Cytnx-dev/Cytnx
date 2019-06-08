@@ -11,7 +11,6 @@ from cytnx import linalg
 a = cytnx.Storage(10,cytnx.Type.Double);
 bbb = a.to(cytnx.Device.cpu)
 ccc = a.to(cytnx.Device.cuda+0)
-exit(1)
 
 print(a[3])
 print(a.dtype)

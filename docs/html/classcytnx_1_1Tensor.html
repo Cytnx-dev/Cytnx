@@ -66,7 +66,6 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classcytnx_1_1Tensor-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">cytnx::Tensor Class Reference</div>  </div>
@@ -80,18 +79,6 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a22124cada82e6dded5978fcf731bfcc5"><td class="memItemLeft" align="right" valign="top"><a id="a22124cada82e6dded5978fcf731bfcc5"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Tensor</b> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;rhs)</td></tr>
-<tr class="separator:a22124cada82e6dded5978fcf731bfcc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a122d879973b24d961a888d615e7e2673"><td class="memItemLeft" align="right" valign="top"><a id="a122d879973b24d961a888d615e7e2673"></a>
-<a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;rhs)</td></tr>
-<tr class="separator:a122d879973b24d961a888d615e7e2673"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afdb4470e0dc934964d80aa9c761cca48"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#afdb4470e0dc934964d80aa9c761cca48">Init</a> (const std::vector&lt; cytnx_uint64 &gt; &amp;<a class="el" href="classcytnx_1_1Tensor.html#a6d0ab6d09633ad4d6099aa822ec5335a">shape</a>, const unsigned int &amp;<a class="el" href="classcytnx_1_1Tensor.html#a4472af6f8e825a13440e832bf82fb627">dtype</a>=Type.Double, const int &amp;<a class="el" href="classcytnx_1_1Tensor.html#ac6d3310eb4defbdacf662dcd81d8fe09">device</a>=-1)</td></tr>
-<tr class="memdesc:afdb4470e0dc934964d80aa9c761cca48"><td class="mdescLeft">&#160;</td><td class="mdescRight">initialize a <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>  <a href="#afdb4470e0dc934964d80aa9c761cca48">More...</a><br /></td></tr>
-<tr class="separator:afdb4470e0dc934964d80aa9c761cca48"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afdcff16b2096d10b524161be52ba767e"><td class="memItemLeft" align="right" valign="top"><a id="afdcff16b2096d10b524161be52ba767e"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Tensor</b> (const std::vector&lt; cytnx_uint64 &gt; &amp;<a class="el" href="classcytnx_1_1Tensor.html#a6d0ab6d09633ad4d6099aa822ec5335a">shape</a>, const unsigned int &amp;<a class="el" href="classcytnx_1_1Tensor.html#a4472af6f8e825a13440e832bf82fb627">dtype</a>=Type.Double, const int &amp;<a class="el" href="classcytnx_1_1Tensor.html#ac6d3310eb4defbdacf662dcd81d8fe09">device</a>=-1)</td></tr>
-<tr class="separator:afdcff16b2096d10b524161be52ba767e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4472af6f8e825a13440e832bf82fb627"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#a4472af6f8e825a13440e832bf82fb627">dtype</a> () const</td></tr>
 <tr class="memdesc:a4472af6f8e825a13440e832bf82fb627"><td class="mdescLeft">&#160;</td><td class="mdescRight">the dtype-id of the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>  <a href="#a4472af6f8e825a13440e832bf82fb627">More...</a><br /></td></tr>
 <tr class="separator:a4472af6f8e825a13440e832bf82fb627"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -266,16 +253,195 @@ std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#
 <tr class="memitem:aca1b7e9ae53b3529a7f79b24991c9373"><td class="memItemLeft" align="right" valign="top"><a id="aca1b7e9ae53b3529a7f79b24991c9373"></a>
 <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Exp</b> ()</td></tr>
 <tr class="separator:aca1b7e9ae53b3529a7f79b24991c9373"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:a8ce244b54f83542eb4c66e2d6f0e7d86"><td class="memItemLeft" align="right" valign="top"><a id="a8ce244b54f83542eb4c66e2d6f0e7d86"></a>
-boost::intrusive_ptr&lt; Tensor_impl &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_impl</b></td></tr>
-<tr class="separator:a8ce244b54f83542eb4c66e2d6f0e7d86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader"></div></td></tr>
+<tr class="memitem:afdb4470e0dc934964d80aa9c761cca48"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#afdb4470e0dc934964d80aa9c761cca48">Init</a> (const std::vector&lt; cytnx_uint64 &gt; &amp;<a class="el" href="classcytnx_1_1Tensor.html#a6d0ab6d09633ad4d6099aa822ec5335a">shape</a>, const unsigned int &amp;<a class="el" href="classcytnx_1_1Tensor.html#a4472af6f8e825a13440e832bf82fb627">dtype</a>=Type.Double, const int &amp;<a class="el" href="classcytnx_1_1Tensor.html#ac6d3310eb4defbdacf662dcd81d8fe09">device</a>=-1)</td></tr>
+<tr class="memdesc:afdb4470e0dc934964d80aa9c761cca48"><td class="mdescLeft">&#160;</td><td class="mdescRight">initialize a <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>  <a href="#afdb4470e0dc934964d80aa9c761cca48">More...</a><br /></td></tr>
+<tr class="separator:afdb4470e0dc934964d80aa9c761cca48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afdcff16b2096d10b524161be52ba767e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#afdcff16b2096d10b524161be52ba767e">Tensor</a> (const std::vector&lt; cytnx_uint64 &gt; &amp;<a class="el" href="classcytnx_1_1Tensor.html#a6d0ab6d09633ad4d6099aa822ec5335a">shape</a>, const unsigned int &amp;<a class="el" href="classcytnx_1_1Tensor.html#a4472af6f8e825a13440e832bf82fb627">dtype</a>=Type.Double, const int &amp;<a class="el" href="classcytnx_1_1Tensor.html#ac6d3310eb4defbdacf662dcd81d8fe09">device</a>=-1)</td></tr>
+<tr class="memdesc:afdcff16b2096d10b524161be52ba767e"><td class="mdescLeft">&#160;</td><td class="mdescRight">initialize a <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>  <a href="#afdcff16b2096d10b524161be52ba767e">More...</a><br /></td></tr>
+<tr class="separator:afdcff16b2096d10b524161be52ba767e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>an tensor (multi-dimensional array) </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="afdcff16b2096d10b524161be52ba767e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afdcff16b2096d10b524161be52ba767e">&#9670;&nbsp;</a></span>Tensor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cytnx::Tensor::Tensor </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; cytnx_uint64 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>shape</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const unsigned int &amp;&#160;</td>
+          <td class="paramname"><em>dtype</em> = <code>Type.Double</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int &amp;&#160;</td>
+          <td class="paramname"><em>device</em> = <code>-1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>initialize a <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">shape</td><td>the shape of tensor. </td></tr>
+    <tr><td class="paramname">dtype</td><td>the dtype of tensor. This can be any of type defined in cytnx::Type </td></tr>
+    <tr><td class="paramname">device</td><td>the device that tensor to be created. This can be cytnx::Device.cpu or cytnx::Device.cuda+&lt;gpuid&gt;</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>[Note]</p><ol type="1">
+<li>the content of <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> created will be un-initialize! See <a class="el" href="namespacecytnx.html#ab8a79a03fb0465f3eb2641017f3f1755">zeros()</a>, <a class="el" href="namespacecytnx.html#a83fb7bbe73368751a0d0f535d4a10a33">ones() </a> or <a class="el" href="namespacecytnx.html#a733f9931141463bc8b7c61931ccf52c3">arange() </a> for generating an <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>.</li>
+</ol>
+<h2>Example:</h2>
+<h3>c++ API:</h3>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        1. Create a Tensor with </span></div><div class="line"><span class="comment">        shape (3,4,5),</span></div><div class="line"><span class="comment">        dtype =Type.Double [default],</span></div><div class="line"><span class="comment">        device=Device.cpu [default]</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A({3,4,5});</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        2. Create a Tensor with </span></div><div class="line"><span class="comment">        shape (3,4,5),</span></div><div class="line"><span class="comment">        dtype =Type.Uint64,</span></div><div class="line"><span class="comment">        device=Device.cpu [default],</span></div><div class="line"><span class="comment">        [Note] the dtype can be any one of the supported type.</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B({3,4,5},Type.Uint64);</div><div class="line">    cout &lt;&lt; B &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        3. Initialize a Tensor with </span></div><div class="line"><span class="comment">        shape (3,4,5),</span></div><div class="line"><span class="comment">        dtype =Type.Double,</span></div><div class="line"><span class="comment">        device=Device.cuda+0, (on gpu with gpu-id=0)</span></div><div class="line"><span class="comment">        [Note] the gpu device can be set with Device.cuda+&lt;gpu-id&gt;</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> C({3,4,5},Type.Double,Device.cuda+0);</div><div class="line">    cout &lt;&lt; C &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">//4. Create an empty Tensor, and init later</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> D;</div><div class="line">    D.<a class="code" href="classcytnx_1_1Tensor.html#afdb4470e0dc934964d80aa9c761cca48">Init</a>({3,4,5},Type.Double,Device.cpu);</div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment">
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+
+
+
+Total elem: 60
+type  : Uint64
+cytnx device: CPU
+Shape : (3,4,5)
+[[[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]
+ [[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]
+ [[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]]
+
+
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CUDA/GPU-id:0
+Shape : (3,4,5)
+[[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+
+
+</pre> <h3>python API:</h3>
+<div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">#1. Create a Tensor with </span></div><div class="line"><span class="comment">#  shape (3,4,5),</span></div><div class="line"><span class="comment">#  dtype =Type.Double [default],</span></div><div class="line"><span class="comment">#  device=Device.cpu [default]</span></div><div class="line">A = Tensor([3,4,5])</div><div class="line">print(A)</div><div class="line"></div><div class="line"><span class="comment">#2. Create a Tensor with </span></div><div class="line"><span class="comment">#  shape (3,4,5),</span></div><div class="line"><span class="comment">#  dtype =Type.Uint64,</span></div><div class="line"><span class="comment">#  device=Device.cpu [default],</span></div><div class="line"><span class="comment">#  [Note] the dtype can be any one of the supported type.</span></div><div class="line">B = Tensor([3,4,5],dtype=Type.Uint64)</div><div class="line">print(B)</div><div class="line"></div><div class="line"><span class="comment">#3. Initialize a Tensor with </span></div><div class="line"><span class="comment">#  shape (3,4,5),</span></div><div class="line"><span class="comment">#  dtype =Type.Double,</span></div><div class="line"><span class="comment">#  device=Device.cuda+0, (on gpu with gpu-id=0)</span></div><div class="line"><span class="comment">#  [Note] the gpu device can be set with Device.cuda+&lt;gpu-id&gt;</span></div><div class="line">C = Tensor([3,4,5],dtype=Type.Double,device=Device.cuda+0);</div><div class="line">print(C)</div><div class="line"></div><div class="line"><span class="comment">#4. Create an empty Tensor, and init later</span></div><div class="line">D = Tensor()</div><div class="line">D.Init([3,4,5],dtype=Type.Double,device=Device.cpu);</div><div class="line"></div><div class="line"></div><div class="line"> </div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment">
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 1.06098e-153 8.19691e+247 5.39115e+228 1.23762e+224 ]
+  [2.66064e-260 7.27456e+199 2.41318e+185 7.86015e-85 3.06263e+223 ]
+  [4.90606e-109 3.94655e+180 3.75209e+199 4.96845e+180 1.18414e+224 ]
+  [7.86015e-85 7.36507e+228 2.07049e-28 5.74971e+169 6.16785e+223 ]]
+ [[2.04724e+190 9.49253e-154 1.39388e-258 7.33721e+223 1.44421e+214 ]
+  [1.28714e+272 2.13269e+102 1.67772e+243 3.91625e-27 5.36154e+276 ]
+  [1.18414e+224 5.50421e-95 2.38345e+180 8.89470e+252 5.19016e+141 ]
+  [5.04535e+223 9.03728e-91 4.27256e+180 9.00757e-96 2.15967e-27 ]]
+ [[8.04158e-96 9.69724e+189 2.33118e+30 3.39067e-09 4.66843e-10 ]
+  [5.74971e+169 6.16785e+223 1.12648e-153 7.29537e+175 1.44421e+214 ]
+  [1.28714e+272 3.25422e+97 7.10583e+159 5.38206e+228 3.06500e+169 ]
+  [1.16331e+253 7.36507e+228 2.54716e+151 2.49867e+262 1.20626e-319 ]]]
+
+
+
+Total elem: 60
+type  : Uint64
+cytnx device: CPU
+Shape : (3,4,5)
+[[[         -700818272          -700818272          -726046856           894392662          -697558016 ]
+  [         2081438952           221246347          -725995024          -725997720          1879256591 ]
+  [         -725994832          -725997888            34713300          -726098048          -725997664 ]
+  [         1647034496          -725997496          -725997552          2019459242          -726097992 ]]
+ [[         -725997384         -1210137313          -725997216          -725997272          1259917062 ]
+  [         -725997048          -725997104          1883873429          -725996880          -725996936 ]
+  [        -1256161352          -725999344          2081457000          -214618908          -725982456 ]
+  [         2081457944         -1117588437          -725982344          -726009336         -1989215784 ]]
+ [[         -725982288          -725982232          -298799098          -725984848          2081463368 ]
+  [          243657267          -725982176          -725982120         -1167856703          -725981952 ]
+  [         -725982008          -701014080          -725981784          -725981840          1603158043 ]
+  [         -725981616          -725953624          -676954723          -725981504          -725953552 ]]]
+
+
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CUDA/GPU-id:0
+Shape : (3,4,5)
+[[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+
+
+
+
+
+</pre> 
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a id="a5e2248e9babdb786167ed349df9084ae"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5e2248e9babdb786167ed349df9084ae">&#9670;&nbsp;</a></span>clone()</h2>
 

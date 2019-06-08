@@ -320,12 +320,13 @@ namespace cytnx{
     /// @endcond
 
     //======================================================================
-    //wrapper:
+    ///@brief An Enhanced tensor specifically designed for physical Tensor network simulation 
     class UniTensor{
         private:
             boost::intrusive_ptr<UniTensor_base> _impl;
 
         public:
+            ///@cond
             UniTensor(): _impl(new UniTensor_base()){};
             UniTensor(const UniTensor &rhs){
                 this->_impl = rhs._impl;
@@ -334,6 +335,7 @@ namespace cytnx{
                 this->_impl = rhs._impl;
                 return *this;
             }
+            ///@endcond
 
             UniTensor(const Tensor &in_tensor, const cytnx_uint64 &Rowrank): _impl(new UniTensor_base()){
                 this->Init(in_tensor,Rowrank);
