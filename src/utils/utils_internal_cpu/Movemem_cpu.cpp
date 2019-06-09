@@ -28,30 +28,52 @@ namespace cytnx{
                 accu_old*=old_shape[i];
                 accu_new*=newshape[i];
             }
-            std::vector<cytnx_uint64> old_inds(old_shape.size());
+            
 
             cytnx_complex128 *des = (cytnx_complex128*)malloc(accu_old*sizeof(cytnx_complex128));
             cytnx_complex128 *src = static_cast<cytnx_complex128*>(in->Mem);
 
             #ifdef UNI_OMP
-            #pragma omp parallel for schedule(dynamic)
-            #endif
-            for(cytnx_uint64 n=0;n<accu_old;n++){
-                //calc new id:
-                cytnx_uint64 j;
-                cytnx_uint64 old_loc = n;
-                for(j=0;j<old_shape.size();j++){
-                    old_inds[j] = old_loc/shifter_old[j];
-                    old_loc= old_loc%shifter_old[j];
+                std::vector<std::vector<cytnx_uint64> > old_inds;
+                #pragma omp parallel
+                {
+                    if(omp_get_thread_num()==0) old_inds = std::vector<std::vector<cytnx_uint64> >(omp_get_num_threads(),std::vector<cytnx_uint64>(old_shape.size()));
                 }
-                old_loc =0; // position:
-                for(j=0;j<old_shape.size();j++){
-                    old_loc += shifter_new[j]*old_inds[mapper[j]];
-                }
-                des[old_loc] = src[n];
-            }
-            
 
+                #pragma omp parallel for schedule(dynamic)
+                for(cytnx_uint64 n=0;n<accu_old;n++){
+                    //calc new id:
+                    cytnx_uint64 j;
+                    cytnx_uint64 old_loc = n;
+                    for(j=0;j<old_shape.size();j++){
+                        old_inds[omp_get_thread_num()][j] = old_loc/shifter_old[j];
+                        old_loc= old_loc%shifter_old[j];
+                    }
+                    old_loc =0; // position:
+                    for(j=0;j<old_shape.size();j++){
+                        old_loc += shifter_new[j]*old_inds[omp_get_thread_num()][mapper[j]];
+                    }
+                    des[old_loc] = src[n];
+                }
+
+            #else
+                std::vector<cytnx_uint64> old_inds(old_shape.size());
+                cytnx_uint64 j,old_loc;
+                for(cytnx_uint64 n=0;n<accu_old;n++){
+                    //calc new id:
+                    old_loc = n;
+                    for(j=0;j<old_shape.size();j++){
+                        old_inds[j] = old_loc/shifter_old[j];
+                        old_loc= old_loc%shifter_old[j];
+                    }
+                    old_loc =0; // position:
+                    for(j=0;j<old_shape.size();j++){
+                        old_loc += shifter_new[j]*old_inds[mapper[j]];
+                    }
+                    des[old_loc] = src[n];
+                }
+            #endif
+            
             
             boost::intrusive_ptr<Storage_base> out(new ComplexDoubleStorage());
             if(is_inplace){
@@ -84,28 +106,50 @@ namespace cytnx{
                 accu_old*=old_shape[i];
                 accu_new*=newshape[i];
             }
-            std::vector<cytnx_uint64> old_inds(old_shape.size());
 
             cytnx_complex64 *des = (cytnx_complex64*)malloc(accu_old*sizeof(cytnx_complex64));
             cytnx_complex64 *src = static_cast<cytnx_complex64*>(in->Mem);
 
             #ifdef UNI_OMP
-            #pragma omp parallel for schedule(dynamic)
+                std::vector<std::vector<cytnx_uint64> > old_inds;
+                #pragma omp parallel
+                {
+                    if(omp_get_thread_num()==0) old_inds = std::vector<std::vector<cytnx_uint64> >(omp_get_num_threads(),std::vector<cytnx_uint64>(old_shape.size()));
+                }
+
+                #pragma omp parallel for schedule(dynamic)
+                for(cytnx_uint64 n=0;n<accu_old;n++){
+                    //calc new id:
+                    cytnx_uint64 j;
+                    cytnx_uint64 old_loc = n;
+                    for(j=0;j<old_shape.size();j++){
+                        old_inds[omp_get_thread_num()][j] = old_loc/shifter_old[j];
+                        old_loc= old_loc%shifter_old[j];
+                    }
+                    old_loc =0; // position:
+                    for(j=0;j<old_shape.size();j++){
+                        old_loc += shifter_new[j]*old_inds[omp_get_thread_num()][mapper[j]];
+                    }
+                    des[old_loc] = src[n];
+                }
+
+            #else
+                std::vector<cytnx_uint64> old_inds(old_shape.size());
+                cytnx_uint64 j,old_loc;
+                for(cytnx_uint64 n=0;n<accu_old;n++){
+                    //calc new id:
+                    old_loc = n;
+                    for(j=0;j<old_shape.size();j++){
+                        old_inds[j] = old_loc/shifter_old[j];
+                        old_loc= old_loc%shifter_old[j];
+                    }
+                    old_loc =0; // position:
+                    for(j=0;j<old_shape.size();j++){
+                        old_loc += shifter_new[j]*old_inds[mapper[j]];
+                    }
+                    des[old_loc] = src[n];
+                }
             #endif
-            for(cytnx_uint64 n=0;n<accu_old;n++){
-                //calc new id:
-                cytnx_uint64 j;
-                cytnx_uint64 old_loc = n;
-                for(j=0;j<old_shape.size();j++){
-                    old_inds[j] = old_loc/shifter_old[j];
-                    old_loc= old_loc%shifter_old[j];
-                }
-                old_loc =0; // position:
-                for(j=0;j<old_shape.size();j++){
-                    old_loc += shifter_new[j]*old_inds[mapper[j]];
-                }
-                des[old_loc] = src[n];
-            }
             
 
             
@@ -141,28 +185,50 @@ namespace cytnx{
                 accu_old*=old_shape[i];
                 accu_new*=newshape[i];
             }
-            std::vector<cytnx_uint64> old_inds(old_shape.size());
 
             cytnx_double *des = (cytnx_double*)malloc(accu_old*sizeof(cytnx_double));
             cytnx_double *src = static_cast<cytnx_double*>(in->Mem);
 
             #ifdef UNI_OMP
-            #pragma omp parallel for schedule(dynamic)
+                std::vector<std::vector<cytnx_uint64> > old_inds;
+                #pragma omp parallel
+                {
+                    if(omp_get_thread_num()==0) old_inds = std::vector<std::vector<cytnx_uint64> >(omp_get_num_threads(),std::vector<cytnx_uint64>(old_shape.size()));
+                }
+
+                #pragma omp parallel for schedule(dynamic)
+                for(cytnx_uint64 n=0;n<accu_old;n++){
+                    //calc new id:
+                    cytnx_uint64 j;
+                    cytnx_uint64 old_loc = n;
+                    for(j=0;j<old_shape.size();j++){
+                        old_inds[omp_get_thread_num()][j] = old_loc/shifter_old[j];
+                        old_loc= old_loc%shifter_old[j];
+                    }
+                    old_loc =0; // position:
+                    for(j=0;j<old_shape.size();j++){
+                        old_loc += shifter_new[j]*old_inds[omp_get_thread_num()][mapper[j]];
+                    }
+                    des[old_loc] = src[n];
+                }
+
+            #else
+                std::vector<cytnx_uint64> old_inds(old_shape.size());
+                cytnx_uint64 j,old_loc;
+                for(cytnx_uint64 n=0;n<accu_old;n++){
+                    //calc new id:
+                    old_loc = n;
+                    for(j=0;j<old_shape.size();j++){
+                        old_inds[j] = old_loc/shifter_old[j];
+                        old_loc= old_loc%shifter_old[j];
+                    }
+                    old_loc =0; // position:
+                    for(j=0;j<old_shape.size();j++){
+                        old_loc += shifter_new[j]*old_inds[mapper[j]];
+                    }
+                    des[old_loc] = src[n];
+                }
             #endif
-            for(cytnx_uint64 n=0;n<accu_old;n++){
-                //calc new id:
-                cytnx_uint64 j;
-                cytnx_uint64 old_loc = n;
-                for(j=0;j<old_shape.size();j++){
-                    old_inds[j] = old_loc/shifter_old[j];
-                    old_loc= old_loc%shifter_old[j];
-                }
-                old_loc =0; // position:
-                for(j=0;j<old_shape.size();j++){
-                    old_loc += shifter_new[j]*old_inds[mapper[j]];
-                }
-                des[old_loc] = src[n];
-            }
             
 
             
@@ -198,28 +264,50 @@ namespace cytnx{
                 accu_old*=old_shape[i];
                 accu_new*=newshape[i];
             }
-            std::vector<cytnx_uint64> old_inds(old_shape.size());
 
             cytnx_float *des = (cytnx_float*)malloc(accu_old*sizeof(cytnx_float));
             cytnx_float *src = static_cast<cytnx_float*>(in->Mem);
 
             #ifdef UNI_OMP
-            #pragma omp parallel for schedule(dynamic)
+                std::vector<std::vector<cytnx_uint64> > old_inds;
+                #pragma omp parallel
+                {
+                    if(omp_get_thread_num()==0) old_inds = std::vector<std::vector<cytnx_uint64> >(omp_get_num_threads(),std::vector<cytnx_uint64>(old_shape.size()));
+                }
+
+                #pragma omp parallel for schedule(dynamic)
+                for(cytnx_uint64 n=0;n<accu_old;n++){
+                    //calc new id:
+                    cytnx_uint64 j;
+                    cytnx_uint64 old_loc = n;
+                    for(j=0;j<old_shape.size();j++){
+                        old_inds[omp_get_thread_num()][j] = old_loc/shifter_old[j];
+                        old_loc= old_loc%shifter_old[j];
+                    }
+                    old_loc =0; // position:
+                    for(j=0;j<old_shape.size();j++){
+                        old_loc += shifter_new[j]*old_inds[omp_get_thread_num()][mapper[j]];
+                    }
+                    des[old_loc] = src[n];
+                }
+
+            #else
+                std::vector<cytnx_uint64> old_inds(old_shape.size());
+                cytnx_uint64 j,old_loc;
+                for(cytnx_uint64 n=0;n<accu_old;n++){
+                    //calc new id:
+                    old_loc = n;
+                    for(j=0;j<old_shape.size();j++){
+                        old_inds[j] = old_loc/shifter_old[j];
+                        old_loc= old_loc%shifter_old[j];
+                    }
+                    old_loc =0; // position:
+                    for(j=0;j<old_shape.size();j++){
+                        old_loc += shifter_new[j]*old_inds[mapper[j]];
+                    }
+                    des[old_loc] = src[n];
+                }
             #endif
-            for(cytnx_uint64 n=0;n<accu_old;n++){
-                //calc new id:
-                cytnx_uint64 j;
-                cytnx_uint64 old_loc = n;
-                for(j=0;j<old_shape.size();j++){
-                    old_inds[j] = old_loc/shifter_old[j];
-                    old_loc= old_loc%shifter_old[j];
-                }
-                old_loc =0; // position:
-                for(j=0;j<old_shape.size();j++){
-                    old_loc += shifter_new[j]*old_inds[mapper[j]];
-                }
-                des[old_loc] = src[n];
-            }
             
 
             
@@ -255,28 +343,50 @@ namespace cytnx{
                 accu_old*=old_shape[i];
                 accu_new*=newshape[i];
             }
-            std::vector<cytnx_uint64> old_inds(old_shape.size());
 
             cytnx_int64 *des = (cytnx_int64*)malloc(accu_old*sizeof(cytnx_int64));
             cytnx_int64 *src = static_cast<cytnx_int64*>(in->Mem);
 
             #ifdef UNI_OMP
-            #pragma omp parallel for schedule(dynamic)
+                std::vector<std::vector<cytnx_uint64> > old_inds;
+                #pragma omp parallel
+                {
+                    if(omp_get_thread_num()==0) old_inds = std::vector<std::vector<cytnx_uint64> >(omp_get_num_threads(),std::vector<cytnx_uint64>(old_shape.size()));
+                }
+
+                #pragma omp parallel for schedule(dynamic)
+                for(cytnx_uint64 n=0;n<accu_old;n++){
+                    //calc new id:
+                    cytnx_uint64 j;
+                    cytnx_uint64 old_loc = n;
+                    for(j=0;j<old_shape.size();j++){
+                        old_inds[omp_get_thread_num()][j] = old_loc/shifter_old[j];
+                        old_loc= old_loc%shifter_old[j];
+                    }
+                    old_loc =0; // position:
+                    for(j=0;j<old_shape.size();j++){
+                        old_loc += shifter_new[j]*old_inds[omp_get_thread_num()][mapper[j]];
+                    }
+                    des[old_loc] = src[n];
+                }
+
+            #else
+                std::vector<cytnx_uint64> old_inds(old_shape.size());
+                cytnx_uint64 j,old_loc;
+                for(cytnx_uint64 n=0;n<accu_old;n++){
+                    //calc new id:
+                    old_loc = n;
+                    for(j=0;j<old_shape.size();j++){
+                        old_inds[j] = old_loc/shifter_old[j];
+                        old_loc= old_loc%shifter_old[j];
+                    }
+                    old_loc =0; // position:
+                    for(j=0;j<old_shape.size();j++){
+                        old_loc += shifter_new[j]*old_inds[mapper[j]];
+                    }
+                    des[old_loc] = src[n];
+                }
             #endif
-            for(cytnx_uint64 n=0;n<accu_old;n++){
-                //calc new id:
-                cytnx_uint64 j;
-                cytnx_uint64 old_loc = n;
-                for(j=0;j<old_shape.size();j++){
-                    old_inds[j] = old_loc/shifter_old[j];
-                    old_loc= old_loc%shifter_old[j];
-                }
-                old_loc =0; // position:
-                for(j=0;j<old_shape.size();j++){
-                    old_loc += shifter_new[j]*old_inds[mapper[j]];
-                }
-                des[old_loc] = src[n];
-            }
             
 
             
@@ -312,28 +422,50 @@ namespace cytnx{
                 accu_old*=old_shape[i];
                 accu_new*=newshape[i];
             }
-            std::vector<cytnx_uint64> old_inds(old_shape.size());
 
             cytnx_uint64 *des = (cytnx_uint64*)malloc(accu_old*sizeof(cytnx_uint64));
             cytnx_uint64 *src = static_cast<cytnx_uint64*>(in->Mem);
 
             #ifdef UNI_OMP
-            #pragma omp parallel for schedule(dynamic)
+                std::vector<std::vector<cytnx_uint64> > old_inds;
+                #pragma omp parallel
+                {
+                    if(omp_get_thread_num()==0) old_inds = std::vector<std::vector<cytnx_uint64> >(omp_get_num_threads(),std::vector<cytnx_uint64>(old_shape.size()));
+                }
+
+                #pragma omp parallel for schedule(dynamic)
+                for(cytnx_uint64 n=0;n<accu_old;n++){
+                    //calc new id:
+                    cytnx_uint64 j;
+                    cytnx_uint64 old_loc = n;
+                    for(j=0;j<old_shape.size();j++){
+                        old_inds[omp_get_thread_num()][j] = old_loc/shifter_old[j];
+                        old_loc= old_loc%shifter_old[j];
+                    }
+                    old_loc =0; // position:
+                    for(j=0;j<old_shape.size();j++){
+                        old_loc += shifter_new[j]*old_inds[omp_get_thread_num()][mapper[j]];
+                    }
+                    des[old_loc] = src[n];
+                }
+
+            #else
+                std::vector<cytnx_uint64> old_inds(old_shape.size());
+                cytnx_uint64 j,old_loc;
+                for(cytnx_uint64 n=0;n<accu_old;n++){
+                    //calc new id:
+                    old_loc = n;
+                    for(j=0;j<old_shape.size();j++){
+                        old_inds[j] = old_loc/shifter_old[j];
+                        old_loc= old_loc%shifter_old[j];
+                    }
+                    old_loc =0; // position:
+                    for(j=0;j<old_shape.size();j++){
+                        old_loc += shifter_new[j]*old_inds[mapper[j]];
+                    }
+                    des[old_loc] = src[n];
+                }
             #endif
-            for(cytnx_uint64 n=0;n<accu_old;n++){
-                //calc new id:
-                cytnx_uint64 j;
-                cytnx_uint64 old_loc = n;
-                for(j=0;j<old_shape.size();j++){
-                    old_inds[j] = old_loc/shifter_old[j];
-                    old_loc= old_loc%shifter_old[j];
-                }
-                old_loc =0; // position:
-                for(j=0;j<old_shape.size();j++){
-                    old_loc += shifter_new[j]*old_inds[mapper[j]];
-                }
-                des[old_loc] = src[n];
-            }
             
 
             
@@ -368,28 +500,50 @@ namespace cytnx{
                 accu_old*=old_shape[i];
                 accu_new*=newshape[i];
             }
-            std::vector<cytnx_uint64> old_inds(old_shape.size());
 
             cytnx_int32 *des = (cytnx_int32*)malloc(accu_old*sizeof(cytnx_int32));
             cytnx_int32 *src = static_cast<cytnx_int32*>(in->Mem);
 
             #ifdef UNI_OMP
-            #pragma omp parallel for schedule(dynamic)
+                std::vector<std::vector<cytnx_uint64> > old_inds;
+                #pragma omp parallel
+                {
+                    if(omp_get_thread_num()==0) old_inds = std::vector<std::vector<cytnx_uint64> >(omp_get_num_threads(),std::vector<cytnx_uint64>(old_shape.size()));
+                }
+
+                #pragma omp parallel for schedule(dynamic)
+                for(cytnx_uint64 n=0;n<accu_old;n++){
+                    //calc new id:
+                    cytnx_uint64 j;
+                    cytnx_uint64 old_loc = n;
+                    for(j=0;j<old_shape.size();j++){
+                        old_inds[omp_get_thread_num()][j] = old_loc/shifter_old[j];
+                        old_loc= old_loc%shifter_old[j];
+                    }
+                    old_loc =0; // position:
+                    for(j=0;j<old_shape.size();j++){
+                        old_loc += shifter_new[j]*old_inds[omp_get_thread_num()][mapper[j]];
+                    }
+                    des[old_loc] = src[n];
+                }
+
+            #else
+                std::vector<cytnx_uint64> old_inds(old_shape.size());
+                cytnx_uint64 j,old_loc;
+                for(cytnx_uint64 n=0;n<accu_old;n++){
+                    //calc new id:
+                    old_loc = n;
+                    for(j=0;j<old_shape.size();j++){
+                        old_inds[j] = old_loc/shifter_old[j];
+                        old_loc= old_loc%shifter_old[j];
+                    }
+                    old_loc =0; // position:
+                    for(j=0;j<old_shape.size();j++){
+                        old_loc += shifter_new[j]*old_inds[mapper[j]];
+                    }
+                    des[old_loc] = src[n];
+                }
             #endif
-            for(cytnx_uint64 n=0;n<accu_old;n++){
-                //calc new id:
-                cytnx_uint64 j;
-                cytnx_uint64 old_loc = n;
-                for(j=0;j<old_shape.size();j++){
-                    old_inds[j] = old_loc/shifter_old[j];
-                    old_loc= old_loc%shifter_old[j];
-                }
-                old_loc =0; // position:
-                for(j=0;j<old_shape.size();j++){
-                    old_loc += shifter_new[j]*old_inds[mapper[j]];
-                }
-                des[old_loc] = src[n];
-            }
             
 
             
@@ -424,28 +578,50 @@ namespace cytnx{
                 accu_old*=old_shape[i];
                 accu_new*=newshape[i];
             }
-            std::vector<cytnx_uint64> old_inds(old_shape.size());
 
             cytnx_uint32 *des = (cytnx_uint32*)malloc(accu_old*sizeof(cytnx_uint32));
             cytnx_uint32 *src = static_cast<cytnx_uint32*>(in->Mem);
 
             #ifdef UNI_OMP
-            #pragma omp parallel for schedule(dynamic)
+                std::vector<std::vector<cytnx_uint64> > old_inds;
+                #pragma omp parallel
+                {
+                    if(omp_get_thread_num()==0) old_inds = std::vector<std::vector<cytnx_uint64> >(omp_get_num_threads(),std::vector<cytnx_uint64>(old_shape.size()));
+                }
+
+                #pragma omp parallel for schedule(dynamic)
+                for(cytnx_uint64 n=0;n<accu_old;n++){
+                    //calc new id:
+                    cytnx_uint64 j;
+                    cytnx_uint64 old_loc = n;
+                    for(j=0;j<old_shape.size();j++){
+                        old_inds[omp_get_thread_num()][j] = old_loc/shifter_old[j];
+                        old_loc= old_loc%shifter_old[j];
+                    }
+                    old_loc =0; // position:
+                    for(j=0;j<old_shape.size();j++){
+                        old_loc += shifter_new[j]*old_inds[omp_get_thread_num()][mapper[j]];
+                    }
+                    des[old_loc] = src[n];
+                }
+
+            #else
+                std::vector<cytnx_uint64> old_inds(old_shape.size());
+                cytnx_uint64 j,old_loc;
+                for(cytnx_uint64 n=0;n<accu_old;n++){
+                    //calc new id:
+                    old_loc = n;
+                    for(j=0;j<old_shape.size();j++){
+                        old_inds[j] = old_loc/shifter_old[j];
+                        old_loc= old_loc%shifter_old[j];
+                    }
+                    old_loc =0; // position:
+                    for(j=0;j<old_shape.size();j++){
+                        old_loc += shifter_new[j]*old_inds[mapper[j]];
+                    }
+                    des[old_loc] = src[n];
+                }
             #endif
-            for(cytnx_uint64 n=0;n<accu_old;n++){
-                //calc new id:
-                cytnx_uint64 j;
-                cytnx_uint64 old_loc = n;
-                for(j=0;j<old_shape.size();j++){
-                    old_inds[j] = old_loc/shifter_old[j];
-                    old_loc= old_loc%shifter_old[j];
-                }
-                old_loc =0; // position:
-                for(j=0;j<old_shape.size();j++){
-                    old_loc += shifter_new[j]*old_inds[mapper[j]];
-                }
-                des[old_loc] = src[n];
-            }
             
 
             

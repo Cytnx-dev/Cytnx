@@ -121,8 +121,20 @@ int main(int argc, char *argv[]){
     ut1.print_diagram();
     ut1.combineBonds({0,2},true,false);
     ut1.print_diagram();
-    Tensor tmpp = ut1.get_block();
-    cout << tmpp << endl;
+
+    Tensor x1 = arange(2*3*4);
+    x1.reshape_({2,3,4});
+    cout << x1 << endl;
+    cout << x1.is_contiguous() << endl;
+
+    x1.permute_({2,0,1});
+    cout << x1 << endl;
+    cout << x1.is_contiguous() << endl;
+    x1.contiguous_();
+    cout << x1 << endl;
+    //x1.reshape_({2,2,3,2});
+    //cout << x1 << endl;
+
     //Tensor tmp = zeros({3,2,4});
     /*
     ut1.print_diagram(true); 
