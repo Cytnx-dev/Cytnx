@@ -266,15 +266,9 @@ namespace cytnx{
                 for(cytnx_uint64 i=0;i<idx_no_combine.size();i++)
                     new_shape.push_back(this->_bonds[idx_no_combine[i]].dim());
 
-                std::cout << mapper << std::endl;
-                std::cout << "bef" << this->_block << std::endl; 
                 this->_block.permute_(mapper); 
-                std::cout << "aft" << this->_block << std::endl; 
 
-                std::cout << new_shape << std::endl;
-                std::cout << "bef" << this->_block << std::endl; 
                 this->_block.reshape_(new_shape);
-                std::cout << "aft" << this->_block << std::endl; 
 
                 cytnx_int64 f_label = this->_labels[idx_mapper[0]];
                 vec_erase_(this->_bonds,std::vector<cytnx_uint64>(idx_mapper.begin()+1,idx_mapper.end()));
@@ -283,12 +277,11 @@ namespace cytnx{
                 //find index 
                 cytnx_uint64 x = vec_where(this->_labels,f_label);                                
                 idx_no_combine = utils_internal::range_cpu(1,this->_labels.size());
-                std::cout << idx_no_combine << std::endl;
                 idx_no_combine.insert(idx_no_combine.begin()+x,0);
                 this->_block.permute_(idx_no_combine);
-
-
                 this->_Rowrank = new_Nin;
+
+
             }else{
                 /*
                 std::vector<cytnx_int64> new_shape; new_shape.append(-1);

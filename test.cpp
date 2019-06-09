@@ -119,8 +119,10 @@ int main(int argc, char *argv[]){
     
     UniTensor ut1(bds,{},2);
     ut1.print_diagram();
-    ut1.combineBonds({0,2},true,false);
+    cout << ut1 << endl;
+    ut1.combineBonds({2,0},true,false);
     ut1.print_diagram();
+    cout << ut1 << endl;
 
     Tensor x1 = arange(2*3*4);
     x1.reshape_({2,3,4});
