@@ -118,6 +118,11 @@ int main(int argc, char *argv[]){
     
     
     UniTensor ut1(bds,{},2);
+    ut1.print_diagram();
+    ut1.combineBonds({0,2},true,false);
+    ut1.print_diagram();
+    Tensor tmpp = ut1.get_block();
+    cout << tmpp << endl;
     //Tensor tmp = zeros({3,2,4});
     /*
     ut1.print_diagram(true); 

@@ -260,7 +260,7 @@ namespace cytnx{
                 this->_is_diag = false;
             }
 
-            void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back=false, const bool &by_label=true);
+            void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back=true, const bool &by_label=true);
 
             ~DenseUniTensor(){};
             // end virtual function              
@@ -339,7 +339,7 @@ namespace cytnx{
             void to_dense_(){
                 cytnx_error_msg(true,"[ERROR] cannot to_dense_ a UniTensor with symmetry.%s","\n");
             }
-            void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back=false, const bool &by_label=true){};
+            void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back=true, const bool &by_label=true){};
             ~SparseUniTensor(){};
             // end virtual func
     };
@@ -522,7 +522,9 @@ namespace cytnx{
             void to_dense_(){
                 this->_impl->to_dense_();
             }
-
+            void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back=true, const bool &by_label=true){
+                this->_impl->combineBonds(indicators,permute_back,by_label);
+            }
     };
 
     std::ostream& operator<<(std::ostream& os, const UniTensor &in);

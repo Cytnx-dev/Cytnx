@@ -62,7 +62,7 @@ OBJS += Storage.o Bond.o Tensor.o Symmetry.o Accessor.o Generator.o UniTensor_ba
 
 ## Utils
 OBJS += utils_internal_interface.o
-OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o is.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_cpu.o SetElems_cpu.o
+OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o is.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_cpu.o SetElems_cpu.o
 ifeq ($(GPU_Enable),1)
   OBJS += cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o cuFill_gpu.o cuSetArange_gpu.o cuGetElems_gpu.o  cuSetElems_gpu.o
 endif
@@ -303,6 +303,10 @@ vec_clone.o: $(CytnxPATH)/src/utils/vec_clone.cpp $(CytnxPATH)/include/utils/vec
 vec_unique.o: $(CytnxPATH)/src/utils/vec_unique.cpp $(CytnxPATH)/include/utils/vec_unique.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 vec_map.o: $(CytnxPATH)/src/utils/vec_map.cpp $(CytnxPATH)/include/utils/vec_map.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+vec_erase.o: $(CytnxPATH)/src/utils/vec_erase.cpp $(CytnxPATH)/include/utils/vec_erase.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+vec_where.o: $(CytnxPATH)/src/utils/vec_where.cpp $(CytnxPATH)/include/utils/vec_where.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 ifeq ($(GPU_Enable),1)

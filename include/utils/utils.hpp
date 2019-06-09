@@ -6,6 +6,9 @@
 #include "vec_clone.hpp"
 #include "vec_unique.hpp"
 #include "vec_map.hpp"
+#include "vec_erase.hpp"
+#include "vec_where.hpp"
+
 /// Helper function to print vector with ODT:
 #include <vector>
 #include <iostream>
