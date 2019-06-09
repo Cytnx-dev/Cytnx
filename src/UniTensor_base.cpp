@@ -117,7 +117,7 @@ namespace cytnx{
         void UniTensor_base::to_dense_(){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
-        void UniTensor_base::combineBonds(const std::vector<cytnx_int64> &indicators, const bool &by_labels){
+        void UniTensor_base::combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back, const bool &by_labels){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
         //-----------------------------------------

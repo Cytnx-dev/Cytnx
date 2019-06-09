@@ -773,7 +773,9 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__repr__",[](cytnx::UniTensor &self)->std::string{
                     std::cout << self << std::endl;
                     return std::string("");
-                 })
+                 }) 
+                .def("to_dense",&cytnx::UniTensor::to_dense)
+                .def("to_dense_",&cytnx::UniTensor::to_dense_)
                 ;
 
     pybind11::module m_linalg = m.def_submodule("linalg","linear algebra related.");

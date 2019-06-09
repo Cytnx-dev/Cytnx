@@ -126,7 +126,7 @@ namespace cytnx{
             virtual boost::intrusive_ptr<UniTensor_base> reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank=0);
             virtual boost::intrusive_ptr<UniTensor_base> to_dense();
             virtual void to_dense_();
-            virtual void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &by_label=true);
+            virtual void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back=false, const bool &by_label=true);
             virtual ~UniTensor_base(){};
     };
     /// @endcond
@@ -266,31 +266,7 @@ namespace cytnx{
                 this->_is_diag = false;
             }
 
-            void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &by_label=true){
-                cytnx_error_msg(indicators.size() < 2,"[ERROR] the number of bonds to combine must be > 1%s","\n");
-                std::vector<cytnx_int64>::iterator it;
-                std::vector<cytnx_int64> idx_mapper;
-                if(by_label){
-                    
-                    //find the index of label:
-                    for(cytnx_uint64 i=0;i<indicators.size();i++){
-                        it = std::find(this->_labels.begin(),this->_labels.end(),indicators[i]);
-                        cytnx_error_msg(it == this->_labels.end(),"[ERROR] labels not found in current UniTensor%s","\n");
-                        idx_mapper.push_back(std::distance(this->_labels.begin(),it));
-                    }
-
-                }else{
-                    idx_mapper = indicators;
-                }
-
-                ///first permute the Tensor:
-                std::vector<cytnx_uint64> old_shape = this->shape();
-                
-                cytnx_error_msg(this->_is_diag,"[ERROR] cannot combineBond on a is_diag=True UniTensor. suggestion: try UniTensor.to_dense()/to_dense_() first.%s","\n");
-                 
-
-
-            }
+            void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back=false, const bool &by_label=true);
 
             ~DenseUniTensor(){};
             // end virtual function              
@@ -369,7 +345,7 @@ namespace cytnx{
             void to_dense_(){
                 cytnx_error_msg(true,"[ERROR] cannot to_dense_ a UniTensor with symmetry.%s","\n");
             }
-            void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &by_label=true){};
+            void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back=false, const bool &by_label=true){};
             ~SparseUniTensor(){};
             // end virtual func
     };
@@ -544,7 +520,14 @@ namespace cytnx{
             void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank=0){
                 this->_impl->reshape_(new_shape,Rowrank);
             }
-            
+            UniTensor to_dense(){
+                UniTensor out;
+                out._impl = this->_impl->to_dense();
+                return out;
+            }            
+            void to_dense_(){
+                this->_impl->to_dense_();
+            }
 
     };
 

@@ -222,6 +222,53 @@ namespace cytnx{
     }
 
 
+    void DenseUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back, const bool &by_label){
+        cytnx_error_msg(indicators.size() < 2,"[ERROR] the number of bonds to combine must be > 1%s","\n");
+        std::vector<cytnx_int64>::iterator it;
+        std::vector<cytnx_uint64> idx_mapper;
+        if(by_label){
+            
+            //find the index of label:
+            for(cytnx_uint64 i=0;i<indicators.size();i++){
+                it = std::find(this->_labels.begin(),this->_labels.end(),indicators[i]);
+                cytnx_error_msg(it == this->_labels.end(),"[ERROR] labels not found in current UniTensor%s","\n");
+                idx_mapper.push_back(std::distance(this->_labels.begin(),it));
+            }
+
+        }else{
+            idx_mapper = std::vector<cytnx_uint64>(indicators.begin(),indicators.end());
+        }
+
+        ///first permute the Tensor:
+        std::vector<cytnx_uint64> old_shape = this->shape();
+        
+        cytnx_error_msg(this->_is_diag,"[ERROR] cannot combineBond on a is_diag=True UniTensor. suggestion: try UniTensor.to_dense()/to_dense_() first.%s","\n");
+
+        if(this->is_tag()){
+            
+        }else{
+            if(permute_back){
+
+            }else{
+                /*
+                cytnx_uint64 new_Nin = this->_Rowrank;
+                std::vector<cytnx_uint64> idx_no_combine = utils::internal::range_cpu(this->_labels.size());
+                for(cytnx_uint64 i=0;i<idx_mapper.size();i++)
+                    idx_no_combine.erase(remove(idx_no_combine.begin(),idx_no_combine.end(),idx_mapper[i]), idx_no_combine.end());
+                std::vector<cytnx_uint64> mapper(this->_labels.size());
+                memcpy(&mapper[0],&idx_mapper[0],sizeof(cytnx_uint64)*idx_mapper.size());
+                memcpy(&mapper[idx_mapper.size()],&idx_no_combine[0],sizeof(cytnx_uint64)*idx_no_combine.size());
+                std::vector<cytnx_int64> new_shape; new_shape.append(-1);
+                
+                this->_block.permute_(mapper).reshape_(;
+                */
+
+            }
+        }         
+
+    }
+
+
 
 }
 
