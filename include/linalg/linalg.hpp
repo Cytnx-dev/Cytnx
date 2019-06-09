@@ -9,7 +9,10 @@
 
 
 namespace cytnx{
-
+    /**
+    @namespace cytnx::linalg
+    @brief linear algebra related functions.
+    */
     namespace linalg{
         // Add:
         Tensor Add(const Tensor &Lt, const Tensor &Rt);
@@ -41,6 +44,17 @@ namespace cytnx{
 
 
         // Svd:
+        /** 
+        @brief Perform Singular-Value decomposition on a rank-2 Tensor.
+        @param Tin a \link cytnx::Tensor Tensor \endlink, it should be a rank-2 tensor (matrix)
+        @param is_U if return a left uniform matrix.
+        @param is_vT if return a right uniform matrix.
+        @return [std::vector<Tensors>]  
+
+            1. the first tensor is a 1-d tensor contanin the singular values
+            2. the second tensor is the left uniform matrix [U], a 2-d tensor (matrix). It only return when is_U=true.
+            3. the third tensor is the right uniform matrix [vT], a 2-d tensor (matrix). It only return when is_vT=true.
+        */
         std::vector<Tensor> Svd(const Tensor &Tin, const bool &is_U=true, const bool &is_vT=true);
 
         // Eig:

@@ -780,6 +780,7 @@ PYBIND11_MODULE(cytnx,m){
                  }) 
                 .def("to_dense",&cytnx::UniTensor::to_dense)
                 .def("to_dense_",&cytnx::UniTensor::to_dense_)
+                .def("combineBonds",&cytnx::UniTensor::combineBonds,py::arg("indicators"),py::arg("permute_back")=true,py::arg("by_label")=true);
                 ;
 
     pybind11::module m_linalg = m.def_submodule("linalg","linear algebra related.");

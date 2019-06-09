@@ -148,29 +148,47 @@ $(function() {
 </pre> <div class="fragment"><div class="line"><span class="keyword">typedef</span> Accessor ac;</div><div class="line">Tensor A({3,4,5},Type.Double);</div><div class="line">Tensor out = A.get({ac(0),ac::all(),ac::range(1,4)}); </div><div class="line"><span class="comment">// equivalent to python: out = A[0,:,1:4]</span></div></div><!-- fragment --></li>
 </ul>
 <h2>Avaliable linear-algebra function (Keep updating):</h2>
-<pre class="fragment">  func    |   inplace | CPU | GPU  | callby tn 
-----------|-----------|-----|------|-----------
-  Add     |   x       |  Y  |  Y   |    Y
-  Sub     |   x       |  Y  |  Y   |    Y
-  Mul     |   x       |  Y  |  Y   |    Y
-  Div     |   x       |  Y  |  Y   |    Y
-  +,+=[tn]|   x       |  Y  |  Y   |    Y (Add_)
-  -,-=[tn]|   x       |  Y  |  Y   |    Y (Sub_)
-  *,*=[tn]|   x       |  Y  |  Y   |    Y (Mul_)
-  /,/=[tn]|   x       |  Y  |  Y   |    Y (Div_)
-  Svd     |   x       |  Y  |  Y   |    Y
-  Inv     |   Inv_    |  Y  |  Y   |    Y
-  Conj    |   Conj_   |  Y  |  Y   |    Y 
-  Exp     |   Exp_    |  Y  |  Y   |    Y
-  Eigh    |   x       |  Y  |  Y   |    Y 
-  Matmul  |   x       |  Y  |  Y   |    N
-  Diag    |   x       |  Y  |  Y   |    N
-</pre><h2>Generators</h2>
+<p>See <a class="el" href="namespacecytnx_1_1linalg.html">cytnx::linalg </a> for further details</p>
+<table class="doxtable">
+<tr>
+<th>func </th><th>inplace </th><th>CPU </th><th>GPU </th><th>callby tn  </th></tr>
+<tr>
+<td>Add </td><td>x </td><td>Y </td><td>Y </td><td>Y </td></tr>
+<tr>
+<td>Sub </td><td>x </td><td>Y </td><td>Y </td><td>Y </td></tr>
+<tr>
+<td>Mul </td><td>x </td><td>Y </td><td>Y </td><td>Y </td></tr>
+<tr>
+<td>Div </td><td>x </td><td>Y </td><td>Y </td><td>Y </td></tr>
+<tr>
+<td>+,+=[tn]</td><td>x </td><td>Y </td><td>Y </td><td>Y (Add_) </td></tr>
+<tr>
+<td>-,-=[tn]</td><td>x </td><td>Y </td><td>Y </td><td>Y (Sub_) </td></tr>
+<tr>
+<td>*,*=[tn]</td><td>x </td><td>Y </td><td>Y </td><td>Y (Mul_) </td></tr>
+<tr>
+<td>/,/=[tn]</td><td>x </td><td>Y </td><td>Y </td><td>Y (Div_) </td></tr>
+<tr>
+<td>Svd </td><td>x </td><td>Y </td><td>Y </td><td>Y </td></tr>
+<tr>
+<td>Inv </td><td>Inv_ </td><td>Y </td><td>Y </td><td>Y </td></tr>
+<tr>
+<td>Conj </td><td>Conj_ </td><td>Y </td><td>Y </td><td>Y </td></tr>
+<tr>
+<td>Exp </td><td>Exp_ </td><td>Y </td><td>Y </td><td>Y </td></tr>
+<tr>
+<td>Eigh </td><td>x </td><td>Y </td><td>Y </td><td>Y </td></tr>
+<tr>
+<td>Matmul </td><td>x </td><td>Y </td><td>Y </td><td>N </td></tr>
+<tr>
+<td>Diag </td><td>x </td><td>Y </td><td>Y </td><td>N </td></tr>
+</table>
+<h2>Generators</h2>
 <pre class="fragment">Tensor: zeros(), ones(), arange()
 </pre><h2>Example</h2>
 <pre class="fragment">See test.cpp for using C++ .
 See test.py for using python  
-</pre><h2>Author</h2>
+</pre><h2>Developer</h2>
 <pre class="fragment">Kai-Hsin Wu kaihsinwu@gmail.com </pre> </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

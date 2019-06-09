@@ -24,22 +24,22 @@
 
 ## compile
     * compile
-    $make -Bj4
+        $make -Bj4
 
     * turn on DEBUG mode:
-    $make -Bj4 DEBUG_Enable=1
+        $make -Bj4 DEBUG_Enable=1
 
     * turn on OpenMp accelerate
-    $make -Bj4 OMP_Enable=1 
+        $make -Bj4 OMP_Enable=1 
 
     * turn on GPU accelerate
-    $make -Bj4 GPU_Enable=1
+        $make -Bj4 GPU_Enable=1
 
     * turn on GPU+OpenMp accelerate
-    $make -Bj4 GPU_Enable=1 OMP_Enable=1
+        $make -Bj4 GPU_Enable=1 OMP_Enable=1
 
     * compile python wrapper
-    $make pyobj -Bj4 <args>
+        $make pyobj -Bj4 <args>
 
     <args> can be OMP_Enable, GPU_Enable, DEBUG_Enable, MKL_Enable.
 
@@ -163,6 +163,7 @@
 
 
 ## Avaliable linear-algebra function (Keep updating):
+    See \link cytnx::linalg cytnx::linalg \endlink for further details
 
       func    |   inplace | CPU | GPU  | callby tn 
     ----------|-----------|-----|------|-----------
@@ -186,15 +187,13 @@
 
     Tensor: zeros(), ones(), arange()
     
-
-
      
 ## Example
     
     See test.cpp for using C++ .
     See test.py for using python  
 
-## Author
+## Developer
 
     Kai-Hsin Wu kaihsinwu@gmail.com 
 

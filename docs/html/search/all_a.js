@@ -5,6 +5,7 @@ var searchData=
   ['shape',['shape',['../classcytnx_1_1Tensor.html#a6d0ab6d09633ad4d6099aa822ec5335a',1,'cytnx::Tensor']]],
   ['size',['size',['../classcytnx_1_1Storage.html#aaf36262622abdab03c90b713c454f78e',1,'cytnx::Storage']]],
   ['storage',['Storage',['../classcytnx_1_1Storage.html',1,'cytnx']]],
+  ['svd',['Svd',['../namespacecytnx_1_1linalg.html#ac17f16959a4849ea91bce712d24d4e4e',1,'cytnx::linalg']]],
   ['symmetry',['Symmetry',['../classcytnx_1_1Symmetry.html',1,'cytnx']]],
   ['syms',['syms',['../classcytnx_1_1Bond.html#ad0adf7b134654f0390e98695ba4d416e',1,'cytnx::Bond']]]
 ];

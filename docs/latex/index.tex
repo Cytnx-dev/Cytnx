@@ -187,26 +187,34 @@ Tensor out = A.get(\{ac(0),ac::all(),ac::range(1,4)\});
 
 \subsection*{Avaliable linear-\/algebra function (Keep updating)\+:}
 
-\begin{DoxyVerb}  func    |   inplace | CPU | GPU  | callby tn 
-----------|-----------|-----|------|-----------
-  Add     |   x       |  Y  |  Y   |    Y
-  Sub     |   x       |  Y  |  Y   |    Y
-  Mul     |   x       |  Y  |  Y   |    Y
-  Div     |   x       |  Y  |  Y   |    Y
-  +,+=[tn]|   x       |  Y  |  Y   |    Y (Add_)
-  -,-=[tn]|   x       |  Y  |  Y   |    Y (Sub_)
-  *,*=[tn]|   x       |  Y  |  Y   |    Y (Mul_)
-  /,/=[tn]|   x       |  Y  |  Y   |    Y (Div_)
-  Svd     |   x       |  Y  |  Y   |    Y
-  Inv     |   Inv_    |  Y  |  Y   |    Y
-  Conj    |   Conj_   |  Y  |  Y   |    Y 
-  Exp     |   Exp_    |  Y  |  Y   |    Y
-  Eigh    |   x       |  Y  |  Y   |    Y 
-  Matmul  |   x       |  Y  |  Y   |    N
-  Diag    |   x       |  Y  |  Y   |    N
-\end{DoxyVerb}
+See \hyperlink{namespacecytnx_1_1linalg}{cytnx\+::linalg } for further details
 
-
+\tabulinesep=1mm
+\begin{longtabu} spread 0pt [c]{*{5}{|X[-1]}|}
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ func }&\textbf{ inplace }&\textbf{ C\+PU }&\textbf{ G\+PU }&\textbf{ callby tn  }\\\cline{1-5}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ func }&\textbf{ inplace }&\textbf{ C\+PU }&\textbf{ G\+PU }&\textbf{ callby tn  }\\\cline{1-5}
+\endhead
+Add &x &Y &Y &Y \\\cline{1-5}
+Sub &x &Y &Y &Y \\\cline{1-5}
+Mul &x &Y &Y &Y \\\cline{1-5}
+Div &x &Y &Y &Y \\\cline{1-5}
++,+=\mbox{[}tn\mbox{]}&x &Y &Y &Y (Add\+\_\+) \\\cline{1-5}
+-\/,-\/=\mbox{[}tn\mbox{]}&x &Y &Y &Y (Sub\+\_\+) \\\cline{1-5}
+$\ast$,$\ast$=\mbox{[}tn\mbox{]}&x &Y &Y &Y (Mul\+\_\+) \\\cline{1-5}
+/,/=\mbox{[}tn\mbox{]}&x &Y &Y &Y (Div\+\_\+) \\\cline{1-5}
+Svd &x &Y &Y &Y \\\cline{1-5}
+Inv &Inv\+\_\+ &Y &Y &Y \\\cline{1-5}
+Conj &Conj\+\_\+ &Y &Y &Y \\\cline{1-5}
+Exp &Exp\+\_\+ &Y &Y &Y \\\cline{1-5}
+Eigh &x &Y &Y &Y \\\cline{1-5}
+Matmul &x &Y &Y &N \\\cline{1-5}
+Diag &x &Y &Y &N \\\cline{1-5}
+\end{longtabu}
 \subsection*{Generators}
 
 \begin{DoxyVerb}Tensor: zeros(), ones(), arange()
@@ -220,7 +228,7 @@ See test.py for using python
 \end{DoxyVerb}
 
 
-\subsection*{Author}
+\subsection*{Developer}
 
 \begin{DoxyVerb}Kai-Hsin Wu kaihsinwu@gmail.com \end{DoxyVerb}
  

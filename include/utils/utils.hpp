@@ -8,7 +8,7 @@
 #include "vec_map.hpp"
 #include "vec_erase.hpp"
 #include "vec_where.hpp"
-
+#include "vec_concatenate.hpp"
 /// Helper function to print vector with ODT:
 #include <vector>
 #include <iostream>
