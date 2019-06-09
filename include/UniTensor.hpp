@@ -10,6 +10,7 @@
 #include "intrusive_ptr_base.hpp"
 #include "utils/utils_internal_interface.hpp"
 #include "utils/utils.hpp"
+#include "linalg/linalg.hpp"
 #include <iostream>
 #include <vector>
 #include <initializer_list>
@@ -252,14 +253,7 @@ namespace cytnx{
                 out->Init_by_Tensor(this->_block.reshape(new_shape),Rowrank);
                 return out;
             }
-            boost::intrusive_ptr<UniTensor_base> to_dense(){
-                cytnx_error_msg(!(this->_is_diag),"[ERROR] to_dense can only operate on UniTensor with is_diag = True.%s","\n");
-                DenseUniTensor *tmp = this->clone_meta();
-                tmp->_block = cytnx::linalg::Diag(this->_block);
-                tmp->_is_diag = false;
-                boost::intrusive_ptr<UniTensor_base> out(tmp);
-                return out;
-            }
+            boost::intrusive_ptr<UniTensor_base> to_dense();
             void to_dense_(){
                 cytnx_error_msg(!(this->_is_diag),"[ERROR] to_dense_ can only operate on UniTensor with is_diag = True.%s","\n");
                 this->_block = cytnx::linalg::Diag(this->_block);

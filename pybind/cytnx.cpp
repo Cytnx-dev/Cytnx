@@ -8,7 +8,7 @@
 #include <pybind11/numpy.h>
 #include <pybind11/buffer_info.h>
 
-#include "../include/cytnx.hpp"
+#include "cytnx.hpp"
 //#include "../include/cytnx_error.hpp"
 
 namespace py = pybind11;
@@ -129,6 +129,10 @@ PYBIND11_MODULE(cytnx,m){
                 .def("stype_str", &cytnx::Symmetry::stype_str)
                 .def("n",&cytnx::Symmetry::n)
                 .def("clone",&cytnx::Symmetry::clone)
+                //.def("combine_rule",&cytnx::Symmetry::combine_rule,py::arg("qnums_1"),py::arg("qnums_2"))
+                //.def("combine_rule_",&cytnx::Symmetry::combine_rule_,py::arg("qnums_l"),py::arg("qnums_r"))
+                //.def("check_qnum", &cytnx::Symmetry::check_qnum,py::arg("qnum"))
+                //.def("check_qnums", &cytnx::Symmetry::check_qnums, py::arg("qnums"))
                 ;
 
     py::class_<cytnx::Bond>(m,"Bond")

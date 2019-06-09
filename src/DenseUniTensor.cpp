@@ -1,6 +1,7 @@
 #include "UniTensor.hpp"
 #include "utils/utils.hpp"
 #include "Generator.hpp"
+#include "linalg/linalg.hpp"
 #include <vector>
 namespace cytnx{
 
@@ -268,6 +269,14 @@ namespace cytnx{
 
     }
 
+    boost::intrusive_ptr<UniTensor_base> DenseUniTensor::to_dense(){
+        cytnx_error_msg(!(this->_is_diag),"[ERROR] to_dense can only operate on UniTensor with is_diag = True.%s","\n");
+        DenseUniTensor *tmp = this->clone_meta();
+        tmp->_block = cytnx::linalg::Diag(this->_block);
+        tmp->_is_diag = false;
+        boost::intrusive_ptr<UniTensor_base> out(tmp);
+        return out;
+    }
 
 
 }
