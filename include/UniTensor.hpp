@@ -69,6 +69,7 @@ namespace cytnx{
             const std::vector<cytnx_int64>& labels() const{ return this->_labels;}
             const std::vector<Bond> &bonds() const {return this->_bonds;}       
             const std::string& name() const { return this->_name;}
+            cytnx_uint64  rank() const {return this->_labels.size();}
             void set_name(const std::string &in){ this->_name = in;}
             void set_Rowrank(const cytnx_uint64 &new_Rowrank){
                 cytnx_error_msg(new_Rowrank >= this->_labels.size(),"[ERROR] Rowrank cannot exceed the rank of UniTensor.%s","\n");
@@ -422,7 +423,7 @@ namespace cytnx{
 
             }
 
-
+            cytnx_uint64 rank() const {return this->_impl->rank();}
             cytnx_uint64 Rowrank() const{return this->_impl->Rowrank();}
             unsigned int  dtype() const{ return this->_impl->dtype(); }
             int          device() const{ return this->_impl->device();   }
@@ -528,6 +529,8 @@ namespace cytnx{
     };
 
     std::ostream& operator<<(std::ostream& os, const UniTensor &in);
+
+    UniTensor contract(const UniTensor &inL, const UniTensor &inR);
 
 }
 

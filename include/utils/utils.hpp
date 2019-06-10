@@ -9,6 +9,7 @@
 #include "vec_erase.hpp"
 #include "vec_where.hpp"
 #include "vec_concatenate.hpp"
+#include "vec_intersect.hpp"
 /// Helper function to print vector with ODT:
 #include <vector>
 #include <iostream>

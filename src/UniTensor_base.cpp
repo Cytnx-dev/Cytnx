@@ -140,6 +140,24 @@ namespace cytnx{
             return os;
         }
         
+        UniTensor contract(const UniTensor &inL, const UniTensor &inR){
+            //checking :
+            cytnx_error_msg(inL.is_blockform() != inR.is_blockform(),"[ERROR] cannot contract non-symmetry UniTensor with symmetry UniTensor%s","\n");
+            cytnx_error_msg(inL.is_tag() != inR.is_tag(), "[ERROR] cannot contract tagged UniTensor with untagged UniTensor.%s","\n");
 
+            //get common labels:    
+            std::vector<cytnx_int64> comm_labels;
+            std::vector<cytnx_uint64> comm_idx1,comm_idx2;
+            vec_intersect_(comm_labels,inL.labels(),inR.labels(),comm_idx1,comm_idx2);
+            std::vector<cytnx_uint64> non_comm_idx1 = vec_erase(utils_internal::range_cpu(inL.rank()),comm_idx1);
+            std::vector<cytnx_uint64> non_comm_idx2 = vec_erase(utils_internal::range_cpu(inR.rank()),comm_idx2);
+                
+            //inL.get_block().permute_(vec_conatenate(non_comm_idx1,comm_idx1));
+            
+    
+                        
+
+        }
+    
 }
 
