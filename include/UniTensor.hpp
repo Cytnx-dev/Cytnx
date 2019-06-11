@@ -52,6 +52,8 @@ namespace cytnx{
 
         public:
             friend class UniTensor; // allow wrapper to access the private elems
+            friend class DenseUniTensor;
+            friend class SparseUniTensor;
             UniTensor_base(): _is_tag(false), _name(std::string("")), _is_braket_form(false), _Rowrank(-1), _is_diag(false){};
 
             //copy&assignment constr., use intrusive_ptr's !!
@@ -529,11 +531,18 @@ namespace cytnx{
             void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back=true, const bool &by_label=true){
                 this->_impl->combineBonds(indicators,permute_back,by_label);
             }
+            UniTensor contract(const UniTensor &inR) const{
+                UniTensor out;
+                out._impl = this->_impl->contract(inR._impl);
+                return out;
+            }
+    
     };
 
     std::ostream& operator<<(std::ostream& os, const UniTensor &in);
 
-    //UniTensor contract(const UniTensor &inL, const UniTensor &inR);
+    UniTensor contract(const UniTensor &inL, const UniTensor &inR);
+
 
 }
 

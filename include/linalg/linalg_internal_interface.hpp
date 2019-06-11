@@ -13,6 +13,7 @@
 #include "linalg/linalg_internal_cpu/Exp_internal.hpp"
 #include "linalg/linalg_internal_cpu/Matmul_internal.hpp"
 #include "linalg/linalg_internal_cpu/Diag_internal.hpp"
+#include "linalg/linalg_internal_cpu/Outer_internal.hpp"
 #ifdef UNI_GPU
     #include "linalg/linalg_internal_gpu/cuArithmic_internal.hpp"
     #include "linalg/linalg_internal_gpu/cuSvd_internal.hpp"
@@ -22,6 +23,7 @@
     #include "linalg/linalg_internal_gpu/cuExp_internal.hpp"
     #include "linalg/linalg_internal_gpu/cuMatmul_internal.hpp"
     #include "linalg/linalg_internal_gpu/cuDiag_internal.hpp"
+    #include "linalg/linalg_internal_gpu/cuOuter_internal.hpp"
 #endif
 
 namespace cytnx{
@@ -35,6 +37,7 @@ namespace cytnx{
         typedef void (*Expfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
         typedef void (*Diagfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
         typedef void (*Matmulfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &,const boost::intrusive_ptr<Storage_base> &, const cytnx_int32 &, const cytnx_int32 &, const cytnx_int32&);
+        typedef void (*Outerfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base>&);
 
         class linalg_internal_interface{
             public:
@@ -46,6 +49,7 @@ namespace cytnx{
                 std::vector<Expfunc_oii> Exp_ii;
                 std::vector<Diagfunc_oii> Diag_ii;
                 std::vector<Matmulfunc_oii> Matmul_ii;
+                std::vector<std::vector<Outerfunc_oii> >Outer_ii;
 
                 #ifdef UNI_GPU
                 std::vector<std::vector<Arithmicfunc_oii> > cuAri_ii;
@@ -56,6 +60,7 @@ namespace cytnx{
                 std::vector<Diagfunc_oii> cuDiag_ii;
                 std::vector<Eighfunc_oii> cuEigh_ii;
                 std::vector<Matmulfunc_oii> cuMatmul_ii;
+                std::vector<std::vector<Outerfunc_oii> > cuOuter_ii;
                 #endif
 
             linalg_internal_interface();

@@ -83,6 +83,13 @@ namespace cytnx{
         //Tensordot:
         Tensor Tensordot(const Tensor &Tl, const Tensor &Tr, const std::vector<cytnx_uint64> &idxl, const std::vector<cytnx_uint64> &idxr);
 
+        //Otimes:
+        Tensor Otimes(const Tensor &Tl, const Tensor &Tr);
+ 
+        
+
+        
+
 
     }// namespace linalg
     
@@ -111,6 +118,8 @@ namespace cytnx{
     Tensor operator/(const T &lc, const Tensor &Rt);
     template<class T>
     Tensor operator/(const Tensor &Lt, const T &rc);
+
+    
 
 
 

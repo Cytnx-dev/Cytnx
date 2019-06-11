@@ -361,25 +361,89 @@ namespace cytnx{
         //checking :
         cytnx_error_msg(rhs->is_blockform() ,"[ERROR] cannot contract non-symmetry UniTensor with symmetry UniTensor%s","\n");
         cytnx_error_msg(this->is_tag() != rhs->is_tag(), "[ERROR] cannot contract tagged UniTensor with untagged UniTensor.%s","\n");
-
+        //cytnx_error_msg(this->is_diag() != rhs->is_diag(),"[ERROR] cannot contract a diagonal tensor with non-diagonal tensor. [suggestion:] call UniTensor.to_dense/to_dense_ first%s","\n");
         //get common labels:    
         std::vector<cytnx_int64> comm_labels;
         std::vector<cytnx_uint64> comm_idx1,comm_idx2;
         vec_intersect_(comm_labels,this->labels(),rhs->labels(),comm_idx1,comm_idx2);
-        std::vector<cytnx_uint64> non_comm_idx1 = vec_erase(utils_internal::range_cpu(this->rank()),comm_idx1);
-        std::vector<cytnx_uint64> non_comm_idx2 = vec_erase(utils_internal::range_cpu(rhs->rank()),comm_idx2);
-            
-        //construct new tensor:
-        std::vector<Bond> new_bonds;
-        std::vector<cytnx_int64> new_labels;
-        
+
+        //output instance:
         DenseUniTensor *tmp = new DenseUniTensor();
-        
+            
+        tmp->_bonds.clear();
+        tmp->_labels.clear();
 
-        //inL.get_block().permute_(vec_conatenate(non_comm_idx1,comm_idx1));
-        
 
+        if(comm_idx1.size() == 0){
+            //process meta
+            vec_concatenate_(tmp->_labels,this->labels(),rhs->labels());
+            
+            // these two cannot omp parallel, due to intrusive_ptr
+            for(cytnx_uint64 i=0; i<this->_bonds.size();i++)
+                tmp->_bonds.push_back(this->_bonds[i].clone());
+            for(cytnx_uint64 i=0; i<rhs->_bonds.size();i++)
+                tmp->_bonds.push_back(rhs->_bonds[i].clone());
+
+            tmp->_is_tag = this->is_tag();
+            tmp->_Rowrank = this->Rowrank() + rhs->Rowrank();
+
+            if((this->is_diag() == rhs->is_diag()) && this->is_diag()){
+                tmp->_block = linalg::Otimes(this->_block, rhs->get_block_());
+                tmp->_block.reshape_({-1});
+                tmp->_is_diag = true;
+            }else{
+                Tensor tmpL,tmpR;
+                if(this->is_diag()) tmpL = linalg::Diag(this->_block);
+                else tmpL = this->_block; 
+                if(rhs->is_diag()) tmpR = linalg::Diag(rhs->get_block_());
+                else tmpR =  rhs->get_block_(); // share view!!
+
+                tmp->_block = linalg::Otimes(tmpL,tmpR);
+                tmp->_is_diag = false;
+
+            }
+            tmp->_is_braket_form = tmp->_update_braket();
+
+        }else{
+            //process meta
+            std::vector<cytnx_uint64> non_comm_idx1 = vec_erase(utils_internal::range_cpu(this->rank()),comm_idx1);
+            std::vector<cytnx_uint64> non_comm_idx2 = vec_erase(utils_internal::range_cpu(rhs->rank()),comm_idx2);
+                
+            vec_concatenate_(tmp->_labels,vec_clone(this->_labels,non_comm_idx1),vec_clone(rhs->_labels,non_comm_idx2));
+            
+            // these two cannot omp parallel, due to intrusive_ptr
+            for(cytnx_uint64 i=0; i<non_comm_idx1.size();i++)
+                tmp->_bonds.push_back(this->_bonds[non_comm_idx1[i]].clone());
+            for(cytnx_uint64 i=0; i<non_comm_idx2.size();i++)
+                tmp->_bonds.push_back(rhs->_bonds[non_comm_idx2[i]].clone());
+            
+            tmp->_is_tag = this->is_tag();
+            tmp->_Rowrank = this->Rowrank() + rhs->Rowrank();
+            for(cytnx_uint64 i=0; i<comm_idx1.size();i++)
+                if(comm_idx1[i] < this->_Rowrank) tmp->_Rowrank--;
+            for(cytnx_uint64 i=0;i<comm_idx2.size();i++)
+                if(comm_idx2[i] < rhs->_Rowrank) tmp->_Rowrank--;
+
+            if((this->is_diag() == rhs->is_diag()) && this->is_diag()){
+                //diag x diag:
+                tmp->_block = this->_block * rhs->get_block_();
+                tmp->_is_diag = true;
+            }else{
+                // diag x dense:
+                Tensor tmpL,tmpR;
+                if(this->is_diag()) tmpL = linalg::Diag(this->_block);
+                else tmpL = this->_block; 
+                if(rhs->is_diag()) tmpR = linalg::Diag(rhs->get_block_());
+                else tmpR =  rhs->get_block_(); // share view!!
+                tmp->_block = linalg::Tensordot(tmpL,tmpR,comm_idx1,comm_idx2);
+                tmp->_is_diag = false;
+            }
+            tmp->_is_braket_form = tmp->_update_braket();
+ 
+        }// check if no common index
                     
+        boost::intrusive_ptr<UniTensor_base> out(tmp);
+        return out;
 
     }
 

@@ -6,8 +6,10 @@ namespace cytnx{
     namespace linalg{
         Tensor Tensordot(const Tensor &Tl, const Tensor &Tr, const std::vector<cytnx_uint64> &idxl, const std::vector<cytnx_uint64> &idxr){
             //checking:
-            cytnx_error_msg(idxl.size() != idxr.size(),"[ERROR] the number of index to contract must be consist across two tensors.%s","\n");
-
+            cytnx_error_msg(idxl.size() != idxr.size(),"[ERROR] the number of index to trace must be consist across two tensors.%s","\n");
+            cytnx_error_msg(idxl.size()==0,"[ERROR] pass empty index list for trace. suggestion: call linalg::Otimes() instead?%s","\n");
+            cytnx_error_msg(Tl.device() != Tr.device(),"[ERROR] two tensor for Tensordot cannot on different devices.%s","\n");
+             
             std::vector<cytnx_uint64> mapperL,mapperR;
             std::vector<cytnx_uint64> non_contract_l = vec_erase(utils_internal::range_cpu(Tl.shape().size()),idxl);
             std::vector<cytnx_uint64> non_contract_r = vec_erase(utils_internal::range_cpu(Tr.shape().size()),idxr);
@@ -36,12 +38,12 @@ namespace cytnx{
             tmpL.reshape_({-1,comm_dim});
             tmpR.reshape_({comm_dim,-1});
                         
-            Tensor out = Matmul(tmpL,tmpR);
+            Tensor out = Matmul(tmpL,tmpR); 
             out.reshape_(new_shape);
             
             return out;
 
         }
-    }
 
+    }//linalg
 }
