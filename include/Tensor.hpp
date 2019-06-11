@@ -420,7 +420,7 @@ namespace cytnx{
                 this->_impl->permute_(rnks);
             }
 
-            Tensor permute(const std::vector<cytnx_uint64> &rnks){
+            Tensor permute(const std::vector<cytnx_uint64> &rnks) const{
                 Tensor out;
                 out._impl = this->_impl->permute(rnks);
                 return out;

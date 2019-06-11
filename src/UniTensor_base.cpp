@@ -120,6 +120,9 @@ namespace cytnx{
         void UniTensor_base::combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back, const bool &by_labels){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
+        boost::intrusive_ptr<UniTensor_base> UniTensor_base::contract(const boost::intrusive_ptr<UniTensor_base>&rhs){
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+        }
         //-----------------------------------------
         std::ostream& operator<<(std::ostream& os, const UniTensor &in){
             printf("Tensor name: %s\n",in.name().c_str());
@@ -139,7 +142,8 @@ namespace cytnx{
 
             return os;
         }
-        
+
+        /*        
         UniTensor contract(const UniTensor &inL, const UniTensor &inR){
             //checking :
             cytnx_error_msg(inL.is_blockform() != inR.is_blockform(),"[ERROR] cannot contract non-symmetry UniTensor with symmetry UniTensor%s","\n");
@@ -158,6 +162,6 @@ namespace cytnx{
                         
 
         }
-    
+        */
 }
 

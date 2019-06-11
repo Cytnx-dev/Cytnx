@@ -129,6 +129,8 @@ namespace cytnx{
             virtual boost::intrusive_ptr<UniTensor_base> to_dense();
             virtual void to_dense_();
             virtual void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back=false, const bool &by_label=true);
+            virtual boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs);
+            
             virtual ~UniTensor_base(){};
     };
     /// @endcond
@@ -262,7 +264,7 @@ namespace cytnx{
             }
 
             void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back=true, const bool &by_label=true);
-
+            boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs);
             ~DenseUniTensor(){};
             // end virtual function              
 
@@ -341,6 +343,7 @@ namespace cytnx{
                 cytnx_error_msg(true,"[ERROR] cannot to_dense_ a UniTensor with symmetry.%s","\n");
             }
             void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back=true, const bool &by_label=true){};
+            boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs){};
             ~SparseUniTensor(){};
             // end virtual func
     };
@@ -530,7 +533,7 @@ namespace cytnx{
 
     std::ostream& operator<<(std::ostream& os, const UniTensor &in);
 
-    UniTensor contract(const UniTensor &inL, const UniTensor &inR);
+    //UniTensor contract(const UniTensor &inL, const UniTensor &inR);
 
 }
 

@@ -186,6 +186,9 @@
       Eigh    |   x       |  Y  |  Y   |    Y 
       Matmul  |   x       |  Y  |  Y   |    N
       Diag    |   x       |  Y  |  Y   |    N
+    *Tensordot|   x       |  Y  |  Y   |    N
+    
+    * this is a high level linalg 
  
 ## Generators 
 

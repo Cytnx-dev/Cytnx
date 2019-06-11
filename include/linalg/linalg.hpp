@@ -80,6 +80,8 @@ namespace cytnx{
         // Diag:
         Tensor Diag(const Tensor &Tin);
         
+        //Tensordot:
+        Tensor Tensordot(const Tensor &Tl, const Tensor &Tr, const std::vector<cytnx_uint64> &idxl, const std::vector<cytnx_uint64> &idxr);
 
 
     }// namespace linalg

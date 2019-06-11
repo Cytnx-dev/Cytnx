@@ -357,6 +357,32 @@ namespace cytnx{
         return out;
     }
 
+    boost::intrusive_ptr<UniTensor_base> DenseUniTensor::contract(const boost::intrusive_ptr<UniTensor_base> &rhs){
+        //checking :
+        cytnx_error_msg(rhs->is_blockform() ,"[ERROR] cannot contract non-symmetry UniTensor with symmetry UniTensor%s","\n");
+        cytnx_error_msg(this->is_tag() != rhs->is_tag(), "[ERROR] cannot contract tagged UniTensor with untagged UniTensor.%s","\n");
+
+        //get common labels:    
+        std::vector<cytnx_int64> comm_labels;
+        std::vector<cytnx_uint64> comm_idx1,comm_idx2;
+        vec_intersect_(comm_labels,this->labels(),rhs->labels(),comm_idx1,comm_idx2);
+        std::vector<cytnx_uint64> non_comm_idx1 = vec_erase(utils_internal::range_cpu(this->rank()),comm_idx1);
+        std::vector<cytnx_uint64> non_comm_idx2 = vec_erase(utils_internal::range_cpu(rhs->rank()),comm_idx2);
+            
+        //construct new tensor:
+        std::vector<Bond> new_bonds;
+        std::vector<cytnx_int64> new_labels;
+        
+        DenseUniTensor *tmp = new DenseUniTensor();
+        
+
+        //inL.get_block().permute_(vec_conatenate(non_comm_idx1,comm_idx1));
+        
+
+                    
+
+    }
+
 
 }
 
