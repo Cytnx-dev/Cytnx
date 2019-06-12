@@ -7,7 +7,8 @@ LDFLAGS := -L$(CYTNX_ROOT)
 Tensor_example = Tensor_Init.e Tensor_to.e Tensor_to_.e Tensor_clone.e
 Storage_example = Storage_Init.e Storage_astype.e Storage_eq.e Storage_clone.e
 Bond_example = Bond_Init.e
-all: $(Tensor_example) $(Storage_example) $(Bond_example)
+Accessor_example = Accessor_ex.e
+all: $(Tensor_example) $(Storage_example) $(Bond_example) $(Accessor_example)
 
 
 Tensor_Init.e: ./Tensor/Init.cpp $(CYTNX_ROOT)/libcytnx.so
@@ -42,11 +43,14 @@ Storage_clone.e: ./Storage/clone.cpp $(CYTNX_ROOT)/libcytnx.so
 Bond_Init.e: ./Bond/Init.cpp $(CYTNX_ROOT)/libcytnx.so
 	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so 
 
+Accessor_ex.e: ./Accessor/example.cpp $(CYTNX_ROOT)/libcytnx.so
+	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so
+
 
 
 .phony: clean
 
 clean:
-	rm $(Tensor_example) $(Storage_example) $(Bond_example)
+	rm $(Tensor_example) $(Storage_example) $(Bond_example) $(Accessor_example)
 
 

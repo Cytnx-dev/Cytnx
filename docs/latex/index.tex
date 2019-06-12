@@ -171,7 +171,7 @@ Storage A(400,Type.Double);
 
 Storage B = A; \textcolor{comment}{// A and B share same memory, this is similar as python }
 
-Storage C = A.to(Device.cuda+0); 
+Storage C = A.\hyperlink{classcytnx_1_1Tensor_acf7f697a9434f9bc98a7d00a555ee982}{to}(Device.cuda+0); 
 \end{DoxyCode}
 
 \end{DoxyItemize}
@@ -190,10 +190,10 @@ Tensor B(\{3,4\},Type.Double,Device.cuda+0); \textcolor{comment}{// create tenso
 Tensor C = B; \textcolor{comment}{// C and B share same memory.}
 
 \textcolor{comment}{// move A to gpu}
-Tensor D = A.to(Device.cuda+0);
+Tensor D = A.\hyperlink{classcytnx_1_1Tensor_acf7f697a9434f9bc98a7d00a555ee982}{to}(Device.cuda+0);
 
 \textcolor{comment}{// inplace move A to gpu}
-A.to\_(Device.cuda+0);
+A.\hyperlink{classcytnx_1_1Tensor_a114a31fbb8bf4a90f150b6a67e42183a}{to\_}(Device.cuda+0);
 \end{DoxyCode}
 
 \item Type conversion in between avaliable\+: 

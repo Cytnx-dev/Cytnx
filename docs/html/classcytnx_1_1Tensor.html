@@ -380,18 +380,18 @@ Total elem: 60
 type  : Uint64
 cytnx device: CPU
 Shape : (3,4,5)
-[[[          577776800           577776800           552548216         -1663706266           581016632 ]
-  [         -413333528          1060546440           552600304           552597464          1191298080 ]
-  [          552600496           552597296          1635613581           552595560           552597520 ]
-  [        -1203645810           552597688           552597632         -1009075268           552595784 ]]
- [[          552597800           880160075           552597968           552597912          1117875808 ]
-  [          552598136           552598080         -1942206701           552598304           552598248 ]
-  [         -837631930           552595840          -413315592         -1360647617           552612728 ]
-  [         -413314648           146437637           552612840           552585848          -772597087 ]]
- [[          552612896           552612952           591770697           552610608          -413309224 ]
-  [          700012584           552613008           552613064          1174644491           552613232 ]
-  [          552613176          -429902810           552613400           552613344          1749880250 ]
-  [          552613568           552645472         -2101403139           552613680           552645544 ]]]
+[[[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]
+ [[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]
+ [[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]]
 
 
 
@@ -450,7 +450,7 @@ Shape : (3,4,5)
  to have a copy of the current tensor, we call clone to return a copy.</p>
 <h2>Example:</h2>
 <h3>c++ API:</h3>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A({3,4,5});</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A; <span class="comment">// B shares same object with A</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> C = A.<a class="code" href="classcytnx_1_1Storage.html#aed0530dd20f3fb352d45653ba46a3d50">clone</a>(); <span class="comment">// C is a copy of A</span></div><div class="line">    </div><div class="line">    <span class="comment">// use is() to check if two variable shares same object</span></div><div class="line">    cout &lt;&lt; is(B,A) &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; is(C,A) &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A({3,4,5});</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A; <span class="comment">// B shares same object with A</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> C = A.<a class="code" href="classcytnx_1_1Tensor.html#a5e2248e9babdb786167ed349df9084ae">clone</a>(); <span class="comment">// C is a copy of A</span></div><div class="line">    </div><div class="line">    <span class="comment">// use is() to check if two variable shares same object</span></div><div class="line">    cout &lt;&lt; is(B,A) &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; is(C,A) &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">1
 0
 </pre> <h3>python API:</h3>
@@ -710,18 +710,18 @@ Total elem: 60
 type  : Uint64
 cytnx device: CPU
 Shape : (3,4,5)
-[[[          577776800           577776800           552548216         -1663706266           581016632 ]
-  [         -413333528          1060546440           552600304           552597464          1191298080 ]
-  [          552600496           552597296          1635613581           552595560           552597520 ]
-  [        -1203645810           552597688           552597632         -1009075268           552595784 ]]
- [[          552597800           880160075           552597968           552597912          1117875808 ]
-  [          552598136           552598080         -1942206701           552598304           552598248 ]
-  [         -837631930           552595840          -413315592         -1360647617           552612728 ]
-  [         -413314648           146437637           552612840           552585848          -772597087 ]]
- [[          552612896           552612952           591770697           552610608          -413309224 ]
-  [          700012584           552613008           552613064          1174644491           552613232 ]
-  [          552613176          -429902810           552613400           552613344          1749880250 ]
-  [          552613568           552645472         -2101403139           552613680           552645544 ]]]
+[[[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]
+ [[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]
+ [[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]]
 
 
 
@@ -815,7 +815,7 @@ Shape : (3,4,5)
  see also: <a class="el" href="classcytnx_1_1Tensor.html#a114a31fbb8bf4a90f150b6a67e42183a">Tensor.to_ </a> <br />
  </p><h2>Example:</h2>
 <h3>c++ API:</h3>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A({3,4,5});</div><div class="line"></div><div class="line">    <span class="comment">//move the tensor to different device by creating a clone object</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A.<a class="code" href="classcytnx_1_1Tensor.html#acf7f697a9434f9bc98a7d00a555ee982">to</a>(Device.cuda+0);</div><div class="line">    cout &lt;&lt; B.<a class="code" href="classcytnx_1_1Tensor.html#a335f7625fa01784f49b2223238d0c14e">device_str</a>() &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; A.device_str() &lt;&lt; endl;    </div><div class="line"></div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div></div><!-- fragment --> <h4>output&gt;</h4>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A({3,4,5});</div><div class="line"></div><div class="line">    <span class="comment">//move the tensor to different device by creating a clone object</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A.<a class="code" href="classcytnx_1_1Tensor.html#acf7f697a9434f9bc98a7d00a555ee982">to</a>(Device.cuda+0);</div><div class="line">    cout &lt;&lt; B.<a class="code" href="classcytnx_1_1Tensor.html#a335f7625fa01784f49b2223238d0c14e">device_str</a>() &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; A.<a class="code" href="classcytnx_1_1Tensor.html#a335f7625fa01784f49b2223238d0c14e">device_str</a>() &lt;&lt; endl;    </div><div class="line"></div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">cytnx device: CUDA/GPU-id:0
 cytnx device: CPU
 </pre> <h3>python API:</h3>
@@ -860,7 +860,7 @@ cytnx device: CPU
  see also: <a class="el" href="classcytnx_1_1Tensor.html#acf7f697a9434f9bc98a7d00a555ee982">Tensor.to </a><br />
  </p><h2>Example:</h2>
 <h3>c++ API:</h3>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A({3,4,5});</div><div class="line"></div><div class="line">    <span class="comment">// move the instance tensor to different device</span></div><div class="line">    A.<a class="code" href="classcytnx_1_1Tensor.html#a114a31fbb8bf4a90f150b6a67e42183a">to_</a>(Device.cuda+0);</div><div class="line">    cout &lt;&lt; A.device_str() &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div></div><!-- fragment --> <h4>output&gt;</h4>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A({3,4,5});</div><div class="line"></div><div class="line">    <span class="comment">// move the instance tensor to different device</span></div><div class="line">    A.<a class="code" href="classcytnx_1_1Tensor.html#a114a31fbb8bf4a90f150b6a67e42183a">to_</a>(Device.cuda+0);</div><div class="line">    cout &lt;&lt; A.<a class="code" href="classcytnx_1_1Tensor.html#a335f7625fa01784f49b2223238d0c14e">device_str</a>() &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">cytnx device: CUDA/GPU-id:0
 </pre> <h3>python API:</h3>
 <div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line">A = Tensor([3,4,5])</div><div class="line"></div><div class="line">A.to_(Device.cuda+0);</div><div class="line">print(A.device_str())</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>

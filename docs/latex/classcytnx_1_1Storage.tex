@@ -90,15 +90,15 @@ description\+:
 \textcolor{comment}{        dtype =Type.Double [default],}
 \textcolor{comment}{    */}
     \hyperlink{classcytnx_1_1Storage}{Storage} A(10);
-    cout << A.dtype\_str() << endl;
+    cout << A.\hyperlink{classcytnx_1_1Tensor_a9e09106c7529e8be90caa52e1541e498}{dtype\_str}() << endl;
 
     \textcolor{comment}{// the type is the same as A's type, so B shares the same object with A}
-    \hyperlink{classcytnx_1_1Storage}{Storage} B = A.\hyperlink{classcytnx_1_1Storage_a8310d8dbb70510272ded2e3d01be25f0}{astype}(Type.Double); 
+    \hyperlink{classcytnx_1_1Storage}{Storage} B = A.astype(Type.Double); 
     cout << B.\hyperlink{classcytnx_1_1Storage_ab6e9fb01ad4655701a2d54dc978eef17}{dtype\_str}() << endl;
     cout << is(B,A) << endl; \textcolor{comment}{// true}
 
     \textcolor{comment}{// cast A from Type.Double to Type.Float}
-    \hyperlink{classcytnx_1_1Storage}{Storage} C = A.\hyperlink{classcytnx_1_1Storage_a8310d8dbb70510272ded2e3d01be25f0}{astype}(Type.Float);
+    \hyperlink{classcytnx_1_1Storage}{Storage} C = A.astype(Type.Float);
     cout << C.\hyperlink{classcytnx_1_1Storage_ab6e9fb01ad4655701a2d54dc978eef17}{dtype\_str}() << endl;
     cout << is(C, A) << endl; \textcolor{comment}{// false}
 
@@ -190,7 +190,7 @@ return a copy of current storage.
     \hyperlink{classcytnx_1_1Storage}{Storage} A(15);
 
     \hyperlink{classcytnx_1_1Storage}{Storage} B = A; \textcolor{comment}{// B shares same object with A}
-    \hyperlink{classcytnx_1_1Storage}{Storage} C = A.\hyperlink{classcytnx_1_1Storage_aed0530dd20f3fb352d45653ba46a3d50}{clone}(); \textcolor{comment}{// C is a copy of A}
+    \hyperlink{classcytnx_1_1Storage}{Storage} C = A.\hyperlink{classcytnx_1_1Tensor_a5e2248e9babdb786167ed349df9084ae}{clone}(); \textcolor{comment}{// C is a copy of A}
     
     \textcolor{comment}{// use is() to check if two variable shares same object}
     cout << is(B,A) << endl;
@@ -417,12 +417,12 @@ D.Init(10,dtype=Type.Double,device=Device.cpu)
 dtype : Double (Float64)
 device: cytnx device: CPU
 size  : 10
-[ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+[ 6.92196e-310 6.92196e-310 -1.45406e-127 6.92196e-310 6.92196e-310 -4.90239e-34 6.92196e-310 4.65605e-310 -4.55906e+167 6.92196e-310 ]
 
 dtype : Uint64
 device: cytnx device: CPU
 size  : 10
-[          1604111520          1604111520                   0                   0          1608224944          1607601648            -8436270          1608222288           617799920          -870057238  ]
+[           149519520           149519520           124299728           124299672          -356436677           124299896           124299840           -31276941           124300064           124300008  ]
 
 dtype : Double (Float64)
 device: cytnx device: CUDA/GPU-id:0
@@ -469,10 +469,10 @@ compare two \hyperlink{classcytnx_1_1Storage}{Storage}
 \textcolor{comment}{        dtype =Type.Double [default],}
 \textcolor{comment}{    */}
     \hyperlink{classcytnx_1_1Storage}{Storage} A(10);
-    cout << A.dtype\_str() << endl;
+    cout << A.\hyperlink{classcytnx_1_1Tensor_a9e09106c7529e8be90caa52e1541e498}{dtype\_str}() << endl;
 
     \hyperlink{classcytnx_1_1Storage}{Storage} B = A;  
-    \hyperlink{classcytnx_1_1Storage}{Storage} C = A.\hyperlink{classcytnx_1_1Storage_aed0530dd20f3fb352d45653ba46a3d50}{clone}();
+    \hyperlink{classcytnx_1_1Storage}{Storage} C = A.\hyperlink{classcytnx_1_1Tensor_a5e2248e9babdb786167ed349df9084ae}{clone}();
 
     cout << (B == A) << endl; \textcolor{comment}{// true (share same instance)}
     cout << is(B,A) << endl; \textcolor{comment}{// true (share same instance)}

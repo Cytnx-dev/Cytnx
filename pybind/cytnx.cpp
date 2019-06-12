@@ -118,6 +118,14 @@ PYBIND11_MODULE(cytnx,m){
                         return cytnx::ones(tmp,dtype,device);
                   },py::arg("size"),py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
 
+    m.def("arange",[](const cytnx_uint64 &Nelem, const unsigned int &dtype, const int &device)->Tensor{
+                        return cytnx::arange(Nelem,dtype,device);
+                  },py::arg("size"),py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
+
+    m.def("arange",[](const cytnx_double &start, const cytnx_double &end, const cytnx_double &step, const unsigned int &dtype, const int &device)->Tensor{
+                        return cytnx::arange(start,end,step,dtype,device);
+                  },py::arg("start"),py::arg("end"),py::arg("step") = double(1), py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
+
     py::class_<cytnx::Symmetry>(m,"Symmetry")
                 //construction
                 .def(py::init<>())
