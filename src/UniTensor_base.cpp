@@ -143,7 +143,7 @@ namespace cytnx{
             return os;
         }
 
-        UniTensor contract(const UniTensor &inL, const UniTensor &inR){
+        UniTensor Contract(const UniTensor &inL, const UniTensor &inR){
             return inL.contract(inR);
         }
         

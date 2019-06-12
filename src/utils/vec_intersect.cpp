@@ -26,13 +26,13 @@ namespace cytnx{
         std::vector<T> v2 = inR; // copy
         std::sort(v1.begin(), v1.end());
         std::sort(v2.begin(), v2.end());
-
+        
         std::set_intersection(v1.begin(),v1.end(),
                               v2.begin(),v2.end(),
                               back_inserter(out));
         for(cytnx_uint64 i=0;i<out.size();i++){
-            indices_v1.push_back(std::distance(v1.begin(),std::find(v1.begin(),v1.end(),out[i])));
-            indices_v2.push_back(std::distance(v2.begin(),std::find(v2.begin(),v2.end(),out[i])));
+            indices_v1.push_back(std::distance(inL.begin(),std::find(inL.begin(),inL.end(),out[i])));
+            indices_v2.push_back(std::distance(inR.begin(),std::find(inR.begin(),inR.end(),out[i])));
         }
     }
 

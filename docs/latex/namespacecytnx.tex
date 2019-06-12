@@ -70,9 +70,8 @@ bool {\bfseries operator==} (const \hyperlink{classcytnx_1_1Symmetry}{Symmetry} 
 \mbox{\Hypertarget{namespacecytnx_a651e9fae9c180966bc3655999e473a78}\label{namespacecytnx_a651e9fae9c180966bc3655999e473a78}} 
 std\+::ostream \& {\bfseries operator$<$$<$} (std\+::ostream \&os, const \hyperlink{classcytnx_1_1Tensor}{Tensor} \&in)
 \item 
-\mbox{\Hypertarget{namespacecytnx_a82ae0f76259f95cfe10256e8c3454921}\label{namespacecytnx_a82ae0f76259f95cfe10256e8c3454921}} 
-std\+::ostream \& {\bfseries operator$<$$<$} (std\+::ostream \&os, const \hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor} \&in)
-\item 
+\hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor} \hyperlink{namespacecytnx_aff129ee03a89358da36c843e471a8ef2}{Contract} (const \hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor} \&inL, const \hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor} \&inR)
+\begin{DoxyCompactList}\small\item\em Contract two \hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor} by tracing the ranks with common labels. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{namespacecytnx_a067e7063e7cc7a80c9c91d8998ab7134}\label{namespacecytnx_a067e7063e7cc7a80c9c91d8998ab7134}} 
 \hyperlink{classcytnx_1_1Tensor}{Tensor} {\bfseries operator+} (const \hyperlink{classcytnx_1_1Tensor}{Tensor} \&Lt, const \hyperlink{classcytnx_1_1Tensor}{Tensor} \&Rt)
 \item 
@@ -199,7 +198,27 @@ create an rank-\/1 \hyperlink{classcytnx_1_1Tensor}{Tensor} with elements define
 \begin{DoxyReturn}{Returns}
 \mbox{[}\hyperlink{classcytnx_1_1Tensor}{Tensor}\mbox{]} 
 \end{DoxyReturn}
-\mbox{\Hypertarget{namespacecytnx_a83fb7bbe73368751a0d0f535d4a10a33}\label{namespacecytnx_a83fb7bbe73368751a0d0f535d4a10a33}} 
+\mbox{\Hypertarget{namespacecytnx_aff129ee03a89358da36c843e471a8ef2}\label{namespacecytnx_aff129ee03a89358da36c843e471a8ef2}} 
+\index{cytnx@{cytnx}!Contract@{Contract}}
+\index{Contract@{Contract}!cytnx@{cytnx}}
+\subsubsection{\texorpdfstring{Contract()}{Contract()}}
+{\footnotesize\ttfamily \hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor} cytnx\+::\+Contract (\begin{DoxyParamCaption}\item[{const \hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor} \&}]{inL,  }\item[{const \hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor} \&}]{inR }\end{DoxyParamCaption})}
+
+
+
+Contract two \hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor} by tracing the ranks with common labels. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em inL} & the \hyperlink{classcytnx_1_1Tensor}{Tensor} \#1 \\
+\hline
+{\em inR} & the \hyperlink{classcytnx_1_1Tensor}{Tensor} \#2 \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{[}\hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor}\mbox{]}
+\end{DoxyReturn}
+See also \hyperlink{}{Uni\+Tensor.\+contract } \mbox{\Hypertarget{namespacecytnx_a83fb7bbe73368751a0d0f535d4a10a33}\label{namespacecytnx_a83fb7bbe73368751a0d0f535d4a10a33}} 
 \index{cytnx@{cytnx}!ones@{ones}}
 \index{ones@{ones}!cytnx@{cytnx}}
 \subsubsection{\texorpdfstring{ones()}{ones()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}

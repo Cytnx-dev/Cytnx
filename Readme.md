@@ -24,6 +24,10 @@
     * pybind11 2.2.4
     * numpy >= 1.15 
 
+    [MKL]
+    * icpc (if using with CUDA, v18- should be used)
+    
+
 ## ubuntu
     sudo apt-get install libboost-all-dev
 
@@ -187,7 +191,8 @@
       Matmul  |   x       |  Y  |  Y   |    N
       Diag    |   x       |  Y  |  Y   |    N
     *Tensordot|   x       |  Y  |  Y   |    N
-    
+     Otimes   |   x       |  Y  |  Y   |    N
+ 
     * this is a high level linalg 
  
 ## Generators 

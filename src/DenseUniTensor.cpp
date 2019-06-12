@@ -366,7 +366,6 @@ namespace cytnx{
         std::vector<cytnx_int64> comm_labels;
         std::vector<cytnx_uint64> comm_idx1,comm_idx2;
         vec_intersect_(comm_labels,this->labels(),rhs->labels(),comm_idx1,comm_idx2);
-
         //output instance:
         DenseUniTensor *tmp = new DenseUniTensor();
             

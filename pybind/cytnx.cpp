@@ -780,13 +780,26 @@ PYBIND11_MODULE(cytnx,m){
                  }) 
                 .def("to_dense",&cytnx::UniTensor::to_dense)
                 .def("to_dense_",&cytnx::UniTensor::to_dense_)
-                .def("combineBonds",&cytnx::UniTensor::combineBonds,py::arg("indicators"),py::arg("permute_back")=true,py::arg("by_label")=true);
+                .def("combineBonds",&cytnx::UniTensor::combineBonds,py::arg("indicators"),py::arg("permute_back")=true,py::arg("by_label")=true)
+                .def("contract", &cytnx::UniTensor::contract)
                 ;
-
+    
+    m.def("Contract",cytnx::Contract);
+    
     pybind11::module m_linalg = m.def_submodule("linalg","linear algebra related.");
 
     m_linalg.def("Svd",&cytnx::linalg::Svd,py::arg("Tin"),py::arg("is_U")=true,py::arg("is_vT")=true);
     m_linalg.def("Eigh",&cytnx::linalg::Eigh,py::arg("Tin"),py::arg("is_V")=false);
+    m_linalg.def("Exp",&cytnx::linalg::Exp,py::arg("Tin"));
+    m_linalg.def("Exp_",&cytnx::linalg::Exp_,py::arg("Tio"));
+    m_linalg.def("Inv",&cytnx::linalg::Inv,py::arg("Tin"));
+    m_linalg.def("Inv_",&cytnx::linalg::Inv_,py::arg("Tio"));
+    m_linalg.def("Conj",&cytnx::linalg::Inv,py::arg("Tin"));
+    m_linalg.def("Conj_",&cytnx::linalg::Inv_,py::arg("Tio"));
+    m_linalg.def("Matmul",&cytnx::linalg::Matmul,py::arg("T1"),py::arg("T2"));
+    m_linalg.def("Diag",&cytnx::linalg::Diag, py::arg("Tin"));
+    m_linalg.def("Tensordot",&cytnx::linalg::Tensordot, py::arg("T1"),py::arg("T2"),py::arg("indices_1"),py::arg("indices_2"));
+    m_linalg.def("Otimes",&cytnx::linalg::Otimes, py::arg("T1"),py::arg("T2"));
 
 }
 

@@ -352,6 +352,7 @@ namespace cytnx{
     /// @endcond
 
     //======================================================================
+
     ///@brief An Enhanced tensor specifically designed for physical Tensor network simulation 
     class UniTensor{
         private:
@@ -369,21 +370,48 @@ namespace cytnx{
             }
             ///@endcond
 
+            //@{
+            /**
+            @brief Initialize a UniTensor with cytnx::Tensor. 
+            @param in_tensor a cytnx::Tensor
+            @param Rowrank the Rowrank of the outcome UniTensor.
+    
+            [Note] 
+                1. The constructed UniTensor will have same rank as the input Tensor, with default labels, and a shared view (shared instance) of interal block as the input Tensor. 
+                2. The constructed UniTensor is always untagged. 
+            
+
+            */
             UniTensor(const Tensor &in_tensor, const cytnx_uint64 &Rowrank): _impl(new UniTensor_base()){
                 this->Init(in_tensor,Rowrank);
             }
-
-
-            UniTensor(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false): _impl(new UniTensor_base()){
-                this->Init(bonds,in_labels,Rowrank,dtype,device,is_diag);
-            }
-
             void Init(const Tensor &in_tensor, const cytnx_uint64 &Rowrank){
                boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
                out->Init_by_Tensor(in_tensor, Rowrank);
                this->_impl = out;
             }
+            //@}
 
+
+            //@{
+            /**
+            @brief Initialize a UniTensor. 
+            @param bonds the bond list. when init, each bond will be copy( not a shared view of bond object with input bond) 
+            @param in_labels the labels for each rank(bond)
+            @param Rowrank the rank of physical row space.
+            @param dtype the dtype of the UniTensor. It can be any type defined in cytnx::Type.
+            @param device the device that the UniTensor is put on. It can be any device defined in cytnx::Device.
+            @param is_diag if the constructed UniTensor is a diagonal UniTensor. 
+                This can only be assigned true when the UniTensor is square, untagged and rank-2 UniTensor. 
+    
+            [Note] 
+                1. the bonds cannot contain simutaneously untagged bond(s) and tagged bond(s)
+                2. If the bonds are with symmetry (qnums), the symmetry types should be the same across all the bonds.
+          
+            */
+            UniTensor(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false): _impl(new UniTensor_base()){
+                this->Init(bonds,in_labels,Rowrank,dtype,device,is_diag);
+            }
             void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false){
 
                 // checking type:
@@ -405,19 +433,45 @@ namespace cytnx{
                 }
                 this->_impl->Init(bonds, in_labels, Rowrank, dtype, device, is_diag);
             }
-            
+            //@}            
+
+            /**
+            @brief set the name of the UniTensor
+            @param in the name. It should be a string.
+
+            */
             void set_name(const std::string &in){
                 this->_impl->set_name(in);
             }
+            /**
+            @brief set a new label for bond at the assigned index.
+            @param idx the index of the bond.
+            @param new_label the new label that is assign to the bond.
+
+            [Note]
+                the new assign label cannot be the same as the label of any other bonds in the UniTensor.
+                ( cannot have duplicate labels )
+
+            */
             void set_label(const cytnx_uint64 &idx, const cytnx_int64 &new_label){
                 this->_impl->set_label(idx,new_label);
             }
+
+            /**
+            @brief set new labels for all the bonds.
+            @param new_labels the new labels for each bond.
+
+            [Note]
+                the new assign labels cannot have duplicate element(s), and should have the same size as the rank of UniTensor.
+
+            */
             void set_labels(const std::vector<cytnx_int64> &new_labels){
                 this->_impl->set_labels(new_labels);
             }
             void set_Rowrank(const cytnx_uint64 &new_Rowrank){
                 this->_impl->set_Rowrank(new_Rowrank);
             }
+
             template<class T>
             T& item(){
 
@@ -539,9 +593,21 @@ namespace cytnx{
     
     };
 
+    ///@cond
     std::ostream& operator<<(std::ostream& os, const UniTensor &in);
+    ///@endcond
 
-    UniTensor contract(const UniTensor &inL, const UniTensor &inR);
+    /**
+    @brief Contract two UniTensor by tracing the ranks with common labels.
+    @param inL the Tensor #1
+    @param inR the Tensor #2
+    @return 
+        [UniTensor]
+
+    See also \link cytnx::UniTensor::contract UniTensor.contract \endlink
+
+    */
+    UniTensor Contract(const UniTensor &inL, const UniTensor &inR);
 
 
 }

@@ -144,9 +144,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const
 <tr class="memitem:a651e9fae9c180966bc3655999e473a78"><td class="memItemLeft" align="right" valign="top"><a id="a651e9fae9c180966bc3655999e473a78"></a>
 std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (std::ostream &amp;os, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;in)</td></tr>
 <tr class="separator:a651e9fae9c180966bc3655999e473a78"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82ae0f76259f95cfe10256e8c3454921"><td class="memItemLeft" align="right" valign="top"><a id="a82ae0f76259f95cfe10256e8c3454921"></a>
-std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (std::ostream &amp;os, const <a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> &amp;in)</td></tr>
-<tr class="separator:a82ae0f76259f95cfe10256e8c3454921"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff129ee03a89358da36c843e471a8ef2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#aff129ee03a89358da36c843e471a8ef2">Contract</a> (const <a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> &amp;inL, const <a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> &amp;inR)</td></tr>
+<tr class="memdesc:aff129ee03a89358da36c843e471a8ef2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contract two <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">UniTensor</a> by tracing the ranks with common labels.  <a href="#aff129ee03a89358da36c843e471a8ef2">More...</a><br /></td></tr>
+<tr class="separator:aff129ee03a89358da36c843e471a8ef2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a067e7063e7cc7a80c9c91d8998ab7134"><td class="memItemLeft" align="right" valign="top"><a id="a067e7063e7cc7a80c9c91d8998ab7134"></a>
 <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator+</b> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Lt, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Rt)</td></tr>
 <tr class="separator:a067e7063e7cc7a80c9c91d8998ab7134"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -330,6 +330,45 @@ Type_class&#160;</td><td class="memItemRight" valign="bottom"><b>Type</b></td></
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>] </dd></dl>
+
+</div>
+</div>
+<a id="aff129ee03a89358da36c843e471a8ef2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff129ee03a89358da36c843e471a8ef2">&#9670;&nbsp;</a></span>Contract()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> cytnx::Contract </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>inL</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>inR</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Contract two <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">UniTensor</a> by tracing the ranks with common labels. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">inL</td><td>the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> #1 </td></tr>
+    <tr><td class="paramname">inR</td><td>the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> #2 </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">UniTensor</a>]</dd></dl>
+<p>See also <a class="el" href="">UniTensor.contract </a> </p>
 
 </div>
 </div>

@@ -115,15 +115,29 @@ int main(int argc, char *argv[]){
 
     std::vector<Bond> bds = {bd_1,bd_2,bd_3}; 
     std::vector<cytnx_int64> labels = {};
-    
-    
+        
     UniTensor ut1(bds,{},2);
+    UniTensor ut2 = ut1.clone();
     ut1.print_diagram();
     cout << ut1 << endl;
     ut1.combineBonds({2,0},true,false);
     ut1.print_diagram();
-    cout << ut1 << endl;
+    ut2.print_diagram();
+    ut2.set_label(2,-4);
+    ut2.print_diagram();
 
+    UniTensor ut3 = Contract(ut1,ut2);
+    ut3.print_diagram();
+
+
+
+
+    //cout << ut1 << endl;
+
+    //cout << ut2 << endl;
+
+
+    /*
     Tensor x1 = arange(2*3*4);
     x1.reshape_({2,3,4});
     cout << x1 << endl;
@@ -134,6 +148,7 @@ int main(int argc, char *argv[]){
     cout << x1.is_contiguous() << endl;
     x1.contiguous_();
     cout << x1 << endl;
+    */
     //x1.reshape_({2,2,3,2});
     //cout << x1 << endl;
 

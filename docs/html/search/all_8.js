@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['print_5finfo',['print_info',['../classcytnx_1_1Storage.html#a0ae2bee5e15c651b05dadf5dbbdb36f5',1,'cytnx::Storage']]]
+  ['nsym',['Nsym',['../classcytnx_1_1Bond.html#acd46a218add6a88c1cc9035b06adb7b6',1,'cytnx::Bond']]]
 ];
