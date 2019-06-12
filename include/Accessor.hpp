@@ -21,6 +21,7 @@ namespace cytnx{
             // if type is range, loc              are not used.
 
         public:
+            ///@cond
             enum : cytnx_int64{
                 none,
                 Singl,
@@ -29,39 +30,54 @@ namespace cytnx{
             };
 
             Accessor(): type(Accessor::none){};
+            ///@endcond
 
             // singul constr.
+            /**
+            @brief access the specific index at the assigned rank in Tensor.
+            @param loc the specify index 
+            */
             Accessor(const cytnx_int64 &loc);
 
+            ///@cond
             // all constr. ( use string to dispatch )            
             Accessor(const std::string &str);
 
             // range constr. 
             Accessor(const cytnx_int64 &min, const cytnx_int64 &max, const cytnx_int64 &step);
 
-
             //copy constructor:
             Accessor(const Accessor& rhs);
-
             //copy assignment:
             Accessor& operator=(const Accessor& rhs);
+            ///@endcond
 
             //handy generator function :
+            /**
+            @brief access the whole rank, this is similar to [:] in python 
+            */
             static Accessor all(){
                 return Accessor(std::string("s"));
             };
-
+            /**
+            @brief access the range at assigned rank, this is similar to [min:max:step] in python 
+            @param min 
+            @param max
+            @param step
+            */
             static Accessor range(const cytnx_int64 &min, 
                                   const cytnx_int64 &max, 
                                   const cytnx_int64 &step=1){
                 return Accessor(min,max,step);
             };
 
+            ///@cond
             // get the real len from dim
             // if type is all, pos will be null, and len == dim
             // if type is range, pos will be the locator, and len == len(pos)
             // if type is singl, pos will be pos, and len == 0 
             void get_len_pos(const cytnx_uint64 &dim, cytnx_uint64 &len, std::vector<cytnx_uint64> &pos) const;
+            ///@endcond
     };
 
 }// namespace cytnx

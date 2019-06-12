@@ -65,7 +65,6 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classcytnx_1_1Accessor-members.html">List of all members</a>  </div>
@@ -79,48 +78,105 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="Accessor_8hpp_source.html">Accessor.hpp</a>&gt;</code></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:aae988b37daecd3e9564e507d1225f8ce"><td class="memItemLeft" align="right" valign="top"><a id="aae988b37daecd3e9564e507d1225f8ce"></a>enum &#160;</td><td class="memItemRight" valign="bottom">: cytnx_int64 { <b>none</b>, 
-<b>Singl</b>, 
-<b>All</b>, 
-<b>Range</b>
- }</td></tr>
-<tr class="separator:aae988b37daecd3e9564e507d1225f8ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9f6fa9087f09756e020355a05196d384"><td class="memItemLeft" align="right" valign="top"><a id="a9f6fa9087f09756e020355a05196d384"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Accessor</b> (const cytnx_int64 &amp;loc)</td></tr>
+<tr class="memitem:a9f6fa9087f09756e020355a05196d384"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Accessor.html#a9f6fa9087f09756e020355a05196d384">Accessor</a> (const cytnx_int64 &amp;loc)</td></tr>
+<tr class="memdesc:a9f6fa9087f09756e020355a05196d384"><td class="mdescLeft">&#160;</td><td class="mdescRight">access the specific index at the assigned rank in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>.  <a href="#a9f6fa9087f09756e020355a05196d384">More...</a><br /></td></tr>
 <tr class="separator:a9f6fa9087f09756e020355a05196d384"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aefb1304726a9b229f3929e2b9d439602"><td class="memItemLeft" align="right" valign="top"><a id="aefb1304726a9b229f3929e2b9d439602"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Accessor</b> (const std::string &amp;str)</td></tr>
-<tr class="separator:aefb1304726a9b229f3929e2b9d439602"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac0f2ae43a1a31db04ac9d4fafb70fea6"><td class="memItemLeft" align="right" valign="top"><a id="ac0f2ae43a1a31db04ac9d4fafb70fea6"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Accessor</b> (const cytnx_int64 &amp;min, const cytnx_int64 &amp;max, const cytnx_int64 &amp;step)</td></tr>
-<tr class="separator:ac0f2ae43a1a31db04ac9d4fafb70fea6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b7d3e3d7f2640ededbc207b468c8dc9"><td class="memItemLeft" align="right" valign="top"><a id="a6b7d3e3d7f2640ededbc207b468c8dc9"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Accessor</b> (const <a class="el" href="classcytnx_1_1Accessor.html">Accessor</a> &amp;rhs)</td></tr>
-<tr class="separator:a6b7d3e3d7f2640ededbc207b468c8dc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0eb2fc1c85e7accff2078d85c8cf1cda"><td class="memItemLeft" align="right" valign="top"><a id="a0eb2fc1c85e7accff2078d85c8cf1cda"></a>
-<a class="el" href="classcytnx_1_1Accessor.html">Accessor</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classcytnx_1_1Accessor.html">Accessor</a> &amp;rhs)</td></tr>
-<tr class="separator:a0eb2fc1c85e7accff2078d85c8cf1cda"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad581c89553f55c4ce23de58e4499bdda"><td class="memItemLeft" align="right" valign="top"><a id="ad581c89553f55c4ce23de58e4499bdda"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>get_len_pos</b> (const cytnx_uint64 &amp;dim, cytnx_uint64 &amp;len, std::vector&lt; cytnx_uint64 &gt; &amp;pos) const</td></tr>
-<tr class="separator:ad581c89553f55c4ce23de58e4499bdda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a71b8c4af7182a2c9144929bdef9ff4fd"><td class="memItemLeft" align="right" valign="top"><a id="a71b8c4af7182a2c9144929bdef9ff4fd"></a>
-static <a class="el" href="classcytnx_1_1Accessor.html">Accessor</a>&#160;</td><td class="memItemRight" valign="bottom"><b>all</b> ()</td></tr>
+static <a class="el" href="classcytnx_1_1Accessor.html">Accessor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Accessor.html#a71b8c4af7182a2c9144929bdef9ff4fd">all</a> ()</td></tr>
+<tr class="memdesc:a71b8c4af7182a2c9144929bdef9ff4fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">access the whole rank, this is similar to [:] in python <br /></td></tr>
 <tr class="separator:a71b8c4af7182a2c9144929bdef9ff4fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a5a508a58b71897c3dd162195aceaa9"><td class="memItemLeft" align="right" valign="top"><a id="a7a5a508a58b71897c3dd162195aceaa9"></a>
-static <a class="el" href="classcytnx_1_1Accessor.html">Accessor</a>&#160;</td><td class="memItemRight" valign="bottom"><b>range</b> (const cytnx_int64 &amp;min, const cytnx_int64 &amp;max, const cytnx_int64 &amp;step=1)</td></tr>
+<tr class="memitem:a7a5a508a58b71897c3dd162195aceaa9"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcytnx_1_1Accessor.html">Accessor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Accessor.html#a7a5a508a58b71897c3dd162195aceaa9">range</a> (const cytnx_int64 &amp;min, const cytnx_int64 &amp;max, const cytnx_int64 &amp;step=1)</td></tr>
+<tr class="memdesc:a7a5a508a58b71897c3dd162195aceaa9"><td class="mdescLeft">&#160;</td><td class="mdescRight">access the range at assigned rank, this is similar to [min:max:step] in python  <a href="#a7a5a508a58b71897c3dd162195aceaa9">More...</a><br /></td></tr>
 <tr class="separator:a7a5a508a58b71897c3dd162195aceaa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>object that mimic the python slice to access elements in C++ [this is for c++ API only]. </p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a9f6fa9087f09756e020355a05196d384"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f6fa9087f09756e020355a05196d384">&#9670;&nbsp;</a></span>Accessor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cytnx::Accessor::Accessor </td>
+          <td>(</td>
+          <td class="paramtype">const cytnx_int64 &amp;&#160;</td>
+          <td class="paramname"><em>loc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>access the specific index at the assigned rank in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>the specify index </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a7a5a508a58b71897c3dd162195aceaa9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a5a508a58b71897c3dd162195aceaa9">&#9670;&nbsp;</a></span>range()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classcytnx_1_1Accessor.html">Accessor</a> cytnx::Accessor::range </td>
+          <td>(</td>
+          <td class="paramtype">const cytnx_int64 &amp;&#160;</td>
+          <td class="paramname"><em>min</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const cytnx_int64 &amp;&#160;</td>
+          <td class="paramname"><em>max</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const cytnx_int64 &amp;&#160;</td>
+          <td class="paramname"><em>step</em> = <code>1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>access the range at assigned rank, this is similar to [min:max:step] in python </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">min</td><td></td></tr>
+    <tr><td class="paramname">max</td><td></td></tr>
+    <tr><td class="paramname">step</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/<a class="el" href="Accessor_8hpp_source.html">Accessor.hpp</a></li>
 </ul>
 </div><!-- contents -->
