@@ -26,10 +26,7 @@ for texe in Storage_exes:
     print("================") 
 
 for texe in Bond_exes:
-    if(len(texe.split(".e")[0].split("Bond_"))>1):
-        output_name = "combineBond_.cpp.out"
-    else:
-        output_name = (texe.split(".e")[0]).split("Bond_")[-1] + ".cpp.out"
+    output_name = (texe.split(".e")[0]).split("Bond_")[-1] + ".cpp.out"
     os.system("./%s > Bond/%s"%(texe,output_name))
     print(texe)
     print("================") 
