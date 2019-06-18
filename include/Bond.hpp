@@ -206,13 +206,13 @@ namespace cytnx{
 
             ## Example:
             ### c++ API:
-            \include example/Bond/combindBond_.cpp
+            \include example/Bond/combineBondinplace.cpp
             #### output>
-            \verbinclude example/Bond/combindBond_.cpp.out
+            \verbinclude example/Bond/combineBondinplace.cpp.out
             ### python API:
-            \include example/Bond/combindBond_.py               
+            \include example/Bond/combineBondinplace.py               
             #### output>
-            \verbinclude example/Bond/combindBond_.py.out
+            \verbinclude example/Bond/combineBondinplace.py.out
             */
             void combineBond_(const Bond &bd_in){
                 this->_impl->combineBond_(bd_in._impl);
@@ -223,6 +223,15 @@ namespace cytnx{
             @param bd_in the bond that to be combined.
             @return [Bond] a new combined bond instance.
 
+            ## Example:
+            ### c++ API:
+            \include example/Bond/combineBond.cpp
+            #### output>
+            \verbinclude example/Bond/combineBond.cpp.out
+            ### python API:
+            \include example/Bond/combineBond.py               
+            #### output>
+            \verbinclude example/Bond/combineBond.py.out
             */
             Bond combineBond(const Bond &bd_in){
                 Bond out;

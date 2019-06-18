@@ -119,6 +119,7 @@ bd_sym = cytnx.Bond(3,cytnx.bondType.BD_KET,\
                          cytnx.Symmetry.U1()])
 print(bd_sym)
 
+print(bd_sym == bd_sym)
 bd_1 = cytnx.Bond(3)
 bd_2 = cytnx.Bond(2)
 bd_3 = cytnx.Bond(4)
