@@ -184,10 +184,14 @@ namespace cytnx{
             void to_(const int &device){
                 this->_block.to_(device);
             }
-            boost::intrusive_ptr<UniTensor_base> to(const int &device) const{
-                boost::intrusive_ptr<UniTensor_base> out = this->clone();
-                out->to_(device);
-                return out;    
+            boost::intrusive_ptr<UniTensor_base> to(const int &device){
+                if(this->device() == device){
+                    return this;
+                }else{
+                    boost::intrusive_ptr<UniTensor_base> out = this->clone();
+                    out->to_(device);
+                    return out;   
+                } 
             }
             boost::intrusive_ptr<UniTensor_base> clone() const{
                 DenseUniTensor* tmp = this->clone_meta();

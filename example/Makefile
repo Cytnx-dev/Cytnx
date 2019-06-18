@@ -6,7 +6,7 @@ LDFLAGS := -L$(CYTNX_ROOT)
 
 Tensor_example = Tensor_Init.e Tensor_to.e Tensor_to_.e Tensor_clone.e
 Storage_example = Storage_Init.e Storage_astype.e Storage_eq.e Storage_clone.e
-Bond_example = Bond_Init.e
+Bond_example = Bond_Init.e Bond_clone.e Bond_combineBond_.e
 Accessor_example = Accessor_ex.e
 all: $(Tensor_example) $(Storage_example) $(Bond_example) $(Accessor_example)
 
@@ -41,6 +41,10 @@ Storage_clone.e: ./Storage/clone.cpp $(CYTNX_ROOT)/libcytnx.so
 
 
 Bond_Init.e: ./Bond/Init.cpp $(CYTNX_ROOT)/libcytnx.so
+	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so 
+Bond_clone.e: ./Bond/clone.cpp $(CYTNX_ROOT)/libcytnx.so
+	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so 
+Bond_combineBond_.e: ./Bond/combineBond_.cpp $(CYTNX_ROOT)/libcytnx.so
 	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so 
 
 Accessor_ex.e: ./Accessor/example.cpp $(CYTNX_ROOT)/libcytnx.so

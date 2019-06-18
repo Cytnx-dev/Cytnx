@@ -153,6 +153,7 @@ PYBIND11_MODULE(cytnx,m){
                 std::cout << self << std::endl;
                 return std::string("");
              })
+            .def("__eq__",&cytnx::Bond::operator==)
             .def("type",&cytnx::Bond::type)
             .def("qnums",&cytnx::Bond::qnums)
             .def("dim", &cytnx::Bond::dim)
@@ -728,7 +729,10 @@ PYBIND11_MODULE(cytnx,m){
                 .def("bonds",&cytnx::UniTensor::bonds)
                 .def("shape",&cytnx::UniTensor::shape)
                 .def("to_",&cytnx::UniTensor::to_)
-                .def("to",&cytnx::UniTensor::to)
+                .def("to_different_device" ,[](cytnx::UniTensor &self,const cytnx_int64 &device){
+                                                    cytnx_error_msg(self.device() == device, "[ERROR][pybind][to_diffferent_device] same device for to() should be handle in python side.%s","\n");
+                                                    return self.to(device);
+                                                } , py::arg("device"))
                 .def("clone",&cytnx::UniTensor::clone)
                 //.def("permute",&cytnx::UniTensor::permute,py::arg("mapper"),py::arg("Rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
                 //.def("permute_",&cytnx::UniTensor::permute_,py::arg("mapper"),py::arg("Rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)

@@ -34,17 +34,16 @@ void \hyperlink{classcytnx_1_1Bond_a6272e30153df85944fc98bf5419dc1c8}{clear\+\_\
 \begin{DoxyCompactList}\small\item\em change the tag-\/type to the default value B\+D\+\_\+\+R\+EG \end{DoxyCompactList}\item 
 \hyperlink{classcytnx_1_1Bond}{Bond} \hyperlink{classcytnx_1_1Bond_a8c4d6443ffe7c3f3ecd8c474fd9a18eb}{clone} () const
 \begin{DoxyCompactList}\small\item\em return a copy of the instance \hyperlink{classcytnx_1_1Bond}{Bond} \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classcytnx_1_1Bond_ac21ab26ec469ac56ae78c9e4bbbe7040}\label{classcytnx_1_1Bond_ac21ab26ec469ac56ae78c9e4bbbe7040}} 
-void {\bfseries combine\+Bond\+\_\+} (const \hyperlink{classcytnx_1_1Bond}{Bond} \&bd\+\_\+in)
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Bond_a609c034885efa32fc244be82a56e1f8c}\label{classcytnx_1_1Bond_a609c034885efa32fc244be82a56e1f8c}} 
-\hyperlink{classcytnx_1_1Bond}{Bond} {\bfseries combine\+Bond} (const \hyperlink{classcytnx_1_1Bond}{Bond} \&bd\+\_\+in)
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Bond_a4a1d060cf2d0c44d83356df757a802d1}\label{classcytnx_1_1Bond_a4a1d060cf2d0c44d83356df757a802d1}} 
-\hyperlink{classcytnx_1_1Bond}{Bond} {\bfseries combine\+Bonds} (const std\+::vector$<$ \hyperlink{classcytnx_1_1Bond}{Bond} $>$ \&bds)
-\item 
-\mbox{\Hypertarget{classcytnx_1_1Bond_a1fd655bfe0845839502b6e385d743078}\label{classcytnx_1_1Bond_a1fd655bfe0845839502b6e385d743078}} 
-void {\bfseries combine\+Bonds\+\_\+} (const std\+::vector$<$ \hyperlink{classcytnx_1_1Bond}{Bond} $>$ \&bds)
+void \hyperlink{classcytnx_1_1Bond_ac21ab26ec469ac56ae78c9e4bbbe7040}{combine\+Bond\+\_\+} (const \hyperlink{classcytnx_1_1Bond}{Bond} \&bd\+\_\+in)
+\begin{DoxyCompactList}\small\item\em combine the input bond with self, inplacely \end{DoxyCompactList}\item 
+\hyperlink{classcytnx_1_1Bond}{Bond} \hyperlink{classcytnx_1_1Bond_a609c034885efa32fc244be82a56e1f8c}{combine\+Bond} (const \hyperlink{classcytnx_1_1Bond}{Bond} \&bd\+\_\+in)
+\begin{DoxyCompactList}\small\item\em combine the input bond with self, and return a new combined \hyperlink{classcytnx_1_1Bond}{Bond} instance. \end{DoxyCompactList}\item 
+\hyperlink{classcytnx_1_1Bond}{Bond} \hyperlink{classcytnx_1_1Bond_a4a1d060cf2d0c44d83356df757a802d1}{combine\+Bonds} (const std\+::vector$<$ \hyperlink{classcytnx_1_1Bond}{Bond} $>$ \&bds)
+\begin{DoxyCompactList}\small\item\em combine multiple input bonds with self, and return a new combined \hyperlink{classcytnx_1_1Bond}{Bond} instance. \end{DoxyCompactList}\item 
+void \hyperlink{classcytnx_1_1Bond_a1fd655bfe0845839502b6e385d743078}{combine\+Bonds\+\_\+} (const std\+::vector$<$ \hyperlink{classcytnx_1_1Bond}{Bond} $>$ \&bds)
+\begin{DoxyCompactList}\small\item\em combine multiple input bonds with self, inplacely \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classcytnx_1_1Bond_a3505ee4175e05332e4965fd719aed840}\label{classcytnx_1_1Bond_a3505ee4175e05332e4965fd719aed840}} 
+bool {\bfseries operator==} (const \hyperlink{classcytnx_1_1Bond}{Bond} \&rhs)
 \end{DoxyCompactItemize}
 
 
@@ -63,8 +62,171 @@ the object contains auxiliary properties for each \hyperlink{classcytnx_1_1Tenso
 return a copy of the instance \hyperlink{classcytnx_1_1Bond}{Bond} 
 
 \begin{DoxyReturn}{Returns}
-\mbox{[}\hyperlink{classcytnx_1_1Bond}{Bond}\mbox{]} a new instance of \hyperlink{classcytnx_1_1Bond}{Bond} that have the same contents 
+\mbox{[}\hyperlink{classcytnx_1_1Bond}{Bond}\mbox{]} a new instance of \hyperlink{classcytnx_1_1Bond}{Bond} that have the same contents
 \end{DoxyReturn}
+\subsubsection*{Example\+:}
+
+\paragraph*{c++ A\+PI\+:}
+
+
+\begin{DoxyCodeInclude}
+\textcolor{preprocessor}{#include "cytnx.hpp"}
+\textcolor{preprocessor}{#include <iostream>}
+
+
+\textcolor{keyword}{using namespace }\hyperlink{namespacecytnx}{cytnx};
+\textcolor{keyword}{using namespace }std;
+\textcolor{keywordtype}{int} main()\{ 
+
+    \textcolor{comment}{/* 1.}
+\textcolor{comment}{        create a non-symmetry, regular bond (BD\_REG) }
+\textcolor{comment}{        with dimension 10}
+\textcolor{comment}{    */}
+    \hyperlink{classcytnx_1_1Bond}{Bond} bd\_a = \hyperlink{classcytnx_1_1Bond}{Bond}(10);
+    cout << bd\_a << endl;
+
+    \hyperlink{classcytnx_1_1Bond}{Bond} bd\_b = bd\_a;
+    \hyperlink{classcytnx_1_1Bond}{Bond} bd\_c = bd\_a.\hyperlink{classcytnx_1_1Bond_a8c4d6443ffe7c3f3ecd8c474fd9a18eb}{clone}();
+
+    cout << is(bd\_b,bd\_a) << endl; \textcolor{comment}{//true, the same instance}
+    cout << is(bd\_c,bd\_a) << endl; \textcolor{comment}{//false, different instance}
+
+    cout << (bd\_b == bd\_a) << endl; \textcolor{comment}{//true, same content}
+    cout << (bd\_c == bd\_a) << endl; \textcolor{comment}{//true, same content}
+
+    \textcolor{keywordflow}{return} 0;
+
+\}
+
+\end{DoxyCodeInclude}
+ \subparagraph*{output$>$}
+
+
+\begin{DoxyVerbInclude}
+Dim = 10 |type: REGULAR 
+
+1
+0
+1
+1
+\end{DoxyVerbInclude}
+ \paragraph*{python A\+PI\+:}
+
+
+\begin{DoxyCodeInclude}
+\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *
+
+bd\_a = Bond(10)
+print(bd\_a)
+
+bd\_b = bd\_a;
+bd\_c = bd\_a.clone();
+
+print(bd\_b \textcolor{keywordflow}{is} bd\_a) \textcolor{comment}{#true}
+print(bd\_c \textcolor{keywordflow}{is} bd\_a) \textcolor{comment}{#false}
+print(bd\_b == bd\_a) \textcolor{comment}{#true}
+print(bd\_c == bd\_a) \textcolor{comment}{#true}
+\end{DoxyCodeInclude}
+ \subparagraph*{output$>$}
+
+
+\begin{DoxyVerbInclude}
+Dim = 10 |type: REGULAR 
+
+
+True
+False
+True
+True
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Bond_a609c034885efa32fc244be82a56e1f8c}\label{classcytnx_1_1Bond_a609c034885efa32fc244be82a56e1f8c}} 
+\index{cytnx\+::\+Bond@{cytnx\+::\+Bond}!combine\+Bond@{combine\+Bond}}
+\index{combine\+Bond@{combine\+Bond}!cytnx\+::\+Bond@{cytnx\+::\+Bond}}
+\subsubsection{\texorpdfstring{combine\+Bond()}{combineBond()}}
+{\footnotesize\ttfamily \hyperlink{classcytnx_1_1Bond}{Bond} cytnx\+::\+Bond\+::combine\+Bond (\begin{DoxyParamCaption}\item[{const \hyperlink{classcytnx_1_1Bond}{Bond} \&}]{bd\+\_\+in }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+combine the input bond with self, and return a new combined \hyperlink{classcytnx_1_1Bond}{Bond} instance. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bd\+\_\+in} & the bond that to be combined. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{[}\hyperlink{classcytnx_1_1Bond}{Bond}\mbox{]} a new combined bond instance. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcytnx_1_1Bond_ac21ab26ec469ac56ae78c9e4bbbe7040}\label{classcytnx_1_1Bond_ac21ab26ec469ac56ae78c9e4bbbe7040}} 
+\index{cytnx\+::\+Bond@{cytnx\+::\+Bond}!combine\+Bond\+\_\+@{combine\+Bond\+\_\+}}
+\index{combine\+Bond\+\_\+@{combine\+Bond\+\_\+}!cytnx\+::\+Bond@{cytnx\+::\+Bond}}
+\subsubsection{\texorpdfstring{combine\+Bond\+\_\+()}{combineBond\_()}}
+{\footnotesize\ttfamily void cytnx\+::\+Bond\+::combine\+Bond\+\_\+ (\begin{DoxyParamCaption}\item[{const \hyperlink{classcytnx_1_1Bond}{Bond} \&}]{bd\+\_\+in }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+combine the input bond with self, inplacely 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bd\+\_\+in} & the bond that to be combined with self.\\
+\hline
+\end{DoxyParams}
+\subsubsection*{Example\+:}
+
+\paragraph*{c++ A\+PI\+:}
+
+
+\begin{DoxyCodeInclude}
+\end{DoxyCodeInclude}
+ \subparagraph*{output$>$}
+
+
+\begin{DoxyVerbInclude}
+\end{DoxyVerbInclude}
+ \paragraph*{python A\+PI\+:}
+
+
+\begin{DoxyCodeInclude}
+\end{DoxyCodeInclude}
+ \subparagraph*{output$>$}
+
+
+\begin{DoxyVerbInclude}
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Bond_a4a1d060cf2d0c44d83356df757a802d1}\label{classcytnx_1_1Bond_a4a1d060cf2d0c44d83356df757a802d1}} 
+\index{cytnx\+::\+Bond@{cytnx\+::\+Bond}!combine\+Bonds@{combine\+Bonds}}
+\index{combine\+Bonds@{combine\+Bonds}!cytnx\+::\+Bond@{cytnx\+::\+Bond}}
+\subsubsection{\texorpdfstring{combine\+Bonds()}{combineBonds()}}
+{\footnotesize\ttfamily \hyperlink{classcytnx_1_1Bond}{Bond} cytnx\+::\+Bond\+::combine\+Bonds (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \hyperlink{classcytnx_1_1Bond}{Bond} $>$ \&}]{bds }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+combine multiple input bonds with self, and return a new combined \hyperlink{classcytnx_1_1Bond}{Bond} instance. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bds} & the bonds that to be combined with self. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{[}\hyperlink{classcytnx_1_1Bond}{Bond}\mbox{]} a new combined bond instance. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcytnx_1_1Bond_a1fd655bfe0845839502b6e385d743078}\label{classcytnx_1_1Bond_a1fd655bfe0845839502b6e385d743078}} 
+\index{cytnx\+::\+Bond@{cytnx\+::\+Bond}!combine\+Bonds\+\_\+@{combine\+Bonds\+\_\+}}
+\index{combine\+Bonds\+\_\+@{combine\+Bonds\+\_\+}!cytnx\+::\+Bond@{cytnx\+::\+Bond}}
+\subsubsection{\texorpdfstring{combine\+Bonds\+\_\+()}{combineBonds\_()}}
+{\footnotesize\ttfamily void cytnx\+::\+Bond\+::combine\+Bonds\+\_\+ (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \hyperlink{classcytnx_1_1Bond}{Bond} $>$ \&}]{bds }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+combine multiple input bonds with self, inplacely 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bds} & the bonds that to be combined with self. \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{classcytnx_1_1Bond_aa072647e03a4c797479445bd41b9eacf}\label{classcytnx_1_1Bond_aa072647e03a4c797479445bd41b9eacf}} 
 \index{cytnx\+::\+Bond@{cytnx\+::\+Bond}!dim@{dim}}
 \index{dim@{dim}!cytnx\+::\+Bond@{cytnx\+::\+Bond}}

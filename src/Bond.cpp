@@ -59,6 +59,20 @@ namespace cytnx{
     */
 
 
+    bool Bond::operator==(const Bond &rhs){
+        if(this->dim() != rhs.dim()) return false;
+        if(this->type() != rhs.type()) return false;
+        if(this->Nsym() != rhs.Nsym()) return false;
+        if(this->Nsym()!=0){
+            if(this->syms() != rhs.syms()) return false;
+            if(this->qnums().size() != rhs.qnums().size()) return false;
+            for(cytnx_uint64 i=0;i<this->qnums().size();i++){
+                if(this->qnums()[i] != rhs.qnums()[i]) return false;
+            }
+        }
+        return true;        
+    }
+
     std::ostream& operator<<(std::ostream &os,const Bond &bin){
         os << "Dim = " << bin.dim() << " |";
         if(bin.type()==bondType::BD_REG){

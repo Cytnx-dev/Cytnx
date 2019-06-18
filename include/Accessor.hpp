@@ -36,6 +36,16 @@ namespace cytnx{
             /**
             @brief access the specific index at the assigned rank in Tensor.
             @param loc the specify index 
+            
+            ## Example:
+            ### c++ API:
+            \include example/Accessor/example.cpp
+            #### output>
+            \verbinclude example/Accessor/example.cpp.out
+            ### python API:
+            \include example/Accessor/example.py               
+            #### output>
+            \verbinclude example/Accessor/example.py.out
             */
             Accessor(const cytnx_int64 &loc);
 
@@ -55,6 +65,16 @@ namespace cytnx{
             //handy generator function :
             /**
             @brief access the whole rank, this is similar to [:] in python 
+            
+            ## Example:
+            ### c++ API:
+            \include example/Accessor/example.cpp
+            #### output>
+            \verbinclude example/Accessor/example.cpp.out
+            ### python API:
+            \include example/Accessor/example.py               
+            #### output>
+            \verbinclude example/Accessor/example.py.out
             */
             static Accessor all(){
                 return Accessor(std::string("s"));
@@ -64,6 +84,16 @@ namespace cytnx{
             @param min 
             @param max
             @param step
+            
+            ## Example:
+            ### c++ API:
+            \include example/Accessor/example.cpp
+            #### output>
+            \verbinclude example/Accessor/example.cpp.out
+            ### python API:
+            \include example/Accessor/example.py               
+            #### output>
+            \verbinclude example/Accessor/example.py.out
             */
             static Accessor range(const cytnx_int64 &min, 
                                   const cytnx_int64 &max, 

@@ -183,6 +183,15 @@ namespace cytnx{
             @brief return a copy of the instance Bond
             @return [Bond] a new instance of Bond that have the same contents 
 
+            ## Example:
+            ### c++ API:
+            \include example/Bond/clone.cpp
+            #### output>
+            \verbinclude example/Bond/clone.cpp.out
+            ### python API:
+            \include example/Bond/clone.py               
+            #### output>
+            \verbinclude example/Bond/clone.py.out
             */
             Bond clone() const{
                 Bond out;
@@ -190,16 +199,43 @@ namespace cytnx{
                 return out;
             }
 
+
+            /**
+            @brief combine the input bond with self, inplacely
+            @param bd_in the bond that to be combined with self.
+
+            ## Example:
+            ### c++ API:
+            \include example/Bond/combindBond_.cpp
+            #### output>
+            \verbinclude example/Bond/combindBond_.cpp.out
+            ### python API:
+            \include example/Bond/combindBond_.py               
+            #### output>
+            \verbinclude example/Bond/combindBond_.py.out
+            */
             void combineBond_(const Bond &bd_in){
                 this->_impl->combineBond_(bd_in._impl);
             }           
-            
+
+            /**
+            @brief combine the input bond with self, and return a new combined Bond instance.
+            @param bd_in the bond that to be combined.
+            @return [Bond] a new combined bond instance.
+
+            */
             Bond combineBond(const Bond &bd_in){
                 Bond out;
                 out._impl = this->_impl->combineBond(bd_in._impl);
                 return out;
             }
-            
+
+            /**
+            @brief combine multiple input bonds with self, and return a new combined Bond instance.
+            @param bds the bonds that to be combined with self.
+            @return [Bond] a new combined bond instance.
+
+            */
             Bond combineBonds(const std::vector<Bond> &bds){
                 Bond out = this->clone();
                 for(cytnx_uint64 i=0;i<bds.size();i++){
@@ -208,11 +244,20 @@ namespace cytnx{
                 return out;
             }
 
+            /**
+            @brief combine multiple input bonds with self, inplacely
+            @param bds the bonds that to be combined with self.
+
+            */
             void combineBonds_(const std::vector<Bond> &bds){
                 for(cytnx_uint64 i=0;i<bds.size();i++){
                     this->combineBond_(bds[i]);
                 }
             }
+            
+            
+            bool operator==(const Bond &rhs);
+
     
     };
 
