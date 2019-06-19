@@ -112,7 +112,6 @@ namespace cytnx{
 
             void permute_(const std::vector<cytnx_uint64> &rnks);
 
-
             boost::intrusive_ptr<Tensor_impl> permute(const std::vector<cytnx_uint64> &rnks){
                 boost::intrusive_ptr<Tensor_impl> out = this->clone();
                 out->permute_(rnks);
@@ -419,7 +418,22 @@ namespace cytnx{
             void permute_(const std::vector<cytnx_uint64> &rnks){
                 this->_impl->permute_(rnks);
             }
-
+            
+            /**
+            @brief perform tensor permute on the cytnx::Tensor and return a new instance.
+            @param rnks the permute indices, should have No. of elements equal to the rank of tensor.
+            @return [Tensor] a permuted new Tensor
+            
+            ## Example:
+            ### c++ API:
+            \include example/Tensor/permute.cpp
+            #### output>
+            \verbinclude example/Tensor/permute.cpp.out
+            ### python API:
+            \include example/Tensor/permute.py               
+            #### output>
+            \verbinclude example/Tensor/permute.py.out
+            */
             Tensor permute(const std::vector<cytnx_uint64> &rnks) const{
                 Tensor out;
                 out._impl = this->_impl->permute(rnks);

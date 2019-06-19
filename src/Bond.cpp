@@ -15,9 +15,9 @@ namespace cytnx{
         }else{
                 
 
-            cytnx_uint64 Ndim = in_qnums.begin()[0].size();
+            //cytnx_uint64 Ndim = in_qnums.begin()[0].size();
             for(cytnx_uint64 i=0;i<in_qnums.size();i++){
-                cytnx_error_msg(in_qnums.begin()[i].size() != Ndim,"%s","[ERROR] invalid qnums. the # of column of qnums list should be identify across each row. ");
+                cytnx_error_msg(in_qnums.begin()[i].size() != dim,"%s","[ERROR] invalid qnums. the # of column of qnums list should be identify across each row, and consist with [dim]");
             }
             
             //cytnx_error_msg(Nsym==0,"%s","[ERROR] pass empty qnums to initialize Bond_impl is invalid.");
@@ -59,7 +59,7 @@ namespace cytnx{
     */
 
 
-    bool Bond::operator==(const Bond &rhs){
+    bool Bond::operator==(const Bond &rhs) const{
         if(this->dim() != rhs.dim()) return false;
         if(this->type() != rhs.type()) return false;
         if(this->Nsym() != rhs.Nsym()) return false;

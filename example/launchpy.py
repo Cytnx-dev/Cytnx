@@ -19,6 +19,7 @@ Tensor_exes = [ x for x in os.listdir("./Tensor") if ".py" in x and not "out" in
 Storage_exes = [ x for x in os.listdir("./Storage") if ".py" in x and not "out" in x]
 Bond_exes = [ x for x in os.listdir("./Bond") if ".py" in x and not "out" in x]
 Accessor_exes = [ x for x in os.listdir("./Accessor") if ".py" in x and not "out" in x]
+Symmetry_exes = [ x for x in os.listdir("./Symmetry") if ".py" in x and not "out" in x]
 
 ## generate output
 for texe in Tensor_exes:
@@ -48,6 +49,12 @@ for texe in Accessor_exes:
     output_name = texe + ".out"
     os.system("python %s > %s"%(os.path.join("./Accessor",texe),os.path.join("./Accessor",output_name)))
 
+## generate output
+for texe in Symmetry_exes:
+    print(texe)
+    print("================")
+    output_name = texe + ".out"
+    os.system("python %s > %s"%(os.path.join("./Symmetry",texe),os.path.join("./Symmetry",output_name)))
 
 """
 for texe in Storage_exes:

@@ -12,6 +12,12 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -81,7 +87,7 @@ $(function() {
   <tr><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#aa072647e03a4c797479445bd41b9eacf">dim</a>() const</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a707a803fa98fb6a87b5f3c3b3000509f">Init</a>(const cytnx_uint64 &amp;dim, const bondType &amp;bd_type=bondType::BD_REG, const std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt; &amp;in_qnums={}, const std::vector&lt; Symmetry &gt; &amp;in_syms={})</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#acd46a218add6a88c1cc9035b06adb7b6">Nsym</a>() const</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>operator==</b>(const Bond &amp;rhs) (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>operator==</b>(const Bond &amp;rhs) const (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#ac33a7bc780a4c7afba2b6d2d571bf23e">qnums</a>() const</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#ae6957c3902bf12fd27ab881db3fe5243">set_type</a>(const bondType &amp;new_bondType)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#ad0adf7b134654f0390e98695ba4d416e">syms</a>() const</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>

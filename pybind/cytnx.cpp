@@ -137,6 +137,7 @@ PYBIND11_MODULE(cytnx,m){
                 .def("stype_str", &cytnx::Symmetry::stype_str)
                 .def("n",&cytnx::Symmetry::n)
                 .def("clone",&cytnx::Symmetry::clone)
+                .def("__eq__",&cytnx::Symmetry::operator==)
                 //.def("combine_rule",&cytnx::Symmetry::combine_rule,py::arg("qnums_1"),py::arg("qnums_2"))
                 //.def("combine_rule_",&cytnx::Symmetry::combine_rule_,py::arg("qnums_l"),py::arg("qnums_r"))
                 //.def("check_qnum", &cytnx::Symmetry::check_qnum,py::arg("qnum"))

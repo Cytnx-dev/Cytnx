@@ -12,6 +12,12 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -122,9 +128,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a1fd655bfe0845839502b6e385d743078"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Bond.html#a1fd655bfe0845839502b6e385d743078">combineBonds_</a> (const std::vector&lt; <a class="el" href="classcytnx_1_1Bond.html">Bond</a> &gt; &amp;bds)</td></tr>
 <tr class="memdesc:a1fd655bfe0845839502b6e385d743078"><td class="mdescLeft">&#160;</td><td class="mdescRight">combine multiple input bonds with self, inplacely  <a href="#a1fd655bfe0845839502b6e385d743078">More...</a><br /></td></tr>
 <tr class="separator:a1fd655bfe0845839502b6e385d743078"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3505ee4175e05332e4965fd719aed840"><td class="memItemLeft" align="right" valign="top"><a id="a3505ee4175e05332e4965fd719aed840"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classcytnx_1_1Bond.html">Bond</a> &amp;rhs)</td></tr>
-<tr class="separator:a3505ee4175e05332e4965fd719aed840"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afdf23503375937b9fc5fb892685fe056"><td class="memItemLeft" align="right" valign="top"><a id="afdf23503375937b9fc5fb892685fe056"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classcytnx_1_1Bond.html">Bond</a> &amp;rhs) const</td></tr>
+<tr class="separator:afdf23503375937b9fc5fb892685fe056"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>the object contains auxiliary properties for each <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> rank (bond) </p>
@@ -209,7 +215,7 @@ True
 <dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Bond.html" title="the object contains auxiliary properties for each Tensor rank (bond) ">Bond</a>] a new combined bond instance.</dd></dl>
 <h2>Example:</h2>
 <h3>c++ API:</h3>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <span class="comment">/* 1.</span></div><div class="line"><span class="comment">        create a non-symmetry, regular bond (BD_REG) </span></div><div class="line"><span class="comment">        with dimension 10</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_a = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(10,BD_KET);</div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_b = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(15,BD_KET);</div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_c = bd_a.<a class="code" href="classcytnx_1_1Bond.html#a609c034885efa32fc244be82a56e1f8c">combineBond</a>(bd_b);</div><div class="line">    cout &lt;&lt; bd_c &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; bd_a &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; bd_b &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">/* 2.</span></div><div class="line"><span class="comment">        combine symmetry bonds, </span></div><div class="line"><span class="comment">        with U1 x Z2 multiple symmetry </span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_d = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(3,BD_BRA,{{0,2,-4},</div><div class="line">                               {1,0,1}},</div><div class="line">                              {Symmetry::U1(),</div><div class="line">                               Symmetry::Zn(2)});</div><div class="line">                                </div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_e = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(4,BD_BRA,{{0,2,-1,3},</div><div class="line">                               {0,1, 1,0}},</div><div class="line">                              {Symmetry::U1(),</div><div class="line">                               Symmetry::Zn(2)});</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_f = bd_d.<a class="code" href="classcytnx_1_1Bond.html#a609c034885efa32fc244be82a56e1f8c">combineBond</a>(bd_e);</div><div class="line">    cout &lt;&lt; bd_f &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; bd_d &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; bd_e &lt;&lt; endl;</div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">    </div><div class="line"></div><div class="line"></div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <span class="comment">/* 1.</span></div><div class="line"><span class="comment">        create a non-symmetry, regular bond (BD_REG) </span></div><div class="line"><span class="comment">        with dimension 10</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_a = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(10,BD_KET);</div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_b = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(15,BD_KET);</div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_c = bd_a.<a class="code" href="classcytnx_1_1Bond.html#a609c034885efa32fc244be82a56e1f8c">combineBond</a>(bd_b);</div><div class="line">    cout &lt;&lt; bd_c &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; bd_a &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; bd_b &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">/* 2.</span></div><div class="line"><span class="comment">        combine symmetry bonds, </span></div><div class="line"><span class="comment">        with U1 x Z2 multiple symmetry </span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_d = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(3,BD_BRA,{{0,2,-4},</div><div class="line">                               {1,0,1}},</div><div class="line">                              {<a class="code" href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">Symmetry::U1</a>(),</div><div class="line">                               <a class="code" href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">Symmetry::Zn</a>(2)});</div><div class="line">                                </div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_e = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(4,BD_BRA,{{0,2,-1,3},</div><div class="line">                               {0,1, 1,0}},</div><div class="line">                              {<a class="code" href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">Symmetry::U1</a>(),</div><div class="line">                               <a class="code" href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">Symmetry::Zn</a>(2)});</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_f = bd_d.<a class="code" href="classcytnx_1_1Bond.html#a609c034885efa32fc244be82a56e1f8c">combineBond</a>(bd_e);</div><div class="line">    cout &lt;&lt; bd_f &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; bd_d &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; bd_e &lt;&lt; endl;</div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">    </div><div class="line"></div><div class="line"></div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">Dim = 150 |type: KET&gt;     
 
 Dim = 10 |type: KET&gt;     
@@ -290,7 +296,7 @@ Dim = 4 |type: &lt;BRA
 </dl>
 <h2>Example:</h2>
 <h3>c++ API:</h3>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <span class="comment">/* 1.</span></div><div class="line"><span class="comment">        create a non-symmetry, regular bond (BD_REG) </span></div><div class="line"><span class="comment">        with dimension 10</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_a = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(10);</div><div class="line">    cout &lt;&lt; bd_a &lt;&lt; endl;</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_b = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(5);</div><div class="line">    cout &lt;&lt; bd_b &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    bd_a.<a class="code" href="classcytnx_1_1Bond.html#ac21ab26ec469ac56ae78c9e4bbbe7040">combineBond_</a>(bd_b);</div><div class="line">    cout &lt;&lt; bd_a &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/* 2.</span></div><div class="line"><span class="comment">        combine symmetry bonds, </span></div><div class="line"><span class="comment">        with U1 x Z2 multiple symmetry </span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_c = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(3,BD_BRA,{{0,2,-4},</div><div class="line">                               {1,0,1}},</div><div class="line">                              {Symmetry::U1(),</div><div class="line">                               Symmetry::Zn(2)});</div><div class="line">                                </div><div class="line">    cout &lt;&lt; bd_c &lt;&lt; endl;</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_d = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(4,BD_BRA,{{0,2,-1,3},</div><div class="line">                               {0,1, 1,0}},</div><div class="line">                              {Symmetry::U1(),</div><div class="line">                               Symmetry::Zn(2)});</div><div class="line">    cout &lt;&lt; bd_d &lt;&lt; endl;</div><div class="line"></div><div class="line">    </div><div class="line">    bd_c.<a class="code" href="classcytnx_1_1Bond.html#ac21ab26ec469ac56ae78c9e4bbbe7040">combineBond_</a>(bd_d);</div><div class="line">    cout &lt;&lt; bd_c &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">    </div><div class="line"></div><div class="line"></div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <span class="comment">/* 1.</span></div><div class="line"><span class="comment">        create a non-symmetry, regular bond (BD_REG) </span></div><div class="line"><span class="comment">        with dimension 10</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_a = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(10);</div><div class="line">    cout &lt;&lt; bd_a &lt;&lt; endl;</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_b = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(5);</div><div class="line">    cout &lt;&lt; bd_b &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    bd_a.<a class="code" href="classcytnx_1_1Bond.html#ac21ab26ec469ac56ae78c9e4bbbe7040">combineBond_</a>(bd_b);</div><div class="line">    cout &lt;&lt; bd_a &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/* 2.</span></div><div class="line"><span class="comment">        combine symmetry bonds, </span></div><div class="line"><span class="comment">        with U1 x Z2 multiple symmetry </span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_c = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(3,BD_BRA,{{0,2,-4},</div><div class="line">                               {1,0,1}},</div><div class="line">                              {<a class="code" href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">Symmetry::U1</a>(),</div><div class="line">                               <a class="code" href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">Symmetry::Zn</a>(2)});</div><div class="line">                                </div><div class="line">    cout &lt;&lt; bd_c &lt;&lt; endl;</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_d = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(4,BD_BRA,{{0,2,-1,3},</div><div class="line">                               {0,1, 1,0}},</div><div class="line">                              {<a class="code" href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">Symmetry::U1</a>(),</div><div class="line">                               <a class="code" href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">Symmetry::Zn</a>(2)});</div><div class="line">    cout &lt;&lt; bd_d &lt;&lt; endl;</div><div class="line"></div><div class="line">    </div><div class="line">    bd_c.<a class="code" href="classcytnx_1_1Bond.html#ac21ab26ec469ac56ae78c9e4bbbe7040">combineBond_</a>(bd_d);</div><div class="line">    cout &lt;&lt; bd_c &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">    </div><div class="line"></div><div class="line"></div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">Dim = 10 |type: REGULAR 
 
 Dim = 5 |type: REGULAR 
@@ -369,8 +375,74 @@ Dim = 12 |type: &lt;BRA
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Bond.html" title="the object contains auxiliary properties for each Tensor rank (bond) ">Bond</a>] a new combined bond instance. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Bond.html" title="the object contains auxiliary properties for each Tensor rank (bond) ">Bond</a>] a new combined bond instance.</dd></dl>
+<h2>Example:</h2>
+<h3>c++ API:</h3>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <span class="comment">/* 1.</span></div><div class="line"><span class="comment">        combine multiple KET bonds</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_a = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(10,BD_KET);</div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_b = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(4,BD_KET);</div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_c = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(5,BD_KET);</div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_d = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(2,BD_KET);</div><div class="line">    </div><div class="line">    <span class="comment">// note that this will not create copy instances for each Bond elements.</span></div><div class="line">    <span class="comment">// so it is both memory efficient and fast!</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_all = bd_a.<a class="code" href="classcytnx_1_1Bond.html#a4a1d060cf2d0c44d83356df757a802d1">combineBonds</a>({bd_b,bd_c,bd_d});</div><div class="line">    </div><div class="line">    cout &lt;&lt; bd_a &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; bd_b &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; bd_c &lt;&lt; endl;   </div><div class="line">    cout &lt;&lt; bd_d &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; bd_all &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/* 2.</span></div><div class="line"><span class="comment">        combine symmetry bonds, </span></div><div class="line"><span class="comment">        with U1 x Z2 multiple symmetry </span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_sym_a = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(3,BD_BRA,{{0,2,-4},</div><div class="line">                               {1,0,1}},</div><div class="line">                              {<a class="code" href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">Symmetry::U1</a>(),</div><div class="line">                               <a class="code" href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">Symmetry::Zn</a>(2)});</div><div class="line">                                </div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_sym_b = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(4,BD_BRA,{{0,2,-1,3},</div><div class="line">                               {0,1, 1,0}},</div><div class="line">                              {<a class="code" href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">Symmetry::U1</a>(),</div><div class="line">                               <a class="code" href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">Symmetry::Zn</a>(2)});</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_sym_c = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(5,BD_BRA,{{1,1,-1,-2,0},</div><div class="line">                               {1,1, 1,0 ,0}},</div><div class="line">                              {<a class="code" href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">Symmetry::U1</a>(),</div><div class="line">                               <a class="code" href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">Symmetry::Zn</a>(2)});</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_sym_d = bd_sym_a.<a class="code" href="classcytnx_1_1Bond.html#a4a1d060cf2d0c44d83356df757a802d1">combineBonds</a>({bd_sym_b,bd_sym_c});</div><div class="line">    cout &lt;&lt; bd_sym_a &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; bd_sym_b &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; bd_sym_c &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; bd_sym_d &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">    </div><div class="line"></div><div class="line"></div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment">Dim = 10 |type: KET&gt;     
 
+Dim = 4 |type: KET&gt;     
+
+Dim = 5 |type: KET&gt;     
+
+Dim = 2 |type: KET&gt;     
+
+Dim = 400 |type: KET&gt;     
+
+Dim = 3 |type: &lt;BRA     
+ U1::  +0 +2 -4
+ Z2::  +1 +0 +1
+
+Dim = 4 |type: &lt;BRA     
+ U1::  +0 +2 -1 +3
+ Z2::  +0 +1 +1 +0
+
+Dim = 5 |type: &lt;BRA     
+ U1::  +1 +1 -1 -2 +0
+ Z2::  +1 +1 +1 +0 +0
+
+Dim = 60 |type: &lt;BRA     
+ U1::  +1 +1 -1 -2 +0 +3 +3 +1 +0 +2 +0 +0 -2 -3 -1 +4 +4 +2 +1 +3 +3 +3 +1 +0 +2 +5 +5 +3 +2 +4 +2 +2 +0 -1 +1 +6 +6 +4 +3 +5 -3 -3 -5 -6 -4 -1 -1 -3 -4 -2 -4 -4 -6 -7 -5 +0 +0 -2 -3 -1
+ Z2::  +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1 +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1
+
+</pre> <h3>python API:</h3>
+<div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line">bd_a = Bond(10,BD_KET);</div><div class="line">bd_b = Bond(4,BD_KET);</div><div class="line">bd_c = Bond(5,BD_KET);</div><div class="line">bd_d = Bond(2,BD_KET);</div><div class="line"></div><div class="line">bd_all = bd_a.combineBonds([bd_b,bd_c,bd_d]);</div><div class="line">    </div><div class="line">print( bd_a )</div><div class="line">print( bd_b )</div><div class="line">print( bd_c )   </div><div class="line">print( bd_d )</div><div class="line">print( bd_all )</div><div class="line"></div><div class="line"></div><div class="line">bd_sym_a = Bond(3,BD_BRA,[[0,2,-4],</div><div class="line">                          [1,0,1]],</div><div class="line">                          [Symmetry.U1(),</div><div class="line">                           Symmetry.Zn(2)]);</div><div class="line">                            </div><div class="line">bd_sym_b = Bond(4,BD_BRA,[[0,2,-1,3],</div><div class="line">                          [0,1, 1,0]],</div><div class="line">                          [Symmetry.U1(),</div><div class="line">                           Symmetry.Zn(2)]);</div><div class="line"></div><div class="line">bd_sym_c = Bond(5,BD_BRA,[[1,1,-1,-2,0],</div><div class="line">                          [1,1, 1,0 ,0]],</div><div class="line">                          [Symmetry.U1(),</div><div class="line">                           Symmetry.Zn(2)]);</div><div class="line"></div><div class="line">bd_sym_d = bd_sym_a.combineBonds([bd_sym_b,bd_sym_c]);</div><div class="line">print( bd_sym_a )</div><div class="line">print( bd_sym_b )</div><div class="line">print( bd_sym_c )</div><div class="line">print( bd_sym_d )</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment">Dim = 10 |type: KET&gt;     
+
+Dim = 4 |type: KET&gt;     
+
+Dim = 5 |type: KET&gt;     
+
+Dim = 2 |type: KET&gt;     
+
+Dim = 400 |type: KET&gt;     
+
+Dim = 3 |type: &lt;BRA     
+ U1::  +0 +2 -4
+ Z2::  +1 +0 +1
+
+Dim = 4 |type: &lt;BRA     
+ U1::  +0 +2 -1 +3
+ Z2::  +0 +1 +1 +0
+
+Dim = 5 |type: &lt;BRA     
+ U1::  +1 +1 -1 -2 +0
+ Z2::  +1 +1 +1 +0 +0
+
+Dim = 60 |type: &lt;BRA     
+ U1::  +1 +1 -1 -2 +0 +3 +3 +1 +0 +2 +0 +0 -2 -3 -1 +4 +4 +2 +1 +3 +3 +3 +1 +0 +2 +5 +5 +3 +2 +4 +2 +2 +0 -1 +1 +6 +6 +4 +3 +5 -3 -3 -5 -6 -4 -1 -1 -3 -4 -2 -4 -4 -6 -7 -5 +0 +0 -2 -3 -1
+ Z2::  +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1 +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1
+
+
+
+
+
+
+
+
+
+
+</pre> 
 </div>
 </div>
 <a id="a1fd655bfe0845839502b6e385d743078"></a>
@@ -400,11 +472,77 @@ Dim = 12 |type: &lt;BRA
 <p>combine multiple input bonds with self, inplacely </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">bds</td><td>the bonds that to be combined with self. </td></tr>
+    <tr><td class="paramname">bds</td><td>the bonds that to be combined with self.</td></tr>
   </table>
   </dd>
 </dl>
+<h2>Example:</h2>
+<h3>c++ API:</h3>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <span class="comment">/* 1.</span></div><div class="line"><span class="comment">        combine multiple KET bonds</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_a = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(10,BD_KET);</div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_b = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(4,BD_KET);</div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_c = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(5,BD_KET);</div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_d = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(2,BD_KET);</div><div class="line">    cout &lt;&lt; bd_a &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; bd_b &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; bd_c &lt;&lt; endl;   </div><div class="line">    cout &lt;&lt; bd_d &lt;&lt; endl;</div><div class="line">    </div><div class="line">    bd_a.<a class="code" href="classcytnx_1_1Bond.html#a1fd655bfe0845839502b6e385d743078">combineBonds_</a>({bd_b,bd_c,bd_d});</div><div class="line">    cout &lt;&lt; bd_a &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/* 2.</span></div><div class="line"><span class="comment">        combine symmetry bonds, </span></div><div class="line"><span class="comment">        with U1 x Z2 multiple symmetry </span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_sym_a = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(3,BD_BRA,{{0,2,-4},</div><div class="line">                               {1,0,1}},</div><div class="line">                              {<a class="code" href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">Symmetry::U1</a>(),</div><div class="line">                               <a class="code" href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">Symmetry::Zn</a>(2)});</div><div class="line">                                </div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_sym_b = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(4,BD_BRA,{{0,2,-1,3},</div><div class="line">                               {0,1, 1,0}},</div><div class="line">                              {<a class="code" href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">Symmetry::U1</a>(),</div><div class="line">                               <a class="code" href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">Symmetry::Zn</a>(2)});</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_sym_c = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(5,BD_BRA,{{1,1,-1,-2,0},</div><div class="line">                               {1,1, 1,0 ,0}},</div><div class="line">                              {<a class="code" href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">Symmetry::U1</a>(),</div><div class="line">                               <a class="code" href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">Symmetry::Zn</a>(2)});</div><div class="line">    </div><div class="line">    cout &lt;&lt; bd_sym_a &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; bd_sym_b &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; bd_sym_c &lt;&lt; endl;</div><div class="line">    bd_sym_a.<a class="code" href="classcytnx_1_1Bond.html#a1fd655bfe0845839502b6e385d743078">combineBonds_</a>({bd_sym_b,bd_sym_c});</div><div class="line">    cout &lt;&lt; bd_sym_a &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">    </div><div class="line"></div><div class="line"></div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment">Dim = 10 |type: KET&gt;     
 
+Dim = 4 |type: KET&gt;     
+
+Dim = 5 |type: KET&gt;     
+
+Dim = 2 |type: KET&gt;     
+
+Dim = 400 |type: KET&gt;     
+
+Dim = 3 |type: &lt;BRA     
+ U1::  +0 +2 -4
+ Z2::  +1 +0 +1
+
+Dim = 4 |type: &lt;BRA     
+ U1::  +0 +2 -1 +3
+ Z2::  +0 +1 +1 +0
+
+Dim = 5 |type: &lt;BRA     
+ U1::  +1 +1 -1 -2 +0
+ Z2::  +1 +1 +1 +0 +0
+
+Dim = 60 |type: &lt;BRA     
+ U1::  +1 +1 -1 -2 +0 +3 +3 +1 +0 +2 +0 +0 -2 -3 -1 +4 +4 +2 +1 +3 +3 +3 +1 +0 +2 +5 +5 +3 +2 +4 +2 +2 +0 -1 +1 +6 +6 +4 +3 +5 -3 -3 -5 -6 -4 -1 -1 -3 -4 -2 -4 -4 -6 -7 -5 +0 +0 -2 -3 -1
+ Z2::  +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1 +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1
+
+</pre> <h3>python API:</h3>
+<div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line">bd_a = Bond(10,BD_KET);</div><div class="line">bd_b = Bond(4,BD_KET);</div><div class="line">bd_c = Bond(5,BD_KET);</div><div class="line">bd_d = Bond(2,BD_KET);</div><div class="line">print( bd_a )</div><div class="line">print( bd_b )</div><div class="line">print( bd_c )   </div><div class="line">print( bd_d )</div><div class="line"></div><div class="line">bd_a.combineBonds_([bd_b,bd_c,bd_d]);</div><div class="line">print( bd_a )</div><div class="line"></div><div class="line"></div><div class="line">bd_sym_a = Bond(3,BD_BRA,[[0,2,-4],</div><div class="line">                          [1,0,1]],</div><div class="line">                          [Symmetry.U1(),</div><div class="line">                           Symmetry.Zn(2)]);</div><div class="line">                            </div><div class="line">bd_sym_b = Bond(4,BD_BRA,[[0,2,-1,3],</div><div class="line">                          [0,1, 1,0]],</div><div class="line">                          [Symmetry.U1(),</div><div class="line">                           Symmetry.Zn(2)]);</div><div class="line"></div><div class="line">bd_sym_c = Bond(5,BD_BRA,[[1,1,-1,-2,0],</div><div class="line">                          [1,1, 1,0 ,0]],</div><div class="line">                          [Symmetry.U1(),</div><div class="line">                           Symmetry.Zn(2)]);</div><div class="line"></div><div class="line">print( bd_sym_a )</div><div class="line">print( bd_sym_b )</div><div class="line">print( bd_sym_c )</div><div class="line">bd_sym_a.combineBonds_([bd_sym_b,bd_sym_c]);</div><div class="line">print( bd_sym_a )</div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment">Dim = 10 |type: KET&gt;     
+
+Dim = 4 |type: KET&gt;     
+
+Dim = 5 |type: KET&gt;     
+
+Dim = 2 |type: KET&gt;     
+
+Dim = 400 |type: KET&gt;     
+
+Dim = 3 |type: &lt;BRA     
+ U1::  +0 +2 -4
+ Z2::  +1 +0 +1
+
+Dim = 4 |type: &lt;BRA     
+ U1::  +0 +2 -1 +3
+ Z2::  +0 +1 +1 +0
+
+Dim = 5 |type: &lt;BRA     
+ U1::  +1 +1 -1 -2 +0
+ Z2::  +1 +1 +1 +0 +0
+
+Dim = 60 |type: &lt;BRA     
+ U1::  +1 +1 -1 -2 +0 +3 +3 +1 +0 +2 +0 +0 -2 -3 -1 +4 +4 +2 +1 +3 +3 +3 +1 +0 +2 +5 +5 +3 +2 +4 +2 +2 +0 -1 +1 +6 +6 +4 +3 +5 -3 -3 -5 -6 -4 -1 -1 -3 -4 -2 -4 -4 -6 -7 -5 +0 +0 -2 -3 -1
+ Z2::  +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1 +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1
+
+
+
+
+
+
+
+
+
+
+</pre> 
 </div>
 </div>
 <a id="aa072647e03a4c797479445bd41b9eacf"></a>
@@ -487,7 +625,7 @@ Dim = 12 |type: &lt;BRA
     <tr><td class="paramname">dim</td><td>the dimension of the bond (rank) </td></tr>
     <tr><td class="paramname">bondType</td><td>the tag of the bond, it can be BD_BRA, BD_KET as physical tagged; or BD_REG as regular bond (rank) </td></tr>
     <tr><td class="paramname">in_qnums</td><td>the quantum number(s) of the bond. it should be a 2d vector with shape (# of symmetry, dim) </td></tr>
-    <tr><td class="paramname">in_syms</td><td>the symmetry object of the bond. [Note] if qnums are provided, the default symmetry type is <a class="el" href="">Symmetry::U1 </a></td></tr>
+    <tr><td class="paramname">in_syms</td><td>the symmetry object of the bond. [Note] if qnums are provided, the default symmetry type is <a class="el" href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">Symmetry::U1 </a></td></tr>
   </table>
   </dd>
 </dl>
@@ -501,7 +639,7 @@ Dim = 12 |type: &lt;BRA
 </ol>
 <h2>Example:</h2>
 <h3>c++ API:</h3>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <span class="comment">/* 1.</span></div><div class="line"><span class="comment">        create a non-symmetry, regular bond (BD_REG) </span></div><div class="line"><span class="comment">        with dimension 10</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_a = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(10);</div><div class="line">    cout &lt;&lt; bd_a &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">/* 2. </span></div><div class="line"><span class="comment">        create a non-symmetry bond tagged with BD_KET </span></div><div class="line"><span class="comment">        with dimension 10</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_b = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(10,BD_KET);</div><div class="line">    cout &lt;&lt; bd_b &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">/* 3.</span></div><div class="line"><span class="comment">        crate a symmetry bond, </span></div><div class="line"><span class="comment">        with single U1 (default) symmetry and qnums = (0,2,-1,3)</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_c = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(4,BD_KET,{{0,2,-1,3}});</div><div class="line">    cout &lt;&lt; bd_c &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">/* 3.</span></div><div class="line"><span class="comment">        crate a symmetry bond, </span></div><div class="line"><span class="comment">        with U1 x Z2 multiple symmetry </span></div><div class="line"><span class="comment">        and qnums = U1:(0,2,-1,3) x Z2:(0,1,1,0)</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_d = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(4,BD_BRA,{{0,2,-1,3},</div><div class="line">                               {0,1, 1,0}},</div><div class="line">                              {Symmetry::U1(),</div><div class="line">                               Symmetry::Zn(2)});</div><div class="line">    cout &lt;&lt; bd_d &lt;&lt; endl;</div><div class="line"></div><div class="line">    </div><div class="line">    </div><div class="line"></div><div class="line"></div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <span class="comment">/* 1.</span></div><div class="line"><span class="comment">        create a non-symmetry, regular bond (BD_REG) </span></div><div class="line"><span class="comment">        with dimension 10</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_a = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(10);</div><div class="line">    cout &lt;&lt; bd_a &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">/* 2. </span></div><div class="line"><span class="comment">        create a non-symmetry bond tagged with BD_KET </span></div><div class="line"><span class="comment">        with dimension 10</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_b = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(10,BD_KET);</div><div class="line">    cout &lt;&lt; bd_b &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">/* 3.</span></div><div class="line"><span class="comment">        crate a symmetry bond, </span></div><div class="line"><span class="comment">        with single U1 (default) symmetry and qnums = (0,2,-1,3)</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_c = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(4,BD_KET,{{0,2,-1,3}});</div><div class="line">    cout &lt;&lt; bd_c &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">/* 3.</span></div><div class="line"><span class="comment">        crate a symmetry bond, </span></div><div class="line"><span class="comment">        with U1 x Z2 multiple symmetry </span></div><div class="line"><span class="comment">        and qnums = U1:(0,2,-1,3) x Z2:(0,1,1,0)</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Bond.html">Bond</a> bd_d = <a class="code" href="classcytnx_1_1Bond.html">Bond</a>(4,BD_BRA,{{0,2,-1,3},</div><div class="line">                               {0,1, 1,0}},</div><div class="line">                              {<a class="code" href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">Symmetry::U1</a>(),</div><div class="line">                               <a class="code" href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">Symmetry::Zn</a>(2)});</div><div class="line">    cout &lt;&lt; bd_d &lt;&lt; endl;</div><div class="line"></div><div class="line">    </div><div class="line">    </div><div class="line"></div><div class="line"></div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">Dim = 10 |type: REGULAR 
 
 Dim = 10 |type: KET&gt;     
@@ -647,8 +785,8 @@ Dim = 4 |type: &lt;BRA
 </div><div class="memdoc">
 
 <p>return the vector of symmetry objects </p>
-<dl class="section return"><dt>Returns</dt><dd>[vector of <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a>]</dd></dl>
-<p>[Note] each <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a> objects in the return vector are shared instances, which reduce the memory usage for copy a new <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a> object. </p>
+<dl class="section return"><dt>Returns</dt><dd>[vector of <a class="el" href="classcytnx_1_1Symmetry.html" title="the symmetry object ">Symmetry</a>]</dd></dl>
+<p>[Note] each <a class="el" href="classcytnx_1_1Symmetry.html" title="the symmetry object ">Symmetry</a> objects in the return vector are shared instances, which reduce the memory usage for copy a new <a class="el" href="classcytnx_1_1Symmetry.html" title="the symmetry object ">Symmetry</a> object. </p>
 
 </div>
 </div>

@@ -243,7 +243,16 @@ namespace cytnx{
             @brief combine multiple input bonds with self, and return a new combined Bond instance.
             @param bds the bonds that to be combined with self.
             @return [Bond] a new combined bond instance.
-
+            
+            ## Example:
+            ### c++ API:
+            \include example/Bond/combineBonds.cpp
+            #### output>
+            \verbinclude example/Bond/combineBonds.cpp.out
+            ### python API:
+            \include example/Bond/combineBonds.py               
+            #### output>
+            \verbinclude example/Bond/combineBonds.py.out
             */
             Bond combineBonds(const std::vector<Bond> &bds){
                 Bond out = this->clone();
@@ -256,7 +265,16 @@ namespace cytnx{
             /**
             @brief combine multiple input bonds with self, inplacely
             @param bds the bonds that to be combined with self.
-
+            
+            ## Example:
+            ### c++ API:
+            \include example/Bond/combineBonds_.cpp
+            #### output>
+            \verbinclude example/Bond/combineBonds_.cpp.out
+            ### python API:
+            \include example/Bond/combineBonds_.py               
+            #### output>
+            \verbinclude example/Bond/combineBonds_.py.out
             */
             void combineBonds_(const std::vector<Bond> &bds){
                 for(cytnx_uint64 i=0;i<bds.size();i++){
@@ -265,7 +283,7 @@ namespace cytnx{
             }
             
             
-            bool operator==(const Bond &rhs);
+            bool operator==(const Bond &rhs) const;
 
     
     };

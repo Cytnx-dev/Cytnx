@@ -188,12 +188,12 @@ combine the input bond with self, and return a new combined \hyperlink{classcytn
 \textcolor{comment}{    */}
     \hyperlink{classcytnx_1_1Bond}{Bond} bd\_d = \hyperlink{classcytnx_1_1Bond}{Bond}(3,BD\_BRA,\{\{0,2,-4\},
                                \{1,0,1\}\},
-                              \{Symmetry::U1(),
+                              \{\hyperlink{classcytnx_1_1Symmetry_a9218fd66fc9cca64cd3d792e0019592a}{Symmetry::U1}(),
                                Symmetry::Zn(2)\});
                                 
     \hyperlink{classcytnx_1_1Bond}{Bond} bd\_e = \hyperlink{classcytnx_1_1Bond}{Bond}(4,BD\_BRA,\{\{0,2,-1,3\},
                                \{0,1, 1,0\}\},
-                              \{Symmetry::U1(),
+                              \{\hyperlink{classcytnx_1_1Symmetry_a9218fd66fc9cca64cd3d792e0019592a}{Symmetry::U1}(),
                                Symmetry::Zn(2)\});
 
     \hyperlink{classcytnx_1_1Bond}{Bond} bd\_f = bd\_d.\hyperlink{classcytnx_1_1Bond_a609c034885efa32fc244be82a56e1f8c}{combineBond}(bd\_e);
@@ -339,14 +339,14 @@ combine the input bond with self, inplacely
 \textcolor{comment}{    */}
     \hyperlink{classcytnx_1_1Bond}{Bond} bd\_c = \hyperlink{classcytnx_1_1Bond}{Bond}(3,BD\_BRA,\{\{0,2,-4\},
                                \{1,0,1\}\},
-                              \{Symmetry::U1(),
+                              \{\hyperlink{classcytnx_1_1Symmetry_a9218fd66fc9cca64cd3d792e0019592a}{Symmetry::U1}(),
                                Symmetry::Zn(2)\});
                                 
     cout << bd\_c << endl;
 
     \hyperlink{classcytnx_1_1Bond}{Bond} bd\_d = \hyperlink{classcytnx_1_1Bond}{Bond}(4,BD\_BRA,\{\{0,2,-1,3\},
                                \{0,1, 1,0\}\},
-                              \{Symmetry::U1(),
+                              \{\hyperlink{classcytnx_1_1Symmetry_a9218fd66fc9cca64cd3d792e0019592a}{Symmetry::U1}(),
                                Symmetry::Zn(2)\});
     cout << bd\_d << endl;
 
@@ -461,9 +461,187 @@ combine multiple input bonds with self, and return a new combined \hyperlink{cla
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-\mbox{[}\hyperlink{classcytnx_1_1Bond}{Bond}\mbox{]} a new combined bond instance. 
+\mbox{[}\hyperlink{classcytnx_1_1Bond}{Bond}\mbox{]} a new combined bond instance.
 \end{DoxyReturn}
-\mbox{\Hypertarget{classcytnx_1_1Bond_a1fd655bfe0845839502b6e385d743078}\label{classcytnx_1_1Bond_a1fd655bfe0845839502b6e385d743078}} 
+\subsubsection*{Example\+:}
+
+\paragraph*{c++ A\+PI\+:}
+
+
+\begin{DoxyCodeInclude}
+\textcolor{preprocessor}{#include "cytnx.hpp"}
+\textcolor{preprocessor}{#include <iostream>}
+
+
+\textcolor{keyword}{using namespace }\hyperlink{namespacecytnx}{cytnx};
+\textcolor{keyword}{using namespace }std;
+\textcolor{keywordtype}{int} main()\{ 
+
+    \textcolor{comment}{/* 1.}
+\textcolor{comment}{        combine multiple KET bonds}
+\textcolor{comment}{    */}
+    \hyperlink{classcytnx_1_1Bond}{Bond} bd\_a = \hyperlink{classcytnx_1_1Bond}{Bond}(10,BD\_KET);
+    \hyperlink{classcytnx_1_1Bond}{Bond} bd\_b = \hyperlink{classcytnx_1_1Bond}{Bond}(4,BD\_KET);
+    \hyperlink{classcytnx_1_1Bond}{Bond} bd\_c = \hyperlink{classcytnx_1_1Bond}{Bond}(5,BD\_KET);
+    \hyperlink{classcytnx_1_1Bond}{Bond} bd\_d = \hyperlink{classcytnx_1_1Bond}{Bond}(2,BD\_KET);
+    
+    \textcolor{comment}{// note that this will not create copy instances for each Bond elements.}
+    \textcolor{comment}{// so it is both memory efficient and fast!}
+    \hyperlink{classcytnx_1_1Bond}{Bond} bd\_all = bd\_a.\hyperlink{classcytnx_1_1Bond_a4a1d060cf2d0c44d83356df757a802d1}{combineBonds}(\{bd\_b,bd\_c,bd\_d\});
+    
+    cout << bd\_a << endl;
+    cout << bd\_b << endl;
+    cout << bd\_c << endl;   
+    cout << bd\_d << endl;
+    cout << bd\_all << endl;
+
+
+    \textcolor{comment}{/* 2.}
+\textcolor{comment}{        combine symmetry bonds, }
+\textcolor{comment}{        with U1 x Z2 multiple symmetry }
+\textcolor{comment}{    */}
+    \hyperlink{classcytnx_1_1Bond}{Bond} bd\_sym\_a = \hyperlink{classcytnx_1_1Bond}{Bond}(3,BD\_BRA,\{\{0,2,-4\},
+                               \{1,0,1\}\},
+                              \{\hyperlink{classcytnx_1_1Symmetry_a9218fd66fc9cca64cd3d792e0019592a}{Symmetry::U1}(),
+                               Symmetry::Zn(2)\});
+                                
+    \hyperlink{classcytnx_1_1Bond}{Bond} bd\_sym\_b = \hyperlink{classcytnx_1_1Bond}{Bond}(4,BD\_BRA,\{\{0,2,-1,3\},
+                               \{0,1, 1,0\}\},
+                              \{\hyperlink{classcytnx_1_1Symmetry_a9218fd66fc9cca64cd3d792e0019592a}{Symmetry::U1}(),
+                               Symmetry::Zn(2)\});
+
+    \hyperlink{classcytnx_1_1Bond}{Bond} bd\_sym\_c = \hyperlink{classcytnx_1_1Bond}{Bond}(5,BD\_BRA,\{\{1,1,-1,-2,0\},
+                               \{1,1, 1,0 ,0\}\},
+                              \{\hyperlink{classcytnx_1_1Symmetry_a9218fd66fc9cca64cd3d792e0019592a}{Symmetry::U1}(),
+                               Symmetry::Zn(2)\});
+
+    \hyperlink{classcytnx_1_1Bond}{Bond} bd\_sym\_d = bd\_sym\_a.\hyperlink{classcytnx_1_1Bond_a4a1d060cf2d0c44d83356df757a802d1}{combineBonds}(\{bd\_sym\_b,bd\_sym\_c\});
+    cout << bd\_sym\_a << endl;
+    cout << bd\_sym\_b << endl;
+    cout << bd\_sym\_c << endl;
+    cout << bd\_sym\_d << endl;
+
+    \textcolor{keywordflow}{return} 0;
+    
+
+
+\}
+
+\end{DoxyCodeInclude}
+ \subparagraph*{output$>$}
+
+
+\begin{DoxyVerbInclude}
+Dim = 10 |type: KET>     
+
+Dim = 4 |type: KET>     
+
+Dim = 5 |type: KET>     
+
+Dim = 2 |type: KET>     
+
+Dim = 400 |type: KET>     
+
+Dim = 3 |type: <BRA     
+ U1::  +0 +2 -4
+ Z2::  +1 +0 +1
+
+Dim = 4 |type: <BRA     
+ U1::  +0 +2 -1 +3
+ Z2::  +0 +1 +1 +0
+
+Dim = 5 |type: <BRA     
+ U1::  +1 +1 -1 -2 +0
+ Z2::  +1 +1 +1 +0 +0
+
+Dim = 60 |type: <BRA     
+ U1::  +1 +1 -1 -2 +0 +3 +3 +1 +0 +2 +0 +0 -2 -3 -1 +4 +4 +2 +1 +3 +3 +3 +1 +0 +2 +5 +5 +3 +2 +4 +2 +2 +0 -1 +1 +6 +6 +4 +3 +5 -3 -3 -5 -6 -4 -1 -1 -3 -4 -2 -4 -4 -6 -7 -5 +0 +0 -2 -3 -1
+ Z2::  +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1 +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1
+
+\end{DoxyVerbInclude}
+ \paragraph*{python A\+PI\+:}
+
+
+\begin{DoxyCodeInclude}
+\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *
+
+bd\_a = Bond(10,BD\_KET);
+bd\_b = Bond(4,BD\_KET);
+bd\_c = Bond(5,BD\_KET);
+bd\_d = Bond(2,BD\_KET);
+
+bd\_all = bd\_a.combineBonds([bd\_b,bd\_c,bd\_d]);
+    
+print( bd\_a )
+print( bd\_b )
+print( bd\_c )   
+print( bd\_d )
+print( bd\_all )
+
+
+bd\_sym\_a = Bond(3,BD\_BRA,[[0,2,-4],
+                          [1,0,1]],
+                          [Symmetry.U1(),
+                           Symmetry.Zn(2)]);
+                            
+bd\_sym\_b = Bond(4,BD\_BRA,[[0,2,-1,3],
+                          [0,1, 1,0]],
+                          [Symmetry.U1(),
+                           Symmetry.Zn(2)]);
+
+bd\_sym\_c = Bond(5,BD\_BRA,[[1,1,-1,-2,0],
+                          [1,1, 1,0 ,0]],
+                          [Symmetry.U1(),
+                           Symmetry.Zn(2)]);
+
+bd\_sym\_d = bd\_sym\_a.combineBonds([bd\_sym\_b,bd\_sym\_c]);
+print( bd\_sym\_a )
+print( bd\_sym\_b )
+print( bd\_sym\_c )
+print( bd\_sym\_d )
+
+\end{DoxyCodeInclude}
+ \subparagraph*{output$>$}
+
+
+\begin{DoxyVerbInclude}
+Dim = 10 |type: KET>     
+
+Dim = 4 |type: KET>     
+
+Dim = 5 |type: KET>     
+
+Dim = 2 |type: KET>     
+
+Dim = 400 |type: KET>     
+
+Dim = 3 |type: <BRA     
+ U1::  +0 +2 -4
+ Z2::  +1 +0 +1
+
+Dim = 4 |type: <BRA     
+ U1::  +0 +2 -1 +3
+ Z2::  +0 +1 +1 +0
+
+Dim = 5 |type: <BRA     
+ U1::  +1 +1 -1 -2 +0
+ Z2::  +1 +1 +1 +0 +0
+
+Dim = 60 |type: <BRA     
+ U1::  +1 +1 -1 -2 +0 +3 +3 +1 +0 +2 +0 +0 -2 -3 -1 +4 +4 +2 +1 +3 +3 +3 +1 +0 +2 +5 +5 +3 +2 +4 +2 +2 +0 -1 +1 +6 +6 +4 +3 +5 -3 -3 -5 -6 -4 -1 -1 -3 -4 -2 -4 -4 -6 -7 -5 +0 +0 -2 -3 -1
+ Z2::  +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1 +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1
+
+
+
+
+
+
+
+
+
+
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Bond_a1fd655bfe0845839502b6e385d743078}\label{classcytnx_1_1Bond_a1fd655bfe0845839502b6e385d743078}} 
 \index{cytnx\+::\+Bond@{cytnx\+::\+Bond}!combine\+Bonds\+\_\+@{combine\+Bonds\+\_\+}}
 \index{combine\+Bonds\+\_\+@{combine\+Bonds\+\_\+}!cytnx\+::\+Bond@{cytnx\+::\+Bond}}
 \subsubsection{\texorpdfstring{combine\+Bonds\+\_\+()}{combineBonds\_()}}
@@ -475,10 +653,183 @@ combine multiple input bonds with self, inplacely
 
 
 \begin{DoxyParams}{Parameters}
-{\em bds} & the bonds that to be combined with self. \\
+{\em bds} & the bonds that to be combined with self.\\
 \hline
 \end{DoxyParams}
-\mbox{\Hypertarget{classcytnx_1_1Bond_aa072647e03a4c797479445bd41b9eacf}\label{classcytnx_1_1Bond_aa072647e03a4c797479445bd41b9eacf}} 
+\subsubsection*{Example\+:}
+
+\paragraph*{c++ A\+PI\+:}
+
+
+\begin{DoxyCodeInclude}
+\textcolor{preprocessor}{#include "cytnx.hpp"}
+\textcolor{preprocessor}{#include <iostream>}
+
+
+\textcolor{keyword}{using namespace }\hyperlink{namespacecytnx}{cytnx};
+\textcolor{keyword}{using namespace }std;
+\textcolor{keywordtype}{int} main()\{ 
+
+    \textcolor{comment}{/* 1.}
+\textcolor{comment}{        combine multiple KET bonds}
+\textcolor{comment}{    */}
+    \hyperlink{classcytnx_1_1Bond}{Bond} bd\_a = \hyperlink{classcytnx_1_1Bond}{Bond}(10,BD\_KET);
+    \hyperlink{classcytnx_1_1Bond}{Bond} bd\_b = \hyperlink{classcytnx_1_1Bond}{Bond}(4,BD\_KET);
+    \hyperlink{classcytnx_1_1Bond}{Bond} bd\_c = \hyperlink{classcytnx_1_1Bond}{Bond}(5,BD\_KET);
+    \hyperlink{classcytnx_1_1Bond}{Bond} bd\_d = \hyperlink{classcytnx_1_1Bond}{Bond}(2,BD\_KET);
+    cout << bd\_a << endl;
+    cout << bd\_b << endl;
+    cout << bd\_c << endl;   
+    cout << bd\_d << endl;
+    
+    bd\_a.\hyperlink{classcytnx_1_1Bond_a1fd655bfe0845839502b6e385d743078}{combineBonds\_}(\{bd\_b,bd\_c,bd\_d\});
+    cout << bd\_a << endl;
+
+
+    \textcolor{comment}{/* 2.}
+\textcolor{comment}{        combine symmetry bonds, }
+\textcolor{comment}{        with U1 x Z2 multiple symmetry }
+\textcolor{comment}{    */}
+    \hyperlink{classcytnx_1_1Bond}{Bond} bd\_sym\_a = \hyperlink{classcytnx_1_1Bond}{Bond}(3,BD\_BRA,\{\{0,2,-4\},
+                               \{1,0,1\}\},
+                              \{\hyperlink{classcytnx_1_1Symmetry_a9218fd66fc9cca64cd3d792e0019592a}{Symmetry::U1}(),
+                               Symmetry::Zn(2)\});
+                                
+    \hyperlink{classcytnx_1_1Bond}{Bond} bd\_sym\_b = \hyperlink{classcytnx_1_1Bond}{Bond}(4,BD\_BRA,\{\{0,2,-1,3\},
+                               \{0,1, 1,0\}\},
+                              \{\hyperlink{classcytnx_1_1Symmetry_a9218fd66fc9cca64cd3d792e0019592a}{Symmetry::U1}(),
+                               Symmetry::Zn(2)\});
+
+    \hyperlink{classcytnx_1_1Bond}{Bond} bd\_sym\_c = \hyperlink{classcytnx_1_1Bond}{Bond}(5,BD\_BRA,\{\{1,1,-1,-2,0\},
+                               \{1,1, 1,0 ,0\}\},
+                              \{\hyperlink{classcytnx_1_1Symmetry_a9218fd66fc9cca64cd3d792e0019592a}{Symmetry::U1}(),
+                               Symmetry::Zn(2)\});
+    
+    cout << bd\_sym\_a << endl;
+    cout << bd\_sym\_b << endl;
+    cout << bd\_sym\_c << endl;
+    bd\_sym\_a.\hyperlink{classcytnx_1_1Bond_a1fd655bfe0845839502b6e385d743078}{combineBonds\_}(\{bd\_sym\_b,bd\_sym\_c\});
+    cout << bd\_sym\_a << endl;
+
+    \textcolor{keywordflow}{return} 0;
+    
+
+
+\}
+
+\end{DoxyCodeInclude}
+ \subparagraph*{output$>$}
+
+
+\begin{DoxyVerbInclude}
+Dim = 10 |type: KET>     
+
+Dim = 4 |type: KET>     
+
+Dim = 5 |type: KET>     
+
+Dim = 2 |type: KET>     
+
+Dim = 400 |type: KET>     
+
+Dim = 3 |type: <BRA     
+ U1::  +0 +2 -4
+ Z2::  +1 +0 +1
+
+Dim = 4 |type: <BRA     
+ U1::  +0 +2 -1 +3
+ Z2::  +0 +1 +1 +0
+
+Dim = 5 |type: <BRA     
+ U1::  +1 +1 -1 -2 +0
+ Z2::  +1 +1 +1 +0 +0
+
+Dim = 60 |type: <BRA     
+ U1::  +1 +1 -1 -2 +0 +3 +3 +1 +0 +2 +0 +0 -2 -3 -1 +4 +4 +2 +1 +3 +3 +3 +1 +0 +2 +5 +5 +3 +2 +4 +2 +2 +0 -1 +1 +6 +6 +4 +3 +5 -3 -3 -5 -6 -4 -1 -1 -3 -4 -2 -4 -4 -6 -7 -5 +0 +0 -2 -3 -1
+ Z2::  +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1 +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1
+
+\end{DoxyVerbInclude}
+ \paragraph*{python A\+PI\+:}
+
+
+\begin{DoxyCodeInclude}
+\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *
+
+bd\_a = Bond(10,BD\_KET);
+bd\_b = Bond(4,BD\_KET);
+bd\_c = Bond(5,BD\_KET);
+bd\_d = Bond(2,BD\_KET);
+print( bd\_a )
+print( bd\_b )
+print( bd\_c )   
+print( bd\_d )
+
+bd\_a.combineBonds\_([bd\_b,bd\_c,bd\_d]);
+print( bd\_a )
+
+
+bd\_sym\_a = Bond(3,BD\_BRA,[[0,2,-4],
+                          [1,0,1]],
+                          [Symmetry.U1(),
+                           Symmetry.Zn(2)]);
+                            
+bd\_sym\_b = Bond(4,BD\_BRA,[[0,2,-1,3],
+                          [0,1, 1,0]],
+                          [Symmetry.U1(),
+                           Symmetry.Zn(2)]);
+
+bd\_sym\_c = Bond(5,BD\_BRA,[[1,1,-1,-2,0],
+                          [1,1, 1,0 ,0]],
+                          [Symmetry.U1(),
+                           Symmetry.Zn(2)]);
+
+print( bd\_sym\_a )
+print( bd\_sym\_b )
+print( bd\_sym\_c )
+bd\_sym\_a.combineBonds\_([bd\_sym\_b,bd\_sym\_c]);
+print( bd\_sym\_a )
+\end{DoxyCodeInclude}
+ \subparagraph*{output$>$}
+
+
+\begin{DoxyVerbInclude}
+Dim = 10 |type: KET>     
+
+Dim = 4 |type: KET>     
+
+Dim = 5 |type: KET>     
+
+Dim = 2 |type: KET>     
+
+Dim = 400 |type: KET>     
+
+Dim = 3 |type: <BRA     
+ U1::  +0 +2 -4
+ Z2::  +1 +0 +1
+
+Dim = 4 |type: <BRA     
+ U1::  +0 +2 -1 +3
+ Z2::  +0 +1 +1 +0
+
+Dim = 5 |type: <BRA     
+ U1::  +1 +1 -1 -2 +0
+ Z2::  +1 +1 +1 +0 +0
+
+Dim = 60 |type: <BRA     
+ U1::  +1 +1 -1 -2 +0 +3 +3 +1 +0 +2 +0 +0 -2 -3 -1 +4 +4 +2 +1 +3 +3 +3 +1 +0 +2 +5 +5 +3 +2 +4 +2 +2 +0 -1 +1 +6 +6 +4 +3 +5 -3 -3 -5 -6 -4 -1 -1 -3 -4 -2 -4 -4 -6 -7 -5 +0 +0 -2 -3 -1
+ Z2::  +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1 +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1 +1 +1 +1 +0 +0 +1 +1 +1 +0 +0 +0 +0 +0 +1 +1
+
+
+
+
+
+
+
+
+
+
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Bond_aa072647e03a4c797479445bd41b9eacf}\label{classcytnx_1_1Bond_aa072647e03a4c797479445bd41b9eacf}} 
 \index{cytnx\+::\+Bond@{cytnx\+::\+Bond}!dim@{dim}}
 \index{dim@{dim}!cytnx\+::\+Bond@{cytnx\+::\+Bond}}
 \subsubsection{\texorpdfstring{dim()}{dim()}}
@@ -509,7 +860,7 @@ init a bond object
 \hline
 {\em in\+\_\+qnums} & the quantum number(s) of the bond. it should be a 2d vector with shape (\# of symmetry, dim) \\
 \hline
-{\em in\+\_\+syms} & the symmetry object of the bond. \mbox{[}Note\mbox{]} if qnums are provided, the default symmetry type is \hyperlink{}{Symmetry\+::\+U1 }\\
+{\em in\+\_\+syms} & the symmetry object of the bond. \mbox{[}Note\mbox{]} if qnums are provided, the default symmetry type is \hyperlink{classcytnx_1_1Symmetry_a9218fd66fc9cca64cd3d792e0019592a}{Symmetry\+::\+U1 }\\
 \hline
 \end{DoxyParams}
 description\+:
@@ -566,7 +917,7 @@ description\+:
 \textcolor{comment}{    */}
     \hyperlink{classcytnx_1_1Bond}{Bond} bd\_d = \hyperlink{classcytnx_1_1Bond}{Bond}(4,BD\_BRA,\{\{0,2,-1,3\},
                                \{0,1, 1,0\}\},
-                              \{Symmetry::U1(),
+                              \{\hyperlink{classcytnx_1_1Symmetry_a9218fd66fc9cca64cd3d792e0019592a}{Symmetry::U1}(),
                                Symmetry::Zn(2)\});
     cout << bd\_d << endl;
 

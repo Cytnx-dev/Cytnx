@@ -12,6 +12,12 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -93,6 +99,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">an memeory storage with multi-type/multi-device support  <a href="classcytnx_1_1Storage.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">the symmetry object  <a href="classcytnx_1_1Symmetry.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">an tensor (multi-dimensional array)  <a href="classcytnx_1_1Tensor.html#details">More...</a><br /></td></tr>
@@ -138,9 +145,6 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ae6b20189964ca74ff03eb7565dc0b8cd"><td class="memItemLeft" align="right" valign="top"><a id="ae6b20189964ca74ff03eb7565dc0b8cd"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a> &amp;lhs, const <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a> &amp;rhs)</td></tr>
-<tr class="separator:ae6b20189964ca74ff03eb7565dc0b8cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a651e9fae9c180966bc3655999e473a78"><td class="memItemLeft" align="right" valign="top"><a id="a651e9fae9c180966bc3655999e473a78"></a>
 std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (std::ostream &amp;os, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;in)</td></tr>
 <tr class="separator:a651e9fae9c180966bc3655999e473a78"><td class="memSeparator" colspan="2">&#160;</td></tr>

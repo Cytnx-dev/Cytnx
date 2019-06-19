@@ -12,6 +12,12 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -109,8 +115,8 @@ const bool &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>is_contig
 <tr class="memitem:a18f27d1fff73e4fb4109bc8faf3b5ace"><td class="memItemLeft" align="right" valign="top"><a id="a18f27d1fff73e4fb4109bc8faf3b5ace"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>permute_</b> (const std::vector&lt; cytnx_uint64 &gt; &amp;rnks)</td></tr>
 <tr class="separator:a18f27d1fff73e4fb4109bc8faf3b5ace"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adbdc402a8c4d6d738523a888bcf9c0c2"><td class="memItemLeft" align="right" valign="top"><a id="adbdc402a8c4d6d738523a888bcf9c0c2"></a>
-<a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><b>permute</b> (const std::vector&lt; cytnx_uint64 &gt; &amp;rnks) const</td></tr>
+<tr class="memitem:adbdc402a8c4d6d738523a888bcf9c0c2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#adbdc402a8c4d6d738523a888bcf9c0c2">permute</a> (const std::vector&lt; cytnx_uint64 &gt; &amp;rnks) const</td></tr>
+<tr class="memdesc:adbdc402a8c4d6d738523a888bcf9c0c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform tensor permute on the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">cytnx::Tensor</a> and return a new instance.  <a href="#adbdc402a8c4d6d738523a888bcf9c0c2">More...</a><br /></td></tr>
 <tr class="separator:adbdc402a8c4d6d738523a888bcf9c0c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a127e50508e1ee0eadf11601d66d76988"><td class="memItemLeft" align="right" valign="top"><a id="a127e50508e1ee0eadf11601d66d76988"></a>
 <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><b>contiguous</b> ()</td></tr>
@@ -746,6 +752,60 @@ Shape : (3,4,5)
 
 
 
+</pre> 
+</div>
+</div>
+<a id="adbdc402a8c4d6d738523a888bcf9c0c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adbdc402a8c4d6d738523a888bcf9c0c2">&#9670;&nbsp;</a></span>permute()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> cytnx::Tensor::permute </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; cytnx_uint64 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>rnks</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>perform tensor permute on the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">cytnx::Tensor</a> and return a new instance. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">rnks</td><td>the permute indices, should have No. of elements equal to the rank of tensor. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>] a permuted new <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a></dd></dl>
+<h2>Example:</h2>
+<h3>c++ API:</h3>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A({3,4,5});</div><div class="line">    cout &lt;&lt; A.<a class="code" href="classcytnx_1_1Tensor.html#a6d0ab6d09633ad4d6099aa822ec5335a">shape</a>() &lt;&lt; endl;</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A.<a class="code" href="classcytnx_1_1Tensor.html#adbdc402a8c4d6d738523a888bcf9c0c2">permute</a>({0,2,1});</div><div class="line">    cout &lt;&lt; B.<a class="code" href="classcytnx_1_1Tensor.html#a6d0ab6d09633ad4d6099aa822ec5335a">shape</a>() &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">//[Note] permute will not actually move the internal memory (storage) layout.</span></div><div class="line">    <span class="comment">//       this is called non-contiguous status. </span></div><div class="line">    <span class="comment">//       the memory layout will only move when Tensor.contiguous() is called.</span></div><div class="line">    cout &lt;&lt; B.is_contiguous() &lt;&lt; endl; <span class="comment">// false.</span></div><div class="line">    B.contiguous_(); <span class="comment">//actual moving the memory</span></div><div class="line">    cout &lt;&lt; B.is_contiguous() &lt;&lt; endl; <span class="comment">// true.</span></div><div class="line">    </div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment">Vector Print:
+Total Elements:3
+[3 4 5 ]
+
+Vector Print:
+Total Elements:3
+[3 5 4 ]
+
+0
+1
+</pre> <h3>python API:</h3>
+<div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line">A = Tensor([3,4,5])</div><div class="line">print(A.shape())</div><div class="line"></div><div class="line">B = A.permute(0,2,1)</div><div class="line">print(B.shape())</div><div class="line"></div><div class="line">print(B.is_contiguous()) <span class="comment">#false</span></div><div class="line">B.contiguous_()</div><div class="line">print(B.is_contiguous()) <span class="comment">#true</span></div><div class="line">    </div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment">[3, 4, 5]
+[3, 5, 4]
+False
+True
 </pre> 
 </div>
 </div>

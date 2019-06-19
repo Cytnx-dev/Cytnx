@@ -6,10 +6,13 @@
 using namespace std;
 
 
-    bool cytnx::operator==(const Symmetry &lhs, const Symmetry &rhs){
-        return(lhs.stype() == rhs.stype()) && (lhs.n() == rhs.n());
-    }
 namespace cytnx{
+
+    bool cytnx::Symmetry::operator==(const cytnx::Symmetry &rhs) const{
+        return(this->stype() == rhs.stype()) && (this->n() == rhs.n());
+    }
+
+    //=============================
 
     std::string cytnx::SymmetryType_class::getname(const int &stype_id){
         if(stype_id==this->U){
