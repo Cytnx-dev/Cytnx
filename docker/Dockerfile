@@ -5,6 +5,7 @@ MAINTAINER kaihsinwu
 ENV PATH=/miniconda/bin:${PATH}
 ENV LD_LIBRARY_PATH=/miniconda/lib:/opt/cytnx:${LD_LIBRARY_PATH}
 ENV CPATH=/miniconda/include:/opt/cytnx/include:${CPATH}
+ENV PYTHONPATH=/opt/cytnx:${PYTHONPATH}
 RUN mkdir /opt/cytnx
 COPY cytnx /opt/cytnx/ 
 
@@ -18,5 +19,5 @@ RUN apt-get update\
     && conda install -y -c conda-forge pybind11 openmp\
     && conda install -y -c anaconda mkl-include boost\
     && cd /opt/cytnx\
-    && make -Bj4
+    && make -Bj4\
     && make pyobj

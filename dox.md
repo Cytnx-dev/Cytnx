@@ -101,6 +101,22 @@
     * pybind11 2.2.4
     * numpy >= 1.15 
 
+## docker image with MKL 
+  [https://hub.docker.com/r/kaihsinwu/cytnx_mkl](https://hub.docker.com/r/kaihsinwu/cytnx_mkl)
+    
+### To run:
+
+```{.sh}
+    $docker pull kaihsinwu/cytnx_mkl
+    $docker run -ti kaihsinwu/cytnx_mkl
+```
+
+###Note:
+    Once docker image is run, the user code can be compile (for example) with:
+
+```{.sh}
+    $g++-6 -std=c++11 -O3 <your.code.cpp> /opt/cytnx/libcytnx.so
+```
 
 ## compile
     * compile: 

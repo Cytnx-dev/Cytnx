@@ -170,7 +170,12 @@ $(function() {
 <li>pybind11 2.2.4</li>
 <li>numpy &gt;= 1.15</li>
 </ul>
-<h2>compile</h2>
+<h2>docker image with MKL</h2>
+<p><a href="https://hub.docker.com/r/kaihsinwu/cytnx_mkl">https://hub.docker.com/r/kaihsinwu/cytnx_mkl</a></p>
+<h3>To run:</h3>
+<div class="fragment"><div class="line">$docker pull kaihsinwu/cytnx_mkl</div><div class="line">$docker run -ti kaihsinwu/cytnx_mkl</div></div><!-- fragment --><h3>Note:</h3>
+<p>Once docker image is run, the user code can be compile (for example) with:</p>
+<div class="fragment"><div class="line">$g++-6 -std=c++11 -O3 &lt;your.code.cpp&gt; /opt/cytnx/libcytnx.so</div></div><!-- fragment --><h2>compile</h2>
 <ul>
 <li><p class="startli">compile:</p>
 <p class="startli">$make -Bj4</p>
