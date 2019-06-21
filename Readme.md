@@ -6,6 +6,26 @@
 
 [https://kaihsin.github.io/Cytnx/docs/html/index.html](https://kaihsin.github.io/Cytnx/docs/html/index.html)
 
+## docker image with MKL 
+  [https://hub.docker.com/r/kaihsinwu/cytnx_mkl](https://hub.docker.com/r/kaihsinwu/cytnx_mkl)
+    
+    * To run:
+
+    $docker pull kaihsinwu/cytnx_mkl
+    $docker run -ti kaihsinwu/cytnx_mkl
+
+    * Note:
+    
+    Once docker image is run, the user code can be compile (for example) with:
+
+    $g++-6 -std=c++11 -O3 <your.code.cpp> /opt/cytnx/libcytnx.so
+
+    Or, directly using python API, by import cytnx in python script:
+
+```python
+    from cytnx import *
+```
+
 ## Requirements
     * Boost v1.53+ [check_deleted, atomicadd, intrusive_ptr]
     * C++11
@@ -30,20 +50,6 @@
 
 ## ubuntu
     sudo apt-get install libboost-all-dev libblas-dev liblapack-dev make curl g++-6 libomp-dev 
-
-## docker image with MKL 
-  [https://hub.docker.com/r/kaihsinwu/cytnx_mkl](https://hub.docker.com/r/kaihsinwu/cytnx_mkl)
-    
-    * To run:
-
-    $docker pull kaihsinwu/cytnx_mkl
-    $docker run -ti kaihsinwu/cytnx_mkl
-
-    * Note:
-    
-    Once docker image is run, the user code can be compile (for example) with:
-
-    $g++-6 -std=c++11 -O3 <your.code.cpp> /opt/cytnx/libcytnx.so
 
 
 ## compile
@@ -182,7 +188,11 @@
             
 ```
 
-
+## Example
+    
+    See example/ folder or documentation for how to use API
+    See test.cpp for using C++ .
+    See test.py for using python  
 
 
 ## Avaliable linear-algebra function (Keep updating):
@@ -213,14 +223,8 @@
 
     Tensor: zeros(), ones(), arange()
     
-
      
-## Example
-    
-    See test.cpp for using C++ .
-    See test.py for using python  
-
-## Author
+## Developer
 
     Kai-Hsin Wu kaihsinwu@gmail.com 
 

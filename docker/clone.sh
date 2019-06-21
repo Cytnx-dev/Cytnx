@@ -3,7 +3,7 @@ mkdir cytnx
 cp -r ../include cytnx/
 cp -r ../src cytnx/
 cp ../Makefile cytnx/
-cp ../make.inc cytnx/
+cp ../make.docker.inc cytnx/
 cp ../LICENSE cytnx/
 cp -r ../pybind cytnx/
 cp -r ../cytnx cytnx/
