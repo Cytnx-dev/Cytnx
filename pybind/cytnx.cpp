@@ -104,7 +104,7 @@ PYBIND11_MODULE(cytnx,m){
                         return cytnx::zeros(Nelem,dtype,device);
                   },py::arg("size"),py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
 
-    m.def("zeros",[](py::tuple Nelem, const unsigned int &dtype, const int &device)->Tensor{
+    m.def("zeros",[](py::object Nelem, const unsigned int &dtype, const int &device)->Tensor{
                         std::vector<cytnx_uint64> tmp = Nelem.cast<std::vector<cytnx_uint64> >();
                         return cytnx::zeros(tmp,dtype,device);
                   },py::arg("size"),py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
@@ -113,7 +113,7 @@ PYBIND11_MODULE(cytnx,m){
                         return cytnx::ones(Nelem,dtype,device);
                   },py::arg("size"),py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
 
-    m.def("ones",[](py::tuple Nelem, const unsigned int &dtype, const int &device)->Tensor{
+    m.def("ones",[](py::object Nelem, const unsigned int &dtype, const int &device)->Tensor{
                         std::vector<cytnx_uint64> tmp = Nelem.cast<std::vector<cytnx_uint64> >();
                         return cytnx::ones(tmp,dtype,device);
                   },py::arg("size"),py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
