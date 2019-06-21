@@ -12,13 +12,6 @@ int main(){
     Tensor B = A.permute({0,2,1});
     cout << B.shape() << endl;
 
-    //[Note] permute will not actually move the internal memory (storage) layout.
-    //       this is called non-contiguous status. 
-    //       the memory layout will only move when Tensor.contiguous() is called.
-    cout << B.is_contiguous() << endl; // false.
-    B.contiguous_(); //actual moving the memory
-    cout << B.is_contiguous() << endl; // true.
-    
 
     return 0;
 }

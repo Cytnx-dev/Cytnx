@@ -440,19 +440,85 @@ namespace cytnx{
                 return out;
             }
 
+
+            /**
+            @brief Make the Tensor contiguous by coalescing the memory (storage).
+            @return [Tensor] a new Tensor that is with contiguous memory (storage). 
+
+            See also \link Tensor::contiguous_ Tensor::contiguous_() \endlink
+
+            ## Example:
+            ### c++ API:
+            \include example/Tensor/contiguous.cpp
+            #### output>
+            \verbinclude example/Tensor/contiguous.cpp.out
+            ### python API:
+            \include example/Tensor/contiguous.py               
+            #### output>
+            \verbinclude example/Tensor/contiguous.py.out
+            */
             Tensor contiguous(){
                 Tensor out;
                 out._impl = this->_impl->contiguous();
                 return out;
             }
+            
+            /**
+            @brief Make the Tensor contiguous by coalescing the memory (storage), inplacely
+
+            See also \link Tensor::contiguous Tensor::contiguous() \endlink
+
+            ## Example:
+            ### c++ API:
+            \include example/Tensor/contiguous_.cpp
+            #### output>
+            \verbinclude example/Tensor/contiguous_.cpp.out
+            ### python API:
+            \include example/Tensor/contiguous_.py               
+            #### output>
+            \verbinclude example/Tensor/contiguous_.py.out
+            */
             void contiguous_(){
                 this->_impl->contiguous_();
             }
 
+            /**
+            @brief reshape the Tensor, inplacely
+            @param new_shape the new shape of the Tensor. 
+    
+            See also \link Tensor::reshape Tensor::reshape() \endlink
+
+            ## Example:
+            ### c++ API:
+            \include example/Tensor/reshape_.cpp
+            #### output>
+            \verbinclude example/Tensor/reshape_.cpp.out
+            ### python API:
+            \include example/Tensor/reshape_.py               
+            #### output>
+            \verbinclude example/Tensor/reshape_.py.out
+            */
             void reshape_(const std::vector<cytnx_int64> &new_shape){
                 this->_impl->reshape_(new_shape);
             }
+            
+            /**
+            @brief return a new Tensor that is reshaped.
+            @param new_shape the new shape of the Tensor. 
+            @return [Tensor]
 
+            See also \link Tensor::reshape_ Tensor::reshape_() \endlink
+
+            ## Example:
+            ### c++ API:
+            \include example/Tensor/reshape.cpp
+            #### output>
+            \verbinclude example/Tensor/reshape.cpp.out
+            ### python API:
+            \include example/Tensor/reshape.py               
+            #### output>
+            \verbinclude example/Tensor/reshape.py.out
+            */
             Tensor reshape(const std::vector<cytnx_int64> &new_shape){
                 Tensor out;
                 out._impl = this->_impl->reshape(new_shape);
@@ -465,11 +531,47 @@ namespace cytnx{
                 return out;
             }
 
+
+            /**
+            @brief [C++ only] get an element at specific location.
+            @param locator the location of the element 
+            @return [ref] 
+
+            ## Note:
+                1. This is for C++ API only!
+                2. need template instantiation to resolve the type, which should be consist with the dtype of the Tensor. An error will be issued if the template type is inconsist with the current dtype of Tensor.
+                3. For python API, use [] directly to get element.
+
+            ## Example:
+            ### c++ API:
+            \include example/Tensor/at.cpp
+            #### output>
+            \verbinclude example/Tensor/at.cpp.out
+            */
             template<class T>
             T& at(const std::vector<cytnx_uint64> &locator){
                 return this->_impl->at<T>(locator);
             }
 
+            /**
+            @brief get an from a rank-0 Tensor
+            @return [T] 
+
+            ## Note:
+                1. This can only be called on a rank-0 Tensor (scalar). For C++ API, a template instantiation of type is needed to resolve the type, which should be connsist with the dtype of the Tensor. An error will be issued if the template type if inconsist with the current dtype of Tensor.
+                2. Although the return is by reference in C++ part, the return in python is not. 
+                3. From 2., We recommend user to use at<T> (C++ API) and [] (python API) to modify the value of the element to have consistant syntax across two languages. 
+
+            ## Example:
+            ### c++ API:
+            \include example/Tensor/item.cpp
+            #### output>
+            \verbinclude example/Tensor/item.cpp.out
+            ### python API:
+            \include example/Tensor/item.py               
+            #### output>
+            \verbinclude example/Tensor/item.py.out
+            */
             template<class T>
             T& item(){
                 cytnx_error_msg(this->_impl->storage().size()!=1,"[ERROR][Tensor.item<T>]%s","item can only be called from a Tensor with only one element\n");
@@ -509,6 +611,7 @@ namespace cytnx{
                 this->_impl->fill(val);
                 return *this;
             }
+
 
             bool equiv(const Tensor &rhs){
                 if(this->shape() != rhs.shape()) return false;

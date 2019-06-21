@@ -3,8 +3,8 @@ CC := g++
 CCFLAGS := -std=c++11 
 INCFLAGS := -I$(CYTNX_ROOT)/include
 LDFLAGS := -L$(CYTNX_ROOT)
-
-Tensor_example = Tensor_Init.e Tensor_to.e Tensor_to_.e Tensor_clone.e Tensor_permute.e
+ 
+Tensor_example = Tensor_Init.e Tensor_to.e Tensor_to_.e Tensor_clone.e Tensor_permute.e Tensor_contiguous.e Tensor_contiguous_.e Tensor_reshape.e Tensor_reshape_.e Tensor_at.e Tensor_item.e
 Storage_example = Storage_Init.e Storage_astype.e Storage_eq.e Storage_clone.e
 Bond_example = Bond_Init.e Bond_clone.e Bond_combineBondinplace.e Bond_combineBond.e Bond_combineBonds.e Bond_combineBonds_.e
 Accessor_example = Accessor_ex.e
@@ -14,18 +14,26 @@ all: $(Tensor_example) $(Storage_example) $(Bond_example) $(Accessor_example) $(
 
 Tensor_Init.e: ./Tensor/Init.cpp $(CYTNX_ROOT)/libcytnx.so
 	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
-
 Tensor_to.e: ./Tensor/to.cpp $(CYTNX_ROOT)/libcytnx.so
 	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
-
 Tensor_to_.e: ./Tensor/to_.cpp $(CYTNX_ROOT)/libcytnx.so
 	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
-
 Tensor_clone.e: ./Tensor/clone.cpp $(CYTNX_ROOT)/libcytnx.so
 	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
 Tensor_permute.e: ./Tensor/permute.cpp $(CYTNX_ROOT)/libcytnx.so
 	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
-
+Tensor_contiguous.e: ./Tensor/contiguous.cpp $(CYTNX_ROOT)/libcytnx.so
+	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
+Tensor_contiguous_.e: ./Tensor/contiguous_.cpp $(CYTNX_ROOT)/libcytnx.so
+	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
+Tensor_reshape_.e: ./Tensor/reshape_.cpp $(CYTNX_ROOT)/libcytnx.so
+	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
+Tensor_reshape.e: ./Tensor/reshape.cpp $(CYTNX_ROOT)/libcytnx.so
+	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
+Tensor_at.e: ./Tensor/at.cpp $(CYTNX_ROOT)/libcytnx.so
+	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
+Tensor_item.e: ./Tensor/item.cpp $(CYTNX_ROOT)/libcytnx.so
+	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $< $(CYTNX_ROOT)/libcytnx.so	
 
 
 Storage_Init.e: ./Storage/Init.cpp $(CYTNX_ROOT)/libcytnx.so

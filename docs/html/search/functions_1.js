@@ -12,5 +12,7 @@ var searchData=
   ['combinebonds_5f',['combineBonds_',['../classcytnx_1_1Bond.html#a1fd655bfe0845839502b6e385d743078',1,'cytnx::Bond']]],
   ['conj',['Conj',['../namespacecytnx_1_1linalg.html#a470d0886432554a35ecaf961451c0806',1,'cytnx::linalg']]],
   ['conj_5f',['Conj_',['../namespacecytnx_1_1linalg.html#adc3233bf8bc3eb6a435340f912412801',1,'cytnx::linalg']]],
+  ['contiguous',['contiguous',['../classcytnx_1_1Tensor.html#a127e50508e1ee0eadf11601d66d76988',1,'cytnx::Tensor']]],
+  ['contiguous_5f',['contiguous_',['../classcytnx_1_1Tensor.html#a405470654ef4ef5fc0b1d24754a3daf9',1,'cytnx::Tensor']]],
   ['contract',['Contract',['../namespacecytnx.html#aff129ee03a89358da36c843e471a8ef2',1,'cytnx']]]
 ];
