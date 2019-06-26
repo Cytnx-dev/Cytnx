@@ -1,0 +1,16 @@
+image: alpine
+
+pages:
+  script:
+  - apk --no-cache add py3-pip python-dev
+  - pip3 install sphinx
+  - pip3 install sphinx_rtd_theme
+  - apk --no-cache add make
+
+  - mv docs/html/index.html public/
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
+
