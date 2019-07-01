@@ -14,6 +14,7 @@ $(error $(CONFIG_FILE) not found.)
 endif
 include $(CONFIG_FILE)
 
+## 
 CytnxPATH=.
 INCFLAGS :=-I$(CytnxPATH)/include
 
@@ -78,7 +79,7 @@ OBJS += Storage.o Bond.o Tensor.o Symmetry.o Accessor.o Generator.o UniTensor_ba
 
 ## Utils
 OBJS += utils_internal_interface.o
-OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o is.o vec_intersect.o vec_concatenate.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_cpu.o SetElems_cpu.o
+OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o is.o vec_intersect.o vec_concatenate.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_cpu.o SetElems_cpu.o cartesian.o
 ifeq ($(GPU_Enable),1)
   OBJS += cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o cuFill_gpu.o cuSetArange_gpu.o cuGetElems_gpu.o  cuSetElems_gpu.o
 endif
@@ -319,6 +320,8 @@ complex_arithmic.o: $(CytnxPATH)/src/utils/complex_arithmic.cpp $(CytnxPATH)/inc
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 is.o: $(CytnxPATH)/src/utils/is.cpp $(CytnxPATH)/include/utils/is.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+cartesian.o: $(CytnxPATH)/src/utils/cartesian.cpp $(CytnxPATH)/include/utils/cartesian.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 vec_clone.o: $(CytnxPATH)/src/utils/vec_clone.cpp $(CytnxPATH)/include/utils/vec_clone.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<

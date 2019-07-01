@@ -3,6 +3,7 @@
 
 #include "complex_arithmic.hpp"
 #include "is.hpp"
+#include "cartesian.hpp"
 #include "vec_clone.hpp"
 #include "vec_unique.hpp"
 #include "vec_map.hpp"

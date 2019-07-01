@@ -171,7 +171,7 @@ namespace cytnx{
 
     std::ostream& operator<<(std::ostream& os,const Tensor &in){
         if(in.is_contiguous()) in._impl->storage()._impl->PrintElem_byShape(os,in.shape());
-        else in._impl->storage()._impl->PrintElem_byShape(os,in.shape(),in._impl->_get_invmapper());
+        else in._impl->storage()._impl->PrintElem_byShape(os,in.shape(),in._impl->invmapper());
         return os;
     }       
 

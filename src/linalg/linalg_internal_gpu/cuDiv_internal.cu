@@ -56,7 +56,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_cdtcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_cdtcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
             cuDoubleComplex *_Lin = (cuDoubleComplex*)Lin->Mem;
             cuDoubleComplex *_Rin = (cuDoubleComplex*)Rin->Mem;
@@ -93,7 +93,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_cdtcf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_cdtcf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
             cuDoubleComplex *_Lin = (cuDoubleComplex*)Lin->Mem;
             cuFloatComplex *_Rin = (cuFloatComplex*)Rin->Mem;
@@ -129,7 +129,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_cdtd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_cdtd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
             cuDoubleComplex *_Lin = (cuDoubleComplex*)Lin->Mem;
             cytnx_double *_Rin = (cytnx_double*)Rin->Mem;
@@ -167,7 +167,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_cdtf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_cdtf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
             cuDoubleComplex *_Lin = (cuDoubleComplex*)Lin->Mem;
             cytnx_float *_Rin = (cytnx_float*)Rin->Mem;
@@ -208,7 +208,7 @@ namespace cytnx{
               __syncthreads();
           }
 
-        void cuDiv_internal_cdtu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_cdtu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
             cuDoubleComplex *_Lin = (cuDoubleComplex*)Lin->Mem;
             cytnx_uint64 *_Rin = (cytnx_uint64*)Rin->Mem;
@@ -246,7 +246,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_cdtu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_cdtu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
             cuDoubleComplex *_Lin = (cuDoubleComplex*)Lin->Mem;
             cytnx_uint32 *_Rin = (cytnx_uint32*)Rin->Mem;
@@ -284,7 +284,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_cdti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_cdti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
             cuDoubleComplex *_Lin = (cuDoubleComplex*)Lin->Mem;
             cytnx_int64 *_Rin = (cytnx_int64*)Rin->Mem;
@@ -322,7 +322,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_cdti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_cdti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
             cuDoubleComplex *_Lin = (cuDoubleComplex*)Lin->Mem;
             cytnx_int32 *_Rin = (cytnx_int32*)Rin->Mem;
@@ -359,7 +359,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_cftcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_cftcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
             cuFloatComplex *_Lin = (cuFloatComplex*)Lin->Mem;
             cuDoubleComplex *_Rin = (cuDoubleComplex*)Rin->Mem;
@@ -395,7 +395,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_cftcf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_cftcf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
             cuFloatComplex *_Lin = (cuFloatComplex*)Lin->Mem;
             cuFloatComplex *_Rin = (cuFloatComplex*)Rin->Mem;
@@ -432,7 +432,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_cftd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_cftd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
             cuFloatComplex *_Lin = (cuFloatComplex*)Lin->Mem;
             cytnx_double *_Rin = (cytnx_double*)Rin->Mem;
@@ -470,7 +470,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_cftf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_cftf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
             cuFloatComplex *_Lin = (cuFloatComplex*)Lin->Mem;
             cytnx_float *_Rin = (cytnx_float*)Rin->Mem;
@@ -507,7 +507,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_cftu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_cftu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
             cuFloatComplex *_Lin = (cuFloatComplex*)Lin->Mem;
             cytnx_uint64 *_Rin = (cytnx_uint64*)Rin->Mem;
@@ -544,7 +544,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_cftu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_cftu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
             cuFloatComplex *_Lin = (cuFloatComplex*)Lin->Mem;
             cytnx_uint32 *_Rin = (cytnx_uint32*)Rin->Mem;
@@ -582,7 +582,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_cfti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_cfti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
             cuFloatComplex *_Lin = (cuFloatComplex*)Lin->Mem;
             cytnx_int64 *_Rin = (cytnx_int64*)Rin->Mem;
@@ -620,7 +620,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_cfti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_cfti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
             cuFloatComplex *_Lin = (cuFloatComplex*)Lin->Mem;
             cytnx_int32 *_Rin = (cytnx_int32*)Rin->Mem;
@@ -657,7 +657,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_dtcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_dtcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
             cytnx_double *_Lin = (cytnx_double*)Lin->Mem;
             cuDoubleComplex *_Rin = (cuDoubleComplex*)Rin->Mem;
@@ -694,7 +694,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_dtcf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_dtcf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
             cytnx_double *_Lin = (cytnx_double*)Lin->Mem;
             cuFloatComplex *_Rin = (cuFloatComplex*)Rin->Mem;
@@ -714,7 +714,7 @@ namespace cytnx{
         }
 
 
-        void cuDiv_internal_dtd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_dtd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_double *_out = (cytnx_double*)out->Mem;
             cytnx_double *_Lin = (cytnx_double*)Lin->Mem;
             cytnx_double *_Rin = (cytnx_double*)Rin->Mem;
@@ -732,7 +732,7 @@ namespace cytnx{
 
 
         }
-        void cuDiv_internal_dtf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_dtf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_double *_out = (cytnx_double*)out->Mem;
             cytnx_double *_Lin = (cytnx_double*)Lin->Mem;
             cytnx_float *_Rin = (cytnx_float*)Rin->Mem;
@@ -748,7 +748,7 @@ namespace cytnx{
                   cuDiv_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
               }
         }
-        void cuDiv_internal_dtu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_dtu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
 
             cytnx_double *_out = (cytnx_double*)out->Mem;
             cytnx_double *_Lin = (cytnx_double*)Lin->Mem;
@@ -766,7 +766,7 @@ namespace cytnx{
               }
 
         }
-        void cuDiv_internal_dtu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_dtu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
 
             cytnx_double *_out = (cytnx_double*)out->Mem;
             cytnx_double *_Lin = (cytnx_double*)Lin->Mem;
@@ -783,7 +783,7 @@ namespace cytnx{
                   cuDiv_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
               }
         }
-        void cuDiv_internal_dti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_dti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
 
             cytnx_double *_out = (cytnx_double*)out->Mem;
             cytnx_double *_Lin = (cytnx_double*)Lin->Mem;
@@ -801,7 +801,7 @@ namespace cytnx{
               }
 
         }
-        void cuDiv_internal_dti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_dti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
 
             cytnx_double *_out = (cytnx_double*)out->Mem;
             cytnx_double *_Lin = (cytnx_double*)Lin->Mem;
@@ -840,7 +840,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_ftcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_ftcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
             cytnx_float *_Lin = (cytnx_float*)Lin->Mem;
             cuDoubleComplex *_Rin = (cuDoubleComplex*)Rin->Mem;
@@ -877,7 +877,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_ftcf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_ftcf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
             cytnx_float *_Lin = (cytnx_float*)Lin->Mem;
             cuFloatComplex *_Rin = (cuFloatComplex*)Rin->Mem;
@@ -895,7 +895,7 @@ namespace cytnx{
 
         }
 
-        void cuDiv_internal_ftd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_ftd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_double *_out = (cytnx_double*)out->Mem;
             cytnx_float *_Lin = (cytnx_float*)Lin->Mem;
             cytnx_double *_Rin = (cytnx_double*)Rin->Mem;
@@ -912,7 +912,7 @@ namespace cytnx{
               }
 
         }
-        void cuDiv_internal_ftf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_ftf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_float *_out = (cytnx_float*)out->Mem;
             cytnx_float *_Lin = (cytnx_float*)Lin->Mem;
             cytnx_float *_Rin = (cytnx_float*)Rin->Mem;
@@ -929,7 +929,7 @@ namespace cytnx{
               }
 
         }
-        void cuDiv_internal_ftu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_ftu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_float *_out = (cytnx_float*)out->Mem;
             cytnx_float *_Lin = (cytnx_float*)Lin->Mem;
             cytnx_uint64 *_Rin = (cytnx_uint64*)Rin->Mem;
@@ -946,7 +946,7 @@ namespace cytnx{
               }
 
         }
-        void cuDiv_internal_ftu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_ftu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_float *_out = (cytnx_float*)out->Mem;
             cytnx_float *_Lin = (cytnx_float*)Lin->Mem;
             cytnx_uint32 *_Rin = (cytnx_uint32*)Rin->Mem;
@@ -962,7 +962,7 @@ namespace cytnx{
                   cuDiv_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
               }
         }
-        void cuDiv_internal_fti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_fti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_float *_out = (cytnx_float*)out->Mem;
             cytnx_float *_Lin = (cytnx_float*)Lin->Mem;
             cytnx_int64 *_Rin = (cytnx_int64*)Rin->Mem;
@@ -979,7 +979,7 @@ namespace cytnx{
               }
 
         }
-        void cuDiv_internal_fti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_fti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_float *_out = (cytnx_float*)out->Mem;
             cytnx_float *_Lin = (cytnx_float*)Lin->Mem;
             cytnx_int32 *_Rin = (cytnx_int32*)Rin->Mem;
@@ -1017,7 +1017,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_i64tcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_i64tcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
             cytnx_int64 *_Lin = (cytnx_int64*)Lin->Mem;
             cuDoubleComplex *_Rin = (cuDoubleComplex*)Rin->Mem;
@@ -1054,7 +1054,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_i64tcf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_i64tcf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
             cytnx_int64 *_Lin = (cytnx_int64*)Lin->Mem;
             cuFloatComplex *_Rin = (cuFloatComplex*)Rin->Mem;
@@ -1073,7 +1073,7 @@ namespace cytnx{
         }
 
 
-        void cuDiv_internal_i64td(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_i64td(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_double *_out = (cytnx_double*)out->Mem;
             cytnx_int64 *_Lin = (cytnx_int64*)Lin->Mem;
             cytnx_double *_Rin = (cytnx_double*)Rin->Mem;
@@ -1090,7 +1090,7 @@ namespace cytnx{
               }
 
         }
-        void cuDiv_internal_i64tf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_i64tf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_float *_out = (cytnx_float*)out->Mem;
             cytnx_int64 *_Lin = (cytnx_int64*)Lin->Mem;
             cytnx_float *_Rin = (cytnx_float*)Rin->Mem;
@@ -1106,7 +1106,7 @@ namespace cytnx{
                   cuDiv_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
               }
         }
-        void cuDiv_internal_i64ti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_i64ti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_int64 *_out = (cytnx_int64*)out->Mem;
             cytnx_int64 *_Lin = (cytnx_int64*)Lin->Mem;
             cytnx_int64 *_Rin = (cytnx_int64*)Rin->Mem;
@@ -1123,7 +1123,7 @@ namespace cytnx{
               }
 
         }
-        void cuDiv_internal_i64tu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_i64tu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_int64 *_out = (cytnx_int64*)out->Mem;
             cytnx_int64 *_Lin = (cytnx_int64*)Lin->Mem;
             cytnx_uint64 *_Rin = (cytnx_uint64*)Rin->Mem;
@@ -1139,7 +1139,7 @@ namespace cytnx{
                   cuDiv_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
               }
         }
-        void cuDiv_internal_i64ti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_i64ti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_int64 *_out = (cytnx_int64*)out->Mem;
             cytnx_int64 *_Lin = (cytnx_int64*)Lin->Mem;
             cytnx_int32 *_Rin = (cytnx_int32*)Rin->Mem;
@@ -1155,7 +1155,7 @@ namespace cytnx{
                   cuDiv_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
               }
         }
-        void cuDiv_internal_i64tu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_i64tu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_int64 *_out = (cytnx_int64*)out->Mem;
             cytnx_int64 *_Lin = (cytnx_int64*)Lin->Mem;
             cytnx_uint32 *_Rin = (cytnx_uint32*)Rin->Mem;
@@ -1191,7 +1191,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_u64tcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_u64tcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
              cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
              cytnx_uint64 *_Lin = (cytnx_uint64*)Lin->Mem;
              cuDoubleComplex  *_Rin = (cuDoubleComplex*)Rin->Mem;
@@ -1227,7 +1227,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_u64tcf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_u64tcf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
                cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
                cytnx_uint64 *_Lin = (cytnx_uint64*)Lin->Mem;
                cuFloatComplex  *_Rin = (cuFloatComplex*)Rin->Mem;
@@ -1244,7 +1244,7 @@ namespace cytnx{
                   }
 
         }
-        void cuDiv_internal_u64td(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_u64td(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
                cytnx_double *_out = (cytnx_double*)out->Mem;
                cytnx_uint64 *_Lin = (cytnx_uint64*)Lin->Mem;
                cytnx_double  *_Rin = (cytnx_double*)Rin->Mem;
@@ -1260,7 +1260,7 @@ namespace cytnx{
                       cuDiv_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
                   }
         }
-        void cuDiv_internal_u64tf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_u64tf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
                cytnx_float *_out = (cytnx_float*)out->Mem;
                cytnx_uint64 *_Lin = (cytnx_uint64*)Lin->Mem;
                cytnx_float  *_Rin = (cytnx_float*)Rin->Mem;
@@ -1276,7 +1276,7 @@ namespace cytnx{
                       cuDiv_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
                   }
         }
-        void cuDiv_internal_u64ti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_u64ti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
                cytnx_int64 *_out = (cytnx_int64*)out->Mem;
                cytnx_uint64 *_Lin = (cytnx_uint64*)Lin->Mem;
                cytnx_int64  *_Rin = (cytnx_int64*)Rin->Mem;
@@ -1292,7 +1292,7 @@ namespace cytnx{
                       cuDiv_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
                   }
         }
-        void cuDiv_internal_u64tu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_u64tu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_uint64 *_out = (cytnx_uint64*)out->Mem;
             cytnx_uint64 *_Lin = (cytnx_uint64*)Lin->Mem;
             cytnx_uint64 *_Rin = (cytnx_uint64*)Rin->Mem;
@@ -1308,7 +1308,7 @@ namespace cytnx{
                   cuDiv_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
               }
         }
-        void cuDiv_internal_u64ti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_u64ti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_uint64 *_out = (cytnx_uint64*)out->Mem;
             cytnx_uint64 *_Lin = (cytnx_uint64*)Lin->Mem;
             cytnx_int32 *_Rin = (cytnx_int32*)Rin->Mem;
@@ -1324,7 +1324,7 @@ namespace cytnx{
                   cuDiv_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
               }
         }
-        void cuDiv_internal_u64tu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_u64tu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_uint64 *_out = (cytnx_uint64*)out->Mem;
             cytnx_uint64 *_Lin = (cytnx_uint64*)Lin->Mem;
             cytnx_uint32 *_Rin = (cytnx_uint32*)Rin->Mem;
@@ -1363,7 +1363,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_i32tcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_i32tcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
               cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
               cytnx_int32 *_Lin = (cytnx_int32*)Lin->Mem;
               cuDoubleComplex *_Rin = (cuDoubleComplex*)Rin->Mem;
@@ -1400,7 +1400,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_i32tcf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_i32tcf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
             cytnx_int32 *_Lin = (cytnx_int32*)Lin->Mem;
             cuFloatComplex *_Rin = (cuFloatComplex*)Rin->Mem;
@@ -1418,7 +1418,7 @@ namespace cytnx{
 
 
         }
-        void cuDiv_internal_i32td(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_i32td(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_double *_out = (cytnx_double*)out->Mem;
             cytnx_int32 *_Lin = (cytnx_int32*)Lin->Mem;
             cytnx_double *_Rin = (cytnx_double*)Rin->Mem;
@@ -1435,7 +1435,7 @@ namespace cytnx{
               }
 
         }
-        void cuDiv_internal_i32tf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_i32tf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_float *_out = (cytnx_float*)out->Mem;
             cytnx_int32 *_Lin = (cytnx_int32*)Lin->Mem;
             cytnx_float *_Rin = (cytnx_float*)Rin->Mem;
@@ -1453,7 +1453,7 @@ namespace cytnx{
 
 
         }
-        void cuDiv_internal_i32ti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_i32ti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_int64 *_out = (cytnx_int64*)out->Mem;
             cytnx_int32 *_Lin = (cytnx_int32*)Lin->Mem;
             cytnx_int64 *_Rin = (cytnx_int64*)Rin->Mem;
@@ -1472,7 +1472,7 @@ namespace cytnx{
 
 
         }
-        void cuDiv_internal_i32tu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_i32tu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_uint64 *_out = (cytnx_uint64*)out->Mem;
             cytnx_int32 *_Lin = (cytnx_int32*)Lin->Mem;
             cytnx_uint64 *_Rin = (cytnx_uint64*)Rin->Mem;
@@ -1490,7 +1490,7 @@ namespace cytnx{
 
 
         }
-        void cuDiv_internal_i32ti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_i32ti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_int32 *_out = (cytnx_int32*)out->Mem;
             cytnx_int32 *_Lin = (cytnx_int32*)Lin->Mem;
             cytnx_int32 *_Rin = (cytnx_int32*)Rin->Mem;
@@ -1507,7 +1507,7 @@ namespace cytnx{
               }
 
         }
-        void cuDiv_internal_i32tu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_i32tu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_int32 *_out = (cytnx_int32*)out->Mem;
             cytnx_int32 *_Lin = (cytnx_int32*)Lin->Mem;
             cytnx_uint32 *_Rin = (cytnx_uint32*)Rin->Mem;
@@ -1543,7 +1543,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_u32tcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_u32tcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
             cytnx_uint32 *_Lin = (cytnx_uint32*)Lin->Mem;
             cuDoubleComplex *_Rin = (cuDoubleComplex*)Rin->Mem;
@@ -1580,7 +1580,7 @@ namespace cytnx{
             }
             __syncthreads();
         }
-        void cuDiv_internal_u32tcf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_u32tcf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
              cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
               cytnx_uint32 *_Lin = (cytnx_uint32*)Lin->Mem;
               cuFloatComplex *_Rin = (cuFloatComplex*)Rin->Mem;
@@ -1598,7 +1598,7 @@ namespace cytnx{
 
 
         }
-        void cuDiv_internal_u32td(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_u32td(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
               cytnx_double *_out = (cytnx_double*)out->Mem;
               cytnx_uint32 *_Lin = (cytnx_uint32*)Lin->Mem;
               cytnx_double *_Rin = (cytnx_double*)Rin->Mem;
@@ -1616,7 +1616,7 @@ namespace cytnx{
 
 
         }
-        void cuDiv_internal_u32tf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_u32tf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
               cytnx_float *_out = (cytnx_float*)out->Mem;
               cytnx_uint32 *_Lin = (cytnx_uint32*)Lin->Mem;
               cytnx_float *_Rin = (cytnx_float*)Rin->Mem;
@@ -1634,7 +1634,7 @@ namespace cytnx{
 
 
         }
-        void cuDiv_internal_u32ti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_u32ti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
               cytnx_int64 *_out = (cytnx_int64*)out->Mem;
               cytnx_uint32 *_Lin = (cytnx_uint32*)Lin->Mem;
               cytnx_int64 *_Rin = (cytnx_int64*)Rin->Mem;
@@ -1652,7 +1652,7 @@ namespace cytnx{
 
 
         }
-        void cuDiv_internal_u32tu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_u32tu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
               cytnx_uint64 *_out = (cytnx_uint64*)out->Mem;
               cytnx_uint32 *_Lin = (cytnx_uint32*)Lin->Mem;
               cytnx_uint64 *_Rin = (cytnx_uint64*)Rin->Mem;
@@ -1669,7 +1669,7 @@ namespace cytnx{
                 }
 
         }
-        void cuDiv_internal_u32ti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_u32ti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
               cytnx_int32 *_out = (cytnx_int32*)out->Mem;
               cytnx_uint32 *_Lin = (cytnx_uint32*)Lin->Mem;
               cytnx_int32 *_Rin = (cytnx_int32*)Rin->Mem;
@@ -1686,7 +1686,7 @@ namespace cytnx{
                 }
 
         }
-        void cuDiv_internal_u32tu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len){
+        void cuDiv_internal_u32tu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_uint32 *_out = (cytnx_uint32*)out->Mem;
             cytnx_uint32 *_Lin = (cytnx_uint32*)Lin->Mem;
             cytnx_uint32 *_Rin = (cytnx_uint32*)Rin->Mem;

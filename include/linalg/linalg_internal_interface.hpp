@@ -29,7 +29,7 @@
 namespace cytnx{
     
     namespace linalg_internal{
-        typedef void (*Arithmicfunc_oii)(boost::intrusive_ptr<Storage_base> &,boost::intrusive_ptr<Storage_base> &,boost::intrusive_ptr<Storage_base> &,const unsigned long long & len, const char &type);
+        typedef void (*Arithmicfunc_oii)(boost::intrusive_ptr<Storage_base> &,boost::intrusive_ptr<Storage_base> &,boost::intrusive_ptr<Storage_base> &,const unsigned long long & len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type);
         typedef void (*Svdfunc_oii)(const boost::intrusive_ptr<Storage_base> &, boost::intrusive_ptr<Storage_base> &,boost::intrusive_ptr<Storage_base> &,  boost::intrusive_ptr<Storage_base> &, const cytnx_int32 &, const cytnx_int32&);
         typedef void (*Eighfunc_oii)(const boost::intrusive_ptr<Storage_base> &, boost::intrusive_ptr<Storage_base> &,  boost::intrusive_ptr<Storage_base> &, const cytnx_int32&);
         typedef void (*Invinplacefunc_oii)(boost::intrusive_ptr<Storage_base> &, const cytnx_int32&);

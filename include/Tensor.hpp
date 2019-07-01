@@ -74,11 +74,11 @@ namespace cytnx{
                 return this->_contiguous;
             }
 
-            const std::vector<cytnx_uint64>& _get_mapper() const{
-                return _mapper;
+            const std::vector<cytnx_uint64>& mapper() const{
+                return this->_mapper;
             }
-            const std::vector<cytnx_uint64> & _get_invmapper() const{
-                return _invmapper;
+            const std::vector<cytnx_uint64>& invmapper() const{
+                return this->_invmapper;
             }
             Storage& storage(){
                 return _storage;

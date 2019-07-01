@@ -131,6 +131,23 @@ int main(int argc, char *argv[]){
 
 
 
+    Tensor X1 = arange(100);
+    X1.reshape_({2,5,2,5});
+    Tensor X2 = X1.clone();
+    X1.permute_({2,0,1,3});
+    X2.permute_({0,2,3,1});
+    cout << X1 << X2 << endl;
+    
+    Tensor X1c = X1.clone();
+    Tensor X2c = X2.clone();
+    X1c.contiguous_();
+    X2c.contiguous_();
+
+
+    cout << X1 + X2 << endl;
+    cout << X1c + X2c << endl;
+    
+
 
     //cout << ut1 << endl;
 

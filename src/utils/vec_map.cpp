@@ -11,7 +11,7 @@ namespace cytnx{
         std::vector<T> out(in.size());
         for(cytnx_uint64 i=0;i<in.size();i++){
             cytnx_error_msg(mapper[i] >= in.size(),"[ERROR][vec_map] mapper exceed the size of in vector%s","\n");
-            out[mapper[i]] = in[i];
+            out[i] = in[mapper[i]];
         }
         return out;
     }
