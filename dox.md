@@ -67,10 +67,12 @@
       \link cytnx::linalg::Sub Sub\endlink     |   x       |  Y  |  Y   |    Y
       \link cytnx::linalg::Mul Mul\endlink     |   x       |  Y  |  Y   |    Y
       \link cytnx::linalg::Div Div\endlink     |   x       |  Y  |  Y   |    Y
+      \link cytnx::linalg::Cpr Cpr\endlink     |   x       |  Y  |  Y   |    Y
       +,+=[tn]|   x       |  Y  |  Y   |    Y (\link cytnx::Tensor::Add_ Tensor.Add_\endlink)
       -,-=[tn]|   x       |  Y  |  Y   |    Y (\link cytnx::Tensor::Sub_ Tensor.Sub_\endlink)
       *,*=[tn]|   x       |  Y  |  Y   |    Y (\link cytnx::Tensor::Mul_ Tensor.Mul_\endlink)
       /,/=[tn]|   x       |  Y  |  Y   |    Y (\link cytnx::Tensor::Div_ Tensor.Div_\endlink)
+      ==  [tn]|   x       |  Y  |  Y   |    Y (\link cytnx::Tensor::Cpr_ Tensor.Cpr_\endlink)
       \link cytnx::linalg::Svd Svd\endlink     |   x       |  Y  |  Y   |    Y
       \link cytnx::linalg::Inv Inv\endlink     |   \link cytnx::linalg::Inv_ Inv_\endlink    |  Y  |  Y   |    Y
       \link cytnx::linalg::Conj Conj\endlink    |   \link cytnx::linalg::Conj_ Conj_\endlink   |  Y  |  Y   |    Y 

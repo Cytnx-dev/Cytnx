@@ -23,6 +23,10 @@
 
 #include "Type.hpp"
 #include "complex_arithmic.hpp"
+#ifdef UNI_GPU
+    #include "cucomplex_arithmic.hpp"
+#endif
+
 #include "Storage.hpp"
 namespace cytnx{
     namespace utils_internal{

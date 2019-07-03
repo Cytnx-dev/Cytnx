@@ -760,6 +760,16 @@ namespace cytnx{
                 return *this /= rhs; 
            }
            
+           template<class T>
+           Tensor Cpr(const T &rhs){
+                return *this == rhs;
+           }
+           template<class T>
+           Tensor& Cpr_(const T &rhs){
+                return *this == rhs; 
+           }
+
+           
             // linalg:
             std::vector<Tensor> Svd(const bool &is_U=true, const bool &is_vT=true);
             std::vector<Tensor> Eigh(const bool &is_V=false);

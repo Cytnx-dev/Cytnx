@@ -150,6 +150,10 @@ int main(int argc, char *argv[]){
     Tensor Bb = ones({3,4,5},Type.Bool);
     cout << Bb << endl;
 
+    cout << X1c << endl;
+    cout << X1 << endl;
+    cout << (X1c == X1) << endl;
+
     //cout << ut1 << endl;
 
     //cout << ut2 << endl;

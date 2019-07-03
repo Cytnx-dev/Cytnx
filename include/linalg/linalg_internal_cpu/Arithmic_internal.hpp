@@ -8,7 +8,7 @@
 #include "linalg/linalg_internal_cpu/Mul_internal.hpp"
 #include "linalg/linalg_internal_cpu/Sub_internal.hpp"
 #include "linalg/linalg_internal_cpu/Div_internal.hpp"
-
+#include "linalg/linalg_internal_cpu/Cpr_internal.hpp"
 
 namespace cytnx{
     namespace linalg_internal{

@@ -2,6 +2,9 @@
 #define __utils_H_
 
 #include "complex_arithmic.hpp"
+#ifdef UNI_GPU
+    #include "cucomplex_arithmic.hpp"
+#endif
 #include "is.hpp"
 #include "cartesian.hpp"
 #include "vec_clone.hpp"

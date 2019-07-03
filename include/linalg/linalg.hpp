@@ -58,6 +58,17 @@ namespace cytnx{
         template<class T>
         Tensor Div(const Tensor &Lt, const T &rc);
 
+        // Cpr:
+        //==================================================
+        /**
+        @brief element-wise compare
+        */
+        Tensor Cpr(const Tensor &Lt, const Tensor &Rt);
+        template<class T>
+        Tensor Cpr(const T &lc, const Tensor &Rt);    
+        template<class T>
+        Tensor Cpr(const Tensor &Lt, const T &rc);
+
 
         // Svd:
         //==================================================
@@ -236,7 +247,12 @@ namespace cytnx{
     Tensor operator/(const T &lc, const Tensor &Rt);
     template<class T>
     Tensor operator/(const Tensor &Lt, const T &rc);
-
+    //----------------------------------
+    Tensor operator==(const Tensor &Lt, const Tensor &Rt);
+    template<class T>
+    Tensor operator==(const T &lc, const Tensor &Rt);
+    template<class T>
+    Tensor operator==(const Tensor &Lt, const T &rc);
     
 
 

@@ -14,5 +14,6 @@ var searchData=
   ['conj_5f',['Conj_',['../namespacecytnx_1_1linalg.html#adc3233bf8bc3eb6a435340f912412801',1,'cytnx::linalg']]],
   ['contiguous',['contiguous',['../classcytnx_1_1Tensor.html#a127e50508e1ee0eadf11601d66d76988',1,'cytnx::Tensor']]],
   ['contiguous_5f',['contiguous_',['../classcytnx_1_1Tensor.html#a405470654ef4ef5fc0b1d24754a3daf9',1,'cytnx::Tensor']]],
-  ['contract',['Contract',['../namespacecytnx.html#aff129ee03a89358da36c843e471a8ef2',1,'cytnx']]]
+  ['contract',['Contract',['../namespacecytnx.html#aff129ee03a89358da36c843e471a8ef2',1,'cytnx']]],
+  ['cpr',['Cpr',['../namespacecytnx_1_1linalg.html#aea125f2928934007725809426bb77e38',1,'cytnx::linalg']]]
 ];

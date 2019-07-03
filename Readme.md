@@ -205,10 +205,12 @@
       Sub     |   x       |  Y  |  Y   |    Y
       Mul     |   x       |  Y  |  Y   |    Y
       Div     |   x       |  Y  |  Y   |    Y
+      Cpr     |   x       |  Y  |  Y   |    Y
       +,+=[tn]|   x       |  Y  |  Y   |    Y (Add_)
       -,-=[tn]|   x       |  Y  |  Y   |    Y (Sub_)
       *,*=[tn]|   x       |  Y  |  Y   |    Y (Mul_)
       /,/=[tn]|   x       |  Y  |  Y   |    Y (Div_)
+      ==[tn]  |   x       |  Y  |  Y   |    Y (Cpr_)
       Svd     |   x       |  Y  |  Y   |    Y
       Inv     |   Inv_    |  Y  |  Y   |    Y
       Conj    |   Conj_   |  Y  |  Y   |    Y 
