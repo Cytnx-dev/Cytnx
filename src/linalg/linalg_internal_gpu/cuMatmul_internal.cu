@@ -137,6 +137,39 @@ namespace cytnx{
             cuMatMul_kernel<<<Nblocks,512>>>(_out,_inl,_inr,Ml,Comm,Nr);
 
         }
+        void cuMatmul_internal_i16(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &inl, const boost::intrusive_ptr<Storage_base> &inr, const cytnx_int32 &Ml, const cytnx_int32 &Comm, const cytnx_int32 &Nr){
+            cytnx_int16* _out = (cytnx_int16*)out->Mem;
+            cytnx_int16* _inl = (cytnx_int16*)inl->Mem;
+            cytnx_int16* _inr = (cytnx_int16*)inr->Mem;
+        
+            cytnx_uint64 Nblocks = (cytnx_uint64(Ml)*Nr)/512;
+            if((cytnx_uint64(Ml)*Nr)%512) Nblocks+=1;
+
+            cuMatMul_kernel<<<Nblocks,512>>>(_out,_inl,_inr,Ml,Comm,Nr);
+
+        }
+        void cuMatmul_internal_u16(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &inl, const boost::intrusive_ptr<Storage_base> &inr, const cytnx_int32 &Ml, const cytnx_int32 &Comm, const cytnx_int32 &Nr){
+            cytnx_uint16* _out = (cytnx_uint16*)out->Mem;
+            cytnx_uint16* _inl = (cytnx_uint16*)inl->Mem;
+            cytnx_uint16* _inr = (cytnx_uint16*)inr->Mem;
+        
+            cytnx_uint64 Nblocks = (cytnx_uint64(Ml)*Nr)/512;
+            if((cytnx_uint64(Ml)*Nr)%512) Nblocks+=1;
+
+            cuMatMul_kernel<<<Nblocks,512>>>(_out,_inl,_inr,Ml,Comm,Nr);
+
+        }
+        void cuMatmul_internal_b(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &inl, const boost::intrusive_ptr<Storage_base> &inr, const cytnx_int32 &Ml, const cytnx_int32 &Comm, const cytnx_int32 &Nr){
+            cytnx_bool* _out = (cytnx_bool*)out->Mem;
+            cytnx_bool* _inl = (cytnx_bool*)inl->Mem;
+            cytnx_bool* _inr = (cytnx_bool*)inr->Mem;
+        
+            cytnx_uint64 Nblocks = (cytnx_uint64(Ml)*Nr)/512;
+            if((cytnx_uint64(Ml)*Nr)%512) Nblocks+=1;
+
+            cuMatMul_kernel<<<Nblocks,512>>>(_out,_inl,_inr,Ml,Comm,Nr);
+
+        }
 
 
     }    

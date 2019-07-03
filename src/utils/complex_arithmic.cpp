@@ -33,7 +33,18 @@ namespace cytnx{
     {
         return cytnx_complex128(ln.real() + rn, ln.imag() );
     }
-
+    cytnx_complex128 operator+(const cytnx_complex128 &ln, const cytnx_uint16 &rn)
+    {
+        return cytnx_complex128(ln.real() + rn, ln.imag() );
+    }
+    cytnx_complex128 operator+(const cytnx_complex128 &ln, const cytnx_int16 &rn)
+    {
+        return cytnx_complex128(ln.real() + rn, ln.imag() );
+    }
+    cytnx_complex128 operator+(const cytnx_complex128 &ln, const cytnx_bool &rn)
+    {
+        return cytnx_complex128(ln.real() + rn, ln.imag() );
+    }
 
 //-----------------------------
     cytnx_complex128 operator+(const cytnx_complex64 &ln, const cytnx_complex128 &rn)
@@ -65,7 +76,18 @@ namespace cytnx{
     {
         return cytnx_complex64(ln.real() + rn, ln.imag());
     }
-
+    cytnx_complex64 operator+(const cytnx_complex64 &ln, const cytnx_uint16 &rn)
+    {
+        return cytnx_complex64(ln.real() + rn, ln.imag());
+    }
+    cytnx_complex64 operator+(const cytnx_complex64 &ln, const cytnx_int16 &rn)
+    {
+        return cytnx_complex64(ln.real() + rn, ln.imag());
+    }
+    cytnx_complex64 operator+(const cytnx_complex64 &ln, const cytnx_bool &rn)
+    {
+        return cytnx_complex64(ln.real() + rn, ln.imag());
+    }
 //-----------------------
     //cytnx_complex128 operator+(const cytnx_complex128 &rn,const cytnx_complex128 &ln);
     //cytnx_complex128 operator+(const cytnx_complex64 &rn,const cytnx_complex128 &ln);
@@ -90,6 +112,18 @@ namespace cytnx{
         return cytnx_complex128(ln.real() + rn, ln.imag());
     }
     cytnx_complex128 operator+(const cytnx_int32 &rn,const cytnx_complex128 &ln)
+    {
+        return cytnx_complex128(ln.real() + rn, ln.imag());
+    }
+    cytnx_complex128 operator+(const cytnx_uint16 &rn,const cytnx_complex128 &ln)
+    {
+        return cytnx_complex128(ln.real() + rn, ln.imag());
+    }
+    cytnx_complex128 operator+(const cytnx_int16 &rn,const cytnx_complex128 &ln)
+    {
+        return cytnx_complex128(ln.real() + rn, ln.imag());
+    }
+    cytnx_complex128 operator+(const cytnx_bool &rn,const cytnx_complex128 &ln)
     {
         return cytnx_complex128(ln.real() + rn, ln.imag());
     }
@@ -122,7 +156,18 @@ namespace cytnx{
     {
         return cytnx_complex64(ln.real() + rn, ln.imag());
     }
-
+    cytnx_complex64 operator+(const cytnx_uint16 &rn,const cytnx_complex64 &ln)
+    {
+        return cytnx_complex64(ln.real() + rn, ln.imag());
+    }
+    cytnx_complex64 operator+(const cytnx_int16 &rn,const cytnx_complex64 &ln)    
+    {
+        return cytnx_complex64(ln.real() + rn, ln.imag());
+    }
+    cytnx_complex64 operator+( const cytnx_bool &rn,const cytnx_complex64 &ln)
+    {
+        return cytnx_complex64(ln.real() + rn, ln.imag());
+    }
 //===================================
 
     //cytnx_complex128 operator-(const cytnx_complex128 &ln, const cytnx_complex128 &rn);
@@ -154,6 +199,19 @@ namespace cytnx{
     { 
         return cytnx_complex128(ln.real() - rn, ln.imag());
     }
+    cytnx_complex128 operator-(const cytnx_complex128 &ln, const cytnx_uint16 &rn)
+    { 
+        return cytnx_complex128(ln.real() - rn, ln.imag());
+    }
+    cytnx_complex128 operator-(const cytnx_complex128 &ln, const cytnx_int16 &rn)
+    { 
+        return cytnx_complex128(ln.real() - rn, ln.imag());
+    }
+    cytnx_complex128 operator-(const cytnx_complex128 &ln, const cytnx_bool &rn)
+    { 
+        return cytnx_complex128(ln.real() - rn, ln.imag());
+    }
+
 
     cytnx_complex128 operator-(const cytnx_complex64 &ln, const cytnx_complex128 &rn)
     { 
@@ -184,6 +242,19 @@ namespace cytnx{
     { 
         return cytnx_complex64(ln.real() - rn, ln.imag());
     }
+    cytnx_complex64 operator-(const cytnx_complex64 &ln, const cytnx_uint16 &rn)
+    { 
+        return cytnx_complex64(ln.real() - rn, ln.imag());
+    }
+    cytnx_complex64 operator-(const cytnx_complex64 &ln, const cytnx_int16 &rn)
+    { 
+        return cytnx_complex64(ln.real() - rn, ln.imag());
+    }
+    cytnx_complex64 operator-(const cytnx_complex64 &ln, const cytnx_bool &rn)
+    { 
+        return cytnx_complex64(ln.real() - rn, ln.imag());
+    }
+
 //------------
 
     //cytnx_complex128 operator-(const cytnx_complex128 &rn,const cytnx_complex128 &ln);
@@ -209,6 +280,18 @@ namespace cytnx{
         return cytnx_complex128(rn - ln.real() , -ln.imag());
     }
     cytnx_complex128 operator-(const cytnx_int32 &rn,const cytnx_complex128 &ln)
+    { 
+        return cytnx_complex128(rn - ln.real() , -ln.imag());
+    }
+    cytnx_complex128 operator-(const cytnx_uint16 &rn,const cytnx_complex128 &ln)
+    { 
+        return cytnx_complex128(rn - ln.real() , -ln.imag());
+    }
+    cytnx_complex128 operator-(const cytnx_int16 &rn,const cytnx_complex128 &ln)
+    { 
+        return cytnx_complex128(rn - ln.real() , -ln.imag());
+    }
+    cytnx_complex128 operator-(const cytnx_bool &rn,const cytnx_complex128 &ln)
     { 
         return cytnx_complex128(rn - ln.real() , -ln.imag());
     }
@@ -241,7 +324,18 @@ namespace cytnx{
     { 
         return cytnx_complex64(rn - ln.real() , -ln.imag());
     }
-
+    cytnx_complex64 operator-(const cytnx_uint16 &rn,const cytnx_complex64 &ln)
+    { 
+        return cytnx_complex64(rn - ln.real() , -ln.imag());
+    }
+    cytnx_complex64 operator-(const cytnx_int16 &rn,const cytnx_complex64 &ln)
+    { 
+        return cytnx_complex64(rn - ln.real() , -ln.imag());
+    }
+    cytnx_complex64 operator-( const cytnx_bool &rn,const cytnx_complex64 &ln)
+    { 
+        return cytnx_complex64(rn - ln.real() , -ln.imag());
+    }
 
 //=============================
 
@@ -275,6 +369,19 @@ namespace cytnx{
     {
         return cytnx_complex128(ln.real()*rn,ln.imag()*rn);
     }
+    cytnx_complex128 operator*(const cytnx_complex128 &ln, const cytnx_uint16 &rn)
+    {
+        return cytnx_complex128(ln.real()*rn,ln.imag()*rn);
+    }
+    cytnx_complex128 operator*(const cytnx_complex128 &ln, const cytnx_int16 &rn)
+    {
+        return cytnx_complex128(ln.real()*rn,ln.imag()*rn);
+    }
+    cytnx_complex128 operator*(const cytnx_complex128 &ln, const cytnx_bool &rn)
+    {
+        return cytnx_complex128(ln.real()*rn,ln.imag()*rn);
+    }
+
 
     cytnx_complex128 operator*(const cytnx_complex64 &ln, const cytnx_complex128 &rn)
     {
@@ -306,6 +413,20 @@ namespace cytnx{
     {
         return cytnx_complex64(ln.real()*rn,ln.imag()*rn);
     }
+    cytnx_complex64 operator*(const cytnx_complex64 &ln, const cytnx_uint16 &rn)
+    {
+        return cytnx_complex64(ln.real()*rn,ln.imag()*rn);
+    }
+    cytnx_complex64 operator*(const cytnx_complex64 &ln, const cytnx_int16 &rn)
+    {
+        return cytnx_complex64(ln.real()*rn,ln.imag()*rn);
+    }
+    cytnx_complex64 operator*(const cytnx_complex64 &ln, const cytnx_bool &rn)
+    {
+        return cytnx_complex64(ln.real()*rn,ln.imag()*rn);
+    }
+
+
 
     //cytnx_complex128 operator*(const cytnx_complex128 &rn,const cytnx_complex128 &ln);
     //cytnx_complex128 operator*(const cytnx_complex64 &rn,const cytnx_complex128 &ln);
@@ -333,6 +454,19 @@ namespace cytnx{
     {
         return cytnx_complex128(ln.real()*rn,ln.imag()*rn);
     }
+    cytnx_complex128 operator*(const cytnx_uint16 &rn,const cytnx_complex128 &ln)
+    {
+        return cytnx_complex128(ln.real()*rn,ln.imag()*rn);
+    }
+    cytnx_complex128 operator*(const cytnx_int16 &rn,const cytnx_complex128 &ln)
+    {
+        return cytnx_complex128(ln.real()*rn,ln.imag()*rn);
+    }
+    cytnx_complex128 operator*(const cytnx_bool &rn,const cytnx_complex128 &ln)
+    {
+        return cytnx_complex128(ln.real()*rn,ln.imag()*rn);
+    }
+
 
     //cytnx_complex128 operator*(const cytnx_complex128 &rn,const cytnx_complex64 &ln);
     //cytnx_complex64 operator*(const cytnx_complex64 &rn,const cytnx_complex64 &ln);
@@ -360,7 +494,18 @@ namespace cytnx{
     {
         return cytnx_complex64(ln.real()*rn,ln.imag()*rn);
     }
-
+    cytnx_complex64 operator*(const cytnx_uint16 &rn,const cytnx_complex64 &ln)
+    {
+        return cytnx_complex64(ln.real()*rn,ln.imag()*rn);
+    }
+    cytnx_complex64 operator*(const cytnx_int16 &rn,const cytnx_complex64 &ln)
+    {
+        return cytnx_complex64(ln.real()*rn,ln.imag()*rn);
+    }
+    cytnx_complex64 operator*( const cytnx_bool &rn,const cytnx_complex64 &ln)
+    {
+        return cytnx_complex64(ln.real()*rn,ln.imag()*rn);
+    }
 //-------------------------------
 
     //cytnx_complex128 operator/(const cytnx_complex128 &ln, const cytnx_complex128 &rn);
@@ -392,6 +537,20 @@ namespace cytnx{
     {
         return cytnx_complex128(ln.real()/rn,ln.imag()/rn);
     }
+    cytnx_complex128 operator/(const cytnx_complex128 &ln, const cytnx_uint16 &rn)
+    {
+        return cytnx_complex128(ln.real()/rn,ln.imag()/rn);
+    }
+    cytnx_complex128 operator/(const cytnx_complex128 &ln, const cytnx_int16 &rn)
+    {
+        return cytnx_complex128(ln.real()/rn,ln.imag()/rn);
+    }
+    cytnx_complex128 operator/(const cytnx_complex128 &ln, const cytnx_bool &rn)
+    {
+        return cytnx_complex128(ln.real()/rn,ln.imag()/rn);
+    }
+
+
 
     cytnx_complex128 operator/(const cytnx_complex64 &ln, const cytnx_complex128 &rn)
     {
@@ -422,6 +581,19 @@ namespace cytnx{
     {
         return cytnx_complex64(ln.real()/rn,ln.imag()/rn);
     }
+    cytnx_complex64 operator/(const cytnx_complex64 &ln, const cytnx_uint16 &rn)
+    {
+        return cytnx_complex64(ln.real()/rn,ln.imag()/rn);
+    }
+    cytnx_complex64 operator/(const cytnx_complex64 &ln, const cytnx_int16 &rn)
+    {
+        return cytnx_complex64(ln.real()/rn,ln.imag()/rn);
+    }
+    cytnx_complex64 operator/(const cytnx_complex64 &ln, const cytnx_bool &rn)
+    {
+        return cytnx_complex64(ln.real()/rn,ln.imag()/rn);
+    }
+
 
     //cytnx_complex128 operator/(const cytnx_complex128 &rn,const cytnx_complex128 &ln);
     //cytnx_complex128 operator/(const cytnx_complex64 &rn,const cytnx_complex128 &ln);
@@ -449,6 +621,19 @@ namespace cytnx{
     {
         return cytnx_complex128(rn,0)/ln;
     }
+    cytnx_complex128 operator/(const cytnx_uint16 &rn,const cytnx_complex128 &ln)
+    {
+        return cytnx_complex128(rn,0)/ln;
+    }
+    cytnx_complex128 operator/(const cytnx_int16 &rn,const cytnx_complex128 &ln)
+    {
+        return cytnx_complex128(rn,0)/ln;
+    }
+    cytnx_complex128 operator/(const cytnx_bool &rn,const cytnx_complex128 &ln)
+    {
+        return cytnx_complex128(rn,0)/ln;
+    }
+
 
     //cytnx_complex128 operator/(const cytnx_complex128 &rn,const cytnx_complex64 &ln);
     //cytnx_complex64 operator/(const cytnx_complex64 &rn,const cytnx_complex64 &ln);
@@ -473,6 +658,18 @@ namespace cytnx{
         return cytnx_complex64(rn,0)/ln;
     }
     cytnx_complex64 operator/( const cytnx_int32 &rn,const cytnx_complex64 &ln)
+    {
+        return cytnx_complex64(rn,0)/ln;
+    }
+    cytnx_complex64 operator/(const cytnx_uint16 &rn,const cytnx_complex64 &ln)
+    {
+        return cytnx_complex64(rn,0)/ln;
+    }
+    cytnx_complex64 operator/(const cytnx_int16 &rn,const cytnx_complex64 &ln)
+    {
+        return cytnx_complex64(rn,0)/ln;
+    }
+    cytnx_complex64 operator/( const cytnx_bool &rn,const cytnx_complex64 &ln)
     {
         return cytnx_complex64(rn,0)/ln;
     }

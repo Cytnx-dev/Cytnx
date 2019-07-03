@@ -18,6 +18,10 @@ namespace cytnx{
     cytnx_complex128 operator+(const cytnx_complex128 &ln, const cytnx_uint32 &rn);
     cytnx_complex128 operator+(const cytnx_complex128 &ln, const cytnx_int64 &rn);
     cytnx_complex128 operator+(const cytnx_complex128 &ln, const cytnx_int32 &rn);
+    cytnx_complex128 operator+(const cytnx_complex128 &ln, const cytnx_uint16 &rn);
+    cytnx_complex128 operator+(const cytnx_complex128 &ln, const cytnx_int16 &rn);
+    cytnx_complex128 operator+(const cytnx_complex128 &ln, const cytnx_uint16 &rn);
+    cytnx_complex128 operator+(const cytnx_complex128 &ln, const cytnx_bool &rn);
 
     cytnx_complex128 operator+(const cytnx_complex64 &ln, const cytnx_complex128 &rn);
     //cytnx_complex64 operator+(const cytnx_complex64 &ln, const cytnx_complex64 &rn);
@@ -27,6 +31,10 @@ namespace cytnx{
     cytnx_complex64 operator+(const cytnx_complex64 &ln, const cytnx_uint32 &rn);
     cytnx_complex64 operator+(const cytnx_complex64 &ln, const cytnx_int64 &rn);
     cytnx_complex64 operator+(const cytnx_complex64 &ln, const cytnx_int32 &rn);
+    cytnx_complex64 operator+(const cytnx_complex64 &ln, const cytnx_int16 &rn);
+    cytnx_complex64 operator+(const cytnx_complex64 &ln, const cytnx_uint16 &rn);
+    cytnx_complex64 operator+(const cytnx_complex64 &ln, const cytnx_bool &rn);
+
 
     //cytnx_complex128 operator+(const cytnx_complex128 &rn,const cytnx_complex128 &ln);
     //cytnx_complex128 operator+(const cytnx_complex64 &rn,const cytnx_complex128 &ln);
@@ -36,6 +44,10 @@ namespace cytnx{
     cytnx_complex128 operator+(const cytnx_uint32 &rn,const cytnx_complex128 &ln);
     cytnx_complex128 operator+(const cytnx_int64 &rn,const cytnx_complex128 &ln);
     cytnx_complex128 operator+(const cytnx_int32 &rn,const cytnx_complex128 &ln);
+    cytnx_complex128 operator+(const cytnx_int16 &rn,const cytnx_complex128 &ln);
+    cytnx_complex128 operator+(const cytnx_uint16 &rn,const cytnx_complex128 &ln);
+    cytnx_complex128 operator+(const cytnx_bool &rn,const cytnx_complex128 &ln);
+
 
     //cytnx_complex128 operator+(const cytnx_complex128 &rn,const cytnx_complex64 &ln);
     //cytnx_complex64 operator+(const cytnx_complex64 &rn,const cytnx_complex64 &ln);
@@ -45,6 +57,9 @@ namespace cytnx{
     cytnx_complex64 operator+(const cytnx_uint32 &rn,const cytnx_complex64 &ln);
     cytnx_complex64 operator+(const cytnx_int64 &rn,const cytnx_complex64 &ln);
     cytnx_complex64 operator+( const cytnx_int32 &rn,const cytnx_complex64 &ln);
+    cytnx_complex64 operator+(const cytnx_int16 &rn,const cytnx_complex64 &ln);
+    cytnx_complex64 operator+(const cytnx_uint16 &rn,const cytnx_complex64 &ln);
+    cytnx_complex64 operator+(const cytnx_bool &rn,const cytnx_complex64 &ln);
 
 //---------------------
     //cytnx_complex128 operator-(const cytnx_complex128 &ln, const cytnx_complex128 &rn);
@@ -55,6 +70,9 @@ namespace cytnx{
     cytnx_complex128 operator-(const cytnx_complex128 &ln, const cytnx_uint32 &rn);
     cytnx_complex128 operator-(const cytnx_complex128 &ln, const cytnx_int64 &rn);
     cytnx_complex128 operator-(const cytnx_complex128 &ln, const cytnx_int32 &rn);
+    cytnx_complex128 operator-(const cytnx_complex128 &ln, const cytnx_int16 &rn);
+    cytnx_complex128 operator-(const cytnx_complex128 &ln, const cytnx_uint16 &rn);
+    cytnx_complex128 operator-(const cytnx_complex128 &ln, const cytnx_bool &rn);
 
     cytnx_complex128 operator-(const cytnx_complex64 &ln, const cytnx_complex128 &rn);
     //cytnx_complex64 operator-(const cytnx_complex64 &ln, const cytnx_complex64 &rn);
@@ -64,6 +82,9 @@ namespace cytnx{
     cytnx_complex64 operator-(const cytnx_complex64 &ln, const cytnx_uint32 &rn);
     cytnx_complex64 operator-(const cytnx_complex64 &ln, const cytnx_int64 &rn);
     cytnx_complex64 operator-(const cytnx_complex64 &ln, const cytnx_int32 &rn);
+    cytnx_complex64 operator-(const cytnx_complex64 &ln, const cytnx_uint16 &rn);
+    cytnx_complex64 operator-(const cytnx_complex64 &ln, const cytnx_int16 &rn);
+    cytnx_complex64 operator-(const cytnx_complex64 &ln, const cytnx_bool &rn);
 
     //cytnx_complex128 operator-(const cytnx_complex128 &rn,const cytnx_complex128 &ln);
     //cytnx_complex128 operator-(const cytnx_complex64 &rn,const cytnx_complex128 &ln);
@@ -73,6 +94,9 @@ namespace cytnx{
     cytnx_complex128 operator-(const cytnx_uint32 &rn,const cytnx_complex128 &ln);
     cytnx_complex128 operator-(const cytnx_int64 &rn,const cytnx_complex128 &ln);
     cytnx_complex128 operator-(const cytnx_int32 &rn,const cytnx_complex128 &ln);
+    cytnx_complex128 operator-(const cytnx_uint16 &rn,const cytnx_complex128 &ln);
+    cytnx_complex128 operator-(const cytnx_int16 &rn,const cytnx_complex128 &ln);
+    cytnx_complex128 operator-(const cytnx_bool &rn,const cytnx_complex128 &ln);
 
     //cytnx_complex128 operator-(const cytnx_complex128 &rn,const cytnx_complex64 &ln);
     //cytnx_complex64 operator-(const cytnx_complex64 &rn,const cytnx_complex64 &ln);
@@ -82,6 +106,9 @@ namespace cytnx{
     cytnx_complex64 operator-(const cytnx_uint32 &rn,const cytnx_complex64 &ln);
     cytnx_complex64 operator-(const cytnx_int64 &rn,const cytnx_complex64 &ln);
     cytnx_complex64 operator-( const cytnx_int32 &rn,const cytnx_complex64 &ln);
+    cytnx_complex64 operator-(const cytnx_uint16 &rn,const cytnx_complex64 &ln);
+    cytnx_complex64 operator-(const cytnx_int16 &rn,const cytnx_complex64 &ln);
+    cytnx_complex64 operator-(const cytnx_bool &rn,const cytnx_complex64 &ln);
 
 //---------------------
     //cytnx_complex128 operator*(const cytnx_complex128 &ln, const cytnx_complex128 &rn);
@@ -92,6 +119,9 @@ namespace cytnx{
     cytnx_complex128 operator*(const cytnx_complex128 &ln, const cytnx_uint32 &rn);
     cytnx_complex128 operator*(const cytnx_complex128 &ln, const cytnx_int64 &rn);
     cytnx_complex128 operator*(const cytnx_complex128 &ln, const cytnx_int32 &rn);
+    cytnx_complex128 operator*(const cytnx_complex128 &ln, const cytnx_uint16 &rn);
+    cytnx_complex128 operator*(const cytnx_complex128 &ln, const cytnx_int16 &rn);
+    cytnx_complex128 operator*(const cytnx_complex128 &ln, const cytnx_bool &rn);
 
     cytnx_complex128 operator*(const cytnx_complex64 &ln, const cytnx_complex128 &rn);
     //cytnx_complex64 operator*(const cytnx_complex64 &ln, const cytnx_complex64 &rn);
@@ -101,6 +131,9 @@ namespace cytnx{
     cytnx_complex64 operator*(const cytnx_complex64 &ln, const cytnx_uint32 &rn);
     cytnx_complex64 operator*(const cytnx_complex64 &ln, const cytnx_int64 &rn);
     cytnx_complex64 operator*(const cytnx_complex64 &ln, const cytnx_int32 &rn);
+    cytnx_complex64 operator*(const cytnx_complex64 &ln, const cytnx_uint16 &rn);
+    cytnx_complex64 operator*(const cytnx_complex64 &ln, const cytnx_int16 &rn);
+    cytnx_complex64 operator*(const cytnx_complex64 &ln, const cytnx_bool &rn);
 
     //cytnx_complex128 operator*(const cytnx_complex128 &rn,const cytnx_complex128 &ln);
     //cytnx_complex128 operator*(const cytnx_complex64 &rn,const cytnx_complex128 &ln);
@@ -110,6 +143,9 @@ namespace cytnx{
     cytnx_complex128 operator*(const cytnx_uint32 &rn,const cytnx_complex128 &ln);
     cytnx_complex128 operator*(const cytnx_int64 &rn,const cytnx_complex128 &ln);
     cytnx_complex128 operator*(const cytnx_int32 &rn,const cytnx_complex128 &ln);
+    cytnx_complex128 operator*(const cytnx_uint16 &rn,const cytnx_complex128 &ln);
+    cytnx_complex128 operator*(const cytnx_int16 &rn,const cytnx_complex128 &ln);
+    cytnx_complex128 operator*(const cytnx_bool &rn,const cytnx_complex128 &ln);
 
     //cytnx_complex128 operator*(const cytnx_complex128 &rn,const cytnx_complex64 &ln);
     //cytnx_complex64 operator*(const cytnx_complex64 &rn,const cytnx_complex64 &ln);
@@ -119,6 +155,9 @@ namespace cytnx{
     cytnx_complex64 operator*(const cytnx_uint32 &rn,const cytnx_complex64 &ln);
     cytnx_complex64 operator*(const cytnx_int64 &rn,const cytnx_complex64 &ln);
     cytnx_complex64 operator*( const cytnx_int32 &rn,const cytnx_complex64 &ln);
+    cytnx_complex64 operator*(const cytnx_uint16 &rn,const cytnx_complex64 &ln);
+    cytnx_complex64 operator*(const cytnx_int16 &rn,const cytnx_complex64 &ln);
+    cytnx_complex64 operator*( const cytnx_bool &rn,const cytnx_complex64 &ln);
 
 //---------------------
     //cytnx_complex128 operator/(const cytnx_complex128 &ln, const cytnx_complex128 &rn);
@@ -129,6 +168,10 @@ namespace cytnx{
     cytnx_complex128 operator/(const cytnx_complex128 &ln, const cytnx_uint32 &rn);
     cytnx_complex128 operator/(const cytnx_complex128 &ln, const cytnx_int64 &rn);
     cytnx_complex128 operator/(const cytnx_complex128 &ln, const cytnx_int32 &rn);
+    cytnx_complex128 operator/(const cytnx_complex128 &ln, const cytnx_uint16 &rn);
+    cytnx_complex128 operator/(const cytnx_complex128 &ln, const cytnx_int16 &rn);
+    cytnx_complex128 operator/(const cytnx_complex128 &ln, const cytnx_bool &rn);
+
 
     cytnx_complex128 operator/(const cytnx_complex64 &ln, const cytnx_complex128 &rn);
     //cytnx_complex64 operator/(const cytnx_complex64 &ln, const cytnx_complex64 &rn);
@@ -138,6 +181,9 @@ namespace cytnx{
     cytnx_complex64 operator/(const cytnx_complex64 &ln, const cytnx_uint32 &rn);
     cytnx_complex64 operator/(const cytnx_complex64 &ln, const cytnx_int64 &rn);
     cytnx_complex64 operator/(const cytnx_complex64 &ln, const cytnx_int32 &rn);
+    cytnx_complex64 operator/(const cytnx_complex64 &ln, const cytnx_uint16 &rn);
+    cytnx_complex64 operator/(const cytnx_complex64 &ln, const cytnx_int16 &rn);
+    cytnx_complex64 operator/(const cytnx_complex64 &ln, const cytnx_bool &rn);
 
     //cytnx_complex128 operator/(const cytnx_complex128 &rn,const cytnx_complex128 &ln);
     //cytnx_complex128 operator/(const cytnx_complex64 &rn,const cytnx_complex128 &ln);
@@ -147,6 +193,9 @@ namespace cytnx{
     cytnx_complex128 operator/(const cytnx_uint32 &rn,const cytnx_complex128 &ln);
     cytnx_complex128 operator/(const cytnx_int64 &rn,const cytnx_complex128 &ln);
     cytnx_complex128 operator/(const cytnx_int32 &rn,const cytnx_complex128 &ln);
+    cytnx_complex128 operator/(const cytnx_uint16 &rn,const cytnx_complex128 &ln);
+    cytnx_complex128 operator/(const cytnx_int16 &rn,const cytnx_complex128 &ln);
+    cytnx_complex128 operator/(const cytnx_bool &rn,const cytnx_complex128 &ln);
 
     //cytnx_complex128 operator/(const cytnx_complex128 &rn,const cytnx_complex64 &ln);
     //cytnx_complex64 operator/(const cytnx_complex64 &rn,const cytnx_complex64 &ln);
@@ -156,6 +205,9 @@ namespace cytnx{
     cytnx_complex64 operator/(const cytnx_uint32 &rn,const cytnx_complex64 &ln);
     cytnx_complex64 operator/(const cytnx_int64 &rn,const cytnx_complex64 &ln);
     cytnx_complex64 operator/( const cytnx_int32 &rn,const cytnx_complex64 &ln);
+    cytnx_complex64 operator/(const cytnx_uint16 &rn,const cytnx_complex64 &ln);
+    cytnx_complex64 operator/(const cytnx_int16 &rn,const cytnx_complex64 &ln);
+    cytnx_complex64 operator/( const cytnx_bool &rn,const cytnx_complex64 &ln);
 #endif
 
 // operator overload for GPU code. for COMPLEX type arithmic.

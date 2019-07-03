@@ -608,6 +608,214 @@ namespace cytnx{
                 return out;
             }
         }
+        boost::intrusive_ptr<Storage_base> cuMovemem_gpu_u16(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace){
+            #ifdef UNI_DEBUG
+            cytnx_error_msg(in->dtype != Type.Uint16,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Uint16",in->dtype_str().c_str());
+            cytnx_error_msg(in->device == Device.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
+            #endif
+
+            
+
+            std::vector<cytnx_uint64> newshape(old_shape.size());
+            for(cytnx_uint64 i=0;i<old_shape.size();i++)
+                newshape[i] = old_shape[mapper[i]];
+
+            std::vector<cytnx_uint64> shifter_old(old_shape.size());
+            std::vector<cytnx_uint64> shifter_new(old_shape.size());
+
+            cytnx_uint64 accu_old=1,accu_new=1;
+            for(cytnx_int64 i=old_shape.size()-1;i>=0;i--){
+                shifter_old[i] = accu_old;
+                shifter_new[i] = accu_new;
+                accu_old*=old_shape[i];
+                accu_new*=newshape[i];
+            }
+            std::vector<cytnx_uint64> old_inds(old_shape.size());
+
+            std::vector<cytnx_uint64> permuted_shifter_new(old_shape.size());
+            for(unsigned int i=0;i<old_shape.size();i++)
+                permuted_shifter_new[i] = shifter_new[invmapper[i]];
+
+            ///allocate a GPU for psn-vec/so-vec/tmp des-vec
+            cytnx_uint64 *dshifter_old, *dperm_shifter_new;
+            cytnx_uint16 *dtmp;
+            cytnx_uint64 Nelem = accu_old;        
+
+            cudaSetDevice(in->device); // ensure the following allocation on the same device as src.
+            checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(cytnx_uint64)*shifter_old.size()));
+            checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(cytnx_uint64)*permuted_shifter_new.size()));
+            dtmp = (cytnx_uint16*)cuMalloc_gpu(sizeof(cytnx_uint16)*Nelem); 
+
+            /// copy psn-vec/so-vec to device
+            checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(cytnx_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
+            checkCudaErrors(cudaMemcpy(dshifter_old, &shifter_old[0], sizeof(cytnx_uint64)*shifter_old.size(),cudaMemcpyHostToDevice));
+
+
+            ///calculate how many blocks, and shared mem size, thpb fixed at 256 (need fine tune)
+            cytnx_uint64 NBlocks = Nelem/256;
+            if(Nelem%256){
+                NBlocks+=1;
+            }
+            cuMovemem_kernel<<< NBlocks,256,shifter_old.size()*2*sizeof(cytnx_uint64) >>>(dtmp,(cytnx_uint16*)in->Mem,dshifter_old,dperm_shifter_new,old_shape.size(),Nelem);
+
+
+            ///house keeping:
+            checkCudaErrors(cudaFree(dshifter_old));
+            checkCudaErrors(cudaFree(dperm_shifter_new));
+
+            boost::intrusive_ptr<Storage_base> out(new Uint16Storage());
+            if(is_inplace){
+
+                ///cpy back:
+                checkCudaErrors(cudaMemcpy(in->Mem,dtmp, sizeof(cytnx_uint16)*Nelem,cudaMemcpyDeviceToDevice));
+                cudaFree(dtmp);
+                return out;
+
+            }else{
+
+                out->_Init_byptr(dtmp,Nelem);
+                return out;
+            }
+        }
+        boost::intrusive_ptr<Storage_base> cuMovemem_gpu_i16(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace){
+            #ifdef UNI_DEBUG
+            cytnx_error_msg(in->dtype != Type.Int16,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Int16",in->dtype_str().c_str());
+            cytnx_error_msg(in->device == Device.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
+            #endif
+
+            
+
+            std::vector<cytnx_uint64> newshape(old_shape.size());
+            for(cytnx_uint64 i=0;i<old_shape.size();i++)
+                newshape[i] = old_shape[mapper[i]];
+
+            std::vector<cytnx_uint64> shifter_old(old_shape.size());
+            std::vector<cytnx_uint64> shifter_new(old_shape.size());
+
+            cytnx_uint64 accu_old=1,accu_new=1;
+            for(cytnx_int64 i=old_shape.size()-1;i>=0;i--){
+                shifter_old[i] = accu_old;
+                shifter_new[i] = accu_new;
+                accu_old*=old_shape[i];
+                accu_new*=newshape[i];
+            }
+            std::vector<cytnx_uint64> old_inds(old_shape.size());
+
+            std::vector<cytnx_uint64> permuted_shifter_new(old_shape.size());
+            for(unsigned int i=0;i<old_shape.size();i++)
+                permuted_shifter_new[i] = shifter_new[invmapper[i]];
+
+            ///allocate a GPU for psn-vec/so-vec/tmp des-vec
+            cytnx_uint64 *dshifter_old, *dperm_shifter_new;
+            cytnx_int16 *dtmp;
+            cytnx_uint64 Nelem = accu_old;        
+
+            cudaSetDevice(in->device); // ensure the following allocation on the same device as src.
+            checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(cytnx_uint64)*shifter_old.size()));
+            checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(cytnx_uint64)*permuted_shifter_new.size()));
+            dtmp = (cytnx_int16*)cuMalloc_gpu(sizeof(cytnx_int16)*Nelem); 
+
+            /// copy psn-vec/so-vec to device
+            checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(cytnx_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
+            checkCudaErrors(cudaMemcpy(dshifter_old, &shifter_old[0], sizeof(cytnx_uint64)*shifter_old.size(),cudaMemcpyHostToDevice));
+
+
+            ///calculate how many blocks, and shared mem size, thpb fixed at 256 (need fine tune)
+            cytnx_uint64 NBlocks = Nelem/256;
+            if(Nelem%256){
+                NBlocks+=1;
+            }
+            cuMovemem_kernel<<< NBlocks,256,shifter_old.size()*2*sizeof(cytnx_uint64) >>>(dtmp,(cytnx_int16*)in->Mem,dshifter_old,dperm_shifter_new,old_shape.size(),Nelem);
+
+
+            ///house keeping:
+            checkCudaErrors(cudaFree(dshifter_old));
+            checkCudaErrors(cudaFree(dperm_shifter_new));
+
+            boost::intrusive_ptr<Storage_base> out(new Int16Storage());
+            if(is_inplace){
+
+                ///cpy back:
+                checkCudaErrors(cudaMemcpy(in->Mem,dtmp, sizeof(cytnx_int16)*Nelem,cudaMemcpyDeviceToDevice));
+                cudaFree(dtmp);
+                return out;
+
+            }else{
+
+                out->_Init_byptr(dtmp,Nelem);
+                return out;
+            }
+        }
+        boost::intrusive_ptr<Storage_base> cuMovemem_gpu_b(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace){
+            #ifdef UNI_DEBUG
+            cytnx_error_msg(in->dtype != Type.Bool,"[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type Bool",in->dtype_str().c_str());
+            cytnx_error_msg(in->device == Device.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
+            #endif
+
+            
+
+            std::vector<cytnx_uint64> newshape(old_shape.size());
+            for(cytnx_uint64 i=0;i<old_shape.size();i++)
+                newshape[i] = old_shape[mapper[i]];
+
+            std::vector<cytnx_uint64> shifter_old(old_shape.size());
+            std::vector<cytnx_uint64> shifter_new(old_shape.size());
+
+            cytnx_uint64 accu_old=1,accu_new=1;
+            for(cytnx_int64 i=old_shape.size()-1;i>=0;i--){
+                shifter_old[i] = accu_old;
+                shifter_new[i] = accu_new;
+                accu_old*=old_shape[i];
+                accu_new*=newshape[i];
+            }
+            std::vector<cytnx_uint64> old_inds(old_shape.size());
+
+            std::vector<cytnx_uint64> permuted_shifter_new(old_shape.size());
+            for(unsigned int i=0;i<old_shape.size();i++)
+                permuted_shifter_new[i] = shifter_new[invmapper[i]];
+
+            ///allocate a GPU for psn-vec/so-vec/tmp des-vec
+            cytnx_uint64 *dshifter_old, *dperm_shifter_new;
+            cytnx_bool *dtmp;
+            cytnx_uint64 Nelem = accu_old;        
+
+            cudaSetDevice(in->device); // ensure the following allocation on the same device as src.
+            checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(cytnx_uint64)*shifter_old.size()));
+            checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(cytnx_uint64)*permuted_shifter_new.size()));
+            dtmp = (cytnx_bool*)cuMalloc_gpu(sizeof(cytnx_bool)*Nelem); 
+
+            /// copy psn-vec/so-vec to device
+            checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(cytnx_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
+            checkCudaErrors(cudaMemcpy(dshifter_old, &shifter_old[0], sizeof(cytnx_uint64)*shifter_old.size(),cudaMemcpyHostToDevice));
+
+
+            ///calculate how many blocks, and shared mem size, thpb fixed at 256 (need fine tune)
+            cytnx_uint64 NBlocks = Nelem/256;
+            if(Nelem%256){
+                NBlocks+=1;
+            }
+            cuMovemem_kernel<<< NBlocks,256,shifter_old.size()*2*sizeof(cytnx_uint64) >>>(dtmp,(cytnx_bool*)in->Mem,dshifter_old,dperm_shifter_new,old_shape.size(),Nelem);
+
+
+            ///house keeping:
+            checkCudaErrors(cudaFree(dshifter_old));
+            checkCudaErrors(cudaFree(dperm_shifter_new));
+
+            boost::intrusive_ptr<Storage_base> out(new BoolStorage());
+            if(is_inplace){
+
+                ///cpy back:
+                checkCudaErrors(cudaMemcpy(in->Mem,dtmp, sizeof(cytnx_bool)*Nelem,cudaMemcpyDeviceToDevice));
+                cudaFree(dtmp);
+                return out;
+
+            }else{
+
+                out->_Init_byptr(dtmp,Nelem);
+                return out;
+            }
+        }
+
 
     #endif // UNI_GPU
     }//namespace utils_internal

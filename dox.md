@@ -38,10 +38,13 @@
     | cytnx_float      | float                | Type.Float
     | cytnx_uint64     | uint64_t             | Type.Uint64
     | cytnx_uint32     | uint32_t             | Type.Uint32
+    | cytnx_uint16     | uint16_t             | Type.Uint16
     | cytnx_int64      | int64_t              | Type.Int64
     | cytnx_int32      | int32_t              | Type.Int32
+    | cytnx_int16      | int16_t              | Type.Int16
     | cytnx_complex128 | std::complex<double> | Type.ComplexDouble
     | cytnx_complex64  | std::complex<float>  | Type.ComplexFloat
+    | cytnx_bool       | bool                 | Type.Bool
 
 ### 2. Multiple devices support.
     * simple moving btwn CPU and GPU (see below)

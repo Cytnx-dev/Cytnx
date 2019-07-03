@@ -208,6 +208,71 @@ namespace cytnx{
             return out;
         }
         
+        template<>
+        Tensor Add<cytnx_int16>(const cytnx_int16 &lc, const Tensor &Rt){
+            Storage Cnst(1,Type.Int16);
+            Cnst.at<cytnx_int16>(0) = lc;
+
+            Tensor out(Rt.shape(),Type.Int16 < Rt.dtype()?Type.Int16:Rt.dtype(),Rt.device());
+
+            if(Rt.device()==Device.cpu){
+                cytnx::linalg_internal::lii.Ari_ii[Type.Int16][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},0);
+            }else{
+                #ifdef UNI_GPU
+                    checkCudaErrors(cudaSetDevice(Rt.device()));
+                    cytnx::linalg_internal::lii.cuAri_ii[Type.Int16][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},0);
+                #else
+                    cytnx_error_msg(true,"[Add] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
+                #endif 
+            }        
+
+            return out;
+        }
+
+        template<>
+        Tensor Add<cytnx_uint16>(const cytnx_uint16 &lc, const Tensor &Rt){
+            Storage Cnst(1,Type.Uint16);
+            Cnst.at<cytnx_uint16>(0) = lc;
+
+            Tensor out(Rt.shape(),Type.Uint16 < Rt.dtype()?Type.Uint16:Rt.dtype(),Rt.device());
+
+            if(Rt.device()==Device.cpu){
+                cytnx::linalg_internal::lii.Ari_ii[Type.Uint16][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},0);
+            }else{
+                #ifdef UNI_GPU
+                    checkCudaErrors(cudaSetDevice(Rt.device()));
+                    cytnx::linalg_internal::lii.cuAri_ii[Type.Uint16][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},0);
+                #else
+                    cytnx_error_msg(true,"[Add] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
+                #endif 
+            }        
+
+            return out;
+        }
+
+        template<>
+        Tensor Add<cytnx_bool>(const cytnx_bool &lc, const Tensor &Rt){
+            Storage Cnst(1,Type.Bool);
+            Cnst.at<cytnx_bool>(0) = lc;
+
+            Tensor out(Rt.shape(),Type.Bool < Rt.dtype()?Type.Bool:Rt.dtype(),Rt.device());
+
+            if(Rt.device()==Device.cpu){
+                cytnx::linalg_internal::lii.Ari_ii[Type.Bool][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},0);
+            }else{
+                #ifdef UNI_GPU
+                    checkCudaErrors(cudaSetDevice(Rt.device()));
+                    cytnx::linalg_internal::lii.cuAri_ii[Type.Bool][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},0);
+                #else
+                    cytnx_error_msg(true,"[Add] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
+                #endif 
+            }        
+
+            return out;
+        }
+
+
+
         //-----------------------------------------------------------------------------------
         template<>
         Tensor Add<cytnx_complex128>(const Tensor &Lc, const cytnx_complex128 &rc){
@@ -241,8 +306,22 @@ namespace cytnx{
         Tensor Add<cytnx_uint32>(const Tensor &Lc, const cytnx_uint32 &rc){
             return Add(rc,Lc);
         }
+        template<>
+        Tensor Add<cytnx_int16>(const Tensor &Lc, const cytnx_int16 &rc){
+            return Add(rc,Lc);
+        }
+        template<>
+        Tensor Add<cytnx_uint16>(const Tensor &Lc, const cytnx_uint16 &rc){
+            return Add(rc,Lc);
+        }
+        template<>
+        Tensor Add<cytnx_bool>(const Tensor &Lc, const cytnx_bool &rc){
+            return Add(rc,Lc);
+        }
 
     }// linalg
+
+
 
 
     Tensor operator+(const Tensor &Lt, const Tensor &Rt){
@@ -280,6 +359,20 @@ namespace cytnx{
     Tensor operator+<cytnx_uint32>(const cytnx_uint32 &lc, const Tensor &Rt){
         return cytnx::linalg::Add(lc,Rt);
     }
+    template<>
+    Tensor operator+<cytnx_int16>(const cytnx_int16 &lc, const Tensor &Rt){
+        return cytnx::linalg::Add(lc,Rt);
+    }
+    template<>
+    Tensor operator+<cytnx_uint16>(const cytnx_uint16 &lc, const Tensor &Rt){
+        return cytnx::linalg::Add(lc,Rt);
+    }
+    template<>
+    Tensor operator+<cytnx_bool>(const cytnx_bool &lc, const Tensor &Rt){
+        return cytnx::linalg::Add(lc,Rt);
+    }
+
+
 
     template<>
     Tensor operator+<cytnx_complex128>(const Tensor &Lt, const cytnx_complex128 &rc){
@@ -313,6 +406,15 @@ namespace cytnx{
     Tensor operator+<cytnx_uint32>(const Tensor &Lt, const cytnx_uint32 &rc){
        return cytnx::linalg::Add(Lt,rc);
     }
+    template<>
+    Tensor operator+<cytnx_int16>(const Tensor &Lt, const cytnx_int16 &rc){
+       return cytnx::linalg::Add(Lt,rc);
+    }
+    template<>
+    Tensor operator+<cytnx_uint16>(const Tensor &Lt, const cytnx_uint16 &rc){
+       return cytnx::linalg::Add(Lt,rc);
+    }
+
     
     /*
     template<> Tensor operator+<cytnx_complex128>(const Tensor &, const cytnx_complex128&);

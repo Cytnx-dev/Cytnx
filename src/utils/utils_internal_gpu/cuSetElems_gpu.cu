@@ -388,6 +388,18 @@ namespace cytnx{
             if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_double,cytnx_uint32>(in,out,offj,new_offj,locators,TotalElem);
             else cuSetElems_gpu_impl<cytnx_double,cytnx_uint32>(in,out,offj,new_offj,locators,TotalElem);
         }
+        void cuSetElems_gpu_dti16(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_double,cytnx_int16>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_double,cytnx_int16>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_dtu16(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_double,cytnx_uint16>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_double,cytnx_uint16>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_dtb(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_double,cytnx_bool>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_double,cytnx_bool>(in,out,offj,new_offj,locators,TotalElem);
+        }
 
         //----
         void cuSetElems_gpu_ftcd(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
@@ -422,7 +434,19 @@ namespace cytnx{
             if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_float,cytnx_uint32>(in,out,offj,new_offj,locators,TotalElem);
             else cuSetElems_gpu_impl<cytnx_float,cytnx_uint32>(in,out,offj,new_offj,locators,TotalElem);
         }
-        
+        void cuSetElems_gpu_ftu16(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_float,cytnx_uint16>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_float,cytnx_uint16>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_fti16(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_float,cytnx_int16>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_float,cytnx_int16>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_ftb(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_float,cytnx_bool>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_float,cytnx_bool>(in,out,offj,new_offj,locators,TotalElem);
+        }
+
         //----
         void cuSetElems_gpu_i64tcd(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
             if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_int64,cuDoubleComplex>(in,out,offj,new_offj,locators,TotalElem);
@@ -455,6 +479,18 @@ namespace cytnx{
         void cuSetElems_gpu_i64tu32(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
             if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_int64,cytnx_uint32>(in,out,offj,new_offj,locators,TotalElem);
             else cuSetElems_gpu_impl<cytnx_int64,cytnx_uint32>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_i64tu16(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_int64,cytnx_uint16>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_int64,cytnx_uint16>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_i64ti16(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_int64,cytnx_int16>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_int64,cytnx_int16>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_i64tb(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_int64,cytnx_bool>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_int64,cytnx_bool>(in,out,offj,new_offj,locators,TotalElem);
         }
 
         //----
@@ -490,6 +526,18 @@ namespace cytnx{
             if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_uint64,cytnx_uint32>(in,out,offj,new_offj,locators,TotalElem);
             else cuSetElems_gpu_impl<cytnx_uint64,cytnx_uint32>(in,out,offj,new_offj,locators,TotalElem);
         }
+        void cuSetElems_gpu_u64tu16(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_uint64,cytnx_uint16>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_uint64,cytnx_uint16>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_u64ti16(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_uint64,cytnx_int32>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_uint64,cytnx_int32>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_u64tb(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_uint64,cytnx_bool>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_uint64,cytnx_bool>(in,out,offj,new_offj,locators,TotalElem);
+        }
 
         //----
         void cuSetElems_gpu_i32tcd(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
@@ -523,6 +571,18 @@ namespace cytnx{
         void cuSetElems_gpu_i32tu32(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
             if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_int32,cytnx_uint32>(in,out,offj,new_offj,locators,TotalElem);
             else cuSetElems_gpu_impl<cytnx_int32,cytnx_uint32>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_i32tu16(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_int32,cytnx_uint16>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_int32,cytnx_uint16>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_i32ti16(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_int32,cytnx_int16>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_int32,cytnx_int16>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_i32tb(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_int32,cytnx_bool>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_int32,cytnx_bool>(in,out,offj,new_offj,locators,TotalElem);
         }
 
         //----
@@ -558,5 +618,156 @@ namespace cytnx{
             if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_uint32,cytnx_uint32>(in,out,offj,new_offj,locators,TotalElem);
             else cuSetElems_gpu_impl<cytnx_uint32,cytnx_uint32>(in,out,offj,new_offj,locators,TotalElem);
         }
+        void cuSetElems_gpu_u32tu16(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_uint32,cytnx_uint16>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_uint32,cytnx_uint16>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_u32ti16(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_uint32,cytnx_int16>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_uint32,cytnx_int16>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_u32tb(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_uint32,cytnx_bool>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_uint32,cytnx_bool>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        
+        //----
+        void cuSetElems_gpu_i16tcd(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_int16,cuDoubleComplex>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_int16,cuDoubleComplex>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_i16tcf(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_int16,cuFloatComplex>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_int16,cuFloatComplex>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_i16td(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_int16,cytnx_double>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_int16,cytnx_double>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_i16tf(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_int16,cytnx_float>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_int16,cytnx_float>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_i16ti64(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_int16,cytnx_int64>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_int16,cytnx_int64>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_i16tu64(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_int16,cytnx_uint64>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_int16,cytnx_uint64>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_i16ti32(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_int16,cytnx_int32>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_int16,cytnx_int32>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_i16tu32(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_int16,cytnx_uint32>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_int16,cytnx_uint32>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_i16tu16(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_int16,cytnx_uint16>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_int16,cytnx_uint16>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_i16ti16(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_int16,cytnx_int16>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_int16,cytnx_int16>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_i16tb(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_int16,cytnx_bool>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_int16,cytnx_bool>(in,out,offj,new_offj,locators,TotalElem);
+        }
+
+        //----
+        void cuSetElems_gpu_u16tcd(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_uint16,cuDoubleComplex>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_uint16,cuDoubleComplex>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_u16tcf(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_uint16,cuFloatComplex>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_uint16,cuFloatComplex>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_u16td(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_uint16,cytnx_double>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_uint16,cytnx_double>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_u16tf(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_uint16,cytnx_float>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_uint16,cytnx_float>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_u16ti64(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_uint16,cytnx_int64>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_uint16,cytnx_int64>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_u16tu64(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_uint16,cytnx_uint64>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_uint16,cytnx_uint64>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_u16ti32(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_uint16,cytnx_int32>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_uint16,cytnx_int32>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_u16tu32(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_uint16,cytnx_uint32>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_uint16,cytnx_uint32>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_u16tu16(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_uint16,cytnx_uint16>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_uint16,cytnx_uint16>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_u16ti16(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_uint16,cytnx_int16>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_uint16,cytnx_int16>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_u16tb(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_uint16,cytnx_bool>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_uint16,cytnx_bool>(in,out,offj,new_offj,locators,TotalElem);
+        }
+
+        //----
+        void cuSetElems_gpu_btcd(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_bool,cuDoubleComplex>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_bool,cuDoubleComplex>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_btcf(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_bool,cuFloatComplex>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_bool,cuFloatComplex>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_btd(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_bool,cytnx_double>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_bool,cytnx_double>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_btf(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_bool,cytnx_float>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_bool,cytnx_float>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_bti64(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_bool,cytnx_int64>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_bool,cytnx_int64>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_btu64(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_bool,cytnx_uint64>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_bool,cytnx_uint64>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_bti32(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_bool,cytnx_int32>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_bool,cytnx_int32>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_btu32(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_bool,cytnx_uint32>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_bool,cytnx_uint32>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_btu16(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_bool,cytnx_uint16>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_bool,cytnx_uint16>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_bti16(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_bool,cytnx_int16>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_bool,cytnx_int16>(in,out,offj,new_offj,locators,TotalElem);
+        }
+        void cuSetElems_gpu_btb(void* in, void *out,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem,const bool & is_scalar){
+            if(is_scalar) cuSetElems_gpu_scal_impl<cytnx_bool,cytnx_bool>(in,out,offj,new_offj,locators,TotalElem);
+            else cuSetElems_gpu_impl<cytnx_bool,cytnx_bool>(in,out,offj,new_offj,locators,TotalElem);
+        }
+
     }
 }

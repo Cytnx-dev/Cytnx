@@ -70,7 +70,7 @@ else
   ALL_LDFLAGS += $(LDFLAGS)
 endif
 
-OBJS = Storage_base.o Uint32Storage.o Int32Storage.o Uint64Storage.o Int64Storage.o FloatStorage.o DoubleStorage.o ComplexFloatStorage.o ComplexDoubleStorage.o Type.o Device.o
+OBJS = Storage_base.o BoolStorage.o Uint16Storage.o Int16Storage.o Uint32Storage.o Int32Storage.o Uint64Storage.o Int64Storage.o FloatStorage.o DoubleStorage.o ComplexFloatStorage.o ComplexDoubleStorage.o Type.o Device.o
 
 
 OBJS += Storage.o Bond.o Tensor.o Symmetry.o Accessor.o Generator.o UniTensor_base.o DenseUniTensor.o SparseUniTensor.o 
@@ -162,7 +162,12 @@ SparseUniTensor.o: $(CytnxPATH)/src/SparseUniTensor.cpp $(CytnxPATH)/include/Uni
 ###########################
 Storage_base.o: $(CytnxPATH)/src/Storage_base.cpp $(CytnxPATH)/include/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-
+BoolStorage.o: $(CytnxPATH)/src/BoolStorage.cpp $(CytnxPATH)/include/Storage.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+Uint16Storage.o: $(CytnxPATH)/src/Uint16Storage.cpp $(CytnxPATH)/include/Storage.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+Int16Storage.o: $(CytnxPATH)/src/Int16Storage.cpp $(CytnxPATH)/include/Storage.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 Uint32Storage.o: $(CytnxPATH)/src/Uint32Storage.cpp $(CytnxPATH)/include/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 Int32Storage.o: $(CytnxPATH)/src/Int32Storage.cpp $(CytnxPATH)/include/Storage.hpp

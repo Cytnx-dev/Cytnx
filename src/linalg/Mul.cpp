@@ -209,6 +209,67 @@ namespace cytnx{
 
             return out;
         }
+        template<>
+        Tensor Mul<cytnx_int16>(const cytnx_int16 &lc, const Tensor &Rt){
+            Storage Cnst(1,Type.Int16);
+            Cnst.at<cytnx_int16>(0) = lc;
+
+            Tensor out(Rt.shape(),Type.Int16 < Rt.dtype()?Type.Int16:Rt.dtype(),Rt.device());
+
+            if(Rt.device()==Device.cpu){
+                cytnx::linalg_internal::lii.Ari_ii[Type.Int16][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},1);
+            }else{
+                #ifdef UNI_GPU
+                    checkCudaErrors(cudaSetDevice(Rt.device()));
+                    cytnx::linalg_internal::lii.cuAri_ii[Type.Int16][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},1);
+                #else
+                    cytnx_error_msg(true,"[Mul] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
+                #endif 
+            }        
+
+            return out;
+        }
+
+        template<>
+        Tensor Mul<cytnx_uint16>(const cytnx_uint16 &lc, const Tensor &Rt){
+            Storage Cnst(1,Type.Uint16);
+            Cnst.at<cytnx_uint16>(0) = lc;
+
+            Tensor out(Rt.shape(),Type.Uint16 < Rt.dtype()?Type.Uint16:Rt.dtype(),Rt.device());
+
+            if(Rt.device()==Device.cpu){
+                cytnx::linalg_internal::lii.Ari_ii[Type.Uint16][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},1);
+            }else{
+                #ifdef UNI_GPU
+                    checkCudaErrors(cudaSetDevice(Rt.device()));
+                    cytnx::linalg_internal::lii.cuAri_ii[Type.Uint16][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},1);
+                #else
+                    cytnx_error_msg(true,"[Mul] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
+                #endif 
+            }        
+
+            return out;
+        }
+        template<>
+        Tensor Mul<cytnx_bool>(const cytnx_bool &lc, const Tensor &Rt){
+            Storage Cnst(1,Type.Bool);
+            Cnst.at<cytnx_bool>(0) = lc;
+
+            Tensor out(Rt.shape(),Type.Bool < Rt.dtype()?Type.Bool:Rt.dtype(),Rt.device());
+
+            if(Rt.device()==Device.cpu){
+                cytnx::linalg_internal::lii.Ari_ii[Type.Bool][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},1);
+            }else{
+                #ifdef UNI_GPU
+                    checkCudaErrors(cudaSetDevice(Rt.device()));
+                    cytnx::linalg_internal::lii.cuAri_ii[Type.Bool][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},1);
+                #else
+                    cytnx_error_msg(true,"[Mul] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
+                #endif 
+            }        
+
+            return out;
+        }
         
         //-----------------------------------------------------------------------------------
         template<>
@@ -241,6 +302,18 @@ namespace cytnx{
         }
         template<>
         Tensor Mul<cytnx_uint32>(const Tensor &Lc, const cytnx_uint32 &rc){
+            return Mul(rc,Lc);
+        }
+        template<>
+        Tensor Mul<cytnx_int16>(const Tensor &Lc, const cytnx_int16 &rc){
+            return Mul(rc,Lc);
+        }
+        template<>
+        Tensor Mul<cytnx_uint16>(const Tensor &Lc, const cytnx_uint16 &rc){
+            return Mul(rc,Lc);
+        }
+        template<>
+        Tensor Mul<cytnx_bool>(const Tensor &Lc, const cytnx_bool &rc){
             return Mul(rc,Lc);
         }
 
@@ -281,6 +354,18 @@ namespace cytnx{
     Tensor operator*<cytnx_uint32>(const cytnx_uint32 &lc, const Tensor &Rt){
         return cytnx::linalg::Mul(lc,Rt);
     }
+    template<>
+    Tensor operator*<cytnx_uint16>(const cytnx_uint16 &lc, const Tensor &Rt){
+        return cytnx::linalg::Mul(lc,Rt);
+    }
+    template<>
+    Tensor operator*<cytnx_int16>(const cytnx_int16 &lc, const Tensor &Rt){
+        return cytnx::linalg::Mul(lc,Rt);
+    }
+    template<>
+    Tensor operator*<cytnx_bool>(const cytnx_bool &lc, const Tensor &Rt){
+        return cytnx::linalg::Mul(lc,Rt);
+    }
 
     template<>
     Tensor operator*<cytnx_complex128>(const Tensor &Lt, const cytnx_complex128 &rc){
@@ -314,7 +399,18 @@ namespace cytnx{
     Tensor operator*<cytnx_uint32>(const Tensor &Lt, const cytnx_uint32 &rc){
        return cytnx::linalg::Mul(Lt,rc);
     }
-
+    template<>
+    Tensor operator*<cytnx_uint16>(const Tensor &Lt, const cytnx_uint16 &rc){
+       return cytnx::linalg::Mul(Lt,rc);
+    }
+    template<>
+    Tensor operator*<cytnx_int16>(const Tensor &Lt, const cytnx_int16 &rc){
+       return cytnx::linalg::Mul(Lt,rc);
+    }
+    template<>
+    Tensor operator*<cytnx_bool>(const Tensor &Lt, const cytnx_bool &rc){
+       return cytnx::linalg::Mul(Lt,rc);
+    }
 
     
     template<> Tensor operator*<cytnx_complex128>(const Tensor &, const cytnx_complex128&);
@@ -325,6 +421,10 @@ namespace cytnx{
     template<> Tensor operator*<cytnx_uint64>(const Tensor &, const cytnx_uint64&);
     template<> Tensor operator*<cytnx_int32>(const Tensor &, const cytnx_int32&);
     template<> Tensor operator*<cytnx_uint32>(const Tensor &, const cytnx_uint32&);
+    template<> Tensor operator*<cytnx_uint16>(const Tensor &, const cytnx_uint16&);
+    template<> Tensor operator*<cytnx_int16>(const Tensor &, const cytnx_int16&);
+    template<> Tensor operator*<cytnx_bool>(const Tensor &, const cytnx_bool&);
+
 
     template<> Tensor operator*<cytnx_complex128>( const cytnx_complex128&,const Tensor &);
     template<> Tensor operator*<cytnx_complex64>( const cytnx_complex64&,const Tensor &);
@@ -334,7 +434,9 @@ namespace cytnx{
     template<> Tensor operator*<cytnx_uint64>( const cytnx_uint64&,const Tensor &);
     template<> Tensor operator*<cytnx_int32>( const cytnx_int32&,const Tensor &);
     template<> Tensor operator*<cytnx_uint32>( const cytnx_uint32&,const Tensor &);
-
+    template<> Tensor operator*<cytnx_uint16>( const cytnx_uint16&,const Tensor &);
+    template<> Tensor operator*<cytnx_int16>( const cytnx_int16&,const Tensor &);
+    template<> Tensor operator*<cytnx_bool>( const cytnx_bool&,const Tensor &);
 }//cytnx
 
 

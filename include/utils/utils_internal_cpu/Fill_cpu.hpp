@@ -19,7 +19,9 @@ namespace cytnx{
         void Fill_cpu_u64(void *in, void *val, const cytnx_uint64 &Nelem);
         void Fill_cpu_i32(void *in, void *val, const cytnx_uint64 &Nelem);
         void Fill_cpu_u32(void *in, void *val, const cytnx_uint64 &Nelem);
-
+        void Fill_cpu_u16(void *in, void *val, const cytnx_uint64 &Nelem);
+        void Fill_cpu_i16(void *in, void *val, const cytnx_uint64 &Nelem);
+        void Fill_cpu_b(void *in, void *val, const cytnx_uint64 &Nelem);
     }//namespace utils_internal
 
 }//namespace cytnx

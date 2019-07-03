@@ -29,6 +29,24 @@ namespace cytnx{
 namespace cytnx{
     namespace linalg_internal{
 
+        void cuDiag_internal_b(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &ten, const cytnx_uint64 &L){
+            cytnx_uint32 NBlocks = L/512;
+            if(L%512) NBlocks+=1;
+            cuDiag_internal_kernel<<<NBlocks,512>>>((cytnx_bool*)out->Mem,(cytnx_bool*)ten->Mem,L);
+        }
+
+        void cuDiag_internal_i16(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &ten, const cytnx_uint64 &L){
+            cytnx_uint32 NBlocks = L/512;
+            if(L%512) NBlocks+=1;
+            cuDiag_internal_kernel<<<NBlocks,512>>>((cytnx_int16*)out->Mem,(cytnx_int16*)ten->Mem,L);
+        }
+
+        void cuDiag_internal_u16(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &ten, const cytnx_uint64 &L){
+            cytnx_uint32 NBlocks = L/512;
+            if(L%512) NBlocks+=1;
+            cuDiag_internal_kernel<<<NBlocks,512>>>((cytnx_uint16*)out->Mem,(cytnx_uint16*)ten->Mem,L);
+        }
+
         void cuDiag_internal_i32(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &ten, const cytnx_uint64 &L){
             cytnx_uint32 NBlocks = L/512;
             if(L%512) NBlocks+=1;

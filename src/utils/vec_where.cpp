@@ -23,6 +23,8 @@ namespace cytnx{
     template cytnx_uint64 vec_where(const std::vector<cytnx_uint64> &,const cytnx_uint64 &);
     template cytnx_uint64 vec_where(const std::vector<cytnx_int32> &,const cytnx_int32 &);
     template cytnx_uint64 vec_where(const std::vector<cytnx_uint32> &,const cytnx_uint32 &);
-    
+    template cytnx_uint64 vec_where(const std::vector<cytnx_int16> &,const cytnx_int16 &);
+    template cytnx_uint64 vec_where(const std::vector<cytnx_uint16> &,const cytnx_uint16 &);
+    template cytnx_uint64 vec_where(const std::vector<cytnx_bool> &,const cytnx_bool &);
 
 }

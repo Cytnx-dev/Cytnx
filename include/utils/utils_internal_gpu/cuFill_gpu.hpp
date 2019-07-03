@@ -19,6 +19,9 @@ namespace cytnx{
         void cuFill_gpu_u64( void* in, void* val, const cytnx_uint64&);
         void cuFill_gpu_i32( void* in, void* val, const cytnx_uint64&);
         void cuFill_gpu_u32( void* in, void* val, const cytnx_uint64&);
+        void cuFill_gpu_u16( void* in, void* val, const cytnx_uint64&);
+        void cuFill_gpu_i16( void* in, void* val, const cytnx_uint64&);
+        void cuFill_gpu_b( void* in, void* val, const cytnx_uint64&);
     }//utils_internal
 }//cytnx 
 

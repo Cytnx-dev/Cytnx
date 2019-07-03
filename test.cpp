@@ -147,7 +147,8 @@ int main(int argc, char *argv[]){
     cout << X1 + X2 << endl;
     cout << X1c + X2c << endl;
     
-
+    Tensor Bb = ones({3,4,5},Type.Bool);
+    cout << Bb << endl;
 
     //cout << ut1 << endl;
 

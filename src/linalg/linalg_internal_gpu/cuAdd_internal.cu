@@ -340,6 +340,118 @@ namespace cytnx{
 
         }
 
+
+        __global__ void cuAdd_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const cytnx_uint64 Nelem, const cytnx_int16 val){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuDoubleComplex(val,0));
+            }
+            __syncthreads();
+        }
+        __global__ void cuAdd_lconst_kernel(cuDoubleComplex *out, const cuDoubleComplex val, const cytnx_uint64 Nelem, const cytnx_int16 *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(val,make_cuDoubleComplex(ptr[blockIdx.x*blockDim.x + threadIdx.x],0));
+            }
+            __syncthreads();
+        }
+        __global__ void cuAdd_tn_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const cytnx_uint64 Nelem, const cytnx_int16 *val){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuDoubleComplex(val[blockIdx.x*blockDim.x + threadIdx.x],0));
+            }
+            __syncthreads();
+        }
+        void cuAdd_internal_cdti16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
+            cuDoubleComplex *_Lin = (cuDoubleComplex*)Lin->Mem;
+            cytnx_int16 *_Rin = (cytnx_int16*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin[0]);
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+
+        }
+
+
+        __global__ void cuAdd_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const cytnx_uint64 Nelem, const cytnx_uint16 val){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuDoubleComplex(val,0));
+            }
+            __syncthreads();
+        }
+        __global__ void cuAdd_lconst_kernel(cuDoubleComplex *out, const cuDoubleComplex val, const cytnx_uint64 Nelem, const cytnx_uint16 *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(val,make_cuDoubleComplex(ptr[blockIdx.x*blockDim.x + threadIdx.x],0));
+            }
+            __syncthreads();
+        }
+        __global__ void cuAdd_tn_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const cytnx_uint64 Nelem, const cytnx_uint16 *val){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuDoubleComplex(val[blockIdx.x*blockDim.x + threadIdx.x],0));
+            }
+            __syncthreads();
+        }
+        void cuAdd_internal_cdtu16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
+            cuDoubleComplex *_Lin = (cuDoubleComplex*)Lin->Mem;
+            cytnx_uint16 *_Rin = (cytnx_uint16*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin[0]);
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+
+        }
+
+        __global__ void cuAdd_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const cytnx_uint64 Nelem, const cytnx_bool val){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuDoubleComplex(val,0));
+            }
+            __syncthreads();
+        }
+        __global__ void cuAdd_lconst_kernel(cuDoubleComplex *out, const cuDoubleComplex val, const cytnx_uint64 Nelem, const cytnx_bool *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(val,make_cuDoubleComplex(ptr[blockIdx.x*blockDim.x + threadIdx.x],0));
+            }
+            __syncthreads();
+        }
+        __global__ void cuAdd_tn_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr, const cytnx_uint64 Nelem, const cytnx_bool *val){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                out[blockIdx.x*blockDim.x + threadIdx.x] = cuCadd(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuDoubleComplex(val[blockIdx.x*blockDim.x + threadIdx.x],0));
+            }
+            __syncthreads();
+        }
+        void cuAdd_internal_cdtb(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
+            cuDoubleComplex *_Lin = (cuDoubleComplex*)Lin->Mem;
+            cytnx_bool *_Rin = (cytnx_bool*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin[0]);
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+
+        }
+
+
+//----------------------------------------------------
         void cuAdd_internal_cftcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
 
 		    cuAdd_internal_cdtcf(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
@@ -606,7 +718,110 @@ namespace cytnx{
               }
 
         }
+        
+        __global__ void cuAdd_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const cytnx_int16 Nelem, const cytnx_int16 val){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuFloatComplex(val,0));
+            }
+            __syncthreads();
+        }
+        __global__ void cuAdd_lconst_kernel(cuFloatComplex *out, const cuFloatComplex val, const cytnx_int16 Nelem, const cytnx_int16 *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(val,make_cuFloatComplex(ptr[blockIdx.x*blockDim.x + threadIdx.x],0));
+            }
+            __syncthreads();
+        }
+        __global__ void cuAdd_tn_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const cytnx_int16 Nelem, const cytnx_int16 *val){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuFloatComplex(val[blockIdx.x*blockDim.x + threadIdx.x],0));
+            }
+            __syncthreads();
+        }
+        void cuAdd_internal_cfti16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
+            cuFloatComplex *_Lin = (cuFloatComplex*)Lin->Mem;
+            cytnx_int16 *_Rin = (cytnx_int16*)Rin->Mem;
 
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin[0]);
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+
+        }
+
+        __global__ void cuAdd_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const cytnx_uint16 Nelem, const cytnx_uint16 val){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuFloatComplex(val,0));
+            }
+            __syncthreads();
+        }
+        __global__ void cuAdd_lconst_kernel(cuFloatComplex *out, const cuFloatComplex val, const cytnx_uint16 Nelem, const cytnx_uint16 *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(val,make_cuFloatComplex(ptr[blockIdx.x*blockDim.x + threadIdx.x],0));
+            }
+            __syncthreads();
+        }
+        __global__ void cuAdd_tn_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const cytnx_uint16 Nelem, const cytnx_uint16 *val){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuFloatComplex(val[blockIdx.x*blockDim.x + threadIdx.x],0));
+            }
+            __syncthreads();
+        }
+        void cuAdd_internal_cftu16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
+            cuFloatComplex *_Lin = (cuFloatComplex*)Lin->Mem;
+            cytnx_uint16 *_Rin = (cytnx_uint16*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin[0]);
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+
+        }
+
+        __global__ void cuAdd_lconst_kernel(cuFloatComplex *out, const cuFloatComplex val, const cytnx_uint64 Nelem, const cytnx_bool *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(val,make_cuFloatComplex(ptr[blockIdx.x*blockDim.x + threadIdx.x],0));
+            }
+            __syncthreads();
+        }
+        __global__ void cuAdd_tn_kernel(cuFloatComplex *out, const cuFloatComplex *ptr, const cytnx_uint64 Nelem, const cytnx_bool *val){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                out[blockIdx.x*blockDim.x + threadIdx.x] = cuCaddf(ptr[blockIdx.x*blockDim.x + threadIdx.x],make_cuFloatComplex(val[blockIdx.x*blockDim.x + threadIdx.x],0));
+            }
+            __syncthreads();
+        }
+        void cuAdd_internal_cftb(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
+            cuFloatComplex *_Lin = (cuFloatComplex*)Lin->Mem;
+            cytnx_bool *_Rin = (cytnx_bool*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,make_cuFloatComplex(_Rin[0],0));
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+
+        }
+
+//------------------------------
         void cuAdd_internal_dtcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
              cuAdd_internal_cdtd(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
         }
@@ -720,7 +935,77 @@ namespace cytnx{
               }
 
         }
+        void cuAdd_internal_dti16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
 
+            cytnx_double *_out = (cytnx_double*)out->Mem;
+            cytnx_double *_Lin = (cytnx_double*)Lin->Mem;
+            cytnx_int16 *_Rin = (cytnx_int16*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin[0]);
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+
+        }
+        void cuAdd_internal_dtu16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+
+            cytnx_double *_out = (cytnx_double*)out->Mem;
+            cytnx_double *_Lin = (cytnx_double*)Lin->Mem;
+            cytnx_uint16 *_Rin = (cytnx_uint16*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin[0]);
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+
+        }
+
+
+        
+        __global__ void cuAdd_lconst_kernel(cytnx_double *out, const cytnx_double val, const cytnx_uint64 Nelem, const cytnx_bool *ptr){
+              if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = val + double(ptr[blockIdx.x*blockDim.x + threadIdx.x]);
+              }
+              __syncthreads();
+         }
+        
+        __global__ void cuAdd_tn_kernel(cytnx_double *out, const cytnx_double *val, const cytnx_uint64 Nelem, const cytnx_bool *ptr){
+              if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = val[blockIdx.x*blockDim.x + threadIdx.x] + double(ptr[blockIdx.x*blockDim.x + threadIdx.x]);
+              }
+              __syncthreads();
+        }
+        void cuAdd_internal_dtb(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+
+            cytnx_double *_out = (cytnx_double*)out->Mem;
+            cytnx_double *_Lin = (cytnx_double*)Lin->Mem;
+            cytnx_bool *_Rin = (cytnx_bool*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,cytnx_double(_Rin[0]));
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+
+        }
+//----------------------------
         void cuAdd_internal_ftcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
              cuAdd_internal_cdtf(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
         }
@@ -814,8 +1099,73 @@ namespace cytnx{
               }
 
         }
+        void cuAdd_internal_fti16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cytnx_float *_out = (cytnx_float*)out->Mem;
+            cytnx_float *_Lin = (cytnx_float*)Lin->Mem;
+            cytnx_int16 *_Rin = (cytnx_int16*)Rin->Mem;
 
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
 
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin[0]);
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+
+        }
+        void cuAdd_internal_ftu16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cytnx_float *_out = (cytnx_float*)out->Mem;
+            cytnx_float *_Lin = (cytnx_float*)Lin->Mem;
+            cytnx_uint16 *_Rin = (cytnx_uint16*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin[0]);
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+
+        }
+
+        __global__ void cuAdd_lconst_kernel(cytnx_float *out, const cytnx_float val, const cytnx_uint64 Nelem, const cytnx_bool *ptr){
+              if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = val + float(ptr[blockIdx.x*blockDim.x + threadIdx.x]);
+              }
+              __syncthreads();
+         }
+        
+        __global__ void cuAdd_tn_kernel(cytnx_float *out, const cytnx_float *val, const cytnx_uint64 Nelem, const cytnx_bool *ptr){
+              if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = val[blockIdx.x*blockDim.x + threadIdx.x] + float(ptr[blockIdx.x*blockDim.x + threadIdx.x]);
+              }
+              __syncthreads();
+        }
+        void cuAdd_internal_ftb(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cytnx_float *_out = (cytnx_float*)out->Mem;
+            cytnx_float *_Lin = (cytnx_float*)Lin->Mem;
+            cytnx_bool *_Rin = (cytnx_bool*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,cytnx_float(_Rin[0]));
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+
+        }
+
+//----------------------------------
         void cuAdd_internal_i64tcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
              cuAdd_internal_cdti64(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
         }
@@ -894,8 +1244,72 @@ namespace cytnx{
               }
 
         }
+        void cuAdd_internal_i64ti16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cytnx_int64 *_out = (cytnx_int64*)out->Mem;
+            cytnx_int64 *_Lin = (cytnx_int64*)Lin->Mem;
+            cytnx_int16 *_Rin = (cytnx_int16*)Rin->Mem;
 
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
 
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin[0]);
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+        }
+        void cuAdd_internal_i64tu16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cytnx_int64 *_out = (cytnx_int64*)out->Mem;
+            cytnx_int64 *_Lin = (cytnx_int64*)Lin->Mem;
+            cytnx_uint16 *_Rin = (cytnx_uint16*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin[0]);
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+
+        }
+
+        __global__ void cuAdd_lconst_kernel(cytnx_int64 *out, const cytnx_int64 val, const cytnx_uint64 Nelem, const cytnx_bool *ptr){
+              if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = val + cytnx_int64(ptr[blockIdx.x*blockDim.x + threadIdx.x]);
+              }
+              __syncthreads();
+         }
+        
+        __global__ void cuAdd_tn_kernel(cytnx_int64 *out, const cytnx_int64 *val, const cytnx_uint64 Nelem, const cytnx_bool *ptr){
+              if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = val[blockIdx.x*blockDim.x + threadIdx.x] + cytnx_int64(ptr[blockIdx.x*blockDim.x + threadIdx.x]);
+              }
+              __syncthreads();
+        }
+        void cuAdd_internal_i64tb(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cytnx_int64 *_out = (cytnx_int64*)out->Mem;
+            cytnx_int64 *_Lin = (cytnx_int64*)Lin->Mem;
+            cytnx_bool *_Rin = (cytnx_bool*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,cytnx_int64(_Rin[0]));
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+
+        }
+
+//-------------------------------------
         void cuAdd_internal_u64tcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
              cuAdd_internal_cdtu64(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
         }
@@ -961,6 +1375,72 @@ namespace cytnx{
 
         }
 
+        void cuAdd_internal_u64ti16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cytnx_uint64 *_out = (cytnx_uint64*)out->Mem;
+            cytnx_uint64 *_Lin = (cytnx_uint64*)Lin->Mem;
+            cytnx_int16 *_Rin = (cytnx_int16*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin[0]);
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+        }
+        void cuAdd_internal_u64tu16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cytnx_uint64 *_out = (cytnx_uint64*)out->Mem;
+            cytnx_uint64 *_Lin = (cytnx_uint64*)Lin->Mem;
+            cytnx_uint16 *_Rin = (cytnx_uint16*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin[0]);
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+
+        }
+
+        __global__ void cuAdd_lconst_kernel(cytnx_uint64 *out, const cytnx_uint64 val, const cytnx_uint64 Nelem, const cytnx_bool *ptr){
+              if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = val + cytnx_uint64(ptr[blockIdx.x*blockDim.x + threadIdx.x]);
+              }
+              __syncthreads();
+         }
+        
+        __global__ void cuAdd_tn_kernel(cytnx_uint64 *out, const cytnx_uint64 *val, const cytnx_uint64 Nelem, const cytnx_bool *ptr){
+              if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = val[blockIdx.x*blockDim.x + threadIdx.x] + cytnx_uint64(ptr[blockIdx.x*blockDim.x + threadIdx.x]);
+              }
+              __syncthreads();
+        }
+        void cuAdd_internal_u64tb(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cytnx_uint64 *_out = (cytnx_uint64*)out->Mem;
+            cytnx_uint64 *_Lin = (cytnx_uint64*)Lin->Mem;
+            cytnx_bool *_Rin = (cytnx_bool*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,cytnx_uint64(_Rin[0]));
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+
+        }
+
+//-----------------------------
         void cuAdd_internal_i32tcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
              cuAdd_internal_cdti32(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
 
@@ -1019,8 +1499,75 @@ namespace cytnx{
               }
 
         }
+        void cuAdd_internal_i32ti16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cytnx_int32 *_out = (cytnx_int32*)out->Mem;
+            cytnx_int32 *_Lin = (cytnx_int32*)Lin->Mem;
+            cytnx_int16 *_Rin = (cytnx_int16*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin[0]);
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+
+        }
+        void cuAdd_internal_i32tu16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cytnx_int32 *_out = (cytnx_int32*)out->Mem;
+            cytnx_int32 *_Lin = (cytnx_int32*)Lin->Mem;
+            cytnx_uint16 *_Rin = (cytnx_uint16*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin[0]);
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+
+        }
+
+        __global__ void cuAdd_lconst_kernel(cytnx_int32 *out, const cytnx_int32 val, const cytnx_uint64 Nelem, const cytnx_bool *ptr){
+              if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = val + cytnx_int32(ptr[blockIdx.x*blockDim.x + threadIdx.x]);
+              }
+              __syncthreads();
+         }
+        
+        __global__ void cuAdd_tn_kernel(cytnx_int32 *out, const cytnx_int32 *val, const cytnx_uint64 Nelem, const cytnx_bool *ptr){
+              if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = val[blockIdx.x*blockDim.x + threadIdx.x] + cytnx_int32(ptr[blockIdx.x*blockDim.x + threadIdx.x]);
+              }
+              __syncthreads();
+        }
+        void cuAdd_internal_i32tb(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cytnx_int32 *_out = (cytnx_int32*)out->Mem;
+            cytnx_int32 *_Lin = (cytnx_int32*)Lin->Mem;
+            cytnx_bool *_Rin = (cytnx_bool*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,cytnx_int32(_Rin[0]));
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+
+        }
 
 
+
+//-------------------------------------
         void cuAdd_internal_u32tcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
              cuAdd_internal_cdtu32(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
 
@@ -1065,8 +1612,304 @@ namespace cytnx{
                   cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
               }
         }
+        void cuAdd_internal_u32ti16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cytnx_uint32 *_out = (cytnx_uint32*)out->Mem;
+            cytnx_uint32 *_Lin = (cytnx_uint32*)Lin->Mem;
+            cytnx_int16 *_Rin = (cytnx_int16*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin[0]);
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+        }
+        void cuAdd_internal_u32tu16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cytnx_uint32 *_out = (cytnx_uint32*)out->Mem;
+            cytnx_uint32 *_Lin = (cytnx_uint32*)Lin->Mem;
+            cytnx_uint16 *_Rin = (cytnx_uint16*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin[0]);
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+        }
 
 
+        __global__ void cuAdd_lconst_kernel(cytnx_uint32 *out, const cytnx_uint32 val, const cytnx_uint64 Nelem, const cytnx_bool *ptr){
+              if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = val + cytnx_uint32(ptr[blockIdx.x*blockDim.x + threadIdx.x]);
+              }
+              __syncthreads();
+         }
+        
+        __global__ void cuAdd_tn_kernel(cytnx_uint32 *out, const cytnx_uint32 *val, const cytnx_uint64 Nelem, const cytnx_bool *ptr){
+              if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = val[blockIdx.x*blockDim.x + threadIdx.x] + cytnx_uint32(ptr[blockIdx.x*blockDim.x + threadIdx.x]);
+              }
+              __syncthreads();
+        }
+        void cuAdd_internal_u32tb(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cytnx_uint32 *_out = (cytnx_uint32*)out->Mem;
+            cytnx_uint32 *_Lin = (cytnx_uint32*)Lin->Mem;
+            cytnx_bool *_Rin = (cytnx_bool*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,cytnx_uint32(_Rin[0]));
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+        }
+
+//------------------------------------
+        void cuAdd_internal_i16tcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_cdti16(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+
+        }
+        void cuAdd_internal_i16tcf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_cfti16(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+
+        }
+        void cuAdd_internal_i16td(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_dti16(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+
+        }
+        void cuAdd_internal_i16tf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_fti16(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+
+        }
+        void cuAdd_internal_i16ti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_i64ti16(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+
+        }
+        void cuAdd_internal_i16tu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_u64ti16(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+
+        }
+        void cuAdd_internal_i16ti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_i32ti16(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+
+        }
+        void cuAdd_internal_i16tu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_u32ti16(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+        }
+        void cuAdd_internal_i16ti16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cytnx_int16 *_out = (cytnx_int16*)out->Mem;
+            cytnx_int16 *_Lin = (cytnx_int16*)Lin->Mem;
+            cytnx_int16 *_Rin = (cytnx_int16*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin[0]);
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+        }
+        void cuAdd_internal_i16tu16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cytnx_int16 *_out = (cytnx_int16*)out->Mem;
+            cytnx_int16 *_Lin = (cytnx_int16*)Lin->Mem;
+            cytnx_uint16 *_Rin = (cytnx_uint16*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin[0]);
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+        }
+
+
+        __global__ void cuAdd_lconst_kernel(cytnx_int16 *out, const cytnx_int16 val, const cytnx_uint64 Nelem, const cytnx_bool *ptr){
+              if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = val + cytnx_int16(ptr[blockIdx.x*blockDim.x + threadIdx.x]);
+              }
+              __syncthreads();
+         }
+        
+        __global__ void cuAdd_tn_kernel(cytnx_int16 *out, const cytnx_int16 *val, const cytnx_uint64 Nelem, const cytnx_bool *ptr){
+              if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = val[blockIdx.x*blockDim.x + threadIdx.x] + cytnx_int16(ptr[blockIdx.x*blockDim.x + threadIdx.x]);
+              }
+              __syncthreads();
+        }
+        void cuAdd_internal_i16tb(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cytnx_int16 *_out = (cytnx_int16*)out->Mem;
+            cytnx_int16 *_Lin = (cytnx_int16*)Lin->Mem;
+            cytnx_bool *_Rin = (cytnx_bool*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,cytnx_int16(_Rin[0]));
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+        }
+
+//------------------------------------
+        void cuAdd_internal_u16tcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_cdtu16(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+
+        }
+        void cuAdd_internal_u16tcf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_cftu16(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+
+        }
+        void cuAdd_internal_u16td(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_dtu16(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+
+        }
+        void cuAdd_internal_u16tf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_ftu16(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+
+        }
+        void cuAdd_internal_u16ti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_i64tu16(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+
+        }
+        void cuAdd_internal_u16tu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_u64tu16(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+
+        }
+        void cuAdd_internal_u16ti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_i32tu16(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+
+        }
+        void cuAdd_internal_u16tu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_u32tu16(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+        }
+        void cuAdd_internal_u16ti16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_i16tu16(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+        }
+        void cuAdd_internal_u16tu16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cytnx_uint16 *_out = (cytnx_uint16*)out->Mem;
+            cytnx_uint16 *_Lin = (cytnx_uint16*)Lin->Mem;
+            cytnx_uint16 *_Rin = (cytnx_uint16*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin[0]);
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+        }
+
+
+        __global__ void cuAdd_lconst_kernel(cytnx_uint16 *out, const cytnx_uint16 val, const cytnx_uint64 Nelem, const cytnx_bool *ptr){
+              if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = val + cytnx_uint16(ptr[blockIdx.x*blockDim.x + threadIdx.x]);
+              }
+              __syncthreads();
+         }
+        
+        __global__ void cuAdd_tn_kernel(cytnx_uint16 *out, const cytnx_uint16 *val, const cytnx_uint64 Nelem, const cytnx_bool *ptr){
+              if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = val[blockIdx.x*blockDim.x + threadIdx.x] + cytnx_uint16(ptr[blockIdx.x*blockDim.x + threadIdx.x]);
+              }
+              __syncthreads();
+        }
+        void cuAdd_internal_u16tb(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cytnx_uint16 *_out = (cytnx_uint16*)out->Mem;
+            cytnx_uint16 *_Lin = (cytnx_uint16*)Lin->Mem;
+            cytnx_bool *_Rin = (cytnx_bool*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,cytnx_uint16(_Rin[0]));
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+        }
+
+//------------------------------------
+        void cuAdd_internal_btcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_cdtb(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+
+        }
+        void cuAdd_internal_btcf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_cftb(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+
+        }
+        void cuAdd_internal_btd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_dtb(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+
+        }
+        void cuAdd_internal_btf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_ftb(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+
+        }
+        void cuAdd_internal_bti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_i64tb(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+
+        }
+        void cuAdd_internal_btu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_u64tb(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+
+        }
+        void cuAdd_internal_bti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_i32tb(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+
+        }
+        void cuAdd_internal_btu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_u32tb(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+        }
+        void cuAdd_internal_bti16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_i16tb(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+        }
+        void cuAdd_internal_btu16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+             cuAdd_internal_u16tb(out,Rin,Lin,len, shape, invmapper_R, invmapper_L);
+        }
+
+        void cuAdd_internal_btb(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
+            cytnx_bool *_out = (cytnx_bool*)out->Mem;
+            cytnx_bool *_Lin = (cytnx_bool*)Lin->Mem;
+            cytnx_bool *_Rin = (cytnx_bool*)Rin->Mem;
+
+            cytnx_uint32 NBlocks = len/512;
+            if(len%512) NBlocks += 1;
+
+              if(Lin->size()==1){
+                  cuAdd_lconst_kernel<<<NBlocks,512>>>(_out,_Lin[0],len,_Rin);
+              }else if(Rin->size()==1){
+                  cuAdd_rconst_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin[0]);
+              }else{
+                  cuAdd_tn_kernel<<<NBlocks,512>>>(_out,_Lin,len,_Rin);
+              }
+        }
 
 
 

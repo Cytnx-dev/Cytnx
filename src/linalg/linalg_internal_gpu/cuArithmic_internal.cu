@@ -52,7 +52,28 @@ namespace cytnx{
             else if(type==2) cytnx::linalg_internal::cuSub_internal_cdti32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
             else             cytnx::linalg_internal::cuDiv_internal_cdti32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
         }
+        void cuArithmic_internal_cdtu16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_cdtu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_cdtu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_cdtu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_cdtu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+        void cuArithmic_internal_cdti16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_cdti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_cdti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_cdti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_cdti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+        void cuArithmic_internal_cdtb(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_cdtb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_cdtb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_cdtb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_cdtb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
 
+
+
+//---------------------
         void cuArithmic_internal_cftcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
             if(type==0)      cytnx::linalg_internal::cuAdd_internal_cftcd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
             else if(type==1) cytnx::linalg_internal::cuMul_internal_cftcd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
@@ -101,7 +122,26 @@ namespace cytnx{
             else if(type==2) cytnx::linalg_internal::cuSub_internal_cfti32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
             else             cytnx::linalg_internal::cuDiv_internal_cfti32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
         }
+        void cuArithmic_internal_cftu16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_cftu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_cftu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_cftu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_cftu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+        void cuArithmic_internal_cfti16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_cfti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_cfti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_cfti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_cfti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+        void cuArithmic_internal_cftb(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_cftb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_cftb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_cftb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_cftb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
 
+//---------------------
         void cuArithmic_internal_dtcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
             if(type==0)      cytnx::linalg_internal::cuAdd_internal_dtcd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
             else if(type==1) cytnx::linalg_internal::cuMul_internal_dtcd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
@@ -150,7 +190,25 @@ namespace cytnx{
             else if(type==2) cytnx::linalg_internal::cuSub_internal_dti32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
             else             cytnx::linalg_internal::cuDiv_internal_dti32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
         }
-
+        void cuArithmic_internal_dtu16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_dtu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_dtu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_dtu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_dtu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+        void cuArithmic_internal_dti16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_dti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_dti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_dti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_dti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+        void cuArithmic_internal_dtb(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_dtb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_dtb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_dtb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_dtb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+//------------------
         void cuArithmic_internal_ftcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
             if(type==0)      cytnx::linalg_internal::cuAdd_internal_ftcd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
             else if(type==1) cytnx::linalg_internal::cuMul_internal_ftcd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
@@ -204,7 +262,25 @@ namespace cytnx{
             else             cytnx::linalg_internal::cuDiv_internal_fti32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
 
 }
-
+        void cuArithmic_internal_ftu16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_ftu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_ftu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_ftu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_ftu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+        void cuArithmic_internal_fti16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_fti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_fti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_fti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_fti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+        void cuArithmic_internal_ftb(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_ftb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_ftb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_ftb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_cftb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+//---------------------------
         void cuArithmic_internal_u64tcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
 
             if(type==0)      cytnx::linalg_internal::cuAdd_internal_u64tcd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
@@ -269,7 +345,26 @@ namespace cytnx{
 
 
 }
+        void cuArithmic_internal_u64tu16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_u64tu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_u64tu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_u64tu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_u64tu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+        void cuArithmic_internal_u64ti16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_u64ti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_u64ti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_u64ti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_u64ti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+        void cuArithmic_internal_u64tb(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_u64tb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_u64tb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_u64tb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_u64tb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
 
+//------------------------------
         void cuArithmic_internal_i64tcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
             if(type==0)      cytnx::linalg_internal::cuAdd_internal_i64tcd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
             else if(type==1) cytnx::linalg_internal::cuMul_internal_i64tcd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
@@ -334,7 +429,25 @@ namespace cytnx{
 
 
 }
-
+        void cuArithmic_internal_i64tu16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_i64tu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_i64tu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_i64tu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_i64tu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+        void cuArithmic_internal_i64ti16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_i64ti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_i64ti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_i64ti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_i64ti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+        void cuArithmic_internal_i64tb(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_i64tb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_i64tb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_i64tb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_i64tb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+//-----------------------------
         void cuArithmic_internal_u32tcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
             if(type==0)      cytnx::linalg_internal::cuAdd_internal_u32tcd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
             else if(type==1) cytnx::linalg_internal::cuMul_internal_u32tcd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
@@ -399,6 +512,25 @@ namespace cytnx{
 
 
 }
+        void cuArithmic_internal_u32tu16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_u32tu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_u32tu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_u32tu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_u32tu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+        void cuArithmic_internal_u32ti16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_u32ti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_u32ti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_u32ti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_u32ti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+        void cuArithmic_internal_u32tb(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_u32tb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_u32tb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_u32tb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_u32tb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+//---------------------------------------
 
         void cuArithmic_internal_i32tcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
             if(type==0)      cytnx::linalg_internal::cuAdd_internal_i32tcd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
@@ -464,7 +596,280 @@ namespace cytnx{
 
 
 }
+        void cuArithmic_internal_i32tu16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_i32tu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_i32tu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_i32tu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_i32tu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+        void cuArithmic_internal_i32ti16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_i32ti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_i32ti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_i32ti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_i32ti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+        void cuArithmic_internal_i32tb(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_i32tb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_i32tb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_i32tb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_i32tb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
 
+//---------------------------------------
+
+        void cuArithmic_internal_i16tcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_i16tcd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_i16tcd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_i16tcd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_i16tcd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+
+
+}
+        void cuArithmic_internal_i16tcf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_i16tcf(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_i16tcf(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_i16tcf(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_i16tcf(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+
+
+}
+        void cuArithmic_internal_i16td(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_i16td(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_i16td(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_i16td(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_i16td(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+
+
+}
+        void cuArithmic_internal_i16tf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_i16tf(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_i16tf(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_i16tf(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_i16tf(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+
+
+}
+        void cuArithmic_internal_i16tu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_i16tu64(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_i16tu64(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_i16tu64(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_i16tu64(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+
+
+}
+        void cuArithmic_internal_i16ti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_i16ti64(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_i16ti64(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_i16ti64(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_i16ti64(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+
+
+}
+        void cuArithmic_internal_i16tu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_i16tu32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_i16tu32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_i16tu32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_i16tu32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+
+
+}
+        void cuArithmic_internal_i16ti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_i16ti32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_i16ti32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_i16ti32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_i16ti32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+
+
+}
+        void cuArithmic_internal_i16tu16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_i16tu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_i16tu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_i16tu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_i16tu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+        void cuArithmic_internal_i16ti16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_i16ti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_i16ti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_i16ti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_i16ti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+        void cuArithmic_internal_i16tb(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_i16tb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_i16tb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_i16tb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_i16tb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+
+
+//---------------------------------------
+
+        void cuArithmic_internal_u16tcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_u16tcd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_u16tcd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_u16tcd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_u16tcd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+
+
+}
+        void cuArithmic_internal_u16tcf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_u16tcf(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_u16tcf(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_u16tcf(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_u16tcf(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+
+
+}
+        void cuArithmic_internal_u16td(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_u16td(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_u16td(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_u16td(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_u16td(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+
+
+}
+        void cuArithmic_internal_u16tf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_u16tf(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_u16tf(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_u16tf(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_u16tf(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+
+
+}
+        void cuArithmic_internal_u16tu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_u16tu64(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_u16tu64(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_u16tu64(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_u16tu64(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+
+
+}
+        void cuArithmic_internal_u16ti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_u16ti64(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_u16ti64(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_u16ti64(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_u16ti64(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+
+
+}
+        void cuArithmic_internal_u16tu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_u16tu32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_u16tu32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_u16tu32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_u16tu32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+
+
+}
+        void cuArithmic_internal_u16ti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_u16ti32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_u16ti32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_u16ti32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_u16ti32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+
+
+}
+        void cuArithmic_internal_u16tu16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_u16tu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_u16tu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_u16tu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_u16tu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+        void cuArithmic_internal_u16ti16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_u16ti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_u16ti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_u16ti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_u16ti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+        void cuArithmic_internal_u16tb(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_u16tb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_u16tb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_u16tb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_u16tb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+
+//---------------------------------------
+
+        void cuArithmic_internal_btcd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_btcd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_btcd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_btcd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_btcd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+
+
+}
+        void cuArithmic_internal_btcf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_btcf(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_btcf(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_btcf(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_btcf(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+
+
+}
+        void cuArithmic_internal_btd(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_btd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_btd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_btd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_btd(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+
+
+}
+        void cuArithmic_internal_btf(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_btf(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_btf(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_btf(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_btf(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+
+
+}
+        void cuArithmic_internal_btu64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_btu64(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_btu64(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_btu64(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_btu64(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+
+
+}
+        void cuArithmic_internal_bti64(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_bti64(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_bti64(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_bti64(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_bti64(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+
+
+}
+        void cuArithmic_internal_btu32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_btu32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_btu32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_btu32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_btu32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+
+
+}
+        void cuArithmic_internal_bti32(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_bti32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_bti32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_bti32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_bti32(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+
+
+}
+        void cuArithmic_internal_btu16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_btu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_btu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_btu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_btu16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+        void cuArithmic_internal_bti16(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_bti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_bti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_bti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_bti16(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
+        void cuArithmic_internal_btb(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type){
+            if(type==0)      cytnx::linalg_internal::cuAdd_internal_btb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==1) cytnx::linalg_internal::cuMul_internal_btb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else if(type==2) cytnx::linalg_internal::cuSub_internal_btb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+            else             cytnx::linalg_internal::cuDiv_internal_btb(out,Lin,Rin,len,shape,invmapper_L,invmapper_R);
+        }
 
    }
 }
