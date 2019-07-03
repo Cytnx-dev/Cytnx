@@ -262,7 +262,6 @@ PYBIND11_MODULE(cytnx,m){
                 .def("print_info", &cytnx::Storage::print_info)
                 .def("set_zeros",  &cytnx::Storage::set_zeros)
                 .def("__eq__",[](cytnx::Storage &self, const cytnx::Storage &rhs)->bool{return self == rhs;})
-                
 
                 .def("fill",&cytnx::Storage::fill<cytnx::cytnx_complex128>, py::arg("val"))
                 .def("fill",&cytnx::Storage::fill<cytnx::cytnx_complex64>, py::arg("val"))
@@ -641,6 +640,19 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__ifloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_int16     &rhs){return self.Div_(rhs);})
                 .def("__ifloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint16    &rhs){return self.Div_(rhs);})
                 .def("__ifloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_bool      &rhs){return self.Div_(rhs);})
+
+                .def("__eq__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return self == rhs;})
+                .def("__eq__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&rhs){return self == rhs;})
+                .def("__eq__",[](cytnx::Tensor &self, const cytnx::cytnx_complex64 &rhs){return self == rhs;})
+                .def("__eq__",[](cytnx::Tensor &self, const cytnx::cytnx_double    &rhs){return self == rhs;})
+                .def("__eq__",[](cytnx::Tensor &self, const cytnx::cytnx_float     &rhs){return self == rhs;})
+                .def("__eq__",[](cytnx::Tensor &self, const cytnx::cytnx_int64     &rhs){return self == rhs;})
+                .def("__eq__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &rhs){return self == rhs;})
+                .def("__eq__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &rhs){return self == rhs;})
+                .def("__eq__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &rhs){return self == rhs;})
+                .def("__eq__",[](cytnx::Tensor &self, const cytnx::cytnx_int16     &rhs){return self == rhs;})
+                .def("__eq__",[](cytnx::Tensor &self, const cytnx::cytnx_uint16    &rhs){return self == rhs;})
+                .def("__eq__",[](cytnx::Tensor &self, const cytnx::cytnx_bool      &rhs){return self == rhs;})
 
                 //linalg >>
                 .def("Svd",&cytnx::Tensor::Svd, py::arg("is_U"), py::arg("is_vT"))
