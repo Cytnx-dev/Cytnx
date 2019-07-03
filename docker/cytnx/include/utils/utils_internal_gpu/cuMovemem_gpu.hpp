@@ -28,6 +28,11 @@ namespace cytnx{
         boost::intrusive_ptr<Storage_base> cuMovemem_gpu_i32(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace);
 
         boost::intrusive_ptr<Storage_base> cuMovemem_gpu_u32(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace);
+        boost::intrusive_ptr<Storage_base> cuMovemem_gpu_u16(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace);
+
+        boost::intrusive_ptr<Storage_base> cuMovemem_gpu_i16(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace);
+
+        boost::intrusive_ptr<Storage_base> cuMovemem_gpu_b(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace);
     #endif
 
     }//utils_internal

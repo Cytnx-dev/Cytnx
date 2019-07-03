@@ -185,7 +185,63 @@ namespace cytnx{
 
         }
 
+        __global__ void cuOuter_kernel(cuDoubleComplex *out, const cuDoubleComplex *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cytnx_int16 *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = cuCmul(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)],make_cuDoubleComplex(ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL],0));
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_cdti16(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
+            cuDoubleComplex *_Lin = (cuDoubleComplex*)Lin->Mem;
+            cytnx_int16 *_Rin = (cytnx_int16*)Rin->Mem;
 
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+
+        __global__ void cuOuter_kernel(cuDoubleComplex *out, const cuDoubleComplex *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cytnx_uint16 *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = cuCmul(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)],make_cuDoubleComplex(ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL],0));
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_cdtu16(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
+            cuDoubleComplex *_Lin = (cuDoubleComplex*)Lin->Mem;
+            cytnx_uint16 *_Rin = (cytnx_uint16*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+
+        __global__ void cuOuter_kernel(cuDoubleComplex *out, const cuDoubleComplex *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cytnx_bool *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = cuCmul(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)],make_cuDoubleComplex(ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL],0));
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_cdtb(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
+            cuDoubleComplex *_Lin = (cuDoubleComplex*)Lin->Mem;
+            cytnx_bool *_Rin = (cytnx_bool*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+//-------------------------------------------
         __global__ void cuOuter_kernel(cuDoubleComplex *out, const cuFloatComplex *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cuDoubleComplex *ptr){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
                   out[blockIdx.x*blockDim.x + threadIdx.x] = cuCmul(cuComplexFloatToDouble(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)]),ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL]);
@@ -342,8 +398,65 @@ namespace cytnx{
             cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
 
         }
-        
 
+        __global__ void cuOuter_kernel(cuFloatComplex *out, const cuFloatComplex *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cytnx_int16 *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = cuCmulf(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)],make_cuFloatComplex(ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL],0));
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_cfti16(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
+            cuFloatComplex *_Lin = (cuFloatComplex*)Lin->Mem;
+            cytnx_int16 *_Rin = (cytnx_int16*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }      
+
+        __global__ void cuOuter_kernel(cuFloatComplex *out, const cuFloatComplex *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cytnx_uint16 *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = cuCmulf(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)],make_cuFloatComplex(ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL],0));
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_cftu16(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
+            cuFloatComplex *_Lin = (cuFloatComplex*)Lin->Mem;
+            cytnx_uint16 *_Rin = (cytnx_uint16*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }  
+
+        __global__ void cuOuter_kernel(cuFloatComplex *out, const cuFloatComplex *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cytnx_bool *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = cuCmulf(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)],make_cuFloatComplex(ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL],0));
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_cftb(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
+            cuFloatComplex *_Lin = (cuFloatComplex*)Lin->Mem;
+            cytnx_bool *_Rin = (cytnx_bool*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }        
+
+//-----------------------------------------
         __global__ void cuOuter_kernel(cuDoubleComplex *out, const cytnx_double *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cuDoubleComplex *ptr){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
                   out[blockIdx.x*blockDim.x + threadIdx.x] = cuCmul(make_cuDoubleComplex(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)],0),ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL]);
@@ -457,9 +570,52 @@ namespace cytnx{
                 
             cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
         }
+        void cuOuter_internal_dti16(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
 
+            cytnx_double *_out = (cytnx_double*)out->Mem;
+            cytnx_double *_Lin = (cytnx_double*)Lin->Mem;
+            cytnx_int16 *_Rin = (cytnx_int16*)Rin->Mem;
 
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+        }
 
+        void cuOuter_internal_dtu16(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+
+            cytnx_double *_out = (cytnx_double*)out->Mem;
+            cytnx_double *_Lin = (cytnx_double*)Lin->Mem;
+            cytnx_uint16 *_Rin = (cytnx_uint16*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+        }
+
+        __global__ void cuOuter_kernel(cytnx_double *out, const cytnx_double *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cytnx_bool *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)] * cytnx_double(ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL]);
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_dtb(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cytnx_double *_out = (cytnx_double*)out->Mem;
+            cytnx_double *_Lin = (cytnx_double*)Lin->Mem;
+            cytnx_bool *_Rin = (cytnx_bool*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+
+//--------------------------------------
         __global__ void cuOuter_kernel(cuDoubleComplex *out, const cytnx_float *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cuDoubleComplex *ptr){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
                   out[blockIdx.x*blockDim.x + threadIdx.x] = cuCmul(make_cuDoubleComplex(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)],0),ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL]);
@@ -569,9 +725,50 @@ namespace cytnx{
                 
             cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
         }
+        void cuOuter_internal_fti16(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cytnx_float *_out = (cytnx_float*)out->Mem;
+            cytnx_float *_Lin = (cytnx_float*)Lin->Mem;
+            cytnx_int16 *_Rin = (cytnx_int16*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+        }
+        void cuOuter_internal_ftu16(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cytnx_float *_out = (cytnx_float*)out->Mem;
+            cytnx_float *_Lin = (cytnx_float*)Lin->Mem;
+            cytnx_uint16 *_Rin = (cytnx_uint16*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+        }
+
+        __global__ void cuOuter_kernel(cytnx_float *out, const cytnx_float *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cytnx_bool *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)] * cytnx_float(ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL]);
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_ftb(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cytnx_float *_out = (cytnx_float*)out->Mem;
+            cytnx_float *_Lin = (cytnx_float*)Lin->Mem;
+            cytnx_bool *_Rin = (cytnx_bool*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
 
 
-
+//-------------------------------
         __global__ void cuOuter_kernel(cuDoubleComplex *out, const cytnx_int64 *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cuDoubleComplex *ptr){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
                   out[blockIdx.x*blockDim.x + threadIdx.x] = cuCmul(make_cuDoubleComplex(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)],0),ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL]);
@@ -678,7 +875,49 @@ namespace cytnx{
                 
             cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
         }
+        void cuOuter_internal_i64ti16(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cytnx_int64 *_out = (cytnx_int64*)out->Mem;
+            cytnx_int64 *_Lin = (cytnx_int64*)Lin->Mem;
+            cytnx_int16 *_Rin = (cytnx_int16*)Rin->Mem;
 
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+        }
+        void cuOuter_internal_i64tu16(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cytnx_int64 *_out = (cytnx_int64*)out->Mem;
+            cytnx_int64 *_Lin = (cytnx_int64*)Lin->Mem;
+            cytnx_uint16 *_Rin = (cytnx_uint16*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+        }
+        __global__ void cuOuter_kernel(cytnx_int64 *out, const cytnx_int64 *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cytnx_bool *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)] * cytnx_int64(ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL]);
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_i64tb(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cytnx_int64 *_out = (cytnx_int64*)out->Mem;
+            cytnx_int64 *_Lin = (cytnx_int64*)Lin->Mem;
+            cytnx_bool *_Rin = (cytnx_bool*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+
+
+//----------------------------------------
         __global__ void cuOuter_kernel(cuDoubleComplex *out, const cytnx_uint64 *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cuDoubleComplex *ptr){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
                   out[blockIdx.x*blockDim.x + threadIdx.x] = cuCmul(make_cuDoubleComplex(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)],0),ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL]);
@@ -783,8 +1022,49 @@ namespace cytnx{
             cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
 
         }
+        void cuOuter_internal_u64ti16(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cytnx_uint64 *_out = (cytnx_uint64*)out->Mem;
+            cytnx_uint64 *_Lin = (cytnx_uint64*)Lin->Mem;
+            cytnx_int16 *_Rin = (cytnx_int16*)Rin->Mem;
 
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+        }
+        void cuOuter_internal_u64tu16(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cytnx_uint64 *_out = (cytnx_uint64*)out->Mem;
+            cytnx_uint64 *_Lin = (cytnx_uint64*)Lin->Mem;
+            cytnx_uint16 *_Rin = (cytnx_uint16*)Rin->Mem;
 
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+        __global__ void cuOuter_kernel(cytnx_uint64 *out, const cytnx_uint64 *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cytnx_bool *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)] * cytnx_uint64(ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL]);
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_u64tb(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cytnx_uint64 *_out = (cytnx_uint64*)out->Mem;
+            cytnx_uint64 *_Lin = (cytnx_uint64*)Lin->Mem;
+            cytnx_bool *_Rin = (cytnx_bool*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+
+//----------------------------------------------
 
 
         __global__ void cuOuter_kernel(cuDoubleComplex *out, const cytnx_int32 *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cuDoubleComplex *ptr){
@@ -901,6 +1181,49 @@ namespace cytnx{
             cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
 
         }
+        void cuOuter_internal_i32ti16(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cytnx_int32 *_out = (cytnx_int32*)out->Mem;
+            cytnx_int32 *_Lin = (cytnx_int32*)Lin->Mem;
+            cytnx_int16*_Rin = (cytnx_int16*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+        void cuOuter_internal_i32tu16(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cytnx_int32 *_out = (cytnx_int32*)out->Mem;
+            cytnx_int32 *_Lin = (cytnx_int32*)Lin->Mem;
+            cytnx_uint16 *_Rin = (cytnx_uint16*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+        __global__ void cuOuter_kernel(cytnx_int32 *out, const cytnx_int32  *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cytnx_bool *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)] * cytnx_int32(ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL]);
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_i32tb(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cytnx_int32  *_out = (cytnx_int32 *)out->Mem;
+            cytnx_int32  *_Lin = (cytnx_int32 *)Lin->Mem;
+            cytnx_bool *_Rin = (cytnx_bool*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+//------------------------------
 
         __global__ void cuOuter_kernel(cuDoubleComplex *out, const cytnx_uint32 *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cuDoubleComplex *ptr){
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
@@ -1012,9 +1335,553 @@ namespace cytnx{
                 
             cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
         }
+        void cuOuter_internal_u32ti16(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+              cytnx_uint32 *_out = (cytnx_uint32*)out->Mem;
+              cytnx_uint32 *_Lin = (cytnx_uint32*)Lin->Mem;
+              cytnx_int16 *_Rin = (cytnx_int16*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+        void cuOuter_internal_u32tu16(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cytnx_uint32 *_out = (cytnx_uint32*)out->Mem;
+            cytnx_uint32 *_Lin = (cytnx_uint32*)Lin->Mem;
+            cytnx_uint16 *_Rin = (cytnx_uint16*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+        }
+        __global__ void cuOuter_kernel(cytnx_uint32 *out, const cytnx_uint32  *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cytnx_bool *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)] * cytnx_uint32(ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL]);
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_u32tb(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cytnx_uint32  *_out = (cytnx_uint32 *)out->Mem;
+            cytnx_uint32  *_Lin = (cytnx_uint32 *)Lin->Mem;
+            cytnx_bool *_Rin = (cytnx_bool*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+
+//------------------------------
+
+        __global__ void cuOuter_kernel(cuDoubleComplex *out, const cytnx_int16 *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cuDoubleComplex *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = cuCmul(make_cuDoubleComplex(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)],0),ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL]);
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_i16tcd(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
+            cytnx_int16 *_Lin = (cytnx_int16*)Lin->Mem;
+            cuDoubleComplex *_Rin = (cuDoubleComplex*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
 
 
+        }
 
+        __global__ void cuOuter_kernel(cuFloatComplex *out, const cytnx_int16 *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cuFloatComplex *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = cuCmulf(make_cuFloatComplex(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)],0),ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL]);
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_i16tcf(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+             cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
+              cytnx_int16 *_Lin = (cytnx_int16*)Lin->Mem;
+              cuFloatComplex *_Rin = (cuFloatComplex*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+        void cuOuter_internal_i16td(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+              cytnx_double *_out = (cytnx_double*)out->Mem;
+              cytnx_int16 *_Lin = (cytnx_int16*)Lin->Mem;
+              cytnx_double *_Rin = (cytnx_double*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+        void cuOuter_internal_i16tf(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+              cytnx_float *_out = (cytnx_float*)out->Mem;
+              cytnx_int16 *_Lin = (cytnx_int16*)Lin->Mem;
+              cytnx_float *_Rin = (cytnx_float*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+        void cuOuter_internal_i16ti64(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+              cytnx_int64 *_out = (cytnx_int64*)out->Mem;
+              cytnx_int16 *_Lin = (cytnx_int16*)Lin->Mem;
+              cytnx_int64 *_Rin = (cytnx_int64*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+
+        }
+        void cuOuter_internal_i16tu64(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+              cytnx_uint64 *_out = (cytnx_uint64*)out->Mem;
+              cytnx_int16 *_Lin = (cytnx_int16*)Lin->Mem;
+              cytnx_uint64 *_Rin = (cytnx_uint64*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+        void cuOuter_internal_i16ti32(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+              cytnx_int32 *_out = (cytnx_int32*)out->Mem;
+              cytnx_int16 *_Lin = (cytnx_int16*)Lin->Mem;
+              cytnx_int32 *_Rin = (cytnx_int32*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+        void cuOuter_internal_i16tu32(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cytnx_uint32 *_out = (cytnx_uint32*)out->Mem;
+            cytnx_int16 *_Lin = (cytnx_int16*)Lin->Mem;
+            cytnx_uint32 *_Rin = (cytnx_uint32*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+        }
+        void cuOuter_internal_i16ti16(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+              cytnx_int16 *_out = (cytnx_int16*)out->Mem;
+              cytnx_int16 *_Lin = (cytnx_int16*)Lin->Mem;
+              cytnx_int16 *_Rin = (cytnx_int16*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+        void cuOuter_internal_i16tu16(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cytnx_int16 *_out = (cytnx_int16*)out->Mem;
+            cytnx_int16 *_Lin = (cytnx_int16*)Lin->Mem;
+            cytnx_uint16 *_Rin = (cytnx_uint16*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+        }
+        __global__ void cuOuter_kernel(cytnx_int16 *out, const cytnx_int16  *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cytnx_bool *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)] * cytnx_int16(ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL]);
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_i16tb(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cytnx_int16  *_out = (cytnx_int16 *)out->Mem;
+            cytnx_int16  *_Lin = (cytnx_int16 *)Lin->Mem;
+            cytnx_bool *_Rin = (cytnx_bool*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+
+//------------------------------
+
+        __global__ void cuOuter_kernel(cuDoubleComplex *out, const cytnx_uint16 *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cuDoubleComplex *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = cuCmul(make_cuDoubleComplex(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)],0),ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL]);
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_u16tcd(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
+            cytnx_uint16 *_Lin = (cytnx_uint16*)Lin->Mem;
+            cuDoubleComplex *_Rin = (cuDoubleComplex*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+
+        }
+
+        __global__ void cuOuter_kernel(cuFloatComplex *out, const cytnx_uint16 *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cuFloatComplex *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = cuCmulf(make_cuFloatComplex(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)],0),ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL]);
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_u16tcf(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+             cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
+              cytnx_uint16 *_Lin = (cytnx_uint16*)Lin->Mem;
+              cuFloatComplex *_Rin = (cuFloatComplex*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+        void cuOuter_internal_u16td(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+              cytnx_double *_out = (cytnx_double*)out->Mem;
+              cytnx_uint16 *_Lin = (cytnx_uint16*)Lin->Mem;
+              cytnx_double *_Rin = (cytnx_double*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+        void cuOuter_internal_u16tf(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+              cytnx_float *_out = (cytnx_float*)out->Mem;
+              cytnx_uint16 *_Lin = (cytnx_uint16*)Lin->Mem;
+              cytnx_float *_Rin = (cytnx_float*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+        void cuOuter_internal_u16ti64(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+              cytnx_int64 *_out = (cytnx_int64*)out->Mem;
+              cytnx_uint16 *_Lin = (cytnx_uint16*)Lin->Mem;
+              cytnx_int64 *_Rin = (cytnx_int64*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+
+        }
+        void cuOuter_internal_u16tu64(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+              cytnx_uint64 *_out = (cytnx_uint64*)out->Mem;
+              cytnx_uint16 *_Lin = (cytnx_uint16*)Lin->Mem;
+              cytnx_uint64 *_Rin = (cytnx_uint64*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+        void cuOuter_internal_u16ti32(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+              cytnx_int32 *_out = (cytnx_int32*)out->Mem;
+              cytnx_uint16 *_Lin = (cytnx_uint16*)Lin->Mem;
+              cytnx_int32 *_Rin = (cytnx_int32*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+        void cuOuter_internal_u16tu32(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cytnx_uint32 *_out = (cytnx_uint32*)out->Mem;
+            cytnx_uint16 *_Lin = (cytnx_uint16*)Lin->Mem;
+            cytnx_uint32 *_Rin = (cytnx_uint32*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+        }
+        void cuOuter_internal_u16ti16(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+              cytnx_int16 *_out = (cytnx_int16*)out->Mem;
+              cytnx_uint16 *_Lin = (cytnx_uint16*)Lin->Mem;
+              cytnx_int16 *_Rin = (cytnx_int16*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+        void cuOuter_internal_u16tu16(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cytnx_uint16 *_out = (cytnx_uint16*)out->Mem;
+            cytnx_uint16 *_Lin = (cytnx_uint16*)Lin->Mem;
+            cytnx_uint16 *_Rin = (cytnx_uint16*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+        }
+        __global__ void cuOuter_kernel(cytnx_uint16 *out, const cytnx_uint16  *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cytnx_bool *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)] * cytnx_uint16(ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL]);
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_u16tb(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cytnx_uint16  *_out = (cytnx_uint16 *)out->Mem;
+            cytnx_uint16  *_Lin = (cytnx_uint16 *)Lin->Mem;
+            cytnx_bool *_Rin = (cytnx_bool*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+
+//------------------------------
+
+        __global__ void cuOuter_kernel(cuDoubleComplex *out, const cytnx_bool *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cuDoubleComplex *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = cuCmul(make_cuDoubleComplex(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)],0),ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL]);
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_btcd(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+            cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
+            cytnx_bool *_Lin = (cytnx_bool*)Lin->Mem;
+            cuDoubleComplex *_Rin = (cuDoubleComplex*)Rin->Mem;
+
+            cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+
+        }
+
+        __global__ void cuOuter_kernel(cuFloatComplex *out, const cytnx_bool *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cuFloatComplex *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = cuCmulf(make_cuFloatComplex(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)],0),ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL]);
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_btcf(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+             cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
+              cytnx_bool *_Lin = (cytnx_bool*)Lin->Mem;
+              cuFloatComplex *_Rin = (cuFloatComplex*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+        __global__ void cuOuter_kernel(cytnx_double *out, const cytnx_bool *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cytnx_double *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = cytnx_double(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)])*ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL];
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_btd(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+              cytnx_double *_out = (cytnx_double*)out->Mem;
+              cytnx_bool *_Lin = (cytnx_bool*)Lin->Mem;
+              cytnx_double *_Rin = (cytnx_double*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+        __global__ void cuOuter_kernel(cytnx_float *out, const cytnx_bool *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cytnx_float *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = cytnx_float(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)])*ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL];
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_btf(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+              cytnx_float *_out = (cytnx_float*)out->Mem;
+              cytnx_bool *_Lin = (cytnx_bool*)Lin->Mem;
+              cytnx_float *_Rin = (cytnx_float*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+        __global__ void cuOuter_kernel(cytnx_int64 *out, const cytnx_bool *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cytnx_int64 *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = cytnx_int64(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)])*ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL];
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_bti64(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+              cytnx_int64 *_out = (cytnx_int64*)out->Mem;
+              cytnx_bool *_Lin = (cytnx_bool*)Lin->Mem;
+              cytnx_int64 *_Rin = (cytnx_int64*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+        __global__ void cuOuter_kernel(cytnx_uint64 *out, const cytnx_bool *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cytnx_uint64 *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = cytnx_uint64(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)])*ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL];
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_btu64(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+              cytnx_uint64 *_out = (cytnx_uint64*)out->Mem;
+              cytnx_bool *_Lin = (cytnx_bool*)Lin->Mem;
+              cytnx_uint64 *_Rin = (cytnx_uint64*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+        __global__ void cuOuter_kernel(cytnx_int32 *out, const cytnx_bool *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cytnx_int32 *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = cytnx_int32(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)])*ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL];
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_bti32(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+              cytnx_int32*_out = (cytnx_int32*)out->Mem;
+              cytnx_bool *_Lin = (cytnx_bool*)Lin->Mem;
+              cytnx_int32 *_Rin = (cytnx_int32*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+        __global__ void cuOuter_kernel(cytnx_uint32 *out, const cytnx_bool *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cytnx_uint32 *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = cytnx_uint32(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)])*ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL];
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_btu32(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+              cytnx_uint32*_out = (cytnx_uint32*)out->Mem;
+              cytnx_bool *_Lin = (cytnx_bool*)Lin->Mem;
+              cytnx_uint32 *_Rin = (cytnx_uint32*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+        __global__ void cuOuter_kernel(cytnx_int16 *out, const cytnx_bool *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cytnx_int16 *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = cytnx_int16(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)])*ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL];
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_bti16(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+              cytnx_int16*_out = (cytnx_int16*)out->Mem;
+              cytnx_bool *_Lin = (cytnx_bool*)Lin->Mem;
+              cytnx_int16 *_Rin = (cytnx_int16*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+        __global__ void cuOuter_kernel(cytnx_uint16 *out, const cytnx_bool *val, const cytnx_uint64 Nelem, const cytnx_uint64 OffL,const cytnx_uint16 *ptr){
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){                                                
+                  out[blockIdx.x*blockDim.x + threadIdx.x] = cytnx_uint16(val[cytnx_uint64((blockIdx.x*blockDim.x + threadIdx.x)/OffL)])*ptr[(blockIdx.x*blockDim.x + threadIdx.x)%OffL];
+            }
+            __syncthreads();
+        }
+        void cuOuter_internal_btu16(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+              cytnx_uint16*_out = (cytnx_uint16*)out->Mem;
+              cytnx_bool *_Lin = (cytnx_bool*)Lin->Mem;
+              cytnx_uint16 *_Rin = (cytnx_uint16*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
+
+        void cuOuter_internal_btb(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin){
+              cytnx_bool*_out = (cytnx_bool*)out->Mem;
+              cytnx_bool *_Lin = (cytnx_bool*)Lin->Mem;
+              cytnx_bool *_Rin = (cytnx_bool*)Rin->Mem;
+
+              cytnx_uint64 Nelem = Lin->len*Rin->len;
+            cytnx_uint32 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks += 1;
+                
+            cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,Rin->len,_Rin);
+
+        }
 
 
     }//namespace linalg_internal

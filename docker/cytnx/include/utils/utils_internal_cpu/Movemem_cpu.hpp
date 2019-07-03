@@ -27,8 +27,10 @@ namespace cytnx{
         boost::intrusive_ptr<Storage_base> Movemem_cpu_i32(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace);
 
         boost::intrusive_ptr<Storage_base> Movemem_cpu_u32(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace);
+        boost::intrusive_ptr<Storage_base> Movemem_cpu_i16(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace);
 
-
+        boost::intrusive_ptr<Storage_base> Movemem_cpu_u16(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace);
+        boost::intrusive_ptr<Storage_base> Movemem_cpu_b(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64>&mapper, const std::vector<cytnx_uint64> &invmapper, const bool is_inplace);
     }//namespace utils_internal
 }//namespace cytnx
 #endif

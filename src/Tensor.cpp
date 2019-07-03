@@ -161,8 +161,9 @@ namespace cytnx{
     template void Tensor_impl::set<cytnx_uint64>(const std::vector<cytnx::Accessor> &, const cytnx_uint64&);
     template void Tensor_impl::set<cytnx_int32>(const std::vector<cytnx::Accessor> &, const cytnx_int32&);
     template void Tensor_impl::set<cytnx_uint32>(const std::vector<cytnx::Accessor> &, const cytnx_uint32&);
-
-
+    template void Tensor_impl::set<cytnx_int16>(const std::vector<cytnx::Accessor> &, const cytnx_int16&);
+    template void Tensor_impl::set<cytnx_uint16>(const std::vector<cytnx::Accessor> &, const cytnx_uint16&);
+    template void Tensor_impl::set<cytnx_bool>(const std::vector<cytnx::Accessor> &, const cytnx_bool&);
 
 
 
@@ -216,6 +217,19 @@ namespace cytnx{
         *this = cytnx::linalg::Add(*this,rc);
         return *this;
     }
+    template<> Tensor& Tensor::operator+=<cytnx_int16>(const cytnx_int16 &rc){
+        *this = cytnx::linalg::Add(*this,rc);
+        return *this;
+    }
+    template<> Tensor& Tensor::operator+=<cytnx_uint16>(const cytnx_uint16 &rc){
+        *this = cytnx::linalg::Add(*this,rc);
+        return *this;
+    }
+    template<> Tensor& Tensor::operator+=<cytnx_bool>(const cytnx_bool &rc){
+        *this = cytnx::linalg::Add(*this,rc);
+        return *this;
+    }
+
     // -= 
     template<> Tensor& Tensor::operator-=<Tensor>(const Tensor &rc){
         *this = cytnx::linalg::Sub(*this,rc);
@@ -253,6 +267,19 @@ namespace cytnx{
         *this = cytnx::linalg::Sub(*this,rc);
         return *this;
     }
+    template<> Tensor& Tensor::operator-=<cytnx_int16>(const cytnx_int16 &rc){
+        *this = cytnx::linalg::Sub(*this,rc);
+        return *this;
+    }
+    template<> Tensor& Tensor::operator-=<cytnx_uint16>(const cytnx_uint16 &rc){
+        *this = cytnx::linalg::Sub(*this,rc);
+        return *this;
+    }
+    template<> Tensor& Tensor::operator-=<cytnx_bool>(const cytnx_bool &rc){
+        *this = cytnx::linalg::Sub(*this,rc);
+        return *this;
+    }
+
     // *= 
     template<> Tensor& Tensor::operator*=<Tensor>(const Tensor &rc){
         *this = cytnx::linalg::Mul(*this,rc);
@@ -290,6 +317,19 @@ namespace cytnx{
         *this = cytnx::linalg::Mul(*this,rc);
         return *this;
     }
+    template<> Tensor& Tensor::operator*=<cytnx_int16>(const cytnx_int16 &rc){
+        *this = cytnx::linalg::Mul(*this,rc);
+        return *this;
+    }
+    template<> Tensor& Tensor::operator*=<cytnx_uint16>(const cytnx_uint16 &rc){
+        *this = cytnx::linalg::Mul(*this,rc);
+        return *this;
+    }
+    template<> Tensor& Tensor::operator*=<cytnx_bool>(const cytnx_bool &rc){
+        *this = cytnx::linalg::Mul(*this,rc);
+        return *this;
+    }
+
     // /= 
     template<> Tensor& Tensor::operator/=<Tensor>(const Tensor &rc){
         *this = cytnx::linalg::Div(*this,rc);
@@ -327,8 +367,18 @@ namespace cytnx{
         *this = cytnx::linalg::Div(*this,rc);
         return *this;
     }
-
-
+    template<> Tensor& Tensor::operator/=<cytnx_int16>(const cytnx_int16 &rc){
+        *this = cytnx::linalg::Div(*this,rc);
+        return *this;
+    }
+    template<> Tensor& Tensor::operator/=<cytnx_uint16>(const cytnx_uint16 &rc){
+        *this = cytnx::linalg::Div(*this,rc);
+        return *this;
+    }
+    template<> Tensor& Tensor::operator/=<cytnx_bool>(const cytnx_bool &rc){
+        *this = cytnx::linalg::Div(*this,rc);
+        return *this;
+    }
 
     std::vector<Tensor> Tensor::Svd(const bool&is_U, const bool&is_vT){
         return linalg::Svd(*this, is_U, is_vT);

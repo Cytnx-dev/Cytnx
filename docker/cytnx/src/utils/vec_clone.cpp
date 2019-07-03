@@ -61,6 +61,24 @@ namespace cytnx{
         memcpy(&out[0],&in_vec[0],sizeof(cytnx_uint32)*in_vec.size());
         return out;
     }
+    template<>
+    std::vector<cytnx_int16> vec_clone(const std::vector<cytnx_int16> &in_vec){
+        std::vector<cytnx_int16> out(in_vec.size());
+        memcpy(&out[0],&in_vec[0],sizeof(cytnx_int16)*in_vec.size());
+        return out;
+    }
+    template<>
+    std::vector<cytnx_uint16> vec_clone(const std::vector<cytnx_uint16> &in_vec){
+        std::vector<cytnx_uint16> out(in_vec.size());
+        memcpy(&out[0],&in_vec[0],sizeof(cytnx_uint16)*in_vec.size());
+        return out;
+    }
+    template<>
+    std::vector<cytnx_bool> vec_clone(const std::vector<cytnx_bool> &in_vec){
+        std::vector<cytnx_bool> out = in_vec;
+        return out;
+    }
+
     //=======================================================
 
     template<class T>
@@ -127,6 +145,26 @@ namespace cytnx{
         cytnx_error_msg(Nelem > in_vec.size(),"[ERROR] Nelem cannot exceed the no. of elements in the in_vec%s","\n");
         std::vector<cytnx_uint32> out(Nelem);
         memcpy(&out[0],&in_vec[0],sizeof(cytnx_uint32)*Nelem);
+        return out;
+    }
+    template<>
+    std::vector<cytnx_int16> vec_clone(const std::vector<cytnx_int16> &in_vec, const cytnx_uint64 &Nelem){
+        cytnx_error_msg(Nelem > in_vec.size(),"[ERROR] Nelem cannot exceed the no. of elements in the in_vec%s","\n");
+        std::vector<cytnx_int16> out(Nelem);
+        memcpy(&out[0],&in_vec[0],sizeof(cytnx_int16)*Nelem);
+        return out;
+    }
+    template<>
+    std::vector<cytnx_uint16> vec_clone(const std::vector<cytnx_uint16> &in_vec, const cytnx_uint64 &Nelem){
+        cytnx_error_msg(Nelem > in_vec.size(),"[ERROR] Nelem cannot exceed the no. of elements in the in_vec%s","\n");
+        std::vector<cytnx_uint16> out(Nelem);
+        memcpy(&out[0],&in_vec[0],sizeof(cytnx_uint16)*Nelem);
+        return out;
+    }
+    template<>
+    std::vector<cytnx_bool> vec_clone(const std::vector<cytnx_bool> &in_vec, const cytnx_uint64 &Nelem){
+        cytnx_error_msg(Nelem > in_vec.size(),"[ERROR] Nelem cannot exceed the no. of elements in the in_vec%s","\n");
+        std::vector<cytnx_bool> out(in_vec.begin(),in_vec.begin()+Nelem);
         return out;
     }
 
@@ -207,6 +245,33 @@ namespace cytnx{
     template<>
     std::vector<cytnx_uint32> vec_clone(const std::vector<cytnx_uint32>& in_vec, const std::vector<cytnx_uint64> &locators ){
         std::vector<cytnx_uint32> out(locators.size());
+        for(cytnx_uint64 i=0;i<locators.size();i++){
+            cytnx_error_msg(locators[i] >= in_vec.size(),"[ERROR] the index [%d] in locators exceed the bbound.\n",locators[i]);
+            out[i] = in_vec[locators[i]];
+        }
+        return out;
+    }
+    template<>
+    std::vector<cytnx_int16> vec_clone(const std::vector<cytnx_int16>& in_vec, const std::vector<cytnx_uint64> &locators ){
+        std::vector<cytnx_int16> out(locators.size());
+        for(cytnx_uint64 i=0;i<locators.size();i++){
+            cytnx_error_msg(locators[i] >= in_vec.size(),"[ERROR] the index [%d] in locators exceed the bbound.\n",locators[i]);
+            out[i] = in_vec[locators[i]];
+        }
+        return out;
+    }
+    template<>
+    std::vector<cytnx_uint16> vec_clone(const std::vector<cytnx_uint16>& in_vec, const std::vector<cytnx_uint64> &locators ){
+        std::vector<cytnx_uint16> out(locators.size());
+        for(cytnx_uint64 i=0;i<locators.size();i++){
+            cytnx_error_msg(locators[i] >= in_vec.size(),"[ERROR] the index [%d] in locators exceed the bbound.\n",locators[i]);
+            out[i] = in_vec[locators[i]];
+        }
+        return out;
+    }
+    template<>
+    std::vector<cytnx_bool> vec_clone(const std::vector<cytnx_bool>& in_vec, const std::vector<cytnx_uint64> &locators ){
+        std::vector<cytnx_bool> out(locators.size());
         for(cytnx_uint64 i=0;i<locators.size();i++){
             cytnx_error_msg(locators[i] >= in_vec.size(),"[ERROR] the index [%d] in locators exceed the bbound.\n",locators[i]);
             out[i] = in_vec[locators[i]];

@@ -24,7 +24,12 @@ std::string cytnx::Type_class::getname(const unsigned int &type_id){
             return string("Int32");
         case Type_class::Uint32:
             return string("Uint32");
-
+        case Type_class::Int16:
+            return string("Int16");
+        case Type_class::Uint16:
+            return string("Uint16");
+        case Type_class::Bool:
+            return string("Bool");
         default:
             cytnx_error_msg(1,"%s","[ERROR] invalid type");
     }
@@ -49,6 +54,12 @@ unsigned int cytnx::Type_class::c_typename_to_id(const std::string &c_name){
         return this->Int32;
     }else if(c_name == typeid(cytnx_uint32).name()){
         return this->Uint32;
+    }else if(c_name == typeid(cytnx_int16).name()){
+        return this->Int16;
+    }else if(c_name == typeid(cytnx_uint16).name()){
+        return this->Uint16;
+    }else if(c_name == typeid(cytnx_bool).name()){
+        return this->Bool;
     }else{
         cytnx_error_msg(1,"%s","[ERROR] invalid type");
     }

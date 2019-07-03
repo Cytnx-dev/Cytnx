@@ -1,4 +1,4 @@
-CONFIG_FILE := make.inc
+CONFIG_FILE := make.docker.inc
 
 ##########################################
 # Color
@@ -14,6 +14,7 @@ $(error $(CONFIG_FILE) not found.)
 endif
 include $(CONFIG_FILE)
 
+## 
 CytnxPATH=.
 INCFLAGS :=-I$(CytnxPATH)/include
 
@@ -27,10 +28,10 @@ else
 endif
 
 ifeq ($(MKL_Enable),1)
-  CCFLAGS += -std=c++11 -g -Wformat=0 -fPIC -DUNI_MKL 
+  CCFLAGS += -std=c++11 -O3 -Wformat=0 -fPIC -DUNI_MKL 
   LDFLAGS += $(DOCKER_MKL) -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5 -ldl
 else
-  CCFLAGS += -std=c++11 -g -Wformat=0 -fPIC
+  CCFLAGS += -std=c++11 -O3 -Wformat=0 -fPIC
   LDFLAGS +=  -llapack -lblas
 endif
 
@@ -69,7 +70,7 @@ else
   ALL_LDFLAGS += $(LDFLAGS)
 endif
 
-OBJS = Storage_base.o Uint32Storage.o Int32Storage.o Uint64Storage.o Int64Storage.o FloatStorage.o DoubleStorage.o ComplexFloatStorage.o ComplexDoubleStorage.o Type.o Device.o
+OBJS = Storage_base.o BoolStorage.o Uint16Storage.o Int16Storage.o Uint32Storage.o Int32Storage.o Uint64Storage.o Int64Storage.o FloatStorage.o DoubleStorage.o ComplexFloatStorage.o ComplexDoubleStorage.o Type.o Device.o
 
 
 OBJS += Storage.o Bond.o Tensor.o Symmetry.o Accessor.o Generator.o UniTensor_base.o DenseUniTensor.o SparseUniTensor.o 
@@ -78,7 +79,7 @@ OBJS += Storage.o Bond.o Tensor.o Symmetry.o Accessor.o Generator.o UniTensor_ba
 
 ## Utils
 OBJS += utils_internal_interface.o
-OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o is.o vec_intersect.o vec_concatenate.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_cpu.o SetElems_cpu.o
+OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o is.o vec_intersect.o vec_concatenate.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_cpu.o SetElems_cpu.o cartesian.o
 ifeq ($(GPU_Enable),1)
   OBJS += cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o cuFill_gpu.o cuSetArange_gpu.o cuGetElems_gpu.o  cuSetElems_gpu.o
 endif
@@ -161,7 +162,12 @@ SparseUniTensor.o: $(CytnxPATH)/src/SparseUniTensor.cpp $(CytnxPATH)/include/Uni
 ###########################
 Storage_base.o: $(CytnxPATH)/src/Storage_base.cpp $(CytnxPATH)/include/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-
+BoolStorage.o: $(CytnxPATH)/src/BoolStorage.cpp $(CytnxPATH)/include/Storage.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+Uint16Storage.o: $(CytnxPATH)/src/Uint16Storage.cpp $(CytnxPATH)/include/Storage.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+Int16Storage.o: $(CytnxPATH)/src/Int16Storage.cpp $(CytnxPATH)/include/Storage.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 Uint32Storage.o: $(CytnxPATH)/src/Uint32Storage.cpp $(CytnxPATH)/include/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 Int32Storage.o: $(CytnxPATH)/src/Int32Storage.cpp $(CytnxPATH)/include/Storage.hpp
@@ -319,6 +325,8 @@ complex_arithmic.o: $(CytnxPATH)/src/utils/complex_arithmic.cpp $(CytnxPATH)/inc
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 is.o: $(CytnxPATH)/src/utils/is.cpp $(CytnxPATH)/include/utils/is.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+cartesian.o: $(CytnxPATH)/src/utils/cartesian.cpp $(CytnxPATH)/include/utils/cartesian.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 vec_clone.o: $(CytnxPATH)/src/utils/vec_clone.cpp $(CytnxPATH)/include/utils/vec_clone.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<

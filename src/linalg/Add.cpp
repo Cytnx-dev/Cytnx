@@ -414,27 +414,11 @@ namespace cytnx{
     Tensor operator+<cytnx_uint16>(const Tensor &Lt, const cytnx_uint16 &rc){
        return cytnx::linalg::Add(Lt,rc);
     }
-
+    template<>
+    Tensor operator+<cytnx_bool>(const Tensor &Lt, const cytnx_bool &rc){
+       return cytnx::linalg::Add(Lt,rc);
+    }
     
-    /*
-    template<> Tensor operator+<cytnx_complex128>(const Tensor &, const cytnx_complex128&);
-    template<> Tensor operator+<cytnx_complex64>(const Tensor &, const cytnx_complex64&);
-    template<> Tensor operator+<cytnx_double>(const Tensor &, const cytnx_double&);
-    template<> Tensor operator+<cytnx_float>(const Tensor &, const cytnx_float&);
-    template<> Tensor operator+<cytnx_int64>(const Tensor &, const cytnx_int64&);
-    template<> Tensor operator+<cytnx_uint64>(const Tensor &, const cytnx_uint64&);
-    template<> Tensor operator+<cytnx_int32>(const Tensor &, const cytnx_int32&);
-    template<> Tensor operator+<cytnx_uint32>(const Tensor &, const cytnx_uint32&);
-
-    template<> Tensor operator+<cytnx_complex128>( const cytnx_complex128&,const Tensor &);
-    template<> Tensor operator+<cytnx_complex64>( const cytnx_complex64&,const Tensor &);
-    template<> Tensor operator+<cytnx_double>( const cytnx_double&,const Tensor &);
-    template<> Tensor operator+<cytnx_float>( const cytnx_float&,const Tensor &);
-    template<> Tensor operator+<cytnx_int64>( const cytnx_int64&,const Tensor &);
-    template<> Tensor operator+<cytnx_uint64>( const cytnx_uint64&,const Tensor &);
-    template<> Tensor operator+<cytnx_int32>( const cytnx_int32&,const Tensor &);
-    template<> Tensor operator+<cytnx_uint32>( const cytnx_uint32&,const Tensor &);
-    */
 }// cytnx
 
 

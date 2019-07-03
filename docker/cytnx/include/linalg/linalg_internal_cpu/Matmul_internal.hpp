@@ -21,8 +21,9 @@ namespace cytnx{
         void Matmul_internal_u64(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &inl, const boost::intrusive_ptr<Storage_base> &inr, const cytnx_int32 &Ml, const cytnx_int32 &Comm, const cytnx_int32 &Nr);
         void Matmul_internal_i32(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &inl, const boost::intrusive_ptr<Storage_base> &inr, const cytnx_int32 &Ml, const cytnx_int32 &Comm, const cytnx_int32 &Nr);
         void Matmul_internal_u32(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &inl, const boost::intrusive_ptr<Storage_base> &inr, const cytnx_int32 &Ml, const cytnx_int32 &Comm, const cytnx_int32 &Nr);
-
-
+        void Matmul_internal_i16(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &inl, const boost::intrusive_ptr<Storage_base> &inr, const cytnx_int32 &Ml, const cytnx_int32 &Comm, const cytnx_int32 &Nr);
+        void Matmul_internal_u16(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &inl, const boost::intrusive_ptr<Storage_base> &inr, const cytnx_int32 &Ml, const cytnx_int32 &Comm, const cytnx_int32 &Nr);
+        void Matmul_internal_b(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &inl, const boost::intrusive_ptr<Storage_base> &inr, const cytnx_int32 &Ml, const cytnx_int32 &Comm, const cytnx_int32 &Nr);
     }    
 }
 

@@ -19,6 +19,30 @@ namespace cytnx{
             }
         }
 
+        void Diag_internal_b(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &ten, const cytnx_uint64 &L){
+        
+            cytnx_bool *_out = (cytnx_bool*)out->Mem;
+            cytnx_bool *_ten = (cytnx_bool*)ten->Mem;
+
+            Diag_internal_driver(_out,_ten,L);
+        }
+
+        void Diag_internal_i16(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &ten, const cytnx_uint64 &L){
+        
+            cytnx_int16 *_out = (cytnx_int16*)out->Mem;
+            cytnx_int16 *_ten = (cytnx_int16*)ten->Mem;
+
+            Diag_internal_driver(_out,_ten,L);
+        }
+
+        void Diag_internal_u16(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &ten,  const cytnx_uint64 &L){
+
+            cytnx_uint16 *_out = (cytnx_uint16*)out->Mem;
+            cytnx_uint16 *_ten = (cytnx_uint16*)ten->Mem;
+
+            Diag_internal_driver(_out,_ten,L);
+        }
+
 
         void Diag_internal_i32(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &ten, const cytnx_uint64 &L){
         

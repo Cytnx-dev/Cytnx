@@ -122,6 +122,47 @@ namespace cytnx{
 
         }
 
+        void Fill_cpu_i16(void* in, void *val, const cytnx_uint64 &Nelem){
+
+            cytnx_int16* ptr = (cytnx_int16*)in;
+            cytnx_int16 _val = *((cytnx_int16*)val);
+
+            #ifdef UNI_OMP
+            #pragma omp parallel for schedule(dynamic)
+            #endif
+            for(cytnx_uint64 i =0; i< Nelem;i++){
+                ptr[i] = _val;
+            }
+
+        }
+
+        void Fill_cpu_u16(void* in, void *val, const cytnx_uint64 &Nelem){
+
+            cytnx_uint16* ptr = (cytnx_uint16*)in;
+            cytnx_uint16 _val = *((cytnx_uint16*)val);
+
+            #ifdef UNI_OMP
+            #pragma omp parallel for schedule(dynamic)
+            #endif
+            for(cytnx_uint64 i =0; i< Nelem;i++){
+                ptr[i] = _val;
+            }
+
+        }
+
+        void Fill_cpu_b(void* in, void *val, const cytnx_uint64 &Nelem){
+
+            cytnx_bool* ptr = (cytnx_bool*)in;
+            cytnx_bool _val = *((cytnx_bool*)val);
+
+            #ifdef UNI_OMP
+            #pragma omp parallel for schedule(dynamic)
+            #endif
+            for(cytnx_uint64 i =0; i< Nelem;i++){
+                ptr[i] = _val;
+            }
+
+        }
 
     }//namespace utils_internal
 }//namespace cytnx

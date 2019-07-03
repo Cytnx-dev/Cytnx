@@ -76,6 +76,9 @@ PYBIND11_MODULE(cytnx,m){
 		.value("Int64", cytnx::__type::__pybind_type::Int64  ) 	
         .value("Uint32", cytnx::__type::__pybind_type::Uint32)
 		.value("Int32", cytnx::__type::__pybind_type::Int32  ) 	
+        .value("Uint16", cytnx::__type::__pybind_type::Uint16)
+		.value("Int16", cytnx::__type::__pybind_type::Int16  ) 	
+		.value("Bool", cytnx::__type::__pybind_type::Bool    ) 	
 		.export_values();
     
     
@@ -104,7 +107,7 @@ PYBIND11_MODULE(cytnx,m){
                         return cytnx::zeros(Nelem,dtype,device);
                   },py::arg("size"),py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
 
-    m.def("zeros",[](py::tuple Nelem, const unsigned int &dtype, const int &device)->Tensor{
+    m.def("zeros",[](py::object Nelem, const unsigned int &dtype, const int &device)->Tensor{
                         std::vector<cytnx_uint64> tmp = Nelem.cast<std::vector<cytnx_uint64> >();
                         return cytnx::zeros(tmp,dtype,device);
                   },py::arg("size"),py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
@@ -113,7 +116,7 @@ PYBIND11_MODULE(cytnx,m){
                         return cytnx::ones(Nelem,dtype,device);
                   },py::arg("size"),py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
 
-    m.def("ones",[](py::tuple Nelem, const unsigned int &dtype, const int &device)->Tensor{
+    m.def("ones",[](py::object Nelem, const unsigned int &dtype, const int &device)->Tensor{
                         std::vector<cytnx_uint64> tmp = Nelem.cast<std::vector<cytnx_uint64> >();
                         return cytnx::ones(tmp,dtype,device);
                   },py::arg("size"),py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
@@ -269,6 +272,9 @@ PYBIND11_MODULE(cytnx,m){
                 .def("fill",&cytnx::Storage::fill<cytnx::cytnx_uint64   >, py::arg("val"))
                 .def("fill",&cytnx::Storage::fill<cytnx::cytnx_int32    >, py::arg("val"))
                 .def("fill",&cytnx::Storage::fill<cytnx::cytnx_uint32   >, py::arg("val"))
+                .def("fill",&cytnx::Storage::fill<cytnx::cytnx_int16    >, py::arg("val"))
+                .def("fill",&cytnx::Storage::fill<cytnx::cytnx_uint16   >, py::arg("val"))
+                .def("fill",&cytnx::Storage::fill<cytnx::cytnx_bool     >, py::arg("val"))
                 ;
 
     py::class_<cytnx::Tensor>(m,"Tensor")
@@ -337,6 +343,12 @@ PYBIND11_MODULE(cytnx,m){
                         out = py::cast(self.item<cytnx::cytnx_uint32>());
                     else if(self.dtype() == cytnx::Type.Int32) 
                         out = py::cast(self.item<cytnx::cytnx_int32>());
+                    else if(self.dtype() == cytnx::Type.Uint16) 
+                        out = py::cast(self.item<cytnx::cytnx_uint16>());
+                    else if(self.dtype() == cytnx::Type.Int16) 
+                        out = py::cast(self.item<cytnx::cytnx_int16>());
+                    else if(self.dtype() == cytnx::Type.Bool) 
+                        out = py::cast(self.item<cytnx::cytnx_bool>());
                     else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
                     return out;
                  })
@@ -353,6 +365,9 @@ PYBIND11_MODULE(cytnx,m){
                 .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_uint64   >, py::arg("val"))
                 .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_int32    >, py::arg("val"))
                 .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_uint32   >, py::arg("val"))
+                .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_int16    >, py::arg("val"))
+                .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_uint16   >, py::arg("val"))
+                .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_bool     >, py::arg("val"))
 
                 .def("__getitem__",[](const cytnx::Tensor &self, py::object locators){
                     cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to getitem from a empty Tensor%s","\n");
@@ -431,7 +446,11 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__setitem__",&f_Tensor_setitem_scal<cytnx_uint64> ) 
                 .def("__setitem__",&f_Tensor_setitem_scal<cytnx_int32>) 
                 .def("__setitem__",&f_Tensor_setitem_scal<cytnx_uint32> )
- 
+                .def("__setitem__",&f_Tensor_setitem_scal<cytnx_int16>) 
+                .def("__setitem__",&f_Tensor_setitem_scal<cytnx_uint16> )
+                .def("__setitem__",&f_Tensor_setitem_scal<cytnx_bool> )
+
+
                 //arithmetic >>
                 .def("__add__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return self.Add(rhs);})
                 .def("__add__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&rhs){return self.Add(rhs);})
@@ -442,7 +461,10 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__add__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &rhs){return self.Add(rhs);})
                 .def("__add__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &rhs){return self.Add(rhs);})
                 .def("__add__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &rhs){return self.Add(rhs);})
-
+                .def("__add__",[](cytnx::Tensor &self, const cytnx::cytnx_int16     &rhs){return self.Add(rhs);})
+                .def("__add__",[](cytnx::Tensor &self, const cytnx::cytnx_uint16    &rhs){return self.Add(rhs);})
+                .def("__add__",[](cytnx::Tensor &self, const cytnx::cytnx_bool      &rhs){return self.Add(rhs);})
+                
                 .def("__radd__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&lhs){return cytnx::linalg::Add(lhs,self);})
                 .def("__radd__",[](cytnx::Tensor &self, const cytnx::cytnx_complex64 &lhs){return cytnx::linalg::Add(lhs,self);})
                 .def("__radd__",[](cytnx::Tensor &self, const cytnx::cytnx_double    &lhs){return cytnx::linalg::Add(lhs,self);})
@@ -451,7 +473,10 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__radd__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &lhs){return cytnx::linalg::Add(lhs,self);})
                 .def("__radd__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &lhs){return cytnx::linalg::Add(lhs,self);})
                 .def("__radd__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &lhs){return cytnx::linalg::Add(lhs,self);})
- 
+                .def("__radd__",[](cytnx::Tensor &self, const cytnx::cytnx_int16     &lhs){return cytnx::linalg::Add(lhs,self);})
+                .def("__radd__",[](cytnx::Tensor &self, const cytnx::cytnx_uint16    &lhs){return cytnx::linalg::Add(lhs,self);})
+                .def("__radd__",[](cytnx::Tensor &self, const cytnx::cytnx_bool      &lhs){return cytnx::linalg::Add(lhs,self);})
+                
                 .def("__iadd__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return self.Add_(rhs);}) // these will return self!
                 .def("__iadd__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&rhs){return self.Add_(rhs);})
                 .def("__iadd__",[](cytnx::Tensor &self, const cytnx::cytnx_complex64 &rhs){return self.Add_(rhs);})
@@ -461,7 +486,9 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__iadd__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &rhs){return self.Add_(rhs);})
                 .def("__iadd__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &rhs){return self.Add_(rhs);})
                 .def("__iadd__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &rhs){return self.Add_(rhs);})
-
+                .def("__iadd__",[](cytnx::Tensor &self, const cytnx::cytnx_int16     &rhs){return self.Add_(rhs);})
+                .def("__iadd__",[](cytnx::Tensor &self, const cytnx::cytnx_uint16    &rhs){return self.Add_(rhs);})
+                .def("__iadd__",[](cytnx::Tensor &self, const cytnx::cytnx_bool      &rhs){return self.Add_(rhs);})
 
                 .def("__sub__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return self.Sub(rhs);})
                 .def("__sub__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&rhs){return self.Sub(rhs);})
@@ -472,6 +499,9 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__sub__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &rhs){return self.Sub(rhs);})
                 .def("__sub__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &rhs){return self.Sub(rhs);})
                 .def("__sub__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &rhs){return self.Sub(rhs);})
+                .def("__sub__",[](cytnx::Tensor &self, const cytnx::cytnx_int16     &rhs){return self.Sub(rhs);})
+                .def("__sub__",[](cytnx::Tensor &self, const cytnx::cytnx_uint16    &rhs){return self.Sub(rhs);})
+                .def("__sub__",[](cytnx::Tensor &self, const cytnx::cytnx_bool      &rhs){return self.Sub(rhs);})
 
                 .def("__rsub__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&lhs){return cytnx::linalg::Sub(lhs,self);})
                 .def("__rsub__",[](cytnx::Tensor &self, const cytnx::cytnx_complex64 &lhs){return cytnx::linalg::Sub(lhs,self);})
@@ -481,6 +511,9 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__rsub__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &lhs){return cytnx::linalg::Sub(lhs,self);})
                 .def("__rsub__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &lhs){return cytnx::linalg::Sub(lhs,self);})
                 .def("__rsub__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &lhs){return cytnx::linalg::Sub(lhs,self);})
+                .def("__rsub__",[](cytnx::Tensor &self, const cytnx::cytnx_int16     &lhs){return cytnx::linalg::Sub(lhs,self);})
+                .def("__rsub__",[](cytnx::Tensor &self, const cytnx::cytnx_uint16    &lhs){return cytnx::linalg::Sub(lhs,self);})
+                .def("__rsub__",[](cytnx::Tensor &self, const cytnx::cytnx_bool      &lhs){return cytnx::linalg::Sub(lhs,self);})
  
                 .def("__isub__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return self.Sub_(rhs);}) // these will return self!
                 .def("__isub__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&rhs){return self.Sub_(rhs);})
@@ -491,6 +524,9 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__isub__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &rhs){return self.Sub_(rhs);})
                 .def("__isub__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &rhs){return self.Sub_(rhs);})
                 .def("__isub__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &rhs){return self.Sub_(rhs);})
+                .def("__isub__",[](cytnx::Tensor &self, const cytnx::cytnx_int16     &rhs){return self.Sub_(rhs);})
+                .def("__isub__",[](cytnx::Tensor &self, const cytnx::cytnx_uint16    &rhs){return self.Sub_(rhs);})
+                .def("__isub__",[](cytnx::Tensor &self, const cytnx::cytnx_bool      &rhs){return self.Sub_(rhs);})
 
                 .def("__mul__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return self.Mul(rhs);})
                 .def("__mul__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&rhs){return self.Mul(rhs);})
@@ -501,6 +537,9 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__mul__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &rhs){return self.Mul(rhs);})
                 .def("__mul__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &rhs){return self.Mul(rhs);})
                 .def("__mul__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &rhs){return self.Mul(rhs);})
+                .def("__mul__",[](cytnx::Tensor &self, const cytnx::cytnx_int16     &rhs){return self.Mul(rhs);})
+                .def("__mul__",[](cytnx::Tensor &self, const cytnx::cytnx_uint16    &rhs){return self.Mul(rhs);})
+                .def("__mul__",[](cytnx::Tensor &self, const cytnx::cytnx_bool    &rhs){return self.Mul(rhs);})
 
                 .def("__rmul__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&lhs){return cytnx::linalg::Mul(lhs,self);})
                 .def("__rmul__",[](cytnx::Tensor &self, const cytnx::cytnx_complex64 &lhs){return cytnx::linalg::Mul(lhs,self);})
@@ -510,6 +549,9 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__rmul__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &lhs){return cytnx::linalg::Mul(lhs,self);})
                 .def("__rmul__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &lhs){return cytnx::linalg::Mul(lhs,self);})
                 .def("__rmul__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &lhs){return cytnx::linalg::Mul(lhs,self);})
+                .def("__rmul__",[](cytnx::Tensor &self, const cytnx::cytnx_int16     &lhs){return cytnx::linalg::Mul(lhs,self);})
+                .def("__rmul__",[](cytnx::Tensor &self, const cytnx::cytnx_uint16    &lhs){return cytnx::linalg::Mul(lhs,self);})
+                .def("__rmul__",[](cytnx::Tensor &self, const cytnx::cytnx_bool      &lhs){return cytnx::linalg::Mul(lhs,self);})
  
                 .def("__imul__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return self.Mul_(rhs);}) // these will return self!
                 .def("__imul__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&rhs){return self.Mul_(rhs);})
@@ -520,7 +562,9 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__imul__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &rhs){return self.Mul_(rhs);})
                 .def("__imul__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &rhs){return self.Mul_(rhs);})
                 .def("__imul__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &rhs){return self.Mul_(rhs);})
-
+                .def("__imul__",[](cytnx::Tensor &self, const cytnx::cytnx_int16     &rhs){return self.Mul_(rhs);})
+                .def("__imul__",[](cytnx::Tensor &self, const cytnx::cytnx_uint16    &rhs){return self.Mul_(rhs);})
+                .def("__imul__",[](cytnx::Tensor &self, const cytnx::cytnx_bool      &rhs){return self.Mul_(rhs);})
 
                 .def("__truediv__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return self.Div(rhs);})
                 .def("__truediv__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&rhs){return self.Div(rhs);})
@@ -531,6 +575,9 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__truediv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &rhs){return self.Div(rhs);})
                 .def("__truediv__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &rhs){return self.Div(rhs);})
                 .def("__truediv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &rhs){return self.Div(rhs);})
+                .def("__truediv__",[](cytnx::Tensor &self, const cytnx::cytnx_int16     &rhs){return self.Div(rhs);})
+                .def("__truediv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint16    &rhs){return self.Div(rhs);})
+                .def("__truediv__",[](cytnx::Tensor &self, const cytnx::cytnx_bool      &rhs){return self.Div(rhs);})
 
                 .def("__rtruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&lhs){return cytnx::linalg::Div(lhs,self);})
                 .def("__rtruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_complex64 &lhs){return cytnx::linalg::Div(lhs,self);})
@@ -540,6 +587,9 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__rtruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &lhs){return cytnx::linalg::Div(lhs,self);})
                 .def("__rtruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &lhs){return cytnx::linalg::Div(lhs,self);})
                 .def("__rtruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &lhs){return cytnx::linalg::Div(lhs,self);})
+                .def("__rtruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_int16     &lhs){return cytnx::linalg::Div(lhs,self);})
+                .def("__rtruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint16    &lhs){return cytnx::linalg::Div(lhs,self);})
+                .def("__rtruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_bool      &lhs){return cytnx::linalg::Div(lhs,self);})
  
                 .def("__itruediv__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return self.Div_(rhs);}) // these will return self!
                 .def("__itruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&rhs){return self.Div_(rhs);})
@@ -550,6 +600,9 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__itruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &rhs){return self.Div_(rhs);})
                 .def("__itruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &rhs){return self.Div_(rhs);})
                 .def("__itruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &rhs){return self.Div_(rhs);})
+                .def("__itruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_int16     &rhs){return self.Div_(rhs);})
+                .def("__itruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint16    &rhs){return self.Div_(rhs);})
+                .def("__itruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_bool      &rhs){return self.Div_(rhs);})
 
                 .def("__floordiv__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return self.Div(rhs);})
                 .def("__floordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&rhs){return self.Div(rhs);})
@@ -560,6 +613,9 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__floordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &rhs){return self.Div(rhs);})
                 .def("__floordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &rhs){return self.Div(rhs);})
                 .def("__floordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &rhs){return self.Div(rhs);})
+                .def("__floordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_int16     &rhs){return self.Div(rhs);})
+                .def("__floordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint16    &rhs){return self.Div(rhs);})
+                .def("__floordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_bool      &rhs){return self.Div(rhs);})
 
                 .def("__rfloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&lhs){return cytnx::linalg::Div(lhs,self);})
                 .def("__rfloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_complex64 &lhs){return cytnx::linalg::Div(lhs,self);})
@@ -569,6 +625,9 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__rfloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &lhs){return cytnx::linalg::Div(lhs,self);})
                 .def("__rfloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &lhs){return cytnx::linalg::Div(lhs,self);})
                 .def("__rfloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &lhs){return cytnx::linalg::Div(lhs,self);})
+                .def("__rfloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_int16     &lhs){return cytnx::linalg::Div(lhs,self);})
+                .def("__rfloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint16    &lhs){return cytnx::linalg::Div(lhs,self);})
+                .def("__rfloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_bool      &lhs){return cytnx::linalg::Div(lhs,self);})
  
                 .def("__ifloordiv__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return self.Div_(rhs);}) // these will return self!
                 .def("__ifloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&rhs){return self.Div_(rhs);})
@@ -579,8 +638,9 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__ifloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &rhs){return self.Div_(rhs);})
                 .def("__ifloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &rhs){return self.Div_(rhs);})
                 .def("__ifloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &rhs){return self.Div_(rhs);})
-
-
+                .def("__ifloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_int16     &rhs){return self.Div_(rhs);})
+                .def("__ifloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint16    &rhs){return self.Div_(rhs);})
+                .def("__ifloordiv__",[](cytnx::Tensor &self, const cytnx::cytnx_bool      &rhs){return self.Div_(rhs);})
 
                 //linalg >>
                 .def("Svd",&cytnx::Tensor::Svd, py::arg("is_U"), py::arg("is_vT"))
@@ -649,6 +709,12 @@ PYBIND11_MODULE(cytnx,m){
                         out = py::cast(self.item<cytnx::cytnx_uint32>());
                     else if(self.dtype() == cytnx::Type.Int32) 
                         out = py::cast(self.item<cytnx::cytnx_int32>());
+                    else if(self.dtype() == cytnx::Type.Uint16) 
+                        out = py::cast(self.item<cytnx::cytnx_uint16>());
+                    else if(self.dtype() == cytnx::Type.Int16) 
+                        out = py::cast(self.item<cytnx::cytnx_int16>());
+                    else if(self.dtype() == cytnx::Type.Bool) 
+                        out = py::cast(self.item<cytnx::cytnx_bool>());
                     else cytnx_error_msg(true, "%s","[ERROR] try to get element from a empty UniTensor.");
                     return out;
                  })

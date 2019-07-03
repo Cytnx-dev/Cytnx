@@ -39,6 +39,18 @@ namespace cytnx{
         boost::intrusive_ptr<Storage_base> out(new Int32Storage());
         return out;
     }
+    boost::intrusive_ptr<Storage_base> SIInit_u16(){
+        boost::intrusive_ptr<Storage_base> out(new Uint16Storage());
+        return out;
+    }
+    boost::intrusive_ptr<Storage_base> SIInit_i16(){
+        boost::intrusive_ptr<Storage_base> out(new Int16Storage());
+        return out;
+    }
+    boost::intrusive_ptr<Storage_base> SIInit_b(){
+        boost::intrusive_ptr<Storage_base> out(new BoolStorage());
+        return out;
+    }
 
     Storage_init_interface::Storage_init_interface(){
         USIInit.resize(N_Type);
@@ -50,6 +62,9 @@ namespace cytnx{
         USIInit[this->Int64] = SIInit_i64;
         USIInit[this->Uint32]= SIInit_u32;
         USIInit[this->Int32] = SIInit_i32;
+        USIInit[this->Uint16]= SIInit_u16;
+        USIInit[this->Int16] = SIInit_i16;
+        USIInit[this->Bool] = SIInit_b;
     }
 
     //==========================
@@ -292,7 +307,15 @@ namespace cytnx{
     void Storage_base::fill(const cytnx_uint32     &val){
         cytnx_error_msg(1,"%s","[ERROR] call fill directly on Void Storage.");
     }
-
+    void Storage_base::fill(const cytnx_int16      &val){
+        cytnx_error_msg(1,"%s","[ERROR] call fill directly on Void Storage.");
+    }
+    void Storage_base::fill(const cytnx_uint16     &val){
+        cytnx_error_msg(1,"%s","[ERROR] call fill directly on Void Storage.");
+    }
+    void Storage_base::fill(const cytnx_bool       &val){
+        cytnx_error_msg(1,"%s","[ERROR] call fill directly on Void Storage.");
+    }
     void Storage_base::set_zeros(){
         cytnx_error_msg(1,"%s","[ERROR] call set_zeros directly on Void Storage.");
     }
@@ -380,6 +403,36 @@ namespace cytnx{
         cudaDeviceSynchronize();
     #endif
         return static_cast<int64_t*>(this->Mem);
+    }
+
+    template<>
+    int16_t* Storage_base::data<int16_t>()const{
+
+        cytnx_error_msg(dtype != Type.Int16, "[ERROR] type mismatch. try to get <int16_t> type from raw data of type %s", Type.getname(dtype).c_str());
+    #ifdef UNI_GPU
+        cudaDeviceSynchronize();
+    #endif
+        return static_cast<int16_t*>(this->Mem);
+    }
+
+    template<>
+    uint16_t* Storage_base::data<uint16_t>()const{
+
+        cytnx_error_msg(dtype != Type.Uint16, "[ERROR] type mismatch. try to get <uint16_t> type from raw data of type %s", Type.getname(dtype).c_str());
+    #ifdef UNI_GPU
+        cudaDeviceSynchronize();
+    #endif
+        return static_cast<uint16_t*>(this->Mem);
+    }
+    
+    template<>
+    bool* Storage_base::data<bool>()const{
+
+        cytnx_error_msg(dtype != Type.Bool, "[ERROR] type mismatch. try to get <bool> type from raw data of type %s", Type.getname(dtype).c_str());
+    #ifdef UNI_GPU
+        cudaDeviceSynchronize();
+    #endif
+        return static_cast<bool*>(this->Mem);
     }
 
     // get complex raw pointer using CUDA complex type 
@@ -474,5 +527,33 @@ namespace cytnx{
     #endif
         return static_cast<int64_t*>(this->Mem)[idx];
     }
+
+    template<>
+    uint16_t& Storage_base::at<uint16_t>(const unsigned int &idx)const{
+        cytnx_error_msg(dtype != Type.Uint16, "[ERROR] type mismatch. try to get <uint16_t> type from raw data of type %s", Type.getname(dtype).c_str());
+    #ifdef UNI_GPU
+        cudaDeviceSynchronize();
+    #endif
+        return static_cast<uint16_t*>(this->Mem)[idx];
+    }
+
+    template<>
+    int16_t& Storage_base::at<int16_t>(const unsigned int &idx)const{
+        cytnx_error_msg(dtype != Type.Int16, "[ERROR] type mismatch. try to get <int16_t> type from raw data of type %s", Type.getname(dtype).c_str());
+    #ifdef UNI_GPU
+        cudaDeviceSynchronize();
+    #endif
+        return static_cast<int16_t*>(this->Mem)[idx];
+    }
+    
+    template<>
+    bool& Storage_base::at<bool>(const unsigned int &idx)const{
+        cytnx_error_msg(dtype != Type.Bool, "[ERROR] type mismatch. try to get <bool> type from raw data of type %s", Type.getname(dtype).c_str());
+    #ifdef UNI_GPU
+        cudaDeviceSynchronize();
+    #endif
+        return static_cast<bool*>(this->Mem)[idx];
+    }
+
 
 }//namespace cytnx;

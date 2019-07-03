@@ -1,57 +1,54 @@
 #include "Storage.hpp"
 #include "utils/utils_internal_interface.hpp"
+
 using namespace std;
-using namespace cytnx;
 
 namespace cytnx{
-    //+++++++++++++++++++
-    void FloatStorage::Init(const unsigned long long &len_in, const int &device){
-        //cout << "Float.init" << endl;
-        //check:
+    void Int16Storage::Init(const unsigned long long &len_in,const int &device){
+        //cout << "Int16.init" << endl;
         this->len = len_in;
-     
+
         //check:
         cytnx_error_msg(len_in < 1, "%s", "[ERROR] cannot init a Storage with zero element");
-        this->dtype = Type.Float;
+        this->dtype = Type.Int16;
         if(device==Device.cpu){
-            this->Mem = utils_internal::Malloc_cpu(this->len*sizeof(float));
+            this->Mem = utils_internal::Malloc_cpu(this->len*sizeof(cytnx_int16));
         }else{
             #ifdef UNI_GPU
                 cytnx_error_msg(device>=Device.Ngpus,"%s","[ERROR] invalid device.");
                 cudaSetDevice(device);
-                this->Mem = utils_internal::cuMalloc_gpu(this->len*sizeof(float));
+                this->Mem = utils_internal::cuMalloc_gpu(this->len*sizeof(cytnx_int16));
             #else
                 cytnx_error_msg(1,"%s","[ERROR] cannot init a Storage on gpu without CUDA support.");
             #endif
         }
-        this->device= device;
-    }           
+        this->device = device;
+    }
 
-    void FloatStorage::_Init_byptr(void *rawptr, const unsigned long long &len_in,const int &device){
+    void Int16Storage::_Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device){
         this->Mem = rawptr;
         this->len = len_in;
     # ifdef UNI_DEBUG
         cytnx_error_msg(len_in < 1, "%s", "[ERROR] _Init_by_ptr cannot have len_in < 1.");
     # endif
-        this->dtype = Type.Float;
-        this->device=  device;
+        this->dtype = Type.Int16;
+        this->device = device;
     }
 
-
-    boost::intrusive_ptr<Storage_base> FloatStorage::_create_new_sametype(){
-        boost::intrusive_ptr<Storage_base> out(new FloatStorage());
+    boost::intrusive_ptr<Storage_base> Int16Storage::_create_new_sametype(){
+        boost::intrusive_ptr<Storage_base> out(new Int16Storage());
         return out;
     }
 
-
-    boost::intrusive_ptr<Storage_base> FloatStorage::clone(){
-        boost::intrusive_ptr<Storage_base> out(new FloatStorage());
+    boost::intrusive_ptr<Storage_base> Int16Storage::clone(){
+        boost::intrusive_ptr<Storage_base> out(new Int16Storage());
         out->Init(this->len,this->device);
         if(this->device==Device.cpu){
-            memcpy(out->Mem,this->Mem,sizeof(float)*this->len);
+            memcpy(out->Mem,this->Mem,sizeof(cytnx_int16)*this->len);
         }else{
             #ifdef UNI_GPU
-                checkCudaErrors(cudaMemcpy(out->Mem,this->Mem,sizeof(float)*this->len,cudaMemcpyDeviceToDevice));
+                checkCudaErrors(cudaSetDevice(this->device));
+                checkCudaErrors(cudaMemcpy(out->Mem,this->Mem,sizeof(cytnx_int16)*this->len,cudaMemcpyDeviceToDevice));
             #else
                 cytnx_error_msg(1,"%s","[ERROR] cannot clone a Storage on gpu without CUDA support.");
             #endif
@@ -60,13 +57,29 @@ namespace cytnx{
     }
 
 
-    void FloatStorage::Move_memory_(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper){
+    void Int16Storage::Move_memory_(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper){
         boost::intrusive_ptr<Storage_base> tmp(this);
         if(this->device==Device.cpu){
-            utils_internal::Movemem_cpu_f(tmp,old_shape,mapper,invmapper,1);
+            utils_internal::Movemem_cpu_i16(tmp,old_shape,mapper,invmapper,1);
         }else{
             #ifdef UNI_GPU
-                utils_internal::cuMovemem_gpu_f(tmp,old_shape,mapper,invmapper,1); 
+                checkCudaErrors(cudaSetDevice(this->device));
+                utils_internal::cuMovemem_gpu_i16(tmp,old_shape,mapper,invmapper,1); 
+            #else
+                cytnx_error_msg(1,"%s","[ERROR][Internal] try to call GPU section without CUDA support");
+            #endif
+        }
+
+    }
+
+    boost::intrusive_ptr<Storage_base> Int16Storage::Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper){
+        boost::intrusive_ptr<Storage_base> tmp(this);
+        if(this->device==Device.cpu){
+            return utils_internal::Movemem_cpu_i16(tmp,old_shape,mapper,invmapper,0);
+        }else{
+            #ifdef UNI_GPU
+                checkCudaErrors(cudaSetDevice(this->device));
+                return utils_internal::cuMovemem_gpu_i16(tmp,old_shape,mapper,invmapper,0); 
             #else
                 cytnx_error_msg(1,"%s","[ERROR][Internal] try to call GPU section without CUDA support");
             #endif
@@ -74,29 +87,15 @@ namespace cytnx{
 
 
     }
-
-    boost::intrusive_ptr<Storage_base> FloatStorage::Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper){
-        boost::intrusive_ptr<Storage_base> tmp(this);
-        if(this->device==Device.cpu){
-            return utils_internal::Movemem_cpu_f(tmp,old_shape,mapper,invmapper,0);
-        }else{
-            #ifdef UNI_GPU
-                return utils_internal::cuMovemem_gpu_f(tmp,old_shape,mapper,invmapper,0); 
-            #else
-                cytnx_error_msg(1,"%s","[ERROR][Internal] try to call GPU section without CUDA support");
-            #endif
-        }
-
-    }
-    void FloatStorage::to_(const int &device){
+    void Int16Storage::to_(const int &device){
         if(this->device != device){
             if(this->device==Device.cpu){
                 //here, cpu->gpu with gid=device
                 #ifdef UNI_GPU
                     cytnx_error_msg(device>=Device.Ngpus,"%s","[ERROR] invalid device.");
                     cudaSetDevice(device);          
-                    void *dtmp = utils_internal::cuMalloc_gpu(sizeof(float)*this->len);
-                    checkCudaErrors(cudaMemcpy(dtmp,this->Mem,sizeof(float)*this->len,cudaMemcpyHostToDevice));
+                    void *dtmp = utils_internal::cuMalloc_gpu(sizeof(cytnx_int16)*this->len);
+                    checkCudaErrors(cudaMemcpy(dtmp,this->Mem,sizeof(cytnx_int16)*this->len,cudaMemcpyHostToDevice));
                     free(this->Mem);
                     this->Mem = dtmp;
                     this->device=device;
@@ -108,8 +107,8 @@ namespace cytnx{
                     if(device==Device.cpu){
                         //here, gpu->cpu
                         cudaSetDevice(this->device);
-                        void *htmp = malloc(sizeof(float)*this->len);
-                        checkCudaErrors(cudaMemcpy(htmp,this->Mem,sizeof(float)*this->len,cudaMemcpyDeviceToHost));
+                        void *htmp = malloc(sizeof(cytnx_int16)*this->len);
+                        checkCudaErrors(cudaMemcpy(htmp,this->Mem,sizeof(cytnx_int16)*this->len,cudaMemcpyDeviceToHost));
                         cudaFree(this->Mem);
                         this->Mem = htmp;
                         this->device = device;
@@ -117,8 +116,8 @@ namespace cytnx{
                         // here, gpu->gpu 
                         cytnx_error_msg(device>=Device.Ngpus,"%s","[ERROR] invalid device.");
                         cudaSetDevice(device);
-                        void *dtmp = utils_internal::cuMalloc_gpu(sizeof(float)*this->len);
-                        checkCudaErrors(cudaMemcpyPeer(dtmp,device,this->Mem,this->device,sizeof(float)*this->len));
+                        void *dtmp = utils_internal::cuMalloc_gpu(sizeof(cytnx_int16)*this->len);
+                        checkCudaErrors(cudaMemcpyPeer(dtmp,device,this->Mem,this->device,sizeof(cytnx_int16)*this->len));
                         cudaFree(this->Mem);
                         this->Mem = dtmp;
                         this->device = device;
@@ -128,9 +127,8 @@ namespace cytnx{
                 #endif
             }
         }
-
     }
-    boost::intrusive_ptr<Storage_base> FloatStorage::to(const int &device){
+    boost::intrusive_ptr<Storage_base> Int16Storage::to(const int &device){
         // Here, we follow pytorch scheme. if the device is the same as this->device, then return this (python self)
         // otherwise, return a clone on different device.
         if(this->device == device){
@@ -141,9 +139,9 @@ namespace cytnx{
                 #ifdef UNI_GPU
                     cytnx_error_msg(device>=Device.Ngpus,"%s","[ERROR] invalid device.");
                     cudaSetDevice(device);          
-                    void *dtmp = utils_internal::cuMalloc_gpu(sizeof(float)*this->len);
-                    checkCudaErrors(cudaMemcpy(dtmp,this->Mem,sizeof(float)*this->len,cudaMemcpyHostToDevice));
-                    boost::intrusive_ptr<Storage_base> out(new FloatStorage());
+                    void *dtmp = utils_internal::cuMalloc_gpu(sizeof(cytnx_int16)*this->len);
+                    checkCudaErrors(cudaMemcpy(dtmp,this->Mem,sizeof(cytnx_int16)*this->len,cudaMemcpyHostToDevice));
+                    boost::intrusive_ptr<Storage_base> out(new Int16Storage());
                     out->_Init_byptr(dtmp,this->len,device);
                     return out;
                 #else
@@ -154,18 +152,18 @@ namespace cytnx{
                     if(device==Device.cpu){
                         //here, gpu->cpu
                         cudaSetDevice(this->device);
-                        void *htmp = malloc(sizeof(float)*this->len);
-                        checkCudaErrors(cudaMemcpy(htmp,this->Mem,sizeof(float)*this->len,cudaMemcpyDeviceToHost));
-                        boost::intrusive_ptr<Storage_base> out(new FloatStorage());
+                        void *htmp = malloc(sizeof(cytnx_int16)*this->len);
+                        checkCudaErrors(cudaMemcpy(htmp,this->Mem,sizeof(cytnx_int16)*this->len,cudaMemcpyDeviceToHost));
+                        boost::intrusive_ptr<Storage_base> out(new Int16Storage());
                         out->_Init_byptr(htmp,this->len,device);
                         return out;
                     }else{
                         // here, gpu->gpu 
                         cytnx_error_msg(device>=Device.Ngpus,"%s","[ERROR] invalid device.");
                         cudaSetDevice(device);
-                        void *dtmp = utils_internal::cuMalloc_gpu(sizeof(float)*this->len);
-                        checkCudaErrors(cudaMemcpyPeer(dtmp,device,this->Mem,this->device,sizeof(float)*this->len));
-                        boost::intrusive_ptr<Storage_base> out(new FloatStorage());
+                        void *dtmp = utils_internal::cuMalloc_gpu(sizeof(cytnx_int16)*this->len);
+                        checkCudaErrors(cudaMemcpyPeer(dtmp,device,this->Mem,this->device,sizeof(cytnx_int16)*this->len));
+                        boost::intrusive_ptr<Storage_base> out(new Int16Storage());
                         out->_Init_byptr(dtmp,this->len,device);
                         return out;
                     }
@@ -174,12 +172,10 @@ namespace cytnx{
                 #endif
             }
 
-
-
         }
     }
 
-    void FloatStorage::PrintElem_byShape(std::ostream &os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper){
+    void Int16Storage::PrintElem_byShape(std::ostream &os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper){
     
         // checking:
         cytnx_uint64 Ne = 1;
@@ -220,7 +216,7 @@ namespace cytnx{
 
 
             cytnx_uint64 s;
-            cytnx_float* elem_ptr_ = static_cast<cytnx_float*>(this->Mem);
+            cytnx_int16* elem_ptr_ = static_cast<cytnx_int16*>(this->Mem);
 
             if(mapper.size()==0){
 
@@ -237,7 +233,7 @@ namespace cytnx{
                     }
                     for(cytnx_uint64 i=0;i<shape.back();i++){
                         stk2.back() = i;
-                        printf("%.5e ",elem_ptr_[cnt]);
+                        printf("%+5d ",elem_ptr_[cnt]);
                         cnt++;
                     }
 
@@ -299,7 +295,7 @@ namespace cytnx{
                         for(cytnx_uint64 n=0;n<shape.size();n++){
                             RealMemPos += c_offj[n]*stk2[mapper[n]]; // mapback + backmap = normal-map
                         }
-                        printf("%.5e ",elem_ptr_[RealMemPos]);
+                        printf("%+5d ",elem_ptr_[RealMemPos]);
                         //cnt++;
                     }
 
@@ -336,142 +332,151 @@ namespace cytnx{
 
 
 
-
-    void FloatStorage::print_elems(){
-        cytnx_float* elem_ptr_ = static_cast<cytnx_float*>(this->Mem);
+    void Int16Storage::print_elems(){
+        cytnx_int16* elem_ptr_ = static_cast<cytnx_int16*>(this->Mem);
         cout << "[ ";
         for(unsigned long long cnt=0;cnt<this->len;cnt++){
-            printf("%.5e ",elem_ptr_[cnt]);
+            printf("%+5d ",elem_ptr_[cnt]);
         }
-        cout << "]" << endl;
+        cout << " ]" << endl;
     }
 
-
-
-    void FloatStorage::fill(const cytnx_complex128 &val){
+    void Int16Storage::fill(const cytnx_complex128 &val){
         cytnx_error_msg(true,"[ERROR]%s"," cannot fill complex value into real container");
     }
-    void FloatStorage::fill(const cytnx_complex64  &val){
+    void Int16Storage::fill(const cytnx_complex64  &val){
         cytnx_error_msg(true,"[ERROR]%s"," cannot fill complex value into real container");
     }
-    void FloatStorage::fill(const cytnx_double     &val){
-        cytnx_float tmp = val;
+    void Int16Storage::fill(const cytnx_double     &val){
+        cytnx_int16 tmp = val;
         if(this->device == Device.cpu){
-            utils_internal::Fill_cpu_f(this->Mem, (void*)(&tmp), this->len);
+            utils_internal::Fill_cpu_i16(this->Mem, (void*)(&tmp), this->len);
         }else{
             #ifdef UNI_GPU
-                utils_internal::cuFill_gpu_f(this->Mem, (void*)(&tmp), this->len);
+                checkCudaErrors(cudaSetDevice(this->device));
+                utils_internal::cuFill_gpu_i16(this->Mem, (void*)(&tmp), this->len);
             #else
                 cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
             #endif
         }
     }
-    void FloatStorage::fill(const cytnx_float      &val){
+    void Int16Storage::fill(const cytnx_float      &val){
+        cytnx_int16 tmp = val;
         if(this->device == Device.cpu){
-            utils_internal::Fill_cpu_f(this->Mem, (void*)(&val), this->len);
+            utils_internal::Fill_cpu_i16(this->Mem, (void*)(&tmp), this->len);
         }else{
             #ifdef UNI_GPU
-                utils_internal::cuFill_gpu_f(this->Mem, (void*)(&val), this->len);
+                checkCudaErrors(cudaSetDevice(this->device));
+                utils_internal::cuFill_gpu_i16(this->Mem, (void*)(&tmp), this->len);
             #else
                 cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
             #endif
         }
     }
-    void FloatStorage::fill(const cytnx_int64      &val){
-        cytnx_float tmp = val;
+    void Int16Storage::fill(const cytnx_int64      &val){
+        cytnx_int16 tmp = val;
         if(this->device == Device.cpu){
-            utils_internal::Fill_cpu_f(this->Mem, (void*)(&tmp), this->len);
+            utils_internal::Fill_cpu_i16(this->Mem, (void*)(&tmp), this->len);
         }else{
             #ifdef UNI_GPU
-                utils_internal::cuFill_gpu_f(this->Mem, (void*)(&tmp), this->len);
+                checkCudaErrors(cudaSetDevice(this->device));
+                utils_internal::cuFill_gpu_i16(this->Mem, (void*)(&tmp), this->len);
             #else
                 cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
             #endif
         }
     }
-    void FloatStorage::fill(const cytnx_uint64     &val){
-        cytnx_float tmp = val;
+    void Int16Storage::fill(const cytnx_uint64     &val){
+        cytnx_int16 tmp = val;
         if(this->device == Device.cpu){
-            utils_internal::Fill_cpu_f(this->Mem, (void*)(&tmp), this->len);
+            utils_internal::Fill_cpu_i16(this->Mem, (void*)(&tmp), this->len);
         }else{
             #ifdef UNI_GPU
-                utils_internal::cuFill_gpu_f(this->Mem, (void*)(&tmp), this->len);
+                checkCudaErrors(cudaSetDevice(this->device));
+                utils_internal::cuFill_gpu_i16(this->Mem, (void*)(&tmp), this->len);
             #else
                 cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
             #endif
         }
     }
-    void FloatStorage::fill(const cytnx_int32      &val){
-        cytnx_float tmp = val;
+    void Int16Storage::fill(const cytnx_int32      &val){
+        cytnx_int16 tmp = val;
         if(this->device == Device.cpu){
-            utils_internal::Fill_cpu_f(this->Mem, (void*)(&tmp), this->len);
+            utils_internal::Fill_cpu_i16(this->Mem, (void*)(&tmp), this->len);
         }else{
             #ifdef UNI_GPU
-                utils_internal::cuFill_gpu_f(this->Mem, (void*)(&tmp), this->len);
+                checkCudaErrors(cudaSetDevice(this->device));
+                utils_internal::cuFill_gpu_i16(this->Mem, (void*)(&tmp), this->len);
             #else
                 cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
             #endif
         }
     }
-    void FloatStorage::fill(const cytnx_uint32     &val){
-        cytnx_float tmp = val;
+    void Int16Storage::fill(const cytnx_uint32     &val){
+        cytnx_int16 tmp = val;
         if(this->device == Device.cpu){
-            utils_internal::Fill_cpu_f(this->Mem, (void*)(&tmp), this->len);
+            utils_internal::Fill_cpu_i16(this->Mem, (void*)(&tmp), this->len);
         }else{
             #ifdef UNI_GPU
-                utils_internal::cuFill_gpu_f(this->Mem, (void*)(&tmp), this->len);
+                checkCudaErrors(cudaSetDevice(this->device));
+                utils_internal::cuFill_gpu_i16(this->Mem, (void*)(&tmp), this->len);
             #else
                 cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
             #endif
         }
     }
-    void FloatStorage::fill(const cytnx_int16      &val){
-        cytnx_float tmp = val;
+    void Int16Storage::fill(const cytnx_uint16     &val){
+        cytnx_int16 tmp = val;
         if(this->device == Device.cpu){
-            utils_internal::Fill_cpu_f(this->Mem, (void*)(&tmp), this->len);
+            utils_internal::Fill_cpu_i16(this->Mem, (void*)(&tmp), this->len);
         }else{
             #ifdef UNI_GPU
-                utils_internal::cuFill_gpu_f(this->Mem, (void*)(&tmp), this->len);
+                checkCudaErrors(cudaSetDevice(this->device));
+                utils_internal::cuFill_gpu_i16(this->Mem, (void*)(&tmp), this->len);
             #else
                 cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
             #endif
         }
     }
-    void FloatStorage::fill(const cytnx_uint16     &val){
-        cytnx_float tmp = val;
+    void Int16Storage::fill(const cytnx_int16     &val){
         if(this->device == Device.cpu){
-            utils_internal::Fill_cpu_f(this->Mem, (void*)(&tmp), this->len);
+            utils_internal::Fill_cpu_i16(this->Mem, (void*)(&val), this->len);
         }else{
             #ifdef UNI_GPU
-                utils_internal::cuFill_gpu_f(this->Mem, (void*)(&tmp), this->len);
+                checkCudaErrors(cudaSetDevice(this->device));
+                utils_internal::cuFill_gpu_i16(this->Mem, (void*)(&val), this->len);
             #else
                 cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
             #endif
         }
     }
-    void FloatStorage::fill(const cytnx_bool     &val){
-        cytnx_float tmp = val;
+    void Int16Storage::fill(const cytnx_bool     &val){
+        cytnx_int16 tmp = val;
         if(this->device == Device.cpu){
-            utils_internal::Fill_cpu_f(this->Mem, (void*)(&tmp), this->len);
+            utils_internal::Fill_cpu_i16(this->Mem, (void*)(&tmp), this->len);
         }else{
             #ifdef UNI_GPU
-                utils_internal::cuFill_gpu_f(this->Mem, (void*)(&tmp), this->len);
+                checkCudaErrors(cudaSetDevice(this->device));
+                utils_internal::cuFill_gpu_i16(this->Mem, (void*)(&tmp), this->len);
             #else
                 cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
             #endif
         }
     }
 
-    void FloatStorage::set_zeros(){
+
+    void Int16Storage::set_zeros(){
         if(this->device == Device.cpu){
-            utils_internal::SetZeros(this->Mem,sizeof(cytnx_float)*this->len);
+            utils_internal::SetZeros(this->Mem,sizeof(cytnx_int16)*this->len);
         }else{
             #ifdef UNI_GPU
-                utils_internal::cuSetZeros(this->Mem,sizeof(cytnx_float)*this->len);
+                checkCudaErrors(cudaSetDevice(this->device));
+                utils_internal::cuSetZeros(this->Mem,sizeof(cytnx_int16)*this->len);
             #else
                 cytnx_error_msg(1,"[ERROR][set_zeros] fatal, the storage is on gpu without CUDA support.%s","\n");
             #endif
         }
     }
 
-}//namespace cytnx
+
+}//cytnx

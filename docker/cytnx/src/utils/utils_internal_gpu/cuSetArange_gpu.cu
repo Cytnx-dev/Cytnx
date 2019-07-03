@@ -81,6 +81,27 @@ namespace cytnx{
             if(Nelem%512) NBlocks+=1;
             cuSetArange_kernel<<<NBlocks,512>>>(ptr,start,step,Nelem);
         }
+        void cuSetArange_gpu_i16(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start, const cytnx_double &end, const cytnx_double &step, const cytnx_uint64 &Nelem){
+            cytnx_int16 * ptr = (cytnx_int16*)in->Mem;
+            cytnx_uint64 NBlocks = Nelem/512;
+
+            if(Nelem%512) NBlocks+=1;
+            cuSetArange_kernel<<<NBlocks,512>>>(ptr,start,step,Nelem);
+        }
+        void cuSetArange_gpu_u16(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start, const cytnx_double &end, const cytnx_double &step, const cytnx_uint64 &Nelem){
+            cytnx_uint16 * ptr = (cytnx_uint16*)in->Mem;
+            cytnx_uint64 NBlocks = Nelem/512;
+
+            if(Nelem%512) NBlocks+=1;
+            cuSetArange_kernel<<<NBlocks,512>>>(ptr,start,step,Nelem);
+        }
+        void cuSetArange_gpu_b(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start, const cytnx_double &end, const cytnx_double &step, const cytnx_uint64 &Nelem){
+            cytnx_bool * ptr = (cytnx_bool*)in->Mem;
+            cytnx_uint64 NBlocks = Nelem/512;
+
+            if(Nelem%512) NBlocks+=1;
+            cuSetArange_kernel<<<NBlocks,512>>>(ptr,start,step,Nelem);
+        }
 
     }
 }

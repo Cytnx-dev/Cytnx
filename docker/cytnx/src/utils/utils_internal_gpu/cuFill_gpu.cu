@@ -87,5 +87,32 @@ namespace cytnx{
             if(Nelem%512) NBlocks+=1;
             cuFill_kernel<<<NBlocks,512>>>(ptr,_val,Nelem);
         }
+        
+        void cuFill_gpu_i16(void* in, void* val, const cytnx_uint64 &Nelem){
+            cytnx_int16* ptr = (cytnx_int16*)in;
+            cytnx_int16 _val = *((cytnx_int16*)val);
+            
+            cytnx_uint64 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks+=1;
+            cuFill_kernel<<<NBlocks,512>>>(ptr,_val,Nelem);
+        }
+        
+        void cuFill_gpu_u16(void* in, void* val, const cytnx_uint64 &Nelem){
+            cytnx_uint16* ptr = (cytnx_uint16*)in;
+            cytnx_uint16 _val = *((cytnx_uint16*)val);
+            
+            cytnx_uint64 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks+=1;
+            cuFill_kernel<<<NBlocks,512>>>(ptr,_val,Nelem);
+        }
+        void cuFill_gpu_b(void* in, void* val, const cytnx_uint64 &Nelem){
+            cytnx_bool* ptr = (cytnx_bool*)in;
+            cytnx_bool _val = *((cytnx_bool*)val);
+            
+            cytnx_uint64 NBlocks = Nelem/512;
+            if(Nelem%512) NBlocks+=1;
+            cuFill_kernel<<<NBlocks,512>>>(ptr,_val,Nelem);
+
+        }
     }//namespace utils_internal
 }//namespace cytnx

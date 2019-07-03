@@ -361,12 +361,13 @@ namespace cytnx{
         }
     }
     void Int32Storage::fill(const cytnx_float      &val){
+        cytnx_int32 tmp = val;
         if(this->device == Device.cpu){
-            utils_internal::Fill_cpu_i32(this->Mem, (void*)(&val), this->len);
+            utils_internal::Fill_cpu_i32(this->Mem, (void*)(&tmp), this->len);
         }else{
             #ifdef UNI_GPU
                 checkCudaErrors(cudaSetDevice(this->device));
-                utils_internal::cuFill_gpu_i32(this->Mem, (void*)(&val), this->len);
+                utils_internal::cuFill_gpu_i32(this->Mem, (void*)(&tmp), this->len);
             #else
                 cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
             #endif
@@ -399,13 +400,12 @@ namespace cytnx{
         }
     }
     void Int32Storage::fill(const cytnx_int32      &val){
-        cytnx_int32 tmp = val;
         if(this->device == Device.cpu){
-            utils_internal::Fill_cpu_i32(this->Mem, (void*)(&tmp), this->len);
+            utils_internal::Fill_cpu_i32(this->Mem, (void*)(&val), this->len);
         }else{
             #ifdef UNI_GPU
                 checkCudaErrors(cudaSetDevice(this->device));
-                utils_internal::cuFill_gpu_i32(this->Mem, (void*)(&tmp), this->len);
+                utils_internal::cuFill_gpu_i32(this->Mem, (void*)(&val), this->len);
             #else
                 cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
             #endif
@@ -424,7 +424,45 @@ namespace cytnx{
             #endif
         }
     }
-
+    void Int32Storage::fill(const cytnx_int16     &val){
+        cytnx_int32 tmp = val;
+        if(this->device == Device.cpu){
+            utils_internal::Fill_cpu_i32(this->Mem, (void*)(&tmp), this->len);
+        }else{
+            #ifdef UNI_GPU
+                checkCudaErrors(cudaSetDevice(this->device));
+                utils_internal::cuFill_gpu_i32(this->Mem, (void*)(&tmp), this->len);
+            #else
+                cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
+            #endif
+        }
+    }
+    void Int32Storage::fill(const cytnx_uint16     &val){
+        cytnx_int32 tmp = val;
+        if(this->device == Device.cpu){
+            utils_internal::Fill_cpu_i32(this->Mem, (void*)(&tmp), this->len);
+        }else{
+            #ifdef UNI_GPU
+                checkCudaErrors(cudaSetDevice(this->device));
+                utils_internal::cuFill_gpu_i32(this->Mem, (void*)(&tmp), this->len);
+            #else
+                cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
+            #endif
+        }
+    }
+    void Int32Storage::fill(const cytnx_bool     &val){
+        cytnx_int32 tmp = val;
+        if(this->device == Device.cpu){
+            utils_internal::Fill_cpu_i32(this->Mem, (void*)(&tmp), this->len);
+        }else{
+            #ifdef UNI_GPU
+                checkCudaErrors(cudaSetDevice(this->device));
+                utils_internal::cuFill_gpu_i32(this->Mem, (void*)(&tmp), this->len);
+            #else
+                cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
+            #endif
+        }
+    }
 
 
     void Int32Storage::set_zeros(){

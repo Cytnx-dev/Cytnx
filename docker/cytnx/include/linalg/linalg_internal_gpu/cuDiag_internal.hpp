@@ -12,6 +12,11 @@ namespace cytnx{
     namespace linalg_internal{
 
 
+        void cuDiag_internal_b(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &ten, const cytnx_uint64 &L);
+        void cuDiag_internal_i16(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &ten, const cytnx_uint64 &L);
+
+        void cuDiag_internal_u16(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &ten,  const cytnx_uint64 &L);
+
         void cuDiag_internal_i32(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &ten, const cytnx_uint64 &L);
 
         void cuDiag_internal_u32(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &ten,  const cytnx_uint64 &L);

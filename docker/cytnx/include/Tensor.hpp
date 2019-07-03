@@ -74,11 +74,11 @@ namespace cytnx{
                 return this->_contiguous;
             }
 
-            const std::vector<cytnx_uint64>& _get_mapper() const{
-                return _mapper;
+            const std::vector<cytnx_uint64>& mapper() const{
+                return this->_mapper;
             }
-            const std::vector<cytnx_uint64> & _get_invmapper() const{
-                return _invmapper;
+            const std::vector<cytnx_uint64>& invmapper() const{
+                return this->_invmapper;
             }
             Storage& storage(){
                 return _storage;
@@ -440,75 +440,274 @@ namespace cytnx{
                 return out;
             }
 
+
+            /**
+            @brief Make the Tensor contiguous by coalescing the memory (storage).
+            @return [Tensor] a new Tensor that is with contiguous memory (storage). 
+
+            See also \link Tensor::contiguous_ Tensor::contiguous_() \endlink
+
+            ## Example:
+            ### c++ API:
+            \include example/Tensor/contiguous.cpp
+            #### output>
+            \verbinclude example/Tensor/contiguous.cpp.out
+            ### python API:
+            \include example/Tensor/contiguous.py               
+            #### output>
+            \verbinclude example/Tensor/contiguous.py.out
+            */
             Tensor contiguous(){
                 Tensor out;
                 out._impl = this->_impl->contiguous();
                 return out;
             }
+            
+            /**
+            @brief Make the Tensor contiguous by coalescing the memory (storage), inplacely
+
+            See also \link Tensor::contiguous Tensor::contiguous() \endlink
+
+            ## Example:
+            ### c++ API:
+            \include example/Tensor/contiguous_.cpp
+            #### output>
+            \verbinclude example/Tensor/contiguous_.cpp.out
+            ### python API:
+            \include example/Tensor/contiguous_.py               
+            #### output>
+            \verbinclude example/Tensor/contiguous_.py.out
+            */
             void contiguous_(){
                 this->_impl->contiguous_();
             }
 
+            /**
+            @brief reshape the Tensor, inplacely
+            @param new_shape the new shape of the Tensor. 
+    
+            See also \link Tensor::reshape Tensor::reshape() \endlink
+
+            ## Example:
+            ### c++ API:
+            \include example/Tensor/reshape_.cpp
+            #### output>
+            \verbinclude example/Tensor/reshape_.cpp.out
+            ### python API:
+            \include example/Tensor/reshape_.py               
+            #### output>
+            \verbinclude example/Tensor/reshape_.py.out
+            */
             void reshape_(const std::vector<cytnx_int64> &new_shape){
                 this->_impl->reshape_(new_shape);
             }
+            
+            /**
+            @brief return a new Tensor that is reshaped.
+            @param new_shape the new shape of the Tensor. 
+            @return [Tensor]
 
+            See also \link Tensor::reshape_ Tensor::reshape_() \endlink
+
+            ## Example:
+            ### c++ API:
+            \include example/Tensor/reshape.cpp
+            #### output>
+            \verbinclude example/Tensor/reshape.cpp.out
+            ### python API:
+            \include example/Tensor/reshape.py               
+            #### output>
+            \verbinclude example/Tensor/reshape.py.out
+            */
             Tensor reshape(const std::vector<cytnx_int64> &new_shape){
                 Tensor out;
                 out._impl = this->_impl->reshape(new_shape);
                 return out;
             }
 
+
+            /**
+            @brief return a new Tensor that cast to different dtype.
+            @param new_type the new dtype. It can be any type defined in cytnx::Type
+            @return [Tensor]
+
+            ## Note:
+                If the new_type is the same as dtype of the current Tensor, return self.            
+
+            ## Example:
+            ### c++ API:
+            \include example/Tensor/astype.cpp
+            #### output>
+            \verbinclude example/Tensor/astype.cpp.out
+            ### python API:
+            \include example/Tensor/astype.py               
+            #### output>
+            \verbinclude example/Tensor/astype.py.out
+            */
             Tensor astype(const int &new_type) const{
                 Tensor out;
                 out._impl = this->_impl->astype(new_type);
                 return out;
             }
 
+
+            /**
+            @brief [C++ only] get an element at specific location.
+            @param locator the location of the element 
+            @return [ref] 
+
+            ## Note:
+                1. This is for C++ API only!
+                2. need template instantiation to resolve the type, which should be consist with the dtype of the Tensor. An error will be issued if the template type is inconsist with the current dtype of Tensor.
+                3. For python API, use [] directly to get element.
+
+            ## Example:
+            ### c++ API:
+            \include example/Tensor/at.cpp
+            #### output>
+            \verbinclude example/Tensor/at.cpp.out
+            */
             template<class T>
             T& at(const std::vector<cytnx_uint64> &locator){
                 return this->_impl->at<T>(locator);
             }
 
+            /**
+            @brief get an from a rank-0 Tensor
+            @return [T] 
+
+            ## Note:
+                1. This can only be called on a rank-0 Tensor (scalar). For C++ API, a template instantiation of type is needed to resolve the type, which should be connsist with the dtype of the Tensor. An error will be issued if the template type if inconsist with the current dtype of Tensor.
+                2. Although the return is by reference in C++ part, the return in python is not. 
+                3. From 2., We recommend user to use at<T> (C++ API) and [] (python API) to modify the value of the element to have consistant syntax across two languages. 
+
+            ## Example:
+            ### c++ API:
+            \include example/Tensor/item.cpp
+            #### output>
+            \verbinclude example/Tensor/item.cpp.out
+            ### python API:
+            \include example/Tensor/item.py               
+            #### output>
+            \verbinclude example/Tensor/item.py.out
+            */
             template<class T>
             T& item(){
                 cytnx_error_msg(this->_impl->storage().size()!=1,"[ERROR][Tensor.item<T>]%s","item can only be called from a Tensor with only one element\n");
                 return this->_impl->storage().at<T>(0);
             }
 
+            /**
+            @brief get elements using Accessor (C++ API) / slices (python API)
+            @return [Tensor]
+
+            See also \link cytnx::Accessor Accessor\endlink for cordinate with Accessor in C++ API.
+
+            ## Note:
+                1. the return will be a new Tensor instance, which not share memory with the current Tensor.
+                
+
+            ## Example:
+            ### c++ API:
+            \include example/Tensor/get.cpp
+            #### output>
+            \verbinclude example/Tensor/get.cpp.out
+            ### python API:
+            \include example/Tensor/get.py               
+            #### output>
+            \verbinclude example/Tensor/get.py.out
+            */
             Tensor get(const std::vector<cytnx::Accessor> &accessors)const {
                 Tensor out;
                 out._impl = this->_impl->get(accessors);
                 return out;
             }
+            
+            /**
+            @brief set elements with the input Tensor using Accessor (C++ API) / slices (python API)
+            @param accessors the list(vector) of accessors.
+            @param rhs [Tensor]
+
+            
+            ## Note:
+                the shape of the input Tensor should be the same as the shape that indicated using Accessor. The memory is not shared with the input Tensor.
+                
+            ## Example:
+            ### c++ API:
+            \include example/Tensor/set.cpp
+            #### output>
+            \verbinclude example/Tensor/set.cpp.out
+            ### python API:
+            \include example/Tensor/set.py               
+            #### output>
+            \verbinclude example/Tensor/set.py.out
+            */
             void set(const std::vector<cytnx::Accessor> &accessors, const Tensor &rhs){
                 this->_impl->set(accessors,rhs._impl);
             }
+
+            
+            /**
+            @brief set elements with the input constant using Accessor (C++ API) / slices (python API)
+            @param accessors the list(vector) of accessors.
+            @param rc [Const] 
+
+            See also \link cytnx::Tensor::fill Tensor::fill \endlink for filling all elements with assigned constant.  
+                
+            ## Example:
+            ### c++ API:
+            \include example/Tensor/set.cpp
+            #### output>
+            \verbinclude example/Tensor/set.cpp.out
+            ### python API:
+            \include example/Tensor/set.py               
+            #### output>
+            \verbinclude example/Tensor/set.py.out
+            */
             template<class T>
             void set(const std::vector<cytnx::Accessor> &accessors, const T &rc){
                 this->_impl->set(accessors,rc);
             }
-
-
+            ///@cond
             template<class T>
             void set(const std::initializer_list<cytnx::Accessor> &accessors, const T &rc){
                 std::vector<cytnx::Accessor> args = accessors;
                 this->set(args,rc);
             }
+            ///@endcond
 
+            /**
+            @brief return the storage of current Tensor. 
+            @return [Storage]
+
+            ## Note:
+                1. The return storage shares the same instance of the storage of current Tensor. Use \link Storage::clone Storage.clone() \endlink to create a new instance of the returned Storage. 
+
+            */
             Storage& storage() const{
                 return this->_impl->storage();
             } 
-            /*       
-            const Storage& storage() const{
-                return this->_impl->storage();
-            }
+
+            /**
+            @brief fill all the element of current Tensor with the value.
+            @param val the assigned value 
+
+
+            ## Example:
+            ### c++ API:
+            \include example/Tensor/fill.cpp
+            #### output>
+            \verbinclude example/Tensor/fill.cpp.out
+            ### python API 
+            \include example/Tensor/fill.py               
+            #### output>
+            \verbinclude example/Tensor/fill.py.out
             */
             template<class T>
-            Tensor& fill(const T& val){
+            void fill(const T& val){
                 this->_impl->fill(val);
-                return *this;
             }
+
 
             bool equiv(const Tensor &rhs){
                 if(this->shape() != rhs.shape()) return false;

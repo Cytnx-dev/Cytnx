@@ -23,7 +23,9 @@ namespace cytnx{
         void SetArange_cpu_u64(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start, const cytnx_double &end, const cytnx_double &step, const cytnx_uint64 &Nelem);
         void SetArange_cpu_i32(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start, const cytnx_double &end, const cytnx_double &step, const cytnx_uint64 &Nelem);
         void SetArange_cpu_u32(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start, const cytnx_double &end, const cytnx_double &step, const cytnx_uint64 &Nelem);
-
+        void SetArange_cpu_i16(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start, const cytnx_double &end, const cytnx_double &step, const cytnx_uint64 &Nelem);
+        void SetArange_cpu_u16(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start, const cytnx_double &end, const cytnx_double &step, const cytnx_uint64 &Nelem);
+        void SetArange_cpu_b(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start, const cytnx_double &end, const cytnx_double &step, const cytnx_uint64 &Nelem);
     }
 }
 #endif

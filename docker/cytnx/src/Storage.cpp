@@ -57,6 +57,21 @@ namespace cytnx{
                     if(this->at<cytnx_uint32>(i) != rhs.at<cytnx_uint32>(i)) return false;
                 }
                 break;
+            case Type.Int16:
+                for(cytnx_uint64 i=0;i<this->size();i++){
+                    if(this->at<cytnx_int16>(i) != rhs.at<cytnx_int16>(i)) return false;
+                }
+                break;
+            case Type.Uint16:
+                for(cytnx_uint64 i=0;i<this->size();i++){
+                    if(this->at<cytnx_uint16>(i) != rhs.at<cytnx_uint16>(i)) return false;
+                }
+                break;
+            case Type.Bool:
+                for(cytnx_uint64 i=0;i<this->size();i++){
+                    if(this->at<cytnx_bool>(i) != rhs.at<cytnx_bool>(i)) return false;
+                }
+                break;
             default:
                 cytnx_error_msg(true,"[ERROR] fatal internal, Storage has invalid type.%s","\n");
 
