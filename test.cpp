@@ -154,6 +154,19 @@ int main(int argc, char *argv[]){
     cout << X1 << endl;
     cout << (X1c == X1) << endl;
 
+    string sx1 = " test this ";
+    string sx2 = " sttr: str;   ";
+    string sx3 = " accr: tt,0,t,;    ";
+
+    //str_strip(sx1);
+    //str_strip(sx2);
+    //str_strip(sx3);
+    //cout << str_strip(sx1) << "|" << endl;
+    //cout << str_strip(sx2) << "|" << endl;
+    //cout << str_strip(sx3) << "|" << endl;
+        
+    cout << str_split(sx1,false) << endl;
+
     //cout << ut1 << endl;
 
     //cout << ut2 << endl;

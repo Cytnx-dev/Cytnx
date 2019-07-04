@@ -79,7 +79,7 @@ OBJS += Storage.o Bond.o Tensor.o Symmetry.o Accessor.o Generator.o UniTensor_ba
 
 ## Utils
 OBJS += utils_internal_interface.o
-OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o is.o vec_intersect.o vec_concatenate.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_cpu.o SetElems_cpu.o cartesian.o
+OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o is.o vec_intersect.o vec_concatenate.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_cpu.o SetElems_cpu.o cartesian.o str_utils.o
 ifeq ($(GPU_Enable),1)
   OBJS += cucomplex_arithmic.o cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o cuFill_gpu.o cuSetArange_gpu.o cuGetElems_gpu.o  cuSetElems_gpu.o
 endif
@@ -348,6 +348,9 @@ vec_concatenate.o: $(CytnxPATH)/src/utils/vec_concatenate.cpp $(CytnxPATH)/inclu
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 vec_intersect.o: $(CytnxPATH)/src/utils/vec_intersect.cpp $(CytnxPATH)/include/utils/vec_intersect.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+str_utils.o: $(CytnxPATH)/src/utils/str_utils.cpp $(CytnxPATH)/include/utils/str_utils.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+
 
 ifeq ($(GPU_Enable),1)
 cucomplex_arithmic.o: $(CytnxPATH)/src/utils/cucomplex_arithmic.cu $(CytnxPATH)/include/utils/cucomplex_arithmic.hpp
