@@ -2,6 +2,9 @@
 
 ![alt text](./Icon_small.png)
 
+## Intro slide
+[https://bit.ly/2NxHFwm](Cytnxv0.1.pdf)
+
 ## Documentation:
 
 [https://kaihsin.github.io/Cytnx/docs/html/index.html](https://kaihsin.github.io/Cytnx/docs/html/index.html)
