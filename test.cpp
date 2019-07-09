@@ -157,7 +157,9 @@ int main(int argc, char *argv[]){
     string sx1 = " test this ";
     string sx2 = " sttr: str;   ";
     string sx3 = " accr: tt,0,t,;    ";
+    string sx4 = ":";
 
+    string sx5 = "(  ((A,B),C,(D, E,F)),G )";
     //str_strip(sx1);
     //str_strip(sx2);
     //str_strip(sx3);
@@ -166,11 +168,29 @@ int main(int argc, char *argv[]){
     //cout << str_strip(sx3) << "|" << endl;
         
     cout << str_split(sx1,false) << endl;
-
+    cout << str_split(sx4,false,":") << endl;
+    cout << str_findall(sx5,"(),") << endl;
+    //cout << str_findall(sx5,"\w") << endl;
     //cout << ut1 << endl;
 
     //cout << ut2 << endl;
 
+
+    UniTensor T1 = UniTensor(Tensor({2,3,4,5}),2);
+    UniTensor T2 = UniTensor(Tensor({4,6,7,8}),3);
+    UniTensor T3 = UniTensor(Tensor({5,6,7,2}),4);
+    
+    
+
+    Network net;
+    net.Fromfile("test.net");
+    
+    net.PutUniTensor("A",T1,false);
+    net.PutUniTensor("B",T2,false);
+    net.PutUniTensor("C",T3,false);
+
+
+    net.Launch();
 
     /*
     Tensor x1 = arange(2*3*4);

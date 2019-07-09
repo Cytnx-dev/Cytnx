@@ -57,7 +57,7 @@
     * \link cytnx::Accessor Accessor \endlink [c++ only]
     * \link cytnx::Symmetry Symmetry \endlink [binded]
     * \link cytnx::UniTensor UniTensor \endlink [binded]
-
+    * \link cytnx::Network Network \endlink
 ## linear algebra functions: 
     See \link cytnx::linalg cytnx::linalg \endlink for further details
 

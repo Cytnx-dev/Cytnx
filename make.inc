@@ -2,7 +2,7 @@
 
 
 ## compile with CUDA support:
-GPU_Enable=1
+GPU_Enable=0
 
 ## compile with Openmp support:
 OMP_Enable=1

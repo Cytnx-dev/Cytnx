@@ -73,13 +73,13 @@ endif
 OBJS = Storage_base.o BoolStorage.o Uint16Storage.o Int16Storage.o Uint32Storage.o Int32Storage.o Uint64Storage.o Int64Storage.o FloatStorage.o DoubleStorage.o ComplexFloatStorage.o ComplexDoubleStorage.o Type.o Device.o
 
 
-OBJS += Storage.o Bond.o Tensor.o Symmetry.o Accessor.o Generator.o UniTensor_base.o DenseUniTensor.o SparseUniTensor.o 
+OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o Storage.o Bond.o Tensor.o Symmetry.o Accessor.o Generator.o UniTensor_base.o DenseUniTensor.o SparseUniTensor.o contraction_tree.o
 
 
 
 ## Utils
 OBJS += utils_internal_interface.o
-OBJS += Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o is.o vec_intersect.o vec_concatenate.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_cpu.o SetElems_cpu.o cartesian.o str_utils.o
+OBJS += utils.o Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o is.o vec_intersect.o vec_concatenate.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_cpu.o SetElems_cpu.o cartesian.o str_utils.o
 ifeq ($(GPU_Enable),1)
   OBJS += cucomplex_arithmic.o cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o cuFill_gpu.o cuSetArange_gpu.o cuGetElems_gpu.o  cuSetElems_gpu.o
 endif
@@ -188,6 +188,19 @@ ComplexFloatStorage.o: $(CytnxPATH)/src/ComplexFloatStorage.cpp $(CytnxPATH)/inc
 ComplexDoubleStorage.o: $(CytnxPATH)/src/ComplexDoubleStorage.cpp $(CytnxPATH)/include/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 
+## Network:
+Network.o: $(CytnxPATH)/src/Network.cpp $(CytnxPATH)/include/Network.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+Network_base.o: $(CytnxPATH)/src/Network_base.cpp $(CytnxPATH)/include/Network.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+
+RegularNetwork.o: $(CytnxPATH)/src/RegularNetwork.cpp $(CytnxPATH)/include/Network.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+
+FermionNetwork.o: $(CytnxPATH)/src/FermionNetwork.cpp $(CytnxPATH)/include/Network.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+
+
 
 ## linalg_internal
 ###########################
@@ -294,12 +307,16 @@ Type.o : $(CytnxPATH)/src/Type.cpp $(CytnxPATH)/include/Type.hpp
 Device.o: $(CytnxPATH)/src/Device.cpp $(CytnxPATH)/include/Device.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
+contraction_tree.o: $(CytnxPATH)/src/contraction_tree.cpp $(CytnxPATH)/include/contraction_tree.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 ## Utils
 ##########################
 utils_internal_interface.o: $(CytnxPATH)/src/utils/utils_internal_interface.cpp $(CytnxPATH)/include/utils/utils_internal_interface.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
+utils.o: $(CytnxPATH)/src/utils/utils.cpp $(CytnxPATH)/include/utils/utils.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 Cast_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/Cast_cpu.cpp $(CytnxPATH)/include/utils/utils_internal_cpu/Cast_cpu.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<

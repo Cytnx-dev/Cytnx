@@ -1,5 +1,6 @@
 #ifndef __cytnx_H_
 #define __cytnx_H_
+#include "Network.hpp"
 #include "Accessor.hpp"
 #include "Device.hpp"
 #include "Type.hpp"

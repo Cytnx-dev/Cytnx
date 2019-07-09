@@ -19,6 +19,7 @@ namespace cytnx{
     class SymmetryType_class{
         public:
             enum : int{
+                Void=-99,
                 U=-1,
                 Z=0,
             };
@@ -32,8 +33,8 @@ namespace cytnx{
         public:
             int stype_id;
             int n; 
-            Symmetry_base(){};
-            Symmetry_base(const int &n){
+            Symmetry_base():stype_id(SymType.Void){};
+            Symmetry_base(const int &n):stype_id(SymType.Void){
                 this->Init(n);
             };
             Symmetry_base(const Symmetry_base &rhs);
@@ -54,7 +55,7 @@ namespace cytnx{
     ///@cond
     class U1Symmetry : public Symmetry_base{
         public:
-            U1Symmetry(){};
+            U1Symmetry(){this->stype_id = SymType.U;};
             U1Symmetry(const int &n){this->Init(n);};
             void Init(const int &n){
                 this->stype_id = SymType.U;      
@@ -74,7 +75,7 @@ namespace cytnx{
     ///@cond
     class ZnSymmetry : public Symmetry_base{
        public:
-            ZnSymmetry(){};
+            ZnSymmetry(){this->stype_id = SymType.Z;};
             ZnSymmetry(const int &n){this->Init(n);};
             void Init(const int &n){
                 this->stype_id = SymType.Z;

@@ -18,6 +18,19 @@
 namespace cytnx{
    
     /// @cond 
+    class UniTensorType_class{
+        public:
+            enum : int{
+                Void=-99,
+                Dense=0,
+                Sparse=1,
+            };
+            std::string getname(const int &ut_type);
+    };
+    extern UniTensorType_class UTenType;
+    /// @endcond
+
+    /// @cond
     //class DenseUniTensor;
     //class SparseUniTensor; 
     class UniTensor_base: public intrusive_ptr_base<UniTensor_base>{
@@ -30,6 +43,7 @@ namespace cytnx{
             cytnx_int64 _Rowrank;
             bool _is_diag;
             std::string _name;
+            int uten_type_id; //the unitensor type id.
 
             bool _update_braket(){
                 if(_bonds.size()==0) return false;
@@ -49,12 +63,12 @@ namespace cytnx{
                 }
             }
 
-
         public:
             friend class UniTensor; // allow wrapper to access the private elems
             friend class DenseUniTensor;
             friend class SparseUniTensor;
-            UniTensor_base(): _is_tag(false), _name(std::string("")), _is_braket_form(false), _Rowrank(-1), _is_diag(false){};
+
+            UniTensor_base(): _is_tag(false), _name(std::string("")), _is_braket_form(false), _Rowrank(-1), _is_diag(false), uten_type_id(UTenType.Void){};
 
             //copy&assignment constr., use intrusive_ptr's !!
             UniTensor_base(const UniTensor_base &rhs);
@@ -95,8 +109,12 @@ namespace cytnx{
                 // only non-symm can enter this
                 return this->get_block_().at<T>(locator);
             }
-            
-
+            int uten_type(){
+                return this->uten_type_id;
+            }
+            std::string uten_type_str(){
+                return UTenType.getname(this->uten_type_id);
+            }
 
             virtual void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1,const unsigned int &dtype=Type.Double,const int &device = Device.cpu,const bool &is_diag=false);
             virtual void Init_by_Tensor(const Tensor& in, const cytnx_uint64 &Rowrank);
@@ -154,6 +172,7 @@ namespace cytnx{
                 return tmp;
             }
         public:
+            DenseUniTensor(){this->uten_type_id = UTenType.Dense;};
             friend class UniTensor; // allow wrapper to access the private elems
             // virtual functions
             void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
@@ -274,6 +293,8 @@ namespace cytnx{
             ~DenseUniTensor(){};
             // end virtual function              
 
+            
+
     };
     /// @endcond
 
@@ -291,6 +312,8 @@ namespace cytnx{
         
         public:
             friend class UniTensor; // allow wrapper to access the private elems
+            SparseUniTensor(){this->uten_type_id = UTenType.Sparse;};
+
             // virtual functions
             void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
             void Init_by_Tensor(const Tensor& in_tensor, const cytnx_uint64 &Rowrank){
@@ -489,10 +512,12 @@ namespace cytnx{
             cytnx_uint64 rank() const {return this->_impl->rank();}
             cytnx_uint64 Rowrank() const{return this->_impl->Rowrank();}
             unsigned int  dtype() const{ return this->_impl->dtype(); }
+            int uten_type() const{ return this->_impl->uten_type();}
             int          device() const{ return this->_impl->device();   }
             std::string name() const { return this->_impl->name();}
             std::string      dtype_str() const{ return this->_impl->dtype_str();}
             std::string     device_str() const{ return this->_impl->device_str();}
+            std::string     uten_type_str() const {return this->_impl->uten_type_str();}
             bool     is_contiguous() const{ return this->_impl->is_contiguous();}
             bool is_diag() const{ return this->_impl->is_diag(); }
             bool is_tag() const { return this->_impl->is_tag();}

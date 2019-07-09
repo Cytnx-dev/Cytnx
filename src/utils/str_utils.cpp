@@ -33,7 +33,7 @@ namespace cytnx{
         string tmp = in; // make  copy of in string  
 
         string::size_type pos = tmp.find_first_not_of(key);
-        if(pos == string::npos) return tmp;
+        if(pos == string::npos) return string();
         tmp.erase(0,pos); // ltrim
 
         pos = tmp.find_last_not_of(key);
@@ -41,6 +41,37 @@ namespace cytnx{
         tmp.erase(pos+1); // rtrim
  
         return tmp;    
+
+    }
+
+    vector<string> str_findall(const string &in, const string &tokens){
+        vector<string> out;
+        if(in.empty()) return out; 
+
+        size_t pos=0,endpos;
+        string tmp,op;
+        if((endpos = in.find_first_of(tokens, pos))==string::npos){
+            out.push_back(in);
+            return out;
+        }
+        tmp = in.substr(pos,endpos-pos+1);
+        op = tmp.back();
+        tmp.pop_back();
+        if(tmp.length()) out.push_back(tmp);
+        out.push_back(op); 
+        pos = endpos+1;
+
+        while(((endpos = in.find_first_of(tokens, pos)) != std::string::npos)) {
+            tmp = in.substr(pos, endpos - pos+1);
+            op = tmp.back();
+            tmp.pop_back();
+            if(tmp.length()) out.push_back(tmp);
+            out.push_back(op); 
+            pos = endpos+1;
+        }
+        tmp = in.substr(pos,in.length());
+        if(tmp.length()) out.push_back(tmp);
+        return out;
 
     }
 
