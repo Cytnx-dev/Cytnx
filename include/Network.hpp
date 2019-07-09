@@ -82,6 +82,7 @@ namespace cytnx{
             virtual void Fromfile(const std::string& fname);
             virtual void Clear();
             virtual UniTensor Launch();
+            virtual boost::intrusive_ptr<Network_base> clone();
             virtual ~Network_base(){};
             
     
@@ -105,6 +106,19 @@ namespace cytnx{
                 this->ORDER_tokens.clear();
             }
             UniTensor Launch();
+            boost::intrusive_ptr<Network_base> clone(){
+                RegularNetwork *tmp = new RegularNetwork();
+                tmp->name2pos = this->name2pos;
+                tmp->CtTree = this->CtTree;
+                tmp->names = this->names;
+                tmp->iBondNums = this->iBondNums;
+                tmp->label_arr = this->label_arr;
+                tmp->TOUT_labels = this->TOUT_labels;
+                tmp->TOUT_iBondNum = this->TOUT_iBondNum;
+                tmp->ORDER_tokens = this->ORDER_tokens;
+                boost::intrusive_ptr<Network_base> out(tmp);
+                return out;
+            }
             ~RegularNetwork(){};
 
     }; 
@@ -129,12 +143,25 @@ namespace cytnx{
                 this->ORDER_tokens.clear();
             }
             UniTensor Launch(){};
+            boost::intrusive_ptr<Network_base> clone(){
+                FermionNetwork *tmp = new FermionNetwork();
+                tmp->name2pos = this->name2pos;
+                tmp->CtTree = this->CtTree;
+                tmp->names = this->names;
+                tmp->iBondNums = this->iBondNums;
+                tmp->label_arr = this->label_arr;
+                tmp->TOUT_labels = this->TOUT_labels;
+                tmp->TOUT_iBondNum = this->TOUT_iBondNum;
+                tmp->ORDER_tokens = this->ORDER_tokens;
+                boost::intrusive_ptr<Network_base> out(tmp);
+                return out;
+            }
             ~FermionNetwork(){};
     };
 
     ///@endcond
 
-    /// @brief the Network
+    /// @brief the Network object for easy build tensor network.
     // wrapper
     class Network{
         public:
@@ -145,14 +172,32 @@ namespace cytnx{
             Network& operator=(const Network &rhs){this->_impl = rhs._impl; return *this;}
             ///@endcond
 
+
+
+            /**
+            @brief Construct Network from network file.
+            @param fname The network file path
+            @param network_type The type of network. 
+                   This can be [NtType.Regular] or [NtType.Fermion.].
+                   Currently, only Regular Network is support!
+            
+                
+            ##note:
+                1. each network file cannot have more than 1024 lines. 
+ 
+            */
             void Fromfile(const std::string &fname, const int &network_type=NtType.Regular){
                 if(network_type==NtType.Regular){
                     boost::intrusive_ptr<Network_base> tmp(new RegularNetwork());
                     this->_impl = tmp;
                 }else{
-                    cytnx_error_msg(true,"[ERROR] currently only support regular type network.%s","\n");
+                    cytnx_error_msg(true,"[Developing] currently only support regular type network.%s","\n");
                 }
                 this->_impl->Fromfile(fname);
+            }
+
+            Network(const std::string &fname, const int &network_type=NtType.Regular){
+                this->Fromfile(fname,network_type);
             }
 
             void PutUniTensor(const std::string &name, const UniTensor &utensor, const bool &is_clone=true){
@@ -169,6 +214,11 @@ namespace cytnx{
                 this->_impl = tmp;
             }
 
+            Network clone(){
+                Network out;
+                out._impl = this->_impl->clone();
+                return out;
+            }
     
     };
 

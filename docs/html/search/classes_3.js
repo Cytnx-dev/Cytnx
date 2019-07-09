@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['tensor',['Tensor',['../classcytnx_1_1Tensor.html',1,'cytnx']]]
+  ['network',['Network',['../classcytnx_1_1Network.html',1,'cytnx']]],
+  ['node',['Node',['../classcytnx_1_1Node.html',1,'cytnx']]]
 ];

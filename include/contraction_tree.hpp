@@ -58,6 +58,17 @@ namespace cytnx{
             std::vector<Node> nodes_container; // this contains intermediate layer.
             std::vector<Node> base_nodes; // this is the button layer.
 
+            ContractionTree(){};
+            ContractionTree(const ContractionTree &rhs){
+                this->nodes_container = rhs.nodes_container;
+                this->base_nodes = rhs.base_nodes;
+            }
+            ContractionTree& operator==(const ContractionTree &rhs){
+                this->nodes_container = rhs.nodes_container;
+                this->base_nodes = rhs.base_nodes;
+                return *this;
+            }
+
             // clear all the elements in the whole tree.
             void clear(){
                 nodes_container.clear();
