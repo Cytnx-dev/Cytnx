@@ -95,6 +95,12 @@ PYBIND11_MODULE(cytnx,m){
         .value("Z",cytnx::__sym::__stype::Z)
         .value("U",cytnx::__sym::__stype::U)
         .export_values();
+
+    py::enum_<cytnx::__ntwk::__nttype>(m,"NtType")
+        .value("Regular",cytnx::__ntwk::__nttype::Regular)
+        .value("Fermion",cytnx::__ntwk::__nttype::Fermion)
+        .value("Void"   ,cytnx::__ntwk::__nttype::Void)
+        .export_values();
     
     py::enum_<cytnx::bondType>(m,"bondType")
         .value("BD_BRA", cytnx::bondType::BD_BRA)
@@ -128,6 +134,21 @@ PYBIND11_MODULE(cytnx,m){
     m.def("arange",[](const cytnx_double &start, const cytnx_double &end, const cytnx_double &step, const unsigned int &dtype, const int &device)->Tensor{
                         return cytnx::arange(start,end,step,dtype,device);
                   },py::arg("start"),py::arg("end"),py::arg("step") = double(1), py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
+
+    py::class_<cytnx::Network>(m,"Network")
+                .def(py::init<>())
+                .def(py::init<const std::string &, const int&>(),py::arg("fname"),py::arg("network_type")=(int)NtType.Regular)
+                .def("Fromfile",&cytnx::Network::Fromfile,py::arg("fname"),py::arg("network_type")=(int)NtType.Regular)
+                .def("PutUniTensor",[](cytnx::Network &self,const std::string &name, const cytnx::UniTensor &utensor, const bool &is_clone){
+                                                self.PutUniTensor(name,utensor,is_clone);
+                                        },py::arg("name"),py::arg("utensor"),py::arg("is_clone")=true)
+                .def("PutUniTensor",[](cytnx::Network &self,const cytnx_uint64 &idx, const cytnx::UniTensor &utensor, const bool &is_clone){
+                                                self.PutUniTensor(idx,utensor,is_clone);
+                                        },py::arg("idx"),py::arg("utensor"),py::arg("is_clone")=true)
+                .def("Launch",&cytnx::Network::Launch)
+                .def("Clear",&cytnx::Network::Clear)
+                .def("clone",&cytnx::Network::clone)
+                ;
 
     py::class_<cytnx::Symmetry>(m,"Symmetry")
                 //construction

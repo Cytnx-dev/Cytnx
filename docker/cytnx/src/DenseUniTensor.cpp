@@ -89,30 +89,40 @@ namespace cytnx{
         return out;
     }
     void DenseUniTensor::permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank, const bool& by_label){
+        std::vector<cytnx_uint64> mapper_u64;
         if(by_label){
-            cytnx_error_msg(true,"[Developing!]%s","\n");
-        }else{
-            std::vector<cytnx_uint64> mapper_u64(mapper.begin(),mapper.end());
-            if(this->_is_diag){
-                if(Rowrank>=0){
-                    cytnx_error_msg(Rowrank!=1,"[ERROR] Rowrank should be =1 for UniTensor with is_diag=true%s","\n");
-                }
-                this->_bonds = vec_map(vec_clone(this->bonds()),mapper_u64);// this will check validity
-                this->_labels = vec_map(this->labels(),mapper_u64);
-                this->_is_braket_form = this->_update_braket();
-
-            }else{
-                
-                this->_bonds = vec_map(vec_clone(this->bonds()),mapper_u64);// this will check validity
-                this->_labels = vec_map(this->labels(),mapper_u64);
-                this->_block.permute_(mapper_u64);
-                if(Rowrank>=0){
-                    cytnx_error_msg(Rowrank>=this->_bonds.size(),"[ERROR] Rowrank cannot exceed the rank of UniTensor.%s","\n");
-                    this->_Rowrank = Rowrank;
-                }
-                this->_is_braket_form = this->_update_braket();
+            //cytnx_error_msg(true,"[Developing!]%s","\n");
+            std::vector<cytnx_int64>::iterator it;
+            for(cytnx_uint64 i=0;i<mapper.size();i++){
+                it = std::find(this->_labels.begin(),this->_labels.end(),mapper[i]);
+                cytnx_error_msg(it == this->_labels.end(),"[ERROR] label %d does not exist in current UniTensor.\n",mapper[i]);
+                mapper_u64.push_back(std::distance(this->_labels.begin(),it));
             }
+            
+        }else{
+            mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(),mapper.end());
         }
+
+        if(this->_is_diag){
+            if(Rowrank>=0){
+                cytnx_error_msg(Rowrank!=1,"[ERROR] Rowrank should be =1 for UniTensor with is_diag=true%s","\n");
+            }
+            this->_bonds = vec_map(vec_clone(this->bonds()),mapper_u64);// this will check validity
+            this->_labels = vec_map(this->labels(),mapper_u64);
+            this->_is_braket_form = this->_update_braket();
+
+        }else{
+            
+            this->_bonds = vec_map(vec_clone(this->bonds()),mapper_u64);// this will check validity
+            this->_labels = vec_map(this->labels(),mapper_u64);
+            this->_block.permute_(mapper_u64);
+            if(Rowrank>=0){
+                cytnx_error_msg(Rowrank>=this->_bonds.size(),"[ERROR] Rowrank cannot exceed the rank of UniTensor.%s","\n");
+                this->_Rowrank = Rowrank;
+            }
+            this->_is_braket_form = this->_update_braket();
+        }
+        
     };
 
 

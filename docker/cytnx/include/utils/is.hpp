@@ -2,14 +2,12 @@
 #define __is__H_
 
 
-#include "cytnx.hpp"
 #include "Type.hpp"
 #include "cytnx_error.hpp"
 #include "Tensor.hpp"
 #include "Storage.hpp"
 #include "Bond.hpp"
 #include "Symmetry.hpp"
-
 namespace cytnx{
    
     bool is(const Tensor&L, const Tensor&R);

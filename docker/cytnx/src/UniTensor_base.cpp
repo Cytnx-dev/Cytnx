@@ -1,7 +1,23 @@
 #include "UniTensor.hpp"
 #include "Tensor.hpp"
-namespace cytnx{
+#include <string>
 
+namespace cytnx{
+    //====================================================    
+    std::string UniTensorType_class::getname(const int &ut_type){
+        if(ut_type==this->Void){
+            return std::string("Void (un-initialize UniTensor");
+        }else if(ut_type==this->Dense){
+            return std::string("Dense");
+        }else if(ut_type==this->Sparse){
+            return std::string("Sparse (block-form)");
+        }else{
+            cytnx_error_msg(true,"%s\n","[ERROR] invalid ut_type");
+        }
+        // extend more in here!!
+    }
+    UniTensorType_class UTenType;
+    //===================================================
 
         void UniTensor_base::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &Rowrank,const unsigned int &dtype,const int &device,const bool &is_diag){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");

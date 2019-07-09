@@ -2,6 +2,9 @@
 #define __utils_H_
 
 #include "complex_arithmic.hpp"
+#ifdef UNI_GPU
+    #include "cucomplex_arithmic.hpp"
+#endif
 #include "is.hpp"
 #include "cartesian.hpp"
 #include "vec_clone.hpp"
@@ -11,6 +14,7 @@
 #include "vec_where.hpp"
 #include "vec_concatenate.hpp"
 #include "vec_intersect.hpp"
+#include "str_utils.hpp"
 /// Helper function to print vector with ODT:
 #include <vector>
 #include <iostream>
@@ -28,14 +32,15 @@ namespace cytnx{
         for(unsigned long long i=0;i<NBin;i++){
             for(int j=0;j<10;j++){
                 if(i*10+j>=vec.size()) break;
-                os << vec[i*10+j] << " ";
+                os << vec[i*10+j];
+                if(i*10+j!=vec.size()-1) os << ", ";
             }
             if(i==NBin-1) os << "]";
             os << std::endl;
         }
         return os;
     }
-
+    std::ostream& operator<<(std::ostream& os, const std::vector<std::string> &vec);
 
 }
 #endif
