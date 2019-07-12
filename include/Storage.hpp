@@ -722,7 +722,7 @@ namespace cytnx{
             \verbinclude example/Storage/eq.py.out
             */
             bool operator==(const Storage &rhs);
-
+            bool operator!=(const Storage &rhs);
 
             /**
             @brief set all the elements to the assigned value val

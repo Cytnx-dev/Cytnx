@@ -72,6 +72,9 @@ namespace cytnx{
         }
         return true;        
     }
+    bool Bond::operator!=(const Bond &rhs) const{
+        return !(*this == rhs);
+    }
 
     std::ostream& operator<<(std::ostream &os,const Bond &bin){
         os << "Dim = " << bin.dim() << " |";

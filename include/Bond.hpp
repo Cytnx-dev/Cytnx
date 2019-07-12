@@ -24,7 +24,7 @@ namespace cytnx{
             std::vector<Symmetry> _syms;
 
         public:
-
+            friend class Bond;
             Bond_impl(): _type(bondType::BD_REG) {};   
 
             void Init(const cytnx_uint64 &dim, const bondType &bd_type=bondType::BD_REG, const std::vector<std::vector<cytnx_int64> > &in_qnums = {}, const std::vector<Symmetry> &in_syms={});
@@ -35,7 +35,7 @@ namespace cytnx{
             const cytnx_uint64&                             dim() const{return this->_dim;}
             cytnx_uint32                           Nsym() const{return this->_syms.size();}
             std::vector<Symmetry>                   syms() const{return vec_clone(this->_syms);}
-
+            
 
             void set_type(const bondType &new_bondType){
                 this->_type = new_bondType;
@@ -284,8 +284,16 @@ namespace cytnx{
             
             
             bool operator==(const Bond &rhs) const;
+            bool operator!=(const Bond &rhs) const;
+   
+            ///@cond
+            //these are internal function that should hide from user!
+            std::vector<Symmetry>& _syms_by_ref() const{
+                return this->_impl->_syms;
+            }
+            ///@endcond
 
-    
+ 
     };
 
     ///@cond

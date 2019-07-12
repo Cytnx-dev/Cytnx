@@ -79,7 +79,9 @@ namespace cytnx{
         return true;
 
     }
-
+    bool Storage::operator!=(const Storage &rhs){
+        return !(*this==rhs);
+    }
 }
 
 

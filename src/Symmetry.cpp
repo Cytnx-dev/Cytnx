@@ -11,7 +11,9 @@ namespace cytnx{
     bool cytnx::Symmetry::operator==(const cytnx::Symmetry &rhs) const{
         return(this->stype() == rhs.stype()) && (this->n() == rhs.n());
     }
-
+    bool cytnx::Symmetry::operator!=(const cytnx::Symmetry &rhs) const{
+        return !(*this == rhs);
+    }
     //=============================
 
     std::string cytnx::SymmetryType_class::getname(const int &stype_id){

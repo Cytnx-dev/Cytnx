@@ -93,7 +93,7 @@ ifeq ($(GPU_Enable),1)
 endif
 
 ## Linalg
-OBJS += Add.o Div.o Sub.o Mul.o Cpr.o Svd.o Inv.o Inv_.o Conj.o Conj_.o Exp.o Exp_.o Eigh.o Diag.o Matmul.o Tensordot.o Otimes.o
+OBJS += Add.o Div.o Sub.o Mul.o Cpr.o Svd.o Svd_truncate.o Inv.o Inv_.o Conj.o Conj_.o Exp.o Exp_.o Eigh.o Diag.o Matmul.o Tensordot.o Otimes.o
 
 
 ALLOBJS = $(OBJS)
@@ -404,6 +404,8 @@ Div.o: $(CytnxPATH)/src/linalg/Div.cpp $(CytnxPATH)/include/linalg/linalg.hpp
 Cpr.o: $(CytnxPATH)/src/linalg/Cpr.cpp $(CytnxPATH)/include/linalg/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Svd.o: $(CytnxPATH)/src/linalg/Svd.cpp $(CytnxPATH)/include/linalg/linalg.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+Svd_truncate.o: $(CytnxPATH)/src/linalg/Svd_truncate.cpp $(CytnxPATH)/include/linalg/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Inv.o: $(CytnxPATH)/src/linalg/Inv.cpp $(CytnxPATH)/include/linalg/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<

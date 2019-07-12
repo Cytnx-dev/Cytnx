@@ -58,6 +58,7 @@
     * \link cytnx::Symmetry Symmetry \endlink [binded]
     * \link cytnx::UniTensor UniTensor \endlink [binded]
     * \link cytnx::Network Network \endlink [binded]
+
 ## linear algebra functions: 
     See \link cytnx::linalg cytnx::linalg \endlink for further details
 
@@ -74,6 +75,7 @@
       /,/=[tn]|   x       |  Y  |  Y   |    Y (\link cytnx::Tensor::Div_ Tensor.Div_\endlink)
       ==  [tn]|   x       |  Y  |  Y   |    Y (\link cytnx::Tensor::Cpr_ Tensor.Cpr_\endlink)
       \link cytnx::linalg::Svd Svd\endlink     |   x       |  Y  |  Y   |    Y
+      *\link cytnx::linalg::Svd_truncate Svd_truncate\endlink     |   x       |  Y  |  Y   |    N
       \link cytnx::linalg::Inv Inv\endlink     |   \link cytnx::linalg::Inv_ Inv_\endlink    |  Y  |  Y   |    Y
       \link cytnx::linalg::Conj Conj\endlink    |   \link cytnx::linalg::Conj_ Conj_\endlink   |  Y  |  Y   |    Y 
       \link cytnx::linalg::Exp Exp\endlink     |   \link cytnx::linalg::Exp_ Exp_\endlink    |  Y  |  Y   |    Y
@@ -86,7 +88,7 @@
     *this is a high level linalg 
 
 ## Generators 
-    Tensor: \link cytnx::zeros zeros()\endlink, ones(), arange()
+    Tensor: \link cytnx::zeros zeros()\endlink, \link cytnx::ones ones()\endlink, \link cytnx::arange arange()\endlink
     
 ## Requirements
     * Boost v1.53+ [check_deleted, atomicadd, intrusive_ptr]

@@ -287,7 +287,7 @@ namespace cytnx{
             }
 
             bool operator==(const Symmetry &rhs) const;
-
+            bool operator!=(const Symmetry &rhs) const;
     };
 
 

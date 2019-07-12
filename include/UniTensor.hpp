@@ -312,7 +312,10 @@ namespace cytnx{
         
         public:
             friend class UniTensor; // allow wrapper to access the private elems
-            SparseUniTensor(){this->uten_type_id = UTenType.Sparse;};
+            SparseUniTensor(){
+                this->uten_type_id = UTenType.Sparse;
+                this->_is_tag = true; 
+            };
 
             // virtual functions
             void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
@@ -331,10 +334,18 @@ namespace cytnx{
             boost::intrusive_ptr<UniTensor_base> to(const int &device) const{};
             boost::intrusive_ptr<UniTensor_base> clone() const{};
             bool     is_contiguous() const{};
-            unsigned int  dtype() const{};
-            int          device() const{};
-            std::string      dtype_str() const{};
-            std::string     device_str() const{};
+            unsigned int  dtype() const{
+                return this->_blocks[0].dtype();
+            };
+            int          device() const{
+                return this->_blocks[0].device();
+            };
+            std::string      dtype_str() const{
+                return this->_blocks[0].dtype_str();
+            };
+            std::string     device_str() const{
+                return this->_blocks[0].device_str();
+            };
             boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank=-1, const bool &by_label=false){};
             void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank=-1,const bool &by_label=false){};
             void contiguous_(){};
