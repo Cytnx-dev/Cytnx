@@ -148,6 +148,8 @@ PYBIND11_MODULE(cytnx,m){
                 .def("Launch",&cytnx::Network::Launch)
                 .def("Clear",&cytnx::Network::Clear)
                 .def("clone",&cytnx::Network::clone)
+                .def("__copy__",&cytnx::Network::clone)
+                .def("__deepcopy__",&cytnx::Network::clone)
                 ;
 
     py::class_<cytnx::Symmetry>(m,"Symmetry")
@@ -161,6 +163,8 @@ PYBIND11_MODULE(cytnx,m){
                 .def("stype_str", &cytnx::Symmetry::stype_str)
                 .def("n",&cytnx::Symmetry::n)
                 .def("clone",&cytnx::Symmetry::clone)
+                .def("__copy__",&cytnx::Symmetry::clone)
+                .def("__deepcopy__",&cytnx::Symmetry::clone)
                 .def("__eq__",&cytnx::Symmetry::operator==)
                 //.def("combine_rule",&cytnx::Symmetry::combine_rule,py::arg("qnums_1"),py::arg("qnums_2"))
                 //.def("combine_rule_",&cytnx::Symmetry::combine_rule_,py::arg("qnums_l"),py::arg("qnums_r"))
@@ -180,13 +184,17 @@ PYBIND11_MODULE(cytnx,m){
              })
             .def("__eq__",&cytnx::Bond::operator==)
             .def("type",&cytnx::Bond::type)
-            .def("qnums",&cytnx::Bond::qnums)
+            .def("qnums",[](cytnx::Bond &self){return self.qnums();})
+            .def("qnums_clone",[](cytnx::Bond &self){return self.qnums_clone();})
             .def("dim", &cytnx::Bond::dim)
             .def("Nsym", &cytnx::Bond::Nsym)
-            .def("syms", &cytnx::Bond::syms)
+            .def("syms", [](cytnx::Bond &self){return self.syms();})
+            .def("syms_clone", [](cytnx::Bond &self){return self.syms_clone();})
             .def("set_type", &cytnx::Bond::set_type)
             .def("clear_type", &cytnx::Bond::clear_type)
             .def("clone", &cytnx::Bond::clone)
+            .def("__copy__",&cytnx::Bond::clone)
+            .def("__deepcopy__",&cytnx::Bond::clone)
             .def("combineBond", &cytnx::Bond::combineBond)
             .def("combineBond_",&cytnx::Bond::combineBond_)
             .def("combineBonds",&cytnx::Bond::combineBonds)
@@ -278,6 +286,8 @@ PYBIND11_MODULE(cytnx,m){
 
 
                 .def("clone", &cytnx::Storage::clone)
+                .def("__copy__",&cytnx::Storage::clone)
+                .def("__deepcopy__",&cytnx::Storage::clone)
                 .def("size", &cytnx::Storage::size)
                 .def("__len__",[](cytnx::Storage &self){return self.size();})
                 .def("print_info", &cytnx::Storage::print_info)
@@ -310,6 +320,8 @@ PYBIND11_MODULE(cytnx,m){
                 .def("shape",&cytnx::Tensor::shape)
                 
                 .def("clone", &cytnx::Tensor::clone)
+                .def("__copy__", &cytnx::Tensor::clone)
+                .def("__deepcopy__", &cytnx::Tensor::clone)
                 //.def("to", &cytnx::Tensor::to, py::arg("device"))
                 // handle same device from cytnx/Tensor_conti.py
                 .def("to_different_device" ,[](cytnx::Tensor &self,const cytnx_int64 &device){
@@ -834,6 +846,8 @@ PYBIND11_MODULE(cytnx,m){
                                                     return self.to(device);
                                                 } , py::arg("device"))
                 .def("clone",&cytnx::UniTensor::clone)
+                .def("__copy__",&cytnx::UniTensor::clone)
+                .def("__deepcopy__",&cytnx::UniTensor::clone)
                 //.def("permute",&cytnx::UniTensor::permute,py::arg("mapper"),py::arg("Rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
                 //.def("permute_",&cytnx::UniTensor::permute_,py::arg("mapper"),py::arg("Rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
 

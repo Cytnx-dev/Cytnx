@@ -14,18 +14,24 @@ print( bd_d )
 print( bd_all )
 
 
-bd_sym_a = Bond(3,BD_BRA,[[0,2,-4],
-                          [1,0,1]],
+bd_sym_a = Bond(3,BD_BRA,[[0,1],
+                          [2,0],
+                          [-4,1]],
                           [Symmetry.U1(),
                            Symmetry.Zn(2)]);
                             
-bd_sym_b = Bond(4,BD_BRA,[[0,2,-1,3],
-                          [0,1, 1,0]],
+bd_sym_b = Bond(4,BD_BRA,[[0 ,0],
+                          [2 ,1],
+                          [-1,1],
+                          [3 ,0]],
                           [Symmetry.U1(),
                            Symmetry.Zn(2)]);
 
-bd_sym_c = Bond(5,BD_BRA,[[1,1,-1,-2,0],
-                          [1,1, 1,0 ,0]],
+bd_sym_c = Bond(5,BD_BRA,[[1 ,1],
+                          [1 ,1],
+                          [-1,1],
+                          [-2,0],
+                          [0 ,0]],
                           [Symmetry.U1(),
                            Symmetry.Zn(2)]);
 

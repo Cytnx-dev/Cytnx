@@ -16,8 +16,8 @@ int main(){
         Note that the qnums should obey the valid value range of the correspond symmetry.
         with Z2 = [0,2)
     */
-    Bond bd_sym_z2_A = Bond(4,BD_KET,{{0,0,1,1}},{sym_z2});
-    Bond bd_sym_z2_B = Bond(3,BD_KET,{{0,1,1}},{sym_z2});
+    Bond bd_sym_z2_A = Bond(4,BD_KET,{{0},{0},{1},{1}},{sym_z2});
+    Bond bd_sym_z2_B = Bond(3,BD_KET,{{0},{1},{1}},{sym_z2});
     cout << bd_sym_z2_A << endl;
     cout << bd_sym_z2_B << endl;
 
@@ -38,8 +38,8 @@ int main(){
         Note that the qnums should obey the valid value range of the correspond symmetry.
         with Z4 = [0,4)
     */
-    Bond bd_sym_z4_A = Bond(4,BD_KET,{{0,3,1,2}},{sym_z4});
-    Bond bd_sym_z4_B = Bond(3,BD_KET,{{2,3,1}},{sym_z4});
+    Bond bd_sym_z4_A = Bond(4,BD_KET,{{0},{3},{1},{2}},{sym_z4});
+    Bond bd_sym_z4_B = Bond(3,BD_KET,{{2},{3},{1}},{sym_z4});
     cout << bd_sym_z4_A << endl;
     cout << bd_sym_z4_B << endl;
 

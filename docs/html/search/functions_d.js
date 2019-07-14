@@ -9,9 +9,10 @@ var searchData=
   ['shape',['shape',['../classcytnx_1_1Tensor.html#a6d0ab6d09633ad4d6099aa822ec5335a',1,'cytnx::Tensor']]],
   ['size',['size',['../classcytnx_1_1Storage.html#aaf36262622abdab03c90b713c454f78e',1,'cytnx::Storage']]],
   ['storage',['storage',['../classcytnx_1_1Tensor.html#a0fd5918a0f64ebd74fe34cb8b8164c30',1,'cytnx::Tensor']]],
-  ['stype',['stype',['../classcytnx_1_1Symmetry.html#ae1f07ee701371e161a6873230fe2f331',1,'cytnx::Symmetry']]],
-  ['stype_5fstr',['stype_str',['../classcytnx_1_1Symmetry.html#a42f9e6b967e1b02a394cb731d014eb7e',1,'cytnx::Symmetry']]],
+  ['stype',['stype',['../classcytnx_1_1Symmetry.html#a47a73a6248750acc221104e3079d652c',1,'cytnx::Symmetry']]],
+  ['stype_5fstr',['stype_str',['../classcytnx_1_1Symmetry.html#a0ba15e919a5693923e54c2c6f7d376c6',1,'cytnx::Symmetry']]],
   ['sub',['Sub',['../namespacecytnx_1_1linalg.html#a78477b25b3eed121847f1a13b878a925',1,'cytnx::linalg']]],
   ['svd',['Svd',['../namespacecytnx_1_1linalg.html#ac17f16959a4849ea91bce712d24d4e4e',1,'cytnx::linalg']]],
-  ['syms',['syms',['../classcytnx_1_1Bond.html#ad0adf7b134654f0390e98695ba4d416e',1,'cytnx::Bond']]]
+  ['syms',['syms',['../classcytnx_1_1Bond.html#af085efde3b6b0abf7024114025fff0d9',1,'cytnx::Bond::syms() const'],['../classcytnx_1_1Bond.html#aa6706253e9428ad460ebf22f88ef6acd',1,'cytnx::Bond::syms()']]],
+  ['syms_5fclone',['syms_clone',['../classcytnx_1_1Bond.html#afafd842540baf90592914b7d2baa0abd',1,'cytnx::Bond']]]
 ];

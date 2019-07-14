@@ -150,7 +150,7 @@ namespace cytnx{
             virtual void to_dense_();
             virtual void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back=false, const bool &by_label=true);
             virtual boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs);
-            
+            virtual std::vector<Bond> getTotalQnums(const bool &physical=false);          
             virtual ~UniTensor_base(){};
     };
     /// @endcond
@@ -290,6 +290,9 @@ namespace cytnx{
 
             void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back=true, const bool &by_label=true);
             boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs);
+            std::vector<Bond> getTotalQnums(const bool &physical=false){
+                cytnx_error_msg(true,"[ERROR][DenseUniTensor] %s","getTotalQnums can only operate on UniTensor with symmetry.\n");
+            }        
             ~DenseUniTensor(){};
             // end virtual function              
 
@@ -384,6 +387,7 @@ namespace cytnx{
             }
             void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back=true, const bool &by_label=true){};
             boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs){};
+            std::vector<Bond> getTotalQnums(const bool &physical=false);
             ~SparseUniTensor(){};
             // end virtual func
     };
@@ -630,7 +634,12 @@ namespace cytnx{
                 out._impl = this->_impl->contract(inR._impl);
                 return out;
             }
-    
+            std::vector<Bond> getTotalQnums(const bool physical=false) const{
+                return this->_impl->getTotalQnums(physical);
+            }
+
+            
+
     };
 
     ///@cond

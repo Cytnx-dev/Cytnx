@@ -41,12 +41,14 @@ namespace cytnx{
             Symmetry_base& operator=(const Symmetry_base &rhs);
       
             std::vector<cytnx_int64> combine_rule( const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR);
+            cytnx_int64 combine_rule( const cytnx_int64 &inL, const cytnx_int64 &inR);
 
             virtual void Init(const int &n){};
             virtual boost::intrusive_ptr<Symmetry_base> clone(){};
             virtual bool check_qnum(const cytnx_int64 &in_qnum); // check the passed in qnums satisfy the symmetry requirement.
             virtual bool check_qnums(const std::vector<cytnx_int64> &in_qnums); 
             virtual void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR);
+            virtual void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR);
             //virtual std::vector<cytnx_int64>& combine_rule(const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR);
             
     };
@@ -69,6 +71,7 @@ namespace cytnx{
             bool check_qnum(const cytnx_int64 &in_qnum);
             bool check_qnums(const std::vector<cytnx_int64> &in_qnums); 
             void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR);
+            void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR);
     };
     ///@endcond
 
@@ -89,6 +92,7 @@ namespace cytnx{
             bool check_qnum(const cytnx_int64 &in_qnum);
             bool check_qnums(const std::vector<cytnx_int64> &in_qnums); 
             void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR);
+            void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR);
     };
     ///@endcond
 
@@ -215,7 +219,7 @@ namespace cytnx{
                 the symmetry type-id.
 
             */
-            int & stype() const {
+            int  stype() const {
                 return this->_impl->stype_id;
             }
             
@@ -238,7 +242,7 @@ namespace cytnx{
                 the symmetry type name.
 
             */
-            const std::string stype_str(){
+            std::string stype_str() const{
                 return SymType.getname(this->_impl->stype_id) + std::to_string(this->_impl->n);
             }
 
@@ -283,8 +287,31 @@ namespace cytnx{
 
             */
             void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR){
-                return this->_impl->combine_rule_(out,inL,inR);
+                this->_impl->combine_rule_(out,inL,inR);
             }
+
+            /** 
+            @brief apply combine rule of current symmetry to two quantum numbers.
+            @param inL the #1 quantum number.
+            @param inR the #2 quantum number.
+            @return the combined quantum number.  
+
+            */
+            cytnx_int64 combine_rule(const cytnx_int64 &inL, const cytnx_int64 &inR){
+                return this->_impl->combine_rule(inL,inR);
+            }
+            
+            /** 
+            @brief apply combine rule of current symmetry to two quantum numbers, and store the combined quntun number into parameter \param out.
+            @param out the output quantum number.
+            @param inL the #1 quantum number.
+            @param inR the #2 quantum number.
+
+            */
+            void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR){
+                this->_impl->combine_rule_(out,inL,inR);
+            }
+
 
             bool operator==(const Symmetry &rhs) const;
             bool operator!=(const Symmetry &rhs) const;

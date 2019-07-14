@@ -20,7 +20,7 @@ namespace cytnx{
         private:
             cytnx_uint64 _dim;
             bondType _type;
-            std::vector< std::vector<cytnx_int64> > _qnums;
+            std::vector< std::vector<cytnx_int64> > _qnums; //(dim, # of sym)
             std::vector<Symmetry> _syms;
 
         public:
@@ -32,10 +32,16 @@ namespace cytnx{
 
             bondType                                type() const{return this->_type;};
             const std::vector<std::vector<cytnx_int64> >& qnums() const{return this->_qnums;}
+            std::vector<std::vector<cytnx_int64> >& qnums(){return this->_qnums;}
             const cytnx_uint64&                             dim() const{return this->_dim;}
             cytnx_uint32                           Nsym() const{return this->_syms.size();}
-            std::vector<Symmetry>                   syms() const{return vec_clone(this->_syms);}
-            
+            const std::vector<Symmetry>&                   syms() const{return this->_syms;}
+            std::vector<Symmetry>& syms(){return this->_syms;}
+
+            //this is clone return.
+            std::vector<std::vector<cytnx_int64> > qnums_clone() const{return this->_qnums;}
+            std::vector<Symmetry> syms_clone() const{return vec_clone(this->_syms);}
+
 
             void set_type(const bondType &new_bondType){
                 this->_type = new_bondType;
@@ -50,33 +56,22 @@ namespace cytnx{
                 boost::intrusive_ptr<Bond_impl> out(new Bond_impl());
                 out->_dim = this->dim();
                 out->_type = this->type();
-                out->_qnums = this->qnums();
-                out->_syms  = this->syms();// return a clone of vec!
+                out->_qnums = this->qnums_clone();
+                out->_syms  = this->syms_clone();// return a clone of vec!
                 return out;
             }
 
-            void combineBond_(const boost::intrusive_ptr<Bond_impl> &bd_in){
-                //check:
-                cytnx_error_msg(this->type() != bd_in->type(),"%s\n","[ERROR] cannot combine two Bonds with different types.");
-                cytnx_error_msg(this->Nsym() != bd_in->Nsym(),"%s\n","[ERROR] cannot combine two Bonds with differnet symmetry.");
-                if(this->Nsym() != 0)
-                    cytnx_error_msg(this->syms() != bd_in->syms(),"%s\n","[ERROR] cannot combine two Bonds with differnet symmetry.");
-
-                this->_dim *= bd_in->dim();
-            
-                /// handle symmetry
-                std::vector<std::vector<cytnx_int64> > new_qnums(this->Nsym());
-                for(cytnx_uint32 i=0;i<this->Nsym();i++){
-                    this->_syms[i].combine_rule_(new_qnums[i],this->_qnums[i],bd_in->qnums()[i]);
-                }                        
-                this->_qnums = new_qnums;
-            }                    
+            void combineBond_(const boost::intrusive_ptr<Bond_impl> &bd_in);
 
             boost::intrusive_ptr<Bond_impl> combineBond(const boost::intrusive_ptr<Bond_impl> &bd_in){
                 boost::intrusive_ptr<Bond_impl> out = this->clone();
                 out->combineBond_(bd_in);
                 return out;
             }
+
+            //std::vector<std::vector<cytnx_int64> > getUniqueQnums(){
+                
+            //}
 
 
     };//Bond_impl
@@ -132,13 +127,24 @@ namespace cytnx{
             */
             bondType                                type() const{return this->_impl->type();};
             
+            //@{
             /**
-            @brief return the current quantum number set(s)
-            @return [2d vector] with shape: (# of symmetry, dim) 
+            @brief return the current quantum number set(s) by reference
+            @return [2d vector] with shape: (dim, # of Symmetry) 
+
 
             */
-            std::vector<std::vector<cytnx_int64> > qnums() const{return this->_impl->qnums();};
+            const std::vector<std::vector<cytnx_int64> >& qnums() const{return this->_impl->qnums();};
+            std::vector<std::vector<cytnx_int64> >& qnums(){return this->_impl->qnums();};
+            //@}
+            
+            /**
+            @brief return copy of the current quantum number set(s) 
+            @return [2d vector] with shape: (dim, # of Symmetry) 
 
+            */
+            std::vector<std::vector<cytnx_int64> > qnums_clone() const{return this->_impl->qnums_clone();};
+    
             /**
             @brief return the dimension of the bond
             @return [cytnx_uint64]
@@ -153,14 +159,26 @@ namespace cytnx{
             */
             cytnx_uint32                            Nsym() const{return this->_impl->syms().size();};
 
+
+            //@{
             /**
-            @brief return the vector of symmetry objects
+            @brief return the vector of symmetry objects by reference.
             @return [vector of Symmetry]
 
-            [Note] each Symmetry objects in the return vector are shared instances, which reduce the memory usage for copy a new Symmetry object. 
+            */
+            const std::vector<Symmetry>&                   syms() const{return this->_impl->syms();};
+            std::vector<Symmetry>&                         syms(){return this->_impl->syms();};
+            //@}
+
+            /**
+            @brief return copy of the vector of symmetry objects.
+            @return [vector of Symmetry]
 
             */
-            std::vector<Symmetry>                   syms() const{return this->_impl->syms();};
+            std::vector<Symmetry>                         syms_clone() const{return this->_impl->syms_clone();};
+
+
+
 
             /**
             @brief change the tag-type of the instance Bond
@@ -286,12 +304,6 @@ namespace cytnx{
             bool operator==(const Bond &rhs) const;
             bool operator!=(const Bond &rhs) const;
    
-            ///@cond
-            //these are internal function that should hide from user!
-            std::vector<Symmetry>& _syms_by_ref() const{
-                return this->_impl->_syms;
-            }
-            ///@endcond
 
  
     };

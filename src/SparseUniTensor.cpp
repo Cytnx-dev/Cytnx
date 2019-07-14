@@ -15,7 +15,8 @@ namespace cytnx{
 
         //check Symmetry for all bonds
         cytnx_uint32 N_symmetry = bonds[0].Nsym();
-        vector<Symmetry> tmpSyms = bonds[0]._syms_by_ref();
+        vector<Symmetry> tmpSyms = bonds[0].syms();
+        /*
         cytnx_uint32 N_ket = 0;
         for(cytnx_uint64 i=0;i<bonds.size();i++){
             //check 
@@ -60,13 +61,64 @@ namespace cytnx{
         this->_is_braket_form = this->_update_braket();
 
         //Symmetry, initialize memories for blocks.
-                
+        vector<Bond> tot_bonds = this->getTotalQnums();
+
+        
+        */  
 
 
     }
 
 
+    vector<Bond> SparseUniTensor::getTotalQnums(const bool &physical){
+        /*
+        if(physical){
+            cytnx_error_msg(true,"[Developing!]%s","\n");
+    
+        }else{
+            vector<Bond> cb_inbonds = vec_clone(this->_bonds,this->_Rowrank);
+            cytnx_uint64 Bdim;
+            for(cytnx_uint64 i=0;i<cb_inbonds.size();i++){
+                Bdim = cb_inbonds[i].dim();
 
+                #ifdef UNI_OMP
+                #pragma omp parallel for schedule(dynamic)
+                #endif
+                for(cytnx_uint64 d=0;d<Bdim*cb_inbonds[i].Nsym();d++){
+                    cb_inbonds[i].qnums()[cytnx_uint64(d/Bdim)][d%Bdim] *= cb_inbonds[i].type()*bondType::BD_KET;
+                }
+            }
+            if(cb_inbonds.size()>1){
+                for(cytnx_uint64 i=1;i<cb_inbonds.size();i++){
+                    cb_inbonds[0].combineBond_(cb_inbonds[i]);
+                }
+            }
+            
+            vector<Bond> cb_outbonds = vec_clone(this->_bonds,this->_Rowrank,this->_bonds.size());
+            for(cytnx_uint64 i=0;i<cb_outbonds.size();i++){
+                Bdim = cb_outbonds[i].dim();
+
+                #ifdef UNI_OMP
+                #pragma omp parallel for schedule(dynamic)
+                #endif
+                for(cytnx_uint64 d=0;d<Bdim*cb_outbonds[i].Nsym();d++){
+                    cb_outbonds[i].qnums()[cytnx_uint64(d/Bdim)][d%Bdim] *= cb_outbonds[i].type()*bondType::BD_BRA;
+                }
+            }
+            if(cb_outbonds.size()>1){
+                for(cytnx_uint64 i=1;i<cb_outbonds.size();i++){
+                    cb_outbonds[0].combineBond_(cb_outbonds[i]);
+                }
+            }
+            
+            vector<Bond> out(2);
+            out[0] = cb_inbonds[0]; cb_inbonds.clear();
+            out[1] = cb_outbonds[0]; cb_outbonds.clear();
+            return out;
+        }
+        */
+
+    }
 
 
 }

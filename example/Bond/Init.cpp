@@ -24,7 +24,7 @@ int main(){
         crate a symmetry bond, 
         with single U1 (default) symmetry and qnums = (0,2,-1,3)
     */
-    Bond bd_c = Bond(4,BD_KET,{{0,2,-1,3}});
+    Bond bd_c = Bond(4,BD_KET,{{0},{2},{-1},{3}});
     cout << bd_c << endl;
 
     /* 3.
@@ -32,8 +32,10 @@ int main(){
         with U1 x Z2 multiple symmetry 
         and qnums = U1:(0,2,-1,3) x Z2:(0,1,1,0)
     */
-    Bond bd_d = Bond(4,BD_BRA,{{0,2,-1,3},
-                               {0,1, 1,0}},
+    Bond bd_d = Bond(4,BD_BRA,{{0 ,0},
+                               {2 ,1},
+                               {-1,1},
+                               {3 ,0}},
                               {Symmetry::U1(),
                                Symmetry::Zn(2)});
     cout << bd_d << endl;

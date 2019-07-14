@@ -20,10 +20,10 @@ INCFLAGS :=-I$(CytnxPATH)/include
 
 
 ifeq ($(ICPC_Enable),1)
-  CC:=icpc
+  CC:= $(ICPC)
   CCFLAGS:= -DUNI_ICPC
 else
-  CC:= g++-6
+  CC:= $(GCC)
   CCFLAGS:=
 endif
 

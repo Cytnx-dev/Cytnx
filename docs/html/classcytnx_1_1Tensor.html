@@ -371,18 +371,18 @@ Total elem: 60
 type  : Double (Float64)
 cytnx device: CPU
 Shape : (3,4,5)
-[[[0.00000e+00 1.06098e-153 8.19691e+247 5.39115e+228 1.23762e+224 ]
+[[[4.64000e-310 1.06098e-153 8.19691e+247 5.39115e+228 1.23762e+224 ]
   [2.66064e-260 7.27456e+199 2.41318e+185 7.86015e-85 3.06263e+223 ]
   [4.90606e-109 3.94655e+180 3.75209e+199 4.96845e+180 1.18414e+224 ]
   [7.86015e-85 7.36507e+228 2.07049e-28 5.74971e+169 6.16785e+223 ]]
  [[2.04724e+190 9.49253e-154 1.39388e-258 7.33721e+223 1.44421e+214 ]
   [1.28714e+272 2.13269e+102 1.67772e+243 3.91625e-27 5.36154e+276 ]
-  [1.18414e+224 5.50421e-95 2.38345e+180 8.89470e+252 5.19016e+141 ]
-  [5.04535e+223 9.03728e-91 4.27256e+180 9.00757e-96 2.15967e-27 ]]
- [[8.04158e-96 9.69724e+189 2.33118e+30 3.39067e-09 4.66843e-10 ]
-  [5.74971e+169 6.16785e+223 1.12648e-153 7.29537e+175 1.44421e+214 ]
+  [1.18414e+224 5.50421e-95 2.38345e+180 8.89470e+252 2.17235e-153 ]
+  [2.50022e+243 6.96742e+252 1.99999e+174 7.26588e+223 1.99999e+174 ]]
+ [[2.42614e+198 8.04138e-96 9.69724e+189 2.91741e-14 9.47071e-154 ]
+  [1.39388e-258 6.16785e+223 1.12648e-153 7.29537e+175 1.44421e+214 ]
   [1.28714e+272 3.25422e+97 7.10583e+159 5.38206e+228 3.06500e+169 ]
-  [1.16331e+253 7.36507e+228 2.54716e+151 2.49867e+262 1.20626e-319 ]]]
+  [1.16331e+253 7.36507e+228 2.54716e+151 2.49867e+262 2.68247e-260 ]]]
 
 
 
@@ -390,18 +390,18 @@ Total elem: 60
 type  : Uint64
 cytnx device: CPU
 Shape : (3,4,5)
-[[[                  0                   0                   0                   0                   0 ]
-  [                  0                   0                   0                   0                   0 ]
-  [                  0                   0                   0                   0                   0 ]
-  [                  0                   0                   0                   0                   0 ]]
- [[                  0                   0                   0                   0                   0 ]
-  [                  0                   0                   0                   0                   0 ]
-  [                  0                   0                   0                   0                   0 ]
-  [                  0                   0                   0                   0                   0 ]]
- [[                  0                   0                   0                   0                   0 ]
-  [                  0                   0                   0                   0                   0 ]
-  [                  0                   0                   0                   0                   0 ]
-  [                  0                   0                   0                   0                   0 ]]]
+[[[                  0           539784039          1936159329          1869378149          1853187616 ]
+  [          168439406           678194281          2036539450          1853127011          1919906670 ]
+  [         1663056492           539588709           174419567          1819044198          1663056486 ]
+  [         1954112302          1869835877           540699745           695756140          1701736270 ]]
+ [[         1818846752           540698220          2036543096          1936614740           980181366 ]
+  [          539587681           174419567          1819044198          1663056486          1954112302 ]
+  [         1869835877           540699745           757082484           168453486           678194281 ]
+  [         2036539450          1853127011          1919906670          1763719788          1310735917 ]]
+ [[          539899402          1818587944          2020504697          1412331630          1981820018 ]
+  [          695496297          1701736270          1818846752           540698220          2036543096 ]
+  [         1936614740           980181366          1043144745           940182117          1932029036 ]
+  [         1954112288          2020504697           745697139          1852383290          1867391038 ]]]
 
 
 
@@ -682,17 +682,17 @@ False
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A({3,4,5});</div><div class="line">    cout &lt;&lt; A.<a class="code" href="classcytnx_1_1Tensor.html#a6d0ab6d09633ad4d6099aa822ec5335a">shape</a>() &lt;&lt; endl;</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A.<a class="code" href="classcytnx_1_1Tensor.html#adbdc402a8c4d6d738523a888bcf9c0c2">permute</a>({0,2,1});</div><div class="line">    cout &lt;&lt; B.<a class="code" href="classcytnx_1_1Tensor.html#a6d0ab6d09633ad4d6099aa822ec5335a">shape</a>() &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">//[Note] permute will not actually move the internal memory (storage) layout.</span></div><div class="line">    <span class="comment">//       this is called non-contiguous status. </span></div><div class="line">    <span class="comment">//       the memory layout will only move when Tensor.contiguous() is called.</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> C = B.<a class="code" href="classcytnx_1_1Tensor.html#a127e50508e1ee0eadf11601d66d76988">contiguous</a>(); <span class="comment">//actual moving the memory</span></div><div class="line">    cout &lt;&lt; B.is_contiguous() &lt;&lt; endl; <span class="comment">// false.</span></div><div class="line">    cout &lt;&lt; C.is_contiguous() &lt;&lt; endl; <span class="comment">// true.</span></div><div class="line">    cout &lt;&lt; C.<a class="code" href="classcytnx_1_1Tensor.html#a6d0ab6d09633ad4d6099aa822ec5335a">shape</a>() &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">Vector Print:
 Total Elements:3
-[3 4 5 ]
+[3, 4, 5]
 
 Vector Print:
 Total Elements:3
-[3 5 4 ]
+[3, 5, 4]
 
 0
 1
 Vector Print:
 Total Elements:3
-[3 5 4 ]
+[3, 5, 4]
 
 </pre> <h3>python API:</h3>
 <div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line">A = Tensor([3,4,5])</div><div class="line">print(A.shape())</div><div class="line"></div><div class="line">B = A.permute(0,2,1)</div><div class="line">print(B.shape())</div><div class="line"></div><div class="line">C = B.contiguous()</div><div class="line">print(B.is_contiguous()) <span class="comment">#false</span></div><div class="line">print(C.is_contiguous()) <span class="comment">#true</span></div><div class="line">print(C.shape())</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
@@ -734,11 +734,11 @@ True
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A({3,4,5});</div><div class="line">    cout &lt;&lt; A.<a class="code" href="classcytnx_1_1Tensor.html#a6d0ab6d09633ad4d6099aa822ec5335a">shape</a>() &lt;&lt; endl;</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A.<a class="code" href="classcytnx_1_1Tensor.html#adbdc402a8c4d6d738523a888bcf9c0c2">permute</a>({0,2,1});</div><div class="line">    cout &lt;&lt; B.<a class="code" href="classcytnx_1_1Tensor.html#a6d0ab6d09633ad4d6099aa822ec5335a">shape</a>() &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">//[Note] permute will not actually move the internal memory (storage) layout.</span></div><div class="line">    <span class="comment">//       this is called non-contiguous status. </span></div><div class="line">    <span class="comment">//       the memory layout will only move when Tensor.contiguous() is called.</span></div><div class="line">    cout &lt;&lt; B.is_contiguous() &lt;&lt; endl; <span class="comment">// false.</span></div><div class="line">    B.<a class="code" href="classcytnx_1_1Tensor.html#a405470654ef4ef5fc0b1d24754a3daf9">contiguous_</a>(); <span class="comment">//actual moving the memory</span></div><div class="line">    cout &lt;&lt; B.is_contiguous() &lt;&lt; endl; <span class="comment">// true.</span></div><div class="line">    </div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">Vector Print:
 Total Elements:3
-[3 4 5 ]
+[3, 4, 5]
 
 Vector Print:
 Total Elements:3
-[3 5 4 ]
+[3, 5, 4]
 
 0
 1
@@ -1202,18 +1202,18 @@ Total elem: 60
 type  : Double (Float64)
 cytnx device: CPU
 Shape : (3,4,5)
-[[[0.00000e+00 1.06098e-153 8.19691e+247 5.39115e+228 1.23762e+224 ]
+[[[4.64000e-310 1.06098e-153 8.19691e+247 5.39115e+228 1.23762e+224 ]
   [2.66064e-260 7.27456e+199 2.41318e+185 7.86015e-85 3.06263e+223 ]
   [4.90606e-109 3.94655e+180 3.75209e+199 4.96845e+180 1.18414e+224 ]
   [7.86015e-85 7.36507e+228 2.07049e-28 5.74971e+169 6.16785e+223 ]]
  [[2.04724e+190 9.49253e-154 1.39388e-258 7.33721e+223 1.44421e+214 ]
   [1.28714e+272 2.13269e+102 1.67772e+243 3.91625e-27 5.36154e+276 ]
-  [1.18414e+224 5.50421e-95 2.38345e+180 8.89470e+252 5.19016e+141 ]
-  [5.04535e+223 9.03728e-91 4.27256e+180 9.00757e-96 2.15967e-27 ]]
- [[8.04158e-96 9.69724e+189 2.33118e+30 3.39067e-09 4.66843e-10 ]
-  [5.74971e+169 6.16785e+223 1.12648e-153 7.29537e+175 1.44421e+214 ]
+  [1.18414e+224 5.50421e-95 2.38345e+180 8.89470e+252 2.17235e-153 ]
+  [2.50022e+243 6.96742e+252 1.99999e+174 7.26588e+223 1.99999e+174 ]]
+ [[2.42614e+198 8.04138e-96 9.69724e+189 2.91741e-14 9.47071e-154 ]
+  [1.39388e-258 6.16785e+223 1.12648e-153 7.29537e+175 1.44421e+214 ]
   [1.28714e+272 3.25422e+97 7.10583e+159 5.38206e+228 3.06500e+169 ]
-  [1.16331e+253 7.36507e+228 2.54716e+151 2.49867e+262 1.20626e-319 ]]]
+  [1.16331e+253 7.36507e+228 2.54716e+151 2.49867e+262 2.68247e-260 ]]]
 
 
 
@@ -1221,18 +1221,18 @@ Total elem: 60
 type  : Uint64
 cytnx device: CPU
 Shape : (3,4,5)
-[[[                  0                   0                   0                   0                   0 ]
-  [                  0                   0                   0                   0                   0 ]
-  [                  0                   0                   0                   0                   0 ]
-  [                  0                   0                   0                   0                   0 ]]
- [[                  0                   0                   0                   0                   0 ]
-  [                  0                   0                   0                   0                   0 ]
-  [                  0                   0                   0                   0                   0 ]
-  [                  0                   0                   0                   0                   0 ]]
- [[                  0                   0                   0                   0                   0 ]
-  [                  0                   0                   0                   0                   0 ]
-  [                  0                   0                   0                   0                   0 ]
-  [                  0                   0                   0                   0                   0 ]]]
+[[[                  0           539784039          1936159329          1869378149          1853187616 ]
+  [          168439406           678194281          2036539450          1853127011          1919906670 ]
+  [         1663056492           539588709           174419567          1819044198          1663056486 ]
+  [         1954112302          1869835877           540699745           695756140          1701736270 ]]
+ [[         1818846752           540698220          2036543096          1936614740           980181366 ]
+  [          539587681           174419567          1819044198          1663056486          1954112302 ]
+  [         1869835877           540699745           757082484           168453486           678194281 ]
+  [         2036539450          1853127011          1919906670          1763719788          1310735917 ]]
+ [[          539899402          1818587944          2020504697          1412331630          1981820018 ]
+  [          695496297          1701736270          1818846752           540698220          2036543096 ]
+  [         1936614740           980181366          1043144745           940182117          1932029036 ]
+  [         1954112288          2020504697           745697139          1852383290          1867391038 ]]]
 
 
 
@@ -1357,11 +1357,11 @@ Shape : (1)
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A({3,4,5});</div><div class="line">    cout &lt;&lt; A.<a class="code" href="classcytnx_1_1Tensor.html#a6d0ab6d09633ad4d6099aa822ec5335a">shape</a>() &lt;&lt; endl;</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A.<a class="code" href="classcytnx_1_1Tensor.html#adbdc402a8c4d6d738523a888bcf9c0c2">permute</a>({0,2,1});</div><div class="line">    cout &lt;&lt; B.<a class="code" href="classcytnx_1_1Tensor.html#a6d0ab6d09633ad4d6099aa822ec5335a">shape</a>() &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">Vector Print:
 Total Elements:3
-[3 4 5 ]
+[3, 4, 5]
 
 Vector Print:
 Total Elements:3
-[3 5 4 ]
+[3, 5, 4]
 
 </pre> <h3>python API:</h3>
 <div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line">A = Tensor([3,4,5])</div><div class="line">print(A.shape())</div><div class="line"></div><div class="line">B = A.permute(0,2,1)</div><div class="line">print(B.shape())</div><div class="line"></div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
