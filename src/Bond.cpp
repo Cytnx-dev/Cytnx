@@ -1,5 +1,6 @@
 #include "Bond.hpp"
-
+#include <algorithm>
+#include "utils/utils_internal_interface.hpp"
 using namespace std;
 namespace cytnx{
 
@@ -70,6 +71,25 @@ namespace cytnx{
                    
         this->_qnums = new_qnums;
     }                    
+
+    //-------------
+    std::vector<std::vector<cytnx_int64> > Bond_impl::getUniqueQnums(std::vector<cytnx_uint64> &counts, const bool &return_counts){
+        cytnx_error_msg(this->_qnums.size()==0,"[ERROR][getUniqueQnums] cannot call this on a non-symmetry bond!%s","\n");
+        
+        vector<vector<cytnx_int64> > tmp_qnums = this->_qnums;
+        std::sort(tmp_qnums.begin(),tmp_qnums.end(),utils_internal::_fx_compare_vec_inc);
+        tmp_qnums.resize(std::distance(tmp_qnums.begin(), std::unique(tmp_qnums.begin(),tmp_qnums.end())));
+        if(return_counts){
+            counts.resize(tmp_qnums.size());
+            for(cytnx_uint64 i=0;i<tmp_qnums.size();i++){
+                counts[i] = std::count(this->_qnums.begin(),this->_qnums.end(),tmp_qnums[i]);
+            }
+        }
+
+        return tmp_qnums;
+
+    }
+
     /*
     void Bond_impl::Init(const cytnx_uint64 &dim, const std::initializer_list<std::initializer_list<cytnx_int64> > &in_qnums,const std::initializer_list<Symmetry> &in_syms,const bondType &bd_type){
 

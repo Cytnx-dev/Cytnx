@@ -69,9 +69,8 @@ namespace cytnx{
                 return out;
             }
 
-            //std::vector<std::vector<cytnx_int64> > getUniqueQnums(){
-                
-            //}
+            // return a sorted qnums by removing all duplicates.
+            std::vector<std::vector<cytnx_int64> > getUniqueQnums(std::vector<cytnx_uint64> &counts, const bool &return_counts);
 
 
     };//Bond_impl
@@ -299,7 +298,19 @@ namespace cytnx{
                     this->combineBond_(bds[i]);
                 }
             }
-            
+
+            /**
+            @brief return a sorted qnum sets by removing all the duplicate qnum sets.
+            @return unique_qnums
+
+            */
+            std::vector<std::vector<cytnx_int64> > getUniqueQnums(std::vector<cytnx_uint64> &counts){
+                return this->_impl->getUniqueQnums(counts,true);
+            }
+            std::vector<std::vector<cytnx_int64> > getUniqueQnums(){
+                std::vector<cytnx_uint64> tmp;
+                return this->_impl->getUniqueQnums(tmp,false);
+            }
             
             bool operator==(const Bond &rhs) const;
             bool operator!=(const Bond &rhs) const;

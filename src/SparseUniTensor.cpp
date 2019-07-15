@@ -16,7 +16,7 @@ namespace cytnx{
         //check Symmetry for all bonds
         cytnx_uint32 N_symmetry = bonds[0].Nsym();
         vector<Symmetry> tmpSyms = bonds[0].syms();
-        /*
+        
         cytnx_uint32 N_ket = 0;
         for(cytnx_uint64 i=0;i<bonds.size();i++){
             //check 
@@ -26,7 +26,7 @@ namespace cytnx{
             //check symmetry and type:
             cytnx_error_msg(bonds[i].Nsym() != N_symmetry,"[ERROR][SparseUniTensor] inconsistant # of symmetry at bond: %d. # of symmetry should be %d\n",i,N_symmetry);
             for(cytnx_uint32 n=0;n<N_symmetry;n++){
-                cytnx_error_msg(bonds[i]._syms_by_ref()[n] !=tmpSyms[n],"[ERROR][SparseUniTensor] symmetry mismatch at bond: %d, %s != %s\n",n,bonds[i]._syms_by_ref()[n].stype_str().c_str(),tmpSyms[n].stype_str().c_str());
+                cytnx_error_msg(bonds[i].syms()[n] != tmpSyms[n],"[ERROR][SparseUniTensor] symmetry mismatch at bond: %d, %s != %s\n",n,bonds[i].syms()[n].stype_str().c_str(),tmpSyms[n].stype_str().c_str());
             }
             N_ket += cytnx_uint32(bonds[i].type() == bondType::BD_KET);
         }
@@ -60,32 +60,49 @@ namespace cytnx{
         this->_bonds = vec_clone(bonds);
         this->_is_braket_form = this->_update_braket();
 
+        //need to maintain the mapper for contiguous for block_form. 
+        this->_mapper = utils_internal::range_cpu(this->_bonds.size());
+        this->_inv_mapper = this->_mapper;
+
         //Symmetry, initialize memories for blocks.
         vector<Bond> tot_bonds = this->getTotalQnums();
+        vector<cytnx_uint64> degenerates;
+        vector<vector<cytnx_int64> > uniq_bonds_row = tot_bonds[0].getUniqueQnums();
+        vector<vector<cytnx_int64> > uniq_bonds_col = tot_bonds[1].getUniqueQnums();
 
-        
-        */  
+        //wait for implement 2d vec_intersect....
+    
+
+        //
+        //this->_block.resize(uniq_bonds.size());
+        //for(cytnx_uint64 i=0;i<this->_block.size();i++){
+        //    this->_block[i].Init({degenerates[i],degenerates[i]},dtype,device);
+        //}
+        //
+                
+
+
 
 
     }
 
 
     vector<Bond> SparseUniTensor::getTotalQnums(const bool &physical){
-        /*
+        
         if(physical){
             cytnx_error_msg(true,"[Developing!]%s","\n");
     
         }else{
             vector<Bond> cb_inbonds = vec_clone(this->_bonds,this->_Rowrank);
-            cytnx_uint64 Bdim;
+            cytnx_uint64 N_sym;
             for(cytnx_uint64 i=0;i<cb_inbonds.size();i++){
-                Bdim = cb_inbonds[i].dim();
+                N_sym = cb_inbonds[i].Nsym();
 
                 #ifdef UNI_OMP
                 #pragma omp parallel for schedule(dynamic)
                 #endif
-                for(cytnx_uint64 d=0;d<Bdim*cb_inbonds[i].Nsym();d++){
-                    cb_inbonds[i].qnums()[cytnx_uint64(d/Bdim)][d%Bdim] *= cb_inbonds[i].type()*bondType::BD_KET;
+                for(cytnx_uint64 d=0;d<N_sym*cb_inbonds[i].dim();d++){
+                    cb_inbonds[i].qnums()[cytnx_uint64(d/N_sym)][d%N_sym] *= cb_inbonds[i].type()*bondType::BD_KET;
                 }
             }
             if(cb_inbonds.size()>1){
@@ -96,13 +113,13 @@ namespace cytnx{
             
             vector<Bond> cb_outbonds = vec_clone(this->_bonds,this->_Rowrank,this->_bonds.size());
             for(cytnx_uint64 i=0;i<cb_outbonds.size();i++){
-                Bdim = cb_outbonds[i].dim();
+                N_sym = cb_outbonds[i].Nsym();
 
                 #ifdef UNI_OMP
                 #pragma omp parallel for schedule(dynamic)
                 #endif
-                for(cytnx_uint64 d=0;d<Bdim*cb_outbonds[i].Nsym();d++){
-                    cb_outbonds[i].qnums()[cytnx_uint64(d/Bdim)][d%Bdim] *= cb_outbonds[i].type()*bondType::BD_BRA;
+                for(cytnx_uint64 d=0;d<N_sym*cb_outbonds[i].dim();d++){
+                    cb_outbonds[i].qnums()[cytnx_uint64(d/N_sym)][d%N_sym] *= cb_outbonds[i].type()*bondType::BD_BRA;
                 }
             }
             if(cb_outbonds.size()>1){
@@ -116,7 +133,7 @@ namespace cytnx{
             out[1] = cb_outbonds[0]; cb_outbonds.clear();
             return out;
         }
-        */
+        
 
     }
 
