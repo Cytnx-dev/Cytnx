@@ -14,5 +14,9 @@ namespace cytnx{
     template<class T>
     std::vector<T> vec_clone(const std::vector<T>& in_vec, const std::vector<cytnx_uint64> &locators);
 
+    template<class T>
+    std::vector<T> vec_clone(const std::vector<T>& in_vec, const cytnx_uint64 &start, const cytnx_uint64 &end);
+
+
 }
 #endif

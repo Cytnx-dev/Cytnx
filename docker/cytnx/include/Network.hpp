@@ -15,12 +15,19 @@
 namespace cytnx{
 
     /// @cond
+    struct __ntwk{
+        enum __nttype{
+            Void = -1,
+            Regular = 0,
+            Fermion= 1
+        };
+    };
     class NetworkType_class{
         public:
             enum : int{
                 Void= -1,
                 Regular= 0,
-                Fermion= 1,
+                Fermion= 1
             };
             std::string getname(const int &nwrktype_id);
     };

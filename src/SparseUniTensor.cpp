@@ -205,5 +205,79 @@ namespace cytnx{
 
     }
 
-}
+    void SparseUniTensor::print_diagram(const bool &bond_info){
+        printf("-----------------------%s","\n");
+        printf("tensor Name : %s\n",this->_name.c_str());
+        printf("tensor Rank : %d\n",this->_labels.size());
+        printf("block_form  : true%s","\n");
+        printf("valid bocks : %d\n",this->_blocks.size());
+        printf("on device   : %s\n",this->device_str().c_str());
+
+        cytnx_uint64 Nin = this->_Rowrank;
+        cytnx_uint64 Nout = this->_labels.size() - this->_Rowrank;
+        cytnx_uint64 vl;
+        if(Nin > Nout) vl = Nin;
+        else           vl = Nout;
+
+        std::string bks;
+        char *l = (char*)malloc(40*sizeof(char));
+        char *llbl = (char*)malloc(40*sizeof(char));
+        char *r = (char*)malloc(40*sizeof(char));
+        char *rlbl = (char*)malloc(40*sizeof(char));
+        
+        printf("braket_form : %s\n",this->_is_braket_form?"True":"False");
+        printf("      |ket>               <bra| %s","\n");
+        printf("           ---------------      %s","\n");
+        for(cytnx_uint64 i=0;i<vl;i++){
+            printf("           |             |     %s","\n");
+            if(i<Nin){
+                if(this->_bonds[i].type() == bondType::BD_KET) bks = "> ";
+                else                                         bks = "<*";
+                memset(l,0,sizeof(char)*40);
+                memset(llbl,0,sizeof(char)*40);
+                sprintf(l,"%3d %s__",this->_labels[i],bks.c_str());
+                sprintf(llbl,"%-3d",this->_bonds[i].dim());
+            }else{
+                memset(l,0,sizeof(char)*40);
+                memset(llbl,0,sizeof(char)*40);
+                sprintf(l,"%s","        ");
+                sprintf(llbl,"%s","   ");
+            }
+            if(i< Nout){
+                if(this->_bonds[Nin+i].type() == bondType::BD_KET) bks = "*>";
+                else                                              bks = " <";
+                memset(r,0,sizeof(char)*40);
+                memset(rlbl,0,sizeof(char)*40);
+                sprintf(r,"__%s %-3d",bks.c_str(),this->_labels[Nin + i]);
+                sprintf(rlbl,"%-3d",this->_bonds[Nin + i].dim());
+            }else{
+                memset(r,0,sizeof(char)*40);
+                memset(rlbl,0,sizeof(char)*40);
+                sprintf(r,"%s","        ");
+                sprintf(rlbl,"%s","   ");
+            }
+            printf("   %s| %s     %s |%s\n",l,llbl,rlbl,r);
+
+        }
+        printf("           |             |     %s","\n");
+        printf("           ---------------     %s","\n");
+
+
+        if(bond_info){
+            for(cytnx_uint64 i=0; i< this->_bonds.size();i++){
+                printf("lbl:%d ",this->_labels[i]);
+                std::cout << this->_bonds[i] << std::endl;
+            }
+        }
+
+        fflush(stdout);
+        free(l);
+        free(llbl);
+        free(r);
+        free(rlbl);
+    }
+
+
+
+}//namespace cytnx
 

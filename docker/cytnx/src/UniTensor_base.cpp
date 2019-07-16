@@ -38,7 +38,7 @@ namespace cytnx{
         void UniTensor_base::to_(const int &device){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
-        boost::intrusive_ptr<UniTensor_base> UniTensor_base::to(const int &device) const{
+        boost::intrusive_ptr<UniTensor_base> UniTensor_base::to(const int &device){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
         boost::intrusive_ptr<UniTensor_base> UniTensor_base::clone() const{
@@ -139,6 +139,11 @@ namespace cytnx{
         boost::intrusive_ptr<UniTensor_base> UniTensor_base::contract(const boost::intrusive_ptr<UniTensor_base>&rhs){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
+        std::vector<Bond> UniTensor_base::getTotalQnums(const bool &physical){
+
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+        }
+
         //-----------------------------------------
         std::ostream& operator<<(std::ostream& os, const UniTensor &in){
             printf("Tensor name: %s\n",in.name().c_str());

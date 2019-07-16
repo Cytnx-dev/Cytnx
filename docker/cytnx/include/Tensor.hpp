@@ -47,7 +47,17 @@ namespace cytnx{
             Tensor_impl(): _contiguous(true){};
 
             void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype=Type.Double, const int device=-1);
+                
+            /*
+            template<class T>
+            void From_vec(const T &ndvec){
+                cytnx_error_msg(std::string(typeid(T).name()).find("vector") == std::string::npos,"[ERROR][Tensor][From_vec] the input argument should be a nd vector.%s","\n");
+                //dispatch the rank!:
+                                
+                
 
+            }
+            */
             //clone&assignment constr., use intrusive_ptr's
             Tensor_impl(const Tensor_impl &rhs);
             Tensor_impl& operator=(const Tensor_impl &rhs); // add const

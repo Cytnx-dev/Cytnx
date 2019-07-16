@@ -31,6 +31,8 @@
 namespace cytnx{
     namespace utils_internal{
 
+        bool _fx_compare_vec_inc(const std::vector<cytnx_int64> &v1,const std::vector<cytnx_int64> &v2);
+
         typedef void (*ElemCast_io)(const boost::intrusive_ptr<Storage_base>&,boost::intrusive_ptr<Storage_base>&,const unsigned long long &, const int &);
         typedef void (*SetArange_io)(boost::intrusive_ptr<Storage_base>&,const double&, const double&, const double&, const cytnx_uint64 &);
         typedef void (*GetElems_io)(void*, void*, const std::vector<cytnx_uint64>&, const std::vector<cytnx_uint64>&,const std::vector<std::vector<cytnx_uint64> >&,const cytnx_uint64 &);

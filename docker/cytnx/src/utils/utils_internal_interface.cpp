@@ -4,6 +4,17 @@ using namespace std;
 namespace cytnx{
     namespace utils_internal{
 
+        // this is an internal function for compare.
+        //-------------
+        bool _fx_compare_vec_inc(const std::vector<cytnx_int64> &v1,const std::vector<cytnx_int64> &v2){
+             
+            for(cytnx_uint64 i=0;i<v1.size();i++){
+                if(v1[i] < v2[i]) return true;
+                else if(v1[i] > v2[i]) return false;    
+            }
+            return false;
+        }
+
 
         utils_internal_interface::utils_internal_interface(){
 

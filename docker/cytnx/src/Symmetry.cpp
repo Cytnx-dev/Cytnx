@@ -11,7 +11,9 @@ namespace cytnx{
     bool cytnx::Symmetry::operator==(const cytnx::Symmetry &rhs) const{
         return(this->stype() == rhs.stype()) && (this->n() == rhs.n());
     }
-
+    bool cytnx::Symmetry::operator!=(const cytnx::Symmetry &rhs) const{
+        return !(*this == rhs);
+    }
     //=============================
 
     std::string cytnx::SymmetryType_class::getname(const int &stype_id){
@@ -33,7 +35,12 @@ namespace cytnx{
         this->combine_rule_(out,inL,inR);
         return out;
     }
-
+    
+    cytnx_int64 Symmetry_base::combine_rule( const cytnx_int64 &inL, const cytnx_int64 &inR){
+        cytnx_int64 out;
+        this->combine_rule_(out,inL,inR);
+        return out;
+    }
 
     bool cytnx::Symmetry_base::check_qnum(const cytnx_int64 &qnum){
         cytnx_error_msg(1,"%s","[ERROR][Internal] should not call Symmerty base!");
@@ -44,7 +51,9 @@ namespace cytnx{
     void cytnx::Symmetry_base::combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR){
         cytnx_error_msg(1,"%s","[ERROR][Internal] should not call Symmerty base!");
     }
-
+    void cytnx::Symmetry_base::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR){
+        cytnx_error_msg(1,"%s","[ERROR][Internal] should not call Symmerty base!");
+    }
     ///=========================
     bool cytnx::U1Symmetry::check_qnum(const cytnx_int64 &qnum){
         return true;
@@ -64,6 +73,10 @@ namespace cytnx{
         }    
 
     }
+    void cytnx::U1Symmetry::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR){
+        out = inL + inR;
+    }
+   
 
     ///========================
     bool cytnx::ZnSymmetry::check_qnum(const cytnx_int64 &qnum){
@@ -111,6 +124,10 @@ namespace cytnx{
         }    
 
     }
+    void cytnx::ZnSymmetry::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR){
+        out = (inL + inR)%(this->n);
+    }
+
 
 //++++++++++++++++++++++++
     SymmetryType_class SymType;

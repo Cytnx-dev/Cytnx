@@ -117,7 +117,7 @@ namespace cytnx{
             this->_labels = vec_map(this->labels(),mapper_u64);
             this->_block.permute_(mapper_u64);
             if(Rowrank>=0){
-                cytnx_error_msg(Rowrank>=this->_bonds.size(),"[ERROR] Rowrank cannot exceed the rank of UniTensor.%s","\n");
+                cytnx_error_msg((Rowrank>this->_bonds.size()) || (Rowrank < 0),"[ERROR] Rowrank cannot exceed the rank of UniTensor, and should be >=0.%s","\n");
                 this->_Rowrank = Rowrank;
             }
             this->_is_braket_form = this->_update_braket();

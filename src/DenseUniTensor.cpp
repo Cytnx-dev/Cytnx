@@ -130,6 +130,7 @@ namespace cytnx{
         printf("-----------------------%s","\n");
         printf("tensor Name : %s\n",this->_name.c_str());
         printf("tensor Rank : %d\n",this->_labels.size());
+        printf("block_form  : false%s","\n");
         printf("is_diag     : %s\n",this->_is_diag?"True":"False");
         printf("on device   : %s\n",this->device_str().c_str());
 

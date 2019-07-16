@@ -85,6 +85,12 @@ namespace cytnx{
         */
         std::vector<Tensor> Svd(const Tensor &Tin, const bool &is_U=true, const bool &is_vT=true);
 
+        // Svd_truncate:
+        //==================================================
+        std::vector<Tensor> Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,const bool &is_U=true, const bool &is_vT=true);
+       
+
+
         // Eig:
         //==================================================
         /**

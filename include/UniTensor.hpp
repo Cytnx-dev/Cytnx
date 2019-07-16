@@ -405,25 +405,39 @@ namespace cytnx{
                 #endif
                 return this->_blocks[0].device_str();
             };
+            void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank=-1,const bool &by_label=false);
             boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank=-1, const bool &by_label=false){
                 boost::intrusive_ptr<UniTensor_base> out = this->clone();
                 out->permute_(mapper,Rowrank,by_label);
                 return out;
             };
-            void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank=-1,const bool &by_label=false);
-            void contiguous_(){};
-            boost::intrusive_ptr<UniTensor_base> contiguous(){};            
-            void print_diagram(const bool &bond_info=false){};
-            Tensor get_block(const cytnx_uint64 &idx=0) const{};
-            Tensor get_block(const std::vector<cytnx_int64> &qnum) const{};
+            void contiguous_(){
+                cytnx_error_msg(true,"[Developing]%s","\n");
+            };
+            boost::intrusive_ptr<UniTensor_base> contiguous(){
+                cytnx_error_msg(true,"[Developing]%s","\n");
+            };            
+            void print_diagram(const bool &bond_info=false);
+            Tensor get_block(const cytnx_uint64 &idx=0) const{
+                cytnx_error_msg(true,"[Developing]%s","\n");
+            };
+            Tensor get_block(const std::vector<cytnx_int64> &qnum) const{
+                cytnx_error_msg(true,"[Developing]%s","\n");
+            };
             // return a share view of block, this only work for non-symm tensor.
             Tensor get_block_(const cytnx_uint64 &idx=0) const{
                 cytnx_error_msg(true,"[ERROR][SparseUniTensor] cannot use get_block_() on a UniTensor with symmetry.\n suggestion: try get_block()/get_blocks()%s","\n");
                 return Tensor();
             }
-            std::vector<Tensor> get_blocks() const {};
-            void put_block(const Tensor &in,const cytnx_uint64 &idx=0){};
-            void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum){};
+            std::vector<Tensor> get_blocks() const {
+                cytnx_error_msg(true,"[Developing]%s","\n");
+            };
+            void put_block(const Tensor &in,const cytnx_uint64 &idx=0){
+                cytnx_error_msg(true,"[Developing]%s","\n");
+            };
+            void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum){
+                cytnx_error_msg(true,"[Developing]%s","\n");
+            };
             // this will only work on non-symm tensor (DenseUniTensor)
             boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors){
                 cytnx_error_msg(true,"[ERROR][SparseUniTensor][get] cannot use get on a UniTensor with Symmetry.\n suggestion: try get_block()/get_blocks() first.%s","\n");
@@ -445,8 +459,12 @@ namespace cytnx{
             void to_dense_(){
                 cytnx_error_msg(true,"[ERROR] cannot to_dense_ a UniTensor with symmetry.%s","\n");
             }
-            void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back=true, const bool &by_label=true){};
-            boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs){};
+            void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back=true, const bool &by_label=true){
+                cytnx_error_msg(true,"[Developing]%s","\n");
+            };
+            boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs){
+                cytnx_error_msg(true,"[Developing]%s","\n");
+            };
             std::vector<Bond> getTotalQnums(const bool &physical=false);
             ~SparseUniTensor(){};
             // end virtual func

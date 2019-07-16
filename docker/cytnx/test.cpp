@@ -83,10 +83,9 @@ int main(int argc, char *argv[]){
     Zp.set({ac::all(),ac::range(1,3)}, 4);
     cout << Zp;
 
-    Bond bd_in = Bond(3,BD_KET,{{0,0,1},
-                                {1,2,0},
-                                {-1,-1,2},
-                                {4,-4,2}}
+    Bond bd_in = Bond(3,BD_KET,{{0,1,-1, 4},
+                                {0,2,-1,-4},
+                                {1,0, 2, 2}}
                               ,{Symmetry::Zn(2),
                                 Symmetry::Zn(3),
                                 Symmetry::U1(),
@@ -100,12 +99,19 @@ int main(int argc, char *argv[]){
     Bond bd_l = Bond(10,BD_KET);
     cout << bd_l << endl;
 
-    Bond bd_dqu1 = Bond(3, BD_BRA,{{0,2,3},{1,2,4}});
-    Bond bd_dqu2 = Bond(5, BD_BRA,{{0,2,3,-2,-1},{1,2,4,-4,-2}});
+    Bond bd_dqu1 = Bond(3, BD_BRA,{{0,1},{2,2},{3,4}});
+    Bond bd_dqu2 = Bond(5, BD_BRA,{{0,1},{2,2},{3,4},{-2,-4},{-1,-2}});
     Bond bd_dqu3 = bd_dqu1.combineBond(bd_dqu2);
+    Bond bd_dqu4 = Bond(6, BD_BRA,{{0,1},{2,2},{3,4},{-2,-4},{-1,-2},{3,4}});
     cout << bd_dqu1 << endl;
    cout << bd_dqu2 << endl;
     cout << bd_dqu3 << endl; 
+    cout << bd_dqu4.getDegeneracy({3,4}) << endl;
+    vector<vector<cytnx_int64> > comm24 = vec2d_intersect(bd_dqu2.qnums(),bd_dqu4.qnums(),false,false);
+    for(cytnx_uint64 i=0;i<comm24.size();i++){
+        cout << comm24[i] << endl;
+    } 
+    return 0;
      
     Bond bd_1 = Bond(3);
     Bond bd_2 = Bond(5);
@@ -192,6 +198,15 @@ int main(int argc, char *argv[]){
 
     net.Launch();
 
+    vector<float> vd;
+    vector<vector<double> > vvd;
+    vector<vector<vector<double> > > vvvd;
+    vector<vector<vector<vector<double> > > > vvvvd;
+
+    cout << typeid(vd).name() << endl;
+    cout << typeid(vvd).name() << endl;
+    cout << typeid(vvvd).name() << endl;
+    cout << typeid(vvvvd).name() << endl;
     /*
     Tensor x1 = arange(2*3*4);
     x1.reshape_({2,3,4});

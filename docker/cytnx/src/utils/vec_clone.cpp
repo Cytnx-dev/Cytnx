@@ -278,7 +278,141 @@ namespace cytnx{
         }
         return out;
     }
+    //=============================================================================
 
+    template<class T>
+    std::vector<T> vec_clone(const std::vector<T>& in_vec, const cytnx_uint64 &start, const cytnx_uint64 &end){
+        cytnx_error_msg(start >= end,"[ERROR][vec_clone] start must <= end.%s","\n");
+        cytnx_error_msg((end-start)>in_vec.size(),"[ERROR][vec_clone] indices out of range for clone.%s","\n");
+
+        std::vector<T> out(end-start);        
+        for(cytnx_uint64 i=start;i<end;i++){
+            out[i-start] = in_vec[i].clone();
+        }
+        return out;
+    }
+    template<>
+    std::vector<cytnx_complex128> vec_clone(const std::vector<cytnx_complex128>& in_vec, const cytnx_uint64 &start, const cytnx_uint64 &end){
+        cytnx_error_msg(start >= end,"[ERROR][vec_clone] start must <= end.%s","\n");
+        cytnx_error_msg((end-start)>in_vec.size(),"[ERROR][vec_clone] indices out of range for clone.%s","\n");
+
+        std::vector<cytnx_complex128> out(end-start);        
+        for(cytnx_uint64 i=start;i<end;i++){
+            out[i-start] = in_vec[i];
+        }
+        return out;
+    }
+    template<>
+    std::vector<cytnx_complex64> vec_clone(const std::vector<cytnx_complex64>& in_vec, const cytnx_uint64 &start, const cytnx_uint64 &end){
+        cytnx_error_msg(start >= end,"[ERROR][vec_clone] start must <= end.%s","\n");
+        cytnx_error_msg((end-start)>in_vec.size(),"[ERROR][vec_clone] indices out of range for clone.%s","\n");
+
+        std::vector<cytnx_complex64> out(end-start);        
+        for(cytnx_uint64 i=start;i<end;i++){
+            out[i-start] = in_vec[i];
+        }
+        return out;
+    }
+    template<>
+    std::vector<cytnx_double> vec_clone(const std::vector<cytnx_double>& in_vec, const cytnx_uint64 &start, const cytnx_uint64 &end){
+        cytnx_error_msg(start >= end,"[ERROR][vec_clone] start must <= end.%s","\n");
+        cytnx_error_msg((end-start)>in_vec.size(),"[ERROR][vec_clone] indices out of range for clone.%s","\n");
+
+        std::vector<cytnx_double> out(end-start);        
+        for(cytnx_uint64 i=start;i<end;i++){
+            out[i-start] = in_vec[i];
+        }
+        return out;
+    }
+    template<>
+    std::vector<cytnx_float> vec_clone(const std::vector<cytnx_float>& in_vec, const cytnx_uint64 &start, const cytnx_uint64 &end){
+        cytnx_error_msg(start >= end,"[ERROR][vec_clone] start must <= end.%s","\n");
+        cytnx_error_msg((end-start)>in_vec.size(),"[ERROR][vec_clone] indices out of range for clone.%s","\n");
+
+        std::vector<cytnx_float> out(end-start);        
+        for(cytnx_uint64 i=start;i<end;i++){
+            out[i-start] = in_vec[i];
+        }
+        return out;
+    }
+    template<>
+    std::vector<cytnx_int64> vec_clone(const std::vector<cytnx_int64>& in_vec, const cytnx_uint64 &start, const cytnx_uint64 &end){
+        cytnx_error_msg(start >= end,"[ERROR][vec_clone] start must <= end.%s","\n");
+        cytnx_error_msg((end-start)>in_vec.size(),"[ERROR][vec_clone] indices out of range for clone.%s","\n");
+
+        std::vector<cytnx_int64> out(end-start);        
+        for(cytnx_uint64 i=start;i<end;i++){
+            out[i-start] = in_vec[i];
+        }
+        return out;
+    }
+    template<>
+    std::vector<cytnx_uint64> vec_clone(const std::vector<cytnx_uint64>& in_vec, const cytnx_uint64 &start, const cytnx_uint64 &end){
+        cytnx_error_msg(start >= end,"[ERROR][vec_clone] start must <= end.%s","\n");
+        cytnx_error_msg((end-start)>in_vec.size(),"[ERROR][vec_clone] indices out of range for clone.%s","\n");
+
+        std::vector<cytnx_uint64> out(end-start);        
+        for(cytnx_uint64 i=start;i<end;i++){
+            out[i-start] = in_vec[i];
+        }
+        return out;
+    }
+    template<>
+    std::vector<cytnx_int32> vec_clone(const std::vector<cytnx_int32>& in_vec, const cytnx_uint64 &start, const cytnx_uint64 &end){
+        cytnx_error_msg(start >= end,"[ERROR][vec_clone] start must <= end.%s","\n");
+        cytnx_error_msg((end-start)>in_vec.size(),"[ERROR][vec_clone] indices out of range for clone.%s","\n");
+
+        std::vector<cytnx_int32> out(end-start);        
+        for(cytnx_uint64 i=start;i<end;i++){
+            out[i-start] = in_vec[i];
+        }
+        return out;
+    }
+    template<>
+    std::vector<cytnx_uint32> vec_clone(const std::vector<cytnx_uint32>& in_vec, const cytnx_uint64 &start, const cytnx_uint64 &end){
+        cytnx_error_msg(start >= end,"[ERROR][vec_clone] start must <= end.%s","\n");
+        cytnx_error_msg((end-start)>in_vec.size(),"[ERROR][vec_clone] indices out of range for clone.%s","\n");
+
+        std::vector<cytnx_uint32> out(end-start);        
+        for(cytnx_uint64 i=start;i<end;i++){
+            out[i-start] = in_vec[i];
+        }
+        return out;
+    }
+    template<>
+    std::vector<cytnx_int16> vec_clone(const std::vector<cytnx_int16>& in_vec, const cytnx_uint64 &start, const cytnx_uint64 &end){
+        cytnx_error_msg(start >= end,"[ERROR][vec_clone] start must <= end.%s","\n");
+        cytnx_error_msg((end-start)>in_vec.size(),"[ERROR][vec_clone] indices out of range for clone.%s","\n");
+
+        std::vector<cytnx_int16> out(end-start);        
+        for(cytnx_uint64 i=start;i<end;i++){
+            out[i-start] = in_vec[i];
+        }
+        return out;
+    }
+    template<>
+    std::vector<cytnx_uint16> vec_clone(const std::vector<cytnx_uint16>& in_vec, const cytnx_uint64 &start, const cytnx_uint64 &end){
+        cytnx_error_msg(start >= end,"[ERROR][vec_clone] start must <= end.%s","\n");
+        cytnx_error_msg((end-start)>in_vec.size(),"[ERROR][vec_clone] indices out of range for clone.%s","\n");
+
+        std::vector<cytnx_uint16> out(end-start);        
+        for(cytnx_uint64 i=start;i<end;i++){
+            out[i-start] = in_vec[i];
+        }
+        return out;
+    }
+    template<>
+    std::vector<cytnx_bool> vec_clone(const std::vector<cytnx_bool>& in_vec, const cytnx_uint64 &start, const cytnx_uint64 &end){
+        cytnx_error_msg(start >= end,"[ERROR][vec_clone] start must <= end.%s","\n");
+        cytnx_error_msg((end-start)>in_vec.size(),"[ERROR][vec_clone] indices out of range for clone.%s","\n");
+
+        std::vector<cytnx_bool> out(end-start);        
+        for(cytnx_uint64 i=start;i<end;i++){
+            out[i-start] = in_vec[i];
+        }
+        return out;
+    }
+    //================================
 
     template std::vector<Bond> vec_clone<Bond>(const std::vector<Bond>&);
     template std::vector<Symmetry> vec_clone<Symmetry>(const std::vector<Symmetry>&);
@@ -290,12 +424,14 @@ namespace cytnx{
     template std::vector<Tensor> vec_clone<Tensor>(const std::vector<Tensor>&, const cytnx_uint64 &);
     template std::vector<Storage> vec_clone<Storage>(const std::vector<Storage>&, const cytnx_uint64 &);
 
-
     template std::vector<Bond> vec_clone<Bond>(const std::vector<Bond>&, const std::vector<cytnx_uint64> &);
     template std::vector<Symmetry> vec_clone<Symmetry>(const std::vector<Symmetry>&, const std::vector<cytnx_uint64> &);
     template std::vector<Tensor> vec_clone<Tensor>(const std::vector<Tensor>&, const std::vector<cytnx_uint64> &);
     template std::vector<Storage> vec_clone<Storage>(const std::vector<Storage>&, const std::vector<cytnx_uint64> &);
 
-
+    template std::vector<Bond> vec_clone<Bond>(const std::vector<Bond>&, const cytnx_uint64 &, const cytnx_uint64 &);
+    template std::vector<Symmetry> vec_clone<Symmetry>(const std::vector<Symmetry>&, const cytnx_uint64 &, const cytnx_uint64 &);
+    template std::vector<Tensor> vec_clone<Tensor>(const std::vector<Tensor>&, const cytnx_uint64 &, const cytnx_uint64 &);
+    template std::vector<Storage> vec_clone<Storage>(const std::vector<Storage>&, const cytnx_uint64 &, const cytnx_uint64 &);
 
 }
