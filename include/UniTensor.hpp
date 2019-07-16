@@ -544,7 +544,7 @@ namespace cytnx{
 
                 // dynamical dispatch:
                 if(is_sym){
-                    cytnx_error_msg(true,"[interrupt, developing][SparseUniTensor]%s","\n");
+                    cytnx_warning_msg(true,"[warning, still developing, some functions will display \"[Developing]\"][SparseUniTensor]%s","\n");
                     boost::intrusive_ptr<UniTensor_base> out(new SparseUniTensor());
                     this->_impl = out;
                 }else{   

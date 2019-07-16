@@ -44,10 +44,16 @@ namespace cytnx{
 
 
             void set_type(const bondType &new_bondType){
+                if((this->_type != BD_REG) && (new_bondType == BD_REG)){
+                    cytnx_error_msg(this->_qnums.size(),"[ERROR] cannot change type to BD_REG for a symmetry bond.%s","\n");
+                }
                 this->_type = new_bondType;
             }
 
             void clear_type(){
+                if(this->_type != BD_REG){
+                    cytnx_error_msg(this->_qnums.size(),"[ERROR] cannot clear type for a symmetry bond.%s","\n");
+                }
                 this->_type = bondType::BD_REG;
             }
 

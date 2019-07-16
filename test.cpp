@@ -102,7 +102,8 @@ int main(int argc, char *argv[]){
     Bond bd_dqu1 = Bond(3, BD_BRA,{{0,1},{2,2},{3,4}});
     Bond bd_dqu2 = Bond(5, BD_BRA,{{0,1},{2,2},{3,4},{-2,-4},{-1,-2}});
     Bond bd_dqu3 = bd_dqu1.combineBond(bd_dqu2);
-    Bond bd_dqu4 = Bond(6, BD_BRA,{{0,1},{2,2},{3,4},{-2,-4},{-1,-2},{3,4}});
+    bd_dqu3.set_type(BD_KET);
+    Bond bd_dqu4 = Bond(6, BD_KET,{{0,1},{2,2},{3,4},{-2,-4},{-1,-2},{3,4}});
     cout << bd_dqu1 << endl;
    cout << bd_dqu2 << endl;
     cout << bd_dqu3 << endl; 
@@ -111,6 +112,10 @@ int main(int argc, char *argv[]){
     for(cytnx_uint64 i=0;i<comm24.size();i++){
         cout << comm24[i] << endl;
     } 
+    std::vector<Bond> dbds = {bd_dqu1,bd_dqu2,bd_dqu3,bd_dqu4}; 
+        
+    UniTensor dut1(dbds,{},2);
+    dut1.print_diagram(true);
     return 0;
      
     Bond bd_1 = Bond(3);
