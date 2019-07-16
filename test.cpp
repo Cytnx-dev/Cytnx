@@ -112,10 +112,15 @@ int main(int argc, char *argv[]){
     for(cytnx_uint64 i=0;i<comm24.size();i++){
         cout << comm24[i] << endl;
     } 
-    std::vector<Bond> dbds = {bd_dqu1,bd_dqu2,bd_dqu3,bd_dqu4}; 
+    std::vector<Bond> dbds = {bd_dqu3,bd_dqu4,bd_dqu1,bd_dqu2}; 
         
     UniTensor dut1(dbds,{},2);
     dut1.print_diagram(true);
+    dut1.permute_({2,3,0,1});
+    dut1.print_diagram(true);
+    auto bcbs = dut1.getTotalQnums();
+    cout << bcbs[0] << endl;
+    cout << bcbs[1] << endl;
     return 0;
      
     Bond bd_1 = Bond(3);

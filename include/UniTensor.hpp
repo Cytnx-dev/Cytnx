@@ -169,7 +169,7 @@ namespace cytnx{
                 tmp->_is_braket_form = this->_is_braket_form;
                 tmp->_Rowrank = this->_Rowrank;
                 tmp->_is_diag = this->_is_diag;
-                tmp->_name = this->_name;
+                //tmp->_name = this->_name;
                 tmp->_is_tag = this->_is_tag; 
                 return tmp;
             }
@@ -311,6 +311,8 @@ namespace cytnx{
             std::vector<Tensor> _blocks;
             std::vector<cytnx_uint64> _mapper;
             std::vector<cytnx_uint64> _inv_mapper;
+
+            cytnx_uint64 _inner_Rowrank;
             std::vector<std::vector<cytnx_int64> > _blockqnums;
             std::vector<std::vector<cytnx_uint64> > _inner2outer_row;
             std::vector<std::vector<cytnx_uint64> > _inner2outer_col;
@@ -320,21 +322,31 @@ namespace cytnx{
 
             bool _contiguous;
             
-            SparseUniTensor* clone_meta() const{
+            SparseUniTensor* clone_meta(const bool &inner, const bool &outer) const{
                 SparseUniTensor* tmp = new SparseUniTensor();
-                tmp->_bonds = vec_clone(this->_bonds);
-                tmp->_labels = this->_labels;
-                tmp->_is_braket_form = this->_is_braket_form;
-                tmp->_Rowrank = this->_Rowrank;
-                tmp->_name = this->_name;
+
+                //outer meta
+                if(outer){
+                    tmp->_bonds = vec_clone(this->_bonds);
+                    tmp->_labels = this->_labels;
+                    tmp->_is_braket_form = this->_is_braket_form;
+                    tmp->_Rowrank = this->_Rowrank;
+                    //tmp->_name = this->_name;
+                }
+                //comm meta
                 tmp->_mapper = this->_mapper;
                 tmp->_inv_mapper = this->_inv_mapper;
                 tmp->_contiguous = this->_contiguous;
-                tmp->_inner2outer_row = this->_inner2outer_row;
-                tmp->_inner2outer_col = this->_inner2outer_col;
-                tmp->_outer2inner_row = this->_outer2inner_row;
-                tmp->_outer2inner_col = this->_outer2inner_col;
-                tmp->_blockqnums = this->_blockqnums;
+
+                //inner meta    
+                if(inner){            
+                    tmp->_inner_Rowrank = this->_inner_Rowrank;
+                    tmp->_inner2outer_row = this->_inner2outer_row;
+                    tmp->_inner2outer_col = this->_inner2outer_col;
+                    tmp->_outer2inner_row = this->_outer2inner_row;
+                    tmp->_outer2inner_col = this->_outer2inner_col;
+                    tmp->_blockqnums = this->_blockqnums;
+                }
                 return tmp;
             };
         
@@ -373,7 +385,7 @@ namespace cytnx{
                 }
             };
             boost::intrusive_ptr<UniTensor_base> clone() const{
-                SparseUniTensor* tmp = this->clone_meta();
+                SparseUniTensor* tmp = this->clone_meta(true,true);
                 tmp->_blocks = vec_clone(this->_blocks);
                 boost::intrusive_ptr<UniTensor_base> out(tmp);
                 return out;
@@ -416,6 +428,15 @@ namespace cytnx{
             };
             boost::intrusive_ptr<UniTensor_base> contiguous(){
                 cytnx_error_msg(true,"[Developing]%s","\n");
+                if(this->is_contiguous){
+                    boost::intrusive_ptr<UniTensor_base> out(this);
+                    return out;
+                }else{
+                    SparseUniTensor* tmp = this->clone();
+                    
+                    boost::intrusive_ptr<UniTensor_base> out(tmp);
+                    return out;
+                }
             };            
             void print_diagram(const bool &bond_info=false);
             Tensor get_block(const cytnx_uint64 &idx=0) const{
@@ -424,10 +445,13 @@ namespace cytnx{
             Tensor get_block(const std::vector<cytnx_int64> &qnum) const{
                 cytnx_error_msg(true,"[Developing]%s","\n");
             };
-            // return a share view of block, this only work for non-symm tensor.
+            // return a share view of block, this only work for symm tensor in contiguous form.
             Tensor get_block_(const cytnx_uint64 &idx=0) const{
-                cytnx_error_msg(true,"[ERROR][SparseUniTensor] cannot use get_block_() on a UniTensor with symmetry.\n suggestion: try get_block()/get_blocks()%s","\n");
-                return Tensor();
+                cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseUniTensor] cannot use get_block_() on non-contiguous UniTensor with symmetry.\n suggestion: \n  1) Call contiguous_()/contiguous() first.\n  2) Try get_block()/get_blocks()%s","\n");
+                
+                cytnx_error_msg(idx >= this->_blocks.size(),"[ERROR][SparseUniTensor] index exceed the number of blocks.%s","\n");
+
+                return this->_blocks[idx];
             }
             std::vector<Tensor> get_blocks() const {
                 cytnx_error_msg(true,"[Developing]%s","\n");

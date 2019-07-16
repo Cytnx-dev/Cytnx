@@ -34,10 +34,14 @@ namespace cytnx{
         //check Rowrank:
         cytnx_error_msg((N_ket<1)||(N_ket>bonds.size()-1),"[ERROR][SparseUniTensor] must have at least one ket-bond and one bra-bond.%s","\n");
         
-        if(Rowrank<0){this->_Rowrank = N_ket;}
+        if(Rowrank<0){
+            this->_Rowrank = N_ket;
+            this->_inner_Rowrank = N_ket;
+        }
         else{
             cytnx_error_msg((Rowrank<1) || (Rowrank>bonds.size()-1),"[ERROR][SparseUniTensor] Rowrank must be >=1 and <=rank-1.%s","\n");
             this->_Rowrank = Rowrank;
+            this->_inner_Rowrank = Rowrank;
             // update braket_form >>>
         }
 
@@ -63,6 +67,7 @@ namespace cytnx{
         //need to maintain the mapper for contiguous for block_form. 
         this->_mapper = utils_internal::range_cpu(this->_bonds.size());
         this->_inv_mapper = this->_mapper;
+        this->_contiguous = true;
 
         //Symmetry, initialize memories for blocks.
         vector<Bond> tot_bonds = this->getTotalQnums();
@@ -197,7 +202,7 @@ namespace cytnx{
         //check rowrank.
         if(Rowrank>=0){
             cytnx_error_msg((Rowrank>=this->_bonds.size()) || (Rowrank<=0),"[ERROR] Rowrank should >=1 and <= UniTensor.rank-1 for SparseUniTensor (UniTensor in blockform)(UniTensor with symmetries).%s","\n");
-            this->_Rowrank = Rowrank;
+            this->_Rowrank = Rowrank; //only update the outer meta.
         }
 
         //update braket form status.
@@ -277,7 +282,29 @@ namespace cytnx{
         free(rlbl);
     }
 
+    boost::intrusive_ptr<UniTensor_base> SparseUniTensor::contiguous(){
+        if(this->is_contiguous()){
+            boost::intrusive_ptr<UniTensor_base> out(this);
+            return out;
+        }else{
+            //make a new instance with only the outer meta:
+            SparseUniTensor* tmp = this->clone_meta(true,false); 
+            
+            //calculate new inner meta, and copy the element from it.   
+        
+ 
 
+            //update comm-meta:
+            tmp->_contiguous = true;
+            tmp->_mapper = utils_internal::Range_cpu(this->_bond.size());
+            tmp->_inv_mapper = tmp->_mapper;
+
+
+            //transform to a intr_ptr.
+            boost::intrusive_ptr<UniTensor_base> out(tmp);
+            return out;
+        }
+    }
 
 }//namespace cytnx
 
