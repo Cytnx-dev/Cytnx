@@ -38,7 +38,7 @@ namespace cytnx{
         void UniTensor_base::to_(const int &device){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
-        boost::intrusive_ptr<UniTensor_base> UniTensor_base::to(const int &device) const{
+        boost::intrusive_ptr<UniTensor_base> UniTensor_base::to(const int &device){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
         boost::intrusive_ptr<UniTensor_base> UniTensor_base::clone() const{

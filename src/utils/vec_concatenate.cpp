@@ -15,15 +15,24 @@ namespace cytnx{
     template<>
     std::vector<bool> vec_concatenate(const std::vector<bool>& inL, const std::vector<bool> &inR){
         std::vector<bool> out(inL.size()+inR.size());
-        for(cytnx_uint64 i=0;i<inL.size();i++)
+        #ifdef UNI_OMP
+        #pragma omp parallel for schedule(dynamic)
+        #endif
+        for(cytnx_uint64 i=0;i<inL.size();i++){
             out[i] = inL[i];
+        }
+        #ifdef UNI_OMP
+        #pragma omp parallel for schedule(dynamic)
+        #endif
         for(cytnx_uint64 i=0;i<inR.size();i++)
             out[inL.size()+i] = inR[i];
+
         return out;
     }
 
     template<class T>
     void vec_concatenate_(std::vector<T> &out, const std::vector<T> &inL, const std::vector<T> &inR){
+
         out.resize(inL.size()+inR.size());
         memcpy(&out[0],&inL[0],sizeof(T)*inL.size());
         memcpy(&out[inL.size()], &inR[0],sizeof(T)*inR.size());
@@ -31,8 +40,14 @@ namespace cytnx{
     template<>
     void vec_concatenate_(std::vector<bool> &out, const std::vector<bool> &inL, const std::vector<bool> &inR){
         out.resize(inL.size()+inR.size());
+        #ifdef UNI_OMP
+        #pragma omp parallel for schedule(dynamic)
+        #endif
         for(cytnx_uint64 i=0;i<inL.size();i++)
             out[i] = inL[i];
+        #ifdef UNI_OMP
+        #pragma omp parallel for schedule(dynamic)
+        #endif
         for(cytnx_uint64 i=0;i<inR.size();i++)
             out[inL.size()+i] = inR[i];
     }

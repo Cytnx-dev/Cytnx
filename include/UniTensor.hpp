@@ -13,6 +13,8 @@
 #include "linalg/linalg.hpp"
 #include <iostream>
 #include <vector>
+#include <map>
+#include <utility>
 #include <initializer_list>
 #include <algorithm>
 namespace cytnx{
@@ -122,7 +124,7 @@ namespace cytnx{
             virtual bool      is_blockform() const ;
             virtual bool     is_contiguous() const;
             virtual void to_(const int &device);
-            virtual boost::intrusive_ptr<UniTensor_base> to(const int &device) const;
+            virtual boost::intrusive_ptr<UniTensor_base> to(const int &device);
             virtual boost::intrusive_ptr<UniTensor_base> clone() const;
             virtual unsigned int  dtype() const;
             virtual int          device() const;
@@ -309,9 +311,32 @@ namespace cytnx{
             std::vector<Tensor> _blocks;
             std::vector<cytnx_uint64> _mapper;
             std::vector<cytnx_uint64> _inv_mapper;
+            std::vector<std::vector<cytnx_int64> > _blockqnums;
+            std::vector<std::vector<cytnx_uint64> > _inner2outer_row;
+            std::vector<std::vector<cytnx_uint64> > _inner2outer_col;
+            std::map<cytnx_uint64,std::pair<cytnx_uint64,cytnx_uint64> > _outer2inner_row;
+            std::map<cytnx_uint64, std::pair<cytnx_uint64,cytnx_uint64> > _outer2inner_col;
+            
+
             bool _contiguous;
             
-            //boost::intrusive_ptr<UniTensor_base> clone_meta() const{};
+            SparseUniTensor* clone_meta() const{
+                SparseUniTensor* tmp = new SparseUniTensor();
+                tmp->_bonds = vec_clone(this->_bonds);
+                tmp->_labels = this->_labels;
+                tmp->_is_braket_form = this->_is_braket_form;
+                tmp->_Rowrank = this->_Rowrank;
+                tmp->_name = this->_name;
+                tmp->_mapper = this->_mapper;
+                tmp->_inv_mapper = this->_inv_mapper;
+                tmp->_contiguous = this->_contiguous;
+                tmp->_inner2outer_row = this->_inner2outer_row;
+                tmp->_inner2outer_col = this->_inner2outer_col;
+                tmp->_outer2inner_row = this->_outer2inner_row;
+                tmp->_outer2inner_col = this->_outer2inner_col;
+                tmp->_blockqnums = this->_blockqnums;
+                return tmp;
+            };
         
         public:
             friend class UniTensor; // allow wrapper to access the private elems
@@ -333,24 +358,59 @@ namespace cytnx{
                 return out;
             }
             bool is_blockform() const{return true;}
-            void to_(const int &device){};
-            boost::intrusive_ptr<UniTensor_base> to(const int &device) const{};
-            boost::intrusive_ptr<UniTensor_base> clone() const{};
-            bool     is_contiguous() const{};
+            void to_(const int &device){
+                for(cytnx_uint64 i=0;i<this->_blocks.size();i++){
+                    this->_blocks[i].to_(device);
+                }
+            };
+            boost::intrusive_ptr<UniTensor_base> to(const int &device){
+                if(this->device() == device){
+                    return this;
+                }else{
+                    boost::intrusive_ptr<UniTensor_base> out = this->clone();
+                    out->to_(device);
+                    return out;
+                }
+            };
+            boost::intrusive_ptr<UniTensor_base> clone() const{
+                SparseUniTensor* tmp = this->clone_meta();
+                tmp->_blocks = vec_clone(this->_blocks);
+                boost::intrusive_ptr<UniTensor_base> out(tmp);
+                return out;
+            };
+            bool     is_contiguous() const{
+                return this->_contiguous;
+            };
             unsigned int  dtype() const{
+                #ifdef UNI_DEBUG
+                cytnx_error_msg(this->_blocks.size()==0,"[ERROR][internal] empty blocks for blockform.%s","\n");
+                #endif
                 return this->_blocks[0].dtype();
             };
             int          device() const{
+                #ifdef UNI_DEBUG
+                cytnx_error_msg(this->_blocks.size()==0,"[ERROR][internal] empty blocks for blockform.%s","\n");
+                #endif
                 return this->_blocks[0].device();
             };
             std::string      dtype_str() const{
+                #ifdef UNI_DEBUG
+                cytnx_error_msg(this->_blocks.size()==0,"[ERROR][internal] empty blocks for blockform.%s","\n");
+                #endif
                 return this->_blocks[0].dtype_str();
             };
             std::string     device_str() const{
+                #ifdef UNI_DEBUG
+                cytnx_error_msg(this->_blocks.size()==0,"[ERROR][internal] empty blocks for blockform.%s","\n");
+                #endif
                 return this->_blocks[0].device_str();
             };
-            boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank=-1, const bool &by_label=false){};
-            void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank=-1,const bool &by_label=false){};
+            boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank=-1, const bool &by_label=false){
+                boost::intrusive_ptr<UniTensor_base> out = this->clone();
+                out->permute_(mapper,Rowrank,by_label);
+                return out;
+            };
+            void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank=-1,const bool &by_label=false);
             void contiguous_(){};
             boost::intrusive_ptr<UniTensor_base> contiguous(){};            
             void print_diagram(const bool &bond_info=false){};

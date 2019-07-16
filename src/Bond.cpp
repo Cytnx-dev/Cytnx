@@ -89,7 +89,82 @@ namespace cytnx{
         return tmp_qnums;
 
     }
+    cytnx_uint64 Bond_impl::getDegeneracy(const std::vector<cytnx_int64> &qnum, const bool &return_indices,std::vector<cytnx_uint64> &indices){
 
+        if(this->_qnums.size()==0){ return 0; }
+        else{
+            cytnx_error_msg(qnum.size() != this->Nsym(),"[ERROR][getDegeneracy] the qnum specify does not match the number of symmetries.%s","\n");
+            if(return_indices){
+                #ifdef UNI_OMP
+                    std::vector<cytnx_uint64> tmp_cnts;
+                    std::vector< std::vector<cytnx_uint64> >tmp_indices;
+                    #pragma omp parallel
+                    {
+                        if(omp_get_thread_num()==0){
+                            tmp_cnts.resize(omp_get_num_threads(),0);
+                            tmp_indices.resize(omp_get_num_threads());
+                        }
+                    }
+
+                    #pragma omp parallel for schedule(dynamic)
+                    for(cytnx_uint64 i=0;i<this->_qnums.size();i++){
+                        if(this->_qnums[i] == qnum){ 
+                            tmp_cnts[omp_get_thread_num()]++; 
+                            tmp_indices[omp_get_thread_num()].push_back(i);
+                        }                  
+                    }
+
+                    // sum over all counts from each thread.
+                    cytnx_uint64 cnt = tmp_cnts[0];
+                    for(cytnx_uint64 i=1;i<tmp_cnts.size();i++){
+                        cnt+=tmp_cnts[i];
+                        tmp_cnts[i]+=tmp_cnts[i-1];
+                    }
+                    indices.resize(cnt);
+                    
+                    // concate the indices from each thread
+                    memcpy(&indices[0],&tmp_indices[0],sizeof(cytnx_uint64)*tmp_indices[0].size());
+                    for(cytnx_uint64 i=1;i<tmp_cnts.size();i++){
+                        memcpy(&indices[tmp_cnts[i-1]],&tmp_indices[i],sizeof(cytnx_uint64)*tmp_indices[i].size());
+                    }
+                    std::sort(indices.begin(),indices.end());
+
+                    return cnt;
+                #else
+                    cytnx_uint64 cnt =0;
+                    indices.clear();
+                    for(cytnx_uint64 i=0;i<this->_qnums.size();i++){
+                        if(this->_qnums[i] == qnum){ 
+                            cnt++; 
+                            indices.push_back(i);
+                        }                  
+                    }            
+                    return cnt;
+                    
+                #endif
+            }else{
+                #ifdef UNI_OMP
+                    std::vector<cytnx_uint64> tmp_cnts;
+                    #pragma omp parallel
+                    {
+                        if(omp_get_thread_num()==0) tmp_cnts.resize(omp_get_num_threads(),0);
+                    }
+
+                    #pragma omp parallel for schedule(dynamic)
+                    for(cytnx_uint64 i=0;i<this->_qnums.size();i++){
+                        if(this->_qnums[i] == qnum){ tmp_cnts[omp_get_thread_num()]++; }                  
+                    }
+            
+                    for(cytnx_uint64 i=1;i<tmp_cnts.size();i++)
+                        tmp_cnts[0]+=tmp_cnts[i];
+                    return tmp_cnts[0];
+                #else
+                    return std::count(this->_qnums.begin(),this->_qnums.end(),qnum);
+                    
+                #endif
+            }
+        }
+    }
     /*
     void Bond_impl::Init(const cytnx_uint64 &dim, const std::initializer_list<std::initializer_list<cytnx_int64> > &in_qnums,const std::initializer_list<Symmetry> &in_syms,const bondType &bd_type){
 

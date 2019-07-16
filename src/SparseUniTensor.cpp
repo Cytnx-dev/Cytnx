@@ -70,19 +70,34 @@ namespace cytnx{
         vector<vector<cytnx_int64> > uniq_bonds_row = tot_bonds[0].getUniqueQnums();
         vector<vector<cytnx_int64> > uniq_bonds_col = tot_bonds[1].getUniqueQnums();
 
-        //wait for implement 2d vec_intersect....
-    
-
-        //
-        //this->_block.resize(uniq_bonds.size());
-        //for(cytnx_uint64 i=0;i<this->_block.size();i++){
-        //    this->_block[i].Init({degenerates[i],degenerates[i]},dtype,device);
-        //}
-        //
+        //get common qnum set of row-col (bra-ket) space.
+        this->_blockqnums = vec2d_intersect(uniq_bonds_row,uniq_bonds_col,true,true);    
+        cytnx_error_msg(this->_blockqnums.size()==0,"[ERROR][SparseUniTensor] invalid qnums. no common block (qnum) in this setup.%s","\n");
                 
+        //calculate&init the No. of blocks and their sizes.
+        this->_blocks.resize(this->_blockqnums.size());
+        cytnx_uint64 rowdim,coldim;
+        this->_inner2outer_row.resize(this->_blocks.size());
+        this->_inner2outer_col.resize(this->_blocks.size());
+
+        for(cytnx_uint64 i=0;i<this->_blocks.size();i++){
+                        
+            rowdim = tot_bonds[0].getDegeneracy(this->_blockqnums[i],this->_inner2outer_row[i]);
+            coldim = tot_bonds[1].getDegeneracy(this->_blockqnums[i],this->_inner2outer_col[i]);    
+            for(cytnx_uint64 j=0;j<this->_inner2outer_row[i].size();j++){
+                this->_outer2inner_row[this->_inner2outer_row[i][j]] = pair<cytnx_uint64,cytnx_uint64>(i,j);
+            }
+
+            for(cytnx_uint64 j=0;j<this->_inner2outer_col[i].size();j++){
+                this->_outer2inner_col[this->_inner2outer_col[i][j]] = pair<cytnx_uint64,cytnx_uint64>(i,j);
+            }
+
+            this->_blocks[i].Init({rowdim,coldim},dtype,device);
+        }
 
 
 
+       
 
     }
 
@@ -136,7 +151,59 @@ namespace cytnx{
         
 
     }
+    void SparseUniTensor::permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank,const bool &by_label){
+        std::vector<cytnx_uint64> mapper_u64;
+        if(by_label){
+            //cytnx_error_msg(true,"[Developing!]%s","\n");
+            std::vector<cytnx_int64>::iterator it;
+            for(cytnx_uint64 i=0;i<mapper.size();i++){
+                it = std::find(this->_labels.begin(),this->_labels.end(),mapper[i]);
+                cytnx_error_msg(it == this->_labels.end(),"[ERROR] label %d does not exist in current UniTensor.\n",mapper[i]);
+                mapper_u64.push_back(std::distance(this->_labels.begin(),it));
+            }
+            
+        }else{
+            mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(),mapper.end());
+        }
 
+
+        this->_bonds = vec_map(vec_clone(this->bonds()),mapper_u64);// this will check validity
+        this->_labels = vec_map(this->labels(),mapper_u64);
+
+        std::vector<cytnx_uint64> new_fwdmap(this->_mapper.size());
+        std::vector<cytnx_uint64> new_shape(this->_mapper.size());
+        std::vector<cytnx_uint64> new_idxmap(this->_mapper.size());
+
+        for(cytnx_uint32 i=0;i<mapper_u64.size();i++){
+            if(mapper_u64[i] >= mapper_u64.size()){
+                cytnx_error_msg(1,"%s","invalid rank index.\n");
+            }
+            //std::cout << this->_mapper[rnks[i]] << " " << i << std::endl;
+            new_idxmap[this->_mapper[mapper_u64[i]]] = i;
+            new_fwdmap[i] = this->_mapper[mapper_u64[i]];
+        }
+
+        this->_inv_mapper = new_idxmap;
+        this->_mapper = new_fwdmap;
+        
+        ///checking if permute back to contiguous:
+        bool iconti=true;
+        for(cytnx_uint32 i=0;i<mapper_u64.size();i++){
+            if(new_fwdmap[i]!=new_idxmap[i]){iconti = false; break;}
+            if(new_fwdmap[i] != i){iconti=false; break;}
+        }
+        this->_contiguous= iconti;
+
+        //check rowrank.
+        if(Rowrank>=0){
+            cytnx_error_msg((Rowrank>=this->_bonds.size()) || (Rowrank<=0),"[ERROR] Rowrank should >=1 and <= UniTensor.rank-1 for SparseUniTensor (UniTensor in blockform)(UniTensor with symmetries).%s","\n");
+            this->_Rowrank = Rowrank;
+        }
+
+        //update braket form status.
+        this->_is_braket_form = this->_update_braket();
+
+    }
 
 }
 

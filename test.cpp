@@ -102,9 +102,16 @@ int main(int argc, char *argv[]){
     Bond bd_dqu1 = Bond(3, BD_BRA,{{0,1},{2,2},{3,4}});
     Bond bd_dqu2 = Bond(5, BD_BRA,{{0,1},{2,2},{3,4},{-2,-4},{-1,-2}});
     Bond bd_dqu3 = bd_dqu1.combineBond(bd_dqu2);
+    Bond bd_dqu4 = Bond(6, BD_BRA,{{0,1},{2,2},{3,4},{-2,-4},{-1,-2},{3,4}});
     cout << bd_dqu1 << endl;
    cout << bd_dqu2 << endl;
     cout << bd_dqu3 << endl; 
+    cout << bd_dqu4.getDegeneracy({3,4}) << endl;
+    vector<vector<cytnx_int64> > comm24 = vec2d_intersect(bd_dqu2.qnums(),bd_dqu4.qnums(),false,false);
+    for(cytnx_uint64 i=0;i<comm24.size();i++){
+        cout << comm24[i] << endl;
+    } 
+    return 0;
      
     Bond bd_1 = Bond(3);
     Bond bd_2 = Bond(5);

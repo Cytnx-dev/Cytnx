@@ -72,6 +72,10 @@ namespace cytnx{
             // return a sorted qnums by removing all duplicates.
             std::vector<std::vector<cytnx_int64> > getUniqueQnums(std::vector<cytnx_uint64> &counts, const bool &return_counts);
 
+            // return the degeneracy of the specify qnum set.
+            cytnx_uint64 getDegeneracy(const std::vector<cytnx_int64> &qnum, const bool &return_indices,std::vector<cytnx_uint64> &indices);
+
+
 
     };//Bond_impl
     ///@endcond
@@ -312,6 +316,22 @@ namespace cytnx{
                 return this->_impl->getUniqueQnums(tmp,false);
             }
             
+            /**
+            @brief return the degeneracy of specify qnum set.
+            @return degeneracy
+            
+            ## [Note]
+                if the bond has no symmetries, return 0. 
+
+            */
+            cytnx_uint64 getDegeneracy(const std::vector<cytnx_int64>& qnum) const{
+                std::vector<cytnx_uint64> tmp;
+                return this->_impl->getDegeneracy(qnum,false,tmp);            
+            } 
+            cytnx_uint64 getDegeneracy(const std::vector<cytnx_int64>& qnum, std::vector<cytnx_uint64> &indices) const{
+                indices.clear();
+                return this->_impl->getDegeneracy(qnum,true,indices);
+            }
             bool operator==(const Bond &rhs) const;
             bool operator!=(const Bond &rhs) const;
    
