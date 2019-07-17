@@ -1,5 +1,6 @@
 #include "UniTensor.hpp"
 #include "Tensor.hpp"
+#include "linalg/linalg.hpp"
 #include <string>
 
 namespace cytnx{

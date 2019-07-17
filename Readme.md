@@ -202,28 +202,28 @@
 
 ## Avaliable linear-algebra function (Keep updating):
 
-      func        |   inplace | CPU | GPU  | callby tn 
-    --------------|-----------|-----|------|-----------
-      Add         |   x       |  Y  |  Y   |    Y
-      Sub         |   x       |  Y  |  Y   |    Y
-      Mul         |   x       |  Y  |  Y   |    Y
-      Div         |   x       |  Y  |  Y   |    Y
-      Cpr         |   x       |  Y  |  Y   |    Y
-      +,+=[tn]    |   x       |  Y  |  Y   |    Y (Add_)
-      -,-=[tn]    |   x       |  Y  |  Y   |    Y (Sub_)
-      *,*=[tn]    |   x       |  Y  |  Y   |    Y (Mul_)
-      /,/=[tn]    |   x       |  Y  |  Y   |    Y (Div_)
-      ==[tn]      |   x       |  Y  |  Y   |    Y (Cpr_)
-      Svd         |   x       |  Y  |  Y   |    Y
-     *Svd_truncate|   x       |  Y  |  Y   |    N
-      Inv         |   Inv_    |  Y  |  Y   |    Y
-      Conj        |   Conj_   |  Y  |  Y   |    Y 
-      Exp         |   Exp_    |  Y  |  Y   |    Y
-      Eigh        |   x       |  Y  |  Y   |    Y 
-      Matmul      |   x       |  Y  |  Y   |    N
-      Diag        |   x       |  Y  |  Y   |    N
-    *Tensordot    |   x       |  Y  |  Y   |    N
-     Otimes       |   x       |  Y  |  Y   |    N
+      func        |   inplace | CPU | GPU  | callby tn   | Tn | UniTn 
+    --------------|-----------|-----|------|-------------|----|-------
+      Add         |   x       |  Y  |  Y   |    Y        | Y  |   Y
+      Sub         |   x       |  Y  |  Y   |    Y        | Y  |   Y
+      Mul         |   x       |  Y  |  Y   |    Y        | Y  |   N
+      Div         |   x       |  Y  |  Y   |    Y        | Y  |   N
+      Cpr         |   x       |  Y  |  Y   |    Y        | Y  |   N
+      +,+=[tn]    |   x       |  Y  |  Y   |    Y (Add_) | Y  |   N
+      -,-=[tn]    |   x       |  Y  |  Y   |    Y (Sub_) | Y  |   N
+      *,*=[tn]    |   x       |  Y  |  Y   |    Y (Mul_) | Y  |   N
+      /,/=[tn]    |   x       |  Y  |  Y   |    Y (Div_) | Y  |   N
+      ==[tn]      |   x       |  Y  |  Y   |    Y (Cpr_) | Y  |   N 
+      Svd         |   x       |  Y  |  Y   |    Y        | Y  |   N
+     *Svd_truncate|   x       |  Y  |  Y   |    N        | Y  |   N
+      Inv         |   Inv_    |  Y  |  Y   |    Y        | Y  |   N
+      Conj        |   Conj_   |  Y  |  Y   |    Y        | Y  |   N
+      Exp         |   Exp_    |  Y  |  Y   |    Y        | Y  |   N
+      Eigh        |   x       |  Y  |  Y   |    Y        | Y  |   N
+      Matmul      |   x       |  Y  |  Y   |    N        | Y  |   N
+      Diag        |   x       |  Y  |  Y   |    N        | Y  |   N
+    *Tensordot    |   x       |  Y  |  Y   |    N        | Y  |   N
+     Otimes       |   x       |  Y  |  Y   |    N        | Y  |   N
  
     * this is a high level linalg 
  

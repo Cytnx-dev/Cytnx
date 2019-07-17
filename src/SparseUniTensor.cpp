@@ -296,7 +296,7 @@ namespace cytnx{
 
             //update comm-meta:
             tmp->_contiguous = true;
-            tmp->_mapper = utils_internal::Range_cpu(this->_bond.size());
+            tmp->_mapper = utils_internal::range_cpu(cytnx_uint64(this->_bonds.size()));
             tmp->_inv_mapper = tmp->_mapper;
 
 

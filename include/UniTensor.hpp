@@ -10,7 +10,6 @@
 #include "intrusive_ptr_base.hpp"
 #include "utils/utils_internal_interface.hpp"
 #include "utils/utils.hpp"
-#include "linalg/linalg.hpp"
 #include <iostream>
 #include <vector>
 #include <map>
@@ -284,11 +283,7 @@ namespace cytnx{
                 return out;
             }
             boost::intrusive_ptr<UniTensor_base> to_dense();
-            void to_dense_(){
-                cytnx_error_msg(!(this->_is_diag),"[ERROR] to_dense_ can only operate on UniTensor with is_diag = True.%s","\n");
-                this->_block = cytnx::linalg::Diag(this->_block);
-                this->_is_diag = false;
-            }
+            void to_dense_();
 
             void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back=true, const bool &by_label=true);
             boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs);
@@ -426,18 +421,7 @@ namespace cytnx{
             void contiguous_(){
                 cytnx_error_msg(true,"[Developing]%s","\n");
             };
-            boost::intrusive_ptr<UniTensor_base> contiguous(){
-                cytnx_error_msg(true,"[Developing]%s","\n");
-                if(this->is_contiguous){
-                    boost::intrusive_ptr<UniTensor_base> out(this);
-                    return out;
-                }else{
-                    SparseUniTensor* tmp = this->clone();
-                    
-                    boost::intrusive_ptr<UniTensor_base> out(tmp);
-                    return out;
-                }
-            };            
+            boost::intrusive_ptr<UniTensor_base> contiguous();
             void print_diagram(const bool &bond_info=false);
             Tensor get_block(const cytnx_uint64 &idx=0) const{
                 cytnx_error_msg(true,"[Developing]%s","\n");

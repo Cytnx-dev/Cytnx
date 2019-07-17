@@ -367,6 +367,11 @@ namespace cytnx{
         boost::intrusive_ptr<UniTensor_base> out(tmp);
         return out;
     }
+    void DenseUniTensor::to_dense_(){
+                cytnx_error_msg(!(this->_is_diag),"[ERROR] to_dense_ can only operate on UniTensor with is_diag = True.%s","\n");
+                this->_block = cytnx::linalg::Diag(this->_block);
+                this->_is_diag = false;
+    }
 
     boost::intrusive_ptr<UniTensor_base> DenseUniTensor::contract(const boost::intrusive_ptr<UniTensor_base> &rhs){
         //checking :
