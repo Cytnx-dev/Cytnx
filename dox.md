@@ -126,33 +126,34 @@
 ```
 
 ## compile
-    * compile: 
+    1.) Set the flags to config the install inside make.inc
+        There are 4 important flags: ICPC_Enable, OMP_Enable, GPU_Enable, MKL_Enable  
+        * a. The default compiler is g++-6. Change "GCC" for the compiler on your system.
+            
+            To use intel icpc compiler instead of default compiler, set "ICPC_Enable"=1.
 
-        $make -Bj4
+            [Note] You can only choose either icpc or gcc. 
+                * In the case where ICPC_Enable=1, GCC will be ignore. 
+                * In the case where ICPC_Enable=1, set "ICPC" to the path of your icpc binary.
+                * In the case where ICPC_Enable=0, "ICPC" will be ignored. 
+                  
+        * b. To enable the GPU support, set "GPU_Enable" =1, otherwise =0.  
 
-    * turn on DEBUG mode:
+            [Note] 
+                * if GPU_Enable=1, the "CUDA_PATH" should be set to the cuda directory on your system.
+                * if GPU_Enable=0, the "CUDA_PATH" will be ignored. 
+
+        * c. To enable the acceleration using OpenMP, set "OMP_Enable" =1, otherwise =0.
+        * d. The default linalg library are using LAPACK and BLAS. To use intel MKL instead, set "MKL_enable" =1.
         
-        $make -Bj4 DEBUG_Enable=1
-
-    * turn on OpenMp accelerate
+    2.) compile by running:
         
-        $make -Bj4 OMP_Enable=1 
+        $make -Bj
 
-    * turn on GPU accelerate
+    3.) [Option] compile the python API
         
-        $make -Bj4 GPU_Enable=1
+        $make pyobj
 
-    * turn on GPU+OpenMp accelerate
-        
-        $make -Bj4 GPU_Enable=1 OMP_Enable=1
-
-    * compile python wrapper
-        
-        $make pyobj -Bj4 <args>
-
-    <args> can be OMP_Enable, GPU_Enable, DEBUG_Enable, MKL_Enable.
-
-    Note: if MKL_Enable=1, will enforce using icpc as compiler.
    
 ## Some snippets:
 

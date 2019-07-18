@@ -128,6 +128,18 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a1fd655bfe0845839502b6e385d743078"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Bond.html#a1fd655bfe0845839502b6e385d743078">combineBonds_</a> (const std::vector&lt; <a class="el" href="classcytnx_1_1Bond.html">Bond</a> &gt; &amp;bds)</td></tr>
 <tr class="memdesc:a1fd655bfe0845839502b6e385d743078"><td class="mdescLeft">&#160;</td><td class="mdescRight">combine multiple input bonds with self, inplacely  <a href="#a1fd655bfe0845839502b6e385d743078">More...</a><br /></td></tr>
 <tr class="separator:a1fd655bfe0845839502b6e385d743078"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a863dc35428fbf86ea7ac8674c8a18517"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Bond.html#a863dc35428fbf86ea7ac8674c8a18517">getUniqueQnums</a> (std::vector&lt; cytnx_uint64 &gt; &amp;counts)</td></tr>
+<tr class="memdesc:a863dc35428fbf86ea7ac8674c8a18517"><td class="mdescLeft">&#160;</td><td class="mdescRight">return a sorted qnum sets by removing all the duplicate qnum sets.  <a href="#a863dc35428fbf86ea7ac8674c8a18517">More...</a><br /></td></tr>
+<tr class="separator:a863dc35428fbf86ea7ac8674c8a18517"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb1358f27ec9d746056af2ac439a5d9a"><td class="memItemLeft" align="right" valign="top"><a id="afb1358f27ec9d746056af2ac439a5d9a"></a>
+std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getUniqueQnums</b> ()</td></tr>
+<tr class="separator:afb1358f27ec9d746056af2ac439a5d9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a121d5fb24f782cf66889771146af5da8"><td class="memItemLeft" align="right" valign="top">cytnx_uint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Bond.html#a121d5fb24f782cf66889771146af5da8">getDegeneracy</a> (const std::vector&lt; cytnx_int64 &gt; &amp;qnum) const</td></tr>
+<tr class="memdesc:a121d5fb24f782cf66889771146af5da8"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the degeneracy of specify qnum set.  <a href="#a121d5fb24f782cf66889771146af5da8">More...</a><br /></td></tr>
+<tr class="separator:a121d5fb24f782cf66889771146af5da8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d714304116d09bd23e6f05d05aaf7dd"><td class="memItemLeft" align="right" valign="top"><a id="a8d714304116d09bd23e6f05d05aaf7dd"></a>
+cytnx_uint64&#160;</td><td class="memItemRight" valign="bottom"><b>getDegeneracy</b> (const std::vector&lt; cytnx_int64 &gt; &amp;qnum, std::vector&lt; cytnx_uint64 &gt; &amp;indices) const</td></tr>
+<tr class="separator:a8d714304116d09bd23e6f05d05aaf7dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afdf23503375937b9fc5fb892685fe056"><td class="memItemLeft" align="right" valign="top"><a id="afdf23503375937b9fc5fb892685fe056"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classcytnx_1_1Bond.html">Bond</a> &amp;rhs) const</td></tr>
 <tr class="separator:afdf23503375937b9fc5fb892685fe056"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -587,6 +599,66 @@ Dim = 60 |type: &lt;BRA
 
 <p>return the dimension of the bond </p>
 <dl class="section return"><dt>Returns</dt><dd>[cytnx_uint64] </dd></dl>
+
+</div>
+</div>
+<a id="a121d5fb24f782cf66889771146af5da8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a121d5fb24f782cf66889771146af5da8">&#9670;&nbsp;</a></span>getDegeneracy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cytnx_uint64 cytnx::Bond::getDegeneracy </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; cytnx_int64 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>qnum</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>return the degeneracy of specify qnum set. </p>
+<dl class="section return"><dt>Returns</dt><dd>degeneracy</dd></dl>
+<h2>[Note]</h2>
+<p>if the bond has no symmetries, return 0. </p>
+
+</div>
+</div>
+<a id="a863dc35428fbf86ea7ac8674c8a18517"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a863dc35428fbf86ea7ac8674c8a18517">&#9670;&nbsp;</a></span>getUniqueQnums()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::vector&lt;cytnx_int64&gt; &gt; cytnx::Bond::getUniqueQnums </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; cytnx_uint64 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>counts</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>return a sorted qnum sets by removing all the duplicate qnum sets. </p>
+<dl class="section return"><dt>Returns</dt><dd>unique_qnums </dd></dl>
 
 </div>
 </div>

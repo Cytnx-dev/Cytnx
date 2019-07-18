@@ -55,29 +55,35 @@
     sudo apt-get install libboost-all-dev libblas-dev liblapack-dev make curl g++-6 libomp-dev 
 
 
-## compile
-    * compile
-    $make -Bj4
+## Install 
+    1.) Set the flags to config the install inside make.inc
+        There are 4 important flags: ICPC_Enable, OMP_Enable, GPU_Enable, MKL_Enable  
+        * a. The default compiler is g++-6. Change "GCC" for the compiler on your system.
+            
+            To use intel icpc compiler instead of default compiler, set "ICPC_Enable"=1.
 
-    * turn on DEBUG mode:
-    $make -Bj4 DEBUG_Enable=1
+            [Note] You can only choose either icpc or gcc. 
+                * In the case where ICPC_Enable=1, GCC will be ignore. 
+                * In the case where ICPC_Enable=1, set "ICPC" to the path of your icpc binary.
+                * In the case where ICPC_Enable=0, "ICPC" will be ignored. 
+                  
+        * b. To enable the GPU support, set "GPU_Enable" =1, otherwise =0.  
 
-    * turn on OpenMp accelerate
-    $make -Bj4 OMP_Enable=1 
+            [Note] 
+                * if GPU_Enable=1, the "CUDA_PATH" should be set to the cuda directory on your system.
+                * if GPU_Enable=0, the "CUDA_PATH" will be ignored. 
 
-    * turn on GPU accelerate
-    $make -Bj4 GPU_Enable=1
+        * c. To enable the acceleration using OpenMP, set "OMP_Enable" =1, otherwise =0.
+        * d. The default linalg library are using LAPACK and BLAS. To use intel MKL instead, set "MKL_enable" =1.
+        
+    2.) compile by running:
+        
+        $make -Bj
 
-    * turn on GPU+OpenMp accelerate
-    $make -Bj4 GPU_Enable=1 OMP_Enable=1
+    3.) [Option] compile the python API
+        
+        $make pyobj
 
-    * compile python wrapper
-    $make pyobj -Bj4 <args>
-
-    <args> can be OMP_Enable, GPU_Enable, DEBUG_Enable, MKL_Enable.
-
-    Note: if MKL_Enable=1, will enforce using icpc as compiler.
-   
 
 ## Objects:
     * Storage   [binded]
