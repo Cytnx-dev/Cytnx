@@ -32,6 +32,7 @@ std::string cytnx::Type_class::getname(const unsigned int &type_id){
             return string("Bool");
         default:
             cytnx_error_msg(1,"%s","[ERROR] invalid type");
+            return string("");
     }
 
 }
@@ -62,6 +63,7 @@ unsigned int cytnx::Type_class::c_typename_to_id(const std::string &c_name){
         return this->Bool;
     }else{
         cytnx_error_msg(1,"%s","[ERROR] invalid type");
+        return 0;
     }
 
 }

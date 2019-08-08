@@ -14,6 +14,7 @@ namespace cytnx{
             return string("Fermion");
         }else{
             cytnx_error_msg(true,"%s","[ERROR] invalid nwrktype_id");
+            return string("");
         }
         // extend more in here!!
     }

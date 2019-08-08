@@ -289,6 +289,7 @@ namespace cytnx{
             boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs);
             std::vector<Bond> getTotalQnums(const bool &physical=false){
                 cytnx_error_msg(true,"[ERROR][DenseUniTensor] %s","getTotalQnums can only operate on UniTensor with symmetry.\n");
+                return std::vector<Bond>();
             }        
             ~DenseUniTensor(){};
             // end virtual function              
@@ -425,9 +426,11 @@ namespace cytnx{
             void print_diagram(const bool &bond_info=false);
             Tensor get_block(const cytnx_uint64 &idx=0) const{
                 cytnx_error_msg(true,"[Developing]%s","\n");
+                return Tensor();
             };
             Tensor get_block(const std::vector<cytnx_int64> &qnum) const{
                 cytnx_error_msg(true,"[Developing]%s","\n");
+                return Tensor();
             };
             // return a share view of block, this only work for symm tensor in contiguous form.
             Tensor get_block_(const cytnx_uint64 &idx=0) const{
@@ -439,6 +442,7 @@ namespace cytnx{
             }
             std::vector<Tensor> get_blocks() const {
                 cytnx_error_msg(true,"[Developing]%s","\n");
+                return std::vector<Tensor>();
             };
             void put_block(const Tensor &in,const cytnx_uint64 &idx=0){
                 cytnx_error_msg(true,"[Developing]%s","\n");
@@ -449,7 +453,7 @@ namespace cytnx{
             // this will only work on non-symm tensor (DenseUniTensor)
             boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors){
                 cytnx_error_msg(true,"[ERROR][SparseUniTensor][get] cannot use get on a UniTensor with Symmetry.\n suggestion: try get_block()/get_blocks() first.%s","\n");
-                  
+                return nullptr;  
             }
             // this will only work on non-symm tensor (DenseUniTensor)
             void set(const std::vector<Accessor> &accessors, const Tensor &rhs){
@@ -460,9 +464,11 @@ namespace cytnx{
             }
             boost::intrusive_ptr<UniTensor_base> reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank=0){
                 cytnx_error_msg(true,"[ERROR] cannot reshape a UniTensor with symmetry.%s","\n");
+                return nullptr;
             }
             boost::intrusive_ptr<UniTensor_base> to_dense(){
                 cytnx_error_msg(true,"[ERROR] cannot to_dense a UniTensor with symmetry.%s","\n");
+                return nullptr;
             }
             void to_dense_(){
                 cytnx_error_msg(true,"[ERROR] cannot to_dense_ a UniTensor with symmetry.%s","\n");
@@ -472,6 +478,7 @@ namespace cytnx{
             };
             boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs){
                 cytnx_error_msg(true,"[Developing]%s","\n");
+                return nullptr;
             };
             std::vector<Bond> getTotalQnums(const bool &physical=false);
             ~SparseUniTensor(){};

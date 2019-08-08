@@ -35,11 +35,13 @@ string Device_class::getname(const int &device_id){
     }else if(device_id>=0){
         if(device_id >= Ngpus){
             cytnx_error_msg(true,"%s","[ERROR] invalid device_id, gpuid exceed limit");
+            return string("");
         }else{
             return string("cytnx device: CUDA/GPU-id:") + to_string(device_id);
         }
     }else{
         cytnx_error_msg(true,"%s","[ERROR] invalid device_id");
+        return string("");
     }
 
 }

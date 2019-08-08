@@ -83,6 +83,7 @@ namespace cytnx{
                 return utils_internal::cuMovemem_gpu_cf(tmp,old_shape,mapper,invmapper,0); 
             #else
                 cytnx_error_msg(1,"%s","[ERROR][Internal] try to call GPU section without CUDA support");
+                return nullptr;
             #endif
         }
 
@@ -148,6 +149,7 @@ namespace cytnx{
                     return out;
                 #else
                     cytnx_error_msg(1,"%s","[ERROR] try to move from cpu(Host) to gpu without CUDA support."); 
+                    return nullptr;
                 #endif
             }else{
                 #ifdef UNI_GPU
@@ -171,6 +173,7 @@ namespace cytnx{
                     }
                 #else
                     cytnx_error_msg(1,"%s","[ERROR][Internal] Storage.to_. the Storage is as GPU but without CUDA support.");
+                    return nullptr;
                 #endif
             }
 

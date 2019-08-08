@@ -39,6 +39,7 @@ namespace cytnx{
         this->max  = rhs.max;
         this->loc  = rhs.loc;
         this->step = rhs.step;
+        return *this;
     }
 
     // get the real len from dim

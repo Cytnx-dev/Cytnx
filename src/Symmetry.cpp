@@ -23,6 +23,7 @@ namespace cytnx{
             return string("Z");
         }else{
             cytnx_error_msg(true,"%s","[ERROR] invalid stype_id");
+            return string("");
         }
         // extend more in here!!
     }
@@ -44,9 +45,11 @@ namespace cytnx{
 
     bool cytnx::Symmetry_base::check_qnum(const cytnx_int64 &qnum){
         cytnx_error_msg(1,"%s","[ERROR][Internal] should not call Symmerty base!");
+        return false;
     }
     bool cytnx::Symmetry_base::check_qnums(const std::vector<cytnx_int64> &qnums){
-        cytnx_error_msg(1,"%s","[ERROR][Internal] should not call Symmerty base!");
+        cytnx_error_msg(1,"%s","[ERROR][Internal] should not call Symmerty base!"); 
+        return false;
     }
     void cytnx::Symmetry_base::combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR){
         cytnx_error_msg(1,"%s","[ERROR][Internal] should not call Symmerty base!");

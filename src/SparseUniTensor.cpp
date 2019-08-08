@@ -111,7 +111,7 @@ namespace cytnx{
         
         if(physical){
             cytnx_error_msg(true,"[Developing!]%s","\n");
-    
+            return vector<Bond>();
         }else{
             vector<Bond> cb_inbonds = vec_clone(this->_bonds,this->_Rowrank);
             cytnx_uint64 N_sym;

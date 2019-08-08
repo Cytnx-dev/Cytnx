@@ -49,6 +49,7 @@ namespace cytnx{
                     return out;
                 #else
                     cytnx_error_msg(true,"[Eigh] fatal error,%s","try to call the gpu section without CUDA support.\n");
+                    return std::vector<Tensor>();
                 #endif
             }    
 

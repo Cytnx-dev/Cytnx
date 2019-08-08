@@ -62,6 +62,7 @@ namespace cytnx{
                     return out;
                 #else
                     cytnx_error_msg(true,"[Matmul] fatal error,%s","try to call the gpu section without CUDA support.\n");
+                    return Tensor();                                         
                 #endif
             }    
 

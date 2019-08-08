@@ -116,6 +116,7 @@ namespace cytnx{
 
     boost::intrusive_ptr<Storage_base> Storage_base::_create_new_sametype(){
         cytnx_error_msg(1,"%s","[ERROR] call _create_new_sametype in base");
+        return nullptr;
     }
 
     boost::intrusive_ptr<Storage_base> Storage_base::clone(){
@@ -155,6 +156,7 @@ namespace cytnx{
 
     boost::intrusive_ptr<Storage_base> Storage_base::Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper){
         cytnx_error_msg(1,"%s","[ERROR] call Move_memory_ directly on Void Storage.");
+        return nullptr;
     }
 
     void Storage_base::to_(const int &device){
@@ -163,6 +165,7 @@ namespace cytnx{
 
     boost::intrusive_ptr<Storage_base> Storage_base::to(const int &device){
         cytnx_error_msg(1,"%s","[ERROR] call to directly on Void Storage.");
+        return nullptr;
     }
 
 

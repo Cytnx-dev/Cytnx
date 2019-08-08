@@ -22,9 +22,11 @@ namespace cytnx{
     }
     UniTensor Network_base::Launch(){
         cytnx_error_msg(true,"[ERROR][Network][Launch] call from uninitialize network.%s","\n");
+        return UniTensor();
     }
     boost::intrusive_ptr<Network_base> Network_base::clone(){
         cytnx_error_msg(true,"[ERROR][Network][clone] call from uninitialize network. %s","\n");
+        return nullptr;
     }
 
 }//namespace cytnx

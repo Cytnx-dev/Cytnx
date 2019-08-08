@@ -497,6 +497,7 @@ namespace cytnx{
         //===============
         UniTensor Sub(const UniTensor &Lt, const UniTensor &Rt){
             cytnx_error_msg(true,"[Sub][Developing]%s","\n");
+            return UniTensor();
         }
         
         template<class T>

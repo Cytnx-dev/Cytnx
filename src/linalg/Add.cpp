@@ -325,6 +325,7 @@ namespace cytnx{
 
         UniTensor Add(const UniTensor &Lt, const UniTensor &Rt){
             cytnx_error_msg(true,"[Developing!]%s","\n");
+            return UniTensor();
         }
 
         //-----------------------------------------------------------------------------------

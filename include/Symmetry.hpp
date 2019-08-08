@@ -44,7 +44,7 @@ namespace cytnx{
             cytnx_int64 combine_rule( const cytnx_int64 &inL, const cytnx_int64 &inR);
 
             virtual void Init(const int &n){};
-            virtual boost::intrusive_ptr<Symmetry_base> clone(){};
+            virtual boost::intrusive_ptr<Symmetry_base> clone(){return nullptr;};
             virtual bool check_qnum(const cytnx_int64 &in_qnum); // check the passed in qnums satisfy the symmetry requirement.
             virtual bool check_qnums(const std::vector<cytnx_int64> &in_qnums); 
             virtual void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR);
