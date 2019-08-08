@@ -505,7 +505,7 @@ namespace cytnx{
             if(out.is_blockform()){
                 cytnx_error_msg(true,"[Developing][Sub][SparseUniTensor]%s","\n");
             }else{
-                out.get_block_() = lc - out.get_block_();
+                out.get_block_() = Sub(lc , out.get_block_());
             }
             return out;
         }
@@ -528,7 +528,7 @@ namespace cytnx{
             if(out.is_blockform()){
                 cytnx_error_msg(true,"[Developing][Sub][SparseUniTensor]%s","\n");
             }else{
-                out.get_block_() = out.get_block_() - rc;
+                out.get_block_() = Sub(out.get_block_() , rc);
             }
             return out;
         }

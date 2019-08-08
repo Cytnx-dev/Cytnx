@@ -1,5 +1,5 @@
 #ifndef __H_cartesian_
-#define __H_cartesian__
+#define __H_cartesian_
 
 #include <vector>
 #include "Type.hpp"

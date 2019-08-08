@@ -336,7 +336,7 @@ namespace cytnx{
                 //developing
                 cytnx_error_msg(true,"[Developing][Add][SparseUniTensor]%s","\n");
             }else{
-                out.get_block_() = lc + out.get_block_();
+                out.get_block_() = Add(lc , out.get_block_());
             }
             return out;
         }

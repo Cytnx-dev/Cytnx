@@ -278,6 +278,7 @@ namespace cytnx{
             }
             Tensor& operator=(const Tensor &rhs){
                 _impl = rhs._impl;
+                return *this;
             }
             ///@endcond
 

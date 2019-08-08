@@ -30,10 +30,8 @@ int main(int argc, char *argv[]){
     cout << is(s,s2) << is(s,s3) << endl;
     cout << (s==s2) << (s==s3) << endl;
     
-
     Tensor x;
     x  = zeros({3,4,5},Type.Double,Device.cpu);
-    
     //Tensor x = zeros({3,4,5});
     cout << x << endl; 
     x.fill(5.);
