@@ -10,7 +10,7 @@ from cytnx import linalg
 # testing infrastructure--------
 a = cytnx.Storage(10,cytnx.Type.Double);
 bbb = a.to(cytnx.Device.cpu)
-ccc = a.to(cytnx.Device.cuda+0)
+#ccc = a.to(cytnx.Device.cuda+0)
 
 print(a[3])
 print(a.dtype)
@@ -113,8 +113,7 @@ bd_in = cytnx.Bond(10,cytnx.bondType.BD_BRA);
 print(bd_in)
 
 bd_sym = cytnx.Bond(3,cytnx.bondType.BD_KET,\
-                        [[0,1,1],\
-                         [2,2,3]],\
+                        [[0,2],[1,2],[1,3]],\
                         [cytnx.Symmetry.Zn(2),\
                          cytnx.Symmetry.U1()])
 print(bd_sym)

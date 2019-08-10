@@ -119,7 +119,7 @@ libcytnx.so: $(ALLOBJS)
 	$(CC) -shared -o $@ $^ $(CCFLAGS) $(LDFLAGS)
 
 pyobj: $(ALLOBJS)
-	$(CC) $(INCFLAGS) $(CCFLAGS) $(shell python3 -m pybind11 --includes)  pybind/cytnx.cpp $^ $(LDFLAGS) -shared -o cytnx/cytnx$(shell python3-config --extension-suffix)
+	$(CC) $(INCFLAGS) $(CCFLAGS) -undefined dynamic_lookup $(shell python3 -m pybind11 --includes)  pybind/cytnx.cpp $^ $(LDFLAGS) -shared -o cytnx/cytnx$(shell python3-config --extension-suffix)
 
 
 docs : 
