@@ -59,6 +59,13 @@ namespace cytnx{
         template<class T>
         Tensor Mul(const Tensor &Lt, const T &rc);
 
+        UniTensor Mul(const UniTensor &Lt, const UniTensor &Rt);
+        template<class T>
+        UniTensor Mul(const T &lc,const UniTensor &Rt);
+        template<class T>
+        UniTensor Mul(const UniTensor &Lt,const T &rc);
+
+
         // Div:
         //==================================================
         /**
@@ -273,6 +280,13 @@ namespace cytnx{
     Tensor operator*(const T &lc, const Tensor &Rt);
     template<class T>
     Tensor operator*(const Tensor &Lt, const T &rc);
+
+    UniTensor operator*(const UniTensor &Lt, const UniTensor &Rt);
+    template<class T>
+    UniTensor operator*(const T &lc, const UniTensor &Rt);
+    template<class T>
+    UniTensor operator*(const UniTensor &Lt, const T &rc);
+
     //----------------------------------
     Tensor operator/(const Tensor &Lt, const Tensor &Rt);
     template<class T>

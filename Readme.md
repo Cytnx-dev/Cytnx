@@ -212,7 +212,7 @@
     --------------|-----------|-----|------|-------------|----|-------
       Add         |   x       |  Y  |  Y   |    Y        | Y  |   Y
       Sub         |   x       |  Y  |  Y   |    Y        | Y  |   Y
-      Mul         |   x       |  Y  |  Y   |    Y        | Y  |   N
+      Mul         |   x       |  Y  |  Y   |    Y        | Y  |   Y
       Div         |   x       |  Y  |  Y   |    Y        | Y  |   N
       Cpr         |   x       |  Y  |  Y   |    Y        | Y  |   N
       +,+=[tn]    |   x       |  Y  |  Y   |    Y (Add_) | Y  |   N
