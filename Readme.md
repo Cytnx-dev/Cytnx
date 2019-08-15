@@ -34,7 +34,7 @@
     * C++11
     * lapack 
     * blas 
-    * gcc v6+
+    * gcc v4.8.5+ (recommand v6+) (required -std=c++11) 
 
     [CUDA support]
     * CUDA v10+
@@ -213,13 +213,13 @@
       Add         |   x       |  Y  |  Y   |    Y        | Y  |   Y
       Sub         |   x       |  Y  |  Y   |    Y        | Y  |   Y
       Mul         |   x       |  Y  |  Y   |    Y        | Y  |   Y
-      Div         |   x       |  Y  |  Y   |    Y        | Y  |   N
-      Cpr         |   x       |  Y  |  Y   |    Y        | Y  |   N
-      +,+=[tn]    |   x       |  Y  |  Y   |    Y (Add_) | Y  |   N
-      -,-=[tn]    |   x       |  Y  |  Y   |    Y (Sub_) | Y  |   N
-      *,*=[tn]    |   x       |  Y  |  Y   |    Y (Mul_) | Y  |   N
-      /,/=[tn]    |   x       |  Y  |  Y   |    Y (Div_) | Y  |   N
-      ==[tn]      |   x       |  Y  |  Y   |    Y (Cpr_) | Y  |   N 
+      Div         |   x       |  Y  |  Y   |    Y        | Y  |   Y
+      Cpr         |   x       |  Y  |  Y   |    Y        | Y  |   x
+      +,+=[tn]    |   x       |  Y  |  Y   |    Y (Add_) | Y  |   Y
+      -,-=[tn]    |   x       |  Y  |  Y   |    Y (Sub_) | Y  |   Y
+      *,*=[tn]    |   x       |  Y  |  Y   |    Y (Mul_) | Y  |   Y
+      /,/=[tn]    |   x       |  Y  |  Y   |    Y (Div_) | Y  |   Y
+      ==[tn]      |   x       |  Y  |  Y   |    Y (Cpr_) | Y  |   x 
       Svd         |   x       |  Y  |  Y   |    Y        | Y  |   N
      *Svd_truncate|   x       |  Y  |  Y   |    N        | Y  |   N
       Inv         |   Inv_    |  Y  |  Y   |    Y        | Y  |   N

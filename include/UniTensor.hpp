@@ -117,6 +117,9 @@ namespace cytnx{
                 return UTenType.getname(this->uten_type_id);
             }
 
+            
+
+
             virtual void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1,const unsigned int &dtype=Type.Double,const int &device = Device.cpu,const bool &is_diag=false);
             virtual void Init_by_Tensor(const Tensor& in, const cytnx_uint64 &Rowrank);
             virtual std::vector<cytnx_uint64> shape() const;
@@ -731,9 +734,56 @@ namespace cytnx{
                 return this->_impl->getTotalQnums(physical);
             }
 
-            
+                        
+            //Arithmetic:
+            template<class T>
+            UniTensor& operator+=(const T &rc);
+            template<class T>
+            UniTensor& operator-=(const T &rc);
+            template<class T>
+            UniTensor& operator*=(const T &rc);
+            template<class T>
+            UniTensor& operator/=(const T &rc);
 
-    };
+            template<class T>
+            UniTensor Add(const T &rhs){
+                return *this + rhs;
+            }
+            template<class T>
+            UniTensor& Add_(const T &rhs){
+                return *this += rhs;
+            }
+
+            template<class T>
+            UniTensor Sub(const T &rhs){
+                return *this - rhs;
+            }
+            template<class T>
+            UniTensor& Sub_(const T &rhs){
+                return *this -= rhs;
+            }
+
+            template<class T>
+            UniTensor Mul(const T &rhs){
+                return *this * rhs;
+            }
+            template<class T>
+            UniTensor& Mul_(const T &rhs){
+                return *this *= rhs;
+            }
+
+            template<class T>
+            UniTensor Div(const T &rhs){
+                return *this / rhs;
+            }
+            template<class T>
+            UniTensor& Div_(const T &rhs){
+                return *this /= rhs;
+            }
+
+
+
+    };//class UniTensor
 
     ///@cond
     std::ostream& operator<<(std::ostream& os, const UniTensor &in);

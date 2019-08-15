@@ -95,7 +95,7 @@
     * C++11
     * lapack 
     * blas 
-    * gcc v6+
+    * gcc v4.8.5+ (recommand v6+) (required -std=c++11)
 
     [CUDA support]
     * CUDA v10+

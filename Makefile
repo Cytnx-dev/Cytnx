@@ -73,7 +73,7 @@ endif
 OBJS = Storage_base.o BoolStorage.o Uint16Storage.o Int16Storage.o Uint32Storage.o Int32Storage.o Uint64Storage.o Int64Storage.o FloatStorage.o DoubleStorage.o ComplexFloatStorage.o ComplexDoubleStorage.o Type.o Device.o
 
 
-OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o Storage.o Bond.o Tensor.o Symmetry.o Accessor.o Generator.o UniTensor_base.o DenseUniTensor.o SparseUniTensor.o contraction_tree.o
+OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o Storage.o Bond.o Tensor.o Symmetry.o Accessor.o Generator.o UniTensor_base.o DenseUniTensor.o SparseUniTensor.o UniTensor.o contraction_tree.o
 
 
 
@@ -149,6 +149,10 @@ Accessor.o: $(CytnxPATH)/src/Accessor.cpp $(CytnxPATH)/include/Accessor.hpp
 
 Generator.o: $(CytnxPATH)/src/Generator.cpp $(CytnxPATH)/include/Generator.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+
+UniTensor.o: $(CytnxPATH)/src/UniTensor.cpp $(CytnxPATH)/include/UniTensor.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+
 
 UniTensor_base.o: $(CytnxPATH)/src/UniTensor_base.cpp $(CytnxPATH)/include/UniTensor.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
