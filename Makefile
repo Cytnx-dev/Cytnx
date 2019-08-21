@@ -14,6 +14,15 @@ $(error $(CONFIG_FILE) not found.)
 endif
 include $(CONFIG_FILE)
 
+## Detecting the OS
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+  PYOBJFLAG := -undefined dynamic_lookup
+else
+  PYOBJFLAG :=
+endif
+
+
 ## 
 CytnxPATH=.
 INCFLAGS :=-I$(CytnxPATH)/include
@@ -119,7 +128,7 @@ libcytnx.so: $(ALLOBJS)
 	$(CC) -shared -o $@ $^ $(CCFLAGS) $(LDFLAGS)
 
 pyobj: $(ALLOBJS)
-	$(CC) $(INCFLAGS) $(CCFLAGS) -undefined dynamic_lookup $(shell python3 -m pybind11 --includes)  pybind/cytnx.cpp $^ $(LDFLAGS) -shared -o cytnx/cytnx$(shell python3-config --extension-suffix)
+	$(CC) $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes)  pybind/cytnx.cpp $^ $(LDFLAGS) -shared -o cytnx/cytnx$(shell python3-config --extension-suffix)
 
 
 docs : 
