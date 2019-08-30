@@ -1,5 +1,5 @@
-#ifndef __complex_arithmic__H_
-#define __complex_arithmic__H_
+#ifndef __complex_arithmetic__H_
+#define __complex_arithmetic__H_
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
