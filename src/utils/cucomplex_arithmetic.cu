@@ -1,5 +1,5 @@
 #include "Type.hpp"
-#include "utils/cucomplex_arithmic.hpp"
+#include "utils/cucomplex_arithmetic.hpp"
 namespace cytnx{
 
 #ifdef UNI_GPU
