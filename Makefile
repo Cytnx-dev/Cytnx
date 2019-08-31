@@ -88,16 +88,16 @@ OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o Storage.o Bon
 
 ## Utils
 OBJS += utils_internal_interface.o
-OBJS += utils.o Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmic.o is.o vec_intersect.o vec_concatenate.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_cpu.o SetElems_cpu.o cartesian.o str_utils.o
+OBJS += utils.o Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o complex_arithmetic.o is.o vec_intersect.o vec_concatenate.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_cpu.o SetElems_cpu.o cartesian.o str_utils.o
 ifeq ($(GPU_Enable),1)
-  OBJS += cucomplex_arithmic.o cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o cuFill_gpu.o cuSetArange_gpu.o cuGetElems_gpu.o  cuSetElems_gpu.o
+  OBJS += cucomplex_arithmetic.o cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o cuFill_gpu.o cuSetArange_gpu.o cuGetElems_gpu.o  cuSetElems_gpu.o
 endif
 
 ## Linalg_internal
 OBJS += linalg_internal_interface.o
-OBJS += Cpr_internal.o Add_internal.o Sub_internal.o Mul_internal.o Div_internal.o Arithmic_internal.o Svd_internal.o Inv_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_internal.o Diag_internal.o Outer_internal.o 
+OBJS += Cpr_internal.o Add_internal.o Sub_internal.o Mul_internal.o Div_internal.o Arithmetic_internal.o Svd_internal.o Inv_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_internal.o Diag_internal.o Outer_internal.o 
 ifeq ($(GPU_Enable),1)
-  OBJS += cuCpr_internal.o cuAdd_internal.o cuSub_internal.o cuMul_internal.o cuDiv_internal.o cuArithmic_internal.o cuSvd_internal.o cuInv_inplace_internal.o cuConj_inplace_internal.o cuExp_internal.o  cuEigh_internal.o cuMatmul_internal.o cuDiag_internal.o cuOuter_internal.o
+  OBJS += cuCpr_internal.o cuAdd_internal.o cuSub_internal.o cuMul_internal.o cuDiv_internal.o cuArithmetic_internal.o cuSvd_internal.o cuInv_inplace_internal.o cuConj_inplace_internal.o cuExp_internal.o  cuEigh_internal.o cuMatmul_internal.o cuDiag_internal.o cuOuter_internal.o
 
 endif
 
@@ -220,7 +220,7 @@ FermionNetwork.o: $(CytnxPATH)/src/FermionNetwork.cpp $(CytnxPATH)/include/Netwo
 linalg_internal_interface.o : $(CytnxPATH)/src/linalg/linalg_internal_interface.cpp $(CytnxPATH)/include/linalg/linalg_internal_interface.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 
-Arithmic_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Arithmic_internal.cpp $(CytnxPATH)/include/linalg/linalg_internal_cpu/Arithmic_internal.hpp
+Arithmetic_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Arithmetic_internal.cpp $(CytnxPATH)/include/linalg/linalg_internal_cpu/Arithmetic_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 
 Cpr_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Cpr_internal.cpp $(CytnxPATH)/include/linalg/linalg_internal_cpu/Cpr_internal.hpp
@@ -265,7 +265,7 @@ Outer_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Outer_internal.c
 
 ifeq ($(GPU_Enable),1)
 
-cuArithmic_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuArithmic_internal.cu $(CytnxPATH)/include/linalg/linalg_internal_gpu/cuArithmic_internal.hpp
+cuArithmetic_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuArithmetic_internal.cu $(CytnxPATH)/include/linalg/linalg_internal_gpu/cuArithmetic_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
 cuCpr_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuCpr_internal.cu $(CytnxPATH)/include/linalg/linalg_internal_gpu/cuCpr_internal.hpp
@@ -357,7 +357,7 @@ Fill_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/Fill_cpu.cpp $(CytnxPATH)/
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 
-complex_arithmic.o: $(CytnxPATH)/src/utils/complex_arithmic.cpp $(CytnxPATH)/include/utils/complex_arithmic.hpp
+complex_arithmetic.o: $(CytnxPATH)/src/utils/complex_arithmetic.cpp $(CytnxPATH)/include/utils/complex_arithmetic.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 is.o: $(CytnxPATH)/src/utils/is.cpp $(CytnxPATH)/include/utils/is.hpp
@@ -383,7 +383,7 @@ str_utils.o: $(CytnxPATH)/src/utils/str_utils.cpp $(CytnxPATH)/include/utils/str
 
 
 ifeq ($(GPU_Enable),1)
-cucomplex_arithmic.o: $(CytnxPATH)/src/utils/cucomplex_arithmic.cu $(CytnxPATH)/include/utils/cucomplex_arithmic.hpp
+cucomplex_arithmetic.o: $(CytnxPATH)/src/utils/cucomplex_arithmetic.cu $(CytnxPATH)/include/utils/cucomplex_arithmetic.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 cuAlloc_gpu.o: $(CytnxPATH)/src/utils/utils_internal_gpu/cuAlloc_gpu.cu $(CytnxPATH)/include/utils/utils_internal_gpu/cuAlloc_gpu.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@

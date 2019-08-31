@@ -1,5 +1,5 @@
 #include "Type.hpp"
-#include "utils/complex_arithmic.hpp"
+#include "utils/complex_arithmetic.hpp"
 namespace cytnx{
 
 #ifdef UNI_ICPC
