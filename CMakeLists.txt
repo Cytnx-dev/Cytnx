@@ -33,7 +33,7 @@
 cmake_minimum_required(VERSION 3.1.3)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 
 ######################################################################
 ### DISABLING IN-SOURCE BUILD
@@ -77,14 +77,11 @@ endif()
 ######################################################################
 
 option(ICPC "Build with Intel Compilers" OFF)
-option(CUDA_SUPPORT "Build using Nvidia CUDA for GPU library" OFF)
-option(EXAMPLES "Build Example Codes" ON)
+option(CUDA "Build using Nvidia CUDA for GPU library" OFF)
 option(PYTHON "Build Python wrapper" OFF)
 option(MKL "Build using MKL" OFF)
 option(DOC "Build API docuemntation" OFF)
-option(HDF5 "Build HDF5" OFF)
 option(PACKAGES "Build Source/Binary Packages" ON)
-option(API_TESTS "Build API tests" ON)
 if (ICPC)
   message(STATUS, "Build with Intel Compilers")
   message(STATUS, "Finding Intel Compilers....")
@@ -181,31 +178,25 @@ message(STATUS ${COMPILE_DEFINITIONS})
 ###  NVCC:= $(CUDA_PATH)/bin/nvcc -ccbin $(CC)
 ### NVFLAGS:= -m64 -g
 ### SMS ?= 30
-GENCODE_FLAGS:= -arch=sm_$(SMS)
+
 if(CUDA)
   find_package(CUDA REQUIRED)
   SET(CUDA_SEPARABLE_COMPILATION ON)
-  list(APPEND CUDA_NVCC_FLAGS "-O3;-Wno-deprecated-gpu-targets")
+  list(APPEND CUDA_NVCC_FLAGS "-O3;-Wno-deprecated-gpu-targets;-m64")
   set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS}  "-DUNI_GPU")
   set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS}  "-arch=sm_35")
-  if(WIN32)
-    SET(CUDA_PROPAGATE_HOST_FLAGS ON)
-  else()
-    SET(CUDA_PROPAGATE_HOST_FLAGS OFF)
-  endif()
+
   string(REPLACE "libcusparse" "libcusolver" CUDA_cusolver_LIBRARY ${CUDA_cusparse_LIBRARY})#Workaround
   #set(CUDA_VERBOSE_BUILD true)
-  ADD_DEFINITIONS("-DUNI_GPU -DUNI_CUSOLVER")
+  ADD_DEFINITIONS("-DUNI_GPU")
   set(LNPACKAGE "cusolver")
   set(CALARCH "gpu")
 else()
-  ADD_DEFINITIONS("-DUNI_CPU -DUNI_LAPACK")
+  ADD_DEFINITIONS(" -DUNI_LAPACK")
   set(LNPACKAGE "lapack")
   set(CALARCH "cpu")
 endif()
 
-### Set architecture specific variable
-set(UNI10_ARCH "${LNPACKAGE}_${CALARCH}")
 
 # ----------------------------------------
 # Find OpenMP
@@ -216,27 +207,7 @@ if ( OPENMP_FOUND )
 endif()
 
 
-######################################################################
-### Find HDF5 Library and Include dirs
-######################################################################
-IF(BUILD_HDF5_SUPPORT)
- ADD_DEFINITIONS("-DHDF5")
- if( NOT (DEFINED HDF5_C_LIBRARIES AND DEFINED HDF5_CXX_LIBRARIES AND DEFINED HDF5_INCLUDE_DIRS))
-   find_package(HDF5 REQUIRED COMPONENTS C CXX)
-   set(HDF5_LIBs ${HDF5_C_LIBRARIES} ${HDF5_CXX_LIBRARIES})
-   set(HDF5_INCLUDE_DIRS ${HDF5_INCLUDE_DIRS})
-   find_package(ZLIB)
-   set( HDF5_LIBs ${HDF5_LIBs} ${ZLIB_LIBRARIES})
-  #  find_package(SZ)
-  #  set( HDF5_LIBs ${HDF5_LIBs} ${SZLIB_LIBRARIES})
-   #TODO: Need win32
- else()
-   set(HDF5_LIBs ${HDF5_C_LIBRARIES} ${HDF5_CXX_LIBRARIES})
-   set(HDF5_INCLUDE_DIRS ${HDF5_INCLUDE_DIRS})
-   message( STATUS "HDF5 found: ${HDF5_LIBRARIES}")
- endif()
- include_directories(${HDF5_INCLUDE_DIRS})
-ENDIF()
+
 ######################################################################
 ### FLAGS
 ######################################################################
@@ -246,11 +217,7 @@ endif()
 if(MKL_MLT)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 endif()
-if( UNIX OR MINGW OR CYGWIN)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ")
-elseif (WINDOWS)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Qstd=c++11")
-endif()
+
 
 if (MKL_MLT)
   set(CMAKE_EXE_LINKER_FLAGS "-pthread")
@@ -278,34 +245,18 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 ######################################################################
 
 add_subdirectory(src)
-if (BUILD_EXAMPLES)
-  add_subdirectory(examples)
-endif()
-if (BUILD_API_TESTS)
-if (NOT WIN32)
- add_subdirectory(gtest-1.7.0)
- add_subdirectory(uni10_api_test)
-endif()
-endif()
+
+
 ######################################################################
 ### ADD LIBRARY
 ######################################################################
-set(uni10-objects
-$<TARGET_OBJECTS:uni10-auxiliary>
-$<TARGET_OBJECTS:uni10-env_info>
-$<TARGET_OBJECTS:uni10-api>
-$<TARGET_OBJECTS:uni10-${UNI10_ARCH}>
+set(cytnx-objects
+$<TARGET_OBJECTS:cytnx>
+$<TARGET_OBJECTS:cytnx-linalg>
+$<TARGET_OBJECTS:uni10-utils>
 )
-#IF( BUILD_ARPACK_SUPPORT )
-#  set(uni10-objects ${uni10-objects}
-#  $<TARGET_OBJECTS:uni10-arpack>
-#  )
-#ENDIF()
-IF(BUILD_HDF5_SUPPORT)
- set(uni10-objects ${uni10-objects}
- $<TARGET_OBJECTS:uni10-hdf5>
- )
-ENDIF()
+
+
 IF (BUILD_CUDA_SUPPORT)
   CUDA_INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include)
   CUDA_ADD_LIBRARY(uni10 SHARED
@@ -414,7 +365,7 @@ ENDIF()
 ######################################################################
 ### INSTALL
 ######################################################################
-install(TARGETS uni10 uni10-static
+install(TARGETS cyntax cyntax-static
         LIBRARY
         DESTINATION lib
         COMPONENT libraries
@@ -432,25 +383,9 @@ install(DIRECTORY include/
 	FILES_MATCHING PATTERN 		"*.h*"
 )
 
-######################################################################
-### INSTALL LANCZOS/ARNOLDI HEADERS
-######################################################################
-install(DIRECTORY advanced/
-	DESTINATION advanced
-        COMPONENT headers
-	FILES_MATCHING PATTERN 		"*.*"
-)
 
-######################################################################
-### INSTALL EXAMPLES
-######################################################################
-if(BUILD_EXAMPLES)
-  install(DIRECTORY examples/
-	DESTINATION examples/
-	COMPONENT examples
-	PATTERN "CMakeLists*" EXCLUDE
-  )
-endif()
+
+
 ######################################################################
 ### INSTALL DOCUMENTATION
 ######################################################################
@@ -463,23 +398,13 @@ endif()
 install(FILES INSTALL API_Changes.md	ChangeLog.md	DevGuide.md	README.md GPL LGPL
         DESTINATION .
         COMPONENT common)
-######################################################################
-### INSTALL TESTS
-######################################################################
-if(NOT WIN32)
-install(DIRECTORY uni10_api_test/
-        DESTINATION uni10_api_test/
-        COMPONENT test
-	PATTERN "CMakeLists*" EXCLUDE
-)
-endif()
 
 
 
-set(libname "${CMAKE_SHARED_LIBRARY_PREFIX}uni10.${UNI10_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
-IF(BUILD_CUDA_SUPPORT)
-set(libname "${CMAKE_SHARED_LIBRARY_PREFIX}uni10gpu.${UNI10_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
-ENDIF()
+
+
+set(libname "${CMAKE_SHARED_LIBRARY_PREFIX}cytnx.${UNI10_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+
 
 
 
@@ -488,7 +413,7 @@ ENDIF()
 ######################################################################
 message(STATUS "")
 message(STATUS "------------------------------------------------")
-message(STATUS "  Uni10: The Universal Tensor Network Library")
+message(STATUS "  Cytnx: The Universal Tensor Network Library")
 message(STATUS "------------------------------------------------")
 message(STATUS "")
 message(STATUS " Version: ${UNI10_VERSION}")
@@ -499,28 +424,12 @@ message(STATUS " CXX Compiler: ${CMAKE_CXX_COMPILER}")
 message(STATUS " CXX Flags: ${CMAKE_CXX_FLAGS}")
 message(STATUS " BLAS and LAPACK Libraries: ${LAPACK_LIBRARIES}")
 
-#if(BUILD_ARPACK_SUPPORT)
-#  message(STATUS " Build APPACK Support: YES")
-#  message(STATUS "  - ARPACK Libraries: ${ARPACK_LIBRARIES}")
-#else()
-#  message(STATUS " Build APPACK Support: NO")
-#endif()
 
-if(BUILD_HDF5_SUPPORT)
- message(STATUS " Build HDF5 Support: YES")
- message(STATUS "  - HDF5 Libraries: ${HDF5_LIBs}")
- message(STATUS "  - HDF5 Includes: ${HDF5_INCLUDE_DIRS}")
-else()
- message(STATUS " Build HDF5 Support: NO")
-endif()
 
-if(BUILD_EXAMPLES)
-  message(STATUS " Build Examples: YES")
-else()
-  message(STATUS " Build Examples: NO")
-endif()
 
-if(BUILD_PYTHON_WRAPPER)
+
+
+if(PYTHON)
   message(STATUS " Build Python Wrapper: YES")
   message(STATUS "  - Python Excutable  : ${PYTHON_EXECUTABLE}")
   message(STATUS "  - Python Headers    : ${PYTHON_INCLUDE_DIR}")
@@ -528,7 +437,7 @@ if(BUILD_PYTHON_WRAPPER)
 else()
   message(STATUS " Build Python Wrapper: NO")
 endif()
-if(BUILD_CUDA_SUPPORT)
+if(CUDA)
   message( STATUS " Build CUDA Support: YES")
   message( STATUS "  - CUDA Version: ${CUDA_VERSION_STRING}")
   message( STATUS "  - CUDA Toolkit Root: ${CUDA_TOOLKIT_ROOT_DIR}")
@@ -536,7 +445,7 @@ if(BUILD_CUDA_SUPPORT)
 else()
   message( STATUS " Build CUDA Support: NO")
 endif()
-if(BUILD_DOC)
+if(DOC)
   message( STATUS " Build Documentation: YES")
   message( STATUS "  - Doxygen: ${DOXYGEN_EXECUTABLE}")
 else()
