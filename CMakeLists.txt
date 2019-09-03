@@ -101,6 +101,8 @@ if (ICPC)
     find_program(CMAKE_CXX_COMPILER NAMES cpp)
     find_program(CMAKE_AR NAMES ar)
     find_program(CMAKE_LINKER NAMES ld)
+  else()
+    ADD_DEFINITIONS("-DUNI_ICPC")
   endif ()
 endif ()
 
@@ -115,9 +117,7 @@ endif()
 ######################################################################
 ### PROJECT
 ######################################################################
-
-project(Cytnx)
-
+project(Cytnx LANGUAGES C++)
 ######################################################################
 ### CMAKE INSTALL OPTIONS
 ######################################################################
@@ -129,22 +129,14 @@ if(UNIX)
 	)
   endif()
 endif()
-if(WIN32)
-  if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-        set(CMAKE_INSTALL_PREFIX "C:\\Program Files\\cytnx"
-                CACHE PATH "Cytnx install prefix"
-                FORCE
-        )
-  endif()
-endif()
+
 ######################################################################
 ### CMAKE BUILD TYPE
 ######################################################################
 
 if (${CMAKE_BUILD_TYPE} MATCHES Debug)
-   set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -coverage -Wall")
+   set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -coverage -Wall -DUNI_DEBUG  ")
 else()
-   #set(CMAKE_CXX_FLAGS "-O3 -Wall -fvisibility=hidden")
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall")
 endif()
 
@@ -164,7 +156,6 @@ if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES))
 else()
   set(LAPACK_LIBRARIES  ${BLAS_LIBRARIES}  ${LAPACK_LIBRARIES})
   message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}")
-  ADD_DEFINITIONS("-DUNI_CPU -DUNI_LAPACK")
 endif()
 
 
@@ -181,20 +172,14 @@ message(STATUS ${COMPILE_DEFINITIONS})
 
 if(CUDA)
   find_package(CUDA REQUIRED)
-  SET(CUDA_SEPARABLE_COMPILATION ON)
+  set(CUDA_SEPARABLE_COMPILATION ON)
   list(APPEND CUDA_NVCC_FLAGS "-O3;-Wno-deprecated-gpu-targets;-m64")
   set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS}  "-DUNI_GPU")
   set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS}  "-arch=sm_35")
 
   string(REPLACE "libcusparse" "libcusolver" CUDA_cusolver_LIBRARY ${CUDA_cusparse_LIBRARY})#Workaround
   #set(CUDA_VERBOSE_BUILD true)
-  ADD_DEFINITIONS("-DUNI_GPU")
-  set(LNPACKAGE "cusolver")
-  set(CALARCH "gpu")
-else()
-  ADD_DEFINITIONS(" -DUNI_LAPACK")
-  set(LNPACKAGE "lapack")
-  set(CALARCH "cpu")
+  add_definitions("-DUNI_GPU")
 endif()
 
 
