@@ -1,4 +1,4 @@
-CONFIG_FILE := make.inc
+CONFIG_FILE := make.clang.inc
 
 ##########################################
 # Color
@@ -17,9 +17,9 @@ include $(CONFIG_FILE)
 ## Detecting the OS
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
-  PYOBJFLAG := -undefined dynamic_lookup
+  PYOBJFLAGS := -undefined dynamic_lookup
 else
-  PYOBJFLAG :=
+  PYOBJFLAGS :=
 endif
 
 
