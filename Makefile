@@ -1,4 +1,4 @@
-CONFIG_FILE := make.clang.inc
+CONFIG_FILE := make.inc
 
 ##########################################
 # Color
