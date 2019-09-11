@@ -25,7 +25,7 @@
           char msg[512];
           va_start(args, format);
           vsprintf(msg, format, args);
-          sprintf(output_str, "\n# Tor10 error occur at %s\n# error: %s\n# file : %s (%d)", func, msg, file, line) ;
+          sprintf(output_str, "\n# Cytnx error occur at %s\n# error: %s\n# file : %s (%d)", func, msg, file, line) ;
           va_end(args);
           throw std::logic_error(output_str);
         }
@@ -43,7 +43,7 @@
         char msg[512];
         va_start(args, format);
         vsprintf(msg, format, args);
-        sprintf(output_str, "\n# Tor10 warning occur at %s\n# warning: %s\n# file : %s (%d)", func, msg, file, line) ;
+        sprintf(output_str, "\n# Cytnx warning occur at %s\n# warning: %s\n# file : %s (%d)", func, msg, file, line) ;
         va_end(args);
         std::cerr << output_str << std::endl;
       }

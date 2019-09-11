@@ -28,14 +28,14 @@ namespace cytnx{
                 if(this->_is_tag){
                     if(Rowrank < 0){this->_Rowrank = N_ket;}
                     else{
-                        cytnx_error_msg(Rowrank >= bonds.size(),"[ERROR] Rowrank cannot exceed total rank of Tensor.%s","\n");
+                        cytnx_error_msg(Rowrank > bonds.size(),"[ERROR] Rowrank cannot exceed total rank of Tensor.%s","\n");
                         this->_Rowrank = Rowrank;
                     }
                 }else{ 
                     if(bonds.size()==0) this->_Rowrank = 0;    
                     else{
                         cytnx_error_msg(Rowrank <0, "[ERROR] initialize a non-symmetry, un-tagged tensor should assign a >=0 Rowrank.%s","\n");
-                        cytnx_error_msg(Rowrank >= bonds.size(),"[ERROR] Rowrank cannot exceed total rank of Tensor.%s","\n");
+                        cytnx_error_msg(Rowrank > bonds.size(),"[ERROR] Rowrank cannot exceed total rank of Tensor.%s","\n");
                         this->_Rowrank = Rowrank;
                     }
                 }
