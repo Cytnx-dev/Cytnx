@@ -183,7 +183,7 @@ namespace cytnx{
     }
 
     void BoolStorage::PrintElem_byShape(std::ostream &os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper){
-    
+        char* buffer = (char*)malloc(sizeof(char)*256);
         // checking:
         cytnx_uint64 Ne = 1;
         for(cytnx_uint64 i=0;i<shape.size();i++){
@@ -207,10 +207,10 @@ namespace cytnx{
             int atDevice = this->device;
             os << Device.getname(this->device) << std::endl;
 
-            printf("%s","Shape :");
-            printf(" (%d",shape[0]);
+            sprintf(buffer,"%s","Shape :"); os << string(buffer);
+            sprintf(buffer," (%d",shape[0]);
             for(cytnx_int32 i=1;i<shape.size();i++){
-                printf(",%d",shape[i]);
+                sprintf(buffer,",%d",shape[i]); os << string(buffer);
             }
             os << ")"<< std::endl;
 
@@ -231,17 +231,17 @@ namespace cytnx{
                 while(1){
                     for(cytnx_int32 i=0;i<shape.size();i++){
                         if(i<shape.size()-stk.size()){
-                            printf("%s"," ");
+                            sprintf(buffer,"%s"," "); os << string(buffer);
                         }else{
                             stk2.push_back(0);
-                            printf("%s","[");
+                            sprintf(buffer,"%s","["); os << string(buffer);
                             stk.pop_back();
                         }
                     }
                     for(cytnx_uint64 i=0;i<shape.back();i++){
                         stk2.back() = i;
-                        if(elem_ptr_[cnt]) printf("True %s"," ");
-                        else printf("False%s"," ");
+                        if(elem_ptr_[cnt]) {sprintf(buffer,"True %s"," "); os << string(buffer);}
+                        else {sprintf(buffer,"False%s"," "); os << string(buffer);}
                         cnt++;
                     }
 
@@ -255,7 +255,7 @@ namespace cytnx{
                             stk.push_back(*(&shape.back()-s));
                             s++;
                             stk2.pop_back();
-                            printf("%s","]");
+                            sprintf(buffer,"%s","]"); os << string(buffer);
                         }else{
                             stk2.back()+=1;
                             break;
@@ -288,10 +288,10 @@ namespace cytnx{
                 while(1){
                     for(cytnx_int32 i=0;i<shape.size();i++){
                         if(i<shape.size()-stk.size()){
-                            printf("%s"," ");
+                            sprintf(buffer,"%s"," "); os << string(buffer);
                         }else{
                             stk2.push_back(0);
-                            printf("%s","[");
+                            sprintf(buffer,"%s","["); os << string(buffer);
                             stk.pop_back();
                         }
                     }
@@ -303,8 +303,8 @@ namespace cytnx{
                         for(cytnx_uint64 n=0;n<shape.size();n++){
                             RealMemPos += c_offj[n]*stk2[mapper[n]]; // mapback + backmap = normal-map
                         }
-                        if(elem_ptr_[RealMemPos]) printf("True %s"," ");
-                        else printf("False%s"," ");
+                        if(elem_ptr_[RealMemPos]) {sprintf(buffer,"True %s"," "); os << string(buffer);}
+                        else {sprintf(buffer,"False%s"," "); os << string(buffer);}
                         //cnt++;
                     }
 
@@ -317,7 +317,7 @@ namespace cytnx{
                             stk.push_back(*(&shape.back()-s));
                             s++;
                             stk2.pop_back();
-                            printf("%s","]");
+                            sprintf(buffer,"%s","]"); os << string(buffer);
                         }else{
                             stk2.back()+=1;
                             break;
@@ -337,19 +337,22 @@ namespace cytnx{
             }
 
         }//len==0
+        free(buffer);
     }
 
 
 
 
     void BoolStorage::print_elems(){
+        char* buffer = (char*)malloc(sizeof(char)*256);
         cytnx_bool* elem_ptr_ = static_cast<cytnx_bool*>(this->Mem);
         cout << "[ ";
         for(unsigned long long cnt=0;cnt<this->len;cnt++){
-            if(elem_ptr_[cnt]) printf("True %s"," ");
-            else printf("False%s"," ");
+            if(elem_ptr_[cnt]) {sprintf(buffer,"True %s"," "); cout << string(buffer);}
+            else               {sprintf(buffer,"False%s"," "); cout << string(buffer);}
         }
         cout << "]" << endl;
+        free(buffer);
     }
 
 

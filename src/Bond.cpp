@@ -197,6 +197,7 @@ namespace cytnx{
     }
 
     std::ostream& operator<<(std::ostream &os,const Bond &bin){
+        char* buffer = (char*)malloc(sizeof(char)*256);
         os << "Dim = " << bin.dim() << " |";
         if(bin.type()==bondType::BD_REG){
             os << "type: REGULAR " << std::endl;
@@ -212,10 +213,11 @@ namespace cytnx{
         for(cytnx_int32 i=0;i<bin.Nsym();i++){
             os << " " << bin.syms()[i].stype_str() << ":: ";
             for(cytnx_int32 j=0;j<bin.dim();j++){
-                printf(" %+2d",bin.qnums()[j][i]);
+                sprintf(buffer," %+2d",bin.qnums()[j][i]); os << string(buffer);
             }
             os << std::endl;
         }
+        free(buffer);
         return os;
     }
 

@@ -45,25 +45,28 @@ string Device_class::getname(const int &device_id){
     }
 
 }
-void Device_class::Print_Property(){
+void Device_class::Print_Property(){    
+    char* buffer = (char*)malloc(sizeof(char)*256);
     #ifdef UNI_GPU
         cout << "=== CUDA support ===" << endl;
         cout << ": Peer PCIE Access:" << endl;
         cout << "   ";
-        for(int i=0;i<this->Ngpus;i++)
-            printf(" %2d",i);
+        for(int i=0;i<this->Ngpus;i++){
+            sprintf(buffer," %2d",i); cout << string(buffer);
+        }
         cout << endl;
         
         cout << "   ";
-        for(int i=0;i<this->Ngpus;i++)
-            printf("%s","---");
+        for(int i=0;i<this->Ngpus;i++){
+            sprintf(buffer,"%s","---"); cout << string(buffer);
+        }
         cout << endl;
         
         for(int i=0;i<this->Ngpus;i++){
-            printf("%2d|",i);
+            sprintf(buffer,"%2d|",i); cout << string(buffer);
             for(int j=0;j<this->Ngpus;j++){
-                if(j==i) printf("%s","  x");
-                else printf("  %d",int(CanAccessPeer[i][j]));
+                if(j==i) {sprintf(buffer,"%s","  x"); cout << string(buffer);
+                else     {sprintf(buffer,"  %d",int(CanAccessPeer[i][j])); cout << string(buffer);
             }
             cout << endl;
         }
@@ -72,7 +75,7 @@ void Device_class::Print_Property(){
         cout << "=== No CUDA support ===" << endl;
     #endif
 
-
+    free(buffer);
 }
 
 
