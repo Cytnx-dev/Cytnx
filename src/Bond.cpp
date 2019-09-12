@@ -39,6 +39,7 @@ namespace cytnx{
             this->_qnums = in_qnums;
             this->_type = bd_type;
 
+            cytnx_error_msg((in_qnums.size()!=0) && (bd_type==BD_REG),"%s","[ERROR] bond with qnums (symmetry) can only have bond_type=BD_BRA or BD_KET");
             //check qnums match the rule of each symmetry type
             for(cytnx_uint64 d=0;d<in_qnums.size();d++){
                 for(cytnx_uint64 i=0;i<N_syms;i++)
