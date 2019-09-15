@@ -62,8 +62,17 @@
 
     double ddot_(const int32_t *n, const double *x, const int32_t *incx, 
                  const double *y, const int32_t *incy);
+    float  sdot_(const int32_t *n, const float *x, const int32_t *incx, 
+                 const float *y, const int32_t *incy);
     void   zdotc_(std::complex<double>* res, const int32_t *n, const std::complex<double> *x, 
                   const int32_t *incx, const std::complex<double> *y, const int32_t *incy);
+    void   zdotu_(std::complex<double>* res, const int32_t *n, const std::complex<double> *x, 
+                  const int32_t *incx, const std::complex<double> *y, const int32_t *incy);
+    void   cdotc_(std::complex<float>* res, const int32_t *n, const std::complex<float> *x, 
+                  const int32_t *incx, const std::complex<float> *y, const int32_t *incy);
+    void   cdotu_(std::complex<float>* res, const int32_t *n, const std::complex<float> *x, 
+                  const int32_t *incx, const std::complex<float> *y, const int32_t *incy);
+
 
     // D and Z LAPACK functions
 
@@ -395,10 +404,25 @@
     {
       return ddot_(n, x, incx, y, incy);
     }
-
+    inline float sdot( const int32_t *n, const float *x, const int32_t *incx, const float *y, const int32_t *incy)
+    {
+      return sdot_(n, x, incx, y, incy);
+    }
     inline void zdotc(std::complex<double>* res, const int32_t *n, const std::complex<double> *x, const int32_t *incx, const std::complex<double> *y, const int32_t *incy)
     {   
         zdotc_(res, n, x, incx, y, incy);
+    }
+    inline void zdotu(std::complex<double>* res, const int32_t *n, const std::complex<double> *x, const int32_t *incx, const std::complex<double> *y, const int32_t *incy)
+    {   
+        zdotu_(res, n, x, incx, y, incy);
+    }
+    inline void cdotc(std::complex<float>* res, const int32_t *n, const std::complex<float> *x, const int32_t *incx, const std::complex<float> *y, const int32_t *incy)
+    {   
+        cdotc_(res, n, x, incx, y, incy);
+    }
+    inline void cdotu(std::complex<float>* res, const int32_t *n, const std::complex<float> *x, const int32_t *incx, const std::complex<float> *y, const int32_t *incy)
+    {   
+        cdotu_(res, n, x, incx, y, incy);
     }
 
     inline void dstev( const char* jobz, const int32_t* n, const double* d, const double* e, const double* z,
