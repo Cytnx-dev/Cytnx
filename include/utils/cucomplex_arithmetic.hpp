@@ -1,5 +1,5 @@
-#ifndef __cucomplex_arithmic__H_
-#define __cucomplex_arithmic__H_
+#ifndef __cucomplex_arithmetic__H_
+#define __cucomplex_arithmetic__H_
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
