@@ -18,6 +18,23 @@ int main(int argc, char *argv[]){
     */
 
     //Device.Print_Property();
+
+    
+    Tensor A = arange(10,Type.Double);
+    Tensor B = arange(0,1,0.1,Type.Double);
+    cout << A << B << endl;
+    Tensor C = linalg::Vectordot(A,B);
+    cout << C.item<double>();
+
+    A = zeros(4); A.at<double>({1}) = 1; A.at<double>({2}) = 1;
+    B = zeros(4); B.at<double>({0}) = 1; B.at<double>({3}) = 1;
+    
+    A.reshape_({2,2});
+    B.reshape_({2,2});
+    cout << linalg::Otimes(B,B).reshape({4,4}) << endl;
+    
+    return 0;
+    //return 0;
     
            
     Storage s;

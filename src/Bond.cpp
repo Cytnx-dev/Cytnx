@@ -39,6 +39,7 @@ namespace cytnx{
             this->_qnums = in_qnums;
             this->_type = bd_type;
 
+            cytnx_error_msg((in_qnums.size()!=0) && (bd_type==BD_REG),"%s","[ERROR] bond with qnums (symmetry) can only have bond_type=BD_BRA or BD_KET");
             //check qnums match the rule of each symmetry type
             for(cytnx_uint64 d=0;d<in_qnums.size();d++){
                 for(cytnx_uint64 i=0;i<N_syms;i++)
@@ -197,6 +198,7 @@ namespace cytnx{
     }
 
     std::ostream& operator<<(std::ostream &os,const Bond &bin){
+        char* buffer = (char*)malloc(sizeof(char)*256);
         os << "Dim = " << bin.dim() << " |";
         if(bin.type()==bondType::BD_REG){
             os << "type: REGULAR " << std::endl;
@@ -212,10 +214,11 @@ namespace cytnx{
         for(cytnx_int32 i=0;i<bin.Nsym();i++){
             os << " " << bin.syms()[i].stype_str() << ":: ";
             for(cytnx_int32 j=0;j<bin.dim();j++){
-                printf(" %+2d",bin.qnums()[j][i]);
+                sprintf(buffer," %+2d",bin.qnums()[j][i]); os << string(buffer);
             }
             os << std::endl;
         }
+        free(buffer);
         return os;
     }
 

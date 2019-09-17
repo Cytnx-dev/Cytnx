@@ -158,9 +158,10 @@ namespace cytnx{
 
         //-----------------------------------------
         std::ostream& operator<<(std::ostream& os, const UniTensor &in){
-            printf("Tensor name: %s\n",in.name().c_str());
+            char* buffer = (char*)malloc(sizeof(char)*256);
+            sprintf(buffer,"Tensor name: %s\n",in.name().c_str()); os << std::string(buffer);
             if(!in.is_tag()) 
-                printf("braket_form : %s\n", in.is_braket_form()?"True":"False");
+                sprintf(buffer,"braket_form : %s\n", in.is_braket_form()?"True":"False"); os << std::string(buffer);
             
             if(in.is_blockform()){
                 std::vector<Tensor> tmp = in.get_blocks();
@@ -168,12 +169,13 @@ namespace cytnx{
                     os << tmp[i] << std::endl;
                 
             }else{
-                printf("is_diag    : %s\n",in.is_diag()?"True":"False");
+                sprintf(buffer,"is_diag    : %s\n",in.is_diag()?"True":"False"); os << std::string(buffer);
                 Tensor tmp = in.get_block();
                 os << tmp << std::endl;     
             }         
-
+            free(buffer);
             return os;
+        
         }
 
         UniTensor Contract(const UniTensor &inL, const UniTensor &inR){

@@ -84,6 +84,7 @@
       \link cytnx::linalg::Diag Diag\endlink    |   x       |  Y  |  Y   |    N
       *\link cytnx::linalg::Tensordot Tensordot\endlink | x | Y | Y | N
       \link cytnx::linalg::Otimes Otimes\endlink  |   x       | Y   |  Y   |   N
+      \link cytnx::linalg::Vectordot Vectordot\endlink    |   x       |  Y  |  N   |    N
  
     *this is a high level linalg 
 

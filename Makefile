@@ -17,9 +17,9 @@ include $(CONFIG_FILE)
 ## Detecting the OS
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
-  PYOBJFLAG := -undefined dynamic_lookup
+  PYOBJFLAGS := -undefined dynamic_lookup
 else
-  PYOBJFLAG :=
+  PYOBJFLAGS :=
 endif
 
 
@@ -95,14 +95,16 @@ endif
 
 ## Linalg_internal
 OBJS += linalg_internal_interface.o
-OBJS += Cpr_internal.o Add_internal.o Sub_internal.o Mul_internal.o Div_internal.o Arithmetic_internal.o Svd_internal.o Inv_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_internal.o Diag_internal.o Outer_internal.o 
+
+OBJS += Cpr_internal.o Add_internal.o Sub_internal.o Mul_internal.o Div_internal.o Arithmic_internal.o Svd_internal.o Inv_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_internal.o Diag_internal.o Outer_internal.o Vectordot_internal.o 
+
 ifeq ($(GPU_Enable),1)
   OBJS += cuCpr_internal.o cuAdd_internal.o cuSub_internal.o cuMul_internal.o cuDiv_internal.o cuArithmetic_internal.o cuSvd_internal.o cuInv_inplace_internal.o cuConj_inplace_internal.o cuExp_internal.o  cuEigh_internal.o cuMatmul_internal.o cuDiag_internal.o cuOuter_internal.o
 
 endif
 
 ## Linalg
-OBJS += Add.o Div.o Sub.o Mul.o Cpr.o Svd.o Svd_truncate.o Inv.o Inv_.o Conj.o Conj_.o Exp.o Exp_.o Eigh.o Diag.o Matmul.o Tensordot.o Otimes.o
+OBJS += Add.o Div.o Sub.o Mul.o Cpr.o Svd.o Svd_truncate.o Inv.o Inv_.o Conj.o Conj_.o Exp.o Exp_.o Eigh.o Diag.o Matmul.o Tensordot.o Otimes.o Vectordot.o
 
 
 ALLOBJS = $(OBJS)
@@ -262,6 +264,10 @@ Matmul_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Matmul_internal
 
 Outer_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Outer_internal.cpp $(CytnxPATH)/include/linalg/linalg_internal_cpu/Outer_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+
+Vectordot_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Vectordot_internal.cpp $(CytnxPATH)/include/linalg/linalg_internal_cpu/Vectordot_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+
 
 ifeq ($(GPU_Enable),1)
 
@@ -439,6 +445,8 @@ Eigh.o: $(CytnxPATH)/src/linalg/Eigh.cpp $(CytnxPATH)/include/linalg/linalg.hpp
 Matmul.o: $(CytnxPATH)/src/linalg/Matmul.cpp $(CytnxPATH)/include/linalg/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Tensordot.o: $(CytnxPATH)/src/linalg/Tensordot.cpp $(CytnxPATH)/include/linalg/linalg.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+Vectordot.o: $(CytnxPATH)/src/linalg/Vectordot.cpp $(CytnxPATH)/include/linalg/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Otimes.o: $(CytnxPATH)/src/linalg/Otimes.cpp $(CytnxPATH)/include/linalg/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<

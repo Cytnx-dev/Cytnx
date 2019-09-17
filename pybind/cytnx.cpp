@@ -66,6 +66,10 @@ PYBIND11_MODULE(cytnx,m){
     //global vars
     //m.attr("cytnxdevice") = cytnx::cytnxdevice;
     //m.attr("Type")   = py::cast(cytnx::Type);    
+    //m.attr("redirect_output") = py::capsule(new py::scoped_ostream_redirect(...),
+    //[](void *sor) { delete static_cast<py::scoped_ostream_redirect *>(sor); });
+    py::add_ostream_redirect(m, "ostream_redirect");
+
 
     py::enum_<cytnx::__type::__pybind_type>(m,"Type")
         .value("ComplexDouble", cytnx::__type::__pybind_type::ComplexDouble)
@@ -181,7 +185,8 @@ PYBIND11_MODULE(cytnx,m){
             .def("__repr__",[](cytnx::Bond &self){
                 std::cout << self << std::endl;
                 return std::string("");
-             })
+             },py::call_guard<py::scoped_ostream_redirect,
+                     py::scoped_estream_redirect>())
             .def("__eq__",&cytnx::Bond::operator==)
             .def("type",&cytnx::Bond::type)
             .def("qnums",[](cytnx::Bond &self){return self.qnums();})
@@ -273,7 +278,8 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__repr__",[](cytnx::Storage &self)->std::string{
                     std::cout << self << std::endl;
                     return std::string("");
-                 })
+                 },py::call_guard<py::scoped_ostream_redirect,
+                     py::scoped_estream_redirect>())
                 .def("__len__",[](cytnx::Storage &self)->cytnx::cytnx_uint64{return self.size();})
                 
                 .def("to_", &cytnx::Storage::to_, py::arg("device"))
@@ -290,7 +296,8 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__deepcopy__",&cytnx::Storage::clone)
                 .def("size", &cytnx::Storage::size)
                 .def("__len__",[](cytnx::Storage &self){return self.size();})
-                .def("print_info", &cytnx::Storage::print_info)
+                .def("print_info", &cytnx::Storage::print_info,py::call_guard<py::scoped_ostream_redirect,
+                     py::scoped_estream_redirect>())
                 .def("set_zeros",  &cytnx::Storage::set_zeros)
                 .def("__eq__",[](cytnx::Storage &self, const cytnx::Storage &rhs)->bool{return self == rhs;})
 
@@ -388,7 +395,8 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__repr__",[](cytnx::Tensor &self)->std::string{
                     std::cout << self << std::endl;
                     return std::string("");
-                 })
+                 },py::call_guard<py::scoped_ostream_redirect,
+                     py::scoped_estream_redirect>())
                 .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_complex128>, py::arg("val"))
                 .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_complex64>, py::arg("val"))
                 .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_double   >, py::arg("val"))
@@ -882,7 +890,8 @@ PYBIND11_MODULE(cytnx,m){
 
                 .def("contiguous",&cytnx::UniTensor::contiguous)
                 .def("contiguous_",&cytnx::UniTensor::contiguous_)
-                .def("print_diagram",&cytnx::UniTensor::print_diagram,py::arg("bond_info")=false)
+                .def("print_diagram",&cytnx::UniTensor::print_diagram,py::arg("bond_info")=false,py::call_guard<py::scoped_ostream_redirect,
+                     py::scoped_estream_redirect>())
                         
                 .def("get_block", [](const cytnx::UniTensor &self, const cytnx_uint64&idx){
                                         return self.get_block(idx);
@@ -903,7 +912,8 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__repr__",[](cytnx::UniTensor &self)->std::string{
                     std::cout << self << std::endl;
                     return std::string("");
-                 }) 
+                 },py::call_guard<py::scoped_ostream_redirect,
+                     py::scoped_estream_redirect>()) 
                 .def("to_dense",&cytnx::UniTensor::to_dense)
                 .def("to_dense_",&cytnx::UniTensor::to_dense_)
                 .def("combineBonds",&cytnx::UniTensor::combineBonds,py::arg("indicators"),py::arg("permute_back")=true,py::arg("by_label")=true)

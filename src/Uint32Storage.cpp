@@ -178,7 +178,7 @@ namespace cytnx{
     }
 
     void Uint32Storage::PrintElem_byShape(std::ostream &os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper){
-    
+        char* buffer = (char*)malloc(sizeof(char)*256); 
         // checking:
         cytnx_uint64 Ne = 1;
         for(cytnx_uint64 i=0;i<shape.size();i++){
@@ -202,10 +202,10 @@ namespace cytnx{
             int atDevice = this->device;
             os << Device.getname(this->device) << std::endl;
 
-            printf("%s","Shape :");
-            printf(" (%d",shape[0]);
+            sprintf(buffer,buffer,"%s","Shape :"); os << std::string(buffer);
+            sprintf(buffer,buffer," (%d",shape[0]); os << std::string(buffer);
             for(cytnx_int32 i=1;i<shape.size();i++){
-                printf(",%d",shape[i]);
+                sprintf(buffer,buffer,",%d",shape[i]); os << std::string(buffer);
             }
             os << ")"<< std::endl;
 
@@ -226,16 +226,16 @@ namespace cytnx{
                 while(1){
                     for(cytnx_int32 i=0;i<shape.size();i++){
                         if(i<shape.size()-stk.size()){
-                            printf("%s"," ");
+                            sprintf(buffer,"%s"," "); os << string(buffer);
                         }else{
                             stk2.push_back(0);
-                            printf("%s","[");
+                            sprintf(buffer,"%s","["); os << string(buffer);
                             stk.pop_back();
                         }
                     }
                     for(cytnx_uint64 i=0;i<shape.back();i++){
                         stk2.back() = i;
-                        printf("%10d ",elem_ptr_[cnt]);
+                        sprintf(buffer,"%10d ",elem_ptr_[cnt]); os << string(buffer);
                         cnt++;
                     }
 
@@ -249,7 +249,7 @@ namespace cytnx{
                             stk.push_back(*(&shape.back()-s));
                             s++;
                             stk2.pop_back();
-                            printf("%s","]");
+                            sprintf(buffer,"%s","]"); os << string(buffer);
                         }else{
                             stk2.back()+=1;
                             break;
@@ -282,10 +282,10 @@ namespace cytnx{
                 while(1){
                     for(cytnx_int32 i=0;i<shape.size();i++){
                         if(i<shape.size()-stk.size()){
-                            printf("%s"," ");
+                            sprintf(buffer,"%s"," "); os << string(buffer);
                         }else{
                             stk2.push_back(0);
-                            printf("%s","[");
+                            sprintf(buffer,"%s","["); os << string(buffer);
                             stk.pop_back();
                         }
                     }
@@ -297,7 +297,7 @@ namespace cytnx{
                         for(cytnx_uint64 n=0;n<shape.size();n++){
                             RealMemPos += c_offj[n]*stk2[mapper[n]]; // mapback + backmap = normal-map
                         }
-                        printf("%10d ",elem_ptr_[RealMemPos]);
+                        sprintf(buffer,"%10d ",elem_ptr_[RealMemPos]); os << string(buffer);
                         //cnt++;
                     }
 
@@ -310,7 +310,7 @@ namespace cytnx{
                             stk.push_back(*(&shape.back()-s));
                             s++;
                             stk2.pop_back();
-                            printf("%s","]");
+                            sprintf(buffer,"%s","]"); os << string(buffer);
                         }else{
                             stk2.back()+=1;
                             break;
@@ -330,17 +330,20 @@ namespace cytnx{
             }
 
         }//len==0
+        free(buffer);
     }
 
 
 
     void Uint32Storage::print_elems(){
+        char* buffer = (char*)malloc(sizeof(char)*256);
         cytnx_uint32* elem_ptr_ = static_cast<cytnx_uint32*>(this->Mem);
         cout << "[ ";
         for(unsigned long long cnt=0;cnt<this->len;cnt++){
-            printf("%10d ",elem_ptr_[cnt]);
+            sprintf(buffer,"%10d ",elem_ptr_[cnt]); cout << string(buffer);
         }
         cout << " ]" << endl;
+        free(buffer);
     }
 
     void Uint32Storage::fill(const cytnx_complex128 &val){

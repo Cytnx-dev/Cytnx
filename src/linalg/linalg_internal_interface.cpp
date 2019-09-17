@@ -214,6 +214,21 @@ namespace cytnx{
             Matmul_ii[Type.Uint16       ] = Matmul_internal_u16;
             Matmul_ii[Type.Bool         ] = Matmul_internal_b  ;
 
+
+            //====================
+            Vd_ii = vector<Vectordotfunc_oii>(N_Type);
+            Vd_ii[Type.ComplexDouble] = Vectordot_internal_cd;
+            Vd_ii[Type.ComplexFloat ] = Vectordot_internal_cf;
+            Vd_ii[Type.Double] = Vectordot_internal_d;
+            Vd_ii[Type.Float ] = Vectordot_internal_f;
+            Vd_ii[Type.Int64 ] = Vectordot_internal_i64;
+            Vd_ii[Type.Uint64] = Vectordot_internal_u64;
+            Vd_ii[Type.Int32 ] = Vectordot_internal_i32;
+            Vd_ii[Type.Uint32] = Vectordot_internal_u32;
+            Vd_ii[Type.Int16 ] = Vectordot_internal_i16;
+            Vd_ii[Type.Uint16] = Vectordot_internal_u16;
+            Vd_ii[Type.Bool  ] = Vectordot_internal_b  ;
+
             //================
             Outer_ii = vector<vector<Outerfunc_oii> >(N_Type,vector<Outerfunc_oii>(N_Type,NULL));
 

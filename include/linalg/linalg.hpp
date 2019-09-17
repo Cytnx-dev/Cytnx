@@ -248,8 +248,24 @@ namespace cytnx{
         Tensor Otimes(const Tensor &Tl, const Tensor &Tr);
  
         
+        //VectorDot:
+        //=================================================
+        /**
+        @brief perform inner product of vectors
+        @param Tl Tensor #1
+        @param Tr Tensor #2
+        @param if the Tl should be conjugated (only work for complex. For real Tensor, no function), default: false
+        @return 
+            [Tensor] Rank-0
 
-        
+        description:
+            two Tensors must be Rank-1, with same length. 
+
+        [Note]
+            performance tune: This function have better performance when two vectors with same types, and are one of following type: cytnx_double, cytnx_float, cytnx_complex64 or cytnx_complex128. 
+            
+        */
+        Tensor Vectordot(const Tensor &Tl, const Tensor &Tr, const bool &is_conj=false);
 
 
     }// namespace linalg

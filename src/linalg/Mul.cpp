@@ -13,7 +13,7 @@ namespace cytnx{
 
 
             if(Lt.is_contiguous() && Rt.is_contiguous()){
-                // non-contiguous section
+                // contiguous section
                 if(Lt.device() == Device.cpu){
                     cytnx::linalg_internal::lii.Ari_ii[Lt.dtype()][Rt.dtype()](out._impl->storage()._impl,Lt._impl->storage()._impl,Rt._impl->storage()._impl,Lt._impl->storage()._impl->size(),{},{},{},1);
                 }else{
@@ -25,7 +25,7 @@ namespace cytnx{
                     #endif
                 }
             }else{
-                // contiguous section
+                // non-contiguous section
                 if(Lt.device() == Device.cpu){
                     cytnx::linalg_internal::lii.Ari_ii[Lt.dtype()][Rt.dtype()](out._impl->storage()._impl,Lt._impl->storage()._impl,Rt._impl->storage()._impl,Lt._impl->storage()._impl->size(),Lt._impl->shape(),Lt._impl->invmapper(),Rt._impl->invmapper(),1);
                 }else{
