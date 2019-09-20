@@ -12,13 +12,13 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Uni10 is distributed in the hope that it will be useful,
+#    cytnx is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with Uni10.  If not, see <http://www.gnu.org/licenses/>.
+#    along with cytnx.  If not, see <http://www.gnu.org/licenses/>.
 #  @endlicense
 #  @brief Main specification file for CMake
 #  @author Ying-Jer Kao
@@ -30,8 +30,9 @@
 ######################################################################
 ### CMAKE VERSION
 ######################################################################
-cmake_minimum_required(VERSION 3.1.3)
+cmake_minimum_required(VERSION 3.1)
 
+include(cmake/target_sources_local.cmake)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 set(CMAKE_CXX_STANDARD 11)
 
@@ -39,7 +40,8 @@ set(CMAKE_CXX_STANDARD 11)
 ### DISABLING IN-SOURCE BUILD
 ### (DO NOT MODIFY)
 ######################################################################
-
+set(CMAKE_DISABLE_SOURCE_CHANGES ON)
+set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
   message(FATAL_ERROR
     "
@@ -69,6 +71,16 @@ if(    NOT cmake_build_type_tolower STREQUAL "debug"
    AND NOT cmake_build_type_tolower STREQUAL "relwithdebinfo")
   message(FATAL_ERROR "Unknown build type \"${CMAKE_BUILD_TYPE}\". Allowed values are Debug, Release, RelWithDebInfo (case-insensitive).")
 endif()
+######################################################################
+# Version information
+######################################################################
+set(CYTNX_VERSION_MAJOR 0)
+set(CYTNX_VERSION_MINOR 7)
+set(CYTNX_VERSION_PATCH 0)
+set(CYTNX_VERSION COUNT 1)
+set(CYTNX_VERSION
+  ${CYTNX_VERSION_MAJOR}.${CYTNX_VERSION_MINOR}.${CYTNX_VERSION_PATCH}
+)
 
 
 
@@ -76,14 +88,13 @@ endif()
 ### COMMAND LINE OPTIONS
 ######################################################################
 
-option(ICPC "Build with Intel Compilers" OFF)
-option(CUDA "Build using Nvidia CUDA for GPU library" OFF)
-option(PYTHON "Build Python wrapper" OFF)
-option(MKL "Build using MKL" OFF)
-option(DOC "Build API docuemntation" OFF)
-option(PACKAGES "Build Source/Binary Packages" ON)
-if (ICPC)
-  message(STATUS, "Build with Intel Compilers")
+option(USE_ICPC "Build Cytnx with Intel Compilers" OFF)
+option(USE_CUDA "Build using Nvidia CUDA for GPU library" OFF)
+option(BUILD_PYTHON "Build Python wrapper" OFF)
+option(USE_MKL "Build using MKL" OFF)
+option(BUILD_DOC "Build API docuemntation" OFF)
+if (USE_ICPC)
+  message(STATUS, "Build Cytnx with Intel Compilers")
   message(STATUS, "Finding Intel Compilers....")
   find_program(CMAKE_C_COMPILER NAMES icc)
   find_program(CMAKE_CXX_COMPILER NAMES icpc)
@@ -106,7 +117,7 @@ if (ICPC)
   endif ()
 endif ()
 
-if (MKL)
+if (USE_MKL)
   option(MKL_SDL "Link to a single MKL dynamic libary." ON)
   option(MKL_MLT "Use multi-threading libary. [Default]" ON)
   mark_as_advanced(MKL_SDL MKL_MLT)
@@ -117,7 +128,7 @@ endif()
 ######################################################################
 ### PROJECT
 ######################################################################
-project(Cytnx LANGUAGES C++)
+project(CYTNX LANGUAGES C++ C)
 ######################################################################
 ### CMAKE INSTALL OPTIONS
 ######################################################################
@@ -144,7 +155,7 @@ endif()
 ### Find BLAS and LAPACK
 ######################################################################
 if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES))
-  if (MKL)
+  if (USE_MKL)
     find_package(MKL REQUIRED)
     ADD_DEFINITIONS("-DUNI_MKL")
     set(LAPACK_LIBRARIES ${MKL_MINIMAL_LIBRARY})
@@ -170,15 +181,19 @@ message(STATUS ${COMPILE_DEFINITIONS})
 ### NVFLAGS:= -m64 -g
 ### SMS ?= 30
 
-if(CUDA)
+if(USE_CUDA)
   find_package(CUDA REQUIRED)
   set(CUDA_SEPARABLE_COMPILATION ON)
   list(APPEND CUDA_NVCC_FLAGS "-O3;-Wno-deprecated-gpu-targets;-m64")
   set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS}  "-DUNI_GPU")
-  set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS}  "-arch=sm_35")
-
-  string(REPLACE "libcusparse" "libcusolver" CUDA_cusolver_LIBRARY ${CUDA_cusparse_LIBRARY})#Workaround
-  #set(CUDA_VERBOSE_BUILD true)
+  set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS}  "-arch=sm_50 \
+      -gencode=arch=compute_50,code=sm_50 \
+      -gencode=arch=compute_52,code=sm_52 \
+      -gencode=arch=compute_60,code=sm_60 \
+      -gencode=arch=compute_61,code=sm_61 \
+      -gencode=arch=compute_70,code=sm_70 \
+      -gencode=arch=compute_75,code=sm_75 \
+      -gencode=arch=compute_75,code=compute_75 ")
   add_definitions("-DUNI_GPU")
 endif()
 
@@ -193,34 +208,10 @@ endif()
 
 
 
-######################################################################
-### FLAGS
-######################################################################
-if(UNIX )
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-endif()
-if(MKL_MLT)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
-endif()
-
-
-if (MKL_MLT)
-  set(CMAKE_EXE_LINKER_FLAGS "-pthread")
-endif()
 
 ######################################################################
 ### PATHS
 ######################################################################
-
-#set the default path for built executables to the "bin" directory
-if (UNIX OR MINGW OR CYGWIN)
-  set(EXECUTABLE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-endif()
-
-#set the default path for built libraries to the "lib" directory
-#if (UNIX OR MINGW OR CYGWIN)
-#  set(LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-#endif()
 
 # path to include directory
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -235,84 +226,66 @@ add_subdirectory(src)
 ######################################################################
 ### ADD LIBRARY
 ######################################################################
-set(cytnx-objects
-$<TARGET_OBJECTS:cytnx>
-$<TARGET_OBJECTS:cytnx-linalg>
-$<TARGET_OBJECTS:uni10-utils>
-)
 
+
+add_library(cytnx "")
 
 IF (BUILD_CUDA_SUPPORT)
   CUDA_INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include)
-  CUDA_ADD_LIBRARY(uni10 SHARED
-    ${uni10-objects}
-    src/uni10_cusolver_gpu/tools_cusolver_gpu/cuda_kernel_funcs/uni10_exp_kernel_gpu.cu
-    src/uni10_cusolver_gpu/tools_cusolver_gpu/cuda_kernel_funcs/uni10_kernel_gpu.cu
-    src/uni10_cusolver_gpu/tools_cusolver_gpu/cuda_kernel_funcs/uni10_reshape_kernel_gpu.cu
-    src/uni10_env_info/uni10_cusolver_gpu/uni10_memory_const_cusolver_gpu.cu
+  CUDA_ADD_LIBRARY(cytnx SHARED
+
     )
-  CUDA_ADD_LIBRARY(uni10-static STATIC
-    ${uni10-objects}
-    src/uni10_cusolver_gpu/tools_cusolver_gpu/cuda_kernel_funcs/uni10_exp_kernel_gpu.cu
-    src/uni10_cusolver_gpu/tools_cusolver_gpu/cuda_kernel_funcs/uni10_kernel_gpu.cu
-    src/uni10_cusolver_gpu/tools_cusolver_gpu/cuda_kernel_funcs/uni10_reshape_kernel_gpu.cu
-    src/uni10_env_info/uni10_cusolver_gpu/uni10_memory_const_cusolver_gpu.cu
+  CUDA_ADD_LIBRARY(cytnx-static STATIC
+    ${cytnx-objects}
+    src/cytnx_cusolver_gpu/tools_cusolver_gpu/cuda_kernel_funcs/cytnx_exp_kernel_gpu.cu
+    src/cytnx_cusolver_gpu/tools_cusolver_gpu/cuda_kernel_funcs/cytnx_kernel_gpu.cu
+    src/cytnx_cusolver_gpu/tools_cusolver_gpu/cuda_kernel_funcs/cytnx_reshape_kernel_gpu.cu
+    src/cytnx_env_info/cytnx_cusolver_gpu/cytnx_memory_const_cusolver_gpu.cu
     )
-#  cuda_add_library( uni10 SHARED ${uni10all})
-#  cuda_add_library( uni10-static STATIC ${uni10all})
-  SET_TARGET_PROPERTIES(uni10-static PROPERTIES OUTPUT_NAME "uni10")
-  IF(APPLE)
+
+  SET_TARGET_PROPERTIES(cytnx-static PROPERTIES OUTPUT_NAME "cytnx")
+  if(APPLE)
     set(MACOSX_RPATH 1)
-    SET_TARGET_PROPERTIES(uni10 PROPERTIES VERSION ${UNI10_VERSION} SOVERSION ${UNI10_VERSION_MAJOR} MACOSX_RPATH 1)
+    SET_TARGET_PROPERTIES(cytnx PROPERTIES VERSION ${CYTNX_VERSION} SOVERSION ${CYTNX_VERSION_MAJOR} MACOSX_RPATH 1)
   else()
-    SET_TARGET_PROPERTIES(uni10 PROPERTIES VERSION ${UNI10_VERSION} SOVERSION ${UNI10_VERSION_MAJOR})
+    SET_TARGET_PROPERTIES(cytnx PROPERTIES VERSION ${CYTNX_VERSION} SOVERSION ${CYTNX_VERSION_MAJOR})
   endif()
-  target_link_libraries(uni10
+  target_link_libraries(cytnx
                 ${CUDA_CUDART_LIBRARY}
 		${CUDA_CUBLAS_LIBRARIES}
                 ${CUDA_cusolver_LIBRARY}
                 ${LAPACK_LIBRARIES}
                 ${OpenMP_CXX_LIBRARIES})
-  target_link_libraries(uni10-static
+  target_link_libraries(cytnx-static
                 ${CUDA_CUDART_LIBRARY}
 		${CUDA_CUBLAS_LIBRARIES}
                 ${CUDA_cusolver_LIBRARY}
                 ${LAPACK_LIBRARIES}
                 ${OpenMP_CXX_LIBRARIES})
-ELSE()
-  IF ("${CMAKE_GENERATOR}" STREQUAL "Xcode")
-# Add Dummy file to Xcode Project to build the library
-    add_custom_command(
-    PRE_BUILD
-    OUTPUT ${CMAKE_BINARY_DIR}/src/dummy.cpp
-    COMMAND touch ${CMAKE_BINARY_DIR}/src/dummy.cpp
-   )
-   add_library(uni10 SHARED ${uni10-objects} ${CMAKE_BINARY_DIR}/src/dummy.cpp)
-   add_library(uni10-static STATIC ${uni10-objects} ${CMAKE_BINARY_DIR}/src/dummy.cpp)
-ELSE()
-   add_library(uni10 SHARED ${uni10-objects} )
-   add_library(uni10-static STATIC ${uni10-objects})
-  ENDIF()
-  target_link_libraries(uni10 ${LAPACK_LIBRARIES})
-  target_link_libraries(uni10-static ${LAPACK_LIBRARIES})
-  SET_TARGET_PROPERTIES(uni10-static PROPERTIES OUTPUT_NAME "uni10")
+
+   add_library(cytnx SHARED ${cytnx-objects} )
+   add_library(cytnx-static STATIC ${cytnx-objects})
+
+  target_link_libraries(cytnx ${LAPACK_LIBRARIES})
+  target_link_libraries(cytnx-static ${LAPACK_LIBRARIES})
+  SET_TARGET_PROPERTIES(cytnx-static PROPERTIES OUTPUT_NAME "cytnx")
   IF(APPLE)
     set(MACOSX_RPATH 1)
-    SET_TARGET_PROPERTIES(uni10 PROPERTIES VERSION ${UNI10_VERSION} SOVERSION ${UNI10_VERSION_MAJOR} MACOSX_RPATH 1)
+    SET_TARGET_PROPERTIES(cytnx PROPERTIES VERSION ${CYTNX_VERSION} SOVERSION ${CYTNX_VERSION_MAJOR} MACOSX_RPATH 1)
   ELSE()
-    SET_TARGET_PROPERTIES(uni10 PROPERTIES VERSION ${UNI10_VERSION} SOVERSION ${UNI10_VERSION_MAJOR})
+    SET_TARGET_PROPERTIES(cytnx PROPERTIES VERSION ${CYTNX_VERSION} SOVERSION ${CYTNX_VERSION_MAJOR})
   ENDIF()
-  target_link_libraries(uni10
+  target_link_libraries(cytnx
                 ${LAPACK_LIBRARIES}
                 ${OpenMP_CXX_LIBRARIES})
-  target_link_libraries(uni10-static
+  target_link_libraries(cytnx-static
                 ${LAPACK_LIBRARIES}
                 ${OpenMP_CXX_LIBRARIES})
 ENDIF()
 
 IF(BUILD_HDF5_SUPPORT)
-  target_link_libraries(uni10 ${HDF5_LIBs})
-  target_link_libraries(uni10-static ${HDF5_LIBs})
+  target_link_libraries(cytnx ${HDF5_LIBs})
+  target_link_libraries(cytnx-static ${HDF5_LIBs})
 ENDIF()
 ######################################################################
 ### RPATH SETTINGS
@@ -332,9 +305,9 @@ ENDIF("${isSystemDir}" STREQUAL "-1")
 IF(BUILD_DOC)
   FIND_PACKAGE(Doxygen REQUIRED)
   if(DOXYGEN_FOUND)
-    configure_file(Uni10_Doxyfile.in Uni10Doxyfile)
+    configure_file(cytnx_Doxyfile.in cytnxDoxyfile)
     add_custom_target(doc ALL
-    ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Uni10Doxyfile
+    ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/cytnxDoxyfile
      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
      COMMENT "Generating API documentation with Doxygen" VERBATIM
      )
@@ -343,8 +316,8 @@ ENDIF()
 
 IF(BUILD_PYTHON_WRAPPER)
    FIND_PACKAGE(pybind11 REQUIRED)
-   pybind11_add_module(pyuni10 pyuni10/pyuni10.cpp)
-   target_link_libraries(pyuni10 PRIVATE uni10-static)
+   pybind11_add_module(pycytnx pycytnx/pycytnx.cpp)
+   target_link_libraries(pycytnx PRIVATE cytnx-static)
 ENDIF()
 
 ######################################################################
@@ -388,7 +361,7 @@ install(FILES INSTALL API_Changes.md	ChangeLog.md	DevGuide.md	README.md GPL LGPL
 
 
 
-set(libname "${CMAKE_SHARED_LIBRARY_PREFIX}cytnx.${UNI10_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+set(libname "${CMAKE_SHARED_LIBRARY_PREFIX}cytnx.${CYTNX_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 
 
@@ -401,7 +374,7 @@ message(STATUS "------------------------------------------------")
 message(STATUS "  Cytnx: The Universal Tensor Network Library")
 message(STATUS "------------------------------------------------")
 message(STATUS "")
-message(STATUS " Version: ${UNI10_VERSION}")
+message(STATUS " Version: ${CYTNX_VERSION}")
 message(STATUS " Generator: ${CMAKE_GENERATOR}")
 message(STATUS " Build Target: ${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 message(STATUS " Installation Prefix: ${CMAKE_INSTALL_PREFIX}")
