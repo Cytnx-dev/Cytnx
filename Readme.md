@@ -230,7 +230,8 @@
       Diag        |   x       |  Y  |  Y   |    N        | Y  |   N
     *Tensordot    |   x       |  Y  |  Y   |    N        | Y  |   N
      Otimes       |   x       |  Y  |  Y   |    N        | Y  |   N
- 
+     Vectordot    |   x       |  Y  |  N   |    N        | Y  |   N 
+
     * this is a high level linalg 
  
 ## Generators 

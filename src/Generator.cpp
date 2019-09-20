@@ -35,10 +35,10 @@ namespace cytnx{
         Tensor out;
         if(start < end){
             Nelem = cytnx_uint64((end - start)/step);
-            if(fmod((end - start),step) > 1.0e-14) Nelem += 1;
+            //if(fmod((end - start),step) > 1.0e-14) Nelem += 1;
         }else{
             Nelem = cytnx_uint64((start - end)/(-step));
-            if(fmod((start - end),(-step)) > 1.0e-14) Nelem += 1;
+            //if(fmod((start - end),(-step)) > 1.0e-14) Nelem += 1;
         }
         cytnx_error_msg(Nelem == 0,"[ERROR] arange(start,end,step)%s","Nelem cannot be zero! check the range!\n");
         out.Init({Nelem},dtype,device);

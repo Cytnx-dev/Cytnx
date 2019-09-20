@@ -211,12 +211,14 @@ namespace cytnx{
     }
 
     void SparseUniTensor::print_diagram(const bool &bond_info){
-        printf("-----------------------%s","\n");
-        printf("tensor Name : %s\n",this->_name.c_str());
-        printf("tensor Rank : %d\n",this->_labels.size());
-        printf("block_form  : true%s","\n");
-        printf("valid bocks : %d\n",this->_blocks.size());
-        printf("on device   : %s\n",this->device_str().c_str());
+        char *buffer = (char*)malloc(256*sizeof(char));
+
+        sprintf(buffer,"-----------------------%s","\n");
+        sprintf(buffer,"tensor Name : %s\n",this->_name.c_str());       std::cout << std::string(buffer);
+        sprintf(buffer,"tensor Rank : %d\n",this->_labels.size());      std::cout << std::string(buffer);
+        sprintf(buffer,"block_form  : true%s","\n");                    std::cout << std::string(buffer);
+        sprintf(buffer,"valid bocks : %d\n",this->_blocks.size());      std::cout << std::string(buffer);
+        sprintf(buffer,"on device   : %s\n",this->device_str().c_str());std::cout << std::string(buffer);
 
         cytnx_uint64 Nin = this->_Rowrank;
         cytnx_uint64 Nout = this->_labels.size() - this->_Rowrank;
@@ -230,11 +232,11 @@ namespace cytnx{
         char *r = (char*)malloc(40*sizeof(char));
         char *rlbl = (char*)malloc(40*sizeof(char));
         
-        printf("braket_form : %s\n",this->_is_braket_form?"True":"False");
-        printf("      |ket>               <bra| %s","\n");
-        printf("           ---------------      %s","\n");
+        sprintf(buffer,"braket_form : %s\n",this->_is_braket_form?"True":"False"); std::cout << std::string(buffer);
+        sprintf(buffer,"      |ket>               <bra| %s","\n");                 std::cout << std::string(buffer);
+        sprintf(buffer,"           ---------------      %s","\n");                 std::cout << std::string(buffer);
         for(cytnx_uint64 i=0;i<vl;i++){
-            printf("           |             |     %s","\n");
+            sprintf(buffer,"           |             |     %s","\n"); std::cout << std::string(buffer);
             if(i<Nin){
                 if(this->_bonds[i].type() == bondType::BD_KET) bks = "> ";
                 else                                         bks = "<*";
@@ -261,16 +263,16 @@ namespace cytnx{
                 sprintf(r,"%s","        ");
                 sprintf(rlbl,"%s","   ");
             }
-            printf("   %s| %s     %s |%s\n",l,llbl,rlbl,r);
+            sprintf(buffer,"   %s| %s     %s |%s\n",l,llbl,rlbl,r); std::cout << std::string(buffer);
 
         }
-        printf("           |             |     %s","\n");
-        printf("           ---------------     %s","\n");
+        sprintf(buffer,"           |             |     %s","\n"); std::cout << std::string(buffer);
+        sprintf(buffer,"           ---------------     %s","\n"); std::cout << std::string(buffer);
 
 
         if(bond_info){
             for(cytnx_uint64 i=0; i< this->_bonds.size();i++){
-                printf("lbl:%d ",this->_labels[i]);
+                sprintf(buffer,"lbl:%d ",this->_labels[i]); std::cout << std::string(buffer);
                 std::cout << this->_bonds[i] << std::endl;
             }
         }
@@ -280,6 +282,7 @@ namespace cytnx{
         free(llbl);
         free(r);
         free(rlbl);
+        free(buffer);
     }
 
     boost::intrusive_ptr<UniTensor_base> SparseUniTensor::contiguous(){
