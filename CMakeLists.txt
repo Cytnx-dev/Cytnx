@@ -128,7 +128,9 @@ endif()
 ######################################################################
 ### PROJECT
 ######################################################################
-project(CYTNX LANGUAGES C++ C)
+project(CYTNX VERSION ${CYTNX_VERSION} LANGUAGES CXX C)
+
+
 ######################################################################
 ### CMAKE INSTALL OPTIONS
 ######################################################################
@@ -150,6 +152,12 @@ if (${CMAKE_BUILD_TYPE} MATCHES Debug)
 else()
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall")
 endif()
+
+target_include_directories(cytnx
+    PUBLIC
+        $<INSTALL_INTERFACE:include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
 
 ######################################################################
 ### Find BLAS and LAPACK
@@ -214,13 +222,12 @@ endif()
 ######################################################################
 
 # path to include directory
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 ######################################################################
 ### ADD SUBDIRECTORIES
 ######################################################################
 
-add_subdirectory(src)
+
 
 
 ######################################################################
@@ -230,74 +237,9 @@ add_subdirectory(src)
 
 add_library(cytnx "")
 
-IF (BUILD_CUDA_SUPPORT)
-  CUDA_INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include)
-  CUDA_ADD_LIBRARY(cytnx SHARED
+add_subdirectory(src)
 
-    )
-  CUDA_ADD_LIBRARY(cytnx-static STATIC
-    ${cytnx-objects}
-    src/cytnx_cusolver_gpu/tools_cusolver_gpu/cuda_kernel_funcs/cytnx_exp_kernel_gpu.cu
-    src/cytnx_cusolver_gpu/tools_cusolver_gpu/cuda_kernel_funcs/cytnx_kernel_gpu.cu
-    src/cytnx_cusolver_gpu/tools_cusolver_gpu/cuda_kernel_funcs/cytnx_reshape_kernel_gpu.cu
-    src/cytnx_env_info/cytnx_cusolver_gpu/cytnx_memory_const_cusolver_gpu.cu
-    )
 
-  SET_TARGET_PROPERTIES(cytnx-static PROPERTIES OUTPUT_NAME "cytnx")
-  if(APPLE)
-    set(MACOSX_RPATH 1)
-    SET_TARGET_PROPERTIES(cytnx PROPERTIES VERSION ${CYTNX_VERSION} SOVERSION ${CYTNX_VERSION_MAJOR} MACOSX_RPATH 1)
-  else()
-    SET_TARGET_PROPERTIES(cytnx PROPERTIES VERSION ${CYTNX_VERSION} SOVERSION ${CYTNX_VERSION_MAJOR})
-  endif()
-  target_link_libraries(cytnx
-                ${CUDA_CUDART_LIBRARY}
-		${CUDA_CUBLAS_LIBRARIES}
-                ${CUDA_cusolver_LIBRARY}
-                ${LAPACK_LIBRARIES}
-                ${OpenMP_CXX_LIBRARIES})
-  target_link_libraries(cytnx-static
-                ${CUDA_CUDART_LIBRARY}
-		${CUDA_CUBLAS_LIBRARIES}
-                ${CUDA_cusolver_LIBRARY}
-                ${LAPACK_LIBRARIES}
-                ${OpenMP_CXX_LIBRARIES})
-
-   add_library(cytnx SHARED ${cytnx-objects} )
-   add_library(cytnx-static STATIC ${cytnx-objects})
-
-  target_link_libraries(cytnx ${LAPACK_LIBRARIES})
-  target_link_libraries(cytnx-static ${LAPACK_LIBRARIES})
-  SET_TARGET_PROPERTIES(cytnx-static PROPERTIES OUTPUT_NAME "cytnx")
-  IF(APPLE)
-    set(MACOSX_RPATH 1)
-    SET_TARGET_PROPERTIES(cytnx PROPERTIES VERSION ${CYTNX_VERSION} SOVERSION ${CYTNX_VERSION_MAJOR} MACOSX_RPATH 1)
-  ELSE()
-    SET_TARGET_PROPERTIES(cytnx PROPERTIES VERSION ${CYTNX_VERSION} SOVERSION ${CYTNX_VERSION_MAJOR})
-  ENDIF()
-  target_link_libraries(cytnx
-                ${LAPACK_LIBRARIES}
-                ${OpenMP_CXX_LIBRARIES})
-  target_link_libraries(cytnx-static
-                ${LAPACK_LIBRARIES}
-                ${OpenMP_CXX_LIBRARIES})
-ENDIF()
-
-IF(BUILD_HDF5_SUPPORT)
-  target_link_libraries(cytnx ${HDF5_LIBs})
-  target_link_libraries(cytnx-static ${HDF5_LIBs})
-ENDIF()
-######################################################################
-### RPATH SETTINGS
-######################################################################
-SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
-SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
-SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-LIST(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
-IF("${isSystemDir}" STREQUAL "-1")
-   SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-ENDIF("${isSystemDir}" STREQUAL "-1")
 
 ######################################################################
 ### Build Documents
@@ -353,7 +295,7 @@ install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc/
         COMPONENT documentation
 )
 endif()
-install(FILES INSTALL API_Changes.md	ChangeLog.md	DevGuide.md	README.md GPL LGPL
+install(FILES INSTALL 	README.md GPL LGPL
         DESTINATION .
         COMPONENT common)
 
@@ -387,7 +329,7 @@ message(STATUS " BLAS and LAPACK Libraries: ${LAPACK_LIBRARIES}")
 
 
 
-if(PYTHON)
+if(BUILD_PYTHON)
   message(STATUS " Build Python Wrapper: YES")
   message(STATUS "  - Python Excutable  : ${PYTHON_EXECUTABLE}")
   message(STATUS "  - Python Headers    : ${PYTHON_INCLUDE_DIR}")
@@ -395,7 +337,7 @@ if(PYTHON)
 else()
   message(STATUS " Build Python Wrapper: NO")
 endif()
-if(CUDA)
+if(USE_CUDA)
   message( STATUS " Build CUDA Support: YES")
   message( STATUS "  - CUDA Version: ${CUDA_VERSION_STRING}")
   message( STATUS "  - CUDA Toolkit Root: ${CUDA_TOOLKIT_ROOT_DIR}")
@@ -403,7 +345,7 @@ if(CUDA)
 else()
   message( STATUS " Build CUDA Support: NO")
 endif()
-if(DOC)
+if(BUILD_DOC)
   message( STATUS " Build Documentation: YES")
   message( STATUS "  - Doxygen: ${DOXYGEN_EXECUTABLE}")
 else()
