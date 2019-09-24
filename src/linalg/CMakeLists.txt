@@ -1,98 +1,31 @@
   target_sources_local(cytnx
-    PUBLIC
-
+    # PUBLIC
+    # linalg.hpp
+    # linalg_internal_interface.hpp
     PRIVATE
+    Add.cpp
+    Conj.cpp
+    Conj_.cpp
+    Cpr.cpp
+    Diag.cpp
+    Div.cpp
+    Eigh.cpp
+    Exp.cpp
+    Exp_.cpp
+    Inv.cpp
+    Inv_.cpp
+    Matmul.cpp
+    Mul.cpp
+    Otimes.cpp
+    Sub.cpp
+    Svd.cpp
+    Svd_truncate.cpp
+    Tensordot.cpp
+    Vectordot.cpp
+    linalg_internal_interface.cpp
 )
-linalg/linalg_internal_cpu/Add_internal.cpp
-linalg/linalg_internal_cpu/Arithmetic_internal.cpp
-linalg/linalg_internal_cpu/Conj_inplace_internal.cpp
-linalg/linalg_internal_cpu/Cpr_internal.cpp
-linalg/linalg_internal_cpu/Diag_internal.cpp
-linalg/linalg_internal_cpu/Div_internal.cpp
-linalg/linalg_internal_cpu/Eigh_internal.cpp
-linalg/linalg_internal_cpu/Exp_internal.cpp
-linalg/linalg_internal_cpu/Inv_inplace_internal.cpp
-linalg/linalg_internal_cpu/Matmul_internal.cpp
-linalg/linalg_internal_cpu/Mul_internal.cpp
-linalg/linalg_internal_cpu/Outer_internal.cpp
-linalg/linalg_internal_cpu/Sub_internal.cpp
-linalg/linalg_internal_cpu/Svd_internal.cpp
 
-linalg/linalg.hpp
-linalg/linalg_internal_interface.hpp
-utils/cartesian.hpp
-utils/complex_arithmetic.hpp
-utils/cucomplex_arithmetic.hpp
-utils/is.hpp
-utils/str_utils.hpp
-utils/utils.hpp
-utils/utils_internal_interface.hpp
-utils/vec_clone.hpp
-utils/vec_concatenate.hpp
-utils/vec_erase.hpp
-utils/vec_intersect.hpp
-utils/vec_map.hpp
-utils/vec_unique.hpp
-utils/vec_where.hpp
-linalg/linalg_internal_cpu/Add_internal.hpp
-linalg/linalg_internal_cpu/Arithmetic_internal.hpp
-linalg/linalg_internal_cpu/Conj_inplace_internal.hpp
-linalg/linalg_internal_cpu/Cpr_internal.hpp
-linalg/linalg_internal_cpu/Diag_internal.hpp
-linalg/linalg_internal_cpu/Div_internal.hpp
-linalg/linalg_internal_cpu/Eigh_internal.hpp
-linalg/linalg_internal_cpu/Exp_internal.hpp
-linalg/linalg_internal_cpu/Inv_inplace_internal.hpp
-linalg/linalg_internal_cpu/Matmul_internal.hpp
-linalg/linalg_internal_cpu/Mul_internal.hpp
-linalg/linalg_internal_cpu/Outer_internal.hpp
-linalg/linalg_internal_cpu/Sub_internal.hpp
-linalg/linalg_internal_cpu/Svd_internal.hpp
-linalg/linalg_internal_gpu/cuAdd_internal.hpp
-linalg/linalg_internal_gpu/cuArithmetic_internal.hpp
-linalg/linalg_internal_gpu/cuConj_inplace_internal.hpp
-linalg/linalg_internal_gpu/cuCpr_internal.hpp
-linalg/linalg_internal_gpu/cuDiag_internal.hpp
-linalg/linalg_internal_gpu/cuDiv_internal.hpp
-linalg/linalg_internal_gpu/cuEigh_internal.hpp
-linalg/linalg_internal_gpu/cuExp_internal.hpp
-linalg/linalg_internal_gpu/cuInv_inplace_internal.hpp
-linalg/linalg_internal_gpu/cuMatmul_internal.hpp
-linalg/linalg_internal_gpu/cuMul_internal.hpp
-linalg/linalg_internal_gpu/cuOuter_internal.hpp
-linalg/linalg_internal_gpu/cuSub_internal.hpp
-linalg/linalg_internal_gpu/cuSvd_internal.hpp
-linalg/linalg_internal_gpu/cuAdd_internal.cu
-linalg/linalg_internal_gpu/cuArithmetic_internal.cu
-linalg/linalg_internal_gpu/cuConj_inplace_internal.cu
-linalg/linalg_internal_gpu/cuCpr_internal.cu
-linalg/linalg_internal_gpu/cuDiag_internal.cu
-linalg/linalg_internal_gpu/cuDiv_internal.cu
-linalg/linalg_internal_gpu/cuEigh_internal.cu
-linalg/linalg_internal_gpu/cuExp_internal.cu
-linalg/linalg_internal_gpu/cuInv_inplace_internal.cu
-linalg/linalg_internal_gpu/cuMatmul_internal.cu
-linalg/linalg_internal_gpu/cuMul_internal.cu
-linalg/linalg_internal_gpu/cuOuter_internal.cu
-linalg/linalg_internal_gpu/cuSub_internal.cu
-linalg/linalg_internal_gpu/cuSvd_internal.cu
-Add.cpp
-Conj.cpp
-Conj_.cpp
-Cpr.cpp
-Diag.cpp
-Div.cpp
-Eigh.cpp
-Exp.cpp
-Exp_.cpp
-Inv.cpp
-Inv_.cpp
-Matmul.cpp
-Mul.cpp
-Otimes.cpp
-Sub.cpp
-Svd.cpp
-Svd_truncate.cpp
-Tensordot.cpp
-Vectordot.cpp
-linalg_internal_interface.cpp
+add_subdirectory(linalg_internal_cpu)
+if(USE_CUDA)
+  add_subdirectory(linalg_internal_gpu)
+endif()

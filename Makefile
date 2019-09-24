@@ -95,7 +95,9 @@ endif
 
 ## Linalg_internal
 OBJS += linalg_internal_interface.o
-OBJS += Cpr_internal.o Add_internal.o Sub_internal.o Mul_internal.o Div_internal.o Arithmetic_internal.o Svd_internal.o Inv_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_internal.o Diag_internal.o Outer_internal.o 
+
+OBJS += Cpr_internal.o Add_internal.o Sub_internal.o Mul_internal.o Div_internal.o Arithmetic_internal.o Svd_internal.o Inv_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_internal.o Diag_internal.o Outer_internal.o Vectordot_internal.o 
+
 ifeq ($(GPU_Enable),1)
   OBJS += cuCpr_internal.o cuAdd_internal.o cuSub_internal.o cuMul_internal.o cuDiv_internal.o cuArithmetic_internal.o cuSvd_internal.o cuInv_inplace_internal.o cuConj_inplace_internal.o cuExp_internal.o  cuEigh_internal.o cuMatmul_internal.o cuDiag_internal.o cuOuter_internal.o
 
@@ -111,7 +113,7 @@ ifeq ($(GPU_Enable),1)
   ALLOBJS += gpusrc.o
 endif
 
-
+TESTPATH=tests
 
 
 all: test 
@@ -454,7 +456,7 @@ Otimes.o: $(CytnxPATH)/src/linalg/Otimes.cpp $(CytnxPATH)/include/linalg/linalg.
 Tridiag.o: $(CytnxPATH)/src/linalg/Tridiag.cpp $(CytnxPATH)/include/linalg/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
-test.o: test.cpp
+test.o: $(TESTPATH)/test.cpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 

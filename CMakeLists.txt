@@ -153,11 +153,19 @@ else()
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall")
 endif()
 
+add_library(cytnx "")
 target_include_directories(cytnx
     PUBLIC
         $<INSTALL_INTERFACE:include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
 )
+target_include_directories(cytnx SYSTEM
+    PUBLIC
+				${Boost_INCLUDE_DIRS}
+)
+add_subdirectory(src)
+
+
 
 ######################################################################
 ### Find BLAS and LAPACK
@@ -177,7 +185,8 @@ else()
   message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}")
 endif()
 
-
+find_package(Boost REQUIRED)
+message(STATUS ${Boost_INCLUDE_DIRS})
 message(STATUS ${COMPILE_DEFINITIONS})
 ######################################################################
 ### Find CUDA
@@ -235,9 +244,7 @@ endif()
 ######################################################################
 
 
-add_library(cytnx "")
 
-add_subdirectory(src)
 
 
 
@@ -265,7 +272,7 @@ ENDIF()
 ######################################################################
 ### INSTALL
 ######################################################################
-install(TARGETS cyntax cyntax-static
+install(TARGETS cytnx
         LIBRARY
         DESTINATION lib
         COMPONENT libraries
