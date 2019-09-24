@@ -1,0 +1,7 @@
+include CMakeLists.txt
+recursive-include cmake *
+include LICENSE
+include README.md
+recursive-include src *
+recursive-include include *
+include pybind/cytnx.cpp

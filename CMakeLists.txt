@@ -34,7 +34,7 @@ cmake_minimum_required(VERSION 3.1)
 
 include(cmake/target_sources_local.cmake)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
-set(CMAKE_CXX_STANDARD 11)
+
 
 ######################################################################
 ### DISABLING IN-SOURCE BUILD
@@ -143,15 +143,7 @@ if(UNIX)
   endif()
 endif()
 
-######################################################################
-### CMAKE BUILD TYPE
-######################################################################
 
-if (${CMAKE_BUILD_TYPE} MATCHES Debug)
-   set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -coverage -Wall -DUNI_DEBUG  ")
-else()
-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall")
-endif()
 
 add_library(cytnx "")
 target_include_directories(cytnx
@@ -163,6 +155,7 @@ target_include_directories(cytnx SYSTEM
     PUBLIC
 				${Boost_INCLUDE_DIRS}
 )
+target_compile_features(cytnx PUBLIC cxx_std_11)
 add_subdirectory(src)
 
 
@@ -186,7 +179,6 @@ else()
 endif()
 
 find_package(Boost REQUIRED)
-message(STATUS ${Boost_INCLUDE_DIRS})
 message(STATUS ${COMPILE_DEFINITIONS})
 ######################################################################
 ### Find CUDA
@@ -223,30 +215,7 @@ if ( OPENMP_FOUND )
    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}" )
 endif()
 
-
-
-
-######################################################################
-### PATHS
-######################################################################
-
-# path to include directory
-
-######################################################################
-### ADD SUBDIRECTORIES
-######################################################################
-
-
-
-
-######################################################################
-### ADD LIBRARY
-######################################################################
-
-
-
-
-
+target_link_libraries(cytnx PUBLIC Boost::boost ${LAPACK_LIBRARIES})
 
 ######################################################################
 ### Build Documents
@@ -263,32 +232,29 @@ IF(BUILD_DOC)
   endif(DOXYGEN_FOUND)
 ENDIF()
 
-IF(BUILD_PYTHON_WRAPPER)
+IF(BUILD_PYTHON)
    FIND_PACKAGE(pybind11 REQUIRED)
-   pybind11_add_module(pycytnx pycytnx/pycytnx.cpp)
-   target_link_libraries(pycytnx PRIVATE cytnx-static)
+   pybind11_add_module(pycytnx pybind/cytnx.cpp)
+   target_link_libraries(pycytnx PRIVATE cytnx)
+   set_target_properties(pycytnx PROPERTIES OUTPUT_NAME cytnx)
 ENDIF()
 
 ######################################################################
 ### INSTALL
 ######################################################################
-install(TARGETS cytnx
+INSTALL(TARGETS cytnx EXPORT cytnx_targets
         LIBRARY
-        DESTINATION lib
-        COMPONENT libraries
+          DESTINATION lib
+          COMPONENT libraries
         ARCHIVE
-        DESTINATION lib
-        COMPONENT libraries)
+          DESTINATION lib
+          COMPONENT libraries
+        PUBLIC_HEADER
+          DESTINATION include
+          COMPONENT Development
+      )
+install(EXPORT cytnx_targets NAMESPACE cytnx DESTINATION lib/cytnx)
 
-######################################################################
-### INSTALL HEADER FILES
-######################################################################
-
-install(DIRECTORY include/
-	DESTINATION include
-        COMPONENT headers
-	FILES_MATCHING PATTERN 		"*.h*"
-)
 
 
 
@@ -319,9 +285,9 @@ set(libname "${CMAKE_SHARED_LIBRARY_PREFIX}cytnx.${CYTNX_VERSION}${CMAKE_SHARED_
 # Information Messages
 ######################################################################
 message(STATUS "")
-message(STATUS "------------------------------------------------")
-message(STATUS "  Cytnx: The Universal Tensor Network Library")
-message(STATUS "------------------------------------------------")
+message(STATUS "------------------------------------------------------------------------")
+message(STATUS "  Project Cytnx, A Cross-section of Python & C++,Tensor network library ")
+message(STATUS "------------------------------------------------------------------------")
 message(STATUS "")
 message(STATUS " Version: ${CYTNX_VERSION}")
 message(STATUS " Generator: ${CMAKE_GENERATOR}")
