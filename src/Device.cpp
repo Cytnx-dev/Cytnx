@@ -65,8 +65,8 @@ void Device_class::Print_Property(){
         for(int i=0;i<this->Ngpus;i++){
             sprintf(buffer,"%2d|",i); cout << string(buffer);
             for(int j=0;j<this->Ngpus;j++){
-                if(j==i) {sprintf(buffer,"%s","  x"); cout << string(buffer);
-                else     {sprintf(buffer,"  %d",int(CanAccessPeer[i][j])); cout << string(buffer);
+                if(j==i) {sprintf(buffer,"%s","  x"); cout << string(buffer);}
+                else     {sprintf(buffer,"  %d",int(CanAccessPeer[i][j])); cout << string(buffer);}
             }
             cout << endl;
         }
