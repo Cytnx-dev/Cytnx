@@ -1,0 +1,21 @@
+target_sources_local(cytnx
+  PRIVATE
+    # Alloc_cpu.hpp
+    # Cast_cpu.hpp
+    # Fill_cpu.hpp
+    # GetElems_cpu.hpp
+    # Movemem_cpu.hpp
+    # Range_cpu.hpp
+    # SetArange_cpu.hpp
+    # SetElems_cpu.hpp
+    # SetZeros_cpu.hpp
+    Alloc_cpu.cpp
+    Cast_cpu.cpp
+    Fill_cpu.cpp
+    GetElems_cpu.cpp
+    Movemem_cpu.cpp
+    Range_cpu.cpp
+    SetArange_cpu.cpp
+    SetElems_cpu.cpp
+    SetZeros_cpu.cpp
+)
