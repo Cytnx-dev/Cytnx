@@ -2,7 +2,6 @@
 #define _H_Network_
 
 #include "Type.hpp"
-#include "Network.hpp"
 #include "UniTensor.hpp"
 #include "cytnx_error.hpp"
 #include <initializer_list>
@@ -38,12 +37,12 @@ namespace cytnx{
     class Network_base: public intrusive_ptr_base<Network_base>{
         protected:
             int nwrktype_id;
-            std::vector<UniTensor> tensors; 
+            std::vector<UniTensor> tensors;
             std::vector<cytnx_int64> TOUT_labels;
             cytnx_uint64 TOUT_iBondNum;
 
             //bool ordered;
-           
+
             //Contraction order.
             ContractionTree CtTree;
             std::vector<std::string> ORDER_tokens;
@@ -56,15 +55,15 @@ namespace cytnx{
             // name of tn.
             std::vector< std::string > names;
             std::map<std::string,cytnx_uint64> name2pos;
-            
-            
+
+
 
         public:
             friend class FermionNetwork;
             friend class RegularNetwork;
             friend class Network;
             Network_base():nwrktype_id(NtType.Void){};
-           
+
 
             bool HasPutAllUniTensor(){
                 for(cytnx_uint64 i=0;i<this->tensors.size();i++){
@@ -76,13 +75,13 @@ namespace cytnx{
             //void print_network() const;
 
             //void PreConstruct(bool force = true);
-            
+
             //void PutTensor(cytnx_int64 idx, const UniTensor& UniT, bool force = true);
-            
+
             //void PutTensor(const std::string  &name, const UniTensor &UniT, bool force = true);
-            
+
             //UniTensor Launch(const std::string &Tname="");
-            
+
             //std::string GetContractOrder() const;
             virtual void PutUniTensor(const std::string &name, const UniTensor &utensor, const bool &is_clone);
             virtual void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor, const bool &is_clone);
@@ -91,12 +90,12 @@ namespace cytnx{
             virtual UniTensor Launch();
             virtual boost::intrusive_ptr<Network_base> clone();
             virtual ~Network_base(){};
-            
-    
+
+
     };//Network_base
 
     class RegularNetwork : public Network_base{
-        
+
         public:
             RegularNetwork(){this->nwrktype_id = NtType.Regular;};
             void Fromfile(const std::string &fname);
@@ -128,13 +127,13 @@ namespace cytnx{
             }
             ~RegularNetwork(){};
 
-    }; 
+    };
 
     //Under dev!!
     class FermionNetwork : public Network_base{
         protected:
             // [Future] Swap gates.
- 
+
         public:
             FermionNetwork(){this->nwrktype_id=NtType.Fermion;};
             void Fromfile(const std::string &fname){};
@@ -185,14 +184,14 @@ namespace cytnx{
             /**
             @brief Construct Network from network file.
             @param fname The network file path
-            @param network_type The type of network. 
+            @param network_type The type of network.
                    This can be [NtType.Regular] or [NtType.Fermion.].
                    Currently, only Regular Network is support!
-            
-                
+
+
             ##note:
-                1. each network file cannot have more than 1024 lines. 
- 
+                1. each network file cannot have more than 1024 lines.
+
             */
             void Fromfile(const std::string &fname, const int &network_type=NtType.Regular){
                 if(network_type==NtType.Regular){
@@ -227,7 +226,7 @@ namespace cytnx{
                 out._impl = this->_impl->clone();
                 return out;
             }
-    
+
     };
 
     ///@cond
