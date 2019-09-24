@@ -30,21 +30,21 @@
 ######################################################################
 
 target_sources_local(cytnx
-  PUBLIC
-    Accessor.hpp
-    Bond.hpp
-    Device.hpp
-    Generator.hpp
-    Network.hpp
-    Storage.hpp
-    Symmetry.hpp
-    Tensor.hpp
-    Type.hpp
-    UniTensor.hpp
-    contraction_tree.hpp
-    cytnx.hpp
-    cytnx_error.hpp
-    intrusive_ptr_base.hpp
+  # PUBLIC
+  #   Accessor.hpp
+  #   Bond.hpp
+  #   Device.hpp
+  #   Generator.hpp
+  #   Network.hpp
+  #   Storage.hpp
+  #   Symmetry.hpp
+  #   Tensor.hpp
+  #   Type.hpp
+  #   UniTensor.hpp
+  #   contraction_tree.hpp
+  #   cytnx.hpp
+  #   cytnx_error.hpp
+  #   intrusive_ptr_base.hpp
   PRIVATE
     Accessor.cpp
     Bond.cpp
