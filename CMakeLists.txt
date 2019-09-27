@@ -254,7 +254,10 @@ INSTALL(TARGETS cytnx EXPORT cytnx_targets
           COMPONENT Development
       )
 install(EXPORT cytnx_targets NAMESPACE cytnx DESTINATION lib/cytnx)
-
+install(DIRECTORY include/
+        DESTINATION include
+        COMPONENT headers
+        FILES_MATCHING PATTERN 		"*.h*")
 
 
 
@@ -268,7 +271,9 @@ install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc/
         COMPONENT documentation
 )
 endif()
-install(FILES INSTALL 	README.md GPL LGPL
+install(FILES
+        README.md
+        LICENSE
         DESTINATION .
         COMPONENT common)
 
