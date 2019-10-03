@@ -1,4 +1,4 @@
-#include "utils/utils_internal_cpu/Range_cpu.hpp"
+#include "Range_cpu.hpp"
 #ifdef UNI_OMP
 #include <omp.h>
 #endif

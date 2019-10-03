@@ -1,4 +1,4 @@
-#include "utils/utils_internal_gpu/cuSetZeros_gpu.hpp"
+#include "cuSetZeros_gpu.hpp"
 
 using namespace std;
 

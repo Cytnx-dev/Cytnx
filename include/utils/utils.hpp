@@ -1,10 +1,10 @@
 #ifndef __utils_H_
 #define __utils_H_
 
-#include "complex_arithmetic.hpp"
-#ifdef UNI_GPU
-    #include "cucomplex_arithmetic.hpp"
-#endif
+//#include "complex_arithmetic.hpp"
+//#ifdef UNI_GPU
+//    #include "cucomplex_arithmetic.hpp"
+//#endif
 #include "is.hpp"
 #include "cartesian.hpp"
 #include "vec_clone.hpp"

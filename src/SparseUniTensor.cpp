@@ -1,6 +1,6 @@
 #include "UniTensor.hpp"
 #include "utils/utils.hpp"
-#include "linalg/linalg.hpp"
+#include "linalg.hpp"
 #include "Generator.hpp"
 #include <vector>
 using namespace std;

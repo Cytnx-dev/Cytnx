@@ -1,7 +1,7 @@
 #include <typeinfo>
 #include "Tensor.hpp"
 #include "utils/utils_internal_interface.hpp"
-#include "linalg/linalg.hpp"
+#include "linalg.hpp"
 
 using namespace std;
 

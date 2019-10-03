@@ -5,8 +5,8 @@
 #include <cstdlib>
 #include <stdint.h>
 #include <climits>
-#include "../../Type.hpp"
-#include "../../cytnx_error.hpp"
+#include "Type.hpp"
+#include "cytnx_error.hpp"
 
 namespace cytnx{
     namespace utils_internal{

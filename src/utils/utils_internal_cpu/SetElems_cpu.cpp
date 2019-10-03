@@ -1,4 +1,4 @@
-#include "utils/utils_internal_cpu/SetElems_cpu.hpp"
+#include "SetElems_cpu.hpp"
 #include "utils/utils_internal_interface.hpp"
 #ifdef UNI_OMP
 #include <omp.h>

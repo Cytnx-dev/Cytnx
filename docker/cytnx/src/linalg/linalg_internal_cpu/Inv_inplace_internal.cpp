@@ -1,6 +1,6 @@
 #include "cytnx_error.hpp"
-#include "linalg/linalg_internal_cpu/Inv_inplace_internal.hpp"
-#include "utils/lapack_wrapper.h"
+#include "Inv_inplace_internal.hpp"
+#include "lapack_wrapper.hpp"
 
 
 namespace cytnx{

@@ -8,7 +8,6 @@
 #include "Symmetry.hpp"
 #include "Bond.hpp"
 #include "intrusive_ptr_base.hpp"
-#include "utils/utils_internal_interface.hpp"
 #include "utils/utils.hpp"
 #include <iostream>
 #include <vector>

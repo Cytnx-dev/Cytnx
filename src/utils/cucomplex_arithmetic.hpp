@@ -65,7 +65,7 @@ namespace cytnx{
 #endif
 
 
-// operator overload for GPU code. for COMPLEX type arithmic.
+// operator overload for GPU code. for COMPLEX type arithmetic.
 } // namespace cytnx
 
 #endif

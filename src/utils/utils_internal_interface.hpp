@@ -22,7 +22,7 @@
 #endif
 
 #include "Type.hpp"
-#include "complex_arithmetic.hpp"
+#include "utils/complex_arithmetic.hpp"
 #ifdef UNI_GPU
     #include "cucomplex_arithmetic.hpp"
 #endif

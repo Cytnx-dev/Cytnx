@@ -5,7 +5,6 @@
 #include "cytnx_error.hpp"
 #include "Tensor.hpp"
 #include "Storage.hpp"
-#include "linalg/linalg_internal_interface.hpp"
 #include "UniTensor.hpp"
 
 namespace cytnx{

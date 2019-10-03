@@ -1,13 +1,13 @@
 target_sources_local(cytnx
   PRIVATE
-    # cuAlloc_gpu.hpp
-    # cuCast_gpu.hpp
-    # cuFill_gpu.hpp
-    # cuGetElems_gpu.hpp
-    # cuMovemem_gpu.hpp
-    # cuSetArange_gpu.hpp
-    # cuSetElems_gpu.hpp
-    # cuSetZeros_gpu.hpp
+    cuAlloc_gpu.hpp
+    cuCast_gpu.hpp
+    cuFill_gpu.hpp
+    cuGetElems_gpu.hpp
+    cuMovemem_gpu.hpp
+    cuSetArange_gpu.hpp
+    cuSetElems_gpu.hpp
+    cuSetZeros_gpu.hpp
     cuAlloc_gpu.cu
     cuCast_gpu.cu
     cuFill_gpu.cu

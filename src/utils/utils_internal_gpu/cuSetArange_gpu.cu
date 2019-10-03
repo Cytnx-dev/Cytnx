@@ -1,4 +1,4 @@
-#include "utils/utils_internal_gpu/cuSetArange_gpu.hpp"
+#include "cuSetArange_gpu.hpp"
 
 
 namespace cytnx{
