@@ -4,11 +4,11 @@
 
 #include "Type.hpp"
 #include "Storage.hpp"
-#include "linalg/linalg_internal_cpu/Add_internal.hpp"
-#include "linalg/linalg_internal_cpu/Mul_internal.hpp"
-#include "linalg/linalg_internal_cpu/Sub_internal.hpp"
-#include "linalg/linalg_internal_cpu/Div_internal.hpp"
-#include "linalg/linalg_internal_cpu/Cpr_internal.hpp"
+#include "Add_internal.hpp"
+#include "Mul_internal.hpp"
+#include "Sub_internal.hpp"
+#include "Div_internal.hpp"
+#include "Cpr_internal.hpp"
 
 namespace cytnx{
     namespace linalg_internal{

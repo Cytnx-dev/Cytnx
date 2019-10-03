@@ -1,8 +1,8 @@
-#include "linalg/linalg_internal_cpu/Outer_internal.hpp"
+#include "Outer_internal.hpp"
 #include "utils/utils_internal_interface.hpp"
 
 #include "utils/complex_arithmetic.hpp"
-#include "utils/lapack_wrapper.h"
+#include "lapack_wrapper.hpp"
 
 #ifdef UNI_OMP
     #include <omp.h>

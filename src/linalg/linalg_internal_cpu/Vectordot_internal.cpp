@@ -1,7 +1,7 @@
-#include "linalg/linalg_internal_cpu/Vectordot_internal.hpp"
+#include "Vectordot_internal.hpp"
 #include "utils/utils_internal_interface.hpp"
 #include "utils/utils.hpp"
-#include "utils/lapack_wrapper.h"
+#include "lapack_wrapper.hpp"
 #include <vector>
 #ifdef UNI_OMP
     #include <omp.h>

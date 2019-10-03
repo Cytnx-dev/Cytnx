@@ -1,4 +1,4 @@
-#include "linalg/linalg_internal_interface.hpp"
+#include "linalg_internal_interface.hpp"
 
 using namespace std;
 

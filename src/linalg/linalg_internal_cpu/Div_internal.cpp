@@ -1,4 +1,4 @@
-#include "linalg/linalg_internal_cpu/Div_internal.hpp"
+#include "Div_internal.hpp"
 #include "utils/utils_internal_interface.hpp"
 #include "utils/utils.hpp"
 #ifdef UNI_OMP

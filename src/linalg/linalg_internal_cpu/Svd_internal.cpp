@@ -1,6 +1,6 @@
-#include "linalg/linalg_internal_cpu/Svd_internal.hpp"
+#include "Svd_internal.hpp"
 #include "cytnx_error.hpp"
-#include "utils/lapack_wrapper.h"
+#include "lapack_wrapper.hpp"
 
 namespace cytnx{
 

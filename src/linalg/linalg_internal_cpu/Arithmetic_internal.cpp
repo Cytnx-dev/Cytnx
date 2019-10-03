@@ -1,4 +1,4 @@
-#include "linalg/linalg_internal_cpu/Arithmetic_internal.hpp"
+#include "Arithmetic_internal.hpp"
 
 namespace cytnx{
     namespace linalg_internal{
