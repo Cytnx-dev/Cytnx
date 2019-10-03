@@ -11,6 +11,6 @@
 #include "Bond.hpp"
 #include "Generator.hpp"
 #include "UniTensor.hpp"
-#include "linalg/linalg.hpp"
+#include "linalg.hpp"
 #include "utils/utils.hpp"
 #endif

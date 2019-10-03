@@ -1,4 +1,4 @@
-#include "utils/utils_internal_interface.hpp"
+#include "utils_internal_interface.hpp"
 #include <vector>
 using namespace std;
 namespace cytnx{

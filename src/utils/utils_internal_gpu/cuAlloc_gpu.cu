@@ -1,4 +1,4 @@
-#include "utils/utils_internal_gpu/cuAlloc_gpu.hpp"
+#include "cuAlloc_gpu.hpp"
 
 using namespace std;
 

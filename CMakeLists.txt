@@ -34,7 +34,7 @@ cmake_minimum_required(VERSION 3.1)
 
 include(cmake/target_sources_local.cmake)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
-
+include(GNUInstallDirs)
 
 ######################################################################
 ### DISABLING IN-SOURCE BUILD
@@ -90,7 +90,7 @@ set(CYTNX_VERSION
 
 option(USE_ICPC "Build Cytnx with Intel Compilers" OFF)
 option(USE_CUDA "Build using Nvidia CUDA for GPU library" OFF)
-option(BUILD_PYTHON "Build Python wrapper" OFF)
+option(BUILD_PYTHON "Build Python wrapper" ON)
 option(USE_MKL "Build using MKL" OFF)
 option(BUILD_DOC "Build API docuemntation" OFF)
 if (USE_ICPC)
@@ -147,6 +147,8 @@ endif()
 
 add_library(cytnx "")
 target_include_directories(cytnx
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
     PUBLIC
         $<INSTALL_INTERFACE:include>
         $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
@@ -203,7 +205,7 @@ if(USE_CUDA)
       -gencode=arch=compute_70,code=sm_70 \
       -gencode=arch=compute_75,code=sm_75 \
       -gencode=arch=compute_75,code=compute_75 ")
-  add_definitions("-DUNI_GPU")
+  target_compile_definitions( cytnx UNI_GPU)
 endif()
 
 
@@ -242,20 +244,22 @@ ENDIF()
 ######################################################################
 ### INSTALL
 ######################################################################
+
+set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/cytnx)
 INSTALL(TARGETS cytnx EXPORT cytnx_targets
         LIBRARY
-          DESTINATION lib
-          COMPONENT libraries
+          DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        COMPONENT libraries
         ARCHIVE
-          DESTINATION lib
+          DESTINATION ${CMAKE_INSTALL_LIBDIR}
           COMPONENT libraries
         PUBLIC_HEADER
-          DESTINATION include
+          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/cytnx
           COMPONENT Development
       )
-install(EXPORT cytnx_targets NAMESPACE cytnx DESTINATION lib/cytnx)
+install(EXPORT cytnx_targets NAMESPACE cytnx DESTINATION ${INSTALL_CONFIGDIR})
 install(DIRECTORY include/
-        DESTINATION include
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/cytnx
         COMPONENT headers
         FILES_MATCHING PATTERN 		"*.h*")
 

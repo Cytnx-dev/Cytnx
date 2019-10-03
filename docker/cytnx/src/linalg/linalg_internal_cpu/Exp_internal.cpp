@@ -1,6 +1,6 @@
 #include "linalg/linalg_internal_cpu/Exp_internal.hpp"
 #include "cytnx_error.hpp"
-#include "utils/lapack_wrapper.h"
+#include "utils/lapack_wrapper.hpp"
 
 #ifdef UNI_OMP
 #include <omp.h>

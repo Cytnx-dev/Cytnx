@@ -1,4 +1,4 @@
-#include "utils/utils_internal_gpu/cuGetElems_gpu.hpp"
+#include "cuGetElems_gpu.hpp"
 
 
 namespace cytnx{

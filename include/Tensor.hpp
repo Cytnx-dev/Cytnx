@@ -6,7 +6,7 @@
 #include "Storage.hpp"
 #include "Device.hpp"
 #include "intrusive_ptr_base.hpp"
-#include "utils/utils_internal_interface.hpp"
+//#include "utils/utils_internal_interface.hpp"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -14,7 +14,15 @@
 #include "Accessor.hpp"
 namespace cytnx{
 
+namespace utils_internal{
+        std::vector<cytnx_uint64> range_cpu(const cytnx_uint64 &len);
+        std::vector<cytnx_uint64> range_cpu(const cytnx_uint64 &start, const cytnx_uint64 &end);
 
+
+        template<class T>
+        std::vector<T> range_cpu(const cytnx_int64 &len);
+        template<class T>
+        std::vector<T> range_cpu(const cytnx_int64 &start, const cytnx_int64 &end);}
 
     ///@cond
     // real implementation
@@ -227,7 +235,7 @@ namespace cytnx{
                             
                 if(has_undetermine){
                     cytnx_error_msg(new_N >= this->_storage.size(),"%s","[ERROR] new shape exceed the total number of elements.");
-                    cytnx_error_msg(this->_storage.size()%new_N,"%s","[ERROR] unmatch size when reshape with undetermine dimension");
+                    cytnx_error_msg(this->_storage.size()%new_N,"%s","[ERROR] unmatched size when reshape with undetermined dimension");
                     result_shape[Udet_id] = this->_storage.size()/new_N;
                 }else{
                     cytnx_error_msg(new_N != this->_storage.size(),"%s","[ERROR] new shape does not match the number of elements.");
