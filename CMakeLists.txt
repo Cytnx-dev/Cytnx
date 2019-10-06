@@ -257,7 +257,11 @@ INSTALL(TARGETS cytnx EXPORT cytnx_targets
           DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/cytnx
           COMPONENT Development
       )
-install(EXPORT cytnx_targets NAMESPACE cytnx DESTINATION ${INSTALL_CONFIGDIR})
+install(EXPORT cytnx_targets
+        FILE CytnxTargets.cmake
+        NAMESPACE cytnx::
+        DESTINATION ${INSTALL_CONFIGDIR}
+        )
 install(DIRECTORY include/
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/cytnx
         COMPONENT headers
@@ -278,7 +282,7 @@ endif()
 install(FILES
         README.md
         LICENSE
-        DESTINATION .
+        DESTINATION ${CMAKE_INSTALL_PREFIX}
         COMPONENT common)
 
 

@@ -196,7 +196,7 @@ namespace cytnx{
                     }
                     this->_bonds = bds;
                     this->_block = in_tensor;
-                    this->_labels = utils_internal::range_cpu<cytnx_int64>(in_tensor.shape().size());
+                    this->_labels = vec_range<cytnx_int64>(in_tensor.shape().size());
                     cytnx_error_msg(Rowrank > in_tensor.shape().size(),"[ERROR][Init_by_tensor] Rowrank exceed the rank of Tensor.%s","\n");
                     this->_Rowrank = Rowrank;
                 }

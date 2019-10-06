@@ -19,7 +19,7 @@ namespace cytnx{
         //this->_storage = __SII.USIInit[dtype]();
         this->_storage.Init(Nelem,dtype,device);
         this->_shape = shape;
-        this->_mapper = utils_internal::range_cpu(shape.size());
+        this->_mapper = vec_range(shape.size());
         this->_invmapper = this->_mapper;
         this->_contiguous = true;
 

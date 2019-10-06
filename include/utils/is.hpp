@@ -1,7 +1,6 @@
 #ifndef __is__H_
 #define __is__H_
 
-
 #include "Type.hpp"
 #include "cytnx_error.hpp"
 #include "Tensor.hpp"
