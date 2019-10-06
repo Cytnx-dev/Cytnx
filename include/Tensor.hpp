@@ -6,23 +6,16 @@
 #include "Storage.hpp"
 #include "Device.hpp"
 #include "intrusive_ptr_base.hpp"
-//#include "utils/utils_internal_interface.hpp"
+
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <initializer_list>
+#include "utils/vec_range.hpp"
 #include "Accessor.hpp"
+
 namespace cytnx{
 
-namespace utils_internal{
-        std::vector<cytnx_uint64> range_cpu(const cytnx_uint64 &len);
-        std::vector<cytnx_uint64> range_cpu(const cytnx_uint64 &start, const cytnx_uint64 &end);
-
-
-        template<class T>
-        std::vector<T> range_cpu(const cytnx_int64 &len);
-        template<class T>
-        std::vector<T> range_cpu(const cytnx_int64 &start, const cytnx_int64 &end);}
 
     ///@cond
     // real implementation
@@ -189,7 +182,7 @@ namespace utils_internal{
                     }
         
                     out->_storage = this->_storage._impl->Move_memory(oldshape,this->_mapper, this->_invmapper);
-                    out->_invmapper = utils_internal::range_cpu(this->_invmapper.size());
+                    out->_invmapper = vec_range(this->_invmapper.size());
                     out->_mapper = out->_invmapper;
                     out->_shape = this->_shape;
                     out->_contiguous = true;
@@ -206,7 +199,7 @@ namespace utils_internal{
                         oldshape[i] = this->_shape[this->_invmapper[i]];
                     }
                     this->_storage._impl->Move_memory_(oldshape,this->_mapper, this->_invmapper);
-                    this->_mapper = utils_internal::range_cpu(this->_invmapper.size());
+                    this->_mapper = vec_range(this->_invmapper.size());
                     this->_invmapper = this->_mapper;
                     this->_contiguous = true;
                 }
@@ -242,7 +235,7 @@ namespace utils_internal{
                 }
             
                 this->_shape = result_shape;
-                this->_mapper = utils_internal::range_cpu(result_shape.size());
+                this->_mapper = vec_range(result_shape.size());
                 this->_invmapper = this->_mapper; 
             }
 

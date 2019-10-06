@@ -268,7 +268,7 @@ namespace cytnx{
             }
             //<<<
             ///create mapper for permute
-            std::vector<cytnx_uint64> idx_no_combine = utils_internal::range_cpu(this->_labels.size());
+            std::vector<cytnx_uint64> idx_no_combine =vec_range(this->_labels.size());
             vec_erase_(idx_no_combine,idx_mapper);
             
             std::vector<cytnx_uint64> mapper;
@@ -288,7 +288,7 @@ namespace cytnx{
             //permute back>>
             //find index 
             cytnx_uint64 x = vec_where(this->_labels,f_label);                                
-            idx_no_combine = utils_internal::range_cpu(1,this->_labels.size());
+            idx_no_combine = vec_range(1,this->_labels.size());
             idx_no_combine.insert(idx_no_combine.begin()+x,0);
             this->_block.permute_(idx_no_combine);
             this->_Rowrank = new_Nin;
@@ -303,7 +303,7 @@ namespace cytnx{
                 this->_bonds[idx_mapper[0]].combineBond_(this->_bonds[idx_mapper[i]]);
             }                  
             //<<<
-            std::vector<cytnx_uint64> idx_no_combine = utils_internal::range_cpu(this->_labels.size());
+            std::vector<cytnx_uint64> idx_no_combine = vec_range(this->_labels.size());
             vec_erase_(idx_no_combine,idx_mapper);
             
             std::vector<cytnx_uint64> mapper;
@@ -424,8 +424,8 @@ namespace cytnx{
 
         }else{
             //process meta
-            std::vector<cytnx_uint64> non_comm_idx1 = vec_erase(utils_internal::range_cpu(this->rank()),comm_idx1);
-            std::vector<cytnx_uint64> non_comm_idx2 = vec_erase(utils_internal::range_cpu(rhs->rank()),comm_idx2);
+            std::vector<cytnx_uint64> non_comm_idx1 = vec_erase(vec_range(this->rank()), comm_idx1);
+            std::vector<cytnx_uint64> non_comm_idx2 = vec_erase(vec_range(rhs->rank()), comm_idx2);
                 
             vec_concatenate_(tmp->_labels,vec_clone(this->_labels,non_comm_idx1),vec_clone(rhs->_labels,non_comm_idx2));
             

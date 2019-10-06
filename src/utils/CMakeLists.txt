@@ -25,6 +25,7 @@ target_sources_local(cytnx
     vec_erase.cpp
     vec_intersect.cpp
     vec_map.cpp
+    vec_range.cpp
     vec_unique.cpp
     vec_where.cpp
 )

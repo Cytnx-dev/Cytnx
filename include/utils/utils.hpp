@@ -1,10 +1,6 @@
 #ifndef __utils_H_
 #define __utils_H_
 
-//#include "complex_arithmetic.hpp"
-//#ifdef UNI_GPU
-//    #include "cucomplex_arithmetic.hpp"
-//#endif
 #include "is.hpp"
 #include "cartesian.hpp"
 #include "vec_clone.hpp"
@@ -14,6 +10,7 @@
 #include "vec_where.hpp"
 #include "vec_concatenate.hpp"
 #include "vec_intersect.hpp"
+#include "vec_range.hpp"
 #include "str_utils.hpp"
 /// Helper function to print vector with ODT:
 #include <vector>
