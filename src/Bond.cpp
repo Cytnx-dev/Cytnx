@@ -211,10 +211,10 @@ namespace cytnx{
         }
         //os << bin.get_syms().size() << endl;
 
-        for(cytnx_int32 i=0;i<bin.Nsym();i++){
+        for(cytnx_size_t i=0;i<bin.Nsym();i++){
             os << " " << bin.syms()[i].stype_str() << ":: ";
-            for(cytnx_int32 j=0;j<bin.dim();j++){
-                sprintf(buffer," %+2d",bin.qnums()[j][i]); os << string(buffer);
+            for(cytnx_size_t j=0;j<bin.dim();j++){
+                sprintf(buffer," %+2lld",bin.qnums()[j][i]); os << string(buffer);
             }
             os << std::endl;
         }

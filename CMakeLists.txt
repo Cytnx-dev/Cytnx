@@ -58,8 +58,8 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
     "
   )
 endif()
-
-
+# Generate pif code
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
@@ -71,6 +71,8 @@ if(    NOT cmake_build_type_tolower STREQUAL "debug"
    AND NOT cmake_build_type_tolower STREQUAL "relwithdebinfo")
   message(FATAL_ERROR "Unknown build type \"${CMAKE_BUILD_TYPE}\". Allowed values are Debug, Release, RelWithDebInfo (case-insensitive).")
 endif()
+
+
 ######################################################################
 # Version information
 ######################################################################
@@ -158,6 +160,8 @@ target_include_directories(cytnx SYSTEM
 				${Boost_INCLUDE_DIRS}
 )
 target_compile_features(cytnx PUBLIC cxx_std_11)
+
+
 add_subdirectory(src)
 
 
@@ -259,7 +263,7 @@ INSTALL(TARGETS cytnx EXPORT cytnx_targets
       )
 install(EXPORT cytnx_targets
         FILE CytnxTargets.cmake
-        NAMESPACE cytnx::
+        NAMESPACE Cytnx::
         DESTINATION ${INSTALL_CONFIGDIR}
         )
 install(DIRECTORY include/
@@ -268,6 +272,32 @@ install(DIRECTORY include/
         FILES_MATCHING PATTERN 		"*.h*")
 
 
+#Create a ConfigVersion.cmake file
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+        ${CMAKE_CURRENT_BINARY_DIR}/CytnxConfigVersion.cmake
+        VERSION ${CYTNX_VERSION}
+        COMPATIBILITY AnyNewerVersion
+)
+
+configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxConfig.cmake.in
+        ${CMAKE_CURRENT_BINARY_DIR}/CytnxConfig.cmake
+        INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
+        )
+
+
+install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/CytnxConfig.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/CytnxConfigVersion.cmake
+        DESTINATION ${INSTALL_CONFIGDIR}
+        )
+
+##############################################
+## Exporting from the build tree
+
+export(EXPORT cytnx_targets FILE ${CMAKE_CURRENT_BINARY_DIR}/CytnxTargets.cmake NAMESPACE Cytnx::)
+
+export(PACKAGE Cytnx)
 
 
 ######################################################################
@@ -341,6 +371,9 @@ endif()
 message(STATUS "")
 message(STATUS "")
 message(STATUS "")
+
+
+
 
 if (BUILD_PACKAGES)
 include("Package.cmake")

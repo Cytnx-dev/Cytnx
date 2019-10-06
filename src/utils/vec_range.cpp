@@ -57,5 +57,5 @@ namespace cytnx{
         }
         return out;
     }
-    
+
 }//namespace cytnx

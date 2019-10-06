@@ -209,9 +209,9 @@ namespace cytnx{
             os << Device.getname(this->device) << std::endl;
 
             sprintf(buffer,"%s","Shape :"); os << std::string(buffer);
-            sprintf(buffer," (%d",shape[0]); os << std::string(buffer);
+            sprintf(buffer," (%llu",shape[0]); os << std::string(buffer);
             for(cytnx_int32 i=1;i<shape.size();i++){
-                sprintf(buffer,",%d",shape[i]); os << std::string(buffer);
+                sprintf(buffer,",%llu",shape[i]); os << std::string(buffer);
             }
             os << ")"<< std::endl;
 
@@ -224,13 +224,13 @@ namespace cytnx{
 
 
             cytnx_uint64 s;
-            cytnx_complex128* elem_ptr_ = static_cast<cytnx_complex128*>(this->Mem);
+            auto* elem_ptr_ = static_cast<cytnx_complex128*>(this->Mem);
 
-            if(mapper.size()==0){
+            if(mapper.empty()){
 
                 cytnx_uint64 cnt=0;
                 while(1){
-                    for(cytnx_int32 i=0;i<shape.size();i++){
+                    for(auto i=0;i<shape.size();i++){
                         if(i<shape.size()-stk.size()){
                             sprintf(buffer,"%s"," "); os << std::string(buffer);
                         }else{
@@ -239,7 +239,7 @@ namespace cytnx{
                             stk.pop_back();
                         }
                     }
-                    for(cytnx_uint64 i=0;i<shape.back();i++){
+                    for(auto i=0;i<shape.back();i++){
                         stk2.back() = i;
                         sprintf(buffer,"%.5e%+.5ej ",elem_ptr_[cnt].real(),elem_ptr_[cnt].imag()); os << std::string(buffer);
                         cnt++;

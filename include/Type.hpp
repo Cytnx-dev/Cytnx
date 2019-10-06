@@ -21,6 +21,7 @@ namespace cytnx{
     typedef int64_t cytnx_int64;
     typedef int32_t cytnx_int32;
     typedef int16_t cytnx_int16;
+    typedef size_t cytnx_size_t;
     typedef std::complex<float> cytnx_complex64;
     typedef std::complex<double> cytnx_complex128;
     typedef bool cytnx_bool;
