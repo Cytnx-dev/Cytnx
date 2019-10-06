@@ -208,9 +208,9 @@ namespace cytnx{
             os << Device.getname(this->device) << std::endl;
 
             sprintf(buffer,"%s","Shape :"); os << string(buffer);
-            sprintf(buffer," (%d",shape[0]);
-            for(cytnx_int32 i=1;i<shape.size();i++){
-                sprintf(buffer,",%d",shape[i]); os << string(buffer);
+            sprintf(buffer," (%llu",shape[0]);
+            for(auto i=1;i<shape.size();i++){
+                sprintf(buffer,",%llu",shape[i]); os << string(buffer);
             }
             os << ")"<< std::endl;
 
@@ -229,7 +229,7 @@ namespace cytnx{
 
                 cytnx_uint64 cnt=0;
                 while(1){
-                    for(cytnx_int32 i=0;i<shape.size();i++){
+                    for(cytnx_size_t i=0;i<shape.size();i++){
                         if(i<shape.size()-stk.size()){
                             sprintf(buffer,"%s"," "); os << string(buffer);
                         }else{
@@ -238,7 +238,7 @@ namespace cytnx{
                             stk.pop_back();
                         }
                     }
-                    for(cytnx_uint64 i=0;i<shape.back();i++){
+                    for(cytnx_size_t i=0;i<shape.back();i++){
                         stk2.back() = i;
                         if(elem_ptr_[cnt]) {sprintf(buffer,"True %s"," "); os << string(buffer);}
                         else {sprintf(buffer,"False%s"," "); os << string(buffer);}
@@ -286,7 +286,7 @@ namespace cytnx{
                 }
 
                 while(1){
-                    for(cytnx_int32 i=0;i<shape.size();i++){
+                    for(auto i=0;i<shape.size();i++){
                         if(i<shape.size()-stk.size()){
                             sprintf(buffer,"%s"," "); os << string(buffer);
                         }else{

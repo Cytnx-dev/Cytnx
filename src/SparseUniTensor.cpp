@@ -215,9 +215,9 @@ namespace cytnx{
 
         sprintf(buffer,"-----------------------%s","\n");
         sprintf(buffer,"tensor Name : %s\n",this->_name.c_str());       std::cout << std::string(buffer);
-        sprintf(buffer,"tensor Rank : %d\n",this->_labels.size());      std::cout << std::string(buffer);
+        sprintf(buffer,"tensor Rank : %lu\n",this->_labels.size());      std::cout << std::string(buffer);
         sprintf(buffer,"block_form  : true%s","\n");                    std::cout << std::string(buffer);
-        sprintf(buffer,"valid bocks : %d\n",this->_blocks.size());      std::cout << std::string(buffer);
+        sprintf(buffer,"valid bocks : %lu\n",this->_blocks.size());      std::cout << std::string(buffer);
         sprintf(buffer,"on device   : %s\n",this->device_str().c_str());std::cout << std::string(buffer);
 
         cytnx_uint64 Nin = this->_Rowrank;
@@ -242,8 +242,8 @@ namespace cytnx{
                 else                                         bks = "<*";
                 memset(l,0,sizeof(char)*40);
                 memset(llbl,0,sizeof(char)*40);
-                sprintf(l,"%3d %s__",this->_labels[i],bks.c_str());
-                sprintf(llbl,"%-3d",this->_bonds[i].dim());
+                sprintf(l,"%3lld %s__",this->_labels[i],bks.c_str());
+                sprintf(llbl,"%-3llu",this->_bonds[i].dim());
             }else{
                 memset(l,0,sizeof(char)*40);
                 memset(llbl,0,sizeof(char)*40);
@@ -255,8 +255,8 @@ namespace cytnx{
                 else                                              bks = " <";
                 memset(r,0,sizeof(char)*40);
                 memset(rlbl,0,sizeof(char)*40);
-                sprintf(r,"__%s %-3d",bks.c_str(),this->_labels[Nin + i]);
-                sprintf(rlbl,"%-3d",this->_bonds[Nin + i].dim());
+                sprintf(r,"__%s %-3lld",bks.c_str(),this->_labels[Nin + i]);
+                sprintf(rlbl,"%-3llu",this->_bonds[Nin + i].dim());
             }else{
                 memset(r,0,sizeof(char)*40);
                 memset(rlbl,0,sizeof(char)*40);
@@ -272,7 +272,7 @@ namespace cytnx{
 
         if(bond_info){
             for(cytnx_uint64 i=0; i< this->_bonds.size();i++){
-                sprintf(buffer,"lbl:%d ",this->_labels[i]); std::cout << std::string(buffer);
+                sprintf(buffer,"lbl:%lld ",this->_labels[i]); std::cout << std::string(buffer);
                 std::cout << this->_bonds[i] << std::endl;
             }
         }

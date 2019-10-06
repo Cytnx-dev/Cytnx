@@ -34,7 +34,7 @@ namespace cytnx{
             unsigned int dtype; // default 0, Void
             int device; // default -1, on cpu
 
-            Storage_base(): len(0), Mem(NULL),dtype(0), device(-1){};
+            Storage_base():  Mem(nullptr),len(0),dtype(0), device(-1){};
             //Storage_base(const std::initializer_list<unsigned int> &init_shape);
             //Storage_base(const std::vector<unsigned int> &init_shape);    
             Storage_base(const unsigned long long &len_in,const int &device);
