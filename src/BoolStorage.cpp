@@ -209,7 +209,7 @@ namespace cytnx{
 
             sprintf(buffer,"%s","Shape :"); os << string(buffer);
             sprintf(buffer," (%llu",shape[0]);
-            for(auto i=1;i<shape.size();i++){
+            for(cytnx_size_t i=1;i<shape.size();i++){
                 sprintf(buffer,",%llu",shape[i]); os << string(buffer);
             }
             os << ")"<< std::endl;
@@ -285,8 +285,8 @@ namespace cytnx{
                     accu*=c_shape[i];
                 }
 
-                while(1){
-                    for(auto i=0;i<shape.size();i++){
+                while(true){
+                    for(cytnx_size_t i=0;i<shape.size();i++){
                         if(i<shape.size()-stk.size()){
                             sprintf(buffer,"%s"," "); os << string(buffer);
                         }else{
@@ -345,7 +345,7 @@ namespace cytnx{
 
     void BoolStorage::print_elems(){
         char* buffer = (char*)malloc(sizeof(char)*256);
-        cytnx_bool* elem_ptr_ = static_cast<cytnx_bool*>(this->Mem);
+        auto* elem_ptr_ = static_cast<cytnx_bool*>(this->Mem);
         cout << "[ ";
         for(unsigned long long cnt=0;cnt<this->len;cnt++){
             if(elem_ptr_[cnt]) {sprintf(buffer,"True %s"," "); cout << string(buffer);}
