@@ -229,8 +229,8 @@ namespace cytnx{
             if(mapper.empty()){
 
                 cytnx_uint64 cnt=0;
-                while(1){
-                    for(auto i=0;i<shape.size();i++){
+                while(true){
+                    for(cytnx_size_t i=0;i<shape.size();i++){
                         if(i<shape.size()-stk.size()){
                             sprintf(buffer,"%s"," "); os << std::string(buffer);
                         }else{
@@ -239,7 +239,7 @@ namespace cytnx{
                             stk.pop_back();
                         }
                     }
-                    for(auto i=0;i<shape.back();i++){
+                    for(cytnx_size_t i=0;i<shape.back();i++){
                         stk2.back() = i;
                         sprintf(buffer,"%.5e%+.5ej ",elem_ptr_[cnt].real(),elem_ptr_[cnt].imag()); os << std::string(buffer);
                         cnt++;
@@ -247,7 +247,7 @@ namespace cytnx{
 
 
                     s=0;
-                    while(1){
+                    while(true){
                         if(stk2.empty()){
                             break;
                         }

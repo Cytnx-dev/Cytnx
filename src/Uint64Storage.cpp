@@ -205,7 +205,7 @@ namespace cytnx{
 
             sprintf(buffer,"%s","Shape :"); os << string(buffer);
             sprintf(buffer," (%llu",shape[0]);os << string(buffer);
-            for(auto i=1; i < shape.size(); i++){
+            for(cytnx_size_t i=1; i < shape.size(); i++){
                 sprintf(buffer,",%llu",shape[i]); os << string(buffer);
             }
             os << ")"<< std::endl;
@@ -225,7 +225,7 @@ namespace cytnx{
 
                 cytnx_uint64 cnt=0;
                 while(true){
-                    for(auto i=0; i < shape.size(); i++){
+                    for(cytnx_size_t i=0; i < shape.size(); i++){
                         if(i<shape.size()-stk.size()){
                             sprintf(buffer,"%s"," "); os << string(buffer);
                         }else{
@@ -272,16 +272,16 @@ namespace cytnx{
 
                 cytnx_uint64 accu=1;
                 cytnx_uint64 RealMemPos;
-                for(auto i=0;i<shape.size();i++){
+                for(cytnx_size_t i=0;i<shape.size();i++){
                     c_shape[i] = shape[mapper[i]];
                 }
-                for(auto i=c_shape.size()-1;i>=0;i--){
+                for(cytnx_size_t i=c_shape.size()-1;i>=0;i--){
                     c_offj[i] = accu;
                     accu*=c_shape[i];
                 }
 
                 while(true){
-                    for(auto i=0;i<shape.size();i++){
+                    for(cytnx_size_t i=0;i<shape.size();i++){
                         if(i<shape.size()-stk.size()){
                             sprintf(buffer,"%s"," ");os << string(buffer);
                         }else{
@@ -290,7 +290,7 @@ namespace cytnx{
                             stk.pop_back();
                         }
                     }
-                    for(auto i=0;i<shape.back();i++){
+                    for(cytnx_size_t i=0;i<shape.back();i++){
                         stk2.back() = i;
 
                         ///Calculate the Memory reflection:
