@@ -24,7 +24,7 @@
     #include "linalg/linalg_internal_gpu/cuExp_internal.hpp"
     #include "linalg/linalg_internal_gpu/cuMatmul_internal.hpp"
     #include "linalg/linalg_internal_gpu/cuDiag_internal.hpp"
-    #include "linalg/linalg_internal_gpu/cuOuter_internal.hpp"
+    //#include "linalg/linalg_internal_gpu/cuOuter_internal.hpp"
 #endif
 
 namespace cytnx{
@@ -63,7 +63,7 @@ namespace cytnx{
                 std::vector<Diagfunc_oii> cuDiag_ii;
                 std::vector<Eighfunc_oii> cuEigh_ii;
                 std::vector<Matmulfunc_oii> cuMatmul_ii;
-                std::vector<std::vector<Outerfunc_oii> > cuOuter_ii;
+                //std::vector<std::vector<Outerfunc_oii> > cuOuter_ii;
                 #endif
 
             linalg_internal_interface();

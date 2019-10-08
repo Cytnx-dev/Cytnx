@@ -543,6 +543,7 @@ namespace cytnx{
                 cuMatmul_ii[Type.Bool         ] = cuMatmul_internal_b;
 
                 //================
+                /*
                 cuOuter_ii = vector<vector<Outerfunc_oii> >(N_Type,vector<Outerfunc_oii>(N_Type,NULL));
 
                 cuOuter_ii[Type.ComplexDouble][Type.ComplexDouble] = cuOuter_internal_cdtcd;
@@ -683,7 +684,7 @@ namespace cytnx{
                 cuOuter_ii[Type.Bool][Type.Uint16       ] = cuOuter_internal_btu16;
                 cuOuter_ii[Type.Bool][Type.Int16        ] = cuOuter_internal_bti16;
                 cuOuter_ii[Type.Bool][Type.Bool         ] = cuOuter_internal_btb;
-
+                */
             #endif
         }
 
