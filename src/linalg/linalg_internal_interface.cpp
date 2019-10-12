@@ -229,6 +229,12 @@ namespace cytnx{
             Vd_ii[Type.Uint16] = Vectordot_internal_u16;
             Vd_ii[Type.Bool  ] = Vectordot_internal_b  ;
 
+            //====================
+            Td_ii = vector<Tdfunc_oii>(N_Type);
+            Td_ii[Type.Double] = Tridiag_internal_d;
+            Td_ii[Type.Float ] = Tridiag_internal_f;
+
+
             //================
             Outer_ii = vector<vector<Outerfunc_oii> >(N_Type,vector<Outerfunc_oii>(N_Type,NULL));
 

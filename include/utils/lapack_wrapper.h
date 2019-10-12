@@ -220,6 +220,8 @@
     void zungrq_( const int32_t* m, const int32_t* n, const int32_t* k, std::complex<double>* a, 
                   const int32_t* lda, const std::complex<double>* tau, std::complex<double>* work, const int32_t* lwork, int32_t* info );
 
+    void dstemr_( const char *jobz, const char *range, const int32_t *N, double *D, double *E,const double *vl, const double *vu, const int32_t *il, const int32_t *iu, int32_t *M, double* W, double *Z, const int32_t *ldz, const int32_t *nzc, int32_t *isuppz, bool *tryrac, double*work, int32_t* lwork, int32_t*iwork, int32_t* liwork, int32_t* info); 
+
     }// extern C
 
     // Wrappers for BLAS and LAPACK functions

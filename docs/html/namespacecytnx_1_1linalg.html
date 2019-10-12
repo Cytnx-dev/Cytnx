@@ -228,6 +228,9 @@ std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#
 <tr class="memitem:aa69a91a5651fce55380cf800c6030d73"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#aa69a91a5651fce55380cf800c6030d73">Vectordot</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tl, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tr, const bool &amp;is_conj=false)</td></tr>
 <tr class="memdesc:aa69a91a5651fce55380cf800c6030d73"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform inner product of vectors  <a href="#aa69a91a5651fce55380cf800c6030d73">More...</a><br /></td></tr>
 <tr class="separator:aa69a91a5651fce55380cf800c6030d73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc68d62e804d6d3e86aeec00015b07cd"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#abc68d62e804d6d3e86aeec00015b07cd">Tridiag</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;<a class="el" href="namespacecytnx_1_1linalg.html#a5913f0bdd6cc130aeb927f42a874a149">Diag</a>, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Sub_diag, const bool &amp;is_V=false)</td></tr>
+<tr class="memdesc:abc68d62e804d6d3e86aeec00015b07cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform diagonalization of symmetric tri-diagnoal matrix.  <a href="#abc68d62e804d6d3e86aeec00015b07cd">More...</a><br /></td></tr>
+<tr class="separator:abc68d62e804d6d3e86aeec00015b07cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>linear algebra related functions. </p>
@@ -598,6 +601,54 @@ std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#
 <li>the elements in idxl and idxr have one to one correspondence.</li>
 <li>two tensors should on same device. </li>
 </ol>
+
+</div>
+</div>
+<a id="abc68d62e804d6d3e86aeec00015b07cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc68d62e804d6d3e86aeec00015b07cd">&#9670;&nbsp;</a></span>Tridiag()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&gt; cytnx::linalg::Tridiag </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>Diag</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>Sub_diag</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramname"><em>is_V</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>perform diagonalization of symmetric tri-diagnoal matrix. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Diag</td><td><a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> #1 </td></tr>
+    <tr><td class="paramname">Sub_diag</td><td><a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> #2 </td></tr>
+    <tr><td class="paramname">is_V</td><td>if calculate the eigen value. </td></tr>
+    <tr><td class="paramname">k</td><td>Return k lowest eigen vector if is_V=True </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>[vector&lt;Tensor&gt;] if is_V = True, the first tensor is the eigen value, and second tensor is eigenvector of shape [k,L].</dd></dl>
+<p>description: two Tensors must be Rank-1, with length of Diag = L and Sub_diag length = L-1.</p>
+<p>[Note] performance tune: This function have better performance when two vectors with same types, and are one of following type: cytnx_double, cytnx_float. In general all real type can be use as input, which will be promote to floating point type for calculation. </p>
 
 </div>
 </div>

@@ -19,6 +19,13 @@ int main(int argc, char *argv[]){
 
     //Device.Print_Property();
 
+    Tensor DD = arange(1.,5.,1.);
+    Tensor sDD = arange(0.4,0.7,0.1);
+    cout << DD << sDD << endl;
+
+    cout << linalg::Tridiag(DD,sDD,true);
+    return 0;
+
     
     Tensor A = arange(10,Type.Double);
     Tensor B = arange(0,1,0.1,Type.Double);

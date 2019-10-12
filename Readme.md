@@ -229,10 +229,11 @@
       Matmul      |   x       |  Y  |  Y   |    N        | Y  |   N
       Diag        |   x       |  Y  |  Y   |    N        | Y  |   N
     *Tensordot    |   x       |  Y  |  Y   |    N        | Y  |   N
-     Otimes       |   x       |  Y  |  Y   |    N        | Y  |   N
+     Otimes       |   x       |  Y  | ^N   |    N        | Y  |   N
      Vectordot    |   x       |  Y  |  N   |    N        | Y  |   N 
-
+      Tridiag     |   x       |  Y  |  N   |    N        | Y  |   N
     * this is a high level linalg 
+    ^ this is temporary disable
  
 ## Generators 
 

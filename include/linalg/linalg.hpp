@@ -267,6 +267,25 @@ namespace cytnx{
         */
         Tensor Vectordot(const Tensor &Tl, const Tensor &Tr, const bool &is_conj=false);
 
+        //Tridiag:
+        //===========================================
+        /**
+        @brief perform diagonalization of symmetric tri-diagnoal matrix. 
+        @param Diag Tensor #1 
+        @param Sub_diag Tensor #2
+        @param is_V: if calculate the eigen value. 
+        @param k: Return k lowest eigen vector if is_V=True
+        @return 
+            [vector<Tensor>] if is_V = True, the first tensor is the eigen value, and second tensor is eigenvector of shape [k,L]. 
+
+        description:
+            two Tensors must be Rank-1, with length of Diag = L and Sub_diag length = L-1. 
+
+        [Note]
+            performance tune: This function have better performance when two vectors with same types, and are one of following type: cytnx_double, cytnx_float. In general all real type can be use as input, which will be promote to floating point type for calculation.  
+            
+        */
+        std::vector<Tensor> Tridiag(const Tensor &Diag, const Tensor &Sub_diag, const bool &is_V=false);
 
     }// namespace linalg
     
