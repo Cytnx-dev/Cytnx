@@ -7,7 +7,7 @@ using namespace std;
 namespace cytnx{
 
 
-    vector<cytnx_uint64> range_cpu(const cytnx_uint64 &start, const cytnx_uint64 &end){
+    vector<cytnx_uint64> vec_range(const cytnx_uint64 &start, const cytnx_uint64 &end){
         cytnx_error_msg(end < start,"[ERROR] cannot have end < start%s","\n");
         vector<cytnx_uint64> out(end-start);
 
