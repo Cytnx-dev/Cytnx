@@ -1,4 +1,4 @@
-#include "linalg/linalg_internal_gpu/cuArithmetic_internal.hpp"
+#include "cuArithmetic_internal.hpp"
 
 namespace cytnx{
     namespace linalg_internal{

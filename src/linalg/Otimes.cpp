@@ -34,7 +34,7 @@ namespace cytnx{
             }else{
                 #ifdef UNI_GPU
                     cytnx_error_msg(true,"[Otimes] currently Otimes is not support for GPU, pending for fix.%s","\n");
-                    checkCudaErrors(cudaSetDevice(Tl.device()));
+                    //checkCudaErrors(cudaSetDevice(Tl.device()));
                     //cytnx::linalg_internal::lii.cuOuter_ii[Tl.dtype()][Tr.dtype()](out._impl->storage()._impl, Tl._impl->storage()._impl, Tr._impl->storage()._impl,i1,j1,i2,j2);
                 #else
                     cytnx_error_msg(true,"[Otimes] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 

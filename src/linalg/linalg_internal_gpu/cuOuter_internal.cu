@@ -1,4 +1,6 @@
-#include "linalg/linalg_internal_gpu/cuOuter_internal.hpp"
+#include <cuda.h>
+#include <device_launch_parameters.h>
+#include "cuOuter_internal.hpp"
 #include "utils/utils_internal_interface.hpp"
 
 #ifdef UNI_OMP
