@@ -56,7 +56,8 @@ namespace cytnx{
             
             template<class T>   
             T* data() const;
-
+            void Save(const int &f);
+            void Load(const int &f);
             void print();
             void print_info();
             /*
@@ -557,6 +558,9 @@ namespace cytnx{
                 return *this;
             }
             ///@endcond
+
+            void Save(const int &f);
+            void Load(const int &f);
 
             /**
             @brief cast the type of current Storage

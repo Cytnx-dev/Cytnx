@@ -82,6 +82,61 @@ namespace cytnx{
     bool Storage::operator!=(const Storage &rhs){
         return !(*this==rhs);
     }
+
+
+    void Storage::Save(const int &f){
+        //header
+        write(f,&this->size(),sizeof(unsigned long long));
+        write(f,&this->dtype(),sizeof(unsigned int));
+        write(f,&this->device(),sizeof(int));
+        
+        //data:
+        if(this->device() == Device.cpu){
+            write(f,this->_impl->Mem,Type.typeSize(this->dtype())*this->size());
+        }else{
+            #ifdef UNI_GPU
+                checkCudaErrors(cudaSetDevice(this->device()));
+                void *htmp = malloc(Type.typeSize(this->dtype())*this->size());
+                checkCudaErrors(cudaMemcpy(htmp,this->_impl->Mem,Type.typeSize(this->dtype())*this->size(),cudaMemcpyDeviceToHost));
+                write(f,htmp,Type.typeSize(this->dtype())*this->size());
+                free(htmp);
+                
+            #else
+                cytnx_error_msg(true,"ERROR internal fatal error in Save Storage%s","\n");
+            #endif
+        }
+
+    }
+    void Storage::Load(const int &f){
+        //header
+        unsigned long long sz;
+        unsigned int dt;
+        int dv;
+        read(f,&sz,sizeof(unsigned long long));
+        read(f,&dt,sizeof(unsigned int));
+        read(f,&dv,sizeof(int));
+        this->_impl = __SII.USIInit[dt]();
+        this->_impl->Init(sz,dv);
+
+        //data:
+        if(dv != Device.cpu){
+            read(f,this->_impl->Mem,Type.typeSize(dt)*sz);
+        }else{
+            #ifdef UNI_GPU
+                checkCudaErrors(cudaSetDevice(dv));
+                void *htmp = malloc(Type.typeSize(dt)*sz);
+                read(f,htmp,Type.typeSize(dt)*sz);
+                checkCudaErrors(cudaMemcpy(this->_impl->Mem,htmp,Type.typeSize(dt)*sz,cudaMemcpyHostToDevice));
+                free(htmp);
+                
+            #else
+                cytnx_error_msg(true,"ERROR internal fatal error in Load Storage%s","\n");
+            #endif
+        }
+
+    }
+
+
 }
 
 
