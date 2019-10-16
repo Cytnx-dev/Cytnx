@@ -91,7 +91,7 @@ set(CYTNX_VERSION
 ######################################################################
 
 option(USE_ICPC "Build Cytnx with Intel Compilers" OFF)
-option(USE_CUDA "Build using Nvidia CUDA for GPU library" OFF)
+option(USE_CUDA "Build using Nvidia CUDA for GPU library" ON)
 option(BUILD_PYTHON "Build Python wrapper" ON)
 option(USE_MKL "Build using MKL" OFF)
 option(BUILD_DOC "Build API docuemntation" OFF)
@@ -130,7 +130,7 @@ endif()
 ######################################################################
 ### PROJECT
 ######################################################################
-project(CYTNX VERSION ${CYTNX_VERSION} LANGUAGES CXX C)
+project(CYTNX VERSION ${CYTNX_VERSION} LANGUAGES CXX C )
 
 
 ######################################################################
@@ -160,7 +160,7 @@ target_include_directories(cytnx SYSTEM
 				${Boost_INCLUDE_DIRS}
 )
 target_compile_features(cytnx PUBLIC cxx_std_11)
-
+#set_property(TARGET cytnx PROPERTY CXX_STANDARD 11)
 
 add_subdirectory(src)
 
@@ -197,19 +197,32 @@ message(STATUS ${COMPILE_DEFINITIONS})
 ### SMS ?= 30
 
 if(USE_CUDA)
+  enable_language(CUDA)
   find_package(CUDA REQUIRED)
-  set(CUDA_SEPARABLE_COMPILATION ON)
-  list(APPEND CUDA_NVCC_FLAGS "-O3;-Wno-deprecated-gpu-targets;-m64")
-  set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS}  "-DUNI_GPU")
-  set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS}  "-arch=sm_50 \
-      -gencode=arch=compute_50,code=sm_50 \
-      -gencode=arch=compute_52,code=sm_52 \
-      -gencode=arch=compute_60,code=sm_60 \
-      -gencode=arch=compute_61,code=sm_61 \
-      -gencode=arch=compute_70,code=sm_70 \
-      -gencode=arch=compute_75,code=sm_75 \
-      -gencode=arch=compute_75,code=compute_75 ")
-  target_compile_definitions( cytnx UNI_GPU)
+  if(NOT DEFINED CMAKE_CUDA_STANDARD)
+    set(CMAKE_CUDA_STANDARD 11)
+    set(CMAKE_CUDA_STANDARD_REQUIRED ON)
+  endif()
+
+  set_target_properties(cytnx PROPERTIES 
+      CUDA_SEPARABLE_COMPILATION ON
+                                   )
+
+  set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Xcompiler=-Wall -Wno-deprecated-gpu-targets -Xcudafe=--display_error_number")
+#  list(APPEND CUDA_NVCC_FLAGS "-O3;-Wno-deprecated-gpu-targets;-m64")
+##  set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS}  "-DUNI_GPU")
+#  set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS}  "-arch=sm_50 \
+#      -gencode=arch=compute_50,code=sm_50 \
+#      -gencode=arch=compute_52,code=sm_52 \
+#      -gencode=arch=compute_60,code=sm_60 \
+#      -gencode=arch=compute_61,code=sm_61 \
+#      -gencode=arch=compute_70,code=sm_70 \
+#      -gencode=arch=compute_75,code=sm_75 \
+#      -gencode=arch=compute_75,code=compute_75 ")
+  target_compile_definitions(cytnx PRIVATE UNI_GPU)
+  #target_compile_options(cytnx INTERFACE ${CMAKE_CUDA_FLAGS})
+  target_include_directories(cytnx PRIVATE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
+  #target_link_libraries(cytnx PRIVATE ${CUDA_cusolver_LIBRARY})
 endif()
 
 
@@ -217,8 +230,17 @@ endif()
 # Find OpenMP
 find_package( OpenMP )
 if ( OPENMP_FOUND )
-   set( CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}" )
-   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}" )
+  if(NOT TARGET OpenMP::OpenMP_CXX)
+    find_package(Threads REQUIRED)
+    add_library(OpenMP::OpenMP_CXX IMPORTED INTERFACE)
+    set_property(TARGET OpenMP::OpenMP_CXX
+                 PROPERTY INTERFACE_COMPILE_OPTIONS ${OpenMP_CXX_FLAGS})
+    # Only works if the same flag is passed to the linker; use CMake 3.9+ otherwise (Intel, AppleClang)
+    set_property(TARGET OpenMP::OpenMP_CXX
+                 PROPERTY INTERFACE_LINK_LIBRARIES ${OpenMP_CXX_FLAGS} Threads::Threads)
+
+   endif() 
+  target_link_libraries(cytnx PRIVATE OpenMP::OpenMP_CXX)
 endif()
 
 target_link_libraries(cytnx PUBLIC Boost::boost ${LAPACK_LIBRARIES})
