@@ -8,6 +8,7 @@
 #include "intrusive_ptr_base.hpp"
 #include "utils/utils_internal_interface.hpp"
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <initializer_list>
 #include "Accessor.hpp"
@@ -36,6 +37,7 @@ namespace cytnx{
             bool _contiguous;
 
         public:
+            friend class Tensor;
             boost::intrusive_ptr<Tensor_impl> _clone_meta_only() const{
                 boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
                 out->_mapper = this->_mapper;
@@ -270,6 +272,17 @@ namespace cytnx{
     class Tensor{
         private:
         public:
+            
+            void _Save(std::fstream &f);
+            void _Load(std::fstream &f);
+
+            void Save(const std::string &fname);
+            void Save(const char* fname);
+            void Load(const std::string &fname);
+            void Load(const char* fname);
+
+
+
             ///@cond
             boost::intrusive_ptr<Tensor_impl> _impl;
             Tensor(): _impl(new Tensor_impl()){};

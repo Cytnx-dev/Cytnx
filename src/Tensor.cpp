@@ -7,6 +7,8 @@ using namespace std;
 
 namespace cytnx{        
 
+   
+
     void Tensor_impl::Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype, int device){
         //check:
         cytnx_error_msg(dtype>=N_Type,"%s","[ERROR] invalid argument: dtype");
@@ -179,6 +181,93 @@ namespace cytnx{
     //===================================================================
     //wrapper
 
+    void Tensor::Save(const std::string &fname){
+        fstream f;
+        f.open((fname+".cytn"),ios::out|ios::trunc|ios::binary);
+        if(!f.is_open()){
+            cytnx_error_msg(true,"[ERROR] invalid file path for save.%s","\n");
+        }
+        this->_Save(f);
+        f.close();
+    }
+    void Tensor::Save(const char* fname){
+        fstream f;
+        string ffname = string(fname) + ".cytn";
+        f.open(ffname,ios::out|ios::trunc|ios::binary);
+        if(!f.is_open()){
+            cytnx_error_msg(true,"[ERROR] invalid file path for save.%s","\n");
+        }
+        this->_Save(f);
+        f.close();
+    }
+    void Tensor::_Save(fstream &f){
+        //header
+        //check:
+        cytnx_error_msg(!f.is_open(),"[ERROR] invalid fstream!.%s","\n");
+
+        unsigned int IDDs = 888;
+        f.write((char*)&IDDs,sizeof(unsigned int));
+        cytnx_uint64 shp = this->shape().size();
+        cytnx_uint64 Conti = this->is_contiguous();
+        f.write((char*)&shp,sizeof(cytnx_uint64));
+
+        f.write((char*)&Conti,sizeof(cytnx_uint64));
+        f.write((char*)&this->_impl->_shape[0],sizeof(cytnx_uint64)*shp);
+        f.write((char*)&this->_impl->_mapper[0],sizeof(cytnx_uint64)*shp);
+        f.write((char*)&this->_impl->_invmapper[0],sizeof(cytnx_uint64)*shp);
+
+        //pass to storage for save:
+        this->_impl->_storage._Save(f);
+
+    }
+
+    void Tensor::Load(const std::string &fname){
+        fstream f;
+        f.open(fname,ios::in|ios::binary);
+        if(!f.is_open()){
+            cytnx_error_msg(true,"[ERROR] invalid file path for load.%s","\n");
+        }
+        this->_Load(f);
+        f.close();
+    }
+    void Tensor::Load(const char* fname){
+        fstream f;
+        f.open(fname,ios::in|ios::binary);
+        if(!f.is_open()){
+            cytnx_error_msg(true,"[ERROR] invalid file path for load.%s","\n");
+        }
+        this->_Load(f);
+        f.close();
+    }
+    void Tensor::_Load(fstream &f){
+        
+        //header
+        //check:
+        cytnx_error_msg(!f.is_open(),"[ERROR] invalid fstream!.%s","\n");
+
+        unsigned int tmpIDDs;
+        f.read((char*)&tmpIDDs,sizeof(unsigned int));
+        cytnx_error_msg(tmpIDDs!=888,"[ERROR] the object is not a cytnx tensor!%s","\n");
+
+        cytnx_uint64 shp  ;
+        cytnx_uint64 Conti; 
+        f.read((char*)&shp,sizeof(cytnx_uint64));
+        f.read((char*)&Conti,sizeof(cytnx_uint64));
+        this->_impl->_contiguous = Conti;
+
+
+        this->_impl->_shape.resize(shp);
+        this->_impl->_mapper.resize(shp);
+        this->_impl->_invmapper.resize(shp);
+        f.read((char*)&this->_impl->_shape[0],sizeof(cytnx_uint64)*shp);
+        f.read((char*)&this->_impl->_mapper[0],sizeof(cytnx_uint64)*shp);
+        f.read((char*)&this->_impl->_invmapper[0],sizeof(cytnx_uint64)*shp);
+
+        //pass to storage for save:
+        this->_impl->_storage._Load(f);
+
+
+    }
 
     // += 
     template<> Tensor& Tensor::operator+=<Tensor>(const Tensor &rc){

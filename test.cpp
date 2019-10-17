@@ -31,6 +31,15 @@ int main(int argc, char *argv[]){
     Storage s22;
     s22.Load("test.cyst");
     cout << s22 << endl;
+
+    Tensor DD1 = arange(1.,5.,1.);
+    cout << DD1 << endl;
+
+    DD1.Save("test");
+    Tensor DD2;
+    DD2.Load("test.cytn");
+    cout << DD2 << endl;
+
     return 0;
 
 
