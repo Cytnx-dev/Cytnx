@@ -25,11 +25,11 @@ int main(int argc, char *argv[]){
     s1.at<cytnx_int64>(4) = 3;
     s1.at<cytnx_int64>(5) = 66;
     s1.at<cytnx_int64>(0) = 53;
-    s1.Save("test.storage");
+    s1.Save("test");
     cout << s1 << endl;
     
     Storage s22;
-    s22.Load("test.storage");
+    s22.Load("test.cyst");
     cout << s22 << endl;
     return 0;
 

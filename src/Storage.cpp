@@ -86,7 +86,7 @@ namespace cytnx{
 
     void Storage::Save(const std::string &fname){
         fstream f;
-        f.open(fname,ios::out|ios::trunc|ios::binary);
+        f.open((fname+".cyst"),ios::out|ios::trunc|ios::binary);
         if(!f.is_open()){
             cytnx_error_msg(true,"[ERROR] invalid file path for save.%s","\n");
         }
@@ -95,7 +95,8 @@ namespace cytnx{
     }
     void Storage::Save(const char* fname){
         fstream f;
-        f.open(fname,ios::out|ios::trunc|ios::binary);
+        string ffname = string(fname) + ".cyst";
+        f.open(ffname,ios::out|ios::trunc|ios::binary);
         if(!f.is_open()){
             cytnx_error_msg(true,"[ERROR] invalid file path for save.%s","\n");
         }
