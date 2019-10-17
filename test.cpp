@@ -19,6 +19,21 @@ int main(int argc, char *argv[]){
 
     //Device.Print_Property();
 
+    Storage s1;
+    s1.Init(10,Type.Int64,Device.cpu);
+    s1.set_zeros();
+    s1.at<cytnx_int64>(4) = 3;
+    s1.at<cytnx_int64>(5) = 66;
+    s1.at<cytnx_int64>(0) = 53;
+    s1.Save("test.storage");
+    cout << s1 << endl;
+    
+    Storage s22;
+    s22.Load("test.storage");
+    cout << s22 << endl;
+    return 0;
+
+
     Tensor DD = arange(1.,5.,1.);
     Tensor sDD = arange(0.4,0.7,0.1);
     cout << DD << sDD << endl;

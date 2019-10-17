@@ -2,6 +2,7 @@
 #define _H_Storage_
 
 #include <iostream>
+#include <fstream>
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
@@ -56,8 +57,6 @@ namespace cytnx{
             
             template<class T>   
             T* data() const;
-            void Save(const int &f);
-            void Load(const int &f);
             void print();
             void print_info();
             /*
@@ -559,8 +558,15 @@ namespace cytnx{
             }
             ///@endcond
 
-            void Save(const int &f);
-            void Load(const int &f);
+            void _Save(std::fstream &f);
+            void _Load(std::fstream &f);
+
+
+            void Save(const std::string &fname);
+            void Save(const char* fname);
+            
+            void Load(const std::string &fname);
+            void Load(const char* fname);
 
             /**
             @brief cast the type of current Storage

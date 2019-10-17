@@ -84,21 +84,44 @@ namespace cytnx{
     }
 
 
-    void Storage::Save(const int &f){
+    void Storage::Save(const std::string &fname){
+        fstream f;
+        f.open(fname,ios::out|ios::trunc|ios::binary);
+        if(!f.is_open()){
+            cytnx_error_msg(true,"[ERROR] invalid file path for save.%s","\n");
+        }
+        this->_Save(f);   
+        f.close();
+    }
+    void Storage::Save(const char* fname){
+        fstream f;
+        f.open(fname,ios::out|ios::trunc|ios::binary);
+        if(!f.is_open()){
+            cytnx_error_msg(true,"[ERROR] invalid file path for save.%s","\n");
+        }
+        this->_Save(f);
+        f.close();
+    }
+    void Storage::_Save(fstream &f){
         //header
-        write(f,&this->size(),sizeof(unsigned long long));
-        write(f,&this->dtype(),sizeof(unsigned int));
-        write(f,&this->device(),sizeof(int));
+        //check:
+        cytnx_error_msg(!f.is_open(),"[ERROR] invalid fstream!.%s","\n");
+
+        unsigned int IDDs = 999;
+        f.write((char*)&IDDs,sizeof(unsigned int));
+        f.write((char*)&this->size(),sizeof(unsigned long long));
+        f.write((char*)&this->dtype(),sizeof(unsigned int));
+        f.write((char*)&this->device(),sizeof(int));
         
         //data:
         if(this->device() == Device.cpu){
-            write(f,this->_impl->Mem,Type.typeSize(this->dtype())*this->size());
+            f.write((char*)this->_impl->Mem,Type.typeSize(this->dtype())*this->size());
         }else{
             #ifdef UNI_GPU
                 checkCudaErrors(cudaSetDevice(this->device()));
                 void *htmp = malloc(Type.typeSize(this->dtype())*this->size());
                 checkCudaErrors(cudaMemcpy(htmp,this->_impl->Mem,Type.typeSize(this->dtype())*this->size(),cudaMemcpyDeviceToHost));
-                write(f,htmp,Type.typeSize(this->dtype())*this->size());
+                f.write(char*)htmp,Type.typeSize(this->dtype())*this->size());
                 free(htmp);
                 
             #else
@@ -107,25 +130,64 @@ namespace cytnx{
         }
 
     }
-    void Storage::Load(const int &f){
+
+
+    void Storage::Load(const std::string &fname){
+        fstream f;
+        f.open(fname,ios::in|ios::binary);
+        if(!f.is_open()){
+            cytnx_error_msg(true,"[ERROR] invalid file path for load.%s","\n");
+        }
+        this->_Load(f);   
+        f.close();
+    }
+    void Storage::Load(const char* fname){
+        fstream f;
+        f.open(fname,ios::in|ios::binary);
+        if(!f.is_open()){
+            cytnx_error_msg(true,"[ERROR] invalid file path for load.%s","\n");
+        }
+        this->_Load(f);
+        f.close();
+    }
+    void Storage::_Load(fstream &f){
         //header
         unsigned long long sz;
         unsigned int dt;
         int dv;
-        read(f,&sz,sizeof(unsigned long long));
-        read(f,&dt,sizeof(unsigned int));
-        read(f,&dv,sizeof(int));
+
+        //check:
+        cytnx_error_msg(!f.is_open(),"[ERROR] invalid fstream!.%s","\n");
+        
+        //checking IDD
+        unsigned int tmpIDDs;
+        f.read((char*)&tmpIDDs,sizeof(unsigned int));
+        if(tmpIDDs != 999){
+            cytnx_error_msg(true,"[ERROR] the Load file is not the Storage object!\n","%s");
+        }
+
+        f.read((char*)&sz,sizeof(unsigned long long));
+        f.read((char*)&dt,sizeof(unsigned int));
+        f.read((char*)&dv,sizeof(int));
+        
+        if(dv != Device.cpu){
+            if(dv >= Device.Ngpus){
+                cytnx_warning_msg(true,"[Warning!!] the original device ID does not exists. the tensor will be put on CPU, please use .to() or .to_() to move to desire devices.%s","\n");
+                dv = -1;
+            }
+        }
+        
         this->_impl = __SII.USIInit[dt]();
         this->_impl->Init(sz,dv);
 
         //data:
-        if(dv != Device.cpu){
-            read(f,this->_impl->Mem,Type.typeSize(dt)*sz);
+        if(dv == Device.cpu){
+            f.read((char*)this->_impl->Mem,Type.typeSize(dt)*sz);
         }else{
             #ifdef UNI_GPU
                 checkCudaErrors(cudaSetDevice(dv));
                 void *htmp = malloc(Type.typeSize(dt)*sz);
-                read(f,htmp,Type.typeSize(dt)*sz);
+                f.read((char*)htmp,Type.typeSize(dt)*sz);
                 checkCudaErrors(cudaMemcpy(this->_impl->Mem,htmp,Type.typeSize(dt)*sz,cudaMemcpyHostToDevice));
                 free(htmp);
                 
