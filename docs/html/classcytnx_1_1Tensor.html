@@ -85,6 +85,24 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a3787538221698d29b7c057846298c4da"><td class="memItemLeft" align="right" valign="top"><a id="a3787538221698d29b7c057846298c4da"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>_Save</b> (std::fstream &amp;f)</td></tr>
+<tr class="separator:a3787538221698d29b7c057846298c4da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c76174d63de3ae5f76f16e98d26e315"><td class="memItemLeft" align="right" valign="top"><a id="a2c76174d63de3ae5f76f16e98d26e315"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>_Load</b> (std::fstream &amp;f)</td></tr>
+<tr class="separator:a2c76174d63de3ae5f76f16e98d26e315"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff52e971692a635519ae9504f784c15a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#aff52e971692a635519ae9504f784c15a">Save</a> (const std::string &amp;fname)</td></tr>
+<tr class="memdesc:aff52e971692a635519ae9504f784c15a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save current <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> to file.  <a href="#aff52e971692a635519ae9504f784c15a">More...</a><br /></td></tr>
+<tr class="separator:aff52e971692a635519ae9504f784c15a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ccb3c41d6b2c39a68116949b774a9b9"><td class="memItemLeft" align="right" valign="top"><a id="a1ccb3c41d6b2c39a68116949b774a9b9"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Save</b> (const char *fname)</td></tr>
+<tr class="separator:a1ccb3c41d6b2c39a68116949b774a9b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c6f1463000fc169fb5f66b101f6a63b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#a1c6f1463000fc169fb5f66b101f6a63b">Load</a> (const std::string &amp;fname)</td></tr>
+<tr class="memdesc:a1c6f1463000fc169fb5f66b101f6a63b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load current <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> to file.  <a href="#a1c6f1463000fc169fb5f66b101f6a63b">More...</a><br /></td></tr>
+<tr class="separator:a1c6f1463000fc169fb5f66b101f6a63b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3f3e07c23ee3aa2345865849e3509a1"><td class="memItemLeft" align="right" valign="top"><a id="af3f3e07c23ee3aa2345865849e3509a1"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Load</b> (const char *fname)</td></tr>
+<tr class="separator:af3f3e07c23ee3aa2345865849e3509a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4472af6f8e825a13440e832bf82fb627"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#a4472af6f8e825a13440e832bf82fb627">dtype</a> () const</td></tr>
 <tr class="memdesc:a4472af6f8e825a13440e832bf82fb627"><td class="mdescLeft">&#160;</td><td class="mdescRight">the dtype-id of the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>  <a href="#a4472af6f8e825a13440e832bf82fb627">More...</a><br /></td></tr>
 <tr class="separator:a4472af6f8e825a13440e832bf82fb627"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1320,6 +1338,33 @@ Shape : (1)
 </pre> 
 </div>
 </div>
+<a id="a1c6f1463000fc169fb5f66b101f6a63b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c6f1463000fc169fb5f66b101f6a63b">&#9670;&nbsp;</a></span>Load()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cytnx::Tensor::Load </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>fname</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Load current <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> to file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fname</td><td>file name</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>description: load the <a class="el" href="classcytnx_1_1Storage.html" title="an memeory storage with multi-type/multi-device support ">Storage</a> from file with file path specify with input param 'fname' </p>
+
+</div>
+</div>
 <a id="adbdc402a8c4d6d738523a888bcf9c0c2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adbdc402a8c4d6d738523a888bcf9c0c2">&#9670;&nbsp;</a></span>permute()</h2>
 
@@ -1533,6 +1578,33 @@ Shape : (5,12)
 
 
 </pre> 
+</div>
+</div>
+<a id="aff52e971692a635519ae9504f784c15a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff52e971692a635519ae9504f784c15a">&#9670;&nbsp;</a></span>Save()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cytnx::Tensor::Save </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>fname</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Save current <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> to file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fname</td><td>file name</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>description: save the <a class="el" href="classcytnx_1_1Storage.html" title="an memeory storage with multi-type/multi-device support ">Storage</a> to file with file path specify with input param 'fname' with postfix ".cytn" </p>
+
 </div>
 </div>
 <a id="a771f1f5b51f89abd8df4166e602214ac"></a>

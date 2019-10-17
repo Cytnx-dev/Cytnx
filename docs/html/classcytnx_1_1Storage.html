@@ -91,6 +91,24 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a281c06bd64e9ea3338083c18c4c32eda"><td class="memItemLeft" align="right" valign="top"><a id="a281c06bd64e9ea3338083c18c4c32eda"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Storage</b> (const unsigned long long &amp;<a class="el" href="classcytnx_1_1Storage.html#aaf36262622abdab03c90b713c454f78e">size</a>, const unsigned int &amp;<a class="el" href="classcytnx_1_1Storage.html#a643824801e81ab86aca055f1dd1f34d7">dtype</a>=Type.Double, int <a class="el" href="classcytnx_1_1Storage.html#a4c3e27582d7f951e6b76ccbb92f7c537">device</a>=-1)</td></tr>
 <tr class="separator:a281c06bd64e9ea3338083c18c4c32eda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a408af79a3272722440b9b12eb1dc87dd"><td class="memItemLeft" align="right" valign="top"><a id="a408af79a3272722440b9b12eb1dc87dd"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>_Save</b> (std::fstream &amp;f)</td></tr>
+<tr class="separator:a408af79a3272722440b9b12eb1dc87dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0747f0e56f120fe8f1b82945b09df26e"><td class="memItemLeft" align="right" valign="top"><a id="a0747f0e56f120fe8f1b82945b09df26e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>_Load</b> (std::fstream &amp;f)</td></tr>
+<tr class="separator:a0747f0e56f120fe8f1b82945b09df26e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae678c02085f12febc8c2f3476cdb4311"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Storage.html#ae678c02085f12febc8c2f3476cdb4311">Save</a> (const std::string &amp;fname)</td></tr>
+<tr class="memdesc:ae678c02085f12febc8c2f3476cdb4311"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save current <a class="el" href="classcytnx_1_1Storage.html" title="an memeory storage with multi-type/multi-device support ">Storage</a> to file.  <a href="#ae678c02085f12febc8c2f3476cdb4311">More...</a><br /></td></tr>
+<tr class="separator:ae678c02085f12febc8c2f3476cdb4311"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adaa5cb07bbaf3537dc523282bc82d5f4"><td class="memItemLeft" align="right" valign="top"><a id="adaa5cb07bbaf3537dc523282bc82d5f4"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Save</b> (const char *fname)</td></tr>
+<tr class="separator:adaa5cb07bbaf3537dc523282bc82d5f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54484bf7ed5f7bdae96a23e2dc295dd9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Storage.html#a54484bf7ed5f7bdae96a23e2dc295dd9">Load</a> (const std::string &amp;fname)</td></tr>
+<tr class="memdesc:a54484bf7ed5f7bdae96a23e2dc295dd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load current <a class="el" href="classcytnx_1_1Storage.html" title="an memeory storage with multi-type/multi-device support ">Storage</a> from file.  <a href="#a54484bf7ed5f7bdae96a23e2dc295dd9">More...</a><br /></td></tr>
+<tr class="separator:a54484bf7ed5f7bdae96a23e2dc295dd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d477dc44faeafcb35e3c19baaf78483"><td class="memItemLeft" align="right" valign="top"><a id="a7d477dc44faeafcb35e3c19baaf78483"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Load</b> (const char *fname)</td></tr>
+<tr class="separator:a7d477dc44faeafcb35e3c19baaf78483"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8310d8dbb70510272ded2e3d01be25f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Storage.html">Storage</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Storage.html#a8310d8dbb70510272ded2e3d01be25f0">astype</a> (const unsigned int &amp;new_type) const</td></tr>
 <tr class="memdesc:a8310d8dbb70510272ded2e3d01be25f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">cast the type of current <a class="el" href="classcytnx_1_1Storage.html" title="an memeory storage with multi-type/multi-device support ">Storage</a>  <a href="#a8310d8dbb70510272ded2e3d01be25f0">More...</a><br /></td></tr>
 <tr class="separator:a8310d8dbb70510272ded2e3d01be25f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -472,6 +490,33 @@ size  : 10
 </pre> 
 </div>
 </div>
+<a id="a54484bf7ed5f7bdae96a23e2dc295dd9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a54484bf7ed5f7bdae96a23e2dc295dd9">&#9670;&nbsp;</a></span>Load()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cytnx::Storage::Load </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>fname</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Load current <a class="el" href="classcytnx_1_1Storage.html" title="an memeory storage with multi-type/multi-device support ">Storage</a> from file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fname</td><td>file name</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>description: load the <a class="el" href="classcytnx_1_1Storage.html" title="an memeory storage with multi-type/multi-device support ">Storage</a> from file with file path specify with input param 'fname'. </p>
+
+</div>
+</div>
 <a id="ad304e00cf3d472ea0355af6b40c4529d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad304e00cf3d472ea0355af6b40c4529d">&#9670;&nbsp;</a></span>operator==()</h2>
 
@@ -512,6 +557,33 @@ True
 True
 False
 </pre> 
+</div>
+</div>
+<a id="ae678c02085f12febc8c2f3476cdb4311"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae678c02085f12febc8c2f3476cdb4311">&#9670;&nbsp;</a></span>Save()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cytnx::Storage::Save </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>fname</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Save current <a class="el" href="classcytnx_1_1Storage.html" title="an memeory storage with multi-type/multi-device support ">Storage</a> to file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fname</td><td>file name</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>description: save the <a class="el" href="classcytnx_1_1Storage.html" title="an memeory storage with multi-type/multi-device support ">Storage</a> to file with file path specify with input param 'fname' with postfix ".cyst" </p>
+
 </div>
 </div>
 <a id="a7e854529c99108b0acc3e5e2b185244b"></a>

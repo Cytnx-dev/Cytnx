@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['range',['range',['../classcytnx_1_1Accessor.html#a7a5a508a58b71897c3dd162195aceaa9',1,'cytnx::Accessor']]],
-  ['reshape',['reshape',['../classcytnx_1_1Tensor.html#a182f8f7b3ae3d0db8ed55d2adf8c6b45',1,'cytnx::Tensor']]],
-  ['reshape_5f',['reshape_',['../classcytnx_1_1Tensor.html#a3723449528b9a20dd46c32c9e042b8f0',1,'cytnx::Tensor']]]
+  ['qnums',['qnums',['../classcytnx_1_1Bond.html#a9276b15ab9b96dc7b1fac4dc407b9aa6',1,'cytnx::Bond::qnums() const'],['../classcytnx_1_1Bond.html#a528aa25d76bcfb057ab7b56cf28f0ed4',1,'cytnx::Bond::qnums()']]],
+  ['qnums_5fclone',['qnums_clone',['../classcytnx_1_1Bond.html#a86503fa193140358b4def496a634b5b6',1,'cytnx::Bond']]]
 ];
