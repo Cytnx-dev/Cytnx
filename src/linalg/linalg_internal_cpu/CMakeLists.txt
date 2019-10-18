@@ -14,6 +14,7 @@ target_sources_local(cytnx
     Outer_internal.hpp
     Sub_internal.hpp
     Svd_internal.hpp
+    Tridiag_internal.hpp
     Vectordot_internal.hpp
 
     Add_internal.cpp
@@ -28,6 +29,7 @@ target_sources_local(cytnx
     Matmul_internal.cpp
     Mul_internal.cpp
     Outer_internal.cpp
+    Tridiag_internal.cpp
     Sub_internal.cpp
     Svd_internal.cpp
     Vectordot_internal.cpp
