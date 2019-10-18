@@ -203,9 +203,9 @@ namespace cytnx{
             os << Device.getname(this->device) << std::endl;
 
             sprintf(buffer,"%s","Shape :"); os << string(buffer);
-            sprintf(buffer," (%d",shape[0]); os << string(buffer);
+            sprintf(buffer," (%llu",shape[0]); os << string(buffer);
             for(cytnx_int32 i=1;i<shape.size();i++){
-                sprintf(buffer,",%d",shape[i]); os << string(buffer);
+                sprintf(buffer,",%llu",shape[i]); os << string(buffer);
             }
             os << ")"<< std::endl;
 
@@ -235,7 +235,7 @@ namespace cytnx{
                     }
                     for(cytnx_uint64 i=0;i<shape.back();i++){
                         stk2.back() = i;
-                        sprintf(buffer,"%+19d ",elem_ptr_[cnt]);os << string(buffer);
+                        sprintf(buffer,"%+19lld ",elem_ptr_[cnt]);os << string(buffer);
                         cnt++;
                     }
 
@@ -297,7 +297,7 @@ namespace cytnx{
                         for(cytnx_uint64 n=0;n<shape.size();n++){
                             RealMemPos += c_offj[n]*stk2[mapper[n]]; // mapback + backmap = normal-map
                         }
-                        sprintf(buffer,"%+19d ",elem_ptr_[RealMemPos]);os << string(buffer);
+                        sprintf(buffer,"%+19lld ",elem_ptr_[RealMemPos]);os << string(buffer);
                         //cnt++;
                     }
 
@@ -340,7 +340,7 @@ namespace cytnx{
         cytnx_int64* elem_ptr_ = static_cast<cytnx_int64*>(this->Mem);
         cout << "[ ";
         for(unsigned long long cnt=0;cnt<this->len;cnt++){
-            sprintf(buffer,"%+19d ",elem_ptr_[cnt]); cout << string(buffer);
+            sprintf(buffer,"%+19lld ",elem_ptr_[cnt]); cout << string(buffer);
         }
         cout << " ]" << endl;
         free(buffer);
