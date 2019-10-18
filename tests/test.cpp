@@ -19,6 +19,37 @@ int main(int argc, char *argv[]){
 
     //Device.Print_Property();
 
+    Storage s1;
+    s1.Init(10,Type.Int64,Device.cpu);
+    s1.set_zeros();
+    s1.at<cytnx_int64>(4) = 3;
+    s1.at<cytnx_int64>(5) = 66;
+    s1.at<cytnx_int64>(0) = 53;
+    s1.Save("test");
+    cout << s1 << endl;
+    
+    Storage s22;
+    s22.Load("test.cyst");
+    cout << s22 << endl;
+
+    Tensor DD1 = arange(1.,5.,1.);
+    cout << DD1 << endl;
+
+    DD1.Save("test");
+    Tensor DD2;
+    DD2.Load("test.cytn");
+    cout << DD2 << endl;
+
+    return 0;
+
+
+    Tensor DD = arange(1.,5.,1.);
+    Tensor sDD = arange(0.4,0.7,0.1);
+    cout << DD << sDD << endl;
+
+    cout << linalg::Tridiag(DD,sDD,true);
+    return 0;
+
     
     Tensor A = arange(10,Type.Double);
     Tensor B = arange(0,1,0.1,Type.Double);

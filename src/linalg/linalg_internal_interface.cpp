@@ -229,6 +229,12 @@ namespace cytnx{
             Vd_ii[Type.Uint16] = Vectordot_internal_u16;
             Vd_ii[Type.Bool  ] = Vectordot_internal_b  ;
 
+            //====================
+            Td_ii = vector<Tdfunc_oii>(N_Type);
+            Td_ii[Type.Double] = Tridiag_internal_d;
+            Td_ii[Type.Float ] = Tridiag_internal_f;
+
+
             //================
             Outer_ii = vector<vector<Outerfunc_oii> >(N_Type,vector<Outerfunc_oii>(N_Type,NULL));
 
@@ -544,7 +550,7 @@ namespace cytnx{
 
                 //================
                 /*
- cuOuter_ii = vector<vector<Outerfunc_oii> >(N_Type,vector<Outerfunc_oii>(N_Type,NULL));
+                cuOuter_ii = vector<vector<Outerfunc_oii> >(N_Type,vector<Outerfunc_oii>(N_Type,NULL));
 
                 cuOuter_ii[Type.ComplexDouble][Type.ComplexDouble] = cuOuter_internal_cdtcd;
                 cuOuter_ii[Type.ComplexDouble][Type.ComplexFloat ] = cuOuter_internal_cdtcf;
@@ -684,7 +690,7 @@ namespace cytnx{
                 cuOuter_ii[Type.Bool][Type.Uint16       ] = cuOuter_internal_btu16;
                 cuOuter_ii[Type.Bool][Type.Int16        ] = cuOuter_internal_bti16;
                 cuOuter_ii[Type.Bool][Type.Bool         ] = cuOuter_internal_btb;
-*/
+                */
             #endif
         }
 

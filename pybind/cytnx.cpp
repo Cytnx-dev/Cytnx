@@ -312,6 +312,8 @@ PYBIND11_MODULE(cytnx,m){
                 .def("fill",&cytnx::Storage::fill<cytnx::cytnx_int16    >, py::arg("val"))
                 .def("fill",&cytnx::Storage::fill<cytnx::cytnx_uint16   >, py::arg("val"))
                 .def("fill",&cytnx::Storage::fill<cytnx::cytnx_bool     >, py::arg("val"))
+                .def("Save",[](cytnx::Storage &self, const std::string &fname){self.Save(fname);},py::arg("fname"))
+                .def("Load",[](cytnx::Storage &self, const std::string &fname){self.Load(fname);},py::arg("fname"))
                 ;
 
     py::class_<cytnx::Tensor>(m,"Tensor")
@@ -408,6 +410,10 @@ PYBIND11_MODULE(cytnx,m){
                 .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_int16    >, py::arg("val"))
                 .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_uint16   >, py::arg("val"))
                 .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_bool     >, py::arg("val"))
+
+                .def("Save",[](cytnx::Tensor &self, const std::string &fname){self.Save(fname);},py::arg("fname"))
+                .def("Load",[](cytnx::Tensor &self, const std::string &fname){self.Load(fname);},py::arg("fname"))
+
 
                 .def("__getitem__",[](const cytnx::Tensor &self, py::object locators){
                     cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to getitem from a empty Tensor%s","\n");

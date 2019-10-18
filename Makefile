@@ -104,7 +104,7 @@ ifeq ($(GPU_Enable),1)
 endif
 
 ## Linalg
-OBJS += Add.o Div.o Sub.o Mul.o Cpr.o Svd.o Svd_truncate.o Inv.o Inv_.o Conj.o Conj_.o Exp.o Exp_.o Eigh.o Diag.o Matmul.o Tensordot.o Otimes.o Vectordot.o
+OBJS += Add.o Div.o Sub.o Mul.o Cpr.o Svd.o Svd_truncate.o Inv.o Inv_.o Conj.o Conj_.o Exp.o Exp_.o Eigh.o Diag.o Matmul.o Tensordot.o Otimes.o Vectordot.o Tridiag.o
 
 
 ALLOBJS = $(OBJS)
@@ -266,6 +266,9 @@ Outer_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Outer_internal.c
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 
 Vectordot_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Vectordot_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Vectordot_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+
+Tridiag_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Tridiag_internal.cpp $(CytnxPATH)/include/linalg/linalg_internal_cpu/Tridiag_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 
 
@@ -448,6 +451,8 @@ Tensordot.o: $(CytnxPATH)/src/linalg/Tensordot.cpp $(CytnxPATH)/include/linalg.h
 Vectordot.o: $(CytnxPATH)/src/linalg/Vectordot.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Otimes.o: $(CytnxPATH)/src/linalg/Otimes.cpp $(CytnxPATH)/include/linalg.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+Tridiag.o: $(CytnxPATH)/src/linalg/Tridiag.cpp $(CytnxPATH)/include/linalg/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 test.o: $(TESTPATH)/test.cpp

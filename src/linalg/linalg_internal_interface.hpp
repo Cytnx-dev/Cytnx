@@ -40,6 +40,7 @@ namespace cytnx{
         typedef void (*Matmulfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &,const boost::intrusive_ptr<Storage_base> &, const cytnx_int32 &, const cytnx_int32 &, const cytnx_int32&);
         typedef void (*Outerfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base>&, const cytnx_uint64 &, const cytnx_uint64 &, const cytnx_uint64 &, const cytnx_uint64 &);
         typedef void (*Vectordotfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base>&,const unsigned long long &, const bool &);
+        typedef void (*Tdfunc_oii)(const boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, boost::intrusive_ptr<Storage_base>&, boost::intrusive_ptr<Storage_base>&, const cytnx_int32 &);
     
         class linalg_internal_interface{
             public:
@@ -53,6 +54,7 @@ namespace cytnx{
                 std::vector<Matmulfunc_oii> Matmul_ii;
                 std::vector<std::vector<Outerfunc_oii> >Outer_ii;
                 std::vector<Vectordotfunc_oii> Vd_ii;
+                std::vector<Tdfunc_oii> Td_ii;
 
                 #ifdef UNI_GPU
                 std::vector<std::vector<Arithmeticfunc_oii> > cuAri_ii;
@@ -63,7 +65,7 @@ namespace cytnx{
                 std::vector<Diagfunc_oii> cuDiag_ii;
                 std::vector<Eighfunc_oii> cuEigh_ii;
                 std::vector<Matmulfunc_oii> cuMatmul_ii;
-                std::vector<std::vector<Outerfunc_oii> > cuOuter_ii;
+                //std::vector<std::vector<Outerfunc_oii> > cuOuter_ii;
                 #endif
 
             linalg_internal_interface();

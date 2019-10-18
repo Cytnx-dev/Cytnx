@@ -83,10 +83,11 @@
       \link cytnx::linalg::Matmul Matmul\endlink  |   x       |  Y  |  Y   |    N
       \link cytnx::linalg::Diag Diag\endlink    |   x       |  Y  |  Y   |    N
       *\link cytnx::linalg::Tensordot Tensordot\endlink | x | Y | Y | N
-      \link cytnx::linalg::Otimes Otimes\endlink  |   x       | Y   |  Y   |   N
+      \link cytnx::linalg::Otimes Otimes\endlink  |   x       | Y   | ^N   |   N
       \link cytnx::linalg::Vectordot Vectordot\endlink    |   x       |  Y  |  N   |    N
- 
+      \link cytnx::linalg::Tridiag Tridiag\endlink    | x | Y | N | N  
     *this is a high level linalg 
+    ^this is temporary disable
 
 ## Generators 
     Tensor: \link cytnx::zeros zeros()\endlink, \link cytnx::ones ones()\endlink, \link cytnx::arange arange()\endlink

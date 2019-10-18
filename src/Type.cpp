@@ -68,6 +68,40 @@ unsigned int cytnx::Type_class::c_typename_to_id(const std::string &c_name){
 
 }
 
+unsigned int cytnx::Type_class::typeSize(const unsigned int &type_id){
+
+
+    switch (type_id){
+        case Type_class::Void:
+            return 0;
+        case Type_class::ComplexDouble:
+            return sizeof(cytnx_complex128);
+        case Type_class::ComplexFloat:
+            return sizeof(cytnx_complex64);
+        case Type_class::Double:
+            return sizeof(cytnx_double);
+        case Type_class::Float:
+            return sizeof(cytnx_float);
+        case Type_class::Int64:
+            return sizeof(cytnx_int64);
+        case Type_class::Uint64:
+            return sizeof(cytnx_uint64);
+        case Type_class::Int32:
+            return sizeof(cytnx_int32);
+        case Type_class::Uint32:
+            return sizeof(cytnx_uint32);
+        case Type_class::Int16:
+            return sizeof(cytnx_int16);
+        case Type_class::Uint16:
+            return sizeof(cytnx_uint16);
+        case Type_class::Bool:
+            return sizeof(cytnx_bool);
+        default:
+            cytnx_error_msg(1,"%s","[ERROR] invalid type");
+            return 0;
+    }
+
+}
         
 namespace cytnx{
     Type_class Type;

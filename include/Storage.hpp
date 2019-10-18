@@ -2,6 +2,7 @@
 #define _H_Storage_
 
 #include <iostream>
+#include <fstream>
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
@@ -56,7 +57,6 @@ namespace cytnx{
             
             template<class T>   
             T* data() const;
-
             void print();
             void print_info();
             /*
@@ -557,6 +557,30 @@ namespace cytnx{
                 return *this;
             }
             ///@endcond
+
+            void _Save(std::fstream &f);
+            void _Load(std::fstream &f);
+
+            /**
+            @brief Save current Storage to file
+            @param fname file name
+
+            description:
+                save the Storage to file with file path specify with input param 'fname' with postfix ".cyst"
+
+            */            
+            void Save(const std::string &fname);
+            void Save(const char* fname);
+            /**
+            @brief Load current Storage from file
+            @param fname file name
+
+            description:
+                load the Storage from file with file path specify with input param 'fname'.
+
+            */            
+            void Load(const std::string &fname);
+            void Load(const char* fname);
 
             /**
             @brief cast the type of current Storage
