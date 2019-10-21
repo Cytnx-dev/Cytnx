@@ -153,7 +153,7 @@ target_include_directories(cytnx
         ${CMAKE_CURRENT_SOURCE_DIR}/src
     PUBLIC
         $<INSTALL_INTERFACE:include>
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 target_include_directories(cytnx SYSTEM
     PUBLIC
