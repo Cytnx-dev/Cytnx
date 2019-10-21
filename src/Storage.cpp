@@ -122,7 +122,7 @@ namespace cytnx{
                 checkCudaErrors(cudaSetDevice(this->device()));
                 void *htmp = malloc(Type.typeSize(this->dtype())*this->size());
                 checkCudaErrors(cudaMemcpy(htmp,this->_impl->Mem,Type.typeSize(this->dtype())*this->size(),cudaMemcpyDeviceToHost));
-                f.write(char*)htmp,Type.typeSize(this->dtype())*this->size());
+                f.write((char*)htmp,Type.typeSize(this->dtype())*this->size());
                 free(htmp);
                 
             #else

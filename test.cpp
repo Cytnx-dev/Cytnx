@@ -40,7 +40,6 @@ int main(int argc, char *argv[]){
     DD2.Load("test.cytn");
     cout << DD2 << endl;
 
-    return 0;
 
 
     Tensor DD = arange(1.,5.,1.);
