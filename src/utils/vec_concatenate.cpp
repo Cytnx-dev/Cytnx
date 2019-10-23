@@ -1,6 +1,4 @@
 #include "utils/vec_concatenate.hpp"
-#include "Bond.hpp"
-#include <algorithm>
 #include <vector>
 #include <cstring>
 namespace cytnx{
