@@ -1,8 +1,7 @@
 #include "utils/vec_clone.hpp"
 #include "Tensor.hpp"
 #include "Storage.hpp"
-#include "Symmetry.hpp"
-#include "Bond.hpp"
+
 namespace cytnx{
 
     template<class T>
@@ -414,23 +413,19 @@ namespace cytnx{
     }
     //================================
 
-    template std::vector<Bond> vec_clone<Bond>(const std::vector<Bond>&);
-    template std::vector<Symmetry> vec_clone<Symmetry>(const std::vector<Symmetry>&);
+
     template std::vector<Tensor> vec_clone<Tensor>(const std::vector<Tensor>&);
     template std::vector<Storage> vec_clone<Storage>(const std::vector<Storage>&);
     
-    template std::vector<Bond> vec_clone<Bond>(const std::vector<Bond>&, const cytnx_uint64 &);
-    template std::vector<Symmetry> vec_clone<Symmetry>(const std::vector<Symmetry>&, const cytnx_uint64 &);
+
     template std::vector<Tensor> vec_clone<Tensor>(const std::vector<Tensor>&, const cytnx_uint64 &);
     template std::vector<Storage> vec_clone<Storage>(const std::vector<Storage>&, const cytnx_uint64 &);
 
-    template std::vector<Bond> vec_clone<Bond>(const std::vector<Bond>&, const std::vector<cytnx_uint64> &);
-    template std::vector<Symmetry> vec_clone<Symmetry>(const std::vector<Symmetry>&, const std::vector<cytnx_uint64> &);
+
     template std::vector<Tensor> vec_clone<Tensor>(const std::vector<Tensor>&, const std::vector<cytnx_uint64> &);
     template std::vector<Storage> vec_clone<Storage>(const std::vector<Storage>&, const std::vector<cytnx_uint64> &);
 
-    template std::vector<Bond> vec_clone<Bond>(const std::vector<Bond>&, const cytnx_uint64 &, const cytnx_uint64 &);
-    template std::vector<Symmetry> vec_clone<Symmetry>(const std::vector<Symmetry>&, const cytnx_uint64 &, const cytnx_uint64 &);
+
     template std::vector<Tensor> vec_clone<Tensor>(const std::vector<Tensor>&, const cytnx_uint64 &, const cytnx_uint64 &);
     template std::vector<Storage> vec_clone<Storage>(const std::vector<Storage>&, const cytnx_uint64 &, const cytnx_uint64 &);
 

@@ -1,9 +1,7 @@
 #include "utils/vec_intersect.hpp"
 #include "utils/utils_internal_interface.hpp"
-#include "Bond.hpp"
 #include <algorithm>
 #include <vector>
-#include <cstring>
 namespace cytnx{
 
     std::vector<std::vector<cytnx_int64> > vec2d_intersect( const std::vector<std::vector<cytnx_int64> > &inL, const std::vector<std::vector<cytnx_int64> > &inR, const bool &sorted_L, const bool &sorted_R){

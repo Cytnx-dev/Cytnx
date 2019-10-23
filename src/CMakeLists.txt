@@ -47,34 +47,24 @@ target_sources_local(cytnx
   #   intrusive_ptr_base.hpp
   PRIVATE
     Accessor.cpp
-    Bond.cpp
     BoolStorage.cpp
     ComplexDoubleStorage.cpp
     ComplexFloatStorage.cpp
-    DenseUniTensor.cpp
     Device.cpp
     DoubleStorage.cpp
-    FermionNetwork.cpp
     FloatStorage.cpp
     Generator.cpp
     Int16Storage.cpp
     Int32Storage.cpp
     Int64Storage.cpp
-    Network.cpp
-    Network_base.cpp
-    RegularNetwork.cpp
-    SparseUniTensor.cpp
     Storage.cpp
     Storage_base.cpp
-    Symmetry.cpp
     Tensor.cpp
     Type.cpp
     Uint16Storage.cpp
     Uint32Storage.cpp
     Uint64Storage.cpp
-    UniTensor.cpp
-    UniTensor_base.cpp
-    contraction_tree.cpp
+    ../include/cytnx_error.hpp
 )
 
 
