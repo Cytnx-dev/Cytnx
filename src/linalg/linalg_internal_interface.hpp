@@ -15,6 +15,7 @@
 #include "linalg_internal_cpu/Diag_internal.hpp"
 #include "linalg_internal_cpu/Outer_internal.hpp"
 #include "linalg_internal_cpu/Vectordot_internal.hpp"
+#include "linalg_internal_cpu/Tridiag_internal.hpp"
 #ifdef UNI_GPU
     #include "linalg_internal_gpu/cuArithmetic_internal.hpp"
     #include "linalg_internal_gpu/cuSvd_internal.hpp"
