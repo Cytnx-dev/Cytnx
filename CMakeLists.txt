@@ -92,7 +92,7 @@ set(CYTNX_VERSION
 
 option(USE_ICPC "Build Cytnx with Intel Compilers" OFF)
 option(USE_CUDA "Build using Nvidia CUDA for GPU library" ON)
-option(BUILD_PYTHON "Build Python wrapper" ON)
+option(BUILD_PYTHON "Build Python wrapper" OFF)
 option(USE_MKL "Build using MKL" OFF)
 option(BUILD_DOC "Build API docuemntation" OFF)
 if (USE_ICPC)
@@ -125,14 +125,7 @@ if (USE_MKL)
   mark_as_advanced(MKL_SDL MKL_MLT)
 endif()
 
-if(UNIX)
-  if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set(CMAKE_INSTALL_PREFIX "/usr/local/cytnx"
-            CACHE PATH "Cytnx install prefix"
-            FORCE
-            )
-  endif()
-endif()
+
 
 ######################################################################
 ### PROJECT
@@ -140,17 +133,7 @@ endif()
 project(CYTNX VERSION ${CYTNX_VERSION} LANGUAGES CXX C )
 
 
-######################################################################
-### CMAKE INSTALL OPTIONS
-######################################################################
-if(UNIX)
-  if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-	set(CMAKE_INSTALL_PREFIX "/usr/local/cytnx"
-		CACHE PATH "Cytnx install prefix"
-   		FORCE
-	)
-  endif()
-endif()
+
 
 
 
