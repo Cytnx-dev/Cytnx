@@ -17,15 +17,15 @@
 #include "linalg_internal_cpu/Vectordot_internal.hpp"
 #include "linalg_internal_cpu/Tridiag_internal.hpp"
 #ifdef UNI_GPU
-    #include "linalg_internal_gpu/cuArithmetic_internal.hpp"
-    #include "linalg_internal_gpu/cuSvd_internal.hpp"
-    #include "linalg_internal_gpu/cuEigh_internal.hpp"
-    #include "linalg_internal_gpu/cuInv_inplace_internal.hpp"
-    #include "linalg_internal_gpu/cuConj_inplace_internal.hpp"
-    #include "linalg_internal_gpu/cuExp_internal.hpp"
-    #include "linalg_internal_gpu/cuMatmul_internal.hpp"
-    #include "linalg_internal_gpu/cuDiag_internal.hpp"
-    #include "linalg_internal_gpu/cuOuter_internal.hpp"
+    #include "linalg/linalg_internal_gpu/cuArithmetic_internal.hpp"
+    #include "linalg/linalg_internal_gpu/cuSvd_internal.hpp"
+    #include "linalg/linalg_internal_gpu/cuEigh_internal.hpp"
+    #include "linalg/linalg_internal_gpu/cuInv_inplace_internal.hpp"
+    #include "linalg/linalg_internal_gpu/cuConj_inplace_internal.hpp"
+    #include "linalg/linalg_internal_gpu/cuExp_internal.hpp"
+    #include "linalg/linalg_internal_gpu/cuMatmul_internal.hpp"
+    #include "linalg/linalg_internal_gpu/cuDiag_internal.hpp"
+    //#include "linalg/linalg_internal_gpu/cuOuter_internal.hpp"
 #endif
 
 namespace cytnx{

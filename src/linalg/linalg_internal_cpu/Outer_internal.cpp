@@ -1,6 +1,5 @@
 #include "Outer_internal.hpp"
 #include "utils/utils_internal_interface.hpp"
-
 #include "utils/complex_arithmetic.hpp"
 #include "lapack_wrapper.hpp"
 
