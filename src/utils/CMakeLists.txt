@@ -28,6 +28,7 @@ target_sources_local(cytnx
     vec_range.cpp
     vec_unique.cpp
     vec_where.cpp
+    vec2d_col_sort.cpp
 )
 
 add_subdirectory(utils_internal_cpu)

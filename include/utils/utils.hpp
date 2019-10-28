@@ -11,6 +11,7 @@
 #include "vec_concatenate.hpp"
 #include "vec_intersect.hpp"
 #include "vec_range.hpp"
+#include "vec2d_col_sort.hpp"
 #include "str_utils.hpp"
 /// Helper function to print vector with ODT:
 #include <vector>
