@@ -321,14 +321,6 @@ install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc/
         COMPONENT documentation
 )
 endif()
-install(FILES
-        README.md
-        LICENSE
-        DESTINATION ${CMAKE_INSTALL_PREFIX}
-        COMPONENT common)
-
-
-
 
 
 set(libname "${CMAKE_SHARED_LIBRARY_PREFIX}cytnx.${CYTNX_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
