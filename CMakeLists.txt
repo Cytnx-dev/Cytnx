@@ -231,6 +231,7 @@ if ( OPENMP_FOUND )
 
    endif() 
   target_link_libraries(cytnx PRIVATE OpenMP::OpenMP_CXX)
+  target_compile_definitions(cytnx PRIVATE UNI_OMP)
 endif()
 
 target_link_libraries(cytnx PUBLIC Boost::boost ${LAPACK_LIBRARIES})

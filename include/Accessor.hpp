@@ -13,8 +13,8 @@ namespace cytnx{
     class Accessor{
         private:
             cytnx_int64 type; 
-            cytnx_int64 min, max, step;
-            cytnx_int64 loc;
+            cytnx_int64 min{}, max{}, step{};
+            cytnx_int64 loc{};
 
             // if type is singl, min/max/step     are not used
             // if type is all  , min/max/step/loc are not used
@@ -32,7 +32,7 @@ namespace cytnx{
             Accessor(): type(Accessor::none){};
             ///@endcond
 
-            // singul constr.
+            // single constructor
             /**
             @brief access the specific index at the assigned rank in Tensor.
             @param loc the specify index 
@@ -47,11 +47,11 @@ namespace cytnx{
             #### output>
             \verbinclude example/Accessor/example.py.out
             */
-            Accessor(const cytnx_int64 &loc);
+            explicit Accessor(const cytnx_int64 &loc);
 
             ///@cond
             // all constr. ( use string to dispatch )            
-            Accessor(const std::string &str);
+            explicit Accessor(const std::string &str);
 
             // range constr. 
             Accessor(const cytnx_int64 &min, const cytnx_int64 &max, const cytnx_int64 &step);
