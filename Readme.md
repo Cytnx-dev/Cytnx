@@ -3,7 +3,7 @@
 ![alt text](./Icon_small.png)
 
 ## Intro slide
-[Cytnx_v0.1.pdf](https://bit.ly/2NxHFwm)
+[Cytnx_v0.2.pdf](https://drive.google.com/file/d/13VBJ9565Zw5_W-_-aJjztGESESAVMm8_/view?usp=sharing)
 
 ## Documentation:
 
