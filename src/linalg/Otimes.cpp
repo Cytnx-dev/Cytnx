@@ -5,7 +5,7 @@
 namespace cytnx{
 
     namespace linalg{
-        Tensor Otimes(const Tensor &Tl, const Tensor &Tr){
+        Tensor Otimes(const Tensor &Tl, const Tensor &Tr, const bool &matrix_form){
             
             //checking:
             cytnx_error_msg(Tl.shape().size()==0,"[ERROR] pass empty tensor in param #1%s","\n");
@@ -39,7 +39,27 @@ namespace cytnx{
                     cytnx_error_msg(true,"[Otimes] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
                 #endif
             }
-             
+            
+
+            if(matrix_form){    
+                cytnx_uint32 row = 1;
+                cytnx_uint32 col = 1;
+                if(Tl.shape().size()==1){
+                    col*= Tl.shape()[0];
+                }else{
+                    row*= Tl.shape()[0];
+                    col*= Tl.shape()[1];
+                }
+                if(Tr.shape().size()==1){
+                    col*= Tr.shape()[0];
+                    
+                }else{
+                    row*= Tr.shape()[0];
+                    col*= Tr.shape()[1];
+                }
+                out.reshape_({row,col});
+            }
+
             return out;
 
         }

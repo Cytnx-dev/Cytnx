@@ -235,17 +235,19 @@ namespace cytnx{
         @brief perform outer produces of two Tensor.
         @param Tl Tensor #1
         @param Tr Tensor #2
+        @param matrix_form bool 
         @return 
             [Tensor]
 
         description:
             if the Tensor #1 has [shape_1], and Tensor #2 has [shape_2]; then the return Tensor will have shape: concate(shape_1,shape_2)
-    
+            if matrix_form = True, the return will be a rank-2 tensor. if false, the return will be a Tensor with rank equal to the total rank of the input tensors.            
+
         [Note]
             two tensor should on same device. 
 
         */
-        Tensor Otimes(const Tensor &Tl, const Tensor &Tr);
+        Tensor Otimes(const Tensor &Tl, const Tensor &Tr, const bool &matrix_form=true);
  
         
         //VectorDot:
