@@ -116,13 +116,17 @@ endif
 TESTPATH=tests
 
 
-all: test 
+all: test demo 
 
 
 #test: test.o $(ALLOBJS)
 #	$(CC) -o $@ $^ $(CCFLAGS) $(LDFLAGS)
 
 test: test.o libcytnx.so
+	$(CC) -L. $(LDFLAGS) -o $@ $< libcytnx.so
+	#export LD_LIBRARY_PATH=.
+
+demo: demo.o libcytnx.so
 	$(CC) -L. $(LDFLAGS) -o $@ $< libcytnx.so
 	#export LD_LIBRARY_PATH=.
 
@@ -457,7 +461,8 @@ Tridiag.o: $(CytnxPATH)/src/linalg/Tridiag.cpp $(CytnxPATH)/include/linalg/linal
 
 test.o: $(TESTPATH)/test.cpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-
+demo.o: demo.cpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 .phony : clean cleanpy
 
