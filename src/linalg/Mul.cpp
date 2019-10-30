@@ -375,6 +375,127 @@ namespace cytnx {
         }
 
 
-    }//cytnx
+    }//linalg
+Tensor operator*(const Tensor &Lt, const Tensor &Rt){
+  return cytnx::linalg::Mul(Lt,Rt);
+}
+template<>
+Tensor operator*<cytnx_complex128>(const cytnx_complex128 &lc, const Tensor &Rt){
+  return cytnx::linalg::Mul(lc,Rt);
+}
+template<>
+Tensor operator*<cytnx_complex64>(const cytnx_complex64 &lc, const Tensor &Rt){
+  return cytnx::linalg::Mul(lc,Rt);
+}
+template<>
+Tensor operator*<cytnx_double>(const cytnx_double &lc, const Tensor &Rt){
+  return cytnx::linalg::Mul(lc,Rt);
+}
+template<>
+Tensor operator*<cytnx_float>(const cytnx_float &lc, const Tensor &Rt){
+  return cytnx::linalg::Mul(lc,Rt);
+}
+template<>
+Tensor operator*<cytnx_int64>(const cytnx_int64 &lc, const Tensor &Rt){
+  return cytnx::linalg::Mul(lc,Rt);
+}
+template<>
+Tensor operator*<cytnx_uint64>(const cytnx_uint64 &lc, const Tensor &Rt){
+  return cytnx::linalg::Mul(lc,Rt);
+}
+template<>
+Tensor operator*<cytnx_int32>(const cytnx_int32 &lc, const Tensor &Rt){
+  return cytnx::linalg::Mul(lc,Rt);
+}
+template<>
+Tensor operator*<cytnx_uint32>(const cytnx_uint32 &lc, const Tensor &Rt){
+  return cytnx::linalg::Mul(lc,Rt);
+}
+template<>
+Tensor operator*<cytnx_uint16>(const cytnx_uint16 &lc, const Tensor &Rt){
+  return cytnx::linalg::Mul(lc,Rt);
+}
+template<>
+Tensor operator*<cytnx_int16>(const cytnx_int16 &lc, const Tensor &Rt){
+  return cytnx::linalg::Mul(lc,Rt);
+}
+template<>
+Tensor operator*<cytnx_bool>(const cytnx_bool &lc, const Tensor &Rt){
+  return cytnx::linalg::Mul(lc,Rt);
+}
+
+template<>
+Tensor operator*<cytnx_complex128>(const Tensor &Lt, const cytnx_complex128 &rc){
+  return cytnx::linalg::Mul(Lt,rc);
+}
+template<>
+Tensor operator*<cytnx_complex64>(const Tensor &Lt, const cytnx_complex64 &rc){
+  return cytnx::linalg::Mul(Lt,rc);
+}
+template<>
+Tensor operator*<cytnx_double>(const Tensor &Lt, const cytnx_double &rc){
+  return cytnx::linalg::Mul(Lt,rc);
+}
+template<>
+Tensor operator*<cytnx_float>(const Tensor &Lt, const cytnx_float &rc){
+  return cytnx::linalg::Mul(Lt,rc);
+}
+template<>
+Tensor operator*<cytnx_int64>(const Tensor &Lt, const cytnx_int64 &rc){
+  return cytnx::linalg::Mul(Lt,rc);
+}
+template<>
+Tensor operator*<cytnx_uint64>(const Tensor &Lt, const cytnx_uint64 &rc){
+  return cytnx::linalg::Mul(Lt,rc);
+}
+template<>
+Tensor operator*<cytnx_int32>(const Tensor &Lt, const cytnx_int32 &rc){
+  return cytnx::linalg::Mul(Lt,rc);
+}
+template<>
+Tensor operator*<cytnx_uint32>(const Tensor &Lt, const cytnx_uint32 &rc){
+  return cytnx::linalg::Mul(Lt,rc);
+}
+template<>
+Tensor operator*<cytnx_uint16>(const Tensor &Lt, const cytnx_uint16 &rc){
+  return cytnx::linalg::Mul(Lt,rc);
+}
+template<>
+Tensor operator*<cytnx_int16>(const Tensor &Lt, const cytnx_int16 &rc){
+  return cytnx::linalg::Mul(Lt,rc);
+}
+template<>
+Tensor operator*<cytnx_bool>(const Tensor &Lt, const cytnx_bool &rc){
+  return cytnx::linalg::Mul(Lt,rc);
+}
+
+
+template<> Tensor operator*<cytnx_complex128>(const Tensor &, const cytnx_complex128&);
+template<> Tensor operator*<cytnx_complex64>(const Tensor &, const cytnx_complex64&);
+template<> Tensor operator*<cytnx_double>(const Tensor &, const cytnx_double&);
+template<> Tensor operator*<cytnx_float>(const Tensor &, const cytnx_float&);
+template<> Tensor operator*<cytnx_int64>(const Tensor &, const cytnx_int64&);
+template<> Tensor operator*<cytnx_uint64>(const Tensor &, const cytnx_uint64&);
+template<> Tensor operator*<cytnx_int32>(const Tensor &, const cytnx_int32&);
+template<> Tensor operator*<cytnx_uint32>(const Tensor &, const cytnx_uint32&);
+template<> Tensor operator*<cytnx_uint16>(const Tensor &, const cytnx_uint16&);
+template<> Tensor operator*<cytnx_int16>(const Tensor &, const cytnx_int16&);
+template<> Tensor operator*<cytnx_bool>(const Tensor &, const cytnx_bool&);
+
+
+template<> Tensor operator*<cytnx_complex128>( const cytnx_complex128&,const Tensor &);
+template<> Tensor operator*<cytnx_complex64>( const cytnx_complex64&,const Tensor &);
+template<> Tensor operator*<cytnx_double>( const cytnx_double&,const Tensor &);
+template<> Tensor operator*<cytnx_float>( const cytnx_float&,const Tensor &);
+template<> Tensor operator*<cytnx_int64>( const cytnx_int64&,const Tensor &);
+template<> Tensor operator*<cytnx_uint64>( const cytnx_uint64&,const Tensor &);
+template<> Tensor operator*<cytnx_int32>( const cytnx_int32&,const Tensor &);
+template<> Tensor operator*<cytnx_uint32>( const cytnx_uint32&,const Tensor &);
+template<> Tensor operator*<cytnx_uint16>( const cytnx_uint16&,const Tensor &);
+template<> Tensor operator*<cytnx_int16>( const cytnx_int16&,const Tensor &);
+template<> Tensor operator*<cytnx_bool>( const cytnx_bool&,const Tensor &);
+
+
+
 
 }
