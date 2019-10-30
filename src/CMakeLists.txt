@@ -64,7 +64,6 @@ target_sources_local(cytnx
     Uint16Storage.cpp
     Uint32Storage.cpp
     Uint64Storage.cpp
-    ../include/cytnx_error.hpp
 )
 
 
