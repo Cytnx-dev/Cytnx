@@ -61,7 +61,7 @@ void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc
 
 PYBIND11_MODULE(cytnx,m){
 
-    m.attr("__version__") = "0.0.0";
+    m.attr("__version__") = "0.7.0";
 
     //global vars
     //m.attr("cytnxdevice") = cytnx::cytnxdevice;
