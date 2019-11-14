@@ -32,7 +32,7 @@ namespace cytnx{
             //tensor shape
             std::vector<cytnx_uint64> _shape;
 
-            // psudo-perm info
+            // pseudo-perm info
             std::vector<cytnx_uint64> _mapper;
             std::vector<cytnx_uint64> _invmapper;
             bool _contiguous;
@@ -133,7 +133,7 @@ namespace cytnx{
  
             template<class T> 
             T& at(const std::vector<cytnx_uint64> &locator){
-                cytnx_error_msg(locator.size() != this->_shape.size(), "%s", "The input indexes rank is not match Tensor's rank.");
+                cytnx_error_msg(locator.size() != this->_shape.size(), "%s", "The input index does not match Tensor's rank.");
 
                 cytnx_uint64 RealRank,mtplyr;
                 std::vector<cytnx_uint64> c_shape(this->_shape.size());
@@ -144,7 +144,7 @@ namespace cytnx{
 
                 for(cytnx_int64 i=this->_shape.size()-1; i>=0; i--){
                     if(locator[i]>=this->_shape[i]){
-                        cytnx_error_msg(true, "%s", "The dimension of rank that trying to access is exceed Tensor's dimension.");
+                        cytnx_error_msg(true, "%s", "Attempting to access out-of-bound index in Tensor.");
                     }
                     c_shape[i] = this->_shape[this->_invmapper[i]];
                     c_loc[i] = locator[this->_invmapper[i]];

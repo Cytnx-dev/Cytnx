@@ -30,7 +30,7 @@ namespace cytnx{
             //tensor shape
             std::vector<cytnx_uint64> _shape;
 
-            // psudo-perm info
+            // pseudo-perm info
             std::vector<cytnx_uint64> _mapper;
             std::vector<cytnx_uint64> _invmapper;
             bool _contiguous;
