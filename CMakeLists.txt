@@ -132,12 +132,9 @@ endif()
 ######################################################################
 project(CYTNX VERSION ${CYTNX_VERSION} LANGUAGES CXX C )
 
-
-
-
-
-
 add_library(cytnx "")
+set_property(TARGET cytnx PROPERTY C_VISIBILITY_PRESET hidden)
+set_property(TARGET cytnx PROPERTY VISIBILITY_INLINES_HIDDEN ON)
 target_include_directories(cytnx
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
