@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['capacity',['capacity',['../classcytnx_1_1Storage.html#a62bab0b879eabdd9be7a269fd604d987',1,'cytnx::Storage']]],
   ['check_5fqnum',['check_qnum',['../classcytnx_1_1Symmetry.html#a066741cabfe04df9e9e2782f047188b0',1,'cytnx::Symmetry']]],
   ['check_5fqnums',['check_qnums',['../classcytnx_1_1Symmetry.html#a38c1572a027e289430434b56324e2ead',1,'cytnx::Symmetry']]],
   ['clear_5ftype',['clear_type',['../classcytnx_1_1Bond.html#a6272e30153df85944fc98bf5419dc1c8',1,'cytnx::Bond']]],

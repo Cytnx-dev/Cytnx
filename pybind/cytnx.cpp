@@ -290,7 +290,9 @@ PYBIND11_MODULE(cytnx,m){
                                                     return self.to(device);
                                                 } , py::arg("device"))
 
-
+                
+                .def("resize", &cytnx::Storage::resize)
+                .def("capacity", &cytnx::Storage::capacity)
                 .def("clone", &cytnx::Storage::clone)
                 .def("__copy__",&cytnx::Storage::clone)
                 .def("__deepcopy__",&cytnx::Storage::clone)
@@ -312,6 +314,18 @@ PYBIND11_MODULE(cytnx,m){
                 .def("fill",&cytnx::Storage::fill<cytnx::cytnx_int16    >, py::arg("val"))
                 .def("fill",&cytnx::Storage::fill<cytnx::cytnx_uint16   >, py::arg("val"))
                 .def("fill",&cytnx::Storage::fill<cytnx::cytnx_bool     >, py::arg("val"))
+                
+                //.def("append",&cytnx::Storage::append<cytnx::cytnx_complex128>, py::arg("val"))
+                //.def("append",&cytnx::Storage::append<cytnx::cytnx_complex64>, py::arg("val"))
+                //.def("append",&cytnx::Storage::append<cytnx::cytnx_double   >, py::arg("val"))
+                //.def("append",&cytnx::Storage::append<cytnx::cytnx_float    >, py::arg("val"))
+                //.def("append",&cytnx::Storage::append<cytnx::cytnx_int64    >, py::arg("val"))
+                //.def("append",&cytnx::Storage::append<cytnx::cytnx_uint64   >, py::arg("val"))
+                //.def("append",&cytnx::Storage::append<cytnx::cytnx_int32    >, py::arg("val"))
+                //.def("append",&cytnx::Storage::append<cytnx::cytnx_uint32   >, py::arg("val"))
+                //.def("append",&cytnx::Storage::append<cytnx::cytnx_int16    >, py::arg("val"))
+                //.def("append",&cytnx::Storage::append<cytnx::cytnx_uint16   >, py::arg("val"))
+                //.def("append",&cytnx::Storage::append<cytnx::cytnx_bool     >, py::arg("val"))
                 .def("Save",[](cytnx::Storage &self, const std::string &fname){self.Save(fname);},py::arg("fname"))
                 .def("Load",[](cytnx::Storage &self, const std::string &fname){self.Load(fname);},py::arg("fname"))
                 ;
@@ -941,7 +955,7 @@ PYBIND11_MODULE(cytnx,m){
     m_linalg.def("Matmul",&cytnx::linalg::Matmul,py::arg("T1"),py::arg("T2"));
     m_linalg.def("Diag",&cytnx::linalg::Diag, py::arg("Tin"));
     m_linalg.def("Tensordot",&cytnx::linalg::Tensordot, py::arg("T1"),py::arg("T2"),py::arg("indices_1"),py::arg("indices_2"));
-    m_linalg.def("Otimes",&cytnx::linalg::Otimes, py::arg("T1"),py::arg("T2"));
+    m_linalg.def("Otimes",&cytnx::linalg::Otimes, py::arg("T1"),py::arg("T2"),py::arg("matrix_form")=true);
 
 }
 

@@ -19,7 +19,7 @@ UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
   PYOBJFLAGS := -undefined dynamic_lookup
 else
-  PYOBJFLAGS :=
+  PYOBJFLAGS := 
 endif
 
 

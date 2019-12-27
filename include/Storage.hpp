@@ -807,7 +807,7 @@ namespace cytnx{
 
             /**
             @brief resize the current Storage. 
-            @param newsize. Note that currently it can only be >1, which cannot have zero elements.
+            @param newsize. 
                 
             */
             void resize(const cytnx_uint64 &newsize){
