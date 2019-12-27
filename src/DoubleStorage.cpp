@@ -10,13 +10,23 @@ namespace cytnx{
         //check:
         cytnx_error_msg(len_in < 1, "%s", "[ERROR] cannot init a Storage with zero element");
         this->dtype = Type.Double;
+
+
+        if(this->len%32){
+            this->cap = ((unsigned long long)((this->len)/32)+1)*32;
+        }else{
+            this->cap = this->len;
+        }
+
+
+
         if(device==Device.cpu){
-            this->Mem = utils_internal::Malloc_cpu(this->len*sizeof(double));
+            this->Mem = utils_internal::Malloc_cpu(this->cap*sizeof(double));
         }else{
             #ifdef UNI_GPU
                 cytnx_error_msg(device>=Device.Ngpus,"%s","[ERROR] invalid device.");
                 checkCudaErrors(cudaSetDevice(device));
-                this->Mem = utils_internal::cuMalloc_gpu(this->len*sizeof(double));
+                this->Mem = utils_internal::cuMalloc_gpu(this->cap*sizeof(double));
                 
             #else
                 cytnx_error_msg(1,"%s","[ERROR] cannot init a Storage on gpu without CUDA support.");
@@ -25,16 +35,26 @@ namespace cytnx{
         this->device=device;
     }
 
-    void DoubleStorage::_Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device){
+    void DoubleStorage::_Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device, const bool &iscap, const unsigned long long &cap_in){
+
         //[note], this is an internal function, the device should match the device_id that allocate the pointer if the pointer is on GPU device.
 
         this->Mem = rawptr;
         this->len = len_in;
+        if(iscap){
+            this->cap = cap_in;
+        }else{
+            this->cap = len_in;
+        }
+
+        cytnx_error_msg(this->cap%32 != 0, "%s", "[ERROR] _Init_by_ptr cannot have not 32x cap_in.");
+
+
     # ifdef UNI_DEBUG
         cytnx_error_msg(len_in < 1, "%s", "[ERROR] _Init_by_ptr cannot have len_in < 1.");
+        cytnx_error_msg(this->cap < this->len, "%s", "[ERROR] _Init_by_ptr cannot have capacity < size.");
     # endif
         this->dtype = Type.Double;
-
         this->device=device;
     }
 
@@ -50,6 +70,7 @@ namespace cytnx{
             memcpy(out->Mem,this->Mem,sizeof(double)*this->len);
         }else{
             #ifdef UNI_GPU
+                checkCudaErrors(cudaSetDevice(this->device));
                 checkCudaErrors(cudaMemcpy(out->Mem,this->Mem,sizeof(double)*this->len,cudaMemcpyDeviceToDevice));
             #else
                 cytnx_error_msg(1,"%s","[ERROR] cannot clone a Storage on gpu without CUDA support.");
@@ -96,7 +117,7 @@ namespace cytnx{
                 #ifdef UNI_GPU
                     cytnx_error_msg(device>=Device.Ngpus,"%s","[ERROR] invalid device.");
                     cudaSetDevice(device);          
-                    void *dtmp = utils_internal::cuMalloc_gpu(sizeof(double)*this->len);
+                    void *dtmp = utils_internal::cuMalloc_gpu(sizeof(double)*this->cap);
                     checkCudaErrors(cudaMemcpy(dtmp,this->Mem,sizeof(double)*this->len,cudaMemcpyHostToDevice));
                     free(this->Mem);
                     this->Mem = dtmp;
@@ -109,7 +130,7 @@ namespace cytnx{
                     if(device==Device.cpu){
                         //here, gpu->cpu
                         cudaSetDevice(this->device);
-                        void *htmp = malloc(sizeof(double)*this->len);
+                        void *htmp = malloc(sizeof(double)*this->cap);
                         checkCudaErrors(cudaMemcpy(htmp,this->Mem,sizeof(double)*this->len,cudaMemcpyDeviceToHost));
                         cudaFree(this->Mem);
                         this->Mem = htmp;
@@ -118,7 +139,7 @@ namespace cytnx{
                         // here, gpu->gpu 
                         cytnx_error_msg(device>=Device.Ngpus,"%s","[ERROR] invalid device.");
                         cudaSetDevice(device);
-                        void *dtmp = utils_internal::cuMalloc_gpu(sizeof(double)*this->len);
+                        void *dtmp = utils_internal::cuMalloc_gpu(sizeof(double)*this->cap);
                         checkCudaErrors(cudaMemcpyPeer(dtmp,device,this->Mem,this->device,sizeof(double)*this->len));
                         cudaFree(this->Mem);
                         this->Mem = dtmp;
@@ -141,10 +162,10 @@ namespace cytnx{
                 #ifdef UNI_GPU
                     cytnx_error_msg(device>=Device.Ngpus,"%s","[ERROR] invalid device.");
                     cudaSetDevice(device);          
-                    void *dtmp = utils_internal::cuMalloc_gpu(sizeof(double)*this->len);
+                    void *dtmp = utils_internal::cuMalloc_gpu(sizeof(double)*this->cap);
                     checkCudaErrors(cudaMemcpy(dtmp,this->Mem,sizeof(double)*this->len,cudaMemcpyHostToDevice));
                     boost::intrusive_ptr<Storage_base> out(new DoubleStorage());
-                    out->_Init_byptr(dtmp,this->len,device);
+                    out->_Init_byptr(dtmp,this->len,device,true,this->cap);
                     return out;
                 #else
                     cytnx_error_msg(1,"%s","[ERROR] try to move from cpu(Host) to gpu without CUDA support."); 
@@ -155,19 +176,19 @@ namespace cytnx{
                     if(device==Device.cpu){
                         //here, gpu->cpu
                         cudaSetDevice(this->device);
-                        void *htmp = malloc(sizeof(double)*this->len);
+                        void *htmp = malloc(sizeof(double)*this->cap);
                         checkCudaErrors(cudaMemcpy(htmp,this->Mem,sizeof(double)*this->len,cudaMemcpyDeviceToHost));
                         boost::intrusive_ptr<Storage_base> out(new DoubleStorage());
-                        out->_Init_byptr(htmp,this->len,device);
+                        out->_Init_byptr(htmp,this->len,device,true,this->cap);
                         return out;
                     }else{
                         // here, gpu->gpu 
                         cytnx_error_msg(device>=Device.Ngpus,"%s","[ERROR] invalid device.");
                         cudaSetDevice(device);
-                        void *dtmp = utils_internal::cuMalloc_gpu(sizeof(double)*this->len);
+                        void *dtmp = utils_internal::cuMalloc_gpu(sizeof(double)*this->cap);
                         checkCudaErrors(cudaMemcpyPeer(dtmp,device,this->Mem,this->device,sizeof(double)*this->len));
                         boost::intrusive_ptr<Storage_base> out(new DoubleStorage());
-                        out->_Init_byptr(dtmp,this->len,device);
+                        out->_Init_byptr(dtmp,this->len,device,true,this->cap);
                         return out;
                     }
                 #else

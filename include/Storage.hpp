@@ -31,10 +31,11 @@ namespace cytnx{
             //std::vector<unsigned int> shape;
 
             unsigned long long len; // default 0
+            unsigned long long cap; // default 0  
             unsigned int dtype; // default 0, Void
             int device; // default -1, on cpu
 
-            Storage_base(): len(0), Mem(NULL),dtype(0), device(-1){};
+            Storage_base(): cap(0),len(0), Mem(NULL),dtype(0), device(-1){};
             //Storage_base(const std::initializer_list<unsigned int> &init_shape);
             //Storage_base(const std::vector<unsigned int> &init_shape);    
             Storage_base(const unsigned long long &len_in,const int &device);
@@ -45,7 +46,10 @@ namespace cytnx{
 
             //void Init(const std::initializer_list<unsigned int> &init_shape);
             std::string dtype_str() const ;
-            std::string device_str() const;
+            std::string device_str() const;         
+            const unsigned long long &capacity() const{
+                return this->cap;
+            }
             const unsigned long long &size() const{
                 return this->len;
             }
@@ -98,7 +102,7 @@ namespace cytnx{
             // these is the one that do the work, and customize with Storage_base
             //virtual void Init(const std::vector<unsigned int> &init_shape);
             virtual void Init(const unsigned long long &len_in, const int &device=-1);
-            virtual void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
+            virtual void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1, const bool &iscap=false, const unsigned long long &cap_in=0);
 
             // this function will return a new storage with the same type as the one 
             // that initiate this function. 
@@ -139,7 +143,7 @@ namespace cytnx{
         public:
             FloatStorage(){this->dtype=Type.Float;};
             void Init(const unsigned long long &len_in, const int &device=-1);
-            void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
+            void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1, const bool &iscap=false, const unsigned long long &cap_in=0);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
             boost::intrusive_ptr<Storage_base> clone();
             boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
@@ -171,7 +175,7 @@ namespace cytnx{
         public:
             DoubleStorage(){this->dtype=Type.Double;};
             void Init(const unsigned long long &len_in,const int &device=-1);
-            void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
+            void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1, const bool &iscap=false, const unsigned long long &cap_in=0);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
             boost::intrusive_ptr<Storage_base> clone();
             boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
@@ -203,7 +207,7 @@ namespace cytnx{
         public:
             ComplexDoubleStorage(){this->dtype=Type.ComplexDouble;};
             void Init(const unsigned long long &len_in, const int &device=-1);
-            void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
+            void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1, const bool &iscap=false, const unsigned long long &cap_in=0);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
             boost::intrusive_ptr<Storage_base> clone();
             boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
@@ -236,7 +240,7 @@ namespace cytnx{
         public:
             ComplexFloatStorage(){this->dtype=Type.ComplexFloat;};
             void Init(const unsigned long long &len_in,const int &device=-1);
-            void _Init_byptr(void *rawptr, const unsigned long long &len_in,const int &device=-1);
+            void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1, const bool &iscap=false, const unsigned long long &cap_in=0);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
             boost::intrusive_ptr<Storage_base> clone();
             boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
@@ -269,7 +273,7 @@ namespace cytnx{
         public:
             Int64Storage(){this->dtype=Type.Int64;};
             void Init(const unsigned long long &len_in, const int &device=-1);
-            void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
+            void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1, const bool &iscap=false, const unsigned long long &cap_in=0);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
             boost::intrusive_ptr<Storage_base> clone();
             boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
@@ -302,7 +306,7 @@ namespace cytnx{
         public:
             Uint64Storage(){this->dtype=Type.Uint64;};
             void Init(const unsigned long long &len_in, const int &device=-1);
-            void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
+            void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1, const bool &iscap=false, const unsigned long long &cap_in=0);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
             boost::intrusive_ptr<Storage_base> clone();
             boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
@@ -336,7 +340,7 @@ namespace cytnx{
         public:
             Int32Storage(){this->dtype=Type.Int32;};
             void Init(const unsigned long long &len_in, const int &device=-1);
-            void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
+            void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1, const bool &iscap=false, const unsigned long long &cap_in=0);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
             boost::intrusive_ptr<Storage_base> clone();
             boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
@@ -369,7 +373,7 @@ namespace cytnx{
         public:
             Uint32Storage(){this->dtype=Type.Uint32;};
             void Init(const unsigned long long &len_in, const int &device=-1);
-            void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
+            void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1, const bool &iscap=false, const unsigned long long &cap_in=0);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
             boost::intrusive_ptr<Storage_base> clone();
             boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
@@ -402,7 +406,7 @@ namespace cytnx{
         public:
             Uint16Storage(){this->dtype=Type.Uint16;};
             void Init(const unsigned long long &len_in, const int &device=-1);
-            void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
+            void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1, const bool &iscap=false, const unsigned long long &cap_in=0);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
             boost::intrusive_ptr<Storage_base> clone();
             boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
@@ -435,7 +439,7 @@ namespace cytnx{
         public:
             Int16Storage(){this->dtype=Type.Int16;};
             void Init(const unsigned long long &len_in, const int &device=-1);
-            void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
+            void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1, const bool &iscap=false, const unsigned long long &cap_in=0);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
             boost::intrusive_ptr<Storage_base> clone();
             boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
@@ -468,7 +472,7 @@ namespace cytnx{
         public:
             BoolStorage(){this->dtype=Type.Bool;};
             void Init(const unsigned long long &len_in, const int &device=-1);
-            void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1);
+            void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device=-1, const bool &iscap=false, const unsigned long long &cap_in=0);
             boost::intrusive_ptr<Storage_base> _create_new_sametype();
             boost::intrusive_ptr<Storage_base> clone();
             boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper);
@@ -702,6 +706,10 @@ namespace cytnx{
             */            
             const unsigned long long &size() const{
                 return this->_impl->len;
+            }
+
+            const unsigned long long &capacity() const{
+                return this->_impl->cap;
             }
 
             /**

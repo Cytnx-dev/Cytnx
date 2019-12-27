@@ -130,7 +130,8 @@ namespace cytnx{
     string Storage_base::device_str()const{
         return Device.getname(this->device);
     }
-    void Storage_base::_Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device){
+    void Storage_base::_Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device, const bool &iscap, const unsigned long long &cap_in){
+
         cytnx_error_msg(1,"%s","[ERROR] call _Init_byptr in base");
     }
 

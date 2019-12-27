@@ -30,7 +30,7 @@ namespace cytnx{
             }
             
 
-            cytnx_complex128 *des = (cytnx_complex128*)malloc(accu_old*sizeof(cytnx_complex128));
+            cytnx_complex128 *des = (cytnx_complex128*)malloc(in->cap*sizeof(cytnx_complex128));
             cytnx_complex128 *src = static_cast<cytnx_complex128*>(in->Mem);
 
             #ifdef UNI_OMP
@@ -81,7 +81,7 @@ namespace cytnx{
                 free(des);
                 return out;
             }else{
-                out->_Init_byptr(des,accu_old);
+                out->_Init_byptr(des,accu_old,true,in->cap);
                 return out;
             }
 
@@ -107,7 +107,7 @@ namespace cytnx{
                 accu_new*=newshape[i];
             }
 
-            cytnx_complex64 *des = (cytnx_complex64*)malloc(accu_old*sizeof(cytnx_complex64));
+            cytnx_complex64 *des = (cytnx_complex64*)malloc(in->cap*sizeof(cytnx_complex64));
             cytnx_complex64 *src = static_cast<cytnx_complex64*>(in->Mem);
 
             #ifdef UNI_OMP
@@ -159,7 +159,7 @@ namespace cytnx{
                 free(des);
                 return out;
             }else{
-                out->_Init_byptr(des,accu_old);
+                out->_Init_byptr(des,accu_old,true,in->cap);
                 return out;
             }
 
@@ -186,7 +186,7 @@ namespace cytnx{
                 accu_new*=newshape[i];
             }
 
-            cytnx_double *des = (cytnx_double*)malloc(accu_old*sizeof(cytnx_double));
+            cytnx_double *des = (cytnx_double*)malloc(in->cap*sizeof(cytnx_double));
             cytnx_double *src = static_cast<cytnx_double*>(in->Mem);
 
             #ifdef UNI_OMP
@@ -238,7 +238,7 @@ namespace cytnx{
                 free(des);
                 return out;
             }else{
-                out->_Init_byptr(des,accu_old);
+                out->_Init_byptr(des,accu_old,true,in->cap);
                 return out;
             }
 
@@ -265,7 +265,7 @@ namespace cytnx{
                 accu_new*=newshape[i];
             }
 
-            cytnx_float *des = (cytnx_float*)malloc(accu_old*sizeof(cytnx_float));
+            cytnx_float *des = (cytnx_float*)malloc(in->cap*sizeof(cytnx_float));
             cytnx_float *src = static_cast<cytnx_float*>(in->Mem);
 
             #ifdef UNI_OMP
@@ -317,7 +317,7 @@ namespace cytnx{
                 free(des);
                 return out;
             }else{
-                out->_Init_byptr(des,accu_old);
+                out->_Init_byptr(des,accu_old,true,in->cap);
                 return out;
             }
 
@@ -344,7 +344,7 @@ namespace cytnx{
                 accu_new*=newshape[i];
             }
 
-            cytnx_int64 *des = (cytnx_int64*)malloc(accu_old*sizeof(cytnx_int64));
+            cytnx_int64 *des = (cytnx_int64*)malloc(in->cap*sizeof(cytnx_int64));
             cytnx_int64 *src = static_cast<cytnx_int64*>(in->Mem);
 
             #ifdef UNI_OMP
@@ -396,7 +396,7 @@ namespace cytnx{
                 free(des);
                 return out;
             }else{
-                out->_Init_byptr(des,accu_old);
+                out->_Init_byptr(des,accu_old,true,in->cap);
                 return out;
             }
 
@@ -423,7 +423,7 @@ namespace cytnx{
                 accu_new*=newshape[i];
             }
 
-            cytnx_uint64 *des = (cytnx_uint64*)malloc(accu_old*sizeof(cytnx_uint64));
+            cytnx_uint64 *des = (cytnx_uint64*)malloc(in->cap*sizeof(cytnx_uint64));
             cytnx_uint64 *src = static_cast<cytnx_uint64*>(in->Mem);
 
             #ifdef UNI_OMP
@@ -475,7 +475,7 @@ namespace cytnx{
                 free(des);
                 return out;
             }else{
-                out->_Init_byptr(des,accu_old);
+                out->_Init_byptr(des,accu_old,true,in->cap);
                 return out;
             }
 
@@ -501,7 +501,7 @@ namespace cytnx{
                 accu_new*=newshape[i];
             }
 
-            cytnx_int32 *des = (cytnx_int32*)malloc(accu_old*sizeof(cytnx_int32));
+            cytnx_int32 *des = (cytnx_int32*)malloc(in->cap*sizeof(cytnx_int32));
             cytnx_int32 *src = static_cast<cytnx_int32*>(in->Mem);
 
             #ifdef UNI_OMP
@@ -553,7 +553,7 @@ namespace cytnx{
                 free(des);
                 return out;
             }else{
-                out->_Init_byptr(des,accu_old);
+                out->_Init_byptr(des,accu_old,true,in->cap);
                 return out;
             }
 
@@ -579,7 +579,7 @@ namespace cytnx{
                 accu_new*=newshape[i];
             }
 
-            cytnx_uint32 *des = (cytnx_uint32*)malloc(accu_old*sizeof(cytnx_uint32));
+            cytnx_uint32 *des = (cytnx_uint32*)malloc(in->cap*sizeof(cytnx_uint32));
             cytnx_uint32 *src = static_cast<cytnx_uint32*>(in->Mem);
 
             #ifdef UNI_OMP
@@ -631,7 +631,7 @@ namespace cytnx{
                 free(des);
                 return out;
             }else{
-                out->_Init_byptr(des,accu_old);
+                out->_Init_byptr(des,accu_old,true,in->cap);
                 return out;
             }
 
@@ -656,7 +656,7 @@ namespace cytnx{
                 accu_new*=newshape[i];
             }
 
-            cytnx_uint16 *des = (cytnx_uint16*)malloc(accu_old*sizeof(cytnx_uint16));
+            cytnx_uint16 *des = (cytnx_uint16*)malloc(in->cap*sizeof(cytnx_uint16));
             cytnx_uint16 *src = static_cast<cytnx_uint16*>(in->Mem);
 
             #ifdef UNI_OMP
@@ -708,7 +708,7 @@ namespace cytnx{
                 free(des);
                 return out;
             }else{
-                out->_Init_byptr(des,accu_old);
+                out->_Init_byptr(des,accu_old,true,in->cap);
                 return out;
             }
 
@@ -733,7 +733,7 @@ namespace cytnx{
                 accu_new*=newshape[i];
             }
 
-            cytnx_int16 *des = (cytnx_int16*)malloc(accu_old*sizeof(cytnx_int16));
+            cytnx_int16 *des = (cytnx_int16*)malloc(in->cap*sizeof(cytnx_int16));
             cytnx_int16 *src = static_cast<cytnx_int16*>(in->Mem);
 
             #ifdef UNI_OMP
@@ -785,7 +785,7 @@ namespace cytnx{
                 free(des);
                 return out;
             }else{
-                out->_Init_byptr(des,accu_old);
+                out->_Init_byptr(des,accu_old,true,in->cap);
                 return out;
             }
 
@@ -810,7 +810,7 @@ namespace cytnx{
                 accu_new*=newshape[i];
             }
 
-            cytnx_bool *des = (cytnx_bool*)malloc(accu_old*sizeof(cytnx_bool));
+            cytnx_bool *des = (cytnx_bool*)malloc(in->cap*sizeof(cytnx_bool));
             cytnx_bool *src = static_cast<cytnx_bool*>(in->Mem);
 
             #ifdef UNI_OMP
@@ -862,7 +862,7 @@ namespace cytnx{
                 free(des);
                 return out;
             }else{
-                out->_Init_byptr(des,accu_old);
+                out->_Init_byptr(des,accu_old,true,in->cap);
                 return out;
             }
 

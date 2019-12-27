@@ -80,7 +80,7 @@ namespace cytnx{
             cudaSetDevice(in->device); // ensure the following allocation on the same device as src.
             checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(cytnx_uint64)*shifter_old.size()));
             checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(cytnx_uint64)*permuted_shifter_new.size()));
-            dtmp = (cuDoubleComplex*)cuMalloc_gpu(sizeof(cuDoubleComplex)*Nelem); 
+            dtmp = (cuDoubleComplex*)cuMalloc_gpu(sizeof(cuDoubleComplex)*in->cap); 
 
             /// copy psn-vec/so-vec to device
             checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(cytnx_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
@@ -109,7 +109,7 @@ namespace cytnx{
 
             }else{
 
-                out->_Init_byptr(dtmp,Nelem);
+                out->_Init_byptr(dtmp,Nelem,true,in->cap);
                 return out;
             }
 
@@ -151,7 +151,7 @@ namespace cytnx{
             cudaSetDevice(in->device); // ensure the following allocation on the same device as src.
             checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(cytnx_uint64)*shifter_old.size()));
             checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(cytnx_uint64)*permuted_shifter_new.size()));
-            dtmp = (cuFloatComplex*)cuMalloc_gpu(sizeof(cuFloatComplex)*Nelem); 
+            dtmp = (cuFloatComplex*)cuMalloc_gpu(sizeof(cuFloatComplex)*in->cap); 
 
             /// copy psn-vec/so-vec to device
             checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(cytnx_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
@@ -180,7 +180,7 @@ namespace cytnx{
 
             }else{
 
-                out->_Init_byptr(dtmp,Nelem);
+                out->_Init_byptr(dtmp,Nelem,true,in->cap);
                 return out;
             }
 
@@ -222,7 +222,7 @@ namespace cytnx{
             cudaSetDevice(in->device); // ensure the following allocation on the same device as src.
             checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(cytnx_uint64)*shifter_old.size()));
             checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(cytnx_uint64)*permuted_shifter_new.size()));
-            dtmp = (double*)cuMalloc_gpu(sizeof(double)*Nelem); 
+            dtmp = (double*)cuMalloc_gpu(sizeof(double)*in->cap); 
 
             /// copy psn-vec/so-vec to device
             checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(cytnx_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
@@ -251,7 +251,7 @@ namespace cytnx{
 
             }else{
 
-                out->_Init_byptr(dtmp,Nelem);
+                out->_Init_byptr(dtmp,Nelem,true,in->cap);
                 return out;
             }
         }
@@ -292,7 +292,7 @@ namespace cytnx{
             cudaSetDevice(in->device); // ensure the following allocation on the same device as src.
             checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(cytnx_uint64)*shifter_old.size()));
             checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(cytnx_uint64)*permuted_shifter_new.size()));
-            dtmp = (float*)cuMalloc_gpu(sizeof(float)*Nelem); 
+            dtmp = (float*)cuMalloc_gpu(sizeof(float)*in->cap); 
 
             /// copy psn-vec/so-vec to device
             checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(cytnx_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
@@ -321,7 +321,7 @@ namespace cytnx{
 
             }else{
 
-                out->_Init_byptr(dtmp,Nelem);
+                out->_Init_byptr(dtmp,Nelem,true,in->cap);
                 return out;
             }
 
@@ -363,7 +363,7 @@ namespace cytnx{
             cudaSetDevice(in->device); // ensure the following allocation on the same device as src.
             checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(cytnx_uint64)*shifter_old.size()));
             checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(cytnx_uint64)*permuted_shifter_new.size()));
-            dtmp = (cytnx_int64*)cuMalloc_gpu(sizeof(cytnx_int64)*Nelem); 
+            dtmp = (cytnx_int64*)cuMalloc_gpu(sizeof(cytnx_int64)*in->cap); 
 
             /// copy psn-vec/so-vec to device
             checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(cytnx_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
@@ -392,7 +392,7 @@ namespace cytnx{
 
             }else{
 
-                out->_Init_byptr(dtmp,Nelem);
+                out->_Init_byptr(dtmp,Nelem,true,in->cap);
                 return out;
             }
 
@@ -435,7 +435,7 @@ namespace cytnx{
             cudaSetDevice(in->device); // ensure the following allocation on the same device as src.
             checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(cytnx_uint64)*shifter_old.size()));
             checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(cytnx_uint64)*permuted_shifter_new.size()));
-            dtmp = (cytnx_uint64*)cuMalloc_gpu(sizeof(cytnx_uint64)*Nelem); 
+            dtmp = (cytnx_uint64*)cuMalloc_gpu(sizeof(cytnx_uint64)*in->cap); 
 
             /// copy psn-vec/so-vec to device
             checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(cytnx_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
@@ -464,7 +464,7 @@ namespace cytnx{
 
             }else{
 
-                out->_Init_byptr(dtmp,Nelem);
+                out->_Init_byptr(dtmp,Nelem,true,in->cap);
                 return out;
             }
         }
@@ -505,7 +505,7 @@ namespace cytnx{
             cudaSetDevice(in->device); // ensure the following allocation on the same device as src.
             checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(cytnx_uint64)*shifter_old.size()));
             checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(cytnx_uint64)*permuted_shifter_new.size()));
-            dtmp = (cytnx_int32*)cuMalloc_gpu(sizeof(cytnx_int32)*Nelem); 
+            dtmp = (cytnx_int32*)cuMalloc_gpu(sizeof(cytnx_int32)*in->cap); 
 
             /// copy psn-vec/so-vec to device
             checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(cytnx_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
@@ -534,7 +534,7 @@ namespace cytnx{
 
             }else{
 
-                out->_Init_byptr(dtmp,Nelem);
+                out->_Init_byptr(dtmp,Nelem,true,in->cap);
                 return out;
             }
         }
@@ -575,7 +575,7 @@ namespace cytnx{
             cudaSetDevice(in->device); // ensure the following allocation on the same device as src.
             checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(cytnx_uint64)*shifter_old.size()));
             checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(cytnx_uint64)*permuted_shifter_new.size()));
-            dtmp = (cytnx_uint32*)cuMalloc_gpu(sizeof(cytnx_uint32)*Nelem); 
+            dtmp = (cytnx_uint32*)cuMalloc_gpu(sizeof(cytnx_uint32)*in->cap); 
 
             /// copy psn-vec/so-vec to device
             checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(cytnx_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
@@ -604,7 +604,7 @@ namespace cytnx{
 
             }else{
 
-                out->_Init_byptr(dtmp,Nelem);
+                out->_Init_byptr(dtmp,Nelem,true,in->cap);
                 return out;
             }
         }
@@ -644,7 +644,7 @@ namespace cytnx{
             cudaSetDevice(in->device); // ensure the following allocation on the same device as src.
             checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(cytnx_uint64)*shifter_old.size()));
             checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(cytnx_uint64)*permuted_shifter_new.size()));
-            dtmp = (cytnx_uint16*)cuMalloc_gpu(sizeof(cytnx_uint16)*Nelem); 
+            dtmp = (cytnx_uint16*)cuMalloc_gpu(sizeof(cytnx_uint16)*in->cap); 
 
             /// copy psn-vec/so-vec to device
             checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(cytnx_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
@@ -673,7 +673,7 @@ namespace cytnx{
 
             }else{
 
-                out->_Init_byptr(dtmp,Nelem);
+                out->_Init_byptr(dtmp,Nelem,true,in->cap);
                 return out;
             }
         }
@@ -713,7 +713,7 @@ namespace cytnx{
             cudaSetDevice(in->device); // ensure the following allocation on the same device as src.
             checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(cytnx_uint64)*shifter_old.size()));
             checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(cytnx_uint64)*permuted_shifter_new.size()));
-            dtmp = (cytnx_int16*)cuMalloc_gpu(sizeof(cytnx_int16)*Nelem); 
+            dtmp = (cytnx_int16*)cuMalloc_gpu(sizeof(cytnx_int16)*in->cap); 
 
             /// copy psn-vec/so-vec to device
             checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(cytnx_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
@@ -742,7 +742,7 @@ namespace cytnx{
 
             }else{
 
-                out->_Init_byptr(dtmp,Nelem);
+                out->_Init_byptr(dtmp,Nelem,true,in->cap);
                 return out;
             }
         }
@@ -782,7 +782,7 @@ namespace cytnx{
             cudaSetDevice(in->device); // ensure the following allocation on the same device as src.
             checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(cytnx_uint64)*shifter_old.size()));
             checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(cytnx_uint64)*permuted_shifter_new.size()));
-            dtmp = (cytnx_bool*)cuMalloc_gpu(sizeof(cytnx_bool)*Nelem); 
+            dtmp = (cytnx_bool*)cuMalloc_gpu(sizeof(cytnx_bool)*in->cap); 
 
             /// copy psn-vec/so-vec to device
             checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(cytnx_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
@@ -811,7 +811,7 @@ namespace cytnx{
 
             }else{
 
-                out->_Init_byptr(dtmp,Nelem);
+                out->_Init_byptr(dtmp,Nelem,true,in->cap);
                 return out;
             }
         }
