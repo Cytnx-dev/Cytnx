@@ -8,7 +8,7 @@ namespace cytnx{
         this->len = len_in;
 
         //check:
-        cytnx_error_msg(len_in < 1, "%s", "[ERROR] cannot init a Storage with zero element");
+        //cytnx_error_msg(len_in < 1, "%s", "[ERROR] cannot init a Storage with zero element");
         this->dtype = Type.Int64;
 
         if(this->len%32){
@@ -502,7 +502,7 @@ namespace cytnx{
     }
 
     void Int64Storage::resize(const cytnx_uint64 &newsize){
-        cytnx_error_msg(newsize < 1,"[ERROR]resize should have size > 0%s","\n");
+        //cytnx_error_msg(newsize < 1,"[ERROR]resize should have size > 0%s","\n");
 
         if(newsize > this->cap){
             if(newsize%32){

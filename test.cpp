@@ -19,6 +19,13 @@ int main(int argc, char *argv[]){
 
     //Device.Print_Property();
 
+    void *tmpp;
+    cout << tmpp << endl;
+    tmpp = malloc(0);
+    cout << tmpp << endl;
+    free(tmpp);
+
+    return 0 ;
     Storage s1 ;
     s1.Init(0,Type.Double,Device.cpu);
     s1.set_zeros();
