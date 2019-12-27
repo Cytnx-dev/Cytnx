@@ -19,18 +19,20 @@ int main(int argc, char *argv[]){
 
     //Device.Print_Property();
 
-    Storage s1;
-    s1.Init(10,Type.Int64,Device.cpu);
+    Storage s1 ;
+    s1.Init(0,Type.Double,Device.cpu);
     s1.set_zeros();
-    s1.at<cytnx_int64>(4) = 3;
-    s1.at<cytnx_int64>(5) = 66;
-    s1.at<cytnx_int64>(0) = 53;
-    s1.Save("test");
+    for(int i=0;i<100;i++){
+        s1.append(i);
+    } 
     cout << s1 << endl;
-    
+    cout << s1.capacity() << endl;
+    exit(1);
     Storage s22;
     s22.Load("test.cyst");
     cout << s22 << endl;
+
+    
 
     Tensor DD1 = arange(1.,5.,1.);
     cout << DD1 << endl;

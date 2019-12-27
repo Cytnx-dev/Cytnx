@@ -796,6 +796,7 @@ namespace cytnx{
             ///@cond
             template<class T> // this is c++ only
             T& at(const unsigned int &idx) const{
+                cytnx_error_msg(idx>=this->size(),"[ERROR] trying to access elements out of bound.%s","\n");
                 return this->_impl->at<T>(idx);
             }
             template<class T> // this is c++ only
