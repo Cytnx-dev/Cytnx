@@ -407,12 +407,13 @@ namespace cytnx{
         }
     }
     void ComplexDoubleStorage::fill(const cytnx_float      &val){
+        cytnx_complex128 tmp(val,0);
         if(this->device == Device.cpu){
-            utils_internal::Fill_cpu_cd(this->Mem, (void*)(&val), this->len);
+            utils_internal::Fill_cpu_cd(this->Mem, (void*)(&tmp), this->len);
         }else{
             #ifdef UNI_GPU
                 checkCudaErrors(cudaSetDevice(this->device));
-                utils_internal::cuFill_gpu_cd(this->Mem, (void*)(&val), this->len);
+                utils_internal::cuFill_gpu_cd(this->Mem, (void*)(&tmp), this->len);
             #else
                 cytnx_error_msg(true,"[ERROR][fill] fatal internal, %s","storage is on gpu without CUDA support\n");
             #endif
@@ -524,8 +525,135 @@ namespace cytnx{
         }
     }
 
+    void ComplexDoubleStorage::resize(const cytnx_uint64 &newsize){
+        cytnx_error_msg(newsize < 1,"[ERROR]resize should have size > 0%s","\n");
 
+        if(newsize > this->cap){
+            if(newsize%32){
+                this->cap = ((unsigned long long)((newsize)/32)+1)*32;
+            }else{
+                this->cap = newsize;
+            }
+            if(this->device==Device.cpu){
+                void *htmp = malloc(sizeof(cytnx_complex128)*this->cap);
+                memcpy(htmp,this->Mem,sizeof(cytnx_complex128)*this->len);
+                free(this->Mem);
+                this->Mem = htmp;
+            }else{
+                #ifdef UNI_GPU
+                    cytnx_error_msg(device>=Device.Ngpus,"%s","[ERROR] invalid device.");
+                    cudaSetDevice(device);
+                    void *dtmp = utils_internal::cuMalloc_gpu(sizeof(cytnx_complex128)*this->cap);
+                    checkCudaErrors(cudaMemcpyPeer(dtmp,device,this->Mem,this->device,sizeof(cytnx_complex128)*this->len));
+                    cudaFree(this->Mem);
+                    this->Mem = dtmp;
+                #else
+                    cytnx_error_msg(1,"%s","[ERROR][Internal] Storage.resize. the Storage is as GPU but without CUDA support.");
+                #endif
+            }
+        }
+        this->len = newsize;
+            
+    }
 
-
+    void ComplexDoubleStorage::append(const cytnx_complex128 &val){
+        //cytnx_complex128 tmp(val.real(),val.imag());
+        if(this->len+1 > this->cap){
+            this->resize(this->len+1); 
+        }else{
+            this->len+=1;
+        }
+        this->at<cytnx_complex128>(this->len-1) = val;
+    }
+    void ComplexDoubleStorage::append(const cytnx_complex64  &val){
+        cytnx_complex128 tmp(val.real(),val.imag());
+        if(this->len+1 > this->cap){
+            this->resize(this->len+1); 
+        }else{
+            this->len+=1;
+        }
+        this->at<cytnx_complex128>(this->len-1) = tmp;
+    }
+    void ComplexDoubleStorage::append(const cytnx_double  &val){
+        cytnx_complex128 tmp(val,0);
+        if(this->len+1 > this->cap){
+            this->resize(this->len+1); 
+        }else{
+            this->len+=1;
+        }
+        this->at<cytnx_complex128>(this->len-1) = tmp;
+    }
+    void ComplexDoubleStorage::append(const cytnx_float  &val){
+        cytnx_complex128 tmp(val,0);
+        if(this->len+1 > this->cap){
+            this->resize(this->len+1); 
+        }else{
+            this->len+=1;
+        }
+        this->at<cytnx_complex128>(this->len-1) = tmp;
+    }
+    void ComplexDoubleStorage::append(const cytnx_int64  &val){
+        cytnx_complex128 tmp(val,0);
+        if(this->len+1 > this->cap){
+            this->resize(this->len+1); 
+        }else{
+            this->len+=1;
+        }
+        this->at<cytnx_complex128>(this->len-1) = tmp;
+    }
+    void ComplexDoubleStorage::append(const cytnx_int32  &val){
+        cytnx_complex128 tmp(val,0);
+        if(this->len+1 > this->cap){
+            this->resize(this->len+1); 
+        }else{
+            this->len+=1;
+        }
+        this->at<cytnx_complex128>(this->len-1) = tmp;
+    }
+    void ComplexDoubleStorage::append(const cytnx_int16  &val){
+        cytnx_complex128 tmp(val,0);
+        if(this->len+1 > this->cap){
+            this->resize(this->len+1); 
+        }else{
+            this->len+=1;
+        }
+        this->at<cytnx_complex128>(this->len-1) = tmp;
+    }
+    void ComplexDoubleStorage::append(const cytnx_uint64  &val){
+        cytnx_complex128 tmp(val,0);
+        if(this->len+1 > this->cap){
+            this->resize(this->len+1); 
+        }else{
+            this->len+=1;
+        }
+        this->at<cytnx_complex128>(this->len-1) = tmp;
+    }
+    void ComplexDoubleStorage::append(const cytnx_uint32  &val){
+        cytnx_complex128 tmp(val,0);
+        if(this->len+1 > this->cap){
+            this->resize(this->len+1); 
+        }else{
+            this->len+=1;
+        }
+        this->at<cytnx_complex128>(this->len-1) = tmp;
+    }
+    void ComplexDoubleStorage::append(const cytnx_uint16  &val){
+        cytnx_complex128 tmp(val,0);
+        if(this->len+1 > this->cap){
+            this->resize(this->len+1); 
+        }else{
+            this->len+=1;
+        }
+        this->at<cytnx_complex128>(this->len-1) = tmp;
+    }
+    void ComplexDoubleStorage::append(const cytnx_bool  &val){
+        cytnx_complex128 tmp(val,0);
+        if(this->len+1 > this->cap){
+            this->resize(this->len+1); 
+        }else{
+            this->len+=1;
+        }
+        this->at<cytnx_complex128>(this->len-1) = tmp;
+    }
 
 }//namespace cytnx

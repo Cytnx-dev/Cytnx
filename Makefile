@@ -114,7 +114,7 @@ endif
 
 
 
-all: test demo 
+all: test 
 
 
 #test: test.o $(ALLOBJS)
@@ -459,8 +459,6 @@ Tridiag.o: $(CytnxPATH)/src/linalg/Tridiag.cpp $(CytnxPATH)/include/linalg/linal
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 test.o: test.cpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-demo.o: demo.cpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 .phony : clean cleanpy

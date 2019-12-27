@@ -88,6 +88,10 @@ namespace cytnx{
         cout << "dev" << endl;
     }
 
+    void Storage_base::resize(const cytnx_uint64 &newsize){
+        cytnx_error_msg(1, "[ERROR][internal] resize should not be called by base%s","\n");    
+    }
+
     boost::intrusive_ptr<Storage_base> Storage_base::astype(const unsigned int &dtype){
         boost::intrusive_ptr<Storage_base> out(new Storage_base());
         if(dtype == this->dtype) return boost::intrusive_ptr<Storage_base>(this);
@@ -324,6 +328,41 @@ namespace cytnx{
         cytnx_error_msg(1,"%s","[ERROR] call set_zeros directly on Void Storage.");
     }
 
+    void Storage_base::append(const cytnx_complex128 &val){
+        cytnx_error_msg(1,"%s","[ERROR] call append directly on Void Storage.");
+    }
+    void Storage_base::append(const cytnx_complex64  &val){
+        cytnx_error_msg(1,"%s","[ERROR] call append directly on Void Storage.");
+    }
+    void Storage_base::append(const cytnx_double     &val){
+        cytnx_error_msg(1,"%s","[ERROR] call append directly on Void Storage.");
+    }
+    void Storage_base::append(const cytnx_float      &val){
+        cytnx_error_msg(1,"%s","[ERROR] call append directly on Void Storage.");
+    }
+    void Storage_base::append(const cytnx_int64      &val){
+        cytnx_error_msg(1,"%s","[ERROR] call append directly on Void Storage.");
+    }
+    void Storage_base::append(const cytnx_uint64     &val){
+        cytnx_error_msg(1,"%s","[ERROR] call append directly on Void Storage.");
+    }
+    void Storage_base::append(const cytnx_int32      &val){
+        cytnx_error_msg(1,"%s","[ERROR] call append directly on Void Storage.");
+    }
+    void Storage_base::append(const cytnx_uint32     &val){
+        cytnx_error_msg(1,"%s","[ERROR] call append directly on Void Storage.");
+    }
+    void Storage_base::append(const cytnx_int16      &val){
+        cytnx_error_msg(1,"%s","[ERROR] call append directly on Void Storage.");
+    }
+    void Storage_base::append(const cytnx_uint16     &val){
+        cytnx_error_msg(1,"%s","[ERROR] call append directly on Void Storage.");
+    }
+    void Storage_base::append(const cytnx_bool       &val){
+        cytnx_error_msg(1,"%s","[ERROR] call append directly on Void Storage.");
+    }
+
+
 
     //instantiation:
     //================================================
@@ -558,6 +597,7 @@ namespace cytnx{
     #endif
         return static_cast<bool*>(this->Mem)[idx];
     }
+
 
 
 

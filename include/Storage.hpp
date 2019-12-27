@@ -133,7 +133,19 @@ namespace cytnx{
             virtual void fill(const cytnx_uint16     &val);
             virtual void fill(const cytnx_bool       &val);
             virtual void set_zeros();
+            virtual void resize(const cytnx_uint64 &newsize);
             
+            virtual void append(const cytnx_complex128 &val);
+            virtual void append(const cytnx_complex64  &val);
+            virtual void append(const cytnx_double     &val);
+            virtual void append(const cytnx_float      &val);
+            virtual void append(const cytnx_int64      &val);
+            virtual void append(const cytnx_uint64     &val);
+            virtual void append(const cytnx_int32      &val);
+            virtual void append(const cytnx_uint32     &val);
+            virtual void append(const cytnx_int16      &val);
+            virtual void append(const cytnx_uint16     &val);
+            virtual void append(const cytnx_bool       &val);
 
     };        
     ///@endcond
@@ -166,6 +178,19 @@ namespace cytnx{
             void fill(const cytnx_uint16     &val);
             void fill(const cytnx_bool       &val);
             void set_zeros();
+            void resize(const cytnx_uint64 &newsize);
+
+            void append(const cytnx_complex128 &val);
+            void append(const cytnx_complex64  &val);
+            void append(const cytnx_double     &val);
+            void append(const cytnx_float      &val);
+            void append(const cytnx_int64      &val);
+            void append(const cytnx_uint64     &val);
+            void append(const cytnx_int32      &val);
+            void append(const cytnx_uint32     &val);
+            void append(const cytnx_int16      &val);
+            void append(const cytnx_uint16     &val);
+            void append(const cytnx_bool       &val);
 
     };          
     ///@endcond
@@ -198,6 +223,19 @@ namespace cytnx{
             void fill(const cytnx_uint16     &val);
             void fill(const cytnx_bool       &val);
             void set_zeros();
+            void resize(const cytnx_uint64 &newsize);
+
+            void append(const cytnx_complex128 &val);
+            void append(const cytnx_complex64  &val);
+            void append(const cytnx_double     &val);
+            void append(const cytnx_float      &val);
+            void append(const cytnx_int64      &val);
+            void append(const cytnx_uint64     &val);
+            void append(const cytnx_int32      &val);
+            void append(const cytnx_uint32     &val);
+            void append(const cytnx_int16      &val);
+            void append(const cytnx_uint16     &val);
+            void append(const cytnx_bool       &val);
 
     };
     ///@endcond
@@ -230,7 +268,20 @@ namespace cytnx{
             void fill(const cytnx_uint16     &val);
             void fill(const cytnx_bool       &val);
             void set_zeros();
+            void resize(const cytnx_uint64 &newsize);
 
+
+            void append(const cytnx_complex128 &val);
+            void append(const cytnx_complex64  &val);
+            void append(const cytnx_double     &val);
+            void append(const cytnx_float      &val);
+            void append(const cytnx_int64      &val);
+            void append(const cytnx_uint64     &val);
+            void append(const cytnx_int32      &val);
+            void append(const cytnx_uint32     &val);
+            void append(const cytnx_int16      &val);
+            void append(const cytnx_uint16     &val);
+            void append(const cytnx_bool       &val);
 
     };
     ///@endcond
@@ -263,7 +314,19 @@ namespace cytnx{
             void fill(const cytnx_uint16     &val);
             void fill(const cytnx_bool       &val);
             void set_zeros();
+            void resize(const cytnx_uint64 &newsize);
 
+            void append(const cytnx_complex128 &val);
+            void append(const cytnx_complex64  &val);
+            void append(const cytnx_double     &val);
+            void append(const cytnx_float      &val);
+            void append(const cytnx_int64      &val);
+            void append(const cytnx_uint64     &val);
+            void append(const cytnx_int32      &val);
+            void append(const cytnx_uint32     &val);
+            void append(const cytnx_int16      &val);
+            void append(const cytnx_uint16     &val);
+            void append(const cytnx_bool       &val);
 
     };
     ///@endcond
@@ -296,7 +359,19 @@ namespace cytnx{
             void fill(const cytnx_uint16     &val);
             void fill(const cytnx_bool       &val);
             void set_zeros();
+            void resize(const cytnx_uint64 &newsize);
 
+            void append(const cytnx_complex128 &val);
+            void append(const cytnx_complex64  &val);
+            void append(const cytnx_double     &val);
+            void append(const cytnx_float      &val);
+            void append(const cytnx_int64      &val);
+            void append(const cytnx_uint64     &val);
+            void append(const cytnx_int32      &val);
+            void append(const cytnx_uint32     &val);
+            void append(const cytnx_int16      &val);
+            void append(const cytnx_uint16     &val);
+            void append(const cytnx_bool       &val);
 
     };          
     ///@endcond
@@ -330,9 +405,19 @@ namespace cytnx{
             void fill(const cytnx_uint16     &val);
             void fill(const cytnx_bool       &val);
             void set_zeros();
+            void resize(const cytnx_uint64 &newsize);
 
-
-
+            void append(const cytnx_complex128 &val);
+            void append(const cytnx_complex64  &val);
+            void append(const cytnx_double     &val);
+            void append(const cytnx_float      &val);
+            void append(const cytnx_int64      &val);
+            void append(const cytnx_uint64     &val);
+            void append(const cytnx_int32      &val);
+            void append(const cytnx_uint32     &val);
+            void append(const cytnx_int16      &val);
+            void append(const cytnx_uint16     &val);
+            void append(const cytnx_bool       &val);
     };          
     ///@endcond
     ///@cond
@@ -363,8 +448,18 @@ namespace cytnx{
             void fill(const cytnx_uint16     &val);
             void fill(const cytnx_bool       &val);
             void set_zeros();
-
-
+            void resize(const cytnx_uint64 &newsize);
+            void append(const cytnx_complex128 &val);
+            void append(const cytnx_complex64  &val);
+            void append(const cytnx_double     &val);
+            void append(const cytnx_float      &val);
+            void append(const cytnx_int64      &val);
+            void append(const cytnx_uint64     &val);
+            void append(const cytnx_int32      &val);
+            void append(const cytnx_uint32     &val);
+            void append(const cytnx_int16      &val);
+            void append(const cytnx_uint16     &val);
+            void append(const cytnx_bool       &val);
     };          
     ///@endcond
 
@@ -396,8 +491,18 @@ namespace cytnx{
             void fill(const cytnx_uint16     &val);
             void fill(const cytnx_bool       &val);
             void set_zeros();
-
-
+            void resize(const cytnx_uint64 &newsize);
+            void append(const cytnx_complex128 &val);
+            void append(const cytnx_complex64  &val);
+            void append(const cytnx_double     &val);
+            void append(const cytnx_float      &val);
+            void append(const cytnx_int64      &val);
+            void append(const cytnx_uint64     &val);
+            void append(const cytnx_int32      &val);
+            void append(const cytnx_uint32     &val);
+            void append(const cytnx_int16      &val);
+            void append(const cytnx_uint16     &val);
+            void append(const cytnx_bool       &val);
     };          
     ///@endcond
 
@@ -429,8 +534,18 @@ namespace cytnx{
             void fill(const cytnx_uint16     &val);
             void fill(const cytnx_bool       &val);
             void set_zeros();
-
-
+            void resize(const cytnx_uint64 &newsize);
+            void append(const cytnx_complex128 &val);
+            void append(const cytnx_complex64  &val);
+            void append(const cytnx_double     &val);
+            void append(const cytnx_float      &val);
+            void append(const cytnx_int64      &val);
+            void append(const cytnx_uint64     &val);
+            void append(const cytnx_int32      &val);
+            void append(const cytnx_uint32     &val);
+            void append(const cytnx_int16      &val);
+            void append(const cytnx_uint16     &val);
+            void append(const cytnx_bool       &val);
     };          
     ///@endcond
 
@@ -462,8 +577,18 @@ namespace cytnx{
             void fill(const cytnx_uint16     &val);
             void fill(const cytnx_bool       &val);
             void set_zeros();
-
-
+            void resize(const cytnx_uint64 &newsize);
+            void append(const cytnx_complex128 &val);
+            void append(const cytnx_complex64  &val);
+            void append(const cytnx_double     &val);
+            void append(const cytnx_float      &val);
+            void append(const cytnx_int64      &val);
+            void append(const cytnx_uint64     &val);
+            void append(const cytnx_int32      &val);
+            void append(const cytnx_uint32     &val);
+            void append(const cytnx_int16      &val);
+            void append(const cytnx_uint16     &val);
+            void append(const cytnx_bool       &val);
     };          
     ///@endcond
 
@@ -495,8 +620,18 @@ namespace cytnx{
             void fill(const cytnx_uint16     &val);
             void fill(const cytnx_bool       &val);
             void set_zeros();
-
-
+            void resize(const cytnx_uint64 &newsize);
+            void append(const cytnx_complex128 &val);
+            void append(const cytnx_complex64  &val);
+            void append(const cytnx_double     &val);
+            void append(const cytnx_float      &val);
+            void append(const cytnx_int64      &val);
+            void append(const cytnx_uint64     &val);
+            void append(const cytnx_int32      &val);
+            void append(const cytnx_uint32     &val);
+            void append(const cytnx_int16      &val);
+            void append(const cytnx_uint16     &val);
+            void append(const cytnx_bool       &val);
     };          
     ///@endcond
 
@@ -646,6 +781,18 @@ namespace cytnx{
                 return out;
             }            
 
+            /**
+            @brief append a value
+            @param val the value to append. it can be any type defined in cytnx::Type
+                
+            [Note] 
+                1. cannot append a complex value into a real Storage.     
+            */            
+            template<class T> 
+            void append(const T &val){
+                return this->_impl->append(val);
+            }
+
             ///@cond
             template<class T> // this is c++ only
             T& at(const unsigned int &idx) const{
@@ -656,6 +803,15 @@ namespace cytnx{
                 return this->_impl->data<T>();
             }
             ///@endcond
+
+            /**
+            @brief resize the current Storage. 
+            @param newsize. Note that currently it can only be >1, which cannot have zero elements.
+                
+            */
+            void resize(const cytnx_uint64 &newsize){
+                this->_impl->resize(newsize);
+            }
 
 
             /**
@@ -707,7 +863,12 @@ namespace cytnx{
             const unsigned long long &size() const{
                 return this->_impl->len;
             }
-
+            
+            /**
+            @brief the capacity ( no. of real elements in memory) in the Storage
+            @return [cytnx_uint64]  
+                
+            */            
             const unsigned long long &capacity() const{
                 return this->_impl->cap;
             }

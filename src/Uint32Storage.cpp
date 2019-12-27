@@ -505,4 +505,115 @@ namespace cytnx{
         }
     }
 
+    void Uint32Storage::resize(const cytnx_uint64 &newsize){
+        cytnx_error_msg(newsize < 1,"[ERROR]resize should have size > 0%s","\n");
+
+        if(newsize > this->cap){
+            if(newsize%32){
+                this->cap = ((unsigned long long)((newsize)/32)+1)*32;
+            }else{
+                this->cap = newsize;
+            }
+            if(this->device==Device.cpu){
+                void *htmp = malloc(sizeof(cytnx_uint32)*this->cap);
+                memcpy(htmp,this->Mem,sizeof(cytnx_uint32)*this->len);
+                free(this->Mem);
+                this->Mem = htmp;
+            }else{
+                #ifdef UNI_GPU
+                    cytnx_error_msg(device>=Device.Ngpus,"%s","[ERROR] invalid device.");
+                    cudaSetDevice(device);
+                    void *dtmp = utils_internal::cuMalloc_gpu(sizeof(cytnx_uint32)*this->cap);
+                    checkCudaErrors(cudaMemcpyPeer(dtmp,device,this->Mem,this->device,sizeof(cytnx_uint32)*this->len));
+                    cudaFree(this->Mem);
+                    this->Mem = dtmp;
+                #else
+                    cytnx_error_msg(1,"%s","[ERROR][Internal] Storage.resize. the Storage is as GPU but without CUDA support.");
+                #endif
+            }
+        }
+        this->len = newsize;
+            
+    }
+
+    void Uint32Storage::append(const cytnx_complex128 &val){
+        cytnx_error_msg(true,"[ERROR]%s"," cannot append complex value into real container");
+    }
+    void Uint32Storage::append(const cytnx_complex64  &val){
+        cytnx_error_msg(true,"[ERROR]%s"," cannot append complex value into real container");
+    }
+    void Uint32Storage::append(const cytnx_double  &val){
+        if(this->len+1 > this->cap){
+            this->resize(this->len+1);
+        }else{
+            this->len+=1;
+        }
+        this->at<cytnx_uint32>(this->len-1) = val;
+    }
+    void Uint32Storage::append(const cytnx_float  &val){
+        if(this->len+1 > this->cap){
+            this->resize(this->len+1);
+        }else{
+            this->len+=1;
+        }
+        this->at<cytnx_uint32>(this->len-1) = val;
+    }
+    void Uint32Storage::append(const cytnx_int64  &val){
+        if(this->len+1 > this->cap){
+            this->resize(this->len+1);
+        }else{
+            this->len+=1;
+        }
+        this->at<cytnx_uint32>(this->len-1) = val;
+    }
+    void Uint32Storage::append(const cytnx_int32  &val){
+        if(this->len+1 > this->cap){
+            this->resize(this->len+1);
+        }else{
+            this->len+=1;
+        }
+        this->at<cytnx_uint32>(this->len-1) = val;
+    }
+    void Uint32Storage::append(const cytnx_int16  &val){
+        if(this->len+1 > this->cap){
+            this->resize(this->len+1);
+        }else{
+            this->len+=1;
+        }
+        this->at<cytnx_uint32>(this->len-1) = val;
+    }
+    void Uint32Storage::append(const cytnx_uint64  &val){
+        if(this->len+1 > this->cap){
+            this->resize(this->len+1);
+        }else{
+            this->len+=1;
+        }
+        this->at<cytnx_uint32>(this->len-1) = val;
+    }
+    void Uint32Storage::append(const cytnx_uint32  &val){
+        if(this->len+1 > this->cap){
+            this->resize(this->len+1);
+        }else{
+            this->len+=1;
+        }
+        this->at<cytnx_uint32>(this->len-1) = val;
+    }
+    void Uint32Storage::append(const cytnx_uint16  &val){
+        if(this->len+1 > this->cap){
+            this->resize(this->len+1);
+        }else{
+            this->len+=1;
+        }
+        this->at<cytnx_uint32>(this->len-1) = val;
+    }
+    void Uint32Storage::append(const cytnx_bool  &val){
+        if(this->len+1 > this->cap){
+            this->resize(this->len+1);
+        }else{
+            this->len+=1;
+        }
+        this->at<cytnx_uint32>(this->len-1) = val;
+    }
+
+
 }//cytnx
