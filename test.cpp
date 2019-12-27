@@ -1,7 +1,7 @@
 #include "cytnx.hpp"
 #include <complex>
 
-
+ 
 using namespace std;
 using namespace cytnx;
 
@@ -18,14 +18,6 @@ int main(int argc, char *argv[]){
     */
 
     //Device.Print_Property();
-
-    void *tmpp;
-    cout << tmpp << endl;
-    tmpp = malloc(0);
-    cout << tmpp << endl;
-    free(tmpp);
-
-    return 0 ;
     Storage s1 ;
     s1.Init(0,Type.Double,Device.cpu);
     s1.set_zeros();
@@ -34,10 +26,6 @@ int main(int argc, char *argv[]){
     } 
     cout << s1 << endl;
     cout << s1.capacity() << endl;
-    exit(1);
-    Storage s22;
-    s22.Load("test.cyst");
-    cout << s22 << endl;
 
     
 
@@ -56,6 +44,10 @@ int main(int argc, char *argv[]){
     cout << DD << sDD << endl;
 
     cout << linalg::Tridiag(DD,sDD,true);
+
+    Tensor Trr({1,1,1},Type.Double);
+    Trr.reshape_({1,1,1,1,-1});
+    cout << Trr << endl;
     return 0;
 
     

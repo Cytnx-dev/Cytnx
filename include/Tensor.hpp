@@ -226,7 +226,7 @@ namespace cytnx{
 
                             
                 if(has_undetermine){
-                    cytnx_error_msg(new_N >= this->_storage.size(),"%s","[ERROR] new shape exceed the total number of elements.");
+                    cytnx_error_msg(new_N > this->_storage.size(),"%s","[ERROR] new shape exceed the total number of elements.");
                     cytnx_error_msg(this->_storage.size()%new_N,"%s","[ERROR] unmatch size when reshape with undetermine dimension");
                     result_shape[Udet_id] = this->_storage.size()/new_N;
                 }else{
