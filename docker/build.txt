@@ -1,3 +1,0 @@
-sudo docker images
-sudo docker rmi cytnx_mkl
-sudo docker build -t cytnx_mkl . --no-cache
