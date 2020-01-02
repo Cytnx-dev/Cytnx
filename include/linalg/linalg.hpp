@@ -178,23 +178,69 @@ namespace cytnx{
         */
         void Conj_(Tensor &Tin);
 
+
         // Exp:
         //==================================================
         /**
         @brief Exponential all the element in Tensor.
         @return 
-            [Tensor]
+            [Double Tensor] or [ComplexDouble Tensor]
     
         */
         Tensor Exp(const Tensor &Tin);
+        
+        /**
+        @brief Exponential all the element in Tensor.
+        @return 
+            [Float Tensor] or [ComplexFloat Tensor]
+    
+        */
+        Tensor Expf(const Tensor &Tin);
+
         /**
         @brief inplace perform Exponential on all the element in Tensor.
         @param Tin, the input Tensor.
         
         description:
-            on return, the elements in Tin will be modified to it's exponetial value. 
+            1. on return, the elements in Tin will be modified to it's exponetial value.
+            2. For Real, if the type is not Double, change the type of the input tensor to Double.
+            3. For Complex, if input is ComplexFloat, promote to ComplexDouble.
         */
         void Exp_(Tensor &Tin);
+        
+        /**
+        @brief inplace perform Exponential on all the element in Tensor.
+        @param Tin, the input Tensor.
+        
+        description:
+            1. on return, the elements in Tin will be modified to it's exponetial value.
+            2. For Real, if the type is not Float, change the type of the input tensor to Float.
+            3. For Complex, if input is ComplexDouble, promote to ComplexFloat.
+        */
+        void Expf_(Tensor &Tin);
+
+
+        // Pow:
+        //==================================================
+        /**
+        @brief take power p on all the elements in Tensor.
+        @param p, the power
+        @return 
+            [Tensor]
+    
+        */
+        //Tensor Pow(const Tensor &Tin, const double &p);
+        
+        /**
+        @brief inplace perform power on all the elements in Tensor.
+        @param Tin, the input Tensor.
+        @param p, the power.
+        
+        description:
+            on return, the elements in Tin will be modified to it's exponetial value. 
+        */
+        //void Pow_(Tensor &Tin, const double &p);
+
 
         // Diag:
         //==================================================
@@ -229,26 +275,42 @@ namespace cytnx{
         */
         Tensor Tensordot(const Tensor &Tl, const Tensor &Tr, const std::vector<cytnx_uint64> &idxl, const std::vector<cytnx_uint64> &idxr);
 
-        //Otimes:
+        //Outer:
         //==================================================
         /**
-        @brief perform outer produces of two Tensor.
-        @param Tl Tensor #1
-        @param Tr Tensor #2
-        @param matrix_form bool 
+        @brief perform outer produces of two rank-1 Tensor.
+        @param Tl rank-1 Tensor #1
+        @param Tr rank-1 Tensor #2
         @return 
             [Tensor]
 
         description:
             if the Tensor #1 has [shape_1], and Tensor #2 has [shape_2]; then the return Tensor will have shape: concate(shape_1,shape_2)
-            if matrix_form = True, the return will be a rank-2 tensor. if false, the return will be a Tensor with rank equal to the total rank of the input tensors.            
 
         [Note]
             two tensor should on same device. 
 
         */
-        Tensor Otimes(const Tensor &Tl, const Tensor &Tr, const bool &matrix_form=true);
- 
+        Tensor Outer(const Tensor &Tl, const Tensor &Tr);
+
+        //Kron:
+        //==================================================
+        /**
+        @brief perform kronecker produces of two Tensor.
+        @param Tl rank-n Tensor #1
+        @param Tr rank-m Tensor #2
+        @return 
+            [Tensor]
+
+        description:
+            The function assume two tensor has the same rank. In case where two tensors have different ranks, the small one will be extend by adding redundant dimension.
+            if the Tensor #1 has shape=(i1,j1,k1,l1...), and Tensor #2 has shape=(i2,j2,k2,l2...); then the return Tensor will have shape=(i1*i2,j1*j2,k1*k2...)
+
+        [Note]
+            two tensor should on same device. 
+
+        */
+        Tensor Kron(const Tensor &Tl,const Tensor &Tr); 
         
         //VectorDot:
         //=================================================

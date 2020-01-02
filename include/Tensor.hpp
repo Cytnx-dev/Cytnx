@@ -589,6 +589,12 @@ namespace cytnx{
                 return out;
             }
 
+            //Tensor diagonal(){
+            //    for(unsigned int i=0;i<this->shape().size();i++){
+            //        if(this->shape()[i] != this->shape()[0],"[ERROR] Tensor.diagonal() can only be called when the subject has equal dimension in each rank.%s","\n");
+            //    }
+            //    
+            //}
 
             /**
             @brief [C++ only] get an element at specific location.
@@ -645,6 +651,8 @@ namespace cytnx{
             ## Note:
                 1. the return will be a new Tensor instance, which not share memory with the current Tensor.
                 
+            ## Equivalently:
+                One can also using more intruisive way to get the slice using [] operator. 
 
             ## Example:
             ### c++ API:
@@ -660,6 +668,9 @@ namespace cytnx{
                 Tensor out;
                 out._impl = this->_impl->get(accessors);
                 return out;
+            }
+            Tensor operator[](const std::vector<cytnx::Accessor> &accessors){
+                return this->get(accessors);
             }
             
             /**
@@ -684,6 +695,7 @@ namespace cytnx{
             void set(const std::vector<cytnx::Accessor> &accessors, const Tensor &rhs){
                 this->_impl->set(accessors,rhs._impl);
             }
+            
 
             
             /**
@@ -808,7 +820,42 @@ namespace cytnx{
                 return *this == rhs; 
            }
 
-           
+            void append(const Tensor &rhs){
+                cytnx_error_msg(true,"[ERROR] append a Tensor is under developing.%s","\n");
+            }
+            /*
+            void append(const Tensor &rhs){
+                // convert to the same type.
+                Tensor in;
+                if(rhs.dtype() != this->dtype()){
+                    in = rhs.astype(this->dtype());        
+                }else{
+                    in = rhs;
+                }       
+ 
+                // 1) check rank
+                if(this->shape().size()==1){
+                    // check if rhs is a scalar tensor (only one element)
+                    cytnx_error_msg(!(rhs.shape().size()==1 && rhs.shape()[0]==1),"[ERROR] trying to append a scalar into multidimentional Tensor is not allow.\n Only rank-1 Tensor can accept scalar append.%s","\n");
+                    this->_impl->_shape[0]+=1;
+                    this->_impl->_storage.append(0);
+
+                }else{
+                    cytnx_error_msg(rhs.shape().size() != this->shape().size()-1,"[ERROR] try to append a Tensor with rank not match.%s","\n");
+                    
+                }
+                cytnx_error_msg(!this->is_contiguous(),"[ERROR] append require the Tensor to be contiguous. suggestion: call contiguous() or contiguous_() first.","\n");
+            }
+            */
+            template<class T>
+            void append(const T &rhs){
+                cytnx_error_msg(this->shape().size()!=1,"[ERROR] trying to append a scalar into multidimentional Tensor is not allow.\n Only rank-1 Tensor can accept scalar append.%s","\n");
+                cytnx_error_msg(!this->is_contiguous(),"[ERROR] append require the Tensor to be contiguous. suggestion: call contiguous() or contiguous_() first.","\n");
+                this->_impl->_shape[0]+=1;
+                this->_impl->_storage.append(rhs);         
+            }
+
+ 
             // linalg:
             std::vector<Tensor> Svd(const bool &is_U=true, const bool &is_vT=true);
             std::vector<Tensor> Eigh(const bool &is_V=false);

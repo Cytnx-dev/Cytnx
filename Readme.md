@@ -5,6 +5,18 @@
 ## Intro slide
 [Cytnx_v0.2.pdf](https://drive.google.com/file/d/13VBJ9565Zw5_W-_-aJjztGESESAVMm8_/view?usp=sharing)
 
+## Current Version:
+    v0.4
+
+## What's new:
+    1. remove Otimes, add Kron and Outer 
+    2. Add Storage append, capacity, pre-alloc 32x address
+    3. Tensor can now allow redundant dimension (e.g. shape = (1,1,1,1,1...) 
+    4. Add Storage.from_vector, directly convert the C++ vector to Storage
+    5. Add more intruisive way to get slices for Tensor in C++, using operator[]
+    6. Add Tensor.append for rank-1 Tensor    
+    7. Add Exp() Expf() Exp\_() Expf\_()
+
 ## Documentation:
 
 [https://kaihsin.github.io/Cytnx/docs/html/index.html](https://kaihsin.github.io/Cytnx/docs/html/index.html)
@@ -225,13 +237,16 @@
       Inv         |   Inv_    |  Y  |  Y   |    Y        | Y  |   N
       Conj        |   Conj_   |  Y  |  Y   |    Y        | Y  |   N
       Exp         |   Exp_    |  Y  |  Y   |    Y        | Y  |   N
+      Expf        |   Expf_   |  Y  |  Y   |    Y        | Y  |   N
       Eigh        |   x       |  Y  |  Y   |    Y        | Y  |   N
       Matmul      |   x       |  Y  |  Y   |    N        | Y  |   N
       Diag        |   x       |  Y  |  Y   |    N        | Y  |   N
     *Tensordot    |   x       |  Y  |  Y   |    N        | Y  |   N
-     Otimes       |   x       |  Y  | ^N   |    N        | Y  |   N
+     Outer        |   x       |  Y  |  Y   |    N        | Y  |   N 
      Vectordot    |   x       |  Y  |  N   |    N        | Y  |   N 
       Tridiag     |   x       |  Y  |  N   |    N        | Y  |   N
+     Kron         |   x       |  Y  |  N   |    N        | Y  |   N
+
     * this is a high level linalg 
     ^ this is temporary disable
  

@@ -15,5 +15,8 @@ int main(){
     cout << B << endl;
 
 
+    Tensor B2 = A[{2,ac::all(),ac::range(2,5,1)}];
+    cout << B2 << endl;
+
     return 0;
 }

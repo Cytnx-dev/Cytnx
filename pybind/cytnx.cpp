@@ -955,7 +955,8 @@ PYBIND11_MODULE(cytnx,m){
     m_linalg.def("Matmul",&cytnx::linalg::Matmul,py::arg("T1"),py::arg("T2"));
     m_linalg.def("Diag",&cytnx::linalg::Diag, py::arg("Tin"));
     m_linalg.def("Tensordot",&cytnx::linalg::Tensordot, py::arg("T1"),py::arg("T2"),py::arg("indices_1"),py::arg("indices_2"));
-    m_linalg.def("Otimes",&cytnx::linalg::Otimes, py::arg("T1"),py::arg("T2"),py::arg("matrix_form")=true);
+    m_linalg.def("Outer",&cytnx::linalg::Outer, py::arg("T1"),py::arg("T2"));
+    m_linalg.def("Kron",&cytnx::linalg::Kron, py::arg("T1"),py::arg("T2"));
 
 }
 

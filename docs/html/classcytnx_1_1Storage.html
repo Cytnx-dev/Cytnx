@@ -29,7 +29,7 @@
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.0.0</span>
+   &#160;<span id="projectnumber">v0.4</span>
    </div>
   </td>
  </tr>
@@ -163,6 +163,10 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const
 <tr class="memitem:a48f0424f051a4b3a821eb964be4cd5db"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Storage.html#a48f0424f051a4b3a821eb964be4cd5db">fill</a> (const T &amp;val)</td></tr>
 <tr class="memdesc:a48f0424f051a4b3a821eb964be4cd5db"><td class="mdescLeft">&#160;</td><td class="mdescRight">set all the elements to the assigned value val  <a href="#a48f0424f051a4b3a821eb964be4cd5db">More...</a><br /></td></tr>
 <tr class="separator:a48f0424f051a4b3a821eb964be4cd5db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2af56dfad6b8de844e810ac154b12770"><td class="memTemplParams" colspan="2"><a id="a2af56dfad6b8de844e810ac154b12770"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a2af56dfad6b8de844e810ac154b12770"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>from_vector</b> (const std::vector&lt; T &gt; &amp;vin, const int <a class="el" href="classcytnx_1_1Storage.html#a4c3e27582d7f951e6b76ccbb92f7c537">device</a>=-1)</td></tr>
+<tr class="separator:a2af56dfad6b8de844e810ac154b12770"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>an memeory storage with multi-type/multi-device support </p>
@@ -537,7 +541,7 @@ size  : 10
 dtype : Uint64
 device: cytnx device: CPU
 size  : 10
-[                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0  ]
+[                   0           540028971                   0                   0                   0                   0                   0                   0                   0                   0  ]
 
 dtype : Double (Float64)
 device: cytnx device: CUDA/GPU-id:0
@@ -549,19 +553,19 @@ size  : 10
 <pre class="fragment">dtype : Double (Float64)
 device: cytnx device: CPU
 size  : 10
-[ 6.95189e-310 6.95189e-310 6.95189e-310 -1.15055e+120 6.95189e-310 6.95189e-310 7.66481e-183 6.95189e-310 6.95189e-310 2.83046e-104 ]
+[ 0.00000e+00 0.00000e+00 0.00000e+00 1.74777e-310 4.68090e-310 0.00000e+00 0.00000e+00 1.67763e+243 4.68090e-310 4.68090e-310 ]
+
 
 dtype : Uint64
 device: cytnx device: CPU
 size  : 10
-[           400936096           400936096         -1539491801           375773536           375773480           931894841           375769840         -2116250888          -471475050           375773592  ]
+[                   0           808530733                   0                   0           -16056321             2598872          -119543632          -120328400          -697568806          -119544336  ]
+
 
 dtype : Double (Float64)
 device: cytnx device: CUDA/GPU-id:0
 size  : 10
 [ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
-
-
 
 
 </pre> 

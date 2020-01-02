@@ -5,8 +5,11 @@ namespace cytnx{
     namespace linalg{
         void Exp_(Tensor &Tin){
             
-            if(Tin.dtype() > 4) Tin = Tin.astype(Type.Float);
-
+            if( (Tin.dtype() == Type.ComplexDouble) || (Tin.dtype() == Type.Double) ){;}
+            else if(Tin.dtype() == Type.ComplexFloat) Tin = Tin.astype(Type.ComplexDouble);
+            else if(Tin.dtype() > 4) Tin = Tin.astype(Type.Double);
+            else if(Tin.dtype() == Type.Float) Tin = Tin.astype(Type.Double);
+            else cytnx_error_msg(true,"[Cannot have void (Uninitialize) Tensor]%s","\n");
 
             if(Tin.device() == Device.cpu){
                 cytnx::linalg_internal::lii.Exp_ii[Tin.dtype()](Tin._impl->storage()._impl,Tin._impl->storage()._impl,Tin._impl->storage()._impl->size());

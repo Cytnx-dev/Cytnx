@@ -29,7 +29,7 @@
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.0.0</span>
+   &#160;<span id="projectnumber">v0.4</span>
    </div>
   </td>
  </tr>
@@ -70,7 +70,19 @@ $(function() {
 <div class="title">Cytnx </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h2>Feature:</h2>
+<div class="textblock"><h2>Version:</h2>
+<p>v0.4</p>
+<h2>What's new:</h2>
+<ol type="1">
+<li>remove Otimes, add Kron and Outer</li>
+<li>Add Storage append, capacity, pre-alloc 32x address</li>
+<li>Tensor can now allow redundant dimension (e.g. shape = (1,1,1,1,1...)</li>
+<li>Add Storage.from_vector, directly convert the C++ vector to Storage</li>
+<li>Add more intruisive way to get slices for Tensor in C++, using operator[]</li>
+<li>Add Tensor.append for rank-1 Tensor</li>
+<li>Add Exp() Expf() Exp_() Expf_()</li>
+</ol>
+<h2>Feature:</h2>
 <h3>Python x C++</h3>
 <p>Benefit from both side. One can do simple prototype on python side and easy transfer to C++ with small effort!</p>
 <div class="fragment"><div class="line"><span class="comment">// c++ version:</span></div><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><a class="code" href="classcytnx_1_1Tensor.html">cytnx::Tensor</a> A({3,4,5},cytnx::Type.Double,cytnx::Device.cpu)</div></div><!-- fragment --><div class="fragment"><div class="line"><span class="comment"># python version:</span></div><div class="line"><span class="keyword">import</span> cytnx</div><div class="line">A =  <a class="code" href="classcytnx_1_1Tensor.html">cytnx.Tensor</a>([3,4,5],dtype=cytnx.Type.Double,device=cytnx.Device.cpu)</div></div><!-- fragment --><h3>1. All the Storage and Tensor can now have mulitple type support.</h3>
@@ -151,6 +163,8 @@ $(function() {
 <tr>
 <td><a class="el" href="namespacecytnx_1_1linalg.html#aac38382cbc0e8202411c96a0ff636471">Exp</a> </td><td><a class="el" href="namespacecytnx_1_1linalg.html#aaab08439dde94ee87939d07933ede6e3">Exp_</a> </td><td>Y </td><td>Y </td><td>Y </td></tr>
 <tr>
+<td><a class="el" href="namespacecytnx_1_1linalg.html#a5831918722e5d18f4eaf37834b8fbf77">Expf</a> </td><td><a class="el" href="namespacecytnx_1_1linalg.html#a5de1faf71c76cdc6b7fa5ba3a3e21bbb">Expf_</a> </td><td>Y </td><td>Y </td><td>Y </td></tr>
+<tr>
 <td><a class="el" href="namespacecytnx_1_1linalg.html#aa9f11ed24ef9684fb8d05c228e3852d6">Eigh</a> </td><td>x </td><td>Y </td><td>Y </td><td>Y </td></tr>
 <tr>
 <td><a class="el" href="namespacecytnx_1_1linalg.html#a53feb441b4b1bd263714ed33e093728f">Matmul</a> </td><td>x </td><td>Y </td><td>Y </td><td>N </td></tr>
@@ -159,7 +173,9 @@ $(function() {
 <tr>
 <td>*<a class="el" href="namespacecytnx_1_1linalg.html#a460e44db6b3d5d2c30c2d2723ff8f788">Tensordot</a> </td><td>x </td><td>Y </td><td>Y </td><td>N </td></tr>
 <tr>
-<td><a class="el" href="namespacecytnx_1_1linalg.html#a18ca1e99aa699ecfe4993142b78aca5d">Otimes</a> </td><td>x </td><td>Y </td><td>^N </td><td>N </td></tr>
+<td><a class="el" href="namespacecytnx_1_1linalg.html#a3e8edc89fdabb9c0f9b342198a31798b">Outer</a> </td><td>x </td><td>Y </td><td>Y </td><td>N </td></tr>
+<tr>
+<td><a class="el" href="namespacecytnx_1_1linalg.html#acf52cf0ddfbacfcbc9970a1e85560b66">Kron</a> </td><td>x </td><td>Y </td><td>N </td><td>N </td></tr>
 <tr>
 <td><a class="el" href="namespacecytnx_1_1linalg.html#aa69a91a5651fce55380cf800c6030d73">Vectordot</a> </td><td>x </td><td>Y </td><td>N </td><td>N </td></tr>
 <tr>

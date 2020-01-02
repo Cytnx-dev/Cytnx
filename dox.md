@@ -1,5 +1,18 @@
 # Cytnx
 
+## Version:
+    v0.4
+
+## What's new:
+    1. remove Otimes, add Kron and Outer 
+    2. Add Storage append, capacity, pre-alloc 32x address
+    3. Tensor can now allow redundant dimension (e.g. shape = (1,1,1,1,1...) 
+    4. Add Storage.from_vector, directly convert the C++ vector to Storage
+    5. Add more intruisive way to get slices for Tensor in C++, using operator[]
+    6. Add Tensor.append for rank-1 Tensor    
+    7. Add Exp() Expf() Exp\_() Expf\_()
+       
+
 ## Feature:
 
 ### Python x C++
@@ -79,11 +92,13 @@
       \link cytnx::linalg::Inv Inv\endlink     |   \link cytnx::linalg::Inv_ Inv_\endlink    |  Y  |  Y   |    Y
       \link cytnx::linalg::Conj Conj\endlink    |   \link cytnx::linalg::Conj_ Conj_\endlink   |  Y  |  Y   |    Y 
       \link cytnx::linalg::Exp Exp\endlink     |   \link cytnx::linalg::Exp_ Exp_\endlink    |  Y  |  Y   |    Y
+      \link cytnx::linalg::Expf Expf\endlink     |   \link cytnx::linalg::Expf_ Expf_\endlink    |  Y  |  Y   |    Y
       \link cytnx::linalg::Eigh Eigh\endlink    |   x       |  Y  |  Y   |    Y 
       \link cytnx::linalg::Matmul Matmul\endlink  |   x       |  Y  |  Y   |    N
       \link cytnx::linalg::Diag Diag\endlink    |   x       |  Y  |  Y   |    N
       *\link cytnx::linalg::Tensordot Tensordot\endlink | x | Y | Y | N
-      \link cytnx::linalg::Otimes Otimes\endlink  |   x       | Y   | ^N   |   N
+      \link cytnx::linalg::Outer Outer\endlink  |   x       | Y   | Y   |   N
+      \link cytnx::linalg::Kron Kron\endlink  |   x       | Y   | N   |   N
       \link cytnx::linalg::Vectordot Vectordot\endlink    |   x       |  Y  |  N   |    N
       \link cytnx::linalg::Tridiag Tridiag\endlink    | x | Y | N | N  
     *this is a high level linalg 

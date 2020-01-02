@@ -406,7 +406,7 @@ namespace cytnx{
             tmp->_Rowrank = this->Rowrank() + rhs->Rowrank();
 
             if((this->is_diag() == rhs->is_diag()) && this->is_diag()){
-                tmp->_block = linalg::Otimes(this->_block, rhs->get_block_());
+                tmp->_block = linalg::Kron(this->_block, rhs->get_block_());
                 tmp->_block.reshape_({-1});
                 tmp->_is_diag = true;
             }else{
@@ -416,7 +416,7 @@ namespace cytnx{
                 if(rhs->is_diag()) tmpR = linalg::Diag(rhs->get_block_());
                 else tmpR =  rhs->get_block_(); // share view!!
 
-                tmp->_block = linalg::Otimes(tmpL,tmpR);
+                tmp->_block = linalg::Kron(tmpL,tmpR);
                 tmp->_is_diag = false;
 
             }

@@ -14,8 +14,10 @@
 #include "linalg/linalg_internal_cpu/Matmul_internal.hpp"
 #include "linalg/linalg_internal_cpu/Diag_internal.hpp"
 #include "linalg/linalg_internal_cpu/Outer_internal.hpp"
+#include "linalg/linalg_internal_cpu/Kron_internal.hpp"
 #include "linalg/linalg_internal_cpu/Vectordot_internal.hpp"
 #include "linalg/linalg_internal_cpu/Tridiag_internal.hpp"
+//#include "linalg/linalg_internal_cpu/Pow_internal.hpp"
 #ifdef UNI_GPU
     #include "linalg/linalg_internal_gpu/cuArithmic_internal.hpp"
     #include "linalg/linalg_internal_gpu/cuSvd_internal.hpp"
@@ -25,7 +27,7 @@
     #include "linalg/linalg_internal_gpu/cuExp_internal.hpp"
     #include "linalg/linalg_internal_gpu/cuMatmul_internal.hpp"
     #include "linalg/linalg_internal_gpu/cuDiag_internal.hpp"
-    //#include "linalg/linalg_internal_gpu/cuOuter_internal.hpp"
+    #include "linalg/linalg_internal_gpu/cuOuter_internal.hpp"
 #endif
 
 namespace cytnx{
@@ -39,10 +41,11 @@ namespace cytnx{
         typedef void (*Expfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
         typedef void (*Diagfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
         typedef void (*Matmulfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &,const boost::intrusive_ptr<Storage_base> &, const cytnx_int32 &, const cytnx_int32 &, const cytnx_int32&);
-        typedef void (*Outerfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base>&, const cytnx_uint64 &, const cytnx_uint64 &, const cytnx_uint64 &, const cytnx_uint64 &);
+        typedef void (*Outerfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base>&, const cytnx_uint64 &, const cytnx_uint64 &);
         typedef void (*Vectordotfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base>&,const unsigned long long &, const bool &);
         typedef void (*Tdfunc_oii)(const boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, boost::intrusive_ptr<Storage_base>&, boost::intrusive_ptr<Storage_base>&, const cytnx_int32 &);
-    
+        typedef void (*Kronfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base>&, const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &);
+        //typedef void (*Powfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &, const double &);
         class linalg_internal_interface{
             public:
                 std::vector<std::vector<Arithmicfunc_oii> > Ari_ii;
@@ -51,9 +54,11 @@ namespace cytnx{
                 std::vector<Invinplacefunc_oii> Inv_inplace_ii;
                 std::vector<Conjinplacefunc_oii> Conj_inplace_ii;
                 std::vector<Expfunc_oii> Exp_ii;
+                //std::vector<Powfunc_oii> Pow_ii;
                 std::vector<Diagfunc_oii> Diag_ii;
                 std::vector<Matmulfunc_oii> Matmul_ii;
                 std::vector<std::vector<Outerfunc_oii> >Outer_ii;
+                std::vector<std::vector<Kronfunc_oii> >Kron_ii;
                 std::vector<Vectordotfunc_oii> Vd_ii;
                 std::vector<Tdfunc_oii> Td_ii;
 
@@ -66,7 +71,7 @@ namespace cytnx{
                 std::vector<Diagfunc_oii> cuDiag_ii;
                 std::vector<Eighfunc_oii> cuEigh_ii;
                 std::vector<Matmulfunc_oii> cuMatmul_ii;
-                //std::vector<std::vector<Outerfunc_oii> > cuOuter_ii;
+                std::vector<std::vector<Outerfunc_oii> > cuOuter_ii;
                 #endif
 
             linalg_internal_interface();

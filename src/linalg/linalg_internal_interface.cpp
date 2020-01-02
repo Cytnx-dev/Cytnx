@@ -169,6 +169,16 @@ namespace cytnx{
             Exp_ii[Type.Double       ] = Exp_internal_d;
             Exp_ii[Type.Float        ] = Exp_internal_f;
 
+
+            //=====================
+            //Pow_ii = vector<Powfunc_oii>(5);
+
+            //Pow_ii[Type.ComplexDouble] = Pow_internal_cd;
+            //Pow_ii[Type.ComplexFloat ] = Pow_internal_cf;
+            //Pow_ii[Type.Double       ] = Pow_internal_d;
+            //Pow_ii[Type.Float        ] = Pow_internal_f;
+
+
             //=====================
             Diag_ii = vector<Expfunc_oii>(N_Type);
 
@@ -234,7 +244,107 @@ namespace cytnx{
             Td_ii[Type.Double] = Tridiag_internal_d;
             Td_ii[Type.Float ] = Tridiag_internal_f;
 
+            //================
+            Kron_ii = vector<vector<Kronfunc_oii> >(N_Type,vector<Kronfunc_oii>(N_Type,NULL));
 
+            Kron_ii[Type.ComplexDouble][Type.ComplexDouble] = Kron_internal_cdtcd;
+            Kron_ii[Type.ComplexDouble][Type.ComplexFloat ] = Kron_internal_cdtcf;
+            Kron_ii[Type.ComplexDouble][Type.Double       ] = Kron_internal_cdtd;
+            Kron_ii[Type.ComplexDouble][Type.Float        ] = Kron_internal_cdtf;
+            Kron_ii[Type.ComplexDouble][Type.Int64        ] = Kron_internal_cdti64;
+            Kron_ii[Type.ComplexDouble][Type.Uint64       ] = Kron_internal_cdtu64;
+            Kron_ii[Type.ComplexDouble][Type.Int32        ] = Kron_internal_cdti32;
+            Kron_ii[Type.ComplexDouble][Type.Uint32       ] = Kron_internal_cdtu32;
+            Kron_ii[Type.ComplexDouble][Type.Int16        ] = Kron_internal_cdti16;
+            Kron_ii[Type.ComplexDouble][Type.Uint16       ] = Kron_internal_cdtu16;
+            Kron_ii[Type.ComplexDouble][Type.Bool         ] = Kron_internal_cdtb;
+            
+            Kron_ii[Type.ComplexFloat][Type.ComplexDouble] = Kron_internal_cftcd;
+            Kron_ii[Type.ComplexFloat][Type.ComplexFloat ] = Kron_internal_cftcf;
+            Kron_ii[Type.ComplexFloat][Type.Double       ] = Kron_internal_cftd;
+            Kron_ii[Type.ComplexFloat][Type.Float        ] = Kron_internal_cftf;
+            Kron_ii[Type.ComplexFloat][Type.Int64        ] = Kron_internal_cfti64;
+            Kron_ii[Type.ComplexFloat][Type.Uint64       ] = Kron_internal_cftu64;
+            Kron_ii[Type.ComplexFloat][Type.Int32        ] = Kron_internal_cfti32;
+            Kron_ii[Type.ComplexFloat][Type.Uint32       ] = Kron_internal_cftu32;
+            Kron_ii[Type.ComplexFloat][Type.Int16        ] = Kron_internal_cfti16;
+            Kron_ii[Type.ComplexFloat][Type.Uint16       ] = Kron_internal_cftu16;
+            Kron_ii[Type.ComplexFloat][Type.Bool         ] = Kron_internal_cftb;
+            
+            Kron_ii[Type.Double][Type.ComplexDouble] = Kron_internal_dtcd;
+            Kron_ii[Type.Double][Type.ComplexFloat ] = Kron_internal_dtcf;
+            Kron_ii[Type.Double][Type.Double       ] = Kron_internal_dtd;
+            Kron_ii[Type.Double][Type.Float        ] = Kron_internal_dtf;
+            Kron_ii[Type.Double][Type.Int64        ] = Kron_internal_dti64;
+            Kron_ii[Type.Double][Type.Uint64       ] = Kron_internal_dtu64;
+            Kron_ii[Type.Double][Type.Int32        ] = Kron_internal_dti32;
+            Kron_ii[Type.Double][Type.Uint32       ] = Kron_internal_dtu32;
+            Kron_ii[Type.Double][Type.Int16        ] = Kron_internal_dti16;
+            Kron_ii[Type.Double][Type.Uint16       ] = Kron_internal_dtu16;
+            Kron_ii[Type.Double][Type.Bool         ] = Kron_internal_dtb;
+            
+            Kron_ii[Type.Float][Type.ComplexDouble] = Kron_internal_ftcd;
+            Kron_ii[Type.Float][Type.ComplexFloat ] = Kron_internal_ftcf;
+            Kron_ii[Type.Float][Type.Double       ] = Kron_internal_ftd;
+            Kron_ii[Type.Float][Type.Float        ] = Kron_internal_ftf;
+            Kron_ii[Type.Float][Type.Int64        ] = Kron_internal_fti64;
+            Kron_ii[Type.Float][Type.Uint64       ] = Kron_internal_ftu64;
+            Kron_ii[Type.Float][Type.Int32        ] = Kron_internal_fti32;
+            Kron_ii[Type.Float][Type.Uint32       ] = Kron_internal_ftu32;
+            Kron_ii[Type.Float][Type.Uint16       ] = Kron_internal_ftu16;
+            Kron_ii[Type.Float][Type.Int16        ] = Kron_internal_fti16;
+            Kron_ii[Type.Float][Type.Bool         ] = Kron_internal_ftb;
+
+            Kron_ii[Type.Int64][Type.ComplexDouble] = Kron_internal_i64tcd;
+            Kron_ii[Type.Int64][Type.ComplexFloat ] = Kron_internal_i64tcf;
+            Kron_ii[Type.Int64][Type.Double       ] = Kron_internal_i64td;
+            Kron_ii[Type.Int64][Type.Float        ] = Kron_internal_i64tf;
+            Kron_ii[Type.Int64][Type.Int64        ] = Kron_internal_i64ti64;
+            Kron_ii[Type.Int64][Type.Uint64       ] = Kron_internal_i64tu64;
+            Kron_ii[Type.Int64][Type.Int32        ] = Kron_internal_i64ti32;
+            Kron_ii[Type.Int64][Type.Uint32       ] = Kron_internal_i64tu32;
+            Kron_ii[Type.Int64][Type.Uint16       ] = Kron_internal_i64tu16;
+            Kron_ii[Type.Int64][Type.Int16        ] = Kron_internal_i64ti16;
+            Kron_ii[Type.Int64][Type.Bool         ] = Kron_internal_i64tb;
+
+            
+            Kron_ii[Type.Uint64][Type.ComplexDouble] = Kron_internal_u64tcd;
+            Kron_ii[Type.Uint64][Type.ComplexFloat ] = Kron_internal_u64tcf;
+            Kron_ii[Type.Uint64][Type.Double       ] = Kron_internal_u64td;
+            Kron_ii[Type.Uint64][Type.Float        ] = Kron_internal_u64tf;
+            Kron_ii[Type.Uint64][Type.Int64        ] = Kron_internal_u64ti64;
+            Kron_ii[Type.Uint64][Type.Uint64       ] = Kron_internal_u64tu64;
+            Kron_ii[Type.Uint64][Type.Int32        ] = Kron_internal_u64ti32;
+            Kron_ii[Type.Uint64][Type.Uint32       ] = Kron_internal_u64tu32;
+            Kron_ii[Type.Uint64][Type.Uint16       ] = Kron_internal_u64tu16;
+            Kron_ii[Type.Uint64][Type.Int16        ] = Kron_internal_u64ti16;
+            Kron_ii[Type.Uint64][Type.Bool         ] = Kron_internal_u64tb;
+
+            Kron_ii[Type.Int32][Type.ComplexDouble] = Kron_internal_i32tcd;
+            Kron_ii[Type.Int32][Type.ComplexFloat ] = Kron_internal_i32tcf;
+            Kron_ii[Type.Int32][Type.Double       ] = Kron_internal_i32td;
+            Kron_ii[Type.Int32][Type.Float        ] = Kron_internal_i32tf;
+            Kron_ii[Type.Int32][Type.Int64        ] = Kron_internal_i32ti64;
+            Kron_ii[Type.Int32][Type.Uint64       ] = Kron_internal_i32tu64;
+            Kron_ii[Type.Int32][Type.Int32        ] = Kron_internal_i32ti32;
+            Kron_ii[Type.Int32][Type.Uint32       ] = Kron_internal_i32tu32;
+            Kron_ii[Type.Int32][Type.Uint16       ] = Kron_internal_i32tu16;
+            Kron_ii[Type.Int32][Type.Int16        ] = Kron_internal_i32ti16;
+            Kron_ii[Type.Int32][Type.Bool         ] = Kron_internal_i32tb;
+
+            
+            Kron_ii[Type.Uint32][Type.ComplexDouble] = Kron_internal_u32tcd;
+            Kron_ii[Type.Uint32][Type.ComplexFloat ] = Kron_internal_u32tcf;
+            Kron_ii[Type.Uint32][Type.Double       ] = Kron_internal_u32td;
+            Kron_ii[Type.Uint32][Type.Float        ] = Kron_internal_u32tf;
+            Kron_ii[Type.Uint32][Type.Int64        ] = Kron_internal_u32ti64;
+            Kron_ii[Type.Uint32][Type.Uint64       ] = Kron_internal_u32tu64;
+            Kron_ii[Type.Uint32][Type.Int32        ] = Kron_internal_u32ti32;
+            Kron_ii[Type.Uint32][Type.Uint32       ] = Kron_internal_u32tu32;
+            Kron_ii[Type.Uint32][Type.Uint16       ] = Kron_internal_u32tu16;
+            Kron_ii[Type.Uint32][Type.Int16        ] = Kron_internal_u32ti16;
+            Kron_ii[Type.Uint32][Type.Bool         ] = Kron_internal_u32tb;
+            
             //================
             Outer_ii = vector<vector<Outerfunc_oii> >(N_Type,vector<Outerfunc_oii>(N_Type,NULL));
 
@@ -549,7 +659,7 @@ namespace cytnx{
                 cuMatmul_ii[Type.Bool         ] = cuMatmul_internal_b;
 
                 //================
-                /*
+                
                 cuOuter_ii = vector<vector<Outerfunc_oii> >(N_Type,vector<Outerfunc_oii>(N_Type,NULL));
 
                 cuOuter_ii[Type.ComplexDouble][Type.ComplexDouble] = cuOuter_internal_cdtcd;
@@ -690,7 +800,7 @@ namespace cytnx{
                 cuOuter_ii[Type.Bool][Type.Uint16       ] = cuOuter_internal_btu16;
                 cuOuter_ii[Type.Bool][Type.Int16        ] = cuOuter_internal_bti16;
                 cuOuter_ii[Type.Bool][Type.Bool         ] = cuOuter_internal_btb;
-                */
+                
             #endif
         }
 

@@ -1,5 +1,9 @@
 var searchData=
 [
-  ['u1',['U1',['../classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a',1,'cytnx::Symmetry']]],
-  ['unitensor',['UniTensor',['../classcytnx_1_1UniTensor.html#a7a5b9286ae4bc1ef5afa00105f222a13',1,'cytnx::UniTensor::UniTensor(const Tensor &amp;in_tensor, const cytnx_uint64 &amp;Rowrank)'],['../classcytnx_1_1UniTensor.html#acc305e7b7767843bd282a9c2cc49114c',1,'cytnx::UniTensor::UniTensor(const std::vector&lt; Bond &gt; &amp;bonds, const std::vector&lt; cytnx_int64 &gt; &amp;in_labels={}, const cytnx_int64 &amp;Rowrank=-1, const unsigned int &amp;dtype=Type.Double, const int &amp;device=Device.cpu, const bool &amp;is_diag=false)']]]
+  ['tensor',['Tensor',['../classcytnx_1_1Tensor.html#afdcff16b2096d10b524161be52ba767e',1,'cytnx::Tensor']]],
+  ['tensordot',['Tensordot',['../namespacecytnx_1_1linalg.html#a460e44db6b3d5d2c30c2d2723ff8f788',1,'cytnx::linalg']]],
+  ['to',['to',['../classcytnx_1_1Storage.html#a2abfcaacf807934be5dd21c254fdb30e',1,'cytnx::Storage::to()'],['../classcytnx_1_1Tensor.html#acf7f697a9434f9bc98a7d00a555ee982',1,'cytnx::Tensor::to()']]],
+  ['to_5f',['to_',['../classcytnx_1_1Storage.html#a0bbf2cbefb5d0835bcb4f0d05e400870',1,'cytnx::Storage::to_()'],['../classcytnx_1_1Tensor.html#a114a31fbb8bf4a90f150b6a67e42183a',1,'cytnx::Tensor::to_()']]],
+  ['tridiag',['Tridiag',['../namespacecytnx_1_1linalg.html#abc68d62e804d6d3e86aeec00015b07cd',1,'cytnx::linalg']]],
+  ['type',['type',['../classcytnx_1_1Bond.html#a8517743cec9589ed551114ea7e55fbb1',1,'cytnx::Bond']]]
 ];

@@ -18,6 +18,22 @@ int main(int argc, char *argv[]){
     */
 
     //Device.Print_Property();
+    cytnx_complex128 testC(1,1);
+    cytnx_complex64 testCf(1,1);
+    cout << pow(testCf,2) << endl;
+    cout << testC << endl;
+    cout << pow(testC,2) << endl;
+
+    Tensor Dtst = arange(60).reshape({4,3,5});
+    Tensor Dtst_s = Dtst[{1,ac::all(),ac::range(1,3)}];
+    cout << Dtst << Dtst_s ;
+    Dtst = arange(10);
+    Dtst.append(44);
+    cout << Dtst << endl;
+    return 0;
+
+
+
     Storage s1 ;
     s1.Init(0,Type.Double,Device.cpu);
     s1.set_zeros();
@@ -27,6 +43,14 @@ int main(int argc, char *argv[]){
     cout << s1 << endl;
     cout << s1.capacity() << endl;
 
+
+    Storage svt;
+    vector<cytnx_double> tmpVVd(30);
+    for(int i=0;i<tmpVVd.size();i++){
+        cout << tmpVVd[i] << endl;
+    }
+    svt.from_vector(tmpVVd);
+    cout << svt << endl;
     
 
     Tensor DD1 = arange(1.,5.,1.);
@@ -48,6 +72,14 @@ int main(int argc, char *argv[]){
     Tensor Trr({1,1,1},Type.Double);
     Trr.reshape_({1,1,1,1,-1});
     cout << Trr << endl;
+
+
+    Tensor Xt1 = arange(4,Type.Double).reshape({2,2});
+    Tensor Xt2 = arange(12,Type.Double).reshape({4,3});
+    cout << Xt1 << endl;
+    cout << Xt2 << endl;
+    cout << linalg::Kron(Xt1,Xt2);
+    
     return 0;
 
     
@@ -62,7 +94,7 @@ int main(int argc, char *argv[]){
     
     A.reshape_({2,2});
     B.reshape_({2,2});
-    cout << linalg::Otimes(B,B).reshape({4,4}) << endl;
+    cout << linalg::Kron(B,B) << endl;
     
     return 0;
     //return 0;

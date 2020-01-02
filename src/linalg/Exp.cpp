@@ -6,8 +6,12 @@ namespace cytnx{
         Tensor Exp(const Tensor &Tin){
             
             Tensor out;
-            if(Tin.dtype() > 4) out = Tin.astype(Type.Float);
-            else out = Tin.clone();            
+            if( (Tin.dtype() == Type.ComplexDouble) || (Tin.dtype() == Type.Double) ) out = Tin.clone();
+            else if(Tin.dtype() == Type.ComplexFloat) out = Tin.astype(Type.ComplexDouble);
+            else if(Tin.dtype() > 4) out = Tin.astype(Type.Double);
+            else if(Tin.dtype() == Type.Float) out = Tin.astype(Type.Double);
+            else cytnx_error_msg(true,"[Cannot have void (Uninitialize) Tensor]%s","\n");
+
 
 
             if(Tin.device() == Device.cpu){

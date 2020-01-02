@@ -29,7 +29,7 @@
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.0.0</span>
+   &#160;<span id="projectnumber">v0.4</span>
    </div>
   </td>
  </tr>
@@ -162,6 +162,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>permute_</b> (const s
 <tr class="memitem:ad7b928e4cb89d40cbd99aefab9aa0075"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#ad7b928e4cb89d40cbd99aefab9aa0075">get</a> (const std::vector&lt; <a class="el" href="classcytnx_1_1Accessor.html">cytnx::Accessor</a> &gt; &amp;accessors) const</td></tr>
 <tr class="memdesc:ad7b928e4cb89d40cbd99aefab9aa0075"><td class="mdescLeft">&#160;</td><td class="mdescRight">get elements using <a class="el" href="classcytnx_1_1Accessor.html" title="object that mimic the python slice to access elements in C++ [this is for c++ API only]...">Accessor</a> (C++ API) / slices (python API)  <a href="#ad7b928e4cb89d40cbd99aefab9aa0075">More...</a><br /></td></tr>
 <tr class="separator:ad7b928e4cb89d40cbd99aefab9aa0075"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95df31a9fc8fddbe5a8bce4342061986"><td class="memItemLeft" align="right" valign="top"><a id="a95df31a9fc8fddbe5a8bce4342061986"></a>
+<a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (const std::vector&lt; <a class="el" href="classcytnx_1_1Accessor.html">cytnx::Accessor</a> &gt; &amp;accessors)</td></tr>
+<tr class="separator:a95df31a9fc8fddbe5a8bce4342061986"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a771f1f5b51f89abd8df4166e602214ac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#a771f1f5b51f89abd8df4166e602214ac">set</a> (const std::vector&lt; <a class="el" href="classcytnx_1_1Accessor.html">cytnx::Accessor</a> &gt; &amp;accessors, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;rhs)</td></tr>
 <tr class="memdesc:a771f1f5b51f89abd8df4166e602214ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">set elements with the input <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> using <a class="el" href="classcytnx_1_1Accessor.html" title="object that mimic the python slice to access elements in C++ [this is for c++ API only]...">Accessor</a> (C++ API) / slices (python API)  <a href="#a771f1f5b51f89abd8df4166e602214ac">More...</a><br /></td></tr>
 <tr class="separator:a771f1f5b51f89abd8df4166e602214ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -235,6 +238,13 @@ template&lt;class T &gt; </td></tr>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:ae9e9ea98664899db1ce86b88e136595e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Cpr_</b> (const T &amp;rhs)</td></tr>
 <tr class="separator:ae9e9ea98664899db1ce86b88e136595e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68a91d1554a4550eac7d339240fa9d02"><td class="memItemLeft" align="right" valign="top"><a id="a68a91d1554a4550eac7d339240fa9d02"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>append</b> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;rhs)</td></tr>
+<tr class="separator:a68a91d1554a4550eac7d339240fa9d02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1fb350e321d7228a1970da4d3f4dfa31"><td class="memTemplParams" colspan="2"><a id="a1fb350e321d7228a1970da4d3f4dfa31"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a1fb350e321d7228a1970da4d3f4dfa31"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>append</b> (const T &amp;rhs)</td></tr>
+<tr class="separator:a1fb350e321d7228a1970da4d3f4dfa31"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0dc4a19c04d3576c3364deb74251d855"><td class="memItemLeft" align="right" valign="top"><a id="a0dc4a19c04d3576c3364deb74251d855"></a>
 std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Svd</b> (const bool &amp;is_U=true, const bool &amp;is_vT=true)</td></tr>
 <tr class="separator:a0dc4a19c04d3576c3364deb74251d855"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -330,7 +340,7 @@ Total elem: 60
 type  : Double (Float64)
 cytnx device: CPU
 Shape : (3,4,5)
-[[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+[[[4.67941e-310 3.99988e-315 0.00000e+00 4.67941e-310 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
@@ -349,7 +359,7 @@ Total elem: 60
 type  : Uint64
 cytnx device: CPU
 Shape : (3,4,5)
-[[[                  0                   0                   0                   0                   0 ]
+[[[         -223237504          1852788341          1917088867          -223230672                   0 ]
   [                  0                   0                   0                   0                   0 ]
   [                  0                   0                   0                   0                   0 ]
   [                  0                   0                   0                   0                   0 ]]
@@ -389,18 +399,19 @@ Total elem: 60
 type  : Double (Float64)
 cytnx device: CPU
 Shape : (3,4,5)
-[[[4.64000e-310 1.06098e-153 8.19691e+247 5.39115e+228 1.23762e+224 ]
-  [2.66064e-260 7.27456e+199 2.41318e+185 7.86015e-85 3.06263e+223 ]
-  [4.90606e-109 3.94655e+180 3.75209e+199 4.96845e+180 1.18414e+224 ]
-  [7.86015e-85 7.36507e+228 2.07049e-28 5.74971e+169 6.16785e+223 ]]
- [[2.04724e+190 9.49253e-154 1.39388e-258 7.33721e+223 1.44421e+214 ]
-  [1.28714e+272 2.13269e+102 1.67772e+243 3.91625e-27 5.36154e+276 ]
-  [1.18414e+224 5.50421e-95 2.38345e+180 8.89470e+252 2.17235e-153 ]
-  [2.50022e+243 6.96742e+252 1.99999e+174 7.26588e+223 1.99999e+174 ]]
- [[2.42614e+198 8.04138e-96 9.69724e+189 2.91741e-14 9.47071e-154 ]
-  [1.39388e-258 6.16785e+223 1.12648e-153 7.29537e+175 1.44421e+214 ]
-  [1.28714e+272 3.25422e+97 7.10583e+159 5.38206e+228 3.06500e+169 ]
-  [1.16331e+253 7.36507e+228 2.54716e+151 2.49867e+262 2.68247e-260 ]]]
+[[[4.66674e-310 1.42390e-105 1.03456e-259 3.44981e+175 4.45197e+252 ]
+  [3.42619e-86 3.18490e-114 5.29746e+276 1.18414e+224 1.67772e+243 ]
+  [1.95327e-153 5.31287e+276 1.06263e+248 3.06500e+169 1.16331e+253 ]
+  [7.36507e+228 2.54716e+151 1.44421e+214 1.28714e+272 3.25422e+97 ]]
+ [[7.10583e+159 1.38497e+219 3.39067e-09 5.74971e+169 6.16785e+223 ]
+  [1.12619e-153 5.32534e+246 1.16330e+253 1.28714e+272 1.38093e-94 ]
+  [3.06206e+169 9.49831e-154 1.28714e+272 3.25422e+97 5.18568e-58 ]
+  [2.57313e+151 3.06222e+169 1.16331e+253 7.36507e+228 2.07049e-28 ]]
+ [[9.49246e-154 1.28714e+272 3.25422e+97 3.39848e-53 2.57313e+151 ]
+  [3.06222e+169 1.16331e+253 7.36507e+228 2.07049e-28 9.49246e-154 ]
+  [1.28714e+272 3.25422e+97 2.22723e-48 2.57313e+151 3.06222e+169 ]
+  [1.16331e+253 7.36507e+228 2.07049e-28 3.39067e-09 5.74971e+169 ]]]
+
 
 
 
@@ -408,18 +419,19 @@ Total elem: 60
 type  : Uint64
 cytnx device: CPU
 Shape : (3,4,5)
-[[[                  0           539784039          1936159329          1869378149          1853187616 ]
-  [          168439406           678194281          2036539450          1853127011          1919906670 ]
-  [         1663056492           539588709           174419567          1819044198          1663056486 ]
-  [         1954112302          1869835877           540699745           695756140          1701736270 ]]
- [[         1818846752           540698220          2036543096          1936614740           980181366 ]
-  [          539587681           174419567          1819044198          1663056486          1954112302 ]
-  [         1869835877           540699745           757082484           168453486           678194281 ]
-  [         2036539450          1853127011          1919906670          1763719788          1310735917 ]]
- [[          539899402          1818587944          2020504697          1412331630          1981820018 ]
-  [          695496297          1701736270          1818846752           540698220          2036543096 ]
-  [         1936614740           980181366          1043144745           940182117          1932029036 ]
-  [         1954112288          2020504697           745697139          1852383290          1867391038 ]]]
+[[[         1022486000           827081589                   0          1022484192                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]
+ [[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]
+ [[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]]
+
 
 
 
@@ -439,8 +451,6 @@ Shape : (3,4,5)
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
-
-
 
 
 
@@ -544,6 +554,7 @@ Shape : (3,4,5)
 
 
 
+
 Total elem: 60
 type  : Uint64
 cytnx device: CPU
@@ -560,7 +571,6 @@ Shape : (3,4,5)
   [                  0                   0                   0                   0                   0 ]
   [                  0                   0                   0                   0                   0 ]
   [                  0                   0                   0                   0                   0 ]]]
-
 
 
 
@@ -977,6 +987,7 @@ Shape : (3,4,5)
 
 
 
+
 Total elem: 60
 type  : Double (Float64)
 cytnx device: CPU
@@ -993,7 +1004,6 @@ Shape : (3,4,5)
   [9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]
   [9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]
   [9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]]]
-
 
 
 
@@ -1031,9 +1041,11 @@ Shape : (3,4,5)
 <ol type="1">
 <li>the return will be a new <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> instance, which not share memory with the current <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>.</li>
 </ol>
+<h2>Equivalently:</h2>
+<p>One can also using more intruisive way to get the slice using [] operator.</p>
 <h2>Example:</h2>
 <h3>c++ API:</h3>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){</div><div class="line"></div><div class="line">    <span class="keyword">typedef</span> <a class="code" href="classcytnx_1_1Accessor.html">Accessor</a> ac;</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A = <a class="code" href="namespacecytnx.html#a733f9931141463bc8b7c61931ccf52c3">arange</a>(60).<a class="code" href="classcytnx_1_1Tensor.html#a182f8f7b3ae3d0db8ed55d2adf8c6b45">reshape</a>({3,4,5});</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A.<a class="code" href="classcytnx_1_1Tensor.html#ad7b928e4cb89d40cbd99aefab9aa0075">get</a>({ac(2),ac::all(),ac::range(2,5,1)});</div><div class="line">    cout &lt;&lt; B &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div></div><!-- fragment --> <h4>output&gt;</h4>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){</div><div class="line"></div><div class="line">    <span class="keyword">typedef</span> <a class="code" href="classcytnx_1_1Accessor.html">Accessor</a> ac;</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A = <a class="code" href="namespacecytnx.html#a733f9931141463bc8b7c61931ccf52c3">arange</a>(60).<a class="code" href="classcytnx_1_1Tensor.html#a182f8f7b3ae3d0db8ed55d2adf8c6b45">reshape</a>({3,4,5});</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A.<a class="code" href="classcytnx_1_1Tensor.html#ad7b928e4cb89d40cbd99aefab9aa0075">get</a>({ac(2),ac::all(),ac::range(2,5,1)});</div><div class="line">    cout &lt;&lt; B &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B2 = A[{2,ac::all(),ac::range(2,5,1)}];</div><div class="line">    cout &lt;&lt; B2 &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">
 Total elem: 60
 type  : Double (Float64)
@@ -1051,6 +1063,17 @@ Shape : (3,4,5)
   [4.50000e+01 4.60000e+01 4.70000e+01 4.80000e+01 4.90000e+01 ]
   [5.00000e+01 5.10000e+01 5.20000e+01 5.30000e+01 5.40000e+01 ]
   [5.50000e+01 5.60000e+01 5.70000e+01 5.80000e+01 5.90000e+01 ]]]
+
+
+
+Total elem: 12
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,3)
+[[4.20000e+01 4.30000e+01 4.40000e+01 ]
+ [4.70000e+01 4.80000e+01 4.90000e+01 ]
+ [5.20000e+01 5.30000e+01 5.40000e+01 ]
+ [5.70000e+01 5.80000e+01 5.90000e+01 ]]
 
 
 
@@ -1086,6 +1109,7 @@ Shape : (3,4,5)
 
 
 
+
 Total elem: 12
 type  : Double (Float64)
 cytnx device: CPU
@@ -1094,7 +1118,6 @@ Shape : (4,3)
  [4.70000e+01 4.80000e+01 4.90000e+01 ]
  [5.20000e+01 5.30000e+01 5.40000e+01 ]
  [5.70000e+01 5.80000e+01 5.90000e+01 ]]
-
 
 
 
@@ -1161,7 +1184,7 @@ Total elem: 60
 type  : Double (Float64)
 cytnx device: CPU
 Shape : (3,4,5)
-[[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+[[[4.67941e-310 3.99988e-315 0.00000e+00 4.67941e-310 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
@@ -1180,7 +1203,7 @@ Total elem: 60
 type  : Uint64
 cytnx device: CPU
 Shape : (3,4,5)
-[[[                  0                   0                   0                   0                   0 ]
+[[[         -223237504          1852788341          1917088867          -223230672                   0 ]
   [                  0                   0                   0                   0                   0 ]
   [                  0                   0                   0                   0                   0 ]
   [                  0                   0                   0                   0                   0 ]]
@@ -1220,18 +1243,19 @@ Total elem: 60
 type  : Double (Float64)
 cytnx device: CPU
 Shape : (3,4,5)
-[[[4.64000e-310 1.06098e-153 8.19691e+247 5.39115e+228 1.23762e+224 ]
-  [2.66064e-260 7.27456e+199 2.41318e+185 7.86015e-85 3.06263e+223 ]
-  [4.90606e-109 3.94655e+180 3.75209e+199 4.96845e+180 1.18414e+224 ]
-  [7.86015e-85 7.36507e+228 2.07049e-28 5.74971e+169 6.16785e+223 ]]
- [[2.04724e+190 9.49253e-154 1.39388e-258 7.33721e+223 1.44421e+214 ]
-  [1.28714e+272 2.13269e+102 1.67772e+243 3.91625e-27 5.36154e+276 ]
-  [1.18414e+224 5.50421e-95 2.38345e+180 8.89470e+252 2.17235e-153 ]
-  [2.50022e+243 6.96742e+252 1.99999e+174 7.26588e+223 1.99999e+174 ]]
- [[2.42614e+198 8.04138e-96 9.69724e+189 2.91741e-14 9.47071e-154 ]
-  [1.39388e-258 6.16785e+223 1.12648e-153 7.29537e+175 1.44421e+214 ]
-  [1.28714e+272 3.25422e+97 7.10583e+159 5.38206e+228 3.06500e+169 ]
-  [1.16331e+253 7.36507e+228 2.54716e+151 2.49867e+262 2.68247e-260 ]]]
+[[[4.66674e-310 1.42390e-105 1.03456e-259 3.44981e+175 4.45197e+252 ]
+  [3.42619e-86 3.18490e-114 5.29746e+276 1.18414e+224 1.67772e+243 ]
+  [1.95327e-153 5.31287e+276 1.06263e+248 3.06500e+169 1.16331e+253 ]
+  [7.36507e+228 2.54716e+151 1.44421e+214 1.28714e+272 3.25422e+97 ]]
+ [[7.10583e+159 1.38497e+219 3.39067e-09 5.74971e+169 6.16785e+223 ]
+  [1.12619e-153 5.32534e+246 1.16330e+253 1.28714e+272 1.38093e-94 ]
+  [3.06206e+169 9.49831e-154 1.28714e+272 3.25422e+97 5.18568e-58 ]
+  [2.57313e+151 3.06222e+169 1.16331e+253 7.36507e+228 2.07049e-28 ]]
+ [[9.49246e-154 1.28714e+272 3.25422e+97 3.39848e-53 2.57313e+151 ]
+  [3.06222e+169 1.16331e+253 7.36507e+228 2.07049e-28 9.49246e-154 ]
+  [1.28714e+272 3.25422e+97 2.22723e-48 2.57313e+151 3.06222e+169 ]
+  [1.16331e+253 7.36507e+228 2.07049e-28 3.39067e-09 5.74971e+169 ]]]
+
 
 
 
@@ -1239,18 +1263,19 @@ Total elem: 60
 type  : Uint64
 cytnx device: CPU
 Shape : (3,4,5)
-[[[                  0           539784039          1936159329          1869378149          1853187616 ]
-  [          168439406           678194281          2036539450          1853127011          1919906670 ]
-  [         1663056492           539588709           174419567          1819044198          1663056486 ]
-  [         1954112302          1869835877           540699745           695756140          1701736270 ]]
- [[         1818846752           540698220          2036543096          1936614740           980181366 ]
-  [          539587681           174419567          1819044198          1663056486          1954112302 ]
-  [         1869835877           540699745           757082484           168453486           678194281 ]
-  [         2036539450          1853127011          1919906670          1763719788          1310735917 ]]
- [[          539899402          1818587944          2020504697          1412331630          1981820018 ]
-  [          695496297          1701736270          1818846752           540698220          2036543096 ]
-  [         1936614740           980181366          1043144745           940182117          1932029036 ]
-  [         1954112288          2020504697           745697139          1852383290          1867391038 ]]]
+[[[         1022486000           827081589                   0          1022484192                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]
+ [[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]
+ [[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]]
+
 
 
 
@@ -1270,8 +1295,6 @@ Shape : (3,4,5)
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
-
-
 
 
 
@@ -1482,6 +1505,7 @@ Shape : (60)
 
 
 
+
 Total elem: 60
 type  : Double (Float64)
 cytnx device: CPU
@@ -1491,7 +1515,6 @@ Shape : (5,12)
  [2.40000e+01 2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 3.50000e+01 ]
  [3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 4.00000e+01 4.10000e+01 4.20000e+01 4.30000e+01 4.40000e+01 4.50000e+01 4.60000e+01 4.70000e+01 ]
  [4.80000e+01 4.90000e+01 5.00000e+01 5.10000e+01 5.20000e+01 5.30000e+01 5.40000e+01 5.50000e+01 5.60000e+01 5.70000e+01 5.80000e+01 5.90000e+01 ]]
-
 
 
 
@@ -1564,6 +1587,7 @@ Shape : (60)
 
 
 
+
 Total elem: 60
 type  : Double (Float64)
 cytnx device: CPU
@@ -1573,7 +1597,6 @@ Shape : (5,12)
  [2.40000e+01 2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 3.50000e+01 ]
  [3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 4.00000e+01 4.10000e+01 4.20000e+01 4.30000e+01 4.40000e+01 4.50000e+01 4.60000e+01 4.70000e+01 ]
  [4.80000e+01 4.90000e+01 5.00000e+01 5.10000e+01 5.20000e+01 5.30000e+01 5.40000e+01 5.50000e+01 5.60000e+01 5.70000e+01 5.80000e+01 5.90000e+01 ]]
-
 
 
 
@@ -1744,6 +1767,7 @@ Shape : (3,4,5)
 
 
 
+
 Total elem: 12
 type  : Double (Float64)
 cytnx device: CPU
@@ -1752,6 +1776,7 @@ Shape : (4,3)
  [0.00000e+00 0.00000e+00 0.00000e+00 ]
  [0.00000e+00 0.00000e+00 0.00000e+00 ]
  [0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
 
 
 
@@ -1774,6 +1799,7 @@ Shape : (3,4,5)
 
 
 
+
 Total elem: 60
 type  : Double (Float64)
 cytnx device: CPU
@@ -1790,9 +1816,6 @@ Shape : (3,4,5)
   [4.50000e+01 4.60000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [5.00000e+01 5.10000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [5.50000e+01 5.60000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
-
-
-
 
 
 
@@ -1937,6 +1960,7 @@ Shape : (3,4,5)
 
 
 
+
 Total elem: 12
 type  : Double (Float64)
 cytnx device: CPU
@@ -1945,6 +1969,7 @@ Shape : (4,3)
  [0.00000e+00 0.00000e+00 0.00000e+00 ]
  [0.00000e+00 0.00000e+00 0.00000e+00 ]
  [0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
 
 
 
@@ -1967,6 +1992,7 @@ Shape : (3,4,5)
 
 
 
+
 Total elem: 60
 type  : Double (Float64)
 cytnx device: CPU
@@ -1983,9 +2009,6 @@ Shape : (3,4,5)
   [4.50000e+01 4.60000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [5.00000e+01 5.10000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [5.50000e+01 5.60000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
-
-
-
 
 
 

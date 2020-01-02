@@ -86,15 +86,36 @@ namespace cytnx{
             void _Init_byptr_safe(T *rawptr, const unsigned long long &len_in){
                 //check:
                 if(this->dtype==Type.Float){
-                        cytnx_error_msg(typeid(T) != typeid(float),"%s","[ERROR _Init_byptr_safe type not match]");
+                        cytnx_error_msg(typeid(T) != typeid(cytnx_float),"%s","[ERROR _Init_byptr_safe type not match]");
                 }else if(this->dtype==Type.Double){
-                        cytnx_error_msg(typeid(T) != typeid(double),"%s","[ERROR _Init_byptr_safe type not match]");
+                        cytnx_error_msg(typeid(T) != typeid(cytnx_double),"%s","[ERROR _Init_byptr_safe type not match]");
+                }else if(this->dtype==Type.Uint64){
+                        cytnx_error_msg(typeid(T) != typeid(cytnx_uint64),"%s","[ERROR _Init_byptr_safe type not match]");
+                }else if(this->dtype==Type.Uint32){
+                        cytnx_error_msg(typeid(T) != typeid(cytnx_uint32),"%s","[ERROR _Init_byptr_safe type not match]");
+                }else if(this->dtype==Type.Int64){
+                        cytnx_error_msg(typeid(T) != typeid(cytnx_int64),"%s","[ERROR _Init_byptr_safe type not match]");
+                }else if(this->dtype==Type.Int32){
+                        cytnx_error_msg(typeid(T) != typeid(cytnx_int32),"%s","[ERROR _Init_byptr_safe type not match]");
+                }else if(this->dtype==Type.ComplexDouble){
+                        cytnx_error_msg(typeid(T) != typeid(cytnx_complex128),"%s","[ERROR _Init_byptr_safe type not match]");
+                }else if(this->dtype==Type.ComplexFloat){
+                        cytnx_error_msg(typeid(T) != typeid(cytnx_complex64),"%s","[ERROR _Init_byptr_safe type not match]");
+                }else if(this->dtype==Type.Int16){
+                        cytnx_error_msg(typeid(T) != typeid(cytnx_int16),"%s","[ERROR _Init_byptr_safe type not match]");
+                }else if(this->dtype==Type.Uint16){
+                        cytnx_error_msg(typeid(T) != typeid(cytnx_uint16),"%s","[ERROR _Init_byptr_safe type not match]");
+                }else if(this->dtype==Type.Bool){
+                        cytnx_error_msg(typeid(T) != typeid(cytnx_bool),"%s","[ERROR _Init_byptr_safe type not match]");
                 }else{
                     cytnx_error_msg(1,"[FATAL] ERROR%s","\n");
                 }
 
                 this->_Init_byptr((void*)rawptr,len_in);
             }
+            
+            
+            
 
             void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
             void SetElem_byShape(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators, const bool &is_scalar);
@@ -929,6 +950,48 @@ namespace cytnx{
             void fill(const T& val){
                 this->_impl->fill(val);
             }
+
+
+            /*
+                @brief renew/create a Storage using c++ vector. 
+                @param vin the C++ vector with supported types. 
+                    
+                [Note] 
+                    This function is C++ only
+            */
+            template<class T>
+            void from_vector(const std::vector<T> &vin,const int device=-1){
+                //auto dispatch:
+                //check:
+                if(typeid(T) == typeid(cytnx_float)){
+                   this->_impl = __SII.USIInit[Type.Float]();
+                }else if(typeid(T) == typeid(cytnx_double)){
+                   this->_impl = __SII.USIInit[Type.Double]();
+                }else if(typeid(T) == typeid(cytnx_uint64)){
+                   this->_impl = __SII.USIInit[Type.Uint64]();
+                }else if(typeid(T) == typeid(cytnx_uint32)){
+                   this->_impl = __SII.USIInit[Type.Uint32]();
+                }else if(typeid(T) == typeid(cytnx_int64)){
+                   this->_impl = __SII.USIInit[Type.Int64]();
+                }else if(typeid(T) == typeid(cytnx_int32)){
+                   this->_impl = __SII.USIInit[Type.Int32]();
+                }else if(typeid(T) == typeid(cytnx_complex128)){
+                   this->_impl = __SII.USIInit[Type.ComplexDouble]();
+                }else if(typeid(T) == typeid(cytnx_complex64)){
+                   this->_impl = __SII.USIInit[Type.ComplexFloat]();
+                }else if(typeid(T) == typeid(cytnx_int16)){
+                   this->_impl = __SII.USIInit[Type.Int16]();
+                }else if(typeid(T) == typeid(cytnx_uint16)){
+                   this->_impl = __SII.USIInit[Type.Uint16]();
+                }else if(typeid(T) == typeid(cytnx_bool)){
+                   this->_impl = __SII.USIInit[Type.Bool]();
+                }else{
+                    cytnx_error_msg(1,"[FATAL] ERROR unsupport type%s","\n");
+                }
+                this->_impl->Init(vin.size(),device);
+                memcpy(this->_impl->Mem,&vin[0],sizeof(T)*vin.size());
+            }
+
 
     };
 
