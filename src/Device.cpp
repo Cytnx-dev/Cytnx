@@ -33,6 +33,7 @@ string Device_class::getname(const int &device_id){
     if(device_id==this->cpu){
         return string("cytnx device: CPU");
     }else if(device_id>=0){
+        cout << device_id << Ngpus << endl;
         if(device_id >= Ngpus){
             cytnx_error_msg(true,"%s","[ERROR] invalid device_id, gpuid exceed limit");
             return string("");

@@ -10,4 +10,10 @@
 #include "Generator.hpp"
 #include "linalg.hpp"
 #include "utils/utils.hpp"
+#ifdef EXT_Enable
+    #include "extension/UniTensor.hpp"
+    #include "extension/Symmetry.hpp"
+    #include "extension/Network.hpp"
+    #include "extension/Bond.hpp"
+#endif
 #endif

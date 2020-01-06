@@ -2,6 +2,11 @@
 #include "Tensor.hpp"
 #include "Storage.hpp"
 
+#ifdef EXT_Enable
+#include "extension/Symmetry.hpp"
+#include "extension/Bond.hpp"
+#endif
+
 namespace cytnx{
 
     template<class T>
@@ -414,10 +419,11 @@ namespace cytnx{
     //================================
 
 
+    
+
     template std::vector<Tensor> vec_clone<Tensor>(const std::vector<Tensor>&);
     template std::vector<Storage> vec_clone<Storage>(const std::vector<Storage>&);
     
-
     template std::vector<Tensor> vec_clone<Tensor>(const std::vector<Tensor>&, const cytnx_uint64 &);
     template std::vector<Storage> vec_clone<Storage>(const std::vector<Storage>&, const cytnx_uint64 &);
 
@@ -429,4 +435,18 @@ namespace cytnx{
     template std::vector<Tensor> vec_clone<Tensor>(const std::vector<Tensor>&, const cytnx_uint64 &, const cytnx_uint64 &);
     template std::vector<Storage> vec_clone<Storage>(const std::vector<Storage>&, const cytnx_uint64 &, const cytnx_uint64 &);
 
+    #ifdef EXT_Enable
+    template std::vector<Bond> vec_clone<Bond>(const std::vector<Bond>&);
+    template std::vector<Symmetry> vec_clone<Symmetry>(const std::vector<Symmetry>&);
+    template std::vector<Bond> vec_clone<Bond>(const std::vector<Bond>&, const cytnx_uint64 &);
+    template std::vector<Symmetry> vec_clone<Symmetry>(const std::vector<Symmetry>&, const cytnx_uint64 &);
+    template std::vector<Bond> vec_clone<Bond>(const std::vector<Bond>&, const std::vector<cytnx_uint64> &);
+    template std::vector<Symmetry> vec_clone<Symmetry>(const std::vector<Symmetry>&, const std::vector<cytnx_uint64> &);
+    template std::vector<Bond> vec_clone<Bond>(const std::vector<Bond>&, const cytnx_uint64 &, const cytnx_uint64 &);
+    template std::vector<Symmetry> vec_clone<Symmetry>(const std::vector<Symmetry>&, const cytnx_uint64 &, const cytnx_uint64 &);
+    #endif
+
+
 }
+
+

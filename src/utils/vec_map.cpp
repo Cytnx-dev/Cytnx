@@ -3,6 +3,10 @@
 #include <algorithm>
 #include <vector>
 #include <cstring>
+#ifdef EXT_Enable
+#include "extension/Bond.hpp"
+#endif 
+
 namespace cytnx{
 
     template<class T>
@@ -28,5 +32,8 @@ namespace cytnx{
     template std::vector<cytnx_int16> vec_map(const std::vector<cytnx_int16> &,const std::vector<cytnx_uint64> &);
     template std::vector<cytnx_uint16> vec_map(const std::vector<cytnx_uint16> &,const std::vector<cytnx_uint64> &);
     template std::vector<cytnx_bool> vec_map(const std::vector<cytnx_bool> &,const std::vector<cytnx_uint64> &);
-//    template std::vector<Bond> vec_map(const std::vector<Bond> &,const std::vector<cytnx_uint64> &);
+    #ifdef EXT_Enable
+    template std::vector<Bond> vec_map(const std::vector<Bond> &,const std::vector<cytnx_uint64> &);
+    #endif 
+
 }

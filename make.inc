@@ -21,6 +21,10 @@ MKL_Enable=0
 
 
 
+#### Cytnx Extension, UniTensor, Symmetry and Bond etc.
+EXT_Enable=0
+
+
 #### DO NOT USE BELOW WHEN CUSTOM INSTALL !!
 #-------------------------------------------
 ## un-commend when distribute by docker

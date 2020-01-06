@@ -1,8 +1,15 @@
+import sys
+sys.path.append("..")
 import cytnx
 from cytnx import linalg
 
 
 
+#bd1 = cytnx.Bond(2)
+#T = cytnx.UniTensor([bd1],Rowrank=1)
+#T.print_diagram()
+
+#exit(1)
 
 #=====================
 # Storage 
@@ -16,7 +23,7 @@ print(a[3])
 print(a.dtype)
 print(a.dtype_str)
 print(a)
-
+exit(1)
 a.fill(14)
 print(a)
 b = a.clone()
@@ -38,7 +45,7 @@ print(Ta_shp)
 print(Ta.dtype_str)
 print(Ta.device_str)
 print(Ta)
-
+exit(1)
 Ta.permute_(0,2,1)
 Tb = Ta.permute_(1,0,2)
 print(Tb is Ta)

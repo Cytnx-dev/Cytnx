@@ -5,6 +5,7 @@ target_sources_local(cytnx
     Fill_cpu.hpp
     GetElems_cpu.hpp
     Movemem_cpu.hpp
+    Range_cpu.hpp
     SetArange_cpu.hpp
     SetElems_cpu.hpp
     SetZeros_cpu.hpp

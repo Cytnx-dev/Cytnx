@@ -82,14 +82,17 @@ endif
 OBJS = Storage_base.o BoolStorage.o Uint16Storage.o Int16Storage.o Uint32Storage.o Int32Storage.o Uint64Storage.o Int64Storage.o FloatStorage.o DoubleStorage.o ComplexFloatStorage.o ComplexDoubleStorage.o Type.o Device.o
 
 
-#OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o UniTensor_base.o DenseUniTensor.o SparseUniTensor.o UniTensor.o Bond.o Symmetry.o contraction_tree.o
 OBJS += Storage.o Tensor.o Accessor.o Generator.o
 
+ifeq ($(EXT_Enable),1)
+ CCFLAGS+= -DEXT_Enable
+ OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o UniTensor_base.o DenseUniTensor.o SparseUniTensor.o UniTensor.o Bond.o Symmetry.o contraction_tree.o
+endif
 
 
 ## Utils
 OBJS += utils_internal_interface.o
-OBJS += utils.o Cast_cpu.o Alloc_cpu.o Movemem_cpu.o vec2d_col_sort.o vec_range.o complex_arithmetic.o is.o vec_intersect.o vec_concatenate.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_cpu.o SetElems_cpu.o cartesian.o str_utils.o
+OBJS += utils.o Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o vec2d_col_sort.o vec_range.o complex_arithmetic.o is.o vec_intersect.o vec_concatenate.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_cpu.o SetElems_cpu.o cartesian.o str_utils.o
 ifeq ($(GPU_Enable),1)
   OBJS += cucomplex_arithmetic.o cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o cuFill_gpu.o cuSetArange_gpu.o cuGetElems_gpu.o  cuSetElems_gpu.o
 endif
@@ -150,12 +153,6 @@ endif
 Tensor.o: $(CytnxPATH)/src/Tensor.cpp $(CytnxPATH)/include/Tensor.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Bond.o : $(CytnxPATH)/src/Bond.cpp $(CytnxPATH)/include/Bond.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-
-Symmetry.o: $(CytnxPATH)/src/Symmetry.cpp $(CytnxPATH)/include/Symmetry.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-
 Storage.o: $(CytnxPATH)/src/Storage.cpp $(CytnxPATH)/include/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
@@ -165,16 +162,34 @@ Accessor.o: $(CytnxPATH)/src/Accessor.cpp $(CytnxPATH)/include/Accessor.hpp
 Generator.o: $(CytnxPATH)/src/Generator.cpp $(CytnxPATH)/include/Generator.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-UniTensor.o: $(CytnxPATH)/src/UniTensor.cpp $(CytnxPATH)/include/UniTensor.hpp
+
+## Extensions:[Note] Only compile if EXT_Enable=1 ----------------------------
+Bond.o : $(CytnxPATH)/src/extension/Bond.cpp $(CytnxPATH)/include/extension/Bond.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+Symmetry.o: $(CytnxPATH)/src/extension/Symmetry.cpp $(CytnxPATH)/include/extension/Symmetry.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+UniTensor.o: $(CytnxPATH)/src/extension/UniTensor.cpp $(CytnxPATH)/include/extension/UniTensor.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
+UniTensor_base.o: $(CytnxPATH)/src/extension/UniTensor_base.cpp $(CytnxPATH)/include/extension/UniTensor.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+DenseUniTensor.o: $(CytnxPATH)/src/extension/DenseUniTensor.cpp $(CytnxPATH)/include/extension/UniTensor.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+SparseUniTensor.o: $(CytnxPATH)/src/extension/SparseUniTensor.cpp $(CytnxPATH)/include/extension/UniTensor.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-UniTensor_base.o: $(CytnxPATH)/src/UniTensor_base.cpp $(CytnxPATH)/include/UniTensor.hpp
+Network.o: $(CytnxPATH)/src/extension/Network.cpp $(CytnxPATH)/include/extension/Network.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+Network_base.o: $(CytnxPATH)/src/extension/Network_base.cpp $(CytnxPATH)/include/extension/Network.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+RegularNetwork.o: $(CytnxPATH)/src/extension/RegularNetwork.cpp $(CytnxPATH)/include/extension/Network.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+FermionNetwork.o: $(CytnxPATH)/src/extension/FermionNetwork.cpp $(CytnxPATH)/include/extension/Network.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+contraction_tree.o: $(CytnxPATH)/src/extension/contraction_tree.cpp $(CytnxPATH)/include/extension/contraction_tree.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-DenseUniTensor.o: $(CytnxPATH)/src/DenseUniTensor.cpp $(CytnxPATH)/include/UniTensor.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-SparseUniTensor.o: $(CytnxPATH)/src/SparseUniTensor.cpp $(CytnxPATH)/include/UniTensor.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+
+##--------------------------------------------------------------------------
 
 
 ## Storage 
@@ -206,19 +221,6 @@ ComplexFloatStorage.o: $(CytnxPATH)/src/ComplexFloatStorage.cpp $(CytnxPATH)/inc
 
 ComplexDoubleStorage.o: $(CytnxPATH)/src/ComplexDoubleStorage.cpp $(CytnxPATH)/include/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
-
-## Network:
-Network.o: $(CytnxPATH)/src/Network.cpp $(CytnxPATH)/include/Network.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
-Network_base.o: $(CytnxPATH)/src/Network_base.cpp $(CytnxPATH)/include/Network.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
-
-RegularNetwork.o: $(CytnxPATH)/src/RegularNetwork.cpp $(CytnxPATH)/include/Network.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
-
-FermionNetwork.o: $(CytnxPATH)/src/FermionNetwork.cpp $(CytnxPATH)/include/Network.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
-
 
 
 ## linalg_internal
@@ -338,8 +340,6 @@ Type.o : $(CytnxPATH)/src/Type.cpp $(CytnxPATH)/include/Type.hpp
 Device.o: $(CytnxPATH)/src/Device.cpp $(CytnxPATH)/include/Device.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-contraction_tree.o: $(CytnxPATH)/src/contraction_tree.cpp $(CytnxPATH)/include/contraction_tree.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 ## Utils
 ##########################
@@ -350,6 +350,9 @@ utils.o: $(CytnxPATH)/src/utils/utils.cpp $(CytnxPATH)/include/utils/utils.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 Cast_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/Cast_cpu.cpp $(CytnxPATH)/src/utils/utils_internal_cpu/Cast_cpu.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+
+Range_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/Range_cpu.cpp $(CytnxPATH)/src/utils/utils_internal_cpu/Range_cpu.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 Movemem_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/Movemem_cpu.cpp $(CytnxPATH)/src/utils/utils_internal_cpu/Movemem_cpu.hpp
