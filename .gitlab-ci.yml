@@ -3,7 +3,7 @@ image: alpine
 pages:
   script:
 
-  - mv doc/html/ public/
+  - mv docs/html/ public/
   artifacts:
     paths:
     - public
