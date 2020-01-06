@@ -1,4 +1,4 @@
-#include "utils/utils_internal_interface.hpp"
+#include "utils_internal_interface.hpp"
 #include <vector>
 using namespace std;
 namespace cytnx{
@@ -7,12 +7,10 @@ namespace cytnx{
         // this is an internal function for compare.
         //-------------
         bool _fx_compare_vec_inc(const std::vector<cytnx_int64> &v1,const std::vector<cytnx_int64> &v2){
-             
-            for(cytnx_uint64 i=0;i<v1.size();i++){
-                if(v1[i] < v2[i]) return true;
-                else if(v1[i] > v2[i]) return false;    
-            }
-            return false;
+
+            std::pair<std::vector<cytnx_int64>, std::vector<cytnx_int64>> p{v1,v2};
+
+            return p.first< p.second;
         }
 
 

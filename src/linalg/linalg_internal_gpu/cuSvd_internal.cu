@@ -1,7 +1,7 @@
 #include "linalg/linalg_internal_gpu/cuSvd_internal.hpp"
 #include "cytnx_error.hpp"
 #include "Type.hpp"
-#include "utils/lapack_wrapper.h"
+#include "lapack_wrapper.hpp"
 
 namespace cytnx{
 

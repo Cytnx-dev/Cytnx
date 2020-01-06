@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['load',['Load',['../classcytnx_1_1Storage.html#a54484bf7ed5f7bdae96a23e2dc295dd9',1,'cytnx::Storage::Load()'],['../classcytnx_1_1Tensor.html#a1c6f1463000fc169fb5f66b101f6a63b',1,'cytnx::Tensor::Load()']]]
+  ['kron',['Kron',['../namespacecytnx_1_1linalg.html#acf52cf0ddfbacfcbc9970a1e85560b66',1,'cytnx::linalg']]]
 ];

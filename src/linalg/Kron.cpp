@@ -1,7 +1,8 @@
-#include "linalg/linalg.hpp"
+#include "linalg.hpp"
 #include "utils/utils.hpp"
 #include "Device.hpp"
 #include <iostream>
+#include "linalg_internal_interface.hpp"
 namespace cytnx{
 
     namespace linalg{

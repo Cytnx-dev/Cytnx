@@ -1,4 +1,4 @@
-#include "linalg/linalg_internal_cpu/Cpr_internal.hpp"
+#include "Cpr_internal.hpp"
 #include "utils/utils_internal_interface.hpp"
 #include "utils/utils.hpp"
 #include <iostream>

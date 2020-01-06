@@ -13,7 +13,7 @@ GPU_Enable=1
 CUDA_PATH=/usr/local/cuda
 
 ## compile with Openmp support:
-OMP_Enable=1
+OMP_Enable=0
 
 ## compile with MKL library:
 MKL_Enable=0
@@ -23,7 +23,7 @@ MKL_Enable=0
 
 #### DO NOT USE BELOW WHEN CUSTOM INSTALL !!
 #-------------------------------------------
-## un-commend when distribute by docker  
+## un-commend when distribute by docker
 #DOCKER_MKL=-L/miniconda/lib
 
 ## compile with debug mode, which add check for internal error! including more information and check at runtime

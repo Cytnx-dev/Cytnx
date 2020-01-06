@@ -1,0 +1,36 @@
+target_sources_local(cytnx
+  PRIVATE
+    Add_internal.hpp
+    Arithmetic_internal.hpp
+    Conj_inplace_internal.hpp
+    Cpr_internal.hpp
+    Diag_internal.hpp
+    Div_internal.hpp
+    Eigh_internal.hpp
+    Exp_internal.hpp
+    Inv_inplace_internal.hpp
+    Matmul_internal.hpp
+    Mul_internal.hpp
+    Outer_internal.hpp
+    Sub_internal.hpp
+    Svd_internal.hpp
+    Tridiag_internal.hpp
+    Vectordot_internal.hpp
+
+    Add_internal.cpp
+    Arithmetic_internal.cpp
+    Conj_inplace_internal.cpp
+    Cpr_internal.cpp
+    Diag_internal.cpp
+    Div_internal.cpp
+    Eigh_internal.cpp
+    Exp_internal.cpp
+    Inv_inplace_internal.cpp
+    Matmul_internal.cpp
+    Mul_internal.cpp
+    Outer_internal.cpp
+    Tridiag_internal.cpp
+    Sub_internal.cpp
+    Svd_internal.cpp
+    Vectordot_internal.cpp
+)

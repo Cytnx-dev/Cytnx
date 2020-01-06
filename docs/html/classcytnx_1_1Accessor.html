@@ -86,7 +86,7 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9f6fa9087f09756e020355a05196d384"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Accessor.html#a9f6fa9087f09756e020355a05196d384">Accessor</a> (const cytnx_int64 &amp;loc)</td></tr>
+<tr class="memitem:a9f6fa9087f09756e020355a05196d384"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Accessor.html#a9f6fa9087f09756e020355a05196d384">Accessor</a> (const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;loc)</td></tr>
 <tr class="memdesc:a9f6fa9087f09756e020355a05196d384"><td class="mdescLeft">&#160;</td><td class="mdescRight">access the specific index at the assigned rank in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>.  <a href="#a9f6fa9087f09756e020355a05196d384">More...</a><br /></td></tr>
 <tr class="separator:a9f6fa9087f09756e020355a05196d384"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -95,7 +95,7 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a71b8c4af7182a2c9144929bdef9ff4fd"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcytnx_1_1Accessor.html">Accessor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Accessor.html#a71b8c4af7182a2c9144929bdef9ff4fd">all</a> ()</td></tr>
 <tr class="memdesc:a71b8c4af7182a2c9144929bdef9ff4fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">access the whole rank, this is similar to [:] in python  <a href="#a71b8c4af7182a2c9144929bdef9ff4fd">More...</a><br /></td></tr>
 <tr class="separator:a71b8c4af7182a2c9144929bdef9ff4fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a5a508a58b71897c3dd162195aceaa9"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcytnx_1_1Accessor.html">Accessor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Accessor.html#a7a5a508a58b71897c3dd162195aceaa9">range</a> (const cytnx_int64 &amp;min, const cytnx_int64 &amp;max, const cytnx_int64 &amp;step=1)</td></tr>
+<tr class="memitem:a7a5a508a58b71897c3dd162195aceaa9"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcytnx_1_1Accessor.html">Accessor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Accessor.html#a7a5a508a58b71897c3dd162195aceaa9">range</a> (const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;min, const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;max, const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;step=1)</td></tr>
 <tr class="memdesc:a7a5a508a58b71897c3dd162195aceaa9"><td class="mdescLeft">&#160;</td><td class="mdescRight">access the range at assigned rank, this is similar to [min:max:step] in python  <a href="#a7a5a508a58b71897c3dd162195aceaa9">More...</a><br /></td></tr>
 <tr class="separator:a7a5a508a58b71897c3dd162195aceaa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -107,15 +107,23 @@ Static Public Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">cytnx::Accessor::Accessor </td>
           <td>(</td>
-          <td class="paramtype">const cytnx_int64 &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;&#160;</td>
           <td class="paramname"><em>loc</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>access the specific index at the assigned rank in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>. </p>
@@ -127,7 +135,7 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <h2>Example:</h2>
 <h3>c++ API:</h3>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line">    </div><div class="line">    <span class="comment">// 1. handy alias:</span></div><div class="line">    <span class="keyword">typedef</span> <a class="code" href="classcytnx_1_1Accessor.html">Accessor</a> ac;</div><div class="line">    </div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        2. Create a Tensor with </span></div><div class="line"><span class="comment">        shape (3,4,5),</span></div><div class="line"><span class="comment">        dtype =Type.Double [default],</span></div><div class="line"><span class="comment">        device=Device.cpu [default]</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A = <a class="code" href="namespacecytnx.html#a733f9931141463bc8b7c61931ccf52c3">cytnx::arange</a>(24);</div><div class="line">    A.<a class="code" href="classcytnx_1_1Tensor.html#a3723449528b9a20dd46c32c9e042b8f0">reshape_</a>({2,3,4});</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        3. Accessing elements using accessor</span></div><div class="line"><span class="comment">        This is similar as python slices. </span></div><div class="line"><span class="comment">        -&gt; A[0,:,0:4:1]</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A.<a class="code" href="classcytnx_1_1Tensor.html#ad7b928e4cb89d40cbd99aefab9aa0075">get</a>({ac(0),ac::all(),ac::range(0,2,1)});</div><div class="line">    cout &lt;&lt; B &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacestd.html">std</a>;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line">    </div><div class="line">    <span class="comment">// 1. handy alias:</span></div><div class="line">    <span class="keyword">typedef</span> <a class="code" href="classcytnx_1_1Accessor.html">Accessor</a> ac;</div><div class="line">    </div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        2. Create a Tensor with </span></div><div class="line"><span class="comment">        shape (3,4,5),</span></div><div class="line"><span class="comment">        dtype =Type.Double [default],</span></div><div class="line"><span class="comment">        device=Device.cpu [default]</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A = <a class="code" href="namespacecytnx.html#a733f9931141463bc8b7c61931ccf52c3">cytnx::arange</a>(24);</div><div class="line">    A.<a class="code" href="classcytnx_1_1Tensor.html#a3723449528b9a20dd46c32c9e042b8f0">reshape_</a>({2,3,4});</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        3. Accessing elements using accessor</span></div><div class="line"><span class="comment">        This is similar as python slices. </span></div><div class="line"><span class="comment">        -&gt; A[0,:,0:4:1]</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A.<a class="code" href="classcytnx_1_1Tensor.html#ad7b928e4cb89d40cbd99aefab9aa0075">get</a>({ac(0),ac::all(),ac::range(0,2,1)});</div><div class="line">    cout &lt;&lt; B &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">
 Total elem: 24
 type  : Double (Float64)
@@ -152,7 +160,7 @@ Shape : (3,2)
 
 
 </pre> <h3>python API:</h3>
-<div class="fragment"><div class="line">from cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line">A = arange(24);</div><div class="line">A.reshape_(2,3,4);</div><div class="line">print(A)</div><div class="line"></div><div class="line"></div><div class="line">B = A[0,:,0:2:1]</div><div class="line">print(B)</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<div class="fragment"><div class="line">from cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line">A = <a class="code" href="namespacecytnx.html#a733f9931141463bc8b7c61931ccf52c3">arange</a>(24);</div><div class="line">A.reshape_(2,3,4);</div><div class="line">print(A)</div><div class="line"></div><div class="line"></div><div class="line">B = A[0,:,0:2:1]</div><div class="line">print(B)</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">
 Total elem: 24
 type  : Double (Float64)
@@ -208,7 +216,7 @@ Shape : (3,2)
 <p>access the whole rank, this is similar to [:] in python </p>
 <h2>Example:</h2>
 <h3>c++ API:</h3>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line">    </div><div class="line">    <span class="comment">// 1. handy alias:</span></div><div class="line">    <span class="keyword">typedef</span> <a class="code" href="classcytnx_1_1Accessor.html">Accessor</a> ac;</div><div class="line">    </div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        2. Create a Tensor with </span></div><div class="line"><span class="comment">        shape (3,4,5),</span></div><div class="line"><span class="comment">        dtype =Type.Double [default],</span></div><div class="line"><span class="comment">        device=Device.cpu [default]</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A = <a class="code" href="namespacecytnx.html#a733f9931141463bc8b7c61931ccf52c3">cytnx::arange</a>(24);</div><div class="line">    A.<a class="code" href="classcytnx_1_1Tensor.html#a3723449528b9a20dd46c32c9e042b8f0">reshape_</a>({2,3,4});</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        3. Accessing elements using accessor</span></div><div class="line"><span class="comment">        This is similar as python slices. </span></div><div class="line"><span class="comment">        -&gt; A[0,:,0:4:1]</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A.<a class="code" href="classcytnx_1_1Tensor.html#ad7b928e4cb89d40cbd99aefab9aa0075">get</a>({ac(0),ac::all(),ac::range(0,2,1)});</div><div class="line">    cout &lt;&lt; B &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacestd.html">std</a>;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line">    </div><div class="line">    <span class="comment">// 1. handy alias:</span></div><div class="line">    <span class="keyword">typedef</span> <a class="code" href="classcytnx_1_1Accessor.html">Accessor</a> ac;</div><div class="line">    </div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        2. Create a Tensor with </span></div><div class="line"><span class="comment">        shape (3,4,5),</span></div><div class="line"><span class="comment">        dtype =Type.Double [default],</span></div><div class="line"><span class="comment">        device=Device.cpu [default]</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A = <a class="code" href="namespacecytnx.html#a733f9931141463bc8b7c61931ccf52c3">cytnx::arange</a>(24);</div><div class="line">    A.<a class="code" href="classcytnx_1_1Tensor.html#a3723449528b9a20dd46c32c9e042b8f0">reshape_</a>({2,3,4});</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        3. Accessing elements using accessor</span></div><div class="line"><span class="comment">        This is similar as python slices. </span></div><div class="line"><span class="comment">        -&gt; A[0,:,0:4:1]</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A.<a class="code" href="classcytnx_1_1Tensor.html#ad7b928e4cb89d40cbd99aefab9aa0075">get</a>({ac(0),ac::all(),ac::range(0,2,1)});</div><div class="line">    cout &lt;&lt; B &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">
 Total elem: 24
 type  : Double (Float64)
@@ -233,7 +241,7 @@ Shape : (3,2)
 
 
 </pre> <h3>python API:</h3>
-<div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line">A = arange(24);</div><div class="line">A.reshape_(2,3,4);</div><div class="line">print(A)</div><div class="line"></div><div class="line"></div><div class="line">B = A[0,:,0:2:1]</div><div class="line">print(B)</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line">A = <a class="code" href="namespacecytnx.html#a733f9931141463bc8b7c61931ccf52c3">arange</a>(24);</div><div class="line">A.reshape_(2,3,4);</div><div class="line">print(A)</div><div class="line"></div><div class="line"></div><div class="line">B = A[0,:,0:2:1]</div><div class="line">print(B)</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">
 Total elem: 24
 type  : Double (Float64)
@@ -274,19 +282,19 @@ Shape : (3,2)
         <tr>
           <td class="memname">static <a class="el" href="classcytnx_1_1Accessor.html">Accessor</a> cytnx::Accessor::range </td>
           <td>(</td>
-          <td class="paramtype">const cytnx_int64 &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;&#160;</td>
           <td class="paramname"><em>min</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const cytnx_int64 &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;&#160;</td>
           <td class="paramname"><em>max</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const cytnx_int64 &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;&#160;</td>
           <td class="paramname"><em>step</em> = <code>1</code>&#160;</td>
         </tr>
         <tr>
@@ -313,7 +321,7 @@ Shape : (3,2)
   </dd>
 </dl>
 <h3>c++ API:</h3>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span>std;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line">    </div><div class="line">    <span class="comment">// 1. handy alias:</span></div><div class="line">    <span class="keyword">typedef</span> <a class="code" href="classcytnx_1_1Accessor.html">Accessor</a> ac;</div><div class="line">    </div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        2. Create a Tensor with </span></div><div class="line"><span class="comment">        shape (3,4,5),</span></div><div class="line"><span class="comment">        dtype =Type.Double [default],</span></div><div class="line"><span class="comment">        device=Device.cpu [default]</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A = <a class="code" href="namespacecytnx.html#a733f9931141463bc8b7c61931ccf52c3">cytnx::arange</a>(24);</div><div class="line">    A.<a class="code" href="classcytnx_1_1Tensor.html#a3723449528b9a20dd46c32c9e042b8f0">reshape_</a>({2,3,4});</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        3. Accessing elements using accessor</span></div><div class="line"><span class="comment">        This is similar as python slices. </span></div><div class="line"><span class="comment">        -&gt; A[0,:,0:4:1]</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A.<a class="code" href="classcytnx_1_1Tensor.html#ad7b928e4cb89d40cbd99aefab9aa0075">get</a>({ac(0),ac::all(),ac::range(0,2,1)});</div><div class="line">    cout &lt;&lt; B &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacestd.html">std</a>;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line">    </div><div class="line">    <span class="comment">// 1. handy alias:</span></div><div class="line">    <span class="keyword">typedef</span> <a class="code" href="classcytnx_1_1Accessor.html">Accessor</a> ac;</div><div class="line">    </div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        2. Create a Tensor with </span></div><div class="line"><span class="comment">        shape (3,4,5),</span></div><div class="line"><span class="comment">        dtype =Type.Double [default],</span></div><div class="line"><span class="comment">        device=Device.cpu [default]</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A = <a class="code" href="namespacecytnx.html#a733f9931141463bc8b7c61931ccf52c3">cytnx::arange</a>(24);</div><div class="line">    A.<a class="code" href="classcytnx_1_1Tensor.html#a3723449528b9a20dd46c32c9e042b8f0">reshape_</a>({2,3,4});</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        3. Accessing elements using accessor</span></div><div class="line"><span class="comment">        This is similar as python slices. </span></div><div class="line"><span class="comment">        -&gt; A[0,:,0:4:1]</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A.<a class="code" href="classcytnx_1_1Tensor.html#ad7b928e4cb89d40cbd99aefab9aa0075">get</a>({ac(0),ac::all(),ac::range(0,2,1)});</div><div class="line">    cout &lt;&lt; B &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">
 Total elem: 24
 type  : Double (Float64)
@@ -338,7 +346,7 @@ Shape : (3,2)
 
 
 </pre> <h3>python API:</h3>
-<div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line">A = arange(24);</div><div class="line">A.reshape_(2,3,4);</div><div class="line">print(A)</div><div class="line"></div><div class="line"></div><div class="line">B = A[0,:,0:2:1]</div><div class="line">print(B)</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line">A = <a class="code" href="namespacecytnx.html#a733f9931141463bc8b7c61931ccf52c3">arange</a>(24);</div><div class="line">A.reshape_(2,3,4);</div><div class="line">print(A)</div><div class="line"></div><div class="line"></div><div class="line">B = A[0,:,0:2:1]</div><div class="line">print(B)</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">
 Total elem: 24
 type  : Double (Float64)
@@ -367,8 +375,9 @@ Shape : (3,2)
 </pre> 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>include/<a class="el" href="Accessor_8hpp_source.html">Accessor.hpp</a></li>
+<li>src/<a class="el" href="Accessor_8cpp.html">Accessor.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

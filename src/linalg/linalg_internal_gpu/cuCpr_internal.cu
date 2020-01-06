@@ -1,6 +1,6 @@
-#include "linalg/linalg_internal_gpu/cuCpr_internal.hpp"
+#include "cuCpr_internal.hpp"
 #include "utils/utils_internal_interface.hpp"
-#include "utils/cucomplex_arithmic.hpp"
+#include "utils/cucomplex_arithmetic.hpp"
 #ifdef UNI_OMP
     #include <omp.h>
 #endif

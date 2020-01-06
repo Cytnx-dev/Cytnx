@@ -1,4 +1,4 @@
-#include "linalg/linalg.hpp"
+#include "linalg.hpp"
 #include "utils/utils.hpp"
 
 namespace cytnx{
@@ -11,8 +11,8 @@ namespace cytnx{
             cytnx_error_msg(Tl.device() != Tr.device(),"[ERROR] two tensor for Tensordot cannot on different devices.%s","\n");
              
             std::vector<cytnx_uint64> mapperL,mapperR;
-            std::vector<cytnx_uint64> non_contract_l = vec_erase(utils_internal::range_cpu(Tl.shape().size()),idxl);
-            std::vector<cytnx_uint64> non_contract_r = vec_erase(utils_internal::range_cpu(Tr.shape().size()),idxr);
+            std::vector<cytnx_uint64> non_contract_l = vec_erase(vec_range(Tl.shape().size()), idxl);
+            std::vector<cytnx_uint64> non_contract_r = vec_erase(vec_range(Tr.shape().size()), idxr);
 
             //calculate permute
             vec_concatenate_(mapperL,non_contract_l, idxl);

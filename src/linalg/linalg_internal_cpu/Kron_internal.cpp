@@ -1,7 +1,7 @@
 #include "linalg/linalg_internal_cpu/Kron_internal.hpp"
 #include "utils/utils_internal_interface.hpp"
-#include "utils/complex_arithmic.hpp"
-#include "utils/lapack_wrapper.h"
+#include "utils/complex_arithmetic.hpp"
+#include "lapack_wrapper.hpp"
 #ifdef UNI_OMP
     #include <omp.h>
 #endif

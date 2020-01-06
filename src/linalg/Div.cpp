@@ -1,4 +1,5 @@
-#include "linalg/linalg.hpp"
+#include "linalg.hpp"
+#include "linalg_internal_interface.hpp"
 
 
 namespace cytnx{
@@ -492,60 +493,6 @@ namespace cytnx{
             return out;
         }
     
-        //===============
-        // UniTensor
-        //===============
-        UniTensor Div(const UniTensor &Lt, const UniTensor &Rt){
-            cytnx_error_msg(true,"[Div][Developing]%s","\n");
-            return UniTensor();
-        }
-
-        template<class T>
-        UniTensor Div(const T &lc, const UniTensor &Rt){
-            UniTensor out = Rt.clone();
-            if(out.is_blockform()){
-                cytnx_error_msg(true,"[Developing][Div][SparseUniTensor]%s","\n");
-            }else{
-                out.get_block_() = Div(lc , out.get_block_());
-            }
-            return out;
-        }
-
-        template UniTensor Div<cytnx_complex128>(const cytnx_complex128 &lc, const UniTensor &Rt);
-        template UniTensor Div<cytnx_complex64>(const cytnx_complex64 &lc, const UniTensor &Rt);
-        template UniTensor Div<cytnx_double>(const cytnx_double &lc, const UniTensor &Rt);
-        template UniTensor Div<cytnx_float>(const cytnx_float &lc, const UniTensor &Rt);
-        template UniTensor Div<cytnx_int64>(const cytnx_int64 &lc, const UniTensor &Rt);
-        template UniTensor Div<cytnx_uint64>(const cytnx_uint64 &lc, const UniTensor &Rt);
-        template UniTensor Div<cytnx_int32>(const cytnx_int32 &lc, const UniTensor &Rt);
-        template UniTensor Div<cytnx_uint32>(const cytnx_uint32 &lc, const UniTensor &Rt);
-        template UniTensor Div<cytnx_int16>(const cytnx_int16 &lc, const UniTensor &Rt);
-        template UniTensor Div<cytnx_uint16>(const cytnx_uint16 &lc, const UniTensor &Rt);
-        template UniTensor Div<cytnx_bool>(const cytnx_bool &lc, const UniTensor &Rt);
-
-        template<class T>
-        UniTensor Div(const UniTensor &Lt, const T &rc){
-            UniTensor out = Lt.clone();
-            if(out.is_blockform()){
-                cytnx_error_msg(true,"[Developing][Div][SparseUniTensor]%s","\n");
-            }else{
-                out.get_block_() = Div(out.get_block_() , rc);
-            }
-            return out;
-        }
-
-        template UniTensor Div<cytnx_complex128>(const UniTensor &Lt,const cytnx_complex128 &rc);
-        template UniTensor Div<cytnx_complex64>(const UniTensor &Lt,const cytnx_complex64 &rc);
-        template UniTensor Div<cytnx_double>(const UniTensor &Lt,const cytnx_double &rc);
-        template UniTensor Div<cytnx_float>(const UniTensor &Lt,const cytnx_float &rc);
-        template UniTensor Div<cytnx_int64>(const UniTensor &Lt,const cytnx_int64 &rc);
-        template UniTensor Div<cytnx_uint64>(const UniTensor &Lt,const cytnx_uint64 &rc);
-        template UniTensor Div<cytnx_int32>(const UniTensor &Lt,const cytnx_int32 &rc);
-        template UniTensor Div<cytnx_uint32>(const UniTensor &Lt,const cytnx_uint32 &rc);
-        template UniTensor Div<cytnx_int16>(const UniTensor &Lt,const cytnx_int16 &rc);
-        template UniTensor Div<cytnx_uint16>(const UniTensor &Lt,const cytnx_uint16 &rc);
-        template UniTensor Div<cytnx_bool>(const UniTensor &Lt,const cytnx_bool &rc);
-
 
     }//linalg
 
@@ -642,67 +589,7 @@ namespace cytnx{
        return cytnx::linalg::Div(Lt,rc);
     }
 
-    //=================
-    // UniTensor
-    //=================
-    UniTensor operator/(const UniTensor &Lt, const UniTensor &Rt){
-        return cytnx::linalg::Div(Lt,Rt);
-    }
 
-    template<class T>
-    UniTensor operator/(const T &lc, const UniTensor &Rt){
-        return cytnx::linalg::Div(lc,Rt);
-    }
-
-    template UniTensor operator/<cytnx_complex128>(const cytnx_complex128 &lc, const UniTensor &Rt);
-    template UniTensor operator/<cytnx_complex64>(const cytnx_complex64 &lc, const UniTensor &Rt);
-    template UniTensor operator/<cytnx_double>(const cytnx_double &lc, const UniTensor &Rt);
-    template UniTensor operator/<cytnx_float>(const cytnx_float &lc, const UniTensor &Rt);
-    template UniTensor operator/<cytnx_int64>(const cytnx_int64 &lc, const UniTensor &Rt);
-    template UniTensor operator/<cytnx_uint64>(const cytnx_uint64 &lc, const UniTensor &Rt);
-    template UniTensor operator/<cytnx_int32>(const cytnx_int32 &lc, const UniTensor &Rt);
-    template UniTensor operator/<cytnx_uint32>(const cytnx_uint32 &lc, const UniTensor &Rt);
-    template UniTensor operator/<cytnx_int16>(const cytnx_int16 &lc, const UniTensor &Rt);
-    template UniTensor operator/<cytnx_uint16>(const cytnx_uint16 &lc, const UniTensor &Rt);
-    template UniTensor operator/<cytnx_bool>(const cytnx_bool &lc, const UniTensor &Rt);
-
-    template<class T>
-    UniTensor operator/(const UniTensor &Lt, const T &rc){
-        return cytnx::linalg::Div(Lt,rc);
-    }
-
-    template UniTensor operator/<cytnx_complex128>(const UniTensor &Lt,const cytnx_complex128 &rc);
-    template UniTensor operator/<cytnx_complex64>(const UniTensor &Lt,const cytnx_complex64 &rc);
-    template UniTensor operator/<cytnx_double>(const UniTensor &Lt,const cytnx_double &rc);
-    template UniTensor operator/<cytnx_float>(const UniTensor &Lt,const cytnx_float &rc);
-    template UniTensor operator/<cytnx_int64>(const UniTensor &Lt,const cytnx_int64 &rc);
-    template UniTensor operator/<cytnx_uint64>(const UniTensor &Lt,const cytnx_uint64 &rc);
-    template UniTensor operator/<cytnx_int32>(const UniTensor &Lt,const cytnx_int32 &rc);
-    template UniTensor operator/<cytnx_uint32>(const UniTensor &Lt,const cytnx_uint32 &rc);
-    template UniTensor operator/<cytnx_int16>(const UniTensor &Lt,const cytnx_int16 &rc);
-    template UniTensor operator/<cytnx_uint16>(const UniTensor &Lt,const cytnx_uint16 &rc);
-    template UniTensor operator/<cytnx_bool>(const UniTensor &Lt,const cytnx_bool &rc);
-
-
-    /*
-    template<> Tensor operator/<cytnx_complex128>(const Tensor &, const cytnx_complex128&);
-    template<> Tensor operator/<cytnx_complex64>(const Tensor &, const cytnx_complex64&);
-    template<> Tensor operator/<cytnx_double>(const Tensor &, const cytnx_double&);
-    template<> Tensor operator/<cytnx_float>(const Tensor &, const cytnx_float&);
-    template<> Tensor operator/<cytnx_int64>(const Tensor &, const cytnx_int64&);
-    template<> Tensor operator/<cytnx_uint64>(const Tensor &, const cytnx_uint64&);
-    template<> Tensor operator/<cytnx_int32>(const Tensor &, const cytnx_int32&);
-    template<> Tensor operator/<cytnx_uint32>(const Tensor &, const cytnx_uint32&);
-
-    template<> Tensor operator/<cytnx_complex128>( const cytnx_complex128&,const Tensor &);
-    template<> Tensor operator/<cytnx_complex64>( const cytnx_complex64&,const Tensor &);
-    template<> Tensor operator/<cytnx_double>( const cytnx_double&,const Tensor &);
-    template<> Tensor operator/<cytnx_float>( const cytnx_float&,const Tensor &);
-    template<> Tensor operator/<cytnx_int64>( const cytnx_int64&,const Tensor &);
-    template<> Tensor operator/<cytnx_uint64>( const cytnx_uint64&,const Tensor &);
-    template<> Tensor operator/<cytnx_int32>( const cytnx_int32&,const Tensor &);
-    template<> Tensor operator/<cytnx_uint32>( const cytnx_uint32&,const Tensor &);
-    */
 }//cytnx
 
 

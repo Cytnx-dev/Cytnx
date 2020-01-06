@@ -311,6 +311,8 @@
             /* Since CUDA 8.0*/
             case cudaErrorNvlinkUncorrectable :
                 return "cudaErrorNvlinkUncorrectable";
+            default:
+                break;
         }
 
         return "<unknown>";

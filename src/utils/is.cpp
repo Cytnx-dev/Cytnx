@@ -10,13 +10,7 @@ namespace cytnx{
         return (L._impl == R._impl);
     }
     
-    bool is(const Bond &L, const Bond &R){
-        return (L._impl == R._impl);
-    }
 
-    bool is(const Symmetry &L, const Symmetry &R){
-        return (L._impl == R._impl);
-    }
 
 }
 

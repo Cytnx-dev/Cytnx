@@ -1,5 +1,5 @@
-#include "utils/utils_internal_gpu/cuMovemem_gpu.hpp"
-#include "utils/utils_internal_gpu/cuAlloc_gpu.hpp"
+#include "cuMovemem_gpu.hpp"
+#include "cuAlloc_gpu.hpp"
 #include "Storage.hpp"
 #ifdef UNI_OMP
 #include <omp.h>

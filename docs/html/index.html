@@ -80,12 +80,12 @@ $(function() {
 <li>Add Storage.from_vector, directly convert the C++ vector to Storage</li>
 <li>Add more intruisive way to get slices for Tensor in C++, using operator[]</li>
 <li>Add Tensor.append for rank-1 Tensor</li>
-<li>Add Exp() Expf() Exp_() Expf_()</li>
+<li>Add <a class="el" href="namespacecytnx_1_1linalg.html#aac38382cbc0e8202411c96a0ff636471" title="Exponential all the element in Tensor. ">Exp()</a> <a class="el" href="namespacecytnx_1_1linalg.html#a5831918722e5d18f4eaf37834b8fbf77" title="Exponential all the element in Tensor. ">Expf()</a> <a class="el" href="namespacecytnx_1_1linalg.html#aaab08439dde94ee87939d07933ede6e3" title="inplace perform Exponential on all the element in Tensor. ">Exp_()</a> <a class="el" href="namespacecytnx_1_1linalg.html#a5de1faf71c76cdc6b7fa5ba3a3e21bbb" title="inplace perform Exponential on all the element in Tensor. ">Expf_()</a></li>
 </ol>
 <h2>Feature:</h2>
 <h3>Python x C++</h3>
 <p>Benefit from both side. One can do simple prototype on python side and easy transfer to C++ with small effort!</p>
-<div class="fragment"><div class="line"><span class="comment">// c++ version:</span></div><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div><div class="line"><a class="code" href="classcytnx_1_1Tensor.html">cytnx::Tensor</a> A({3,4,5},cytnx::Type.Double,cytnx::Device.cpu)</div></div><!-- fragment --><div class="fragment"><div class="line"><span class="comment"># python version:</span></div><div class="line"><span class="keyword">import</span> cytnx</div><div class="line">A =  <a class="code" href="classcytnx_1_1Tensor.html">cytnx.Tensor</a>([3,4,5],dtype=cytnx.Type.Double,device=cytnx.Device.cpu)</div></div><!-- fragment --><h3>1. All the Storage and Tensor can now have mulitple type support.</h3>
+<div class="fragment"><div class="line"><span class="comment">// c++ version:</span></div><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div><div class="line"><a class="code" href="classcytnx_1_1Tensor.html">cytnx::Tensor</a> A({3,4,5},<a class="code" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">cytnx::Type</a>.Double,<a class="code" href="namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a">cytnx::Device</a>.cpu)</div></div><!-- fragment --><div class="fragment"><div class="line"><span class="comment"># python version:</span></div><div class="line"><span class="keyword">import</span> cytnx</div><div class="line">A =  <a class="code" href="classcytnx_1_1Tensor.html">cytnx.Tensor</a>([3,4,5],dtype=cytnx.Type.Double,device=cytnx.Device.cpu)</div></div><!-- fragment --><h3>1. All the Storage and Tensor can now have mulitple type support.</h3>
 <p>The avaliable types are :</p>
 <table class="doxtable">
 <tr>
@@ -121,11 +121,11 @@ $(function() {
 <ul>
 <li><a class="el" href="classcytnx_1_1Storage.html">Storage </a> [binded]</li>
 <li><a class="el" href="classcytnx_1_1Tensor.html">Tensor </a> [binded]</li>
-<li><a class="el" href="classcytnx_1_1Bond.html">Bond </a> [binded]</li>
+<li><a class="el" href="">Bond </a> [binded]</li>
 <li><a class="el" href="classcytnx_1_1Accessor.html">Accessor </a> [c++ only]</li>
-<li><a class="el" href="classcytnx_1_1Symmetry.html">Symmetry </a> [binded]</li>
-<li><a class="el" href="classcytnx_1_1UniTensor.html">UniTensor </a> [binded]</li>
-<li><a class="el" href="classcytnx_1_1Network.html">Network </a> [binded]</li>
+<li><a class="el" href="">Symmetry </a> [binded]</li>
+<li><a class="el" href="">UniTensor </a> [binded]</li>
+<li><a class="el" href="">Network </a> [binded]</li>
 </ul>
 <h2>linear algebra functions:</h2>
 <p>See <a class="el" href="namespacecytnx_1_1linalg.html">cytnx::linalg </a> for further details</p>
@@ -143,19 +143,19 @@ $(function() {
 <tr>
 <td><a class="el" href="namespacecytnx_1_1linalg.html#aea125f2928934007725809426bb77e38">Cpr</a> </td><td>x </td><td>Y </td><td>Y </td><td>Y </td></tr>
 <tr>
-<td>+,+=[tn]</td><td>x </td><td>Y </td><td>Y </td><td>Y (<a class="el" href="">Tensor.Add_</a>) </td></tr>
+<td>+,+=[tn]</td><td>x </td><td>Y </td><td>Y </td><td>Y (<a class="el" href="classcytnx_1_1Tensor.html#ac7ab4b9ee38f619a60c26f203539db65">Tensor.Add_</a>) </td></tr>
 <tr>
-<td>-,-=[tn]</td><td>x </td><td>Y </td><td>Y </td><td>Y (<a class="el" href="">Tensor.Sub_</a>) </td></tr>
+<td>-,-=[tn]</td><td>x </td><td>Y </td><td>Y </td><td>Y (<a class="el" href="classcytnx_1_1Tensor.html#a3482ddb0ebd4ae6585dcea7c96702e0c">Tensor.Sub_</a>) </td></tr>
 <tr>
-<td>*,*=[tn]</td><td>x </td><td>Y </td><td>Y </td><td>Y (<a class="el" href="">Tensor.Mul_</a>) </td></tr>
+<td>*,*=[tn]</td><td>x </td><td>Y </td><td>Y </td><td>Y (<a class="el" href="classcytnx_1_1Tensor.html#a92461c94266f7185da6f8fd35d1ffee4">Tensor.Mul_</a>) </td></tr>
 <tr>
-<td>/,/=[tn]</td><td>x </td><td>Y </td><td>Y </td><td>Y (<a class="el" href="">Tensor.Div_</a>) </td></tr>
+<td>/,/=[tn]</td><td>x </td><td>Y </td><td>Y </td><td>Y (<a class="el" href="classcytnx_1_1Tensor.html#a030748d3e2003f655b1cf73fe0d55a63">Tensor.Div_</a>) </td></tr>
 <tr>
-<td>== [tn]</td><td>x </td><td>Y </td><td>Y </td><td>Y (<a class="el" href="">Tensor.Cpr_</a>) </td></tr>
+<td>== [tn]</td><td>x </td><td>Y </td><td>Y </td><td>Y (<a class="el" href="classcytnx_1_1Tensor.html#ae9e9ea98664899db1ce86b88e136595e">Tensor.Cpr_</a>) </td></tr>
 <tr>
 <td><a class="el" href="namespacecytnx_1_1linalg.html#ac17f16959a4849ea91bce712d24d4e4e">Svd</a> </td><td>x </td><td>Y </td><td>Y </td><td>Y </td></tr>
 <tr>
-<td>*<a class="el" href="">Svd_truncate</a> </td><td>x </td><td>Y </td><td>Y </td><td>N </td></tr>
+<td>*<a class="el" href="namespacecytnx_1_1linalg.html#a37887f24c0050785a9675ecbb7601952">Svd_truncate</a> </td><td>x </td><td>Y </td><td>Y </td><td>N </td></tr>
 <tr>
 <td><a class="el" href="namespacecytnx_1_1linalg.html#a351ad02f478ba8082ee79a37a2a8f108">Inv</a> </td><td><a class="el" href="namespacecytnx_1_1linalg.html#a26628db51e90867ddc050ab11a317a8d">Inv_</a> </td><td>Y </td><td>Y </td><td>Y </td></tr>
 <tr>
@@ -233,17 +233,17 @@ $(function() {
 <h3>Storage</h3>
 <ul>
 <li>Memory container with GPU/CPU support. maintain type conversions (type casting btwn Storages) and moving btwn devices.</li>
-<li>Generic type object, the behavior is very similar to python. <div class="fragment"><div class="line">Storage A(400,Type.Double);</div><div class="line"><span class="keywordflow">for</span>(<span class="keywordtype">int</span> i=0;i&lt;400;i++)</div><div class="line">    A.<a class="code" href="classcytnx_1_1Tensor.html#a697b114d1df390ca558ea9211c2d683b">at</a>&lt;<span class="keywordtype">double</span>&gt;(i) = i;</div><div class="line"></div><div class="line">Storage B = A; <span class="comment">// A and B share same memory, this is similar as python </span></div><div class="line"></div><div class="line">Storage C = A.<a class="code" href="classcytnx_1_1Tensor.html#acf7f697a9434f9bc98a7d00a555ee982">to</a>(Device.cuda+0); </div></div><!-- fragment --></li>
+<li>Generic type object, the behavior is very similar to python. <div class="fragment"><div class="line">Storage A(400,<a class="code" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">Type</a>.Double);</div><div class="line"><span class="keywordflow">for</span>(<span class="keywordtype">int</span> i=0;i&lt;400;i++)</div><div class="line">    A.<a class="code" href="classcytnx_1_1Tensor.html#a697b114d1df390ca558ea9211c2d683b">at</a>&lt;<span class="keywordtype">double</span>&gt;(i) = i;</div><div class="line"></div><div class="line">Storage B = A; <span class="comment">// A and B share same memory, this is similar as python </span></div><div class="line"></div><div class="line">Storage C = A.<a class="code" href="classcytnx_1_1Tensor.html#acf7f697a9434f9bc98a7d00a555ee982">to</a>(<a class="code" href="namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a">Device</a>.cuda+0); </div></div><!-- fragment --></li>
 </ul>
 <h3>Tensor</h3>
 <ul>
 <li>A tensor, API very similar to numpy and pytorch.</li>
-<li>simple moving btwn CPU and GPU: <div class="fragment"><div class="line">Tensor A({3,4},Type.Double,Device.cpu); <span class="comment">// create tensor on CPU (default)</span></div><div class="line">Tensor B({3,4},Type.Double,Device.cuda+0); <span class="comment">// create tensor on GPU with gpu-id=0</span></div><div class="line"></div><div class="line"></div><div class="line">Tensor C = B; <span class="comment">// C and B share same memory.</span></div><div class="line"></div><div class="line"><span class="comment">// move A to gpu</span></div><div class="line">Tensor D = A.<a class="code" href="classcytnx_1_1Tensor.html#acf7f697a9434f9bc98a7d00a555ee982">to</a>(Device.cuda+0);</div><div class="line"></div><div class="line"><span class="comment">// inplace move A to gpu</span></div><div class="line">A.<a class="code" href="classcytnx_1_1Tensor.html#a114a31fbb8bf4a90f150b6a67e42183a">to_</a>(Device.cuda+0);</div></div><!-- fragment --></li>
-<li>Type conversion in between avaliable: <div class="fragment"><div class="line">Tensor A({3,4},Type.Double);</div><div class="line">Tensor B = A.<a class="code" href="classcytnx_1_1Tensor.html#a7b996d3281e7375b29a7cfe4273b299f">astype</a>(Type.Uint64); <span class="comment">// cast double to uint64_t</span></div></div><!-- fragment --></li>
+<li>simple moving btwn CPU and GPU: <div class="fragment"><div class="line">Tensor A({3,4},<a class="code" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">Type</a>.Double,<a class="code" href="namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a">Device</a>.cpu); <span class="comment">// create tensor on CPU (default)</span></div><div class="line">Tensor B({3,4},<a class="code" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">Type</a>.Double,<a class="code" href="namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a">Device</a>.cuda+0); <span class="comment">// create tensor on GPU with gpu-id=0</span></div><div class="line"></div><div class="line"></div><div class="line">Tensor C = B; <span class="comment">// C and B share same memory.</span></div><div class="line"></div><div class="line"><span class="comment">// move A to gpu</span></div><div class="line">Tensor D = A.<a class="code" href="classcytnx_1_1Tensor.html#acf7f697a9434f9bc98a7d00a555ee982">to</a>(<a class="code" href="namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a">Device</a>.cuda+0);</div><div class="line"></div><div class="line"><span class="comment">// inplace move A to gpu</span></div><div class="line">A.<a class="code" href="classcytnx_1_1Tensor.html#a114a31fbb8bf4a90f150b6a67e42183a">to_</a>(<a class="code" href="namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a">Device</a>.cuda+0);</div></div><!-- fragment --></li>
+<li>Type conversion in between avaliable: <div class="fragment"><div class="line">Tensor A({3,4},<a class="code" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">Type</a>.Double);</div><div class="line">Tensor B = A.<a class="code" href="classcytnx_1_1Tensor.html#a7b996d3281e7375b29a7cfe4273b299f">astype</a>(<a class="code" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">Type</a>.Uint64); <span class="comment">// cast double to uint64_t</span></div></div><!-- fragment --></li>
 <li>vitual swap and permute. All the permute and swap will not change the underlying memory</li>
-<li>Use Contiguous() when needed to actual moving the memory layout. <div class="fragment"><div class="line">Tensor A({3,4,5,2},Type.Double);</div><div class="line">A.permute_({0,3,1,2}); <span class="comment">// this will not change the memory, only the shape info is changed.</span></div><div class="line">cout &lt;&lt; A.is_contiguous() &lt;&lt; endl; <span class="comment">// this will be false!</span></div><div class="line"></div><div class="line">A.<a class="code" href="classcytnx_1_1Tensor.html#a405470654ef4ef5fc0b1d24754a3daf9">contiguous_</a>(); <span class="comment">// call Configuous() to actually move the memory.</span></div><div class="line">cout &lt;&lt; A.is_contiguous() &lt;&lt; endl; <span class="comment">// this will be true!</span></div></div><!-- fragment --></li>
-<li>access single element using .at <div class="fragment"><div class="line">Tensor A({3,4,5},Type.Double);</div><div class="line"><span class="keywordtype">double</span> val = A.<a class="code" href="classcytnx_1_1Tensor.html#a697b114d1df390ca558ea9211c2d683b">at</a>&lt;<span class="keywordtype">double</span>&gt;({0,2,2});</div></div><!-- fragment --></li>
-<li>access elements with python slices similarity: <div class="fragment"><div class="line"><span class="keyword">typedef</span> Accessor ac;</div><div class="line">Tensor A({3,4,5},Type.Double);</div><div class="line">Tensor out = A.<a class="code" href="classcytnx_1_1Tensor.html#ad7b928e4cb89d40cbd99aefab9aa0075">get</a>({ac(0),ac::all(),ac::range(1,4)}); </div><div class="line"><span class="comment">// equivalent to python: out = A[0,:,1:4]    </span></div></div><!-- fragment --></li>
+<li>Use Contiguous() when needed to actual moving the memory layout. <div class="fragment"><div class="line">Tensor A({3,4,5,2},<a class="code" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">Type</a>.Double);</div><div class="line">A.<a class="code" href="classcytnx_1_1Tensor.html#a18f27d1fff73e4fb4109bc8faf3b5ace">permute_</a>({0,3,1,2}); <span class="comment">// this will not change the memory, only the shape info is changed.</span></div><div class="line">cout &lt;&lt; A.<a class="code" href="classcytnx_1_1Tensor.html#a6a1d9ed962b0e9a484e2bb0de15eb76d">is_contiguous</a>() &lt;&lt; endl; <span class="comment">// this will be false!</span></div><div class="line"></div><div class="line">A.<a class="code" href="classcytnx_1_1Tensor.html#a405470654ef4ef5fc0b1d24754a3daf9">contiguous_</a>(); <span class="comment">// call Configuous() to actually move the memory.</span></div><div class="line">cout &lt;&lt; A.<a class="code" href="classcytnx_1_1Tensor.html#a6a1d9ed962b0e9a484e2bb0de15eb76d">is_contiguous</a>() &lt;&lt; endl; <span class="comment">// this will be true!</span></div></div><!-- fragment --></li>
+<li>access single element using .at <div class="fragment"><div class="line">Tensor A({3,4,5},<a class="code" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">Type</a>.Double);</div><div class="line"><span class="keywordtype">double</span> val = A.<a class="code" href="classcytnx_1_1Tensor.html#a697b114d1df390ca558ea9211c2d683b">at</a>&lt;<span class="keywordtype">double</span>&gt;({0,2,2});</div></div><!-- fragment --></li>
+<li>access elements with python slices similarity: <div class="fragment"><div class="line"><span class="keyword">typedef</span> Accessor ac;</div><div class="line">Tensor A({3,4,5},<a class="code" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">Type</a>.Double);</div><div class="line">Tensor out = A.<a class="code" href="classcytnx_1_1Tensor.html#ad7b928e4cb89d40cbd99aefab9aa0075">get</a>({ac(0),ac::all(),ac::range(1,4)}); </div><div class="line"><span class="comment">// equivalent to python: out = A[0,:,1:4]    </span></div></div><!-- fragment --></li>
 </ul>
 <h2>Fast Examples</h2>
 <pre class="fragment">See test.cpp for using C++ .

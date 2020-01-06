@@ -1,7 +1,8 @@
-#include "linalg/linalg_internal_gpu/cuConj_inplace_internal.hpp"
+
+#include "cuConj_inplace_internal.hpp"
 #include "cytnx_error.hpp"
 #include "Type.hpp"
-#include "utils/lapack_wrapper.h"
+#include "lapack_wrapper.hpp"
 
 
 

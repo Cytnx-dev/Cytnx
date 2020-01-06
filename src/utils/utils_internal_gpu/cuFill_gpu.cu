@@ -1,4 +1,4 @@
-#include "utils/utils_internal_gpu/cuFill_gpu.hpp"
+#include "cuFill_gpu.hpp"
 #include "Storage.hpp"
 #ifdef UNI_OMP
 #include <omp.h>

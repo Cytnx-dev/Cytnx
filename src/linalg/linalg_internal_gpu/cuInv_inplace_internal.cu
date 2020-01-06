@@ -1,7 +1,7 @@
-#include "linalg/linalg_internal_gpu/cuInv_inplace_internal.hpp"
+#include "cuInv_inplace_internal.hpp"
 #include "cytnx_error.hpp"
 #include "Type.hpp"
-#include "utils/lapack_wrapper.h"
+#include "lapack_wrapper.hpp"
 
 
 namespace cytnx{
@@ -36,7 +36,7 @@ namespace cytnx{
             cytnx_double *d_I;
             checkCudaErrors(cudaMalloc((void**)&d_I,sizeof(cytnx_double)*L*L));
             cytnx_double *h_I = (cytnx_double*)calloc(L*L,sizeof(cytnx_double));
-            for(cytnx_uint64 i=0;i<L;i++)
+            for(auto i=0;i<L;i++)
                 h_I[i*L+i] = 1;
 
             checkCudaErrors(cudaMemcpy(d_I,h_I,sizeof(cytnx_double)*L*L,cudaMemcpyHostToDevice));
@@ -85,7 +85,7 @@ namespace cytnx{
             cytnx_float *d_I;
             checkCudaErrors(cudaMalloc((void**)&d_I,sizeof(cytnx_float)*L*L));
             cytnx_float *h_I = (cytnx_float*)calloc(L*L,sizeof(cytnx_float));
-            for(cytnx_uint64 i=0;i<L;i++)
+            for(auto i=0;i<L;i++)
                 h_I[i*L+i] = 1;
 
             checkCudaErrors(cudaMemcpy(d_I,h_I,sizeof(cytnx_float)*L*L,cudaMemcpyHostToDevice));
@@ -133,7 +133,7 @@ namespace cytnx{
             cytnx_complex128 *d_I;
             checkCudaErrors(cudaMalloc((void**)&d_I,sizeof(cytnx_complex128)*L*L));
             cytnx_complex128 *h_I = (cytnx_complex128*)calloc(L*L,sizeof(cytnx_complex128));
-            for(cytnx_uint64 i=0;i<L;i++)
+            for(auto i=0;i<L;i++)
                 h_I[i*L+i] = cytnx_complex128(1,0);
 
             checkCudaErrors(cudaMemcpy(d_I,h_I,sizeof(cytnx_complex128)*L*L,cudaMemcpyHostToDevice));
@@ -182,7 +182,7 @@ namespace cytnx{
             cytnx_complex64 *d_I;
             checkCudaErrors(cudaMalloc((void**)&d_I,sizeof(cytnx_complex64)*L*L));
             cytnx_complex64 *h_I = (cytnx_complex64*)calloc(L*L,sizeof(cytnx_complex64));
-            for(cytnx_uint64 i=0;i<L;i++)
+            for(auto i=0;i<L;i++)
                 h_I[i*L+i] = cytnx_complex64(1,0);
 
             checkCudaErrors(cudaMemcpy(d_I,h_I,sizeof(cytnx_complex64)*L*L,cudaMemcpyHostToDevice));

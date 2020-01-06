@@ -1,17 +1,16 @@
 #include "utils/vec_intersect.hpp"
-#include "utils/utils_internal_interface.hpp"
-#include "Bond.hpp"
+#include "utils/vec2d_col_sort.hpp"
 #include <algorithm>
 #include <vector>
-#include <cstring>
 namespace cytnx{
 
-    std::vector<std::vector<cytnx_int64> > vec2d_intersect( const std::vector<std::vector<cytnx_int64> > &inL, const std::vector<std::vector<cytnx_int64> > &inR, const bool &sorted_L, const bool &sorted_R){
+
+    std::vector<std::vector<cytnx_int64> > vec2d_intersect(const std::vector<std::vector<cytnx_int64> > &inL, const std::vector<std::vector<cytnx_int64> > &inR, const bool &sorted_L, const bool &sorted_R){
         std::vector<std::vector<cytnx_int64> > out;
         std::vector<std::vector<cytnx_int64> > v1 = inL;
         std::vector<std::vector<cytnx_int64> > v2 = inR;
-        if(!sorted_L) std::sort(v1.begin(),v1.end(),utils_internal::_fx_compare_vec_inc);
-        if(!sorted_R) std::sort(v2.begin(),v2.end(),utils_internal::_fx_compare_vec_inc);
+        if(!sorted_L) vec2d_col_sort(v1);
+        if(!sorted_R) vec2d_col_sort(v2);
 
         std::set_intersection(v1.begin(),v1.end(),
                               v2.begin(),v2.end(),
@@ -19,6 +18,9 @@ namespace cytnx{
         return out;
        
     }
+
+
+
 
 
     template<class T>

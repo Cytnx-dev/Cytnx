@@ -1,4 +1,4 @@
-#include "utils/utils_internal_cpu/SetZeros_cpu.hpp"
+#include "SetZeros_cpu.hpp"
 
 using namespace std;
 

@@ -1,4 +1,5 @@
-#include "linalg/linalg.hpp"
+#include "linalg.hpp"
+#include "linalg_internal_interface.hpp"
 
 
 namespace cytnx{
