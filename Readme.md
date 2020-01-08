@@ -68,6 +68,7 @@
 
 
 ## Install 
+    [Note] Recommend user to use make to install DO NOT USE Cmake. 
     1.) Set the flags to config the install inside make.inc
         There are 4 important flags: ICPC_Enable, OMP_Enable, GPU_Enable, MKL_Enable  
         * a. The default compiler is g++-6. Change "GCC" for the compiler on your system.
@@ -87,6 +88,7 @@
 
         * c. To enable the acceleration using OpenMP, set "OMP_Enable" =1, otherwise =0.
         * d. The default linalg library are using LAPACK and BLAS. To use intel MKL instead, set "MKL_enable" =1.
+        * e. To enable the extension UniTensor/Symmetry/Network/Bond, set EXT_Enable=1.     
         
     2.) compile by running:
         
