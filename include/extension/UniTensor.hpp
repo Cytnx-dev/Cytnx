@@ -8,7 +8,6 @@
 #include "Device.hpp"
 #include "Tensor.hpp"
 #include "intrusive_ptr_base.hpp"
-#include "utils/utils_internal_interface.hpp"
 #include "utils/utils.hpp"
 #include <iostream>
 #include <vector>
@@ -184,27 +183,7 @@ namespace cytnx{
             // virtual functions
             void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
             // this only work for non-symm tensor
-            void Init_by_Tensor(const Tensor& in_tensor, const cytnx_uint64 &Rowrank){
-                cytnx_error_msg(in_tensor.dtype() == Type.Void,"[ERROR][Init_by_Tensor] cannot init a UniTensor from an un-initialize Tensor.%s","\n");
-                if(in_tensor.storage().size() == 1){
-                    //scalalr:
-                    cytnx_error_msg(Rowrank != 0, "[ERROR][Init_by_Tensor] detect the input Tensor is a scalar with only one element. the Rowrank should be =0%s","\n");
-                    this->_bonds.clear();
-                    this->_block = in_tensor;
-                    this->_labels.clear();
-                    this->_Rowrank = Rowrank;
-                }else{
-                    std::vector<Bond> bds;
-                    for(cytnx_uint64 i=0;i<in_tensor.shape().size();i++){
-                        bds.push_back(Bond(in_tensor.shape()[i]));
-                    }
-                    this->_bonds = bds;
-                    this->_block = in_tensor;
-                    this->_labels = utils_internal::range_cpu<cytnx_int64>(in_tensor.shape().size());
-                    cytnx_error_msg(Rowrank > in_tensor.shape().size(),"[ERROR][Init_by_tensor] Rowrank exceed the rank of Tensor.%s","\n");
-                    this->_Rowrank = Rowrank;
-                }
-            }
+            void Init_by_Tensor(const Tensor& in_tensor, const cytnx_uint64 &Rowrank);
             std::vector<cytnx_uint64> shape() const{ return this->_block.shape();}
             bool is_blockform() const{ return false;}
             void to_(const int &device){

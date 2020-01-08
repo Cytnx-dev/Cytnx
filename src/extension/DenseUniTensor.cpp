@@ -1,6 +1,7 @@
 #ifdef EXT_Enable
 #include "extension/UniTensor.hpp"
 #include "utils/utils.hpp"
+#include "utils/utils_internal_interface.hpp"
 #include "Generator.hpp"
 #include "linalg.hpp"
 #include <vector>
@@ -83,6 +84,29 @@ namespace cytnx{
                     }
                 }          
     }
+
+    void DenseUniTensor::Init_by_Tensor(const Tensor& in_tensor, const cytnx_uint64 &Rowrank){
+                cytnx_error_msg(in_tensor.dtype() == Type.Void,"[ERROR][Init_by_Tensor] cannot init a UniTensor from an un-initialize Tensor.%s","\n");
+                if(in_tensor.storage().size() == 1){
+                    //scalalr:
+                    cytnx_error_msg(Rowrank != 0, "[ERROR][Init_by_Tensor] detect the input Tensor is a scalar with only one element. the Rowrank should be =0%s","\n");
+                    this->_bonds.clear();
+                    this->_block = in_tensor;
+                    this->_labels.clear();
+                    this->_Rowrank = Rowrank;
+                }else{
+                    std::vector<Bond> bds;
+                    for(cytnx_uint64 i=0;i<in_tensor.shape().size();i++){
+                        bds.push_back(Bond(in_tensor.shape()[i]));
+                    }
+                    this->_bonds = bds;
+                    this->_block = in_tensor;
+                    this->_labels = utils_internal::range_cpu<cytnx_int64>(in_tensor.shape().size());
+                    cytnx_error_msg(Rowrank > in_tensor.shape().size(),"[ERROR][Init_by_tensor] Rowrank exceed the rank of Tensor.%s","\n");
+                    this->_Rowrank = Rowrank;
+                }
+            }
+
 
     boost::intrusive_ptr<UniTensor_base> DenseUniTensor::permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank, const bool &by_label){
         boost::intrusive_ptr<UniTensor_base> out = this->clone();

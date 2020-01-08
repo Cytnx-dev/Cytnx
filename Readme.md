@@ -100,11 +100,11 @@
 ## Objects:
     * Storage   [binded]
     * Tensor    [binded]
-    * Bond      [binded] 
     * Accessor  [c++ only]
-    * Symmetry  [binded]
-    * UniTensor [binded]
-    * Network   [binded]
+    * Bond      [binded] [Require EXT_Enable flag]
+    * Symmetry  [binded] [Require EXT_Enable flag]
+    * UniTensor [binded] [Require EXT_Enable flag]
+    * Network   [binded] [Require EXT_Enable flag]
 
 ## Feature:
 

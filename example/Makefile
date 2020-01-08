@@ -1,7 +1,7 @@
 CYTNX_ROOT=..
 CC := g++
-CCFLAGS := -std=c++11 
-INCFLAGS := -I$(CYTNX_ROOT)/include
+CCFLAGS := -std=c++11 -DEXT_Enable
+INCFLAGS := $(CCFLAGS) -I$(CYTNX_ROOT)/include
 LDFLAGS := -L$(CYTNX_ROOT)
  
 Tensor_example = Tensor_Init.e Tensor_to.e Tensor_to_.e Tensor_clone.e Tensor_permute.e Tensor_contiguous.e Tensor_contiguous_.e Tensor_reshape.e Tensor_reshape_.e Tensor_at.e Tensor_item.e Tensor_astype.e Tensor_get.e Tensor_set.e Tensor_fill.e

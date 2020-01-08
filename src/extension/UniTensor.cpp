@@ -1,7 +1,7 @@
 #ifdef EXT_Enable
 #include <typeinfo>
 #include "extension/UniTensor.hpp"
-//#include "utils/utils_internal_interface.hpp"
+#include "utils/utils_internal_interface.hpp"
 #include "linalg.hpp"
 
 using namespace std;
