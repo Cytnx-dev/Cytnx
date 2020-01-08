@@ -10,11 +10,14 @@ target_sources_local(cytnx
     Eigh.cpp
     Exp.cpp
     Exp_.cpp
+    Expf.cpp
+    Expf_.cpp
     Inv.cpp
     Inv_.cpp
     Matmul.cpp
     Mul.cpp
-    Otimes.cpp
+    Outer.cpp
+    Kron.cpp
     Sub.cpp
     Svd.cpp
     Svd_truncate.cpp

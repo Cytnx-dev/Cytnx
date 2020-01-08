@@ -17,4 +17,5 @@ target_sources_local(cytnx
     SetArange_cpu.cpp
     SetElems_cpu.cpp
     SetZeros_cpu.cpp
+    Range_cpu.cpp
 )

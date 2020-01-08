@@ -21,16 +21,17 @@
 #    along with cytnx.  If not, see <http://www.gnu.org/licenses/>.
 #  @endlicense
 #  @brief Main specification file for CMake
-#  @author Ying-Jer Kao
-#  @date 2014-05-06
-#  @since 0.1.0
+#  @author Ying-Jer Kao, Kai-Hsin Wu 
+#  @date 2020-01-08
+#  @since 0.4.0
+#  
 ###
-
+set(CMAKE_VERBOSE_MAKEFILE ON)
 
 ######################################################################
 ### CMAKE VERSION
 ######################################################################
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.10)
 
 include(cmake/target_sources_local.cmake)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/")
@@ -77,9 +78,9 @@ endif()
 # Version information
 ######################################################################
 set(CYTNX_VERSION_MAJOR 0)
-set(CYTNX_VERSION_MINOR 7)
+set(CYTNX_VERSION_MINOR 4)
 set(CYTNX_VERSION_PATCH 0)
-set(CYTNX_VERSION COUNT 1)
+set(CYTNX_VERSION COUNT 0)
 set(CYTNX_VERSION
   ${CYTNX_VERSION_MAJOR}.${CYTNX_VERSION_MINOR}.${CYTNX_VERSION_PATCH}
 )
@@ -92,6 +93,7 @@ set(CYTNX_VERSION
 
 option(USE_ICPC "Build Cytnx with Intel Compilers" OFF)
 option(USE_CUDA "Build using Nvidia CUDA for GPU library" ON)
+option(BUILD_EXTENSION "Build cytnx extension" OFF)
 option(BUILD_PYTHON "Build Python wrapper" OFF)
 option(USE_MKL "Build using MKL" OFF)
 option(BUILD_DOC "Build API docuemntation" OFF)
@@ -125,7 +127,9 @@ if (USE_MKL)
   mark_as_advanced(MKL_SDL MKL_MLT)
 endif()
 
-
+if (BUILD_EXTENSION) 
+  target_compile_definitions(cytnx PRIVATE EXT_Enable)
+endif()
 
 ######################################################################
 ### PROJECT
@@ -146,6 +150,7 @@ target_include_directories(cytnx SYSTEM
     PUBLIC
 				${Boost_INCLUDE_DIRS}
 )
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0")
 target_compile_features(cytnx PUBLIC cxx_std_11)
 #set_property(TARGET cytnx PROPERTY CXX_STANDARD 11)
 
@@ -173,6 +178,43 @@ endif()
 
 find_package(Boost REQUIRED)
 message(STATUS ${COMPILE_DEFINITIONS})
+# ----------------------------------------
+# Find OpenMP
+find_package( OpenMP )
+if ( OPENMP_FOUND )
+  if(NOT TARGET OpenMP::OpenMP_CXX)
+    find_package(Threads REQUIRED)
+    add_library(OpenMP::OpenMP_CXX IMPORTED INTERFACE)
+    set_property(TARGET OpenMP::OpenMP_CXX
+                 PROPERTY INTERFACE_COMPILE_OPTIONS "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>")
+    # Only works if the same flag is passed to the linker; use CMake 3.9+ otherwise (Intel, AppleClang)
+    set_property(TARGET OpenMP::OpenMP_CXX
+                 PROPERTY INTERFACE_LINK_LIBRARIES "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>" Threads::Threads)
+
+  else()
+    set_property(TARGET OpenMP::OpenMP_CXX
+                 PROPERTY INTERFACE_COMPILE_OPTIONS "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>")    
+  endif()
+  target_link_libraries(cytnx PRIVATE OpenMP::OpenMP_CXX)
+  target_compile_definitions(cytnx PRIVATE UNI_OMP)
+endif()
+
+target_link_libraries(cytnx PUBLIC Boost::boost ${LAPACK_LIBRARIES})
+
+
+#####
+#function(CUDA_CONVERT_FLAGS EXISTING_TARGET)
+#    get_property(old_flags TARGET ${EXISTING_TARGET} PROPERTY INTERFACE_COMPILE_OPTIONS)
+#    if(NOT "${old_flags}" STREQUAL "")
+#        string(REPLACE ";" "," CUDA_flags "${old_flags}")
+#        set_property(TARGET ${EXISTING_TARGET} PROPERTY INTERFACE_COMPILE_OPTIONS
+#            "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${old_flags}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${CUDA_flags}>"
+#            )
+#    endif()
+#endfunction()
+#CUDA_CONVERT_FLAGS(cytnx)
+####
+
 ######################################################################
 ### Find CUDA
 ######################################################################
@@ -195,8 +237,9 @@ if(USE_CUDA)
       CUDA_SEPARABLE_COMPILATION ON
                                    )
 
-  set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Xcompiler=-Wall -Wno-deprecated-gpu-targets -Xcudafe=--display_error_number")
-#  list(APPEND CUDA_NVCC_FLAGS "-O3;-Wno-deprecated-gpu-targets;-m64")
+  set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Xcudafe=--display_error_number")
+  #set(CMAKE_CUDA_FLAGS "-Xcompiler=-Wall -Xcompiler=-Wno-deprecated-gpu-targets -Xcudafe=--display_error_number")
+  ##set(CMAKE_CUDA_FLAGS "-Xcompiler=-Wall -Wno-deprecated-gpu-targets -Xcudafe=--display_error_number")
 ##  set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS}  "-DUNI_GPU")
 #  set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS}  "-arch=sm_50 \
 #      -gencode=arch=compute_50,code=sm_50 \
@@ -207,31 +250,13 @@ if(USE_CUDA)
 #      -gencode=arch=compute_75,code=sm_75 \
 #      -gencode=arch=compute_75,code=compute_75 ")
   target_compile_definitions(cytnx PRIVATE UNI_GPU)
-  #target_compile_options(cytnx INTERFACE ${CMAKE_CUDA_FLAGS})
+  #target_compile_options(cytnx PRIVATE ${CMAKE_CUDA_FLAGS})
+  #target_compile_options(cytnx PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:>)
   target_include_directories(cytnx PRIVATE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
   target_link_libraries(cytnx PRIVATE ${CUDA_cusolver_LIBRARY})
 endif()
 
 
-# ----------------------------------------
-# Find OpenMP
-find_package( OpenMP )
-if ( OPENMP_FOUND )
-  if(NOT TARGET OpenMP::OpenMP_CXX)
-    find_package(Threads REQUIRED)
-    add_library(OpenMP::OpenMP_CXX IMPORTED INTERFACE)
-    set_property(TARGET OpenMP::OpenMP_CXX
-                 PROPERTY INTERFACE_COMPILE_OPTIONS ${OpenMP_CXX_FLAGS})
-    # Only works if the same flag is passed to the linker; use CMake 3.9+ otherwise (Intel, AppleClang)
-    set_property(TARGET OpenMP::OpenMP_CXX
-                 PROPERTY INTERFACE_LINK_LIBRARIES ${OpenMP_CXX_FLAGS} Threads::Threads)
-
-   endif() 
-  target_link_libraries(cytnx PRIVATE OpenMP::OpenMP_CXX)
-  target_compile_definitions(cytnx PRIVATE UNI_OMP)
-endif()
-
-target_link_libraries(cytnx PUBLIC Boost::boost ${LAPACK_LIBRARIES})
 
 ######################################################################
 ### Build Documents
@@ -314,14 +339,15 @@ export(PACKAGE Cytnx)
 ### INSTALL DOCUMENTATION
 ######################################################################
 if(DOXYGEN_FOUND)
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc/
-	DESTINATION doc
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/docs/
+	DESTINATION docs
         COMPONENT documentation
 )
 endif()
 
 
 set(libname "${CMAKE_SHARED_LIBRARY_PREFIX}cytnx.${CYTNX_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+
 
 
 
