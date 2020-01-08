@@ -26,7 +26,6 @@
 #  @since 0.4.0
 #  
 ###
-set(CMAKE_VERBOSE_MAKEFILE ON)
 
 ######################################################################
 ### CMAKE VERSION
@@ -34,7 +33,8 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 cmake_minimum_required(VERSION 3.10)
 
 include(cmake/target_sources_local.cmake)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
+message(STATUS ${CMAKE_MODULE_PATH})
 include(GNUInstallDirs)
 
 ######################################################################
@@ -93,7 +93,7 @@ set(CYTNX_VERSION
 
 option(USE_ICPC "Build Cytnx with Intel Compilers" OFF)
 option(USE_CUDA "Build using Nvidia CUDA for GPU library" ON)
-option(BUILD_EXTENSION "Build cytnx extension" OFF)
+option(BUILD_EXTENSION "Build cytnx extension" ON)
 option(BUILD_PYTHON "Build Python wrapper" OFF)
 option(USE_MKL "Build using MKL" OFF)
 option(BUILD_DOC "Build API docuemntation" OFF)
@@ -127,9 +127,6 @@ if (USE_MKL)
   mark_as_advanced(MKL_SDL MKL_MLT)
 endif()
 
-if (BUILD_EXTENSION) 
-  target_compile_definitions(cytnx PRIVATE EXT_Enable)
-endif()
 
 ######################################################################
 ### PROJECT
@@ -167,6 +164,14 @@ if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES))
     target_compile_definitions(cytnx PRIVATE UNI_MKL)
     set(LAPACK_LIBRARIES ${MKL_MINIMAL_LIBRARY})
     message("MKL found: ${MKL_MINIMAL_LIBRARY}")
+      if(NOT TARGET MKL::MKL_CXX)
+        add_library(MKL::MKL_CXX IMPORTED INTERFACE)
+        set_property(TARGET MKL::MKL_CXX
+                     PROPERTY INTERFACE_COMPILE_OPTIONS "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:-lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5 -ldl -lstdc++>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:>")
+        # Only works if the same flag is passed to the linker; use CMake 3.9+ otherwise (Intel, AppleClang)
+      endif()
+    target_link_libraries(cytnx PRIVATE MKL::MKL_CXX)
+    target_compile_definitions(cytnx PRIVATE UNI_MKL)
   else()
     find_package( LAPACK REQUIRED)
     message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}" )
@@ -257,6 +262,10 @@ if(USE_CUDA)
 endif()
 
 
+if (BUILD_EXTENSION) 
+  target_compile_definitions(cytnx PRIVATE EXT_Enable)
+endif()
+
 
 ######################################################################
 ### Build Documents
@@ -274,6 +283,7 @@ IF(BUILD_DOC)
 ENDIF()
 
 IF(BUILD_PYTHON)
+   #find_package (PythonLibsNew COMPONENTS pybind11)
    FIND_PACKAGE(pybind11 REQUIRED)
    pybind11_add_module(pycytnx pybind/cytnx.cpp)
    target_link_libraries(pycytnx PRIVATE cytnx)

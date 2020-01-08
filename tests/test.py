@@ -20,10 +20,9 @@ bbb = a.to(cytnx.Device.cpu)
 #ccc = a.to(cytnx.Device.cuda+0)
 
 print(a[3])
-print(a.dtype)
-print(a.dtype_str)
+print(a.dtype())
+print(a.dtype_str())
 print(a)
-exit(1)
 a.fill(14)
 print(a)
 b = a.clone()
@@ -35,6 +34,9 @@ c = b.astype(cytnx.Type.Uint64)
 print(c)
 c.print_info()
 
+c.append(12)
+c.print_info()
+exit(1)
 #=====================
 # Tensor
 #=====================

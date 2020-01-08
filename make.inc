@@ -19,10 +19,8 @@ OMP_Enable=0
 MKL_Enable=0
 
 
-
-
 #### Cytnx Extension, UniTensor, Symmetry and Bond etc.
-EXT_Enable=0
+EXT_Enable=1
 
 
 #### DO NOT USE BELOW WHEN CUSTOM INSTALL !!
