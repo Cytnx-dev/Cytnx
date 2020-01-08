@@ -149,11 +149,11 @@ PYBIND11_MODULE(cytnx,m){
                 .def(py::init<>())
                 .def(py::init<const std::string &, const int&>(),py::arg("fname"),py::arg("network_type")=(int)NtType.Regular)
                 .def("Fromfile",&cytnx::Network::Fromfile,py::arg("fname"),py::arg("network_type")=(int)NtType.Regular)
-                .def("PutUniTensor",[](cytnx::Network &self,const std::string &name, const cytnx::UniTensor &utensor, const bool &is_clone){
-                                                self.PutUniTensor(name,utensor,is_clone);
+                .def("PutCyTensor",[](cytnx::Network &self,const std::string &name, const cytnx::CyTensor &utensor, const bool &is_clone){
+                                                self.PutCyTensor(name,utensor,is_clone);
                                         },py::arg("name"),py::arg("utensor"),py::arg("is_clone")=true)
-                .def("PutUniTensor",[](cytnx::Network &self,const cytnx_uint64 &idx, const cytnx::UniTensor &utensor, const bool &is_clone){
-                                                self.PutUniTensor(idx,utensor,is_clone);
+                .def("PutCyTensor",[](cytnx::Network &self,const cytnx_uint64 &idx, const cytnx::CyTensor &utensor, const bool &is_clone){
+                                                self.PutCyTensor(idx,utensor,is_clone);
                                         },py::arg("idx"),py::arg("utensor"),py::arg("is_clone")=true)
                 .def("Launch",&cytnx::Network::Launch)
                 .def("Clear",&cytnx::Network::Clear)
@@ -732,23 +732,23 @@ PYBIND11_MODULE(cytnx,m){
                 ;
 
     #ifdef EXT_Enable
-    py::class_<cytnx::UniTensor>(m,"UniTensor")
+    py::class_<cytnx::CyTensor>(m,"CyTensor")
                 .def(py::init<>())
                 .def(py::init<const cytnx::Tensor&, const cytnx_uint64&>())
                 .def(py::init<const std::vector<cytnx::Bond> &, const std::vector<cytnx_int64> &, const cytnx_int64 &, const unsigned int &,const int &, const bool &>(),py::arg("bonds"),py::arg("in_labels")=std::vector<cytnx_int64>(),py::arg("Rowrank")=(cytnx_int64)(-1),py::arg("dtype")=(unsigned int)(cytnx::Type.Double),py::arg("device")=(int)cytnx::Device.cpu,py::arg("is_diag")=false)
-                .def("set_name",&cytnx::UniTensor::set_name)
-                .def("set_label",&cytnx::UniTensor::set_label,py::arg("idx"),py::arg("new_label"))
-                .def("set_labels",&cytnx::UniTensor::set_labels,py::arg("new_labels"))
-                .def("set_Rowrank",&cytnx::UniTensor::set_Rowrank, py::arg("new_Rowrank"))
+                .def("set_name",&cytnx::CyTensor::set_name)
+                .def("set_label",&cytnx::CyTensor::set_label,py::arg("idx"),py::arg("new_label"))
+                .def("set_labels",&cytnx::CyTensor::set_labels,py::arg("new_labels"))
+                .def("set_Rowrank",&cytnx::CyTensor::set_Rowrank, py::arg("new_Rowrank"))
 
-                .def("Rowrank",&cytnx::UniTensor::Rowrank)
-                .def("dtype",&cytnx::UniTensor::dtype)
-                .def("dtype_str",&cytnx::UniTensor::dtype_str)
-                .def("device",&cytnx::UniTensor::device)
-                .def("device_str",&cytnx::UniTensor::device_str)
-                .def("name",&cytnx::UniTensor::name)
+                .def("Rowrank",&cytnx::CyTensor::Rowrank)
+                .def("dtype",&cytnx::CyTensor::dtype)
+                .def("dtype_str",&cytnx::CyTensor::dtype_str)
+                .def("device",&cytnx::CyTensor::device)
+                .def("device_str",&cytnx::CyTensor::device_str)
+                .def("name",&cytnx::CyTensor::name)
 
-                .def("reshape",[](cytnx::UniTensor &self, py::args args, py::kwargs kwargs)->cytnx::UniTensor{
+                .def("reshape",[](cytnx::CyTensor &self, py::args args, py::kwargs kwargs)->cytnx::CyTensor{
                     std::vector<cytnx::cytnx_int64> c_args = args.cast< std::vector<cytnx::cytnx_int64> >();
                     cytnx_uint64 Rowrank = 0;
                    
@@ -758,7 +758,7 @@ PYBIND11_MODULE(cytnx,m){
  
                     return self.reshape(c_args,Rowrank);
                 })
-                .def("reshape_",[](cytnx::UniTensor &self, py::args args, py::kwargs kwargs){
+                .def("reshape_",[](cytnx::CyTensor &self, py::args args, py::kwargs kwargs){
                     std::vector<cytnx::cytnx_int64> c_args = args.cast< std::vector<cytnx::cytnx_int64> >();
                     cytnx_uint64 Rowrank = 0;
                    
@@ -770,7 +770,7 @@ PYBIND11_MODULE(cytnx,m){
                 })
 
 
-                .def("item",[](cytnx::UniTensor &self){
+                .def("item",[](cytnx::CyTensor &self){
                     py::object out;
                     if(self.dtype() == cytnx::Type.Double) 
                         out =  py::cast(self.item<cytnx::cytnx_double>());
@@ -794,12 +794,12 @@ PYBIND11_MODULE(cytnx,m){
                         out = py::cast(self.item<cytnx::cytnx_int16>());
                     else if(self.dtype() == cytnx::Type.Bool) 
                         out = py::cast(self.item<cytnx::cytnx_bool>());
-                    else cytnx_error_msg(true, "%s","[ERROR] try to get element from a empty UniTensor.");
+                    else cytnx_error_msg(true, "%s","[ERROR] try to get element from a empty CyTensor.");
                     return out;
                  })
 
-                .def("__getitem__",[](const cytnx::UniTensor &self, py::object locators){
-                    cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to getitem from a empty UniTensor%s","\n");
+                .def("__getitem__",[](const cytnx::CyTensor &self, py::object locators){
+                    cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to getitem from a empty CyTensor%s","\n");
                     
                     size_t start, stop, step, slicelength; 
                     std::vector<cytnx::Accessor> accessors;
@@ -832,8 +832,8 @@ PYBIND11_MODULE(cytnx,m){
                     return self.get(accessors);
                     
                 })
-                .def("__setitem__",[](cytnx::UniTensor &self, py::object locators, const cytnx::Tensor &rhs){
-                    cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to setelem to a empty UniTensor%s","\n");
+                .def("__setitem__",[](cytnx::CyTensor &self, py::object locators, const cytnx::Tensor &rhs){
+                    cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to setelem to a empty CyTensor%s","\n");
                     
                     size_t start, stop, step, slicelength; 
                     std::vector<cytnx::Accessor> accessors;
@@ -867,25 +867,25 @@ PYBIND11_MODULE(cytnx,m){
                     
                 })
 
-                .def("is_contiguous", &cytnx::UniTensor::is_contiguous)
-                .def("is_diag",&cytnx::UniTensor::is_diag)
-                .def("is_tag" ,&cytnx::UniTensor::is_tag)
-                .def("is_braket_form",&cytnx::UniTensor::is_braket_form)
-                .def("labels",&cytnx::UniTensor::labels)
-                .def("bonds",&cytnx::UniTensor::bonds)
-                .def("shape",&cytnx::UniTensor::shape)
-                .def("to_",&cytnx::UniTensor::to_)
-                .def("to_different_device" ,[](cytnx::UniTensor &self,const cytnx_int64 &device){
+                .def("is_contiguous", &cytnx::CyTensor::is_contiguous)
+                .def("is_diag",&cytnx::CyTensor::is_diag)
+                .def("is_tag" ,&cytnx::CyTensor::is_tag)
+                .def("is_braket_form",&cytnx::CyTensor::is_braket_form)
+                .def("labels",&cytnx::CyTensor::labels)
+                .def("bonds",&cytnx::CyTensor::bonds)
+                .def("shape",&cytnx::CyTensor::shape)
+                .def("to_",&cytnx::CyTensor::to_)
+                .def("to_different_device" ,[](cytnx::CyTensor &self,const cytnx_int64 &device){
                                                     cytnx_error_msg(self.device() == device, "[ERROR][pybind][to_diffferent_device] same device for to() should be handle in python side.%s","\n");
                                                     return self.to(device);
                                                 } , py::arg("device"))
-                .def("clone",&cytnx::UniTensor::clone)
-                .def("__copy__",&cytnx::UniTensor::clone)
-                .def("__deepcopy__",&cytnx::UniTensor::clone)
-                //.def("permute",&cytnx::UniTensor::permute,py::arg("mapper"),py::arg("Rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
-                //.def("permute_",&cytnx::UniTensor::permute_,py::arg("mapper"),py::arg("Rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
+                .def("clone",&cytnx::CyTensor::clone)
+                .def("__copy__",&cytnx::CyTensor::clone)
+                .def("__deepcopy__",&cytnx::CyTensor::clone)
+                //.def("permute",&cytnx::CyTensor::permute,py::arg("mapper"),py::arg("Rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
+                //.def("permute_",&cytnx::CyTensor::permute_,py::arg("mapper"),py::arg("Rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
 
-                .def("permute_",[](cytnx::UniTensor &self, py::args args, py::kwargs kwargs){
+                .def("permute_",[](cytnx::CyTensor &self, py::args args, py::kwargs kwargs){
                     std::vector<cytnx::cytnx_int64> c_args = args.cast< std::vector<cytnx::cytnx_int64> >();
                     cytnx_int64 Rowrank = -1;
                     bool by_label = false;
@@ -899,7 +899,7 @@ PYBIND11_MODULE(cytnx,m){
                     }
                     self.permute_(c_args,Rowrank,by_label);
                 })
-                .def("permute",[](cytnx::UniTensor &self, py::args args, py::kwargs kwargs)->cytnx::UniTensor{
+                .def("permute",[](cytnx::CyTensor &self, py::args args, py::kwargs kwargs)->cytnx::CyTensor{
                     std::vector<cytnx::cytnx_int64> c_args = args.cast< std::vector<cytnx::cytnx_int64> >();
                     cytnx_int64 Rowrank = -1;
                     bool by_label = false;
@@ -914,36 +914,36 @@ PYBIND11_MODULE(cytnx,m){
                     return self.permute(c_args,Rowrank,by_label);
                 })
 
-                .def("contiguous",&cytnx::UniTensor::contiguous)
-                .def("contiguous_",&cytnx::UniTensor::contiguous_)
-                .def("print_diagram",&cytnx::UniTensor::print_diagram,py::arg("bond_info")=false,py::call_guard<py::scoped_ostream_redirect,
+                .def("contiguous",&cytnx::CyTensor::contiguous)
+                .def("contiguous_",&cytnx::CyTensor::contiguous_)
+                .def("print_diagram",&cytnx::CyTensor::print_diagram,py::arg("bond_info")=false,py::call_guard<py::scoped_ostream_redirect,
                      py::scoped_estream_redirect>())
                         
-                .def("get_block", [](const cytnx::UniTensor &self, const cytnx_uint64&idx){
+                .def("get_block", [](const cytnx::CyTensor &self, const cytnx_uint64&idx){
                                         return self.get_block(idx);
                                   },py::arg("idx")=(cytnx_uint64)(0))
 
-                .def("get_block", [](const cytnx::UniTensor &self, const std::vector<cytnx_int64>&qnum){
+                .def("get_block", [](const cytnx::CyTensor &self, const std::vector<cytnx_int64>&qnum){
                                         return self.get_block(qnum);
                                   },py::arg("qnum"))
-                .def("get_block_",&cytnx::UniTensor::get_block_)
+                .def("get_block_",&cytnx::CyTensor::get_block_)
 
-                .def("put_block", [](cytnx::UniTensor &self, const cytnx::Tensor &in, const cytnx_uint64&idx){
+                .def("put_block", [](cytnx::CyTensor &self, const cytnx::Tensor &in, const cytnx_uint64&idx){
                                         self.put_block(in,idx);
                                   },py::arg("in"),py::arg("idx")=(cytnx_uint64)(0))
 
-                .def("put_block", [](cytnx::UniTensor &self, const cytnx::Tensor &in, const std::vector<cytnx_int64>&qnum){
+                .def("put_block", [](cytnx::CyTensor &self, const cytnx::Tensor &in, const std::vector<cytnx_int64>&qnum){
                                         self.put_block(in,qnum);
                                   },py::arg("in"),py::arg("qnum"))
-                .def("__repr__",[](cytnx::UniTensor &self)->std::string{
+                .def("__repr__",[](cytnx::CyTensor &self)->std::string{
                     std::cout << self << std::endl;
                     return std::string("");
                  },py::call_guard<py::scoped_ostream_redirect,
                      py::scoped_estream_redirect>()) 
-                .def("to_dense",&cytnx::UniTensor::to_dense)
-                .def("to_dense_",&cytnx::UniTensor::to_dense_)
-                .def("combineBonds",&cytnx::UniTensor::combineBonds,py::arg("indicators"),py::arg("permute_back")=true,py::arg("by_label")=true)
-                .def("contract", &cytnx::UniTensor::contract)
+                .def("to_dense",&cytnx::CyTensor::to_dense)
+                .def("to_dense_",&cytnx::CyTensor::to_dense_)
+                .def("combineBonds",&cytnx::CyTensor::combineBonds,py::arg("indicators"),py::arg("permute_back")=true,py::arg("by_label")=true)
+                .def("contract", &cytnx::CyTensor::contract)
                 ;
     
     m.def("Contract",cytnx::Contract);

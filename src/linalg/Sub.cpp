@@ -581,61 +581,59 @@ namespace cytnx {
             return out;
         }
         
-        #ifdef EXT_Enable
         //===============
-        // cytnx: UniTensor
+        // cytnx: CyTensor
         //===============
-        UniTensor Sub(const UniTensor &Lt, const UniTensor &Rt){
+        CyTensor Sub(const CyTensor &Lt, const CyTensor &Rt){
             cytnx_error_msg(true,"[Sub][Developing]%s","\n");
-            return UniTensor();
+            return CyTensor();
         }
         
         template<class T>
-        UniTensor Sub(const T &lc, const UniTensor &Rt){
-            UniTensor out = Rt.clone();
+        CyTensor Sub(const T &lc, const CyTensor &Rt){
+            CyTensor out = Rt.clone();
             if(out.is_blockform()){
-                cytnx_error_msg(true,"[Developing][Sub][SparseUniTensor]%s","\n");
+                cytnx_error_msg(true,"[Developing][Sub][SparseCyTensor]%s","\n");
             }else{
                 out.get_block_() = Sub(lc , out.get_block_());
             }
             return out;
         }
 
-        template UniTensor Sub<cytnx_complex128>(const cytnx_complex128 &lc, const UniTensor &Rt);
-        template UniTensor Sub<cytnx_complex64>(const cytnx_complex64 &lc, const UniTensor &Rt);
-        template UniTensor Sub<cytnx_double>(const cytnx_double &lc, const UniTensor &Rt);
-        template UniTensor Sub<cytnx_float>(const cytnx_float &lc, const UniTensor &Rt);
-        template UniTensor Sub<cytnx_int64>(const cytnx_int64 &lc, const UniTensor &Rt);
-        template UniTensor Sub<cytnx_uint64>(const cytnx_uint64 &lc, const UniTensor &Rt);
-        template UniTensor Sub<cytnx_int32>(const cytnx_int32 &lc, const UniTensor &Rt);
-        template UniTensor Sub<cytnx_uint32>(const cytnx_uint32 &lc, const UniTensor &Rt);
-        template UniTensor Sub<cytnx_int16>(const cytnx_int16 &lc, const UniTensor &Rt);
-        template UniTensor Sub<cytnx_uint16>(const cytnx_uint16 &lc, const UniTensor &Rt);
-        template UniTensor Sub<cytnx_bool>(const cytnx_bool &lc, const UniTensor &Rt);
+        template CyTensor Sub<cytnx_complex128>(const cytnx_complex128 &lc, const CyTensor &Rt);
+        template CyTensor Sub<cytnx_complex64>(const cytnx_complex64 &lc, const CyTensor &Rt);
+        template CyTensor Sub<cytnx_double>(const cytnx_double &lc, const CyTensor &Rt);
+        template CyTensor Sub<cytnx_float>(const cytnx_float &lc, const CyTensor &Rt);
+        template CyTensor Sub<cytnx_int64>(const cytnx_int64 &lc, const CyTensor &Rt);
+        template CyTensor Sub<cytnx_uint64>(const cytnx_uint64 &lc, const CyTensor &Rt);
+        template CyTensor Sub<cytnx_int32>(const cytnx_int32 &lc, const CyTensor &Rt);
+        template CyTensor Sub<cytnx_uint32>(const cytnx_uint32 &lc, const CyTensor &Rt);
+        template CyTensor Sub<cytnx_int16>(const cytnx_int16 &lc, const CyTensor &Rt);
+        template CyTensor Sub<cytnx_uint16>(const cytnx_uint16 &lc, const CyTensor &Rt);
+        template CyTensor Sub<cytnx_bool>(const cytnx_bool &lc, const CyTensor &Rt);
 
         template<class T>
-        UniTensor Sub(const UniTensor &Lt, const T &rc){
-            UniTensor out = Lt.clone();
+        CyTensor Sub(const CyTensor &Lt, const T &rc){
+            CyTensor out = Lt.clone();
             if(out.is_blockform()){
-                cytnx_error_msg(true,"[Developing][Sub][SparseUniTensor]%s","\n");
+                cytnx_error_msg(true,"[Developing][Sub][SparseCyTensor]%s","\n");
             }else{
                 out.get_block_() = Sub(out.get_block_() , rc);
             }
             return out;
         }
 
-        template UniTensor Sub<cytnx_complex128>(const UniTensor &Lt,const cytnx_complex128 &rc);
-        template UniTensor Sub<cytnx_complex64>(const UniTensor &Lt,const cytnx_complex64 &rc);
-        template UniTensor Sub<cytnx_double>(const UniTensor &Lt,const cytnx_double &rc);
-        template UniTensor Sub<cytnx_float>(const UniTensor &Lt,const cytnx_float &rc);
-        template UniTensor Sub<cytnx_int64>(const UniTensor &Lt,const cytnx_int64 &rc);
-        template UniTensor Sub<cytnx_uint64>(const UniTensor &Lt,const cytnx_uint64 &rc);
-        template UniTensor Sub<cytnx_int32>(const UniTensor &Lt,const cytnx_int32 &rc);
-        template UniTensor Sub<cytnx_uint32>(const UniTensor &Lt,const cytnx_uint32 &rc);
-        template UniTensor Sub<cytnx_int16>(const UniTensor &Lt,const cytnx_int16 &rc);
-        template UniTensor Sub<cytnx_uint16>(const UniTensor &Lt,const cytnx_uint16 &rc);
-        template UniTensor Sub<cytnx_bool>(const UniTensor &Lt,const cytnx_bool &rc);
-        #endif
+        template CyTensor Sub<cytnx_complex128>(const CyTensor &Lt,const cytnx_complex128 &rc);
+        template CyTensor Sub<cytnx_complex64>(const CyTensor &Lt,const cytnx_complex64 &rc);
+        template CyTensor Sub<cytnx_double>(const CyTensor &Lt,const cytnx_double &rc);
+        template CyTensor Sub<cytnx_float>(const CyTensor &Lt,const cytnx_float &rc);
+        template CyTensor Sub<cytnx_int64>(const CyTensor &Lt,const cytnx_int64 &rc);
+        template CyTensor Sub<cytnx_uint64>(const CyTensor &Lt,const cytnx_uint64 &rc);
+        template CyTensor Sub<cytnx_int32>(const CyTensor &Lt,const cytnx_int32 &rc);
+        template CyTensor Sub<cytnx_uint32>(const CyTensor &Lt,const cytnx_uint32 &rc);
+        template CyTensor Sub<cytnx_int16>(const CyTensor &Lt,const cytnx_int16 &rc);
+        template CyTensor Sub<cytnx_uint16>(const CyTensor &Lt,const cytnx_uint16 &rc);
+        template CyTensor Sub<cytnx_bool>(const CyTensor &Lt,const cytnx_bool &rc);
 
     } //linalg
 
@@ -739,48 +737,46 @@ namespace cytnx {
     }
 
 
-    #ifdef EXT_Enable
     //=================
-    // Cytnx: UniTensor
+    // Cytnx: CyTensor
     //=================
-    UniTensor operator-(const UniTensor &Lt, const UniTensor &Rt){
+    CyTensor operator-(const CyTensor &Lt, const CyTensor &Rt){
         return cytnx::linalg::Sub(Lt,Rt);
     }
 
     template<class T>
-    UniTensor operator-(const T &lc, const UniTensor &Rt){
+    CyTensor operator-(const T &lc, const CyTensor &Rt){
         return cytnx::linalg::Sub(lc,Rt);
     }
 
-    template UniTensor operator-<cytnx_complex128>(const cytnx_complex128 &lc, const UniTensor &Rt);
-    template UniTensor operator-<cytnx_complex64>(const cytnx_complex64 &lc, const UniTensor &Rt);
-    template UniTensor operator-<cytnx_double>(const cytnx_double &lc, const UniTensor &Rt);
-    template UniTensor operator-<cytnx_float>(const cytnx_float &lc, const UniTensor &Rt);
-    template UniTensor operator-<cytnx_int64>(const cytnx_int64 &lc, const UniTensor &Rt);
-    template UniTensor operator-<cytnx_uint64>(const cytnx_uint64 &lc, const UniTensor &Rt);
-    template UniTensor operator-<cytnx_int32>(const cytnx_int32 &lc, const UniTensor &Rt);
-    template UniTensor operator-<cytnx_uint32>(const cytnx_uint32 &lc, const UniTensor &Rt);
-    template UniTensor operator-<cytnx_int16>(const cytnx_int16 &lc, const UniTensor &Rt);
-    template UniTensor operator-<cytnx_uint16>(const cytnx_uint16 &lc, const UniTensor &Rt);
-    template UniTensor operator-<cytnx_bool>(const cytnx_bool &lc, const UniTensor &Rt);
+    template CyTensor operator-<cytnx_complex128>(const cytnx_complex128 &lc, const CyTensor &Rt);
+    template CyTensor operator-<cytnx_complex64>(const cytnx_complex64 &lc, const CyTensor &Rt);
+    template CyTensor operator-<cytnx_double>(const cytnx_double &lc, const CyTensor &Rt);
+    template CyTensor operator-<cytnx_float>(const cytnx_float &lc, const CyTensor &Rt);
+    template CyTensor operator-<cytnx_int64>(const cytnx_int64 &lc, const CyTensor &Rt);
+    template CyTensor operator-<cytnx_uint64>(const cytnx_uint64 &lc, const CyTensor &Rt);
+    template CyTensor operator-<cytnx_int32>(const cytnx_int32 &lc, const CyTensor &Rt);
+    template CyTensor operator-<cytnx_uint32>(const cytnx_uint32 &lc, const CyTensor &Rt);
+    template CyTensor operator-<cytnx_int16>(const cytnx_int16 &lc, const CyTensor &Rt);
+    template CyTensor operator-<cytnx_uint16>(const cytnx_uint16 &lc, const CyTensor &Rt);
+    template CyTensor operator-<cytnx_bool>(const cytnx_bool &lc, const CyTensor &Rt);
 
     template<class T>
-    UniTensor operator-(const UniTensor &Lt, const T &rc){
+    CyTensor operator-(const CyTensor &Lt, const T &rc){
         return cytnx::linalg::Sub(Lt,rc);
     }
 
-    template UniTensor operator-<cytnx_complex128>(const UniTensor &Lt,const cytnx_complex128 &rc);
-    template UniTensor operator-<cytnx_complex64>(const UniTensor &Lt,const cytnx_complex64 &rc);
-    template UniTensor operator-<cytnx_double>(const UniTensor &Lt,const cytnx_double &rc);
-    template UniTensor operator-<cytnx_float>(const UniTensor &Lt,const cytnx_float &rc);
-    template UniTensor operator-<cytnx_int64>(const UniTensor &Lt,const cytnx_int64 &rc);
-    template UniTensor operator-<cytnx_uint64>(const UniTensor &Lt,const cytnx_uint64 &rc);
-    template UniTensor operator-<cytnx_int32>(const UniTensor &Lt,const cytnx_int32 &rc);
-    template UniTensor operator-<cytnx_uint32>(const UniTensor &Lt,const cytnx_uint32 &rc);
-    template UniTensor operator-<cytnx_int16>(const UniTensor &Lt,const cytnx_int16 &rc);
-    template UniTensor operator-<cytnx_uint16>(const UniTensor &Lt,const cytnx_uint16 &rc);
-    template UniTensor operator-<cytnx_bool>(const UniTensor &Lt,const cytnx_bool &rc);
-    #endif
+    template CyTensor operator-<cytnx_complex128>(const CyTensor &Lt,const cytnx_complex128 &rc);
+    template CyTensor operator-<cytnx_complex64>(const CyTensor &Lt,const cytnx_complex64 &rc);
+    template CyTensor operator-<cytnx_double>(const CyTensor &Lt,const cytnx_double &rc);
+    template CyTensor operator-<cytnx_float>(const CyTensor &Lt,const cytnx_float &rc);
+    template CyTensor operator-<cytnx_int64>(const CyTensor &Lt,const cytnx_int64 &rc);
+    template CyTensor operator-<cytnx_uint64>(const CyTensor &Lt,const cytnx_uint64 &rc);
+    template CyTensor operator-<cytnx_int32>(const CyTensor &Lt,const cytnx_int32 &rc);
+    template CyTensor operator-<cytnx_uint32>(const CyTensor &Lt,const cytnx_uint32 &rc);
+    template CyTensor operator-<cytnx_int16>(const CyTensor &Lt,const cytnx_int16 &rc);
+    template CyTensor operator-<cytnx_uint16>(const CyTensor &Lt,const cytnx_uint16 &rc);
+    template CyTensor operator-<cytnx_bool>(const CyTensor &Lt,const cytnx_bool &rc);
 
 }//cytnx
 

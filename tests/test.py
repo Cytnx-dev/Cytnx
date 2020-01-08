@@ -6,7 +6,7 @@ from cytnx import linalg
 
 
 #bd1 = cytnx.Bond(2)
-#T = cytnx.UniTensor([bd1],Rowrank=1)
+#T = cytnx.CyTensor([bd1],Rowrank=1)
 #T.print_diagram()
 
 #exit(1)
@@ -132,7 +132,7 @@ bd_1 = cytnx.Bond(3)
 bd_2 = cytnx.Bond(2)
 bd_3 = cytnx.Bond(4)
 
-U = cytnx.UniTensor([bd_1,bd_2,bd_3],Rowrank=2,dtype=cytnx.Type.Double)
+U = cytnx.CyTensor([bd_1,bd_2,bd_3],Rowrank=2,dtype=cytnx.Type.Double)
 U.print_diagram()
 U.permute_(0,2,1,Rowrank=1)
 U.print_diagram()

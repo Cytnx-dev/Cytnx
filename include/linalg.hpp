@@ -6,9 +6,7 @@
 #include "Tensor.hpp"
 #include "Storage.hpp"
 
-#ifdef EXT_Enable
-    #include "extension/UniTensor.hpp"
-#endif
+#include "CyTensor.hpp"
 
 namespace cytnx{
     /**
@@ -27,13 +25,11 @@ namespace cytnx{
         template<class T>
         Tensor Add(const Tensor &Lt, const T &rc);
 
-        #ifdef EXT_Enable
-        UniTensor Add(const UniTensor &Lt, const UniTensor &Rt);
+        CyTensor Add(const CyTensor &Lt, const CyTensor &Rt);
         template<class T>
-        UniTensor Add(const T &lc,const UniTensor &Rt);
+        CyTensor Add(const T &lc,const CyTensor &Rt);
         template<class T>
-        UniTensor Add(const UniTensor &Lt,const T &rc);
-        #endif
+        CyTensor Add(const CyTensor &Lt,const T &rc);
 
 
         // Sub:
@@ -47,13 +43,11 @@ namespace cytnx{
         template<class T>
         Tensor Sub(const Tensor &Lt, const T &rc);
 
-        #ifdef EXT_Enable
-        UniTensor Sub(const UniTensor &Lt, const UniTensor &Rt);
+        CyTensor Sub(const CyTensor &Lt, const CyTensor &Rt);
         template<class T>
-        UniTensor Sub(const T &lc, const UniTensor &Rt);    
+        CyTensor Sub(const T &lc, const CyTensor &Rt);    
         template<class T>
-        UniTensor Sub(const UniTensor &Lt, const T &rc);
-        #endif  
+        CyTensor Sub(const CyTensor &Lt, const T &rc);
 
         // Mul:
         //==================================================
@@ -66,13 +60,11 @@ namespace cytnx{
         template<class T>
         Tensor Mul(const Tensor &Lt, const T &rc);
 
-        #ifdef EXT_Enable
-        UniTensor Mul(const UniTensor &Lt, const UniTensor &Rt);
+        CyTensor Mul(const CyTensor &Lt, const CyTensor &Rt);
         template<class T>
-        UniTensor Mul(const T &lc,const UniTensor &Rt);
+        CyTensor Mul(const T &lc,const CyTensor &Rt);
         template<class T>
-        UniTensor Mul(const UniTensor &Lt,const T &rc);
-        #endif 
+        CyTensor Mul(const CyTensor &Lt,const T &rc);
         
 
         // Div:
@@ -86,13 +78,11 @@ namespace cytnx{
         template<class T>
         Tensor Div(const Tensor &Lt, const T &rc);
 
-        #ifdef EXT_Enable
-        UniTensor Div(const UniTensor &Lt, const UniTensor &Rt);
+        CyTensor Div(const CyTensor &Lt, const CyTensor &Rt);
         template<class T>
-        UniTensor Div(const T &lc,const UniTensor &Rt);
+        CyTensor Div(const T &lc,const CyTensor &Rt);
         template<class T>
-        UniTensor Div(const UniTensor &Lt,const T &rc);
-        #endif
+        CyTensor Div(const CyTensor &Lt,const T &rc);
 
         // Cpr:
         //==================================================
@@ -372,13 +362,11 @@ namespace cytnx{
     Tensor operator+(const Tensor &Lt, const T &rc);
 
 
-    #ifdef EXT_Enable
-    UniTensor operator+(const UniTensor &Lt, const UniTensor &Rt);
+    CyTensor operator+(const CyTensor &Lt, const CyTensor &Rt);
     template<class T>
-    UniTensor operator+(const T &lc, const UniTensor &Rt);
+    CyTensor operator+(const T &lc, const CyTensor &Rt);
     template<class T>
-    UniTensor operator+(const UniTensor &Lt, const T &rc);
-    #endif
+    CyTensor operator+(const CyTensor &Lt, const T &rc);
 
     
     //------------------------------------
@@ -389,13 +377,11 @@ namespace cytnx{
     Tensor operator-(const Tensor &Lt, const T &rc);
     
 
-    #ifdef EXT_Enable
-    UniTensor operator-(const UniTensor &Lt, const UniTensor &Rt);
+    CyTensor operator-(const CyTensor &Lt, const CyTensor &Rt);
     template<class T>
-    UniTensor operator-(const T &lc, const UniTensor &Rt);
+    CyTensor operator-(const T &lc, const CyTensor &Rt);
     template<class T>
-    UniTensor operator-(const UniTensor &Lt, const T &rc);
-    #endif
+    CyTensor operator-(const CyTensor &Lt, const T &rc);
    
     //-----------------------------------
     Tensor operator*(const Tensor &Lt, const Tensor &Rt);
@@ -404,13 +390,11 @@ namespace cytnx{
     template<class T>
     Tensor operator*(const Tensor &Lt, const T &rc);
 
-    #ifdef EXT_Enable
-    UniTensor operator*(const UniTensor &Lt, const UniTensor &Rt);
+    CyTensor operator*(const CyTensor &Lt, const CyTensor &Rt);
     template<class T>
-    UniTensor operator*(const T &lc, const UniTensor &Rt);
+    CyTensor operator*(const T &lc, const CyTensor &Rt);
     template<class T>
-    UniTensor operator*(const UniTensor &Lt, const T &rc);
-    #endif
+    CyTensor operator*(const CyTensor &Lt, const T &rc);
 
 
     //----------------------------------
@@ -420,13 +404,11 @@ namespace cytnx{
     template<class T>
     Tensor operator/(const Tensor &Lt, const T &rc);
 
-    #ifdef EXT_Enable
-    UniTensor operator/(const UniTensor &Lt, const UniTensor &Rt);
+    CyTensor operator/(const CyTensor &Lt, const CyTensor &Rt);
     template<class T>
-    UniTensor operator/(const T &lc, const UniTensor &Rt);
+    CyTensor operator/(const T &lc, const CyTensor &Rt);
     template<class T>
-    UniTensor operator/(const UniTensor &Lt, const T &rc);
-    #endif
+    CyTensor operator/(const CyTensor &Lt, const T &rc);
 
     //----------------------------------
     Tensor operator==(const Tensor &Lt, const Tensor &Rt);

@@ -21,7 +21,7 @@
 #    along with Cytnx.  If not, see <http://www.gnu.org/licenses/>.
 #  @endlicense
 #  @brief Main specification file for CMake
-#  @author Ying-Jer Kao
+#  @author Ying-Jer Kao, Kai-Hsin Wu
 
 
 
@@ -30,45 +30,17 @@
 ######################################################################
 
 target_sources_local(cytnx
-  # PUBLIC
-  #   Accessor.hpp
-  #   Bond.hpp
-  #   Device.hpp
-  #   Generator.hpp
-  #   Network.hpp
-  #   Storage.hpp
-  #   Symmetry.hpp
-  #   Tensor.hpp
-  #   Type.hpp
-  #   UniTensor.hpp
-  #   contraction_tree.hpp
-  #   cytnx.hpp
-  #   cytnx_error.hpp
-  #   intrusive_ptr_base.hpp
   PRIVATE
-    Accessor.cpp
-    BoolStorage.cpp
-    ComplexDoubleStorage.cpp
-    ComplexFloatStorage.cpp
-    Device.cpp
-    DoubleStorage.cpp
-    FloatStorage.cpp
-    Generator.cpp
-    Int16Storage.cpp
-    Int32Storage.cpp
-    Int64Storage.cpp
-    Storage.cpp
-    Storage_base.cpp
-    Tensor.cpp
-    Type.cpp
-    Uint16Storage.cpp
-    Uint32Storage.cpp
-    Uint64Storage.cpp
+    Network_base.cpp
+    Network.cpp
+    RegularNetwork.cpp
+    FermionNetwork.cpp
+    Bond.cpp
+    UniTensor_base.cpp
+    UniTensor.cpp
+    DenseUniTensor.cpp
+    SparseUniTensor.cpp
+    Symmetry.cpp
+    contraction_tree.cpp
 )
 
-
-add_subdirectory(linalg)
-add_subdirectory(utils)
-if(BUILD_EXTENSION)
-  add_subdirectory(extension)
-endif()

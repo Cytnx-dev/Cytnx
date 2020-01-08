@@ -16,6 +16,7 @@
     5. Add more intruisive way to get slices for Tensor in C++, using operator[]
     6. Add Tensor.append for rank-1 Tensor    
     7. Add Exp() Expf() Exp\_() Expf\_()
+    8. Change UniTensor to CyTensor 
 
 ## Documentation:
 
@@ -88,7 +89,7 @@
 
         * c. To enable the acceleration using OpenMP, set "OMP_Enable" =1, otherwise =0.
         * d. The default linalg library are using LAPACK and BLAS. To use intel MKL instead, set "MKL_enable" =1.
-        * e. To enable the extension UniTensor/Symmetry/Network/Bond, set EXT_Enable=1.     
+        * e. To enable the extension CyTensor/Symmetry/Network/Bond, set EXT_Enable=1.     
         
     2.) compile by running:
         
@@ -103,10 +104,10 @@
     * Storage   [binded]
     * Tensor    [binded]
     * Accessor  [c++ only]
-    * Bond      [binded] [Require EXT_Enable flag]
-    * Symmetry  [binded] [Require EXT_Enable flag]
-    * UniTensor [binded] [Require EXT_Enable flag]
-    * Network   [binded] [Require EXT_Enable flag]
+    * Bond      [binded] 
+    * Symmetry  [binded] 
+    * CyTensor [binded] 
+    * Network   [binded] 
 
 ## Feature:
 
@@ -222,7 +223,7 @@
 
 ## Avaliable linear-algebra function (Keep updating):
 
-      func        |   inplace | CPU | GPU  | callby tn   | Tn | UniTn 
+      func        |   inplace | CPU | GPU  | callby tn   | Tn | CyTn 
     --------------|-----------|-----|------|-------------|----|-------
       Add         |   x       |  Y  |  Y   |    Y        | Y  |   Y
       Sub         |   x       |  Y  |  Y   |    Y        | Y  |   Y

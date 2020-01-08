@@ -192,7 +192,7 @@ int main(int argc, char *argv[]){
     } 
     std::vector<Bond> dbds = {bd_dqu3,bd_dqu4,bd_dqu1,bd_dqu2}; 
         
-    UniTensor dut1(dbds,{},2);
+    CyTensor dut1(dbds,{},2);
     dut1.print_diagram(true);
     dut1.permute_({2,3,0,1});
     dut1.print_diagram(true);
@@ -210,8 +210,8 @@ int main(int argc, char *argv[]){
     std::vector<Bond> bds = {bd_1,bd_2,bd_3}; 
     std::vector<cytnx_int64> labels = {};
         
-    UniTensor ut1(bds,{},2);
-    UniTensor ut2 = ut1.clone();
+    CyTensor ut1(bds,{},2);
+    CyTensor ut2 = ut1.clone();
     ut1.print_diagram();
     cout << ut1 << endl;
     ut1.combineBonds({2,0},true,false);
@@ -220,7 +220,7 @@ int main(int argc, char *argv[]){
     ut2.set_label(2,-4);
     ut2.print_diagram();
 
-    UniTensor ut3 = Contract(ut1,ut2);
+    CyTensor ut3 = Contract(ut1,ut2);
     ut3.print_diagram();
 
 
@@ -270,18 +270,18 @@ int main(int argc, char *argv[]){
     //cout << ut2 << endl;
 
 
-    UniTensor T1 = UniTensor(Tensor({2,3,4,5}),2);
-    UniTensor T2 = UniTensor(Tensor({4,6,7,8}),3);
-    UniTensor T3 = UniTensor(Tensor({5,6,7,2}),4);
+    CyTensor T1 = CyTensor(Tensor({2,3,4,5}),2);
+    CyTensor T2 = CyTensor(Tensor({4,6,7,8}),3);
+    CyTensor T3 = CyTensor(Tensor({5,6,7,2}),4);
     
     
 
     Network net;
     net.Fromfile("test.net");
     
-    net.PutUniTensor("A",T1,false);
-    net.PutUniTensor("B",T2,false);
-    net.PutUniTensor("C",T3,false);
+    net.PutCyTensor("A",T1,false);
+    net.PutCyTensor("B",T2,false);
+    net.PutCyTensor("C",T3,false);
 
 
     net.Launch();
@@ -319,7 +319,7 @@ int main(int argc, char *argv[]){
     sss.at<double>({0,0,0}) = 3;
     cout << ut1 << endl;
        
-    UniTensor re(sss,2); // construct by block will not copy, and share same memory.
+    CyTensor re(sss,2); // construct by block will not copy, and share same memory.
     cout << re << endl;
     */
      

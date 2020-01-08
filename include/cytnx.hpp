@@ -11,11 +11,9 @@
 #include "linalg.hpp"
 #include "utils/utils.hpp"
 
-// these will still include, but will have null content if EXT_enable is not define.
-#ifdef EXT_Enable
-#include "extension/UniTensor.hpp"
-#include "extension/Symmetry.hpp"
-#include "extension/Network.hpp"
-#include "extension/Bond.hpp"
-#endif
+#include "CyTensor.hpp"
+#include "Symmetry.hpp"
+#include "Network.hpp"
+#include "Bond.hpp"
+
 #endif

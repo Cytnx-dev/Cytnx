@@ -4,9 +4,7 @@
 #include <vector>
 #include <cstring>
 
-#ifdef EXT_Enable
-#include "extension/Bond.hpp"
-#endif
+#include "Bond.hpp"
 
 namespace cytnx{
 
@@ -48,9 +46,7 @@ namespace cytnx{
     template std::vector<cytnx_int16> vec_erase(const std::vector<cytnx_int16> &,const std::vector<cytnx_uint64> &);
     template std::vector<cytnx_uint16> vec_erase(const std::vector<cytnx_uint16> &,const std::vector<cytnx_uint64> &);
     template std::vector<cytnx_bool> vec_erase(const std::vector<cytnx_bool> &,const std::vector<cytnx_uint64> &);
-    #ifdef EXT_Enable
     template std::vector<Bond> vec_erase(const std::vector<Bond> &,const std::vector<cytnx_uint64> &);
-    #endif
 
     template void vec_erase_(std::vector<cytnx_complex128> &,const std::vector<cytnx_uint64> &);
     template void vec_erase_(std::vector<cytnx_complex64> &,const std::vector<cytnx_uint64> &);
@@ -63,8 +59,6 @@ namespace cytnx{
     template void vec_erase_(std::vector<cytnx_int16> &,const std::vector<cytnx_uint64> &);
     template void vec_erase_(std::vector<cytnx_uint16> &,const std::vector<cytnx_uint64> &);
     template void vec_erase_(std::vector<cytnx_bool> &,const std::vector<cytnx_uint64> &);
-    #ifdef EXT_Enable
     template void vec_erase_(std::vector<Bond> &,const std::vector<cytnx_uint64> &);
-    #endif
 
 }

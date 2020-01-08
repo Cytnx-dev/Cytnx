@@ -83,11 +83,7 @@ OBJS = Storage_base.o BoolStorage.o Uint16Storage.o Int16Storage.o Uint32Storage
 
 
 OBJS += Storage.o Tensor.o Accessor.o Generator.o
-
-ifeq ($(EXT_Enable),1)
- CCFLAGS+= -DEXT_Enable
- OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o UniTensor_base.o DenseUniTensor.o SparseUniTensor.o UniTensor.o Bond.o Symmetry.o contraction_tree.o
-endif
+OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o CyTensor_base.o DenseCyTensor.o SparseCyTensor.o CyTensor.o Bond.o Symmetry.o contraction_tree.o
 
 
 ## Utils
@@ -163,30 +159,29 @@ Generator.o: $(CytnxPATH)/src/Generator.cpp $(CytnxPATH)/include/Generator.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 
-## Extensions:[Note] Only compile if EXT_Enable=1 ----------------------------
-Bond.o : $(CytnxPATH)/src/extension/Bond.cpp $(CytnxPATH)/include/extension/Bond.hpp
+Bond.o : $(CytnxPATH)/src/Bond.cpp $(CytnxPATH)/include/Bond.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-Symmetry.o: $(CytnxPATH)/src/extension/Symmetry.cpp $(CytnxPATH)/include/extension/Symmetry.hpp
+Symmetry.o: $(CytnxPATH)/src/Symmetry.cpp $(CytnxPATH)/include/Symmetry.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-UniTensor.o: $(CytnxPATH)/src/extension/UniTensor.cpp $(CytnxPATH)/include/extension/UniTensor.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-
-UniTensor_base.o: $(CytnxPATH)/src/extension/UniTensor_base.cpp $(CytnxPATH)/include/extension/UniTensor.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-DenseUniTensor.o: $(CytnxPATH)/src/extension/DenseUniTensor.cpp $(CytnxPATH)/include/extension/UniTensor.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-SparseUniTensor.o: $(CytnxPATH)/src/extension/SparseUniTensor.cpp $(CytnxPATH)/include/extension/UniTensor.hpp
+CyTensor.o: $(CytnxPATH)/src/CyTensor.cpp $(CytnxPATH)/include/CyTensor.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Network.o: $(CytnxPATH)/src/extension/Network.cpp $(CytnxPATH)/include/extension/Network.hpp
+CyTensor_base.o: $(CytnxPATH)/src/CyTensor_base.cpp $(CytnxPATH)/include/CyTensor.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+DenseCyTensor.o: $(CytnxPATH)/src/DenseCyTensor.cpp $(CytnxPATH)/include/CyTensor.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+SparseCyTensor.o: $(CytnxPATH)/src/SparseCyTensor.cpp $(CytnxPATH)/include/CyTensor.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+
+Network.o: $(CytnxPATH)/src/Network.cpp $(CytnxPATH)/include/Network.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
-Network_base.o: $(CytnxPATH)/src/extension/Network_base.cpp $(CytnxPATH)/include/extension/Network.hpp
+Network_base.o: $(CytnxPATH)/src/Network_base.cpp $(CytnxPATH)/include/Network.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
-RegularNetwork.o: $(CytnxPATH)/src/extension/RegularNetwork.cpp $(CytnxPATH)/include/extension/Network.hpp
+RegularNetwork.o: $(CytnxPATH)/src/RegularNetwork.cpp $(CytnxPATH)/include/Network.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
-FermionNetwork.o: $(CytnxPATH)/src/extension/FermionNetwork.cpp $(CytnxPATH)/include/extension/Network.hpp
+FermionNetwork.o: $(CytnxPATH)/src/FermionNetwork.cpp $(CytnxPATH)/include/Network.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
-contraction_tree.o: $(CytnxPATH)/src/extension/contraction_tree.cpp $(CytnxPATH)/include/extension/contraction_tree.hpp
+contraction_tree.o: $(CytnxPATH)/src/contraction_tree.cpp $(CytnxPATH)/include/contraction_tree.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 ##--------------------------------------------------------------------------

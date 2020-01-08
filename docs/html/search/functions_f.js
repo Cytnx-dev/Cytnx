@@ -1,8 +1,5 @@
 var searchData=
 [
-  ['tensor',['Tensor',['../classcytnx_1_1Tensor.html#afdcff16b2096d10b524161be52ba767e',1,'cytnx::Tensor']]],
-  ['tensordot',['Tensordot',['../namespacecytnx_1_1linalg.html#a460e44db6b3d5d2c30c2d2723ff8f788',1,'cytnx::linalg']]],
-  ['to',['to',['../classcytnx_1_1Storage.html#a2abfcaacf807934be5dd21c254fdb30e',1,'cytnx::Storage::to()'],['../classcytnx_1_1Tensor.html#acf7f697a9434f9bc98a7d00a555ee982',1,'cytnx::Tensor::to()']]],
-  ['to_5f',['to_',['../classcytnx_1_1Storage.html#a0bbf2cbefb5d0835bcb4f0d05e400870',1,'cytnx::Storage::to_()'],['../classcytnx_1_1Tensor.html#a114a31fbb8bf4a90f150b6a67e42183a',1,'cytnx::Tensor::to_()']]],
-  ['tridiag',['Tridiag',['../namespacecytnx_1_1linalg.html#abc68d62e804d6d3e86aeec00015b07cd',1,'cytnx::linalg']]]
+  ['qnums',['qnums',['../classcytnx_1_1Bond.html#a9276b15ab9b96dc7b1fac4dc407b9aa6',1,'cytnx::Bond::qnums() const'],['../classcytnx_1_1Bond.html#a528aa25d76bcfb057ab7b56cf28f0ed4',1,'cytnx::Bond::qnums()']]],
+  ['qnums_5fclone',['qnums_clone',['../classcytnx_1_1Bond.html#a86503fa193140358b4def496a634b5b6',1,'cytnx::Bond']]]
 ];
