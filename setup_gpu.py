@@ -37,7 +37,7 @@ class CMakeBuild(build_ext):
 
         cfg = 'Debug' if self.debug else 'Release'
         build_args = ['--config', cfg]
-        cmake_args += ['-DBUILD_PYTHON=ON','-DUSE_CUDA=OFF','-DUSE_MKL=ON']
+        cmake_args += ['-DBUILD_PYTHON=ON','-DUSE_CUDA=ON','-DUSE_MKL=ON']
         cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
         build_args += ['--', '-j4']
 

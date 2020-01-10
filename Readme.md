@@ -22,6 +22,18 @@
 
 [https://kaihsin.github.io/Cytnx/docs/html/index.html](https://kaihsin.github.io/Cytnx/docs/html/index.html)
 
+## conda install  
+    [Currently Linux only]
+
+    * without CUDA
+      python 3.6: conda install -c kaihsinwu cytnx_36
+      python 3.7: conda install -c kaihsinwu cytnx_37
+
+    * with CUDA
+      python 3.6: conda install -c kaihsinwu cytnx_cuda_36
+      python 3.7: conda install -c kaihsinwu cytnx_cuda_37
+
+
 ## docker image with MKL 
   [https://hub.docker.com/r/kaihsinwu/cytnx_mkl](https://hub.docker.com/r/kaihsinwu/cytnx_mkl)
     
