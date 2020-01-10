@@ -731,7 +731,6 @@ PYBIND11_MODULE(cytnx,m){
                 .def("Exp",&cytnx::Tensor::Exp)
                 ;
 
-    #ifdef EXT_Enable
     py::class_<cytnx::CyTensor>(m,"CyTensor")
                 .def(py::init<>())
                 .def(py::init<const cytnx::Tensor&, const cytnx_uint64&>())
@@ -947,7 +946,6 @@ PYBIND11_MODULE(cytnx,m){
                 ;
     
     m.def("Contract",cytnx::Contract);
-    #endif
     
     pybind11::module m_linalg = m.def_submodule("linalg","linear algebra related.");
 

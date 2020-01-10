@@ -30,7 +30,7 @@
 ######################################################################
 ### CMAKE VERSION
 ######################################################################
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.11)
 
 include(cmake/target_sources_local.cmake)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
@@ -93,8 +93,7 @@ set(CYTNX_VERSION
 
 option(USE_ICPC "Build Cytnx with Intel Compilers" OFF)
 option(USE_CUDA "Build using Nvidia CUDA for GPU library" ON)
-option(BUILD_EXTENSION "Build cytnx extension" ON)
-option(BUILD_PYTHON "Build Python wrapper" OFF)
+option(BUILD_PYTHON "Build Python wrapper" ON)
 option(USE_MKL "Build using MKL" OFF)
 option(BUILD_DOC "Build API docuemntation" OFF)
 if (USE_ICPC)
@@ -133,7 +132,7 @@ endif()
 ######################################################################
 project(CYTNX VERSION ${CYTNX_VERSION} LANGUAGES CXX C )
 
-add_library(cytnx "")
+add_library(cytnx STATIC)
 set_property(TARGET cytnx PROPERTY C_VISIBILITY_PRESET hidden)
 set_property(TARGET cytnx PROPERTY VISIBILITY_INLINES_HIDDEN ON)
 target_include_directories(cytnx
@@ -259,12 +258,10 @@ if(USE_CUDA)
   #target_compile_options(cytnx PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:>)
   target_include_directories(cytnx PRIVATE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
   target_link_libraries(cytnx PRIVATE ${CUDA_cusolver_LIBRARY})
+  target_link_libraries(cytnx PRIVATE -lcublas -lcurand)
 endif()
 
 
-if (BUILD_EXTENSION) 
-  target_compile_definitions(cytnx PRIVATE EXT_Enable)
-endif()
 
 
 ######################################################################
@@ -283,11 +280,34 @@ IF(BUILD_DOC)
 ENDIF()
 
 IF(BUILD_PYTHON)
-   #find_package (PythonLibsNew COMPONENTS pybind11)
-   FIND_PACKAGE(pybind11 REQUIRED)
-   pybind11_add_module(pycytnx pybind/cytnx.cpp)
-   target_link_libraries(pycytnx PRIVATE cytnx)
-   set_target_properties(pycytnx PROPERTIES OUTPUT_NAME cytnx)
+    find_package(PythonInterp REQUIRED)
+    find_package(pybind11 REQUIRED)
+    if( NOT PYBIND11_FOUND)
+        include(FetchContent)
+        FetchContent_Declare(
+          pybind11_sources
+          GIT_REPOSITORY https://github.com/pybind/pybind11.git
+          GIT_TAG v2.2
+          )
+
+        FetchContent_GetProperties(pybind11_sources)
+
+        if(NOT pybind11_sources_POPULATED)
+          FetchContent_Populate(pybind11_sources)
+
+          add_subdirectory(
+            ${pybind11_sources_SOURCE_DIR}
+            ${pybind11_sources_BINARY_DIR}
+            )
+        endif()
+    endif()
+    pybind11_add_module(pycytnx pybind/cytnx.cpp)
+    target_link_libraries(pycytnx PRIVATE cytnx)
+    set_target_properties(pycytnx PROPERTIES OUTPUT_NAME cytnx)
+    #add_library(cytnx MODULE pybind/cytnx.cpp)
+    #target_link_libraries(cytnx PRIVATE pybind11::module)
+    #set_target_properties(cytnx PROPERTIES PREFIX "${PYTHON_MODULE_PREFIX}"
+    #                                     SUFFIX "${PYTHON_MODULE_EXTENSION}")
 ENDIF()
 
 ######################################################################
@@ -298,7 +318,7 @@ set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/cytnx)
 INSTALL(TARGETS cytnx EXPORT cytnx_targets
         LIBRARY
           DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        COMPONENT libraries
+          COMPONENT libraries
         ARCHIVE
           DESTINATION ${CMAKE_INSTALL_LIBDIR}
           COMPONENT libraries
@@ -306,6 +326,16 @@ INSTALL(TARGETS cytnx EXPORT cytnx_targets
           DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/cytnx
           COMPONENT Development
       )
+if(BUILD_PYTHON)
+    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cytnx
+        DESTINATION ${CMAKE_INSTALL_PREFIX}
+        )
+    INSTALL(TARGETS pycytnx EXPORT pycytnx_targets
+            LIBRARY
+              DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx
+              COMPONENT libraries
+          )
+endif()
 install(EXPORT cytnx_targets
         FILE CytnxTargets.cmake
         NAMESPACE Cytnx::

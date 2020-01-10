@@ -12,11 +12,11 @@ target_sources_local(cytnx
     Matmul_internal.hpp
     Mul_internal.hpp
     Outer_internal.hpp
+    Kron_internal.hpp
     Sub_internal.hpp
     Svd_internal.hpp
     Tridiag_internal.hpp
     Vectordot_internal.hpp
-
     Add_internal.cpp
     Arithmetic_internal.cpp
     Conj_inplace_internal.cpp
@@ -29,6 +29,7 @@ target_sources_local(cytnx
     Matmul_internal.cpp
     Mul_internal.cpp
     Outer_internal.cpp
+    Kron_internal.cpp
     Tridiag_internal.cpp
     Sub_internal.cpp
     Svd_internal.cpp

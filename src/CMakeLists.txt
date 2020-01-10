@@ -36,11 +36,32 @@ target_sources_local(cytnx
     RegularNetwork.cpp
     FermionNetwork.cpp
     Bond.cpp
-    UniTensor_base.cpp
-    UniTensor.cpp
-    DenseUniTensor.cpp
-    SparseUniTensor.cpp
+    CyTensor_base.cpp
+    CyTensor.cpp
+    DenseCyTensor.cpp
+    SparseCyTensor.cpp
     Symmetry.cpp
     contraction_tree.cpp
-)
 
+    Device.cpp
+    Generator.cpp
+    Accessor.cpp
+    Type.cpp
+    Tensor.cpp
+    Storage.cpp
+    Storage_base.cpp
+    ComplexDoubleStorage.cpp
+    ComplexFloatStorage.cpp
+    DoubleStorage.cpp
+    FloatStorage.cpp
+    Uint64Storage.cpp
+    Int64Storage.cpp
+    Uint32Storage.cpp
+    Int32Storage.cpp
+    Uint16Storage.cpp
+    Int16Storage.cpp
+    BoolStorage.cpp
+    
+)
+add_subdirectory(linalg)
+add_subdirectory(utils)
