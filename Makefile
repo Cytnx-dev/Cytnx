@@ -471,7 +471,7 @@ Kron.o: $(CytnxPATH)/src/linalg/Kron.cpp $(CytnxPATH)/include/linalg.hpp
 Tridiag.o: $(CytnxPATH)/src/linalg/Tridiag.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
-test.o: $(TESTPATH)/test.cpp
+test.o: test.cpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 .phony : clean cleanpy

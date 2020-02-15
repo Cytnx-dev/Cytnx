@@ -32,6 +32,10 @@ namespace cytnx{
             for(cytnx_uint64 i=0;i<non_contract_r.size();i++)
                 new_shape[non_contract_l.size()+i] = Tr.shape()[non_contract_r[i]];
 
+            if(new_shape.size()==0){
+                new_shape.push_back(1);
+            }
+
             //permute!
             Tensor tmpL = Tl.permute(mapperL);
             Tensor tmpR = Tr.permute(mapperR);
