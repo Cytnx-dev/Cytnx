@@ -468,7 +468,11 @@ namespace cytnx{
 
             if((this->is_diag() == rhs->is_diag()) && this->is_diag()){
                 //diag x diag:
-                tmp->_block = this->_block * rhs->get_block_();
+                if(tmp->_Rowrank!=0){
+                    tmp->_block = this->_block * rhs->get_block_();
+                }else{
+                    tmp->_block = linalg::Vectordot(this->_block,rhs->get_block_());
+                }
                 tmp->_is_diag = true;
             }else{
                 // diag x dense:
