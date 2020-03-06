@@ -8,8 +8,8 @@
 #include <vector>
 #include "intrusive_ptr_base.hpp"
 #include "utils/vec_clone.hpp"
-namespace cytnx{
-
+namespace cytnx_extension{
+    using namespace cytnx;
     enum bondType: int{
         BD_KET = -1,
         BD_BRA = 1,

@@ -5,8 +5,8 @@
 
 using namespace std;
 
-namespace cytnx{
-
+namespace cytnx_extension{
+    using namespace cytnx;
     // += 
     template<> CyTensor& CyTensor::operator+=<CyTensor>(const CyTensor &rc){
         *this = cytnx::linalg::Add(*this,rc);

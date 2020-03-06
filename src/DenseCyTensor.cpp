@@ -4,8 +4,8 @@
 #include "Generator.hpp"
 #include "linalg.hpp"
 #include <vector>
-namespace cytnx{
-
+namespace cytnx_extension{
+    using namespace cytnx;
 
     void DenseCyTensor::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &Rowrank, const unsigned int &dtype,const int &device, const bool &is_diag){
 

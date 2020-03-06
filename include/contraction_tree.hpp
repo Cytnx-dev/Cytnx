@@ -9,8 +9,8 @@
 #include <map>
 #include <string>
 
-namespace cytnx{
-
+namespace cytnx_extension{
+    using namespace cytnx;
     class Node{
         public:
             CyTensor utensor; //don't worry about copy, because everything are references in cytnx!

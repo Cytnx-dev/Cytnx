@@ -8,8 +8,8 @@
 #include <string>
 #include <cstdio>
 #include "utils/vec_clone.hpp"
-namespace cytnx{
-
+namespace cytnx_extension{
+    using namespace cytnx;
     ///@cond
     struct __sym{
         enum __stype{

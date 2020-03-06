@@ -5,8 +5,8 @@
 
 using namespace std;
 
-namespace cytnx{
-
+namespace cytnx_extension{
+    using namespace cytnx;
     void Network_base::Fromfile(const std::string &fname){
         cytnx_error_msg(true,"[ERROR][Network][Fromfile] call from uninitialize network.%s","\n");
     }

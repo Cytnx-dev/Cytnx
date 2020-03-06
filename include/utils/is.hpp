@@ -12,8 +12,9 @@ namespace cytnx{
    
     bool is(const Tensor&L, const Tensor&R);
     bool is(const Storage&L, const Storage&R);
-    bool is(const Bond &L, const Bond& R);
-    bool is(const Symmetry &L, const Symmetry& R); 
+
+    bool is(const cytnx_extension::Bond &L, const cytnx_extension::Bond& R);
+    bool is(const cytnx_extension::Symmetry &L, const cytnx_extension::Symmetry& R); 
 
 }// namespace cytnx
 

@@ -17,8 +17,9 @@
 #include "Symmetry.hpp"
 #include "Bond.hpp"
 
-namespace cytnx{
-   
+//namespace cytnx{
+namespace cytnx_extension{ 
+    using namespace cytnx;
     /// @cond 
     class CyTensorType_class{
         public:
