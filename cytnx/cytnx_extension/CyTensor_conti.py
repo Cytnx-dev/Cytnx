@@ -1,5 +1,6 @@
-from .utils import *
-from cytnx import *
+from ..utils import *
+from ..cytnx.cytnx_extension_c import *  
+
 
 """
 @add_method(Storage)
@@ -10,7 +11,7 @@ def astype(self, new_type):
     else:
         return self.astype_different_type(new_type)
 """
-
+""
 @add_method(CyTensor)
 def to(self, device):
     if(self.device() == device):
@@ -18,4 +19,4 @@ def to(self, device):
 
     else:
         return self.to_different_device(device)
-
+""

@@ -647,7 +647,7 @@ PYBIND11_MODULE(cytnx,m){
                 ;
 
 
-    auto mext = m.def_submodule("cytnx_extension");
+    auto mext = m.def_submodule("cytnx_extension_c");
     py::enum_<cytnx_extension::__sym::__stype>(mext,"SymType")
         .value("Z",cytnx_extension::__sym::__stype::Z)
         .value("U",cytnx_extension::__sym::__stype::U)

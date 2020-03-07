@@ -1,9 +1,9 @@
 import sys
 #sys.path.append("..")
 import cytnx
-from cytnx import linalg,cytnx_extension
-
-
+#from cytnx import linalg,cytnx_extension
+from cytnx import linalg
+from cytnx import cytnx_extension
 
 
 #bd1 = cytnx.Bond(2)
@@ -59,7 +59,6 @@ Tc = Ta.contiguous()
 print(Tc)
 #Tc = Ta.reshape(12,2)
 #print(Tc)
-exit(1)
 print(Tc.shape)
 
 ele = Ta[0,:,1]
@@ -126,21 +125,22 @@ print(Tn3a)
 ##=============================
 ## Bond
 ##=============================
+
 bd_in = cytnx_extension.Bond(10,cytnx_extension.bondType.BD_BRA);
 print(bd_in)
-exit(1)
-bd_sym = cytnx.Bond(3,cytnx.bondType.BD_KET,\
+bd_sym = cytnx_extension.Bond(3,cytnx_extension.bondType.BD_KET,\
                         [[0,2],[1,2],[1,3]],\
-                        [cytnx.Symmetry.Zn(2),\
-                         cytnx.Symmetry.U1()])
+                        [cytnx_extension.Symmetry.Zn(2),\
+                         cytnx_extension.Symmetry.U1()])
 print(bd_sym)
 
 print(bd_sym == bd_sym)
-bd_1 = cytnx.Bond(3)
-bd_2 = cytnx.Bond(2)
-bd_3 = cytnx.Bond(4)
+bd_1 = cytnx_extension.Bond(3)
+bd_2 = cytnx_extension.Bond(2)
+bd_3 = cytnx_extension.Bond(4)
 
-U = cytnx.CyTensor([bd_1,bd_2,bd_3],Rowrank=2,dtype=cytnx.Type.Double)
+U = cytnx_extension.CyTensor([bd_1,bd_2,bd_3],Rowrank=2,dtype=cytnx.Type.Double)
+
 U.print_diagram()
 U.permute_(0,2,1,Rowrank=1)
 U.print_diagram()
@@ -150,6 +150,10 @@ X.print_diagram()
 
 U.reshape_(6,-1)
 U.print_diagram()
+print(U.is_contiguous())
+
+dU = U.to(cytnx.Device.cpu)
+print(dU is U)
 
 
 
