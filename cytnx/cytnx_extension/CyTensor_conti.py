@@ -22,7 +22,7 @@ def to(self, device):
         return self.to_different_device(device)
 
 @add_method(CyTensor)
-def contiguous(self, device):
+def contiguous(self):
     if(self.is_contiguous()):
         return self
 

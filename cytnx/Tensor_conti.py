@@ -27,7 +27,7 @@ def astype(self,dtype):
         return self.astype_different_dtype(dtype)
 
 @add_method(Tensor)
-def contiguous(self,dtype):
+def contiguous(self):
     if(self.is_contiguous()):
         return self
     else:
