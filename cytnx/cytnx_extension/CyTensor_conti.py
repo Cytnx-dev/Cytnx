@@ -1,5 +1,7 @@
 from ..utils import *
 from ..cytnx.cytnx_extension_c import *  
+## load the submodule from pybind and inject the methods
+
 
 
 """
@@ -11,7 +13,6 @@ def astype(self, new_type):
     else:
         return self.astype_different_type(new_type)
 """
-""
 @add_method(CyTensor)
 def to(self, device):
     if(self.device() == device):
@@ -19,4 +20,11 @@ def to(self, device):
 
     else:
         return self.to_different_device(device)
-""
+
+@add_method(CyTensor)
+def contiguous(self, device):
+    if(self.is_contiguous()):
+        return self
+
+    else:
+        return self.make_contiguous()

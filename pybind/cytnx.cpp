@@ -284,7 +284,7 @@ PYBIND11_MODULE(cytnx,m){
                     //std::cout << c_args.size() << std::endl;
                     return self.permute(c_args);
                 })
-                .def("contiguous",&cytnx::Tensor::contiguous)
+                .def("make_contiguous",&cytnx::Tensor::contiguous)
                 .def("contiguous_",&cytnx::Tensor::contiguous_)
                 .def("reshape_",[](cytnx::Tensor &self, py::args args){
                     std::vector<cytnx::cytnx_int64> c_args = args.cast< std::vector<cytnx::cytnx_int64> >();
@@ -916,7 +916,7 @@ PYBIND11_MODULE(cytnx,m){
                     return self.permute(c_args,Rowrank,by_label);
                 })
 
-                .def("contiguous",&cytnx_extension::CyTensor::contiguous)
+                .def("make_contiguous",&cytnx_extension::CyTensor::contiguous)
                 .def("contiguous_",&cytnx_extension::CyTensor::contiguous_)
                 .def("print_diagram",&cytnx_extension::CyTensor::print_diagram,py::arg("bond_info")=false,py::call_guard<py::scoped_ostream_redirect,
                      py::scoped_estream_redirect>())
