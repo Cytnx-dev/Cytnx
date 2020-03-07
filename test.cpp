@@ -10,11 +10,15 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]){
 
-    Bond bd_r = Bond(10);
-    cout << bd_r << endl;
-    
-    Bond bd_l = Bond(10,BD_KET);
-    cout << bd_l << endl;
+    Tensor Ta({3,4,2},Type.Double);
+    cout << Ta.dtype_str() << endl;
+    cout << Ta.device_str() << endl;
+    cout <<  Ta << endl;
+    Ta.permute_({0,2,1});
+    cout << Ta << endl;
+    Tensor Tc = Ta.contiguous();
+    cout << Tc << endl;
+
 
     return 0;
 

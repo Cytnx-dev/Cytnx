@@ -96,7 +96,9 @@ namespace cytnx{
 
     boost::intrusive_ptr<Storage_base> DoubleStorage::Move_memory(const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper){
         boost::intrusive_ptr<Storage_base> tmp(this);
+        //cout << this->device << " " << Device.cpu << endl;
         if(this->device==Device.cpu){
+            //cout << "[OK]" << endl;
             return utils_internal::Movemem_cpu_d(tmp,old_shape,mapper,invmapper,0);
         }else{
             #ifdef UNI_GPU

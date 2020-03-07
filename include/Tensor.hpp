@@ -179,7 +179,8 @@ namespace cytnx{
                         oldshape[i] = this->_shape[this->_invmapper[i]];
                     }
         
-                    out->_storage = this->_storage._impl->Move_memory(oldshape,this->_mapper, this->_invmapper);
+                    out->_storage._impl = this->_storage._impl->Move_memory(oldshape,this->_mapper, this->_invmapper);
+                    //std::cout << out->_storage << std::endl;
                     out->_invmapper = vec_range(this->_invmapper.size());
                     out->_mapper = out->_invmapper;
                     out->_shape = this->_shape;
@@ -245,7 +246,7 @@ namespace cytnx{
                 }else{
                     out = this->clone();
                 }
-
+                
                 out->reshape_(new_shape);
                 return out;
             }

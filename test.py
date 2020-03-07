@@ -50,8 +50,17 @@ print(Ta)
 Ta.permute_(0,2,1)
 Tb = Ta.permute_(1,0,2)
 print(Tb is Ta)
+print(Ta)
+
+
+
+
+Tc = Ta.contiguous()
+print(Tc)
 #Tc = Ta.reshape(12,2)
-#print(Tc.shape)
+#print(Tc)
+exit(1)
+print(Tc.shape)
 
 ele = Ta[0,:,1]
 print(ele)

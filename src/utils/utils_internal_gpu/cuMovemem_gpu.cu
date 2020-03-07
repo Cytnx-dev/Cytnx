@@ -109,7 +109,7 @@ namespace cytnx{
 
             }else{
 
-                out->_Init_byptr(dtmp,Nelem,true,in->cap);
+                out->_Init_byptr(dtmp,Nelem,in->device,true,in->cap);
                 return out;
             }
 
@@ -180,7 +180,7 @@ namespace cytnx{
 
             }else{
 
-                out->_Init_byptr(dtmp,Nelem,true,in->cap);
+                out->_Init_byptr(dtmp,Nelem,in->device,true,in->cap);
                 return out;
             }
 
@@ -251,7 +251,7 @@ namespace cytnx{
 
             }else{
 
-                out->_Init_byptr(dtmp,Nelem,true,in->cap);
+                out->_Init_byptr(dtmp,Nelem,in->device,true,in->cap);
                 return out;
             }
         }
@@ -321,7 +321,7 @@ namespace cytnx{
 
             }else{
 
-                out->_Init_byptr(dtmp,Nelem,true,in->cap);
+                out->_Init_byptr(dtmp,Nelem,in->device,true,in->cap);
                 return out;
             }
 
@@ -392,7 +392,7 @@ namespace cytnx{
 
             }else{
 
-                out->_Init_byptr(dtmp,Nelem,true,in->cap);
+                out->_Init_byptr(dtmp,Nelem,in->device,true,in->cap);
                 return out;
             }
 
@@ -464,7 +464,7 @@ namespace cytnx{
 
             }else{
 
-                out->_Init_byptr(dtmp,Nelem,true,in->cap);
+                out->_Init_byptr(dtmp,Nelem,in->device,true,in->cap);
                 return out;
             }
         }
@@ -534,7 +534,7 @@ namespace cytnx{
 
             }else{
 
-                out->_Init_byptr(dtmp,Nelem,true,in->cap);
+                out->_Init_byptr(dtmp,Nelem,in->device,true,in->cap);
                 return out;
             }
         }
@@ -604,7 +604,7 @@ namespace cytnx{
 
             }else{
 
-                out->_Init_byptr(dtmp,Nelem,true,in->cap);
+                out->_Init_byptr(dtmp,Nelem,in->device,true,in->cap);
                 return out;
             }
         }
@@ -673,7 +673,7 @@ namespace cytnx{
 
             }else{
 
-                out->_Init_byptr(dtmp,Nelem,true,in->cap);
+                out->_Init_byptr(dtmp,Nelem,in->device,true,in->cap);
                 return out;
             }
         }
@@ -742,7 +742,7 @@ namespace cytnx{
 
             }else{
 
-                out->_Init_byptr(dtmp,Nelem,true,in->cap);
+                out->_Init_byptr(dtmp,Nelem,in->device,true,in->cap);
                 return out;
             }
         }
@@ -811,7 +811,7 @@ namespace cytnx{
 
             }else{
 
-                out->_Init_byptr(dtmp,Nelem,true,in->cap);
+                out->_Init_byptr(dtmp,Nelem,in->device,true,in->cap);
                 return out;
             }
         }

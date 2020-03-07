@@ -81,7 +81,7 @@ namespace cytnx{
                 free(des);
                 return out;
             }else{
-                out->_Init_byptr(des,accu_old,true,in->cap);
+                out->_Init_byptr(des,accu_old,in->device,true,in->cap);
                 return out;
             }
 
@@ -159,7 +159,7 @@ namespace cytnx{
                 free(des);
                 return out;
             }else{
-                out->_Init_byptr(des,accu_old,true,in->cap);
+                out->_Init_byptr(des,accu_old,in->device,true,in->cap);
                 return out;
             }
 
@@ -238,7 +238,7 @@ namespace cytnx{
                 free(des);
                 return out;
             }else{
-                out->_Init_byptr(des,accu_old,true,in->cap);
+                out->_Init_byptr(des,accu_old,in->device,true,in->cap);
                 return out;
             }
 
@@ -317,7 +317,7 @@ namespace cytnx{
                 free(des);
                 return out;
             }else{
-                out->_Init_byptr(des,accu_old,true,in->cap);
+                out->_Init_byptr(des,accu_old,in->device,true,in->cap);
                 return out;
             }
 
@@ -396,7 +396,7 @@ namespace cytnx{
                 free(des);
                 return out;
             }else{
-                out->_Init_byptr(des,accu_old,true,in->cap);
+                out->_Init_byptr(des,accu_old,in->device,true,in->cap);
                 return out;
             }
 
@@ -475,7 +475,7 @@ namespace cytnx{
                 free(des);
                 return out;
             }else{
-                out->_Init_byptr(des,accu_old,true,in->cap);
+                out->_Init_byptr(des,accu_old,in->device,true,in->cap);
                 return out;
             }
 
@@ -553,7 +553,7 @@ namespace cytnx{
                 free(des);
                 return out;
             }else{
-                out->_Init_byptr(des,accu_old,true,in->cap);
+                out->_Init_byptr(des,accu_old,in->device,true,in->cap);
                 return out;
             }
 
@@ -631,7 +631,7 @@ namespace cytnx{
                 free(des);
                 return out;
             }else{
-                out->_Init_byptr(des,accu_old,true,in->cap);
+                out->_Init_byptr(des,accu_old,in->device,true,in->cap);
                 return out;
             }
 
@@ -708,7 +708,7 @@ namespace cytnx{
                 free(des);
                 return out;
             }else{
-                out->_Init_byptr(des,accu_old,true,in->cap);
+                out->_Init_byptr(des,accu_old,in->device,true,in->cap);
                 return out;
             }
 
@@ -785,7 +785,7 @@ namespace cytnx{
                 free(des);
                 return out;
             }else{
-                out->_Init_byptr(des,accu_old,true,in->cap);
+                out->_Init_byptr(des,accu_old,in->device,true,in->cap);
                 return out;
             }
 
@@ -862,7 +862,7 @@ namespace cytnx{
                 free(des);
                 return out;
             }else{
-                out->_Init_byptr(des,accu_old,true,in->cap);
+                out->_Init_byptr(des,accu_old,in->device,true,in->cap);
                 return out;
             }
 
