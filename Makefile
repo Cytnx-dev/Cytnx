@@ -88,9 +88,9 @@ OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o CyTensor_base
 
 ## Utils
 OBJS += utils_internal_interface.o
-OBJS += utils.o Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o vec2d_col_sort.o vec_range.o complex_arithmetic.o is.o vec_intersect.o vec_concatenate.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_cpu.o SetElems_cpu.o cartesian.o str_utils.o
+OBJS += utils.o Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o vec2d_col_sort.o vec_range.o complex_arithmetic.o is.o vec_intersect.o vec_concatenate.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_cpu.o SetElems_cpu.o cartesian.o str_utils.o Complexmem_cpu.o
 ifeq ($(GPU_Enable),1)
-  OBJS += cucomplex_arithmetic.o cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o cuFill_gpu.o cuSetArange_gpu.o cuGetElems_gpu.o  cuSetElems_gpu.o
+  OBJS += cucomplex_arithmetic.o cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o cuFill_gpu.o cuSetArange_gpu.o cuGetElems_gpu.o  cuSetElems_gpu.o cuComplexmem_gpu.o
 endif
 
 ## Linalg_internal
@@ -118,16 +118,16 @@ TESTPATH=tests
 all: test
 
 
-#test: test.o $(ALLOBJS)
-#	$(CC) -o $@ $^ $(CCFLAGS) $(LDFLAGS)
+test: test.o $(ALLOBJS)
+	$(CC) -o $@ $^ $(CCFLAGS) $(LDFLAGS)
 
-test: test.o libcytnx.so
-	$(CC) -L. $(LDFLAGS) -o $@ $< libcytnx.so
-	#export LD_LIBRARY_PATH=.
+#test: test.o libcytnx.so
+#	$(CC) -L. $(LDFLAGS) -o $@ $< libcytnx.so
+#	#export LD_LIBRARY_PATH=.
 
-demo: demo.o libcytnx.so
-	$(CC) -L. $(LDFLAGS) -o $@ $< libcytnx.so
-	#export LD_LIBRARY_PATH=.
+#demo: demo.o libcytnx.so
+#	$(CC) -L. $(LDFLAGS) -o $@ $< libcytnx.so
+#	#export LD_LIBRARY_PATH=.
 
 libcytnx.so: $(ALLOBJS)
 	$(CC) -shared -o $@ $^ $(CCFLAGS) $(LDFLAGS)
@@ -353,6 +353,9 @@ Range_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/Range_cpu.cpp $(CytnxPATH
 Movemem_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/Movemem_cpu.cpp $(CytnxPATH)/src/utils/utils_internal_cpu/Movemem_cpu.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
+Complexmem_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/Complexmem_cpu.cpp $(CytnxPATH)/src/utils/utils_internal_cpu/Complexmem_cpu.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+
 Alloc_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/Alloc_cpu.cpp $(CytnxPATH)/src/utils/utils_internal_cpu/Alloc_cpu.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
@@ -407,6 +410,8 @@ cuAlloc_gpu.o: $(CytnxPATH)/src/utils/utils_internal_gpu/cuAlloc_gpu.cu $(CytnxP
 cuCast_gpu.o: $(CytnxPATH)/src/utils/utils_internal_gpu/cuCast_gpu.cu $(CytnxPATH)/src/utils/utils_internal_gpu/cuCast_gpu.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 cuMovemem_gpu.o: $(CytnxPATH)/src/utils/utils_internal_gpu/cuMovemem_gpu.cu $(CytnxPATH)/src/utils/utils_internal_gpu/cuMovemem_gpu.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+cuComplexmem_gpu.o: $(CytnxPATH)/src/utils/utils_internal_gpu/cuComplexmem_gpu.cu $(CytnxPATH)/src/utils/utils_internal_gpu/cuComplexmem_gpu.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 cuSetZeros_gpu.o: $(CytnxPATH)/src/utils/utils_internal_gpu/cuSetZeros_gpu.cu $(CytnxPATH)/src/utils/utils_internal_gpu/cuSetZeros_gpu.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@

@@ -660,4 +660,47 @@ namespace cytnx{
         this->at<cytnx_complex64>(this->len-1) = tmp;
     }
 
+    boost::intrusive_ptr<Storage_base> ComplexFloatStorage::real(){
+        if(this->device==Device.cpu){
+            boost::intrusive_ptr<Storage_base> out(new FloatStorage());
+            void *dtmp = malloc(sizeof(cytnx_float)*this->cap);    
+            utils_internal::Complexmem_cpu_cftf(dtmp,this->Mem,this->len,true);
+            out->_Init_byptr(dtmp,this->len,this->device,true,this->cap);
+            return out;
+        }else{
+            #ifdef UNI_GPU
+                boost::intrusive_ptr<Storage_base> out(new FloatStorage());
+                cudaSetDevice(device);          
+                void *dtmp = utils_internal::cuMalloc_gpu(sizeof(cytnx_float)*this->cap);
+                utils_internal::cuComplexmem_gpu_cftf(dtmp,this->Mem,this->len,true);
+                out->_Init_byptr(dtmp,this->len,this->device,true,this->cap);
+                return out;
+            #else
+                cytnx_error_msg(1,"%s","[ERROR][Internal] Storage.to_. the Storage is as GPU but without CUDA support.");
+                return nullptr;
+            #endif
+        }
+    }   
+    boost::intrusive_ptr<Storage_base> ComplexFloatStorage::imag(){
+        if(this->device==Device.cpu){
+            boost::intrusive_ptr<Storage_base> out(new FloatStorage());
+            void *dtmp = malloc(sizeof(cytnx_float)*this->cap);    
+            utils_internal::Complexmem_cpu_cftf(dtmp,this->Mem,this->len,false);
+            out->_Init_byptr(dtmp,this->len,this->device,true,this->cap);
+            return out;
+        }else{
+            #ifdef UNI_GPU
+                boost::intrusive_ptr<Storage_base> out(new FloatStorage());
+                cudaSetDevice(device);          
+                void *dtmp = utils_internal::cuMalloc_gpu(sizeof(cytnx_float)*this->cap);
+                utils_internal::cuComplexmem_gpu_cftf(dtmp,this->Mem,this->len,false);
+                out->_Init_byptr(dtmp,this->len,this->device,true,this->cap);
+                return out;
+            #else
+                cytnx_error_msg(1,"%s","[ERROR][Internal] Storage.to_. the Storage is as GPU but without CUDA support.");
+                return nullptr;
+            #endif
+        }
+    }   
+
 }//namespace cytnx

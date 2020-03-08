@@ -611,6 +611,11 @@ namespace cytnx{
         }
         this->at<cytnx_uint16>(this->len-1) = val;
     }
-
+    boost::intrusive_ptr<Storage_base> Uint16Storage::real(){
+        cytnx_error_msg(true,"[ERROR] Storage.real() can only be called from complex type.%s","\n");
+    }   
+    boost::intrusive_ptr<Storage_base> Uint16Storage::imag(){
+        cytnx_error_msg(true,"[ERROR] Storage.imag() can only be called from complex type.%s","\n");
+    }   
 
 }//cytnx

@@ -3,6 +3,9 @@
 
 using namespace std;
 namespace cytnx{
+
+
+
     void DoubleStorage::Init(const unsigned long long &len_in, const int &device){
         //cout << "Double.init" << endl;
         this->len = len_in;
@@ -617,6 +620,11 @@ namespace cytnx{
         this->at<cytnx_double>(this->len-1) = val;
     }
 
-
+    boost::intrusive_ptr<Storage_base> DoubleStorage::real(){
+        cytnx_error_msg(true,"[ERROR] Storage.real() can only be called from complex type.%s","\n");
+    }   
+    boost::intrusive_ptr<Storage_base> DoubleStorage::imag(){
+        cytnx_error_msg(true,"[ERROR] Storage.imag() can only be called from complex type.%s","\n");
+    }   
 
 }//namespace cytnx;

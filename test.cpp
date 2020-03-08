@@ -1,7 +1,7 @@
 #include "cytnx.hpp"
 #include <complex>
 
- 
+  
 using namespace std;
 using namespace cytnx;
 using namespace cytnx_extension;
@@ -19,6 +19,24 @@ int main(int argc, char *argv[]){
     Tensor Tc = Ta.contiguous();
     cout << Tc << endl;
 
+
+    Storage S1(10,Type.ComplexDouble);
+    for(unsigned int i=0;i<S1.size();i++){
+        S1.at<cytnx_complex128>(i) = cytnx_complex128(i,i+1);
+    }
+    cout << S1 << endl;
+    
+    Storage S1r = S1.real();
+    cout << S1r << endl;    
+
+    Storage S1i = S1.imag();
+    cout << S1i << endl;
+
+    Storage S2 = S1.astype(Type.ComplexFloat);
+    Storage S2r = S2.real();
+    Storage S2i = S2.imag();
+    
+    cout << S2 << S2r << S2i << endl;
 
     return 0;
 

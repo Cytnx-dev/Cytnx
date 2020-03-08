@@ -598,7 +598,12 @@ namespace cytnx{
         return static_cast<bool*>(this->Mem)[idx];
     }
 
-
+    boost::intrusive_ptr<Storage_base> Storage_base::real(){
+        cytnx_error_msg(true,"[ERROR] trying to call Storage.real() from void Storage%s","\n");
+    }   
+    boost::intrusive_ptr<Storage_base> Storage_base::imag(){
+        cytnx_error_msg(true,"[ERROR] trying to call Storage.real() from void Storage%s","\n");
+    }   
 
 
 }//namespace cytnx;

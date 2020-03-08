@@ -6,9 +6,14 @@
 [Cytnx_v0.2.pdf](https://drive.google.com/file/d/13VBJ9565Zw5_W-_-aJjztGESESAVMm8_/view?usp=sharing)
 
 ## Current Version:
-    v0.4
+    v0.5
 
 ## What's new:
+    1. Add .imag() .real() for Storage. 
+
+
+## Version log
+    v0.4
     1. remove Otimes, add Kron and Outer 
     2. Add Storage append, capacity, pre-alloc 32x address
     3. Tensor can now allow redundant dimension (e.g. shape = (1,1,1,1,1...) 
@@ -17,6 +22,7 @@
     6. Add Tensor.append for rank-1 Tensor    
     7. Add Exp() Expf() Exp\_() Expf\_()
     8. Change UniTensor to CyTensor 
+    9. Guarded CyTensor, Bond, Symmetry and Network class with cytnx_extension namespace (cytnx_extension submodule in python).  
 
 ## Documentation:
 

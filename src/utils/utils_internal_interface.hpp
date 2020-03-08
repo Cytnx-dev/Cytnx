@@ -10,6 +10,7 @@
 #include "utils_internal_cpu/SetArange_cpu.hpp"
 #include "utils_internal_cpu/GetElems_cpu.hpp"
 #include "utils_internal_cpu/SetElems_cpu.hpp"
+#include "utils_internal_cpu/Complexmem_cpu.hpp"
 #ifdef UNI_GPU
     #include "utils_internal_gpu/cuCast_gpu.hpp"
     #include "utils_internal_gpu/cuAlloc_gpu.hpp"
@@ -19,6 +20,7 @@
     #include "utils_internal_gpu/cuSetArange_gpu.hpp"
     #include "utils_internal_gpu/cuSetElems_gpu.hpp"
     #include "utils_internal_gpu/cuGetElems_gpu.hpp"
+    #include "utils_internal_gpu/Complexmem_gpu.hpp"
 #endif
 
 #include "Type.hpp"
