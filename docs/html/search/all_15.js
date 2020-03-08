@@ -35,7 +35,7 @@ var searchData=
   ['zgetri_5f',['zgetri_',['../lapack__wrapper_8hpp.html#a0c71cd1246a3f74a4481bfa016f7b830',1,'lapack_wrapper.hpp']]],
   ['zheev',['zheev',['../lapack__wrapper_8hpp.html#a9abfd4cef44bec5d8860af1ea8d2e315',1,'lapack_wrapper.hpp']]],
   ['zheev_5f',['zheev_',['../lapack__wrapper_8hpp.html#a6867061d29d1634ebc4421e167f2b38f',1,'lapack_wrapper.hpp']]],
-  ['zn',['Zn',['../classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359',1,'cytnx::Symmetry']]],
+  ['zn',['Zn',['../classcytnx__extension_1_1Symmetry.html#a3b927ac210a3755137a7723f1134d91a',1,'cytnx_extension::Symmetry']]],
   ['zscal',['zscal',['../lapack__wrapper_8hpp.html#a7eda795ed1add1b25d725f946f7b0344',1,'lapack_wrapper.hpp']]],
   ['zscal_5f',['zscal_',['../lapack__wrapper_8hpp.html#af46208dbc6b7d41ce67122cc6dd921cd',1,'lapack_wrapper.hpp']]],
   ['zunglq',['zunglq',['../lapack__wrapper_8hpp.html#a0dfa4b509869bbd3258d8d9c1184e664',1,'lapack_wrapper.hpp']]],

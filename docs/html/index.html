@@ -70,10 +70,14 @@ $(function() {
 <div class="title">Cytnx </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h2>Version:</h2>
-<p>v0.4</p>
+<div class="textblock"><h2>Current Version:</h2>
+<p>v0.5</p>
 <h2>What's new:</h2>
 <ol type="1">
+<li>Add .imag() .real() for Storage.</li>
+</ol>
+<h2>Version log</h2>
+<p>v0.4</p><ol type="1">
 <li>remove Otimes, add Kron and Outer</li>
 <li>Add Storage append, capacity, pre-alloc 32x address</li>
 <li>Tensor can now allow redundant dimension (e.g. shape = (1,1,1,1,1...)</li>
@@ -81,6 +85,8 @@ $(function() {
 <li>Add more intruisive way to get slices for Tensor in C++, using operator[]</li>
 <li>Add Tensor.append for rank-1 Tensor</li>
 <li>Add <a class="el" href="namespacecytnx_1_1linalg.html#aac38382cbc0e8202411c96a0ff636471" title="Exponential all the element in Tensor. ">Exp()</a> <a class="el" href="namespacecytnx_1_1linalg.html#a5831918722e5d18f4eaf37834b8fbf77" title="Exponential all the element in Tensor. ">Expf()</a> <a class="el" href="namespacecytnx_1_1linalg.html#aaab08439dde94ee87939d07933ede6e3" title="inplace perform Exponential on all the element in Tensor. ">Exp_()</a> <a class="el" href="namespacecytnx_1_1linalg.html#a5de1faf71c76cdc6b7fa5ba3a3e21bbb" title="inplace perform Exponential on all the element in Tensor. ">Expf_()</a></li>
+<li>Change UniTensor to CyTensor</li>
+<li>Guarded CyTensor, Bond, Symmetry and Network class with <a class="el" href="namespacecytnx__extension.html">cytnx_extension</a> namespace (<a class="el" href="namespacecytnx__extension.html">cytnx_extension</a> submodule in python).</li>
 </ol>
 <h2>Feature:</h2>
 <h3>Python x C++</h3>
@@ -121,11 +127,11 @@ $(function() {
 <ul>
 <li><a class="el" href="classcytnx_1_1Storage.html">Storage </a> [binded]</li>
 <li><a class="el" href="classcytnx_1_1Tensor.html">Tensor </a> [binded]</li>
-<li><a class="el" href="classcytnx_1_1Bond.html">Bond </a> [binded]</li>
+<li><a class="el" href="">Bond </a> [binded]</li>
 <li><a class="el" href="classcytnx_1_1Accessor.html">Accessor </a> [c++ only]</li>
-<li><a class="el" href="classcytnx_1_1Symmetry.html">Symmetry </a> [binded]</li>
-<li><a class="el" href="classcytnx_1_1CyTensor.html">CyTensor </a> [binded]</li>
-<li><a class="el" href="classcytnx_1_1Network.html">Network </a> [binded]</li>
+<li><a class="el" href="">Symmetry </a> [binded]</li>
+<li><a class="el" href="">CyTensor </a> [binded]</li>
+<li><a class="el" href="">Network </a> [binded]</li>
 </ul>
 <h2>linear algebra functions:</h2>
 <p>See <a class="el" href="namespacecytnx_1_1linalg.html">cytnx::linalg </a> for further details</p>
@@ -202,6 +208,16 @@ $(function() {
 <p>[Python]</p><ul>
 <li>pybind11 2.2.4</li>
 <li>numpy &gt;= 1.15</li>
+</ul>
+<h2>conda install</h2>
+<p>[Currently Linux only]</p>
+<p>without CUDA</p><ul>
+<li>python 3.6: conda install -c kaihsinwu cytnx_36</li>
+<li>python 3.7: conda install -c kaihsinwu cytnx_37</li>
+</ul>
+<p>with CUDA</p><ul>
+<li>python 3.6: conda install -c kaihsinwu cytnx_cuda_36</li>
+<li>python 3.7: conda install -c kaihsinwu cytnx_cuda_37</li>
 </ul>
 <h2>docker image with MKL</h2>
 <p><a href="https://hub.docker.com/r/kaihsinwu/cytnx_mkl">https://hub.docker.com/r/kaihsinwu/cytnx_mkl</a></p>

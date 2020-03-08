@@ -1,9 +1,14 @@
 # Cytnx
 
-## Version:
-    v0.4
+## Current Version:
+    v0.5
 
 ## What's new:
+    1. Add .imag() .real() for Storage. 
+
+
+## Version log
+    v0.4
     1. remove Otimes, add Kron and Outer 
     2. Add Storage append, capacity, pre-alloc 32x address
     3. Tensor can now allow redundant dimension (e.g. shape = (1,1,1,1,1...) 
@@ -11,6 +16,8 @@
     5. Add more intruisive way to get slices for Tensor in C++, using operator[]
     6. Add Tensor.append for rank-1 Tensor    
     7. Add Exp() Expf() Exp\_() Expf\_()
+    8. Change UniTensor to CyTensor 
+    9. Guarded CyTensor, Bond, Symmetry and Network class with cytnx_extension namespace (cytnx_extension submodule in python).  
        
 
 ## Feature:
@@ -125,8 +132,22 @@
     * pybind11 2.2.4
     * numpy >= 1.15 
 
+
+## conda install  
+    [Currently Linux only]
+
+    without CUDA
+    * python 3.6: conda install -c kaihsinwu cytnx_36
+    * python 3.7: conda install -c kaihsinwu cytnx_37
+
+    with CUDA
+    * python 3.6: conda install -c kaihsinwu cytnx_cuda_36
+    * python 3.7: conda install -c kaihsinwu cytnx_cuda_37
+
+
 ## docker image with MKL 
   [https://hub.docker.com/r/kaihsinwu/cytnx_mkl](https://hub.docker.com/r/kaihsinwu/cytnx_mkl)
+
     
 ### To run:
 

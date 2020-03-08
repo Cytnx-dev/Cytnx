@@ -1,15 +1,15 @@
 var searchData=
 [
-  ['base_5fnodes',['base_nodes',['../classcytnx_1_1ContractionTree.html#a72e5d13096fe7ed6871f9443d90b8aee',1,'cytnx::ContractionTree']]],
-  ['bd_5fbra',['BD_BRA',['../namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efac2962ae3afa12880a276114fa889d170',1,'cytnx']]],
-  ['bd_5fket',['BD_KET',['../namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc',1,'cytnx']]],
-  ['bd_5freg',['BD_REG',['../namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efabd7a05c57c46feedff6d9a4bfc136329',1,'cytnx']]],
-  ['bond',['Bond',['../classcytnx_1_1Bond.html',1,'cytnx::Bond'],['../classcytnx_1_1Bond.html#a80ee6b9a0dd288e74d885f6f288b5a0c',1,'cytnx::Bond::Bond()']]],
+  ['base_5fnodes',['base_nodes',['../classcytnx__extension_1_1ContractionTree.html#a15238321ff52734f1b653a52267539bc',1,'cytnx_extension::ContractionTree']]],
+  ['bd_5fbra',['BD_BRA',['../namespacecytnx__extension.html#a3423a36d7e06b6542bb253adba81b4caabee2628160c0202fe948ddaa22cd71f6',1,'cytnx_extension']]],
+  ['bd_5fket',['BD_KET',['../namespacecytnx__extension.html#a3423a36d7e06b6542bb253adba81b4caa020cdf5342745432cb18bb48201611f5',1,'cytnx_extension']]],
+  ['bd_5freg',['BD_REG',['../namespacecytnx__extension.html#a3423a36d7e06b6542bb253adba81b4caaaed2c217ab646a841590c06e2944b3b5',1,'cytnx_extension']]],
+  ['bond',['Bond',['../classcytnx__extension_1_1Bond.html',1,'cytnx_extension::Bond'],['../classcytnx__extension_1_1Bond.html#ae07800c6fc941a273561c4310e0178b1',1,'cytnx_extension::Bond::Bond()']]],
   ['bond_2ecpp',['Bond.cpp',['../Bond_8cpp.html',1,'']]],
   ['bond_2ehpp',['Bond.hpp',['../Bond_8hpp.html',1,'']]],
-  ['bonds',['bonds',['../classcytnx_1_1CyTensor.html#a82eaa9cedccf9334f19c6437095debc3',1,'cytnx::CyTensor']]],
-  ['bondtype',['bondType',['../namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480ef',1,'cytnx']]],
+  ['bonds',['bonds',['../classcytnx__extension_1_1CyTensor.html#adbd4289f25b36ed9b93ff770ea91548f',1,'cytnx_extension::CyTensor']]],
+  ['bondtype',['bondType',['../namespacecytnx__extension.html#a3423a36d7e06b6542bb253adba81b4ca',1,'cytnx_extension']]],
   ['boolstorage_2ecpp',['BoolStorage.cpp',['../BoolStorage_8cpp.html',1,'']]],
-  ['build_5fcontraction_5forder_5fby_5ftokens',['build_contraction_order_by_tokens',['../classcytnx_1_1ContractionTree.html#ae40ec6ca1055ed158a1738d11b4368a3',1,'cytnx::ContractionTree']]],
-  ['build_5fdefault_5fcontraction_5forder',['build_default_contraction_order',['../classcytnx_1_1ContractionTree.html#a4c7e67417cd99555dc74e515f9ba3512',1,'cytnx::ContractionTree']]]
+  ['build_5fcontraction_5forder_5fby_5ftokens',['build_contraction_order_by_tokens',['../classcytnx__extension_1_1ContractionTree.html#adc28354b50b4c81bbedc8fbd5b472837',1,'cytnx_extension::ContractionTree']]],
+  ['build_5fdefault_5fcontraction_5forder',['build_default_contraction_order',['../classcytnx__extension_1_1ContractionTree.html#a08d77cd37d32c87c97eaac1322c055f7',1,'cytnx_extension::ContractionTree']]]
 ];

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['utensor',['utensor',['../classcytnx_1_1Node.html#afca210dc143a9d79fd1696a72f8824e7',1,'cytnx::Node']]],
-  ['utentype',['UTenType',['../namespacecytnx.html#ac4ab3283e627517d8c15f455b05e7afc',1,'cytnx']]]
+  ['utensor',['utensor',['../classcytnx__extension_1_1Node.html#a7b37969f215b69de5af6795057ce0174',1,'cytnx_extension::Node']]],
+  ['utentype',['UTenType',['../namespacecytnx__extension.html#ac3dd92e3605080f3acd8c700e59fcce6',1,'cytnx_extension']]]
 ];

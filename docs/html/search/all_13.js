@@ -1,12 +1,12 @@
 var searchData=
 [
-  ['u1',['U1',['../classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a',1,'cytnx::Symmetry']]],
+  ['u1',['U1',['../classcytnx__extension_1_1Symmetry.html#af7c0b5e0fcb82636226d24f637ce5def',1,'cytnx_extension::Symmetry']]],
   ['uint16storage_2ecpp',['Uint16Storage.cpp',['../Uint16Storage_8cpp.html',1,'']]],
   ['uint32storage_2ecpp',['Uint32Storage.cpp',['../Uint32Storage_8cpp.html',1,'']]],
   ['uint64storage_2ecpp',['Uint64Storage.cpp',['../Uint64Storage_8cpp.html',1,'']]],
-  ['uten_5ftype',['uten_type',['../classcytnx_1_1CyTensor.html#a9192c9b2b59969f9dd68fc3a7ba2636e',1,'cytnx::CyTensor']]],
-  ['uten_5ftype_5fstr',['uten_type_str',['../classcytnx_1_1CyTensor.html#acddc30afc90208453adedf8bd8fedc9f',1,'cytnx::CyTensor']]],
-  ['utensor',['utensor',['../classcytnx_1_1Node.html#afca210dc143a9d79fd1696a72f8824e7',1,'cytnx::Node']]],
-  ['utentype',['UTenType',['../namespacecytnx.html#ac4ab3283e627517d8c15f455b05e7afc',1,'cytnx']]],
+  ['uten_5ftype',['uten_type',['../classcytnx__extension_1_1CyTensor.html#aec7661bb92eba4b5645208b755839bb7',1,'cytnx_extension::CyTensor']]],
+  ['uten_5ftype_5fstr',['uten_type_str',['../classcytnx__extension_1_1CyTensor.html#a9c6a665511e98c3bb7079520051791b5',1,'cytnx_extension::CyTensor']]],
+  ['utensor',['utensor',['../classcytnx__extension_1_1Node.html#a7b37969f215b69de5af6795057ce0174',1,'cytnx_extension::Node']]],
+  ['utentype',['UTenType',['../namespacecytnx__extension.html#ac3dd92e3605080f3acd8c700e59fcce6',1,'cytnx_extension']]],
   ['utils_2ehpp',['utils.hpp',['../utils_8hpp.html',1,'']]]
 ];
