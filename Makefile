@@ -118,12 +118,12 @@ TESTPATH=tests
 all: test
 
 
-test: test.o $(ALLOBJS)
-	$(CC) -o $@ $^ $(CCFLAGS) $(LDFLAGS)
+#test: test.o $(ALLOBJS)
+#	$(CC) -o $@ $^ $(CCFLAGS) $(LDFLAGS)
 
-#test: test.o libcytnx.so
-#	$(CC) -L. $(LDFLAGS) -o $@ $< libcytnx.so
-#	#export LD_LIBRARY_PATH=.
+test: test.o libcytnx.so
+	$(CC) -L. $(LDFLAGS) -o $@ $< -lcytnx
+	#export LD_LIBRARY_PATH=.
 
 #demo: demo.o libcytnx.so
 #	$(CC) -L. $(LDFLAGS) -o $@ $< libcytnx.so
@@ -378,6 +378,7 @@ complex_arithmetic.o: $(CytnxPATH)/src/utils/complex_arithmetic.cpp $(CytnxPATH)
 
 is.o: $(CytnxPATH)/src/utils/is.cpp $(CytnxPATH)/include/utils/is.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+
 cartesian.o: $(CytnxPATH)/src/utils/cartesian.cpp $(CytnxPATH)/include/utils/cartesian.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 vec_clone.o: $(CytnxPATH)/src/utils/vec_clone.cpp $(CytnxPATH)/include/utils/vec_clone.hpp

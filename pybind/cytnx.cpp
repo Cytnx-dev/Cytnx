@@ -248,6 +248,8 @@ PYBIND11_MODULE(cytnx,m){
                 .def("append",&cytnx::Storage::append<cytnx::cytnx_bool     >, py::arg("val"))
                 .def("Save",[](cytnx::Storage &self, const std::string &fname){self.Save(fname);},py::arg("fname"))
                 .def("Load",[](cytnx::Storage &self, const std::string &fname){self.Load(fname);},py::arg("fname"))
+                .def("real",&cytnx::Storage::real)
+                .def("imag",&cytnx::Storage::imag)
                 ;
 
     py::class_<cytnx::Tensor>(m,"Tensor")

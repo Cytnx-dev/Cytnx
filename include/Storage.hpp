@@ -1030,12 +1030,42 @@ namespace cytnx{
                 this->_impl->Init(vin.size(),device);
                 memcpy(this->_impl->Mem,&vin[0],sizeof(T)*vin.size());
             }
+            
+            /**
+            @brief Get the real part form a Complex type Storage
 
-            Storage imag() const{
-                return Storage(this->_impl->imag());
-            };
+            [Note] Cannot be called from a real type Storage. 
+            
+            ## Example:
+            ### c++ API:
+            \include example/Storage/real.cpp
+            #### output>
+            \verbinclude example/Storage/real.cpp.out
+            ### python API:
+            \include example/Storage/real.py               
+            #### output>
+            \verbinclude example/Storage/real.py.out
+            */
             Storage real() const{
                 return Storage(this->_impl->real());
+            };
+            /**
+            @brief Get the imaginary part form a Complex type Storage
+
+            [Note] Cannot be called from a real type Storage. 
+            
+            ## Example:
+            ### c++ API:
+            \include example/Storage/imag.cpp
+            #### output>
+            \verbinclude example/Storage/imag.cpp.out
+            ### python API:
+            \include example/Storage/imag.py               
+            #### output>
+            \verbinclude example/Storage/imag.py.out
+            */
+            Storage imag() const{
+                return Storage(this->_impl->imag());
             };
 
     };

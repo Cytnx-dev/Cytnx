@@ -9,7 +9,6 @@ using namespace cytnx_extension;
 typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]){
-
     /*   
     Bond bd_dqu1 = Bond(4, BD_BRA,{{0,2},{2,0},{1,-1},{-1,1}});
     Bond bd_dqu2 = Bond(3, BD_BRA,{{1,1},{-1,-1},{0,0}});

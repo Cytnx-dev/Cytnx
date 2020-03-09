@@ -1,9 +1,10 @@
 #include "cytnx.hpp"
 #include <iostream>
 
-
-using namespace cytnx;
 using namespace std;
+using namespace cytnx;
+using namespace cytnx_extension; //[Note] To use the Symmetry, use this namespace
+
 int main(){ 
 
     /* 1.

@@ -161,10 +161,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2af56dfad6b8de844e810ac154b12770"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:a2af56dfad6b8de844e810ac154b12770"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Storage.html#a2af56dfad6b8de844e810ac154b12770">from_vector</a> (const std::vector&lt; T &gt; &amp;vin, const int <a class="el" href="classcytnx_1_1Storage.html#a4c3e27582d7f951e6b76ccbb92f7c537">device</a>=-1)</td></tr>
 <tr class="separator:a2af56dfad6b8de844e810ac154b12770"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7557a7109f2764fe97049a348971b39"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Storage.html">Storage</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Storage.html#ad7557a7109f2764fe97049a348971b39">imag</a> () const</td></tr>
-<tr class="separator:ad7557a7109f2764fe97049a348971b39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c28604bf7751c817c44dc3286d6520f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Storage.html">Storage</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Storage.html#a1c28604bf7751c817c44dc3286d6520f">real</a> () const</td></tr>
+<tr class="memdesc:a1c28604bf7751c817c44dc3286d6520f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the real part form a Complex type <a class="el" href="classcytnx_1_1Storage.html" title="an memeory storage with multi-type/multi-device support ">Storage</a>.  <a href="#a1c28604bf7751c817c44dc3286d6520f">More...</a><br /></td></tr>
 <tr class="separator:a1c28604bf7751c817c44dc3286d6520f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7557a7109f2764fe97049a348971b39"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Storage.html">Storage</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Storage.html#ad7557a7109f2764fe97049a348971b39">imag</a> () const</td></tr>
+<tr class="memdesc:ad7557a7109f2764fe97049a348971b39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the imaginary part form a Complex type <a class="el" href="classcytnx_1_1Storage.html" title="an memeory storage with multi-type/multi-device support ">Storage</a>.  <a href="#ad7557a7109f2764fe97049a348971b39">More...</a><br /></td></tr>
+<tr class="separator:ad7557a7109f2764fe97049a348971b39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>an memeory storage with multi-type/multi-device support </p>
@@ -646,6 +648,58 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p>Get the imaginary part form a Complex type <a class="el" href="classcytnx_1_1Storage.html" title="an memeory storage with multi-type/multi-device support ">Storage</a>. </p>
+<p>[Note] Cannot be called from a real type <a class="el" href="classcytnx_1_1Storage.html" title="an memeory storage with multi-type/multi-device support ">Storage</a>.</p>
+<h2>Example:</h2>
+<h3>c++ API:</h3>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacestd.html">std</a>;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    </div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        Get the imag part from a complex128 (ComplexDouble) Storage</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Storage.html">Storage</a> S1(10,<a class="code" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">Type</a>.ComplexDouble);</div><div class="line">    <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i=0;i&lt;S1.size();i++){</div><div class="line">        S1.at&lt;<a class="code" href="namespacecytnx.html#a401ce1c8c4599b9a1a860e9e225e6b9e">cytnx_complex128</a>&gt;(i) = <a class="code" href="namespacecytnx.html#a401ce1c8c4599b9a1a860e9e225e6b9e">cytnx_complex128</a>(i,i+1);</div><div class="line">    }</div><div class="line">    cout &lt;&lt; S1 &lt;&lt; endl;</div><div class="line">    </div><div class="line">    <a class="code" href="classcytnx_1_1Storage.html">Storage</a> S1r = S1.<a class="code" href="classcytnx_1_1Storage.html#ad7557a7109f2764fe97049a348971b39">imag</a>();</div><div class="line">    cout &lt;&lt; S1r &lt;&lt; endl;    </div><div class="line"></div><div class="line">    </div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        Get the imag part from a complex64 (ComplexFloat) Storage</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Storage.html">Storage</a> S2(10,<a class="code" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">Type</a>.ComplexFloat);</div><div class="line">    <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i=0;i&lt;S1.size();i++){</div><div class="line">        S2.at&lt;<a class="code" href="namespacecytnx.html#a63d2515ecaa35660c85571236e61fec7">cytnx_complex64</a>&gt;(i) = <a class="code" href="namespacecytnx.html#a63d2515ecaa35660c85571236e61fec7">cytnx_complex64</a>(i,i+2);</div><div class="line">    }</div><div class="line">    cout &lt;&lt; S2 &lt;&lt; endl;</div><div class="line">    </div><div class="line">    <a class="code" href="classcytnx_1_1Storage.html">Storage</a> S2r = S2.<a class="code" href="classcytnx_1_1Storage.html#ad7557a7109f2764fe97049a348971b39">imag</a>();</div><div class="line">    cout &lt;&lt; S2r &lt;&lt; endl;    </div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment">dtype : Complex Double (Complex Float64)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00+1.00000e+00j 1.00000e+00+2.00000e+00j 2.00000e+00+3.00000e+00j 3.00000e+00+4.00000e+00j 4.00000e+00+5.00000e+00j 5.00000e+00+6.00000e+00j 6.00000e+00+7.00000e+00j 7.00000e+00+8.00000e+00j 8.00000e+00+9.00000e+00j 9.00000e+00+1.00000e+01j  ]
+
+dtype : Double (Float64)
+device: cytnx device: CPU
+size  : 10
+[ 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 ]
+
+dtype : Complex Float (Complex Float32)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00+2.00000e+00j 1.00000e+00+3.00000e+00j 2.00000e+00+4.00000e+00j 3.00000e+00+5.00000e+00j 4.00000e+00+6.00000e+00j 5.00000e+00+7.00000e+00j 6.00000e+00+8.00000e+00j 7.00000e+00+9.00000e+00j 8.00000e+00+1.00000e+01j 9.00000e+00+1.10000e+01j  ]
+
+dtype : Float32
+device: cytnx device: CPU
+size  : 10
+[ 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]
+
+</pre> <h3>python API:</h3>
+<div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line"></div><div class="line">S1 = Storage(10,Type.ComplexDouble)</div><div class="line"></div><div class="line"><span class="keywordflow">for</span> i <span class="keywordflow">in</span> range(10):</div><div class="line">    S1[i] = i + 1j*(i+1)</div><div class="line"></div><div class="line">S1r = S1.imag()</div><div class="line">print(S1)</div><div class="line">print(S1r)</div><div class="line"></div><div class="line">S2 = Storage(10,Type.ComplexFloat)</div><div class="line"></div><div class="line"><span class="keywordflow">for</span> i <span class="keywordflow">in</span> range(10):</div><div class="line">    S2[i] = i + 1j*(i+1)</div><div class="line"></div><div class="line">S2r = S2.imag()</div><div class="line">print(S2)</div><div class="line">print(S2r)</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment">dtype : Complex Double (Complex Float64)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00+1.00000e+00j 1.00000e+00+2.00000e+00j 2.00000e+00+3.00000e+00j 3.00000e+00+4.00000e+00j 4.00000e+00+5.00000e+00j 5.00000e+00+6.00000e+00j 6.00000e+00+7.00000e+00j 7.00000e+00+8.00000e+00j 8.00000e+00+9.00000e+00j 9.00000e+00+1.00000e+01j  ]
+
+
+dtype : Double (Float64)
+device: cytnx device: CPU
+size  : 10
+[ 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 ]
+
+
+dtype : Complex Float (Complex Float32)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00+1.00000e+00j 1.00000e+00+2.00000e+00j 2.00000e+00+3.00000e+00j 3.00000e+00+4.00000e+00j 4.00000e+00+5.00000e+00j 5.00000e+00+6.00000e+00j 6.00000e+00+7.00000e+00j 7.00000e+00+8.00000e+00j 8.00000e+00+9.00000e+00j 9.00000e+00+1.00000e+01j  ]
+
+
+dtype : Float32
+device: cytnx device: CPU
+size  : 10
+[ 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 ]
+
+
+</pre> 
 </div>
 </div>
 <a id="a6cf79f362c4ae68ab7623f0ebac9355e"></a>
@@ -721,13 +775,13 @@ size  : 10
 <pre class="fragment">dtype : Double (Float64)
 device: cytnx device: CPU
 size  : 10
-[ 0.00000e+00 0.00000e+00 0.00000e+00 1.74777e-310 4.66620e-310 0.00000e+00 0.00000e+00 1.67763e+243 4.66620e-310 4.66620e-310 ]
+[ 0.00000e+00 4.67531e-310 6.90414e-310 6.90414e-310 6.90414e-310 6.90414e-310 6.90414e-310 6.90414e-310 6.90414e-310 6.90414e-310 ]
 
 
 dtype : Uint64
 device: cytnx device: CPU
 size  : 10
-[                   0        138247484205                   0                   0 1657059676694454817 14129283765386735444     140220928444592     140220927659952 7148561216671304352     140220928443888  ]
+[                   0        138247484205                   0                   0                   0                   0                   0                   0                   0                   0  ]
 
 
 dtype : Double (Float64)
@@ -895,6 +949,58 @@ False
 </table>
 </div><div class="memdoc">
 
+<p>Get the real part form a Complex type <a class="el" href="classcytnx_1_1Storage.html" title="an memeory storage with multi-type/multi-device support ">Storage</a>. </p>
+<p>[Note] Cannot be called from a real type <a class="el" href="classcytnx_1_1Storage.html" title="an memeory storage with multi-type/multi-device support ">Storage</a>.</p>
+<h2>Example:</h2>
+<h3>c++ API:</h3>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacestd.html">std</a>;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        Get the real part from a complex128 (ComplexDouble) Storage</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Storage.html">Storage</a> S1(10,<a class="code" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">Type</a>.ComplexDouble);</div><div class="line">    <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i=0;i&lt;S1.size();i++){</div><div class="line">        S1.at&lt;<a class="code" href="namespacecytnx.html#a401ce1c8c4599b9a1a860e9e225e6b9e">cytnx_complex128</a>&gt;(i) = <a class="code" href="namespacecytnx.html#a401ce1c8c4599b9a1a860e9e225e6b9e">cytnx_complex128</a>(i,i+1);</div><div class="line">    }</div><div class="line">    cout &lt;&lt; S1 &lt;&lt; endl;</div><div class="line">    </div><div class="line">    <a class="code" href="classcytnx_1_1Storage.html">Storage</a> S1r = S1.<a class="code" href="classcytnx_1_1Storage.html#a1c28604bf7751c817c44dc3286d6520f">real</a>();</div><div class="line">    cout &lt;&lt; S1r &lt;&lt; endl;    </div><div class="line"></div><div class="line">    </div><div class="line">    <span class="comment">/*</span></div><div class="line"><span class="comment">        Get the real part from a complex64 (ComplexFloat) Storage</span></div><div class="line"><span class="comment">    */</span></div><div class="line">    <a class="code" href="classcytnx_1_1Storage.html">Storage</a> S2(10,<a class="code" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">Type</a>.ComplexFloat);</div><div class="line">    <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i=0;i&lt;S1.size();i++){</div><div class="line">        S2.at&lt;<a class="code" href="namespacecytnx.html#a63d2515ecaa35660c85571236e61fec7">cytnx_complex64</a>&gt;(i) = <a class="code" href="namespacecytnx.html#a63d2515ecaa35660c85571236e61fec7">cytnx_complex64</a>(i,i+2);</div><div class="line">    }</div><div class="line">    cout &lt;&lt; S2 &lt;&lt; endl;</div><div class="line">    </div><div class="line">    <a class="code" href="classcytnx_1_1Storage.html">Storage</a> S2r = S2.<a class="code" href="classcytnx_1_1Storage.html#a1c28604bf7751c817c44dc3286d6520f">real</a>();</div><div class="line">    cout &lt;&lt; S2r &lt;&lt; endl;    </div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment">dtype : Complex Double (Complex Float64)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00+1.00000e+00j 1.00000e+00+2.00000e+00j 2.00000e+00+3.00000e+00j 3.00000e+00+4.00000e+00j 4.00000e+00+5.00000e+00j 5.00000e+00+6.00000e+00j 6.00000e+00+7.00000e+00j 7.00000e+00+8.00000e+00j 8.00000e+00+9.00000e+00j 9.00000e+00+1.00000e+01j  ]
+
+dtype : Double (Float64)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+
+dtype : Complex Float (Complex Float32)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00+2.00000e+00j 1.00000e+00+3.00000e+00j 2.00000e+00+4.00000e+00j 3.00000e+00+5.00000e+00j 4.00000e+00+6.00000e+00j 5.00000e+00+7.00000e+00j 6.00000e+00+8.00000e+00j 7.00000e+00+9.00000e+00j 8.00000e+00+1.00000e+01j 9.00000e+00+1.10000e+01j  ]
+
+dtype : Float32
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+
+</pre> <h3>python API:</h3>
+<div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"></div><div class="line"></div><div class="line">S1 = Storage(10,Type.ComplexDouble)</div><div class="line"></div><div class="line"><span class="keywordflow">for</span> i <span class="keywordflow">in</span> range(10):</div><div class="line">    S1[i] = i + 1j*(i+1)</div><div class="line"></div><div class="line">S1r = S1.real()</div><div class="line">print(S1)</div><div class="line">print(S1r)</div><div class="line"></div><div class="line">S2 = Storage(10,Type.ComplexFloat)</div><div class="line"></div><div class="line"><span class="keywordflow">for</span> i <span class="keywordflow">in</span> range(10):</div><div class="line">    S2[i] = i + 1j*(i+1)</div><div class="line"></div><div class="line">S2r = S2.real()</div><div class="line">print(S2)</div><div class="line">print(S2r)</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment">dtype : Complex Double (Complex Float64)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00+1.00000e+00j 1.00000e+00+2.00000e+00j 2.00000e+00+3.00000e+00j 3.00000e+00+4.00000e+00j 4.00000e+00+5.00000e+00j 5.00000e+00+6.00000e+00j 6.00000e+00+7.00000e+00j 7.00000e+00+8.00000e+00j 8.00000e+00+9.00000e+00j 9.00000e+00+1.00000e+01j  ]
+
+
+dtype : Double (Float64)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+
+
+dtype : Complex Float (Complex Float32)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00+1.00000e+00j 1.00000e+00+2.00000e+00j 2.00000e+00+3.00000e+00j 3.00000e+00+4.00000e+00j 4.00000e+00+5.00000e+00j 5.00000e+00+6.00000e+00j 6.00000e+00+7.00000e+00j 7.00000e+00+8.00000e+00j 8.00000e+00+9.00000e+00j 9.00000e+00+1.00000e+01j  ]
+
+
+dtype : Float32
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+
+
+</pre> 
 </div>
 </div>
 <a id="a2ff5a21f81e9b90a5e78e1ba1698351b"></a>

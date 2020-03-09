@@ -1,5 +1,5 @@
 from cytnx import *
-
+from cytnx.cytnx_extension import *
 
 bd_a = Bond(10,BD_KET)
 bd_b = Bond(15,BD_KET)

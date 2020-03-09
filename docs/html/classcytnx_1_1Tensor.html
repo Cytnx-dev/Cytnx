@@ -452,7 +452,7 @@ Total elem: 60
 type  : Double (Float64)
 cytnx device: CPU
 Shape : (3,4,5)
-[[[4.64810e-310 3.99988e-315 0.00000e+00 4.64810e-310 0.00000e+00 ]
+[[[4.65685e-310 3.99988e-315 0.00000e+00 4.65685e-310 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
@@ -471,7 +471,7 @@ Total elem: 60
 type  : Uint64
 cytnx device: CPU
 Shape : (3,4,5)
-[[[     94078526454480 4919428625693100359 4050769471139826783      94078526423093                   0 ]
+[[[     94255686243952 4919428625693100359 3760843648058084447      94255674570809                   0 ]
   [                  0                   0                   0                   0                   0 ]
   [                  0                   0                   0                   0                   0 ]
   [                  0                   0                   0                   0                   0 ]]
@@ -512,7 +512,7 @@ Total elem: 60
 type  : Double (Float64)
 cytnx device: CPU
 Shape : (3,4,5)
-[[[4.63757e-310 1.42390e-105 1.03456e-259 3.44981e+175 4.45197e+252 ]
+[[[4.67233e-310 1.42390e-105 1.03456e-259 3.44981e+175 4.45197e+252 ]
   [3.42619e-86 3.18490e-114 5.29746e+276 1.18414e+224 1.67772e+243 ]
   [1.95327e-153 5.31287e+276 1.06263e+248 3.06500e+169 1.16331e+253 ]
   [7.36507e+228 2.54716e+151 1.44421e+214 1.28714e+272 3.25422e+97 ]]
@@ -532,7 +532,7 @@ Total elem: 60
 type  : Uint64
 cytnx device: CPU
 Shape : (3,4,5)
-[[[     93865478033312 4919428625693100359 3906653183552343135      93865477996595                   0 ]
+[[[     94568969110112 4919428625693100359 3906928061459287135      94568955524914                   0 ]
   [                  0                   0                   0                   0                   0 ]
   [                  0                   0                   0                   0                   0 ]
   [                  0                   0                   0                   0                   0 ]]
@@ -553,18 +553,18 @@ type  : Double (Float64)
 01
 cytnx device: CUDA/GPU-id:0
 Shape : (3,4,5)
-[[[-nan -nan -nan -5.16450e+120 -nan ]
-  [-nan -nan -6.68887e-198 -nan -nan ]
-  [-nan 5.27659e-228 -nan -nan -1.40445e+306 ]
-  [8.58993e+09 -nan -nan -nan -2.75164e-135 ]]
- [[-nan -nan -nan 3.13151e-294 -nan ]
-  [-nan -nan -1.45368e+135 -nan -nan ]
-  [-nan -5.27659e-228 -nan -nan -nan ]
-  [7.41841e-68 -nan -nan -1.40445e+306 -1.42873e-101 ]]
- [[-nan -nan -nan -1.34497e-284 -nan ]
-  [-nan -nan 1.92632e+207 -nan -nan ]
-  [-nan 5.18710e-222 -nan -nan -nan ]
-  [1.18182e-125 -nan -nan -nan 1.13196e-72 ]]]
+[[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
 
 
 
@@ -1529,7 +1529,7 @@ Shape : (3,4,5)
 <p>One can also using more intruisive way to get the slice using [] operator.</p>
 <h2>Example:</h2>
 <h3>c++ API:</h3>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacestd.html">std</a>;</div><div class="line"><span class="keywordtype">int</span> main(){</div><div class="line"></div><div class="line">    <span class="keyword">typedef</span> <a class="code" href="classcytnx_1_1Accessor.html">Accessor</a> ac;</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A = <a class="code" href="namespacecytnx.html#a733f9931141463bc8b7c61931ccf52c3">arange</a>(60).<a class="code" href="classcytnx_1_1Tensor.html#a182f8f7b3ae3d0db8ed55d2adf8c6b45">reshape</a>({3,4,5});</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A.<a class="code" href="classcytnx_1_1Tensor.html#ad7b928e4cb89d40cbd99aefab9aa0075">get</a>({ac(2),ac::all(),ac::range(2,5,1)});</div><div class="line">    cout &lt;&lt; B &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B2 = A[{ac(2),ac::all(),ac::range(2,5,1)}];</div><div class="line">    cout &lt;&lt; B2 &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div></div><!-- fragment --> <h4>output&gt;</h4>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacestd.html">std</a>;</div><div class="line"><span class="keywordtype">int</span> main(){</div><div class="line"></div><div class="line">    <span class="keyword">typedef</span> <a class="code" href="classcytnx_1_1Accessor.html">Accessor</a> <a class="code" href="namespacecytnx__extension.html#ae37352951e39124a1174b3f551f72897">ac</a>;</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A = <a class="code" href="namespacecytnx.html#a733f9931141463bc8b7c61931ccf52c3">arange</a>(60).<a class="code" href="classcytnx_1_1Tensor.html#a182f8f7b3ae3d0db8ed55d2adf8c6b45">reshape</a>({3,4,5});</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A.<a class="code" href="classcytnx_1_1Tensor.html#ad7b928e4cb89d40cbd99aefab9aa0075">get</a>({<a class="code" href="namespacecytnx__extension.html#ae37352951e39124a1174b3f551f72897">ac</a>(2),ac::all(),ac::range(2,5,1)});</div><div class="line">    cout &lt;&lt; B &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B2 = A[{<a class="code" href="namespacecytnx__extension.html#ae37352951e39124a1174b3f551f72897">ac</a>(2),ac::all(),ac::range(2,5,1)}];</div><div class="line">    cout &lt;&lt; B2 &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">
 Total elem: 60
 type  : Double (Float64)
@@ -1668,7 +1668,7 @@ Total elem: 60
 type  : Double (Float64)
 cytnx device: CPU
 Shape : (3,4,5)
-[[[4.64810e-310 3.99988e-315 0.00000e+00 4.64810e-310 0.00000e+00 ]
+[[[4.65685e-310 3.99988e-315 0.00000e+00 4.65685e-310 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
@@ -1687,7 +1687,7 @@ Total elem: 60
 type  : Uint64
 cytnx device: CPU
 Shape : (3,4,5)
-[[[     94078526454480 4919428625693100359 4050769471139826783      94078526423093                   0 ]
+[[[     94255686243952 4919428625693100359 3760843648058084447      94255674570809                   0 ]
   [                  0                   0                   0                   0                   0 ]
   [                  0                   0                   0                   0                   0 ]
   [                  0                   0                   0                   0                   0 ]]
@@ -1728,7 +1728,7 @@ Total elem: 60
 type  : Double (Float64)
 cytnx device: CPU
 Shape : (3,4,5)
-[[[4.63757e-310 1.42390e-105 1.03456e-259 3.44981e+175 4.45197e+252 ]
+[[[4.67233e-310 1.42390e-105 1.03456e-259 3.44981e+175 4.45197e+252 ]
   [3.42619e-86 3.18490e-114 5.29746e+276 1.18414e+224 1.67772e+243 ]
   [1.95327e-153 5.31287e+276 1.06263e+248 3.06500e+169 1.16331e+253 ]
   [7.36507e+228 2.54716e+151 1.44421e+214 1.28714e+272 3.25422e+97 ]]
@@ -1748,7 +1748,7 @@ Total elem: 60
 type  : Uint64
 cytnx device: CPU
 Shape : (3,4,5)
-[[[     93865478033312 4919428625693100359 3906653183552343135      93865477996595                   0 ]
+[[[     94568969110112 4919428625693100359 3906928061459287135      94568955524914                   0 ]
   [                  0                   0                   0                   0                   0 ]
   [                  0                   0                   0                   0                   0 ]
   [                  0                   0                   0                   0                   0 ]]
@@ -1769,18 +1769,18 @@ type  : Double (Float64)
 01
 cytnx device: CUDA/GPU-id:0
 Shape : (3,4,5)
-[[[-nan -nan -nan -5.16450e+120 -nan ]
-  [-nan -nan -6.68887e-198 -nan -nan ]
-  [-nan 5.27659e-228 -nan -nan -1.40445e+306 ]
-  [8.58993e+09 -nan -nan -nan -2.75164e-135 ]]
- [[-nan -nan -nan 3.13151e-294 -nan ]
-  [-nan -nan -1.45368e+135 -nan -nan ]
-  [-nan -5.27659e-228 -nan -nan -nan ]
-  [7.41841e-68 -nan -nan -1.40445e+306 -1.42873e-101 ]]
- [[-nan -nan -nan -1.34497e-284 -nan ]
-  [-nan -nan 1.92632e+207 -nan -nan ]
-  [-nan 5.18710e-222 -nan -nan -nan ]
-  [1.18182e-125 -nan -nan -nan 1.13196e-72 ]]]
+[[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
 
 
 
@@ -3405,7 +3405,7 @@ Shape : (5,12)
 <p>the shape of the input <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> should be the same as the shape that indicated using <a class="el" href="classcytnx_1_1Accessor.html" title="object that mimic the python slice to access elements in C++ [this is for c++ API only]...">Accessor</a>. The memory is not shared with the input <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>.</p>
 <h2>Example:</h2>
 <h3>c++ API:</h3>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacestd.html">std</a>;</div><div class="line"><span class="keywordtype">int</span> main(){</div><div class="line"></div><div class="line">    <span class="keyword">typedef</span> <a class="code" href="classcytnx_1_1Accessor.html">Accessor</a> ac;</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A = <a class="code" href="namespacecytnx.html#a733f9931141463bc8b7c61931ccf52c3">arange</a>(60).<a class="code" href="classcytnx_1_1Tensor.html#a182f8f7b3ae3d0db8ed55d2adf8c6b45">reshape</a>({3,4,5});</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">// 1. Set with Tensor</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = <a class="code" href="namespacecytnx.html#ab8a79a03fb0465f3eb2641017f3f1755">zeros</a>({4,3});</div><div class="line">    cout &lt;&lt; B &lt;&lt; endl;</div><div class="line">    A.<a class="code" href="classcytnx_1_1Tensor.html#a771f1f5b51f89abd8df4166e602214ac">set</a>({ac(2),ac::all(),ac::range(2,5,1)},B);</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">// 2. Set with constant.</span></div><div class="line">    A.<a class="code" href="classcytnx_1_1Tensor.html#a771f1f5b51f89abd8df4166e602214ac">set</a>({ac(0),ac::all(),ac::range(0,2,1)},999);</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div></div><!-- fragment --> <h4>output&gt;</h4>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacestd.html">std</a>;</div><div class="line"><span class="keywordtype">int</span> main(){</div><div class="line"></div><div class="line">    <span class="keyword">typedef</span> <a class="code" href="classcytnx_1_1Accessor.html">Accessor</a> <a class="code" href="namespacecytnx__extension.html#ae37352951e39124a1174b3f551f72897">ac</a>;</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A = <a class="code" href="namespacecytnx.html#a733f9931141463bc8b7c61931ccf52c3">arange</a>(60).<a class="code" href="classcytnx_1_1Tensor.html#a182f8f7b3ae3d0db8ed55d2adf8c6b45">reshape</a>({3,4,5});</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">// 1. Set with Tensor</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = <a class="code" href="namespacecytnx.html#ab8a79a03fb0465f3eb2641017f3f1755">zeros</a>({4,3});</div><div class="line">    cout &lt;&lt; B &lt;&lt; endl;</div><div class="line">    A.<a class="code" href="classcytnx_1_1Tensor.html#a771f1f5b51f89abd8df4166e602214ac">set</a>({<a class="code" href="namespacecytnx__extension.html#ae37352951e39124a1174b3f551f72897">ac</a>(2),ac::all(),ac::range(2,5,1)},B);</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">// 2. Set with constant.</span></div><div class="line">    A.<a class="code" href="classcytnx_1_1Tensor.html#a771f1f5b51f89abd8df4166e602214ac">set</a>({<a class="code" href="namespacecytnx__extension.html#ae37352951e39124a1174b3f551f72897">ac</a>(0),ac::all(),ac::range(0,2,1)},999);</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">
 Total elem: 60
 type  : Double (Float64)
@@ -3598,7 +3598,7 @@ template&lt;class T &gt; </div>
 <p>See also <a class="el" href="classcytnx_1_1Tensor.html#a0c7f2bac2a03be7d22769c7cb896afbe">Tensor::fill </a> for filling all elements with assigned constant.</p>
 <h2>Example:</h2>
 <h3>c++ API:</h3>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacestd.html">std</a>;</div><div class="line"><span class="keywordtype">int</span> main(){</div><div class="line"></div><div class="line">    <span class="keyword">typedef</span> <a class="code" href="classcytnx_1_1Accessor.html">Accessor</a> ac;</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A = <a class="code" href="namespacecytnx.html#a733f9931141463bc8b7c61931ccf52c3">arange</a>(60).<a class="code" href="classcytnx_1_1Tensor.html#a182f8f7b3ae3d0db8ed55d2adf8c6b45">reshape</a>({3,4,5});</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">// 1. Set with Tensor</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = <a class="code" href="namespacecytnx.html#ab8a79a03fb0465f3eb2641017f3f1755">zeros</a>({4,3});</div><div class="line">    cout &lt;&lt; B &lt;&lt; endl;</div><div class="line">    A.<a class="code" href="classcytnx_1_1Tensor.html#a771f1f5b51f89abd8df4166e602214ac">set</a>({ac(2),ac::all(),ac::range(2,5,1)},B);</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">// 2. Set with constant.</span></div><div class="line">    A.<a class="code" href="classcytnx_1_1Tensor.html#a771f1f5b51f89abd8df4166e602214ac">set</a>({ac(0),ac::all(),ac::range(0,2,1)},999);</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div></div><!-- fragment --> <h4>output&gt;</h4>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacestd.html">std</a>;</div><div class="line"><span class="keywordtype">int</span> main(){</div><div class="line"></div><div class="line">    <span class="keyword">typedef</span> <a class="code" href="classcytnx_1_1Accessor.html">Accessor</a> <a class="code" href="namespacecytnx__extension.html#ae37352951e39124a1174b3f551f72897">ac</a>;</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A = <a class="code" href="namespacecytnx.html#a733f9931141463bc8b7c61931ccf52c3">arange</a>(60).<a class="code" href="classcytnx_1_1Tensor.html#a182f8f7b3ae3d0db8ed55d2adf8c6b45">reshape</a>({3,4,5});</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">// 1. Set with Tensor</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = <a class="code" href="namespacecytnx.html#ab8a79a03fb0465f3eb2641017f3f1755">zeros</a>({4,3});</div><div class="line">    cout &lt;&lt; B &lt;&lt; endl;</div><div class="line">    A.<a class="code" href="classcytnx_1_1Tensor.html#a771f1f5b51f89abd8df4166e602214ac">set</a>({<a class="code" href="namespacecytnx__extension.html#ae37352951e39124a1174b3f551f72897">ac</a>(2),ac::all(),ac::range(2,5,1)},B);</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">// 2. Set with constant.</span></div><div class="line">    A.<a class="code" href="classcytnx_1_1Tensor.html#a771f1f5b51f89abd8df4166e602214ac">set</a>({<a class="code" href="namespacecytnx__extension.html#ae37352951e39124a1174b3f551f72897">ac</a>(0),ac::all(),ac::range(0,2,1)},999);</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">
 Total elem: 60
 type  : Double (Float64)
