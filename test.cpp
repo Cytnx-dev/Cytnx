@@ -10,6 +10,42 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]){
 
+   
+    Bond bd_dqu1 = Bond(4, BD_BRA,{{0,2},{2,0},{1,-1},{-1,1}});
+    Bond bd_dqu2 = Bond(3, BD_BRA,{{1,1},{-1,-1},{0,0}});
+    Bond bd_dqu3 = bd_dqu2.clone();
+    bd_dqu3.set_type(BD_KET);
+    Bond bd_dqu4 = bd_dqu1.clone();
+    bd_dqu4.set_type(BD_KET);
+    cout << bd_dqu1 << endl;
+   cout << bd_dqu2 << endl;
+    cout << bd_dqu3 << endl; 
+    //cout << bd_dqu4.getDegeneracy({3,4}) << endl;
+    //vector<vector<cytnx_int64> > comm24 = vec2d_intersect(bd_dqu2.qnums(),bd_dqu4.qnums(),false,false);
+    //for(cytnx_uint64 i=0;i<comm24.size();i++){
+    //    cout << comm24[i] << endl;
+    //} 
+    std::vector<Bond> dbds = {bd_dqu3,bd_dqu4,bd_dqu1,bd_dqu2}; 
+        
+    CyTensor dut1(dbds,{},2);
+    dut1.print_diagram(true);
+    dut1.permute_({2,3,0,1});
+    dut1.print_diagram(true);
+
+    cout << dut1.is_contiguous() << endl;
+
+    CyTensor dut2 = dut1.contiguous();
+
+
+    dut2.print_diagram(true);
+    cout << dut2.is_contiguous() << endl;
+
+    //auto bcbs = dut1.getTotalQnums();
+    //cout << bcbs[0] << endl;
+    //cout << bcbs[1] << endl;
+
+    return 0; 
+
     Tensor Ta({3,4,2},Type.Double);
     cout << Ta.dtype_str() << endl;
     cout << Ta.device_str() << endl;
@@ -219,29 +255,6 @@ int main(int argc, char *argv[]){
     cout << bd_in << endl;
 
 
-    Bond bd_dqu1 = Bond(3, BD_BRA,{{0,1},{2,2},{3,4}});
-    Bond bd_dqu2 = Bond(5, BD_BRA,{{0,1},{2,2},{3,4},{-2,-4},{-1,-2}});
-    Bond bd_dqu3 = bd_dqu1.combineBond(bd_dqu2);
-    bd_dqu3.set_type(BD_KET);
-    Bond bd_dqu4 = Bond(6, BD_KET,{{0,1},{2,2},{3,4},{-2,-4},{-1,-2},{3,4}});
-    cout << bd_dqu1 << endl;
-   cout << bd_dqu2 << endl;
-    cout << bd_dqu3 << endl; 
-    cout << bd_dqu4.getDegeneracy({3,4}) << endl;
-    vector<vector<cytnx_int64> > comm24 = vec2d_intersect(bd_dqu2.qnums(),bd_dqu4.qnums(),false,false);
-    for(cytnx_uint64 i=0;i<comm24.size();i++){
-        cout << comm24[i] << endl;
-    } 
-    std::vector<Bond> dbds = {bd_dqu3,bd_dqu4,bd_dqu1,bd_dqu2}; 
-        
-    CyTensor dut1(dbds,{},2);
-    dut1.print_diagram(true);
-    dut1.permute_({2,3,0,1});
-    dut1.print_diagram(true);
-    auto bcbs = dut1.getTotalQnums();
-    cout << bcbs[0] << endl;
-    cout << bcbs[1] << endl;
-    return 0;
      
     Bond bd_1 = Bond(3);
     Bond bd_2 = Bond(5);

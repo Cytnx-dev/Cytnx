@@ -1,4 +1,5 @@
 #include "CyTensor.hpp"
+#include "Accessor.hpp"
 #include "utils/utils.hpp"
 #include "utils/utils_internal_interface.hpp"
 #include "linalg.hpp"
@@ -7,7 +8,7 @@
 using namespace std;
 namespace cytnx_extension{
     using namespace cytnx;
-
+    typedef Accessor ac;
     void SparseCyTensor::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &Rowrank, const unsigned int &dtype,const int &device, const bool &is_diag){
         //the entering is already check all the bonds have symmetry.
         // need to check:
@@ -292,18 +293,98 @@ namespace cytnx_extension{
             return out;
         }else{
             //make a new instance with only the outer meta:
-            SparseCyTensor* tmp = this->clone_meta(true,false); 
+            //SparseCyTensor* tmp = this->clone_meta(true,false);
+
+            // make new instance  
+            SparseCyTensor* tmp = new SparseCyTensor();
+            tmp->Init(this->_bonds,this->_labels,this->_Rowrank,this->dtype(),this->device(),this->_is_diag);
+            //tmp->print_diagram();            
+            
             
             //calculate new inner meta, and copy the element from it.   
-        
+            for(unsigned int b=0;b<this->_blocks.size();b++){   
+                // build accumulate index with current memory shape.
+                vector<cytnx_uint64> oldshape = vec_map(this->shape(),this->_inv_mapper);
+                //for(int t=0;t<oldshape.size();t++) cout << oldshape[t] << " "; cout << endl;//[DEBUG]
+
+                vector<cytnx_uint64> acc_in_old(this->_inner_Rowrank),acc_out_old(oldshape.size()-this->_inner_Rowrank);
+                acc_out_old[acc_out_old.size()-1] = 1;
+                acc_in_old[ acc_in_old.size()-1 ] = 1;
+                for(unsigned int s=0;s<acc_out_old.size()-1;s++){
+                    acc_out_old[acc_out_old.size()-2-s] = oldshape.back()*acc_out_old[acc_out_old.size()-1-s]; 
+                    oldshape.pop_back();
+                }
+                oldshape.pop_back();
+                for(unsigned int s=0;s<acc_in_old.size()-1;s++){
+                    acc_in_old[acc_in_old.size()-2-s] = oldshape.back()*acc_in_old[acc_in_old.size()-1-s]; 
+                    oldshape.pop_back();
+                }
+                //for(int t=0;t<acc_in_old.size();t++) cout << acc_in_old[t] << " "; cout << endl;//[DEBUG]
+                //for(int t=0;t<acc_out_old.size();t++) cout << acc_out_old[t] << " "; cout << endl;//[DEBUG]
+                //exit(1);
+
+                for(unsigned int i=0;i<this->_blocks[b].shape()[0];i++){
+                    for(unsigned int j=0;j<this->_blocks[b].shape()[1];j++){
+                        //decompress 
+                        vector<cytnx_uint64> tfidx; cytnx_uint64 tmpi = i; // calculate old index
+                        for(unsigned int k=0;k<acc_in_old.size();k++){
+                            tfidx.push_back(tmpi/acc_in_old[k]);
+                            tmpi= tmpi%acc_in_old[k];
+                        }
+                        tmpi = j;
+                        for(unsigned int k=0;k<acc_out_old.size();k++){
+                            tfidx.push_back(tmpi/acc_out_old[k]);
+                            tmpi = tmpi%acc_out_old[k];
+                        }
+    
+                        //cout << "old idxs:" ;
+                        //for(int t=0;t<tfidx.size();t++) cout << tfidx[t] << " "; cout << endl;//[DEBUG]
+
+                        tfidx = vec_map(tfidx,this->_mapper); // convert to new index
+
+                        //cout << "new idxs:" ;
+                        //for(int t=0;t<tfidx.size();t++) cout << tfidx[t] << " "; cout << endl;//[DEBUG]
+
+                        //cout << "new shape:" ;
+                        //for(int t=0;t<tmp->_bonds.size();t++) cout << tmp->_bonds[t].dim() << " "; cout << endl;//[DEBUG]
+
+
+                        //caluclate new row col index:
+                        cytnx_uint64 new_row = 0, new_col=0;
+                        cytnx_uint64 buff=1;
+                        for(unsigned int k=0;k<tmp->labels().size()-tmp->Rowrank();k++){
+                            new_col += buff*tfidx.back();
+                            tfidx.pop_back();
+                            buff*=tmp->_bonds[tmp->_bonds.size()-1-k].dim();
+                        }
+                        buff = 1;
+                        for(unsigned int k=0;k<tmp->_Rowrank;k++){
+                            new_row += buff*tfidx.back();
+                            tfidx.pop_back();
+                            buff*=tmp->_bonds[tmp->_Rowrank-1-k].dim();
+                        }
+                        /* 
+                        cout << new_col << " " << new_row << endl;
+                        cout << "checkblock";
+                        cout << tmp->_outer2inner_row[new_row].first << " " << tmp->_outer2inner_col[new_col].first << endl;
+                        cout << "newblock" << endl;
+                        cout << tmp->_blocks[tmp->_outer2inner_row[new_row].first]<< endl;
+                        cout << "oldblock" << endl;
+                        cout << this->_blocks[b] << endl;
+                        */
+                        tmp->_blocks[tmp->_outer2inner_row[new_row].first].set({ac(tmp->_outer2inner_row[new_row].second),ac(tmp->_outer2inner_col[new_col].second)},this->_blocks[b].get({ac(i),ac(j)}));
+
+                    }// row in block
+                }// col in block
+            }// each old block         
+ 
  
 
             //update comm-meta:
-            tmp->_contiguous = true;
-            tmp->_mapper = utils_internal::range_cpu(cytnx_uint64(this->_bonds.size()));
-            tmp->_inv_mapper = tmp->_mapper;
-
-
+            //tmp->_contiguous = true;
+            //tmp->_mapper = utils_internal::range_cpu(cytnx_uint64(this->_bonds.size()));
+            //tmp->_inv_mapper = tmp->_mapper;
+            
             //transform to a intr_ptr.
             boost::intrusive_ptr<CyTensor_base> out(tmp);
             return out;

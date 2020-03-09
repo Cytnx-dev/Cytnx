@@ -406,8 +406,8 @@ namespace cytnx_extension{
             };
             void contiguous_(){
                 cytnx_error_msg(true,"[Developing]%s","\n");
-            };
-            boost::intrusive_ptr<CyTensor_base> contiguous();
+            }
+            boost::intrusive_ptr<CyTensor_base> contiguous(); 
             void print_diagram(const bool &bond_info=false);
             Tensor get_block(const cytnx_uint64 &idx=0) const{
                 cytnx_error_msg(true,"[Developing]%s","\n");
