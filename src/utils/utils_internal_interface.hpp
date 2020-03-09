@@ -20,7 +20,7 @@
     #include "utils_internal_gpu/cuSetArange_gpu.hpp"
     #include "utils_internal_gpu/cuSetElems_gpu.hpp"
     #include "utils_internal_gpu/cuGetElems_gpu.hpp"
-    #include "utils_internal_gpu/Complexmem_gpu.hpp"
+    #include "utils_internal_gpu/cuComplexmem_gpu.hpp"
 #endif
 
 #include "Type.hpp"

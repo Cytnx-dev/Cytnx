@@ -12,10 +12,10 @@ namespace cytnx{
     #ifdef UNI_GPU
 
 
-        boost::intrusive_ptr<Storage_base> cuComplexmem_gpu_cdtd( void *out, void *in, const cytnx_uint64 &Nelem, const bool get_real){
+        void cuComplexmem_gpu_cdtd( void *out, void *in, const cytnx_uint64 &Nelem, const bool get_real){
 
-            double* ddes = (double*)out->Mem;
-            double* dsrc = (double*)in->Mem ; // we cast into double, so the Memcpy2D can get elem by stride.
+            double* ddes = (double*)out;
+            double* dsrc = (double*)in; // we cast into double, so the Memcpy2D can get elem by stride.
 
             if(get_real){
                 cudaMemcpy2D(ddes,1*sizeof(cytnx_double),dsrc,2*sizeof(cytnx_double),sizeof(cytnx_double),Nelem,cudaMemcpyDeviceToDevice);
@@ -24,10 +24,10 @@ namespace cytnx{
             }
         }
 
-        boost::intrusive_ptr<Storage_base> cuComplexmem_gpu_cdtd( void *out, void *in, const cytnx_uint64 &Nelem, const bool get_real){
+        void cuComplexmem_gpu_cftf( void *out, void *in, const cytnx_uint64 &Nelem, const bool get_real){
             
-            float* ddes = (float*)out->Mem;
-            float* dsrc = (float*)in->Mem ; // we cast into double, so the Memcpy2D can get elem by stride.
+            float* ddes = (float*)out;
+            float* dsrc = (float*)in; // we cast into double, so the Memcpy2D can get elem by stride.
 
             if(get_real){
                 cudaMemcpy2D(ddes,1*sizeof(cytnx_float),dsrc,2*sizeof(cytnx_float),sizeof(cytnx_float),Nelem,cudaMemcpyDeviceToDevice);

@@ -10,7 +10,7 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]){
 
-   
+    /*   
     Bond bd_dqu1 = Bond(4, BD_BRA,{{0,2},{2,0},{1,-1},{-1,1}});
     Bond bd_dqu2 = Bond(3, BD_BRA,{{1,1},{-1,-1},{0,0}});
     Bond bd_dqu3 = bd_dqu2.clone();
@@ -45,7 +45,7 @@ int main(int argc, char *argv[]){
     //cout << bcbs[1] << endl;
 
     return 0; 
-
+    */
     Tensor Ta({3,4,2},Type.Double);
     cout << Ta.dtype_str() << endl;
     cout << Ta.device_str() << endl;
@@ -56,7 +56,7 @@ int main(int argc, char *argv[]){
     cout << Tc << endl;
 
 
-    Storage S1(10,Type.ComplexDouble);
+    Storage S1(10,Type.ComplexDouble,Device.cuda+0);
     for(unsigned int i=0;i<S1.size();i++){
         S1.at<cytnx_complex128>(i) = cytnx_complex128(i,i+1);
     }
