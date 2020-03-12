@@ -404,10 +404,12 @@ namespace cytnx_extension{
                 out->permute_(mapper,Rowrank,by_label);
                 return out;
             };
+            boost::intrusive_ptr<CyTensor_base> contiguous();
             void contiguous_(){
-                cytnx_error_msg(true,"[Developing]%s","\n");
+                if(!this->_contiguous){
+                    this->_impl = this->contiguous();
+                }
             }
-            boost::intrusive_ptr<CyTensor_base> contiguous(); 
             void print_diagram(const bool &bond_info=false);
             Tensor get_block(const cytnx_uint64 &idx=0) const{
                 cytnx_error_msg(true,"[Developing]%s","\n");
@@ -419,7 +421,7 @@ namespace cytnx_extension{
             };
             // return a share view of block, this only work for symm tensor in contiguous form.
             Tensor get_block_(const cytnx_uint64 &idx=0) const{
-                cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseCyTensor] cannot use get_block_() on non-contiguous CyTensor with symmetry.\n suggestion: \n  1) Call contiguous_()/contiguous() first.\n  2) Try get_block()/get_blocks()%s","\n");
+                cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseCyTensor] cannot use get_block_() on non-contiguous CyTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call get_blocks_()\n  2) Try get_block()/get_blocks()%s","\n");
                 
                 cytnx_error_msg(idx >= this->_blocks.size(),"[ERROR][SparseCyTensor] index exceed the number of blocks.%s","\n");
 
