@@ -7,10 +7,10 @@
 #include <climits>
 #include <typeinfo>
 
-#ifdef UNI_MKL
-    #define MKL_Complex8 std::complex<float>
-    #define MKL_Complex16 std::complex<double>
-#endif 
+//#ifdef UNI_MKL
+#define MKL_Complex8 std::complex<float>
+#define MKL_Complex16 std::complex<double>
+//#endif 
 
 namespace cytnx{
     typedef double cytnx_double;

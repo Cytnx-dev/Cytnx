@@ -1,3 +1,6 @@
+#ifdef UNI_OMP
+    #include <omp.h>
+#endif
 #include "Bond.hpp"
 #include <algorithm>
 #include "utils/utils_internal_interface.hpp"

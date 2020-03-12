@@ -1,3 +1,6 @@
+#ifdef UNI_OMP
+    #include <omp.h>
+#endif
 #include "Storage.hpp"
 #include "utils/utils_internal_interface.hpp"
 using namespace std;

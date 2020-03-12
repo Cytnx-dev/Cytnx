@@ -11,9 +11,6 @@
 #include <vector>
 #include <complex>
 
-#ifdef UNI_OMP
-    #include <omp.h>
-#endif
 
 #include "Type.hpp"
 #include "Device.hpp"
