@@ -5,7 +5,8 @@
 
 ## What's new:
     1. Add .imag() .real() for Storage. 
-
+    2. Add xlinalg under cytnx_extension for algebra on CyTensor
+    3. Add xlinalg::Svd()  
 
 ## Version log
     v0.4

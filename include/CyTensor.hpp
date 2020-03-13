@@ -191,7 +191,15 @@ namespace cytnx_extension{
             void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
             // this only work for non-symm tensor
             void Init_by_Tensor(const Tensor& in_tensor, const cytnx_uint64 &Rowrank);
-            std::vector<cytnx_uint64> shape() const{ return this->_block.shape();}
+            std::vector<cytnx_uint64> shape() const{ 
+                if(this->_is_diag){
+                    std::vector<cytnx_uint64> shape = this->_block.shape();
+                    shape.push_back(shape[0]);
+                    return shape;
+                }else{
+                    return this->_block.shape();
+                }
+            }
             bool is_blockform() const{ return false;}
             void to_(const int &device){
                 this->_block.to_(device);
@@ -251,13 +259,23 @@ namespace cytnx_extension{
                 return out; // this will not share memory!!
             }
             void put_block(const Tensor &in, const cytnx_uint64 &idx=0){
-                cytnx_error_msg(in.shape() != this->shape(),"[ERROR][DenseCyTensor] put_block, the input tensor shape does not match.%s","\n");
-                this->_block = in.clone();
+                if(this->is_diag()){
+                    cytnx_error_msg(in.shape() != this->_block.shape(),"[ERROR][DenseCyTensor] put_block, the input tensor shape does not match.%s","\n");
+                    this->_block = in.clone();
+                }else{
+                    cytnx_error_msg(in.shape() != this->shape(),"[ERROR][DenseCyTensor] put_block, the input tensor shape does not match.%s","\n");
+                    this->_block = in.clone();
+                }
             }
             // share view of the block
             void put_block_(const Tensor &in, const cytnx_uint64 &idx=0){
-                cytnx_error_msg(in.shape() != this->shape(),"[ERROR][DenseCyTensor] put_block, the input tensor shape does not match.%s","\n");
-                this->_block = in;
+                if(this->is_diag()){
+                    cytnx_error_msg(in.shape() != this->_block.shape(),"[ERROR][DenseCyTensor] put_block, the input tensor shape does not match.%s","\n");
+                    this->_block = in;
+                }else{
+                    cytnx_error_msg(in.shape() != this->shape(),"[ERROR][DenseCyTensor] put_block, the input tensor shape does not match.%s","\n");
+                    this->_block = in;
+                }
             }
 
             void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum){
