@@ -139,12 +139,19 @@ namespace cytnx_extension{
             virtual boost::intrusive_ptr<CyTensor_base> contiguous_();
             virtual boost::intrusive_ptr<CyTensor_base> contiguous();            
             virtual void print_diagram(const bool &bond_info=false);
+
             virtual Tensor get_block(const cytnx_uint64 &idx=0) const; // return a copy of block
             virtual Tensor get_block(const std::vector<cytnx_int64> &qnum) const; //return a copy of block
             virtual Tensor get_block_(const cytnx_uint64 &idx=0) const; // return a share view of block, this only work for non-symm tensor.
+            virtual Tensor get_block_(const std::vector<cytnx_int64> &qnum) const; //return a copy of block
+
             virtual std::vector<Tensor> get_blocks() const;
+            virtual std::vector<Tensor> get_blocks_() const;
+
             virtual void put_block(const Tensor &in, const cytnx_uint64 &idx=0);
+            virtual void put_block_(const Tensor &in, const cytnx_uint64 &idx=0);
             virtual void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum);
+            virtual void put_block_(const Tensor &in, const std::vector<cytnx_int64> &qnum);
 
             // this will only work on non-symm tensor (DenseCyTensor)
             virtual boost::intrusive_ptr<CyTensor_base> get(const std::vector<Accessor> &accessors);
@@ -226,22 +233,37 @@ namespace cytnx_extension{
             }
             void print_diagram(const bool &bond_info=false);         
             Tensor get_block(const cytnx_uint64 &idx=0) const{ return this->_block.clone(); }
-            Tensor get_block(const std::vector<cytnx_int64> &qnum) const{cytnx_error_msg(true,"[ERROR][DenseCyTensor] try to get_block using qnum on a non-symmetry CyTensor%s","\n"); return Tensor();}
-            std::vector<Tensor> get_blocks() const {
-                std::vector<Tensor> out;
-                out.push_back(this->_block.clone());
-                return out; // this will share memory!!
-            }
+            Tensor get_block(const std::vector<cytnx_int64> &qnum) const{cytnx_error_msg(true,"[ERROR][DenseCyTensor] try to get_block() using qnum on a non-symmetry CyTensor%s","\n"); return Tensor();}
+            // return a share view of block, this only work for non-symm tensor.
+            Tensor get_block_(const std::vector<cytnx_int64> &qnum) const{cytnx_error_msg(true,"[ERROR][DenseCyTensor] try to get_block_() using qnum on a non-symmetry CyTensor%s","\n"); return Tensor();}
             // return a share view of block, this only work for non-symm tensor.
             Tensor get_block_(const cytnx_uint64 &idx=0) const{
                 return this->_block;
             }
-
+            std::vector<Tensor> get_blocks() const {
+                std::vector<Tensor> out;
+                out.push_back(this->_block.clone());
+                return out; // this will not share memory!!
+            }
+            std::vector<Tensor> get_blocks_() const {
+                std::vector<Tensor> out;
+                out.push_back(this->_block);
+                return out; // this will not share memory!!
+            }
             void put_block(const Tensor &in, const cytnx_uint64 &idx=0){
+                cytnx_error_msg(in.shape() != this->shape(),"[ERROR][DenseCyTensor] put_block, the input tensor shape does not match.%s","\n");
+                this->_block = in.clone();
+            }
+            // share view of the block
+            void put_block_(const Tensor &in, const cytnx_uint64 &idx=0){
                 cytnx_error_msg(in.shape() != this->shape(),"[ERROR][DenseCyTensor] put_block, the input tensor shape does not match.%s","\n");
                 this->_block = in;
             }
+
             void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum){
+                cytnx_error_msg(true,"[ERROR][DenseCyTensor] try to put_block using qnum on a non-symmetry CyTensor%s","\n");
+            }
+            void put_block_(const Tensor &in, const std::vector<cytnx_int64> &qnum){
                 cytnx_error_msg(true,"[ERROR][DenseCyTensor] try to put_block using qnum on a non-symmetry CyTensor%s","\n");
             }
             // this will only work on non-symm tensor (DenseCyTensor)
@@ -414,8 +436,13 @@ namespace cytnx_extension{
             }
             void print_diagram(const bool &bond_info=false);
             Tensor get_block(const cytnx_uint64 &idx=0) const{
-                cytnx_error_msg(true,"[Developing]%s","\n");
-                return Tensor();
+                cytnx_error_msg(idx>=this->_blocks.size(),"[ERROR][SparseCyTensor] index out of range%s","\n");
+                if(this->_contiguous){
+                    return this->_blocks[idx].clone();
+                }else{
+                    cytnx_error_msg(true,"[Developing]%s","\n");
+                    return Tensor();
+                }
             };
             Tensor get_block(const std::vector<cytnx_int64> &qnum) const{
                 cytnx_error_msg(true,"[Developing]%s","\n");
@@ -429,16 +456,58 @@ namespace cytnx_extension{
 
                 return this->_blocks[idx];
             }
+            Tensor get_block_(const std::vector<cytnx_int64> &qnum) const{
+                cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseCyTensor] cannot use get_block_() on non-contiguous CyTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call get_blocks_()\n  2) Try get_block()/get_blocks()%s","\n");
+                
+                cytnx_error_msg(true,"[Developing]%s","\n");
+
+                return Tensor();
+            }
+
             std::vector<Tensor> get_blocks() const {
-                cytnx_error_msg(true,"[Developing]%s","\n");
-                return std::vector<Tensor>();
+                if(this->_contiguous){
+                    return vec_clone(this->_blocks);
+                }else{
+                    cytnx_error_msg(true,"[Developing]%s","\n");
+                    return std::vector<Tensor>();
+                }
             };
+
+            std::vector<Tensor> get_blocks_() const {
+                //cout << "[call this]" << endl;
+                if(this->_contiguous){
+                    return this->_blocks;
+                }else{
+                    cytnx_error_msg(true,"[Developing]%s","\n");
+                    return std::vector<Tensor>();
+                }
+            };
+
+
+
             void put_block(const Tensor &in,const cytnx_uint64 &idx=0){
-                cytnx_error_msg(true,"[Developing]%s","\n");
+                cytnx_error_msg(idx>=this->_blocks.size(),"[ERROR][SparseCyTensor] index out of range%s","\n");
+                if(this->_contiguous){
+                    cytnx_error_msg(in.shape()!=this->_blocks[idx].shape(),"[ERROR][SparseCyTensor] the shape of input tensor does not match the shape of block @ idx=%d\n",idx);
+                    this->_blocks[idx] = in.clone();
+                }else{
+                    cytnx_error_msg(true,"[Developing]%s","\n");
+                }
+            };
+            void put_block_(const Tensor &in,const cytnx_uint64 &idx=0){
+                cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseCyTensor] cannot use put_block_() on non-contiguous CyTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call put_blocks_()\n  2) Try put_block()/put_blocks()%s","\n");
+
+                cytnx_error_msg(idx>=this->_blocks.size(),"[ERROR][SparseCyTensor] index out of range%s","\n");
+                cytnx_error_msg(in.shape()!=this->_blocks[idx].shape(),"[ERROR][SparseCyTensor] the shape of input tensor does not match the shape of block @ idx=%d\n",idx);
+                this->_blocks[idx] = in;
             };
             void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum){
                 cytnx_error_msg(true,"[Developing]%s","\n");
             };
+            void put_block_(const Tensor &in, const std::vector<cytnx_int64> &qnum){
+                cytnx_error_msg(true,"[Developing]%s","\n");
+            };
+
             // this will only work on non-symm tensor (DenseCyTensor)
             boost::intrusive_ptr<CyTensor_base> get(const std::vector<Accessor> &accessors){
                 cytnx_error_msg(true,"[ERROR][SparseCyTensor][get] cannot use get on a CyTensor with Symmetry.\n suggestion: try get_block()/get_blocks() first.%s","\n");
@@ -669,10 +738,20 @@ namespace cytnx_extension{
             Tensor get_block_(const cytnx_uint64 &idx=0) const{
                 return this->_impl->get_block_(idx);
             }
+            // this only work for non-symm tensor. return a shared view of block
+            Tensor get_block_(const std::vector<cytnx_int64> &qnum) const{
+                return this->_impl->get_block_(qnum);
+            }
+
             // this return a shared view of blocks for non-symm tensor.
             // for symmetry tensor, it call contiguous first and return a shared view of blocks. [dev]
             std::vector<Tensor> get_blocks() const {
                 return this->_impl->get_blocks();
+            }
+            // this return a shared view of blocks for non-symm tensor.
+            // for symmetry tensor, it call contiguous first and return a shared view of blocks. [dev]
+            std::vector<Tensor> get_blocks_() const {
+                return this->_impl->get_blocks_();
             }
             // the put block will have shared view with the internal block, i.e. non-clone. 
             void put_block(const Tensor &in,const cytnx_uint64 &idx=0){
@@ -682,7 +761,14 @@ namespace cytnx_extension{
             void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum){
                 this->_impl->put_block(in,qnum);
             }
-
+            // the put block will have shared view with the internal block, i.e. non-clone. 
+            void put_block_(const Tensor &in,const cytnx_uint64 &idx=0){
+                this->_impl->put_block_(in,idx);
+            }
+            // the put block will have shared view with the internal block, i.e. non-clone. 
+            void put_block_(const Tensor &in, const std::vector<cytnx_int64> &qnum){
+                this->_impl->put_block_(in,qnum);
+            }
             CyTensor get(const std::vector<Accessor> &accessors) const{
                 CyTensor out;
                 out._impl = this->_impl->get(accessors);

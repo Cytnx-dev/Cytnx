@@ -25,7 +25,8 @@ int main(int argc, char *argv[]){
     //    cout << comm24[i] << endl;
     //} 
     std::vector<Bond> dbds = {bd_dqu3,bd_dqu4,bd_dqu1,bd_dqu2}; 
-        
+
+    cout << "[OK]" << endl;        
     CyTensor dut1(dbds,{},2);
     dut1.print_diagram(true);
     dut1.permute_({2,3,0,1},1);
@@ -38,6 +39,14 @@ int main(int argc, char *argv[]){
 
     dut2.print_diagram(true);
     cout << dut2.is_contiguous() << endl;
+
+    cout << dut2.get_blocks() << endl;
+    //cout << dut2.get_blocks_() << endl;
+    dut2.get_blocks_()[0].at<double>({0,1}) = 100;
+    dut2.get_blocks_()[1].at<double>({0,1}) = 200;
+
+    cout << dut2.get_blocks_() << endl;
+
 
     //auto bcbs = dut1.getTotalQnums();
     //cout << bcbs[0] << endl;

@@ -301,7 +301,6 @@ namespace cytnx_extension{
             SparseCyTensor* tmp = new SparseCyTensor();
             tmp->Init(this->_bonds,this->_labels,this->_Rowrank,this->dtype(),this->device(),this->_is_diag);
             //tmp->print_diagram();            
-            cout << "[Dr]1" << endl; 
             
             //calculate new inner meta, and copy the element from it.   
             for(unsigned int b=0;b<this->_blocks.size();b++){   
