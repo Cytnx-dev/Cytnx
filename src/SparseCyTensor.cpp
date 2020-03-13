@@ -126,6 +126,7 @@ namespace cytnx_extension{
                 for(cytnx_uint64 d=0;d<N_sym*cb_inbonds[i].dim();d++){
                     cb_inbonds[i].qnums()[cytnx_uint64(d/N_sym)][d%N_sym] *= cb_inbonds[i].type()*bondType::BD_KET;
                 }
+                cb_inbonds[i].set_type(bondType::BD_KET);
             }
             if(cb_inbonds.size()>1){
                 for(cytnx_uint64 i=1;i<cb_inbonds.size();i++){
@@ -143,6 +144,7 @@ namespace cytnx_extension{
                 for(cytnx_uint64 d=0;d<N_sym*cb_outbonds[i].dim();d++){
                     cb_outbonds[i].qnums()[cytnx_uint64(d/N_sym)][d%N_sym] *= cb_outbonds[i].type()*bondType::BD_BRA;
                 }
+                cb_outbonds[i].set_type(bondType::BD_BRA);
             }
             if(cb_outbonds.size()>1){
                 for(cytnx_uint64 i=1;i<cb_outbonds.size();i++){
@@ -299,7 +301,7 @@ namespace cytnx_extension{
             SparseCyTensor* tmp = new SparseCyTensor();
             tmp->Init(this->_bonds,this->_labels,this->_Rowrank,this->dtype(),this->device(),this->_is_diag);
             //tmp->print_diagram();            
-            
+            cout << "[Dr]1" << endl; 
             
             //calculate new inner meta, and copy the element from it.   
             for(unsigned int b=0;b<this->_blocks.size();b++){   

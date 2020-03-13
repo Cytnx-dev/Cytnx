@@ -9,7 +9,7 @@ using namespace cytnx_extension;
 typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]){
-    /*   
+       
     Bond bd_dqu1 = Bond(4, BD_BRA,{{0,2},{2,0},{1,-1},{-1,1}});
     Bond bd_dqu2 = Bond(3, BD_BRA,{{1,1},{-1,-1},{0,0}});
     Bond bd_dqu3 = bd_dqu2.clone();
@@ -28,7 +28,7 @@ int main(int argc, char *argv[]){
         
     CyTensor dut1(dbds,{},2);
     dut1.print_diagram(true);
-    dut1.permute_({2,3,0,1});
+    dut1.permute_({2,3,0,1},1);
     dut1.print_diagram(true);
 
     cout << dut1.is_contiguous() << endl;
@@ -44,7 +44,7 @@ int main(int argc, char *argv[]){
     //cout << bcbs[1] << endl;
 
     return 0; 
-    */
+    
     Tensor Ta({3,4,2},Type.Double);
     cout << Ta.dtype_str() << endl;
     cout << Ta.device_str() << endl;
