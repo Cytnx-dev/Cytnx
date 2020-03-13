@@ -930,14 +930,33 @@ PYBIND11_MODULE(cytnx,m){
                 .def("get_block", [](const cytnx_extension::CyTensor &self, const std::vector<cytnx_int64>&qnum){
                                         return self.get_block(qnum);
                                   },py::arg("qnum"))
-                .def("get_block_",&cytnx_extension::CyTensor::get_block_)
 
+                .def("get_block_",[](const cytnx_extension::CyTensor &self, const std::vector<cytnx_int64>&qnum){
+                                        return self.get_block_(qnum);
+                                  },py::arg("qnum"))
+                .def("get_block_", [](const cytnx_extension::CyTensor &self, const cytnx_uint64&idx){
+                                        return self.get_block_(idx);
+                                  },py::arg("idx")=(cytnx_uint64)(0))
+
+                .def("get_blocks", [](const cytnx_extension::CyTensor &self){
+                                        return self.get_blocks();
+                                  })
+                .def("get_blocks_", [](const cytnx_extension::CyTensor &self){
+                                        return self.get_blocks_();
+                                  })
                 .def("put_block", [](cytnx_extension::CyTensor &self, const cytnx::Tensor &in, const cytnx_uint64&idx){
                                         self.put_block(in,idx);
                                   },py::arg("in"),py::arg("idx")=(cytnx_uint64)(0))
 
                 .def("put_block", [](cytnx_extension::CyTensor &self, const cytnx::Tensor &in, const std::vector<cytnx_int64>&qnum){
                                         self.put_block(in,qnum);
+                                  },py::arg("in"),py::arg("qnum"))
+                .def("put_block_", [](cytnx_extension::CyTensor &self, const cytnx::Tensor &in, const cytnx_uint64&idx){
+                                        self.put_block_(in,idx);
+                                  },py::arg("in"),py::arg("idx")=(cytnx_uint64)(0))
+
+                .def("put_block_", [](cytnx_extension::CyTensor &self, const cytnx::Tensor &in, const std::vector<cytnx_int64>&qnum){
+                                        self.put_block_(in,qnum);
                                   },py::arg("in"),py::arg("qnum"))
                 .def("__repr__",[](cytnx_extension::CyTensor &self)->std::string{
                     std::cout << self << std::endl;
@@ -951,7 +970,10 @@ PYBIND11_MODULE(cytnx,m){
                 ;
     mext.def("Contract",cytnx_extension::Contract);
    
-
+    // [Submodule linalg]
+    pybind11::module mext_xlinalg = mext.def_submodule("xlinalg","linear algebra for cytnx_extension.");
+    mext_xlinalg.def("Svd",&cytnx_extension::linalg::Svd,py::arg("Tin"),py::arg("is_U")=true,py::arg("is_vT")=true);
+    
 
     // [Submodule linalg] 
     pybind11::module m_linalg = m.def_submodule("linalg","linear algebra related.");
