@@ -326,17 +326,9 @@ namespace cytnx_extension{
                 for(unsigned int i=0;i<this->_blocks[b].shape()[0];i++){
                     for(unsigned int j=0;j<this->_blocks[b].shape()[1];j++){
                         //decompress 
-                        vector<cytnx_uint64> tfidx; cytnx_uint64 tmpi = i; // calculate old index
-                        for(unsigned int k=0;k<acc_in_old.size();k++){
-                            tfidx.push_back(tmpi/acc_in_old[k]);
-                            tmpi= tmpi%acc_in_old[k];
-                        }
-                        tmpi = j;
-                        for(unsigned int k=0;k<acc_out_old.size();k++){
-                            tfidx.push_back(tmpi/acc_out_old[k]);
-                            tmpi = tmpi%acc_out_old[k];
-                        }
-    
+                        vector<cytnx_uint64> tfidx = vec_concatenate(c2cartesian(i,acc_in_old), 
+                                                                     c2cartesian(j,acc_out_old));
+                       
                         //cout << "old idxs:" ;
                         //for(int t=0;t<tfidx.size();t++) cout << tfidx[t] << " "; cout << endl;//[DEBUG]
 
@@ -349,6 +341,7 @@ namespace cytnx_extension{
                         //for(int t=0;t<tmp->_bonds.size();t++) cout << tmp->_bonds[t].dim() << " "; cout << endl;//[DEBUG]
 
 
+                        
                         //caluclate new row col index:
                         cytnx_uint64 new_row = 0, new_col=0;
                         cytnx_uint64 buff=1;

@@ -76,7 +76,7 @@ namespace cytnx_extension{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
         }
 
-        void CyTensor_base::contiguous_(){
+        boost::intrusive_ptr<CyTensor_base> CyTensor_base::contiguous_(){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
         }
         boost::intrusive_ptr<CyTensor_base> CyTensor_base::contiguous(){

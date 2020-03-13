@@ -136,7 +136,7 @@ namespace cytnx_extension{
             virtual std::string     device_str() const;
             virtual boost::intrusive_ptr<CyTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank=-1, const bool &by_label=false);
             virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank=-1, const bool &by_label=false);
-            virtual void contiguous_();
+            virtual boost::intrusive_ptr<CyTensor_base> contiguous_();
             virtual boost::intrusive_ptr<CyTensor_base> contiguous();            
             virtual void print_diagram(const bool &bond_info=false);
             virtual Tensor get_block(const cytnx_uint64 &idx=0) const; // return a copy of block
@@ -211,7 +211,7 @@ namespace cytnx_extension{
             std::string     device_str() const{ return Device.getname(this->_block.device());}
             boost::intrusive_ptr<CyTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank=-1,const bool &by_label=false);
             void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank=-1, const bool &by_label=false);
-            void contiguous_(){ this->_block.contiguous_();}
+            boost::intrusive_ptr<CyTensor_base> contiguous_(){this->_block.contiguous_(); return boost::intrusive_ptr<CyTensor_base>(this);}
             boost::intrusive_ptr<CyTensor_base> contiguous(){
                 // if contiguous then return self! 
                 if(this->is_contiguous()){
@@ -405,9 +405,11 @@ namespace cytnx_extension{
                 return out;
             };
             boost::intrusive_ptr<CyTensor_base> contiguous();
-            void contiguous_(){
+            boost::intrusive_ptr<CyTensor_base> contiguous_(){
                 if(!this->_contiguous){
-                    this->_impl = this->contiguous();
+                    return this->contiguous();
+                }else{
+                    return boost::intrusive_ptr<CyTensor_base>(this);
                 }
             }
             void print_diagram(const bool &bond_info=false);
@@ -645,7 +647,7 @@ namespace cytnx_extension{
                 return out;
             }
             void contiguous_(){
-                this->_impl->contiguous_();
+                this->_impl = this->_impl->contiguous_();
             }
             void print_diagram(const bool &bond_info=false){
                this->_impl->print_diagram(bond_info);
