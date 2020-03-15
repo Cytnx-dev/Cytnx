@@ -38,7 +38,7 @@ var searchData=
   ['conj',['Conj',['../classcytnx_1_1Tensor.html#acf65f5c4d143eb165f7161e58a06b7e4',1,'cytnx::Tensor::Conj()'],['../namespacecytnx_1_1linalg.html#a470d0886432554a35ecaf961451c0806',1,'cytnx::linalg::Conj()']]],
   ['conj_5f',['Conj_',['../classcytnx_1_1Tensor.html#ab87b5428c5fb510da02fd3bbe316bbfa',1,'cytnx::Tensor::Conj_()'],['../namespacecytnx_1_1linalg.html#adc3233bf8bc3eb6a435340f912412801',1,'cytnx::linalg::Conj_()']]],
   ['contiguous',['contiguous',['../classcytnx__extension_1_1CyTensor.html#acfee2ef9111801ba6d338211d0d53fac',1,'cytnx_extension::CyTensor::contiguous()'],['../classcytnx_1_1Tensor.html#a127e50508e1ee0eadf11601d66d76988',1,'cytnx::Tensor::contiguous()']]],
-  ['contiguous_5f',['contiguous_',['../classcytnx__extension_1_1CyTensor.html#a4c43d0c0c313f3ce0243bc5b433dd083',1,'cytnx_extension::CyTensor::contiguous_()'],['../classcytnx_1_1Tensor.html#a405470654ef4ef5fc0b1d24754a3daf9',1,'cytnx::Tensor::contiguous_()']]],
+  ['contiguous_5f',['contiguous_',['../classcytnx__extension_1_1CyTensor.html#a4c43d0c0c313f3ce0243bc5b433dd083',1,'cytnx_extension::CyTensor::contiguous_()'],['../classcytnx_1_1Tensor.html#a3d4342299e6951dae13b6136b89f1d53',1,'cytnx::Tensor::contiguous_()']]],
   ['contract',['contract',['../classcytnx__extension_1_1CyTensor.html#a4c73200c9686c904896b7dba6101696a',1,'cytnx_extension::CyTensor::contract()'],['../namespacecytnx__extension.html#a39ce549322bc1db6b1cfc5faf72977d3',1,'cytnx_extension::Contract()']]],
   ['contraction_5ftree_2ecpp',['contraction_tree.cpp',['../contraction__tree_8cpp.html',1,'']]],
   ['contraction_5ftree_2ehpp',['contraction_tree.hpp',['../contraction__tree_8hpp.html',1,'']]],
