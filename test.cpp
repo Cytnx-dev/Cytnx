@@ -10,6 +10,11 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]){
 
+    Tensor ttt = arange(16).reshape({4,4});
+    cout << cytnx::linalg::ExpH(ttt);
+    exit(1);
+
+
     Tensor Tproto = arange(24).reshape({3,4,2});
     CyTensor U_test_svd; U_test_svd.Init(Tproto,1);
     cout << U_test_svd;

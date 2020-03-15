@@ -639,7 +639,7 @@ PYBIND11_MODULE(cytnx,m){
 
                 //linalg >>
                 .def("Svd",&cytnx::Tensor::Svd, py::arg("is_U"), py::arg("is_vT"))
-                .def("Eigh",&cytnx::Tensor::Eigh, py::arg("is_V"))
+                .def("Eigh",&cytnx::Tensor::Eigh, py::arg("is_V")=false,py::arg("row_v")=false)
                 .def("Inv_",&cytnx::Tensor::Inv_)
                 .def("Inv",&cytnx::Tensor::Inv_)
                 .def("Conj_",&cytnx::Tensor::Conj_)
@@ -739,7 +739,7 @@ PYBIND11_MODULE(cytnx,m){
     py::class_<cytnx_extension::CyTensor>(mext,"CyTensor")
                 .def(py::init<>())
                 .def(py::init<const cytnx::Tensor&, const cytnx_uint64&>())
-                .def(py::init<const std::vector<cytnx_extension::Bond> &, const std::vector<cytnx_int64> &, const cytnx_int64 &, const unsigned int &,const int &, const bool &>(),py::arg("bonds"),py::arg("in_labels")=std::vector<cytnx_int64>(),py::arg("Rowrank")=(cytnx_int64)(-1),py::arg("dtype")=(unsigned int)(cytnx::Type.Double),py::arg("device")=(int)cytnx::Device.cpu,py::arg("is_diag")=false)
+                .def(py::init<const std::vector<cytnx_extension::Bond> &, const std::vector<cytnx_int64> &, const cytnx_int64 &, const unsigned int &,const int &, const bool &>(),py::arg("bonds"),py::arg("labels")=std::vector<cytnx_int64>(),py::arg("rowrank")=(cytnx_int64)(-1),py::arg("dtype")=(unsigned int)(cytnx::Type.Double),py::arg("device")=(int)cytnx::Device.cpu,py::arg("is_diag")=false)
                 .def("set_name",&cytnx_extension::CyTensor::set_name)
                 .def("set_label",&cytnx_extension::CyTensor::set_label,py::arg("idx"),py::arg("new_label"))
                 .def("set_labels",&cytnx_extension::CyTensor::set_labels,py::arg("new_labels"))
@@ -979,9 +979,12 @@ PYBIND11_MODULE(cytnx,m){
     pybind11::module m_linalg = m.def_submodule("linalg","linear algebra related.");
 
     m_linalg.def("Svd",&cytnx::linalg::Svd,py::arg("Tin"),py::arg("is_U")=true,py::arg("is_vT")=true);
-    m_linalg.def("Eigh",&cytnx::linalg::Eigh,py::arg("Tin"),py::arg("is_V")=false);
+    m_linalg.def("Eigh",&cytnx::linalg::Eigh,py::arg("Tin"),py::arg("is_V")=false,py::arg("row_v")=false);
     m_linalg.def("Exp",&cytnx::linalg::Exp,py::arg("Tin"));
     m_linalg.def("Exp_",&cytnx::linalg::Exp_,py::arg("Tio"));
+    m_linalg.def("Expf_",&cytnx::linalg::Expf_,py::arg("Tio"));
+    m_linalg.def("Expf",&cytnx::linalg::Expf,py::arg("Tio"));
+    m_linalg.def("ExpH",&cytnx::linalg::ExpH,py::arg("Tio"),py::arg("a")=1.0,py::arg("b")=0);
     m_linalg.def("Inv",&cytnx::linalg::Inv,py::arg("Tin"));
     m_linalg.def("Inv_",&cytnx::linalg::Inv_,py::arg("Tio"));
     m_linalg.def("Conj",&cytnx::linalg::Inv,py::arg("Tin"));

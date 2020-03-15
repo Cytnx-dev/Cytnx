@@ -454,8 +454,9 @@ namespace cytnx{
                 return this->_impl->is_contiguous();
             }
 
-            void permute_(const std::vector<cytnx_uint64> &rnks){
+            Tensor permute_(const std::vector<cytnx_uint64> &rnks){
                 this->_impl->permute_(rnks);
+                return *this;
             }
             
             /**
@@ -517,8 +518,9 @@ namespace cytnx{
             #### output>
             \verbinclude example/Tensor/contiguous_.py.out
             */
-            void contiguous_(){
+            Tensor contiguous_(){
                 this->_impl->contiguous_();
+                return *this;
             }
 
             /**
@@ -858,7 +860,7 @@ namespace cytnx{
  
             // linalg:
             std::vector<Tensor> Svd(const bool &is_U=true, const bool &is_vT=true);
-            std::vector<Tensor> Eigh(const bool &is_V=false);
+            std::vector<Tensor> Eigh(const bool &is_V=true,const bool &row_v=false);
             Tensor& Inv_();
             Tensor Inv(); 
             Tensor& Conj_();

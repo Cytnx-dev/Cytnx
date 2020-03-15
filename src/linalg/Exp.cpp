@@ -1,7 +1,5 @@
 #include "linalg.hpp"
 #include "linalg_internal_interface.hpp"
-
-
 namespace cytnx{
     namespace linalg{
         Tensor Exp(const Tensor &Tin){

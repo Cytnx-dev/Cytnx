@@ -87,6 +87,9 @@ namespace cytnx_extension{
 
 }
 
+//====================================================================================
+//====================================================================================
+//====================================================================================
 namespace cytnx{
     /**
     @namespace cytnx::linalg
@@ -180,7 +183,7 @@ namespace cytnx{
 
         [Note] the Tin should be a rank-2 Tensor. 
         */
-        std::vector<Tensor> Eigh(const Tensor &Tin, const bool &is_V=false);
+        std::vector<Tensor> Eigh(const Tensor &Tin, const bool &is_V=true, const bool &row_v=false);
 
         // Matmul:
         //==================================================
@@ -406,6 +409,23 @@ namespace cytnx{
             
         */
         std::vector<Tensor> Tridiag(const Tensor &Diag, const Tensor &Sub_diag, const bool &is_V=false);
+
+
+
+        //ExpH:
+        //===========================================
+        /**
+        @brief perform matrix exponential
+        @param Tensor 
+        @return 
+            [Tensor]
+
+        description:
+            
+        */
+        Tensor ExpH(const Tensor &in,const cytnx_double &a=1, const cytnx_double &b=0);
+
+
 
     }// namespace linalg
     

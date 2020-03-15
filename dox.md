@@ -7,6 +7,9 @@
     1. Add .imag() .real() for Storage. 
     2. Add xlinalg under cytnx_extension for algebra on CyTensor
     3. Add xlinalg::Svd()  
+    4. Change linalg::Eigh() to match numpy 
+    5. fix Diag uninitialize elemets bug
+    6. add linalg::ExpH()
 
 ## Version log
     v0.4
@@ -101,6 +104,7 @@
       \link cytnx::linalg::Conj Conj\endlink    |   \link cytnx::linalg::Conj_ Conj_\endlink   |  Y  |  Y   |    Y 
       \link cytnx::linalg::Exp Exp\endlink     |   \link cytnx::linalg::Exp_ Exp_\endlink    |  Y  |  Y   |    Y
       \link cytnx::linalg::Expf Expf\endlink     |   \link cytnx::linalg::Expf_ Expf_\endlink    |  Y  |  Y   |    Y
+      \link cytnx::linalg::*ExpH ExpH\endlink       |   x       |  Y  |  Y   |    N        | Y  |   N
       \link cytnx::linalg::Eigh Eigh\endlink    |   x       |  Y  |  Y   |    Y 
       \link cytnx::linalg::Matmul Matmul\endlink  |   x       |  Y  |  Y   |    N
       \link cytnx::linalg::Diag Diag\endlink    |   x       |  Y  |  Y   |    N

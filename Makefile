@@ -103,7 +103,7 @@ ifeq ($(GPU_Enable),1)
 endif
 
 ## Linalg
-OBJS += Kron.o Add.o Div.o Sub.o Mul.o Cpr.o Svd.o Svd_truncate.o Inv.o Inv_.o Conj.o Conj_.o Exp.o Exp_.o Expf.o Expf_.o Eigh.o Diag.o Matmul.o Tensordot.o Outer.o Vectordot.o Tridiag.o 
+OBJS += ExpH.o Kron.o Add.o Div.o Sub.o Mul.o Cpr.o Svd.o Svd_truncate.o Inv.o Inv_.o Conj.o Conj_.o Exp.o Exp_.o Expf.o Expf_.o Eigh.o Diag.o Matmul.o Tensordot.o Outer.o Vectordot.o Tridiag.o 
 
 
 ALLOBJS = $(OBJS)
@@ -458,6 +458,8 @@ Exp_.o: $(CytnxPATH)/src/linalg/Exp_.cpp $(CytnxPATH)/include/linalg.hpp
 Expf.o: $(CytnxPATH)/src/linalg/Expf.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Expf_.o: $(CytnxPATH)/src/linalg/Expf_.cpp $(CytnxPATH)/include/linalg.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+ExpH.o: $(CytnxPATH)/src/linalg/ExpH.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Diag.o: $(CytnxPATH)/src/linalg/Diag.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<

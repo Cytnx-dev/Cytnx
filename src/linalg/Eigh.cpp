@@ -4,7 +4,7 @@
 
 namespace cytnx{
     namespace linalg{
-        std::vector<Tensor> Eigh(const Tensor &Tin, const bool &is_V){
+        std::vector<Tensor> Eigh(const Tensor &Tin, const bool &is_V, const bool &row_v){
             
             cytnx_error_msg(Tin.shape().size() != 2,"[Eigh] error, Eigh can only operate on rank-2 Tensor.%s","\n");
             cytnx_error_msg(!Tin.is_contiguous(), "[Eigh] error tensor must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
@@ -31,7 +31,11 @@ namespace cytnx{
 
                 std::vector<Tensor> out;
                 out.push_back(S);
-                if(is_V) out.push_back(V);
+                if(is_V){ 
+                    out.push_back(V); 
+                    if(!row_v) out.back().permute_({1,0}).contiguous_(); 
+                }
+                
                 
                 return out;
 
@@ -45,7 +49,10 @@ namespace cytnx{
 
                     std::vector<Tensor> out;
                     out.push_back(S);
-                    if(is_V) out.push_back(V);
+                    if(is_V){ 
+                        out.push_back(V); 
+                        if(!row_v) out.back().permute_({1,0}).contiguous_(); 
+                    }
                     
                     return out;
                 #else

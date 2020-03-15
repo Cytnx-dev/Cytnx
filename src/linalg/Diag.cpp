@@ -1,13 +1,13 @@
 #include "linalg.hpp"
 #include "linalg_internal_interface.hpp"
-
+#include "Generator.hpp"
 
 
 namespace cytnx{
     namespace linalg{
         Tensor Diag(const Tensor &Tin){
             cytnx_error_msg(Tin.shape().size() != 1, "[ERROR] the input tensor shoud be a rank-1 Tensor.%s","\n");
-            Tensor out({Tin.shape()[0],Tin.shape()[0]},Tin.dtype(),Tin.device());
+            Tensor out = zeros({Tin.shape()[0],Tin.shape()[0]},Tin.dtype(),Tin.device());
             
 
             if(Tin.device() == Device.cpu){
