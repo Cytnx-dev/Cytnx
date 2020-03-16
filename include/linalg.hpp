@@ -56,7 +56,7 @@ namespace cytnx_extension{
         cytnx_extension::CyTensor Div(const cytnx_extension::CyTensor &Lt,const T &rc);
 
         std::vector<cytnx_extension::CyTensor> Svd(const cytnx_extension::CyTensor &Tin, const bool &is_U=true, const bool &is_vT=true);
-
+        std::vector<cytnx_extension::CyTensor> Svd_truncate(const cytnx_extension::CyTensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U=true, const bool &is_vT=true);
 
     }
 

@@ -11,12 +11,17 @@ typedef cytnx::Accessor ac;
 int main(int argc, char *argv[]){
 
     Tensor ttr({3,4,5});
-    cout << ttr ;
     random::Make_normal(ttr,0,0.1,99);
     cout << ttr ;
-    random::Make_normal(ttr,0,0.1,99);
-    cout << ttr ;
+    
+    cytnx_extension::CyTensor TTT(ttr,1);
+    cout << TTT;
+
+    TTT*=3;
+    cout << TTT;    
+
     return 0;
+
 
 
 

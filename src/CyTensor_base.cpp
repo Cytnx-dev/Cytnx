@@ -97,23 +97,41 @@ namespace cytnx_extension{
             return Tensor();
         }
         // return a share view of block, this only work for non-symm tensor.
-        Tensor CyTensor_base::get_block_(const cytnx_uint64 &idx) const{
+        const Tensor& CyTensor_base::get_block_(const cytnx_uint64 &idx) const{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
-            return Tensor();
+            Tensor t;
+            return t;
         }
-        Tensor CyTensor_base::get_block_(const std::vector<cytnx_int64> &qnum) const{
+        // return a share view of block, this only work for non-symm tensor.
+        Tensor& CyTensor_base::get_block_(const cytnx_uint64 &idx){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
-            return Tensor();
+            Tensor t;
+            return t;
         }
-
+        const Tensor& CyTensor_base::get_block_(const std::vector<cytnx_int64> &qnum) const{
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+            Tensor t;
+            return t;
+        }
+        Tensor& CyTensor_base::get_block_(const std::vector<cytnx_int64> &qnum){
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+            Tensor t;
+            return t;
+        }
         std::vector<Tensor> CyTensor_base::get_blocks() const{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
             return std::vector<Tensor>();
         }
-        std::vector<Tensor> CyTensor_base::get_blocks_() const{
+        const std::vector<Tensor>& CyTensor_base::get_blocks_() const{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
             return std::vector<Tensor>();
         }
+        std::vector<Tensor>& CyTensor_base::get_blocks_(){
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+            std::vector<Tensor> t;
+            return t;
+        }
+
         void CyTensor_base::put_block(const Tensor &in, const cytnx_uint64 &idx){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
         }

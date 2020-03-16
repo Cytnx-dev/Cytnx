@@ -44,6 +44,7 @@ eH = cyx.CyTensor(eH,2)
 eH.print_diagram()
 print(eH)
 
+
 H = cyx.CyTensor(H,2)
 H.print_diagram()
 
@@ -57,23 +58,23 @@ A = cyx.CyTensor([cyx.Bond(chi),cyx.Bond(2),cyx.Bond(chi)],rowrank=1,labels=[-1,
 B = cyx.CyTensor(A.bonds(),rowrank=1,labels=[-3,1,-4]);                                
 cytnx.random.Make_normal(B.get_block_(),0,0.2); ## this is temporary, will have more intruitive way to rand
 cytnx.random.Make_normal(A.get_block_(),0,0.2); ## this is temporary, will have more intruitive way to rand
-#A.print_diagram()
-#B.print_diagram()
+A.print_diagram()
+B.print_diagram()
 #print(A)
 #print(B)
 la = cyx.CyTensor([cyx.Bond(chi),cyx.Bond(chi)],rowrank=1,labels=[-2,-3],is_diag=True)
 lb = cyx.CyTensor([cyx.Bond(chi),cyx.Bond(chi)],rowrank=1,labels=[-4,-5],is_diag=True)
-cytnx.random.Make_normal(la.get_block_(),0,0.2); ## this is temporary, will have more intruitive way to rand
-cytnx.random.Make_normal(lb.get_block_(),0,0.2); ## this is temporary, will have more intruitive way to rand
-#la.print_diagram()
-#lb.print_diagram()
+la.put_block(cytnx.ones(chi));
+lb.put_block(cytnx.ones(chi));
+la.print_diagram()
+lb.print_diagram()
 #print(la)
 #print(lb)
-
 
 ## Evov:
 Elast = 0
 for i in range(10000):
+
     A.set_labels([-1,0,-2])
     B.set_labels([-3,1,-4])
     la.set_labels([-2,-3])
@@ -81,7 +82,7 @@ for i in range(10000):
 
     ## contract all
     X = cyx.Contract(cyx.Contract(A,la),cyx.Contract(B,lb))
-    X.print_diagram()
+    #X.print_diagram()
     lb.set_label(idx=1,new_label=-1)
     X = cyx.Contract(lb,X)
 
@@ -106,7 +107,7 @@ for i in range(10000):
     if(np.abs(E-Elast) < CvgCrit):
         print("[Converged!]")
         break
-
+    print("Step: %d Enr: %5.8f"%(i,Elast))
     Elast = E
 
     ## Time evolution the MPS
@@ -114,7 +115,7 @@ for i in range(10000):
     XeH.permute_([-4,2,3,-5],by_label=True)
     #XeH.print_diagram()
     
-    ## Do Svd
+    ## Do Svd + truncate
     ## 
     #        (2)   (3)                   (2)                                    (3)
     #         |     |          =>         |         +   (-6)--s--(-7)  +         |
@@ -122,13 +123,37 @@ for i in range(10000):
     #
 
     XeH.set_Rowrank(2)
-    s,U,Vt = cyx.xlinalg.Svd(XeH)
-    #XeH.print_diagram()
-    #s.print_diagram()
-    #U.print_diagram()
-    #Vt.print_diagram()
+    la,A,B = cyx.xlinalg.Svd_truncate(XeH,chi)
+    Norm = cytnx.linalg.Vectordot(la.get_block_(),la.get_block_()).item()
+    la *= Norm**-0.5 #normalize, will have Norm function
+    #A.print_diagram()
+    #la.print_diagram()
+    #B.print_diagram()
+         
+
+    # de-contract the lb tensor , so it returns to 
+    #             
+    #            |     |     
+    #       --lb-A'-la-B'-lb-- 
+    #
+    # again, but A' and B' are updated 
+    A.set_labels([-1,0,-2]); A.set_Rowrank(1);
+    B.set_labels([-3,1,-4]); B.set_Rowrank(1);
+
+    #A.print_diagram()
+    #B.print_diagram()
+
+    lb_inv = 1./lb
+    A = cyx.Contract(lb_inv,A)
+    B = cyx.Contract(B,lb_inv)
+
+    #A.print_diagram()
+    #B.print_diagram()
+
+    # translation symmetry, exchange A and B site
+    A,B = B,A
+    la,lb = lb,la
 
 
-    exit(1)
         
 

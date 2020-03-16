@@ -90,7 +90,7 @@ namespace cytnx_extension{
                    }else{
                        Tensor tmp;
                        if(Tin.is_contiguous()) tmp = Tin.get_block_();
-                       else tmp = Tin.get_block_().contiguous();
+                       else{ tmp = Tin.get_block(); tmp.contiguous_();}
 
                        vector<cytnx_uint64> tmps = tmp.shape();
                        vector<cytnx_int64> oldshape(tmps.begin(),tmps.end()); tmps.clear();
