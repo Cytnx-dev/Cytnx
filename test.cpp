@@ -12,9 +12,9 @@ int main(int argc, char *argv[]){
 
     Tensor ttr({3,4,5});
     cout << ttr ;
-    random::Make_normal(ttr,0,0.1);
+    random::Make_normal(ttr,0,0.1,99);
     cout << ttr ;
-    random::Make_normal(ttr,0,0.1);
+    random::Make_normal(ttr,0,0.1,99);
     cout << ttr ;
     return 0;
 

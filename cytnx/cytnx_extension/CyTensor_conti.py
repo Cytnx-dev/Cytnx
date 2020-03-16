@@ -1,5 +1,6 @@
 from ..utils import *
 from ..cytnx.cytnx_extension_c import *  
+from ..cytnx.cytnx_extension_c import xlinalg
 ## load the submodule from pybind and inject the methods
 
 

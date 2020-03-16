@@ -889,8 +889,7 @@ PYBIND11_MODULE(cytnx,m){
                 //.def("permute",&cytnx_extension::CyTensor::permute,py::arg("mapper"),py::arg("Rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
                 //.def("permute_",&cytnx_extension::CyTensor::permute_,py::arg("mapper"),py::arg("Rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
 
-                .def("permute_",[](cytnx_extension::CyTensor &self, py::args args, py::kwargs kwargs){
-                    std::vector<cytnx::cytnx_int64> c_args = args.cast< std::vector<cytnx::cytnx_int64> >();
+                .def("permute_",[](cytnx_extension::CyTensor &self, const std::vector<cytnx::cytnx_int64> &c_args, py::kwargs kwargs){
                     cytnx_int64 Rowrank = -1;
                     bool by_label = false;
                     if(kwargs){
@@ -903,8 +902,7 @@ PYBIND11_MODULE(cytnx,m){
                     }
                     self.permute_(c_args,Rowrank,by_label);
                 })
-                .def("permute",[](cytnx_extension::CyTensor &self, py::args args, py::kwargs kwargs)->cytnx_extension::CyTensor{
-                    std::vector<cytnx::cytnx_int64> c_args = args.cast< std::vector<cytnx::cytnx_int64> >();
+                .def("permute",[](cytnx_extension::CyTensor &self,const std::vector<cytnx::cytnx_int64> &c_args, py::kwargs kwargs)->cytnx_extension::CyTensor{
                     cytnx_int64 Rowrank = -1;
                     bool by_label = false;
                     if(kwargs){
@@ -972,7 +970,7 @@ PYBIND11_MODULE(cytnx,m){
    
     // [Submodule linalg]
     pybind11::module mext_xlinalg = mext.def_submodule("xlinalg","linear algebra for cytnx_extension.");
-    mext_xlinalg.def("Svd",&cytnx_extension::linalg::Svd,py::arg("Tin"),py::arg("is_U")=true,py::arg("is_vT")=true);
+    mext_xlinalg.def("Svd",&cytnx_extension::xlinalg::Svd,py::arg("Tin"),py::arg("is_U")=true,py::arg("is_vT")=true);
     
 
     // [Submodule linalg] 
@@ -994,6 +992,24 @@ PYBIND11_MODULE(cytnx,m){
     m_linalg.def("Tensordot",&cytnx::linalg::Tensordot, py::arg("T1"),py::arg("T2"),py::arg("indices_1"),py::arg("indices_2"));
     m_linalg.def("Outer",&cytnx::linalg::Outer, py::arg("T1"),py::arg("T2"));
     m_linalg.def("Kron",&cytnx::linalg::Kron, py::arg("T1"),py::arg("T2"));
+
+    // [Submodule random]
+    pybind11::module m_random = m.def_submodule("random","random related.");
+   
+    m_random.def("Make_normal", [](cytnx::Tensor &Tin, const double &mean, const double &std, const long long &seed){
+                                        if(seed<0)
+                                            cytnx::random::Make_normal(Tin,mean,std);
+                                        else
+                                            cytnx::random::Make_normal(Tin,mean,std,seed);
+                                  },py::arg("Tin"),py::arg("mean"),py::arg("std"),py::arg("seed")=-1);
+
+    m_random.def("Make_normal", [](cytnx::Storage &Sin, const double &mean, const double &std, const long long &seed){
+                                        if(seed<0)
+                                            cytnx::random::Make_normal(Sin,mean,std);
+                                        else
+                                            cytnx::random::Make_normal(Sin,mean,std,seed);
+                                  },py::arg("Sin"),py::arg("mean"),py::arg("std"),py::arg("seed")=-1);
+
 
 }
 

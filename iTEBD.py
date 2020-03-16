@@ -6,7 +6,7 @@ sys.path.append("cytnx")
 import cytnx
 from cytnx import cytnx_extension as cyx
 
-## Example of 1D Ising model 
+#Example of 1D Ising model 
 ## iTEBD
 ##-------------------------------------
 
@@ -38,10 +38,14 @@ del TFterm, ZZterm
 eH = cytnx.linalg.ExpH(H,-dt) ## or equivantly ExpH(-dt*H)
 eH.reshape_(2,2,2,2)
 print(eH)
+H.reshape_(2,2,2,2)
 
 eH = cyx.CyTensor(eH,2)
 eH.print_diagram()
 print(eH)
+
+H = cyx.CyTensor(H,2)
+H.print_diagram()
 
 
 ## Create MPS:
@@ -49,15 +53,22 @@ print(eH)
 #     |    |     
 #   --A-la-B-lb-- 
 #
-A = cyx.CyTensor([cyx.Bond(chi),cyx.Bond(2),cyx.Bond(chi)],rowrank=1,labels=[-1,0,-2])
-B = cyx.CyTensor(A.bonds(),rowrank=1,labels=[-3,1,-4])
-A.print_diagram()
-B.print_diagram()
+A = cyx.CyTensor([cyx.Bond(chi),cyx.Bond(2),cyx.Bond(chi)],rowrank=1,labels=[-1,0,-2]); 
+B = cyx.CyTensor(A.bonds(),rowrank=1,labels=[-3,1,-4]);                                
+cytnx.random.Make_normal(B.get_block_(),0,0.2); ## this is temporary, will have more intruitive way to rand
+cytnx.random.Make_normal(A.get_block_(),0,0.2); ## this is temporary, will have more intruitive way to rand
+#A.print_diagram()
+#B.print_diagram()
+#print(A)
+#print(B)
 la = cyx.CyTensor([cyx.Bond(chi),cyx.Bond(chi)],rowrank=1,labels=[-2,-3],is_diag=True)
 lb = cyx.CyTensor([cyx.Bond(chi),cyx.Bond(chi)],rowrank=1,labels=[-4,-5],is_diag=True)
-la.print_diagram()
-lb.print_diagram()
-
+cytnx.random.Make_normal(la.get_block_(),0,0.2); ## this is temporary, will have more intruitive way to rand
+cytnx.random.Make_normal(lb.get_block_(),0,0.2); ## this is temporary, will have more intruitive way to rand
+#la.print_diagram()
+#lb.print_diagram()
+#print(la)
+#print(lb)
 
 
 ## Evov:
@@ -68,8 +79,56 @@ for i in range(10000):
     la.set_labels([-2,-3])
     lb.set_labels([-4,-5])
 
+    ## contract all
     X = cyx.Contract(cyx.Contract(A,la),cyx.Contract(B,lb))
     X.print_diagram()
-    exit(1)
+    lb.set_label(idx=1,new_label=-1)
+    X = cyx.Contract(lb,X)
 
+    ## X =
+    #           (0)  (1)
+    #            |    |     
+    #  (-4) --lb-A-la-B-lb-- (-5) 
+    #
+    #X.print_diagram()
+
+    Xt = X.clone()
+
+    ## calculate norm and energy for this step
+    # Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element
+    XNorm = cyx.Contract(X,Xt).item()
+    XH = cyx.Contract(X,H)
+    XH.set_labels([-4,-5,0,1])
+    XHX = cyx.Contract(Xt,XH).item() ## rank-0
+    E = XHX/XNorm
+
+    ## check if converged.
+    if(np.abs(E-Elast) < CvgCrit):
+        print("[Converged!]")
+        break
+
+    Elast = E
+
+    ## Time evolution the MPS
+    XeH = cyx.Contract(X,eH)
+    XeH.permute_([-4,2,3,-5],by_label=True)
+    #XeH.print_diagram()
+    
+    ## Do Svd
+    ## 
+    #        (2)   (3)                   (2)                                    (3)
+    #         |     |          =>         |         +   (-6)--s--(-7)  +         |
+    #  (-4) --= XeH =-- (-5)        (-4)--U--(-6)                          (-7)--Vt--(-5)
+    #
+
+    XeH.set_Rowrank(2)
+    s,U,Vt = cyx.xlinalg.Svd(XeH)
+    #XeH.print_diagram()
+    #s.print_diagram()
+    #U.print_diagram()
+    #Vt.print_diagram()
+
+
+    exit(1)
+        
 
