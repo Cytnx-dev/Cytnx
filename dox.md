@@ -10,6 +10,7 @@
     4. Change linalg::Eigh() to match numpy 
     5. fix Diag uninitialize elemets bug
     6. add linalg::ExpH()
+    7. add random::Make_normal()
 
 ## Version log
     v0.4
@@ -116,8 +117,17 @@
     *this is a high level linalg 
     ^this is temporary disable
 
-## Generators 
+## Container Generators 
     Tensor: \link cytnx::zeros zeros()\endlink, \link cytnx::ones ones()\endlink, \link cytnx::arange arange()\endlink
+
+     
+## Random 
+    See \link cytnx::random cytnx::random \endlink for further details
+
+      func    | Tn  | Stor | CPU | GPU  
+    ----------|-----|------|-----|-----------
+    \link cytnx::random::Make_normal Make_normal\endlink   |  Y  |  Y   | Y   |  N
+
     
 ## Requirements
     * Boost v1.53+ [check_deleted, atomicadd, intrusive_ptr]

@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['make_5fnormal',['Make_normal',['../namespacecytnx_1_1random.html#ac456ace342f35864d3a927b3ce9fccbd',1,'cytnx::random::Make_normal(Storage &amp;Sin, const double &amp;mean, const double &amp;std, const unsigned int &amp;seed=std::random_device()())'],['../namespacecytnx_1_1random.html#a7e59e61df6bd451559628f6d2f1b54d8',1,'cytnx::random::Make_normal(Tensor &amp;Tin, const double &amp;mean, const double &amp;std, const unsigned int &amp;seed=std::random_device()())']]],
   ['matmul',['Matmul',['../namespacecytnx_1_1linalg.html#a53feb441b4b1bd263714ed33e093728f',1,'cytnx::linalg']]],
   ['mkl_5fcomplex16',['MKL_Complex16',['../Type_8hpp.html#a1fa119034fee07a6d5449926cbb7915a',1,'Type.hpp']]],
   ['mkl_5fcomplex8',['MKL_Complex8',['../Type_8hpp.html#a0b45f62ef34311fdb79b8de82d75c0d3',1,'Type.hpp']]],

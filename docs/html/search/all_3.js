@@ -73,5 +73,6 @@ var searchData=
   ['cytnx_5fwarning_5fmsg',['cytnx_warning_msg',['../cytnx__error_8hpp.html#a81109ea32caf96bd935d7df52c03105f',1,'cytnx_error.hpp']]],
   ['cytnx',['Cytnx',['../index.html',1,'']]],
   ['linalg',['linalg',['../namespacecytnx_1_1linalg.html',1,'cytnx']]],
+  ['random',['random',['../namespacecytnx_1_1random.html',1,'cytnx']]],
   ['xlinalg',['xlinalg',['../namespacecytnx__extension_1_1xlinalg.html',1,'cytnx_extension']]]
 ];

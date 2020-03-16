@@ -80,6 +80,7 @@ $(function() {
 <li>Change <a class="el" href="namespacecytnx_1_1linalg.html#aeb91cc90ebd85069ea9e7808e64068a2" title="eigen-value decomposition for Hermitian matrix ">linalg::Eigh()</a> to match numpy</li>
 <li>fix Diag uninitialize elemets bug</li>
 <li>add <a class="el" href="namespacecytnx_1_1linalg.html#a003ad2d2784202e936ce4a16e850e17e" title="perform matrix exponential ">linalg::ExpH()</a></li>
+<li>add <a class="el" href="namespacecytnx_1_1random.html#ac456ace342f35864d3a927b3ce9fccbd" title="Randomize the memory of a Tensor with normal distributon. ">random::Make_normal()</a></li>
 </ol>
 <h2>Version log</h2>
 <p>v0.4</p><ol type="1">
@@ -195,8 +196,16 @@ $(function() {
 <td><a class="el" href="namespacecytnx_1_1linalg.html#abc68d62e804d6d3e86aeec00015b07cd">Tridiag</a> </td><td>x </td><td>Y </td><td>N </td><td>N </td></tr>
 </table>
 <p>*this is a high level linalg ^this is temporary disable</p>
-<h2>Generators</h2>
+<h2>Container Generators</h2>
 <p>Tensor: <a class="el" href="namespacecytnx.html#ab8a79a03fb0465f3eb2641017f3f1755">zeros()</a>, <a class="el" href="namespacecytnx.html#a83fb7bbe73368751a0d0f535d4a10a33">ones()</a>, <a class="el" href="namespacecytnx.html#a733f9931141463bc8b7c61931ccf52c3">arange()</a></p>
+<h2>Random</h2>
+<p>See <a class="el" href="namespacecytnx_1_1random.html">cytnx::random </a> for further details</p>
+<table class="doxtable">
+<tr>
+<th>func </th><th>Tn </th><th>Stor </th><th>CPU </th><th>GPU  </th></tr>
+<tr>
+<td><a class="el" href="namespacecytnx_1_1random.html#ac456ace342f35864d3a927b3ce9fccbd">Make_normal</a> </td><td>Y </td><td>Y </td><td>Y </td><td>N </td></tr>
+</table>
 <h2>Requirements</h2>
 <ul>
 <li>Boost v1.53+ [check_deleted, atomicadd, intrusive_ptr]</li>

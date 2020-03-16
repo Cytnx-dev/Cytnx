@@ -10,6 +10,17 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]){
 
+    Tensor ttr({3,4,5});
+    cout << ttr ;
+    random::Make_normal(ttr,0,0.1);
+    cout << ttr ;
+    random::Make_normal(ttr,0,0.1);
+    cout << ttr ;
+    return 0;
+
+
+
+
     Tensor ttt = arange(16).reshape({4,4});
     cout << cytnx::linalg::ExpH(ttt);
     exit(1);

@@ -10,6 +10,7 @@
 #include "Generator.hpp"
 #include "linalg.hpp"
 #include "utils/utils.hpp"
+#include "random.hpp"
 
 #include "CyTensor.hpp"
 #include "Symmetry.hpp"

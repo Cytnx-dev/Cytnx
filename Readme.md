@@ -15,6 +15,7 @@
     4. Change linalg::Eigh() to match numpy 
     5. fix Diag uninitialize elemets bug
     6. add linalg::ExpH()
+    7. add random::Make_normal()
 
 ## Version log
     v0.4
@@ -276,11 +277,17 @@
     * this is a high level linalg 
     ^ this is temporary disable
  
-## Generators 
+## Container Generators 
 
     Tensor: zeros(), ones(), arange()
     
      
+## Random 
+      func        | Tn  | Stor | CPU | GPU  
+    -----------------------------------------------------
+    Make_normal() |  Y  |  Y   | Y   |  N
+
+
 ## Developer
 
     Kai-Hsin Wu kaihsinwu@gmail.com 

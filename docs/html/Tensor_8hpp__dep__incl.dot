@@ -52,6 +52,9 @@ digraph "include/Tensor.hpp"
   Node44 [label="src/Generator.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$Generator_8cpp.html"];
   Node43 -> Node41 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node27 -> Node37 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node27 -> Node45 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node45 [label="include/random.hpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$random_8hpp.html"];
+  Node45 -> Node31 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node27 -> Node39 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node27 -> Node42 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
 }
