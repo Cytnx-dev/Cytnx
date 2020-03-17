@@ -78,7 +78,7 @@ endif()
 # Version information
 ######################################################################
 set(CYTNX_VERSION_MAJOR 0)
-set(CYTNX_VERSION_MINOR 4)
+set(CYTNX_VERSION_MINOR 5)
 set(CYTNX_VERSION_PATCH 0)
 set(CYTNX_VERSION COUNT 0)
 set(CYTNX_VERSION
@@ -146,7 +146,7 @@ target_include_directories(cytnx SYSTEM
     PUBLIC
 				${Boost_INCLUDE_DIRS}
 )
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -w")
 target_compile_features(cytnx PUBLIC cxx_std_11)
 #set_property(TARGET cytnx PROPERTY CXX_STANDARD 11)
 
