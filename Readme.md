@@ -16,6 +16,7 @@
     5. fix Diag uninitialize elemets bug
     6. add linalg::ExpH()
     7. add random::Make_normal()
+    8. add iTEBD example for both C++ and python @ example/iTEBD
 
 ## Version log
     v0.4
