@@ -153,6 +153,15 @@ namespace cytnx{
         Tensor Cpr(const Tensor &Lt, const T &rc);
 
 
+
+        // Norm:
+        //=================================================
+        /**
+        @brief calculate the norm of a vector (or matrix in the future)
+        */
+        Tensor Norm(const Tensor &Tl);
+
+
         // Svd:
         //==================================================
         /** 

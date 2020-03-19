@@ -113,6 +113,7 @@
       *\link cytnx::linalg::Tensordot Tensordot\endlink | x | Y | Y | N
       \link cytnx::linalg::Outer Outer\endlink  |   x       | Y   | Y   |   N
       \link cytnx::linalg::Kron Kron\endlink  |   x       | Y   | N   |   N
+      \link cytnx::linalg::Norm Norm\endlink  |   x       | Y   | N   |   N
       \link cytnx::linalg::Vectordot Vectordot\endlink    |   x       |  Y  |  N   |    N
       \link cytnx::linalg::Tridiag Tridiag\endlink    | x | Y | N | N  
     *this is a high level linalg 

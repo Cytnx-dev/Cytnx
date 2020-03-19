@@ -274,6 +274,7 @@
      Vectordot    |   x       |  Y  |  N   |    N        | Y  |   N 
       Tridiag     |   x       |  Y  |  N   |    N        | Y  |   N
      Kron         |   x       |  Y  |  N   |    N        | Y  |   N
+     Norm         |   x       |  Y  |  N   |    N        | Y  |   N
 
     * this is a high level linalg 
     ^ this is temporary disable

@@ -225,6 +225,13 @@ namespace cytnx{
             Matmul_ii[Type.Bool         ] = Matmul_internal_b  ;
 
 
+            //===================
+            Norm_ii = vector<Normfunc_oii>(N_Type);
+            Norm_ii[Type.ComplexDouble] = Norm_internal_cd;
+            Norm_ii[Type.ComplexFloat ] = Norm_internal_cf;
+            Norm_ii[Type.Double] = Norm_internal_d;
+            Norm_ii[Type.Float ] = Norm_internal_f;
+
             //====================
             Vd_ii = vector<Vectordotfunc_oii>(N_Type);
             Vd_ii[Type.ComplexDouble] = Vectordot_internal_cd;

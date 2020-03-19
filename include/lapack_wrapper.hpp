@@ -48,6 +48,9 @@
     void   zscal_(const int32_t *n, const std::complex<double> *a, std::complex<double> *x, const int32_t *incx);
     void   zdscal_(const int32_t *n, const double *a, std::complex<double> *x, const int32_t *incx);
 
+
+    float snrm2_(const int32_t *n, const float *x, const int32_t *incx);
+    float scnrm2_(const int32_t *n, const std::complex<float> *x, const int32_t *incx);
     double dnrm2_(const int32_t *n, const double *x, const int32_t *incx);
     double dznrm2_(const int32_t *n, const std::complex<double> *x, const int32_t *incx);
 
@@ -289,6 +292,17 @@
     {
       return dznrm2_(n, x, incx);
     }
+
+    inline float snrm2(const int32_t *n, const float *x, const int32_t *incx)
+    { 
+      return snrm2_(n, x, incx); 
+    }
+
+    inline float scnrm2(const int32_t *n, const std::complex<float> *x, const int32_t *incx)
+    {
+      return scnrm2_(n, x, incx);
+    }
+
 
     inline void dscal(const int32_t *n, const double *a, double *x, const int32_t *incx)
     {

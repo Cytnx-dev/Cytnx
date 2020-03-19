@@ -1,5 +1,6 @@
 target_sources_local(cytnx
   PRIVATE
+    Norm_internal.hpp
     Add_internal.hpp
     Arithmetic_internal.hpp
     Conj_inplace_internal.hpp
@@ -34,4 +35,5 @@ target_sources_local(cytnx
     Sub_internal.cpp
     Svd_internal.cpp
     Vectordot_internal.cpp
+    Norm_internal.cpp
 )
