@@ -124,8 +124,8 @@ for i in range(10000):
 
     XeH.set_Rowrank(2)
     la,A,B = cyx.xlinalg.Svd_truncate(XeH,chi)
-    Norm = cytnx.linalg.Vectordot(la.get_block_(),la.get_block_()).item()
-    la *= Norm**-0.5 #normalize, will have Norm function
+    Norm = cytnx.linalg.Norm(la.get_block_()).item()
+    la *= 1./Norm
     #A.print_diagram()
     #la.print_diagram()
     #B.print_diagram()

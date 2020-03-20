@@ -123,8 +123,8 @@ int main(int argc, char *argv[]){
         XeH.set_Rowrank(2);
         vector<cyx::CyTensor> out = cyx::xlinalg::Svd_truncate(XeH,chi);
         la = out[0]; A = out[1]; B = out[2];
-        double Norm = cytnx::linalg::Vectordot(la.get_block_(),la.get_block_()).item<double>();
-        la *= 1./sqrt(Norm); //normalize
+        double Norm = cytnx::linalg::Norm(la.get_block_()).item<double>();
+        la *= 1./Norm; //normalize
         
 
         // de-contract the lb tensor , so it returns to 

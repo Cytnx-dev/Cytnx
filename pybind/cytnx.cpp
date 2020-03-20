@@ -646,6 +646,7 @@ PYBIND11_MODULE(cytnx,m){
                 .def("Conj",&cytnx::Tensor::Conj_)
                 .def("Exp_",&cytnx::Tensor::Exp_)
                 .def("Exp",&cytnx::Tensor::Exp)
+                .def("Norm",&cytnx::Tensor::Norm)
                 ;
 
 
@@ -1193,6 +1194,7 @@ PYBIND11_MODULE(cytnx,m){
     m_linalg.def("Outer",&cytnx::linalg::Outer, py::arg("T1"),py::arg("T2"));
     m_linalg.def("Kron",&cytnx::linalg::Kron, py::arg("T1"),py::arg("T2"));
     m_linalg.def("Vectordot",&cytnx::linalg::Vectordot, py::arg("T1"),py::arg("T2"),py::arg("is_conj")=false);
+    m_linalg.def("Norm",&cytnx::linalg::Norm, py::arg("T1"));
 
     // [Submodule random]
     pybind11::module m_random = m.def_submodule("random","random related.");
