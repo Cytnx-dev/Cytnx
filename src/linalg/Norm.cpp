@@ -33,11 +33,9 @@ namespace cytnx{
             }else{
                 #ifdef UNI_GPU
                     checkCudaErrors(cudaSetDevice(Tl.device()));
-                    //cytnx::linalg_internal::lii.cuNorm_ii[_tl.dtype()](out._impl->storage()._impl->Mem,
-                    //                                        _tl._impl->storage()._impl,
-                    //                                        _tl._impl->storage()._impl);
+                    cytnx::linalg_internal::lii.cuNorm_ii[_tl.dtype()](out._impl->storage()._impl->Mem,
+                                                            _tl._impl->storage()._impl);
 
-                    cytnx_error_msg(true,"[Developing][Norm][Gpu]%s","\n");                    
                     return out;
                 #else
                     cytnx_error_msg(true,"[Norm] fatal error,%s","try to call the gpu section without CUDA support.\n");

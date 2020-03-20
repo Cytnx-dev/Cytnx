@@ -12,6 +12,10 @@
     v0.5.1
 
 ## What's new:
+    v0.5.1
+    1. add Norm() for CPU and GPU, add to call by Tn
+
+    v0.5.0a
     1. Add .imag() .real() for Storage. 
     2. Add xlinalg under cytnx_extension for algebra on CyTensor
     3. Add xlinalg::Svd()  
@@ -277,7 +281,7 @@
      Vectordot    |   x       |  Y  |  N   |    N        | Y  |   N 
       Tridiag     |   x       |  Y  |  N   |    N        | Y  |   N
      Kron         |   x       |  Y  |  N   |    N        | Y  |   N
-     Norm         |   x       |  Y  |  N   |    N        | Y  |   N
+     Norm         |   x       |  Y  |  Y   |    Y        | Y  |   N
 
     * this is a high level linalg 
     ^ this is temporary disable

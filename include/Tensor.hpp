@@ -867,7 +867,7 @@ namespace cytnx{
             Tensor Conj();
             Tensor& Exp_();
             Tensor Exp();
-
+            Tensor Norm();
 
     };// class Tensor
 

@@ -20,6 +20,16 @@ int main(int argc, char *argv[]){
     TTT*=3;
     cout << TTT;    
 
+    ttr.reshape_({-1});
+    cout << ttr ;
+
+    cout << linalg::Norm(ttr);
+    
+    ttr.to_(Device.cuda+0);
+    cout << ttr ;
+    cout << linalg::Norm(ttr);
+
+
     return 0;
 
 

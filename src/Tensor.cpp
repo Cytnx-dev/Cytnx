@@ -500,7 +500,9 @@ namespace cytnx{
     Tensor Tensor::Exp(){
         return linalg::Exp(*this); 
     }
-    
+    Tensor Tensor::Norm(){
+        return linalg::Norm(*this);
+    }    
 
 }//namespace cytnx
 

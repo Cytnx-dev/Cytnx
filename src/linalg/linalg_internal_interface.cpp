@@ -597,6 +597,15 @@ namespace cytnx{
                 cuAri_ii[Type.Bool][Type.Int16        ] = cuArithmetic_internal_bti16;
                 cuAri_ii[Type.Bool][Type.Bool         ] = cuArithmetic_internal_btb;
 
+
+                //Norm
+                //====================
+                cuNorm_ii = vector<Normfunc_oii>(N_Type);
+                cuNorm_ii[Type.ComplexDouble] = cuNorm_internal_cd;
+                cuNorm_ii[Type.ComplexFloat ] = cuNorm_internal_cf;
+                cuNorm_ii[Type.Double] = cuNorm_internal_d;
+                cuNorm_ii[Type.Float ] = cuNorm_internal_f;
+
             
                 // Svd
                 cuSvd_ii = vector<Svdfunc_oii>(5);

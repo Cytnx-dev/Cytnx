@@ -97,7 +97,7 @@ endif
 OBJS += linalg_internal_interface.o
 OBJS += Norm_internal.o Kron_internal.o Cpr_internal.o Add_internal.o Sub_internal.o Mul_internal.o Div_internal.o Arithmetic_internal.o Svd_internal.o Inv_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_internal.o Diag_internal.o Outer_internal.o Vectordot_internal.o Tridiag_internal.o 
 ifeq ($(GPU_Enable),1)
-  OBJS += cuCpr_internal.o cuAdd_internal.o cuSub_internal.o cuMul_internal.o cuDiv_internal.o cuArithmetic_internal.o cuSvd_internal.o cuInv_inplace_internal.o cuConj_inplace_internal.o cuExp_internal.o  cuEigh_internal.o cuMatmul_internal.o cuDiag_internal.o cuOuter_internal.o
+  OBJS += cuNorm_internal.o cuCpr_internal.o cuAdd_internal.o cuSub_internal.o cuMul_internal.o cuDiv_internal.o cuArithmetic_internal.o cuSvd_internal.o cuInv_inplace_internal.o cuConj_inplace_internal.o cuExp_internal.o  cuEigh_internal.o cuMatmul_internal.o cuDiag_internal.o cuOuter_internal.o
 endif
 
 ## Linalg
@@ -328,7 +328,8 @@ cuMatmul_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuMatmul_inte
 
 cuOuter_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuOuter_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuOuter_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
-
+cuNorm_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuNorm_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuNorm_internal.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
 endif
 

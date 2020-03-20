@@ -8,7 +8,7 @@ var searchData=
   ['network_5fbase_2ecpp',['Network_base.cpp',['../Network__base_8cpp.html',1,'']]],
   ['node',['Node',['../classcytnx__extension_1_1Node.html',1,'cytnx_extension::Node'],['../classcytnx__extension_1_1Node.html#a117ee1073b34b8432cccc86ea37855cb',1,'cytnx_extension::Node::Node()'],['../classcytnx__extension_1_1Node.html#a37b4591a3a7b05450814e9e02c049daf',1,'cytnx_extension::Node::Node(const Node &amp;rhs)'],['../classcytnx__extension_1_1Node.html#a0897275ab1693f1f1079d2efc277a876',1,'cytnx_extension::Node::Node(Node *in_left, Node *in_right, const CyTensor &amp;in_uten=CyTensor())']]],
   ['nodes_5fcontainer',['nodes_container',['../classcytnx__extension_1_1ContractionTree.html#a066cfaec4e3ee7a2ae497e1be63a3f87',1,'cytnx_extension::ContractionTree']]],
-  ['norm',['Norm',['../namespacecytnx_1_1linalg.html#a9cd2be179860bb4742ebe320fa063680',1,'cytnx::linalg']]],
+  ['norm',['Norm',['../classcytnx_1_1Tensor.html#a06f794826df49b006b308615242449bd',1,'cytnx::Tensor::Norm()'],['../namespacecytnx_1_1linalg.html#a9cd2be179860bb4742ebe320fa063680',1,'cytnx::linalg::Norm()']]],
   ['nsym',['Nsym',['../classcytnx__extension_1_1Bond.html#aae2eee6461ffde1a0f192e0b580b3830',1,'cytnx_extension::Bond']]],
   ['nttype',['NtType',['../namespacecytnx__extension.html#a40da1da84f9bd707fd5ec888a5693ccf',1,'cytnx_extension']]]
 ];
