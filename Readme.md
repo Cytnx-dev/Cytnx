@@ -5,8 +5,11 @@
 ## Intro slide
 [Cytnx_v0.2.pdf](https://drive.google.com/file/d/13VBJ9565Zw5_W-_-aJjztGESESAVMm8_/view?usp=sharing)
 
-## Current Version:
-    v0.5
+## Stable Version:
+    [v0.5.0 pre-release](https://github.com/kaihsin/Cytnx/tree/v0.5.0a)
+
+## Current dev Version:
+    v0.5.1
 
 ## What's new:
     1. Add .imag() .real() for Storage. 

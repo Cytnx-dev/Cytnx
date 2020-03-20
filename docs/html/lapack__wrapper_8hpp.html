@@ -117,6 +117,10 @@ Functions</h2></td></tr>
 <tr class="separator:af46208dbc6b7d41ce67122cc6dd921cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f1a8f127b2053d5043640e4a6d577dd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lapack__wrapper_8hpp.html#a4f1a8f127b2053d5043640e4a6d577dd">zdscal_</a> (const int32_t *n, const double *a, std::complex&lt; double &gt; *x, const int32_t *incx)</td></tr>
 <tr class="separator:a4f1a8f127b2053d5043640e4a6d577dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56b0109e91497533ba9a647ff773d724"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lapack__wrapper_8hpp.html#a56b0109e91497533ba9a647ff773d724">snrm2_</a> (const int32_t *n, const float *x, const int32_t *incx)</td></tr>
+<tr class="separator:a56b0109e91497533ba9a647ff773d724"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9dd461171469044da2aefea324fdaf5"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lapack__wrapper_8hpp.html#af9dd461171469044da2aefea324fdaf5">scnrm2_</a> (const int32_t *n, const std::complex&lt; float &gt; *x, const int32_t *incx)</td></tr>
+<tr class="separator:af9dd461171469044da2aefea324fdaf5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a38e043d9bd19c1c11b2b4fd0f3075077"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lapack__wrapper_8hpp.html#a38e043d9bd19c1c11b2b4fd0f3075077">dnrm2_</a> (const int32_t *n, const double *x, const int32_t *incx)</td></tr>
 <tr class="separator:a38e043d9bd19c1c11b2b4fd0f3075077"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9041f96f1bb59414702d9fc8d680eb1d"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lapack__wrapper_8hpp.html#a9041f96f1bb59414702d9fc8d680eb1d">dznrm2_</a> (const int32_t *n, const std::complex&lt; double &gt; *x, const int32_t *incx)</td></tr>
@@ -257,6 +261,10 @@ Functions</h2></td></tr>
 <tr class="separator:a9a76bd95d8af2f005700d974ddc25a3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a160b554974ac8e7207efa6d3d089509d"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lapack__wrapper_8hpp.html#a160b554974ac8e7207efa6d3d089509d">dznrm2</a> (const int32_t *n, const std::complex&lt; double &gt; *x, const int32_t *incx)</td></tr>
 <tr class="separator:a160b554974ac8e7207efa6d3d089509d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3483b83b97813316836a5f137816c26d"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lapack__wrapper_8hpp.html#a3483b83b97813316836a5f137816c26d">snrm2</a> (const int32_t *n, const float *x, const int32_t *incx)</td></tr>
+<tr class="separator:a3483b83b97813316836a5f137816c26d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83eff7165a1f8acc1753c7ec1c898f33"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lapack__wrapper_8hpp.html#a83eff7165a1f8acc1753c7ec1c898f33">scnrm2</a> (const int32_t *n, const std::complex&lt; float &gt; *x, const int32_t *incx)</td></tr>
+<tr class="separator:a83eff7165a1f8acc1753c7ec1c898f33"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8e90e5b46675c44de173caf199f2937"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lapack__wrapper_8hpp.html#ad8e90e5b46675c44de173caf199f2937">dscal</a> (const int32_t *n, const double *a, double *x, const int32_t *incx)</td></tr>
 <tr class="separator:ad8e90e5b46675c44de173caf199f2937"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7eda795ed1add1b25d725f946f7b0344"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lapack__wrapper_8hpp.html#a7eda795ed1add1b25d725f946f7b0344">zscal</a> (const int32_t *n, const std::complex&lt; double &gt; *a, std::complex&lt; double &gt; *x, const int32_t *incx)</td></tr>
@@ -5547,6 +5555,82 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a83eff7165a1f8acc1753c7ec1c898f33"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83eff7165a1f8acc1753c7ec1c898f33">&#9670;&nbsp;</a></span>scnrm2()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float scnrm2 </td>
+          <td>(</td>
+          <td class="paramtype">const int32_t *&#160;</td>
+          <td class="paramname"><em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::complex&lt; float &gt; *&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int32_t *&#160;</td>
+          <td class="paramname"><em>incx</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af9dd461171469044da2aefea324fdaf5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9dd461171469044da2aefea324fdaf5">&#9670;&nbsp;</a></span>scnrm2_()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float scnrm2_ </td>
+          <td>(</td>
+          <td class="paramtype">const int32_t *&#160;</td>
+          <td class="paramname"><em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::complex&lt; float &gt; *&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int32_t *&#160;</td>
+          <td class="paramname"><em>incx</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ae145e0dfe55febcc73d3dda2e5d049d8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae145e0dfe55febcc73d3dda2e5d049d8">&#9670;&nbsp;</a></span>scopy()</h2>
 
@@ -6648,6 +6732,82 @@ Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">int32_t *&#160;</td>
           <td class="paramname"><em>info</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3483b83b97813316836a5f137816c26d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3483b83b97813316836a5f137816c26d">&#9670;&nbsp;</a></span>snrm2()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float snrm2 </td>
+          <td>(</td>
+          <td class="paramtype">const int32_t *&#160;</td>
+          <td class="paramname"><em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float *&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int32_t *&#160;</td>
+          <td class="paramname"><em>incx</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a56b0109e91497533ba9a647ff773d724"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a56b0109e91497533ba9a647ff773d724">&#9670;&nbsp;</a></span>snrm2_()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float snrm2_ </td>
+          <td>(</td>
+          <td class="paramtype">const int32_t *&#160;</td>
+          <td class="paramname"><em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float *&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int32_t *&#160;</td>
+          <td class="paramname"><em>incx</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
