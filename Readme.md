@@ -301,4 +301,9 @@
 
     Kai-Hsin Wu kaihsinwu@gmail.com 
 
+## Acknowledgement
+    KHW whould like to thanks for the following contributor(s) for invaluable contribution to the library
+
+    * PoChung Chen  (NCHU, Taiwan) : testing, and bug reporting
+
 
