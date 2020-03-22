@@ -144,6 +144,8 @@
                  const std::complex<float> *vr, const int32_t *ldvr, const std::complex<float> *work, const int32_t* lwork,
                  const float *rwork, int32_t* info );
 
+    void sstev_( const char* jobz, const int32_t* n, const float* d, const float* e, const float* z,
+                 const int32_t* ldaz, const float* work, int32_t* info );
     void dstev_( const char* jobz, const int32_t* n, const double* d, const double* e, const double* z,
                  const int32_t* ldaz, const double* work, int32_t* info );
 
@@ -445,6 +447,12 @@
                  const int32_t* ldaz, const double* work, int32_t* info )
     {
       dstev_( jobz, n, d, e, z, ldaz, work, info );
+    }
+
+    inline void sstev( const char* jobz, const int32_t* n, const float* d, const float* e, const float* z,
+                 const int32_t* ldaz, const float* work, int32_t* info )
+    {
+      sstev_( jobz, n, d, e, z, ldaz, work, info );
     }
 
     inline void dgetrf( const int32_t *m, const int32_t *n, const double *a,  const int32_t *lda, const int32_t *ipiv, int32_t* info )
