@@ -1,6 +1,6 @@
 from .utils import *
 from cytnx import *
-
+import numpy as _nppy
 """
 @add_method(Storage)
 def astype(self, new_type):
@@ -33,4 +33,6 @@ def contiguous(self):
     else:
         return self.make_contiguous()
 
-
+@add_method(Tensor)
+def numpy(self):
+    return _nppy.array(self)

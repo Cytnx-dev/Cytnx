@@ -380,6 +380,14 @@ namespace cytnx{
             }
 
             /**
+                @brief the rank of the Tensor
+                @return [cytnx_uint64] the rank of the Tensor
+            */
+            cytnx_uint64 rank() const{
+                return this->_impl->shape().size();
+            }
+
+            /**
             @brief return a clone of the current Tensor.
             @return [Tensor] 
            
