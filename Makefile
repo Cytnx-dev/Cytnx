@@ -109,7 +109,7 @@ OBJS += random_internal_interface.o
 OBJS += Normal_internal.o
 
 ## Random
-OBJS += Make_normal.o
+OBJS += Make_normal.o normal.o
 
 
 ALLOBJS = $(OBJS)
@@ -348,7 +348,8 @@ Normal_internal.o :  $(CytnxPATH)/src/random/random_internal_cpu/Normal_internal
 ########################
 Make_normal.o: $(CytnxPATH)/src/random/Make_normal.cpp $(CytnxPATH)/include/random.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
-
+normal.o: $(CytnxPATH)/src/random/normal.cpp $(CytnxPATH)/include/random.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 ## Misc
 ##########################

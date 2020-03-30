@@ -296,8 +296,14 @@
 ## Random 
       func        | Tn  | Stor | CPU | GPU  
     -----------------------------------------------------
-    Make_normal() |  Y  |  Y   | Y   |  N
+    *Make_normal() |  Y  |  Y   | Y   |  N
+    ^normal()      |  Y  |  x   | Y   |  N
 
+    * this is initializer
+    ^ this is generator
+
+    [Note] The difference of initializer and generator is that initializer is used to initialize the Tensor, and generator generates a new Tensor.
+     
 
 ## Developer
 

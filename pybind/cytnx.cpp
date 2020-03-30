@@ -1,5 +1,6 @@
 #include <vector>
 #include <map>
+#include <random>
 
   #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -1206,15 +1207,20 @@ PYBIND11_MODULE(cytnx,m){
                                             cytnx::random::Make_normal(Tin,mean,std);
                                         else
                                             cytnx::random::Make_normal(Tin,mean,std,seed);
-                                  },py::arg("Tin"),py::arg("mean"),py::arg("std"),py::arg("seed")=-1);
+                                  },py::arg("Tin"),py::arg("mean"),py::arg("std"),py::arg("seed")=std::random_device()());
 
     m_random.def("Make_normal", [](cytnx::Storage &Sin, const double &mean, const double &std, const long long &seed){
                                         if(seed<0)
                                             cytnx::random::Make_normal(Sin,mean,std);
                                         else
                                             cytnx::random::Make_normal(Sin,mean,std,seed);
-                                  },py::arg("Sin"),py::arg("mean"),py::arg("std"),py::arg("seed")=-1);
-
-
+                                  },py::arg("Sin"),py::arg("mean"),py::arg("std"),py::arg("seed")=std::random_device()());
+    
+    m_random.def("normal", [](const cytnx_uint64& Nelem,const double &mean, const double &std, const int&device, const unsigned int &seed){
+                                   return cytnx::random::normal(Nelem,mean,device,seed);
+                                  },py::arg("Nelem"),py::arg("mean"),py::arg("std"),py::arg("device")=-1,py::arg("seed")=std::random_device()());
+    m_random.def("normal", [](const std::vector<cytnx_uint64>& Nelem,const double &mean, const double &std, const int&device, const unsigned int &seed){
+                                   return cytnx::random::normal(Nelem,mean,std,device,seed);
+                                  },py::arg("Nelem"),py::arg("mean"),py::arg("std"),py::arg("device")=-1,py::arg("seed")=std::random_device()());
 }
 

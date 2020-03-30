@@ -137,7 +137,13 @@
 
       func    | Tn  | Stor | CPU | GPU  
     ----------|-----|------|-----|-----------
-    \link cytnx::random::Make_normal Make_normal\endlink   |  Y  |  Y   | Y   |  N
+    *\link cytnx::random::Make_normal Make_normal\endlink   |  Y  |  Y   | Y   |  N
+    ^\link cytnx::random::normal normal\endlink   |  Y  |  x   | Y   |  N
+    * this is initializer
+    ^ this is generator
+
+    [Note] The difference of initializer and generator is that initializer is used to initialize the Tensor, and generator generates a new Tensor.
+
 
     
 ## Requirements
