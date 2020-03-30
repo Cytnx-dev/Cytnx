@@ -26,9 +26,8 @@ MPO[2,2,:,:] = I
 
 ## as CyTensor :
 MPO_T = cyx.CyTensor(MPO,2)
+MPO_T.set_name("DMRG_MPO")
 MPO_T.print_diagram()
-
-
 
 
 

@@ -18,6 +18,7 @@
 #include "linalg/linalg_internal_cpu/Vectordot_internal.hpp"
 #include "linalg/linalg_internal_cpu/Tridiag_internal.hpp"
 #include "linalg/linalg_internal_cpu/Norm_internal.hpp"
+#include "linalg/linalg_internal_cpu/Matvec_internal.hpp"
 //#include "linalg_internal_cpu/Pow_internal.hpp"
 #ifdef UNI_GPU
     #include "linalg/linalg_internal_gpu/cuArithmetic_internal.hpp"
@@ -30,6 +31,7 @@
     #include "linalg/linalg_internal_gpu/cuDiag_internal.hpp"
     #include "linalg/linalg_internal_gpu/cuOuter_internal.hpp"
     #include "linalg/linalg_internal_gpu/cuNorm_internal.hpp"
+    #include "linalg/linalg_internal_gpu/cuMatvec_internal.hpp"
 #endif
 
 namespace cytnx{
@@ -44,6 +46,7 @@ namespace cytnx{
         typedef void (*Expfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
         typedef void (*Diagfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
         typedef void (*Matmulfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &,const boost::intrusive_ptr<Storage_base> &, const cytnx_int32 &, const cytnx_int32 &, const cytnx_int32&);
+        typedef void (*Matvecfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &,const boost::intrusive_ptr<Storage_base> &, const cytnx_int32 &, const cytnx_int32 &);
         typedef void (*Outerfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base>&, const cytnx_uint64 &, const cytnx_uint64 &);
         typedef void (*Vectordotfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base>&,const unsigned long long &, const bool &);
         typedef void (*Tdfunc_oii)(const boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, boost::intrusive_ptr<Storage_base>&, boost::intrusive_ptr<Storage_base>&, const cytnx_int32 &);
@@ -60,6 +63,7 @@ namespace cytnx{
                 //std::vector<Powfunc_oii> Pow_ii;
                 std::vector<Diagfunc_oii> Diag_ii;
                 std::vector<Matmulfunc_oii> Matmul_ii;
+                std::vector<Matvecfunc_oii> Matvec_ii;
                 std::vector<std::vector<Outerfunc_oii> >Outer_ii;
                 std::vector<std::vector<Kronfunc_oii> >Kron_ii;
                 std::vector<Vectordotfunc_oii> Vd_ii;
@@ -75,6 +79,7 @@ namespace cytnx{
                 std::vector<Diagfunc_oii> cuDiag_ii;
                 std::vector<Eighfunc_oii> cuEigh_ii;
                 std::vector<Matmulfunc_oii> cuMatmul_ii;
+                std::vector<Matvecfunc_oii> cuMatvec_ii;
                 std::vector<std::vector<Outerfunc_oii> > cuOuter_ii;
                 std::vector<Normfunc_oii> cuNorm_ii;
                 #endif

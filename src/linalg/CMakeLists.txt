@@ -24,6 +24,7 @@ target_sources_local(cytnx
     Svd_truncate.cpp
     Tensordot.cpp
     Vectordot.cpp
+    Dot.cpp
     Norm.cpp
     linalg_internal_interface.cpp
 )

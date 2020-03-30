@@ -46,6 +46,7 @@ var searchData=
   ['dorgqr_5f',['dorgqr_',['../lapack__wrapper_8hpp.html#abcb414925a15b27b6abf2f191ba93e91',1,'lapack_wrapper.hpp']]],
   ['dorgrq',['dorgrq',['../lapack__wrapper_8hpp.html#aef7b8d46fe9f12cdded3e14198a6615e',1,'lapack_wrapper.hpp']]],
   ['dorgrq_5f',['dorgrq_',['../lapack__wrapper_8hpp.html#a039108353c08ebe8bb13864632af8787',1,'lapack_wrapper.hpp']]],
+  ['dot',['Dot',['../namespacecytnx_1_1linalg.html#a215dbfd2aa7ef898450de7afff726bca',1,'cytnx::linalg']]],
   ['dscal',['dscal',['../lapack__wrapper_8hpp.html#ad8e90e5b46675c44de173caf199f2937',1,'lapack_wrapper.hpp']]],
   ['dscal_5f',['dscal_',['../lapack__wrapper_8hpp.html#a9fe3f55d515d5ce4c55a48df87dbdf8a',1,'lapack_wrapper.hpp']]],
   ['dstemr_5f',['dstemr_',['../lapack__wrapper_8hpp.html#a9f2f2c34d813639c0513f38c0ca27e54',1,'lapack_wrapper.hpp']]],

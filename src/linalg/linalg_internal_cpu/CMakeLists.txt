@@ -11,6 +11,7 @@ target_sources_local(cytnx
     Exp_internal.hpp
     Inv_inplace_internal.hpp
     Matmul_internal.hpp
+    Matvec_internal.hpp
     Mul_internal.hpp
     Outer_internal.hpp
     Kron_internal.hpp
@@ -28,6 +29,7 @@ target_sources_local(cytnx
     Exp_internal.cpp
     Inv_inplace_internal.cpp
     Matmul_internal.cpp
+    Matvec_internal.cpp
     Mul_internal.cpp
     Outer_internal.cpp
     Kron_internal.cpp

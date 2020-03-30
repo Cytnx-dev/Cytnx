@@ -14,6 +14,7 @@
 ## What's new:
     v0.5.1
     1. add Norm() for CPU and GPU, add to call by Tn
+    2. add Dot() for CPU and GPU, with unify API for Vec-Vec/Mat-Vec/Mat-Mat/Ten-Vec product.
 
     v0.5.0a
     1. Add .imag() .real() for Storage. 
@@ -282,6 +283,7 @@
       Tridiag     |   x       |  Y  |  N   |    N        | Y  |   N
      Kron         |   x       |  Y  |  N   |    N        | Y  |   N
      Norm         |   x       |  Y  |  Y   |    Y        | Y  |   N
+    *Dot          |   x       |  Y  |  Y   |    N        | Y  |   N 
 
     * this is a high level linalg 
     ^ this is temporary disable

@@ -399,6 +399,30 @@ namespace cytnx{
         */
         Tensor Vectordot(const Tensor &Tl, const Tensor &Tr, const bool &is_conj=false);
 
+
+        //Dot:
+        //=================================================
+        /**
+        @brief dot product of two arrays. 
+        @param Tl Tensor #1
+        @param Tr Tensor #2
+        @return 
+            [Tensor] 
+
+        description:
+            1. if both Tl and Tr are 1d arrays, it is inner product of vectors (no complex conj), it calls linalg.Vectordot with is_conj=false.
+            2. if both Tl and Tr are 2d arrays, it calls linalg.Matmul to compute the matrix multiplication
+            3. if Tl is Nd array (with N>=2, and Tr is 1-D array, it is sum product over the last axis of a with b
+
+        [Note]
+            performance tune: This function have better performance when two arrays with same types, and are one of following type: cytnx_double, cytnx_float, cytnx_complex64 or cytnx_complex128. 
+            
+        */
+        Tensor Dot(const Tensor &Tl, const Tensor &Tr);
+
+
+
+
         //Tridiag:
         //===========================================
         /**

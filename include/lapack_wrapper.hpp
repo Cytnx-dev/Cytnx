@@ -54,14 +54,25 @@
     double dnrm2_(const int32_t *n, const double *x, const int32_t *incx);
     double dznrm2_(const int32_t *n, const std::complex<double> *x, const int32_t *incx);
 
+    void   sgemv_(const char *trans, const int32_t *m, const int32_t *n, 
+                  const float *alpha, const float *a, const int32_t *lda, 
+                  const float *x, const int32_t *incx, const float *beta, 
+                  const float *y, const int32_t *incy);
+
     void   dgemv_(const char *trans, const int32_t *m, const int32_t *n, 
                   const double *alpha, const double *a, const int32_t *lda, 
                   const double *x, const int32_t *incx, const double *beta, 
                   const double *y, const int32_t *incy);
+
     void   zgemv_(const char *trans, const int32_t *m, const int32_t *n, 
                   const std::complex<double> *alpha, const std::complex<double> *a, const int32_t *lda,
                   const std::complex<double> *x,const int32_t *incx, const std::complex<double> *beta, 
                   const std::complex<double> *y, const int32_t *incy);
+
+    void   cgemv_(const char *trans, const int32_t *m, const int32_t *n, 
+                  const std::complex<float> *alpha, const std::complex<float> *a, const int32_t *lda,
+                  const std::complex<float> *x,const int32_t *incx, const std::complex<float> *beta, 
+                  const std::complex<float> *y, const int32_t *incy);
 
     double ddot_(const int32_t *n, const double *x, const int32_t *incx, 
                  const double *y, const int32_t *incy);
@@ -406,16 +417,25 @@
       zgesdd_(jobz, m, n, a, lda, s, u, ldu, vt, ldvt, work, lwork, rwork, iwork, info);
     }
 
+    inline void sgemv(const char *trans, const int32_t *m, const int32_t *n, const float *alpha, const float *a, const int32_t *lda, const float *x,
+               const int32_t *incx, const float *beta, const float *y, const int32_t *incy)
+    {
+      sgemv_(trans, m, n, alpha, a, lda, x, incx, beta, y, incy);
+    }
     inline void dgemv(const char *trans, const int32_t *m, const int32_t *n, const double *alpha, const double *a, const int32_t *lda, const double *x,
                const int32_t *incx, const double *beta, const double *y, const int32_t *incy)
     {
       dgemv_(trans, m, n, alpha, a, lda, x, incx, beta, y, incy);
     }
-
     inline void zgemv(const char *trans, const int32_t *m, const int32_t *n, const std::complex<double> *alpha, const std::complex<double> *a, const int32_t *lda,
                       const std::complex<double> *x,const int32_t *incx, const std::complex<double> *beta, const std::complex<double> *y, const int32_t *incy)
     {
         zgemv_(trans, m, n, alpha, a, lda, x, incx, beta, y, incy);
+    }
+    inline void cgemv(const char *trans, const int32_t *m, const int32_t *n, const std::complex<float> *alpha, const std::complex<float> *a, const int32_t *lda,
+                      const std::complex<float> *x,const int32_t *incx, const std::complex<float> *beta, const std::complex<float> *y, const int32_t *incy)
+    {
+        cgemv_(trans, m, n, alpha, a, lda, x, incx, beta, y, incy);
     }
 
     inline double ddot( const int32_t *n, const double *x, const int32_t *incx, const double *y, const int32_t *incy)

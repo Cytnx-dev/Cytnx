@@ -9,6 +9,7 @@
 ## What's new:
     v0.5.1
     1. add Norm() for CPU and GPU, add to call by Tn
+    2. add Dot() for CPU and GPU, with unify API for Vec-Vec/Mat-Vec/Mat-Mat/Ten-Vec product.
 
     v0.5.0a
     1. Add .imag() .real() for Storage. 
@@ -123,6 +124,7 @@
       \link cytnx::linalg::Norm Norm\endlink  |   x       | Y   | Y   |   Y
       \link cytnx::linalg::Vectordot Vectordot\endlink    |   x       |  Y  |  N   |    N
       \link cytnx::linalg::Tridiag Tridiag\endlink    | x | Y | N | N  
+      *\link cytnx::linalg::Dot Dot\endlink | x | Y | Y | N
     *this is a high level linalg 
     ^this is temporary disable
 

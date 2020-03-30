@@ -224,6 +224,19 @@ namespace cytnx{
             Matmul_ii[Type.Uint16       ] = Matmul_internal_u16;
             Matmul_ii[Type.Bool         ] = Matmul_internal_b  ;
 
+            //=====================
+            Matvec_ii = vector<Matvecfunc_oii>(N_Type);
+            Matvec_ii[Type.ComplexDouble] = Matvec_internal_cd ;
+            Matvec_ii[Type.ComplexFloat ] = Matvec_internal_cf ;
+            Matvec_ii[Type.Double       ] = Matvec_internal_d  ;
+            Matvec_ii[Type.Float        ] = Matvec_internal_f  ;
+            Matvec_ii[Type.Int64        ] = Matvec_internal_i64;
+            Matvec_ii[Type.Uint64       ] = Matvec_internal_u64;
+            Matvec_ii[Type.Int32        ] = Matvec_internal_i32;
+            Matvec_ii[Type.Uint32       ] = Matvec_internal_u32;
+            Matvec_ii[Type.Int16        ] = Matvec_internal_i16;
+            Matvec_ii[Type.Uint16       ] = Matvec_internal_u16;
+            Matvec_ii[Type.Bool         ] = Matvec_internal_b  ;
 
             //===================
             Norm_ii = vector<Normfunc_oii>(N_Type);
@@ -673,6 +686,22 @@ namespace cytnx{
                 cuMatmul_ii[Type.Int16        ] = cuMatmul_internal_i16;
                 cuMatmul_ii[Type.Uint16       ] = cuMatmul_internal_u16;
                 cuMatmul_ii[Type.Bool         ] = cuMatmul_internal_b;
+
+                //=====================
+                
+                cuMatvec_ii = vector<Matvecfunc_oii>(N_Type);
+                cuMatvec_ii[Type.ComplexDouble] = cuMatvec_internal_cd ;
+                cuMatvec_ii[Type.ComplexFloat ] = cuMatvec_internal_cf ;
+                cuMatvec_ii[Type.Double       ] = cuMatvec_internal_d  ;
+                cuMatvec_ii[Type.Float        ] = cuMatvec_internal_f  ;
+                cuMatvec_ii[Type.Int64        ] = cuMatvec_internal_i64;
+                cuMatvec_ii[Type.Uint64       ] = cuMatvec_internal_u64;
+                cuMatvec_ii[Type.Int32        ] = cuMatvec_internal_i32;
+                cuMatvec_ii[Type.Uint32       ] = cuMatvec_internal_u32;
+                cuMatvec_ii[Type.Int16        ] = cuMatvec_internal_i16;
+                cuMatvec_ii[Type.Uint16       ] = cuMatvec_internal_u16;
+                cuMatvec_ii[Type.Bool         ] = cuMatvec_internal_b;
+                
 
                 //================
                 

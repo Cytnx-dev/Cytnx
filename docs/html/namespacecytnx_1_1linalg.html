@@ -179,6 +179,9 @@ Functions</h2></td></tr>
 <tr class="memitem:aa69a91a5651fce55380cf800c6030d73"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#aa69a91a5651fce55380cf800c6030d73">Vectordot</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tl, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tr, const bool &amp;is_conj=false)</td></tr>
 <tr class="memdesc:aa69a91a5651fce55380cf800c6030d73"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform inner product of vectors  <a href="#aa69a91a5651fce55380cf800c6030d73">More...</a><br /></td></tr>
 <tr class="separator:aa69a91a5651fce55380cf800c6030d73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a215dbfd2aa7ef898450de7afff726bca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a215dbfd2aa7ef898450de7afff726bca">Dot</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tl, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tr)</td></tr>
+<tr class="memdesc:a215dbfd2aa7ef898450de7afff726bca"><td class="mdescLeft">&#160;</td><td class="mdescRight">dot product of two arrays.  <a href="#a215dbfd2aa7ef898450de7afff726bca">More...</a><br /></td></tr>
+<tr class="separator:a215dbfd2aa7ef898450de7afff726bca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc68d62e804d6d3e86aeec00015b07cd"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#abc68d62e804d6d3e86aeec00015b07cd">Tridiag</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;<a class="el" href="namespacecytnx_1_1linalg.html#a5913f0bdd6cc130aeb927f42a874a149">Diag</a>, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Sub_diag, const bool &amp;is_V=false)</td></tr>
 <tr class="memdesc:abc68d62e804d6d3e86aeec00015b07cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform diagonalization of symmetric tri-diagnoal matrix.  <a href="#abc68d62e804d6d3e86aeec00015b07cd">More...</a><br /></td></tr>
 <tr class="separator:abc68d62e804d6d3e86aeec00015b07cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -540,6 +543,50 @@ template&lt;class T &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a215dbfd2aa7ef898450de7afff726bca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a215dbfd2aa7ef898450de7afff726bca">&#9670;&nbsp;</a></span>Dot()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> cytnx::linalg::Dot </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>Tl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>Tr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>dot product of two arrays. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Tl</td><td><a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> #1 </td></tr>
+    <tr><td class="paramname">Tr</td><td><a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> #2 </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>]</dd></dl>
+<p>description:</p><ol type="1">
+<li>if both Tl and Tr are 1d arrays, it is inner product of vectors (no complex conj), it calls <a class="el" href="namespacecytnx_1_1linalg.html#aa69a91a5651fce55380cf800c6030d73" title="perform inner product of vectors ">linalg.Vectordot</a> with is_conj=false.</li>
+<li>if both Tl and Tr are 2d arrays, it calls <a class="el" href="namespacecytnx_1_1linalg.html#a53feb441b4b1bd263714ed33e093728f" title="perform matrix multiplication on two tensors. ">linalg.Matmul</a> to compute the matrix multiplication</li>
+<li>if Tl is Nd array (with N&gt;=2, and Tr is 1-D array, it is sum product over the last axis of a with b</li>
+</ol>
+<p>[Note] performance tune: This function have better performance when two arrays with same types, and are one of following type: cytnx_double, cytnx_float, cytnx_complex64 or cytnx_complex128. </p>
 
 </div>
 </div>

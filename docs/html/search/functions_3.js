@@ -11,6 +11,8 @@ var searchData=
   ['cgelqf_5f',['cgelqf_',['../lapack__wrapper_8hpp.html#a3f7cc59e549d991362c82d0753efc0c2',1,'lapack_wrapper.hpp']]],
   ['cgemm',['cgemm',['../lapack__wrapper_8hpp.html#a91e0dc94e266db0207f19f66678bf7d8',1,'lapack_wrapper.hpp']]],
   ['cgemm_5f',['cgemm_',['../lapack__wrapper_8hpp.html#a64084ceb4f9a28d3b042f1f5699982ed',1,'lapack_wrapper.hpp']]],
+  ['cgemv',['cgemv',['../lapack__wrapper_8hpp.html#a33b069d9d74110e343d18493ce142b5c',1,'lapack_wrapper.hpp']]],
+  ['cgemv_5f',['cgemv_',['../lapack__wrapper_8hpp.html#a2e1369ce3f562d4c2a19f63564c92c9c',1,'lapack_wrapper.hpp']]],
   ['cgeqrf',['cgeqrf',['../lapack__wrapper_8hpp.html#ae12ab650ba9511f91d48e571501610ee',1,'lapack_wrapper.hpp']]],
   ['cgeqrf_5f',['cgeqrf_',['../lapack__wrapper_8hpp.html#a5b4102a60b1ee664436d04818b65df51',1,'lapack_wrapper.hpp']]],
   ['cgesvd',['cgesvd',['../lapack__wrapper_8hpp.html#a8d857ed5200438794a3c4ad055547764',1,'lapack_wrapper.hpp']]],
