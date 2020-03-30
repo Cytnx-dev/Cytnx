@@ -16,7 +16,7 @@
     1. add Norm() for CPU and GPU, add to call by Tn
     2. add Dot() for CPU and GPU, with unify API for Vec-Vec/Mat-Vec/Mat-Mat/Ten-Vec product.
     3. add Tensor.rank() 
-    4. [Feature] support Tensor to numpy.ndarray
+    4. [Feature] support Tensor <-> numpy.ndarray
 
 
     v0.5.0a

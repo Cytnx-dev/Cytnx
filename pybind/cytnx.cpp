@@ -127,7 +127,50 @@ PYBIND11_MODULE(cytnx,m){
                   },py::arg("start"),py::arg("end"),py::arg("step") = double(1), py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
 
 
-   
+    m.def("from_numpy", [](py::buffer b)-> Tensor{
+        py::buffer_info info = b.request();
+
+        // check type:                    
+        int dtype;
+        std::vector<cytnx_uint64> shape(info.shape.begin(),info.shape.end());
+        ssize_t Totbytes;
+
+        if(info.format ==py::format_descriptor<cytnx_complex128>::format()){
+            dtype=Type.ComplexDouble;
+            Totbytes = info.strides[0]*info.shape[0];
+        }else if(info.format ==py::format_descriptor<cytnx_complex64>::format()){
+            dtype=Type.ComplexFloat;
+            Totbytes = info.strides[0]*info.shape[0];
+        }else if(info.format ==py::format_descriptor<cytnx_double>::format()){
+            dtype=Type.Double;
+            Totbytes = info.strides[0]*info.shape[0];
+        }else if(info.format ==py::format_descriptor<cytnx_float>::format()){
+            dtype=Type.Float;
+            Totbytes = info.strides[0]*info.shape[0];
+        }else if(info.format ==py::format_descriptor<uint64_t>::format()|| info.format=="L"){
+            dtype=Type.Uint64;
+            Totbytes = info.strides[0]*info.shape[0];
+        }else if(info.format ==py::format_descriptor<int64_t>::format() || info.format=="l"){
+            dtype=Type.Int64;
+            Totbytes = info.strides[0]*info.shape[0];
+        }else if(info.format ==py::format_descriptor<uint32_t>::format()){
+            dtype=Type.Uint32;
+            Totbytes = info.strides[0]*info.shape[0];
+        }else if(info.format ==py::format_descriptor<int32_t>::format()){
+            dtype=Type.Int32;
+            Totbytes = info.strides[0]*info.shape[0];
+        }else if(info.format ==py::format_descriptor<cytnx_bool>::format()){
+            dtype=Type.Bool;
+            Totbytes = info.strides[0]*info.shape[0];
+        }else{
+            cytnx_error_msg(true,"[ERROR] invalid type from numpy.ndarray to Tensor%s","\n");
+        }
+        Tensor m;
+        m.Init(shape,dtype);
+        memcpy(m.storage()._impl->Mem,info.ptr,Totbytes);
+        return m;
+     });
+ 
 
 
     py::class_<cytnx::Storage>(m,"Storage")
@@ -264,7 +307,7 @@ PYBIND11_MODULE(cytnx,m){
                     std::vector<ssize_t> stride(m.shape().size());
                     std::vector<ssize_t> shape(m.shape().begin(),m.shape().end());
                     ssize_t accu = 1;
-                    for(int i=0;i<shape.size();i++){
+                    for(int i=shape.size()-1;i>=0;i--){
                         stride[i] = accu;
                         accu*=shape[i];
                     }
@@ -324,7 +367,7 @@ PYBIND11_MODULE(cytnx,m){
                         return py::buffer_info(
                                     m.storage()._impl->Mem,    //ptr
                                     sizeof(cytnx_uint64), //size of elem 
-                                    py::format_descriptor<cytnx_uint64>::format(), //pss format
+                                    py::format_descriptor<uint64_t>::format(), //pss format
                                     m.rank(),    //rank 
                                     shape,       // shape
                                     stride      // stride
@@ -336,7 +379,7 @@ PYBIND11_MODULE(cytnx,m){
                         return py::buffer_info(
                                     m.storage()._impl->Mem,    //ptr
                                     sizeof(cytnx_int64), //size of elem 
-                                    py::format_descriptor<cytnx_int64>::format(), //pss format
+                                    py::format_descriptor<int64_t>::format(), //pss format
                                     m.rank(),    //rank 
                                     shape,       // shape
                                     stride      // stride
@@ -348,7 +391,7 @@ PYBIND11_MODULE(cytnx,m){
                         return py::buffer_info( 
                                     m.storage()._impl->Mem,    //ptr
                                     sizeof(cytnx_uint32), //size of elem 
-                                    py::format_descriptor<cytnx_uint32>::format(), //pss format
+                                    py::format_descriptor<uint32_t>::format(), //pss format
                                     m.rank(),    //rank 
                                     shape,       // shape
                                     stride      // stride
@@ -360,7 +403,7 @@ PYBIND11_MODULE(cytnx,m){
                         return py::buffer_info(
                                     m.storage()._impl->Mem,    //ptr
                                     sizeof(cytnx_int32), //size of elem 
-                                    py::format_descriptor<cytnx_int32>::format(), //pss format
+                                    py::format_descriptor<int32_t>::format(), //pss format
                                     m.rank(),    //rank 
                                     shape,       // shape
                                     stride      // stride
