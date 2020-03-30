@@ -641,7 +641,7 @@ PYBIND11_MODULE(cytnx,m){
 
                 //linalg >>
                 .def("Svd",&cytnx::Tensor::Svd, py::arg("is_U"), py::arg("is_vT"))
-                .def("Eigh",&cytnx::Tensor::Eigh, py::arg("is_V")=false,py::arg("row_v")=false)
+                .def("Eigh",&cytnx::Tensor::Eigh, py::arg("is_V")=true,py::arg("row_v")=false)
                 .def("Inv_",&cytnx::Tensor::Inv_)
                 .def("Inv",&cytnx::Tensor::Inv_)
                 .def("Conj_",&cytnx::Tensor::Conj_)
@@ -1180,7 +1180,7 @@ PYBIND11_MODULE(cytnx,m){
     pybind11::module m_linalg = m.def_submodule("linalg","linear algebra related.");
 
     m_linalg.def("Svd",&cytnx::linalg::Svd,py::arg("Tin"),py::arg("is_U")=true,py::arg("is_vT")=true);
-    m_linalg.def("Eigh",&cytnx::linalg::Eigh,py::arg("Tin"),py::arg("is_V")=false,py::arg("row_v")=false);
+    m_linalg.def("Eigh",&cytnx::linalg::Eigh,py::arg("Tin"),py::arg("is_V")=true,py::arg("row_v")=false);
     m_linalg.def("Exp",&cytnx::linalg::Exp,py::arg("Tin"));
     m_linalg.def("Exp_",&cytnx::linalg::Exp_,py::arg("Tio"));
     m_linalg.def("Expf_",&cytnx::linalg::Expf_,py::arg("Tio"));
@@ -1217,7 +1217,7 @@ PYBIND11_MODULE(cytnx,m){
                                   },py::arg("Sin"),py::arg("mean"),py::arg("std"),py::arg("seed")=std::random_device()());
     
     m_random.def("normal", [](const cytnx_uint64& Nelem,const double &mean, const double &std, const int&device, const unsigned int &seed){
-                                   return cytnx::random::normal(Nelem,mean,device,seed);
+                                   return cytnx::random::normal(Nelem,mean,std,device,seed);
                                   },py::arg("Nelem"),py::arg("mean"),py::arg("std"),py::arg("device")=-1,py::arg("seed")=std::random_device()());
     m_random.def("normal", [](const std::vector<cytnx_uint64>& Nelem,const double &mean, const double &std, const int&device, const unsigned int &seed){
                                    return cytnx::random::normal(Nelem,mean,std,device,seed);
