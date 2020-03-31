@@ -9,7 +9,7 @@ namespace cytnx{
                 random_internal::rii.Normal[Sin.dtype()](Sin._impl,mean,std,seed);
             }else{
                 #ifdef UNI_GPU
-                    cytnx_error_msg(true,"[Developing][Make_normal]%s","\n");
+                    random_internal::rii.cuNormal[Sin.dtype()](Sin._impl,mean,std,seed);
                 #else
                     cytnx_error_msg(true,"[ERROR][Make_normal] Tensor is on GPU without CUDA support.%s","\n");
                 #endif
@@ -22,7 +22,7 @@ namespace cytnx{
                 random_internal::rii.Normal[Tin.dtype()](Tin._impl->storage()._impl,mean,std,seed);
             }else{
                 #ifdef UNI_GPU
-                    cytnx_error_msg(true,"[Developing][Make_normal]%s","\n");
+                    random_internal::rii.cuNormal[Tin.dtype()](Tin._impl->storage()._impl,mean,std,seed);
                 #else
                     cytnx_error_msg(true,"[ERROR][Make_normal] Tensor is on GPU without CUDA support.%s","\n");
                 #endif

@@ -18,6 +18,11 @@ namespace cytnx{
 
 
             #ifdef UNI_GPU
+                cuNormal = vector<Rnd_io>(N_Type,NULL);
+                cuNormal[Type.ComplexDouble] = cuRng_normal_cd;
+                cuNormal[Type.ComplexFloat ] = cuRng_normal_cf;
+                cuNormal[Type.Double       ] = cuRng_normal_d;
+                cuNormal[Type.Float        ] = cuRng_normal_f;
             #endif
 
 

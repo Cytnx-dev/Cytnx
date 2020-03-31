@@ -299,8 +299,8 @@
 ## Random 
       func        | Tn  | Stor | CPU | GPU  
     -----------------------------------------------------
-    *Make_normal() |  Y  |  Y   | Y   |  N
-    ^normal()      |  Y  |  x   | Y   |  N
+    *Make_normal() |  Y  |  Y   | Y   |  Y
+    ^normal()      |  Y  |  x   | Y   |  Y
 
     * this is initializer
     ^ this is generator

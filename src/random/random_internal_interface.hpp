@@ -4,7 +4,7 @@
 #include "random_internal_cpu/Normal_internal.hpp"
 
 #ifdef UNI_GPU
-    //#include "random_internal_gpu/cuNormal_internal.hpp"
+    #include "random_internal_gpu/cuNormal_internal.hpp"
 #endif
 
 #include "Type.hpp"

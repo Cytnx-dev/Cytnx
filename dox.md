@@ -127,8 +127,10 @@
       \link cytnx::linalg::Vectordot Vectordot\endlink    |   x       |  Y  |  N   |    N
       \link cytnx::linalg::Tridiag Tridiag\endlink    | x | Y | N | N  
       *\link cytnx::linalg::Dot Dot\endlink | x | Y | Y | N
-    *this is a high level linalg 
-    ^this is temporary disable
+
+    * this is a high level linalg 
+
+    ^ this is temporary disable
 
 ## Container Generators 
     Tensor: \link cytnx::zeros zeros()\endlink, \link cytnx::ones ones()\endlink, \link cytnx::arange arange()\endlink
@@ -139,9 +141,11 @@
 
       func    | Tn  | Stor | CPU | GPU  
     ----------|-----|------|-----|-----------
-    *\link cytnx::random::Make_normal Make_normal\endlink   |  Y  |  Y   | Y   |  N
-    ^\link cytnx::random::normal normal\endlink   |  Y  |  x   | Y   |  N
+    *\link cytnx::random::Make_normal Make_normal\endlink   |  Y  |  Y   | Y   |  Y
+    ^\link cytnx::random::normal normal\endlink   |  Y  |  x   | Y   |  Y
+
     * this is initializer
+
     ^ this is generator
 
     [Note] The difference of initializer and generator is that initializer is used to initialize the Tensor, and generator generates a new Tensor.
