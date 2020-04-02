@@ -12,9 +12,46 @@
 
 namespace cytnx{
     namespace random{
-
+        // [Storage]
+        // =============================================================================================================
+        // =============================================================================================================
         // Make_normal:
-        //==================================================
+        //--------------------------------------------------
+        /** 
+        @brief Randomize the memory of a Storage with normal distributon
+        @param Sin a \link cytnx::Storage Storage \endlink
+        @param mean the mean of a normal distribution
+        @param std the standard deviation (sigma) of a normal distribution. 
+        @param seed the seed for the random generator. [Default] Using device entropy.
+
+            [Note] The Storage sould be real floating type or complex type.  
+
+        */
+        void Make_normal(Storage &Sin, const double &mean, const double &std, const unsigned int &seed=std::random_device()());
+        
+        // Make_uniform:
+        //--------------------------------------------------
+        /** 
+        @brief Randomize the memory of a Storage with uniform distributon
+        @param Sin a \link cytnx::Storage Storage \endlink
+        @param low the lower-bound of the uniform distribution
+        @param high the higher-bound of the uniform distribution
+        @param seed the seed for the random generator. [Default] Using device entropy.
+
+            [Note] 
+                
+                1. The Storage sould be real floating type or complex type.  
+                2. In cpu, it generate random number in domain [low,high); but in gpu(cuda), it generate random number in domain (low,high]; (cuRandv10)
+
+        */
+        void Make_uniform(Storage &Sin, const double &low=0, const double &high=1, const unsigned int &seed=std::random_device()());
+
+
+        // [Tensor]
+        // =============================================================================================================
+        // =============================================================================================================
+        // Make_normal:
+        //-------------------------------------------------
         /** 
         @brief Randomize the memory of a Tensor with normal distributon
         @param Tin a \link cytnx::Tensor Tensor \endlink
@@ -25,21 +62,25 @@ namespace cytnx{
             [Note] The Tensor sould be real floating type or complex type.  
 
         */
-        void Make_normal(Storage &Sin, const double &mean, const double &std, const unsigned int &seed=std::random_device()());
+        void Make_normal(Tensor  &Tin, const double &mean, const double &std, const unsigned int &seed=std::random_device()());
 
-        // Make_normal:
-        //==================================================
+        // Make_uniform:
+        //--------------------------------------------------
         /** 
-        @brief Randomize the memory of a Storage with normal distributon
-        @param Tin a \link cytnx::Storage Storage \endlink
-        @param mean the mean of a normal distribution
-        @param std the standard deviation (sigma) of a normal distribution. 
+        @brief Randomize the memory of a Tensor with uniform distributon
+        @param Tin a \link cytnx::Tensor Tensor \endlink
+        @param low the lower-bound of the uniform distribution
+        @param high the higher-bound of the uniform distribution
         @param seed the seed for the random generator. [Default] Using device entropy.
 
-            [Note] The Storage sould be real floating type or complex type.  
+            [Note] 
+                
+                1. The Tensor sould be real floating type or complex type.  
+                2. In cpu, it generate random number in domain [low,high); but in gpu(cuda), it generate random number in domain (low,high]; (cuRandv10)
 
         */
-        void Make_normal(Tensor  &Tin, const double &mean, const double &std, const unsigned int &seed=std::random_device()());
+        void Make_uniform(Tensor &Tin, const double &low=0, const double &high=1, const unsigned int &seed=std::random_device()());
+
 
 
         // normal:

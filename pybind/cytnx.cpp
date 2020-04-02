@@ -1374,18 +1374,22 @@ PYBIND11_MODULE(cytnx,m){
     pybind11::module m_random = m.def_submodule("random","random related.");
    
     m_random.def("Make_normal", [](cytnx::Tensor &Tin, const double &mean, const double &std, const long long &seed){
-                                        if(seed<0)
-                                            cytnx::random::Make_normal(Tin,mean,std);
-                                        else
                                             cytnx::random::Make_normal(Tin,mean,std,seed);
                                   },py::arg("Tin"),py::arg("mean"),py::arg("std"),py::arg("seed")=std::random_device()());
 
     m_random.def("Make_normal", [](cytnx::Storage &Sin, const double &mean, const double &std, const long long &seed){
-                                        if(seed<0)
-                                            cytnx::random::Make_normal(Sin,mean,std);
-                                        else
                                             cytnx::random::Make_normal(Sin,mean,std,seed);
                                   },py::arg("Sin"),py::arg("mean"),py::arg("std"),py::arg("seed")=std::random_device()());
+    
+    m_random.def("Make_uniform", [](cytnx::Tensor &Tin, const double &low, const double &high, const long long &seed){
+                                            cytnx::random::Make_uniform(Tin,low,high,seed);
+                                  },py::arg("Tin"),py::arg("low")=double(0),py::arg("high")=double(1.0),py::arg("seed")=std::random_device()());
+
+    m_random.def("Make_uniform", [](cytnx::Storage &Sin, const double &low, const double &high, const long long &seed){
+                                            cytnx::random::Make_uniform(Sin,low,high,seed);
+                                  },py::arg("Sin"),py::arg("low")=double(0),py::arg("high")=double(1.0),py::arg("seed")=std::random_device()());
+
+
     
     m_random.def("normal", [](const cytnx_uint64& Nelem,const double &mean, const double &std, const int&device, const unsigned int &seed){
                                    return cytnx::random::normal(Nelem,mean,std,device,seed);

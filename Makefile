@@ -106,13 +106,13 @@ OBJS += Dot.o Norm.o ExpH.o Kron.o Add.o Div.o Sub.o Mul.o Cpr.o Svd.o Svd_trunc
 
 ## Random_internal
 OBJS += random_internal_interface.o
-OBJS += Normal_internal.o
+OBJS += Normal_internal.o Uniform_internal.o
 ifeq ($(GPU_Enable),1)
-  OBJS += cuNormal_internal.o
+  OBJS += cuNormal_internal.o cuUniform_internal.o
 endif
 
 ## Random
-OBJS += Make_normal.o normal.o
+OBJS += Make_normal.o normal.o Make_uniform.o 
 
 
 ALLOBJS = $(OBJS)
@@ -346,16 +346,23 @@ random_internal_interface.o : $(CytnxPATH)/src/random/random_internal_interface.
 
 Normal_internal.o :  $(CytnxPATH)/src/random/random_internal_cpu/Normal_internal.cpp $(CytnxPATH)/src/random/random_internal_cpu/Normal_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
-
+Uniform_internal.o :  $(CytnxPATH)/src/random/random_internal_cpu/Uniform_internal.cpp $(CytnxPATH)/src/random/random_internal_cpu/Uniform_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 
 ifeq ($(GPU_Enable),1)
 
 cuNormal_internal.o :  $(CytnxPATH)/src/random/random_internal_gpu/cuNormal_internal.cu $(CytnxPATH)/src/random/random_internal_gpu/cuNormal_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+
+cuUniform_internal.o :  $(CytnxPATH)/src/random/random_internal_gpu/cuUniform_internal.cu $(CytnxPATH)/src/random/random_internal_gpu/cuUniform_internal.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+
 endif
 ## Random:
 ########################
 Make_normal.o: $(CytnxPATH)/src/random/Make_normal.cpp $(CytnxPATH)/include/random.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+Make_uniform.o: $(CytnxPATH)/src/random/Make_uniform.cpp $(CytnxPATH)/include/random.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 normal.o: $(CytnxPATH)/src/random/normal.cpp $(CytnxPATH)/include/random.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<

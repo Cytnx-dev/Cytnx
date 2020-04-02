@@ -1,6 +1,7 @@
 var searchData=
 [
   ['make_5fnormal',['Make_normal',['../namespacecytnx_1_1random.html#ac456ace342f35864d3a927b3ce9fccbd',1,'cytnx::random::Make_normal(Storage &amp;Sin, const double &amp;mean, const double &amp;std, const unsigned int &amp;seed=std::random_device()())'],['../namespacecytnx_1_1random.html#a7e59e61df6bd451559628f6d2f1b54d8',1,'cytnx::random::Make_normal(Tensor &amp;Tin, const double &amp;mean, const double &amp;std, const unsigned int &amp;seed=std::random_device()())']]],
+  ['make_5funiform',['Make_uniform',['../namespacecytnx_1_1random.html#a3e0802a4f83adb8b3c8837b53b9f5d94',1,'cytnx::random::Make_uniform(Storage &amp;Sin, const double &amp;low=0, const double &amp;high=1, const unsigned int &amp;seed=std::random_device()())'],['../namespacecytnx_1_1random.html#ab073a742e768ed9a01a121503fec5f7e',1,'cytnx::random::Make_uniform(Tensor &amp;Tin, const double &amp;low=0, const double &amp;high=1, const unsigned int &amp;seed=std::random_device()())']]],
   ['matmul',['Matmul',['../namespacecytnx_1_1linalg.html#a53feb441b4b1bd263714ed33e093728f',1,'cytnx::linalg']]],
   ['mkl_5fcomplex16',['MKL_Complex16',['../Type_8hpp.html#a1fa119034fee07a6d5449926cbb7915a',1,'Type.hpp']]],
   ['mkl_5fcomplex8',['MKL_Complex8',['../Type_8hpp.html#a0b45f62ef34311fdb79b8de82d75c0d3',1,'Type.hpp']]],

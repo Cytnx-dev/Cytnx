@@ -17,7 +17,7 @@
     2. add Dot() for CPU and GPU, with unify API for Vec-Vec/Mat-Vec/Mat-Mat/Ten-Vec product.
     3. add Tensor.rank() 
     4. [Feature] support Tensor <-> numpy.ndarray
-
+    5. add random::Make_uniform()
 
     v0.5.0a
     1. Add .imag() .real() for Storage. 
@@ -300,6 +300,7 @@
       func        | Tn  | Stor | CPU | GPU  
     -----------------------------------------------------
     *Make_normal() |  Y  |  Y   | Y   |  Y
+    *Make_uniform() |  Y  |  Y   | Y   |  N
     ^normal()      |  Y  |  x   | Y   |  Y
 
     * this is initializer

@@ -45,6 +45,7 @@ namespace cytnx{
     };
 
     const int N_Type=12;
+    const int N_fType=5;
     class Type_class{
         public:
             enum:unsigned int{
