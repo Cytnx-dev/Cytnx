@@ -36,3 +36,29 @@ def contiguous(self):
 @add_method(Tensor)
 def numpy(self):
     return _nppy.array(self)
+
+@add_method(Tensor)
+def __iadd__(self,right):
+    self.c__iadd__(right);
+    return self
+
+@add_method(Tensor)
+def __isub__(self,right):
+    self.c__isub__(right);
+    return self
+
+@add_method(Tensor)
+def __imul__(self,right):
+    self.c__imul__(right);
+    return self
+
+@add_method(Tensor)
+def __itruediv__(self,right):
+    self.c__itruediv__(right);
+    return self
+
+@add_method(Tensor)
+def __ifloordiv__(self,right):
+    self.c__ifloordiv__(right);
+    return self
+
