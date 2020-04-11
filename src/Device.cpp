@@ -79,7 +79,15 @@ void Device_class::Print_Property(){
     free(buffer);
 }
 
-
+/*
+#ifdef UNI_GPU
+// See Device.cu
+#else
+void Device_class::cudaDeviceSynchronize(){
+    cytnx_warning_msg(true,"[Warning] calling cudaDeviceSynchronize without CUDA support has no action%s","\n");
+}
+#endif
+*/
 
 Device_class Device;
 }

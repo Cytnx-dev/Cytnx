@@ -10,6 +10,11 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]){
 
+    //Device.cudaDeviceSynchronize();
+    //Device.Print_Property();
+/*    
+    return 0;
+
     Tensor ttr({3,4,5});
     random::Make_normal(ttr,0,0.1,99);
     cout << ttr ;
@@ -143,13 +148,6 @@ int main(int argc, char *argv[]){
     }
     return 0;
 
-    /*
-    vector<cytnx_int64> A(10);
-    for(int i=0;i<10;i++){
-        A[i] = rand()%500;
-    }
-    cout << vec_unique(A) << endl; 
-    */
 
     //Device.Print_Property();
     cytnx_complex128 testC(1,1);
@@ -294,6 +292,8 @@ int main(int argc, char *argv[]){
     cout << Zp;
     Zp.set({ac::all(),ac::range(1,3)}, 4);
     cout << Zp;
+*/
+
 /*
     Bond bd_in = Bond(3,BD_KET,{{0,1,-1, 4},
                                 {0,2,-1,-4},

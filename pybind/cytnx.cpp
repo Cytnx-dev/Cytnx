@@ -72,6 +72,8 @@ PYBIND11_MODULE(cytnx,m){
     py::add_ostream_redirect(m, "ostream_redirect");
 
 
+    
+
     py::enum_<cytnx::__type::__pybind_type>(m,"Type")
         .value("Void", cytnx::__type::__pybind_type::Void)
         .value("ComplexDouble", cytnx::__type::__pybind_type::ComplexDouble)
@@ -93,9 +95,17 @@ PYBIND11_MODULE(cytnx,m){
 	//	.value("cuda", cytnx::__device::__pybind_device::cuda)	
 	//	.export_values();
 
-    m.attr("Device") = py::module::import("enum").attr("IntEnum")
-        ("Device", py::dict("cpu"_a=(cytnx_int64)cytnx::Device.cpu, "cuda"_a=(cytnx_int64)cytnx::Device.cuda)); 
+    
 
+    //m.attr("Device") = py::module::import("enum").attr("IntEnum")
+    //    ("Device", py::dict("cpu"_a=(cytnx_int64)cytnx::Device.cpu, "cuda"_a=(cytnx_int64)cytnx::Device.cuda)); 
+
+
+    auto mdev = m.def_submodule("Device");
+    mdev.attr("cpu")=(cytnx_int64)cytnx::Device.cpu;
+    mdev.attr("cuda")=(cytnx_int64)cytnx::Device.cuda;
+    //mdev.def("cudaDeviceSynchronize",[](){cytnx::Device.cudaDeviceSynchronize();});
+    
 
 
 

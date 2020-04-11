@@ -46,7 +46,7 @@ endif
 
 
 NVCC:= $(CUDA_PATH)/bin/nvcc -ccbin $(CC)
-NVFLAGS:= -m64 -g
+NVFLAGS:= -m64 -g 
 SMS ?= 30
 GENCODE_FLAGS:= -arch=sm_$(SMS)
 
@@ -71,10 +71,10 @@ endif
 
 ALL_LDFLAGS :=
 ifeq ($(GPU_Enable),1)
-  LDFLAGS += -lcublas -lcusolver -lcurand
+  LDFLAGS += -lcublas -lcusolver -lcurand -lcudart
   ALL_LDFLAGS += $(addprefix -Xlinker , $(LDFLAGS))
   ALL_LDFLAGS += -L$(CUDA_PATH)/lib64
-  LDFLAGS += -L$(CUDA_PATH)/lib64 -lcudart
+  LDFLAGS += -L$(CUDA_PATH)/lib64 
 else
   ALL_LDFLAGS += $(LDFLAGS)
 endif

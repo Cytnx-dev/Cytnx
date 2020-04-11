@@ -60,7 +60,9 @@ namespace cytnx_extension{
                        tmp.reshape_({rowdim,-1});
 
                        vector<Tensor> outT = cytnx::linalg::Svd(tmp,is_U,is_vT);
-                       
+                       if(Tin.is_contiguous()) tmp.reshape_(oldshape);                       
+
+
                        int t=0;
                        vector<cytnx_extension::CyTensor> outCyT(outT.size());
 

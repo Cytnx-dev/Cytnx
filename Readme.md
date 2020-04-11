@@ -18,6 +18,7 @@
     3. add Tensor.rank() 
     4. [Feature] support Tensor <-> numpy.ndarray
     5. add random::Make_uniform()
+    6. Fix bug in Svd_truncate that will change the underlying block for contiguous CyTensor. 
 
     v0.5.0a
     1. Add .imag() .real() for Storage. 
@@ -317,5 +318,5 @@
     KHW whould like to thanks for the following contributor(s) for invaluable contribution to the library
 
     * PoChung Chen  (NCHU, Taiwan) : testing, and bug reporting
-
+    * Yu-Hsueh Chen (NTU, Taiwan)  : testing, and bug reporting 
 

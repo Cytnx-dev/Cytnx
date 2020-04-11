@@ -63,6 +63,14 @@ target_sources_local(cytnx
     BoolStorage.cpp
     
 )
+
+#if(UNI_GPU)
+#    target_sourse_local(cytnx
+#        PRIVATE
+#            Device.cu
+#    )
+#endif
+
 add_subdirectory(linalg)
 add_subdirectory(utils)
 add_subdirectory(random)
