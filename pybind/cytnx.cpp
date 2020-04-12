@@ -312,7 +312,7 @@ PYBIND11_MODULE(cytnx,m){
 
                     //device on GPU? move to cpu:ref it;
                     Tensor tmpIN;
-                    if(self.device() >= 0){
+                    if(self.device() < 0){
                         tmpIN = self.to(Device.cpu);
                     }else{
                         tmpIN = self;
