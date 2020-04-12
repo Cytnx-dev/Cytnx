@@ -307,133 +307,68 @@ PYBIND11_MODULE(cytnx,m){
                 .def("imag",&cytnx::Storage::imag)
                 ;
 
-    py::class_<cytnx::Tensor>(m,"Tensor",py::buffer_protocol())
-                .def_buffer([](Tensor &m) -> py::buffer_info
-                {
-                    int dtype = m.dtype();
-                    if(dtype == Type.Void) cytnx_error_msg(true,"[ERROR] Void Type Tensor cannot convert to numpy ndarray%s","\n");
+    py::class_<cytnx::Tensor>(m,"Tensor")
+                .def("numpy",[](Tensor &self)-> py::array {
 
+                    //device on GPU? move to cpu:ref it;
+                    Tensor tmpIN;
+                    if(self.device() >= 0){
+                        tmpIN = self.to(Device.cpu);
+                    }else{
+                        tmpIN = self;
+                    }
+                    if(tmpIN.is_contiguous())
+                        tmpIN = self.clone();
+                    else
+                        tmpIN = self.contiguous();
+
+                    
                     //calculate stride:
-                    std::vector<ssize_t> stride(m.shape().size());
-                    std::vector<ssize_t> shape(m.shape().begin(),m.shape().end());
+                    std::vector<ssize_t> stride(tmpIN.shape().size());
+                    std::vector<ssize_t> shape(tmpIN.shape().begin(),tmpIN.shape().end());
                     ssize_t accu = 1;
                     for(int i=shape.size()-1;i>=0;i--){
-                        stride[i] = accu;
+                        stride[i] = accu*Type.typeSize(tmpIN.dtype());
                         accu*=shape[i];
                     }
-
-                    if(dtype==Type.ComplexDouble){ //--------------------------------
-                        for(int i=0;i<shape.size();i++){
-                            stride[i]*=sizeof(cytnx_complex128);
-                        }
-                        return py::buffer_info(
-                                    m.storage()._impl->Mem,    //ptr
-                                    sizeof(cytnx_complex128), //size of elem 
-                                    py::format_descriptor<std::complex<double> >::format(), //pss format
-                                    m.rank(),    //rank 
-                                    shape,       // shape
-                                    stride      // stride
-                               );
-                    }else if(dtype==Type.ComplexFloat){ //--------------------------------
-                        for(int i=0;i<shape.size();i++){
-                            stride[i]*=sizeof(cytnx_complex64);
-                        }
-                        return py::buffer_info(
-                                    m.storage()._impl->Mem,    //ptr
-                                    sizeof(cytnx_complex64), //size of elem 
-                                    py::format_descriptor<std::complex<float> >::format(), //pss format
-                                    m.rank(),    //rank 
-                                    shape,       // shape
-                                    stride      // stride
-                               );
-                    }else if(dtype==Type.Double){ //--------------------------------
-                        for(int i=0;i<shape.size();i++){
-                            stride[i]*=sizeof(cytnx_double);
-                        }
-                        return py::buffer_info(
-                                    m.storage()._impl->Mem,    //ptr
-                                    sizeof(cytnx_double), //size of elem 
-                                    py::format_descriptor<double>::format(), //pss format
-                                    m.rank(),    //rank 
-                                    shape,       // shape
-                                    stride      // stride
-                               );
-                    }else if(dtype==Type.Float){ //--------------------------------
-                        for(int i=0;i<shape.size();i++){
-                            stride[i]*=sizeof(cytnx_float);
-                        }
-                        return py::buffer_info(
-                                    m.storage()._impl->Mem,    //ptr
-                                    sizeof(cytnx_float), //size of elem 
-                                    py::format_descriptor<float>::format(), //pss format
-                                    m.rank(),    //rank 
-                                    shape,       // shape
-                                    stride      // stride
-                               );
-                    }else if(dtype==Type.Uint64){ //--------------------------------
-                        for(int i=0;i<shape.size();i++){
-                            stride[i]*=sizeof(cytnx_uint64);
-                        }
-                        return py::buffer_info(
-                                    m.storage()._impl->Mem,    //ptr
-                                    sizeof(cytnx_uint64), //size of elem 
-                                    py::format_descriptor<uint64_t>::format(), //pss format
-                                    m.rank(),    //rank 
-                                    shape,       // shape
-                                    stride      // stride
-                               );
-                    }else if(dtype==Type.Int64){ //--------------------------------
-                        for(int i=0;i<shape.size();i++){
-                            stride[i]*=sizeof(cytnx_int64);
-                        }
-                        return py::buffer_info(
-                                    m.storage()._impl->Mem,    //ptr
-                                    sizeof(cytnx_int64), //size of elem 
-                                    py::format_descriptor<int64_t>::format(), //pss format
-                                    m.rank(),    //rank 
-                                    shape,       // shape
-                                    stride      // stride
-                               );
-                    }else if(dtype==Type.Uint32){ //--------------------------------
-                        for(int i=0;i<shape.size();i++){
-                            stride[i]*=sizeof(cytnx_uint32);
-                        }
-                        return py::buffer_info( 
-                                    m.storage()._impl->Mem,    //ptr
-                                    sizeof(cytnx_uint32), //size of elem 
-                                    py::format_descriptor<uint32_t>::format(), //pss format
-                                    m.rank(),    //rank 
-                                    shape,       // shape
-                                    stride      // stride
-                               );
-                    }else if(dtype==Type.Int32){ //--------------------------------
-                        for(int i=0;i<shape.size();i++){
-                            stride[i]*=sizeof(cytnx_int32);
-                        }
-                        return py::buffer_info(
-                                    m.storage()._impl->Mem,    //ptr
-                                    sizeof(cytnx_int32), //size of elem 
-                                    py::format_descriptor<int32_t>::format(), //pss format
-                                    m.rank(),    //rank 
-                                    shape,       // shape
-                                    stride      // stride
-                               );
-                    }else if(dtype==Type.Bool){ //--------------------------------
-                        for(int i=0;i<shape.size();i++){
-                            stride[i]*=sizeof(cytnx_bool);
-                        }
-                        return py::buffer_info(
-                                    m.storage()._impl->Mem,    //ptr
-                                    sizeof(cytnx_bool), //size of elem 
-                                    py::format_descriptor<cytnx_bool>::format(), //pss format
-                                    m.rank(),    //rank 
-                                    shape,       // shape
-                                    stride      // stride
-                               );
+                    py::buffer_info npbuf;
+                    std::string chr_dtype;
+                    if(tmpIN.dtype()==Type.ComplexDouble){ 
+                        chr_dtype = py::format_descriptor<cytnx_complex128>::format();
+                    }else if(tmpIN.dtype() == Type.ComplexFloat){
+                        chr_dtype = py::format_descriptor<cytnx_complex64>::format();
+                    }else if(tmpIN.dtype() == Type.Double){
+                        chr_dtype = py::format_descriptor<cytnx_double>::format();
+                    }else if(tmpIN.dtype() == Type.Float){
+                        chr_dtype = py::format_descriptor<cytnx_float>::format();
+                    }else if(tmpIN.dtype() == Type.Uint64){
+                        chr_dtype = py::format_descriptor<cytnx_uint64>::format();
+                    }else if(tmpIN.dtype() == Type.Int64){
+                        chr_dtype = py::format_descriptor<cytnx_int64>::format();
+                    }else if(tmpIN.dtype() == Type.Uint32){
+                        chr_dtype = py::format_descriptor<cytnx_uint32>::format();
+                    }else if(tmpIN.dtype() == Type.Int32){
+                        chr_dtype = py::format_descriptor<cytnx_int32>::format();
+                    }else if(tmpIN.dtype() == Type.Bool){
+                        chr_dtype = py::format_descriptor<cytnx_bool>::format();
                     }else{
                         cytnx_error_msg(true,"[ERROR] Void Type Tensor cannot convert to numpy ndarray%s","\n");
                     }
 
+
+                    npbuf = py::buffer_info(
+                                tmpIN.storage()._impl->Mem,    //ptr
+                                Type.typeSize(tmpIN.dtype()), //size of elem 
+                                chr_dtype, //pss format
+                                tmpIN.rank(),    //rank 
+                                shape,       // shape
+                                stride      // stride
+                           );
+                    py::array out(npbuf);
+                    // delegate numpy array with it's ptr, and swap a auxiliary ptr for intrusive_ptr to free.
+                    void* pswap = malloc(sizeof(bool));
+                    tmpIN.storage()._impl->Mem = pswap;
+                    return out;
 
                 })
                 //construction

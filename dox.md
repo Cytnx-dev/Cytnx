@@ -14,6 +14,7 @@
     4. [Feature] support Tensor <-> numpy.ndarray
     5. add random::Make_uniform()
     6. Fix bug in Svd_truncate that will change the underlying block for contiguous CyTensor. 
+    7. Fix bug in Tensor->numpy if the underlying Tensor is non-contiguous. 
 
     v0.5.0a
     1. Add .imag() .real() for Storage. 
