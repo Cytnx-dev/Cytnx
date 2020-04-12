@@ -205,33 +205,40 @@
 ```
 
 ## compile
-    1.) Set the flags to config the install inside make.inc
-        There are 4 important flags: ICPC_Enable, OMP_Enable, GPU_Enable, MKL_Enable  
-        * a. The default compiler is g++-6. Change "GCC" for the compiler on your system.
+    1.) create a build folder, and cd to the folder
+        $mkdir build
+
+        $cd build
+
+    2.) resolving the dependency 
+
+        $cmake [flags (optional)] <Cytnx repo folder>
+
+        [Note] there are several customize flags format as (-D<flag name>).
+
+        * USE_ICPC (default = off)
             
-            To use intel icpc compiler instead of default compiler, set "ICPC_Enable"=1.
+            The default compiler is g++-6. 
+            
+        * USE_CUDA (default = off)
 
-            [Note] You can only choose either icpc or gcc. 
-                * In the case where ICPC_Enable=1, GCC will be ignore. 
-                * In the case where ICPC_Enable=1, set "ICPC" to the path of your icpc binary.
-                * In the case where ICPC_Enable=0, "ICPC" will be ignored. 
-                  
-        * b. To enable the GPU support, set "GPU_Enable" =1, otherwise =0.  
+            If USE_CUDA=1, the code will compile with GPU support.
 
-            [Note] 
-                * if GPU_Enable=1, the "CUDA_PATH" should be set to the cuda directory on your system.
-                * if GPU_Enable=0, the "CUDA_PATH" will be ignored. 
+        * USE_MKL (default = off)
 
-        * c. To enable the acceleration using OpenMP, set "OMP_Enable" =1, otherwise =0.
-        * d. The default linalg library are using LAPACK and BLAS. To use intel MKL instead, set "MKL_enable" =1.
+            If USE_MKL=off, the code will compile with system LAPACK/BLAS library. 
+
+        * CMAKE_INSTALL_PREFIX (default is /usr/local)
+    
+            Set the install target path.
         
-    2.) compile by running:
-        
-        $make -Bj
+    3.) compile by running:
+       
+        $make -Bj4
 
-    3.) [Option] compile the python API
+    4.) install to the target path.
         
-        $make pyobj
+        $make install
 
    
 ## Some snippets:

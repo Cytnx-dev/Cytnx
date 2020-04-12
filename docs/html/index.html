@@ -267,26 +267,29 @@ $(function() {
 <div class="fragment"><div class="line">$docker pull kaihsinwu/cytnx_mkl</div><div class="line">$docker run -ti kaihsinwu/cytnx_mkl</div></div><!-- fragment --><h3>Note:</h3>
 <p>Once docker image is run, the user code can be compile (for example) with:</p>
 <div class="fragment"><div class="line">$g++-6 -std=c++11 -O3 &lt;your.code.cpp&gt; /opt/cytnx/libcytnx.so</div></div><!-- fragment --><h2>compile</h2>
-<p>1.) Set the flags to config the install inside make.inc There are 4 important flags: ICPC_Enable, OMP_Enable, GPU_Enable, MKL_Enable</p><ul>
-<li><p class="startli">a. The default compiler is g++-6. Change "GCC" for the compiler on your system.</p>
-<p class="startli">To use intel icpc compiler instead of default compiler, set "ICPC_Enable"=1.</p>
-<p class="startli">[Note] You can only choose either icpc or gcc.</p><ul>
-<li>In the case where ICPC_Enable=1, GCC will be ignore.</li>
-<li>In the case where ICPC_Enable=1, set "ICPC" to the path of your icpc binary.</li>
-<li>In the case where ICPC_Enable=0, "ICPC" will be ignored.</li>
-</ul>
-</li>
-<li><p class="startli">b. To enable the GPU support, set "GPU_Enable" =1, otherwise =0.</p>
-<p class="startli">[Note]</p><ul>
-<li>if GPU_Enable=1, the "CUDA_PATH" should be set to the cuda directory on your system.</li>
-<li>if GPU_Enable=0, the "CUDA_PATH" will be ignored.</li>
-</ul>
-</li>
-<li>c. To enable the acceleration using OpenMP, set "OMP_Enable" =1, otherwise =0.</li>
-<li>d. The default linalg library are using LAPACK and BLAS. To use intel MKL instead, set "MKL_enable" =1.</li>
-</ul>
-<p>2.) compile by running: </p><pre class="fragment">$make -Bj
-</pre><p>3.) [Option] compile the python API </p><pre class="fragment">$make pyobj
+<p>1.) create a build folder, and cd to the folder $mkdir build</p>
+<p>$cd build</p>
+<p>2.) resolving the dependency </p><pre class="fragment">$cmake [flags (optional)] &lt;Cytnx repo folder&gt;
+
+[Note] there are several customize flags format as (-D&lt;flag name&gt;).
+
+* USE_ICPC (default = off)
+
+    The default compiler is g++-6. 
+
+* USE_CUDA (default = off)
+
+    If USE_CUDA=1, the code will compile with GPU support.
+
+* USE_MKL (default = off)
+
+    If USE_MKL=off, the code will compile with system LAPACK/BLAS library. 
+
+* CMAKE_INSTALL_PREFIX (default is /usr/local)
+
+    Set the install target path.
+</pre><p>3.) compile by running: </p><pre class="fragment">$make -Bj4
+</pre><p>4.) install to the target path. </p><pre class="fragment">$make install
 </pre><h2>Some snippets:</h2>
 <h3>Storage</h3>
 <ul>
