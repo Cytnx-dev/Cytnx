@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['imag',['imag',['../classcytnx_1_1Storage.html#ad7557a7109f2764fe97049a348971b39',1,'cytnx::Storage']]],
+  ['imag',['imag',['../classcytnx_1_1Storage.html#ad7557a7109f2764fe97049a348971b39',1,'cytnx::Storage::imag()'],['../classcytnx_1_1Tensor.html#accd77970630990baca3a18638b23fe95',1,'cytnx::Tensor::imag()']]],
   ['init',['Init',['../classcytnx__extension_1_1Bond.html#a6fb6e5af4cd19caa44e427a18167bfca',1,'cytnx_extension::Bond::Init()'],['../classcytnx__extension_1_1CyTensor.html#a2291d3cc416bd4a149307dbe44d2e499',1,'cytnx_extension::CyTensor::Init(const Tensor &amp;in_tensor, const cytnx_uint64 &amp;Rowrank)'],['../classcytnx__extension_1_1CyTensor.html#a3ce1d4eb133b0e06b219dcb03bdb844b',1,'cytnx_extension::CyTensor::Init(const std::vector&lt; Bond &gt; &amp;bonds, const std::vector&lt; cytnx_int64 &gt; &amp;in_labels={}, const cytnx_int64 &amp;Rowrank=-1, const unsigned int &amp;dtype=Type.Double, const int &amp;device=Device.cpu, const bool &amp;is_diag=false)'],['../classcytnx_1_1Storage.html#a6cf79f362c4ae68ab7623f0ebac9355e',1,'cytnx::Storage::Init()'],['../classcytnx_1_1Tensor.html#afdb4470e0dc934964d80aa9c761cca48',1,'cytnx::Tensor::Init()']]],
   ['int16storage_2ecpp',['Int16Storage.cpp',['../Int16Storage_8cpp.html',1,'']]],
   ['int32storage_2ecpp',['Int32Storage.cpp',['../Int32Storage_8cpp.html',1,'']]],

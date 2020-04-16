@@ -8,6 +8,7 @@ target_sources_local(cytnx
     Diag_internal.hpp
     Div_internal.hpp
     Eigh_internal.hpp
+    Eig_internal.hpp
     Exp_internal.hpp
     Inv_inplace_internal.hpp
     Matmul_internal.hpp
@@ -26,6 +27,7 @@ target_sources_local(cytnx
     Diag_internal.cpp
     Div_internal.cpp
     Eigh_internal.cpp
+    Eig_internal.cpp
     Exp_internal.cpp
     Inv_inplace_internal.cpp
     Matmul_internal.cpp

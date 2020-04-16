@@ -185,14 +185,32 @@ namespace cytnx{
        
 
 
-        // Eig:
+        // Eigh:
         //==================================================
         /**
         @brief eigen-value decomposition for Hermitian matrix
-
+        @param Tin The Tensor
+        @param is_V return eigen vectors
+        @param row_V if set to ture, the return eigen vectors will be row form. 
         [Note] the Tin should be a rank-2 Tensor. 
         */
         std::vector<Tensor> Eigh(const Tensor &Tin, const bool &is_V=true, const bool &row_v=false);
+        
+        // Eig:
+        //==================================================
+        /**
+        @brief eigen-value decomposition for generic square matrix
+        @param Tin The Tensor
+        @param is_V return eigen vectors
+        @param row_V if set to ture, the return eigen vectors will be row form. 
+
+        [Note] the Tin should be a rank-2 Tensor. 
+        */
+        std::vector<Tensor> Eig(const Tensor &Tin, const bool &is_V=true, const bool &row_v=false);
+
+
+
+
 
         // Matmul:
         //==================================================

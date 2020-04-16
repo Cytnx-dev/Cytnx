@@ -18,6 +18,7 @@ var searchData=
   ['set_5frowrank',['set_Rowrank',['../classcytnx__extension_1_1CyTensor.html#ab310093c65e44a757607068400e95d71',1,'cytnx_extension::CyTensor']]],
   ['set_5ftype',['set_type',['../classcytnx__extension_1_1Bond.html#adb554c04bf2d2c85ad8daf1f1ae7b6ee',1,'cytnx_extension::Bond']]],
   ['set_5fzeros',['set_zeros',['../classcytnx_1_1Storage.html#a7e854529c99108b0acc3e5e2b185244b',1,'cytnx::Storage']]],
+  ['sgeev_5f',['sgeev_',['../lapack__wrapper_8hpp.html#a6331be7b77b485beaff4e794b0022054',1,'lapack_wrapper.hpp']]],
   ['sgelqf',['sgelqf',['../lapack__wrapper_8hpp.html#a5c4441c13d612c144eab6fc03f93b351',1,'lapack_wrapper.hpp']]],
   ['sgelqf_5f',['sgelqf_',['../lapack__wrapper_8hpp.html#ab5b5539589f98f30dd7f9aa8f41b630a',1,'lapack_wrapper.hpp']]],
   ['sgemm',['sgemm',['../lapack__wrapper_8hpp.html#ac91e6e80670a72273a92c18746dc2cb7',1,'lapack_wrapper.hpp']]],

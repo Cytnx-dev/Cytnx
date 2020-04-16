@@ -146,14 +146,24 @@
     void zheev_( const char* jobz, const char* uplo, const int32_t* n, std::complex<double>* a,
                  const int32_t* lda, double* w, std::complex<double>* work, const int32_t* lwork,
                  const double* rwork, int32_t* info );
-    void zgeev_( const char* jobvl, const char* jobvr, const int32_t* n, const std::complex<double>* a,
-                 const int32_t* lda, const std::complex<double>* w, const std::complex<double> *vl, const int32_t *ldvl,
-                 const std::complex<double> *vr, const int32_t *ldvr, const std::complex<double> *work, const int32_t* lwork,
-                 const double *rwork, int32_t* info );
-    void cgeev_( const char* jobvl, const char* jobvr, const int32_t* n, const std::complex<float>* a,
-                 const int32_t* lda, const std::complex<float>* w, const std::complex<float> *vl, const int32_t *ldvl,
-                 const std::complex<float> *vr, const int32_t *ldvr, const std::complex<float> *work, const int32_t* lwork,
-                 const float *rwork, int32_t* info );
+
+
+    void zgeev_( const char* jobvl, const char* jobvr, const int32_t* n,  std::complex<double>* a,
+                 const int32_t* lda, std::complex<double>* w, std::complex<double> *vl, const int32_t *ldvl,
+                 std::complex<double> *vr, const int32_t *ldvr, std::complex<double> *work, const int32_t* lwork,
+                 double *rwork, int32_t* info );
+    void cgeev_( const char* jobvl, const char* jobvr, const int32_t* n,  std::complex<float>* a,
+                 const int32_t* lda, std::complex<float>* w, std::complex<float> *vl, const int32_t *ldvl,
+                 std::complex<float> *vr, const int32_t *ldvr, std::complex<float> *work, const int32_t* lwork,
+                 float *rwork, int32_t* info );
+    void dgeev_( const char* jobvl, const char* jobvr, const int32_t* n,  double* a,
+                 const int32_t* lda, double* wr, double *wl, double *vl, const int32_t *ldvl,
+                 double *vr, const int32_t *ldvr, double *work, const int32_t* lwork,
+                 int32_t* info );
+    void sgeev_( const char* jobvl, const char* jobvr, const int32_t* n,  float* a,
+                 const int32_t* lda, float* wr, float *wl, float *vl, const int32_t *ldvl,
+                 float *vr, const int32_t *ldvr, float *work, const int32_t* lwork,
+                 int32_t* info );
 
     void sstev_( const char* jobz, const int32_t* n, const float* d, const float* e, const float* z,
                  const int32_t* ldaz, const float* work, int32_t* info );
@@ -349,18 +359,18 @@
                  const double* rwork, int32_t* info )
     { zheev_(  jobz,  uplo,  n,  a, lda, w,  work,  lwork, rwork, info ); }
 
-    inline void zgeev( const char* jobvl, const char* jobvr, const int32_t* n, const std::complex<double>* a,
-        const int32_t* lda, const std::complex<double>* w, const std::complex<double> *vl, const int32_t *ldvl,
-        const std::complex<double> *vr, const int32_t *ldvr, const std::complex<double> *work, const int32_t* lwork,
-        const double *rwork, int32_t* info )
+    inline void zgeev( const char* jobvl, const char* jobvr, const int32_t* n, std::complex<double>* a,
+        const int32_t* lda, std::complex<double>* w, std::complex<double> *vl, const int32_t *ldvl,
+        std::complex<double> *vr, const int32_t *ldvr, std::complex<double> *work, const int32_t* lwork,
+        double *rwork, int32_t* info )
     {
       zgeev_(jobvl, jobvr, n, a, lda, w, vl, ldvl, vr, ldvr, work, lwork, rwork, info);
     }
 
-    inline void cgeev( const char* jobvl, const char* jobvr, const int32_t* n, const std::complex<float>* a,
-        const int32_t* lda, const std::complex<float>* w, const std::complex<float> *vl, const int32_t *ldvl,
-        const std::complex<float> *vr, const int32_t *ldvr, const std::complex<float> *work, const int32_t* lwork,
-        const float *rwork, int32_t* info )
+    inline void cgeev( const char* jobvl, const char* jobvr, const int32_t* n, std::complex<float>* a,
+        const int32_t* lda, std::complex<float>* w, std::complex<float> *vl, const int32_t *ldvl,
+        std::complex<float> *vr, const int32_t *ldvr, std::complex<float> *work, const int32_t* lwork,
+        float *rwork, int32_t* info )
     {
       cgeev_(jobvl, jobvr, n, a, lda, w, vl, ldvl, vr, ldvr, work, lwork, rwork, info);
     }

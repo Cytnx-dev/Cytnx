@@ -162,6 +162,14 @@ namespace cytnx{
             Eigh_ii[Type.Float        ] = Eigh_internal_f;
 
             //=====================
+            Eig_ii = vector<Eighfunc_oii>(5);
+
+            Eig_ii[Type.ComplexDouble] = Eig_internal_cd;
+            Eig_ii[Type.ComplexFloat ] = Eig_internal_cf;
+            Eig_ii[Type.Double       ] = Eig_internal_d;
+            Eig_ii[Type.Float        ] = Eig_internal_f;
+
+            //=====================
             Exp_ii = vector<Expfunc_oii>(5);
 
             Exp_ii[Type.ComplexDouble] = Exp_internal_cd;

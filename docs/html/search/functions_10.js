@@ -2,7 +2,7 @@ var searchData=
 [
   ['range',['range',['../classcytnx_1_1Accessor.html#a7a5a508a58b71897c3dd162195aceaa9',1,'cytnx::Accessor']]],
   ['rank',['rank',['../classcytnx__extension_1_1CyTensor.html#ab078942159a94114631f60edf0da3fb4',1,'cytnx_extension::CyTensor::rank()'],['../classcytnx_1_1Tensor.html#aa3ee5ed793cacd43d3fadbd92d7920a4',1,'cytnx::Tensor::rank()']]],
-  ['real',['real',['../classcytnx_1_1Storage.html#a1c28604bf7751c817c44dc3286d6520f',1,'cytnx::Storage']]],
+  ['real',['real',['../classcytnx_1_1Storage.html#a1c28604bf7751c817c44dc3286d6520f',1,'cytnx::Storage::real()'],['../classcytnx_1_1Tensor.html#ac863dbd316a4771a95810a2e9b922c4e',1,'cytnx::Tensor::real()']]],
   ['reset_5fcontraction_5forder',['reset_contraction_order',['../classcytnx__extension_1_1ContractionTree.html#ade3a6272e39a1b6dede747006ab4c756',1,'cytnx_extension::ContractionTree']]],
   ['reset_5fnodes',['reset_nodes',['../classcytnx__extension_1_1ContractionTree.html#a04b65875cd10366b744bea4e4404fd63',1,'cytnx_extension::ContractionTree']]],
   ['reshape',['reshape',['../classcytnx__extension_1_1CyTensor.html#aedb06916046d9bf5f11d14a533794bdb',1,'cytnx_extension::CyTensor::reshape()'],['../classcytnx_1_1Tensor.html#a182f8f7b3ae3d0db8ed55d2adf8c6b45',1,'cytnx::Tensor::reshape()']]],

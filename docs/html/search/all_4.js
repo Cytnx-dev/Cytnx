@@ -13,6 +13,7 @@ var searchData=
   ['device_2ecpp',['Device.cpp',['../Device_8cpp.html',1,'']]],
   ['device_2ehpp',['Device.hpp',['../Device_8hpp.html',1,'']]],
   ['device_5fstr',['device_str',['../classcytnx__extension_1_1CyTensor.html#a5244dbc1cd5aaad9ba3a1bf578413c28',1,'cytnx_extension::CyTensor::device_str()'],['../classcytnx_1_1Storage.html#ae0d90d5275fa7e52a0a2dc10512ba71f',1,'cytnx::Storage::device_str()'],['../classcytnx_1_1Tensor.html#a335f7625fa01784f49b2223238d0c14e',1,'cytnx::Tensor::device_str()']]],
+  ['dgeev_5f',['dgeev_',['../lapack__wrapper_8hpp.html#a80a9f9d86d9e3b594390783a807015d3',1,'lapack_wrapper.hpp']]],
   ['dgelqf',['dgelqf',['../lapack__wrapper_8hpp.html#afd6b2fc8fe239fc189acd2fd195765b7',1,'lapack_wrapper.hpp']]],
   ['dgelqf_5f',['dgelqf_',['../lapack__wrapper_8hpp.html#a90a567f0aff698fa0e2798cf37752160',1,'lapack_wrapper.hpp']]],
   ['dgemm',['dgemm',['../lapack__wrapper_8hpp.html#a5eaaf0cd8b31ac27ad9a5c5b68afc7bb',1,'lapack_wrapper.hpp']]],

@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['eig',['Eig',['../namespacecytnx_1_1linalg.html#a1137ae19828f715399d90634e4a71ba3',1,'cytnx::linalg']]],
   ['eigh',['Eigh',['../classcytnx_1_1Tensor.html#a2544554b98a0a9a42fcfdcf044212980',1,'cytnx::Tensor::Eigh()'],['../namespacecytnx_1_1linalg.html#aeb91cc90ebd85069ea9e7808e64068a2',1,'cytnx::linalg::Eigh()']]],
   ['equiv',['equiv',['../classcytnx_1_1Tensor.html#aeae314f040e27b581d73c82b33ab6a59',1,'cytnx::Tensor']]],
   ['exp',['Exp',['../classcytnx_1_1Tensor.html#aca1b7e9ae53b3529a7f79b24991c9373',1,'cytnx::Tensor::Exp()'],['../namespacecytnx_1_1linalg.html#aac38382cbc0e8202411c96a0ff636471',1,'cytnx::linalg::Exp()']]],

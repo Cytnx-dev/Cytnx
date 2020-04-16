@@ -20,6 +20,8 @@
     5. add random::Make_uniform()
     6. Fix bug in Svd_truncate that will change the underlying block for contiguous CyTensor. 
     7. Fix bug in Tensor->numpy if the underlying Tensor is non-contiguous. 
+    8. Add Eig.
+    9. Add real() imag() for Tensor. 
 
     v0.5.0a
     1. Add .imag() .real() for Storage. 
@@ -294,6 +296,7 @@
      Kron         |   x       |  Y  |  N   |    N        | Y  |   N
      Norm         |   x       |  Y  |  Y   |    Y        | Y  |   N
     *Dot          |   x       |  Y  |  Y   |    N        | Y  |   N 
+     Eig          |   x       |  Y  |  N   |    N        | Y  |   N 
 
     * this is a high level linalg 
     ^ this is temporary disable

@@ -83,6 +83,8 @@ $(function() {
 <li>add <a class="el" href="namespacecytnx_1_1random.html#a3e0802a4f83adb8b3c8837b53b9f5d94" title="Randomize the memory of a Storage with uniform distributon. ">random::Make_uniform()</a></li>
 <li>Fix bug in Svd_truncate that will change the underlying block for contiguous CyTensor.</li>
 <li>Fix bug in Tensor-&gt;numpy if the underlying Tensor is non-contiguous.</li>
+<li>Add Eig.</li>
+<li>Add real() imag() for Tensor.</li>
 </ol>
 <p>v0.5.0a</p><ol type="1">
 <li>Add .imag() .real() for Storage.</li>
@@ -210,10 +212,10 @@ $(function() {
 <td><a class="el" href="namespacecytnx_1_1linalg.html#abc68d62e804d6d3e86aeec00015b07cd">Tridiag</a> </td><td>x </td><td>Y </td><td>N </td><td>N </td></tr>
 <tr>
 <td>*<a class="el" href="namespacecytnx_1_1linalg.html#a215dbfd2aa7ef898450de7afff726bca">Dot</a> </td><td>x </td><td>Y </td><td>Y </td><td>N </td></tr>
+<tr>
+<td><a class="el" href="namespacecytnx_1_1linalg.html#a1137ae19828f715399d90634e4a71ba3">Eig</a> </td><td>x </td><td>Y </td><td>N </td><td>Y </td></tr>
 </table>
-<ul>
-<li>this is a high level linalg</li>
-</ul>
+<p>* this is a high level linalg</p>
 <p>^ this is temporary disable</p>
 <h2>Container Generators</h2>
 <p>Tensor: <a class="el" href="namespacecytnx.html#ab8a79a03fb0465f3eb2641017f3f1755">zeros()</a>, <a class="el" href="namespacecytnx.html#a83fb7bbe73368751a0d0f535d4a10a33">ones()</a>, <a class="el" href="namespacecytnx.html#a733f9931141463bc8b7c61931ccf52c3">arange()</a></p>

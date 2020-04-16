@@ -7,6 +7,7 @@ target_sources_local(cytnx
     Cpr.cpp
     Diag.cpp
     Div.cpp
+    Eig.cpp
     Eigh.cpp
     Exp.cpp
     Exp_.cpp

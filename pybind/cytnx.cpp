@@ -447,7 +447,9 @@ PYBIND11_MODULE(cytnx,m){
                     else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
                     return out;
                  })
-                .def("storage",&cytnx::Tensor::storage)
+                .def("storage",&cytnx::Tensor::storage) 
+                .def("real", &cytnx::Tensor::real)
+                .def("imag", &cytnx::Tensor::imag)
                 .def("__repr__",[](cytnx::Tensor &self)->std::string{
                     std::cout << self << std::endl;
                     return std::string("");
@@ -1297,6 +1299,7 @@ PYBIND11_MODULE(cytnx,m){
 
     m_linalg.def("Svd",&cytnx::linalg::Svd,py::arg("Tin"),py::arg("is_U")=true,py::arg("is_vT")=true);
     m_linalg.def("Eigh",&cytnx::linalg::Eigh,py::arg("Tin"),py::arg("is_V")=true,py::arg("row_v")=false);
+    m_linalg.def("Eig",&cytnx::linalg::Eig,py::arg("Tin"),py::arg("is_V")=true,py::arg("row_v")=false);
     m_linalg.def("Exp",&cytnx::linalg::Exp,py::arg("Tin"));
     m_linalg.def("Exp_",&cytnx::linalg::Exp_,py::arg("Tio"));
     m_linalg.def("Expf_",&cytnx::linalg::Expf_,py::arg("Tio"));

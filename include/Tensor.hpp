@@ -774,6 +774,11 @@ namespace cytnx{
                 if(this->shape() != rhs.shape()) return false;
                 return true; 
             }
+
+            Tensor real();
+            Tensor imag();
+
+
                
             // Arithmic:
            template<class T>           

@@ -137,6 +137,9 @@ Functions</h2></td></tr>
 <tr class="memitem:aeb91cc90ebd85069ea9e7808e64068a2"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#aeb91cc90ebd85069ea9e7808e64068a2">Eigh</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin, const bool &amp;is_V=true, const bool &amp;row_v=false)</td></tr>
 <tr class="memdesc:aeb91cc90ebd85069ea9e7808e64068a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">eigen-value decomposition for Hermitian matrix  <a href="#aeb91cc90ebd85069ea9e7808e64068a2">More...</a><br /></td></tr>
 <tr class="separator:aeb91cc90ebd85069ea9e7808e64068a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1137ae19828f715399d90634e4a71ba3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a1137ae19828f715399d90634e4a71ba3">Eig</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin, const bool &amp;is_V=true, const bool &amp;row_v=false)</td></tr>
+<tr class="memdesc:a1137ae19828f715399d90634e4a71ba3"><td class="mdescLeft">&#160;</td><td class="mdescRight">eigen-value decomposition for generic square matrix  <a href="#a1137ae19828f715399d90634e4a71ba3">More...</a><br /></td></tr>
+<tr class="separator:a1137ae19828f715399d90634e4a71ba3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53feb441b4b1bd263714ed33e093728f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a53feb441b4b1bd263714ed33e093728f">Matmul</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;TL, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;TR)</td></tr>
 <tr class="memdesc:a53feb441b4b1bd263714ed33e093728f"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform matrix multiplication on two tensors.  <a href="#a53feb441b4b1bd263714ed33e093728f">More...</a><br /></td></tr>
 <tr class="separator:a53feb441b4b1bd263714ed33e093728f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -590,6 +593,51 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
+<a id="a1137ae19828f715399d90634e4a71ba3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1137ae19828f715399d90634e4a71ba3">&#9670;&nbsp;</a></span>Eig()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&gt; cytnx::linalg::Eig </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>Tin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramname"><em>is_V</em> = <code>true</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramname"><em>row_v</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>eigen-value decomposition for generic square matrix </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Tin</td><td>The <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> </td></tr>
+    <tr><td class="paramname">is_V</td><td>return eigen vectors </td></tr>
+    <tr><td class="paramname">row_V</td><td>if set to ture, the return eigen vectors will be row form.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>[Note] the Tin should be a rank-2 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>. </p>
+
+</div>
+</div>
 <a id="aeb91cc90ebd85069ea9e7808e64068a2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aeb91cc90ebd85069ea9e7808e64068a2">&#9670;&nbsp;</a></span>Eigh()</h2>
 
@@ -623,7 +671,14 @@ template&lt;class T &gt; </div>
 </div><div class="memdoc">
 
 <p>eigen-value decomposition for Hermitian matrix </p>
-<p>[Note] the Tin should be a rank-2 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Tin</td><td>The <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> </td></tr>
+    <tr><td class="paramname">is_V</td><td>return eigen vectors </td></tr>
+    <tr><td class="paramname">row_V</td><td>if set to ture, the return eigen vectors will be row form. [Note] the Tin should be a rank-2 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

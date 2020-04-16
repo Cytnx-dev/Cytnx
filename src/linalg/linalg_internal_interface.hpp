@@ -8,6 +8,7 @@
 #include "linalg/linalg_internal_cpu/Arithmetic_internal.hpp"
 #include "linalg/linalg_internal_cpu/Svd_internal.hpp"
 #include "linalg/linalg_internal_cpu/Eigh_internal.hpp"
+#include "linalg/linalg_internal_cpu/Eig_internal.hpp"
 #include "linalg/linalg_internal_cpu/Inv_inplace_internal.hpp"
 #include "linalg/linalg_internal_cpu/Conj_inplace_internal.hpp"
 #include "linalg/linalg_internal_cpu/Exp_internal.hpp"
@@ -57,6 +58,7 @@ namespace cytnx{
                 std::vector<std::vector<Arithmeticfunc_oii> > Ari_ii;
                 std::vector<Svdfunc_oii> Svd_ii;
                 std::vector<Eighfunc_oii> Eigh_ii;
+                std::vector<Eighfunc_oii> Eig_ii;
                 std::vector<Invinplacefunc_oii> Inv_inplace_ii;
                 std::vector<Conjinplacefunc_oii> Conj_inplace_ii;
                 std::vector<Expfunc_oii> Exp_ii;

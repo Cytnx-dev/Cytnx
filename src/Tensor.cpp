@@ -269,6 +269,21 @@ namespace cytnx{
 
     }
 
+    Tensor Tensor::real(){
+        Tensor out; 
+        out._impl = this->_impl->_clone_meta_only();
+        out._impl->_storage = this->_impl->_storage.real();
+        return out;
+    };
+
+    Tensor Tensor::imag(){
+        Tensor out; 
+        out._impl = this->_impl->_clone_meta_only();
+        out._impl->_storage = this->_impl->_storage.imag();
+        return out;
+    }
+
+
     // += 
     template<> Tensor& Tensor::operator+=<Tensor>(const Tensor &rc){
         this->_impl->storage() = cytnx::linalg::Add(*this,rc)._impl->storage();
