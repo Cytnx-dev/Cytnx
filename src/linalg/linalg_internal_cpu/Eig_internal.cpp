@@ -76,6 +76,7 @@ namespace cytnx{
         }
 
         void Eig_internal_d( const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int32 &L){
+            /*
             char jobs = 'N';
 
             cytnx_double *tA;
@@ -108,17 +109,18 @@ namespace cytnx{
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dgeev': Lapack INFO = ", info);
 
             // copy the real and imag to e output:
-            dcopy(&L,e_real, &ONE, (cytnx_double*)e->Mem, &TWO);
-            dcopy(&L,e_imag, &ONE, &(((cytnx_double*)e->Mem)[1]), &TWO);
+            dcopy(L,e_real, &ONE, (cytnx_double*)e->Mem, &TWO);
+            dcopy(L,e_imag, &ONE, &(((cytnx_double*)e->Mem)[1]), &TWO);
 
             free(work);
             free(buffer_A);
             free(rwork);
             free(e_real);
             free(e_imag);
-
+            */
         }
         void Eig_internal_f( const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int32 &L){
+            /*
             char jobs = 'N';
 
             cytnx_float *tA;
@@ -151,15 +153,15 @@ namespace cytnx{
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'sgeev': Lapack INFO = ", info);
 
             // copy the real and imag to e output:
-            scopy(&L,e_real, &ONE, (cytnx_float*)e->Mem, &TWO);
-            scopy(&L,e_imag, &ONE, &(((cytnx_float*)e->Mem)[1]), &TWO);
+            scopy(L,e_real, &ONE, (cytnx_float*)e->Mem, &TWO);
+            scopy(L,e_imag, &ONE, &(((cytnx_float*)e->Mem)[1]), &TWO);
 
             free(work);
             free(buffer_A);
             free(rwork);
             free(e_real);
             free(e_imag);
-
+            */
         }
 
 

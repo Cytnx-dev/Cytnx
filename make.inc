@@ -16,7 +16,7 @@ CUDA_PATH=/usr/local/cuda
 OMP_Enable=1
 
 ## compile with MKL library:
-MKL_Enable=1
+MKL_Enable=0
 
 
 
