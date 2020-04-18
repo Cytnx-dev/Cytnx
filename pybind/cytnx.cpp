@@ -137,8 +137,10 @@ PYBIND11_MODULE(cytnx,m){
                   },py::arg("start"),py::arg("end"),py::arg("step") = double(1), py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
 
 
-    m.def("from_numpy", [](py::buffer b)-> Tensor{
+    m.def("_from_numpy", [](py::buffer b)-> Tensor{
         py::buffer_info info = b.request();
+
+        //std::cout << PyBuffer_IsContiguous(info,'C') << std::endl;
 
         // check type:                    
         int dtype;
@@ -175,7 +177,19 @@ PYBIND11_MODULE(cytnx,m){
         }else{
             cytnx_error_msg(true,"[ERROR] invalid type from numpy.ndarray to Tensor%s","\n");
         }
+        /*
+        for( int i=0;i<info.strides.size();i++)
+            std::cout << info.strides[i] << " ";
+        std::cout << std::endl;
+        for( int i=0;i<info.shape.size();i++)
+            std::cout << info.shape[i] << " ";
+        std::cout << std::endl;
+
+        std::cout << Type.getname(dtype) << std::endl;
+        std::cout << Totbytes << std::endl;
+        */
         Totbytes *= cytnx::Type.typeSize(dtype);
+        
         Tensor m;
         m.Init(shape,dtype);
         memcpy(m.storage()._impl->Mem,info.ptr,Totbytes);
