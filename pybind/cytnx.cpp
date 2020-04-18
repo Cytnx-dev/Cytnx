@@ -175,6 +175,7 @@ PYBIND11_MODULE(cytnx,m){
         }else{
             cytnx_error_msg(true,"[ERROR] invalid type from numpy.ndarray to Tensor%s","\n");
         }
+        Totbytes *= cytnx::Type.typeSize(dtype);
         Tensor m;
         m.Init(shape,dtype);
         memcpy(m.storage()._impl->Mem,info.ptr,Totbytes);
