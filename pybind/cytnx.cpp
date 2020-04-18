@@ -188,7 +188,7 @@ PYBIND11_MODULE(cytnx,m){
         std::cout << Type.getname(dtype) << std::endl;
         std::cout << Totbytes << std::endl;
         */
-        Totbytes *= cytnx::Type.typeSize(dtype);
+        //Totbytes *= cytnx::Type.typeSize(dtype);
         
         Tensor m;
         m.Init(shape,dtype);
