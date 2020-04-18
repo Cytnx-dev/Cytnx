@@ -69,6 +69,8 @@ namespace cytnx{
             }
             cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
             cytnx_complex128*  _out= static_cast<cytnx_complex128*>(out->Mem);
+            
+            memset(_out,0,sizeof(cytnx_complex128)*len_in);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -76,6 +78,8 @@ namespace cytnx{
             for(unsigned long long i=0;i<len_in;i++){
                 _out[i].real(_in[i]);
             }
+
+            
 
         }
 
@@ -86,6 +90,7 @@ namespace cytnx{
             }
             cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
             cytnx_complex64*  _out= static_cast<cytnx_complex64*>(out->Mem);
+            memset(_out,0,sizeof(cytnx_complex64)*len_in);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -239,6 +244,7 @@ namespace cytnx{
             }
             cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
             cytnx_complex128*  _out= static_cast<cytnx_complex128*>(out->Mem);
+            memset(_out,0,sizeof(cytnx_complex128)*len_in);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -254,7 +260,7 @@ namespace cytnx{
             }
             cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
             cytnx_complex64*  _out= static_cast<cytnx_complex64*>(out->Mem);
-
+            memset(_out,0,sizeof(cytnx_complex64)*len_in);
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
             #endif
@@ -397,6 +403,7 @@ namespace cytnx{
             }
             cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
             cytnx_complex128*  _out= static_cast<cytnx_complex128*>(out->Mem);
+            memset(_out,0,sizeof(cytnx_complex128)*len_in);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -413,6 +420,7 @@ namespace cytnx{
             }
             cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
             cytnx_complex64*  _out= static_cast<cytnx_complex64*>(out->Mem);
+            memset(_out,0,sizeof(cytnx_complex64)*len_in);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -561,7 +569,7 @@ namespace cytnx{
             }
             cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
             cytnx_complex128*  _out= static_cast<cytnx_complex128*>(out->Mem);
-
+            memset(_out,0,sizeof(cytnx_complex128)*len_in);
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
             #endif
@@ -576,7 +584,7 @@ namespace cytnx{
             }
             cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
             cytnx_complex64*  _out= static_cast<cytnx_complex64*>(out->Mem);
-
+            memset(_out,0,sizeof(cytnx_complex64)*len_in);
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
             #endif
@@ -721,7 +729,7 @@ namespace cytnx{
             }
             cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
             cytnx_complex128*  _out= static_cast<cytnx_complex128*>(out->Mem);
-
+            memset(_out,0,sizeof(cytnx_complex128)*len_in);
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
             #endif
@@ -736,6 +744,7 @@ namespace cytnx{
             }
             cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
             cytnx_complex64*  _out= static_cast<cytnx_complex64*>(out->Mem);
+            memset(_out,0,sizeof(cytnx_complex64)*len_in);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -879,7 +888,7 @@ namespace cytnx{
             }
             cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
             cytnx_complex128*  _out= static_cast<cytnx_complex128*>(out->Mem);
-
+            memset(_out,0,sizeof(cytnx_complex128)*len_in);
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
             #endif
@@ -895,6 +904,7 @@ namespace cytnx{
             }
             cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
             cytnx_complex64*  _out= static_cast<cytnx_complex64*>(out->Mem);
+            memset(_out,0,sizeof(cytnx_complex64)*len_in);
 
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
@@ -1039,7 +1049,7 @@ namespace cytnx{
             }
             cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->Mem);
             cytnx_complex128*  _out= static_cast<cytnx_complex128*>(out->Mem);
-
+            memset(_out,0,sizeof(cytnx_complex128)*len_in);
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
             #endif
@@ -1055,7 +1065,7 @@ namespace cytnx{
             }
             cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->Mem);
             cytnx_complex64*  _out= static_cast<cytnx_complex64*>(out->Mem);
-
+            memset(_out,0,sizeof(cytnx_complex64)*len_in);
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
             #endif
@@ -1199,7 +1209,7 @@ namespace cytnx{
             }
             cytnx_int16* _in = static_cast<cytnx_int16*>(in->Mem);
             cytnx_complex128*  _out= static_cast<cytnx_complex128*>(out->Mem);
-
+            memset(_out,0,sizeof(cytnx_complex128)*len_in);
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
             #endif
@@ -1215,7 +1225,7 @@ namespace cytnx{
             }
             cytnx_int16* _in = static_cast<cytnx_int16*>(in->Mem);
             cytnx_complex64*  _out= static_cast<cytnx_complex64*>(out->Mem);
-
+            memset(_out,0,sizeof(cytnx_complex64)*len_in);
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
             #endif
@@ -1360,7 +1370,7 @@ namespace cytnx{
             }
             cytnx_bool* _in = static_cast<cytnx_bool*>(in->Mem);
             cytnx_complex128*  _out= static_cast<cytnx_complex128*>(out->Mem);
-
+            memset(_out,0,sizeof(cytnx_complex128)*len_in);
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
             #endif
@@ -1376,7 +1386,7 @@ namespace cytnx{
             }
             cytnx_bool* _in = static_cast<cytnx_bool*>(in->Mem);
             cytnx_complex64*  _out= static_cast<cytnx_complex64*>(out->Mem);
-
+            memset(_out,0,sizeof(cytnx_complex64)*len_in);
             #ifdef UNI_OMP
             #pragma omp parallel for schedule(dynamic)
             #endif

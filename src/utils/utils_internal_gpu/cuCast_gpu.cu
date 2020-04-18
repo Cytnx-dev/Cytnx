@@ -95,6 +95,7 @@ namespace cytnx{
             }
             cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
             cuDoubleComplex*  _out= static_cast<cuDoubleComplex*>(out->Mem);
+            cudaMemset(out->Mem,0,sizeof(cuDoubleComplex)*len_in);
 
             cytnx_uint64 NBlocks = len_in/512;
             if(len_in%512) NBlocks+=1;
@@ -109,6 +110,7 @@ namespace cytnx{
             }
             cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
             cuFloatComplex*  _out= static_cast<cuFloatComplex*>(out->Mem);
+            cudaMemset(out->Mem,0,sizeof(cuFloatComplex)*len_in);
 
             cytnx_uint64 NBlocks = len_in/512;
             if(len_in%512) NBlocks+=1;
@@ -235,7 +237,7 @@ namespace cytnx{
             }
             cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
             cuDoubleComplex*  _out= static_cast<cuDoubleComplex*>(out->Mem);
-
+            cudaMemset(out->Mem,0,sizeof(cuDoubleComplex)*len_in);
             cytnx_uint64 NBlocks = len_in/512;
             if(len_in%512) NBlocks+=1;
             cuCastElem_kernel_r2cd<<<NBlocks,512>>>(_in,_out,len_in);
@@ -248,7 +250,7 @@ namespace cytnx{
             }
             cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
             cuFloatComplex*  _out= static_cast<cuFloatComplex*>(out->Mem);
-
+            cudaMemset(out->Mem,0,sizeof(cuFloatComplex)*len_in);
             cytnx_uint64 NBlocks = len_in/512;
             if(len_in%512) NBlocks+=1;
             cuCastElem_kernel_r2cf<<<NBlocks,512>>>(_in,_out,len_in);
@@ -365,7 +367,7 @@ namespace cytnx{
             }
             cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
             cuDoubleComplex*  _out= static_cast<cuDoubleComplex*>(out->Mem);
-
+            cudaMemset(out->Mem,0,sizeof(cuDoubleComplex)*len_in);
             cytnx_uint64 NBlocks = len_in/512;
             if(len_in%512) NBlocks+=1;
             cuCastElem_kernel_r2cd<<<NBlocks,512>>>(_in,_out,len_in);
@@ -377,7 +379,7 @@ namespace cytnx{
             }
             cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
             cuFloatComplex*  _out= static_cast<cuFloatComplex*>(out->Mem);
-
+            cudaMemset(out->Mem,0,sizeof(cuFloatComplex)*len_in);
             cytnx_uint64 NBlocks = len_in/512;
             if(len_in%512) NBlocks+=1;
             cuCastElem_kernel_r2cf<<<NBlocks,512>>>(_in,_out,len_in);
@@ -500,7 +502,7 @@ namespace cytnx{
             }
             cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
             cuDoubleComplex*  _out= static_cast<cuDoubleComplex*>(out->Mem);
-
+            cudaMemset(out->Mem,0,sizeof(cuDoubleComplex)*len_in);
             cytnx_uint64 NBlocks = len_in/512;
             if(len_in%512) NBlocks+=1;
             cuCastElem_kernel_r2cd<<<NBlocks,512>>>(_in,_out,len_in);
@@ -513,7 +515,7 @@ namespace cytnx{
             }
             cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
             cuFloatComplex*  _out= static_cast<cuFloatComplex*>(out->Mem);
-
+            cudaMemset(out->Mem,0,sizeof(cuFloatComplex)*len_in);
             cytnx_uint64 NBlocks = len_in/512;
             if(len_in%512) NBlocks+=1;
             cuCastElem_kernel_r2cf<<<NBlocks,512>>>(_in,_out,len_in);
@@ -633,7 +635,7 @@ namespace cytnx{
             }
             cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
             cuDoubleComplex*  _out= static_cast<cuDoubleComplex*>(out->Mem);
-
+            cudaMemset(out->Mem,0,sizeof(cuDoubleComplex)*len_in);
             cytnx_uint64 NBlocks = len_in/512;
             if(len_in%512) NBlocks+=1;
             cuCastElem_kernel_r2cd<<<NBlocks,512>>>(_in,_out,len_in);
@@ -645,7 +647,7 @@ namespace cytnx{
             }
             cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
             cuFloatComplex*  _out= static_cast<cuFloatComplex*>(out->Mem);
-
+            cudaMemset(out->Mem,0,sizeof(cuFloatComplex)*len_in);
             cytnx_uint64 NBlocks = len_in/512;
             if(len_in%512) NBlocks+=1;
             cuCastElem_kernel_r2cf<<<NBlocks,512>>>(_in,_out,len_in);
@@ -761,7 +763,7 @@ namespace cytnx{
             }
             cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
             cuDoubleComplex*  _out= static_cast<cuDoubleComplex*>(out->Mem);
-
+            cudaMemset(out->Mem,0,sizeof(cuDoubleComplex)*len_in);
             cytnx_uint64 NBlocks = len_in/512;
             if(len_in%512) NBlocks+=1;
             cuCastElem_kernel_r2cd<<<NBlocks,512>>>(_in,_out,len_in);
@@ -774,7 +776,7 @@ namespace cytnx{
             }
             cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
             cuFloatComplex*  _out= static_cast<cuFloatComplex*>(out->Mem);
-
+            cudaMemset(out->Mem,0,sizeof(cuFloatComplex)*len_in);
             cytnx_uint64 NBlocks = len_in/512;
             if(len_in%512) NBlocks+=1;
             cuCastElem_kernel_r2cf<<<NBlocks,512>>>(_in,_out,len_in);
@@ -891,7 +893,7 @@ namespace cytnx{
             }
             cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->Mem);
             cuDoubleComplex*  _out= static_cast<cuDoubleComplex*>(out->Mem);
-
+            cudaMemset(out->Mem,0,sizeof(cuDoubleComplex)*len_in);
             cytnx_uint64 NBlocks = len_in/512;
             if(len_in%512) NBlocks+=1;
             cuCastElem_kernel_r2cd<<<NBlocks,512>>>(_in,_out,len_in);
@@ -904,7 +906,7 @@ namespace cytnx{
             }
             cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->Mem);
             cuFloatComplex*  _out= static_cast<cuFloatComplex*>(out->Mem);
-
+            cudaMemset(out->Mem,0,sizeof(cuFloatComplex)*len_in);
             cytnx_uint64 NBlocks = len_in/512;
             if(len_in%512) NBlocks+=1;
             cuCastElem_kernel_r2cf<<<NBlocks,512>>>(_in,_out,len_in);
@@ -1021,7 +1023,7 @@ namespace cytnx{
             }
             cytnx_int16* _in = static_cast<cytnx_int16*>(in->Mem);
             cuDoubleComplex*  _out= static_cast<cuDoubleComplex*>(out->Mem);
-
+            cudaMemset(out->Mem,0,sizeof(cuDoubleComplex)*len_in);
             cytnx_uint64 NBlocks = len_in/512;
             if(len_in%512) NBlocks+=1;
             cuCastElem_kernel_r2cd<<<NBlocks,512>>>(_in,_out,len_in);
@@ -1034,7 +1036,7 @@ namespace cytnx{
             }
             cytnx_int16* _in = static_cast<cytnx_int16*>(in->Mem);
             cuFloatComplex*  _out= static_cast<cuFloatComplex*>(out->Mem);
-
+            cudaMemset(out->Mem,0,sizeof(cuFloatComplex)*len_in);
             cytnx_uint64 NBlocks = len_in/512;
             if(len_in%512) NBlocks+=1;
             cuCastElem_kernel_r2cf<<<NBlocks,512>>>(_in,_out,len_in);
@@ -1152,7 +1154,7 @@ namespace cytnx{
             }
             cytnx_bool* _in = static_cast<cytnx_bool*>(in->Mem);
             cuDoubleComplex*  _out= static_cast<cuDoubleComplex*>(out->Mem);
-
+            cudaMemset(out->Mem,0,sizeof(cuDoubleComplex)*len_in);
             cytnx_uint64 NBlocks = len_in/512;
             if(len_in%512) NBlocks+=1;
             cuCastElem_kernel_r2cd<<<NBlocks,512>>>(_in,_out,len_in);
@@ -1165,7 +1167,7 @@ namespace cytnx{
             }
             cytnx_bool* _in = static_cast<cytnx_bool*>(in->Mem);
             cuFloatComplex*  _out= static_cast<cuFloatComplex*>(out->Mem);
-
+            cudaMemset(out->Mem,0,sizeof(cuFloatComplex)*len_in);
             cytnx_uint64 NBlocks = len_in/512;
             if(len_in%512) NBlocks+=1;
             cuCastElem_kernel_r2cf<<<NBlocks,512>>>(_in,_out,len_in);
