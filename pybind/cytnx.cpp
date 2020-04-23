@@ -485,7 +485,14 @@ PYBIND11_MODULE(cytnx,m){
                 .def("Save",[](cytnx::Tensor &self, const std::string &fname){self.Save(fname);},py::arg("fname"))
                 .def("Load",[](cytnx::Tensor &self, const std::string &fname){self.Load(fname);},py::arg("fname"))
 
-
+                .def("__len__",[](const cytnx::Tensor &self){
+                    if(self.dtype()==Type.Void){
+                        cytnx_error_msg(true,"[ERROR] uninitialize Tensor does not have len!%s","\n");
+                        
+                    }else{
+                        return self.shape()[0];
+                    }
+                })
                 .def("__getitem__",[](const cytnx::Tensor &self, py::object locators){
                     cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to getitem from a empty Tensor%s","\n");
                     
@@ -493,6 +500,7 @@ PYBIND11_MODULE(cytnx,m){
                     std::vector<cytnx::Accessor> accessors;
                     if(py::isinstance<py::tuple>(locators)){
                         py::tuple Args = locators.cast<py::tuple>();
+                        std::cout << "locators" << std::endl;
                         // mixing of slice and ints
                         for(cytnx_uint32 axis=0;axis<self.shape().size();axis++){
                             if(axis >= Args.size()){accessors.push_back(Accessor::all());}
@@ -510,6 +518,8 @@ PYBIND11_MODULE(cytnx,m){
                             }
                         }
                     }else{
+                        std::cout << "int locators" << std::endl;
+                        std::cout << locators.cast<cytnx_int64>() << std::endl;
                         // only int
                         for(cytnx_uint32 i=0;i<self.shape().size();i++){
                             if(i==0) accessors.push_back(cytnx::Accessor(locators.cast<cytnx_int64>()));
