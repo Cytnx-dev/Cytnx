@@ -275,7 +275,7 @@ namespace cytnx{
 
                 if(this->device == Device.cpu){
                     if(utils_internal::uii.SetElems_ii[in->dtype][this->dtype] == NULL){
-                        cytnx_error_msg(true, "%s","[ERROR] %s","cannot assign complex element to real container.\n");
+                        cytnx_error_msg(true, "[ERROR] %s","cannot assign complex element to real container.\n");
                     }
                     utils_internal::uii.SetElems_ii[in->dtype][this->dtype](in->Mem,this->Mem,offj,new_offj,locators,TotalElem,is_scalar);
                 }else{
