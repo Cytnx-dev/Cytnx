@@ -1310,6 +1310,8 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__ifloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int16     &rhs){return self.Div_(rhs);})
                 .def("__ifloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint16    &rhs){return self.Div_(rhs);})
                 .def("__ifloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_bool      &rhs){return self.Div_(rhs);})
+                .def("cConj_",&cytnx_extension::CyTensor::Conj_)
+                .def("Conj",&cytnx_extension::CyTensor::Conj)
 
                 ;
     mext.def("Contract",cytnx_extension::Contract);

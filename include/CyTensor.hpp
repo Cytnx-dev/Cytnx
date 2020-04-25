@@ -168,6 +168,9 @@ namespace cytnx_extension{
             virtual void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back=false, const bool &by_label=true);
             virtual boost::intrusive_ptr<CyTensor_base> contract(const boost::intrusive_ptr<CyTensor_base> &rhs);
             virtual std::vector<Bond> getTotalQnums(const bool &physical=false);          
+            virtual boost::intrusive_ptr<CyTensor_base> Conj();
+            virtual void Conj_();
+
             virtual ~CyTensor_base(){};
     };
     /// @endcond
@@ -336,6 +339,17 @@ namespace cytnx_extension{
                 return std::vector<Bond>();
             }        
             ~DenseCyTensor(){};
+
+
+            void Conj_(){
+                this->_block.Conj_();
+            };
+            
+            boost::intrusive_ptr<CyTensor_base> Conj(){
+                boost::intrusive_ptr<CyTensor_base> out = this->clone();
+                out->Conj_();
+                return out;
+            }
             // end virtual function              
 
             
@@ -600,6 +614,18 @@ namespace cytnx_extension{
             };
             std::vector<Bond> getTotalQnums(const bool &physical=false);
             ~SparseCyTensor(){};
+
+
+            boost::intrusive_ptr<CyTensor_base> Conj(){
+                cytnx_error_msg(true,"[Developing]%s","\n");
+                return nullptr;
+            }
+
+            void Conj_(){
+                //this->_block.Conj_();
+                cytnx_error_msg(true,"[Developing]%s","\n");
+            };
+
             // end virtual func
     };
     /// @endcond
@@ -925,6 +951,17 @@ namespace cytnx_extension{
             template<class T>
             CyTensor& Div_(const T &rhs){
                 return *this /= rhs;
+            }
+
+            CyTensor Conj(){
+                CyTensor out;
+                out._impl = this->_impl->Conj();
+                return out;
+            }
+        
+            CyTensor& Conj_(){
+                this->_impl->Conj_();
+                return *this;
             }
 
 

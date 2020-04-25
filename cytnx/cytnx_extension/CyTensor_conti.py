@@ -29,3 +29,7 @@ def contiguous(self):
 
     else:
         return self.make_contiguous()
+@add_method(CyTensor)
+def Conj_(self):
+    self.cConj_();
+    return self

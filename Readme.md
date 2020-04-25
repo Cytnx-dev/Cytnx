@@ -25,7 +25,7 @@
     10. Enhance python API, Storage & Tensor are now iterable.
     11. Fix buf in Conj and Conj_, for both C++ and python
     12. Fix bug python inplace call return ID Conj_, Inv_, Exp_
-
+    13. Add Conj, Conj_ for CyTensor
 
     v0.5.0a
     1. Add .imag() .real() for Storage. 
@@ -286,7 +286,7 @@
       Svd         |   x       |  Y  |  Y   |    Y        | Y  |   N
      *Svd_truncate|   x       |  Y  |  Y   |    N        | Y  |   N
       Inv         |   Inv_    |  Y  |  Y   |    Y        | Y  |   N
-      Conj        |   Conj_   |  Y  |  Y   |    Y        | Y  |   N
+      Conj        |   Conj_   |  Y  |  Y   |    Y        | Y  |   Y
       Exp         |   Exp_    |  Y  |  Y   |    Y        | Y  |   N
       Expf        |   Expf_   |  Y  |  Y   |    Y        | Y  |   N
       Eigh        |   x       |  Y  |  Y   |    Y        | Y  |   N
