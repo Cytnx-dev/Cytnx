@@ -785,11 +785,11 @@ PYBIND11_MODULE(cytnx,m){
                 //linalg >>
                 .def("Svd",&cytnx::Tensor::Svd, py::arg("is_U"), py::arg("is_vT"))
                 .def("Eigh",&cytnx::Tensor::Eigh, py::arg("is_V")=true,py::arg("row_v")=false)
-                .def("Inv_",&cytnx::Tensor::Inv_)
-                .def("Inv",&cytnx::Tensor::Inv_)
-                .def("Conj_",&cytnx::Tensor::Conj_)
-                .def("Conj",&cytnx::Tensor::Conj_)
-                .def("Exp_",&cytnx::Tensor::Exp_)
+                .def("cInv_",&cytnx::Tensor::Inv_)
+                .def("Inv",&cytnx::Tensor::Inv)
+                .def("cConj_",&cytnx::Tensor::Conj_)
+                .def("Conj",&cytnx::Tensor::Conj)
+                .def("cExp_",&cytnx::Tensor::Exp_)
                 .def("Exp",&cytnx::Tensor::Exp)
                 .def("Norm",&cytnx::Tensor::Norm)
                 ;

@@ -25,7 +25,13 @@ class TensorIterator:
 
         else:
             raise StopIteration
+@add_method(Tensor)
+def __iter__(self):
+    return TensorIterator(self)
 
+
+
+##=======================
 @add_method(Tensor)
 def to(self, device):
     if(self.device() == device):
@@ -75,6 +81,14 @@ def __ifloordiv__(self,right):
     return self
 
 @add_method(Tensor)
-def __iter__(self):
-    return TensorIterator(self)
-
+def Conj_(self):
+    self.cConj_()
+    return self
+@add_method(Tensor)
+def Exp_(self):
+    self.cExp_()
+    return self
+@add_method(Tensor)
+def Inv_(self):
+    self.cInv_()
+    return self

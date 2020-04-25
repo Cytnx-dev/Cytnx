@@ -33,7 +33,14 @@ namespace cytnx{
                 out.push_back(S);
                 if(is_V){ 
                     out.push_back(V); 
-                    if(!row_v) out.back().permute_({1,0}).contiguous_(); 
+                    if(!row_v){ 
+                        if(out.back().dtype()==Type.ComplexFloat || out.back().dtype()==Type.ComplexDouble){
+                            out.back().permute_({1,0}).contiguous_();
+                            out.back().Conj_();
+                            //std::cout << "ok";
+                        }else
+                            out.back().permute_({1,0}).contiguous_();
+                    }
                 }
                 
                 
@@ -51,7 +58,14 @@ namespace cytnx{
                     out.push_back(S);
                     if(is_V){ 
                         out.push_back(V); 
-                        if(!row_v) out.back().permute_({1,0}).contiguous_(); 
+                        if(!row_v){ 
+                            if(out.back().dtype()==Type.ComplexFloat || out.back().dtype()==Type.ComplexDouble){
+                                out.back().permute_({1,0}).contiguous_();
+                                out.back().Conj_();
+                                //std::cout << "ok";
+                            }else
+                                out.back().permute_({1,0}).contiguous_();
+                        }
                     }
                     
                     return out;

@@ -22,6 +22,10 @@
     7. Fix bug in Tensor->numpy if the underlying Tensor is non-contiguous. 
     8. Add Eig.
     9. Add real() imag() for Tensor. 
+    10. Enhance python API, Storage & Tensor are now iterable.
+    11. Fix buf in Conj and Conj_, for both C++ and python
+    12. Fix bug python inplace call return ID Conj_, Inv_, Exp_
+
 
     v0.5.0a
     1. Add .imag() .real() for Storage. 

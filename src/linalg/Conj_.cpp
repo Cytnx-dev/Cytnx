@@ -16,7 +16,7 @@ namespace cytnx{
 
             if(Tin.device()==Device.cpu){
 
-                if(Tin.dtype()<3) cytnx::linalg_internal::lii.Conj_inplace_ii[Tin.dtype()](Tin._impl->storage()._impl,Tin.shape().back());
+                if(Tin.dtype()<3) cytnx::linalg_internal::lii.Conj_inplace_ii[Tin.dtype()](Tin._impl->storage()._impl,Tin._impl->storage().size());
                 
                 
 
@@ -24,7 +24,7 @@ namespace cytnx{
                 #ifdef UNI_GPU
                     checkCudaErrors(cudaSetDevice(Tin.device()));
                     if(Tin.dtype()<3) cytnx::linalg_internal::lii.cuConj_inplace_ii[Tin.dtype()](Tin._impl->storage()._impl,
-                                                                             Tin.shape().back()); 
+                                                                             Tin._impl->storage().size()); 
                     
                 #else
                     cytnx_error_msg(true,"[Inv] fatal error,%s","try to call the gpu section withTin CUDA support.\n");
