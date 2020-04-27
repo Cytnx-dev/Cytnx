@@ -515,6 +515,7 @@ namespace cytnx{
     }
     cytnx_complex128 operator/(const cytnx_complex128 &ln, const cytnx_double &rn)
     {
+        //std::cout << "[arithmetic call] cd/d" << std::endl;
         return cytnx_complex128(ln.real()/rn,ln.imag()/rn);
     }
     cytnx_complex128 operator/(const cytnx_complex128 &ln, const cytnx_float &rn)

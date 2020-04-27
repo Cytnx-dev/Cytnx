@@ -130,7 +130,9 @@ namespace cytnx{
             cytnx_complex128 *_out = (cytnx_complex128*)out->Mem;
             cytnx_complex128 *_Lin = (cytnx_complex128*)Lin->Mem;
             cytnx_double *_Rin = (cytnx_double*)Rin->Mem;
-
+            std::cout << "ok" << std::endl;
+            std::cout << Lin->size() << " " << Rin->size() << " " << len << std::endl;
+            
             if(Lin->size()==1){
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
@@ -139,10 +141,11 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
-                #ifdef UNI_OMP
-                    #pragma omp parallel for schedule(dynamic) 
-                #endif
+                //#ifdef UNI_OMP
+                //    #pragma omp parallel for schedule(dynamic) 
+                //#endif
                     for(unsigned long long i=0;i<len;i++){
+                        std::cout << i << std::endl;
                         _out[i] = _Lin[i] / _Rin[0];
                     }
             }else{
