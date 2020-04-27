@@ -1344,6 +1344,7 @@ PYBIND11_MODULE(cytnx,m){
     m_linalg.def("Vectordot",&cytnx::linalg::Vectordot, py::arg("T1"),py::arg("T2"),py::arg("is_conj")=false);
     m_linalg.def("Norm",&cytnx::linalg::Norm, py::arg("T1"));
     m_linalg.def("Dot",&cytnx::linalg::Dot, py::arg("T1"),py::arg("T2"));
+    m_linalg.def("Trace",&cytnx::linalg::Trace, py::arg("Tn"),py::arg("axisA")=0,py::arg("axisB")=1);
 
     // [Submodule random]
     pybind11::module m_random = m.def_submodule("random","random related.");

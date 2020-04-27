@@ -130,7 +130,7 @@ namespace cytnx{
             }            
  
             template<class T> 
-            T& at(const std::vector<cytnx_uint64> &locator){
+            T& at(const std::vector<cytnx_uint64> &locator) const {
                 cytnx_error_msg(locator.size() != this->_shape.size(), "%s", "The input index does not match Tensor's rank.");
 
                 cytnx_uint64 RealRank,mtplyr;
@@ -151,7 +151,6 @@ namespace cytnx{
                 }
                 return this->_storage.at<T>(RealRank);
             }
-
             
             
             
@@ -626,7 +625,10 @@ namespace cytnx{
             T& at(const std::vector<cytnx_uint64> &locator){
                 return this->_impl->at<T>(locator);
             }
-
+            template<class T>
+            const T& at(const std::vector<cytnx_uint64> &locator) const{
+                return this->_impl->at<T>(locator);
+            }
             /**
             @brief get an from a rank-0 Tensor
             @return [T] 

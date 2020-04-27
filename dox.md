@@ -21,6 +21,8 @@
     11. Fix buf in Conj and Conj_, for both C++ and python
     12. Fix bug python inplace call return ID Conj_, Inv_, Exp_
     13. Add Conj, Conj_ for CyTensor
+    14. Fix non-inplace Arithmetic for non-contiguous tensor. 
+    15. Add [trial version] Trace. 
 
     v0.5.0a
     1. Add .imag() .real() for Storage. 
@@ -137,6 +139,7 @@
       \link cytnx::linalg::Tridiag Tridiag\endlink    | x | Y | N | N  
       *\link cytnx::linalg::Dot Dot\endlink | x | Y | Y | N
       \link cytnx::linalg::Eig Eig\endlink    |   x       |  Y  |  N   |    Y 
+      *\link cytnx::linalg::Trace Trace\endlink | x | Y | N | N
     * this is a high level linalg 
 
     ^ this is temporary disable

@@ -210,6 +210,14 @@ namespace cytnx{
 
 
 
+        // Trace:
+        //==================================================
+        /**
+        @brief perform trace over index.
+
+        [Note] the Tn should be at-least rank-2 Tensor.
+        */
+        Tensor Trace(const Tensor &Tn, const cytnx_uint64 &axisA=0, const cytnx_uint64 &axisB=1);
 
 
         // Matmul:

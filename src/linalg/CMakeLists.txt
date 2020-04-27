@@ -20,6 +20,7 @@ target_sources_local(cytnx
     Mul.cpp
     Outer.cpp
     Kron.cpp
+    Trace.cpp
     Sub.cpp
     Svd.cpp
     Svd_truncate.cpp

@@ -101,7 +101,7 @@ ifeq ($(GPU_Enable),1)
 endif
 
 ## Linalg
-OBJS += Eig.o Dot.o Norm.o ExpH.o Kron.o Add.o Div.o Sub.o Mul.o Cpr.o Svd.o Svd_truncate.o Inv.o Inv_.o Conj.o Conj_.o Exp.o Exp_.o Expf.o Expf_.o Eigh.o Diag.o Matmul.o Tensordot.o Outer.o Vectordot.o Tridiag.o 
+OBJS += Trace.o Eig.o Dot.o Norm.o ExpH.o Kron.o Add.o Div.o Sub.o Mul.o Cpr.o Svd.o Svd_truncate.o Inv.o Inv_.o Conj.o Conj_.o Exp.o Exp_.o Expf.o Expf_.o Eigh.o Diag.o Matmul.o Tensordot.o Outer.o Vectordot.o Tridiag.o 
 
 
 ## Random_internal
@@ -521,6 +521,8 @@ Outer.o: $(CytnxPATH)/src/linalg/Outer.cpp $(CytnxPATH)/include/linalg.hpp
 Kron.o: $(CytnxPATH)/src/linalg/Kron.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Dot.o: $(CytnxPATH)/src/linalg/Dot.cpp $(CytnxPATH)/include/linalg.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+Trace.o: $(CytnxPATH)/src/linalg/Trace.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Tridiag.o: $(CytnxPATH)/src/linalg/Tridiag.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<

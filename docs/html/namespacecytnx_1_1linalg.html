@@ -140,6 +140,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a1137ae19828f715399d90634e4a71ba3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a1137ae19828f715399d90634e4a71ba3">Eig</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin, const bool &amp;is_V=true, const bool &amp;row_v=false)</td></tr>
 <tr class="memdesc:a1137ae19828f715399d90634e4a71ba3"><td class="mdescLeft">&#160;</td><td class="mdescRight">eigen-value decomposition for generic square matrix  <a href="#a1137ae19828f715399d90634e4a71ba3">More...</a><br /></td></tr>
 <tr class="separator:a1137ae19828f715399d90634e4a71ba3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02d7105bf16d23128687ba92fb231b54"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a02d7105bf16d23128687ba92fb231b54">Trace</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tn, const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;axisA=0, const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;axisB=1)</td></tr>
+<tr class="memdesc:a02d7105bf16d23128687ba92fb231b54"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform trace over index.  <a href="#a02d7105bf16d23128687ba92fb231b54">More...</a><br /></td></tr>
+<tr class="separator:a02d7105bf16d23128687ba92fb231b54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53feb441b4b1bd263714ed33e093728f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a53feb441b4b1bd263714ed33e093728f">Matmul</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;TL, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;TR)</td></tr>
 <tr class="memdesc:a53feb441b4b1bd263714ed33e093728f"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform matrix multiplication on two tensors.  <a href="#a53feb441b4b1bd263714ed33e093728f">More...</a><br /></td></tr>
 <tr class="separator:a53feb441b4b1bd263714ed33e093728f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1325,6 +1328,43 @@ template&lt;class T &gt; </div>
 <li>the elements in idxl and idxr have one to one correspondence.</li>
 <li>two tensors should on same device. </li>
 </ol>
+
+</div>
+</div>
+<a id="a02d7105bf16d23128687ba92fb231b54"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02d7105bf16d23128687ba92fb231b54">&#9670;&nbsp;</a></span>Trace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> cytnx::linalg::Trace </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>Tn</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;&#160;</td>
+          <td class="paramname"><em>axisA</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;&#160;</td>
+          <td class="paramname"><em>axisB</em> = <code>1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>perform trace over index. </p>
+<p>[Note] the Tn should be at-least rank-2 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>. </p>
 
 </div>
 </div>

@@ -88,6 +88,9 @@ $(function() {
 <li>Enhance python API, Storage &amp; Tensor are now iterable.</li>
 <li>Fix buf in Conj and Conj_, for both C++ and python</li>
 <li>Fix bug python inplace call return ID Conj_, Inv_, Exp_</li>
+<li>Add Conj, Conj_ for CyTensor</li>
+<li>Fix non-inplace Arithmetic for non-contiguous tensor.</li>
+<li>Add [trial version] Trace.</li>
 </ol>
 <p>v0.5.0a</p><ol type="1">
 <li>Add .imag() .real() for Storage.</li>
@@ -217,6 +220,8 @@ $(function() {
 <td>*<a class="el" href="namespacecytnx_1_1linalg.html#a215dbfd2aa7ef898450de7afff726bca">Dot</a> </td><td>x </td><td>Y </td><td>Y </td><td>N </td></tr>
 <tr>
 <td><a class="el" href="namespacecytnx_1_1linalg.html#a1137ae19828f715399d90634e4a71ba3">Eig</a> </td><td>x </td><td>Y </td><td>N </td><td>Y </td></tr>
+<tr>
+<td>*<a class="el" href="namespacecytnx_1_1linalg.html#a02d7105bf16d23128687ba92fb231b54">Trace</a> </td><td>x </td><td>Y </td><td>N </td><td>N </td></tr>
 </table>
 <p>* this is a high level linalg</p>
 <p>^ this is temporary disable</p>
