@@ -258,7 +258,7 @@ namespace cytnx{
                             cytnx_error_msg(true,"[ERROR][Trace] Invalid Type.%s","\n");
                             break;
                     }//switch
-                    out.reshape(shape);
+                    out.reshape_(shape);
                     
                 }
                 
@@ -355,7 +355,7 @@ namespace cytnx{
                             cytnx_error_msg(true,"[ERROR][Trace] Invalid Type.%s","\n");
                             break;
                     }//switch
-                    out.reshape(shape);
+                    out.reshape_(shape);
                     
                 }
                 
