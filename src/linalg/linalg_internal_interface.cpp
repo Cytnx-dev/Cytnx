@@ -179,12 +179,12 @@ namespace cytnx{
 
 
             //=====================
-            //Pow_ii = vector<Powfunc_oii>(5);
+            Pow_ii = vector<Powfunc_oii>(5);
 
-            //Pow_ii[Type.ComplexDouble] = Pow_internal_cd;
-            //Pow_ii[Type.ComplexFloat ] = Pow_internal_cf;
-            //Pow_ii[Type.Double       ] = Pow_internal_d;
-            //Pow_ii[Type.Float        ] = Pow_internal_f;
+            Pow_ii[Type.ComplexDouble] = Pow_internal_cd;
+            Pow_ii[Type.ComplexFloat ] = Pow_internal_cf;
+            Pow_ii[Type.Double       ] = Pow_internal_d;
+            Pow_ii[Type.Float        ] = Pow_internal_f;
 
 
             //=====================

@@ -323,7 +323,7 @@ namespace cytnx{
             [Tensor]
     
         */
-        //Tensor Pow(const Tensor &Tin, const double &p);
+        Tensor Pow(const Tensor &Tin, const double &p);
         
         /**
         @brief inplace perform power on all the elements in Tensor.
@@ -333,7 +333,7 @@ namespace cytnx{
         description:
             on return, the elements in Tin will be modified to it's exponetial value. 
         */
-        //void Pow_(Tensor &Tin, const double &p);
+        void Pow_(Tensor &Tin, const double &p);
 
 
         // Diag:

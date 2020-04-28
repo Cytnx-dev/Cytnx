@@ -11,7 +11,7 @@ namespace cytnx{
             cytnx_error_msg(Tin.shape()[0] != Tin.shape()[1], "[Inv] error, the size of last two rank should be the same.%s","\n"); 
 
             Tensor out;
-            if(Tin.dtype() > 4) out = Tin.astype(Type.Float);
+            if(Tin.dtype() > 4) out = Tin.astype(Type.Double);
             else out = Tin.clone();
 
 

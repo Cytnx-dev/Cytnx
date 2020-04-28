@@ -28,6 +28,7 @@
     13. Add Conj, Conj_ for CyTensor
     14. Fix non-inplace Arithmetic for non-contiguous tensor. 
     15. Add [trial version] Trace. 
+    16. Add Pow, Pow_. 
 
     v0.5.0a
     1. Add .imag() .real() for Storage. 
@@ -303,6 +304,7 @@
      Norm         |   x       |  Y  |  Y   |    Y        | Y  |   N
     *Dot          |   x       |  Y  |  Y   |    N        | Y  |   N 
      Eig          |   x       |  Y  |  N   |    N        | Y  |   N 
+     Pow          |   Pow_    |  Y  |  N   |    Y        | Y  |   N 
     *Trace        |   x       |  Y  |  N   |    N        | Y  |   N
     * this is a high level linalg 
     ^ this is temporary disable

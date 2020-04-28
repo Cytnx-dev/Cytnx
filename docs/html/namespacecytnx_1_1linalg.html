@@ -170,8 +170,14 @@ Functions</h2></td></tr>
 <tr class="memitem:a5de1faf71c76cdc6b7fa5ba3a3e21bbb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a5de1faf71c76cdc6b7fa5ba3a3e21bbb">Expf_</a> (<a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin)</td></tr>
 <tr class="memdesc:a5de1faf71c76cdc6b7fa5ba3a3e21bbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">inplace perform Exponential on all the element in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>.  <a href="#a5de1faf71c76cdc6b7fa5ba3a3e21bbb">More...</a><br /></td></tr>
 <tr class="separator:a5de1faf71c76cdc6b7fa5ba3a3e21bbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2919ef6c163a54360071c286df3fb92e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a2919ef6c163a54360071c286df3fb92e">Pow</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin, const double &amp;p)</td></tr>
+<tr class="memdesc:a2919ef6c163a54360071c286df3fb92e"><td class="mdescLeft">&#160;</td><td class="mdescRight">take power p on all the elements in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>.  <a href="#a2919ef6c163a54360071c286df3fb92e">More...</a><br /></td></tr>
+<tr class="separator:a2919ef6c163a54360071c286df3fb92e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a269ef291355dfee4421fa55ad0247aad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a269ef291355dfee4421fa55ad0247aad">Pow_</a> (<a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin, const double &amp;p)</td></tr>
+<tr class="memdesc:a269ef291355dfee4421fa55ad0247aad"><td class="mdescLeft">&#160;</td><td class="mdescRight">inplace perform power on all the elements in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>.  <a href="#a269ef291355dfee4421fa55ad0247aad">More...</a><br /></td></tr>
+<tr class="separator:a269ef291355dfee4421fa55ad0247aad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5913f0bdd6cc130aeb927f42a874a149"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a5913f0bdd6cc130aeb927f42a874a149">Diag</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin)</td></tr>
-<tr class="memdesc:a5913f0bdd6cc130aeb927f42a874a149"><td class="mdescLeft">&#160;</td><td class="mdescRight">take power p on all the elements in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>.  <a href="#a5913f0bdd6cc130aeb927f42a874a149">More...</a><br /></td></tr>
+<tr class="memdesc:a5913f0bdd6cc130aeb927f42a874a149"><td class="mdescLeft">&#160;</td><td class="mdescRight">return a diagonal tensor with diagonal elements provided as Tin.  <a href="#a5913f0bdd6cc130aeb927f42a874a149">More...</a><br /></td></tr>
 <tr class="separator:a5913f0bdd6cc130aeb927f42a874a149"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a460e44db6b3d5d2c30c2d2723ff8f788"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a460e44db6b3d5d2c30c2d2723ff8f788">Tensordot</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tl, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tr, const std::vector&lt; <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &gt; &amp;idxl, const std::vector&lt; <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &gt; &amp;idxr)</td></tr>
 <tr class="memdesc:a460e44db6b3d5d2c30c2d2723ff8f788"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform tensor dot by sum out the indices assigned of two Tensors.  <a href="#a460e44db6b3d5d2c30c2d2723ff8f788">More...</a><br /></td></tr>
@@ -441,22 +447,8 @@ template&lt;class T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>take power p on all the elements in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">p,the</td><td>power </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>] inplace perform power on all the elements in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>. </dd></dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">Tin,the</td><td>input <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>. </td></tr>
-    <tr><td class="paramname">p,the</td><td>power.</td></tr>
-  </table>
-  </dd>
-</dl>
-<p>description: on return, the elements in Tin will be modified to it's exponetial value. return a diagonal tensor with diagonal elements provided as Tin. </p><dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>]</dd></dl>
+<p>return a diagonal tensor with diagonal elements provided as Tin. </p>
+<dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>]</dd></dl>
 <p>description: the return <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> will be rank-2, with shape=(L, L); where L is the number of elements in Tin.</p>
 <p>[Note] Tin should be a rank-1 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>. </p>
 
@@ -1095,6 +1087,81 @@ template&lt;class T &gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>]</dd></dl>
 <p>description: if the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> #1 has [shape_1], and <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> #2 has [shape_2]; then the return <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> will have shape: concate(shape_1,shape_2)</p>
 <p>[Note] two tensor should on same device. </p>
+
+</div>
+</div>
+<a id="a2919ef6c163a54360071c286df3fb92e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2919ef6c163a54360071c286df3fb92e">&#9670;&nbsp;</a></span>Pow()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> cytnx::linalg::Pow </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>Tin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double &amp;&#160;</td>
+          <td class="paramname"><em>p</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>take power p on all the elements in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">p,the</td><td>power </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>] </dd></dl>
+
+</div>
+</div>
+<a id="a269ef291355dfee4421fa55ad0247aad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a269ef291355dfee4421fa55ad0247aad">&#9670;&nbsp;</a></span>Pow_()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cytnx::linalg::Pow_ </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>Tin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double &amp;&#160;</td>
+          <td class="paramname"><em>p</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>inplace perform power on all the elements in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Tin,the</td><td>input <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>. </td></tr>
+    <tr><td class="paramname">p,the</td><td>power.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>description: on return, the elements in Tin will be modified to it's exponetial value. </p>
 
 </div>
 </div>

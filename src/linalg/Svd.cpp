@@ -16,7 +16,7 @@ namespace cytnx{
             cytnx_uint64 n_singlu = std::max(cytnx_uint64(1),std::min(Tin.shape()[0],Tin.shape()[1])); 
 
             Tensor in;
-            if(Tin.dtype() > Type.Float) in = Tin.astype(Type.Float);
+            if(Tin.dtype() > Type.Float) in = Tin.astype(Type.Double);
             else in = Tin;
 
             //std::cout << n_singlu << std::endl;

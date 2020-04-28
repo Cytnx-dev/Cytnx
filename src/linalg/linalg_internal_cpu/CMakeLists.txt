@@ -20,6 +20,7 @@ target_sources_local(cytnx
     Svd_internal.hpp
     Tridiag_internal.hpp
     Vectordot_internal.hpp
+    Pow_internal.hpp
     Add_internal.cpp
     Arithmetic_internal.cpp
     Conj_inplace_internal.cpp
@@ -40,4 +41,5 @@ target_sources_local(cytnx
     Svd_internal.cpp
     Vectordot_internal.cpp
     Norm_internal.cpp
+    Pow_internal.cpp
 )

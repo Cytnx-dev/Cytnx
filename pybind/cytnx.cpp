@@ -782,6 +782,9 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__eq__",[](cytnx::Tensor &self, const cytnx::cytnx_uint16    &rhs){return self == rhs;})
                 .def("__eq__",[](cytnx::Tensor &self, const cytnx::cytnx_bool      &rhs){return self == rhs;})
 
+                .def("__pow__",[](cytnx::Tensor &self, const cytnx::cytnx_double      &p){return cytnx::linalg::Pow(self,p);})
+
+
                 //linalg >>
                 .def("Svd",&cytnx::Tensor::Svd, py::arg("is_U"), py::arg("is_vT"))
                 .def("Eigh",&cytnx::Tensor::Eigh, py::arg("is_V")=true,py::arg("row_v")=false)
@@ -1345,6 +1348,8 @@ PYBIND11_MODULE(cytnx,m){
     m_linalg.def("Norm",&cytnx::linalg::Norm, py::arg("T1"));
     m_linalg.def("Dot",&cytnx::linalg::Dot, py::arg("T1"),py::arg("T2"));
     m_linalg.def("Trace",&cytnx::linalg::Trace, py::arg("Tn"),py::arg("axisA")=0,py::arg("axisB")=1);
+    m_linalg.def("Pow",&cytnx::linalg::Pow, py::arg("Tn"),py::arg("p"));
+    m_linalg.def("Pow_",&cytnx::linalg::Pow_, py::arg("Tn"),py::arg("p"));
 
     // [Submodule random]
     pybind11::module m_random = m.def_submodule("random","random related.");

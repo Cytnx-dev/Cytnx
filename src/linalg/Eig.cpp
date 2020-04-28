@@ -13,7 +13,7 @@ namespace cytnx{
 
 
             Tensor in;
-            if(Tin.dtype() > Type.Float) in = Tin.astype(Type.ComplexFloat);
+            if(Tin.dtype() > Type.Float) in = Tin.astype(Type.ComplexDouble);
             else{ 
                 if(Tin.dtype()==Type.Float) in = Tin.astype(Type.ComplexFloat);
                 else if(Tin.dtype() == Type.Double) in = Tin.astype(Type.ComplexDouble);

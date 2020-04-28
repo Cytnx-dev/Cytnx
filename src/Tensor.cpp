@@ -519,6 +519,16 @@ namespace cytnx{
         return linalg::Norm(*this);
     }    
 
+    Tensor Tensor::Pow(const cytnx_double &p){
+        return linalg::Pow(*this,p);
+    }    
+
+    Tensor& Tensor::Pow_(const cytnx_double &p){
+        linalg::Pow_(*this,p);
+        return *this;
+    }
+
+
 }//namespace cytnx
 
 

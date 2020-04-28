@@ -19,7 +19,7 @@ namespace cytnx{
             }else{ 
                 cType = Sub_diag.dtype();
             }
-            if(cType > Type.Float) cType = Type.Float;
+            if(cType > Type.Float) cType = Type.Double;
 
 
             Tensor in_diag,s_diag;

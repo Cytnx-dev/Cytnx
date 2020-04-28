@@ -883,6 +883,9 @@ namespace cytnx{
             Tensor& Exp_();
             Tensor Exp();
             Tensor Norm();
+            Tensor Pow(const cytnx_double &p);
+            Tensor& Pow_(const cytnx_double &p);
+
 
     };// class Tensor
 
