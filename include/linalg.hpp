@@ -336,6 +336,28 @@ namespace cytnx{
         void Pow_(Tensor &Tin, const double &p);
 
 
+        // Abs:
+        //==================================================
+        /**
+        @brief Elementwise absolute value.
+        @param Tin tensor.
+        @return 
+            [Tensor]
+    
+        */
+        Tensor Abs(const Tensor &Tin);
+        
+        /**
+        @brief inplace perform elementwiase absolute value.
+        @param Tin, the input Tensor.
+        
+        description:
+            on return, the elements in Tin will be modified to it's absolute value. Note that if the input tensor is complex, it will be modified to real type.
+        */
+        void Abs_(Tensor &Tin);
+
+
+
         // Diag:
         //==================================================
         /**

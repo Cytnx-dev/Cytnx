@@ -28,6 +28,8 @@ target_sources_local(cytnx
     Vectordot.cpp
     Pow.cpp
     Pow_.cpp
+    Abs.cpp
+    Abs_.cpp
     Dot.cpp
     Norm.cpp
     linalg_internal_interface.cpp

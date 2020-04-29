@@ -95,13 +95,13 @@ endif
 
 ## Linalg_internal
 OBJS += linalg_internal_interface.o
-OBJS += Pow_internal.o Eig_internal.o Matvec_internal.o Norm_internal.o Kron_internal.o Cpr_internal.o Add_internal.o Sub_internal.o Mul_internal.o Div_internal.o Arithmetic_internal.o Svd_internal.o Inv_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_internal.o Diag_internal.o Outer_internal.o Vectordot_internal.o Tridiag_internal.o 
+OBJS += Abs_internal.o Pow_internal.o Eig_internal.o Matvec_internal.o Norm_internal.o Kron_internal.o Cpr_internal.o Add_internal.o Sub_internal.o Mul_internal.o Div_internal.o Arithmetic_internal.o Svd_internal.o Inv_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_internal.o Diag_internal.o Outer_internal.o Vectordot_internal.o Tridiag_internal.o 
 ifeq ($(GPU_Enable),1)
   OBJS += cuMatvec_internal.o cuNorm_internal.o cuCpr_internal.o cuAdd_internal.o cuSub_internal.o cuMul_internal.o cuDiv_internal.o cuArithmetic_internal.o cuSvd_internal.o cuInv_inplace_internal.o cuConj_inplace_internal.o cuExp_internal.o  cuEigh_internal.o cuMatmul_internal.o cuDiag_internal.o cuOuter_internal.o
 endif
 
 ## Linalg
-OBJS += Pow_.o Pow.o Trace.o Eig.o Dot.o Norm.o ExpH.o Kron.o Add.o Div.o Sub.o Mul.o Cpr.o Svd.o Svd_truncate.o Inv.o Inv_.o Conj.o Conj_.o Exp.o Exp_.o Expf.o Expf_.o Eigh.o Diag.o Matmul.o Tensordot.o Outer.o Vectordot.o Tridiag.o 
+OBJS += Abs_.o Abs.o Pow_.o Pow.o Trace.o Eig.o Dot.o Norm.o ExpH.o Kron.o Add.o Div.o Sub.o Mul.o Cpr.o Svd.o Svd_truncate.o Inv.o Inv_.o Conj.o Conj_.o Exp.o Exp_.o Expf.o Expf_.o Eigh.o Diag.o Matmul.o Tensordot.o Outer.o Vectordot.o Tridiag.o 
 
 
 ## Random_internal
@@ -291,6 +291,10 @@ Norm_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Norm_internal.cpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 Eig_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Eig_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Eig_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+
+Abs_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Abs_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Abs_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+
 ifeq ($(GPU_Enable),1)
 
 cuArithmetic_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuArithmetic_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuArithmetic_internal.hpp
@@ -530,6 +534,11 @@ Pow.o: $(CytnxPATH)/src/linalg/Pow.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Pow_.o: $(CytnxPATH)/src/linalg/Pow_.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+Abs.o: $(CytnxPATH)/src/linalg/Abs.cpp $(CytnxPATH)/include/linalg.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+Abs_.o: $(CytnxPATH)/src/linalg/Abs_.cpp $(CytnxPATH)/include/linalg.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+
 
 test.o: test.cpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<

@@ -24,6 +24,7 @@
     14. Fix non-inplace Arithmetic for non-contiguous tensor. 
     15. Add [trial version] Trace. 
     16. Add Pow, Pow_.
+    17. Add Abs, Abs_ for cpu.
 
     v0.5.0a
     1. Add .imag() .real() for Storage. 
@@ -141,6 +142,7 @@
       *\link cytnx::linalg::Dot Dot\endlink | x | Y | Y | N
       \link cytnx::linalg::Eig Eig\endlink    |   x       |  Y  |  N   |    Y 
       \link cytnx::linalg::Pow Pow\endlink    |   \link cytnx::linalg::Pow_ Pow_\endlink       |  Y  |  N   |    Y 
+      \link cytnx::linalg::abs abs\endlink    |   \link cytnx::linalg::Abs_ Abs_\endlink       |  Y  |  N   |    N
       *\link cytnx::linalg::Trace Trace\endlink | x | Y | N | N
     * this is a high level linalg 
 

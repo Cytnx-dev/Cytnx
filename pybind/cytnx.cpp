@@ -1350,6 +1350,8 @@ PYBIND11_MODULE(cytnx,m){
     m_linalg.def("Trace",&cytnx::linalg::Trace, py::arg("Tn"),py::arg("axisA")=0,py::arg("axisB")=1);
     m_linalg.def("Pow",&cytnx::linalg::Pow, py::arg("Tn"),py::arg("p"));
     m_linalg.def("Pow_",&cytnx::linalg::Pow_, py::arg("Tn"),py::arg("p"));
+    m_linalg.def("Abs",&cytnx::linalg::Abs, py::arg("Tn"));
+    m_linalg.def("Abs_",&cytnx::linalg::Abs_, py::arg("Tn"));
 
     // [Submodule random]
     pybind11::module m_random = m.def_submodule("random","random related.");
