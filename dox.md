@@ -1,13 +1,15 @@
 # Cytnx
 
 ## Stable Version:
-    [v0.5.0 pre-release](https://github.com/kaihsin/Cytnx/tree/v0.5.0a)
+    [v0.5.1 pre-release](https://github.com/kaihsin/Cytnx/tree/v0.5.1a)
 
 ## Current dev Version:
-    v0.5.1
+    v0.5.2
 
 ## What's new:
-    v0.5.1
+    v0.5.2 
+
+    v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn
     2. add Dot() for CPU and GPU, with unify API for Vec-Vec/Mat-Vec/Mat-Mat/Ten-Vec product.
     3. add Tensor.rank() 
