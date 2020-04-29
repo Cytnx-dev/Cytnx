@@ -517,6 +517,17 @@ PYBIND11_MODULE(cytnx,m){
                                 }
                             }
                         }
+                    }else if(py::isinstance<py::slice>(locators)){
+                        py::slice sls = locators.cast<py::slice>();
+                        if(!sls.compute(self.shape()[0],&start,&stop,&step, &slicelength))
+                            throw py::error_already_set();
+                        if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
+                        else accessors.push_back(cytnx::Accessor::range(start,stop,step));
+                        for(cytnx_uint32 axis=1;axis<self.shape().size();axis++){
+                            accessors.push_back(Accessor::all());
+                        }
+
+
                     }else{
                         //std::cout << "int locators" << std::endl;
                         //std::cout << locators.cast<cytnx_int64>() << std::endl;
