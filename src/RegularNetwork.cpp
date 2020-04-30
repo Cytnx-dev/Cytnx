@@ -189,12 +189,7 @@ namespace cytnx_extension{
         this->tensors.resize(this->names.size());
         this->CtTree.base_nodes.resize(this->names.size());
         
-        //contraction order:
-        if(ORDER_tokens.size()!=0){
-            CtTree.build_contraction_order_by_tokens(this->name2pos,ORDER_tokens);
-        }else{
-            CtTree.build_default_contraction_order(); 
-        }
+
 
     }
 
@@ -247,6 +242,13 @@ namespace cytnx_extension{
         }
 
         
+        //1.5 contraction order:
+        if(ORDER_tokens.size()!=0){
+            CtTree.build_contraction_order_by_tokens(this->name2pos,ORDER_tokens);
+        }else{
+            CtTree.build_default_contraction_order(); 
+        }
+
         //2. contract using postorder traversal:
         //cout << this->CtTree.nodes_container.size() << endl;
         stack<Node*> stk;

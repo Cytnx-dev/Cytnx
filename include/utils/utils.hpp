@@ -1,7 +1,6 @@
 #ifndef __utils_H_
 #define __utils_H_
 
-#include "is.hpp"
 #include "cartesian.hpp"
 #include "vec_clone.hpp"
 #include "vec_unique.hpp"

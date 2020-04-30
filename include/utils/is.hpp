@@ -6,7 +6,7 @@
 #include "Storage.hpp"
 #include "Bond.hpp"
 #include "Symmetry.hpp"
-
+#include "CyTensor.hpp"
 
 namespace cytnx{
    
@@ -18,6 +18,7 @@ namespace cytnx{
 namespace cytnx_extension{
     bool is(const cytnx_extension::Bond &L, const cytnx_extension::Bond &R);
     bool is(const cytnx_extension::Symmetry &L, const cytnx_extension::Symmetry& R); 
-}
+    bool is(const CyTensor &L, const CyTensor& R); 
+}//namespace cytnx
 
 #endif

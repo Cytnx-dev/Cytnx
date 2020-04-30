@@ -19,5 +19,8 @@ namespace cytnx_extension{
     bool is(const cytnx_extension::Symmetry &L, const cytnx_extension::Symmetry &R){
         return (L._impl == R._impl);
     }
+    bool is(const cytnx_extension::CyTensor &L, const cytnx_extension::CyTensor &R){
+        return (L._impl == R._impl);
+    }
 }
 

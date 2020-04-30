@@ -10,6 +10,19 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]){
 
+    Tensor ttr({3,4,5});
+    random::Make_normal(ttr,0,0.1,99);
+    cout << ttr ;
+    
+    cytnx_extension::CyTensor TTT(ttr,1);
+    
+    cytnx_extension::CyTensor cTT = TTT.clone();
+    cytnx_extension::CyTensor cTTr = TTT;
+
+
+   cout << is(cTTr,TTT) << endl;
+   cout << is(cTT,TTT) << endl;
+
     //Device.cudaDeviceSynchronize();
     //Device.Print_Property();
 /*    

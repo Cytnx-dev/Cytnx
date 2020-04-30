@@ -6,8 +6,8 @@
 #include "Storage.hpp"
 #include "Device.hpp"
 #include "Tensor.hpp"
-#include "intrusive_ptr_base.hpp"
 #include "utils/utils.hpp"
+#include "intrusive_ptr_base.hpp"
 #include <iostream>
 #include <vector>
 #include <map>
@@ -169,6 +169,7 @@ namespace cytnx_extension{
             virtual boost::intrusive_ptr<CyTensor_base> contract(const boost::intrusive_ptr<CyTensor_base> &rhs);
             virtual std::vector<Bond> getTotalQnums(const bool &physical=false);          
             virtual boost::intrusive_ptr<CyTensor_base> Conj();
+            //virtual void Trace(const int &a, const int &b, const bool &by_label=false);
             virtual void Conj_();
 
             virtual ~CyTensor_base(){};
@@ -634,11 +635,11 @@ namespace cytnx_extension{
 
     ///@brief An Enhanced tensor specifically designed for physical Tensor network simulation 
     class CyTensor{
-        private:
-            boost::intrusive_ptr<CyTensor_base> _impl;
 
         public:
+
             ///@cond
+            boost::intrusive_ptr<CyTensor_base> _impl;
             CyTensor(): _impl(new CyTensor_base()){};
             CyTensor(const CyTensor &rhs){
                 this->_impl = rhs._impl;
