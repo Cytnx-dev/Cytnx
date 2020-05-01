@@ -528,6 +528,10 @@ namespace cytnx{
         return *this;
     }
 
+    Tensor Tensor::Trace(const cytnx_uint64 &a, const cytnx_uint64 &b){
+        Tensor out = linalg::Trace(*this,a,b);
+        return out;
+    }
 
 }//namespace cytnx
 

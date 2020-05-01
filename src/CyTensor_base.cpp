@@ -196,6 +196,15 @@ namespace cytnx_extension{
         void CyTensor_base::Conj_(){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
         }
+
+        boost::intrusive_ptr<CyTensor_base> CyTensor_base::Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label){
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+            return nullptr;
+        }
+        void CyTensor_base::Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label){
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+        }
+
         //-----------------------------------------
         std::ostream& operator<<(std::ostream& os, const CyTensor &in){
             char* buffer = (char*)malloc(sizeof(char)*256);

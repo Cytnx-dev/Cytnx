@@ -18,6 +18,7 @@ namespace cytnx_extension{
             Node *left;
             Node *right;
             Node *root;
+            cytnx_float cost;
 
             Node():is_assigned(false), left(nullptr), right(nullptr), root(nullptr){};
             Node(const Node &rhs){
@@ -26,6 +27,7 @@ namespace cytnx_extension{
                 this->root  = rhs.root;
                 this->utensor = rhs.utensor;
                 this->is_assigned = rhs.is_assigned;
+                this->cost = 0;
             }
             Node& operator==(const Node &rhs){
                 this->left = rhs.left;
@@ -33,6 +35,7 @@ namespace cytnx_extension{
                 this->root  = rhs.root;
                 this->utensor = rhs.utensor;
                 this->is_assigned = rhs.is_assigned;
+                this->cost = rhs.cost;
                 return *this;
             }
             Node(Node *in_left, Node *in_right, const CyTensor &in_uten=CyTensor()):is_assigned(false), left(nullptr), right(nullptr), root(nullptr){
@@ -40,6 +43,7 @@ namespace cytnx_extension{
                 this->right = in_right;
                 in_left->root = this;
                 in_right->root = this;
+                this->cost = 0;
                 if(in_uten.uten_type()!=UTenType.Void) this->utensor = in_uten;
             }
             void assign_utensor(const CyTensor &in_uten){
@@ -95,7 +99,7 @@ namespace cytnx_extension{
             }
             void build_default_contraction_order();
             void build_contraction_order_by_tokens(const std::map<std::string,cytnx_uint64> &name2pos, const std::vector<std::string> &tokens);
-
+            void build_contraction_order_by_optimal(); 
                 
     };
 

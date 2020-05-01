@@ -817,6 +817,7 @@ PYBIND11_MODULE(cytnx,m){
                 .def("cExp_",&cytnx::Tensor::Exp_)
                 .def("Exp",&cytnx::Tensor::Exp)
                 .def("Norm",&cytnx::Tensor::Norm)
+                .def("Trace",&cytnx::Tensor::Trace)
                 ;
 
 
@@ -1359,7 +1360,8 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__ifloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_bool      &rhs){return self.Div_(rhs);})
                 .def("cConj_",&cytnx_extension::CyTensor::Conj_)
                 .def("Conj",&cytnx_extension::CyTensor::Conj)
-
+                .def("cTrace_",&cytnx_extension::CyTensor::Trace_,py::arg("a"),py::arg("b"),py::arg("by_label")=false)
+                .def("Trace",&cytnx_extension::CyTensor::Trace,py::arg("a"),py::arg("b"),py::arg("by_label")=false)
                 ;
     mext.def("Contract",cytnx_extension::Contract);
    

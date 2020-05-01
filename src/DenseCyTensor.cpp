@@ -3,6 +3,8 @@
 #include "utils/utils_internal_interface.hpp"
 #include "Generator.hpp"
 #include "linalg.hpp"
+#include <algorithm>
+#include <utility>
 #include <vector>
 namespace cytnx_extension{
     using namespace cytnx;
@@ -492,6 +494,59 @@ namespace cytnx_extension{
         return out;
 
     }
+    
+    void DenseCyTensor::Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label){
 
+        // 1) from label to indx. 
+        cytnx_uint64 ida, idb;
+
+        if(by_label){
+            ida = vec_where(this->_labels,a);
+            idb = vec_where(this->_labels,b);
+        }else{
+            cytnx_error_msg(a < 0 || b < 0,"[ERROR] invalid index a, b%s","\n");
+            cytnx_error_msg(a >= this->rank() || b>= this->rank(),"[ERROR] index out of bound%s","\n");
+            ida=a;idb=b;
+        }
+
+
+        // check if indices are the same:
+        cytnx_error_msg(ida == idb, "[ERROR][DenseCyTensor::Trace_] index a and index b should not be the same.%s","\n");
+        // check dimension:
+        cytnx_error_msg(this->_bonds[ida].dim()!= this->_bonds[idb].dim(),"[ERROR][DenseCyTensor::Ttrace_] The dimension of two bond for trace does not match!%s","\n");
+
+        
+        if(this->is_braket_form()){
+
+            //check if it is the same species:
+            if(this->_bonds[ida].type() == this->_bonds[idb].type()){
+                cytnx_error_msg(true,"[ERROR][DenseCyTensor::Trace_] BD_BRA can only contract with BD_KET.%s","\n");
+            }
+
+        }
+
+
+        // trace the block:
+        if(this->_is_diag){
+            cytnx_error_msg(true,"[Error] We need linalg.Sum!%s","\n");
+        }else{
+            this->_block = this->_block.Trace(ida,idb);
+        }
+        
+
+        // update Rowrank:
+        cytnx_int64 tmpRk = this->_Rowrank;
+        if(ida < tmpRk) this->_Rowrank--;
+        if(idb < tmpRk) this->_Rowrank--;
+
+        // remove the bound, labels:
+        if(ida > idb) std::swap(ida,idb);
+        this->_bonds.erase(this->_bonds.begin()+idb);
+        this->_bonds.erase(this->_bonds.begin()+ida);
+        this->_labels.erase(this->_labels.begin()+idb);
+        this->_labels.erase(this->_labels.begin()+ida);
+
+
+    }
 
 }

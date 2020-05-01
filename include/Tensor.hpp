@@ -837,6 +837,9 @@ namespace cytnx{
                 return *this == rhs; 
            }
 
+
+
+
             void append(const Tensor &rhs){
                 cytnx_error_msg(true,"[ERROR] append a Tensor is under developing.%s","\n");
             }
@@ -885,7 +888,7 @@ namespace cytnx{
             Tensor Norm();
             Tensor Pow(const cytnx_double &p);
             Tensor& Pow_(const cytnx_double &p);
-
+            Tensor Trace(const cytnx_uint64 &a, const cytnx_uint64 &b);
 
     };// class Tensor
 

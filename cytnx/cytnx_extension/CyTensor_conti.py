@@ -33,3 +33,8 @@ def contiguous(self):
 def Conj_(self):
     self.cConj_();
     return self
+
+@add_method(CyTensor)
+def Trace_(self,a,b,by_label=False):
+    self.cTrace_(a,b,by_label);
+    return self

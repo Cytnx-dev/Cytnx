@@ -169,7 +169,8 @@ namespace cytnx_extension{
             virtual boost::intrusive_ptr<CyTensor_base> contract(const boost::intrusive_ptr<CyTensor_base> &rhs);
             virtual std::vector<Bond> getTotalQnums(const bool &physical=false);          
             virtual boost::intrusive_ptr<CyTensor_base> Conj();
-            //virtual void Trace(const int &a, const int &b, const bool &by_label=false);
+            virtual void Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false);
+            virtual boost::intrusive_ptr<CyTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false);
             virtual void Conj_();
 
             virtual ~CyTensor_base(){};
@@ -351,6 +352,16 @@ namespace cytnx_extension{
                 out->Conj_();
                 return out;
             }
+            
+            void Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false);
+            boost::intrusive_ptr<CyTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false){
+                boost::intrusive_ptr<CyTensor_base> out = this->clone();
+                out->Trace_(a,b,by_label);
+                return out;
+            }
+
+
+
             // end virtual function              
 
             
@@ -626,7 +637,14 @@ namespace cytnx_extension{
                 //this->_block.Conj_();
                 cytnx_error_msg(true,"[Developing]%s","\n");
             };
-
+            boost::intrusive_ptr<CyTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false) const{
+                cytnx_error_msg(true,"[Developing]%s","\n");
+                return nullptr;
+            };
+            void Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false){
+                cytnx_error_msg(true,"[Developing]%s","\n");
+                //return nullptr;
+            }
             // end virtual func
     };
     /// @endcond
@@ -965,6 +983,16 @@ namespace cytnx_extension{
                 return *this;
             }
 
+            CyTensor Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false) const{
+                CyTensor out;
+                out._impl = this->_impl->Trace(a,b,by_label);
+                return out;
+            }
+
+            CyTensor& Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false){
+                this->_impl->Trace_(a,b,by_label);
+                return *this;
+            }
 
 
     };//class CyTensor

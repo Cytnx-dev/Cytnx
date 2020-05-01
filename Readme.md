@@ -307,7 +307,7 @@
      Eig          |   x       |  Y  |  N   |    N        | Y  |   N 
      Pow          |   Pow_    |  Y  |  N   |    Y        | Y  |   N 
      Abs          |   Abs_    |  Y  |  N   |    N        | Y  |   N 
-    *Trace        |   x       |  Y  |  N   |    N        | Y  |   N
+    *Trace        |   x       |  Y  |  N   |    Y        | Y  |   Y
     * this is a high level linalg 
     ^ this is temporary disable
  

@@ -92,4 +92,36 @@ namespace cytnx_extension{
 
     }   
 
+
+    cytnx_float get_cost(const Node &t1, const Node &t2){
+        cytnx_float cost = 1;
+        vector<cytnx_uint64> shape1 = t1.utensor.shape();
+        vector<cytnx_uint64> shape2 = t2.utensor.shape();
+        //vector<cytnx_uint64>::const_iterator it1 = shape1.begin();
+        //vector<cytnx_uint64>::const_iterator it2 = shape2.begin();
+        
+
+        for(cytnx_uint64 i=0;i<shape1.size();i++){
+            cost*= shape1[i];
+        }
+        for(cytnx_uint64 i=0;i<shape2.size();i++){
+            cost*= shape2[i];
+        }
+        
+        // get bond with common label:
+        vector<cytnx_int64> common_lbl;
+        vector<cytnx_uint64> comm_idx1, comm_idx2;
+        vec_intersect_(common_lbl,t1.utensor.labels(),t2.utensor.labels(),comm_idx1,comm_idx2);
+
+        for(cytnx_uint64 i=0;i<comm_idx2.size();i++)
+            cost /= shape2[comm_idx2[i]];
+
+        return cost + t1.cost + t2.cost;
+
+    }
+    void ContractionTree::build_contraction_order_by_optimal(){
+        
+        
+    }
+
 }
