@@ -28,5 +28,10 @@ namespace cytnx_extension{
         cytnx_error_msg(true,"[ERROR][Network][clone] call from uninitialize network. %s","\n");
         return nullptr;
     }
+    void Network_base::PrintNet(std::ostream& os){
+        os << "        [Empty Network]" << endl;
+        os << "--- Please Load Network file ---\n" ;
+        os << endl;
+    }
 
 }//namespace cytnx

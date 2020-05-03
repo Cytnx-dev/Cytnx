@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['right',['right',['../classcytnx__extension_1_1Node.html#a43e3f1f439985f9800ef6c0c009e7a81',1,'cytnx_extension::Node']]],
-  ['root',['root',['../classcytnx__extension_1_1Node.html#a7c3290933d5ab1dcbb5ae7b009dd611d',1,'cytnx_extension::Node']]]
+  ['nodes_5fcontainer',['nodes_container',['../classcytnx__extension_1_1ContractionTree.html#a066cfaec4e3ee7a2ae497e1be63a3f87',1,'cytnx_extension::ContractionTree']]],
+  ['nttype',['NtType',['../namespacecytnx__extension.html#a40da1da84f9bd707fd5ec888a5693ccf',1,'cytnx_extension']]]
 ];

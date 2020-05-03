@@ -856,6 +856,12 @@ PYBIND11_MODULE(cytnx,m){
                 .def("clone",&cytnx_extension::Network::clone)
                 .def("__copy__",&cytnx_extension::Network::clone)
                 .def("__deepcopy__",&cytnx_extension::Network::clone)
+                .def("__repr__",[](cytnx_extension::Network &self)->std::string{
+                    self.PrintNet();
+                    return std::string("");
+                 },py::call_guard<py::scoped_ostream_redirect,
+                     py::scoped_estream_redirect>())
+                .def("PrintNet",&cytnx_extension::Network::PrintNet)
                 ;
 
     py::class_<cytnx_extension::Symmetry>(mext,"Symmetry")

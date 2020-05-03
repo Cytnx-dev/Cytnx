@@ -21,5 +21,10 @@ namespace cytnx_extension{
 
     NetworkType_class NtType;
 
+    std::ostream& operator<<(std::ostream& os,const Network &in){
+        in._impl->PrintNet(os);
+        return os;
+    }       
+
 }//namespace cytnx
 

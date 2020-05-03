@@ -91,6 +91,7 @@ namespace cytnx_extension{
             virtual void Fromfile(const std::string& fname);
             virtual void Clear();
             virtual CyTensor Launch();
+            virtual void PrintNet(std::ostream &os);
             virtual boost::intrusive_ptr<Network_base> clone();
             virtual ~Network_base(){};
             
@@ -128,6 +129,7 @@ namespace cytnx_extension{
                 boost::intrusive_ptr<Network_base> out(tmp);
                 return out;
             }
+            void PrintNet(std::ostream& os);
             ~RegularNetwork(){};
 
     }; 
@@ -166,6 +168,7 @@ namespace cytnx_extension{
                 boost::intrusive_ptr<Network_base> out(tmp);
                 return out;
             }
+            void PrintNet(std::ostream &os){};
             ~FermionNetwork(){};
     };
 
@@ -216,8 +219,8 @@ namespace cytnx_extension{
             void PutCyTensor(const cytnx_uint64 &idx, const CyTensor &utensor, const bool &is_clone=true){
                 this->_impl->PutCyTensor(idx,utensor,is_clone);
             }
-            void Launch(){
-                this->_impl->Launch();
+            CyTensor Launch(){
+                return this->_impl->Launch();
             }
             void Clear(){
                 boost::intrusive_ptr<Network_base> tmp(new Network_base());
@@ -229,11 +232,14 @@ namespace cytnx_extension{
                 out._impl = this->_impl->clone();
                 return out;
             }
+            void PrintNet(){
+                this->_impl->PrintNet(std::cout);
+            }
     
     };
 
     ///@cond
-    //std::ostream& operator<<(std::ostream &os,const Network &bin);
+    std::ostream& operator<<(std::ostream &os,const Network &bin);
     ///@endcond
 }
 

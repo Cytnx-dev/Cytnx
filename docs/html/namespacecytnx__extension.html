@@ -154,8 +154,12 @@ Functions</h2></td></tr>
 <tr class="separator:aa1a06c7669e8544ed2f1c98d8f30339f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abdfd12671923d90eb34e4b583f770aeb"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx__extension.html#abdfd12671923d90eb34e4b583f770aeb">operator&lt;&lt;</a> (std::ostream &amp;os, const <a class="el" href="classcytnx__extension_1_1Bond.html">Bond</a> &amp;bin)</td></tr>
 <tr class="separator:abdfd12671923d90eb34e4b583f770aeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a7bf75c3eb8925f6391afdbd4aabed7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecytnx.html#a456fea0ea7baaa151496b24424829253">cytnx_float</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx__extension.html#a2a7bf75c3eb8925f6391afdbd4aabed7">get_cost</a> (const <a class="el" href="classcytnx__extension_1_1Node.html">Node</a> &amp;t1, const <a class="el" href="classcytnx__extension_1_1Node.html">Node</a> &amp;t2)</td></tr>
+<tr class="separator:a2a7bf75c3eb8925f6391afdbd4aabed7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acefe11389430f4be98132e0b3923a3c2"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx__extension.html#acefe11389430f4be98132e0b3923a3c2">operator&lt;&lt;</a> (std::ostream &amp;os, const <a class="el" href="classcytnx__extension_1_1CyTensor.html">CyTensor</a> &amp;in)</td></tr>
 <tr class="separator:acefe11389430f4be98132e0b3923a3c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e1982f46aaa1d3b8160c8084c2635d1"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx__extension.html#a3e1982f46aaa1d3b8160c8084c2635d1">operator&lt;&lt;</a> (std::ostream &amp;os, const <a class="el" href="classcytnx__extension_1_1Network.html">Network</a> &amp;in)</td></tr>
+<tr class="separator:a3e1982f46aaa1d3b8160c8084c2635d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1318bd93188a6a286b638b35d9ac63fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx__extension.html#a1318bd93188a6a286b638b35d9ac63fc">_parse_ORDER_line_</a> (vector&lt; string &gt; &amp;tokens, const string &amp;line)</td></tr>
 <tr class="separator:a1318bd93188a6a286b638b35d9ac63fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83ee75bcf645251caa2bb76b3c74bab3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx__extension.html#a83ee75bcf645251caa2bb76b3c74bab3">_parse_TOUT_line_</a> (vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &amp;lbls, <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;TOUT_iBondNum, const string &amp;line)</td></tr>
@@ -340,6 +344,34 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a>]</dd></dl>
 <p>See also <a class="el" href="">CyTensor.contract </a> </p>
+
+</div>
+</div>
+<a id="a2a7bf75c3eb8925f6391afdbd4aabed7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a7bf75c3eb8925f6391afdbd4aabed7">&#9670;&nbsp;</a></span>get_cost()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacecytnx.html#a456fea0ea7baaa151496b24424829253">cytnx_float</a> cytnx_extension::get_cost </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcytnx__extension_1_1Node.html">Node</a> &amp;&#160;</td>
+          <td class="paramname"><em>t1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcytnx__extension_1_1Node.html">Node</a> &amp;&#160;</td>
+          <td class="paramname"><em>t2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -695,8 +727,8 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
-<a id="acefe11389430f4be98132e0b3923a3c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acefe11389430f4be98132e0b3923a3c2">&#9670;&nbsp;</a></span>operator<<() <span class="overload">[1/2]</span></h2>
+<a id="a3e1982f46aaa1d3b8160c8084c2635d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e1982f46aaa1d3b8160c8084c2635d1">&#9670;&nbsp;</a></span>operator<<() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -710,7 +742,7 @@ template&lt;class T &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classcytnx__extension_1_1CyTensor.html">CyTensor</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classcytnx__extension_1_1Network.html">Network</a> &amp;&#160;</td>
           <td class="paramname"><em>in</em>&#160;</td>
         </tr>
         <tr>
@@ -724,7 +756,7 @@ template&lt;class T &gt; </div>
 </div>
 </div>
 <a id="abdfd12671923d90eb34e4b583f770aeb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abdfd12671923d90eb34e4b583f770aeb">&#9670;&nbsp;</a></span>operator<<() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#abdfd12671923d90eb34e4b583f770aeb">&#9670;&nbsp;</a></span>operator<<() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -740,6 +772,34 @@ template&lt;class T &gt; </div>
           <td></td>
           <td class="paramtype">const <a class="el" href="classcytnx__extension_1_1Bond.html">Bond</a> &amp;&#160;</td>
           <td class="paramname"><em>bin</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acefe11389430f4be98132e0b3923a3c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acefe11389430f4be98132e0b3923a3c2">&#9670;&nbsp;</a></span>operator<<() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::ostream&amp; cytnx_extension::operator&lt;&lt; </td>
+          <td>(</td>
+          <td class="paramtype">std::ostream &amp;&#160;</td>
+          <td class="paramname"><em>os</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcytnx__extension_1_1CyTensor.html">CyTensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>in</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

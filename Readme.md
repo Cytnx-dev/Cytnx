@@ -12,6 +12,12 @@
     v0.5.2
 
 ## What's new:
+    v0.5.2
+    1. add Trace and Trace_ for CyTensor.
+    2. fix bug in Network.Launch does not return the output CyTensor
+    3. Add Network.PrintNet, and ostream support.
+    
+
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn
     2. add Dot() for CPU and GPU, with unify API for Vec-Vec/Mat-Vec/Mat-Mat/Ten-Vec product.

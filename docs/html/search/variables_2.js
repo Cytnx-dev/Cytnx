@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['is_5fassigned',['is_assigned',['../classcytnx__extension_1_1Node.html#abcf4ee2a0cccd28df0301ef6e6290f3c',1,'cytnx_extension::Node']]]
+  ['device',['Device',['../namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a',1,'cytnx']]]
 ];

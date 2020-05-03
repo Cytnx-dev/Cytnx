@@ -221,6 +221,48 @@ namespace cytnx_extension{
     }
 
 
+    void RegularNetwork::PrintNet(std::ostream& os){
+        string status;
+        os << "==== Network ====" << endl;
+        if(this->tensors.size()==0){
+            os << "      Empty      "  << endl;
+        }else{
+            for(cytnx_uint64 i=0;i<this->tensors.size();i++){
+                if(this->tensors[i].uten_type()!=UTenType.Void) status = "o";
+                else status = "x";
+                printf("[%s] %s : ",status.c_str(), this->names[i].c_str());
+
+                for(cytnx_int64 j=0;j<this->iBondNums[i];j++){
+                    printf("%d ",this->label_arr[i][j]);
+                }
+                printf("%s","; ");
+                for(cytnx_int64 j=this->iBondNums[i];j<this->label_arr[i].size();j++){
+                    printf("%d ",this->label_arr[i][j]);
+                }
+                os << endl;
+            }
+            
+            os << "TOUT : ";
+            for(cytnx_uint64 i=0;i<TOUT_iBondNum;i++){
+                printf("%d ",this->TOUT_labels[i]);
+            }
+            printf("%s","; ");
+            for(cytnx_int64 j=this->TOUT_iBondNum;j<this->TOUT_labels.size();j++){
+                printf("%d ",this->TOUT_labels[j]);
+            }
+            os << endl;
+            os << "ORDER : ";
+            for(cytnx_int64 i=0; i<this->ORDER_tokens.size();i++){
+                os << this->ORDER_tokens[i];
+            }
+            os<< endl;
+            os << "=================" << endl;
+        }
+
+
+    }
+
+
     CyTensor RegularNetwork::Launch(){
 
 
