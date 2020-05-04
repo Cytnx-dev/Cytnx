@@ -38,8 +38,10 @@ namespace cytnx_extension{
 
     /// @cond
     class Network_base: public intrusive_ptr_base<Network_base>{
-        protected:
+        //protected:
+        public:
             int nwrktype_id;
+            std::string filename;
             std::vector<CyTensor> tensors; 
             std::vector<cytnx_int64> TOUT_labels;
             cytnx_uint64 TOUT_iBondNum;
@@ -61,7 +63,6 @@ namespace cytnx_extension{
             
             
 
-        public:
             friend class FermionNetwork;
             friend class RegularNetwork;
             friend class Network;

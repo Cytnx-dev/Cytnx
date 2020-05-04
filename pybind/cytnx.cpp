@@ -844,6 +844,29 @@ PYBIND11_MODULE(cytnx,m){
     py::class_<cytnx_extension::Network>(mext,"Network")
                 .def(py::init<>())
                 .def(py::init<const std::string &, const int&>(),py::arg("fname"),py::arg("network_type")=(int)cytnx_extension::NtType.Regular)
+                .def("_cget_tn_names",[](cytnx_extension::Network &self){
+                    return self._impl->names;
+                })
+                .def("_cget_tn_labels",[](cytnx_extension::Network &self){
+                    return self._impl->label_arr;
+                })
+                .def("_cget_tn_out_labels",[](cytnx_extension::Network &self){
+                    return self._impl->TOUT_labels;
+                })
+                .def("isLoad",[](cytnx_extension::Network &self)->bool{
+                    return self._impl->tensors.size()==0?false:true;
+                })
+                .def("isAllset",[](cytnx_extension::Network &self)->bool{
+                    bool out = true;
+                    for(int i=0;i<self._impl->tensors.size();i++){
+                        if(self._impl->tensors[i].uten_type()==cytnx_extension::UTenType.Void)
+                            out = false;
+                    }
+                    return out;
+                })
+                .def("_cget_filename",[](cytnx_extension::Network &self){
+                    return self._impl->filename;
+                })
                 .def("Fromfile",&cytnx_extension::Network::Fromfile,py::arg("fname"),py::arg("network_type")=(int)cytnx_extension::NtType.Regular)
                 .def("PutCyTensor",[](cytnx_extension::Network &self,const std::string &name, const cytnx_extension::CyTensor &utensor, const bool &is_clone){
                                                 self.PutCyTensor(name,utensor,is_clone);

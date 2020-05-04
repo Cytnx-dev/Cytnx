@@ -983,6 +983,8 @@ namespace cytnx_extension{
                 return *this;
             }
 
+
+
             CyTensor Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false) const{
                 CyTensor out;
                 out._impl = this->_impl->Trace(a,b,by_label);

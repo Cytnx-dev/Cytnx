@@ -107,7 +107,8 @@ namespace cytnx_extension{
         if(!(infile.is_open())) {
             cytnx_error_msg(true,"[Network] Error in opening file \'",fname.c_str(),"\'.\n");
         }
-
+        filename = fname;
+    
         string line;
         cytnx_uint64 lnum = 0;
         vector<string> tmpvs;
