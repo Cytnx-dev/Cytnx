@@ -16,7 +16,7 @@ def Drawnet_notag(opt_name,tn_names, edges_info,dangling_infos):
     g.attr('node',shape='plaintext')
     for i in dangling_infos:
         g.node(i[0])
-    
+    print(edges_info)
     ## edges! contracted:
     for i in edges_info:
         g.edge(i[0],i[1],label="%d"%(i[2]))

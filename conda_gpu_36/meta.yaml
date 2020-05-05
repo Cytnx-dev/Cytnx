@@ -43,6 +43,7 @@ requirements:
     - intel-openmp
     - setuptools
     - cudatoolkit
+    - python-graphviz
     - {{ compiler("c")}}
     - {{ compiler("cxx")}}
 

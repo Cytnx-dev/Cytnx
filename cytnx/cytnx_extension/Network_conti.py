@@ -22,6 +22,9 @@ def Diagram(self,outname=None):
     tn_names = np.array(self._cget_tn_names());
     tn_labels = np.array(self._cget_tn_labels());
     tn_out_lbls = np.array(self._cget_tn_out_labels());
+    print(tn_names)
+    print(tn_labels)
+    print(tn_out_lbls)
 
     ## get name:
     if(outname is None):
@@ -31,9 +34,11 @@ def Diagram(self,outname=None):
     print(OUT_fn)
 
     ## get common label:
-    all_l = tn_labels.flatten()    
+    all_l = np.concatenate(tn_labels)
     comm_lbl = np.setdiff1d(all_l,tn_out_lbls)
-
+    
+    print(all_l)
+    print(comm_lbl)
     edge_info = [] 
     for i in comm_lbl:
         out = []

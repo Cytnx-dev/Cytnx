@@ -40,6 +40,7 @@ requirements:
     - mkl-include
     - intel-openmp
     - setuptools
+    - python-graphviz
     - {{ compiler("c")}}
     - {{ compiler("cxx")}}
 
