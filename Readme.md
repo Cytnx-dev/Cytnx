@@ -16,7 +16,9 @@
     1. add Trace and Trace_ for CyTensor.
     2. fix bug in Network.Launch does not return the output CyTensor
     3. Add Network.PrintNet, and ostream support.
-    
+    4. Add Network.Diagram() for plot the tensor network diagram (python only)    
+    5. Add support for floating type Vectordot on GPU. 
+    6. Fix bug in to from Anytype to ComplexFloat. 
 
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn
@@ -305,7 +307,7 @@
       Diag        |   x       |  Y  |  Y   |    N        | Y  |   N
     *Tensordot    |   x       |  Y  |  Y   |    N        | Y  |   N
      Outer        |   x       |  Y  |  Y   |    N        | Y  |   N 
-     Vectordot    |   x       |  Y  |  N   |    N        | Y  |   N 
+     Vectordot    |   x       |  Y  | .Y   |    N        | Y  |   N 
       Tridiag     |   x       |  Y  |  N   |    N        | Y  |   N
      Kron         |   x       |  Y  |  N   |    N        | Y  |   N
      Norm         |   x       |  Y  |  Y   |    Y        | Y  |   N
@@ -314,8 +316,12 @@
      Pow          |   Pow_    |  Y  |  N   |    Y        | Y  |   N 
      Abs          |   Abs_    |  Y  |  N   |    N        | Y  |   N 
     *Trace        |   x       |  Y  |  N   |    Y        | Y  |   Y
+    
     * this is a high level linalg 
+    
     ^ this is temporary disable
+    
+    . this is floating point type only
  
 ## Container Generators 
 

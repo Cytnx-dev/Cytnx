@@ -1,15 +1,28 @@
 #include "cytnx.hpp"
 #include <complex>
-
-  
 using namespace std;
 using namespace cytnx;
 using namespace cytnx_extension;
 
+namespace cyx = cytnx_extension;
 typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]){
 
+    Tensor a = arange(10);
+    a = a.astype(Type.ComplexFloat).to(Device.cuda+0);
+    a += 1;
+    cout << a << endl;
+
+    Tensor b = linalg::Vectordot(a,a);
+    cout << b << endl;
+    exit(1);
+
+
+    cyx::Network N = cyx::Network("t2.net");
+    cout << N << endl;
+
+    exit(1);
     Tensor ttr({3,4,5});
     random::Make_normal(ttr,0,0.1,99);
     cout << ttr ;

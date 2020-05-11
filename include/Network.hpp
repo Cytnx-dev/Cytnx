@@ -175,8 +175,10 @@ namespace cytnx_extension{
 
     ///@endcond
 
-    /// @brief the Network object for easy build tensor network.
-    // wrapper
+    /* @brief the Network object for easy build tensor network.
+ 
+         The Network is an object that allow one to create a complex network from a pre-defined Network file. By putting the Tensors into the Network, the user simply call “Network.Launch()” to get the out-come.
+    */
     class Network{
         public:
             ///@cond
@@ -198,6 +200,39 @@ namespace cytnx_extension{
                 
             ##note:
                 1. each network file cannot have more than 1024 lines. 
+
+            ##detail:
+                Format of a network file:
+
+                - each line defines a CyTensor, that takes the format '[name] : [Labels]' 
+                - the name can be any alphabets A-Z, a-z
+                - There are two reserved name: 'TOUT' and 'ORDER' (all capital) 
+                - One can use 'TOUT' line to specify the output CyTensor's bond order using labels
+                - The 'ORDER' line is used to specify the contraction order
+               
+                About [Labels]:
+            
+                - a ';' is used to seperate Rowrank and column rank
+
+                About [ORDER]:
+                
+                - The contraction order, it can be specify using the standard mathmetical bracket ruls.
+                - Without specify this line, the default contraction order will be from the first line to the last line 
+
+
+            ##example network file:
+                \include example/Network/example.net
+
+            ##example code for load the network file:
+            ### c++ API:
+            \include example/Network/Fromfile.cpp
+            #### output>
+            \verbinclude example/Network/Fromfile.cpp.out
+            ### python API 
+            \include example/Network/Fromfile.py               
+            #### output>
+            \verbinclude example/Network/Fromfile.py.out
+            
  
             */
             void Fromfile(const std::string &fname, const int &network_type=NtType.Regular){
