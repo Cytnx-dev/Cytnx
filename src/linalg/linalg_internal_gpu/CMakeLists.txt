@@ -12,6 +12,7 @@ target_sources_local(cytnx
     cuInv_inplace_internal.hpp
     cuMatmul_internal.hpp
     cuMatvec_internal.hpp
+    cuVectordot_internal.hpp
     cuMul_internal.hpp
     cuOuter_internal.hpp
     cuSub_internal.hpp
@@ -27,6 +28,7 @@ target_sources_local(cytnx
     cuInv_inplace_internal.cu
     cuMatmul_internal.cu
     cuMatvec_internal.cu
+    cuVectordot_internal.cu
     cuMul_internal.cu
     cuOuter_internal.cu
     cuSub_internal.cu

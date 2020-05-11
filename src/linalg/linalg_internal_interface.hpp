@@ -34,6 +34,7 @@
     #include "linalg/linalg_internal_gpu/cuOuter_internal.hpp"
     #include "linalg/linalg_internal_gpu/cuNorm_internal.hpp"
     #include "linalg/linalg_internal_gpu/cuMatvec_internal.hpp"
+    #include "linalg/linalg_internal_gpu/cuVectordot_internal.hpp"
     //#include "linalg/linalg_internal_gpu/cuPow_internal.hpp"
     //#include "linalg/linalg_internal_gpu/cuAbs_internal.hpp"
 #endif
@@ -90,6 +91,7 @@ namespace cytnx{
                 std::vector<Matvecfunc_oii> cuMatvec_ii;
                 std::vector<std::vector<Outerfunc_oii> > cuOuter_ii;
                 std::vector<Normfunc_oii> cuNorm_ii;
+                std::vector<Vectordotfunc_oii> cuVd_ii;
                 #endif
 
             linalg_internal_interface();

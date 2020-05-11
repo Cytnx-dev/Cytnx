@@ -28,9 +28,9 @@ namespace cytnx{
                 else MAXX = remain;
                 
                 if(is_conj)
-                    zdotc(&acres,&MAXX,&_Lin[bias],&ONE,&_Rin[bias],&ONE);
+                    acres=zdotc(&MAXX,&_Lin[bias],&ONE,&_Rin[bias],&ONE);
                 else
-                    zdotu(&acres,&MAXX,&_Lin[bias],&ONE,&_Rin[bias],&ONE);
+                    acres=zdotu(&MAXX,&_Lin[bias],&ONE,&_Rin[bias],&ONE);
                 
                 _out[0] += acres;
                 remain -= MAXX;
@@ -52,9 +52,9 @@ namespace cytnx{
                 else MAXX = remain;
                 
                 if(is_conj)
-                    cdotc(&acres,&MAXX,&_Lin[bias],&ONE,&_Rin[bias],&ONE);
+                    acres=cdotc(&MAXX,&_Lin[bias],&ONE,&_Rin[bias],&ONE);
                 else
-                    cdotu(&acres,&MAXX,&_Lin[bias],&ONE,&_Rin[bias],&ONE);
+                    acres=cdotu(&MAXX,&_Lin[bias],&ONE,&_Rin[bias],&ONE);
                 
                 _out[0] += acres;
                 remain -= MAXX;

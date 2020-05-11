@@ -726,6 +726,19 @@ namespace cytnx{
                 cuMatvec_ii[Type.Uint16       ] = cuMatvec_internal_u16;
                 cuMatvec_ii[Type.Bool         ] = cuMatvec_internal_b;
                 
+                //====================
+                cuVd_ii = vector<Vectordotfunc_oii>(N_Type);
+                cuVd_ii[Type.ComplexDouble] = cuVectordot_internal_cd;
+                cuVd_ii[Type.ComplexFloat ] = cuVectordot_internal_cf;
+                cuVd_ii[Type.Double] = cuVectordot_internal_d;
+                cuVd_ii[Type.Float ] = cuVectordot_internal_f;
+                cuVd_ii[Type.Int64 ] = cuVectordot_internal_i64;
+                cuVd_ii[Type.Uint64] = cuVectordot_internal_u64;
+                cuVd_ii[Type.Int32 ] = cuVectordot_internal_i32;
+                cuVd_ii[Type.Uint32] = cuVectordot_internal_u32;
+                cuVd_ii[Type.Int16 ] = cuVectordot_internal_i16;
+                cuVd_ii[Type.Uint16] = cuVectordot_internal_u16;
+                cuVd_ii[Type.Bool  ] = cuVectordot_internal_b  ;
 
                 //================
                 

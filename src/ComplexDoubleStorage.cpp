@@ -221,8 +221,6 @@ namespace cytnx{
             os << std::endl << "Total elem: " << this->len << "\n";
 
             os << "type  : " << Type.getname(this->dtype) << std::endl;
-
-
             int atDevice = this->device;
             os << Device.getname(this->device) << std::endl;
 

@@ -1,10 +1,10 @@
 var searchData=
 [
   ['capacity',['capacity',['../classcytnx_1_1Storage.html#a62bab0b879eabdd9be7a269fd604d987',1,'cytnx::Storage']]],
-  ['cdotc',['cdotc',['../lapack__wrapper_8hpp.html#ab383b6199f049914adf35b25f5f39e1e',1,'lapack_wrapper.hpp']]],
-  ['cdotc_5f',['cdotc_',['../lapack__wrapper_8hpp.html#a40dfd3ee819d2f5cf3d6fddd06832355',1,'lapack_wrapper.hpp']]],
-  ['cdotu',['cdotu',['../lapack__wrapper_8hpp.html#a0853912dcd6358a338c640cbf9ec1281',1,'lapack_wrapper.hpp']]],
-  ['cdotu_5f',['cdotu_',['../lapack__wrapper_8hpp.html#a213affca78da92ae2b97752c0a9347c0',1,'lapack_wrapper.hpp']]],
+  ['cdotc',['cdotc',['../lapack__wrapper_8hpp.html#ac441e4422b837847aabb237b3b288d0d',1,'lapack_wrapper.hpp']]],
+  ['cdotc_5f',['cdotc_',['../lapack__wrapper_8hpp.html#ac57fd75196954c0486beb338ee3b0090',1,'lapack_wrapper.hpp']]],
+  ['cdotu',['cdotu',['../lapack__wrapper_8hpp.html#a8d56943215188e011ff35648f1fab1e5',1,'lapack_wrapper.hpp']]],
+  ['cdotu_5f',['cdotu_',['../lapack__wrapper_8hpp.html#a0c130bc1fd8017420a5183d6ec7c6668',1,'lapack_wrapper.hpp']]],
   ['cgeev',['cgeev',['../lapack__wrapper_8hpp.html#a101892390ca5c6dcd1d65bdd3be451c7',1,'lapack_wrapper.hpp']]],
   ['cgeev_5f',['cgeev_',['../lapack__wrapper_8hpp.html#a527a690add49bf1cf4e8f7d75a595c41',1,'lapack_wrapper.hpp']]],
   ['cgelqf',['cgelqf',['../lapack__wrapper_8hpp.html#a912922d6af9754f6d3c58beb3913cdd6',1,'lapack_wrapper.hpp']]],

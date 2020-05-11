@@ -78,15 +78,12 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>the <a class="el" href="classcytnx__extension_1_1Network.html" title="the Network object for easy build tensor network. ">Network</a> object for easy build tensor network.  
- <a href="classcytnx__extension_1_1Network.html#details">More...</a></p>
-
 <p><code>#include &lt;<a class="el" href="Network_8hpp_source.html">Network.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a30e5b0edfb1e3192726b65073e7b987a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Network.html#a30e5b0edfb1e3192726b65073e7b987a">Fromfile</a> (const std::string &amp;fname, const int &amp;network_type=NtType.Regular)</td></tr>
-<tr class="memdesc:a30e5b0edfb1e3192726b65073e7b987a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct <a class="el" href="classcytnx__extension_1_1Network.html" title="the Network object for easy build tensor network. ">Network</a> from network file.  <a href="#a30e5b0edfb1e3192726b65073e7b987a">More...</a><br /></td></tr>
+<tr class="memdesc:a30e5b0edfb1e3192726b65073e7b987a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct <a class="el" href="classcytnx__extension_1_1Network.html">Network</a> from network file.  <a href="#a30e5b0edfb1e3192726b65073e7b987a">More...</a><br /></td></tr>
 <tr class="separator:a30e5b0edfb1e3192726b65073e7b987a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3152ef5ac3402559b1430403a190174"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Network.html#ae3152ef5ac3402559b1430403a190174">Network</a> (const std::string &amp;fname, const int &amp;network_type=NtType.Regular)</td></tr>
 <tr class="separator:ae3152ef5ac3402559b1430403a190174"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -103,9 +100,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0c51cc196d19faaf13d2d74d860ba973"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Network.html#a0c51cc196d19faaf13d2d74d860ba973">PrintNet</a> ()</td></tr>
 <tr class="separator:a0c51cc196d19faaf13d2d74d860ba973"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>the <a class="el" href="classcytnx__extension_1_1Network.html" title="the Network object for easy build tensor network. ">Network</a> object for easy build tensor network. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ae3152ef5ac3402559b1430403a190174"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae3152ef5ac3402559b1430403a190174">&#9670;&nbsp;</a></span>Network()</h2>
 
@@ -227,19 +222,61 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Construct <a class="el" href="classcytnx__extension_1_1Network.html" title="the Network object for easy build tensor network. ">Network</a> from network file. </p>
+<p>Construct <a class="el" href="classcytnx__extension_1_1Network.html">Network</a> from network file. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fname</td><td>The network file path </td></tr>
-    <tr><td class="paramname">network_type</td><td>The type of network. This can be [NtType.Regular] or [NtType.Fermion.]. Currently, only Regular <a class="el" href="classcytnx__extension_1_1Network.html" title="the Network object for easy build tensor network. ">Network</a> is support!</td></tr>
+    <tr><td class="paramname">network_type</td><td>The type of network. This can be [NtType.Regular] or [NtType.Fermion.]. Currently, only Regular <a class="el" href="classcytnx__extension_1_1Network.html">Network</a> is support!</td></tr>
   </table>
   </dd>
 </dl>
 <h2>note:</h2>
 <ol type="1">
-<li>each network file cannot have more than 1024 lines. </li>
+<li>each network file cannot have more than 1024 lines.</li>
 </ol>
+<h2>detail:</h2>
+<p>Format of a network file:</p>
+<ul>
+<li>each line defines a <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a>, that takes the format '[name] : [Labels]'</li>
+<li>the name can be any alphabets A-Z, a-z</li>
+<li>There are two reserved name: 'TOUT' and 'ORDER' (all capital)</li>
+<li>One can use 'TOUT' line to specify the output <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a>'s bond order using labels</li>
+<li>The 'ORDER' line is used to specify the contraction order</li>
+</ul>
+<p>About [Labels]:</p>
+<ul>
+<li>a ';' is used to seperate Rowrank and column rank</li>
+</ul>
+<p>About [ORDER]:</p>
+<ul>
+<li>The contraction order, it can be specify using the standard mathmetical bracket ruls.</li>
+<li>Without specify this line, the default contraction order will be from the first line to the last line</li>
+</ul>
+<h2>example network file:</h2>
+<div class="fragment"><div class="line">A: 0;1,2</div><div class="line">B: 0;3,4</div><div class="line">C: 5;1,6</div><div class="line">D: 5;7,8</div><div class="line">TOUT: 2,3,4;6,7,8</div><div class="line">ORDER: (A,B),(C,D)</div></div><!-- fragment --><h2>example code for load the network file:</h2>
+<h3>c++ API:</h3>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacestd.html">std</a>;</div><div class="line"><span class="keyword">namespace </span>cyx = <a class="code" href="namespacecytnx__extension.html">cytnx_extension</a>;</div><div class="line"></div><div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>* argv[]){</div><div class="line">    cyx::Network N;</div><div class="line">    N.Fromfile(<span class="stringliteral">&quot;example.net&quot;</span>);</div><div class="line">    cout &lt;&lt; N &lt;&lt; endl;   </div><div class="line">}</div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment">==== Network ====
+[x] A : 0 ; 1 2 
+[x] B : 0 ; 3 4 
+[x] C : 5 ; 1 6 
+[x] D : 5 ; 7 8 
+TOUT : 2 3 4 ; 6 7 8 
+ORDER : (A,B),(C,D)
+=================
 
+</pre> <h3>python API</h3>
+<div class="fragment"><div class="line"><span class="keyword">import</span> cytnx</div><div class="line"><span class="keyword">import</span> cytnx.cytnx_extension <span class="keyword">as</span> cyx</div><div class="line"></div><div class="line"></div><div class="line">N = cyx.Network(<span class="stringliteral">&quot;example.net&quot;</span>)</div><div class="line">print(N)</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment">==== Network ====
+[x] A : 0 ; 1 2 
+[x] B : 0 ; 3 4 
+[x] C : 5 ; 1 6 
+[x] D : 5 ; 7 8 
+TOUT : 2 3 4 ; 6 7 8 
+ORDER : (A,B),(C,D)
+=================
+
+</pre> 
 </div>
 </div>
 <a id="a2cab5d3c7393f037f969925c55eb908a"></a>

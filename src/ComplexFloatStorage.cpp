@@ -168,7 +168,7 @@ namespace cytnx{
                     void *dtmp = utils_internal::cuMalloc_gpu(sizeof(cytnx_complex64)*this->cap);
                     checkCudaErrors(cudaMemcpy(dtmp,this->Mem,sizeof(cytnx_complex64)*this->len,cudaMemcpyHostToDevice));
                     boost::intrusive_ptr<Storage_base> out(new ComplexFloatStorage());
-                    out->_Init_byptr(dtmp,this->len,device);
+                    out->_Init_byptr(dtmp,this->len,device,true,this->cap);
                     return out;
                 #else
                     cytnx_error_msg(1,"%s","[ERROR] try to move from cpu(Host) to gpu without CUDA support."); 

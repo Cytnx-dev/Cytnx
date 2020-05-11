@@ -13,7 +13,8 @@ Storage_example = Storage_Init.e Storage_astype.e Storage_eq.e Storage_clone.e S
 Bond_example = Bond_Init.e Bond_clone.e Bond_combineBondinplace.e Bond_combineBond.e Bond_combineBonds.e Bond_combineBonds_.e
 Accessor_example = Accessor_ex.e
 Symmetry_example = Symmetry_U1.e Symmetry_Zn.e Symmetry_clone.e
-all: $(Tensor_example) $(Storage_example) $(Bond_example) $(Accessor_example) $(Symmetry_example)
+Network_example = Network_Fromfile.e 
+all: $(Tensor_example) $(Storage_example) $(Bond_example) $(Accessor_example) $(Symmetry_example) $(Network_example)
 
 
 Tensor_Init.e: ./Tensor/Init.cpp 
@@ -88,9 +89,13 @@ Symmetry_Zn.e: ./Symmetry/Zn.cpp
 Symmetry_clone.e: ./Symmetry/clone.cpp 
 	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $<  $(SO)
 
+Network_Fromfile.e: ./Network/Fromfile.cpp 
+	$(CC) $(INCFLAGS) $(LDFLAGS) -o $@ $<  $(SO)
+
+
 .phony: clean
 
 clean:
-	rm $(Tensor_example) $(Storage_example) $(Bond_example) $(Accessor_example) $(Symmetry_example)
+	rm $(Tensor_example) $(Storage_example) $(Bond_example) $(Accessor_example) $(Symmetry_example) $(Network_example)
 
 

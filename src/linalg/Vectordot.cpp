@@ -5,7 +5,7 @@
 namespace cytnx{
 
     namespace linalg{
-
+        using namespace std;
         Tensor Vectordot(const Tensor &Tl, const Tensor &Tr, const bool &is_conj){
             //checking:
             cytnx_error_msg(Tl.device() != Tr.device(),"[ERROR] two tensor for Vectordot cannot on different devices.%s","\n");
@@ -37,10 +37,10 @@ namespace cytnx{
             }else{
                 #ifdef UNI_GPU
                     checkCudaErrors(cudaSetDevice(Tl.device()));
-                    //cytnx::linalg_internal::lii.cuVd_ii[out.dtype()](out._impl->storage()._impl,
-                    //                                        L._impl->storage()._impl,
-                    //                                        R._impl->storage()._impl,
-                    //                                        L._impl->storage()._impl->size(),is_conj);
+                    cytnx::linalg_internal::lii.cuVd_ii[out.dtype()](out._impl->storage()._impl,
+                                                            L._impl->storage()._impl,
+                                                            R._impl->storage()._impl,
+                                                            L._impl->storage()._impl->size(),is_conj);
 
                     return out;
                 #else

@@ -231,7 +231,6 @@ namespace cytnx{
 
             os << "type  : " << Type.getname(this->dtype) << std::endl;
 
-
             int atDevice = this->device;
             os << Device.getname(this->device) << std::endl;
 

@@ -8,6 +8,7 @@ Storage_exes = [ x for x in exes if "Storage_" in x]
 Bond_exes = [ x for x in exes if "Bond_" in x]
 Accessor_exes = [ x for x in exes if "Accessor_" in x]
 Symmetry_exes = [x for x in exes if "Symmetry_" in x]
+Network_exes = [x for x in exes if "Network_" in x]
 
 ## generate output
 for texe in Tensor_exes:
@@ -48,5 +49,14 @@ for texe in Symmetry_exes:
     print(texe)
     print("================") 
     os.system("cat Symmetry/%s"%(output_name))
+    print("================")
+
+for texe in Network_exes:
+    output_name = (texe.split(".e")[0]).split("Network_")[-1] + ".cpp.out"
+    os.system("./%s > Network/%s"%(texe,output_name))
+    print(texe)
     print("================") 
+    os.system("cat Network/%s"%(output_name))
+    print("================") 
+
 

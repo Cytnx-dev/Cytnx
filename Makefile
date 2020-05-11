@@ -38,10 +38,10 @@ endif
 
 ifeq ($(MKL_Enable),1)
   CCFLAGS += -std=c++11 -g -Wformat=0 -fPIC -DUNI_MKL -w
-  LDFLAGS += $(DOCKER_MKL) -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5 -ldl -lstdc++
+  LDFLAGS += $(DOCKER_MKL) -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5 -ldl -lstdc++ 
 else
   CCFLAGS += -std=c++11 -g -Wformat=0 -fPIC -w 
-  LDFLAGS +=  -llapack -lblas -lstdc++
+  LDFLAGS +=  -llapack -lblas -lstdc++ 
 endif
 
 
@@ -97,7 +97,7 @@ endif
 OBJS += linalg_internal_interface.o
 OBJS += Abs_internal.o Pow_internal.o Eig_internal.o Matvec_internal.o Norm_internal.o Kron_internal.o Cpr_internal.o Add_internal.o Sub_internal.o Mul_internal.o Div_internal.o Arithmetic_internal.o Svd_internal.o Inv_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_internal.o Diag_internal.o Outer_internal.o Vectordot_internal.o Tridiag_internal.o 
 ifeq ($(GPU_Enable),1)
-  OBJS += cuMatvec_internal.o cuNorm_internal.o cuCpr_internal.o cuAdd_internal.o cuSub_internal.o cuMul_internal.o cuDiv_internal.o cuArithmetic_internal.o cuSvd_internal.o cuInv_inplace_internal.o cuConj_inplace_internal.o cuExp_internal.o  cuEigh_internal.o cuMatmul_internal.o cuDiag_internal.o cuOuter_internal.o
+  OBJS += cuVectordot_internal.o cuMatvec_internal.o cuNorm_internal.o cuCpr_internal.o cuAdd_internal.o cuSub_internal.o cuMul_internal.o cuDiv_internal.o cuArithmetic_internal.o cuSvd_internal.o cuInv_inplace_internal.o cuConj_inplace_internal.o cuExp_internal.o  cuEigh_internal.o cuMatmul_internal.o cuDiag_internal.o cuOuter_internal.o
 endif
 
 ## Linalg
@@ -336,6 +336,8 @@ cuConj_inplace_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuConj_
 cuMatmul_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuMatmul_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuMatmul_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 cuMatvec_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuMatvec_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuMatvec_internal.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+cuVectordot_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuVectordot_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuVectordot_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 cuOuter_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuOuter_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuOuter_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
