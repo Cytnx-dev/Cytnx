@@ -54,12 +54,13 @@ class CMakeBuild(build_ext):
 
 setup(
     name='cytnx',
-    version='0.4',
+    version='0.5.1',
     maintainer='Kai-Hsin Wu, Ying-Jer Kao',
     maintainer_email="kaihsinwu@gmail.com",
     description='Project Cytnx',
     long_description="""This package provides cytnx: A Cross-section of Python & C++,Tensor network library """,
-    packages=["cytnx"],
+    packages=["cytnx","cytnx.cytnx_extension"],
+    include_package_data=True,
     ext_modules=[CMakeExtension('cytnx.cytnx')],
     cmdclass=dict(build_ext=CMakeBuild),
     zip_safe=False,

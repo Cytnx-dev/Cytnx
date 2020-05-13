@@ -1,6 +1,6 @@
 package:
   name: cytnx_cuda_36
-  version: "0.4"
+  version: "0.5.1"
 
 source:
   path: ../
@@ -21,6 +21,8 @@ requirements:
     - intel-openmp
     - setuptools
     - cudatoolkit
+    - graphviz
+    - python-graphviz
     - {{ compiler("c")}}
     - {{ compiler("cxx")}}
 
@@ -32,6 +34,8 @@ requirements:
     - intel-openmp
     - setuptools
     - cudatoolkit
+    - graphviz
+    - python-graphviz
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
 
@@ -43,6 +47,8 @@ requirements:
     - intel-openmp
     - setuptools
     - cudatoolkit
+    - python-graphviz
+    - graphviz
     - python-graphviz
     - {{ compiler("c")}}
     - {{ compiler("cxx")}}

@@ -212,7 +212,8 @@ namespace cytnx_extension{
                
                 About [Labels]:
             
-                - a ';' is used to seperate Rowrank and column rank
+                - each label should seperate by a comma ","
+                - one ';' is needed and used to seperate Rowrank and column rank
 
                 About [ORDER]:
                 

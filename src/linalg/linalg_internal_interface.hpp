@@ -22,6 +22,7 @@
 #include "linalg/linalg_internal_cpu/Matvec_internal.hpp"
 #include "linalg/linalg_internal_cpu/Pow_internal.hpp"
 #include "linalg/linalg_internal_cpu/Abs_internal.hpp"
+#include "linalg/linalg_internal_cpu/QR_internal.hpp"
 #ifdef UNI_GPU
     #include "linalg/linalg_internal_gpu/cuArithmetic_internal.hpp"
     #include "linalg/linalg_internal_gpu/cuSvd_internal.hpp"
@@ -78,6 +79,7 @@ namespace cytnx{
                 std::vector<Vectordotfunc_oii> Vd_ii;
                 std::vector<Tdfunc_oii> Td_ii;
                 std::vector<Normfunc_oii> Norm_ii;
+                std::vector<Svdfunc_oii> QR_ii;
 
                 #ifdef UNI_GPU
                 std::vector<std::vector<Arithmeticfunc_oii> > cuAri_ii;

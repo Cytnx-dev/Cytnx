@@ -9,6 +9,7 @@ target_sources_local(cytnx
     Div.cpp
     Eig.cpp
     Eigh.cpp
+    QR.cpp
     Exp.cpp
     Exp_.cpp
     Expf.cpp

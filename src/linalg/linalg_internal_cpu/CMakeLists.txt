@@ -10,6 +10,7 @@ target_sources_local(cytnx
     Eigh_internal.hpp
     Eig_internal.hpp
     Exp_internal.hpp
+    QR_internal.hpp
     Inv_inplace_internal.hpp
     Matmul_internal.hpp
     Matvec_internal.hpp
@@ -44,4 +45,7 @@ target_sources_local(cytnx
     Norm_internal.cpp
     Pow_internal.cpp
     Abs_internal.cpp
+    QR_internal.cpp
 )
+
+

@@ -1,6 +1,6 @@
 package:
   name: cytnx_36
-  version: "0.4"
+  version: "0.5.1"
 
 source:
   path: ../
@@ -20,6 +20,8 @@ requirements:
     - mkl-include
     - intel-openmp
     - setuptools
+    - python-graphviz
+    - graphviz
     - {{ compiler("c")}}
     - {{ compiler("cxx")}}
 
@@ -30,6 +32,8 @@ requirements:
     - mkl-include
     - intel-openmp
     - setuptools
+    - python-graphviz
+    - graphviz
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
 
@@ -41,6 +45,7 @@ requirements:
     - intel-openmp
     - setuptools
     - python-graphviz
+    - graphviz
     - {{ compiler("c")}}
     - {{ compiler("cxx")}}
 

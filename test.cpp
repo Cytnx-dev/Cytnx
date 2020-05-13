@@ -9,6 +9,15 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]){
 
+    Tensor qr = arange(12).reshape({3,4});
+    auto c = linalg::QR(qr);
+    cout << c;
+    c[0] = c[0][{ac::all(),ac::range(0,3)}];
+    cout << linalg::Matmul(c[0],c[1]);
+    exit(1);
+ 
+
+
     Tensor a = arange(10);
     a = a.astype(Type.ComplexFloat).to(Device.cuda+0);
     a += 1;

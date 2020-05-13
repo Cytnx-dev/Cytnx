@@ -14,6 +14,7 @@
     4. Add Network.Diagram() for plot the tensor network diagram (python only)    
     5. Add support for floating type Vectordot on GPU. 
     6. Fix bug in to from Anytype to ComplexFloat. 
+    7. Add QR for CPU.
 
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn
@@ -150,7 +151,8 @@
       *\link cytnx::linalg::Dot Dot\endlink | x | Y | Y | N
       \link cytnx::linalg::Eig Eig\endlink    |   x       |  Y  |  N   |    Y 
       \link cytnx::linalg::Pow Pow\endlink    |   \link cytnx::linalg::Pow_ Pow_\endlink       |  Y  |  N   |    Y 
-      \link cytnx::linalg::abs abs\endlink    |   \link cytnx::linalg::Abs_ Abs_\endlink       |  Y  |  N   |    N
+      \link cytnx::linalg::Abs Abs\endlink    |   \link cytnx::linalg::Abs_ Abs_\endlink       |  Y  |  N   |    N
+      \link cytnx::linalg::QR QR\endlink    |  x       |  Y  |  N   |    N
       *\link cytnx::linalg::Trace Trace\endlink | x | Y | N | N
     * this is a high level linalg 
 

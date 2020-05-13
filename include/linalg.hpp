@@ -182,6 +182,20 @@ namespace cytnx{
         // Svd_truncate:
         //==================================================
         std::vector<Tensor> Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,const bool &is_U=true, const bool &is_vT=true);
+
+        // QR:
+        //==================================================
+        /** 
+        @brief Perform QR decomposition on a rank-2 Tensor.
+        @param Tin a \link cytnx::Tensor Tensor \endlink, it should be a rank-2 tensor (matrix)
+        @param is_tau if return the tau that contains the Householder reflectors that generate q along with r. The tau array contains scaling factors for the reflectors
+        @return [std::vector<Tensors>]  
+
+            1. the first tensor is the orthomormal matrix [Q], a 2-d tensor (matrix)
+            2. the second tensor is the right-upper triangular matrix [R], a 2-d tensor (matrix). 
+            3. the third tensor is the Householder reflectors [H], a 1-d tensor (matrix). It only return when is_tau=true.
+        */
+        std::vector<Tensor> QR(const Tensor &Tin, const bool &is_tau=false);
        
 
 

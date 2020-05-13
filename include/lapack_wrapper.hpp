@@ -468,44 +468,36 @@
       return sdot_(n, x, incx, y, incy);
     }
 
-    inline std::complex<double> zdotc(const int32_t *n, const std::complex<double> *x, const int32_t *incx, const std::complex<double> *y, const int32_t *incy)
+    inline void zdotc(std::complex<double> *res, const int32_t *n, const std::complex<double> *x, const int32_t *incx, const std::complex<double> *y, const int32_t *incy)
     {  
         #ifndef FORTRAN_COMPLEX_FUNCTIONS_RETURN_VOID
-            return zdotc_(n, x, incx, y, incy);
+            *res = zdotc_(n, x, incx, y, incy);
         #else
-            std::complex<double> res;
-            zdotc_(&res,n, x, incx, y, incy);
-            return res;
+            zdotc_(res,n, x, incx, y, incy);
         #endif
     }
-    inline std::complex<double> zdotu(const int32_t *n, const std::complex<double> *x, const int32_t *incx, const std::complex<double> *y, const int32_t *incy)
+    inline void zdotu(std::complex<double> *res, const int32_t *n, const std::complex<double> *x, const int32_t *incx, const std::complex<double> *y, const int32_t *incy)
     {   
         #ifndef FORTRAN_COMPLEX_FUNCTIONS_RETURN_VOID
-            return zdotu_(n, x, incx, y, incy);
+            *res = zdotu_(n, x, incx, y, incy);
         #else
-            std::complex<double> res;
-            zdotu_(&res,n, x, incx, y, incy);
-            return res;
+            zdotu_(res,n, x, incx, y, incy);
         #endif
     }
-    inline std::complex<float> cdotc(const int32_t *n, const std::complex<float> *x, const int32_t *incx, const std::complex<float> *y, const int32_t *incy)
+    inline void cdotc(std::complex<float> *res, const int32_t *n, const std::complex<float> *x, const int32_t *incx, const std::complex<float> *y, const int32_t *incy)
     {   
         #ifndef FORTRAN_COMPLEX_FUNCTIONS_RETURN_VOID
-            return cdotc_(n, x, incx, y, incy);
+            *res = cdotc_(n, x, incx, y, incy);
         #else
-            std::complex<float> res;
-            cdotc_(&res,n, x, incx, y, incy);
-            return res;
+            cdotc_(res,n, x, incx, y, incy);
         #endif
     }
-    inline std::complex<float> cdotu(const int32_t *n, const std::complex<float> *x, const int32_t *incx, const std::complex<float> *y, const int32_t *incy)
+    inline void cdotu(std::complex<float> *res, const int32_t *n, const std::complex<float> *x, const int32_t *incx, const std::complex<float> *y, const int32_t *incy)
     {   
         #ifndef FORTRAN_COMPLEX_FUNCTIONS_RETURN_VOID
-            return cdotu_(n, x, incx, y, incy);
+            *res = cdotu_(n, x, incx, y, incy);
         #else
-            std::complex<float> res;
-            cdotu_(&res,n, x, incx, y, incy);
-            return res;
+            cdotu_(res,n, x, incx, y, incy);
         #endif
     }
 
