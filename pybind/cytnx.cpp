@@ -1410,6 +1410,7 @@ PYBIND11_MODULE(cytnx,m){
     m_linalg.def("Expf_",&cytnx::linalg::Expf_,py::arg("Tio"));
     m_linalg.def("Expf",&cytnx::linalg::Expf,py::arg("Tio"));
     m_linalg.def("ExpH",&cytnx::linalg::ExpH,py::arg("Tio"),py::arg("a")=1.0,py::arg("b")=0);
+    m_linalg.def("QR",&cytnx::linalg::QR,py::arg("Tio"),py::arg("is_tau")=false);
     m_linalg.def("Inv",&cytnx::linalg::Inv,py::arg("Tin"));
     m_linalg.def("Inv_",&cytnx::linalg::Inv_,py::arg("Tio"));
     m_linalg.def("Conj",&cytnx::linalg::Inv,py::arg("Tin"));
