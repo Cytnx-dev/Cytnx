@@ -38,7 +38,7 @@ void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc
                 // check type:
                 if(py::isinstance<py::slice>(Args[axis])){
                     py::slice sls = Args[axis].cast<py::slice>();
-                    if(!sls.compute(self.shape()[axis],&start,&stop,&step, &slicelength))
+                    if(!sls.compute((ssize_t)self.shape()[axis],&start,&stop,&step, &slicelength))
                         throw py::error_already_set();
                     //if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
                     accessors.push_back(cytnx::Accessor::range(start,stop,step));
@@ -512,7 +512,7 @@ PYBIND11_MODULE(cytnx,m){
                                 // check type:
                                 if(py::isinstance<py::slice>(Args[axis])){
                                     py::slice sls = Args[axis].cast<py::slice>();
-                                    if(!sls.compute(self.shape()[axis],&start,&stop,&step, &slicelength))
+                                    if(!sls.compute((ssize_t)self.shape()[axis],&start,&stop,&step, &slicelength))
                                         throw py::error_already_set();
                                     //std::cout << start << " " << stop << " " << step << slicelength << std::endl;
                                     //if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
@@ -524,7 +524,7 @@ PYBIND11_MODULE(cytnx,m){
                         }
                     }else if(py::isinstance<py::slice>(locators)){
                         py::slice sls = locators.cast<py::slice>();
-                        if(!sls.compute(self.shape()[0],&start,&stop,&step, &slicelength))
+                        if(!sls.compute((ssize_t)self.shape()[0],&start,&stop,&step, &slicelength))
                             throw py::error_already_set();
                         //if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
                         accessors.push_back(cytnx::Accessor::range(start,stop,step));
@@ -561,7 +561,7 @@ PYBIND11_MODULE(cytnx,m){
                                 // check type:
                                 if(py::isinstance<py::slice>(Args[axis])){
                                     py::slice sls = Args[axis].cast<py::slice>();
-                                    if(!sls.compute(self.shape()[axis],&start,&stop,&step, &slicelength))
+                                    if(!sls.compute((ssize_t)self.shape()[axis],&start,&stop,&step, &slicelength))
                                         throw py::error_already_set();
                                     //if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
                                     accessors.push_back(cytnx::Accessor::range(start,stop,step));
@@ -572,7 +572,7 @@ PYBIND11_MODULE(cytnx,m){
                         }
                     }else if(py::isinstance<py::slice>(locators)){
                         py::slice sls = locators.cast<py::slice>();
-                        if(!sls.compute(self.shape()[0],&start,&stop,&step, &slicelength))
+                        if(!sls.compute((ssize_t)self.shape()[0],&start,&stop,&step, &slicelength))
                             throw py::error_already_set();
                         //if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
                         accessors.push_back(cytnx::Accessor::range(start,stop,step));
@@ -1022,7 +1022,7 @@ PYBIND11_MODULE(cytnx,m){
                                 // check type:
                                 if(py::isinstance<py::slice>(Args[axis])){
                                     py::slice sls = Args[axis].cast<py::slice>();
-                                    if(!sls.compute(self.shape()[axis],&start,&stop,&step, &slicelength))
+                                    if(!sls.compute((ssize_t)self.shape()[axis],&start,&stop,&step, &slicelength))
                                         throw py::error_already_set();
                                     //if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
                                     accessors.push_back(cytnx::Accessor::range(start,stop,step));
@@ -1033,7 +1033,7 @@ PYBIND11_MODULE(cytnx,m){
                         }
                     }else if(py::isinstance<py::slice>(locators)){
                         py::slice sls = locators.cast<py::slice>();
-                        if(!sls.compute(self.shape()[0],&start,&stop,&step, &slicelength))
+                        if(!sls.compute((ssize_t)self.shape()[0],&start,&stop,&step, &slicelength))
                             throw py::error_already_set();
                         //if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
                         accessors.push_back(cytnx::Accessor::range(start,stop,step));
@@ -1067,7 +1067,7 @@ PYBIND11_MODULE(cytnx,m){
                                 // check type:
                                 if(py::isinstance<py::slice>(Args[axis])){
                                     py::slice sls = Args[axis].cast<py::slice>();
-                                    if(!sls.compute(self.shape()[axis],&start,&stop,&step, &slicelength))
+                                    if(!sls.compute((ssize_t)self.shape()[axis],&start,&stop,&step, &slicelength))
                                         throw py::error_already_set();
                                     //if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
                                     accessors.push_back(cytnx::Accessor::range(start,stop,step));
@@ -1078,7 +1078,7 @@ PYBIND11_MODULE(cytnx,m){
                         }
                     }else if(py::isinstance<py::slice>(locators)){
                         py::slice sls = locators.cast<py::slice>();
-                        if(!sls.compute(self.shape()[0],&start,&stop,&step, &slicelength))
+                        if(!sls.compute((ssize_t)self.shape()[0],&start,&stop,&step, &slicelength))
                             throw py::error_already_set();
                         //if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
                         accessors.push_back(cytnx::Accessor::range(start,stop,step));

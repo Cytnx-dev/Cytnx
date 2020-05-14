@@ -291,7 +291,7 @@ IF(BUILD_PYTHON)
         FetchContent_Declare(
           pybind11_sources
           GIT_REPOSITORY https://github.com/pybind/pybind11.git
-          GIT_TAG v2.2
+          GIT_TAG v2.4.3
           )
 
         FetchContent_GetProperties(pybind11_sources)
