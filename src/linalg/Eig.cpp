@@ -40,9 +40,9 @@ namespace cytnx{
                     if(!row_v){ 
                         if(out.back().dtype()==Type.ComplexFloat || out.back().dtype()==Type.ComplexDouble){
                             out.back().permute_({1,0}).contiguous_();
-                            std::cout << out.back();
+                            //std::cout << out.back();
                             out.back().Conj_();
-                            std::cout << out.back();
+                            //std::cout << out.back();
                             //std::cout << "ok" << std::endl;
                         }else
                             out.back().permute_({1,0}).contiguous_();

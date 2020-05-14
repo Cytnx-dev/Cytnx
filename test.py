@@ -7,8 +7,11 @@ from cytnx import physics
 from cytnx import cytnx_extension
 
 
-print(physics.spin(0.5,'z'))
+#print(physics.spin(0.5,'z'))
 
+A = cytnx.arange(9).reshape(3,3);
+print(A)
+print(cytnx.linalg.ExpM(A))
 
 exit(1);
 

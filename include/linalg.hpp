@@ -510,16 +510,34 @@ namespace cytnx{
         //ExpH:
         //===========================================
         /**
-        @brief perform matrix exponential
-        @param Tensor 
+        @brief perform matrix exponential for Hermitian matrix
+        @param in input Tensor, should be Hermitian
+        @param a rescale factor
+        @param b bias
         @return 
             [Tensor]
 
-        description:
+        description:    
+            perform matrix exponential with \f$O = \exp{aM + b}\f$.
             
         */
         Tensor ExpH(const Tensor &in,const cytnx_double &a=1, const cytnx_double &b=0);
 
+        //ExpM:
+        //===========================================
+        /**
+        @brief perform matrix exponential for generic matrix
+        @param in input Tensor, should be a square rank-2. 
+        @param a rescale factor
+        @param b bias
+        @return 
+            [Tensor]
+
+        description:    
+            perform matrix exponential with \f$O = \exp{aM + b}\f$.
+            
+        */
+        Tensor ExpM(const Tensor &in,const cytnx_double &a=1, const cytnx_double &b=0);
 
 
     }// namespace linalg

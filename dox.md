@@ -19,6 +19,7 @@
     9. Add physics namespace/submodule
     10. Add physics::spin() for generating Spin-S representation. 
     11. Add physics::pauli() for pauli matrix.
+    12. Add ExpM() for generic matrix (CPU only)
 
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn
@@ -143,6 +144,7 @@
       \link cytnx::linalg::Exp Exp\endlink     |   \link cytnx::linalg::Exp_ Exp_\endlink    |  Y  |  Y   |    Y
       \link cytnx::linalg::Expf Expf\endlink     |   \link cytnx::linalg::Expf_ Expf_\endlink    |  Y  |  Y   |    Y
       *\link cytnx::linalg::ExpH ExpH\endlink       |   x   |  Y  |  Y   |    N 
+      *\link cytnx::linalg::ExpM ExpM\endlink       |   x   |  Y  |  Y   |    N 
       \link cytnx::linalg::Eigh Eigh\endlink    |   x       |  Y  |  Y   |    Y 
       \link cytnx::linalg::Matmul Matmul\endlink  |   x       |  Y  |  Y   |    N
       \link cytnx::linalg::Diag Diag\endlink    |   x       |  Y  |  Y   |    N

@@ -11,10 +11,12 @@ target_sources_local(cytnx
     Eigh.cpp
     QR.cpp
     Exp.cpp
+    ExpM.cpp
     Exp_.cpp
     Expf.cpp
     Expf_.cpp
     ExpH.cpp
+    ExpM.cpp
     Inv.cpp
     Inv_.cpp
     Matmul.cpp

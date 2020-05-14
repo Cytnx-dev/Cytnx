@@ -10,16 +10,16 @@ namespace cytnx{
     namespace linalg{
 
                  
-        Tensor ExpH(const Tensor &Tin, const cytnx_double &a, const cytnx_double &b){
+        Tensor ExpM(const Tensor &Tin, const cytnx_double &a, const cytnx_double &b){
             
             cytnx_error_msg(Tin.shape().size() != 2,"[ExpH] error, ExpH can only operate on rank-2 Tensor.%s","\n");
             cytnx_error_msg(!Tin.is_contiguous(), "[ExpH] error tensor must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
             
             
-            cytnx_error_msg(Tin.shape()[0] != Tin.shape()[1],"[ExpH] error, ExpH can only operator on square Tensor (#row = #col%s","\n");
+            cytnx_error_msg(Tin.shape()[0] != Tin.shape()[1],"[ExpH] error, ExpM can only operator on square Tensor (#row = #col%s","\n");
 
 
-            vector<Tensor> su = cytnx::linalg::Eigh(Tin,true);
+            vector<Tensor> su = cytnx::linalg::Eig(Tin,true);
             Tensor s,u, ut;
             if(a==0)
                 return cytnx::linalg::Diag(cytnx::ones(Tin.shape()[0]));
@@ -38,14 +38,7 @@ namespace cytnx{
             s = cytnx::linalg::Diag(s);
             //cout << s << endl;
             //cout << u;
-            ut = su[1].clone(); 
-            if(Type.is_complex(ut.dtype())){
-                ut.permute_({1,0}).Conj_(); 
-            }else{
-                ut.permute_({1,0});
-            }
-            ut.contiguous_();
-            //cout << ut;
+            ut = Inv(su[1]); 
         
             ut = cytnx::linalg::Matmul(s,ut);
             ut = cytnx::linalg::Matmul(u,ut);
