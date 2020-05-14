@@ -2,11 +2,11 @@ from graphviz import Graph, Digraph
 
 
 
-def Drawnet_notag(opt_name,tn_names, edges_info,dangling_infos):
+def Drawnet_notag(opt_name,tn_names, edges_info,dangling_infos,figsize=[6,5]):
     ## edges_info[i] = (tn1_name,tn2_name,common_label)
 
-    g = Graph(opt_name,filename=opt_name+".gv")
-
+    g = Graph(opt_name,filename=opt_name+".gv",engine='neato')
+    g.attr(size='%d,%d'%(figsize[0],figsize[1]))
     ## insert node!
     g.attr('node',shape='circle')
     for i in tn_names:

@@ -13,7 +13,7 @@ import numpy as np
 
 
 @add_method(Network)
-def Diagram(self,outname=None):
+def Diagram(self,outname=None,figsize=[6,5]):
     if(self.isLoad()==False):
         print("[ERROR][Network] The Network does not Load any Network file yet.")
         exit(99)
@@ -61,7 +61,7 @@ def Diagram(self,outname=None):
         for j in range(len(rtnl[i])):
             dangling_edges.append(("%d"%(rtnl[i][j]),tn_names[i]))
         
-    Drawnet_notag(OUT_fn,tn_names,edge_info,dangling_edges)
+    Drawnet_notag(OUT_fn,tn_names,edge_info,dangling_edges,figsize)
     
 
  
