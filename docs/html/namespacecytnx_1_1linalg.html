@@ -207,8 +207,11 @@ Functions</h2></td></tr>
 <tr class="memdesc:abc68d62e804d6d3e86aeec00015b07cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform diagonalization of symmetric tri-diagnoal matrix.  <a href="#abc68d62e804d6d3e86aeec00015b07cd">More...</a><br /></td></tr>
 <tr class="separator:abc68d62e804d6d3e86aeec00015b07cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a003ad2d2784202e936ce4a16e850e17e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a003ad2d2784202e936ce4a16e850e17e">ExpH</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;in, const <a class="el" href="namespacecytnx.html#a17b847d265f6551b952fd9847198a464">cytnx_double</a> &amp;a=1, const <a class="el" href="namespacecytnx.html#a17b847d265f6551b952fd9847198a464">cytnx_double</a> &amp;b=0)</td></tr>
-<tr class="memdesc:a003ad2d2784202e936ce4a16e850e17e"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform matrix exponential  <a href="#a003ad2d2784202e936ce4a16e850e17e">More...</a><br /></td></tr>
+<tr class="memdesc:a003ad2d2784202e936ce4a16e850e17e"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform matrix exponential for Hermitian matrix  <a href="#a003ad2d2784202e936ce4a16e850e17e">More...</a><br /></td></tr>
 <tr class="separator:a003ad2d2784202e936ce4a16e850e17e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a671e57fbd0efcae9e438130ace6bf1cd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a671e57fbd0efcae9e438130ace6bf1cd">ExpM</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;in, const <a class="el" href="namespacecytnx.html#a17b847d265f6551b952fd9847198a464">cytnx_double</a> &amp;a=1, const <a class="el" href="namespacecytnx.html#a17b847d265f6551b952fd9847198a464">cytnx_double</a> &amp;b=0)</td></tr>
+<tr class="memdesc:a671e57fbd0efcae9e438130ace6bf1cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform matrix exponential for generic matrix  <a href="#a671e57fbd0efcae9e438130ace6bf1cd">More...</a><br /></td></tr>
+<tr class="separator:a671e57fbd0efcae9e438130ace6bf1cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>linear algebra related functions. </p>
@@ -876,15 +879,63 @@ template&lt;class T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>perform matrix exponential </p>
+<p>perform matrix exponential for Hermitian matrix </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname"><a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a></td><td></td></tr>
+    <tr><td class="paramname">in</td><td>input <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>, should be Hermitian </td></tr>
+    <tr><td class="paramname">a</td><td>rescale factor </td></tr>
+    <tr><td class="paramname">b</td><td>bias </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>]</dd></dl>
-<p>description: </p>
+<p>description: perform matrix exponential with \(O = \exp{aM + b}\). </p>
+
+</div>
+</div>
+<a id="a671e57fbd0efcae9e438130ace6bf1cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a671e57fbd0efcae9e438130ace6bf1cd">&#9670;&nbsp;</a></span>ExpM()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> cytnx::linalg::ExpM </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>in</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespacecytnx.html#a17b847d265f6551b952fd9847198a464">cytnx_double</a> &amp;&#160;</td>
+          <td class="paramname"><em>a</em> = <code>1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespacecytnx.html#a17b847d265f6551b952fd9847198a464">cytnx_double</a> &amp;&#160;</td>
+          <td class="paramname"><em>b</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>perform matrix exponential for generic matrix </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">in</td><td>input <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>, should be a square rank-2. </td></tr>
+    <tr><td class="paramname">a</td><td>rescale factor </td></tr>
+    <tr><td class="paramname">b</td><td>bias </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>]</dd></dl>
+<p>description: perform matrix exponential with \(O = \exp{aM + b}\). </p>
 
 </div>
 </div>

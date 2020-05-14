@@ -9,11 +9,20 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]){
 
-    Tensor SZ = cytnx::physics::spin(0.5,'z');
-    cout << SZ << endl;
-    exit(1);
+    //Tensor SZ = cytnx::physics::spin(0.5,'z');
+    //cout << SZ << endl;
+   
+    cytnx_int64 tsc = -10;
+    cout << tsc%3 << endl;
+    //exit(1);
 
     Tensor qr = arange(12).reshape({3,4});
+    cout << qr;
+
+    Tensor qrflip = qr.get({ac::all(),ac::range(3,-1,-1)});
+    cout << qrflip;
+
+    exit(1);
     auto c = linalg::QR(qr);
     cout << c;
     c[0] = c[0][{ac::all(),ac::range(0,3)}];

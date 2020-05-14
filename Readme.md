@@ -25,6 +25,7 @@
     10. Add physics::spin() for generating Spin-S representation. 
     11. Add physics::pauli() for pauli matrix.
     12. Add ExpM() for generic matrix (CPU only)
+    13. Fix bug in python slice, and reverse range slice.
     
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn

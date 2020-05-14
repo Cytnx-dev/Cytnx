@@ -27,7 +27,7 @@ template<class T>
 void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc){
     cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to setelem to a empty Tensor%s","\n");
     
-    size_t start, stop, step, slicelength; 
+    ssize_t start, stop, step, slicelength; 
     std::vector<cytnx::Accessor> accessors;
     if(py::isinstance<py::tuple>(locators)){
         py::tuple Args = locators.cast<py::tuple>();
@@ -40,8 +40,8 @@ void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc
                     py::slice sls = Args[axis].cast<py::slice>();
                     if(!sls.compute(self.shape()[axis],&start,&stop,&step, &slicelength))
                         throw py::error_already_set();
-                    if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
-                    else accessors.push_back(cytnx::Accessor::range(start,stop,step));
+                    //if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
+                    accessors.push_back(cytnx::Accessor::range(start,stop,step));
                 }else{
                     accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
                 }
@@ -500,7 +500,7 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__getitem__",[](const cytnx::Tensor &self, py::object locators){
                     cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to getitem from a empty Tensor%s","\n");
                     
-                    size_t start, stop, step, slicelength; 
+                    ssize_t start, stop, step, slicelength; 
                     std::vector<cytnx::Accessor> accessors;
                     if(py::isinstance<py::tuple>(locators)){
                         py::tuple Args = locators.cast<py::tuple>();
@@ -514,8 +514,9 @@ PYBIND11_MODULE(cytnx,m){
                                     py::slice sls = Args[axis].cast<py::slice>();
                                     if(!sls.compute(self.shape()[axis],&start,&stop,&step, &slicelength))
                                         throw py::error_already_set();
-                                    if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
-                                    else accessors.push_back(cytnx::Accessor::range(start,stop,step));
+                                    //std::cout << start << " " << stop << " " << step << slicelength << std::endl;
+                                    //if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
+                                    accessors.push_back(cytnx::Accessor::range(cytnx_int64(start),cytnx_int64(stop),cytnx_int64(step)));
                                 }else{
                                     accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
                                 }
@@ -525,8 +526,8 @@ PYBIND11_MODULE(cytnx,m){
                         py::slice sls = locators.cast<py::slice>();
                         if(!sls.compute(self.shape()[0],&start,&stop,&step, &slicelength))
                             throw py::error_already_set();
-                        if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
-                        else accessors.push_back(cytnx::Accessor::range(start,stop,step));
+                        //if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
+                        accessors.push_back(cytnx::Accessor::range(start,stop,step));
                         for(cytnx_uint32 axis=1;axis<self.shape().size();axis++){
                             accessors.push_back(Accessor::all());
                         }
@@ -541,7 +542,7 @@ PYBIND11_MODULE(cytnx,m){
                             else accessors.push_back(cytnx::Accessor::all());
                         }
                     }
-                    
+                     
                     return self.get(accessors);
                     
                 })
@@ -549,7 +550,7 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__setitem__",[](cytnx::Tensor &self, py::object locators, const cytnx::Tensor &rhs){
                     cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to setelem to a empty Tensor%s","\n");
                     
-                    size_t start, stop, step, slicelength; 
+                    ssize_t start, stop, step, slicelength; 
                     std::vector<cytnx::Accessor> accessors;
                     if(py::isinstance<py::tuple>(locators)){
                         py::tuple Args = locators.cast<py::tuple>();
@@ -562,8 +563,8 @@ PYBIND11_MODULE(cytnx,m){
                                     py::slice sls = Args[axis].cast<py::slice>();
                                     if(!sls.compute(self.shape()[axis],&start,&stop,&step, &slicelength))
                                         throw py::error_already_set();
-                                    if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
-                                    else accessors.push_back(cytnx::Accessor::range(start,stop,step));
+                                    //if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
+                                    accessors.push_back(cytnx::Accessor::range(start,stop,step));
                                 }else{
                                     accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
                                 }
@@ -573,8 +574,8 @@ PYBIND11_MODULE(cytnx,m){
                         py::slice sls = locators.cast<py::slice>();
                         if(!sls.compute(self.shape()[0],&start,&stop,&step, &slicelength))
                             throw py::error_already_set();
-                        if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
-                        else accessors.push_back(cytnx::Accessor::range(start,stop,step));
+                        //if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
+                        accessors.push_back(cytnx::Accessor::range(start,stop,step));
                         for(cytnx_uint32 axis=1;axis<self.shape().size();axis++){
                             accessors.push_back(Accessor::all());
                         }
@@ -1010,7 +1011,7 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__getitem__",[](const cytnx_extension::CyTensor &self, py::object locators){
                     cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to getitem from a empty CyTensor%s","\n");
                     
-                    size_t start, stop, step, slicelength; 
+                    ssize_t start, stop, step, slicelength; 
                     std::vector<cytnx::Accessor> accessors;
                     if(py::isinstance<py::tuple>(locators)){
                         py::tuple Args = locators.cast<py::tuple>();
@@ -1023,8 +1024,8 @@ PYBIND11_MODULE(cytnx,m){
                                     py::slice sls = Args[axis].cast<py::slice>();
                                     if(!sls.compute(self.shape()[axis],&start,&stop,&step, &slicelength))
                                         throw py::error_already_set();
-                                    if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
-                                    else accessors.push_back(cytnx::Accessor::range(start,stop,step));
+                                    //if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
+                                    accessors.push_back(cytnx::Accessor::range(start,stop,step));
                                 }else{
                                     accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
                                 }
@@ -1034,8 +1035,8 @@ PYBIND11_MODULE(cytnx,m){
                         py::slice sls = locators.cast<py::slice>();
                         if(!sls.compute(self.shape()[0],&start,&stop,&step, &slicelength))
                             throw py::error_already_set();
-                        if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
-                        else accessors.push_back(cytnx::Accessor::range(start,stop,step));
+                        //if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
+                        accessors.push_back(cytnx::Accessor::range(start,stop,step));
                         for(cytnx_uint32 axis=1;axis<self.shape().size();axis++){
                             accessors.push_back(Accessor::all());
                         }
@@ -1055,7 +1056,7 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__setitem__",[](cytnx_extension::CyTensor &self, py::object locators, const cytnx::Tensor &rhs){
                     cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to setelem to a empty CyTensor%s","\n");
                     
-                    size_t start, stop, step, slicelength; 
+                    ssize_t start, stop, step, slicelength; 
                     std::vector<cytnx::Accessor> accessors;
                     if(py::isinstance<py::tuple>(locators)){
                         py::tuple Args = locators.cast<py::tuple>();
@@ -1068,8 +1069,8 @@ PYBIND11_MODULE(cytnx,m){
                                     py::slice sls = Args[axis].cast<py::slice>();
                                     if(!sls.compute(self.shape()[axis],&start,&stop,&step, &slicelength))
                                         throw py::error_already_set();
-                                    if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
-                                    else accessors.push_back(cytnx::Accessor::range(start,stop,step));
+                                    //if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
+                                    accessors.push_back(cytnx::Accessor::range(start,stop,step));
                                 }else{
                                     accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
                                 }
@@ -1079,8 +1080,8 @@ PYBIND11_MODULE(cytnx,m){
                         py::slice sls = locators.cast<py::slice>();
                         if(!sls.compute(self.shape()[0],&start,&stop,&step, &slicelength))
                             throw py::error_already_set();
-                        if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
-                        else accessors.push_back(cytnx::Accessor::range(start,stop,step));
+                        //if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
+                        accessors.push_back(cytnx::Accessor::range(start,stop,step));
                         for(cytnx_uint32 axis=1;axis<self.shape().size();axis++){
                             accessors.push_back(Accessor::all());
                         }

@@ -56,29 +56,17 @@ namespace cytnx{
         if(this->type == Accessor::All){
             len = dim;
         }else if(this->type == Accessor::Range){
-            cytnx_uint64 r_min=this->min,r_max=this->max;
-            while(r_min<0){
-                r_min += dim;
+            cytnx_int64 r_min=this->min,r_max=this->max;
+            cytnx_error_msg((r_max-r_min)/this->step<0,"%s","[ERROR] upper bound and larger bound inconsistent with step sign");
+            len = (r_max-r_min)/this->step;
+            //std::cout << len << " " << dim << std::endl;
+            //if((r_max-r_min)%this->step) len+=1;
+            
+            for(cytnx_int64 i = r_min; i!=r_max; i+=this->step){
+                pos.push_back((i%dim+dim)%dim);
+                //std::cout << pos.back() << std::endl;
             }
-            while(r_max<0){
-                r_max += dim;
-            }
-            if(r_min < r_max){
-                cytnx_error_msg(this->step<0,"%s","[ERROR] upper bound and larger bound inconsistent with step sign");
-                len = (r_max-r_min)/this->step;
-                if((r_max-r_min)%this->step) len+=1;
-                
-                for(cytnx_uint64 i = r_min; i<r_max; i+=this->step){
-                    pos.push_back(i);
-                }
-            }else{
-                cytnx_error_msg(step>0,"%s","[ERROR] upper bound and larger bound inconsistent with step sign");
-                len = (r_min-r_max)/(-this->step);
-                if((r_min-r_max)%(-this->step)) len+=1;
-                for(cytnx_uint64 i = r_min; i>r_max; i+=this->step){
-                    pos.push_back(i);
-                }
-            }
+            
         }else if(this->type == Accessor::Singl){
             //check:
             cytnx_error_msg(this->loc >= dim,"[ERROR] index is out of bound%s","\n");
