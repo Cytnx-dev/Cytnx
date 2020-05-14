@@ -3,8 +3,10 @@
 <area shape="rect" id="node3" href="$CyTensor_8cpp.html" title="src/CyTensor.cpp" alt="" coords="153,80,280,107"/>
 <area shape="rect" id="node4" href="$CyTensor__base_8cpp.html" title="src/CyTensor_base.cpp" alt="" coords="304,80,465,107"/>
 <area shape="rect" id="node5" href="$DenseCyTensor_8cpp.html" title="src/DenseCyTensor.cpp" alt="" coords="489,80,653,107"/>
-<area shape="rect" id="node6" href="$Network_8cpp.html" title="src/Network.cpp" alt="" coords="677,80,796,107"/>
-<area shape="rect" id="node7" href="$Network__base_8cpp.html" title="src/Network_base.cpp" alt="" coords="820,80,973,107"/>
-<area shape="rect" id="node8" href="$SparseCyTensor_8cpp.html" title="src/SparseCyTensor.cpp" alt="" coords="997,80,1164,107"/>
-<area shape="rect" id="node9" href="$Tensor_8cpp.html" title="src/Tensor.cpp" alt="" coords="1189,80,1298,107"/>
+<area shape="rect" id="node6" href="$Generator_8cpp.html" title="src/Generator.cpp" alt="" coords="677,80,804,107"/>
+<area shape="rect" id="node7" href="$Network_8cpp.html" title="src/Network.cpp" alt="" coords="828,80,947,107"/>
+<area shape="rect" id="node8" href="$Network__base_8cpp.html" title="src/Network_base.cpp" alt="" coords="971,80,1124,107"/>
+<area shape="rect" id="node9" href="$Physics_8cpp.html" title="src/Physics.cpp" alt="" coords="1148,80,1264,107"/>
+<area shape="rect" id="node10" href="$SparseCyTensor_8cpp.html" title="src/SparseCyTensor.cpp" alt="" coords="1288,80,1455,107"/>
+<area shape="rect" id="node11" href="$Tensor_8cpp.html" title="src/Tensor.cpp" alt="" coords="1479,80,1589,107"/>
 </map>

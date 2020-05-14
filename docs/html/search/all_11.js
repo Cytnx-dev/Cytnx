@@ -55,6 +55,7 @@ var searchData=
   ['sorgrq',['sorgrq',['../lapack__wrapper_8hpp.html#a43fa34f8656544a83840659a67cc2219',1,'lapack_wrapper.hpp']]],
   ['sorgrq_5f',['sorgrq_',['../lapack__wrapper_8hpp.html#aaa7fb2c8a6daa16b9a2aec15024847bf',1,'lapack_wrapper.hpp']]],
   ['sparsecytensor_2ecpp',['SparseCyTensor.cpp',['../SparseCyTensor_8cpp.html',1,'']]],
+  ['spin',['spin',['../namespacecytnx_1_1physics.html#a9f018f04ccd068e899a8fcfe2e9b82d4',1,'cytnx::physics::spin(const cytnx_double &amp;S, const std::string &amp;Comp, const int &amp;device=Device.cpu)'],['../namespacecytnx_1_1physics.html#af2c0256f7e3502785679b5e6805973e8',1,'cytnx::physics::spin(const cytnx_double &amp;S, const char &amp;Comp, const int &amp;device)']]],
   ['sstev',['sstev',['../lapack__wrapper_8hpp.html#a69ee4472d53fcc117bcdce7b7afbe921',1,'lapack_wrapper.hpp']]],
   ['sstev_5f',['sstev_',['../lapack__wrapper_8hpp.html#a796c53e5700497b9cc8ed94f14904906',1,'lapack_wrapper.hpp']]],
   ['ssyev',['ssyev',['../lapack__wrapper_8hpp.html#a814b714b9caf307e21c2c6d77b065e0b',1,'lapack_wrapper.hpp']]],

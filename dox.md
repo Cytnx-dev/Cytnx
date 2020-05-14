@@ -15,6 +15,10 @@
     5. Add support for floating type Vectordot on GPU. 
     6. Fix bug in to from Anytype to ComplexFloat. 
     7. Add QR for CPU.
+    8. Add identity() and it's alias function eye(). 
+    9. Add physics namespace/submodule
+    10. Add physics::spin() for generating Spin-S representation. 
+    11. Add physics::pauli() for pauli matrix.
 
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn
@@ -161,7 +165,10 @@
     . this is floating point type only
 
 ## Container Generators 
-    Tensor: \link cytnx::zeros zeros()\endlink, \link cytnx::ones ones()\endlink, \link cytnx::arange arange()\endlink
+    Tensor: \link cytnx::zeros zeros()\endlink, \link cytnx::ones ones()\endlink, \link cytnx::arange arange()\endlink, \link cytnx::identity identity()\endlink, \link cytnx::eye eye()\endlink,
+
+## Physics Category
+    Tensor: \link cytnx::physics::spin spin()\endlink  \link cytnx::physics::pauli pauli()\endlink
 
      
 ## Random 

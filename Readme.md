@@ -20,7 +20,11 @@
     5. Add support for floating type Vectordot on GPU. 
     6. Fix bug in to from Anytype to ComplexFloat. 
     7. Add QR for CPU.
-
+    8. Add identity() and it's alias function eye(). 
+    9. Add physics namespace/submodule
+    10. Add physics::spin() for generating Spin-S representation. 
+    11. Add physics::pauli() for pauli matrix.
+    
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn
     2. add Dot() for CPU and GPU, with unify API for Vec-Vec/Mat-Vec/Mat-Mat/Ten-Vec product.
@@ -327,7 +331,11 @@
  
 ## Container Generators 
 
-    Tensor: zeros(), ones(), arange()
+    Tensor: zeros(), ones(), arange(), identity(), eye()
+
+## Physics category 
+
+    Tensor: pauli(), spin()
     
      
 ## Random 

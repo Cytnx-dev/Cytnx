@@ -127,6 +127,10 @@ PYBIND11_MODULE(cytnx,m){
                         std::vector<cytnx_uint64> tmp = Nelem.cast<std::vector<cytnx_uint64> >();
                         return cytnx::ones(tmp,dtype,device);
                   },py::arg("size"),py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
+    m.def("identity",&cytnx::identity
+                  ,py::arg("Dim"),py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
+    m.def("eye",&cytnx::identity
+                  ,py::arg("Dim"),py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
 
     m.def("arange",[](const cytnx_uint64 &Nelem, const unsigned int &dtype, const int &device)->Tensor{
                         return cytnx::arange(Nelem,dtype,device);
@@ -1428,6 +1432,15 @@ PYBIND11_MODULE(cytnx,m){
     m_linalg.def("Pow_",&cytnx::linalg::Pow_, py::arg("Tn"),py::arg("p"));
     m_linalg.def("Abs",&cytnx::linalg::Abs, py::arg("Tn"));
     m_linalg.def("Abs_",&cytnx::linalg::Abs_, py::arg("Tn"));
+
+    // [Submodule physics]
+    pybind11::module m_physics = m.def_submodule("physics","physics related.");
+    m_physics.def("spin",[](const cytnx_double &S, const std::string &Comp, const int &device)->Tensor{
+                                return cytnx::physics::spin(S,Comp,device);
+                            },py::arg("S"),py::arg("Comp"),py::arg("device")=(int)cytnx::Device.cpu);
+    m_physics.def("pauli",[](const std::string &Comp, const int &device)->Tensor{
+                                return cytnx::physics::pauli(Comp,device);
+                            } ,py::arg("Comp"),py::arg("device")=(int)cytnx::Device.cpu);
 
     // [Submodule random]
     pybind11::module m_random = m.def_submodule("random","random related.");

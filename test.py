@@ -3,8 +3,14 @@ import sys
 import cytnx
 #from cytnx import linalg,cytnx_extension
 from cytnx import linalg
+from cytnx import physics
 from cytnx import cytnx_extension
 
+
+print(physics.spin(0.5,'z'))
+
+
+exit(1);
 
 #bd1 = cytnx.Bond(2)
 #T = cytnx.CyTensor([bd1],Rowrank=1)

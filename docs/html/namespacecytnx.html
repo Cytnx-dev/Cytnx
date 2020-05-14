@@ -29,7 +29,7 @@
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.5</span>
+   &#160;<span id="projectnumber">v0.5.2</span>
    </div>
   </td>
  </tr>
@@ -85,6 +85,8 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespacecytnx_1_1linalg"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html">linalg</a></td></tr>
 <tr class="memdesc:namespacecytnx_1_1linalg"><td class="mdescLeft">&#160;</td><td class="mdescRight">linear algebra related functions. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespacecytnx_1_1physics"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1physics.html">physics</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacecytnx_1_1random"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1random.html">random</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -129,6 +131,12 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:af8aa7e619c030f80c54e4d26b576484b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#af8aa7e619c030f80c54e4d26b576484b">identity</a> (const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;Dim, const unsigned int &amp;dtype=Type.Double, const int &amp;device=Device.cpu)</td></tr>
+<tr class="memdesc:af8aa7e619c030f80c54e4d26b576484b"><td class="mdescLeft">&#160;</td><td class="mdescRight">create an square rank-2 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> with all diagonal to be one.  <a href="#af8aa7e619c030f80c54e4d26b576484b">More...</a><br /></td></tr>
+<tr class="separator:af8aa7e619c030f80c54e4d26b576484b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affbd9073156ce86d5e5c03742603c631"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#affbd9073156ce86d5e5c03742603c631">eye</a> (const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;Dim, const unsigned int &amp;dtype=Type.Double, const int &amp;device=Device.cpu)</td></tr>
+<tr class="memdesc:affbd9073156ce86d5e5c03742603c631"><td class="mdescLeft">&#160;</td><td class="mdescRight">create an square rank-2 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> with all diagonal to be one.  <a href="#affbd9073156ce86d5e5c03742603c631">More...</a><br /></td></tr>
+<tr class="separator:affbd9073156ce86d5e5c03742603c631"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a067e7063e7cc7a80c9c91d8998ab7134"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a067e7063e7cc7a80c9c91d8998ab7134">operator+</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Lt, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Rt)</td></tr>
 <tr class="separator:a067e7063e7cc7a80c9c91d8998ab7134"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a75a3787e9b9565f0bc90d19453d1ffa5"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
@@ -508,6 +516,97 @@ Variables</h2></td></tr>
     <tr><td class="paramname">start</td><td>the start value of the range </td></tr>
     <tr><td class="paramname">end</td><td>the end value of the range </td></tr>
     <tr><td class="paramname">step</td><td>the step-size of the range </td></tr>
+    <tr><td class="paramname">dtype</td><td>the dtype of the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>. It can be any type defined in <a class="el" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">cytnx::Type </a> </td></tr>
+    <tr><td class="paramname">device</td><td>the device that the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> is put on. It can be any device defined in <a class="el" href="namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a">cytnx::Device </a></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>] </dd></dl>
+
+</div>
+</div>
+<a id="affbd9073156ce86d5e5c03742603c631"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#affbd9073156ce86d5e5c03742603c631">&#9670;&nbsp;</a></span>eye()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> cytnx::eye </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;&#160;</td>
+          <td class="paramname"><em>Dim</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const unsigned int &amp;&#160;</td>
+          <td class="paramname"><em>dtype</em> = <code>Type.Double</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int &amp;&#160;</td>
+          <td class="paramname"><em>device</em> = <code>Device.cpu</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>create an square rank-2 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> with all diagonal to be one. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Dim</td><td>the dimension of diagonal. </td></tr>
+    <tr><td class="paramname">dtype</td><td>the dtype of the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>. It can be any type defined in <a class="el" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">cytnx::Type </a> </td></tr>
+    <tr><td class="paramname">device</td><td>the device that the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> is put on. It can be any device defined in <a class="el" href="namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a">cytnx::Device </a></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>]</dd></dl>
+<p>Note: This function is a alias of <a class="el" href="namespacecytnx.html#af8aa7e619c030f80c54e4d26b576484b" title="create an square rank-2 Tensor with all diagonal to be one. ">cytnx::identity()</a>. </p>
+
+</div>
+</div>
+<a id="af8aa7e619c030f80c54e4d26b576484b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8aa7e619c030f80c54e4d26b576484b">&#9670;&nbsp;</a></span>identity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> cytnx::identity </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;&#160;</td>
+          <td class="paramname"><em>Dim</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const unsigned int &amp;&#160;</td>
+          <td class="paramname"><em>dtype</em> = <code>Type.Double</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int &amp;&#160;</td>
+          <td class="paramname"><em>device</em> = <code>Device.cpu</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>create an square rank-2 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> with all diagonal to be one. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Dim</td><td>the dimension of diagonal. </td></tr>
     <tr><td class="paramname">dtype</td><td>the dtype of the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>. It can be any type defined in <a class="el" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">cytnx::Type </a> </td></tr>
     <tr><td class="paramname">device</td><td>the device that the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> is put on. It can be any device defined in <a class="el" href="namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a">cytnx::Device </a></td></tr>
   </table>

@@ -8,6 +8,7 @@
 #include "Storage.hpp"
 #include "Tensor.hpp"
 #include "Generator.hpp"
+#include "Physics.hpp"
 #include "linalg.hpp"
 #include "utils/utils.hpp"
 #include "random.hpp"

@@ -33,6 +33,32 @@ namespace cytnx{
     Tensor zeros(const std::vector<cytnx_uint64> &Nelem, const unsigned int &dtype=Type.Double, const int &device=Device.cpu);
     //@}    
 
+    /**
+    @brief create an square rank-2 Tensor with all diagonal to be one. 
+    @param Dim the dimension of diagonal. 
+    @param dtype the dtype of the Tensor. It can be any type defined in \link cytnx::Type cytnx::Type \endlink
+    @param device the device that the Tensor is put on. It can be any device defined in \link cytnx::Device cytnx::Device \endlink
+
+    @return 
+        [Tensor]
+   
+    */    
+    Tensor identity(const cytnx_uint64 &Dim, const unsigned int &dtype=Type.Double, const int &device=Device.cpu);
+
+    /**
+    @brief create an square rank-2 Tensor with all diagonal to be one. 
+    @param Dim the dimension of diagonal. 
+    @param dtype the dtype of the Tensor. It can be any type defined in \link cytnx::Type cytnx::Type \endlink
+    @param device the device that the Tensor is put on. It can be any device defined in \link cytnx::Device cytnx::Device \endlink
+
+    @return 
+        [Tensor]
+
+    Note:
+        This function is a alias of cytnx::identity(). 
+   
+    */    
+    Tensor eye(const cytnx_uint64 &Dim, const unsigned int &dtype=Type.Double, const int &device=Device.cpu);
 
     //@{
     /**

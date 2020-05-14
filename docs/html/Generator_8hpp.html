@@ -29,7 +29,7 @@
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.5</span>
+   &#160;<span id="projectnumber">v0.5.2</span>
    </div>
   </td>
  </tr>
@@ -71,7 +71,8 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">Generator.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -104,7 +105,8 @@ This graph shows which files directly or indirectly include this file:</div>
 <area shape="rect" id="node2" href="cytnx_8hpp.html" title="include/cytnx.hpp" alt="" coords="5,80,129,107"/>
 <area shape="rect" id="node3" href="DenseCyTensor_8cpp.html" title="src/DenseCyTensor.cpp" alt="" coords="153,80,317,107"/>
 <area shape="rect" id="node4" href="Generator_8cpp.html" title="src/Generator.cpp" alt="" coords="341,80,468,107"/>
-<area shape="rect" id="node5" href="SparseCyTensor_8cpp.html" title="src/SparseCyTensor.cpp" alt="" coords="492,80,659,107"/>
+<area shape="rect" id="node5" href="Physics_8cpp.html" title="src/Physics.cpp" alt="" coords="492,80,608,107"/>
+<area shape="rect" id="node6" href="SparseCyTensor_8cpp.html" title="src/SparseCyTensor.cpp" alt="" coords="632,80,799,107"/>
 </map>
 </div>
 </div>
@@ -118,6 +120,12 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:af8aa7e619c030f80c54e4d26b576484b"><td class="memItemLeft" align="right" valign="top">Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#af8aa7e619c030f80c54e4d26b576484b">cytnx::identity</a> (const cytnx_uint64 &amp;Dim, const unsigned int &amp;dtype=Type.Double, const int &amp;device=Device.cpu)</td></tr>
+<tr class="memdesc:af8aa7e619c030f80c54e4d26b576484b"><td class="mdescLeft">&#160;</td><td class="mdescRight">create an square rank-2 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> with all diagonal to be one.  <a href="namespacecytnx.html#af8aa7e619c030f80c54e4d26b576484b">More...</a><br /></td></tr>
+<tr class="separator:af8aa7e619c030f80c54e4d26b576484b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affbd9073156ce86d5e5c03742603c631"><td class="memItemLeft" align="right" valign="top">Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#affbd9073156ce86d5e5c03742603c631">cytnx::eye</a> (const cytnx_uint64 &amp;Dim, const unsigned int &amp;dtype=Type.Double, const int &amp;device=Device.cpu)</td></tr>
+<tr class="memdesc:affbd9073156ce86d5e5c03742603c631"><td class="mdescLeft">&#160;</td><td class="mdescRight">create an square rank-2 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> with all diagonal to be one.  <a href="namespacecytnx.html#affbd9073156ce86d5e5c03742603c631">More...</a><br /></td></tr>
+<tr class="separator:affbd9073156ce86d5e5c03742603c631"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader"></div></td></tr>
 <tr class="memitem:ab8a79a03fb0465f3eb2641017f3f1755"><td class="memItemLeft" align="right" valign="top">Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#ab8a79a03fb0465f3eb2641017f3f1755">cytnx::zeros</a> (const cytnx_uint64 &amp;Nelem, const unsigned int &amp;dtype=Type.Double, const int &amp;device=Device.cpu)</td></tr>
 <tr class="memdesc:ab8a79a03fb0465f3eb2641017f3f1755"><td class="mdescLeft">&#160;</td><td class="mdescRight">create an rank-1 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> with all the elements are initialized with zero.  <a href="namespacecytnx.html#ab8a79a03fb0465f3eb2641017f3f1755">More...</a><br /></td></tr>

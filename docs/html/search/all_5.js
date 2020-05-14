@@ -7,5 +7,6 @@ var searchData=
   ['exp_5f',['Exp_',['../classcytnx_1_1Tensor.html#aefdef16a685cea5b47b682a3c7837da2',1,'cytnx::Tensor::Exp_()'],['../namespacecytnx_1_1linalg.html#aaab08439dde94ee87939d07933ede6e3',1,'cytnx::linalg::Exp_()']]],
   ['expf',['Expf',['../namespacecytnx_1_1linalg.html#a5831918722e5d18f4eaf37834b8fbf77',1,'cytnx::linalg']]],
   ['expf_5f',['Expf_',['../namespacecytnx_1_1linalg.html#a5de1faf71c76cdc6b7fa5ba3a3e21bbb',1,'cytnx::linalg']]],
-  ['exph',['ExpH',['../namespacecytnx_1_1linalg.html#a003ad2d2784202e936ce4a16e850e17e',1,'cytnx::linalg']]]
+  ['exph',['ExpH',['../namespacecytnx_1_1linalg.html#a003ad2d2784202e936ce4a16e850e17e',1,'cytnx::linalg']]],
+  ['eye',['eye',['../namespacecytnx.html#affbd9073156ce86d5e5c03742603c631',1,'cytnx']]]
 ];

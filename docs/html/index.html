@@ -29,7 +29,7 @@
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.5</span>
+   &#160;<span id="projectnumber">v0.5.2</span>
    </div>
   </td>
  </tr>
@@ -83,6 +83,10 @@ $(function() {
 <li>Add support for floating type Vectordot on GPU.</li>
 <li>Fix bug in to from Anytype to ComplexFloat.</li>
 <li>Add QR for CPU.</li>
+<li>Add <a class="el" href="namespacecytnx.html#af8aa7e619c030f80c54e4d26b576484b" title="create an square rank-2 Tensor with all diagonal to be one. ">identity()</a> and it's alias function <a class="el" href="namespacecytnx.html#affbd9073156ce86d5e5c03742603c631" title="create an square rank-2 Tensor with all diagonal to be one. ">eye()</a>.</li>
+<li>Add physics namespace/submodule</li>
+<li>Add <a class="el" href="namespacecytnx_1_1physics.html#a9f018f04ccd068e899a8fcfe2e9b82d4" title="create Spin-S representation matrix. ">physics::spin()</a> for generating Spin-S representation.</li>
+<li>Add <a class="el" href="namespacecytnx_1_1physics.html#a1c6ebefa40751712dfb8976b015f48d6" title="create Pauli matrix. ">physics::pauli()</a> for pauli matrix.</li>
 </ol>
 <p>v0.5.1a</p><ol type="1">
 <li>add <a class="el" href="namespacecytnx_1_1linalg.html#a9cd2be179860bb4742ebe320fa063680" title="calculate the norm of a vector (or matrix in the future) ">Norm()</a> for CPU and GPU, add to call by Tn</li>
@@ -244,7 +248,9 @@ $(function() {
 <p>^ this is temporary disable</p>
 <p>. this is floating point type only</p>
 <h2>Container Generators</h2>
-<p>Tensor: <a class="el" href="namespacecytnx.html#ab8a79a03fb0465f3eb2641017f3f1755">zeros()</a>, <a class="el" href="namespacecytnx.html#a83fb7bbe73368751a0d0f535d4a10a33">ones()</a>, <a class="el" href="namespacecytnx.html#a733f9931141463bc8b7c61931ccf52c3">arange()</a></p>
+<p>Tensor: <a class="el" href="namespacecytnx.html#ab8a79a03fb0465f3eb2641017f3f1755">zeros()</a>, <a class="el" href="namespacecytnx.html#a83fb7bbe73368751a0d0f535d4a10a33">ones()</a>, <a class="el" href="namespacecytnx.html#a733f9931141463bc8b7c61931ccf52c3">arange()</a>, <a class="el" href="namespacecytnx.html#af8aa7e619c030f80c54e4d26b576484b">identity()</a>, <a class="el" href="namespacecytnx.html#affbd9073156ce86d5e5c03742603c631">eye()</a>,</p>
+<h2>Physics Category</h2>
+<p>Tensor: <a class="el" href="namespacecytnx_1_1physics.html#a9f018f04ccd068e899a8fcfe2e9b82d4">spin()</a> <a class="el" href="namespacecytnx_1_1physics.html#a1c6ebefa40751712dfb8976b015f48d6">pauli()</a></p>
 <h2>Random</h2>
 <p>See <a class="el" href="namespacecytnx_1_1random.html">cytnx::random </a> for further details</p>
 <table class="doxtable">

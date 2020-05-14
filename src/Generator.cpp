@@ -2,6 +2,7 @@
 #include "Storage.hpp"
 #include "utils/utils.hpp"
 #include "utils/utils_internal_interface.hpp"
+#include "linalg.hpp"
 #include <cfloat>
 #include <iostream>
 namespace cytnx{
@@ -28,6 +29,14 @@ namespace cytnx{
         Tensor out(Nelem,dtype,device);
         out._impl->storage().fill(1); 
         return out;
+    }
+
+    Tensor identity(const cytnx_uint64 &Dim, const unsigned int &dtype, const int &device){
+        Tensor out = ones(Dim,dtype,device);
+        return linalg::Diag(out);
+    }
+    Tensor eye(const cytnx_uint64 &Dim, const unsigned int &dtype, const int &device){
+        return identity(Dim,dtype,device);
     }
     //-----------------
     Tensor arange(const cytnx_double &start, const cytnx_double &end, const cytnx_double &step, const unsigned int &dtype, const int &device){
