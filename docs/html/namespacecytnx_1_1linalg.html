@@ -194,9 +194,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a3e8edc89fdabb9c0f9b342198a31798b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a3e8edc89fdabb9c0f9b342198a31798b">Outer</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tl, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tr)</td></tr>
 <tr class="memdesc:a3e8edc89fdabb9c0f9b342198a31798b"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform outer produces of two rank-1 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>.  <a href="#a3e8edc89fdabb9c0f9b342198a31798b">More...</a><br /></td></tr>
 <tr class="separator:a3e8edc89fdabb9c0f9b342198a31798b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf52cf0ddfbacfcbc9970a1e85560b66"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#acf52cf0ddfbacfcbc9970a1e85560b66">Kron</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tl, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tr)</td></tr>
-<tr class="memdesc:acf52cf0ddfbacfcbc9970a1e85560b66"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform kronecker produces of two <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>.  <a href="#acf52cf0ddfbacfcbc9970a1e85560b66">More...</a><br /></td></tr>
-<tr class="separator:acf52cf0ddfbacfcbc9970a1e85560b66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc22428de7f69d2afc9a27fca76bfe15"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#abc22428de7f69d2afc9a27fca76bfe15">Kron</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tl, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tr, const bool &amp;Tl_pad_left=false, const bool &amp;Tr_pad_left=false)</td></tr>
+<tr class="memdesc:abc22428de7f69d2afc9a27fca76bfe15"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform kronecker produces of two <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>.  <a href="#abc22428de7f69d2afc9a27fca76bfe15">More...</a><br /></td></tr>
+<tr class="separator:abc22428de7f69d2afc9a27fca76bfe15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa69a91a5651fce55380cf800c6030d73"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#aa69a91a5651fce55380cf800c6030d73">Vectordot</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tl, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tr, const bool &amp;is_conj=false)</td></tr>
 <tr class="memdesc:aa69a91a5651fce55380cf800c6030d73"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform inner product of vectors  <a href="#aa69a91a5651fce55380cf800c6030d73">More...</a><br /></td></tr>
 <tr class="separator:aa69a91a5651fce55380cf800c6030d73"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -983,8 +983,8 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
-<a id="acf52cf0ddfbacfcbc9970a1e85560b66"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acf52cf0ddfbacfcbc9970a1e85560b66">&#9670;&nbsp;</a></span>Kron()</h2>
+<a id="abc22428de7f69d2afc9a27fca76bfe15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc22428de7f69d2afc9a27fca76bfe15">&#9670;&nbsp;</a></span>Kron()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -999,7 +999,19 @@ template&lt;class T &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
-          <td class="paramname"><em>Tr</em>&#160;</td>
+          <td class="paramname"><em>Tr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramname"><em>Tl_pad_left</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramname"><em>Tr_pad_left</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1014,11 +1026,13 @@ template&lt;class T &gt; </div>
   <table class="params">
     <tr><td class="paramname">Tl</td><td>rank-n <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> #1 </td></tr>
     <tr><td class="paramname">Tr</td><td>rank-m <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> #2 </td></tr>
+    <tr><td class="paramname">Tl_pad_left</td><td>The padding scheme for Tl if Tl.rank != Tr.rank </td></tr>
+    <tr><td class="paramname">Tr_pad_left</td><td>The padding scheme for Tr if Tl.rank != Tr.rank </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>]</dd></dl>
-<p>description: The function assume two tensor has the same rank. In case where two tensors have different ranks, the small one will be extend by adding redundant dimension. if the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> #1 has shape=(i1,j1,k1,l1...), and <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> #2 has shape=(i2,j2,k2,l2...); then the return <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> will have shape=(i1*i2,j1*j2,k1*k2...)</p>
+<p>description: The function assume two tensor has the same rank. In case where two tensors have different ranks, the small one will be extend by adding redundant dimension to the beginning of axis (T&lt;x&gt;_pad_right=true) or by adding redundant dim to the last axis (if T&lt;x&gt;_pad_left=false [default]). if the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> #1 has shape=(i1,j1,k1,l1...), and <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> #2 has shape=(i2,j2,k2,l2...); then the return <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> will have shape=(i1*i2,j1*j2,k1*k2...)</p>
 <p>[Note] two tensor should on same device. </p>
 
 </div>

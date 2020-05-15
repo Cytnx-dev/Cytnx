@@ -1425,7 +1425,7 @@ PYBIND11_MODULE(cytnx,m){
     m_linalg.def("Diag",&cytnx::linalg::Diag, py::arg("Tin"));
     m_linalg.def("Tensordot",&cytnx::linalg::Tensordot, py::arg("T1"),py::arg("T2"),py::arg("indices_1"),py::arg("indices_2"));
     m_linalg.def("Outer",&cytnx::linalg::Outer, py::arg("T1"),py::arg("T2"));
-    m_linalg.def("Kron",&cytnx::linalg::Kron, py::arg("T1"),py::arg("T2"));
+    m_linalg.def("Kron",&cytnx::linalg::Kron, py::arg("T1"),py::arg("T2"),py::arg("Tl_pad_left")=false,py::arg("Tr_pad_left")=false);
     m_linalg.def("Vectordot",&cytnx::linalg::Vectordot, py::arg("T1"),py::arg("T2"),py::arg("is_conj")=false);
     m_linalg.def("Norm",&cytnx::linalg::Norm, py::arg("T1"));
     m_linalg.def("Dot",&cytnx::linalg::Dot, py::arg("T1"),py::arg("T2"));

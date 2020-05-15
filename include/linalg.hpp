@@ -429,18 +429,20 @@ namespace cytnx{
         @brief perform kronecker produces of two Tensor.
         @param Tl rank-n Tensor #1
         @param Tr rank-m Tensor #2
+        @param Tl_pad_left The padding scheme for Tl if Tl.rank != Tr.rank
+        @param Tr_pad_left The padding scheme for Tr if Tl.rank != Tr.rank
         @return 
             [Tensor]
 
         description:
-            The function assume two tensor has the same rank. In case where two tensors have different ranks, the small one will be extend by adding redundant dimension.
+            The function assume two tensor has the same rank. In case where two tensors have different ranks, the small one will be extend by adding redundant dimension to the beginning of axis (T<x>_pad_right=true) or by adding redundant dim to the last axis (if T<x>_pad_left=false [default]).
             if the Tensor #1 has shape=(i1,j1,k1,l1...), and Tensor #2 has shape=(i2,j2,k2,l2...); then the return Tensor will have shape=(i1*i2,j1*j2,k1*k2...)
 
         [Note]
-            two tensor should on same device. 
+            two tensor should on same device.
 
         */
-        Tensor Kron(const Tensor &Tl,const Tensor &Tr); 
+        Tensor Kron(const Tensor &Tl,const Tensor &Tr, const bool &Tl_pad_left=false, const bool &Tr_pad_left=false); 
         
         //VectorDot:
         //=================================================

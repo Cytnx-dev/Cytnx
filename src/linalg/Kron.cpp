@@ -6,7 +6,7 @@
 namespace cytnx{
 
     namespace linalg{
-        Tensor Kron(const Tensor &Tl, const Tensor &Tr){
+        Tensor Kron(const Tensor &Tl, const Tensor &Tr, const bool &Tl_pad_left, const bool &Tr_pad_left){
             
             //checking:
             cytnx_error_msg(Tl.shape().size()==0,"[ERROR] pass empty tensor in param #1%s","\n");
@@ -22,12 +22,14 @@ namespace cytnx{
             std::vector<cytnx_uint64> pad_shape2 = Tr.shape();
             if(Tl.shape().size() > Tr.shape().size()){
                 for(unsigned long long i=Tr.shape().size();i<Tl.shape().size();i++){
-                    pad_shape2.push_back(1);
+                    if(Tr_pad_left==false) pad_shape2.push_back(1);
+                    else pad_shape2.insert(pad_shape2.begin(),1);
                 }
 
             }else if(Tl.shape().size() < Tr.shape().size()){
                 for(unsigned long long i=Tl.shape().size();i<Tr.shape().size();i++){
-                    pad_shape1.push_back(1);
+                    if(Tl_pad_left==false) pad_shape1.push_back(1);
+                    else pad_shape1.insert(pad_shape1.begin(),1);
                 }
 
             }

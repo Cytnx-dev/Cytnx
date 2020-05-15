@@ -26,6 +26,8 @@
     11. Add physics::pauli() for pauli matrix.
     12. Add ExpM() for generic matrix (CPU only)
     13. Fix bug in python slice, and reverse range slice.
+    14. Enhance optional Kron padding scheme
+    15. Fix bug in CyTensor contract/Contract(A,B) for tensors with no common label
     
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn

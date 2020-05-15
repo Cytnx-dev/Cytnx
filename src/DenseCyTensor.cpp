@@ -438,11 +438,29 @@ namespace cytnx_extension{
             }else{
                 Tensor tmpL,tmpR;
                 if(this->is_diag()) tmpL = linalg::Diag(this->_block);
-                else tmpL = this->_block; 
-                if(rhs->is_diag()) tmpR = linalg::Diag(rhs->get_block_());
-                else tmpR =  rhs->get_block_(); // share view!!
+                else{ 
+                    if(this->_block.is_contiguous())
+                        tmpL = this->_block;
+                    else
+                        tmpL = this->_block.contiguous();
+                }
 
-                tmp->_block = linalg::Kron(tmpL,tmpR);
+                if(rhs->is_diag()) tmpR = linalg::Diag(rhs->get_block_());
+                else{ 
+                    if(rhs->get_block_().is_contiguous())
+                        tmpR =  rhs->get_block_(); // share view!!
+                    else
+                        tmpR =  rhs->get_block_().contiguous();
+                }
+                std::vector<cytnx_int64> old_shape_L(tmpL.shape().begin(),tmpL.shape().end());
+                //vector<cytnx_int64> old_shape_R(tmpR.shape().begin(),tmpR.shape().end());
+                std::vector<cytnx_int64> shape_L = vec_concatenate(old_shape_L,std::vector<cytnx_int64>(tmpR.shape().size(),1)); 
+                //vector<cytnx_int64> shape_R = vec_concatenate(vector<cytnx_int64>(old_shape_L.size(),1),old_shape_R);
+                tmpL.reshape_(shape_L);
+                //tmpR.reshape_(shape_R);
+                tmp->_block = linalg::Kron(tmpL,tmpR,false,true);
+                tmpL.reshape_(old_shape_L);
+                //tmpR.reshape_(old_shapeR);
                 tmp->_is_diag = false;
 
             }

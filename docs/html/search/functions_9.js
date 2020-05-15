@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['kron',['Kron',['../namespacecytnx_1_1linalg.html#acf52cf0ddfbacfcbc9970a1e85560b66',1,'cytnx::linalg']]]
+  ['kron',['Kron',['../namespacecytnx_1_1linalg.html#abc22428de7f69d2afc9a27fca76bfe15',1,'cytnx::linalg']]]
 ];
