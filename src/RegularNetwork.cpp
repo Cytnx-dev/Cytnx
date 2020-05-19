@@ -31,6 +31,7 @@ namespace cytnx_extension{
  
         cytnx_error_msg(tokens.size()==0,"[ERROR][Network][Fromfile] invalid ORDER line.%s","\n");
 
+        
             
     }
     void _parse_TOUT_line_(vector<cytnx_int64> &lbls, cytnx_uint64 &TOUT_iBondNum, const string &line){
@@ -95,6 +96,19 @@ namespace cytnx_extension{
     }
 
 
+    void _extract_TNs_from_ORDER_(vector<string> &TN_names, const vector<string> &tokens){
+
+        TN_names.clear();
+        for(cytnx_uint64 i=0;i<tokens.size();i++){
+            string tok = str_strip(tokens[i]); // remove space.
+            if(tok.length()==0) continue;
+            if((tok!="(") && (tok!=")") && (tok!=",")){
+                TN_names.push_back(tok);
+            }
+        }
+    }
+
+
     void RegularNetwork::Fromfile(const std::string &fname){
         const cytnx_uint64 MAXLINES = 1024;
 
@@ -112,7 +126,7 @@ namespace cytnx_extension{
         string line;
         cytnx_uint64 lnum = 0;
         vector<string> tmpvs;
-        
+        bool isORDER_exist = false;
 
         //read each line:  
         while(lnum < MAXLINES) {
@@ -153,6 +167,7 @@ namespace cytnx_extension{
                     //cut the line into tokens, 
                     //and leave it to process by CtTree after read all lines.
                     _parse_ORDER_line_(this->ORDER_tokens,content);  
+                    isORDER_exist = true;
                 }
             }else if(name == "TOUT"){
                 //if content has length, then pass to process. 
@@ -191,7 +206,23 @@ namespace cytnx_extension{
         this->tensors.resize(this->names.size());
         this->CtTree.base_nodes.resize(this->names.size());
         
-
+        //checking if all TN are set in ORDER.
+        if(isORDER_exist){
+            std::vector<string> TN_names;
+            _extract_TNs_from_ORDER_(TN_names,this->ORDER_tokens);
+            for(int i=0;i<this->names.size();i++){
+                auto it = std::find(TN_names.begin(),TN_names.end(),this->names[i]);
+                cytnx_error_msg(it == std::end(TN_names),"[ERROR][Network][Fromfile] TN: <%s> defined but is not used in ORDER line\n",this->names[i].c_str());
+                TN_names.erase(it);                
+            }
+            if(TN_names.size()!=0){
+                cout << "[ERROR] Following TNs appeared in ORDER line, but is not defined." << endl;
+                for(int i=0;i<TN_names.size();i++){
+                    cout << "        " << TN_names[i] << endl;
+                }
+                cytnx_error_msg(true,"%s","\n");
+            }
+        }//check consistent.
 
     }
 
