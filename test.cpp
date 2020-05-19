@@ -9,6 +9,46 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]){
 
+    auto a1 = cyx::CyTensor(cytnx::zeros({2,2,2,2}),0); a1.set_name("a1");
+    auto a2 = cyx::CyTensor(cytnx::zeros({2,2,2,2}),0); a2.set_name("a2");
+    auto b1 = cyx::CyTensor(cytnx::zeros({2,2,2,2}),0); b1.set_name("b1");
+    auto b2 = cyx::CyTensor(cytnx::zeros({2,2,2,2}),0); b2.set_name("b2");
+
+    auto lx1 = cyx::CyTensor(cytnx::zeros({2,2}),0); lx1.set_name("lx1"); 
+    auto lx2 = cyx::CyTensor(cytnx::zeros({2,2}),0); lx2.set_name("lx2");
+    auto lya1 = cyx::CyTensor(cytnx::zeros({2,2}),0); lya1.set_name("lya1"); 
+    auto lya2 = cyx::CyTensor(cytnx::zeros({2,2}),0); lya2.set_name("lya2"); 
+    auto lyb1 = cyx::CyTensor(cytnx::zeros({2,2}),0); lyb1.set_name("lyb1"); 
+    auto lyb2 = cyx::CyTensor(cytnx::zeros({2,2}),0); lyb2.set_name("lyb2"); 
+    auto lza1 = cyx::CyTensor(cytnx::zeros({2,2}),0); lza1.set_name("lza1"); 
+    auto lza2 = cyx::CyTensor(cytnx::zeros({2,2}),0); lza2.set_name("lza2"); 
+    auto lzb1 = cyx::CyTensor(cytnx::zeros({2,2}),0); lzb1.set_name("lzb1"); 
+    auto lzb2 = cyx::CyTensor(cytnx::zeros({2,2}),0); lzb2.set_name("lzb2"); 
+
+    auto N = cyx::Network("f.net");
+    //#N.Diagram()
+    N.PutCyTensor("a1",a1,true);
+    N.PutCyTensor("a2",a2,true);
+    N.PutCyTensor("b1",b1,true);
+    N.PutCyTensor("b2",b2,true);
+
+    N.PutCyTensor("lx1",lx1,true);
+    N.PutCyTensor("lx2",lx2,true);
+
+    N.PutCyTensor("lya1",lya1,true);
+    N.PutCyTensor("lya2",lya2,true);
+    N.PutCyTensor("lyb1",lyb1,true);
+    N.PutCyTensor("lyb2",lyb2,true);
+
+    N.PutCyTensor("lza1",lza1,true);
+    N.PutCyTensor("lza2",lza2,true);
+    N.PutCyTensor("lzb1",lzb1,true);
+    N.PutCyTensor("lzb2",lzb2,true);
+    cout << N;
+
+    auto T = N.Launch();
+    exit(1);
+
     //Tensor SZ = cytnx::physics::spin(0.5,'z');
     //cout << SZ << endl;
    
@@ -41,8 +81,8 @@ int main(int argc, char *argv[]){
     exit(1);
 
 
-    cyx::Network N = cyx::Network("t2.net");
-    cout << N << endl;
+    cyx::Network N2 = cyx::Network("t2.net");
+    cout << N2 << endl;
 
     exit(1);
     Tensor ttr({3,4,5});

@@ -172,6 +172,7 @@ namespace cytnx_extension{
                 cytnx_error_msg(content.length()==0,"[ERROR][Network][Fromfile] invalid tensor labelsat line %d. cannot have empty labels for input tensor. \n",lnum);
 
                 this->name2pos[name] = names.size() - 1; // register
+                //cout << name << "|" << names.size() - 1 << endl;
                 this->label_arr.push_back(vector<cytnx_int64>());
                 cytnx_uint64 tmp_iBN;
                 // this is an internal function that is defined in this cpp file.
@@ -288,7 +289,10 @@ namespace cytnx_extension{
             this->tensors[idx].set_labels(this->label_arr[idx]);
             
             this->CtTree.base_nodes[idx].utensor = this->tensors[idx];
+            //this->CtTree.base_nodes[idx].name = this->tensors[idx].name();
             this->CtTree.base_nodes[idx].is_assigned = true;
+            
+            //cout << this->tensors[idx].name() << " " << idx << "from dict:" << this->name2pos[this->tensors[idx].name()] << endl;
         }
 
         
@@ -330,7 +334,11 @@ namespace cytnx_extension{
                 
                 //cout << "OK" << endl;
                 if((root->right!=nullptr) && (root->left!=nullptr)){
-                    root->utensor = Contract(root->left->utensor,root->right->utensor); 
+                    
+                    root->utensor = Contract(root->left->utensor,root->right->utensor);
+                    //cout << "Contract:" << root->left->utensor.name() << " " << root->right->utensor.name() << endl;
+                    //root->left->utensor.print_diagram(); root->right->utensor.print_diagram(); root->utensor.print_diagram();
+                    //root->utensor.set_name(root->left->utensor.name() + root->right->utensor.name());
                     root->left->clear_utensor(); //remove intermediate unitensor to save heap space
                     root->right->clear_utensor(); //remove intermediate unitensor to save heap space
                     root->is_assigned = true;
@@ -347,6 +355,8 @@ namespace cytnx_extension{
         
         //3. get result:
         CyTensor out = this->CtTree.nodes_container.back().utensor;
+        //std::cout << out << std::endl;    
+        //out.print_diagram();
 
         //4. reset nodes:
         this->CtTree.reset_nodes(); 

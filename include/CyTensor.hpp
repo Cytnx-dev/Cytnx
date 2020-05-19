@@ -189,7 +189,7 @@ namespace cytnx_extension{
                 tmp->_is_braket_form = this->_is_braket_form;
                 tmp->_Rowrank = this->_Rowrank;
                 tmp->_is_diag = this->_is_diag;
-                //tmp->_name = this->_name;
+                tmp->_name = this->_name;
                 tmp->_is_tag = this->_is_tag; 
                 return tmp;
             }
@@ -397,7 +397,7 @@ namespace cytnx_extension{
                     tmp->_labels = this->_labels;
                     tmp->_is_braket_form = this->_is_braket_form;
                     tmp->_Rowrank = this->_Rowrank;
-                    //tmp->_name = this->_name;
+                    tmp->_name = this->_name;
                 }
                 //comm meta
                 tmp->_mapper = this->_mapper;

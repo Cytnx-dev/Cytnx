@@ -17,6 +17,7 @@ namespace cytnx_extension{
             bool is_assigned;
             Node *left;
             Node *right;
+            std::string name;
             Node *root;
             cytnx_float cost;
 
