@@ -21,7 +21,7 @@ namespace cytnx{
 
             cytnx_int32 ldA = L;
             cytnx_int32 lwork = -1;
-            cytnx_double *rwork = (cytnx_double*)malloc(sizeof(cytnx_double)*2*L);
+            cytnx_double *rwork = (cytnx_double*)calloc(2*L,sizeof(cytnx_double));
             cytnx_complex128 workspace = 0;
             cytnx_int32 info;
             cytnx_int32 ONE = 1;
@@ -33,7 +33,7 @@ namespace cytnx{
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'zgeev': Lapack INFO = ", info);
 
             lwork = cytnx_int32(workspace.real());
-            cytnx_complex128* work= (cytnx_complex128*)malloc(sizeof(cytnx_complex128)*lwork);
+            cytnx_complex128* work= (cytnx_complex128*)calloc(lwork,sizeof(cytnx_complex128));
             zgeev(&jobs, (char*)"N", &L, buffer_A, &ldA, (cytnx_complex128*)e->Mem, tA,&L,nullptr, &ONE,work, &lwork, rwork, &info);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'zgeev': Lapack INFO = ", info);
@@ -56,7 +56,7 @@ namespace cytnx{
 
             cytnx_int32 ldA = L;
             cytnx_int32 lwork = -1;
-            cytnx_float *rwork = (cytnx_float*)malloc(sizeof(cytnx_float)*2*L);
+            cytnx_float *rwork = (cytnx_float*)calloc(2*L,sizeof(cytnx_float));
             cytnx_complex64 workspace = 0;
             cytnx_int32 info;
             cytnx_int32 ONE = 1;
@@ -66,7 +66,7 @@ namespace cytnx{
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'cgeev': Lapack INFO = ", info);
             lwork = cytnx_int32(workspace.real());
-            cytnx_complex64* work= (cytnx_complex64*)malloc(sizeof(cytnx_complex64)*lwork);
+            cytnx_complex64* work= (cytnx_complex64*)calloc(lwork,sizeof(cytnx_complex64));
             cgeev(&jobs, (char*)"N", &L, buffer_A, &ldA, (cytnx_complex64*)e->Mem, tA,&L,nullptr, &ONE,work, &lwork, rwork, &info);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'cgeev': Lapack INFO = ", info);

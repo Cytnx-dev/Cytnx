@@ -201,7 +201,7 @@ namespace cytnx{
 
     void ComplexDoubleStorage::PrintElem_byShape(std::ostream &os, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper){
     
-        char* buffer = (char*)malloc(sizeof(char)*256);
+        char* buffer = (char*)calloc(1024,sizeof(char));
 
         // checking:
         cytnx_uint64 Ne = 1;
@@ -257,6 +257,7 @@ namespace cytnx{
                     }
                     for(cytnx_size_t i=0;i<shape.back();i++){
                         stk2.back() = i;
+                        
                         sprintf(buffer,"%.5e%+.5ej ",elem_ptr_[cnt].real(),elem_ptr_[cnt].imag()); os << std::string(buffer);
                         cnt++;
                     }

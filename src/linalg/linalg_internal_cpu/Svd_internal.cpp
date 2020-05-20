@@ -23,13 +23,13 @@ namespace cytnx{
             cytnx_complex128 worktest;
             cytnx_int32 info;
 
-            cytnx_double* rwork = (cytnx_double*) malloc(std::max((cytnx_int32)1, 5*min) * sizeof(cytnx_double));
+            cytnx_double* rwork = (cytnx_double*) calloc(std::max((cytnx_int32)1, 5*min),sizeof(cytnx_double));
             zgesvd(jobv, jobu, &N, &M, Mij, &ldA, (cytnx_double*)S->Mem, (cytnx_complex128*)vT->Mem, &ldu, (cytnx_complex128*)U->Mem, &ldvT, &worktest, &lwork, rwork, &info);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'zgesvd': Lapack INFO = ", info);
 
             lwork = (cytnx_int32)(worktest.real());
-            cytnx_complex128 *work = (cytnx_complex128*)malloc(lwork*sizeof(cytnx_complex128));
+            cytnx_complex128 *work = (cytnx_complex128*)calloc(lwork,sizeof(cytnx_complex128));
             zgesvd(jobv, jobu, &N, &M, Mij, &ldA, (cytnx_double*)S->Mem, (cytnx_complex128*)vT->Mem, &ldu, (cytnx_complex128*)U->Mem, &ldvT, work, &lwork,rwork, &info);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'zgesvd': Lapack INFO = ", info);
@@ -57,13 +57,13 @@ namespace cytnx{
             cytnx_complex64 worktest;
             cytnx_int32 info;
 
-            cytnx_float* rwork = (cytnx_float*) malloc(std::max((cytnx_int32)1, 5*min) * sizeof(cytnx_float));
+            cytnx_float* rwork = (cytnx_float*) calloc(std::max((cytnx_int32)1, 5*min) ,sizeof(cytnx_float));
             cgesvd(jobv, jobu, &N, &M, Mij, &ldA, (cytnx_float*)S->Mem, (cytnx_complex64*)vT->Mem, &ldu, (cytnx_complex64*)U->Mem, &ldvT, &worktest, &lwork, rwork, &info);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'cgesvd': Lapack INFO = ", info);
 
             lwork = (cytnx_int32)(worktest.real());
-            cytnx_complex64 *work = (cytnx_complex64*)malloc(lwork*sizeof(cytnx_complex64));
+            cytnx_complex64 *work = (cytnx_complex64*)calloc(lwork,sizeof(cytnx_complex64));
             cgesvd(jobv, jobu, &N, &M, Mij, &ldA, (cytnx_float*)S->Mem, (cytnx_complex64*)vT->Mem, &ldu, (cytnx_complex64*)U->Mem, &ldvT, work, &lwork,rwork, &info);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'cgesvd': Lapack INFO = ", info);
@@ -95,7 +95,7 @@ namespace cytnx{
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dgesvd': Lapack INFO = ", info);
 
             lwork = (cytnx_int32)worktest;
-            cytnx_double *work = (cytnx_double*)malloc(lwork*sizeof(cytnx_double));
+            cytnx_double *work = (cytnx_double*)calloc(lwork,sizeof(cytnx_double));
             dgesvd(jobv, jobu, &N, &M, Mij, &ldA, (cytnx_double*)S->Mem, (cytnx_double*)vT->Mem, &ldu, (cytnx_double*)U->Mem, &ldvT, work, &lwork, &info);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dgesvd': Lapack INFO = ", info);
@@ -124,7 +124,7 @@ namespace cytnx{
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'sgesvd': Lapack INFO = ", info);
 
             lwork = (cytnx_int32)worktest;
-            cytnx_float *work = (cytnx_float*)malloc(lwork*sizeof(cytnx_float));
+            cytnx_float *work = (cytnx_float*)calloc(lwork,sizeof(cytnx_float));
             sgesvd(jobv, jobu, &N, &M, Mij, &ldA, (cytnx_float*)S->Mem, (cytnx_float*)vT->Mem, &ldu, (cytnx_float*)U->Mem, &ldvT, work, &lwork, &info);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'sgesvd': Lapack INFO = ", info);

@@ -23,8 +23,9 @@ namespace cytnx{
 
             Tensor U,S,vT;
             S.Init({n_singlu},in.dtype()<=2?in.dtype()+2:in.dtype(),in.device()); // if type is complex, S should be real
-            if(is_U){ U.Init({in.shape()[0],n_singlu},in.dtype(),in.device());  }
-            if(is_vT){ vT.Init({n_singlu,in.shape()[1]},in.dtype(),in.device());}
+            S.storage().set_zeros();
+            if(is_U){ U.Init({in.shape()[0],n_singlu},in.dtype(),in.device()); U.storage().set_zeros(); }
+            if(is_vT){ vT.Init({n_singlu,in.shape()[1]},in.dtype(),in.device()); vT.storage().set_zeros();}
 
 
 

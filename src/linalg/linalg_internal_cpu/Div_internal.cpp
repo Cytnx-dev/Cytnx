@@ -4020,7 +4020,7 @@ namespace cytnx{
         }
         void Div_internal_i32td(boost::intrusive_ptr<Storage_base> & out, boost::intrusive_ptr<Storage_base> & Lin, boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R){
             cytnx_double *_out = (cytnx_double*)out->Mem;
-            cytnx_int64 *_Lin = (cytnx_int64*)Lin->Mem;
+            cytnx_int32 *_Lin = (cytnx_int32*)Lin->Mem;
             cytnx_double *_Rin = (cytnx_double*)Rin->Mem;
 
             if(Lin->size()==1){

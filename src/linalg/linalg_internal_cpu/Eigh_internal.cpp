@@ -25,7 +25,7 @@ namespace cytnx{
             cytnx_int32 lwork = -1;
             cytnx_complex128 worktest;
             cytnx_int32 info;
-            cytnx_double *rwork = (cytnx_double*)malloc((3*L+1)*sizeof(cytnx_double));
+            cytnx_double *rwork = (cytnx_double*)calloc((3*L+1),sizeof(cytnx_double));
 
 
             zheev(&jobs, (char*)"U", &L, tA, &ldA, (cytnx_double*)e->Mem, &worktest, &lwork, rwork, &info);
@@ -33,7 +33,8 @@ namespace cytnx{
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dsyev': Lapack INFO = ", info);
 
             lwork = (cytnx_int32)(worktest.real());
-            cytnx_complex128* work= (cytnx_complex128*)malloc(sizeof(cytnx_complex128)*lwork);
+            cytnx_complex128* work= (cytnx_complex128*)calloc(lwork,sizeof(cytnx_complex128));
+            
             zheev(&jobs, (char*)"U", &L, tA, &ldA, (cytnx_double*)e->Mem, work, &lwork, rwork, &info);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dsyev': Lapack INFO = ", info);
@@ -61,7 +62,7 @@ namespace cytnx{
             cytnx_int32 lwork = -1;
             cytnx_complex64 worktest;
             cytnx_int32 info;
-            cytnx_float *rwork = (cytnx_float*)malloc((3*L+1)*sizeof(cytnx_float));
+            cytnx_float *rwork = (cytnx_float*)calloc((3*L+1),sizeof(cytnx_float));
 
 
             cheev(&jobs, (char*)"U", &L, tA, &ldA, (cytnx_float*)e->Mem, &worktest, &lwork, rwork, &info);
@@ -69,7 +70,7 @@ namespace cytnx{
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dsyev': Lapack INFO = ", info);
 
             lwork = (cytnx_int32)(worktest.real());
-            cytnx_complex64* work= (cytnx_complex64*)malloc(sizeof(cytnx_complex64)*lwork);
+            cytnx_complex64* work= (cytnx_complex64*)calloc(lwork,sizeof(cytnx_complex64));
             cheev(&jobs, (char*)"U", &L, tA, &ldA, (cytnx_float*)e->Mem, work, &lwork, rwork, &info);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dsyev': Lapack INFO = ", info);
@@ -102,7 +103,7 @@ namespace cytnx{
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dsyev': Lapack INFO = ", info);
 
             lwork = (cytnx_int32)worktest;
-            cytnx_double* work= (cytnx_double*)malloc(sizeof(cytnx_double)*lwork);
+            cytnx_double* work= (cytnx_double*)calloc(lwork,sizeof(cytnx_double));
             dsyev(&jobs, (char*)"U", &L, tA, &ldA, (cytnx_double*)e->Mem, work, &lwork, &info);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dsyev': Lapack INFO = ", info);
@@ -135,7 +136,7 @@ namespace cytnx{
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dsyev': Lapack INFO = ", info);
 
             lwork = (cytnx_int32)worktest;
-            cytnx_float* work= (cytnx_float*)malloc(sizeof(cytnx_float)*lwork);
+            cytnx_float* work= (cytnx_float*)calloc(lwork,sizeof(cytnx_float)*lwork);
             ssyev(&jobs, (char*)"U", &L, tA, &ldA, (cytnx_float*)e->Mem, work, &lwork, &info);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dsyev': Lapack INFO = ", info);

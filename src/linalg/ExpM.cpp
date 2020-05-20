@@ -20,6 +20,7 @@ namespace cytnx{
 
 
             vector<Tensor> su = cytnx::linalg::Eig(Tin,true);
+            //cout << su[0] << su[1] << endl;
             Tensor s,u, ut;
             if(a==0)
                 return cytnx::linalg::Diag(cytnx::ones(Tin.shape()[0]));

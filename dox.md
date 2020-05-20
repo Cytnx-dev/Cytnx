@@ -25,6 +25,8 @@
     15. Fix bug in CyTensor contract/Contract(A,B) for tensors with no common label
     16. Enhance error message in Network
     17. Add Min(), Max() (CPU only)
+    18. Fix bug in Abs. 
+    19. Fix bug in Div i32td.    
 
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn

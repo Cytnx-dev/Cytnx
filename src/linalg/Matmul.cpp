@@ -28,7 +28,7 @@ namespace cytnx{
                 if(Tl.dtype() < Tr.dtype()){
                     _tr = Tr.astype(Tl.dtype());
                     _tl = Tl;
-                    out.Init({Tl.shape()[0],Tr.shape()[1]},Tl.dtype(),Tl.device());
+                    out.Init({Tl.shape()[0],Tr.shape()[1]},Tl.dtype(),Tl.device()); 
                 }else{
                     _tl = Tl.astype(Tr.dtype());
                     _tr = Tr;
@@ -39,7 +39,7 @@ namespace cytnx{
                 _tr = Tr;
                 out.Init({Tl.shape()[0],Tr.shape()[1]},Tr.dtype(),Tr.device());
             }
-
+            out.storage().set_zeros();
 
             if(Tl.device()==Device.cpu){
 

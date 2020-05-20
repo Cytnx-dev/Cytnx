@@ -23,7 +23,7 @@ namespace cytnx{
             Tensor S,V;
             S.Init({in.shape()[0]},in.dtype()%2==1?Type.ComplexDouble:Type.ComplexFloat,in.device()); // S should always be double!!
 
-            if(is_V){ V.Init(in.shape(),in.dtype(),in.device());  }
+            if(is_V){ V.Init(in.shape(),in.dtype(),in.device()); /*V.storage().set_zeros();*/ }
             
             if(Tin.device()==Device.cpu){
 
@@ -35,6 +35,8 @@ namespace cytnx{
 
                 std::vector<Tensor> out;
                 out.push_back(S);
+                //std::cout << "[Eig][V]" << std::endl;
+                //std::cout << V << std::endl;
                 if(is_V){ 
                     out.push_back(V); 
                     if(!row_v){ 

@@ -28,9 +28,9 @@ namespace cytnx{
             //std::cout << n_singlu << std::endl;
 
             Tensor tau,Q,R;
-            tau.Init({n_tau},in.dtype(),in.device()); // if type is complex, S should be real
-            Q.Init(Tin.shape(),in.dtype(),in.device());
-            R.Init({n_tau,Tin.shape()[1]},in.dtype(),in.device());
+            tau.Init({n_tau},in.dtype(),in.device()); tau.storage().set_zeros();// if type is complex, S should be real
+            Q.Init(Tin.shape(),in.dtype(),in.device()); Q.storage().set_zeros();
+            R.Init({n_tau,Tin.shape()[1]},in.dtype(),in.device()); R.storage().set_zeros();
 
             if(Tin.device()==Device.cpu){
 
@@ -41,7 +41,7 @@ namespace cytnx{
                                                         tau._impl->storage()._impl,in.shape()[0],in.shape()[1]);
 
                 std::vector<Tensor> out;
-                if(in.shape()[0]<in.shape()[1]) Q = Q[{ac::all(),ac::range(0,in.shape()[0])}]; 
+                if(in.shape()[0]<in.shape()[1]) Q = Q[{ac::all(),ac::range(0,in.shape()[0],1)}]; 
                 out.push_back(Q);
                 out.push_back(R);
                 

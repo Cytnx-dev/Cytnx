@@ -9,7 +9,12 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]){
 
-    auto XX11 = cytnx::arange({20});
+
+
+
+    auto XX11 = cytnx::arange({20}).astype(Type.ComplexDouble);
+    cout << XX11 << endl;
+    exit(1);
     cout << XX11 << endl;
     cout << linalg::Max(XX11) << endl;
     cout << linalg::Min(XX11) << endl;
