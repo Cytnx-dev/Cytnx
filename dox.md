@@ -23,6 +23,8 @@
     13. Fix bug in python slice, and reverse range slice.
     14. Enhance optional Kron padding scheme
     15. Fix bug in CyTensor contract/Contract(A,B) for tensors with no common label
+    16. Enhance error message in Network
+    17. Add Min(), Max() (CPU only)
 
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn
@@ -162,6 +164,8 @@
       \link cytnx::linalg::Pow Pow\endlink    |   \link cytnx::linalg::Pow_ Pow_\endlink       |  Y  |  N   |    Y 
       \link cytnx::linalg::Abs Abs\endlink    |   \link cytnx::linalg::Abs_ Abs_\endlink       |  Y  |  N   |    N
       \link cytnx::linalg::QR QR\endlink    |  x       |  Y  |  N   |    N
+      \link cytnx::linalg::Min Min\endlink    |  x       |  Y  |  N   |    N
+      \link cytnx::linalg::Max Max\endlink    |  x       |  Y  |  N   |    N
       *\link cytnx::linalg::Trace Trace\endlink | x | Y | N | N
     * this is a high level linalg 
 

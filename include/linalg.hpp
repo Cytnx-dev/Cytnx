@@ -233,6 +233,24 @@ namespace cytnx{
         */
         Tensor Trace(const Tensor &Tn, const cytnx_uint64 &axisA=0, const cytnx_uint64 &axisB=1);
 
+        // Min:
+        //==================================================
+        /**
+        @brief get the minimum element.
+
+        [Note] For complex TN, only real part is compared.
+        */
+        Tensor Min(const Tensor &Tn);
+
+
+        // Max:
+        //==================================================
+        /**
+        @brief get the maximum element.
+
+        [Note] For complex TN, only real part is compared.
+        */
+        Tensor Max(const Tensor &Tn);
 
         // Matmul:
         //==================================================

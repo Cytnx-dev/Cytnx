@@ -185,6 +185,20 @@ namespace cytnx{
             Exp_ii[Type.Double       ] = Exp_internal_d;
             Exp_ii[Type.Float        ] = Exp_internal_f;
 
+            //=====================
+            MM_ii = vector<MaxMinfunc_oii>(N_Type);
+
+            MM_ii[Type.ComplexDouble] = MaxMin_internal_cd;
+            MM_ii[Type.ComplexFloat ] = MaxMin_internal_cf;
+            MM_ii[Type.Double       ] = MaxMin_internal_d;
+            MM_ii[Type.Float        ] = MaxMin_internal_f;
+            MM_ii[Type.Uint64       ] = MaxMin_internal_u64;
+            MM_ii[Type.Int64        ] = MaxMin_internal_i64;
+            MM_ii[Type.Uint32       ] = MaxMin_internal_u32;
+            MM_ii[Type.Int32        ] = MaxMin_internal_i32;
+            MM_ii[Type.Uint16       ] = MaxMin_internal_u16;
+            MM_ii[Type.Int16        ] = MaxMin_internal_i16;
+            MM_ii[Type.Bool         ] = MaxMin_internal_b;
 
             //=====================
             Pow_ii = vector<Powfunc_oii>(5);

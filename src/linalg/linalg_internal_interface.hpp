@@ -23,6 +23,7 @@
 #include "linalg/linalg_internal_cpu/Pow_internal.hpp"
 #include "linalg/linalg_internal_cpu/Abs_internal.hpp"
 #include "linalg/linalg_internal_cpu/QR_internal.hpp"
+#include "linalg/linalg_internal_cpu/MaxMin_internal.hpp"
 #ifdef UNI_GPU
     #include "linalg/linalg_internal_gpu/cuArithmetic_internal.hpp"
     #include "linalg/linalg_internal_gpu/cuSvd_internal.hpp"
@@ -59,6 +60,7 @@ namespace cytnx{
         typedef void (*Kronfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base>&, const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &);
         typedef void (*Powfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &, const double &);
         typedef void (*Absfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
+        typedef void (*MaxMinfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &, const char &);
 
         class linalg_internal_interface{
             public:
@@ -80,6 +82,7 @@ namespace cytnx{
                 std::vector<Tdfunc_oii> Td_ii;
                 std::vector<Normfunc_oii> Norm_ii;
                 std::vector<Svdfunc_oii> QR_ii;
+                std::vector<MaxMinfunc_oii> MM_ii;
 
                 #ifdef UNI_GPU
                 std::vector<std::vector<Arithmeticfunc_oii> > cuAri_ii;

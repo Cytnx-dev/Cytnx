@@ -9,6 +9,12 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]){
 
+    auto XX11 = cytnx::arange({20});
+    cout << XX11 << endl;
+    cout << linalg::Max(XX11) << endl;
+    cout << linalg::Min(XX11) << endl;
+    return 0;
+
     auto a1 = cyx::CyTensor(cytnx::zeros({2,2,2,2}),0); a1.set_name("a1");
     auto a2 = cyx::CyTensor(cytnx::zeros({2,2,2,2}),0); a2.set_name("a2");
     auto b1 = cyx::CyTensor(cytnx::zeros({2,2,2,2}),0); b1.set_name("b1");

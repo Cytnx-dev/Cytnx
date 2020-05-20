@@ -2,6 +2,8 @@ target_sources_local(cytnx
     PRIVATE
     linalg_internal_interface.hpp
     Add.cpp
+    Min.cpp
+    Max.cpp
     Conj.cpp
     Conj_.cpp
     Cpr.cpp

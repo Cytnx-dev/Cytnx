@@ -1,7 +1,7 @@
 var searchData=
 [
   ['n',['n',['../classcytnx__extension_1_1Symmetry.html#aa31e4ba66b21e5a47393e748455a6a69',1,'cytnx_extension::Symmetry']]],
-  ['name',['name',['../classcytnx__extension_1_1CyTensor.html#a116ebdd865a5ee5808bc47f393c66417',1,'cytnx_extension::CyTensor']]],
+  ['name',['name',['../classcytnx__extension_1_1Node.html#a5445a50bad3827163ff5a56058b94cb3',1,'cytnx_extension::Node::name()'],['../classcytnx__extension_1_1CyTensor.html#a116ebdd865a5ee5808bc47f393c66417',1,'cytnx_extension::CyTensor::name()']]],
   ['network',['Network',['../classcytnx__extension_1_1Network.html',1,'cytnx_extension::Network'],['../classcytnx__extension_1_1Network.html#ae3152ef5ac3402559b1430403a190174',1,'cytnx_extension::Network::Network()']]],
   ['network_2ecpp',['Network.cpp',['../Network_8cpp.html',1,'']]],
   ['network_2ehpp',['Network.hpp',['../Network_8hpp.html',1,'']]],
