@@ -42,7 +42,7 @@ target_sources_local(cytnx
     SparseCyTensor.cpp
     Symmetry.cpp
     contraction_tree.cpp
-
+    search_tree.cpp
     Device.cpp
     Generator.cpp
     Physics.cpp

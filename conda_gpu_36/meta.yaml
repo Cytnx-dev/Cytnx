@@ -1,6 +1,6 @@
 package:
   name: cytnx_cuda_36
-  version: "0.5.1"
+  version: "0.5.2a"
 
 source:
   path: ../

@@ -11,15 +11,6 @@ int main(int argc, char *argv[]){
 
 
 
-
-    auto XX11 = cytnx::arange({20}).astype(Type.ComplexDouble);
-    cout << XX11 << endl;
-    exit(1);
-    cout << XX11 << endl;
-    cout << linalg::Max(XX11) << endl;
-    cout << linalg::Min(XX11) << endl;
-    return 0;
-
     auto a1 = cyx::CyTensor(cytnx::zeros({2,2,2,2}),0); a1.set_name("a1");
     auto a2 = cyx::CyTensor(cytnx::zeros({2,2,2,2}),0); a2.set_name("a2");
     auto b1 = cyx::CyTensor(cytnx::zeros({2,2,2,2}),0); b1.set_name("b1");
@@ -57,7 +48,8 @@ int main(int argc, char *argv[]){
     N.PutCyTensor("lzb2",lzb2,true);
     cout << N;
 
-    auto T = N.Launch();
+    auto T = N.Launch(true);
+    cout << N << endl;
     exit(1);
 
     //Tensor SZ = cytnx::physics::spin(0.5,'z');

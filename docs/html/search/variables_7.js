@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['symtype',['SymType',['../namespacecytnx__extension.html#a31616079e7c6c8112218345546d8c052',1,'cytnx_extension']]]
+  ['right',['right',['../classcytnx__extension_1_1PsudoCyTensor.html#ab3e9c69d40786ce40ed69863c804e279',1,'cytnx_extension::PsudoCyTensor']]],
+  ['root',['root',['../classcytnx__extension_1_1PsudoCyTensor.html#aa81ad9e81af8c0569ea12015f6cef4c1',1,'cytnx_extension::PsudoCyTensor']]]
 ];

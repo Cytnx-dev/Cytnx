@@ -20,7 +20,7 @@ namespace cytnx_extension{
     void Network_base::Clear(){
         cytnx_error_msg(true,"[ERROR][Network][Clear] call from uninitialize network.%s","\n");
     }
-    CyTensor Network_base::Launch(){
+    CyTensor Network_base::Launch(const bool &optimal){
         cytnx_error_msg(true,"[ERROR][Network][Launch] call from uninitialize network.%s","\n");
         return CyTensor();
     }

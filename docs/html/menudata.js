@@ -90,8 +90,7 @@ var menudata={children:[
 {text:"s",url:"functions_func_s.html#index_s"},
 {text:"t",url:"functions_func_t.html#index_t"},
 {text:"u",url:"functions_func_u.html#index_u"},
-{text:"z",url:"functions_func_z.html#index_z"}]},
-{text:"Variables",url:"functions_vars.html"}]}]},
+{text:"z",url:"functions_func_z.html#index_z"}]}]}]},
 {text:"Files",url:"files.html",children:[
 {text:"File List",url:"files.html"},
 {text:"File Members",url:"globals.html",children:[

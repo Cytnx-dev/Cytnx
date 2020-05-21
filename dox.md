@@ -27,6 +27,7 @@
     17. Add Min(), Max() (CPU only)
     18. Fix bug in Abs. 
     19. Fix bug in Div i32td.    
+    20. [Feature] Add optimal contraction order calculation in Network
 
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn
@@ -367,7 +368,7 @@
 ## Developer
 
     Kai-Hsin Wu kaihsinwu@gmail.com 
-
+    Yen-Hsin Wu
 
 
 

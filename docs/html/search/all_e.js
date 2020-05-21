@@ -1,6 +1,7 @@
 var searchData=
 [
   ['pauli',['pauli',['../namespacecytnx_1_1physics.html#a1c6ebefa40751712dfb8976b015f48d6',1,'cytnx::physics::pauli(const std::string &amp;Comp, const int &amp;device=Device.cpu)'],['../namespacecytnx_1_1physics.html#a808ad167af6ff7b343dc503c9264b2a3',1,'cytnx::physics::pauli(const char &amp;Comp, const int &amp;device)']]],
+  ['pcontract',['pContract',['../namespacecytnx__extension.html#a84225100cbf330e56905d0f63dd4d8ea',1,'cytnx_extension']]],
   ['permute',['permute',['../classcytnx__extension_1_1CyTensor.html#a0532fc8d68e71186d95890be3a2c2811',1,'cytnx_extension::CyTensor::permute()'],['../classcytnx_1_1Tensor.html#adbdc402a8c4d6d738523a888bcf9c0c2',1,'cytnx::Tensor::permute()']]],
   ['permute_5f',['permute_',['../classcytnx__extension_1_1CyTensor.html#a64b47772f2a7d98fc61559a54c15c95d',1,'cytnx_extension::CyTensor::permute_()'],['../classcytnx_1_1Tensor.html#a4239ec84bd34f634a822eeff416f4d63',1,'cytnx::Tensor::permute_()']]],
   ['physics_2ecpp',['Physics.cpp',['../Physics_8cpp.html',1,'']]],

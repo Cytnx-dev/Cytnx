@@ -1,6 +1,6 @@
 package:
   name: cytnx_37
-  version: "0.5.1"
+  version: "0.5.2a"
 
 source:
   path: ../

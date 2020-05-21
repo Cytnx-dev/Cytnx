@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['cost',['cost',['../classcytnx__extension_1_1Node.html#a08aa741a57e33f02a490280049a23b32',1,'cytnx_extension::Node']]]
+  ['nttype',['NtType',['../namespacecytnx__extension.html#a40da1da84f9bd707fd5ec888a5693ccf',1,'cytnx_extension']]]
 ];

@@ -95,12 +95,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ade3a6272e39a1b6dede747006ab4c756"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a04b65875cd10366b744bea4e4404fd63"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1ContractionTree.html#a04b65875cd10366b744bea4e4404fd63">reset_nodes</a> ()</td></tr>
 <tr class="separator:a04b65875cd10366b744bea4e4404fd63"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08d77cd37d32c87c97eaac1322c055f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1ContractionTree.html#a08d77cd37d32c87c97eaac1322c055f7">build_default_contraction_order</a> ()</td></tr>
-<tr class="separator:a08d77cd37d32c87c97eaac1322c055f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc28354b50b4c81bbedc8fbd5b472837"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1ContractionTree.html#adc28354b50b4c81bbedc8fbd5b472837">build_contraction_order_by_tokens</a> (const std::map&lt; std::string, <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &gt; &amp;name2pos, const std::vector&lt; std::string &gt; &amp;tokens)</td></tr>
-<tr class="separator:adc28354b50b4c81bbedc8fbd5b472837"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7cf33204b35ad429dbe6b2be84a2bd38"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1ContractionTree.html#a7cf33204b35ad429dbe6b2be84a2bd38">build_contraction_order_by_optimal</a> ()</td></tr>
-<tr class="separator:a7cf33204b35ad429dbe6b2be84a2bd38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95f5049df305598237acd7fcadec120d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1ContractionTree.html#a95f5049df305598237acd7fcadec120d">build_default_contraction_tree</a> ()</td></tr>
+<tr class="separator:a95f5049df305598237acd7fcadec120d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac75405a2dbf6f86a7cc6baf742632307"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1ContractionTree.html#ac75405a2dbf6f86a7cc6baf742632307">build_contraction_tree_by_tokens</a> (const std::map&lt; std::string, <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &gt; &amp;name2pos, const std::vector&lt; std::string &gt; &amp;tokens)</td></tr>
+<tr class="separator:ac75405a2dbf6f86a7cc6baf742632307"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -162,31 +160,14 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a7cf33204b35ad429dbe6b2be84a2bd38"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7cf33204b35ad429dbe6b2be84a2bd38">&#9670;&nbsp;</a></span>build_contraction_order_by_optimal()</h2>
+<a id="ac75405a2dbf6f86a7cc6baf742632307"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac75405a2dbf6f86a7cc6baf742632307">&#9670;&nbsp;</a></span>build_contraction_tree_by_tokens()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void cytnx_extension::ContractionTree::build_contraction_order_by_optimal </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="adc28354b50b4c81bbedc8fbd5b472837"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adc28354b50b4c81bbedc8fbd5b472837">&#9670;&nbsp;</a></span>build_contraction_order_by_tokens()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void cytnx_extension::ContractionTree::build_contraction_order_by_tokens </td>
+          <td class="memname">void cytnx_extension::ContractionTree::build_contraction_tree_by_tokens </td>
           <td>(</td>
           <td class="paramtype">const std::map&lt; std::string, <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>name2pos</em>, </td>
@@ -207,14 +188,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a08d77cd37d32c87c97eaac1322c055f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a08d77cd37d32c87c97eaac1322c055f7">&#9670;&nbsp;</a></span>build_default_contraction_order()</h2>
+<a id="a95f5049df305598237acd7fcadec120d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a95f5049df305598237acd7fcadec120d">&#9670;&nbsp;</a></span>build_default_contraction_tree()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void cytnx_extension::ContractionTree::build_default_contraction_order </td>
+          <td class="memname">void cytnx_extension::ContractionTree::build_default_contraction_tree </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>

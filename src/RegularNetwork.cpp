@@ -1,6 +1,7 @@
 #include <typeinfo>
 #include "Network.hpp"
 #include "utils/utils_internal_interface.hpp"
+#include "search_tree.hpp"
 #include <stack>
 #include <algorithm>
 #include <iostream>
@@ -66,7 +67,7 @@ namespace cytnx_extension{
     void _parse_TN_line_(vector<cytnx_int64> &lbls, cytnx_uint64 &TN_iBondNum, const string &line){
         lbls.clear();
         vector<string> tmp = str_split(line,false,";");
-        cytnx_error_msg(tmp.size()!=2,"[ERROR][Network] Fromfile: %s\n","Invalid TN line");
+        cytnx_error_msg(tmp.size()!=2,"[ERROR][Network] Fromfile: %s\n","Invalid TN line. A \';\' should be used to indicate the Rowrank.\nexample1> \'Tn: 0, 1; 2, 3\'\nexample2> \'Tn: ; -1, 2, 3\'");
 
         // handle col-space lbl
         vector<string> ket_lbls = str_split(tmp[0],false,",");
@@ -303,12 +304,12 @@ namespace cytnx_extension{
     }
 
 
-    CyTensor RegularNetwork::Launch(){
+    CyTensor RegularNetwork::Launch(const bool &optimal){
 
 
         //1. check tensors are all set, and put all unitensor on node for contraction:
         cytnx_error_msg(this->tensors.size()==0,"[ERROR][Launch][RegularNetwork] cannot launch an un-initialize network.%s","\n");
-
+        cytnx_error_msg(this->tensors.size()<2,"[ERROR][Launch][RegularNetwork] Network should contain >=2 tensors.%s","\n");
 
         vector<vector<cytnx_int64> > old_labels;
         for(cytnx_uint64 idx=0;idx<this->tensors.size();idx++){
@@ -328,10 +329,27 @@ namespace cytnx_extension{
 
         
         //1.5 contraction order:
-        if(ORDER_tokens.size()!=0){
-            CtTree.build_contraction_order_by_tokens(this->name2pos,ORDER_tokens);
+        if(optimal==true){
+            // Creat a SearchTree to search for optim contraction order. 
+            SearchTree Stree;
+            Stree.base_nodes.resize(this->tensors.size()); 
+            for(cytnx_uint64 t = 0; t < this->tensors.size(); t ++){
+                Stree.base_nodes[t].from_utensor(this->tensors[t]); //create psudotensors from base tensors
+                Stree.base_nodes[t].accu_str = this->names[t];
+            }
+    
+            Stree.search_order();
+            string Optim_ORDERline = Stree.nodes_container.back()[0].accu_str;
+            this->ORDER_tokens.clear();
+            _parse_ORDER_line_(ORDER_tokens,Optim_ORDERline);
+            CtTree.build_contraction_tree_by_tokens(this->name2pos,ORDER_tokens);
         }else{
-            CtTree.build_default_contraction_order(); 
+            if(ORDER_tokens.size()!=0){ 
+                // *set by user
+                CtTree.build_contraction_tree_by_tokens(this->name2pos,ORDER_tokens);
+            }else{
+                CtTree.build_default_contraction_tree(); 
+            }
         }
 
         //2. contract using postorder traversal:

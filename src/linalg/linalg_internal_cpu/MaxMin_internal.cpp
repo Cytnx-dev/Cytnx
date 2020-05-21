@@ -29,7 +29,7 @@ namespace cytnx{
                     }
                     buf = vector<cytnx_uint64>(Nproc,numeric_limits<cytnx_uint64>::min());
 
-                    #pragma omp parallel for schdule(dynamic)
+                    #pragma omp parallel for schedule(dynamic)
                     for(cytnx_uint64 n=0;n<Nelem;n++){
                         if(_ten[n] > buf[omp_get_thread_num()]) buf[omp_get_thread_num()] = _ten[n];
                     }
@@ -55,7 +55,7 @@ namespace cytnx{
                     }
                     buf = vector<cytnx_uint64>(Nproc,numeric_limits<cytnx_uint64>::max());
 
-                    #pragma omp parallel for schdule(dynamic)
+                    #pragma omp parallel for schedule(dynamic)
                     for(cytnx_uint64 n=0;n<Nelem;n++){
                         if(_ten[n] < buf[omp_get_thread_num()]) buf[omp_get_thread_num()] = _ten[n];
                     }
@@ -90,7 +90,7 @@ namespace cytnx{
                     }
                     buf = vector<cytnx_int64>(Nproc,numeric_limits<cytnx_int64>::min());
 
-                    #pragma omp parallel for schdule(dynamic)
+                    #pragma omp parallel for schedule(dynamic)
                     for(cytnx_uint64 n=0;n<Nelem;n++){
                         if(_ten[n] > buf[omp_get_thread_num()]) buf[omp_get_thread_num()] = _ten[n];
                     }
@@ -116,7 +116,7 @@ namespace cytnx{
                     }
                     buf = vector<cytnx_int64>(Nproc,numeric_limits<cytnx_int64>::max());
 
-                    #pragma omp parallel for schdule(dynamic)
+                    #pragma omp parallel for schedule(dynamic)
                     for(cytnx_uint64 n=0;n<Nelem;n++){
                         if(_ten[n] < buf[omp_get_thread_num()]) buf[omp_get_thread_num()] = _ten[n];
                     }
@@ -152,7 +152,7 @@ namespace cytnx{
                     }
                     buf = vector<cytnx_uint32>(Nproc,numeric_limits<cytnx_uint32>::min());
 
-                    #pragma omp parallel for schdule(dynamic)
+                    #pragma omp parallel for schedule(dynamic)
                     for(cytnx_uint64 n=0;n<Nelem;n++){
                         if(_ten[n] > buf[omp_get_thread_num()]) buf[omp_get_thread_num()] = _ten[n];
                     }
@@ -178,7 +178,7 @@ namespace cytnx{
                     }
                     buf = vector<cytnx_uint32>(Nproc,numeric_limits<cytnx_uint32>::max());
 
-                    #pragma omp parallel for schdule(dynamic)
+                    #pragma omp parallel for schedule(dynamic)
                     for(cytnx_uint64 n=0;n<Nelem;n++){
                         if(_ten[n] < buf[omp_get_thread_num()]) buf[omp_get_thread_num()] = _ten[n];
                     }
@@ -214,7 +214,7 @@ namespace cytnx{
                     }
                     buf = vector<cytnx_int32>(Nproc,numeric_limits<cytnx_int32>::min());
 
-                    #pragma omp parallel for schdule(dynamic)
+                    #pragma omp parallel for schedule(dynamic)
                     for(cytnx_uint64 n=0;n<Nelem;n++){
                         if(_ten[n] > buf[omp_get_thread_num()]) buf[omp_get_thread_num()] = _ten[n];
                     }
@@ -240,7 +240,7 @@ namespace cytnx{
                     }
                     buf = vector<cytnx_int32>(Nproc,numeric_limits<cytnx_int32>::max());
 
-                    #pragma omp parallel for schdule(dynamic)
+                    #pragma omp parallel for schedule(dynamic)
                     for(cytnx_uint64 n=0;n<Nelem;n++){
                         if(_ten[n] < buf[omp_get_thread_num()]) buf[omp_get_thread_num()] = _ten[n];
                     }
@@ -275,7 +275,7 @@ namespace cytnx{
                     }
                     buf = vector<cytnx_uint16>(Nproc,numeric_limits<cytnx_uint16>::min());
 
-                    #pragma omp parallel for schdule(dynamic)
+                    #pragma omp parallel for schedule(dynamic)
                     for(cytnx_uint64 n=0;n<Nelem;n++){
                         if(_ten[n] > buf[omp_get_thread_num()]) buf[omp_get_thread_num()] = _ten[n];
                     }
@@ -301,7 +301,7 @@ namespace cytnx{
                     }
                     buf = vector<cytnx_uint16>(Nproc,numeric_limits<cytnx_uint16>::max());
 
-                    #pragma omp parallel for schdule(dynamic)
+                    #pragma omp parallel for schedule(dynamic)
                     for(cytnx_uint64 n=0;n<Nelem;n++){
                         if(_ten[n] < buf[omp_get_thread_num()]) buf[omp_get_thread_num()] = _ten[n];
                     }
@@ -336,7 +336,7 @@ namespace cytnx{
                     }
                     buf = vector<cytnx_int16>(Nproc,numeric_limits<cytnx_int16>::min());
 
-                    #pragma omp parallel for schdule(dynamic)
+                    #pragma omp parallel for schedule(dynamic)
                     for(cytnx_uint64 n=0;n<Nelem;n++){
                         if(_ten[n] > buf[omp_get_thread_num()]) buf[omp_get_thread_num()] = _ten[n];
                     }
@@ -362,7 +362,7 @@ namespace cytnx{
                     }
                     buf = vector<cytnx_int16>(Nproc,numeric_limits<cytnx_int16>::max());
 
-                    #pragma omp parallel for schdule(dynamic)
+                    #pragma omp parallel for schedule(dynamic)
                     for(cytnx_uint64 n=0;n<Nelem;n++){
                         if(_ten[n] < buf[omp_get_thread_num()]) buf[omp_get_thread_num()] = _ten[n];
                     }
@@ -397,7 +397,7 @@ namespace cytnx{
                     }
                     buf = vector<cytnx_double>(Nproc,DBL_MIN);
 
-                    #pragma omp parallel for schdule(dynamic)
+                    #pragma omp parallel for schedule(dynamic)
                     for(cytnx_uint64 n=0;n<Nelem;n++){
                         if(_ten[n] > buf[omp_get_thread_num()]) buf[omp_get_thread_num()] = _ten[n];
                     }
@@ -423,7 +423,7 @@ namespace cytnx{
                     }
                     buf = vector<cytnx_double>(Nproc,DBL_MAX);
 
-                    #pragma omp parallel for schdule(dynamic)
+                    #pragma omp parallel for schedule(dynamic)
                     for(cytnx_uint64 n=0;n<Nelem;n++){
                         if(_ten[n] < buf[omp_get_thread_num()]) buf[omp_get_thread_num()] = _ten[n];
                     }
@@ -458,7 +458,7 @@ namespace cytnx{
                     }
                     buf = vector<cytnx_float>(Nproc,FLT_MIN);
 
-                    #pragma omp parallel for schdule(dynamic)
+                    #pragma omp parallel for schedule(dynamic)
                     for(cytnx_uint64 n=0;n<Nelem;n++){
                         if(_ten[n] > buf[omp_get_thread_num()]) buf[omp_get_thread_num()] = _ten[n];
                     }
@@ -482,9 +482,9 @@ namespace cytnx{
                     {
                         if(omp_get_thread_num()==0) Nproc = omp_get_num_threads();
                     }
-                    buf = vector<cytnx_double>(Nproc,FLT_MAX);
+                    buf = vector<cytnx_float>(Nproc,FLT_MAX);
 
-                    #pragma omp parallel for schdule(dynamic)
+                    #pragma omp parallel for schedule(dynamic)
                     for(cytnx_uint64 n=0;n<Nelem;n++){
                         if(_ten[n] < buf[omp_get_thread_num()]) buf[omp_get_thread_num()] = _ten[n];
                     }
@@ -510,7 +510,7 @@ namespace cytnx{
            
             if(type=='x'){
                 #ifdef UNI_OMP
-                    vector<cytnx_double> buf;
+                    vector<cytnx_complex128> buf;
                     unsigned int Nproc;
                     #pragma omp parallel
                     {
@@ -518,7 +518,7 @@ namespace cytnx{
                     }
                     buf = vector<cytnx_complex128>(Nproc,cytnx_complex128(DBL_MIN,DBL_MIN));
 
-                    #pragma omp parallel for schdule(dynamic)
+                    #pragma omp parallel for schedule(dynamic)
                     for(cytnx_uint64 n=0;n<Nelem;n++){
                         if(_ten[n].real() >= buf[omp_get_thread_num()].real()) buf[omp_get_thread_num()] = _ten[n];
                     }
@@ -544,7 +544,7 @@ namespace cytnx{
                     }
                     buf = vector<cytnx_complex128>(Nproc,cytnx_complex128(DBL_MAX,DBL_MAX));
 
-                    #pragma omp parallel for schdule(dynamic)
+                    #pragma omp parallel for schedule(dynamic)
                     for(cytnx_uint64 n=0;n<Nelem;n++){
                         if(_ten[n].real() <= buf[omp_get_thread_num()].real()) buf[omp_get_thread_num()] = _ten[n];
                     }
@@ -572,7 +572,7 @@ namespace cytnx{
            
             if(type=='x'){
                 #ifdef UNI_OMP
-                    vector<cytnx_float> buf;
+                    vector<cytnx_complex64> buf;
                     unsigned int Nproc;
                     #pragma omp parallel
                     {
@@ -580,7 +580,7 @@ namespace cytnx{
                     }
                     buf = vector<cytnx_complex64>(Nproc,cytnx_complex64(FLT_MIN,FLT_MIN));
 
-                    #pragma omp parallel for schdule(dynamic)
+                    #pragma omp parallel for schedule(dynamic)
                     for(cytnx_uint64 n=0;n<Nelem;n++){
                         if(_ten[n].real() >= buf[omp_get_thread_num()].real()) buf[omp_get_thread_num()] = _ten[n];
                     }
@@ -606,7 +606,7 @@ namespace cytnx{
                     }
                     buf = vector<cytnx_complex64>(Nproc,cytnx_complex64(FLT_MAX,FLT_MAX));
 
-                    #pragma omp parallel for schdule(dynamic)
+                    #pragma omp parallel for schedule(dynamic)
                     for(cytnx_uint64 n=0;n<Nelem;n++){
                         if(_ten[n].real() <= buf[omp_get_thread_num()].real()) buf[omp_get_thread_num()] = _ten[n];
                     }

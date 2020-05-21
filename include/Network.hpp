@@ -91,7 +91,7 @@ namespace cytnx_extension{
             virtual void PutCyTensor(const cytnx_uint64 &idx, const CyTensor &utensor, const bool &is_clone);
             virtual void Fromfile(const std::string& fname);
             virtual void Clear();
-            virtual CyTensor Launch();
+            virtual CyTensor Launch(const bool &optimal=false);
             virtual void PrintNet(std::ostream &os);
             virtual boost::intrusive_ptr<Network_base> clone();
             virtual ~Network_base(){};
@@ -116,7 +116,7 @@ namespace cytnx_extension{
                 this->TOUT_iBondNum = 0;
                 this->ORDER_tokens.clear();
             }
-            CyTensor Launch();
+            CyTensor Launch(const bool &optimal=false);
             boost::intrusive_ptr<Network_base> clone(){
                 RegularNetwork *tmp = new RegularNetwork();
                 tmp->name2pos = this->name2pos;
@@ -155,7 +155,7 @@ namespace cytnx_extension{
                 this->TOUT_iBondNum = 0;
                 this->ORDER_tokens.clear();
             }
-            CyTensor Launch(){return CyTensor();};
+            CyTensor Launch(const bool &optimal=false){return CyTensor();};
             boost::intrusive_ptr<Network_base> clone(){
                 FermionNetwork *tmp = new FermionNetwork();
                 tmp->name2pos = this->name2pos;
@@ -256,8 +256,8 @@ namespace cytnx_extension{
             void PutCyTensor(const cytnx_uint64 &idx, const CyTensor &utensor, const bool &is_clone=true){
                 this->_impl->PutCyTensor(idx,utensor,is_clone);
             }
-            CyTensor Launch(){
-                return this->_impl->Launch();
+            CyTensor Launch(const bool &optimal=false){
+                return this->_impl->Launch(optimal);
             }
             void Clear(){
                 boost::intrusive_ptr<Network_base> tmp(new Network_base());

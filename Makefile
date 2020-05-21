@@ -83,7 +83,7 @@ OBJS = Storage_base.o BoolStorage.o Uint16Storage.o Int16Storage.o Uint32Storage
 
 
 OBJS += Storage.o Tensor.o Accessor.o Generator.o Physics.o
-OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o CyTensor_base.o DenseCyTensor.o SparseCyTensor.o CyTensor.o Bond.o Symmetry.o contraction_tree.o
+OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o CyTensor_base.o DenseCyTensor.o SparseCyTensor.o CyTensor.o Bond.o Symmetry.o contraction_tree.o search_tree.o
 
 
 ## Utils
@@ -193,6 +193,8 @@ RegularNetwork.o: $(CytnxPATH)/src/RegularNetwork.cpp $(CytnxPATH)/include/Netwo
 FermionNetwork.o: $(CytnxPATH)/src/FermionNetwork.cpp $(CytnxPATH)/include/Network.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 contraction_tree.o: $(CytnxPATH)/src/contraction_tree.cpp $(CytnxPATH)/include/contraction_tree.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+search_tree.o: $(CytnxPATH)/src/search_tree.cpp $(CytnxPATH)/include/search_tree.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 ##--------------------------------------------------------------------------
