@@ -122,14 +122,14 @@ namespace cytnx_extension{
                     cytnx_uint64 cnt = tmp_cnts[0];
                     for(cytnx_uint64 i=1;i<tmp_cnts.size();i++){
                         cnt+=tmp_cnts[i];
-                        tmp_cnts[i]+=tmp_cnts[i-1];
+                        tmp_cnts[i]+=tmp_cnts[i-1];//tmp_cnts[i-1];
                     }
                     indices.resize(cnt);
                     
                     // concate the indices from each thread
-                    memcpy(&indices[0],&tmp_indices[0],sizeof(cytnx_uint64)*tmp_indices[0].size());
+                    memcpy(&indices[0],&tmp_indices[0][0],sizeof(cytnx_uint64)*tmp_indices[0].size());
                     for(cytnx_uint64 i=1;i<tmp_cnts.size();i++){
-                        memcpy(&indices[tmp_cnts[i-1]],&tmp_indices[i],sizeof(cytnx_uint64)*tmp_indices[i].size());
+                        memcpy(&indices[tmp_cnts[i-1]],&tmp_indices[i][0],sizeof(cytnx_uint64)*tmp_indices[i].size());
                     }
                     std::sort(indices.begin(),indices.end());
 

@@ -387,10 +387,7 @@ namespace cytnx_extension{
             
 
             bool _contiguous;
-            
-            SparseCyTensor* clone_meta(const bool &inner, const bool &outer) const{
-                SparseCyTensor* tmp = new SparseCyTensor();
-
+            void set_meta(SparseCyTensor *tmp, const bool &inner, const bool &outer)const{
                 //outer meta
                 if(outer){
                     tmp->_bonds = vec_clone(this->_bonds);
@@ -413,6 +410,11 @@ namespace cytnx_extension{
                     tmp->_outer2inner_col = this->_outer2inner_col;
                     tmp->_blockqnums = this->_blockqnums;
                 }
+
+            }
+            SparseCyTensor* clone_meta(const bool &inner, const bool &outer) const{
+                SparseCyTensor* tmp = new SparseCyTensor();
+                this->set_meta(tmp,inner,outer);
                 return tmp;
             };
         
@@ -492,25 +494,44 @@ namespace cytnx_extension{
             boost::intrusive_ptr<CyTensor_base> contiguous();
             boost::intrusive_ptr<CyTensor_base> contiguous_(){
                 if(!this->_contiguous){
-                    return this->contiguous();
-                }else{
-                    return boost::intrusive_ptr<CyTensor_base>(this);
+                    boost::intrusive_ptr<CyTensor_base> titr = this->contiguous();
+                    SparseCyTensor *tmp = (SparseCyTensor*)titr.get();
+                    tmp->set_meta(this,true,true);
+                    this->_blocks = tmp->_blocks;
+                    
                 }
+                return boost::intrusive_ptr<CyTensor_base>(this);
+                
             }
             void print_diagram(const bool &bond_info=false);
+
             Tensor get_block(const cytnx_uint64 &idx=0) const{
                 cytnx_error_msg(idx>=this->_blocks.size(),"[ERROR][SparseCyTensor] index out of range%s","\n");
                 if(this->_contiguous){
                     return this->_blocks[idx].clone();
                 }else{
-                    cytnx_error_msg(true,"[Developing]%s","\n");
+                    cytnx_error_msg(true,"[Developing] get block from a non-contiguous SparseCyTensor is currently not support. Call contiguous()/contiguous_() first.%s","\n");
                     return Tensor();
                 }
             };
+
             Tensor get_block(const std::vector<cytnx_int64> &qnum) const{
-                cytnx_error_msg(true,"[Developing]%s","\n");
+                cytnx_error_msg(!this->is_braket_form(),"[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch the row/col space.\n permute to the correct physical space first, then get block.%s","\n");
+                if(this->_contiguous){
+                    //get dtype from qnum:
+                    cytnx_int64 idx=-1;
+                    for(int i=0;i<this->_blockqnums.size();i++){
+                        if(qnum==this->_blockqnums[i]){idx=i; break;}
+                    }
+                    cytnx_error_msg(idx<0,"[ERROR][SparseCyTensor] no block with [qnum] exists in the current CyTensor.%s","\n");
+                    return this->get_block(idx);
+                }else{
+                    cytnx_error_msg(true,"[Developing] get block from a non-contiguous SparseCyTensor is currently not support. Call contiguous()/contiguous_() first.%s","\n");
+                    return Tensor();
+                }
                 return Tensor();
             };
+
             // return a share view of block, this only work for symm tensor in contiguous form.
             Tensor& get_block_(const cytnx_uint64 &idx=0){
                 cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseCyTensor] cannot use get_block_() on non-contiguous CyTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call get_blocks_()\n  2) Try get_block()/get_blocks()%s","\n");
@@ -530,24 +551,36 @@ namespace cytnx_extension{
             Tensor& get_block_(const std::vector<cytnx_int64> &qnum){
                 cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseCyTensor] cannot use get_block_() on non-contiguous CyTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call get_blocks_()\n  2) Try get_block()/get_blocks()%s","\n");
                 
-                cytnx_error_msg(true,"[Developing]%s","\n");
-                Tensor t;
-                return t;
+                //get dtype from qnum:
+                cytnx_int64 idx=-1;
+                for(int i=0;i<this->_blockqnums.size();i++){
+                    if(qnum==this->_blockqnums[i]){idx=i; break;}
+                }
+                cytnx_error_msg(idx<0,"[ERROR][SparseCyTensor] no block with [qnum] exists in the current CyTensor.%s","\n");
+                return this->get_block_(idx);
+                //cytnx_error_msg(true,"[Developing]%s","\n");
             }
             const Tensor& get_block_(const std::vector<cytnx_int64> &qnum) const{
                 cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseCyTensor] cannot use get_block_() on non-contiguous CyTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call get_blocks_()\n  2) Try get_block()/get_blocks()%s","\n");
                 
-                cytnx_error_msg(true,"[Developing]%s","\n");
-                Tensor t;
-                return t;
+                //get dtype from qnum:
+                cytnx_int64 idx=-1;
+                for(int i=0;i<this->_blockqnums.size();i++){
+                    if(qnum==this->_blockqnums[i]){idx=i; break;}
+                }
+                cytnx_error_msg(idx<0,"[ERROR][SparseCyTensor] no block with [qnum] exists in the current CyTensor.%s","\n");
+                return this->get_block_(idx);
             }
 
             std::vector<Tensor> get_blocks() const {
                 if(this->_contiguous){
                     return vec_clone(this->_blocks);
                 }else{
-                    cytnx_error_msg(true,"[Developing]%s","\n");
-                    return std::vector<Tensor>();
+                    //cytnx_error_msg(true,"[Developing]%s","\n");
+                    boost::intrusive_ptr<CyTensor_base> tmp = this->clone();
+                    tmp->contiguous_(); 
+                    SparseCyTensor *ttmp = (SparseCyTensor*)tmp.get();
+                    return ttmp->_blocks;
                 }
             };
 
@@ -556,7 +589,8 @@ namespace cytnx_extension{
                 if(this->_contiguous){
                     return this->_blocks;
                 }else{
-                    cytnx_error_msg(true,"[Developing]%s","\n");
+                    //cytnx_error_msg(true,"[Developing]%s","\n");
+                    cytnx_error_msg(true,"[ERROR][SparseCyTensor] cannot call get_blocks_() with a non-contiguous CyTensor. \ntry: \n1) get_blocks()\n2) call contiguous/contiguous_() first, then get_blocks_()%s","\n");
                     return this->_blocks;
                 }
             };
@@ -565,7 +599,7 @@ namespace cytnx_extension{
                 if(this->_contiguous){
                     return this->_blocks;
                 }else{
-                    cytnx_error_msg(true,"[Developing]%s","\n");
+                    cytnx_error_msg(true,"[ERROR][SparseCyTensor] cannot call get_blocks_() with a non-contiguous CyTensor. \ntry: \n1) get_blocks()\n2) call contiguous/contiguous_() first, then get_blocks_()%s","\n");
                     return this->_blocks;
                 }
             };

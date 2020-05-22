@@ -10,6 +10,19 @@ typedef cytnx::Accessor ac;
 int main(int argc, char *argv[]){
 
 
+    // Ket = IN
+    // Bra = OUT
+    auto Bd_i = cyx::Bond(3,cyx::BD_KET,{{2},{0},{-2}},{cyx::Symmetry::U1()}); //# 1 = 0.5 , so it is spin-1
+    auto Bd_o = cyx::Bond(3,cyx::BD_BRA,{{2},{0},{-2}},{cyx::Symmetry::U1()});//# 1 = 0.5, so it is spin-1
+    auto H = cyx::CyTensor({Bd_i,Bd_i,Bd_o,Bd_o},{},2);
+    auto H2 = H.clone();
+    H2.set_labels({4,3,5,6});
+    H.permute_({2,0,1,3},3);
+    //H.contiguous_();
+    H.print_diagram();
+    cout << H.get_blocks();//get blocks
+
+    exit(1);
 
     auto a1 = cyx::CyTensor(cytnx::zeros({2,2,2,2}),0); a1.set_name("a1");
     auto a2 = cyx::CyTensor(cytnx::zeros({2,2,2,2}),0); a2.set_name("a2");

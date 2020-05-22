@@ -175,16 +175,16 @@ namespace cytnx_extension{
         char *rlbl = (char*)malloc(40*sizeof(char));
         if(this->is_tag()){
             sprintf(buffer,"braket_form : %s\n",this->_is_braket_form?"True":"False"); std::cout << std::string(buffer);
-            sprintf(buffer,"      |ket>               <bra| %s","\n"); std::cout << std::string(buffer);
+            sprintf(buffer,"        row               col   %s","\n"); std::cout << std::string(buffer);
             sprintf(buffer,"           ---------------      %s","\n"); std::cout << std::string(buffer);
             for(cytnx_uint64 i=0;i<vl;i++){
                 sprintf(buffer,"           |             |     %s","\n"); std::cout << std::string(buffer);
                 if(i<Nin){
-                    if(this->_bonds[i].type() == bondType::BD_KET) bks = "> ";
-                    else                                         bks = "<*";
+                    if(this->_bonds[i].type() == bondType::BD_KET) bks = " -->";
+                    else                                         bks = "*<--";
                     memset(l,0,sizeof(char)*40);
                     memset(llbl,0,sizeof(char)*40);
-                    sprintf(l,"%3d %s__",this->_labels[i],bks.c_str());
+                    sprintf(l,"%3d %s",this->_labels[i],bks.c_str());
                     sprintf(llbl,"%-3d",this->_bonds[i].dim()); 
                 }else{
                     memset(l,0,sizeof(char)*40);
@@ -193,12 +193,12 @@ namespace cytnx_extension{
                     sprintf(llbl,"%s","   "); 
                 }
                 if(i< Nout){
-                    if(this->_bonds[Nin+i].type() == bondType::BD_KET) bks = "*>";
-                    else                                              bks = " <";
+                    if(this->_bonds[Nin+i].type() == bondType::BD_KET) bks = "<--*";
+                    else                                              bks = "--> ";
                     memset(r,0,sizeof(char)*40);
                     memset(rlbl,0,sizeof(char)*40);
-                    sprintf(r,"__%s %-3d",bks.c_str(),this->_labels[Nin + i]);
-                    sprintf(rlbl,"%-3d",this->_bonds[Nin + i].dim()); 
+                    sprintf(r,"%s %-3d",bks.c_str(),this->_labels[Nin + i]);
+                    sprintf(rlbl,"%3d",this->_bonds[Nin + i].dim()); 
                 }else{
                     memset(r,0,sizeof(char)*40);
                     memset(rlbl,0,sizeof(char)*40);
