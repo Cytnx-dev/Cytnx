@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['mkl_5fcomplex16',['MKL_Complex16',['../Type_8hpp.html#a1fa119034fee07a6d5449926cbb7915a',1,'Type.hpp']]],
-  ['mkl_5fcomplex8',['MKL_Complex8',['../Type_8hpp.html#a0b45f62ef34311fdb79b8de82d75c0d3',1,'Type.hpp']]]
+  ['hbar',['hBar',['../Physics_8hpp.html#adafb6f190ca6cd537bf81bb83b86fdca',1,'Physics.hpp']]],
+  ['hplanck',['hPlanck',['../Physics_8hpp.html#acb991e9f5a4457fb08f1d844165d4042',1,'Physics.hpp']]]
 ];

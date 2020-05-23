@@ -112,14 +112,18 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespacecytnx"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html">cytnx</a></td></tr>
-<tr class="memdesc:namespacecytnx"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function to print vector with ODT: <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacecytnx_1_1physics"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1physics.html">cytnx::physics</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr><td colspan="2"><div class="groupHeader"></div></td></tr>
+<tr class="memitem:a142aa7fd36bbbe9a270c06e568c9e18b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Physics_8hpp.html#a142aa7fd36bbbe9a270c06e568c9e18b">kBoltz</a>&#160;&#160;&#160;cytnx_double(1.380649e-23)</td></tr>
+<tr class="memdesc:a142aa7fd36bbbe9a270c06e568c9e18b"><td class="mdescLeft">&#160;</td><td class="mdescRight">create Spin-S representation matrix.  <a href="#a142aa7fd36bbbe9a270c06e568c9e18b">More...</a><br /></td></tr>
+<tr class="separator:a142aa7fd36bbbe9a270c06e568c9e18b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb991e9f5a4457fb08f1d844165d4042"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Physics_8hpp.html#acb991e9f5a4457fb08f1d844165d4042">hPlanck</a>&#160;&#160;&#160;cytnx_double(6.62607015e-34)</td></tr>
+<tr class="memdesc:acb991e9f5a4457fb08f1d844165d4042"><td class="mdescLeft">&#160;</td><td class="mdescRight">create Spin-S representation matrix.  <a href="#acb991e9f5a4457fb08f1d844165d4042">More...</a><br /></td></tr>
+<tr class="separator:acb991e9f5a4457fb08f1d844165d4042"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adafb6f190ca6cd537bf81bb83b86fdca"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Physics_8hpp.html#adafb6f190ca6cd537bf81bb83b86fdca">hBar</a>&#160;&#160;&#160;cytnx_double(1.05457181e-34)</td></tr>
+<tr class="memdesc:adafb6f190ca6cd537bf81bb83b86fdca"><td class="mdescLeft">&#160;</td><td class="mdescRight">create Spin-S representation matrix.  <a href="#adafb6f190ca6cd537bf81bb83b86fdca">More...</a><br /></td></tr>
+<tr class="separator:adafb6f190ca6cd537bf81bb83b86fdca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f018f04ccd068e899a8fcfe2e9b82d4"><td class="memItemLeft" align="right" valign="top">Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1physics.html#a9f018f04ccd068e899a8fcfe2e9b82d4">cytnx::physics::spin</a> (const cytnx_double &amp;S, const std::string &amp;Comp, const int &amp;device=Device.cpu)</td></tr>
 <tr class="memdesc:a9f018f04ccd068e899a8fcfe2e9b82d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">create Spin-S representation matrix.  <a href="namespacecytnx_1_1physics.html#a9f018f04ccd068e899a8fcfe2e9b82d4">More...</a><br /></td></tr>
 <tr class="separator:a9f018f04ccd068e899a8fcfe2e9b82d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -127,6 +131,82 @@ Functions</h2></td></tr>
 <tr class="memdesc:a1c6ebefa40751712dfb8976b015f48d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">create Pauli matrix.  <a href="namespacecytnx_1_1physics.html#a1c6ebefa40751712dfb8976b015f48d6">More...</a><br /></td></tr>
 <tr class="separator:a1c6ebefa40751712dfb8976b015f48d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="adafb6f190ca6cd537bf81bb83b86fdca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adafb6f190ca6cd537bf81bb83b86fdca">&#9670;&nbsp;</a></span>hBar</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define hBar&#160;&#160;&#160;cytnx_double(1.05457181e-34)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>create Spin-S representation matrix. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">S</td><td>the Spin index. should be multiple of 1/2. </td></tr>
+    <tr><td class="paramname">Comp</td><td>the Component of Spin, it can be 'x', 'y' and 'z' </td></tr>
+    <tr><td class="paramname">device</td><td>the device that the Tensor is put on. It can be any device defined in <a class="el" href="namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a">cytnx::Device </a></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>[Tensor] </dd></dl>
+
+</div>
+</div>
+<a id="acb991e9f5a4457fb08f1d844165d4042"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb991e9f5a4457fb08f1d844165d4042">&#9670;&nbsp;</a></span>hPlanck</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define hPlanck&#160;&#160;&#160;cytnx_double(6.62607015e-34)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>create Spin-S representation matrix. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">S</td><td>the Spin index. should be multiple of 1/2. </td></tr>
+    <tr><td class="paramname">Comp</td><td>the Component of Spin, it can be 'x', 'y' and 'z' </td></tr>
+    <tr><td class="paramname">device</td><td>the device that the Tensor is put on. It can be any device defined in <a class="el" href="namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a">cytnx::Device </a></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>[Tensor] </dd></dl>
+
+</div>
+</div>
+<a id="a142aa7fd36bbbe9a270c06e568c9e18b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a142aa7fd36bbbe9a270c06e568c9e18b">&#9670;&nbsp;</a></span>kBoltz</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define kBoltz&#160;&#160;&#160;cytnx_double(1.380649e-23)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>create Spin-S representation matrix. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">S</td><td>the Spin index. should be multiple of 1/2. </td></tr>
+    <tr><td class="paramname">Comp</td><td>the Component of Spin, it can be 'x', 'y' and 'z' </td></tr>
+    <tr><td class="paramname">device</td><td>the device that the Tensor is put on. It can be any device defined in <a class="el" href="namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a">cytnx::Device </a></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>[Tensor] </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
