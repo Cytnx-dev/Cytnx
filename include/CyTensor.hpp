@@ -107,10 +107,18 @@ namespace cytnx_extension{
             void set_labels(const std::vector<cytnx_int64> &new_labels);
             template<class T>
             T& at(const std::vector<cytnx_uint64> &locator){
-                cytnx_error_msg(this->is_blockform(),"[ERROR] cannot access element using at<T> on a CyTensor with symmetry.\n suggestion: get_block/get_blocks first.%s","\n");
-                
-                // only non-symm can enter this
-                return this->get_block_().at<T>(locator);
+                //std::cout << "at " << this->is_blockform()  << std::endl;
+                if(this->is_blockform()){
+                    // sparse
+                    //cytnx_error_msg(this->is_blockform(),"[ERROR] cannot access element using at<T> on a CyTensor with symmetry.\n suggestion: get_block/get_blocks first.%s","\n");
+                    //std::cout << "[at, blockform]" << std::endl;
+                    T aux;
+                    return this->at_for_sparse(locator, aux);
+
+                }else{
+                    return this->get_block_().at<T>(locator);
+                }
+
             }
             int uten_type(){
                 return this->uten_type_id;
@@ -142,11 +150,12 @@ namespace cytnx_extension{
 
             virtual Tensor get_block(const cytnx_uint64 &idx=0) const; // return a copy of block
             virtual Tensor get_block(const std::vector<cytnx_int64> &qnum) const; //return a copy of block
+
             virtual const Tensor& get_block_(const cytnx_uint64 &idx=0) const; // return a share view of block, this only work for non-symm tensor.
             virtual const Tensor& get_block_(const std::vector<cytnx_int64> &qnum) const; //return a copy of block
-
             virtual Tensor& get_block_(const cytnx_uint64 &idx=0); // return a share view of block, this only work for non-symm tensor.
             virtual Tensor& get_block_(const std::vector<cytnx_int64> &qnum); //return a copy of block
+
 
             virtual std::vector<Tensor> get_blocks() const;
             virtual const std::vector<Tensor>& get_blocks_() const;
@@ -172,6 +181,13 @@ namespace cytnx_extension{
             virtual void Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false);
             virtual boost::intrusive_ptr<CyTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false);
             virtual void Conj_();
+
+            // this a workaround, as virtual function cannot template.
+            virtual cytnx_complex128& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux);
+            virtual cytnx_complex64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux);
+            virtual cytnx_double& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux);
+            virtual cytnx_float& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux);
+
 
             virtual ~CyTensor_base(){};
     };
@@ -359,8 +375,22 @@ namespace cytnx_extension{
                 out->Trace_(a,b,by_label);
                 return out;
             }
-
-
+            cytnx_complex128& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux){
+                cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
+                //return cytnx_complex128(0,0);
+            }
+            cytnx_complex64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux){
+                cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
+                //return cytnx_complex64(0,0);
+            }
+            cytnx_double& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux){
+                cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
+                //return 0;
+            }
+            cytnx_float& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux){
+                cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
+                //return 0;
+            }
 
             // end virtual function              
 
@@ -517,9 +547,9 @@ namespace cytnx_extension{
 
             Tensor get_block(const std::vector<cytnx_int64> &qnum) const{
                 cytnx_error_msg(!this->is_braket_form(),"[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch the row/col space.\n permute to the correct physical space first, then get block.%s","\n");
-                std::cout << "get_block" <<std::endl;
+                //std::cout << "get_block" <<std::endl;
                 if(this->_contiguous){
-                    std::cout << "contiguous" << std::endl;
+                    //std::cout << "contiguous" << std::endl;
                     //get dtype from qnum:
                     cytnx_int64 idx=-1;
                     for(int i=0;i<this->_blockqnums.size();i++){
@@ -684,7 +714,16 @@ namespace cytnx_extension{
                 cytnx_error_msg(true,"[Developing]%s","\n");
                 //return nullptr;
             }
+
+            cytnx_complex128& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux);
+            cytnx_complex64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux);
+            cytnx_double& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux);
+            cytnx_float& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux);
+
+
             // end virtual func
+
+
     };
     /// @endcond
 
@@ -875,28 +914,45 @@ namespace cytnx_extension{
             Tensor get_block(const cytnx_uint64 &idx=0) const{
                 return this->_impl->get_block(idx);
             };
+            //================================
             // return a clone of block
             Tensor get_block(const std::vector<cytnx_int64> &qnum) const{
                 return this->_impl->get_block(qnum);
             }
-
+            Tensor get_block(const std::initializer_list<cytnx_int64> &qnum) const{
+                std::vector<cytnx_int64> tmp = qnum;
+                return get_block(tmp);
+            }
+            //================================
             // this only work for non-symm tensor. return a shared view of block
             const Tensor& get_block_(const cytnx_uint64 &idx=0) const{
                 return this->_impl->get_block_(idx);
             }
+            //================================
             // this only work for non-symm tensor. return a shared view of block
             Tensor& get_block_(const cytnx_uint64 &idx=0){
                 return this->_impl->get_block_(idx);
             }
-
+            //================================
             // this only work for non-symm tensor. return a shared view of block
             Tensor& get_block_(const std::vector<cytnx_int64> &qnum){
                 return this->_impl->get_block_(qnum);
             }
+            Tensor& get_block_(const std::initializer_list<cytnx_int64> &qnum){
+                std::vector<cytnx_int64> tmp = qnum;
+                return get_block_(tmp);
+            }
+            //================================
+
             // this only work for non-symm tensor. return a shared view of block
             const Tensor& get_block_(const std::vector<cytnx_int64> &qnum) const{
                 return this->_impl->get_block_(qnum);
             }
+            const Tensor& get_block_(const std::initializer_list<cytnx_int64> &qnum) const{
+                std::vector<cytnx_int64> tmp = qnum;
+                return this->_impl->get_block_(tmp);
+            }
+            //================================
             // this return a shared view of blocks for non-symm tensor.
             // for symmetry tensor, it call contiguous first and return a shared view of blocks. [dev]
             std::vector<Tensor> get_blocks() const {

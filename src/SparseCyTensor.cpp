@@ -5,6 +5,7 @@
 #include "linalg.hpp"
 #include "Generator.hpp"
 #include <vector>
+#include "utils/vec_print.hpp"
 using namespace std;
 namespace cytnx_extension{
     using namespace cytnx;
@@ -35,7 +36,8 @@ namespace cytnx_extension{
         
         //check Rowrank:
         cytnx_error_msg((N_ket<1)||(N_ket>bonds.size()-1),"[ERROR][SparseCyTensor] must have at least one ket-bond and one bra-bond.%s","\n");
-        
+       
+ 
         if(Rowrank<0){
             this->_Rowrank = N_ket;
             this->_inner_Rowrank = N_ket;
@@ -76,11 +78,17 @@ namespace cytnx_extension{
         vector<cytnx_uint64> degenerates;
         vector<vector<cytnx_int64> > uniq_bonds_row = tot_bonds[0].getUniqueQnums();
         vector<vector<cytnx_int64> > uniq_bonds_col = tot_bonds[1].getUniqueQnums();
+        
+        //vec_print(std::cout,tot_bonds[0].qnums());
+        //vec_print(std::cout,tot_bonds[1].qnums());
+        //[DDK]
 
         //get common qnum set of row-col (bra-ket) space.
         this->_blockqnums = vec2d_intersect(uniq_bonds_row,uniq_bonds_col,true,true);    
         cytnx_error_msg(this->_blockqnums.size()==0,"[ERROR][SparseCyTensor] invalid qnums. no common block (qnum) in this setup.%s","\n");
-                
+          
+        //vec_print(std::cout,this->_blockqnums);
+      
         //calculate&init the No. of blocks and their sizes.
         this->_blocks.resize(this->_blockqnums.size());
         cytnx_uint64 rowdim,coldim;
@@ -303,9 +311,11 @@ namespace cytnx_extension{
             //tmp->print_diagram();            
             
             //calculate new inner meta, and copy the element from it.   
-            for(unsigned int b=0;b<this->_blocks.size();b++){   
+            for(unsigned int b=0;b<this->_blocks.size();b++){
+                 
                 // build accumulate index with current memory shape.
                 vector<cytnx_uint64> oldshape = vec_map(this->shape(),this->_inv_mapper);
+                //cout << oldshape << endl;
                 //for(int t=0;t<oldshape.size();t++) cout << oldshape[t] << " "; cout << endl;//[DEBUG]
 
                 vector<cytnx_uint64> acc_in_old(this->_inner_Rowrank),acc_out_old(oldshape.size()-this->_inner_Rowrank);
@@ -320,6 +330,8 @@ namespace cytnx_extension{
                     acc_in_old[acc_in_old.size()-2-s] = oldshape.back()*acc_in_old[acc_in_old.size()-1-s]; 
                     oldshape.pop_back();
                 }
+                
+
                 //for(int t=0;t<acc_in_old.size();t++) cout << acc_in_old[t] << " "; cout << endl;//[DEBUG]
                 //for(int t=0;t<acc_out_old.size();t++) cout << acc_out_old[t] << " "; cout << endl;//[DEBUG]
                 //exit(1);
@@ -327,8 +339,8 @@ namespace cytnx_extension{
                 for(unsigned int i=0;i<this->_blocks[b].shape()[0];i++){
                     for(unsigned int j=0;j<this->_blocks[b].shape()[1];j++){
                         //decompress 
-                        vector<cytnx_uint64> tfidx = vec_concatenate(c2cartesian(i,acc_in_old), 
-                                                                     c2cartesian(j,acc_out_old));
+                        vector<cytnx_uint64> tfidx = vec_concatenate(c2cartesian(this->_inner2outer_row[b][i],acc_in_old), 
+                                                                     c2cartesian(this->_inner2outer_col[b][j],acc_out_old));
                        
                         //cout << "old idxs:" ;
                         //for(int t=0;t<tfidx.size();t++) cout << tfidx[t] << " "; cout << endl;//[DEBUG]
@@ -384,5 +396,126 @@ namespace cytnx_extension{
             return out;
         }
     }
+
+    // some helper function:
+    std::vector<cytnx_uint64> _locator_to_inner_ij(const std::vector<cytnx_uint64> &locator, const std::vector<cytnx_uint64> &current_shape, const cytnx_uint64 &inner_Rowrank, const std::vector<cytnx_uint64> &inv_mapper){
+        //1. map the locator to the memory layout:
+        std::vector<cytnx_uint64> mem_locator = vec_map(locator,inv_mapper);
+
+        //2. dispatch to row and column part:
+        std::vector<cytnx_uint64> row_locator(inner_Rowrank),col_locator(mem_locator.size() - inner_Rowrank);
+        memcpy(&row_locator[0],&mem_locator[0],sizeof(cytnx_uint64)*row_locator.size());
+        memcpy(&col_locator[0],&mem_locator[inner_Rowrank],sizeof(cytnx_uint64)*col_locator.size());
+
+        //3. 
+        // build accumulate index with current memory shape.
+        vector<cytnx_uint64> oldshape = vec_map(current_shape,inv_mapper);
+
+        vector<cytnx_uint64> acc_in_old(inner_Rowrank),acc_out_old(oldshape.size()-inner_Rowrank);
+        acc_out_old[acc_out_old.size()-1] = 1;
+        acc_in_old[ acc_in_old.size()-1 ] = 1;
+        for(unsigned int s=0;s<acc_out_old.size()-1;s++){
+            acc_out_old[acc_out_old.size()-2-s] = oldshape.back()*acc_out_old[acc_out_old.size()-1-s]; 
+            oldshape.pop_back();
+        }
+        oldshape.pop_back();
+        for(unsigned int s=0;s<acc_in_old.size()-1;s++){
+            acc_in_old[acc_in_old.size()-2-s] = oldshape.back()*acc_in_old[acc_in_old.size()-1-s]; 
+            oldshape.pop_back();
+        }
+        
+        //get row/col for whole memory 
+        return {cartesian2c(row_locator,acc_in_old), cartesian2c(col_locator,acc_out_old)};
+
+    }
+
+    cytnx_complex128& SparseCyTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux){
+        //1. check if out of range:
+        cytnx_error_msg(locator.size()!=this->_bonds.size(),"[ERROR] len(locator) does not match the rank of tensor.%s","\n");
+        for(int i=0;i<this->_bonds.size();i++){
+            cytnx_error_msg(locator[i]>=this->_bonds[i].dim(),"[ERROR][SparseCyTensor][at] locator @index: %d out of range.\n",i);
+        }
+        
+        //2. calculate the location in real memory using meta datas.
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        cytnx_uint64 &i = ij[0];
+        cytnx_uint64 &j = ij[1];
+
+        //3. check if the item is there:
+        // if they ref to different block, then the element is invalid (zero)
+        if(this->_outer2inner_row[i].first != this->_outer2inner_col[j].first){
+            cytnx_error_msg(true,"[ERROR] trying to access element that doesn't belong to any block.%s","\n");
+        }
+
+        cytnx_uint64 block_index = this->_outer2inner_row[i].first;
+        return this->_blocks[block_index].at<cytnx_complex128>({this->_outer2inner_row[i].second,this->_outer2inner_col[j].second});
+        
+    }
+    cytnx_complex64&  SparseCyTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux){
+        //1. check if out of range:
+        cytnx_error_msg(locator.size()!=this->_bonds.size(),"[ERROR] len(locator) does not match the rank of tensor.%s","\n");
+        for(int i=0;i<this->_bonds.size();i++){
+            cytnx_error_msg(locator[i]>=this->_bonds[i].dim(),"[ERROR][SparseCyTensor][at] locator @index: %d out of range.\n",i);
+        }
+        
+        //2. calculate the location in real memory using meta datas.
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        cytnx_uint64 &i = ij[0];
+        cytnx_uint64 &j = ij[1];
+
+        //3. check if the item is there:
+        // if they ref to different block, then the element is invalid (zero)
+        if(this->_outer2inner_row[i].first != this->_outer2inner_col[j].first){
+            cytnx_error_msg(true,"[ERROR] trying to access element that doesn't belong to any block.%s","\n");
+        }
+
+        cytnx_uint64 block_index = this->_outer2inner_row[i].first;
+        return this->_blocks[block_index].at<cytnx_complex64>({this->_outer2inner_row[i].second,this->_outer2inner_col[j].second});
+
+    }
+    cytnx_double&     SparseCyTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux){
+        //1. check if out of range:
+        cytnx_error_msg(locator.size()!=this->_bonds.size(),"[ERROR] len(locator) does not match the rank of tensor.%s","\n");
+        for(int i=0;i<this->_bonds.size();i++){
+            cytnx_error_msg(locator[i]>=this->_bonds[i].dim(),"[ERROR][SparseCyTensor][at] locator @index: %d out of range.\n",i);
+        }
+        
+        //2. calculate the location in real memory using meta datas.
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        cytnx_uint64 &i = ij[0];
+        cytnx_uint64 &j = ij[1];
+
+        //3. check if the item is there:
+        // if they ref to different block, then the element is invalid (zero)
+        if(this->_outer2inner_row[i].first != this->_outer2inner_col[j].first){
+            cytnx_error_msg(true,"[ERROR] trying to access element that doesn't belong to any block.%s","\n");
+        }
+
+        cytnx_uint64 block_index = this->_outer2inner_row[i].first;
+        return this->_blocks[block_index].at<cytnx_double>({this->_outer2inner_row[i].second,this->_outer2inner_col[j].second});
+    }
+    cytnx_float&      SparseCyTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux){
+        //1. check if out of range:
+        cytnx_error_msg(locator.size()!=this->_bonds.size(),"[ERROR] len(locator) does not match the rank of tensor.%s","\n");
+        for(int i=0;i<this->_bonds.size();i++){
+            cytnx_error_msg(locator[i]>=this->_bonds[i].dim(),"[ERROR][SparseCyTensor][at] locator @index: %d out of range.\n",i);
+        }
+        
+        //2. calculate the location in real memory using meta datas.
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        cytnx_uint64 &i = ij[0];
+        cytnx_uint64 &j = ij[1];
+
+        //3. check if the item is there:
+        // if they ref to different block, then the element is invalid (zero)
+        if(this->_outer2inner_row[i].first != this->_outer2inner_col[j].first){
+            cytnx_error_msg(true,"[ERROR] trying to access element that doesn't belong to any block.%s","\n");
+        }
+
+        cytnx_uint64 block_index = this->_outer2inner_row[i].first;
+        return this->_blocks[block_index].at<cytnx_float>({this->_outer2inner_row[i].second,this->_outer2inner_col[j].second});
+    }
+
+
 
 }//namespace cytnx

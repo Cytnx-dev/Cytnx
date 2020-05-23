@@ -75,7 +75,7 @@ namespace cytnx_extension{
                 return out;
             }
 
-            // return a sorted qnums by removing all duplicates.
+            // return a sorted qnums by removing all duplicates, sorted from large to small.
             std::vector<std::vector<cytnx_int64> > getUniqueQnums(std::vector<cytnx_uint64> &counts, const bool &return_counts);
 
             // return the degeneracy of the specify qnum set.

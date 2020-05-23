@@ -81,7 +81,7 @@ namespace cytnx_extension{
         cytnx_error_msg(this->_qnums.size()==0,"[ERROR][getUniqueQnums] cannot call this on a non-symmetry bond!%s","\n");
         
         vector<vector<cytnx_int64> > tmp_qnums = this->_qnums;
-        std::sort(tmp_qnums.begin(),tmp_qnums.end(),utils_internal::_fx_compare_vec_inc);
+        std::sort(tmp_qnums.begin(),tmp_qnums.end(),utils_internal::_fx_compare_vec_dec);
         tmp_qnums.resize(std::distance(tmp_qnums.begin(), std::unique(tmp_qnums.begin(),tmp_qnums.end())));
         if(return_counts){
             counts.resize(tmp_qnums.size());

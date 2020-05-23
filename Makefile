@@ -88,7 +88,7 @@ OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o CyTensor_base
 
 ## Utils
 OBJS += utils_internal_interface.o
-OBJS += utils.o Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o vec2d_col_sort.o vec_range.o complex_arithmetic.o is.o vec_intersect.o vec_concatenate.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_cpu.o SetElems_cpu.o cartesian.o str_utils.o Complexmem_cpu.o
+OBJS += utils.o Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o vec_print.o vec2d_col_sort.o vec_range.o complex_arithmetic.o is.o vec_intersect.o vec_concatenate.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_cpu.o SetElems_cpu.o cartesian.o str_utils.o Complexmem_cpu.o
 ifeq ($(GPU_Enable),1)
   OBJS += cucomplex_arithmetic.o cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o cuFill_gpu.o cuSetArange_gpu.o cuGetElems_gpu.o  cuSetElems_gpu.o cuComplexmem_gpu.o
 endif
@@ -448,6 +448,8 @@ vec_erase.o: $(CytnxPATH)/src/utils/vec_erase.cpp $(CytnxPATH)/include/utils/vec
 vec_where.o: $(CytnxPATH)/src/utils/vec_where.cpp $(CytnxPATH)/include/utils/vec_where.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 vec_range.o: $(CytnxPATH)/src/utils/vec_range.cpp $(CytnxPATH)/include/utils/vec_range.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+vec_print.o: $(CytnxPATH)/src/utils/vec_print.cpp $(CytnxPATH)/include/utils/vec_print.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 vec_concatenate.o: $(CytnxPATH)/src/utils/vec_concatenate.cpp $(CytnxPATH)/include/utils/vec_concatenate.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<

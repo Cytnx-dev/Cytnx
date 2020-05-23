@@ -12,17 +12,59 @@ int main(int argc, char *argv[]){
 
     // Ket = IN
     // Bra = OUT
-    auto Bd_i = cyx::Bond(3,cyx::BD_KET,{{2},{0},{-2}},{cyx::Symmetry::U1()}); //# 1 = 0.5 , so it is spin-1
-    auto Bd_o = cyx::Bond(3,cyx::BD_BRA,{{2},{0},{-2}},{cyx::Symmetry::U1()});//# 1 = 0.5, so it is spin-1
+    auto Bd_i = cyx::Bond(2,cyx::BD_KET,{{1},{-1}},{cyx::Symmetry::U1()}); //# 1 = 0.5 , so it is spin-1
+    auto Bd_o = cyx::Bond(2,cyx::BD_BRA,{{1},{-1}},{cyx::Symmetry::U1()});//# 1 = 0.5, so it is spin-1
     auto H = cyx::CyTensor({Bd_i,Bd_i,Bd_o,Bd_o},{},2);
-    auto H2 = H.clone();
-    H2.set_labels({4,3,5,6});
-    H.permute_({2,0,1,3},3);
-    //H.contiguous_();
-    H.print_diagram();
-    cout << H.get_blocks();//get blocks
+    H.permute_({0,3,1,2});   
+    H.print_diagram();    
 
-    exit(1);
+
+    auto HT = linalg::Kron(physics::spin(1./2,'z'),physics::spin(1./2,'z')) + 
+              linalg::Kron(physics::spin(1./2,'x'),physics::spin(1./2,'x')) +
+              linalg::Kron(physics::spin(1./2,'y'),physics::spin(1./2,'y'));
+    HT = HT.real().reshape({2,2,2,2});
+    HT.permute_({0,3,1,2});
+    
+    for(int i=0;i< HT.shape()[0];i++)
+        for(int j=0;j<HT.shape()[1];j++)
+            for(int k=0;k< HT.shape()[2];k++)
+                for(int l=0;l<HT.shape()[3];l++){
+                    if(abs(HT.at<cytnx_double>({i,j,k,l}))>1.0e-15)
+                        H.at<cytnx_double>({i,j,k,l}) = HT.at<cytnx_double>({i,j,k,l});
+                }
+
+
+    H.permute_({0,1,2,3},-1,true);
+    H.print_diagram();
+    
+    cout << H.get_block({2});
+    cout << H.get_block({0});
+    cout << H.get_block({-2});
+
+    
+    
+    return 0;
+    
+    H.get_block_({4}).at<cytnx_double>({0,0}) = HT.at<cytnx_double>({0,0});
+
+    H.get_block_({2}).at<cytnx_double>({0,0}) = HT.at<cytnx_double>({1,1});
+    H.get_block_({2}).at<cytnx_double>({0,1}) = HT.at<cytnx_double>({1,3});
+    H.get_block_({2}).at<cytnx_double>({1,0}) = HT.at<cytnx_double>({3,1});
+    H.get_block_({2}).at<cytnx_double>({1,1}) = HT.at<cytnx_double>({3,3});
+
+    H.get_block_({0}).at<cytnx_double>({0,0}) = HT.at<cytnx_double>({2,2});
+    H.get_block_({0}).at<cytnx_double>({0,1}) = HT.at<cytnx_double>({2,4});
+    H.get_block_({0}).at<cytnx_double>({0,2}) = HT.at<cytnx_double>({2,6});
+    H.get_block_({0}).at<cytnx_double>({1,0}) = HT.at<cytnx_double>({4,2});
+    H.get_block_({0}).at<cytnx_double>({1,1}) = HT.at<cytnx_double>({4,4});
+    H.get_block_({0}).at<cytnx_double>({1,2}) = HT.at<cytnx_double>({4,6});
+    H.get_block_({0}).at<cytnx_double>({2,0}) = HT.at<cytnx_double>({6,2});
+    H.get_block_({0}).at<cytnx_double>({2,1}) = HT.at<cytnx_double>({6,4});
+    H.get_block_({0}).at<cytnx_double>({2,2}) = HT.at<cytnx_double>({6,6});
+    cout << H << endl;
+    
+    return 0;
+    
 
     auto a1 = cyx::CyTensor(cytnx::zeros({2,2,2,2}),0); a1.set_name("a1");
     auto a2 = cyx::CyTensor(cytnx::zeros({2,2,2,2}),0); a2.set_name("a2");

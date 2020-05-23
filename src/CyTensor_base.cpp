@@ -205,6 +205,20 @@ namespace cytnx_extension{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
         }
 
+        cytnx_complex128& CyTensor_base::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux){
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+        }
+        cytnx_complex64& CyTensor_base::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux){
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+        }
+        cytnx_double& CyTensor_base::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux){
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+        }
+        cytnx_float& CyTensor_base::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux){
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+        }
+
+
         //-----------------------------------------
         std::ostream& operator<<(std::ostream& os, const CyTensor &in){
             char* buffer = (char*)malloc(sizeof(char)*256);
