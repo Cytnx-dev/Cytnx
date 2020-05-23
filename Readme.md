@@ -3,7 +3,7 @@
 ![alt text](./Icon_small.png)
 
 ## Intro slide
-[Cytnx_v0.5.2a.pdf](https://drive.google.com/file/d/12pIMDAqb1n2juzyJvvVSqNd9Flnr4D5E/view?usp=sharing)
+[Cytnx_v0.5.2a.pdf](https://drive.google.com/file/d/1MJvPar3AKfzI0uZPQdfBG39kG4Lv3XIG/view?usp=sharing)
 
 ## Stable Version:
     [v0.5.1 pre-release](https://github.com/kaihsin/Cytnx/tree/v0.5.1a)
