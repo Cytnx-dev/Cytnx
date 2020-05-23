@@ -517,10 +517,15 @@ namespace cytnx_extension{
 
             Tensor get_block(const std::vector<cytnx_int64> &qnum) const{
                 cytnx_error_msg(!this->is_braket_form(),"[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch the row/col space.\n permute to the correct physical space first, then get block.%s","\n");
+                std::cout << "get_block" <<std::endl;
                 if(this->_contiguous){
+                    std::cout << "contiguous" << std::endl;
                     //get dtype from qnum:
                     cytnx_int64 idx=-1;
                     for(int i=0;i<this->_blockqnums.size();i++){
+                        for(int j=0;j<this->_blockqnums[i].size();j++)
+                            std::cout << this->_blockqnums[i][j]<< " ";
+                        std::cout << std::endl;
                         if(qnum==this->_blockqnums[i]){idx=i; break;}
                     }
                     cytnx_error_msg(idx<0,"[ERROR][SparseCyTensor] no block with [qnum] exists in the current CyTensor.%s","\n");
@@ -756,7 +761,8 @@ namespace cytnx_extension{
 
                 // dynamical dispatch:
                 if(is_sym){
-                    cytnx_warning_msg(true,"[warning, still developing, some functions will display \"[Developing]\"][SparseCyTensor]%s","\n");
+                    std::cout << "sym!!" << std::endl;
+                    //cytnx_warning_msg(true,"[warning, still developing, some functions will display \"[Developing]\"][SparseCyTensor]%s","\n");
                     boost::intrusive_ptr<CyTensor_base> out(new SparseCyTensor());
                     this->_impl = out;
                 }else{   

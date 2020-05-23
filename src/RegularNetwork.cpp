@@ -11,13 +11,13 @@ using namespace std;
 namespace cytnx_extension{
     using namespace cytnx;
     // these two are internal functions:
-    void _parse_ORDER_line_(vector<string> &tokens, const string &line){
+    void _parse_ORDER_line_(vector<string> &tokens, const string &line, const cytnx_uint64 &line_num){
 
         cytnx_error_msg((line.find_first_of("\t;\n:") != string::npos),
-                        "[ERROR][Network][Fromfile] invalid ORDER line format.%s",
+                        "[ERROR][Network][Fromfile] line:%d invalid ORDER line format.%s",line_num,
                         "\n");
         cytnx_error_msg((line.find_first_of("(),") == string::npos),
-                        "[ERROR][Network][Fromfile] invalid ORDER line format.%s",
+                        "[ERROR][Network][Fromfile] line:%d invalid ORDER line format.%s",line_num,
                         " tensors should be seperate by delimiter \',\' (comma), and/or wrapped with \'(\' and \')\'");
         
         //check mismatch:
@@ -30,24 +30,24 @@ namespace cytnx_extension{
         // slice the line into pieces by parentheses and comma
         tokens = str_findall(line,"(),");
  
-        cytnx_error_msg(tokens.size()==0,"[ERROR][Network][Fromfile] invalid ORDER line.%s","\n");
+        cytnx_error_msg(tokens.size()==0,"[ERROR][Network][Fromfile] line:%d invalid ORDER line.%s",line_num,"\n");
 
         
             
     }
-    void _parse_TOUT_line_(vector<cytnx_int64> &lbls, cytnx_uint64 &TOUT_iBondNum, const string &line){
+    void _parse_TOUT_line_(vector<cytnx_int64> &lbls, cytnx_uint64 &TOUT_iBondNum, const string &line, const cytnx_uint64 &line_num){
         lbls.clear();
         vector<string> tmp = str_split(line,false,";");
-        cytnx_error_msg(tmp.size()!=2,"[ERROR][Network] Fromfile: %s\n","Invalid TOUT line");
+        cytnx_error_msg(tmp.size()!=2,"[ERROR][Network][Fromfile] line:%d %s\n",line_num,"Invalid TOUT line");
 
         // handle col-space lbl 
         vector<string> ket_lbls = str_split(tmp[0],false,",");
         if(ket_lbls.size()==1) if(ket_lbls[0].length()==0) ket_lbls.clear();
         for(cytnx_uint64 i=0;i<ket_lbls.size();i++){
             string tmp = str_strip(ket_lbls[i]);
-            cytnx_error_msg(tmp.length()==0,"[ERROR][Network][Fromfile] Invalid labels for TOUT line.%s","\n");
+            cytnx_error_msg(tmp.length()==0,"[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",line_num,"\n");
             cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
-                            "[ERROR][Network] Fromfile: %s\n","Invalid TOUT line. label contain non integer.");
+                            "[ERROR][Network][Fromfile] line:%d %s\n",line_num,"Invalid TOUT line. label contain non integer.");
             lbls.push_back(stoi(tmp,nullptr));
         }
         TOUT_iBondNum = lbls.size();
@@ -57,26 +57,26 @@ namespace cytnx_extension{
         if(bra_lbls.size()==1) if(bra_lbls[0].length()==0) bra_lbls.clear();
         for(cytnx_uint64 i=0;i<bra_lbls.size();i++){
             string tmp = str_strip(bra_lbls[i]);
-            cytnx_error_msg(tmp.length()==0,"[ERROR][Network][Fromfile] Invalid labels for TOUT line.%s","\n");
+            cytnx_error_msg(tmp.length()==0,"[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",line_num,"\n");
             cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
-                            "[ERROR][Network] Fromfile: %s\n","Invalid TOUT line. label contain non integer.");
+                            "[ERROR][Network][Fromfile] line:%d %s\n",line_num,"Invalid TOUT line. label contain non integer.");
             lbls.push_back(stoi(tmp,nullptr));
         }
 
     }
-    void _parse_TN_line_(vector<cytnx_int64> &lbls, cytnx_uint64 &TN_iBondNum, const string &line){
+    void _parse_TN_line_(vector<cytnx_int64> &lbls, cytnx_uint64 &TN_iBondNum, const string &line, const cytnx_uint64 &line_num){
         lbls.clear();
         vector<string> tmp = str_split(line,false,";");
-        cytnx_error_msg(tmp.size()!=2,"[ERROR][Network] Fromfile: %s\n","Invalid TN line. A \';\' should be used to indicate the Rowrank.\nexample1> \'Tn: 0, 1; 2, 3\'\nexample2> \'Tn: ; -1, 2, 3\'");
+        cytnx_error_msg(tmp.size()!=2,"[ERROR][Network][Fromfile] line:%d %s\n",line_num,"Invalid TN line. A \';\' should be used to indicate the Rowrank.\nexample1> \'Tn: 0, 1; 2, 3\'\nexample2> \'Tn: ; -1, 2, 3\'");
 
         // handle col-space lbl
         vector<string> ket_lbls = str_split(tmp[0],false,",");
         if(ket_lbls.size()==1) if(ket_lbls[0].length()==0) ket_lbls.clear();
         for(cytnx_uint64 i=0;i<ket_lbls.size();i++){
             string tmp = str_strip(ket_lbls[i]);
-            cytnx_error_msg(tmp.length()==0,"[ERROR][Network][Fromfile] Invalid labels for TN line.%s","\n");
+            cytnx_error_msg(tmp.length()==0,"[ERROR][Network][Fromfile] line:%d Invalid labels for TN line.%s",line_num,"\n");
             cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
-                            "[ERROR][Network] Fromfile: %s\n","Invalid TN line. label contain non integer.");
+                            "[ERROR][Network][Fromfile] line:%d %s\n",line_num,"Invalid TN line. label contain non integer.");
             lbls.push_back(stoi(tmp,nullptr));
         }
         TN_iBondNum = lbls.size();
@@ -86,13 +86,13 @@ namespace cytnx_extension{
         if(bra_lbls.size()==1) if(bra_lbls[0].length()==0) bra_lbls.clear();
         for(cytnx_uint64 i=0;i<bra_lbls.size();i++){
             string tmp = str_strip(bra_lbls[i]);
-            cytnx_error_msg(tmp.length()==0,"[ERROR][Network][Fromfile] Invalid labels for TOUT line.%s","\n");
+            cytnx_error_msg(tmp.length()==0,"[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",line_num,"\n");
             cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
-                            "[ERROR][Network] Fromfile: %s\n","Invalid TN line. label contain non integer.");
+                            "[ERROR][Network][Fromfile] line:%d %s\n",line_num,"Invalid TN line. label contain non integer.");
             lbls.push_back(stoi(tmp,nullptr));
         }
         
-        cytnx_error_msg(lbls.size()==0,"[ERROR][Network][Fromfile] %s\n","Invalid TN line. no label present in this line, which is invalid.%s","\n");
+        cytnx_error_msg(lbls.size()==0,"[ERROR][Network][Fromfile] line:%d %s\n",line_num,"Invalid TN line. no label present in this line, which is invalid.%s","\n");
 
     }
 
@@ -167,14 +167,14 @@ namespace cytnx_extension{
                 if(content.length()){
                     //cut the line into tokens, 
                     //and leave it to process by CtTree after read all lines.
-                    _parse_ORDER_line_(this->ORDER_tokens,content);  
+                    _parse_ORDER_line_(this->ORDER_tokens,content,lnum);  
                     isORDER_exist = true;
                 }
             }else if(name == "TOUT"){
                 //if content has length, then pass to process. 
                 if(content.length()){
                     // this is an internal function that is defined in this cpp file.
-                    _parse_TOUT_line_(this->TOUT_labels,this->TOUT_iBondNum,content);
+                    _parse_TOUT_line_(this->TOUT_labels,this->TOUT_iBondNum,content,lnum);
                 }
             }else{
                 this->names.push_back(name);
@@ -192,7 +192,7 @@ namespace cytnx_extension{
                 this->label_arr.push_back(vector<cytnx_int64>());
                 cytnx_uint64 tmp_iBN;
                 // this is an internal function that is defined in this cpp file.
-                _parse_TN_line_(this->label_arr.back(),tmp_iBN,content);
+                _parse_TN_line_(this->label_arr.back(),tmp_iBN,content,lnum);
                 this->iBondNums.push_back(tmp_iBN);
             }   
 
@@ -223,7 +223,45 @@ namespace cytnx_extension{
                 }
                 cytnx_error_msg(true,"%s","\n");
             }
-        }//check consistent.
+        }//check all RN.
+
+        //checking label matching:
+        map<cytnx_int64,cytnx_int64> lblcnt;
+        for(int i=0;i<this->names.size();i++){
+            for(int j=0;j<this->label_arr[i].size();j++){
+                if(lblcnt.find(this->label_arr[i][j]) == lblcnt.end())
+                    lblcnt[this->label_arr[i][j]]=1;
+                else
+                    lblcnt[this->label_arr[i][j]]+=1;
+            }
+        }
+        vector<cytnx_int64> expected_TOUT;
+        for(map<cytnx_int64,cytnx_int64>::iterator it=lblcnt.begin(); it!=lblcnt.end(); ++it){
+            if(it->second==1)
+                expected_TOUT.push_back(it->first);
+        }
+        bool err = false;   
+        if(expected_TOUT.size()!=TOUT_labels.size()){
+            err = true;
+        }
+        vector<cytnx_int64> itrsct = vec_intersect(expected_TOUT,this->TOUT_labels);
+        if(itrsct.size()!=expected_TOUT.size()){
+            err = true;
+        }
+     
+
+        if(err){
+            cout << "[ERROR][Network][Fromfile] The TOUT contains labels that does not match with the delcartion from TNs.\n";
+            cout << "  > The reduced labels [rank:" << expected_TOUT.size() << "] should be:";
+            for(int i=0;i<expected_TOUT.size();i++)
+                cout << expected_TOUT[i] << " ";
+            cout << endl;
+            cout << "  > The TOUT [rank" << TOUT_labels.size() << "] specified is:";
+            for(int i=0;i<TOUT_labels.size();i++)
+                cout << TOUT_labels[i] << " ";
+            cout << endl;
+            cytnx_error_msg(true,"%s","\n");
+        }
 
     }
 
@@ -341,7 +379,7 @@ namespace cytnx_extension{
             Stree.search_order();
             string Optim_ORDERline = Stree.nodes_container.back()[0].accu_str;
             this->ORDER_tokens.clear();
-            _parse_ORDER_line_(ORDER_tokens,Optim_ORDERline);
+            _parse_ORDER_line_(ORDER_tokens,Optim_ORDERline,999999);
             CtTree.build_contraction_tree_by_tokens(this->name2pos,ORDER_tokens);
         }else{
             if(ORDER_tokens.size()!=0){ 
