@@ -12,18 +12,20 @@ int main(int argc, char *argv[]){
 
     // Ket = IN
     // Bra = OUT
-    auto Bd_i = cyx::Bond(2,cyx::BD_KET,{{1},{-1}},{cyx::Symmetry::U1()}); //# 1 = 0.5 , so it is spin-1
-    auto Bd_o = cyx::Bond(2,cyx::BD_BRA,{{1},{-1}},{cyx::Symmetry::U1()});//# 1 = 0.5, so it is spin-1
+    auto Bd_i = cyx::Bond(2,cyx::BD_KET,{{1},{-1}},{cyx::Symmetry::U1()}); //# 1 = 0.5 , so it is spin-1/2
+    auto Bd_o = cyx::Bond(2,cyx::BD_BRA,{{1},{-1}},{cyx::Symmetry::U1()});//# 1 = 0.5, so it is spin-1/2
     auto H = cyx::CyTensor({Bd_i,Bd_i,Bd_o,Bd_o},{},2);
-    H.permute_({0,3,1,2});   
-    H.print_diagram();    
+    H.print_diagram();
+    //H.permute_({0,3,1,2});   
+    //H.print_diagram();    
 
 
     auto HT = linalg::Kron(physics::spin(1./2,'z'),physics::spin(1./2,'z')) + 
               linalg::Kron(physics::spin(1./2,'x'),physics::spin(1./2,'x')) +
               linalg::Kron(physics::spin(1./2,'y'),physics::spin(1./2,'y'));
+    cout << HT.real() << endl;
     HT = HT.real().reshape({2,2,2,2});
-    HT.permute_({0,3,1,2});
+    //HT.permute_({0,3,1,2});
     
     for(int i=0;i< HT.shape()[0];i++)
         for(int j=0;j<HT.shape()[1];j++)
@@ -34,8 +36,8 @@ int main(int argc, char *argv[]){
                 }
 
 
-    H.permute_({0,1,2,3},-1,true);
-    H.print_diagram();
+    //H.permute_({0,1,2,3},-1,true);
+    //H.print_diagram();
     
     cout << H.get_block({2});
     cout << H.get_block({0});

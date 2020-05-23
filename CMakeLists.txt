@@ -1,7 +1,7 @@
 ###
 #  @file CMakeLists.txt
 #  @license
-#    Copyright (c) 2013-2017
+#    Copyright (c) 2013-
 #    National Taiwan University
 #    National Tsing-Hua University
 #
@@ -21,7 +21,7 @@
 #    along with cytnx.  If not, see <http://www.gnu.org/licenses/>.
 #  @endlicense
 #  @brief Main specification file for CMake
-#  @author Ying-Jer Kao, Kai-Hsin Wu 
+#  @author Kai-Hsin Wu, Ying-Jer Kao,
 #  @date 2020-01-08
 #  @since 0.4.0
 #  
