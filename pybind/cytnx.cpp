@@ -879,7 +879,7 @@ PYBIND11_MODULE(cytnx,m){
                 .def("PutCyTensor",[](cytnx_extension::Network &self,const cytnx_uint64 &idx, const cytnx_extension::CyTensor &utensor, const bool &is_clone){
                                                 self.PutCyTensor(idx,utensor,is_clone);
                                         },py::arg("idx"),py::arg("utensor"),py::arg("is_clone")=true)
-                .def("Launch",&cytnx_extension::Network::Launch,py::arg("optim")=false)
+                .def("Launch",&cytnx_extension::Network::Launch,py::arg("optimal")=false)
                 .def("Clear",&cytnx_extension::Network::Clear)
                 .def("clone",&cytnx_extension::Network::clone)
                 .def("__copy__",&cytnx_extension::Network::clone)
