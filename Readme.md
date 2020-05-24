@@ -43,6 +43,7 @@
     28. SparseCyTensor.at_query. 
     29. SparseCyTensor.Transpose, Conj. 
     30. Symmetry.reverse_rule, Bond.calc_reverse_qnums
+    31. Fix Tensor.numpy from GPU bug.
 
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn

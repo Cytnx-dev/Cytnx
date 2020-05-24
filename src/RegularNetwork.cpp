@@ -200,7 +200,7 @@ namespace cytnx_extension{
         infile.close();
 
 
-        cytnx_error_msg(lnum>=MAXLINES,"[ERROR][Network][Fromfile] network file exceed the maxinum allowed lines, MAXLINES=2048%s","\n");
+        cytnx_error_msg(lnum>=MAXLINES,"[ERROR][Network][Fromfile] network file exceed the maxinum allowed lines, MAXLINES=1024%s","\n");
 
         cytnx_error_msg(this->names.size()<2,"[ERROR][Network][Fromfile] invalid network file. Should have at least 2 tensors defined.%s","\n");
 
