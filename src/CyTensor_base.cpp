@@ -205,6 +205,27 @@ namespace cytnx_extension{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
         }
 
+        void CyTensor_base::Transpose_(){
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+        }
+        boost::intrusive_ptr<CyTensor_base> CyTensor_base::Transpose(){
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+            return nullptr;
+        }
+
+        void CyTensor_base::Dagger_(){
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+        }
+        boost::intrusive_ptr<CyTensor_base> CyTensor_base::Dagger(){
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+            return nullptr;
+        }
+
+
+        void CyTensor_base::tag(){
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+        }
+
         cytnx_complex128& CyTensor_base::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
         }
@@ -217,6 +238,8 @@ namespace cytnx_extension{
         cytnx_float& CyTensor_base::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
         }
+
+
 
 
         //-----------------------------------------

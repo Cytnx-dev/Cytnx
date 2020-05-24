@@ -1,5 +1,7 @@
 var searchData=
 [
+  ['dagger',['Dagger',['../classcytnx__extension_1_1CyTensor.html#adc35ca2b7d39f67712b61b5964062e68',1,'cytnx_extension::CyTensor']]],
+  ['dagger_5f',['Dagger_',['../classcytnx__extension_1_1CyTensor.html#a5e4d6c3abc793953cd29c51ee2ce337f',1,'cytnx_extension::CyTensor']]],
   ['dasum',['dasum',['../lapack__wrapper_8hpp.html#ac799ae913d22f4eb2393dfa09551ce2f',1,'lapack_wrapper.hpp']]],
   ['dasum_5f',['dasum_',['../lapack__wrapper_8hpp.html#af7016601e895055ec6941235d60b8c36',1,'lapack_wrapper.hpp']]],
   ['daxpy',['daxpy',['../lapack__wrapper_8hpp.html#aa91042c2ab2695131f309e7278a0f170',1,'lapack_wrapper.hpp']]],

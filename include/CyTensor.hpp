@@ -37,7 +37,8 @@ namespace cytnx_extension{
     //class DenseCyTensor;
     //class SparseCyTensor; 
     class CyTensor_base: public intrusive_ptr_base<CyTensor_base>{
-        protected:
+
+        public:
 
             std::vector< Bond > _bonds;
             std::vector<cytnx_int64> _labels;
@@ -66,7 +67,6 @@ namespace cytnx_extension{
                 }
             }
 
-        public:
             friend class CyTensor; // allow wrapper to access the private elems
             friend class DenseCyTensor;
             friend class SparseCyTensor;
@@ -86,7 +86,8 @@ namespace cytnx_extension{
                 return this->_is_tag;
             }
             const std::vector<cytnx_int64>& labels() const{ return this->_labels;}
-            const std::vector<Bond> &bonds() const {return this->_bonds;}       
+            const std::vector<Bond> &bonds() const {return this->_bonds;}      
+            std::vector<Bond> &bonds(){return this->_bonds;}      
             const std::string& name() const { return this->_name;}
             cytnx_uint64  rank() const {return this->_labels.size();}
             void set_name(const std::string &in){ this->_name = in;}
@@ -177,10 +178,21 @@ namespace cytnx_extension{
             virtual void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back=false, const bool &by_label=true);
             virtual boost::intrusive_ptr<CyTensor_base> contract(const boost::intrusive_ptr<CyTensor_base> &rhs);
             virtual std::vector<Bond> getTotalQnums(const bool &physical=false);          
-            virtual boost::intrusive_ptr<CyTensor_base> Conj();
             virtual void Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false);
             virtual boost::intrusive_ptr<CyTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false);
+            
+            virtual boost::intrusive_ptr<CyTensor_base> Conj();
             virtual void Conj_();
+
+            virtual boost::intrusive_ptr<CyTensor_base> Transpose();
+            virtual void Transpose_();
+
+            virtual boost::intrusive_ptr<CyTensor_base> Dagger();
+            virtual void Dagger_();
+
+            virtual void tag();
+            
+
 
             // this a workaround, as virtual function cannot template.
             virtual cytnx_complex128& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux);
@@ -368,6 +380,24 @@ namespace cytnx_extension{
                 out->Conj_();
                 return out;
             }
+
+            boost::intrusive_ptr<CyTensor_base> Transpose(){
+                boost::intrusive_ptr<CyTensor_base> out = this->clone();
+                out->Transpose_();
+                return out;
+            }
+            void Transpose_();
+
+            boost::intrusive_ptr<CyTensor_base> Dagger(){
+                boost::intrusive_ptr<CyTensor_base> out = this->Conj();
+                out->Transpose_();
+                return out;
+            }
+            void Dagger_(){
+                this->Conj_();
+                this->Transpose_();    
+            }
+
             
             void Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false);
             boost::intrusive_ptr<CyTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false){
@@ -390,6 +420,19 @@ namespace cytnx_extension{
             cytnx_float& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux){
                 cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
                 //return 0;
+            }
+
+            void tag(){
+                if(!this->is_tag()){
+                    for(int i=0;i<this->_Rowrank;i++){
+                       this->_bonds[i].set_type(BD_KET); 
+                    }
+                    for(int i=this->_Rowrank;i<this->_bonds.size();i++){
+                       this->_bonds[i].set_type(BD_BRA); 
+                    }
+                    this->_is_tag = true;
+                    this->_is_braket_form = this->_update_braket();
+                }
             }
 
             // end virtual function              
@@ -715,6 +758,28 @@ namespace cytnx_extension{
                 //return nullptr;
             }
 
+            boost::intrusive_ptr<CyTensor_base> Transpose(){
+                cytnx_error_msg(true,"[Developing]%s","\n");
+                return nullptr;
+            }
+            void Transpose_(){
+                cytnx_error_msg(true,"[Developing]%s","\n");
+            }
+
+            boost::intrusive_ptr<CyTensor_base> Dagger(){
+                boost::intrusive_ptr<CyTensor_base> out = this->Conj();
+                out->Transpose_();
+                return out;
+            }
+            void Dagger_(){
+                this->Conj_();
+                this->Transpose_();    
+            }
+
+            void tag(){
+                // no-use!
+            }
+
             cytnx_complex128& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux);
             cytnx_complex64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux);
             cytnx_double& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux);
@@ -876,6 +941,7 @@ namespace cytnx_extension{
             }
             const std::vector<cytnx_int64>& labels() const{ return this->_impl->labels();}
             const std::vector<Bond> &bonds() const {return this->_impl->bonds();}       
+            std::vector<Bond> &bonds() {return this->_impl->bonds();}       
             std::vector<cytnx_uint64> shape() const{return this->_impl->shape();}
             bool      is_blockform() const{ return this->_impl->is_blockform();}
 
@@ -1080,6 +1146,15 @@ namespace cytnx_extension{
             }
 
 
+            CyTensor Transpose() const{
+                CyTensor out;
+                out._impl = this->_impl->Transpose();
+                return out;
+            }
+            CyTensor& Transpose_(){
+                this->_impl->Transpose_();
+                return *this;
+            }
 
             CyTensor Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false) const{
                 CyTensor out;
@@ -1091,6 +1166,23 @@ namespace cytnx_extension{
                 this->_impl->Trace_(a,b,by_label);
                 return *this;
             }
+            
+            CyTensor Dagger() const{
+                CyTensor out;
+                out._impl = this->_impl->Dagger();
+                return out;
+            }
+
+            CyTensor& Dagger_(){
+                this->_impl->Dagger_();
+                return *this; 
+            }
+
+            CyTensor& tag(){
+                this->_impl->tag();
+                return *this;
+            }
+
 
 
     };//class CyTensor

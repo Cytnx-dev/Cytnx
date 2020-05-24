@@ -1104,7 +1104,9 @@ PYBIND11_MODULE(cytnx,m){
                 .def("is_tag" ,&cytnx_extension::CyTensor::is_tag)
                 .def("is_braket_form",&cytnx_extension::CyTensor::is_braket_form)
                 .def("labels",&cytnx_extension::CyTensor::labels)
-                .def("bonds",&cytnx_extension::CyTensor::bonds)
+                .def("bonds",[](cytnx_extension::CyTensor &self){
+                    return self.bonds();
+                    })
                 .def("shape",&cytnx_extension::CyTensor::shape)
                 .def("to_",&cytnx_extension::CyTensor::to_)
                 .def("to_different_device" ,[](cytnx_extension::CyTensor &self,const cytnx_int64 &device){
@@ -1396,6 +1398,11 @@ PYBIND11_MODULE(cytnx,m){
                 .def("Conj",&cytnx_extension::CyTensor::Conj)
                 .def("cTrace_",&cytnx_extension::CyTensor::Trace_,py::arg("a"),py::arg("b"),py::arg("by_label")=false)
                 .def("Trace",&cytnx_extension::CyTensor::Trace,py::arg("a"),py::arg("b"),py::arg("by_label")=false)
+                .def("cTranspose_",&cytnx_extension::CyTensor::Transpose_)
+                .def("Transpose",&cytnx_extension::CyTensor::Transpose)
+                .def("cDagger_",&cytnx_extension::CyTensor::Dagger_)
+                .def("Dagger",&cytnx_extension::CyTensor::Dagger)
+                .def("ctag",&cytnx_extension::CyTensor::tag)
                 ;
     mext.def("Contract",cytnx_extension::Contract);
    

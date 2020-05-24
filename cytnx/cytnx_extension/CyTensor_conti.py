@@ -39,9 +39,18 @@ def Trace_(self,a,b,by_label=False):
     self.cTrace_(a,b,by_label);
     return self
 
+@add_method(CyTensor)
+def Transpose_(self):
+    self.cTranspose_();
+    return self
 
+@add_method(CyTensor)
+def Dagger_(self):
+    self.cDagger_();
+    return self
 
-        
-
-
+@add_method(CyTensor)
+def tag(self):
+    self.ctag();
+    return self
 

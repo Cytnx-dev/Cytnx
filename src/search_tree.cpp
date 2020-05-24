@@ -110,7 +110,7 @@ namespace cytnx_extension{
             }//for c
         }//while
 
-        cout << nodes_container.back()[0].accu_str << endl;
+        //cout << nodes_container.back()[0].accu_str << endl;
     }
 
 }//namespace

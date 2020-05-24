@@ -467,6 +467,13 @@ namespace cytnx_extension{
             tmp->_is_braket_form = tmp->_update_braket();
 
         }else{
+
+            // if tag, checking bra-ket matching!
+            if(this->is_tag()){
+                for(int i=0;i<comm_idx1.size();i++)
+                    cytnx_error_msg(this->_bonds[comm_idx1[i]].type() == rhs->_bonds[comm_idx2[i]].type(),"[ERROR][DenseCyTensor][contract] cannot contract common label: <%d> @ self bond#%d & rhs bond#%d, BRA-KET mismatch!%s",this->labels()[comm_idx1[i]],comm_idx1[i],comm_idx2[i],"\n");
+            }
+
             //process meta
             std::vector<cytnx_uint64> non_comm_idx1 = vec_erase(utils_internal::range_cpu(this->rank()),comm_idx1);
             std::vector<cytnx_uint64> non_comm_idx2 = vec_erase(utils_internal::range_cpu(rhs->rank()),comm_idx2);
@@ -530,10 +537,11 @@ namespace cytnx_extension{
 
         // check if indices are the same:
         cytnx_error_msg(ida == idb, "[ERROR][DenseCyTensor::Trace_] index a and index b should not be the same.%s","\n");
-        // check dimension:
-        cytnx_error_msg(this->_bonds[ida].dim()!= this->_bonds[idb].dim(),"[ERROR][DenseCyTensor::Ttrace_] The dimension of two bond for trace does not match!%s","\n");
 
+        // check dimension:
+        cytnx_error_msg(this->_bonds[ida].dim()!= this->_bonds[idb].dim(),"[ERROR][DenseCyTensor::Trace_] The dimension of two bond for trace does not match!%s","\n");
         
+        // check bra-ket if tagged 
         if(this->is_braket_form()){
 
             //check if it is the same species:
@@ -564,7 +572,25 @@ namespace cytnx_extension{
         this->_labels.erase(this->_labels.begin()+idb);
         this->_labels.erase(this->_labels.begin()+ida);
 
-
     }
+
+    void DenseCyTensor::Transpose_(){
+        std::vector<cytnx_int64> new_permute  = vec_concatenate(vec_range<cytnx_int64>(this->Rowrank(),this->rank()),vec_range<cytnx_int64>(0,this->Rowrank()));
+        this->permute_(new_permute);
+        if(this->is_tag()){
+            this->_Rowrank = this->rank() - this->_Rowrank;
+            for(int i=0;i<this->rank();i++){
+                this->_bonds[i].set_type((this->_bonds[i].type()==BD_KET)?BD_BRA:BD_KET);
+            }
+            this->_is_braket_form = this->_update_braket();
+        }else{
+            this->_Rowrank = this->rank() - this->_Rowrank;
+        }
+    }
+
+
+
+
+
 
 }

@@ -9,7 +9,22 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]){
 
+    auto Hn = cyx::CyTensor(cytnx::zeros({2,2,2,2}),1);
+    Hn.print_diagram();
+    Hn.Transpose_();
+    Hn.print_diagram();
+    
+    //return 0;
+    auto Bd1 = cyx::Bond(2,cyx::BD_KET); //# 1 = 0.5 , so it is spin-1/2
+    auto Bd2 = cyx::Bond(2,cyx::BD_BRA);//# 1 = 0.5, so it is spin-1/2
+    auto Htag = cyx::CyTensor({Bd1,Bd1,Bd2,Bd2},{},1);
+    Htag.print_diagram();
+    Htag.Transpose_();
+    Htag.print_diagram();
 
+
+
+    return 0;
     // Ket = IN
     // Bra = OUT
     auto Bd_i = cyx::Bond(2,cyx::BD_KET,{{1},{-1}},{cyx::Symmetry::U1()}); //# 1 = 0.5 , so it is spin-1/2

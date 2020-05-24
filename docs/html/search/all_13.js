@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['tag',['tag',['../classcytnx__extension_1_1CyTensor.html#ade0642978f75480bec50233d21b77f83',1,'cytnx_extension::CyTensor']]],
   ['tensor',['Tensor',['../classcytnx_1_1Tensor.html',1,'cytnx::Tensor'],['../classcytnx_1_1Tensor.html#afdcff16b2096d10b524161be52ba767e',1,'cytnx::Tensor::Tensor()']]],
   ['tensor_2ecpp',['Tensor.cpp',['../Tensor_8cpp.html',1,'']]],
   ['tensor_2ehpp',['Tensor.hpp',['../Tensor_8hpp.html',1,'']]],
@@ -10,6 +11,8 @@ var searchData=
   ['to_5fdense_5f',['to_dense_',['../classcytnx__extension_1_1CyTensor.html#aad18381348f11c03958b268a10a851cc',1,'cytnx_extension::CyTensor']]],
   ['trace',['Trace',['../classcytnx__extension_1_1CyTensor.html#a72ab6c3fa93aaaa12ee572deee16c0b0',1,'cytnx_extension::CyTensor::Trace()'],['../classcytnx_1_1Tensor.html#a4b4acc1496c1f712aca81f09aaff2b3a',1,'cytnx::Tensor::Trace()'],['../namespacecytnx_1_1linalg.html#a02d7105bf16d23128687ba92fb231b54',1,'cytnx::linalg::Trace()']]],
   ['trace_5f',['Trace_',['../classcytnx__extension_1_1CyTensor.html#a34f7cf70d69f383a79e970cae263b183',1,'cytnx_extension::CyTensor']]],
+  ['transpose',['Transpose',['../classcytnx__extension_1_1CyTensor.html#a7428353980971cd718324b4ec9b76ed8',1,'cytnx_extension::CyTensor']]],
+  ['transpose_5f',['Transpose_',['../classcytnx__extension_1_1CyTensor.html#a8dc7b81abf773eb9fb09853690823c6c',1,'cytnx_extension::CyTensor']]],
   ['tridiag',['Tridiag',['../namespacecytnx_1_1linalg.html#abc68d62e804d6d3e86aeec00015b07cd',1,'cytnx::linalg']]],
   ['type',['type',['../classcytnx__extension_1_1Bond.html#af91e04952850b94a063195560ec3868f',1,'cytnx_extension::Bond::type()'],['../namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2',1,'cytnx::Type()']]],
   ['type_2ecpp',['Type.cpp',['../Type_8cpp.html',1,'']]],
