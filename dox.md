@@ -34,6 +34,10 @@
     24. Add xlinalg.Svd, xlinalg.Svd_truncate support for tagged CyTensor.
     25. Fix redundant print in optimal contraction order
     26. Add CyTensor.tag() for DenseCyTensor (regular type) directly convert to CyTensor with direction (tagged type)
+    27. Add SparseCyTensor.at (currently only floating point type) 
+    28. SparseCyTensor.at_query. 
+    29. SparseCyTensor.Transpose, Conj. 
+    30. Symmetry.reverse_rule, Bond.calc_reverse_qnums
 
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn
