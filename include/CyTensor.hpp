@@ -91,10 +91,6 @@ namespace cytnx_extension{
             const std::string& name() const { return this->_name;}
             cytnx_uint64  rank() const {return this->_labels.size();}
             void set_name(const std::string &in){ this->_name = in;}
-            void set_Rowrank(const cytnx_uint64 &new_Rowrank){
-                cytnx_error_msg(new_Rowrank >= this->_labels.size(),"[ERROR] Rowrank cannot exceed the rank of CyTensor.%s","\n");
-                this->_Rowrank = new_Rowrank;
-            }
             void set_label(const cytnx_uint64 &idx, const cytnx_int64 &new_label){
                 cytnx_error_msg(idx>=this->_labels.size(),"[ERROR] index exceed the rank of CyTensor%s","\n");
                 //check in:
@@ -143,6 +139,7 @@ namespace cytnx_extension{
             virtual int          device() const;
             virtual std::string      dtype_str() const;
             virtual std::string     device_str() const;
+            virtual void set_Rowrank(const cytnx_uint64 &new_Rowrank);
             virtual boost::intrusive_ptr<CyTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank=-1, const bool &by_label=false);
             virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank=-1, const bool &by_label=false);
             virtual boost::intrusive_ptr<CyTensor_base> contiguous_();
@@ -193,7 +190,7 @@ namespace cytnx_extension{
             virtual void tag();
             
 
-
+            virtual bool at_query(const std::vector<cytnx_uint64> &locator) const;
             // this a workaround, as virtual function cannot template.
             virtual cytnx_complex128& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux);
             virtual cytnx_complex64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux);
@@ -250,6 +247,11 @@ namespace cytnx_extension{
                     return out;   
                 } 
             }
+            void set_Rowrank(const cytnx_uint64 &new_Rowrank){
+                cytnx_error_msg(new_Rowrank >= this->_labels.size(),"[ERROR] Rowrank cannot exceed the rank of CyTensor.%s","\n");
+                this->_Rowrank = new_Rowrank;
+            }
+
             boost::intrusive_ptr<CyTensor_base> clone() const{
                 DenseCyTensor* tmp = this->clone_meta();
                 tmp->_block = this->_block.clone();
@@ -421,7 +423,9 @@ namespace cytnx_extension{
                 cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
                 //return 0;
             }
-
+            bool at_query(const std::vector<cytnx_uint64> &locator) const{
+                cytnx_error_msg(true,"[ERROR][DenseCyTensor] at_query can only be used on CyTensor with Symmetry.%s","\n");
+            }
             void tag(){
                 if(!this->is_tag()){
                     for(int i=0;i<this->_Rowrank;i++){
@@ -534,6 +538,15 @@ namespace cytnx_extension{
             bool     is_contiguous() const{
                 return this->_contiguous;
             };
+            void set_Rowrank(const cytnx_uint64 &new_Rowrank){
+                cytnx_error_msg((new_Rowrank < 1) || (new_Rowrank>= this->rank()),"[ERROR][SparseCyTensor] Rowrank should be [>=1] and [<CyTensor.rank].%s","\n");
+                cytnx_error_msg(new_Rowrank >= this->_labels.size(),"[ERROR] Rowrank cannot exceed the rank of CyTensor.%s","\n");
+                if(this->_Rowrank!= new_Rowrank)
+                    this->_contiguous = false;
+                this->_Rowrank = new_Rowrank;
+                this->_is_braket_form = this->_update_braket();
+            }
+
             unsigned int  dtype() const{
                 #ifdef UNI_DEBUG
                 cytnx_error_msg(this->_blocks.size()==0,"[ERROR][internal] empty blocks for blockform.%s","\n");
@@ -732,22 +745,21 @@ namespace cytnx_extension{
             void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back=true, const bool &by_label=true){
                 cytnx_error_msg(true,"[Developing]%s","\n");
             };
-            boost::intrusive_ptr<CyTensor_base> contract(const boost::intrusive_ptr<CyTensor_base> &rhs){
-                cytnx_error_msg(true,"[Developing]%s","\n");
-                return nullptr;
-            };
+            boost::intrusive_ptr<CyTensor_base> contract(const boost::intrusive_ptr<CyTensor_base> &rhs);
             std::vector<Bond> getTotalQnums(const bool &physical=false);
             ~SparseCyTensor(){};
 
 
             boost::intrusive_ptr<CyTensor_base> Conj(){
-                cytnx_error_msg(true,"[Developing]%s","\n");
-                return nullptr;
+                boost::intrusive_ptr<CyTensor_base> out = this->clone();
+                out->Conj_();
+                return out;
             }
 
             void Conj_(){
-                //this->_block.Conj_();
-                cytnx_error_msg(true,"[Developing]%s","\n");
+                for(int i=0;i<this->_blocks.size();i++){
+                    this->_blocks[i].Conj_();
+                }
             };
             boost::intrusive_ptr<CyTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false) const{
                 cytnx_error_msg(true,"[Developing]%s","\n");
@@ -758,12 +770,11 @@ namespace cytnx_extension{
                 //return nullptr;
             }
 
+            void Transpose_();
             boost::intrusive_ptr<CyTensor_base> Transpose(){
-                cytnx_error_msg(true,"[Developing]%s","\n");
-                return nullptr;
-            }
-            void Transpose_(){
-                cytnx_error_msg(true,"[Developing]%s","\n");
+                boost::intrusive_ptr<CyTensor_base> out = this->clone();
+                out->Transpose_();
+                return out;
             }
 
             boost::intrusive_ptr<CyTensor_base> Dagger(){
@@ -785,7 +796,7 @@ namespace cytnx_extension{
             cytnx_double& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux);
             cytnx_float& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux);
 
-
+            bool at_query(const std::vector<cytnx_uint64> &locator) const;
             // end virtual func
 
 
@@ -1182,7 +1193,9 @@ namespace cytnx_extension{
                 this->_impl->tag();
                 return *this;
             }
-
+            bool at_query( const std::vector<cytnx_uint64> &locator) const{
+                return this->_impl->at_query(locator);
+            }
 
 
     };//class CyTensor

@@ -45,12 +45,16 @@ namespace cytnx_extension{
             std::vector<cytnx_int64> combine_rule( const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR);
             cytnx_int64 combine_rule( const cytnx_int64 &inL, const cytnx_int64 &inR);
 
+            cytnx_int64 reverse_rule( const cytnx_int64 &in);
+
+
             virtual void Init(const int &n){};
             virtual boost::intrusive_ptr<Symmetry_base> clone(){return nullptr;};
             virtual bool check_qnum(const cytnx_int64 &in_qnum); // check the passed in qnums satisfy the symmetry requirement.
             virtual bool check_qnums(const std::vector<cytnx_int64> &in_qnums); 
             virtual void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR);
             virtual void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR);
+            virtual void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
             //virtual std::vector<cytnx_int64>& combine_rule(const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR);
             
     };
@@ -74,6 +78,7 @@ namespace cytnx_extension{
             bool check_qnums(const std::vector<cytnx_int64> &in_qnums); 
             void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR);
             void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR);
+            void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
     };
     ///@endcond
 
@@ -95,6 +100,7 @@ namespace cytnx_extension{
             bool check_qnums(const std::vector<cytnx_int64> &in_qnums); 
             void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR);
             void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR);
+            void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
     };
     ///@endcond
 
@@ -314,6 +320,14 @@ namespace cytnx_extension{
                 this->_impl->combine_rule_(out,inL,inR);
             }
 
+
+            void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in){
+                this->_impl->reverse_rule_(out,in);
+            }
+            
+            cytnx_int64 reverse_rule(const cytnx_int64 &in){
+                return this->_impl->reverse_rule(in);
+            }
 
             bool operator==(const Symmetry &rhs) const;
             bool operator!=(const Symmetry &rhs) const;

@@ -9,7 +9,14 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]){
 
-    auto Hn = cyx::CyTensor(cytnx::zeros({2,2,2,2}),1);
+
+    
+
+
+
+
+    /*
+
     Hn.print_diagram();
     Hn.Transpose_();
     Hn.print_diagram();
@@ -21,25 +28,27 @@ int main(int argc, char *argv[]){
     Htag.print_diagram();
     Htag.Transpose_();
     Htag.print_diagram();
+    */
 
 
-
-    return 0;
+    //return 0;
     // Ket = IN
     // Bra = OUT
-    auto Bd_i = cyx::Bond(2,cyx::BD_KET,{{1},{-1}},{cyx::Symmetry::U1()}); //# 1 = 0.5 , so it is spin-1/2
-    auto Bd_o = cyx::Bond(2,cyx::BD_BRA,{{1},{-1}},{cyx::Symmetry::U1()});//# 1 = 0.5, so it is spin-1/2
+    auto Bd_i = cyx::Bond(3,cyx::BD_KET,{{2},{0},{-2}},{cyx::Symmetry::U1()}); //# 1 = 0.5 , so it is spin-1
+    auto Bd_o = cyx::Bond(3,cyx::BD_BRA,{{2},{0},{-2}},{cyx::Symmetry::U1()});//# 1 = 0.5, so it is spin-1
     auto H = cyx::CyTensor({Bd_i,Bd_i,Bd_o,Bd_o},{},2);
-    H.print_diagram();
+    
+    //H.print_diagram();
+
     //H.permute_({0,3,1,2});   
     //H.print_diagram();    
 
 
-    auto HT = linalg::Kron(physics::spin(1./2,'z'),physics::spin(1./2,'z')) + 
-              linalg::Kron(physics::spin(1./2,'x'),physics::spin(1./2,'x')) +
-              linalg::Kron(physics::spin(1./2,'y'),physics::spin(1./2,'y'));
+    auto HT = linalg::Kron(physics::spin(1,'z'),physics::spin(1,'z')) + 
+              linalg::Kron(physics::spin(1,'x'),physics::spin(1,'x')) +
+              linalg::Kron(physics::spin(1,'y'),physics::spin(1,'y'));
     cout << HT.real() << endl;
-    HT = HT.real().reshape({2,2,2,2});
+    HT = HT.real().reshape({3,3,3,3});
     //HT.permute_({0,3,1,2});
     
     for(int i=0;i< HT.shape()[0];i++)
@@ -49,15 +58,30 @@ int main(int argc, char *argv[]){
                     if(abs(HT.at<cytnx_double>({i,j,k,l}))>1.0e-15)
                         H.at<cytnx_double>({i,j,k,l}) = HT.at<cytnx_double>({i,j,k,l});
                 }
+    //HT.reshape_({3,27});
+    HT.permute_({1,2,3,0});
+    HT.reshape_({3,-1});    
+    cout << linalg::Matmul(HT,HT.permute({1,0}).contiguous());
 
 
-    //H.permute_({0,1,2,3},-1,true);
-    //H.print_diagram();
+
+
+    H.set_Rowrank(1 ); H.contiguous_();
+    H.print_diagram();
+
+    auto Hcp = H.Transpose();
+    Hcp.contiguous_();    
+
+    for(int i=0;i<Hcp.get_blocks().size();i++){
+        //cout << H.get_block(i) ;
+        //cout << Hcp.get_block(i) ;
+        cout << linalg::Matmul(H.get_block(i),Hcp.get_block(i));
+        cout << "==================\n";
+    }
+
     
-    cout << H.get_block({2});
-    cout << H.get_block({0});
-    cout << H.get_block({-2});
-
+    return 0;
+    
     
     
     return 0;

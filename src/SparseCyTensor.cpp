@@ -78,13 +78,16 @@ namespace cytnx_extension{
         vector<cytnx_uint64> degenerates;
         vector<vector<cytnx_int64> > uniq_bonds_row = tot_bonds[0].getUniqueQnums();
         vector<vector<cytnx_int64> > uniq_bonds_col = tot_bonds[1].getUniqueQnums();
-        
+        //vec_print(std::cout,uniq_bonds_row);// << endl;
+        //vec_print(std::cout,uniq_bonds_col);// << endl;       
+        //exit(1); 
         //vec_print(std::cout,tot_bonds[0].qnums());
         //vec_print(std::cout,tot_bonds[1].qnums());
         //[DDK]
 
         //get common qnum set of row-col (bra-ket) space.
-        this->_blockqnums = vec2d_intersect(uniq_bonds_row,uniq_bonds_col,true,true);    
+        this->_blockqnums = vec2d_intersect(uniq_bonds_row,uniq_bonds_col,false,false);
+    
         cytnx_error_msg(this->_blockqnums.size()==0,"[ERROR][SparseCyTensor] invalid qnums. no common block (qnum) in this setup.%s","\n");
           
         //vec_print(std::cout,this->_blockqnums);
@@ -298,16 +301,22 @@ namespace cytnx_extension{
     }
 
     boost::intrusive_ptr<CyTensor_base> SparseCyTensor::contiguous(){
+        //cout << "[enter contiguous]" << endl;
         if(this->is_contiguous()){
             boost::intrusive_ptr<CyTensor_base> out(this);
             return out;
         }else{
+            //cout << "[non contiguous]" << endl;
             //make a new instance with only the outer meta:
             //SparseCyTensor* tmp = this->clone_meta(true,false);
 
             // make new instance  
             SparseCyTensor* tmp = new SparseCyTensor();
             tmp->Init(this->_bonds,this->_labels,this->_Rowrank,this->dtype(),this->device(),this->_is_diag);
+            
+            //CyTensor tt; tt._impl = boost::intrusive_ptr<CyTensor_base>(tmp);
+            //cout << tt << endl;
+            //exit(1);
             //tmp->print_diagram();            
             
             //calculate new inner meta, and copy the element from it.   
@@ -443,7 +452,11 @@ namespace cytnx_extension{
 
         //3. check if the item is there:
         // if they ref to different block, then the element is invalid (zero)
+        if((this->_outer2inner_row.find(i)==this->_outer2inner_row.end())||(this->_outer2inner_col.find(j)==this->_outer2inner_col.end())){
+            cytnx_error_msg(true,"[ERROR] trying to access element that doesn't belong to any block.%s","\n");
+        }
         if(this->_outer2inner_row[i].first != this->_outer2inner_col[j].first){
+            
             cytnx_error_msg(true,"[ERROR] trying to access element that doesn't belong to any block.%s","\n");
         }
 
@@ -451,6 +464,7 @@ namespace cytnx_extension{
         return this->_blocks[block_index].at<cytnx_complex128>({this->_outer2inner_row[i].second,this->_outer2inner_col[j].second});
         
     }
+    //-----------------------------------------
     cytnx_complex64&  SparseCyTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux){
         //1. check if out of range:
         cytnx_error_msg(locator.size()!=this->_bonds.size(),"[ERROR] len(locator) does not match the rank of tensor.%s","\n");
@@ -465,6 +479,9 @@ namespace cytnx_extension{
 
         //3. check if the item is there:
         // if they ref to different block, then the element is invalid (zero)
+        if((this->_outer2inner_row.find(i)==this->_outer2inner_row.end())||(this->_outer2inner_col.find(j)==this->_outer2inner_col.end())){
+            cytnx_error_msg(true,"[ERROR] trying to access element that doesn't belong to any block.%s","\n");
+        }
         if(this->_outer2inner_row[i].first != this->_outer2inner_col[j].first){
             cytnx_error_msg(true,"[ERROR] trying to access element that doesn't belong to any block.%s","\n");
         }
@@ -473,6 +490,7 @@ namespace cytnx_extension{
         return this->_blocks[block_index].at<cytnx_complex64>({this->_outer2inner_row[i].second,this->_outer2inner_col[j].second});
 
     }
+    //-------------------------------------
     cytnx_double&     SparseCyTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux){
         //1. check if out of range:
         cytnx_error_msg(locator.size()!=this->_bonds.size(),"[ERROR] len(locator) does not match the rank of tensor.%s","\n");
@@ -484,9 +502,13 @@ namespace cytnx_extension{
         std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
         cytnx_uint64 &i = ij[0];
         cytnx_uint64 &j = ij[1];
+        //std::cout << "[at_for_sparse]"<< i << " " << j << std::endl;
 
         //3. check if the item is there:
         // if they ref to different block, then the element is invalid (zero)
+        if((this->_outer2inner_row.find(i)==this->_outer2inner_row.end())||(this->_outer2inner_col.find(j)==this->_outer2inner_col.end())){
+            cytnx_error_msg(true,"[ERROR] trying to access element that doesn't belong to any block.%s","\n");
+        }
         if(this->_outer2inner_row[i].first != this->_outer2inner_col[j].first){
             cytnx_error_msg(true,"[ERROR] trying to access element that doesn't belong to any block.%s","\n");
         }
@@ -494,6 +516,7 @@ namespace cytnx_extension{
         cytnx_uint64 block_index = this->_outer2inner_row[i].first;
         return this->_blocks[block_index].at<cytnx_double>({this->_outer2inner_row[i].second,this->_outer2inner_col[j].second});
     }
+    //--------------------------------------
     cytnx_float&      SparseCyTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux){
         //1. check if out of range:
         cytnx_error_msg(locator.size()!=this->_bonds.size(),"[ERROR] len(locator) does not match the rank of tensor.%s","\n");
@@ -508,12 +531,98 @@ namespace cytnx_extension{
 
         //3. check if the item is there:
         // if they ref to different block, then the element is invalid (zero)
+        if((this->_outer2inner_row.find(i)==this->_outer2inner_row.end())||(this->_outer2inner_col.find(j)==this->_outer2inner_col.end())){
+            cytnx_error_msg(true,"[ERROR] trying to access element that doesn't belong to any block.%s","\n");
+        }
         if(this->_outer2inner_row[i].first != this->_outer2inner_col[j].first){
             cytnx_error_msg(true,"[ERROR] trying to access element that doesn't belong to any block.%s","\n");
         }
 
         cytnx_uint64 block_index = this->_outer2inner_row[i].first;
         return this->_blocks[block_index].at<cytnx_float>({this->_outer2inner_row[i].second,this->_outer2inner_col[j].second});
+    }
+
+    bool SparseCyTensor::at_query(const std::vector<cytnx_uint64> &locator) const{
+        //1. check if out of range:
+        cytnx_error_msg(locator.size()!=this->_bonds.size(),"[ERROR] len(locator) does not match the rank of tensor.%s","\n");
+        for(int i=0;i<this->_bonds.size();i++){
+            cytnx_error_msg(locator[i]>=this->_bonds[i].dim(),"[ERROR][SparseCyTensor][at_query] locator @index: %d out of range.\n",i);
+        }
+        
+        //2. calculate the location in real memory using meta datas.
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        cytnx_uint64 &i = ij[0];
+        cytnx_uint64 &j = ij[1];
+        
+        //[DEBUG]
+        /* 
+        cout << "o2i_row" << endl;
+        for(auto it=this->_outer2inner_row.begin();it!=this->_outer2inner_row.end();it++){
+            cout << it->first << " " << it->second.first << " " << it->second.second << endl;
+        }
+        cout << "o2i_col" << endl;
+        for(auto it=this->_outer2inner_col.begin();it!=this->_outer2inner_col.end();it++){
+            cout << it->first << " " << it->second.first << " " << it->second.second << endl;
+        }
+        */
+        //exit(1);
+
+        //3. check if the item is there:
+        // if they ref to different block, then the element is invalid (zero)
+        if((this->_outer2inner_row.find(i)==this->_outer2inner_row.end())||(this->_outer2inner_col.find(j)==this->_outer2inner_col.end())){
+            return false;
+        }
+
+        if(this->_outer2inner_row.find(i)->second.first != this->_outer2inner_col.find(j)->second.first){
+            return false;
+        }else{
+            //cout <<"[true]"<< i << " " << j << endl;
+            return true;
+        }
+    }
+
+
+    void SparseCyTensor::Transpose_(){
+        
+        //permute as usual:
+        vector<cytnx_int64> new_order = vec_concatenate(vec_range<cytnx_int64>(this->Rowrank(),this->rank()),vec_range<cytnx_int64>(0,this->Rowrank()));
+        this->permute_(new_order,this->rank() - this->Rowrank());
+
+        //modify tag, and reverse qnum:
+        for(int i=0;i<this->bonds().size();i++){
+            this->bonds()[i].set_type((this->bonds()[i].type()==BD_KET)?BD_BRA:BD_KET);
+        }
+
+        //reverse qnum!:
+        Bond redundant = Bond(this->_blockqnums.size(),BD_KET,this->_blockqnums,this->bonds()[0].syms());
+        this->_blockqnums = redundant.calc_reverse_qnums();
+        this->_is_braket_form = this->_update_braket();
+
+    }
+
+    boost::intrusive_ptr<CyTensor_base> SparseCyTensor::contract(const boost::intrusive_ptr<CyTensor_base> &rhs){
+        cytnx_error_msg(true,"[ERROR][Developing.]%s","\n");
+        
+        //checking type
+        cytnx_error_msg(!rhs->is_blockform() ,"[ERROR] cannot contract symmetry CyTensor with non-symmetry CyTensor%s","\n");
+
+        //get common labels:    
+        std::vector<cytnx_int64> comm_labels;
+        std::vector<cytnx_uint64> comm_idx1,comm_idx2;
+        vec_intersect_(comm_labels,this->labels(),rhs->labels(),comm_idx1,comm_idx2);
+
+        
+        if(comm_idx1.size() == 0){
+            // no common labels:
+            
+
+        }else{
+            
+        }
+
+
+
+
     }
 
 

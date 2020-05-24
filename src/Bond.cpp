@@ -169,6 +169,20 @@ namespace cytnx_extension{
             }
         }
     }
+
+    std::vector<std::vector<cytnx_int64> > Bond_impl::calc_reverse_qnums(){
+        std::vector<std::vector<cytnx_int64> > out(this->_qnums.size(),std::vector<cytnx_int64>(this->_syms.size()));
+        #ifdef UNI_OMP
+        #pragma omp parallel for
+        #endif
+        for(cytnx_uint64 i=0;i<out.size();i++){
+            for(int j=0;j<out[i].size();j++){
+                this->_syms[j].reverse_rule_(out[i][j],this->_qnums[i][j]);
+            }
+        }
+        return out;
+    }
+    
     /*
     void Bond_impl::Init(const cytnx_uint64 &dim, const std::initializer_list<std::initializer_list<cytnx_int64> > &in_qnums,const std::initializer_list<Symmetry> &in_syms,const bondType &bd_type){
 

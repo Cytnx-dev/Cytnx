@@ -69,6 +69,7 @@ namespace cytnx_extension{
 
             void combineBond_(const boost::intrusive_ptr<Bond_impl> &bd_in);
 
+    
             boost::intrusive_ptr<Bond_impl> combineBond(const boost::intrusive_ptr<Bond_impl> &bd_in){
                 boost::intrusive_ptr<Bond_impl> out = this->clone();
                 out->combineBond_(bd_in);
@@ -81,6 +82,8 @@ namespace cytnx_extension{
             // return the degeneracy of the specify qnum set.
             cytnx_uint64 getDegeneracy(const std::vector<cytnx_int64> &qnum, const bool &return_indices,std::vector<cytnx_uint64> &indices);
 
+            // return the effective qnums when Bra-Ket mismatch. 
+            std::vector<std::vector<cytnx_int64> > calc_reverse_qnums();
 
 
     };//Bond_impl
@@ -338,6 +341,11 @@ namespace cytnx_extension{
                 indices.clear();
                 return this->_impl->getDegeneracy(qnum,true,indices);
             }
+
+            std::vector<std::vector<cytnx_int64> > calc_reverse_qnums(){
+                return this->_impl->calc_reverse_qnums();
+            }
+
             bool operator==(const Bond &rhs) const;
             bool operator!=(const Bond &rhs) const;
    

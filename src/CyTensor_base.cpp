@@ -33,6 +33,10 @@ namespace cytnx_extension{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
             return std::vector<cytnx_uint64>();
         }
+        void CyTensor_base::set_Rowrank(const cytnx_uint64 &new_Rowrank){
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+        }
+        
         bool      CyTensor_base::is_blockform() const{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
             return false;
@@ -238,7 +242,10 @@ namespace cytnx_extension{
         cytnx_float& CyTensor_base::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
         }
-
+        
+        bool CyTensor_base::at_query(const std::vector<cytnx_uint64> &locator) const{
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+        }
 
 
 

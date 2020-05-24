@@ -6,6 +6,8 @@ namespace cytnx{
 
 
     std::vector<std::vector<cytnx_int64> > vec2d_intersect(const std::vector<std::vector<cytnx_int64> > &inL, const std::vector<std::vector<cytnx_int64> > &inR, const bool &sorted_L, const bool &sorted_R){
+        //sorted from small to large 
+
         std::vector<std::vector<cytnx_int64> > out;
         std::vector<std::vector<cytnx_int64> > v1 = inL;
         std::vector<std::vector<cytnx_int64> > v2 = inR;

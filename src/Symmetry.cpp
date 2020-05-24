@@ -43,6 +43,12 @@ namespace cytnx_extension{
         this->combine_rule_(out,inL,inR);
         return out;
     }
+    cytnx_int64 Symmetry_base::reverse_rule( const cytnx_int64 &in){
+        cytnx_int64 out;
+        this->reverse_rule_(out,in);
+        return out;
+    }
+
 
     bool cytnx_extension::Symmetry_base::check_qnum(const cytnx_int64 &qnum){
         cytnx_error_msg(1,"%s","[ERROR][Internal] should not call Symmerty base!");
@@ -58,6 +64,10 @@ namespace cytnx_extension{
     void cytnx_extension::Symmetry_base::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR){
         cytnx_error_msg(1,"%s","[ERROR][Internal] should not call Symmerty base!");
     }
+    void cytnx_extension::Symmetry_base::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in){
+        cytnx_error_msg(1,"%s","[ERROR][Internal] should not call Symmerty base!");
+    }
+
     ///=========================
     bool cytnx_extension::U1Symmetry::check_qnum(const cytnx_int64 &qnum){
         return true;
@@ -80,7 +90,9 @@ namespace cytnx_extension{
     void cytnx_extension::U1Symmetry::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR){
         out = inL + inR;
     }
-   
+    void cytnx_extension::U1Symmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in){
+        out = in*-1;
+    }
 
     ///========================
     bool cytnx_extension::ZnSymmetry::check_qnum(const cytnx_int64 &qnum){
@@ -114,8 +126,6 @@ namespace cytnx_extension{
             return out;
         #endif
 
-
-
     }
 
     void cytnx_extension::ZnSymmetry::combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR){
@@ -131,7 +141,9 @@ namespace cytnx_extension{
     void cytnx_extension::ZnSymmetry::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR){
         out = (inL + inR)%(this->n);
     }
-
+    void cytnx_extension::ZnSymmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in){
+        out = in*-1;
+    }
 
 //++++++++++++++++++++++++
     SymmetryType_class SymType;
