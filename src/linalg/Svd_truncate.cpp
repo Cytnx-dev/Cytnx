@@ -70,7 +70,8 @@ namespace cytnx_extension{
                    if(oldlabel[i]<=newlbl) newlbl = oldlabel[i]-1;
                }
                Cy_S.Init({newBond,newBond},{newlbl,newlbl-1},1,Type.Double,Device.cpu,true); //it is just reference so no hurt to alias ^^
-               Cy_S.put_block_(outT[t].get({ac::range(0,keepdim)}));
+               Tensor tmps2 = outT[t].get({ac::range(0,keepdim)});
+               Cy_S.put_block_(tmps2);
                t++; 
 
                if(is_U){
