@@ -38,12 +38,24 @@ int main(int argc, char *argv[]){
     auto Bd_o = cyx::Bond(3,cyx::BD_BRA,{{2},{0},{-2}},{cyx::Symmetry::U1()});//# 1 = 0.5, so it is spin-1
     auto H = cyx::CyTensor({Bd_i,Bd_i,Bd_o,Bd_o},{},2);
     
+
+    H.set_elem<cytnx_double>({0,0,0,0},1);
+    auto HHH = H.Transpose();
+
+    cout << HHH << endl;
+
+    //cout << H ;
+    //cout << H.getTotalQnums();
+    //cout << H.get_elem<cytnx_double>({0,0,0,0});
+
+    //cout << H.get_block({4});
+    
     //H.print_diagram();
 
     //H.permute_({0,3,1,2});   
     //H.print_diagram();    
 
-
+    return 0;
     auto HT = linalg::Kron(physics::spin(1,'z'),physics::spin(1,'z')) + 
               linalg::Kron(physics::spin(1,'x'),physics::spin(1,'x')) +
               linalg::Kron(physics::spin(1,'y'),physics::spin(1,'y'));
@@ -71,6 +83,8 @@ int main(int argc, char *argv[]){
 
     auto Hcp = H.Transpose();
     Hcp.contiguous_();    
+
+    
 
     for(int i=0;i<Hcp.get_blocks().size();i++){
         //cout << H.get_block(i) ;

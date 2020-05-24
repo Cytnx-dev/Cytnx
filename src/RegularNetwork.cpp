@@ -114,7 +114,7 @@ namespace cytnx_extension{
         const cytnx_uint64 MAXLINES = 1024;
 
         // empty all
-        this->Clear();
+        this->clear();
     
         // open file 
         std::ifstream infile;

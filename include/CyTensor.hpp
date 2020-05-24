@@ -102,21 +102,59 @@ namespace cytnx_extension{
                 this->_labels[idx] = new_label;                
             }
             void set_labels(const std::vector<cytnx_int64> &new_labels);
+
+
+
             template<class T>
             T& at(const std::vector<cytnx_uint64> &locator){
                 //std::cout << "at " << this->is_blockform()  << std::endl;
                 if(this->is_blockform()){
-                    // sparse
-                    //cytnx_error_msg(this->is_blockform(),"[ERROR] cannot access element using at<T> on a CyTensor with symmetry.\n suggestion: get_block/get_blocks first.%s","\n");
-                    //std::cout << "[at, blockform]" << std::endl;
-                    T aux;
-                    return this->at_for_sparse(locator, aux);
-
+                    cytnx_error_msg(true,"[ERROR][SparseCyTensor] CyTensor with Symmetry cannot get element with at(). Use get_elem()/set_elem() instead.%s","\n");
                 }else{
                     return this->get_block_().at<T>(locator);
                 }
 
             }
+            
+            template<class T>
+            const T& at(const std::vector<cytnx_uint64> &locator) const{
+                //std::cout << "at " << this->is_blockform()  << std::endl;
+                if(this->is_blockform()){
+                    cytnx_error_msg(true,"[ERROR][SparseCyTensor] CyTensor with Symmetry cannot get element with at(). Use get_elem()/set_elem() instead.%s","\n");
+                }else{
+                    return this->get_block_().at<T>(locator);
+                }
+
+            }
+
+
+            template<class T>
+            T get_elem(const std::vector<cytnx_uint64> &locator) const{
+                if(this->is_blockform()){
+                    if(this->elem_exists(locator)){
+                        T aux; // [workaround] use aux to dispatch.
+                        return this->at_for_sparse(locator,aux);
+                    }else{
+                        return 0;
+                    }
+                }else{
+                    return this->at<T>(locator);
+                }
+            }
+            template<class T>
+            void set_elem(const std::vector<cytnx_uint64> &locator, const T &input){
+                if(this->is_blockform()){
+                    if(this->elem_exists(locator)){
+                        T aux;
+                        this->at_for_sparse(locator,aux) = input;
+                    }else{
+                        cytnx_error_msg(true,"[ERROR][SparseCyTensor] invalid location. break qnum block.%s","\n");
+                    }
+                }else{
+                    this->at<T>(locator) = input;
+                }
+            }
+
             int uten_type(){
                 return this->uten_type_id;
             }
@@ -160,9 +198,9 @@ namespace cytnx_extension{
             virtual std::vector<Tensor>& get_blocks_();
 
             virtual void put_block(const Tensor &in, const cytnx_uint64 &idx=0);
-            virtual void put_block_(const Tensor &in, const cytnx_uint64 &idx=0);
+            virtual void put_block_(Tensor &in, const cytnx_uint64 &idx=0);
             virtual void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum);
-            virtual void put_block_(const Tensor &in, const std::vector<cytnx_int64> &qnum);
+            virtual void put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum);
 
             // this will only work on non-symm tensor (DenseCyTensor)
             virtual boost::intrusive_ptr<CyTensor_base> get(const std::vector<Accessor> &accessors);
@@ -190,12 +228,17 @@ namespace cytnx_extension{
             virtual void tag();
             
 
-            virtual bool at_query(const std::vector<cytnx_uint64> &locator) const;
+            virtual bool elem_exists(const std::vector<cytnx_uint64> &locator) const;
             // this a workaround, as virtual function cannot template.
             virtual cytnx_complex128& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux);
             virtual cytnx_complex64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux);
             virtual cytnx_double& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux);
             virtual cytnx_float& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux);
+
+            virtual const cytnx_complex128& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux)const ;
+            virtual const cytnx_complex64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux)const;
+            virtual const cytnx_double& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux)const;
+            virtual const cytnx_float& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux)const;
 
 
             virtual ~CyTensor_base(){};
@@ -322,7 +365,7 @@ namespace cytnx_extension{
                 }
             }
             // share view of the block
-            void put_block_(const Tensor &in, const cytnx_uint64 &idx=0){
+            void put_block_(Tensor &in, const cytnx_uint64 &idx=0){
                 if(this->is_diag()){
                     cytnx_error_msg(in.shape() != this->_block.shape(),"[ERROR][DenseCyTensor] put_block, the input tensor shape does not match.%s","\n");
                     this->_block = in;
@@ -335,7 +378,7 @@ namespace cytnx_extension{
             void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum){
                 cytnx_error_msg(true,"[ERROR][DenseCyTensor] try to put_block using qnum on a non-symmetry CyTensor%s","\n");
             }
-            void put_block_(const Tensor &in, const std::vector<cytnx_int64> &qnum){
+            void put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum){
                 cytnx_error_msg(true,"[ERROR][DenseCyTensor] try to put_block using qnum on a non-symmetry CyTensor%s","\n");
             }
             // this will only work on non-symm tensor (DenseCyTensor)
@@ -407,6 +450,22 @@ namespace cytnx_extension{
                 out->Trace_(a,b,by_label);
                 return out;
             }
+            const cytnx_complex128& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux) const {
+                cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
+                //return cytnx_complex128(0,0);
+            }
+            const cytnx_complex64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux) const{
+                cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
+                //return cytnx_complex64(0,0);
+            }
+            const cytnx_double& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux) const{
+                cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
+                //return 0;
+            }
+            const cytnx_float& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux) const{
+                cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
+                //return 0;
+            }
             cytnx_complex128& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux){
                 cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
                 //return cytnx_complex128(0,0);
@@ -423,8 +482,9 @@ namespace cytnx_extension{
                 cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
                 //return 0;
             }
-            bool at_query(const std::vector<cytnx_uint64> &locator) const{
-                cytnx_error_msg(true,"[ERROR][DenseCyTensor] at_query can only be used on CyTensor with Symmetry.%s","\n");
+
+            bool elem_exists(const std::vector<cytnx_uint64> &locator) const{
+                cytnx_error_msg(true,"[ERROR][DenseCyTensor] elem_exists can only be used on CyTensor with Symmetry.%s","\n");
             }
             void tag(){
                 if(!this->is_tag()){
@@ -609,9 +669,9 @@ namespace cytnx_extension{
                     //get dtype from qnum:
                     cytnx_int64 idx=-1;
                     for(int i=0;i<this->_blockqnums.size();i++){
-                        for(int j=0;j<this->_blockqnums[i].size();j++)
-                            std::cout << this->_blockqnums[i][j]<< " ";
-                        std::cout << std::endl;
+                        //for(int j=0;j<this->_blockqnums[i].size();j++)
+                        //    std::cout << this->_blockqnums[i][j]<< " ";
+                        //std::cout << std::endl;
                         if(qnum==this->_blockqnums[i]){idx=i; break;}
                     }
                     cytnx_error_msg(idx<0,"[ERROR][SparseCyTensor] no block with [qnum] exists in the current CyTensor.%s","\n");
@@ -625,14 +685,14 @@ namespace cytnx_extension{
 
             // return a share view of block, this only work for symm tensor in contiguous form.
             Tensor& get_block_(const cytnx_uint64 &idx=0){
-                cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseCyTensor] cannot use get_block_() on non-contiguous CyTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call get_blocks_()\n  2) Try get_block()/get_blocks()%s","\n");
+                cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseCyTensor] cannot use get_block_() on non-contiguous CyTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call get_block_()\n  2) Try get_block()/get_blocks()%s","\n");
                 
                 cytnx_error_msg(idx >= this->_blocks.size(),"[ERROR][SparseCyTensor] index exceed the number of blocks.%s","\n");
 
                 return this->_blocks[idx];
             }
             const Tensor& get_block_(const cytnx_uint64 &idx=0) const{
-                cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseCyTensor] cannot use get_block_() on non-contiguous CyTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call get_blocks_()\n  2) Try get_block()/get_blocks()%s","\n");
+                cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseCyTensor] cannot use get_block_() on non-contiguous CyTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call get_block_()\n  2) Try get_block()/get_blocks()%s","\n");
                 
                 cytnx_error_msg(idx >= this->_blocks.size(),"[ERROR][SparseCyTensor] index exceed the number of blocks.%s","\n");
 
@@ -640,6 +700,7 @@ namespace cytnx_extension{
             }
 
             Tensor& get_block_(const std::vector<cytnx_int64> &qnum){
+                cytnx_error_msg(!this->is_braket_form(),"[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch the row/col space.\n permute to the correct physical space first, then get block.%s","\n");
                 cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseCyTensor] cannot use get_block_() on non-contiguous CyTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call get_blocks_()\n  2) Try get_block()/get_blocks()%s","\n");
                 
                 //get dtype from qnum:
@@ -652,6 +713,7 @@ namespace cytnx_extension{
                 //cytnx_error_msg(true,"[Developing]%s","\n");
             }
             const Tensor& get_block_(const std::vector<cytnx_int64> &qnum) const{
+                cytnx_error_msg(!this->is_braket_form(),"[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch the row/col space.\n permute to the correct physical space first, then get block.%s","\n");
                 cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseCyTensor] cannot use get_block_() on non-contiguous CyTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call get_blocks_()\n  2) Try get_block()/get_blocks()%s","\n");
                 
                 //get dtype from qnum:
@@ -696,27 +758,45 @@ namespace cytnx_extension{
             };
 
 
-            void put_block(const Tensor &in,const cytnx_uint64 &idx=0){
-                cytnx_error_msg(idx>=this->_blocks.size(),"[ERROR][SparseCyTensor] index out of range%s","\n");
-                if(this->_contiguous){
-                    cytnx_error_msg(in.shape()!=this->_blocks[idx].shape(),"[ERROR][SparseCyTensor] the shape of input tensor does not match the shape of block @ idx=%d\n",idx);
-                    this->_blocks[idx] = in.clone();
-                }else{
-                    cytnx_error_msg(true,"[Developing]%s","\n");
-                }
-            };
-            void put_block_(const Tensor &in,const cytnx_uint64 &idx=0){
+            void put_block_(Tensor &in,const cytnx_uint64 &idx=0){
                 cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseCyTensor] cannot use put_block_() on non-contiguous CyTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call put_blocks_()\n  2) Try put_block()/put_blocks()%s","\n");
 
                 cytnx_error_msg(idx>=this->_blocks.size(),"[ERROR][SparseCyTensor] index out of range%s","\n");
                 cytnx_error_msg(in.shape()!=this->_blocks[idx].shape(),"[ERROR][SparseCyTensor] the shape of input tensor does not match the shape of block @ idx=%d\n",idx);
                 this->_blocks[idx] = in;
             };
-            void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum){
-                cytnx_error_msg(true,"[Developing]%s","\n");
+            void put_block(const Tensor &in,const cytnx_uint64 &idx=0){
+                cytnx_error_msg(idx>=this->_blocks.size(),"[ERROR][SparseCyTensor] index out of range%s","\n");
+                if(this->_contiguous){
+                    cytnx_error_msg(in.shape()!=this->_blocks[idx].shape(),"[ERROR][SparseCyTensor] the shape of input tensor does not match the shape of block @ idx=%d\n",idx);
+                    this->_blocks[idx] = in.clone();
+                }else{
+                    cytnx_error_msg(true,"[Developing] put block to a non-contiguous SparseCyTensor is currently not support. Call contiguous()/contiguous_() first.%s","\n");
+                }
             };
-            void put_block_(const Tensor &in, const std::vector<cytnx_int64> &qnum){
-                cytnx_error_msg(true,"[Developing]%s","\n");
+            void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum){
+                cytnx_error_msg(!this->is_braket_form(),"[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch the row/col space.\n permute to the correct physical space first, then get block.%s","\n");
+                 
+                //get dtype from qnum:
+                cytnx_int64 idx=-1;
+                for(int i=0;i<this->_blockqnums.size();i++){
+                    if(qnum==this->_blockqnums[i]){idx=i; break;}
+                }
+                cytnx_error_msg(idx<0,"[ERROR][SparseCyTensor] no block with [qnum] exists in the current CyTensor.%s","\n");
+                this->put_block(in,idx);
+
+            };
+            void put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum){
+                cytnx_error_msg(!this->is_braket_form(),"[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch the row/col space.\n permute to the correct physical space first, then get block.%s","\n");
+                cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseCyTensor] cannot use put_block_() on non-contiguous CyTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call get_blocks_()\n  2) Try get_block()/get_blocks()%s","\n");
+                
+                //get dtype from qnum:
+                cytnx_int64 idx=-1;
+                for(int i=0;i<this->_blockqnums.size();i++){
+                    if(qnum==this->_blockqnums[i]){idx=i; break;}
+                }
+                cytnx_error_msg(idx<0,"[ERROR][SparseCyTensor] no block with [qnum] exists in the current CyTensor.%s","\n");
+                this->put_block_(in,idx);
             };
 
             // this will only work on non-symm tensor (DenseCyTensor)
@@ -791,12 +871,19 @@ namespace cytnx_extension{
                 // no-use!
             }
 
+            const cytnx_complex128& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux) const;
+            const cytnx_complex64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux) const;
+            const cytnx_double& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux) const;
+            const cytnx_float& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux) const;
+            
             cytnx_complex128& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux);
             cytnx_complex64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux);
             cytnx_double& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux);
             cytnx_float& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux);
 
-            bool at_query(const std::vector<cytnx_uint64> &locator) const;
+
+
+            bool elem_exists(const std::vector<cytnx_uint64> &locator) const;
             // end virtual func
 
 
@@ -987,6 +1074,8 @@ namespace cytnx_extension{
             T& at(const std::vector<cytnx_uint64> &locator){
                 return this->_impl->at<T>(locator);
             }
+
+
             // return a clone of block
             Tensor get_block(const cytnx_uint64 &idx=0) const{
                 return this->_impl->get_block(idx);
@@ -1054,11 +1143,11 @@ namespace cytnx_extension{
                 this->_impl->put_block(in,qnum);
             }
             // the put block will have shared view with the internal block, i.e. non-clone. 
-            void put_block_(const Tensor &in,const cytnx_uint64 &idx=0){
+            void put_block_(Tensor &in,const cytnx_uint64 &idx=0){
                 this->_impl->put_block_(in,idx);
             }
             // the put block will have shared view with the internal block, i.e. non-clone. 
-            void put_block_(const Tensor &in, const std::vector<cytnx_int64> &qnum){
+            void put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum){
                 this->_impl->put_block_(in,qnum);
             }
             CyTensor get(const std::vector<Accessor> &accessors) const{
@@ -1193,12 +1282,26 @@ namespace cytnx_extension{
                 this->_impl->tag();
                 return *this;
             }
-            bool at_query( const std::vector<cytnx_uint64> &locator) const{
-                return this->_impl->at_query(locator);
+            bool elem_exists( const std::vector<cytnx_uint64> &locator) const{
+                return this->_impl->elem_exists(locator);
+            }
+
+            template<class T>
+            T get_elem(const std::vector<cytnx_uint64> &locator) const{
+                return this->_impl->get_elem<T>(locator);
+            }
+            
+            template<class T, class T2>
+            void set_elem(const std::vector<cytnx_uint64> &locator, const T2&rc){   
+                //cytnx_error_msg(true,"[ERROR] invalid type%s","\n");
+                this->_impl->set_elem<T>(locator,rc);
             }
 
 
     };//class CyTensor
+
+
+
 
     ///@cond
     std::ostream& operator<<(std::ostream& os, const CyTensor &in);

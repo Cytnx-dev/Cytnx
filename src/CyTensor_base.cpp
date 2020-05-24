@@ -139,13 +139,13 @@ namespace cytnx_extension{
         void CyTensor_base::put_block(const Tensor &in, const cytnx_uint64 &idx){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
         }
-        void CyTensor_base::put_block_(const Tensor &in, const cytnx_uint64 &idx){
+        void CyTensor_base::put_block_(Tensor &in, const cytnx_uint64 &idx){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
         }
         void CyTensor_base::put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
         }
-        void CyTensor_base::put_block_(const Tensor &in, const std::vector<cytnx_int64> &qnum){
+        void CyTensor_base::put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
         }
         void CyTensor_base::set(const std::vector<Accessor> &accesssors, const Tensor &rhs){
@@ -242,8 +242,22 @@ namespace cytnx_extension{
         cytnx_float& CyTensor_base::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
         }
+        const cytnx_complex128& CyTensor_base::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux) const{
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+        }
+        const cytnx_complex64& CyTensor_base::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux) const{
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+        }
+        const cytnx_double& CyTensor_base::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux) const{
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+        }
+        const cytnx_float& CyTensor_base::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux) const{
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+        }
+
+
         
-        bool CyTensor_base::at_query(const std::vector<cytnx_uint64> &locator) const{
+        bool CyTensor_base::elem_exists(const std::vector<cytnx_uint64> &locator) const{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
         }
 

@@ -11,7 +11,7 @@
 
 #include "cytnx.hpp"
 //#include "../include/cytnx_error.hpp"
-
+#include "complex.h"
 namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
@@ -31,21 +31,26 @@ void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc
     std::vector<cytnx::Accessor> accessors;
     if(py::isinstance<py::tuple>(locators)){
         py::tuple Args = locators.cast<py::tuple>();
+        cytnx_uint64 cnt = 0;
         // mixing of slice and ints
-        for(cytnx_uint32 axis=0;axis<self.shape().size();axis++){
-            if(axis >= Args.size()){accessors.push_back(Accessor::all());}
-            else{ 
-                // check type:
-                if(py::isinstance<py::slice>(Args[axis])){
-                    py::slice sls = Args[axis].cast<py::slice>();
-                    if(!sls.compute((ssize_t)self.shape()[axis],&start,&stop,&step, &slicelength))
-                        throw py::error_already_set();
-                    //if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
-                    accessors.push_back(cytnx::Accessor::range(start,stop,step));
-                }else{
-                    accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
-                }
+        for(cytnx_uint32 axis=0;axis<Args.size();axis++){
+            cnt ++;
+            // check type:
+            if(py::isinstance<py::slice>(Args[axis])){
+                py::slice sls = Args[axis].cast<py::slice>();
+                if(!sls.compute((ssize_t)self.shape()[axis],&start,&stop,&step, &slicelength))
+                    throw py::error_already_set();
+                //std::cout << start << " " << stop << " " << step << slicelength << std::endl;
+                //if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
+                accessors.push_back(cytnx::Accessor::range(cytnx_int64(start),cytnx_int64(stop),cytnx_int64(step)));
+            }else{
+                accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
             }
+        
+        }
+        while(cnt<self.shape().size()){
+            cnt++;
+            accessors.push_back(Accessor::all());
         }
     }else{
         // only int
@@ -58,6 +63,132 @@ void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc
     self.set(accessors,rc);
     
 }
+
+void f_CyTensor_setelem_scal_d(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_double&rc){
+    if(self.dtype() == cytnx::Type.Double) 
+        self.set_elem<cytnx::cytnx_double>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Float) 
+        self.set_elem<cytnx::cytnx_float>(locator,rc);
+    else if(self.dtype() == cytnx::Type.ComplexDouble) 
+        self.set_elem<cytnx::cytnx_complex128>(locator,cytnx_complex128(rc,0));
+    else if(self.dtype() == cytnx::Type.ComplexFloat) 
+        self.set_elem<cytnx::cytnx_complex64>(locator,cytnx_complex64(rc,0));
+    else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
+}
+
+void f_CyTensor_setelem_scal_f(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_float&rc){
+    if(self.dtype() == cytnx::Type.Double) 
+        self.set_elem<cytnx::cytnx_double>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Float) 
+        self.set_elem<cytnx::cytnx_float>(locator,rc);
+    else if(self.dtype() == cytnx::Type.ComplexDouble) 
+        self.set_elem<cytnx::cytnx_complex128>(locator,cytnx_complex128(rc,0));
+    else if(self.dtype() == cytnx::Type.ComplexFloat) 
+        self.set_elem<cytnx::cytnx_complex64>(locator,cytnx_complex64(rc,0));
+    else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
+}
+void f_CyTensor_setelem_scal_u64(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_uint64&rc){
+    if(self.dtype() == cytnx::Type.Double) 
+        self.set_elem<cytnx::cytnx_double>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Float) 
+        self.set_elem<cytnx::cytnx_float>(locator,rc);
+    else if(self.dtype() == cytnx::Type.ComplexDouble) 
+        self.set_elem<cytnx::cytnx_complex128>(locator,cytnx_complex128(rc,0));
+    else if(self.dtype() == cytnx::Type.ComplexFloat) 
+        self.set_elem<cytnx::cytnx_complex64>(locator,cytnx_complex64(rc,0));
+    else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
+}
+void f_CyTensor_setelem_scal_i64(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_int64&rc){
+    if(self.dtype() == cytnx::Type.Double) 
+        self.set_elem<cytnx::cytnx_double>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Float) 
+        self.set_elem<cytnx::cytnx_float>(locator,rc);
+    else if(self.dtype() == cytnx::Type.ComplexDouble) 
+        self.set_elem<cytnx::cytnx_complex128>(locator,cytnx_complex128(rc,0));
+    else if(self.dtype() == cytnx::Type.ComplexFloat) 
+        self.set_elem<cytnx::cytnx_complex64>(locator,cytnx_complex64(rc,0));
+    else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
+}
+void f_CyTensor_setelem_scal_u32(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_uint32&rc){
+    if(self.dtype() == cytnx::Type.Double) 
+        self.set_elem<cytnx::cytnx_double>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Float) 
+        self.set_elem<cytnx::cytnx_float>(locator,rc);
+    else if(self.dtype() == cytnx::Type.ComplexDouble) 
+        self.set_elem<cytnx::cytnx_complex128>(locator,cytnx_complex128(rc,0));
+    else if(self.dtype() == cytnx::Type.ComplexFloat) 
+        self.set_elem<cytnx::cytnx_complex64>(locator,cytnx_complex64(rc,0));
+    else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
+}
+void f_CyTensor_setelem_scal_i32(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_int32&rc){
+    if(self.dtype() == cytnx::Type.Double) 
+        self.set_elem<cytnx::cytnx_double>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Float) 
+        self.set_elem<cytnx::cytnx_float>(locator,rc);
+    else if(self.dtype() == cytnx::Type.ComplexDouble) 
+        self.set_elem<cytnx::cytnx_complex128>(locator,cytnx_complex128(rc,0));
+    else if(self.dtype() == cytnx::Type.ComplexFloat) 
+        self.set_elem<cytnx::cytnx_complex64>(locator,cytnx_complex64(rc,0));
+    else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
+}
+void f_CyTensor_setelem_scal_u16(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_uint16&rc){
+    if(self.dtype() == cytnx::Type.Double) 
+        self.set_elem<cytnx::cytnx_double>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Float) 
+        self.set_elem<cytnx::cytnx_float>(locator,rc);
+    else if(self.dtype() == cytnx::Type.ComplexDouble) 
+        self.set_elem<cytnx::cytnx_complex128>(locator,cytnx_complex128(rc,0));
+    else if(self.dtype() == cytnx::Type.ComplexFloat) 
+        self.set_elem<cytnx::cytnx_complex64>(locator,cytnx_complex64(rc,0));
+    else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
+}
+void f_CyTensor_setelem_scal_i16(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_int16&rc){
+    if(self.dtype() == cytnx::Type.Double) 
+        self.set_elem<cytnx::cytnx_double>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Float) 
+        self.set_elem<cytnx::cytnx_float>(locator,rc);
+    else if(self.dtype() == cytnx::Type.ComplexDouble) 
+        self.set_elem<cytnx::cytnx_complex128>(locator,cytnx_complex128(rc,0));
+    else if(self.dtype() == cytnx::Type.ComplexFloat) 
+        self.set_elem<cytnx::cytnx_complex64>(locator,cytnx_complex64(rc,0));
+    else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
+}
+void f_CyTensor_setelem_scal_b(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_bool&rc){
+    if(self.dtype() == cytnx::Type.Double) 
+        self.set_elem<cytnx::cytnx_double>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Float) 
+        self.set_elem<cytnx::cytnx_float>(locator,rc);
+    else if(self.dtype() == cytnx::Type.ComplexDouble) 
+        self.set_elem<cytnx::cytnx_complex128>(locator,cytnx_complex128(rc,0));
+    else if(self.dtype() == cytnx::Type.ComplexFloat) 
+        self.set_elem<cytnx::cytnx_complex64>(locator,cytnx_complex64(rc,0));
+    else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
+}
+void f_CyTensor_setelem_scal_cd(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_complex128 &rc){
+    if(self.dtype() == cytnx::Type.Double){ 
+        cytnx_error_msg(true,"%s","[ERROR] cannot assign complex to real container.\n");
+    }else if(self.dtype() == cytnx::Type.Float){ 
+        cytnx_error_msg(true,"%s","[ERROR] cannot assign complex to real container.\n");
+    }else if(self.dtype() == cytnx::Type.ComplexDouble){
+        self.set_elem<cytnx::cytnx_complex128>(locator,rc);
+    }else if(self.dtype() == cytnx::Type.ComplexFloat){
+        self.set_elem<cytnx::cytnx_complex64>(locator,cytnx::cytnx_complex64(rc.real(),rc.imag()));
+    }
+    else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
+}
+void f_CyTensor_setelem_scal_cf(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_complex64 &rc){
+    if(self.dtype() == cytnx::Type.Double){
+        cytnx_error_msg(true,"%s","[ERROR] cannot assign complex to real container.\n");
+    }else if(self.dtype() == cytnx::Type.Float){ 
+        cytnx_error_msg(true,"%s","[ERROR] cannot assign complex to real container.\n");
+    }else if(self.dtype() == cytnx::Type.ComplexDouble){
+        self.set_elem<cytnx::cytnx_complex128>(locator,cytnx::cytnx_complex128(rc.real(),rc.imag()));
+    }else if(self.dtype() == cytnx::Type.ComplexFloat){ 
+        self.set_elem<cytnx::cytnx_complex64>(locator,rc);
+    }else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
+}
+
+
 
 
 PYBIND11_MODULE(cytnx,m){
@@ -244,6 +375,12 @@ PYBIND11_MODULE(cytnx,m){
                         out = py::cast(self.at<cytnx::cytnx_uint32>(idx));
                     else if(self.dtype() == cytnx::Type.Int32) 
                         out = py::cast(self.at<cytnx::cytnx_int32>(idx));
+                    else if(self.dtype() == cytnx::Type.Uint16) 
+                        out = py::cast(self.at<cytnx::cytnx_uint16>(idx));
+                    else if(self.dtype() == cytnx::Type.Int16) 
+                        out = py::cast(self.at<cytnx::cytnx_int16>(idx));
+                    else if(self.dtype() == cytnx::Type.Bool) 
+                        out = py::cast(self.at<cytnx::cytnx_bool>(idx));
                     else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
 
                     return out;
@@ -267,6 +404,12 @@ PYBIND11_MODULE(cytnx,m){
                         self.at<cytnx::cytnx_uint32>(idx) = in.cast<cytnx::cytnx_uint32>();
                     else if(self.dtype() == cytnx::Type.Int32) 
                         self.at<cytnx::cytnx_int32>(idx) = in.cast<cytnx::cytnx_int32>();
+                    else if(self.dtype() == cytnx::Type.Uint16) 
+                        self.at<cytnx::cytnx_uint16>(idx) = in.cast<cytnx::cytnx_uint16>();
+                    else if(self.dtype() == cytnx::Type.Int16) 
+                        self.at<cytnx::cytnx_int16>(idx) = in.cast<cytnx::cytnx_int16>();
+                    else if(self.dtype() == cytnx::Type.Bool) 
+                        self.at<cytnx::cytnx_bool>(idx) = in.cast<cytnx::cytnx_bool>();
                     else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
                  })
                 .def("__repr__",[](cytnx::Storage &self)->std::string{
@@ -504,11 +647,10 @@ PYBIND11_MODULE(cytnx,m){
                     std::vector<cytnx::Accessor> accessors;
                     if(py::isinstance<py::tuple>(locators)){
                         py::tuple Args = locators.cast<py::tuple>();
-                        //std::cout << "locators" << std::endl;
+                        cytnx_uint64 cnt = 0;
                         // mixing of slice and ints
-                        for(cytnx_uint32 axis=0;axis<self.shape().size();axis++){
-                            if(axis >= Args.size()){accessors.push_back(Accessor::all());}
-                            else{ 
+                        for(cytnx_uint32 axis=0;axis<Args.size();axis++){
+                                cnt ++;
                                 // check type:
                                 if(py::isinstance<py::slice>(Args[axis])){
                                     py::slice sls = Args[axis].cast<py::slice>();
@@ -520,7 +662,11 @@ PYBIND11_MODULE(cytnx,m){
                                 }else{
                                     accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
                                 }
-                            }
+                            
+                        }
+                        while(cnt<self.shape().size()){
+                            cnt++;
+                            accessors.push_back(Accessor::all());
                         }
                     }else if(py::isinstance<py::slice>(locators)){
                         py::slice sls = locators.cast<py::slice>();
@@ -542,6 +688,7 @@ PYBIND11_MODULE(cytnx,m){
                             else accessors.push_back(cytnx::Accessor::all());
                         }
                     }
+                        
                      
                     return self.get(accessors);
                     
@@ -554,21 +701,26 @@ PYBIND11_MODULE(cytnx,m){
                     std::vector<cytnx::Accessor> accessors;
                     if(py::isinstance<py::tuple>(locators)){
                         py::tuple Args = locators.cast<py::tuple>();
+                        cytnx_uint64 cnt = 0;
                         // mixing of slice and ints
-                        for(cytnx_uint32 axis=0;axis<self.shape().size();axis++){
-                            if(axis >= Args.size()){accessors.push_back(Accessor::all());}
-                            else{ 
+                        for(cytnx_uint32 axis=0;axis<Args.size();axis++){
+                                cnt ++;
                                 // check type:
                                 if(py::isinstance<py::slice>(Args[axis])){
                                     py::slice sls = Args[axis].cast<py::slice>();
                                     if(!sls.compute((ssize_t)self.shape()[axis],&start,&stop,&step, &slicelength))
                                         throw py::error_already_set();
+                                    //std::cout << start << " " << stop << " " << step << slicelength << std::endl;
                                     //if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
-                                    accessors.push_back(cytnx::Accessor::range(start,stop,step));
+                                    accessors.push_back(cytnx::Accessor::range(cytnx_int64(start),cytnx_int64(stop),cytnx_int64(step)));
                                 }else{
                                     accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
                                 }
-                            }
+                            
+                        }
+                        while(cnt<self.shape().size()){
+                            cnt++;
+                            accessors.push_back(Accessor::all());
                         }
                     }else if(py::isinstance<py::slice>(locators)){
                         py::slice sls = locators.cast<py::slice>();
@@ -880,7 +1032,7 @@ PYBIND11_MODULE(cytnx,m){
                                                 self.PutCyTensor(idx,utensor,is_clone);
                                         },py::arg("idx"),py::arg("utensor"),py::arg("is_clone")=true)
                 .def("Launch",&cytnx_extension::Network::Launch,py::arg("optimal")=false)
-                .def("Clear",&cytnx_extension::Network::Clear)
+                .def("clear",&cytnx_extension::Network::clear)
                 .def("clone",&cytnx_extension::Network::clone)
                 .def("__copy__",&cytnx_extension::Network::clone)
                 .def("__deepcopy__",&cytnx_extension::Network::clone)
@@ -978,8 +1130,7 @@ PYBIND11_MODULE(cytnx,m){
  
                     self.reshape_(c_args,Rowrank);
                 })
-
-
+                .def("elem_exists",&cytnx_extension::CyTensor::elem_exists)
                 .def("item",[](cytnx_extension::CyTensor &self){
                     py::object out;
                     if(self.dtype() == cytnx::Type.Double) 
@@ -1010,26 +1161,32 @@ PYBIND11_MODULE(cytnx,m){
 
                 .def("__getitem__",[](const cytnx_extension::CyTensor &self, py::object locators){
                     cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to getitem from a empty CyTensor%s","\n");
-                    
+                    cytnx_error_msg(self.uten_type() == cytnx_extension::UTenType.Sparse,"[ERROR] cannot get element using [] from SparseCyTensor. Use at() instead.%s","\n");
+ 
                     ssize_t start, stop, step, slicelength; 
                     std::vector<cytnx::Accessor> accessors;
                     if(py::isinstance<py::tuple>(locators)){
                         py::tuple Args = locators.cast<py::tuple>();
+                        cytnx_uint64 cnt = 0;
                         // mixing of slice and ints
-                        for(cytnx_uint32 axis=0;axis<self.shape().size();axis++){
-                            if(axis >= Args.size()){accessors.push_back(Accessor::all());}
-                            else{ 
+                        for(cytnx_uint32 axis=0;axis<Args.size();axis++){
+                                cnt ++;
                                 // check type:
                                 if(py::isinstance<py::slice>(Args[axis])){
                                     py::slice sls = Args[axis].cast<py::slice>();
                                     if(!sls.compute((ssize_t)self.shape()[axis],&start,&stop,&step, &slicelength))
                                         throw py::error_already_set();
+                                    //std::cout << start << " " << stop << " " << step << slicelength << std::endl;
                                     //if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
-                                    accessors.push_back(cytnx::Accessor::range(start,stop,step));
+                                    accessors.push_back(cytnx::Accessor::range(cytnx_int64(start),cytnx_int64(stop),cytnx_int64(step)));
                                 }else{
                                     accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
                                 }
-                            }
+                            
+                        }
+                        while(cnt<self.shape().size()){
+                            cnt++;
+                            accessors.push_back(Accessor::all());
                         }
                     }else if(py::isinstance<py::slice>(locators)){
                         py::slice sls = locators.cast<py::slice>();
@@ -1050,31 +1207,38 @@ PYBIND11_MODULE(cytnx,m){
                         }
                     }
                     
+
                     return self.get(accessors);
                     
                 })
                 .def("__setitem__",[](cytnx_extension::CyTensor &self, py::object locators, const cytnx::Tensor &rhs){
                     cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to setelem to a empty CyTensor%s","\n");
+                    cytnx_error_msg(self.uten_type() == cytnx_extension::UTenType.Sparse,"[ERROR] cannot set element using [] from SparseCyTensor. Use at() instead.%s","\n");
                     
                     ssize_t start, stop, step, slicelength; 
                     std::vector<cytnx::Accessor> accessors;
                     if(py::isinstance<py::tuple>(locators)){
                         py::tuple Args = locators.cast<py::tuple>();
+                        cytnx_uint64 cnt = 0;
                         // mixing of slice and ints
-                        for(cytnx_uint32 axis=0;axis<self.shape().size();axis++){
-                            if(axis >= Args.size()){accessors.push_back(Accessor::all());}
-                            else{ 
+                        for(cytnx_uint32 axis=0;axis<Args.size();axis++){
+                                cnt ++;
                                 // check type:
                                 if(py::isinstance<py::slice>(Args[axis])){
                                     py::slice sls = Args[axis].cast<py::slice>();
                                     if(!sls.compute((ssize_t)self.shape()[axis],&start,&stop,&step, &slicelength))
                                         throw py::error_already_set();
+                                    //std::cout << start << " " << stop << " " << step << slicelength << std::endl;
                                     //if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
-                                    accessors.push_back(cytnx::Accessor::range(start,stop,step));
+                                    accessors.push_back(cytnx::Accessor::range(cytnx_int64(start),cytnx_int64(stop),cytnx_int64(step)));
                                 }else{
                                     accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
                                 }
-                            }
+                            
+                        }
+                        while(cnt<self.shape().size()){
+                            cnt++;
+                            accessors.push_back(Accessor::all());
                         }
                     }else if(py::isinstance<py::slice>(locators)){
                         py::slice sls = locators.cast<py::slice>();
@@ -1095,9 +1259,35 @@ PYBIND11_MODULE(cytnx,m){
                         }
                     }
                     
+
                     self.set(accessors,rhs);
                     
                 })
+                .def("get_elem",[](cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator){
+                    py::object out;
+                    if(self.dtype() == cytnx::Type.Double) 
+                        out = py::cast(self.get_elem<cytnx::cytnx_double>(locator));
+                    else if(self.dtype() == cytnx::Type.Float) 
+                        out = py::cast(self.get_elem<cytnx::cytnx_float>(locator));
+                    else if(self.dtype() == cytnx::Type.ComplexDouble) 
+                        out = py::cast(self.get_elem<cytnx::cytnx_complex128>(locator));
+                    else if(self.dtype() == cytnx::Type.ComplexFloat) 
+                        out = py::cast(self.get_elem<cytnx::cytnx_complex64>(locator));
+                    else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
+                    return out;
+                })
+                .def("set_elem",&f_CyTensor_setelem_scal_cd)
+                .def("set_elem",&f_CyTensor_setelem_scal_cf)
+                .def("set_elem",&f_CyTensor_setelem_scal_d)
+                .def("set_elem",&f_CyTensor_setelem_scal_f)
+                .def("set_elem",&f_CyTensor_setelem_scal_u64)
+                .def("set_elem",&f_CyTensor_setelem_scal_i64)
+                .def("set_elem",&f_CyTensor_setelem_scal_u32)
+                .def("set_elem",&f_CyTensor_setelem_scal_i32)
+                .def("set_elem",&f_CyTensor_setelem_scal_u16)
+                .def("set_elem",&f_CyTensor_setelem_scal_i16)
+                .def("set_elem",&f_CyTensor_setelem_scal_b)
+
 
                 .def("is_contiguous", &cytnx_extension::CyTensor::is_contiguous)
                 .def("is_diag",&cytnx_extension::CyTensor::is_diag)
@@ -1187,11 +1377,11 @@ PYBIND11_MODULE(cytnx,m){
                 .def("put_block", [](cytnx_extension::CyTensor &self, const cytnx::Tensor &in, const std::vector<cytnx_int64>&qnum){
                                         self.put_block(in,qnum);
                                   },py::arg("in"),py::arg("qnum"))
-                .def("put_block_", [](cytnx_extension::CyTensor &self, const cytnx::Tensor &in, const cytnx_uint64&idx){
+                .def("put_block_", [](cytnx_extension::CyTensor &self, cytnx::Tensor &in, const cytnx_uint64&idx){
                                         self.put_block_(in,idx);
                                   },py::arg("in"),py::arg("idx")=(cytnx_uint64)(0))
 
-                .def("put_block_", [](cytnx_extension::CyTensor &self, const cytnx::Tensor &in, const std::vector<cytnx_int64>&qnum){
+                .def("put_block_", [](cytnx_extension::CyTensor &self, cytnx::Tensor &in, const std::vector<cytnx_int64>&qnum){
                                         self.put_block_(in,qnum);
                                   },py::arg("in"),py::arg("qnum"))
                 .def("__repr__",[](cytnx_extension::CyTensor &self)->std::string{

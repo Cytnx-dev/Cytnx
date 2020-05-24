@@ -17,7 +17,7 @@ namespace cytnx_extension{
     void Network_base::PutCyTensor(const cytnx_uint64 &idx, const CyTensor &utensor, const bool &is_clone){
         cytnx_error_msg(true,"[ERROR][Network][PutCyTensor] call from uninitialize network.%s","\n");
     }
-    void Network_base::Clear(){
+    void Network_base::clear(){
         cytnx_error_msg(true,"[ERROR][Network][Clear] call from uninitialize network.%s","\n");
     }
     CyTensor Network_base::Launch(const bool &optimal){

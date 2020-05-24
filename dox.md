@@ -35,10 +35,12 @@
     25. Fix redundant print in optimal contraction order
     26. Add CyTensor.tag() for DenseCyTensor (regular type) directly convert to CyTensor with direction (tagged type)
     27. Add SparseCyTensor.at (currently only floating point type) 
-    28. SparseCyTensor.at_query. 
+    28. SparseCyTensor.ele_exists. 
     29. SparseCyTensor.Transpose, Conj. 
     30. Symmetry.reverse_rule, Bond.calc_reverse_qnums
     31. Fix Tensor.numpy from GPU bug.
+    32. Fix Tensor.setitem/getitem pybind bug.
+    33. SparseCyTensor.get_elem/set_elem (currently floating type only (complex)) 
 
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn

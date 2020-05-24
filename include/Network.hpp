@@ -90,7 +90,7 @@ namespace cytnx_extension{
             virtual void PutCyTensor(const std::string &name, const CyTensor &utensor, const bool &is_clone);
             virtual void PutCyTensor(const cytnx_uint64 &idx, const CyTensor &utensor, const bool &is_clone);
             virtual void Fromfile(const std::string& fname);
-            virtual void Clear();
+            virtual void clear();
             virtual CyTensor Launch(const bool &optimal=false);
             virtual void PrintNet(std::ostream &os);
             virtual boost::intrusive_ptr<Network_base> clone();
@@ -106,7 +106,7 @@ namespace cytnx_extension{
             void Fromfile(const std::string &fname);
             void PutCyTensor(const std::string &name, const CyTensor &utensor, const bool &is_clone=true);
             void PutCyTensor(const cytnx_uint64 &idx, const CyTensor &utensor, const bool &is_clone=true);
-            void Clear(){
+            void clear(){
                 this->name2pos.clear();
                 this->CtTree.clear();
                 this->names.clear();
@@ -145,7 +145,7 @@ namespace cytnx_extension{
             void Fromfile(const std::string &fname){};
             void PutCyTensor(const std::string &name, const CyTensor &utensor, const bool &is_clone=true){};
             void PutCyTensor(const cytnx_uint64 &idx, const CyTensor &utensor, const bool &is_clone=true){};
-            void Clear(){
+            void clear(){
                 this->name2pos.clear();
                 this->CtTree.clear();
                 this->names.clear();
@@ -259,9 +259,9 @@ namespace cytnx_extension{
             CyTensor Launch(const bool &optimal=false){
                 return this->_impl->Launch(optimal);
             }
-            void Clear(){
-                boost::intrusive_ptr<Network_base> tmp(new Network_base());
-                this->_impl = tmp;
+            void clear(){
+                //boost::intrusive_ptr<Network_base> tmp(new Network_base());
+                this->_impl->clear();
             }
 
             Network clone(){
