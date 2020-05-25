@@ -655,7 +655,11 @@ namespace cytnx_extension{
         cytnx_extension::CyTensor Div(const T &lc, const cytnx_extension::CyTensor &Rt){
             cytnx_extension::CyTensor out = Rt.clone();
             if(out.is_blockform()){
-                cytnx_error_msg(true,"[Developing][Div][Sparsecytnx_extension::CyTensor]%s","\n");
+                //cytnx_error_msg(true,"[Developing][Div][Sparsecytnx_extension::CyTensor]%s","\n");
+                SparseCyTensor *out_raw = out->_impl.get();
+                for(int i=0;i<out_raw->_blocks.size();i++){
+                    out_raw->_blocks[i] = cytnx::linalg::Div(lc,out_raw->_blocks[i]);
+                }                
             }else{
                 out.get_block_() = cytnx::linalg::Div(lc , out.get_block_());
             }
@@ -678,7 +682,11 @@ namespace cytnx_extension{
         cytnx_extension::CyTensor Div(const cytnx_extension::CyTensor &Lt, const T &rc){
             cytnx_extension::CyTensor out = Lt.clone();
             if(out.is_blockform()){
-                cytnx_error_msg(true,"[Developing][Div][Sparsecytnx_extension::CyTensor]%s","\n");
+                //cytnx_error_msg(true,"[Developing][Div][Sparsecytnx_extension::CyTensor]%s","\n");
+                SparseCyTensor *out_raw = out->_impl.get();
+                for(int i=0;i<out_raw->_blocks.size();i++){
+                    out_raw->_blocks[i] = cytnx::linalg::Div(out_raw->_blocks[i],rc);
+                }                
             }else{
                 out.get_block_() = cytnx::linalg::Div(out.get_block_() , rc);
             }

@@ -744,7 +744,7 @@ namespace cytnx_extension{
         cytnx_extension::CyTensor Sub(const T &lc, const cytnx_extension::CyTensor &Rt){
             cytnx_extension::CyTensor out = Rt.clone();
             if(out.is_blockform()){
-                cytnx_error_msg(true,"[Developing][Sub][Sparsecytnx_extension::CyTensor]%s","\n");
+                cytnx_error_msg(true,"[ERROR][Sub][SparseCyTensor] subtract contant to SparseCyTensor will break the block structure (break symmetry)!%s","\n");
             }else{
                 out.get_block_() = cytnx::linalg::Sub(lc , out.get_block_());
             }
@@ -767,7 +767,7 @@ namespace cytnx_extension{
         cytnx_extension::CyTensor Sub(const cytnx_extension::CyTensor &Lt, const T &rc){
             cytnx_extension::CyTensor out = Lt.clone();
             if(out.is_blockform()){
-                cytnx_error_msg(true,"[Developing][Sub][Sparsecytnx_extension::CyTensor]%s","\n");
+                cytnx_error_msg(true,"[ERROR][Sub][SparseCyTensor] subtract contant to SparseCyTensor will break the block structure (break symmetry)!%s","\n");
             }else{
                 out.get_block_() = cytnx::linalg::Sub(out.get_block_() , rc);
             }

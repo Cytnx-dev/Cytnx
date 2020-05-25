@@ -47,7 +47,7 @@
     32. Fix Tensor.setitem/getitem pybind bug.
     33. SparseCyTensor.get_elem/set_elem (currently floating type only (complex)) 
     34. Add xlinalg::ExpH, xlinalg::ExpM, xlinalg::Trace (ovld of CyTensor.Trace)
-
+    35. support Mul/Div operation on SparseCyTensor 
 
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn

@@ -544,7 +544,14 @@ namespace cytnx_extension{
             cytnx_extension::CyTensor out = Rt.clone();
             if(Rt.is_blockform()){
                 //developing
-                cytnx_error_msg(true,"[Developing][Mul][Sparsecytnx_extension::CyTensor]%s","\n");
+                //cytnx_error_msg(true,"[Developing][Mul][Sparsecytnx_extension::CyTensor]%s","\n");
+                        
+                SparseCyTensor *out_raw = out->_impl.get();
+                for(int i=0;i<out_raw->_blocks.size();i++){
+                    out_raw->_blocks[i] = cytnx::linalg::Mul(lc,out_raw->_blocks[i]);
+                }                
+
+
             }else{
                 out.get_block_() = cytnx::linalg::Mul(lc , out.get_block_());
             }

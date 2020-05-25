@@ -469,7 +469,7 @@ namespace cytnx_extension{
             cytnx_extension::CyTensor out = Rt.clone();
             if(Rt.is_blockform()){
                 //developing
-                cytnx_error_msg(true,"[ERROR][Add][Sparsecytnx_extension::CyTensor]%s","\n");
+                cytnx_error_msg(true,"[ERROR][Add][SparseCyTensor] add contant to SparseCyTensor will break the block structure (break symmetry)!%s","\n");
 
             }else{
                 out.get_block_() = cytnx::linalg::Add(lc , out.get_block_());
