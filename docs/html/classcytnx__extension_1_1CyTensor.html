@@ -145,8 +145,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0532fc8d68e71186d95890be3a2c2811"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a64b47772f2a7d98fc61559a54c15c95d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1CyTensor.html#a64b47772f2a7d98fc61559a54c15c95d">permute_</a> (const std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &amp;mapper, const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;<a class="el" href="classcytnx__extension_1_1CyTensor.html#a44d790c34670948c74995427a7e4ef0e">Rowrank</a>=-1, const bool &amp;by_label=false)</td></tr>
 <tr class="separator:a64b47772f2a7d98fc61559a54c15c95d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acfee2ef9111801ba6d338211d0d53fac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx__extension_1_1CyTensor.html">CyTensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1CyTensor.html#acfee2ef9111801ba6d338211d0d53fac">contiguous</a> ()</td></tr>
-<tr class="separator:acfee2ef9111801ba6d338211d0d53fac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac37b41f8cd54c9fbb9fccbe69cc1a426"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx__extension_1_1CyTensor.html">CyTensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1CyTensor.html#ac37b41f8cd54c9fbb9fccbe69cc1a426">contiguous</a> () const</td></tr>
+<tr class="separator:ac37b41f8cd54c9fbb9fccbe69cc1a426"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c43d0c0c313f3ce0243bc5b433dd083"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1CyTensor.html#a4c43d0c0c313f3ce0243bc5b433dd083">contiguous_</a> ()</td></tr>
 <tr class="separator:a4c43d0c0c313f3ce0243bc5b433dd083"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a445ed3f749b70ad9a7c6392f97205cee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1CyTensor.html#a445ed3f749b70ad9a7c6392f97205cee">print_diagram</a> (const bool &amp;bond_info=false)</td></tr>
@@ -472,7 +472,8 @@ Public Member Functions</h2></td></tr>
 </dl>
 <p>[Note]</p><ol type="1">
 <li>The constructed <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a> will have same rank as the input Tensor, with default labels, and a shared view (shared instance) of interal block as the input Tensor.</li>
-<li>The constructed <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a> is always untagged. </li>
+<li>The constructed <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a> is always untagged.</li>
+<li>[Important] The internal block of <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a> is a referece of input Tensor. That is, they share the same memory. All the change afterward on <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a> block will change in input Tensor as well. Use <a class="el" href="classcytnx_1_1Tensor.html#a5e2248e9babdb786167ed349df9084ae" title="return a clone of the current Tensor. ">Tensor.clone()</a> if a shared view is not the case. </li>
 </ol>
 
 </div>
@@ -806,8 +807,8 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
-<a id="acfee2ef9111801ba6d338211d0d53fac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acfee2ef9111801ba6d338211d0d53fac">&#9670;&nbsp;</a></span>contiguous()</h2>
+<a id="ac37b41f8cd54c9fbb9fccbe69cc1a426"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac37b41f8cd54c9fbb9fccbe69cc1a426">&#9670;&nbsp;</a></span>contiguous()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -819,7 +820,7 @@ template&lt;class T &gt; </div>
           <td class="memname"><a class="el" href="classcytnx__extension_1_1CyTensor.html">CyTensor</a> cytnx_extension::CyTensor::contiguous </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -1547,7 +1548,8 @@ template&lt;class T &gt; </div>
 </dl>
 <p>[Note]</p><ol type="1">
 <li>The constructed <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a> will have same rank as the input Tensor, with default labels, and a shared view (shared instance) of interal block as the input Tensor.</li>
-<li>The constructed <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a> is always untagged. </li>
+<li>The constructed <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a> is always untagged.</li>
+<li>[Important] The internal block of <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a> is a referece of input Tensor. That is, they share the same memory. All the change afterward on <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a> block will change in input Tensor as well. Use <a class="el" href="classcytnx_1_1Tensor.html#a5e2248e9babdb786167ed349df9084ae" title="return a clone of the current Tensor. ">Tensor.clone()</a> if a shared view is not the case. </li>
 </ol>
 
 </div>

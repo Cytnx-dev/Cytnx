@@ -23,6 +23,13 @@ int main(int argc, char *argv[]){
     Tuux.print_diagram();
     cout << Tuux << endl;
 
+
+    auto Tori = zeros({4,4});
+    auto cTori = cyx::CyTensor(Tori,2);
+    cTori.at<cytnx_double>({0,0}) = 1.456;
+    cout << cTori << endl;
+    cout << Tori << endl;
+
     return 0;
 
 

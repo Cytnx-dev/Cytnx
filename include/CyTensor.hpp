@@ -920,7 +920,7 @@ namespace cytnx_extension{
             [Note] 
                 1. The constructed CyTensor will have same rank as the input Tensor, with default labels, and a shared view (shared instance) of interal block as the input Tensor. 
                 2. The constructed CyTensor is always untagged. 
-            
+                3. [Important] The internal block of CyTensor is a referece of input Tensor. That is, they share the same memory. All the change afterward on CyTensor block will change in input Tensor as well. Use Tensor.clone() if a shared view is not the case. 
 
             */
             CyTensor(const Tensor &in_tensor, const cytnx_uint64 &Rowrank): _impl(new CyTensor_base()){
@@ -1060,7 +1060,7 @@ namespace cytnx_extension{
             void permute_(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank=-1,const bool &by_label=false){
                 this->_impl->permute_(mapper,Rowrank,by_label);
             }
-            CyTensor contiguous(){
+            CyTensor contiguous() const{
                 CyTensor out;
                 out._impl = this->_impl->contiguous();
                 return out;
