@@ -68,11 +68,15 @@ namespace cytnx_extension{
             
             if(Tin.is_blockform()){
                 cytnx_error_msg(true,"[Developing]%s","\n");
+                
+
+
             }else{
                 
                 cytnx_error_msg((Tin.Rowrank()==0) || (Tin.Rowrank()==Tin.rank()),"[ERROR][ExpH] The total dimension of row-space and col-space should be equal!!%s","\n");
                 //cytnx_error_msg(Tin.is_contiguous()==false,"[ERROR][ExpH] CyTensor must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
-                CyTensor out = Tin.clone();
+                //CyTensor out = Tin.clone();
+                CyTensor out;
                 if(Tin.is_contiguous()){
                     out = Tin.clone();
                 }else{

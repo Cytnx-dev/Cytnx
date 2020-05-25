@@ -1601,6 +1601,7 @@ PYBIND11_MODULE(cytnx,m){
     mext_xlinalg.def("Svd",&cytnx_extension::xlinalg::Svd,py::arg("Tin"),py::arg("is_U")=true,py::arg("is_vT")=true);
     mext_xlinalg.def("Svd_truncate",&cytnx_extension::xlinalg::Svd_truncate,py::arg("Tin"),py::arg("keepdim"),py::arg("is_U")=true,py::arg("is_vT")=true);
     mext_xlinalg.def("ExpH",&cytnx_extension::xlinalg::ExpH,py::arg("Tin"),py::arg("a")=1.,py::arg("b")=0.);
+    mext_xlinalg.def("ExpM",&cytnx_extension::xlinalg::ExpM,py::arg("Tin"),py::arg("a")=1.,py::arg("b")=0.);
     mext_xlinalg.def("Trace",&cytnx_extension::xlinalg::Trace,py::arg("Tin"),py::arg("a"),py::arg("b"),py::arg("by_label")=false);
 
     // [Submodule linalg] 

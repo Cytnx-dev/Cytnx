@@ -41,7 +41,7 @@
     31. Fix Tensor.numpy from GPU bug.
     32. Fix Tensor.setitem/getitem pybind bug.
     33. SparseCyTensor.get_elem/set_elem (currently floating type only (complex)) 
-    34. Add xlinalg::ExpH, xlinalg::Trace (ovld of CyTensor.Trace)
+    34. Add xlinalg::ExpH, xlinalg::ExpM, xlinalg::Trace (ovld of CyTensor.Trace)
 
 
     v0.5.1a
