@@ -154,7 +154,7 @@ namespace cytnx_extension{
                         cytnx_extension::CyTensor &Cy_vT = outCyT[t]; 
                         Cy_vT._impl->_is_tag = true;
                         Cy_vT.bonds()[0].set_type(cytnx_extension::BD_KET);
-                        for(int i=1;i<Cy_vT.Rowrank();i++){
+                        for(int i=1;i<Cy_vT.rank();i++){
                             Cy_vT.bonds()[i].set_type(Tin.bonds()[Tin.Rowrank()+i-1].type());
                         }
                         Cy_vT._impl->_is_braket_form = Cy_vT._impl->_update_braket();

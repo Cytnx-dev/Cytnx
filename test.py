@@ -2,33 +2,18 @@ import numpy as np
 import cytnx as cy
 from cytnx import cytnx_extension as cyx
 
-a = cy.from_numpy(np.arange(1.0, 3.0))
+a = cy.from_numpy(np.arange(1.0, 11.0).reshape(2,5))
 Ta = cyx.CyTensor(a, 1)
-Ta.set_name('Ta')
+Ta.tag()
 Ta.print_diagram()
-print(Ta)
 
-b = cy.from_numpy(np.arange(3.0, 5.0))
-Tb = cyx.CyTensor(b, 0)
-Tb.set_labels([1])
-Tb.set_name('Tb')
-Tb.print_diagram()
-print(Tb)
+b = cyx.xlinalg.Svd(Ta)
+b[0].set_name("s")
+b[1].set_name("u")
+b[2].set_name("vt")
 
-Tab = cyx.Contract(Ta, Tb)
-Tab.set_name('Tab')
-Tab.print_diagram()
-print(Tab)
-print(Tab.get_block())
-
-Tba = cyx.Contract(Tb, Ta)
-Tba.set_name('Tba')
-Tba.print_diagram()
-print(Tba)
-print(Tba.get_block())
-
-
-
-
+b[0].print_diagram()
+b[1].print_diagram()
+b[2].print_diagram()
 
 
