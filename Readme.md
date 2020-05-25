@@ -46,6 +46,8 @@
     31. Fix Tensor.numpy from GPU bug.
     32. Fix Tensor.setitem/getitem pybind bug.
     33. SparseCyTensor.get_elem/set_elem (currently floating type only (complex)) 
+    34. Add xlinalg::ExpH, xlinalg::Trace (ovld of CyTensor.Trace)
+
 
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn
@@ -310,7 +312,7 @@
 
 ## Avaliable linear-algebra function (Keep updating):
 
-      func        |   inplace | CPU | GPU  | callby tn   | Tn | CyTn 
+      func        |   inplace | CPU | GPU  | callby tn   | Tn | CyTn (xlinalg)
     --------------|-----------|-----|------|-------------|----|-------
       Add         |   x       |  Y  |  Y   |    Y        | Y  |   Y
       Sub         |   x       |  Y  |  Y   |    Y        | Y  |   Y
@@ -322,14 +324,14 @@
       *,*=[tn]    |   x       |  Y  |  Y   |    Y (Mul_) | Y  |   Y
       /,/=[tn]    |   x       |  Y  |  Y   |    Y (Div_) | Y  |   Y
       ==[tn]      |   x       |  Y  |  Y   |    Y (Cpr_) | Y  |   x 
-      Svd         |   x       |  Y  |  Y   |    Y        | Y  |   N
-     *Svd_truncate|   x       |  Y  |  Y   |    N        | Y  |   N
+      Svd         |   x       |  Y  |  Y   |    Y        | Y  |   Y
+     *Svd_truncate|   x       |  Y  |  Y   |    N        | Y  |   Y
       Inv         |   Inv_    |  Y  |  Y   |    Y        | Y  |   N
       Conj        |   Conj_   |  Y  |  Y   |    Y        | Y  |   Y
       Exp         |   Exp_    |  Y  |  Y   |    Y        | Y  |   N
       Expf        |   Expf_   |  Y  |  Y   |    Y        | Y  |   N
       Eigh        |   x       |  Y  |  Y   |    Y        | Y  |   N
-     *ExpH        |   x       |  Y  |  Y   |    N        | Y  |   N
+     *ExpH        |   x       |  Y  |  Y   |    N        | Y  |   Y
      *ExpM        |   x       |  Y  |  N   |    N        | Y  |   N
       Matmul      |   x       |  Y  |  Y   |    N        | Y  |   N
       Diag        |   x       |  Y  |  Y   |    N        | Y  |   N

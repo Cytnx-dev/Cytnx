@@ -249,6 +249,7 @@ namespace cytnx_extension{
     /// @cond
     class DenseCyTensor: public CyTensor_base{
         protected:
+        public:
             Tensor _block;
             DenseCyTensor* clone_meta() const{
                 DenseCyTensor* tmp = new DenseCyTensor();
@@ -261,7 +262,8 @@ namespace cytnx_extension{
                 tmp->_is_tag = this->_is_tag; 
                 return tmp;
             }
-        public:
+            //------------------------------------------
+
             DenseCyTensor(){this->uten_type_id = UTenType.Dense;};
             friend class CyTensor; // allow wrapper to access the private elems
             // virtual functions

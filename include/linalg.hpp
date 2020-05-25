@@ -58,6 +58,11 @@ namespace cytnx_extension{
         std::vector<cytnx_extension::CyTensor> Svd(const cytnx_extension::CyTensor &Tin, const bool &is_U=true, const bool &is_vT=true);
         std::vector<cytnx_extension::CyTensor> Svd_truncate(const cytnx_extension::CyTensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U=true, const bool &is_vT=true);
 
+        cytnx_extension::CyTensor ExpH(const cytnx_extension::CyTensor &Tin, const double &a=1, const double &b=0);
+
+        cytnx_extension::CyTensor Trace(const cytnx_extension::CyTensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false);
+
+
     }
 
     cytnx_extension::CyTensor operator+(const cytnx_extension::CyTensor &Lt, const cytnx_extension::CyTensor &Rt);

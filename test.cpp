@@ -9,10 +9,21 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]){
 
-
+    auto TNs = arange(16).astype(Type.Double).reshape({4,4});
+    TNs = TNs + TNs.permute({1,0});
     
+    cout << linalg::ExpH(TNs);   
 
+    auto Tuu = cyx::CyTensor(TNs.reshape({2,2,2,2}),2);
+    Tuu.print_diagram();
+    auto Tuux = cyx::xlinalg::ExpH(Tuu);
+    Tuux.print_diagram();
+    Tuux.combineBonds({0,1}); 
+    Tuux.combineBonds({2,3}); 
+    Tuux.print_diagram();
+    cout << Tuux << endl;
 
+    return 0;
 
 
     /*

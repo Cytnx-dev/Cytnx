@@ -203,6 +203,7 @@ namespace cytnx{
                 }
             }
 
+
             void reshape_(const std::vector<cytnx_int64> &new_shape){
                 if(!this->_contiguous){
                     this->contiguous_();
@@ -549,7 +550,17 @@ namespace cytnx{
             void reshape_(const std::vector<cytnx_int64> &new_shape){
                 this->_impl->reshape_(new_shape);
             }
-            
+            /// @cond
+            void reshape_(const std::vector<cytnx_uint64> &new_shape){
+                std::vector<cytnx_int64> shape(new_shape.begin(),new_shape.end());
+                this->_impl->reshape_(shape);
+            }           
+            void reshape_(const std::initializer_list<cytnx_int64> &new_shape){
+                std::vector<cytnx_int64> shape = new_shape;
+                this->_impl->reshape_(shape);
+            } 
+            /// @endcond
+
             /**
             @brief return a new Tensor that is reshaped.
             @param new_shape the new shape of the Tensor. 
