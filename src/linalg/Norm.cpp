@@ -20,7 +20,15 @@ namespace cytnx{
             }else{
                 _tl = Tl;
             }
-            out.Init({1},_tl.dtype(),_tl.device());
+            
+
+            if(Tl.dtype()==Type.ComplexDouble){
+                out.Init({1},Type.Double,_tl.device());
+            }else if(Tl.dtype()==Type.ComplexFloat){
+                out.Init({1},Type.Float,_tl.device());
+            }else{ 
+                out.Init({1},_tl.dtype(),_tl.device());
+            }
 
             if(Tl.device()==Device.cpu){
 
