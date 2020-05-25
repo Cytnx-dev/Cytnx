@@ -513,6 +513,8 @@ namespace cytnx_extension{
     /// @cond
     class SparseCyTensor: public CyTensor_base{
         protected:
+        
+        public:
             std::vector<Tensor> _blocks;
             std::vector<cytnx_uint64> _mapper;
             std::vector<cytnx_uint64> _inv_mapper;
@@ -556,8 +558,12 @@ namespace cytnx_extension{
                 this->set_meta(tmp,inner,outer);
                 return tmp;
             };
-        
-        public:
+
+
+
+
+
+            //===================================
             friend class CyTensor; // allow wrapper to access the private elems
             SparseCyTensor(){
                 this->uten_type_id = UTenType.Sparse;
@@ -921,6 +927,16 @@ namespace cytnx_extension{
                 1. The constructed CyTensor will have same rank as the input Tensor, with default labels, and a shared view (shared instance) of interal block as the input Tensor. 
                 2. The constructed CyTensor is always untagged. 
                 3. [Important] The internal block of CyTensor is a referece of input Tensor. That is, they share the same memory. All the change afterward on CyTensor block will change in input Tensor as well. Use Tensor.clone() if a shared view is not the case. 
+
+            ## Example:
+            ### c++ API:
+            \include example/CyTensor/fromTensor.cpp
+            #### output>
+            \verbinclude example/CyTensor/fromTensor.cpp.out
+            ### python API:
+            \include example/CyTensor/fromTensor.py               
+            #### output>
+            \verbinclude example/CyTensor/fromTensor.py.out
 
             */
             CyTensor(const Tensor &in_tensor, const cytnx_uint64 &Rowrank): _impl(new CyTensor_base()){

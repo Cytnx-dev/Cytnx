@@ -546,7 +546,7 @@ namespace cytnx_extension{
                 //developing
                 //cytnx_error_msg(true,"[Developing][Mul][Sparsecytnx_extension::CyTensor]%s","\n");
                         
-                SparseCyTensor *out_raw = out->_impl.get();
+                SparseCyTensor *out_raw = (SparseCyTensor*)out._impl.get();
                 for(int i=0;i<out_raw->_blocks.size();i++){
                     out_raw->_blocks[i] = cytnx::linalg::Mul(lc,out_raw->_blocks[i]);
                 }                

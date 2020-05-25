@@ -9,6 +9,6 @@ var searchData=
   ['expf',['Expf',['../namespacecytnx_1_1linalg.html#a5831918722e5d18f4eaf37834b8fbf77',1,'cytnx::linalg']]],
   ['expf_5f',['Expf_',['../namespacecytnx_1_1linalg.html#a5de1faf71c76cdc6b7fa5ba3a3e21bbb',1,'cytnx::linalg']]],
   ['exph',['ExpH',['../namespacecytnx__extension_1_1xlinalg.html#a836b450886c671a08c877451c54cee34',1,'cytnx_extension::xlinalg::ExpH()'],['../namespacecytnx_1_1linalg.html#a003ad2d2784202e936ce4a16e850e17e',1,'cytnx::linalg::ExpH()']]],
-  ['expm',['ExpM',['../namespacecytnx_1_1linalg.html#a671e57fbd0efcae9e438130ace6bf1cd',1,'cytnx::linalg']]],
+  ['expm',['ExpM',['../namespacecytnx__extension_1_1xlinalg.html#aa6039e19e0dd0e7b0e73032050a8aec3',1,'cytnx_extension::xlinalg::ExpM()'],['../namespacecytnx_1_1linalg.html#a671e57fbd0efcae9e438130ace6bf1cd',1,'cytnx::linalg::ExpM()']]],
   ['eye',['eye',['../namespacecytnx.html#affbd9073156ce86d5e5c03742603c631',1,'cytnx']]]
 ];

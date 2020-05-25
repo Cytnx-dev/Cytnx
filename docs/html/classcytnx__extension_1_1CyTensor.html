@@ -473,9 +473,266 @@ Public Member Functions</h2></td></tr>
 <p>[Note]</p><ol type="1">
 <li>The constructed <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a> will have same rank as the input Tensor, with default labels, and a shared view (shared instance) of interal block as the input Tensor.</li>
 <li>The constructed <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a> is always untagged.</li>
-<li>[Important] The internal block of <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a> is a referece of input Tensor. That is, they share the same memory. All the change afterward on <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a> block will change in input Tensor as well. Use <a class="el" href="classcytnx_1_1Tensor.html#a5e2248e9babdb786167ed349df9084ae" title="return a clone of the current Tensor. ">Tensor.clone()</a> if a shared view is not the case. </li>
+<li>[Important] The internal block of <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a> is a referece of input Tensor. That is, they share the same memory. All the change afterward on <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a> block will change in input Tensor as well. Use <a class="el" href="classcytnx_1_1Tensor.html#a5e2248e9babdb786167ed349df9084ae" title="return a clone of the current Tensor. ">Tensor.clone()</a> if a shared view is not the case.</li>
 </ol>
+<h2>Example:</h2>
+<h3>c++ API:</h3>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacestd.html">std</a>;</div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">namespace </span>cyx = <a class="code" href="namespacecytnx__extension.html">cytnx_extension</a>;</div><div class="line"></div><div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>* argv[]){</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> T = <a class="code" href="namespacecytnx.html#ab8a79a03fb0465f3eb2641017f3f1755">zeros</a>({4,4});</div><div class="line">    cyx::CyTensor CyT = cyx::CyTensor(T,2); <span class="comment">//create un-tagged CyTensor from Tensor</span></div><div class="line">    CyT.print_diagram();</div><div class="line"></div><div class="line">    cout &lt;&lt; <span class="stringliteral">&quot;before:&quot;</span> &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; T &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; CyT &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">//Note that it is a shared view, so a change to CyT will affect Tensor T.</span></div><div class="line">    CyT.<a class="code" href="classcytnx_1_1Tensor.html#a697b114d1df390ca558ea9211c2d683b">at</a>&lt;<a class="code" href="namespacecytnx.html#a17b847d265f6551b952fd9847198a464">cytnx_double</a>&gt;({0,0}) = 1.456;</div><div class="line"></div><div class="line">    cout &lt;&lt; <span class="stringliteral">&quot;after:&quot;</span> &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; T &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; CyT &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">//If we want a new instance of memery, use clone at initialize:</span></div><div class="line">    cout &lt;&lt; <span class="stringliteral">&quot;[non-share example]&quot;</span> &lt;&lt; endl;</div><div class="line">    cyx::CyTensor CyT_nonshare = cyx::CyTensor(T.<a class="code" href="classcytnx_1_1Tensor.html#a5e2248e9babdb786167ed349df9084ae">clone</a>(),2);</div><div class="line"></div><div class="line">    cout &lt;&lt; <span class="stringliteral">&quot;before:&quot;</span> &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; T &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; CyT_nonshare &lt;&lt; endl;</div><div class="line"></div><div class="line">    CyT_nonshare.<a class="code" href="classcytnx_1_1Tensor.html#a697b114d1df390ca558ea9211c2d683b">at</a>&lt;<a class="code" href="namespacecytnx.html#a17b847d265f6551b952fd9847198a464">cytnx_double</a>&gt;({1,1}) = 2.345;</div><div class="line">    </div><div class="line">    cout &lt;&lt; <span class="stringliteral">&quot;after&quot;</span> &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; T &lt;&lt; endl; <span class="comment">// T is unchanged!</span></div><div class="line">    cout &lt;&lt; CyT_nonshare &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment">-----------------------
+tensor Name : 
+tensor Rank : 2
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+            -------------      
+           /             \     
+     0 ____| 4           |        
+           |             |     
+     1 ____| 4           |        
+           \             /     
+            -------------      
+before:
 
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+Tensor name: 
+braket_form : False
+is_diag    : False
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+after:
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[1.45600e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+Tensor name: 
+braket_form : False
+is_diag    : False
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[1.45600e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+[non-share example]
+before:
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[1.45600e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+Tensor name: 
+braket_form : False
+is_diag    : False
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[1.45600e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+after
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[1.45600e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+Tensor name: 
+braket_form : False
+is_diag    : False
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[1.45600e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 2.34500e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+</pre> <h3>python API:</h3>
+<div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> cytnx_extension <span class="keyword">as</span> cyx</div><div class="line"></div><div class="line"></div><div class="line">T = <a class="code" href="namespacecytnx.html#ab8a79a03fb0465f3eb2641017f3f1755">zeros</a>([4,4])</div><div class="line">CyT = cyx.CyTensor(T,2) <span class="comment">#create un-tagged CyTensor from Tensor</span></div><div class="line">CyT.print_diagram()</div><div class="line"></div><div class="line">print(<span class="stringliteral">&quot;before:&quot;</span>)</div><div class="line">print(T)</div><div class="line">print(CyT)</div><div class="line"></div><div class="line"><span class="comment">#Note that it is a shared view, so a change to CyT will affect Tensor T.</span></div><div class="line">CyT.set_elem([0,0],1.456)</div><div class="line"></div><div class="line">print(<span class="stringliteral">&quot;after&quot;</span>)</div><div class="line">print(T)</div><div class="line">print(CyT)</div><div class="line"></div><div class="line"><span class="comment">#If we want a new instance of memery, use clone at initialize:</span></div><div class="line">print(<span class="stringliteral">&quot;[non-share example]&quot;</span>)</div><div class="line">CyT_nonshare = cyx.CyTensor(T.clone(),2);</div><div class="line"></div><div class="line">print(<span class="stringliteral">&quot;before:&quot;</span>)</div><div class="line">print(T)</div><div class="line">print(CyT_nonshare)</div><div class="line"></div><div class="line">CyT_nonshare.set_elem([1,1],2.345);</div><div class="line">    </div><div class="line">print(<span class="stringliteral">&quot;after&quot;</span>)</div><div class="line">print(T) <span class="comment"># T is unchanged!</span></div><div class="line">print(CyT_nonshare)</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment">-----------------------
+tensor Name : 
+tensor Rank : 2
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+            -------------      
+           /             \     
+     0 ____| 4           |        
+           |             |     
+     1 ____| 4           |        
+           \             /     
+            -------------      
+before:
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+Tensor name: 
+braket_form : False
+is_diag    : False
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+
+after
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[1.45600e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+Tensor name: 
+braket_form : False
+is_diag    : False
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[1.45600e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+
+[non-share example]
+before:
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[1.45600e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+Tensor name: 
+braket_form : False
+is_diag    : False
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[1.45600e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+
+after
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[1.45600e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+Tensor name: 
+braket_form : False
+is_diag    : False
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[1.45600e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 2.34500e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+
+</pre> 
 </div>
 </div>
 <a id="ad00a7bd616a2c7c0add64f4e2a01b8b8"></a>
@@ -1549,9 +1806,266 @@ template&lt;class T &gt; </div>
 <p>[Note]</p><ol type="1">
 <li>The constructed <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a> will have same rank as the input Tensor, with default labels, and a shared view (shared instance) of interal block as the input Tensor.</li>
 <li>The constructed <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a> is always untagged.</li>
-<li>[Important] The internal block of <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a> is a referece of input Tensor. That is, they share the same memory. All the change afterward on <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a> block will change in input Tensor as well. Use <a class="el" href="classcytnx_1_1Tensor.html#a5e2248e9babdb786167ed349df9084ae" title="return a clone of the current Tensor. ">Tensor.clone()</a> if a shared view is not the case. </li>
+<li>[Important] The internal block of <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a> is a referece of input Tensor. That is, they share the same memory. All the change afterward on <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a> block will change in input Tensor as well. Use <a class="el" href="classcytnx_1_1Tensor.html#a5e2248e9babdb786167ed349df9084ae" title="return a clone of the current Tensor. ">Tensor.clone()</a> if a shared view is not the case.</li>
 </ol>
+<h2>Example:</h2>
+<h3>c++ API:</h3>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacestd.html">std</a>;</div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">namespace </span>cyx = <a class="code" href="namespacecytnx__extension.html">cytnx_extension</a>;</div><div class="line"></div><div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>* argv[]){</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> T = <a class="code" href="namespacecytnx.html#ab8a79a03fb0465f3eb2641017f3f1755">zeros</a>({4,4});</div><div class="line">    cyx::CyTensor CyT = cyx::CyTensor(T,2); <span class="comment">//create un-tagged CyTensor from Tensor</span></div><div class="line">    CyT.print_diagram();</div><div class="line"></div><div class="line">    cout &lt;&lt; <span class="stringliteral">&quot;before:&quot;</span> &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; T &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; CyT &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">//Note that it is a shared view, so a change to CyT will affect Tensor T.</span></div><div class="line">    CyT.<a class="code" href="classcytnx_1_1Tensor.html#a697b114d1df390ca558ea9211c2d683b">at</a>&lt;<a class="code" href="namespacecytnx.html#a17b847d265f6551b952fd9847198a464">cytnx_double</a>&gt;({0,0}) = 1.456;</div><div class="line"></div><div class="line">    cout &lt;&lt; <span class="stringliteral">&quot;after:&quot;</span> &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; T &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; CyT &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">//If we want a new instance of memery, use clone at initialize:</span></div><div class="line">    cout &lt;&lt; <span class="stringliteral">&quot;[non-share example]&quot;</span> &lt;&lt; endl;</div><div class="line">    cyx::CyTensor CyT_nonshare = cyx::CyTensor(T.<a class="code" href="classcytnx_1_1Tensor.html#a5e2248e9babdb786167ed349df9084ae">clone</a>(),2);</div><div class="line"></div><div class="line">    cout &lt;&lt; <span class="stringliteral">&quot;before:&quot;</span> &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; T &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; CyT_nonshare &lt;&lt; endl;</div><div class="line"></div><div class="line">    CyT_nonshare.<a class="code" href="classcytnx_1_1Tensor.html#a697b114d1df390ca558ea9211c2d683b">at</a>&lt;<a class="code" href="namespacecytnx.html#a17b847d265f6551b952fd9847198a464">cytnx_double</a>&gt;({1,1}) = 2.345;</div><div class="line">    </div><div class="line">    cout &lt;&lt; <span class="stringliteral">&quot;after&quot;</span> &lt;&lt; endl;</div><div class="line">    cout &lt;&lt; T &lt;&lt; endl; <span class="comment">// T is unchanged!</span></div><div class="line">    cout &lt;&lt; CyT_nonshare &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment">-----------------------
+tensor Name : 
+tensor Rank : 2
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+            -------------      
+           /             \     
+     0 ____| 4           |        
+           |             |     
+     1 ____| 4           |        
+           \             /     
+            -------------      
+before:
 
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+Tensor name: 
+braket_form : False
+is_diag    : False
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+after:
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[1.45600e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+Tensor name: 
+braket_form : False
+is_diag    : False
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[1.45600e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+[non-share example]
+before:
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[1.45600e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+Tensor name: 
+braket_form : False
+is_diag    : False
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[1.45600e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+after
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[1.45600e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+Tensor name: 
+braket_form : False
+is_diag    : False
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[1.45600e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 2.34500e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+</pre> <h3>python API:</h3>
+<div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> cytnx_extension <span class="keyword">as</span> cyx</div><div class="line"></div><div class="line"></div><div class="line">T = <a class="code" href="namespacecytnx.html#ab8a79a03fb0465f3eb2641017f3f1755">zeros</a>([4,4])</div><div class="line">CyT = cyx.CyTensor(T,2) <span class="comment">#create un-tagged CyTensor from Tensor</span></div><div class="line">CyT.print_diagram()</div><div class="line"></div><div class="line">print(<span class="stringliteral">&quot;before:&quot;</span>)</div><div class="line">print(T)</div><div class="line">print(CyT)</div><div class="line"></div><div class="line"><span class="comment">#Note that it is a shared view, so a change to CyT will affect Tensor T.</span></div><div class="line">CyT.set_elem([0,0],1.456)</div><div class="line"></div><div class="line">print(<span class="stringliteral">&quot;after&quot;</span>)</div><div class="line">print(T)</div><div class="line">print(CyT)</div><div class="line"></div><div class="line"><span class="comment">#If we want a new instance of memery, use clone at initialize:</span></div><div class="line">print(<span class="stringliteral">&quot;[non-share example]&quot;</span>)</div><div class="line">CyT_nonshare = cyx.CyTensor(T.clone(),2);</div><div class="line"></div><div class="line">print(<span class="stringliteral">&quot;before:&quot;</span>)</div><div class="line">print(T)</div><div class="line">print(CyT_nonshare)</div><div class="line"></div><div class="line">CyT_nonshare.set_elem([1,1],2.345);</div><div class="line">    </div><div class="line">print(<span class="stringliteral">&quot;after&quot;</span>)</div><div class="line">print(T) <span class="comment"># T is unchanged!</span></div><div class="line">print(CyT_nonshare)</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment">-----------------------
+tensor Name : 
+tensor Rank : 2
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+            -------------      
+           /             \     
+     0 ____| 4           |        
+           |             |     
+     1 ____| 4           |        
+           \             /     
+            -------------      
+before:
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+Tensor name: 
+braket_form : False
+is_diag    : False
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+
+after
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[1.45600e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+Tensor name: 
+braket_form : False
+is_diag    : False
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[1.45600e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+
+[non-share example]
+before:
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[1.45600e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+Tensor name: 
+braket_form : False
+is_diag    : False
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[1.45600e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+
+after
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[1.45600e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+Tensor name: 
+braket_form : False
+is_diag    : False
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[1.45600e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 2.34500e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+
+</pre> 
 </div>
 </div>
 <a id="a3ce1d4eb133b0e06b219dcb03bdb844b"></a>
