@@ -566,7 +566,9 @@ PYBIND11_MODULE(cytnx,m){
                     //std::cout << c_args.size() << std::endl;
                     return self.permute(c_args);
                 })
-                .def("make_contiguous",&cytnx::Tensor::contiguous)
+                .def("flatten",&cytnx::Tensor::flatten)
+                .def("flatten_",&cytnx::Tensor::flatten_)
+                .def("make_contiguous",&cytnx::Tensor::contiguous) // this will be rename by python side conti
                 .def("contiguous_",&cytnx::Tensor::contiguous_)
                 .def("reshape_",[](cytnx::Tensor &self, py::args args){
                     std::vector<cytnx::cytnx_int64> c_args = args.cast< std::vector<cytnx::cytnx_int64> >();
@@ -1619,8 +1621,8 @@ PYBIND11_MODULE(cytnx,m){
     m_linalg.def("QR",&cytnx::linalg::QR,py::arg("Tio"),py::arg("is_tau")=false);
     m_linalg.def("Inv",&cytnx::linalg::Inv,py::arg("Tin"));
     m_linalg.def("Inv_",&cytnx::linalg::Inv_,py::arg("Tio"));
-    m_linalg.def("Conj",&cytnx::linalg::Inv,py::arg("Tin"));
-    m_linalg.def("Conj_",&cytnx::linalg::Inv_,py::arg("Tio"));
+    m_linalg.def("Conj",&cytnx::linalg::Conj,py::arg("Tin"));
+    m_linalg.def("Conj_",&cytnx::linalg::Conj_,py::arg("Tio"));
     m_linalg.def("Matmul",&cytnx::linalg::Matmul,py::arg("T1"),py::arg("T2"));
     m_linalg.def("Diag",&cytnx::linalg::Diag, py::arg("Tin"));
     m_linalg.def("Tensordot",&cytnx::linalg::Tensordot, py::arg("T1"),py::arg("T2"),py::arg("indices_1"),py::arg("indices_2"));

@@ -6,7 +6,7 @@ var searchData=
   ['permute_5f',['permute_',['../classcytnx__extension_1_1CyTensor.html#a64b47772f2a7d98fc61559a54c15c95d',1,'cytnx_extension::CyTensor::permute_()'],['../classcytnx_1_1Tensor.html#a4239ec84bd34f634a822eeff416f4d63',1,'cytnx::Tensor::permute_()']]],
   ['physics_2ecpp',['Physics.cpp',['../Physics_8cpp.html',1,'']]],
   ['physics_2ehpp',['Physics.hpp',['../Physics_8hpp.html',1,'']]],
-  ['pow',['Pow',['../classcytnx_1_1Tensor.html#a60fcdf412144aa69a47acf72fbffac13',1,'cytnx::Tensor::Pow()'],['../namespacecytnx_1_1linalg.html#a2919ef6c163a54360071c286df3fb92e',1,'cytnx::linalg::Pow()']]],
+  ['pow',['Pow',['../classcytnx_1_1Tensor.html#ac5bd2525bacc3713694a063074538e20',1,'cytnx::Tensor::Pow()'],['../namespacecytnx_1_1linalg.html#a2919ef6c163a54360071c286df3fb92e',1,'cytnx::linalg::Pow()']]],
   ['pow_5f',['Pow_',['../classcytnx_1_1Tensor.html#a977738a47390feeab721a599fc21ec28',1,'cytnx::Tensor::Pow_()'],['../namespacecytnx_1_1linalg.html#a269ef291355dfee4421fa55ad0247aad',1,'cytnx::linalg::Pow_()']]],
   ['print_5fdiagram',['print_diagram',['../classcytnx__extension_1_1CyTensor.html#a445ed3f749b70ad9a7c6392f97205cee',1,'cytnx_extension::CyTensor']]],
   ['print_5finfo',['print_info',['../classcytnx_1_1Storage.html#a0ae2bee5e15c651b05dadf5dbbdb36f5',1,'cytnx::Storage']]],

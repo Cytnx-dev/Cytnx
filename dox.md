@@ -43,7 +43,7 @@
     33. SparseCyTensor.get_elem/set_elem (currently floating type only (complex)) 
     34. Add xlinalg::ExpH, xlinalg::ExpM, xlinalg::Trace (ovld of CyTensor.Trace)
     35. support Mul/Div operation on SparseCyTensor 
-
+    36. Add Tensor.flatten()
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn
     2. add Dot() for CPU and GPU, with unify API for Vec-Vec/Mat-Vec/Mat-Mat/Ten-Vec product.
@@ -139,11 +139,11 @@
 ## Objects:
     * \link cytnx::Storage Storage \endlink   [binded]
     * \link cytnx::Tensor Tensor \endlink   [binded]
-    * \link cytnx::Bond Bond \endlink     [binded] 
+    * \link cytnx_extension::Bond Bond \endlink     [binded] 
     * \link cytnx::Accessor Accessor \endlink [c++ only]
-    * \link cytnx::Symmetry Symmetry \endlink [binded]
-    * \link cytnx::CyTensor CyTensor \endlink [binded]
-    * \link cytnx::Network Network \endlink [binded]
+    * \link cytnx_extension::Symmetry Symmetry \endlink [binded]
+    * \link cytnx_extension::CyTensor CyTensor \endlink [binded]
+    * \link cytnx_extension::Network Network \endlink [binded]
 
 ## linear algebra functions: 
     See \link cytnx::linalg cytnx::linalg \endlink for further details

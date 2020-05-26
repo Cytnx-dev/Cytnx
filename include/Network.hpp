@@ -94,6 +94,7 @@ namespace cytnx_extension{
             virtual CyTensor Launch(const bool &optimal=false);
             virtual void PrintNet(std::ostream &os);
             virtual boost::intrusive_ptr<Network_base> clone();
+            //virtual void Savefile(const std::string &fname);
             virtual ~Network_base(){};
             
     
@@ -245,6 +246,10 @@ namespace cytnx_extension{
                 }
                 this->_impl->Fromfile(fname);
             }
+
+            //void Savefile(const std::string &fname);
+                
+           
 
             Network(const std::string &fname, const int &network_type=NtType.Regular){
                 this->Fromfile(fname,network_type);

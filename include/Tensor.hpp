@@ -850,6 +850,19 @@ namespace cytnx{
 
 
 
+            Tensor flatten() const{
+                Tensor out = this->clone();
+                out.contiguous_();
+                out.reshape_({-1});
+                return out;
+            }
+
+            void flatten_(){
+                this->contiguous_();
+                this->reshape_({-1});
+                
+            }
+
 
             void append(const Tensor &rhs){
                 cytnx_error_msg(true,"[ERROR] append a Tensor is under developing.%s","\n");
@@ -888,18 +901,18 @@ namespace cytnx{
 
  
             // linalg:
-            std::vector<Tensor> Svd(const bool &is_U=true, const bool &is_vT=true);
-            std::vector<Tensor> Eigh(const bool &is_V=true,const bool &row_v=false);
+            std::vector<Tensor> Svd(const bool &is_U=true, const bool &is_vT=true) const;
+            std::vector<Tensor> Eigh(const bool &is_V=true,const bool &row_v=false) const;
             Tensor& Inv_();
-            Tensor Inv(); 
+            Tensor Inv() const; 
             Tensor& Conj_();
-            Tensor Conj();
+            Tensor Conj() const;
             Tensor& Exp_();
-            Tensor Exp();
-            Tensor Norm();
-            Tensor Pow(const cytnx_double &p);
+            Tensor Exp() const;
+            Tensor Norm() const;
+            Tensor Pow(const cytnx_double &p) const;
             Tensor& Pow_(const cytnx_double &p);
-            Tensor Trace(const cytnx_uint64 &a, const cytnx_uint64 &b);
+            Tensor Trace(const cytnx_uint64 &a, const cytnx_uint64 &b) const;
 
     };// class Tensor
 

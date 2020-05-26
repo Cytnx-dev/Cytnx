@@ -484,10 +484,10 @@ namespace cytnx{
         return *this;
     }
 
-    std::vector<Tensor> Tensor::Svd(const bool&is_U, const bool&is_vT){
+    std::vector<Tensor> Tensor::Svd(const bool&is_U, const bool&is_vT) const{
         return linalg::Svd(*this, is_U, is_vT);
     }
-    std::vector<Tensor> Tensor::Eigh(const bool &is_V,const bool &row_v){
+    std::vector<Tensor> Tensor::Eigh(const bool &is_V,const bool &row_v) const{
         return linalg::Eigh(*this, is_V,row_v);
     }
 
@@ -496,7 +496,7 @@ namespace cytnx{
         linalg::Inv_(*this);
         return *this;
     }
-    Tensor Tensor::Inv(){
+    Tensor Tensor::Inv() const{
         return linalg::Inv(*this); 
     }
     
@@ -504,7 +504,7 @@ namespace cytnx{
         linalg::Conj_(*this);
         return *this;
     }
-    Tensor Tensor::Conj(){
+    Tensor Tensor::Conj() const{
         return linalg::Conj(*this); 
     }
 
@@ -512,14 +512,14 @@ namespace cytnx{
         linalg::Exp_(*this);
         return *this;
     }
-    Tensor Tensor::Exp(){
+    Tensor Tensor::Exp() const{
         return linalg::Exp(*this); 
     }
-    Tensor Tensor::Norm(){
+    Tensor Tensor::Norm() const{
         return linalg::Norm(*this);
     }    
 
-    Tensor Tensor::Pow(const cytnx_double &p){
+    Tensor Tensor::Pow(const cytnx_double &p) const{
         return linalg::Pow(*this,p);
     }    
 
@@ -528,7 +528,7 @@ namespace cytnx{
         return *this;
     }
 
-    Tensor Tensor::Trace(const cytnx_uint64 &a, const cytnx_uint64 &b){
+    Tensor Tensor::Trace(const cytnx_uint64 &a, const cytnx_uint64 &b) const{
         Tensor out = linalg::Trace(*this,a,b);
         return out;
     }
