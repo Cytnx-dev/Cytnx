@@ -1027,12 +1027,16 @@ PYBIND11_MODULE(cytnx,m){
                     return self._impl->filename;
                 })
                 .def("Fromfile",&cytnx_extension::Network::Fromfile,py::arg("fname"),py::arg("network_type")=(int)cytnx_extension::NtType.Regular)
+                .def("Savefile",&cytnx_extension::Network::Savefile,py::arg("fname"))
                 .def("PutCyTensor",[](cytnx_extension::Network &self,const std::string &name, const cytnx_extension::CyTensor &utensor, const bool &is_clone){
                                                 self.PutCyTensor(name,utensor,is_clone);
                                         },py::arg("name"),py::arg("utensor"),py::arg("is_clone")=true)
                 .def("PutCyTensor",[](cytnx_extension::Network &self,const cytnx_uint64 &idx, const cytnx_extension::CyTensor &utensor, const bool &is_clone){
                                                 self.PutCyTensor(idx,utensor,is_clone);
                                         },py::arg("idx"),py::arg("utensor"),py::arg("is_clone")=true)
+                .def("PutCyTensors",[](cytnx_extension::Network &self,const std::vector<std::string> &names, const std::vector<cytnx_extension::CyTensor> &utensors, const bool &is_clone){
+                                                self.PutCyTensors(names,utensors,is_clone);
+                                        },py::arg("names"),py::arg("utensors"),py::arg("is_clone")=true)
                 .def("Launch",&cytnx_extension::Network::Launch,py::arg("optimal")=false)
                 .def("clear",&cytnx_extension::Network::clear)
                 .def("clone",&cytnx_extension::Network::clone)

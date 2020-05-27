@@ -10,12 +10,17 @@ namespace cytnx_extension{
     void Network_base::Fromfile(const std::string &fname){
         cytnx_error_msg(true,"[ERROR][Network][Fromfile] call from uninitialize network.%s","\n");
     }
-
+    void Network_base::Savefile(const std::string &fname){
+        cytnx_error_msg(true,"[ERROR][Network][Savefile] call from uninitialize network.%s","\n");
+    }
     void Network_base::PutCyTensor(const std::string &name, const CyTensor &utensor, const bool &is_clone){
         cytnx_error_msg(true,"[ERROR][Network][PutCyTensor] call from uninitialize network.%s","\n");
     }
     void Network_base::PutCyTensor(const cytnx_uint64 &idx, const CyTensor &utensor, const bool &is_clone){
         cytnx_error_msg(true,"[ERROR][Network][PutCyTensor] call from uninitialize network.%s","\n");
+    }
+    void Network_base::PutCyTensors(const std::vector<string> &names, const std::vector<CyTensor> &utensors, const bool &is_clone){
+        cytnx_error_msg(true,"[ERROR][Network][PutCyTensors] call from uninitialize network.%s","\n");
     }
     void Network_base::clear(){
         cytnx_error_msg(true,"[ERROR][Network][Clear] call from uninitialize network.%s","\n");

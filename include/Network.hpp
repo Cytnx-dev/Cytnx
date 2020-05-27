@@ -89,12 +89,13 @@ namespace cytnx_extension{
             //std::string GetContractOrder() const;
             virtual void PutCyTensor(const std::string &name, const CyTensor &utensor, const bool &is_clone);
             virtual void PutCyTensor(const cytnx_uint64 &idx, const CyTensor &utensor, const bool &is_clone);
+            virtual void PutCyTensors(const std::vector<std::string> &name, const std::vector<CyTensor> &utensors, const bool &is_clone);
             virtual void Fromfile(const std::string& fname);
             virtual void clear();
             virtual CyTensor Launch(const bool &optimal=false);
             virtual void PrintNet(std::ostream &os);
             virtual boost::intrusive_ptr<Network_base> clone();
-            //virtual void Savefile(const std::string &fname);
+            virtual void Savefile(const std::string &fname);
             virtual ~Network_base(){};
             
     
@@ -107,6 +108,7 @@ namespace cytnx_extension{
             void Fromfile(const std::string &fname);
             void PutCyTensor(const std::string &name, const CyTensor &utensor, const bool &is_clone=true);
             void PutCyTensor(const cytnx_uint64 &idx, const CyTensor &utensor, const bool &is_clone=true);
+            void PutCyTensors(const std::vector<std::string> &name, const std::vector<CyTensor> &utensors, const bool &is_clone=true);
             void clear(){
                 this->name2pos.clear();
                 this->CtTree.clear();
@@ -132,6 +134,7 @@ namespace cytnx_extension{
                 return out;
             }
             void PrintNet(std::ostream& os);
+            void Savefile(const std::string &fname);
             ~RegularNetwork(){};
 
     }; 
@@ -146,6 +149,7 @@ namespace cytnx_extension{
             void Fromfile(const std::string &fname){};
             void PutCyTensor(const std::string &name, const CyTensor &utensor, const bool &is_clone=true){};
             void PutCyTensor(const cytnx_uint64 &idx, const CyTensor &utensor, const bool &is_clone=true){};
+            void PutCyTensors(const std::vector<std::string> &name, const std::vector<CyTensor> &utensors, const bool &is_clone=true){};
             void clear(){
                 this->name2pos.clear();
                 this->CtTree.clear();
@@ -171,6 +175,7 @@ namespace cytnx_extension{
                 return out;
             }
             void PrintNet(std::ostream &os){};
+            void Savefile(const std::string &fname){};
             ~FermionNetwork(){};
     };
 
@@ -261,6 +266,9 @@ namespace cytnx_extension{
             void PutCyTensor(const cytnx_uint64 &idx, const CyTensor &utensor, const bool &is_clone=true){
                 this->_impl->PutCyTensor(idx,utensor,is_clone);
             }
+            void PutCyTensors(const std::vector<std::string> &name, const std::vector<CyTensor> &utensors, const bool &is_clone=true){
+                this->_impl->PutCyTensors(name,utensors,is_clone);
+            }
             CyTensor Launch(const bool &optimal=false){
                 return this->_impl->Launch(optimal);
             }
@@ -276,6 +284,10 @@ namespace cytnx_extension{
             }
             void PrintNet(){
                 this->_impl->PrintNet(std::cout);
+            }
+
+            void Savefile(const std::string &fname){
+                this->_impl->Savefile(fname);
             }
     
     };

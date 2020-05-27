@@ -5,6 +5,7 @@ var searchData=
   ['data_3c_20std_3a_3acomplex_3c_20double_20_3e_20_3e',['data&lt; std::complex&lt; double &gt; &gt;',['../namespacecytnx.html#ab7eebbd2964ab2807f7f4fdff088d550',1,'cytnx']]],
   ['data_3c_20std_3a_3acomplex_3c_20float_20_3e_20_3e',['data&lt; std::complex&lt; float &gt; &gt;',['../namespacecytnx.html#a6bf041c55a8678062f192e67e74de2cc',1,'cytnx']]],
   ['save',['Save',['../classcytnx_1_1Storage.html#ae678c02085f12febc8c2f3476cdb4311',1,'cytnx::Storage::Save(const std::string &amp;fname)'],['../classcytnx_1_1Storage.html#adaa5cb07bbaf3537dc523282bc82d5f4',1,'cytnx::Storage::Save(const char *fname)'],['../classcytnx_1_1Tensor.html#aff52e971692a635519ae9504f784c15a',1,'cytnx::Tensor::Save(const std::string &amp;fname)'],['../classcytnx_1_1Tensor.html#a1ccb3c41d6b2c39a68116949b774a9b9',1,'cytnx::Tensor::Save(const char *fname)']]],
+  ['savefile',['Savefile',['../classcytnx__extension_1_1Network.html#a88fe4ce686a6f01fc67f77322fe187e5',1,'cytnx_extension::Network']]],
   ['scnrm2',['scnrm2',['../lapack__wrapper_8hpp.html#a83eff7165a1f8acc1753c7ec1c898f33',1,'lapack_wrapper.hpp']]],
   ['scnrm2_5f',['scnrm2_',['../lapack__wrapper_8hpp.html#af9dd461171469044da2aefea324fdaf5',1,'lapack_wrapper.hpp']]],
   ['scopy',['scopy',['../lapack__wrapper_8hpp.html#ae145e0dfe55febcc73d3dda2e5d049d8',1,'lapack_wrapper.hpp']]],

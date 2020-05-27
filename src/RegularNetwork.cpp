@@ -265,6 +265,13 @@ namespace cytnx_extension{
 
     }
 
+    void RegularNetwork::PutCyTensors(const std::vector<string> &names, const std::vector<CyTensor> &utensors, const bool &is_clone){
+        cytnx_error_msg(names.size()!=utensors.size(),"[ERROR][RegularNetwork][PutCyTensors] total number of names does not match number of input CyTensors.%s","\n");
+        for(int i=0;i<names.size();i++){
+            this->PutCyTensor(names[i],utensors[i],is_clone);
+        }        
+    }
+
     void RegularNetwork::PutCyTensor(const cytnx_uint64 &idx, const CyTensor &utensor, const bool &is_clone){
 
         cytnx_error_msg(idx>=this->CtTree.base_nodes.size(),"[ERROR][RegularNetwork][PutCyTensor] index=%d out of range.\n",idx);
@@ -278,6 +285,62 @@ namespace cytnx_extension{
         }else{
             this->tensors[idx] = utensor;
         }
+
+    }
+
+    void RegularNetwork::Savefile(const std::string &fname){
+        cytnx_error_msg(this->label_arr.size()==0,"[ERROR][RegularNetwork][Savefile] cannot save empty network to network file!%s","\n");
+        
+        fstream fo; fo.open(fname+".net",ios::out|ios::trunc);
+        if(!fo.is_open()){
+            cytnx_error_msg(true,"[ERROR][RegularNetwork][Savefile] cannot open/create file:%s\n",fname.c_str());
+        }
+        
+        for(int i=0;i<this->label_arr.size();i++){
+            fo << this->names[i] << " : ";
+            if(this->iBondNums[i]==0)
+                fo << ";";
+
+            for( int j=0;j<this->label_arr[i].size();j++){
+                fo << this->label_arr[i][j];
+                 
+                if(j+1==this->iBondNums[i])
+                    fo<<";";
+                else if(j!=this->label_arr[i].size()-1)
+                    fo<<",";
+                    
+                if(j==this->label_arr[i].size()-1)
+                    fo<<"\n";
+            }
+
+        }       
+
+        fo << "TOUT : ";
+        for(int i=0;i<TOUT_iBondNum;i++){
+            fo<<this->TOUT_labels[i];
+            if(i!=this->TOUT_iBondNum-1){
+                fo << ",";
+            }
+        }
+        if(this->TOUT_labels.size()!=0) 
+            fo<<";";
+        for(int i=TOUT_iBondNum;i<this->TOUT_labels.size();i++){
+            fo << this->TOUT_labels[i];
+            if(i!=this->TOUT_labels.size()-1){
+                fo << ",";
+            }
+        }
+        fo << "\n";
+
+        if(ORDER_tokens.size()!=0){
+            fo << "ORDER : ";
+            for(int i=0;i<ORDER_tokens.size();i++){
+                fo << ORDER_tokens[i];
+            }
+            fo << endl;
+        }
+
+        fo.close();
 
     }
 

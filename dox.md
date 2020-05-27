@@ -44,6 +44,8 @@
     34. Add xlinalg::ExpH, xlinalg::ExpM, xlinalg::Trace (ovld of CyTensor.Trace)
     35. support Mul/Div operation on SparseCyTensor 
     36. Add Tensor.flatten()
+    37. Add Network.Savefile. Network.PutCyTensors
+
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn
     2. add Dot() for CPU and GPU, with unify API for Vec-Vec/Mat-Vec/Mat-Mat/Ten-Vec product.

@@ -343,17 +343,18 @@ namespace cytnx_extension{
 
             std::vector<Tensor> get_blocks() const {
                 std::vector<Tensor> out;
-                out.push_back(this->_block.clone());
+                cytnx_error_msg(true,"[ERROR][DenseCyTensor] cannot use get_blocks(), use get_block() instead!%s","\n");
                 return out; // this will not share memory!!
             }
             const std::vector<Tensor>& get_blocks_() const {
                 std::vector<Tensor> out;
-                out.push_back(this->_block);
+                //out.push_back(this->_block);
+                cytnx_error_msg(true,"[ERROR][DenseCyTensor] cannot use get_blocks_(), use get_block_() instead!%s","\n");
                 return out; // this will not share memory!!
             }
             std::vector<Tensor>& get_blocks_(){
                 std::vector<Tensor> out;
-                out.push_back(this->_block);
+                cytnx_error_msg(true,"[ERROR][DenseCyTensor] cannot use get_blocks_(), use get_block_() instead!%s","\n");
                 return out; // this will not share memory!!
             }
 

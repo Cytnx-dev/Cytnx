@@ -91,6 +91,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a66db6a7816bcb8244d92211f2fba01fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af33a73b7c7413bd28eb2d7946c23b906"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Network.html#af33a73b7c7413bd28eb2d7946c23b906">PutCyTensor</a> (const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;idx, const <a class="el" href="classcytnx__extension_1_1CyTensor.html">CyTensor</a> &amp;utensor, const bool &amp;is_clone=true)</td></tr>
 <tr class="separator:af33a73b7c7413bd28eb2d7946c23b906"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a458e047eb6ab3ffa759d5030628a6e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Network.html#a6a458e047eb6ab3ffa759d5030628a6e">PutCyTensors</a> (const std::vector&lt; std::string &gt; &amp;name, const std::vector&lt; <a class="el" href="classcytnx__extension_1_1CyTensor.html">CyTensor</a> &gt; &amp;utensors, const bool &amp;is_clone=true)</td></tr>
+<tr class="separator:a6a458e047eb6ab3ffa759d5030628a6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2475919a0651c0f3914dd3b9383d4e31"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx__extension_1_1CyTensor.html">CyTensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Network.html#a2475919a0651c0f3914dd3b9383d4e31">Launch</a> (const bool &amp;optimal=false)</td></tr>
 <tr class="separator:a2475919a0651c0f3914dd3b9383d4e31"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f6b7b26c81ebc136fc087bce2eda81e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Network.html#a5f6b7b26c81ebc136fc087bce2eda81e">clear</a> ()</td></tr>
@@ -99,6 +101,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:afdc385a79f7eb6e5d460d440fcb2a4a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c51cc196d19faaf13d2d74d860ba973"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Network.html#a0c51cc196d19faaf13d2d74d860ba973">PrintNet</a> ()</td></tr>
 <tr class="separator:a0c51cc196d19faaf13d2d74d860ba973"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88fe4ce686a6f01fc67f77322fe187e5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Network.html#a88fe4ce686a6f01fc67f77322fe187e5">Savefile</a> (const std::string &amp;fname)</td></tr>
+<tr class="separator:a88fe4ce686a6f01fc67f77322fe187e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ae3152ef5ac3402559b1430403a190174"></a>
@@ -404,6 +408,74 @@ ORDER : (A,B),(C,D)
           <td></td>
           <td>)</td>
           <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6a458e047eb6ab3ffa759d5030628a6e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a458e047eb6ab3ffa759d5030628a6e">&#9670;&nbsp;</a></span>PutCyTensors()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cytnx_extension::Network::PutCyTensors </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; std::string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="classcytnx__extension_1_1CyTensor.html">CyTensor</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>utensors</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramname"><em>is_clone</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a88fe4ce686a6f01fc67f77322fe187e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88fe4ce686a6f01fc67f77322fe187e5">&#9670;&nbsp;</a></span>Savefile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cytnx_extension::Network::Savefile </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>fname</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
   </td>
