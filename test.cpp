@@ -9,6 +9,19 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]){
 
+
+    auto TNtts = arange(16);
+    cout << TNtts << endl;
+
+    //TNtts[{ac(4)}] = 99999;
+
+
+    auto TNget = TNtts[{ac::range(0,16,2)}];
+    cout << TNget << endl;
+
+    return 0;
+
+
     auto TNs = arange(16).astype(Type.Double).reshape({4,4});
     TNs = TNs + TNs.permute({1,0});
     

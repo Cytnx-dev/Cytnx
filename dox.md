@@ -45,6 +45,8 @@
     35. support Mul/Div operation on SparseCyTensor 
     36. Add Tensor.flatten()
     37. Add Network.Savefile. Network.PutCyTensors
+    38. [Feature] Tensor can now use unify operator[] to get and set elements as python API
+
 
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn

@@ -85,6 +85,8 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a10c6865a755c7d71811c0375d2e758c7"><td class="memItemLeft" align="right" valign="top">Tproxy&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#a10c6865a755c7d71811c0375d2e758c7">operator[]</a> (const std::vector&lt; <a class="el" href="classcytnx_1_1Accessor.html">cytnx::Accessor</a> &gt; &amp;accs)</td></tr>
+<tr class="separator:a10c6865a755c7d71811c0375d2e758c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3787538221698d29b7c057846298c4da"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#a3787538221698d29b7c057846298c4da">_Save</a> (std::fstream &amp;f)</td></tr>
 <tr class="separator:a3787538221698d29b7c057846298c4da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c76174d63de3ae5f76f16e98d26e315"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#a2c76174d63de3ae5f76f16e98d26e315">_Load</a> (std::fstream &amp;f)</td></tr>
@@ -162,8 +164,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad7b928e4cb89d40cbd99aefab9aa0075"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#ad7b928e4cb89d40cbd99aefab9aa0075">get</a> (const std::vector&lt; <a class="el" href="classcytnx_1_1Accessor.html">cytnx::Accessor</a> &gt; &amp;accessors) const</td></tr>
 <tr class="memdesc:ad7b928e4cb89d40cbd99aefab9aa0075"><td class="mdescLeft">&#160;</td><td class="mdescRight">get elements using <a class="el" href="classcytnx_1_1Accessor.html" title="object that mimic the python slice to access elements in C++ [this is for c++ API only]...">Accessor</a> (C++ API) / slices (python API)  <a href="#ad7b928e4cb89d40cbd99aefab9aa0075">More...</a><br /></td></tr>
 <tr class="separator:ad7b928e4cb89d40cbd99aefab9aa0075"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a95df31a9fc8fddbe5a8bce4342061986"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#a95df31a9fc8fddbe5a8bce4342061986">operator[]</a> (const std::vector&lt; <a class="el" href="classcytnx_1_1Accessor.html">cytnx::Accessor</a> &gt; &amp;accessors)</td></tr>
-<tr class="separator:a95df31a9fc8fddbe5a8bce4342061986"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a771f1f5b51f89abd8df4166e602214ac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#a771f1f5b51f89abd8df4166e602214ac">set</a> (const std::vector&lt; <a class="el" href="classcytnx_1_1Accessor.html">cytnx::Accessor</a> &gt; &amp;accessors, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;rhs)</td></tr>
 <tr class="memdesc:a771f1f5b51f89abd8df4166e602214ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">set elements with the input <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> using <a class="el" href="classcytnx_1_1Accessor.html" title="object that mimic the python slice to access elements in C++ [this is for c++ API only]...">Accessor</a> (C++ API) / slices (python API)  <a href="#a771f1f5b51f89abd8df4166e602214ac">More...</a><br /></td></tr>
 <tr class="separator:a771f1f5b51f89abd8df4166e602214ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -3187,8 +3187,8 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
-<a id="a95df31a9fc8fddbe5a8bce4342061986"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a95df31a9fc8fddbe5a8bce4342061986">&#9670;&nbsp;</a></span>operator[]()</h2>
+<a id="a10c6865a755c7d71811c0375d2e758c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10c6865a755c7d71811c0375d2e758c7">&#9670;&nbsp;</a></span>operator[]()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3197,10 +3197,10 @@ template&lt;class T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> cytnx::Tensor::operator[] </td>
+          <td class="memname">Tproxy cytnx::Tensor::operator[] </td>
           <td>(</td>
           <td class="paramtype">const std::vector&lt; <a class="el" href="classcytnx_1_1Accessor.html">cytnx::Accessor</a> &gt; &amp;&#160;</td>
-          <td class="paramname"><em>accessors</em></td><td>)</td>
+          <td class="paramname"><em>accs</em></td><td>)</td>
           <td></td>
         </tr>
       </table>

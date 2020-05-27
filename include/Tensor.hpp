@@ -272,7 +272,48 @@ namespace cytnx{
     class Tensor{
         private:
         public:
-            
+
+            /// @cond
+            // this is a proxy class to allow get/set element using [] as python!
+            struct Tproxy
+            {
+                boost::intrusive_ptr<Tensor_impl> _insimpl;
+                std::vector<cytnx::Accessor> _accs;
+                Tproxy(boost::intrusive_ptr<Tensor_impl> _ptr,const std::vector<cytnx::Accessor> &accs) : _insimpl(_ptr), _accs(accs){}
+
+                // when used to set elems:
+                void operator=(const Tensor &rhs){
+                    this->_insimpl->set(_accs,rhs);
+                }
+
+                template<class T>
+                void operator=(const T &rc){
+                    this->_insimpl->set(_accs,rc);
+                }
+        
+
+                // when used to get elems:
+                operator Tensor () const{
+                    Tensor out;
+                    out._impl = _insimpl->get(_accs);
+                    return out;
+                }
+
+            };
+            /// @endcond
+
+           
+
+            Tproxy operator[](const std::vector<cytnx::Accessor> &accs){
+                return Tproxy(this->_impl,accs);
+            }
+
+            const Tproxy operator[](const std::vector<cytnx::Accessor> &accs) const{
+                return Tproxy(this->_impl,accs);
+            }
+
+
+ 
             void _Save(std::fstream &f);
             void _Load(std::fstream &f);
             /**
@@ -307,6 +348,10 @@ namespace cytnx{
             Tensor& operator=(const Tensor &rhs){
                 _impl = rhs._impl;
                 return *this;
+            }
+
+            Tensor& operator=(const Tproxy &rhsp){ // this is used to handle proxy assignment
+                this->_impl = rhsp._insimpl->get(rhsp._accs);
             }
             ///@endcond
 
@@ -692,9 +737,7 @@ namespace cytnx{
                 out._impl = this->_impl->get(accessors);
                 return out;
             }
-            Tensor operator[](const std::vector<cytnx::Accessor> &accessors){
-                return this->get(accessors);
-            }
+            
             
             /**
             @brief set elements with the input Tensor using Accessor (C++ API) / slices (python API)
