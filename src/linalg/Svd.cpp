@@ -96,7 +96,9 @@ namespace cytnx_extension{
                for(cytnx_uint64 i=0;i<Tin.Rowrank();i++) rowdim*= tmp.shape()[i];
                tmp.reshape_({rowdim,-1});
 
-               vector<Tensor> outT = cytnx::linalg::Svd(tmp,is_U,is_vT);
+               vector<Tensor> outT = cytnx::linalg::Svd(tmp,is_U,is_vT);    
+               if(Tin.is_contiguous())
+                tmp.reshape_(oldshape);
                
                int t=0;
                vector<cytnx_extension::CyTensor> outCyT(outT.size());

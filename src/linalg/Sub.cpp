@@ -6,7 +6,7 @@ namespace cytnx {
     namespace linalg {
         Tensor Sub(const Tensor &Lt, const Tensor &Rt) {
 
-            cytnx_error_msg(Lt.shape() != Rt.shape(), "[Sub] error, the two tensor does not have the same type.%s",
+            cytnx_error_msg(Lt.shape() != Rt.shape(), "[Sub] error, the two tensor does not have the same shape.%s",
                             "\n");
             cytnx_error_msg(Lt.device() != Rt.device(), "[Sub] error, two tensor cannot on different devices.%s", "\n");
 

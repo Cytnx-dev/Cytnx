@@ -6,7 +6,7 @@ namespace cytnx {
     namespace linalg {
         Tensor Mul(const Tensor &Lt, const Tensor &Rt) {
 
-            cytnx_error_msg(Lt.shape() != Rt.shape(), "[Mul] error, the two tensor does not have the same type.%s",
+            cytnx_error_msg(Lt.shape() != Rt.shape(), "[Mul] error, the two tensor does not have the same shape.%s",
                             "\n");
             cytnx_error_msg(Lt.device() != Rt.device(), "[Mul] error, two tensor cannot on different devices.%s", "\n");
             //cytnx_error_msg(!(Lt.is_contiguous() && Rt.is_contiguous()), "[Mul] error two tensors must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");

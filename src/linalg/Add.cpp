@@ -5,7 +5,7 @@ namespace cytnx{
     namespace linalg{
         Tensor Add(const Tensor &Lt, const Tensor &Rt){
             
-            cytnx_error_msg(Lt.shape() != Rt.shape(),"[Add] error, the two tensor does not have the same type.%s","\n");
+            cytnx_error_msg(Lt.shape() != Rt.shape(),"[Add] error, the two tensor does not have the same shape.%s","\n");
             cytnx_error_msg(Lt.device() != Rt.device(),"[Add] error, two tensor cannot on different devices.%s","\n");
      
             Tensor out(Lt.shape(),Lt.dtype() < Rt.dtype()?Lt.dtype():Rt.dtype(),Lt.device());
