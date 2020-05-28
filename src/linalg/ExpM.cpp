@@ -75,7 +75,7 @@ namespace cytnx_extension{
                 }else{
                     out = Tin.contiguous();
                 }
-                cytnx_uint64 Drow=1,Dcol=1;
+                cytnx_int64 Drow=1,Dcol=1;
                 for(int i=0;i<Tin.Rowrank();i++){
                     Drow*=Tin.shape()[i];
                 }
