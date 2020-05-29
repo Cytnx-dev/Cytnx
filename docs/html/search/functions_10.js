@@ -1,12 +1,6 @@
 var searchData=
 [
-  ['range',['range',['../classcytnx_1_1Accessor.html#a7a5a508a58b71897c3dd162195aceaa9',1,'cytnx::Accessor']]],
-  ['rank',['rank',['../classcytnx__extension_1_1CyTensor.html#ab078942159a94114631f60edf0da3fb4',1,'cytnx_extension::CyTensor::rank()'],['../classcytnx_1_1Tensor.html#aa3ee5ed793cacd43d3fadbd92d7920a4',1,'cytnx::Tensor::rank()']]],
-  ['real',['real',['../classcytnx_1_1Storage.html#a1c28604bf7751c817c44dc3286d6520f',1,'cytnx::Storage::real()'],['../classcytnx_1_1Tensor.html#ac863dbd316a4771a95810a2e9b922c4e',1,'cytnx::Tensor::real()']]],
-  ['reshape',['reshape',['../classcytnx__extension_1_1CyTensor.html#aedb06916046d9bf5f11d14a533794bdb',1,'cytnx_extension::CyTensor::reshape()'],['../classcytnx_1_1Tensor.html#a182f8f7b3ae3d0db8ed55d2adf8c6b45',1,'cytnx::Tensor::reshape()']]],
-  ['reshape_5f',['reshape_',['../classcytnx__extension_1_1CyTensor.html#aa947d87c3b1ba57fd041d5801732cc43',1,'cytnx_extension::CyTensor::reshape_()'],['../classcytnx_1_1Tensor.html#a3723449528b9a20dd46c32c9e042b8f0',1,'cytnx::Tensor::reshape_()']]],
-  ['resize',['resize',['../classcytnx_1_1Storage.html#a2ff5a21f81e9b90a5e78e1ba1698351b',1,'cytnx::Storage']]],
-  ['reverse_5frule',['reverse_rule',['../classcytnx__extension_1_1Symmetry.html#a9eef1970926700afd56c54598ea107d3',1,'cytnx_extension::Symmetry']]],
-  ['reverse_5frule_5f',['reverse_rule_',['../classcytnx__extension_1_1Symmetry.html#af3dc8510b1badc39b66430b414d73929',1,'cytnx_extension::Symmetry']]],
-  ['rowrank',['Rowrank',['../classcytnx__extension_1_1CyTensor.html#a44d790c34670948c74995427a7e4ef0e',1,'cytnx_extension::CyTensor']]]
+  ['qnums',['qnums',['../classcytnx__extension_1_1Bond.html#abea0b5fc37d307b2226d035d4f60418f',1,'cytnx_extension::Bond::qnums() const'],['../classcytnx__extension_1_1Bond.html#ab0c204b5234719911e8d070bafe4677a',1,'cytnx_extension::Bond::qnums()']]],
+  ['qnums_5fclone',['qnums_clone',['../classcytnx__extension_1_1Bond.html#a0a8abc8679035434beeb94fb0971578a',1,'cytnx_extension::Bond']]],
+  ['qr',['QR',['../namespacecytnx_1_1linalg.html#a44a1aaacc828eb5202eb912f787626b8',1,'cytnx::linalg']]]
 ];

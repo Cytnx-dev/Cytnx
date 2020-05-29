@@ -96,6 +96,7 @@ namespace cytnx_extension{
                 //check in:
                 bool is_dup =false;
                 for(cytnx_uint64 i=0;i<this->_labels.size();i++){
+                    if(i==idx) continue;
                     if(new_label == this->_labels[i]){is_dup = true; break;}
                 }
                 cytnx_error_msg(is_dup,"[ERROR] alreay has a label that is the same as the input label%s","\n");

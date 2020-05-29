@@ -52,8 +52,9 @@ namespace cytnx{
         }
 
         Tensor pauli(const std::string &Comp, const int &device){
-            Tensor Out = zeros(4,Type.ComplexDouble,device);
+            Tensor Out = zeros({2,2},Type.ComplexDouble,device);
             
+                        
             if(Comp == "z" || Comp == "Z"){
                 Out.at<cytnx_complex128>({0,0}) = 1;
                 Out.at<cytnx_complex128>({1,1}) = -1;

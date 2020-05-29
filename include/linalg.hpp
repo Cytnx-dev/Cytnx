@@ -57,6 +57,7 @@ namespace cytnx_extension{
 
         std::vector<cytnx_extension::CyTensor> Svd(const cytnx_extension::CyTensor &Tin, const bool &is_U=true, const bool &is_vT=true);
         std::vector<cytnx_extension::CyTensor> Svd_truncate(const cytnx_extension::CyTensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U=true, const bool &is_vT=true);
+        std::vector<cytnx_extension::CyTensor> Hosvd(const cytnx_extension::CyTensor &Tin, const std::vector<cytnx_uint64> &mode, const bool &is_core=true, const std::vector<cytnx_int64> &trucate_dim=std::vector<cytnx_int64>());
 
         cytnx_extension::CyTensor ExpH(const cytnx_extension::CyTensor &Tin, const double &a=1, const double &b=0);
         cytnx_extension::CyTensor ExpM(const cytnx_extension::CyTensor &Tin, const double &a=1, const double &b=0);
@@ -187,6 +188,11 @@ namespace cytnx{
         // Svd_truncate:
         //==================================================
         std::vector<Tensor> Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,const bool &is_U=true, const bool &is_vT=true);
+
+
+        // Hosvd:
+        std::vector<Tensor> Hosvd(const Tensor &Tin, const std::vector<cytnx_uint64> &mode, const bool &is_core=true, const std::vector<cytnx_int64> &trucate_dim=std::vector<cytnx_int64>());
+
 
         // QR:
         //==================================================

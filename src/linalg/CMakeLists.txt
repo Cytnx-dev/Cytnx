@@ -34,6 +34,7 @@ target_sources_local(cytnx
     Pow.cpp
     Pow_.cpp
     Abs.cpp
+    Hosvd.cpp
     Abs_.cpp
     Dot.cpp
     Norm.cpp

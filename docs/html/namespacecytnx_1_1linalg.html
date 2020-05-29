@@ -134,6 +134,8 @@ Functions</h2></td></tr>
 <tr class="separator:ac17f16959a4849ea91bce712d24d4e4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37887f24c0050785a9675ecbb7601952"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a37887f24c0050785a9675ecbb7601952">Svd_truncate</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin, const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;keepdim, const bool &amp;is_U=true, const bool &amp;is_vT=true)</td></tr>
 <tr class="separator:a37887f24c0050785a9675ecbb7601952"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4de140a2c3cb50aa31887e2f0488b6d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#ae4de140a2c3cb50aa31887e2f0488b6d">Hosvd</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin, const std::vector&lt; <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &gt; &amp;mode, const bool &amp;is_core=true, const std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &amp;trucate_dim=std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt;())</td></tr>
+<tr class="separator:ae4de140a2c3cb50aa31887e2f0488b6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44a1aaacc828eb5202eb912f787626b8"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a44a1aaacc828eb5202eb912f787626b8">QR</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin, const bool &amp;is_tau=false)</td></tr>
 <tr class="memdesc:a44a1aaacc828eb5202eb912f787626b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform QR decomposition on a rank-2 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>.  <a href="#a44a1aaacc828eb5202eb912f787626b8">More...</a><br /></td></tr>
 <tr class="separator:a44a1aaacc828eb5202eb912f787626b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -942,6 +944,46 @@ template&lt;class T &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>]</dd></dl>
 <p>description: perform matrix exponential with \(O = \exp{aM + b}\). </p>
+
+</div>
+</div>
+<a id="ae4de140a2c3cb50aa31887e2f0488b6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4de140a2c3cb50aa31887e2f0488b6d">&#9670;&nbsp;</a></span>Hosvd()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&gt; cytnx::linalg::Hosvd </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>Tin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>mode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramname"><em>is_core</em> = <code>true</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>trucate_dim</em> = <code>std::vector&lt;&#160;<a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a>&#160;&gt;()</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>

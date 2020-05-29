@@ -48,6 +48,9 @@
     38. [Feature] Tensor can now use unify operator[] to get and set elements as python API
     39. fix ambiguous error message in Tensor arithmetic.
     40. fix bug in xlinalg::Svd
+    41. fix bug in physics::pauli
+    42. fix bug in CyTensor.set_label checking element.
+    43. Add xlinalg::Hosvd (currently CyTensor only)
 
 
     v0.5.1a
