@@ -55,6 +55,7 @@
     45. Add PESS example 
     46. Add support for Norm to generic rank-N Tensor
     47. Add @ operator in python API for shorthand of linalg::Dot
+    48. Add DMRG example
 
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn
@@ -396,6 +397,11 @@
 
     Kai-Hsin Wu kaihsinwu@gmail.com 
     Yen-Hsin Wu
+    Yu-Hsueh Chen 
 
+## Refereces:
+
+    * example/DMRG:
+        https://www.tensors.net/dmrg
 
 

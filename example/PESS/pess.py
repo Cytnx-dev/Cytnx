@@ -3,6 +3,9 @@ import numpy as np
 import cytnx as cy
 from cytnx import cytnx_extension as cyx
 
+##
+# Author: Kai-Hsin Wu
+##
 
 def inv_e(A,clip):
     out = A.clone()

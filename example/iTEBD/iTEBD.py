@@ -1,10 +1,14 @@
+import cytnx
+from cytnx import cytnx_extension as cyx
 import numpy as np
 import scipy as sp
 from scipy import linalg
 import sys
-sys.path.append("cytnx")
-import cytnx
-from cytnx import cytnx_extension as cyx
+
+##
+# Author: Kai-Hsin Wu
+##
+
 
 #Example of 1D Ising model 
 ## iTEBD
