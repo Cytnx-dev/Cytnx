@@ -79,6 +79,11 @@ def __itruediv__(self,right):
 def __ifloordiv__(self,right):
     self.c__ifloordiv__(right);
     return self
+@add_method(Tensor)
+def __imatmul(self,rhs):
+    self.c__imatmul__(rhs);
+    return self;
+
 
 @add_method(Tensor)
 def Conj_(self):

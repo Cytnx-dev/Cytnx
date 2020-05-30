@@ -163,7 +163,13 @@ namespace cytnx{
         // Norm:
         //=================================================
         /**
-        @brief calculate the norm of a vector (or matrix in the future)
+        @brief calculate the norm of a tensor.
+        @param Tl input Tensor
+        @return Tensor
+        
+        [Note]
+            1. if the input tensor is rank-1, the frobenius norm is calculated. 
+            2. if the input tensor is rank-N with N>=2, the tensor will be flatten to 1d first, and calculate the frobenius norm.
         */
         Tensor Norm(const Tensor &Tl);
 
@@ -513,7 +519,9 @@ namespace cytnx{
 
         [Note]
             performance tune: This function have better performance when two arrays with same types, and are one of following type: cytnx_double, cytnx_float, cytnx_complex64 or cytnx_complex128. 
-            
+
+        [Python]
+            In Python API, operator@ is overloaded as a shorthand of linalg::Dot.
         */
         Tensor Dot(const Tensor &Tl, const Tensor &Tr);
 

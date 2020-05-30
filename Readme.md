@@ -58,6 +58,9 @@
     43. Add xlinalg::Hosvd (currently CyTensor only)
     44. change argument of init CyTensor rowrank->Rowrank
     45. Add PESS example 
+    46. Add support for Norm to generic rank-N Tensor
+    47. Add @ operator in python API for shorthand of linalg::Dot
+
 
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn

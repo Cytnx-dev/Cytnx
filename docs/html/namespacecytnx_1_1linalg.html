@@ -127,15 +127,15 @@ Functions</h2></td></tr>
 <tr class="memitem:ac59f29dd40385b5b2705299d0366876f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#ac59f29dd40385b5b2705299d0366876f">Cpr</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Lt, const T &amp;rc)</td></tr>
 <tr class="separator:ac59f29dd40385b5b2705299d0366876f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9cd2be179860bb4742ebe320fa063680"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a9cd2be179860bb4742ebe320fa063680">Norm</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tl)</td></tr>
-<tr class="memdesc:a9cd2be179860bb4742ebe320fa063680"><td class="mdescLeft">&#160;</td><td class="mdescRight">calculate the norm of a vector (or matrix in the future)  <a href="#a9cd2be179860bb4742ebe320fa063680">More...</a><br /></td></tr>
+<tr class="memdesc:a9cd2be179860bb4742ebe320fa063680"><td class="mdescLeft">&#160;</td><td class="mdescRight">calculate the norm of a tensor.  <a href="#a9cd2be179860bb4742ebe320fa063680">More...</a><br /></td></tr>
 <tr class="separator:a9cd2be179860bb4742ebe320fa063680"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac17f16959a4849ea91bce712d24d4e4e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#ac17f16959a4849ea91bce712d24d4e4e">Svd</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin, const bool &amp;is_U=true, const bool &amp;is_vT=true)</td></tr>
 <tr class="memdesc:ac17f16959a4849ea91bce712d24d4e4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform Singular-Value decomposition on a rank-2 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>.  <a href="#ac17f16959a4849ea91bce712d24d4e4e">More...</a><br /></td></tr>
 <tr class="separator:ac17f16959a4849ea91bce712d24d4e4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37887f24c0050785a9675ecbb7601952"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a37887f24c0050785a9675ecbb7601952">Svd_truncate</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin, const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;keepdim, const bool &amp;is_U=true, const bool &amp;is_vT=true)</td></tr>
 <tr class="separator:a37887f24c0050785a9675ecbb7601952"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae4de140a2c3cb50aa31887e2f0488b6d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#ae4de140a2c3cb50aa31887e2f0488b6d">Hosvd</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin, const std::vector&lt; <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &gt; &amp;mode, const bool &amp;is_core=true, const std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &amp;trucate_dim=std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt;())</td></tr>
-<tr class="separator:ae4de140a2c3cb50aa31887e2f0488b6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99631dd49eb552eaff1c40a54a1e568d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a99631dd49eb552eaff1c40a54a1e568d">Hosvd</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin, const std::vector&lt; <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &gt; &amp;mode, const bool &amp;is_core=true, const bool &amp;is_Ls=false, const std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &amp;trucate_dim=std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt;())</td></tr>
+<tr class="separator:a99631dd49eb552eaff1c40a54a1e568d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44a1aaacc828eb5202eb912f787626b8"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a44a1aaacc828eb5202eb912f787626b8">QR</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin, const bool &amp;is_tau=false)</td></tr>
 <tr class="memdesc:a44a1aaacc828eb5202eb912f787626b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform QR decomposition on a rank-2 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>.  <a href="#a44a1aaacc828eb5202eb912f787626b8">More...</a><br /></td></tr>
 <tr class="separator:a44a1aaacc828eb5202eb912f787626b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -658,7 +658,8 @@ template&lt;class T &gt; </div>
 <li>if both Tl and Tr are 2d arrays, it calls <a class="el" href="namespacecytnx_1_1linalg.html#a53feb441b4b1bd263714ed33e093728f" title="perform matrix multiplication on two tensors. ">linalg.Matmul</a> to compute the matrix multiplication</li>
 <li>if Tl is Nd array (with N&gt;=2, and Tr is 1-D array, it is sum product over the last axis of a with b</li>
 </ol>
-<p>[Note] performance tune: This function have better performance when two arrays with same types, and are one of following type: cytnx_double, cytnx_float, cytnx_complex64 or cytnx_complex128. </p>
+<p>[Note] performance tune: This function have better performance when two arrays with same types, and are one of following type: cytnx_double, cytnx_float, cytnx_complex64 or cytnx_complex128.</p>
+<p>[Python] In Python API, operator@ is overloaded as a shorthand of <a class="el" href="namespacecytnx_1_1linalg.html#a215dbfd2aa7ef898450de7afff726bca" title="dot product of two arrays. ">linalg::Dot</a>. </p>
 
 </div>
 </div>
@@ -947,8 +948,8 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
-<a id="ae4de140a2c3cb50aa31887e2f0488b6d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae4de140a2c3cb50aa31887e2f0488b6d">&#9670;&nbsp;</a></span>Hosvd()</h2>
+<a id="a99631dd49eb552eaff1c40a54a1e568d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99631dd49eb552eaff1c40a54a1e568d">&#9670;&nbsp;</a></span>Hosvd()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -970,6 +971,12 @@ template&lt;class T &gt; </div>
           <td></td>
           <td class="paramtype">const bool &amp;&#160;</td>
           <td class="paramname"><em>is_core</em> = <code>true</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramname"><em>is_Ls</em> = <code>false</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1264,7 +1271,18 @@ template&lt;class T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>calculate the norm of a vector (or matrix in the future) </p>
+<p>calculate the norm of a tensor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Tl</td><td>input <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a></dd></dl>
+<p>[Note]</p><ol type="1">
+<li>if the input tensor is rank-1, the frobenius norm is calculated.</li>
+<li>if the input tensor is rank-N with N&gt;=2, the tensor will be flatten to 1d first, and calculate the frobenius norm. </li>
+</ol>
 
 </div>
 </div>

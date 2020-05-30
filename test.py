@@ -3,9 +3,12 @@ import cytnx as cy
 from cytnx import cytnx_extension as cyx
 
 
-tt = cy.ones(10,dtype=cy.Type.ComplexDouble)
+tt = cy.ones([3,3],dtype=cy.Type.ComplexDouble)
 print(tt.Norm())
+tt@=tt
+print(tt@tt)
 
+exit(1)
 
 a = cy.from_numpy(np.arange(1.0, 11.0).reshape(2,5))
 Ta = cyx.CyTensor(a, 1)

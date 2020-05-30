@@ -6,13 +6,14 @@ namespace cytnx{
     namespace linalg{
         Tensor Norm(const Tensor &Tl){
             
-            cytnx_error_msg(Tl.shape().size() != 1,"[Norm] error, tensor Tl ,Norm can only operate on rank-1 Tensor.%s","\n");
-            cytnx_error_msg(!Tl.is_contiguous(), "[Norm] error tensor Tl must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
+            //cytnx_error_msg(Tl.shape().size() != 1,"[Norm] error, tensor Tl ,Norm can only operate on rank-1 Tensor.%s","\n");
+            //cytnx_error_msg(!Tl.is_contiguous(), "[Norm] error tensor Tl must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
 
-
+            
             //check type:
             Tensor _tl;
             Tensor out;
+
             if(Tl.dtype() > 4){
                 //do conversion:
                 _tl = Tl.astype(Type.Double);
@@ -20,7 +21,8 @@ namespace cytnx{
             }else{
                 _tl = Tl;
             }
-            
+           
+
 
             if(Tl.dtype()==Type.ComplexDouble){
                 out.Init({1},Type.Double,_tl.device());

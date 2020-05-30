@@ -964,7 +964,8 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__eq__",[](cytnx::Tensor &self, const cytnx::cytnx_bool      &rhs){return self == rhs;})
 
                 .def("__pow__",[](cytnx::Tensor &self, const cytnx::cytnx_double      &p){return cytnx::linalg::Pow(self,p);})
-
+                .def("__matmul__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return cytnx::linalg::Dot(self,rhs);})
+                .def("c__imatmul__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){self = cytnx::linalg::Dot(self,rhs); return self;})
 
                 //linalg >>
                 .def("Svd",&cytnx::Tensor::Svd, py::arg("is_U"), py::arg("is_vT"))
