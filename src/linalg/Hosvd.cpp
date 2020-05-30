@@ -8,7 +8,7 @@ using namespace std;
 namespace cytnx{
     namespace linalg{
          
-        std::vector<Tensor> Hosvd(const Tensor &Tin, const std::vector<cytnx_uint64> &mode, const bool &is_core, const std::vector<cytnx_int64> &truncate_dim){
+        std::vector<Tensor> Hosvd(const Tensor &Tin, const std::vector<cytnx_uint64> &mode, const bool &is_core, const bool &is_Ls, const std::vector<cytnx_int64> &truncate_dim){
             
             //cytnx_error_msg(Tin.shape().size() != 2,"[Svd] error, Svd can only operate on rank-2 Tensor.%s","\n");
             //cytnx_error_msg(!Tin.is_contiguous(), "[Svd] error tensor must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
@@ -29,7 +29,7 @@ namespace cytnx{
 namespace cytnx_extension{
     namespace xlinalg{
         using namespace cytnx;
-        std::vector<cytnx_extension::CyTensor> Hosvd(const cytnx_extension::CyTensor &Tin, const std::vector<cytnx_uint64> &mode, const bool &is_core, const std::vector<cytnx_int64> &truncate_dim){
+        std::vector<cytnx_extension::CyTensor> Hosvd(const cytnx_extension::CyTensor &Tin, const std::vector<cytnx_uint64> &mode, const bool &is_core, const bool &is_Ls,const std::vector<cytnx_int64> &truncate_dim){
 
 
             //checking mode:
@@ -52,7 +52,7 @@ namespace cytnx_extension{
                 in = Tin;
 
             std::vector<CyTensor> out;
-
+            std::vector<CyTensor> Ls;
 
             if(Tin.is_tag()){
                 cytnx_error_msg(true,"[ERROR][Hosvd] currently can only support regular CyTensor without tagged.%s","\n");
@@ -62,10 +62,17 @@ namespace cytnx_extension{
 
                 for(int i=0;i<mode.size();i++){
                     in.set_Rowrank(mode[i]);
+                
                     if(truncate_dim.size()!=0){
-                        out.push_back(Svd_truncate(in,truncate_dim[i],true,false)[1]);
+                        auto tsvdout = Svd_truncate(in,truncate_dim[i],true,false);
+                        out.push_back(tsvdout[1]);
+                        if(is_Ls)
+                            Ls.push_back(tsvdout[0]);
                     }else{
-                        out.push_back(Svd(in,true,false)[1]);
+                        auto tsvdout = Svd(in,true,false);
+                        out.push_back(tsvdout[1]);
+                        if(is_Ls)
+                            Ls.push_back(tsvdout[0]);
                     }
                     out.back().set_label(out.back().rank()-1,out.back().labels().back()-i);
                     perm.clear();                    
@@ -87,7 +94,12 @@ namespace cytnx_extension{
                     }
                     out.push_back(s);
                 }
-      
+     
+                if(is_Ls){
+                    for(int i=0;i<Ls.size();i++)
+                        out.push_back(Ls[i]);
+                }
+             
             }
             return out;
 

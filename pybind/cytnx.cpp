@@ -1103,7 +1103,7 @@ PYBIND11_MODULE(cytnx,m){
     py::class_<cytnx_extension::CyTensor>(mext,"CyTensor")
                 .def(py::init<>())
                 .def(py::init<const cytnx::Tensor&, const cytnx_uint64&>())
-                .def(py::init<const std::vector<cytnx_extension::Bond> &, const std::vector<cytnx_int64> &, const cytnx_int64 &, const unsigned int &,const int &, const bool &>(),py::arg("bonds"),py::arg("labels")=std::vector<cytnx_int64>(),py::arg("rowrank")=(cytnx_int64)(-1),py::arg("dtype")=(unsigned int)(cytnx::Type.Double),py::arg("device")=(int)cytnx::Device.cpu,py::arg("is_diag")=false)
+                .def(py::init<const std::vector<cytnx_extension::Bond> &, const std::vector<cytnx_int64> &, const cytnx_int64 &, const unsigned int &,const int &, const bool &>(),py::arg("bonds"),py::arg("labels")=std::vector<cytnx_int64>(),py::arg("Rowrank")=(cytnx_int64)(-1),py::arg("dtype")=(unsigned int)(cytnx::Type.Double),py::arg("device")=(int)cytnx::Device.cpu,py::arg("is_diag")=false)
                 .def("set_name",&cytnx_extension::CyTensor::set_name)
                 .def("set_label",&cytnx_extension::CyTensor::set_label,py::arg("idx"),py::arg("new_label"))
                 .def("set_labels",&cytnx_extension::CyTensor::set_labels,py::arg("new_labels"))
@@ -1609,7 +1609,7 @@ PYBIND11_MODULE(cytnx,m){
     mext_xlinalg.def("ExpH",&cytnx_extension::xlinalg::ExpH,py::arg("Tin"),py::arg("a")=1.,py::arg("b")=0.);
     mext_xlinalg.def("ExpM",&cytnx_extension::xlinalg::ExpM,py::arg("Tin"),py::arg("a")=1.,py::arg("b")=0.);
     mext_xlinalg.def("Trace",&cytnx_extension::xlinalg::Trace,py::arg("Tin"),py::arg("a"),py::arg("b"),py::arg("by_label")=false);
-    mext_xlinalg.def("Hosvd",&cytnx_extension::xlinalg::Hosvd, py::arg("Tin"),py::arg("mode"),py::arg("is_core")=true,py::arg("truncate_dim")=std::vector<cytnx_int64>());
+    mext_xlinalg.def("Hosvd",&cytnx_extension::xlinalg::Hosvd, py::arg("Tin"),py::arg("mode"),py::arg("is_core")=true,py::arg("is_Ls")=false,py::arg("truncate_dim")=std::vector<cytnx_int64>());
 
     // [Submodule linalg] 
     pybind11::module m_linalg = m.def_submodule("linalg","linear algebra related.");
@@ -1643,7 +1643,7 @@ PYBIND11_MODULE(cytnx,m){
     m_linalg.def("Abs_",&cytnx::linalg::Abs_, py::arg("Tn"));
     m_linalg.def("Max",&cytnx::linalg::Max, py::arg("Tn"));
     m_linalg.def("Min",&cytnx::linalg::Min, py::arg("Tn"));
-    m_linalg.def("Hosvd",&cytnx::linalg::Hosvd, py::arg("Tn"),py::arg("mode"),py::arg("is_core")=true,py::arg("truncate_dim")=std::vector<cytnx_int64>());
+    m_linalg.def("Hosvd",&cytnx::linalg::Hosvd, py::arg("Tn"),py::arg("mode"),py::arg("is_core")=true,py::arg("is_Ls")=false,py::arg("truncate_dim")=std::vector<cytnx_int64>());
     // [Submodule physics]
     pybind11::module m_physics = m.def_submodule("physics","physics related.");
     m_physics.def("spin",[](const cytnx_double &S, const std::string &Comp, const int &device)->Tensor{

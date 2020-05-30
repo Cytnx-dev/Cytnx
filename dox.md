@@ -51,7 +51,8 @@
     41. fix bug in physics::pauli
     42. fix bug in CyTensor.set_label checking element.
     43. Add xlinalg::Hosvd (currently CyTensor only)
-
+    44. change argument of init CyTensor rowrank->Rowrank
+    45. Add PESS example 
 
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn
