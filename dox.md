@@ -56,6 +56,7 @@
     46. Add support for Norm to generic rank-N Tensor
     47. Add @ operator in python API for shorthand of linalg::Dot
     48. Add DMRG example
+    49. C++ API can now have accessor.size() < rank()
 
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn
