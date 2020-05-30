@@ -1,4 +1,3 @@
-from setting import *
 import numpy as np 
 
 import cytnx as cy
