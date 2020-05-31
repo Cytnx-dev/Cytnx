@@ -343,12 +343,7 @@ $(function() {
 <li>python 3.6: conda install -c kaihsinwu cytnx_cuda_36</li>
 <li>python 3.7: conda install -c kaihsinwu cytnx_cuda_37</li>
 </ul>
-<h2>docker image with MKL</h2>
-<p><a href="https://hub.docker.com/r/kaihsinwu/cytnx_mkl">https://hub.docker.com/r/kaihsinwu/cytnx_mkl</a></p>
-<h3>To run:</h3>
-<div class="fragment"><div class="line">$docker pull kaihsinwu/cytnx_mkl</div><div class="line">$docker run -ti kaihsinwu/cytnx_mkl</div></div><!-- fragment --><h3>Note:</h3>
-<p>Once docker image is run, the user code can be compile (for example) with:</p>
-<div class="fragment"><div class="line">$g++-6 -std=c++11 -O3 &lt;your.code.cpp&gt; /opt/cytnx/libcytnx.so</div></div><!-- fragment --><h2>compile</h2>
+<h2>compile</h2>
 <p>1.) create a build folder, and cd to the folder $mkdir build</p>
 <p>$cd build</p>
 <p>2.) resolving the dependency </p><pre class="fragment">$cmake [flags (optional)] &lt;Cytnx repo folder&gt;

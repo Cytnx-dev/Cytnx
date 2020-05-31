@@ -261,25 +261,6 @@
     * python 3.6: conda install -c kaihsinwu cytnx_cuda_36
     * python 3.7: conda install -c kaihsinwu cytnx_cuda_37
 
-
-## docker image with MKL 
-  [https://hub.docker.com/r/kaihsinwu/cytnx_mkl](https://hub.docker.com/r/kaihsinwu/cytnx_mkl)
-
-    
-### To run:
-
-```{.sh}
-    $docker pull kaihsinwu/cytnx_mkl
-    $docker run -ti kaihsinwu/cytnx_mkl
-```
-
-###Note:
-    Once docker image is run, the user code can be compile (for example) with:
-
-```{.sh}
-    $g++-6 -std=c++11 -O3 <your.code.cpp> /opt/cytnx/libcytnx.so
-```
-
 ## compile
     1.) create a build folder, and cd to the folder
         $mkdir build
