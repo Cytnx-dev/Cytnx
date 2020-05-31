@@ -72,6 +72,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classcytnx__extension_1_1Bond-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">cytnx_extension::Bond Class Reference</div>  </div>
@@ -138,6 +139,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6ecd2844084595e476bf553d7738cf8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a338eca6000565df29635c91dd38e1ec3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Bond.html#a338eca6000565df29635c91dd38e1ec3">calc_reverse_qnums</a> ()</td></tr>
 <tr class="separator:a338eca6000565df29635c91dd38e1ec3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b47f7bf888411c3d9868968e6df9938"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Bond.html#a9b47f7bf888411c3d9868968e6df9938">Save</a> (const std::string &amp;fname) const</td></tr>
+<tr class="separator:a9b47f7bf888411c3d9868968e6df9938"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa728056dd9838338214b7a56c327a2b9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Bond.html#aa728056dd9838338214b7a56c327a2b9">Save</a> (const char *fname) const</td></tr>
+<tr class="separator:aa728056dd9838338214b7a56c327a2b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d5449cdcab17b075e7c98c441455e9f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Bond.html#a3d5449cdcab17b075e7c98c441455e9f">operator==</a> (const <a class="el" href="classcytnx__extension_1_1Bond.html">Bond</a> &amp;rhs) const</td></tr>
 <tr class="separator:a3d5449cdcab17b075e7c98c441455e9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af972db83e2423dfbb1f3b0c0bfe09e74"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Bond.html#af972db83e2423dfbb1f3b0c0bfe09e74">operator!=</a> (const <a class="el" href="classcytnx__extension_1_1Bond.html">Bond</a> &amp;rhs) const</td></tr>
@@ -156,6 +161,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a319d4bc0eea45110425cd04ee5f71655"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx__extension_1_1Symmetry.html">Symmetry</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Bond.html#a319d4bc0eea45110425cd04ee5f71655">syms</a> ()</td></tr>
 <tr class="memdesc:a319d4bc0eea45110425cd04ee5f71655"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the vector of symmetry objects by reference.  <a href="#a319d4bc0eea45110425cd04ee5f71655">More...</a><br /></td></tr>
 <tr class="separator:a319d4bc0eea45110425cd04ee5f71655"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a6c8c2fe6c8eefed4479162ef10a08cd5"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcytnx__extension_1_1Bond.html">cytnx_extension::Bond</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Bond.html#a6c8c2fe6c8eefed4479162ef10a08cd5">Load</a> (const std::string &amp;fname)</td></tr>
+<tr class="separator:a6c8c2fe6c8eefed4479162ef10a08cd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1934962e7d3a2914c36f50556d20ae16"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcytnx__extension_1_1Bond.html">cytnx_extension::Bond</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Bond.html#a1934962e7d3a2914c36f50556d20ae16">Load</a> (const char *fname)</td></tr>
+<tr class="separator:a1934962e7d3a2914c36f50556d20ae16"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>the object contains auxiliary properties for each Tensor rank (bond) </p>
@@ -918,6 +930,58 @@ Dim = 4 |type: &lt;BRA
 </pre> 
 </div>
 </div>
+<a id="a6c8c2fe6c8eefed4479162ef10a08cd5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c8c2fe6c8eefed4479162ef10a08cd5">&#9670;&nbsp;</a></span>Load() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx__extension_1_1Bond.html">Bond</a> cytnx_extension::Bond::Load </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>fname</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1934962e7d3a2914c36f50556d20ae16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1934962e7d3a2914c36f50556d20ae16">&#9670;&nbsp;</a></span>Load() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx__extension_1_1Bond.html">Bond</a> cytnx_extension::Bond::Load </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>fname</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aae2eee6461ffde1a0f192e0b580b3830"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aae2eee6461ffde1a0f192e0b580b3830">&#9670;&nbsp;</a></span>Nsym()</h2>
 
@@ -1063,6 +1127,42 @@ Dim = 4 |type: &lt;BRA
 
 <p>return copy of the current quantum number set(s) </p>
 <dl class="section return"><dt>Returns</dt><dd>[2d vector] with shape: (dim, # of <a class="el" href="classcytnx__extension_1_1Symmetry.html" title="the symmetry object ">Symmetry</a>) </dd></dl>
+
+</div>
+</div>
+<a id="a9b47f7bf888411c3d9868968e6df9938"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b47f7bf888411c3d9868968e6df9938">&#9670;&nbsp;</a></span>Save() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cytnx_extension::Bond::Save </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>fname</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa728056dd9838338214b7a56c327a2b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa728056dd9838338214b7a56c327a2b9">&#9670;&nbsp;</a></span>Save() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cytnx_extension::Bond::Save </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>fname</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>

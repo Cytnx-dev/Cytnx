@@ -1,5 +1,7 @@
 #include "Symmetry.hpp"
 #include <string>
+#include <fstream>
+
 #ifdef UNI_OMP
     #include <omp.h>
 #endif
@@ -144,6 +146,74 @@ namespace cytnx_extension{
     void cytnx_extension::ZnSymmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in){
         out = in*-1;
     }
+
+
+
+    void cytnx_extension::Symmetry::Save(const std::string &fname) const{
+        fstream f;
+        f.open((fname+".cysym"),ios::out|ios::trunc|ios::binary);
+        if(!f.is_open()){
+            cytnx_error_msg(true,"[ERROR] invalid file path for save.%s","\n");
+        }
+        this->_Save(f);
+        f.close();
+    }
+    void cytnx_extension::Symmetry::Save(const char* fname) const{
+        fstream f;
+        string ffname = string(fname) + ".cysym";
+        f.open((ffname),ios::out|ios::trunc|ios::binary);
+        if(!f.is_open()){
+            cytnx_error_msg(true,"[ERROR] invalid file path for save.%s","\n");
+        }
+        this->_Save(f);
+        f.close();
+    }
+
+    cytnx_extension::Symmetry cytnx_extension::Symmetry::Load(const std::string &fname){
+        Symmetry out;
+        fstream f;
+        f.open(fname,ios::in|ios::binary);
+        if(!f.is_open()){
+            cytnx_error_msg(true,"[ERROR] invalid file path for load.%s","\n");
+        }
+        out._Load(f);
+        f.close();
+        return out;
+    }
+
+    cytnx_extension::Symmetry cytnx_extension::Symmetry::Load(const char* fname){
+        Symmetry out;
+        fstream f;
+        f.open(fname,ios::in|ios::binary);
+        if(!f.is_open()){
+            cytnx_error_msg(true,"[ERROR] invalid file path for load.%s","\n");
+        }
+        out._Load(f);
+        f.close();
+        return out;
+    }
+
+    //==================
+    void cytnx_extension::Symmetry::_Save(fstream &f) const{
+        cytnx_error_msg(!f.is_open(),"[ERROR][Symmetry] invalid fstream%s","\n");
+        unsigned int IDDs = 777;
+        f.write((char*)&IDDs,sizeof(unsigned int));
+        f.write((char*)&this->_impl->stype_id,sizeof(int));        
+        f.write((char*)&this->_impl->n,sizeof(int));
+                
+    }
+    void cytnx_extension::Symmetry::_Load(fstream &f){
+        cytnx_error_msg(!f.is_open(),"[ERROR][Symmetry] invalid fstream%s","\n");
+        unsigned int tmpIDDs;
+        f.read((char*)&tmpIDDs,sizeof(unsigned int));
+        cytnx_error_msg(tmpIDDs!=777,"[ERROR] the object is not a cytnx symmetry!%s","\n");
+        int stype_in;
+        int n_in;
+        f.read((char*)&stype_in,sizeof(int));
+        f.read((char*)&n_in,sizeof(int));
+        this->Init(stype_in,n_in);
+    }
+
 
 //++++++++++++++++++++++++
     SymmetryType_class SymType;

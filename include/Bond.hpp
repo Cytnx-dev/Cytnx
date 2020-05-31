@@ -6,6 +6,7 @@
 #include "cytnx_error.hpp"
 #include <initializer_list>
 #include <vector>
+#include <fstream>
 #include "intrusive_ptr_base.hpp"
 #include "utils/vec_clone.hpp"
 namespace cytnx_extension{
@@ -345,6 +346,18 @@ namespace cytnx_extension{
             std::vector<std::vector<cytnx_int64> > calc_reverse_qnums(){
                 return this->_impl->calc_reverse_qnums();
             }
+
+
+            void Save(const std::string &fname) const;
+            void Save(const char* fname) const;
+            static cytnx_extension::Bond Load(const std::string &fname);
+            static cytnx_extension::Bond Load(const char* fname);
+
+
+            /// @cond
+            void _Save(std::fstream &f) const;
+            void _Load(std::fstream &f);
+            /// @endcond
 
             bool operator==(const Bond &rhs) const;
             bool operator!=(const Bond &rhs) const;

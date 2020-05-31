@@ -589,8 +589,12 @@ namespace cytnx_extension{
     }
 
 
-
-
+    void DenseCyTensor::_save_dispatch(std::fstream &f) const{
+        this->_block._Save(f); 
+    }
+    void DenseCyTensor::_load_dispatch(std::fstream &f){
+        this->_block._Load(f); 
+    }
 
 
 }

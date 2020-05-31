@@ -59,6 +59,8 @@
     49. C++ API can now have accessor.size() < rank()
     50. Remove redundant output of Inv.
     51. Add Pow, Pow_ for CyTensor.
+    52. Add Symmetry.Save/Load
+    53. Symmetry/Tensor/Storage/Bond/CyTensor Save/Load re-invented for more simple usage
 
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn

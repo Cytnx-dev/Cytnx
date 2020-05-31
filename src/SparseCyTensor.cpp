@@ -748,5 +748,13 @@ namespace cytnx_extension{
     }
 
 
+    void SparseCyTensor::_save_dispatch(std::fstream &f) const{
+        cytnx_error_msg(true,"[ERROR] Save for SparseCyTensor is under developing!!%s","\n");
+    }
+    void SparseCyTensor::_load_dispatch(std::fstream &f){
+        cytnx_error_msg(true,"[ERROR] Save for SparseCyTensor is under developing!!%s","\n");
+    }
+
+
 
 }//namespace cytnx

@@ -13,6 +13,7 @@
 #include <map>
 #include <utility>
 #include <initializer_list>
+#include <fstream>
 #include <algorithm>
 #include "Symmetry.hpp"
 #include "Bond.hpp"
@@ -40,15 +41,16 @@ namespace cytnx_extension{
     class CyTensor_base: public intrusive_ptr_base<CyTensor_base>{
 
         public:
-
-            std::vector< Bond > _bonds;
-            std::vector<cytnx_int64> _labels;
+            int uten_type_id; //the unitensor type id.
             bool _is_braket_form;
             bool _is_tag;
-            cytnx_int64 _Rowrank;
             bool _is_diag;
+            cytnx_int64 _Rowrank;
             std::string _name;
-            int uten_type_id; //the unitensor type id.
+            std::vector<cytnx_int64> _labels;
+            std::vector< Bond > _bonds;
+
+
 
             bool _update_braket(){
                 if(_bonds.size()==0) return false;
@@ -228,7 +230,6 @@ namespace cytnx_extension{
             virtual void Dagger_();
 
             virtual void tag();
-            
 
             virtual bool elem_exists(const std::vector<cytnx_uint64> &locator) const;
             // this a workaround, as virtual function cannot template.
@@ -241,7 +242,8 @@ namespace cytnx_extension{
             virtual const cytnx_complex64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux)const;
             virtual const cytnx_double& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux)const;
             virtual const cytnx_float& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux)const;
-
+            virtual void _save_dispatch(std::fstream &f) const;
+            virtual void _load_dispatch(std::fstream &f);
 
             virtual ~CyTensor_base(){};
     };
@@ -503,7 +505,9 @@ namespace cytnx_extension{
                     this->_is_braket_form = this->_update_braket();
                 }
             }
-
+            
+            void _save_dispatch(std::fstream &f) const;
+            void _load_dispatch(std::fstream &f);
             // end virtual function              
 
             
@@ -518,17 +522,17 @@ namespace cytnx_extension{
         protected:
         
         public:
-            std::vector<Tensor> _blocks;
-            std::vector<cytnx_uint64> _mapper;
-            std::vector<cytnx_uint64> _inv_mapper;
 
             cytnx_uint64 _inner_Rowrank;
             std::vector<std::vector<cytnx_int64> > _blockqnums;
+            std::vector<cytnx_uint64> _mapper;
+            std::vector<cytnx_uint64> _inv_mapper;
             std::vector<std::vector<cytnx_uint64> > _inner2outer_row;
             std::vector<std::vector<cytnx_uint64> > _inner2outer_col;
             std::map<cytnx_uint64,std::pair<cytnx_uint64,cytnx_uint64> > _outer2inner_row;
             std::map<cytnx_uint64, std::pair<cytnx_uint64,cytnx_uint64> > _outer2inner_col;
-            
+
+            std::vector<Tensor> _blocks;
 
             bool _contiguous;
             void set_meta(SparseCyTensor *tmp, const bool &inner, const bool &outer)const{
@@ -895,6 +899,8 @@ namespace cytnx_extension{
 
 
             bool elem_exists(const std::vector<cytnx_uint64> &locator) const;
+            void _save_dispatch(std::fstream &f) const;
+            void _load_dispatch(std::fstream &f);
             // end virtual func
 
 
@@ -1322,6 +1328,16 @@ namespace cytnx_extension{
                 this->_impl->set_elem<T>(locator,rc);
             }
 
+
+            void Save(const std::string &fname) const;            
+            void Save(const char* fname) const;            
+            static CyTensor Load(const std::string &fname);            
+            static CyTensor  Load(const char* fname);            
+
+            /// @cond
+            void _Load(std::fstream &f);
+            void _Save(std::fstream &f) const;
+            /// @endcond
 
     };//class CyTensor
 

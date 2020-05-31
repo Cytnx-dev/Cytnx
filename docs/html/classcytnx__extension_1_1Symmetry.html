@@ -120,6 +120,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af3dc8510b1badc39b66430b414d73929"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9eef1970926700afd56c54598ea107d3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Symmetry.html#a9eef1970926700afd56c54598ea107d3">reverse_rule</a> (const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;in)</td></tr>
 <tr class="separator:a9eef1970926700afd56c54598ea107d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1fc145e96636942edbc3608671b6f6f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Symmetry.html#a1fc145e96636942edbc3608671b6f6f8">Save</a> (const std::string &amp;fname) const</td></tr>
+<tr class="separator:a1fc145e96636942edbc3608671b6f6f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab79ab3470c487cd4405932420912ba84"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Symmetry.html#ab79ab3470c487cd4405932420912ba84">Save</a> (const char *fname) const</td></tr>
+<tr class="separator:ab79ab3470c487cd4405932420912ba84"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa6686d4a74e2848d3ac3083e8c9e80c7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Symmetry.html#aa6686d4a74e2848d3ac3083e8c9e80c7">operator==</a> (const <a class="el" href="classcytnx__extension_1_1Symmetry.html">Symmetry</a> &amp;rhs) const</td></tr>
 <tr class="separator:aa6686d4a74e2848d3ac3083e8c9e80c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adae785fa8600b3a21d04f274df5ef822"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Symmetry.html#adae785fa8600b3a21d04f274df5ef822">operator!=</a> (const <a class="el" href="classcytnx__extension_1_1Symmetry.html">Symmetry</a> &amp;rhs) const</td></tr>
@@ -133,6 +137,10 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a3b927ac210a3755137a7723f1134d91a"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcytnx__extension_1_1Symmetry.html">Symmetry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Symmetry.html#a3b927ac210a3755137a7723f1134d91a">Zn</a> (const int &amp;<a class="el" href="classcytnx__extension_1_1Symmetry.html#aa31e4ba66b21e5a47393e748455a6a69">n</a>)</td></tr>
 <tr class="memdesc:a3b927ac210a3755137a7723f1134d91a"><td class="mdescLeft">&#160;</td><td class="mdescRight">create a Zn descrete symmetry object with \(n\in\mathbb{N}\)  <a href="#a3b927ac210a3755137a7723f1134d91a">More...</a><br /></td></tr>
 <tr class="separator:a3b927ac210a3755137a7723f1134d91a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa28680a7d19be8796ef4045e99481efb"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcytnx__extension_1_1Symmetry.html">Symmetry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Symmetry.html#aa28680a7d19be8796ef4045e99481efb">Load</a> (const std::string &amp;fname)</td></tr>
+<tr class="separator:aa28680a7d19be8796ef4045e99481efb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2130f58599c3d4946936fe0da339f94c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcytnx__extension_1_1Symmetry.html">Symmetry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx__extension_1_1Symmetry.html#a2130f58599c3d4946936fe0da339f94c">Load</a> (const char *fname)</td></tr>
+<tr class="separator:a2130f58599c3d4946936fe0da339f94c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>the symmetry object </p>
@@ -446,6 +454,58 @@ True
 
 </div>
 </div>
+<a id="aa28680a7d19be8796ef4045e99481efb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa28680a7d19be8796ef4045e99481efb">&#9670;&nbsp;</a></span>Load() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx__extension_1_1Symmetry.html">cytnx_extension::Symmetry</a> cytnx_extension::Symmetry::Load </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>fname</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2130f58599c3d4946936fe0da339f94c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2130f58599c3d4946936fe0da339f94c">&#9670;&nbsp;</a></span>Load() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx__extension_1_1Symmetry.html">cytnx_extension::Symmetry</a> cytnx_extension::Symmetry::Load </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>fname</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aa31e4ba66b21e5a47393e748455a6a69"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa31e4ba66b21e5a47393e748455a6a69">&#9670;&nbsp;</a></span>n()</h2>
 
@@ -573,6 +633,42 @@ True
 <span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1fc145e96636942edbc3608671b6f6f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1fc145e96636942edbc3608671b6f6f8">&#9670;&nbsp;</a></span>Save() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cytnx_extension::Symmetry::Save </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>fname</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab79ab3470c487cd4405932420912ba84"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab79ab3470c487cd4405932420912ba84">&#9670;&nbsp;</a></span>Save() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cytnx_extension::Symmetry::Save </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>fname</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
 </div><div class="memdoc">
 
 </div>

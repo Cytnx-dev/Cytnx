@@ -261,7 +261,13 @@ namespace cytnx_extension{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
         }
 
+        void CyTensor_base::_save_dispatch(std::fstream &f) const{
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+        }
 
+        void CyTensor_base::_load_dispatch(std::fstream &f){
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+        }
 
         //-----------------------------------------
         std::ostream& operator<<(std::ostream& os, const CyTensor &in){

@@ -199,7 +199,7 @@ namespace cytnx{
     //===================================================================
     //wrapper
 
-    void Tensor::Save(const std::string &fname){
+    void Tensor::Save(const std::string &fname) const{
         fstream f;
         f.open((fname+".cytn"),ios::out|ios::trunc|ios::binary);
         if(!f.is_open()){
@@ -208,7 +208,7 @@ namespace cytnx{
         this->_Save(f);
         f.close();
     }
-    void Tensor::Save(const char* fname){
+    void Tensor::Save(const char* fname) const{
         fstream f;
         string ffname = string(fname) + ".cytn";
         f.open(ffname,ios::out|ios::trunc|ios::binary);
@@ -218,7 +218,7 @@ namespace cytnx{
         this->_Save(f);
         f.close();
     }
-    void Tensor::_Save(fstream &f){
+    void Tensor::_Save(fstream &f) const{
         //header
         //check:
         cytnx_error_msg(!f.is_open(),"[ERROR] invalid fstream!.%s","\n");
@@ -239,23 +239,27 @@ namespace cytnx{
 
     }
 
-    void Tensor::Load(const std::string &fname){
+    Tensor Tensor::Load(const std::string &fname){
+        Tensor out;
         fstream f;
         f.open(fname,ios::in|ios::binary);
         if(!f.is_open()){
             cytnx_error_msg(true,"[ERROR] invalid file path for load.%s","\n");
         }
-        this->_Load(f);
+        out._Load(f);
         f.close();
+        return out;
     }
-    void Tensor::Load(const char* fname){
+    Tensor Tensor::Load(const char* fname){
+        Tensor out;
         fstream f;
         f.open(fname,ios::in|ios::binary);
         if(!f.is_open()){
             cytnx_error_msg(true,"[ERROR] invalid file path for load.%s","\n");
         }
-        this->_Load(f);
+        out._Load(f);
         f.close();
+        return out;
     }
     void Tensor::_Load(fstream &f){
         

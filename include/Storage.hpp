@@ -754,8 +754,10 @@ namespace cytnx{
             }
             ///@endcond
 
-            void _Save(std::fstream &f);
+            /// @cond
+            void _Save(std::fstream &f) const;
             void _Load(std::fstream &f);
+            /// @endcond
 
             /**
             @brief Save current Storage to file
@@ -765,8 +767,8 @@ namespace cytnx{
                 save the Storage to file with file path specify with input param 'fname' with postfix ".cyst"
 
             */            
-            void Save(const std::string &fname);
-            void Save(const char* fname);
+            void Save(const std::string &fname) const;
+            void Save(const char* fname) const;
             /**
             @brief Load current Storage from file
             @param fname file name
@@ -775,8 +777,8 @@ namespace cytnx{
                 load the Storage from file with file path specify with input param 'fname'.
 
             */            
-            void Load(const std::string &fname);
-            void Load(const char* fname);
+            static Storage Load(const std::string &fname);
+            static Storage Load(const char* fname);
 
             /**
             @brief cast the type of current Storage

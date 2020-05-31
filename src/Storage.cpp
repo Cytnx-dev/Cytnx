@@ -87,7 +87,7 @@ namespace cytnx{
     }
 
 
-    void Storage::Save(const std::string &fname){
+    void Storage::Save(const std::string &fname) const{
         fstream f;
         f.open((fname+".cyst"),ios::out|ios::trunc|ios::binary);
         if(!f.is_open()){
@@ -96,7 +96,7 @@ namespace cytnx{
         this->_Save(f);   
         f.close();
     }
-    void Storage::Save(const char* fname){
+    void Storage::Save(const char* fname) const{
         fstream f;
         string ffname = string(fname) + ".cyst";
         f.open(ffname,ios::out|ios::trunc|ios::binary);
@@ -106,7 +106,7 @@ namespace cytnx{
         this->_Save(f);
         f.close();
     }
-    void Storage::_Save(fstream &f){
+    void Storage::_Save(fstream &f) const{
         //header
         //check:
         cytnx_error_msg(!f.is_open(),"[ERROR] invalid fstream!.%s","\n");
@@ -136,23 +136,27 @@ namespace cytnx{
     }
 
 
-    void Storage::Load(const std::string &fname){
+    Storage Storage::Load(const std::string &fname){
+        Storage out;
         fstream f;
         f.open(fname,ios::in|ios::binary);
         if(!f.is_open()){
             cytnx_error_msg(true,"[ERROR] invalid file path for load.%s","\n");
         }
-        this->_Load(f);   
+        out._Load(f);   
         f.close();
+        return out;
     }
-    void Storage::Load(const char* fname){
+    Storage Storage::Load(const char* fname){
+        Storage out;
         fstream f;
         f.open(fname,ios::in|ios::binary);
         if(!f.is_open()){
             cytnx_error_msg(true,"[ERROR] invalid file path for load.%s","\n");
         }
-        this->_Load(f);
+        out._Load(f);
         f.close();
+        return out;
     }
     void Storage::_Load(fstream &f){
         //header

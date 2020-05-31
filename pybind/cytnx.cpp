@@ -464,7 +464,7 @@ PYBIND11_MODULE(cytnx,m){
                 .def("append",&cytnx::Storage::append<cytnx::cytnx_uint16   >, py::arg("val"))
                 .def("append",&cytnx::Storage::append<cytnx::cytnx_bool     >, py::arg("val"))
                 .def("Save",[](cytnx::Storage &self, const std::string &fname){self.Save(fname);},py::arg("fname"))
-                .def("Load",[](cytnx::Storage &self, const std::string &fname){self.Load(fname);},py::arg("fname"))
+                .def_static("Load",[](const std::string &fname){return cytnx::Storage::Load(fname);},py::arg("fname"))
                 .def("real",&cytnx::Storage::real)
                 .def("imag",&cytnx::Storage::imag)
                 ;
@@ -632,7 +632,7 @@ PYBIND11_MODULE(cytnx,m){
                 .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_bool     >, py::arg("val"))
 
                 .def("Save",[](cytnx::Tensor &self, const std::string &fname){self.Save(fname);},py::arg("fname"))
-                .def("Load",[](cytnx::Tensor &self, const std::string &fname){self.Load(fname);},py::arg("fname"))
+                .def_static("Load",[](const std::string &fname){return cytnx::Tensor::Load(fname);},py::arg("fname"))
 
                 .def("__len__",[](const cytnx::Tensor &self){
                     if(self.dtype()==Type.Void){
@@ -1068,6 +1068,8 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__copy__",&cytnx_extension::Symmetry::clone)
                 .def("__deepcopy__",&cytnx_extension::Symmetry::clone)
                 .def("__eq__",&cytnx_extension::Symmetry::operator==)
+                .def("Save",[](cytnx_extension::Symmetry &self, const std::string &fname){self.Save(fname);},py::arg("fname"))
+                .def_static("Load",[](const std::string &fname){return cytnx_extension::Symmetry::Load(fname);},py::arg("fname"))
                 //.def("combine_rule",&cytnx_extension::Symmetry::combine_rule,py::arg("qnums_1"),py::arg("qnums_2"))
                 //.def("combine_rule_",&cytnx_extension::Symmetry::combine_rule_,py::arg("qnums_l"),py::arg("qnums_r"))
                 //.def("check_qnum", &cytnx_extension::Symmetry::check_qnum,py::arg("qnum"))
@@ -1101,6 +1103,8 @@ PYBIND11_MODULE(cytnx,m){
             .def("combineBond_",&cytnx_extension::Bond::combineBond_)
             .def("combineBonds",&cytnx_extension::Bond::combineBonds)
             .def("combineBonds_", &cytnx_extension::Bond::combineBonds_)
+            .def("Save",[](cytnx_extension::Bond &self, const std::string &fname){self.Save(fname);},py::arg("fname"))
+            .def_static("Load",[](const std::string &fname){return cytnx_extension::Bond::Load(fname);},py::arg("fname"))
             ;
 
 
@@ -1316,6 +1320,8 @@ PYBIND11_MODULE(cytnx,m){
                 .def("clone",&cytnx_extension::CyTensor::clone)
                 .def("__copy__",&cytnx_extension::CyTensor::clone)
                 .def("__deepcopy__",&cytnx_extension::CyTensor::clone)
+                .def("Save",[](cytnx_extension::CyTensor &self, const std::string &fname){self.Save(fname);},py::arg("fname"))
+                .def_static("Load",[](const std::string &fname){return cytnx_extension::CyTensor::Load(fname);},py::arg("fname"))
                 //.def("permute",&cytnx_extension::CyTensor::permute,py::arg("mapper"),py::arg("Rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
                 //.def("permute_",&cytnx_extension::CyTensor::permute_,py::arg("mapper"),py::arg("Rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
 

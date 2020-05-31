@@ -2,11 +2,31 @@ import numpy as np
 import cytnx as cy
 from cytnx import cytnx_extension as cyx
 
+tt = cyx.Bond(3,cyx.BD_BRA,[[2],[0],[1]],[cyx.Symmetry.U1()])
+tt.Save("tt")
+print(tt)
+
+tt2 = cyx.Bond.Load("tt.cybd")
+print(tt2)
+exit(1)
+
+
+tt = cyx.Symmetry.Zn(2)
+tt.Save("z2")
+
+tt = cyx.Symmetry.Load("z2.cysym")
+
+
 
 tt = cy.ones([3,3],dtype=cy.Type.ComplexDouble)
 print(tt.Norm())
 tt@=tt
-print(tt@tt)
+print(tt)
+
+tt.Save("tt")
+
+t2 = cy.Tensor.Load("tt.cytn")
+print(t2)
 
 exit(1)
 

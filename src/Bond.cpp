@@ -214,6 +214,100 @@ namespace cytnx_extension{
         return !(*this == rhs);
     }
 
+
+    void Bond::Save(const std::string &fname) const{
+        fstream f;
+        f.open((fname+".cybd"),ios::out|ios::trunc|ios::binary);
+        if(!f.is_open()){
+            cytnx_error_msg(true,"[ERROR] invalid file path for save.%s","\n");
+        }
+        this->_Save(f);
+        f.close();
+    }
+    void Bond::Save(const char* fname) const{
+        fstream f;
+        string ffname = string(fname) + ".cybd";
+        f.open((ffname),ios::out|ios::trunc|ios::binary);
+        if(!f.is_open()){
+            cytnx_error_msg(true,"[ERROR] invalid file path for save.%s","\n");
+        }
+        this->_Save(f);
+        f.close();
+    }
+
+    Bond Bond::Load(const std::string &fname){
+        Bond out;
+        fstream f;
+        f.open(fname,ios::in|ios::binary);
+        if(!f.is_open()){
+            cytnx_error_msg(true,"[ERROR] invalid file path for load.%s","\n");
+        }
+        out._Load(f);
+        f.close();
+        return out;
+    }
+
+    Bond Bond::Load(const char* fname){
+        Bond out;
+        fstream f;
+        f.open(fname,ios::in|ios::binary);
+        if(!f.is_open()){
+            cytnx_error_msg(true,"[ERROR] invalid file path for load.%s","\n");
+        }
+        out._Load(f);
+        f.close();
+        return out;
+    }
+
+
+    void Bond::_Save(fstream &f) const{
+        cytnx_error_msg(!f.is_open(),"[ERROR][Bond] invalid fstream%s","\n");
+        unsigned int IDDs = 666;
+        f.write((char*)&IDDs,sizeof(unsigned int));
+        f.write((char*)&this->_impl->_dim,sizeof(cytnx_uint64));        
+        f.write((char*)&this->_impl->_type,sizeof(int));
+
+        // write Nsyms:
+        cytnx_uint64 Nsym = this->_impl->_syms.size();
+        f.write((char*)&Nsym,sizeof(cytnx_uint64));
+        if(Nsym!=0){
+            // writing qnums:
+            for(cytnx_uint64 i=0;i<this->_impl->_dim;i++){
+                f.write((char*)&(this->_impl->_qnums[i][0]),sizeof(cytnx_int64)*Nsym);
+            }
+            // 
+            for(int j=0;j<Nsym;j++){
+                this->_impl->_syms[j]._Save(f);
+            }
+        }
+
+    }
+    void Bond::_Load(fstream &f){
+        cytnx_error_msg(!f.is_open(),"[ERROR][Bond] invalid fstream%s","\n");
+        unsigned int tmpIDDs;
+        f.read((char*)&tmpIDDs,sizeof(unsigned int));
+        cytnx_error_msg(tmpIDDs!=666,"[ERROR] the object is not a cytnx symmetry!%s","\n");
+        f.read((char*)&this->_impl->_dim,sizeof(cytnx_uint64));
+        f.read((char*)&this->_impl->_type,sizeof(int));
+
+        //read Nsyms:
+        cytnx_uint64 Nsym_in;
+        f.read((char*)&Nsym_in,sizeof(cytnx_uint64));
+        if(Nsym_in!=0){
+            this->_impl->_qnums = std::vector< std::vector<cytnx_int64> >(this->_impl->_dim, std::vector<cytnx_int64>(Nsym_in));
+            this->_impl->_syms.resize(Nsym_in);
+            // reading qnums:
+            for(cytnx_uint64 i=0;i<this->_impl->_dim;i++){
+                f.read((char*)&(this->_impl->_qnums[i][0]),sizeof(cytnx_int64)*Nsym_in);
+            }
+            // 
+            for(int j=0;j<Nsym_in;j++){
+                this->_impl->_syms[j]._Load(f);
+            }
+        }
+
+    }
+
     std::ostream& operator<<(std::ostream &os,const Bond &bin){
         char* buffer = (char*)malloc(sizeof(char)*256);
         os << "Dim = " << bin.dim() << " |";

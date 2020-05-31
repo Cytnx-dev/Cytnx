@@ -47,7 +47,7 @@ namespace cytnx_extension{
 
             cytnx_int64 reverse_rule( const cytnx_int64 &in);
 
-
+            
             virtual void Init(const int &n){};
             virtual boost::intrusive_ptr<Symmetry_base> clone(){return nullptr;};
             virtual bool check_qnum(const cytnx_int64 &in_qnum); // check the passed in qnums satisfy the symmetry requirement.
@@ -328,6 +328,16 @@ namespace cytnx_extension{
             cytnx_int64 reverse_rule(const cytnx_int64 &in){
                 return this->_impl->reverse_rule(in);
             }
+
+            void Save(const std::string &fname) const;
+            void Save(const char* fname) const;
+            static Symmetry Load(const std::string &fname);
+            static Symmetry Load(const char* fname);
+
+            /// @cond
+            void _Save(std::fstream &f) const;
+            void _Load(std::fstream &f);
+            /// @endcond
 
             bool operator==(const Symmetry &rhs) const;
             bool operator!=(const Symmetry &rhs) const;
