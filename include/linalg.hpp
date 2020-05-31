@@ -64,7 +64,28 @@ namespace cytnx_extension{
         cytnx_extension::CyTensor Trace(const cytnx_extension::CyTensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false);
 
 
-    }
+        // Pow:
+        //==================================================
+        /**
+        @brief take power p on all the elements in CyTensor.
+        @param p, the power
+        @return 
+            [CyTensor]
+    
+        */
+        CyTensor Pow(const CyTensor &Tin, const double &p);
+        
+        /**
+        @brief inplace perform power on all the elements in CyTensor.
+        @param Tin, the input CyTensor.
+        @param p, the power.
+        
+        description:
+            on return, the elements in Tin will be modified to it's exponetial value. 
+        */
+        void Pow_(CyTensor &Tin, const double &p);
+
+    }//xlinalg
 
     cytnx_extension::CyTensor operator+(const cytnx_extension::CyTensor &Lt, const cytnx_extension::CyTensor &Rt);
     template<class T>

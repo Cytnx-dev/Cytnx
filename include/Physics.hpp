@@ -4,6 +4,7 @@
 #include "Device.hpp"
 #include "cytnx_error.hpp"
 #include "Tensor.hpp"
+#include "CyTensor.hpp"
 #include <vector>
 #include <initializer_list>
 #include <string>
@@ -47,6 +48,21 @@ namespace cytnx{
         #define hBar cytnx_double(1.05457181e-34)    // J-s
 
     }
+}//namespace cytnx
+
+/// @cond
+namespace cytnx_extension{
+    namespace qgates{
+        CyTensor pauli_x(const int &device=Device.cpu);
+        CyTensor pauli_y(const int &device=Device.cpu);
+        CyTensor pauli_z(const int &device=Device.cpu);
+        CyTensor hadamard(const int &device=Device.cpu);
+        CyTensor phase_shift(const cytnx_double &phase, const int &device=Device.cpu);
+        CyTensor swap(const int &device=Device.cpu);
+        CyTensor sqrt_swap(const int &device=Device.cpu);
+    }
 }
+/// @endcond
+
 
 #endif

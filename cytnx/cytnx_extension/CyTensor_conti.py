@@ -54,3 +54,11 @@ def tag(self):
     self.ctag();
     return self
 
+@add_method(CyTensor)
+def __ipow__(self,p):
+    self.c__ipow__(p);
+    return self
+@add_method(CyTensor)
+def Pow_(self,p):
+    self.cPow_(p)
+    return self

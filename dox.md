@@ -57,6 +57,8 @@
     47. Add @ operator in python API for shorthand of linalg::Dot
     48. Add DMRG example
     49. C++ API can now have accessor.size() < rank()
+    50. Remove redundant output of Inv.
+    51. Add Pow, Pow_ for CyTensor.
 
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn
@@ -211,7 +213,6 @@
 ## Physics Category
     Tensor: \link cytnx::physics::spin spin()\endlink  \link cytnx::physics::pauli pauli()\endlink
 
-     
 ## Random 
     See \link cytnx::random cytnx::random \endlink for further details
 

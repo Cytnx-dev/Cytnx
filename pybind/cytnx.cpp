@@ -964,6 +964,7 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__eq__",[](cytnx::Tensor &self, const cytnx::cytnx_bool      &rhs){return self == rhs;})
 
                 .def("__pow__",[](cytnx::Tensor &self, const cytnx::cytnx_double      &p){return cytnx::linalg::Pow(self,p);})
+                .def("c__ipow__",[](cytnx::Tensor &self, const cytnx::cytnx_double      &p){cytnx::linalg::Pow_(self,p);})
                 .def("__matmul__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return cytnx::linalg::Dot(self,rhs);})
                 .def("c__imatmul__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){self = cytnx::linalg::Dot(self,rhs); return self;})
 
@@ -976,6 +977,8 @@ PYBIND11_MODULE(cytnx,m){
                 .def("Conj",&cytnx::Tensor::Conj)
                 .def("cExp_",&cytnx::Tensor::Exp_)
                 .def("Exp",&cytnx::Tensor::Exp)
+                .def("Pow",&cytnx::Tensor::Pow)
+                .def("cPow_",&cytnx::Tensor::Pow_)
                 .def("Norm",&cytnx::Tensor::Norm)
                 .def("Trace",&cytnx::Tensor::Trace)
                 ;
@@ -1591,6 +1594,10 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__ifloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int16     &rhs){return self.Div_(rhs);})
                 .def("__ifloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint16    &rhs){return self.Div_(rhs);})
                 .def("__ifloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_bool      &rhs){return self.Div_(rhs);})
+                .def("__pow__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_double &p){return self.Pow(p);})
+                .def("c__ipow__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_double &p){self.Pow_(p);})
+                .def("Pow",&cytnx_extension::CyTensor::Pow)
+                .def("cPow_",&cytnx_extension::CyTensor::Pow_)
                 .def("cConj_",&cytnx_extension::CyTensor::Conj_)
                 .def("Conj",&cytnx_extension::CyTensor::Conj)
                 .def("cTrace_",&cytnx_extension::CyTensor::Trace_,py::arg("a"),py::arg("b"),py::arg("by_label")=false)
@@ -1611,6 +1618,8 @@ PYBIND11_MODULE(cytnx,m){
     mext_xlinalg.def("ExpM",&cytnx_extension::xlinalg::ExpM,py::arg("Tin"),py::arg("a")=1.,py::arg("b")=0.);
     mext_xlinalg.def("Trace",&cytnx_extension::xlinalg::Trace,py::arg("Tin"),py::arg("a"),py::arg("b"),py::arg("by_label")=false);
     mext_xlinalg.def("Hosvd",&cytnx_extension::xlinalg::Hosvd, py::arg("Tin"),py::arg("mode"),py::arg("is_core")=true,py::arg("is_Ls")=false,py::arg("truncate_dim")=std::vector<cytnx_int64>());
+    mext_xlinalg.def("Pow",&cytnx_extension::xlinalg::Pow,py::arg("Tin"),py::arg("p"));
+    mext_xlinalg.def("Pow_",&cytnx_extension::xlinalg::Pow_,py::arg("Tin"),py::arg("p"));
 
     // [Submodule linalg] 
     pybind11::module m_linalg = m.def_submodule("linalg","linear algebra related.");

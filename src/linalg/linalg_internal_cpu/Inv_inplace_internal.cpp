@@ -24,7 +24,7 @@ namespace cytnx{
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dgetri': Lapack INFO = ", info);
 
             lwork = (cytnx_int32)worktest;
-            std::cout << lwork << std::endl;
+            //std::cout << lwork << std::endl;
             cytnx_double *work = (cytnx_double*)malloc(lwork * sizeof(cytnx_double));
             dgetri(&L, (cytnx_double*)iten->Mem, &L, ipiv, work, &lwork, &info);
 

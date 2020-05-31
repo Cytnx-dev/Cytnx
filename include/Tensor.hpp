@@ -282,13 +282,15 @@ namespace cytnx{
                 Tproxy(boost::intrusive_ptr<Tensor_impl> _ptr,const std::vector<cytnx::Accessor> &accs) : _insimpl(_ptr), _accs(accs){}
 
                 // when used to set elems:
-                void operator=(const Tensor &rhs){
+                const Tensor& operator=(const Tensor &rhs){
                     this->_insimpl->set(_accs,rhs);
+                    return rhs;
                 }
 
                 template<class T>
-                void operator=(const T &rc){
+                const T& operator=(const T &rc){
                     this->_insimpl->set(_accs,rc);
+                    return rc;
                 }
         
 
@@ -303,15 +305,46 @@ namespace cytnx{
             /// @endcond
 
            
-
+            Tproxy operator[](const std::initializer_list<cytnx::Accessor> &accs){
+                std::vector<cytnx::Accessor> tmp = accs;
+                return (*this)[tmp];
+            }
             Tproxy operator[](const std::vector<cytnx::Accessor> &accs){
                 return Tproxy(this->_impl,accs);
             }
-
             const Tproxy operator[](const std::vector<cytnx::Accessor> &accs) const{
                 return Tproxy(this->_impl,accs);
             }
+            const Tproxy operator[](const std::initializer_list<cytnx::Accessor> &accs) const{
+                std::vector<cytnx::Accessor> tmp = accs;
+                return (*this)[tmp];
+            }
 
+
+            Tproxy operator[](const std::initializer_list<cytnx_int64> &accs){
+                std::vector<cytnx_int64> tmp = accs;
+                return (*this)[tmp];
+            }
+            Tproxy operator[](const std::vector<cytnx_int64>  &accs){
+                std::vector<cytnx::Accessor> acc_in;
+                for(int i=0;i<accs.size();i++){
+                    acc_in.push_back(cytnx::Accessor(accs[i]));
+                }
+                return Tproxy(this->_impl,acc_in);
+            }
+            const Tproxy operator[](const std::initializer_list<cytnx_int64> &accs) const{
+                std::vector<cytnx_int64> tmp = accs;
+                return (*this)[tmp];
+            }
+            const Tproxy operator[](const std::vector<cytnx_int64>  &accs) const{
+                std::vector<cytnx::Accessor> acc_in;
+                for(int i=0;i<accs.size();i++){
+                    acc_in.push_back(cytnx::Accessor(accs[i]));
+                }
+                return Tproxy(this->_impl,acc_in);
+            }
+
+            
 
  
             void _Save(std::fstream &f);

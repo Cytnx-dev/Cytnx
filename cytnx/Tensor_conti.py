@@ -97,3 +97,14 @@ def Exp_(self):
 def Inv_(self):
     self.cInv_()
     return self
+
+@add_method(Tensor)
+def Pow_(self,p):
+    self.cPow_(p);
+    return self
+
+@add_method(Tensor)
+def __ipow__(self,right):
+    self.c__ipow__(right);
+    return self
+

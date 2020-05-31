@@ -208,5 +208,13 @@ namespace cytnx_extension{
         return *this;
     }
 
+    CyTensor CyTensor::Pow(const double &p) const{
+        return cytnx_extension::xlinalg::Pow(*this,p);
+    }
+    CyTensor& CyTensor::Pow_(const double &p){
+        cytnx_extension::xlinalg::Pow_(*this,p);
+        return *this;
+    }
+
 
 }

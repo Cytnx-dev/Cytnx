@@ -16,6 +16,7 @@
 #include <algorithm>
 #include "Symmetry.hpp"
 #include "Bond.hpp"
+//#include "linalg.hpp"
 
 //namespace cytnx{
 namespace cytnx_extension{ 
@@ -1302,6 +1303,10 @@ namespace cytnx_extension{
                 this->_impl->tag();
                 return *this;
             }
+        
+            CyTensor Pow(const double &p) const;
+            CyTensor& Pow_(const double &p);
+
             bool elem_exists( const std::vector<cytnx_uint64> &locator) const{
                 return this->_impl->elem_exists(locator);
             }

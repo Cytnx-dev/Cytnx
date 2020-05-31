@@ -1,5 +1,7 @@
 #include "cytnx.hpp"
 #include <complex>
+#include <cstdarg>
+
 using namespace std;
 using namespace cytnx;
 using namespace cytnx_extension;
@@ -7,18 +9,22 @@ using namespace cytnx_extension;
 namespace cyx = cytnx_extension;
 typedef cytnx::Accessor ac;
 
+
+
 int main(int argc, char *argv[]){
 
 
     auto TNtts = arange(16);
     cout << TNtts << endl;
 
+    TNtts[{0}] = TNtts[{1}] = 9999;
+
     //TNtts[{ac(4)}] = 99999;
 
 
-    auto TNget = TNtts[{ac::range(0,16,2)}];
-    cout << TNget << endl;
-
+    //auto TNget = TNtts[{ac::range(0,16,2)}];
+    //cout << TNget << endl;
+    cout << TNtts;
     return 0;
 
 

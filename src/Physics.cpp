@@ -72,7 +72,57 @@ namespace cytnx{
         Tensor pauli(const char &Comp, const int &device){
             return pauli(string(1,Comp),device);
         }
+               
+    }// physics
+}// cytnx namespace
 
 
-    }
-}
+namespace cytnx_extension{
+    namespace qgates{
+        using namespace cytnx;
+        CyTensor pauli_x(const int &device){
+            Tensor tmp = cytnx::physics::pauli('x',device);
+            return CyTensor(tmp,1);
+        }
+        CyTensor pauli_y(const int &device){
+            Tensor tmp = cytnx::physics::pauli('y',device);
+            return CyTensor(tmp,1);
+        }
+        CyTensor pauli_z(const int &device){
+            Tensor tmp = cytnx::physics::pauli('z',device);
+            return CyTensor(tmp,1);
+        }
+        CyTensor hadamard(const int &device){
+            Tensor tmp = cytnx::physics::pauli('z',device);
+            tmp[{0,1}]=1;
+            tmp[{1,0}]=1;
+            return CyTensor(tmp,1);
+        }
+        CyTensor phase_shift(const cytnx_double &phase, const int &device){
+            Tensor tmp = physics::pauli('z',device);
+            tmp[{1,1}] = exp(cytnx_complex128(0,phase));
+            return CyTensor(tmp,1);
+        }   
+
+        CyTensor swap(const int &device){
+            Tensor tmp = zeros({4,4},Type.ComplexDouble,device);
+            tmp[{0,0}] = tmp[{3,3}] = tmp[{1,2}] = tmp[{2,1}] = 1;
+            tmp.reshape_({2,2,2,2});
+            return CyTensor(tmp,2);
+        }   
+
+        CyTensor sqrt_swap(const int &device){
+            Tensor tmp = zeros({4,4},Type.ComplexDouble,device);
+            tmp[{0,0}] = tmp[{3,3}] = 1;
+            tmp[{1,1}] = tmp[{2,2}] = 0.5*cytnx_complex128(1,1);
+            tmp[{1,2}] = tmp[{2,1}] = 0.5*cytnx_complex128(1,-1);
+            tmp.reshape_({2,2,2,2});
+            return CyTensor(tmp,2);
+        }
+
+
+    }// qgates
+
+}// cytnx_extension
+
+

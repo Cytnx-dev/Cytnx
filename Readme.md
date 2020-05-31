@@ -62,7 +62,8 @@
     47. Add @ operator in python API for shorthand of linalg::Dot
     48. Add DMRG example
     49. C++ API can now have accessor.size() < rank()
-    
+    50. Remove redundant output of Inv.
+    51. Add Pow, Pow_ for CyTensor.
 
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn
@@ -358,7 +359,7 @@
      Norm         |   x       |  Y  |  Y   |    Y        | Y  |   N
     *Dot          |   x       |  Y  |  Y   |    N        | Y  |   N 
      Eig          |   x       |  Y  |  N   |    N        | Y  |   N 
-     Pow          |   Pow_    |  Y  |  N   |    Y        | Y  |   N 
+     Pow          |   Pow_    |  Y  |  N   |    Y        | Y  |   Y 
      Abs          |   Abs_    |  Y  |  N   |    N        | Y  |   N 
      QR           |   x       |  Y  |  N   |    N        | Y  |   N 
      Min          |   x       |  Y  |  N   |    N        | Y  |   N 
