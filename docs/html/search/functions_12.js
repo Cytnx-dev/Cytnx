@@ -57,6 +57,7 @@ var searchData=
   ['sorgrq',['sorgrq',['../lapack__wrapper_8hpp.html#a43fa34f8656544a83840659a67cc2219',1,'lapack_wrapper.hpp']]],
   ['sorgrq_5f',['sorgrq_',['../lapack__wrapper_8hpp.html#aaa7fb2c8a6daa16b9a2aec15024847bf',1,'lapack_wrapper.hpp']]],
   ['spin',['spin',['../namespacecytnx_1_1physics.html#a9f018f04ccd068e899a8fcfe2e9b82d4',1,'cytnx::physics::spin(const cytnx_double &amp;S, const std::string &amp;Comp, const int &amp;device=Device.cpu)'],['../namespacecytnx_1_1physics.html#af2c0256f7e3502785679b5e6805973e8',1,'cytnx::physics::spin(const cytnx_double &amp;S, const char &amp;Comp, const int &amp;device)']]],
+  ['sqrt_5fswap',['sqrt_swap',['../namespacecytnx__extension_1_1qgates.html#ab7a56e1ce6d867f5c9e86237961c715c',1,'cytnx_extension::qgates']]],
   ['sstev',['sstev',['../lapack__wrapper_8hpp.html#a69ee4472d53fcc117bcdce7b7afbe921',1,'lapack_wrapper.hpp']]],
   ['sstev_5f',['sstev_',['../lapack__wrapper_8hpp.html#a796c53e5700497b9cc8ed94f14904906',1,'lapack_wrapper.hpp']]],
   ['ssyev',['ssyev',['../lapack__wrapper_8hpp.html#a814b714b9caf307e21c2c6d77b065e0b',1,'lapack_wrapper.hpp']]],
@@ -68,6 +69,7 @@ var searchData=
   ['sub_5f',['Sub_',['../classcytnx__extension_1_1CyTensor.html#a3ee8300750467d6a8c827e7fe79039e4',1,'cytnx_extension::CyTensor::Sub_()'],['../classcytnx_1_1Tensor.html#a3482ddb0ebd4ae6585dcea7c96702e0c',1,'cytnx::Tensor::Sub_()']]],
   ['svd',['Svd',['../classcytnx_1_1Tensor.html#af286c5442012735856d4030806fd6573',1,'cytnx::Tensor::Svd()'],['../namespacecytnx__extension_1_1xlinalg.html#af9dfa33e6c7b8e48c4a4fe3bd62a940a',1,'cytnx_extension::xlinalg::Svd()'],['../namespacecytnx_1_1linalg.html#ac17f16959a4849ea91bce712d24d4e4e',1,'cytnx::linalg::Svd()']]],
   ['svd_5ftruncate',['Svd_truncate',['../namespacecytnx__extension_1_1xlinalg.html#a99d1ad5a67b93d45c1fea8ae9cab5878',1,'cytnx_extension::xlinalg::Svd_truncate()'],['../namespacecytnx_1_1linalg.html#a37887f24c0050785a9675ecbb7601952',1,'cytnx::linalg::Svd_truncate()']]],
+  ['swap',['swap',['../namespacecytnx__extension_1_1qgates.html#a5644fb80180985331a7271624e2220f0',1,'cytnx_extension::qgates']]],
   ['syms',['syms',['../classcytnx__extension_1_1Bond.html#a3dce25e60fd90c86f4b4fb017e1dc0ce',1,'cytnx_extension::Bond::syms() const'],['../classcytnx__extension_1_1Bond.html#a319d4bc0eea45110425cd04ee5f71655',1,'cytnx_extension::Bond::syms()']]],
   ['syms_5fclone',['syms_clone',['../classcytnx__extension_1_1Bond.html#aa10c6d84f7cedc87044b49900cc250fb',1,'cytnx_extension::Bond']]]
 ];

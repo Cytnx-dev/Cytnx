@@ -127,6 +127,12 @@ Functions</h2></td></tr>
 <tr class="separator:aa6039e19e0dd0e7b0e73032050a8aec3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa03370f68ce65d322100ea2cb0e2d424"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx__extension_1_1CyTensor.html">cytnx_extension::CyTensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx__extension_1_1xlinalg.html#aa03370f68ce65d322100ea2cb0e2d424">Trace</a> (const <a class="el" href="classcytnx__extension_1_1CyTensor.html">cytnx_extension::CyTensor</a> &amp;Tin, const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;a, const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;b, const bool &amp;by_label=false)</td></tr>
 <tr class="separator:aa03370f68ce65d322100ea2cb0e2d424"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab977a7436663e018f21c02950baeee90"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx__extension_1_1CyTensor.html">CyTensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx__extension_1_1xlinalg.html#ab977a7436663e018f21c02950baeee90">Pow</a> (const <a class="el" href="classcytnx__extension_1_1CyTensor.html">CyTensor</a> &amp;Tin, const double &amp;p)</td></tr>
+<tr class="memdesc:ab977a7436663e018f21c02950baeee90"><td class="mdescLeft">&#160;</td><td class="mdescRight">take power p on all the elements in <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a>.  <a href="#ab977a7436663e018f21c02950baeee90">More...</a><br /></td></tr>
+<tr class="separator:ab977a7436663e018f21c02950baeee90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae88249f7328bab5c2f6efda1b12fee8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx__extension_1_1xlinalg.html#aae88249f7328bab5c2f6efda1b12fee8">Pow_</a> (<a class="el" href="classcytnx__extension_1_1CyTensor.html">CyTensor</a> &amp;Tin, const double &amp;p)</td></tr>
+<tr class="memdesc:aae88249f7328bab5c2f6efda1b12fee8"><td class="mdescLeft">&#160;</td><td class="mdescRight">inplace perform power on all the elements in <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a>.  <a href="#aae88249f7328bab5c2f6efda1b12fee8">More...</a><br /></td></tr>
+<tr class="separator:aae88249f7328bab5c2f6efda1b12fee8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a4f594fe8bc4862fc7f0d9cfd9600a61d"></a>
@@ -510,6 +516,81 @@ template&lt;class T &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab977a7436663e018f21c02950baeee90"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab977a7436663e018f21c02950baeee90">&#9670;&nbsp;</a></span>Pow()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx__extension_1_1CyTensor.html">CyTensor</a> cytnx_extension::xlinalg::Pow </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcytnx__extension_1_1CyTensor.html">CyTensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>Tin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double &amp;&#160;</td>
+          <td class="paramname"><em>p</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>take power p on all the elements in <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">p,the</td><td>power </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a>] </dd></dl>
+
+</div>
+</div>
+<a id="aae88249f7328bab5c2f6efda1b12fee8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae88249f7328bab5c2f6efda1b12fee8">&#9670;&nbsp;</a></span>Pow_()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cytnx_extension::xlinalg::Pow_ </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcytnx__extension_1_1CyTensor.html">CyTensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>Tin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double &amp;&#160;</td>
+          <td class="paramname"><em>p</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>inplace perform power on all the elements in <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Tin,the</td><td>input <a class="el" href="classcytnx__extension_1_1CyTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">CyTensor</a>. </td></tr>
+    <tr><td class="paramname">p,the</td><td>power.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>description: on return, the elements in Tin will be modified to it's exponetial value. </p>
 
 </div>
 </div>
