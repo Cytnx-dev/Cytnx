@@ -979,6 +979,10 @@ PYBIND11_MODULE(cytnx,m){
                 .def("Exp",&cytnx::Tensor::Exp)
                 .def("Pow",&cytnx::Tensor::Pow)
                 .def("cPow_",&cytnx::Tensor::Pow_)
+                .def("Abs",&cytnx::Tensor::Abs)
+                .def("cAbs_",&cytnx::Tensor::Abs_)
+                .def("Max",&cytnx::Tensor::Max)
+                .def("Min",&cytnx::Tensor::Min)
                 .def("Norm",&cytnx::Tensor::Norm)
                 .def("Trace",&cytnx::Tensor::Trace)
                 ;

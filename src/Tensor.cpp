@@ -550,6 +550,20 @@ namespace cytnx{
         return *this;
     }
 
+    Tensor& Tensor::Abs_(){
+        linalg::Abs_(*this);
+        return *this;
+    }
+    Tensor Tensor::Abs() const{
+        return linalg::Abs(*this);
+    }
+    Tensor Tensor::Max() const{
+        return linalg::Max(*this);
+    }
+    Tensor Tensor::Min() const{
+        return linalg::Min(*this);
+    }
+
     Tensor Tensor::Trace(const cytnx_uint64 &a, const cytnx_uint64 &b) const{
         Tensor out = linalg::Trace(*this,a,b);
         return out;

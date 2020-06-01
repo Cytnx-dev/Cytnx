@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['abs',['Abs',['../namespacecytnx_1_1linalg.html#a3ded6435c7b47eb348d03783bfe72611',1,'cytnx::linalg']]],
-  ['abs_5f',['Abs_',['../namespacecytnx_1_1linalg.html#a30687e6240a889c04637b33ef90c2525',1,'cytnx::linalg']]],
+  ['abs',['Abs',['../classcytnx_1_1Tensor.html#a312a8b7b963199a98e59d9f6a97c32e6',1,'cytnx::Tensor::Abs()'],['../namespacecytnx_1_1linalg.html#a3ded6435c7b47eb348d03783bfe72611',1,'cytnx::linalg::Abs()']]],
+  ['abs_5f',['Abs_',['../classcytnx_1_1Tensor.html#aa8e04d45e4c5b8e6f334e2be38433e07',1,'cytnx::Tensor::Abs_()'],['../namespacecytnx_1_1linalg.html#a30687e6240a889c04637b33ef90c2525',1,'cytnx::linalg::Abs_()']]],
   ['ac',['ac',['../namespacecytnx__extension.html#ae37352951e39124a1174b3f551f72897',1,'cytnx_extension']]],
   ['accessor',['Accessor',['../classcytnx_1_1Accessor.html',1,'cytnx::Accessor'],['../classcytnx_1_1Accessor.html#a9f6fa9087f09756e020355a05196d384',1,'cytnx::Accessor::Accessor()']]],
   ['accessor_2ecpp',['Accessor.cpp',['../Accessor_8cpp.html',1,'']]],

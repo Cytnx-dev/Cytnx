@@ -213,7 +213,7 @@ for k in range(1, numsweeps+2):
     #           /             \     
     #  virt ____| chi     2   |____ phys
     #           |             |     
-    #       ____|        chi  |____ virt        
+    #           |        chi  |____ virt        
     #           \             /     
     #            -------------      
 

@@ -97,7 +97,10 @@ def Exp_(self):
 def Inv_(self):
     self.cInv_()
     return self
-
+@add_method(Tensor)
+def Abs_(self):
+    self.cAbs_()
+    return self
 @add_method(Tensor)
 def Pow_(self,p):
     self.cPow_(p);

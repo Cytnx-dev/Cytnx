@@ -198,10 +198,10 @@
       *\link cytnx::linalg::Dot Dot\endlink | x | Y | Y | N
       \link cytnx::linalg::Eig Eig\endlink    |   x       |  Y  |  N   |    Y 
       \link cytnx::linalg::Pow Pow\endlink    |   \link cytnx::linalg::Pow_ Pow_\endlink       |  Y  |  N   |    Y 
-      \link cytnx::linalg::Abs Abs\endlink    |   \link cytnx::linalg::Abs_ Abs_\endlink       |  Y  |  N   |    N
+      \link cytnx::linalg::Abs Abs\endlink    |   \link cytnx::linalg::Abs_ Abs_\endlink       |  Y  |  N   |    Y
       \link cytnx::linalg::QR QR\endlink    |  x       |  Y  |  N   |    N
-      \link cytnx::linalg::Min Min\endlink    |  x       |  Y  |  N   |    N
-      \link cytnx::linalg::Max Max\endlink    |  x       |  Y  |  N   |    N
+      \link cytnx::linalg::Min Min\endlink    |  x       |  Y  |  N   |    Y
+      \link cytnx::linalg::Max Max\endlink    |  x       |  Y  |  N   |    Y
       *\link cytnx::linalg::Trace Trace\endlink | x | Y | N | N
     * this is a high level linalg 
 

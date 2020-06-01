@@ -298,7 +298,7 @@
 ```c++
             typedef Accessor ac;
             Tensor A({3,4,5},Type.Double);
-            Tensor out = A.get({ac(0),ac::all(),ac::range(1,4)}); 
+            Tensor out = A[{ac(0),ac::all(),ac::range(1,4)}]; 
             // equivalent to python: out = A[0,:,1:4]
             
 ```
@@ -306,8 +306,8 @@
 ## Example
     
     See example/ folder or documentation for how to use API
-    See test.cpp for using C++ .
-    See test.py for using python  
+    See example/iTEBD folder for implementation on iTEBD algo.
+    See example/DMRG folder for implementation on DMRG algo.
 
 
 ## Avaliable linear-algebra function (Keep updating):
@@ -344,10 +344,10 @@
     *Dot          |   x       |  Y  |  Y   |    N        | Y  |   N 
      Eig          |   x       |  Y  |  N   |    N        | Y  |   N 
      Pow          |   Pow_    |  Y  |  N   |    Y        | Y  |   Y 
-     Abs          |   Abs_    |  Y  |  N   |    N        | Y  |   N 
+     Abs          |   Abs_    |  Y  |  N   |    Y        | Y  |   N 
      QR           |   x       |  Y  |  N   |    N        | Y  |   N 
-     Min          |   x       |  Y  |  N   |    N        | Y  |   N 
-     Max          |   x       |  Y  |  N   |    N        | Y  |   N 
+     Min          |   x       |  Y  |  N   |    Y        | Y  |   N 
+     Max          |   x       |  Y  |  N   |    Y        | Y  |   N 
     *Trace        |   x       |  Y  |  N   |    Y        | Y  |   Y
     
     * this is a high level linalg 

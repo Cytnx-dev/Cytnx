@@ -91,20 +91,4 @@ var menudata={children:[
 {text:"t",url:"functions_func_t.html#index_t"},
 {text:"u",url:"functions_func_u.html#index_u"},
 {text:"z",url:"functions_func_z.html#index_z"}]}]}]},
-{text:"Files",url:"files.html",children:[
-{text:"File List",url:"files.html"},
-{text:"File Members",url:"globals.html",children:[
-{text:"All",url:"globals.html",children:[
-{text:"c",url:"globals.html#index_c"},
-{text:"d",url:"globals.html#index_d"},
-{text:"h",url:"globals.html#index_h"},
-{text:"k",url:"globals.html#index_k"},
-{text:"m",url:"globals.html#index_m"},
-{text:"s",url:"globals.html#index_s"},
-{text:"z",url:"globals.html#index_z"}]},
-{text:"Functions",url:"globals_func.html",children:[
-{text:"c",url:"globals_func.html#index_c"},
-{text:"d",url:"globals_func.html#index_d"},
-{text:"s",url:"globals_func.html#index_s"},
-{text:"z",url:"globals_func.html#index_z"}]},
-{text:"Macros",url:"globals_defs.html"}]}]}]}
+{text:"tutorial",url:"https://github.com/kaihsin/Cytnx"}]}
