@@ -6,13 +6,14 @@
 [Cytnx_v0.5.2a.pdf](https://drive.google.com/file/d/1tfruYcfNxtSR0bwJv0WQMnNKwcAeehuT/view?usp=sharing)
 
 ## Stable Version:
-    [v0.5.1 pre-release](https://github.com/kaihsin/Cytnx/tree/v0.5.1a)
+    [v0.5.2 pre-release](https://github.com/kaihsin/Cytnx/tree/v0.5.2a)
 
 ## Current dev Version:
-    v0.5.2
+    v0.5.3
 
 ## What's new:
-    v0.5.2
+
+    v0.5.2a
     1. add Trace and Trace_ for CyTensor.
     2. fix bug in Network.Launch does not return the output CyTensor
     3. Add Network.PrintNet, and ostream support.
@@ -67,7 +68,7 @@
     52. Add Symmetry.Save/Load
     53. Symmetry/Tensor/Storage/Bond/CyTensor Save/Load re-invented for more simple usage
 
-
+## Version log
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn
     2. add Dot() for CPU and GPU, with unify API for Vec-Vec/Mat-Vec/Mat-Mat/Ten-Vec product.
@@ -97,7 +98,6 @@
     7. add random::Make_normal()
     8. add iTEBD example for both C++ and python @ example/iTEBD
 
-## Version log
     v0.4
     1. remove Otimes, add Kron and Outer 
     2. Add Storage append, capacity, pre-alloc 32x address
