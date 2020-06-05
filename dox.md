@@ -8,6 +8,9 @@
 
 ## What's new:
     v0.5.3
+    1. Add xlinalg.QR
+    2. enhance hosvd.
+
 
     v0.5.2
     1. add Trace and Trace_ for CyTensor.

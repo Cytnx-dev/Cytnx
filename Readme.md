@@ -10,6 +10,8 @@
 
 ## Current dev Version:
     v0.5.3
+    1. Add xlinalg.QR
+    2. enhance hosvd.
 
 ## What's new:
 
@@ -345,7 +347,7 @@
      Eig          |   x       |  Y  |  N   |    N        | Y  |   N 
      Pow          |   Pow_    |  Y  |  N   |    Y        | Y  |   Y 
      Abs          |   Abs_    |  Y  |  N   |    Y        | Y  |   N 
-     QR           |   x       |  Y  |  N   |    N        | Y  |   N 
+     QR           |   x       |  Y  |  N   |    N        | Y  |   Y 
      Min          |   x       |  Y  |  N   |    Y        | Y  |   N 
      Max          |   x       |  Y  |  N   |    Y        | Y  |   N 
     *Trace        |   x       |  Y  |  N   |    Y        | Y  |   Y

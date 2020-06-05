@@ -33,7 +33,7 @@ namespace cytnx_extension{
 
 
             //checking mode:
-            cytnx_error_msg(mode.size()<2,"[Hosvd] error mode must be at least 2 element.%s","\n");
+            cytnx_error_msg(mode.size()<1,"[Hosvd] error mode must be at least 1 element.%s","\n");
             if(truncate_dim.size()!=0){
                 cytnx_error_msg(truncate_dim.size()!=mode.size(),"[Hosve] true, truncate_dim are given but len(truncate_dim) != len(mode)%s","\n");
             }
@@ -43,7 +43,7 @@ namespace cytnx_extension{
                 cytnx_error_msg(mode[i]==0,"[Hosvd][ERROR], mode cannot have element=0%s","\n");
                 tot += mode[i];
             }
-            cytnx_error_msg(tot!=Tin.rank(),"[Hosvd] error the total sum of elements in mode should be equal to the rank of Tin.%s","\n");
+            cytnx_error_msg(tot>Tin.rank(),"[Hosvd] error the total sum of elements in mode should be equal or smaller to the rank of Tin.%s","\n");
 
             CyTensor in;
             if(!Tin.is_contiguous())
@@ -76,15 +76,25 @@ namespace cytnx_extension{
                     }
                     out.back().set_label(out.back().rank()-1,out.back().labels().back()-i);
                     perm.clear();                    
-                    for(int j=mode[i];j<in.rank();j++)
-                        perm.push_back(j);
-                    for(int j=0;j<mode[i];j++){
-                        perm.push_back(j);
+                    if(i==mode.size()-1){
+                        for(int j=mode[i]+in.rank()-tot;j<in.rank();j++)
+                            perm.push_back(j);
+                        for(int j=0;j<mode[i]+in.rank()-tot;j++){
+                            perm.push_back(j);
+                        }
+
+                    }else{
+                        for(int j=mode[i];j<in.rank();j++)
+                            perm.push_back(j);
+                        for(int j=0;j<mode[i];j++){
+                            perm.push_back(j);
+                        }
                     }
                     in.permute_(perm);
                     in.contiguous_();
-
+                    
                 }      
+                
                 in.set_Rowrank(oldRowrank);
 
                 if(is_core){

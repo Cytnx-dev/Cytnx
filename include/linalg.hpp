@@ -62,7 +62,7 @@ namespace cytnx_extension{
         cytnx_extension::CyTensor ExpH(const cytnx_extension::CyTensor &Tin, const double &a=1, const double &b=0);
         cytnx_extension::CyTensor ExpM(const cytnx_extension::CyTensor &Tin, const double &a=1, const double &b=0);
         cytnx_extension::CyTensor Trace(const cytnx_extension::CyTensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false);
-
+        std::vector<cytnx_extension::CyTensor> QR(const cytnx_extension::CyTensor &Tin, const bool &is_tau=false);
 
         // Pow:
         //==================================================

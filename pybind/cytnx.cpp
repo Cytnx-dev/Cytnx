@@ -1630,6 +1630,7 @@ PYBIND11_MODULE(cytnx,m){
     mext_xlinalg.def("Hosvd",&cytnx_extension::xlinalg::Hosvd, py::arg("Tin"),py::arg("mode"),py::arg("is_core")=true,py::arg("is_Ls")=false,py::arg("truncate_dim")=std::vector<cytnx_int64>());
     mext_xlinalg.def("Pow",&cytnx_extension::xlinalg::Pow,py::arg("Tin"),py::arg("p"));
     mext_xlinalg.def("Pow_",&cytnx_extension::xlinalg::Pow_,py::arg("Tin"),py::arg("p"));
+    mext_xlinalg.def("QR",&cytnx_extension::xlinalg::QR,py::arg("Tin"),py::arg("is_tau")=false);
 
     // [Submodule linalg] 
     pybind11::module m_linalg = m.def_submodule("linalg","linear algebra related.");
