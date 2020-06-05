@@ -380,9 +380,12 @@
 
 ## Developer
 
-    Kai-Hsin Wu kaihsinwu@gmail.com 
-    Yen-Hsin Wu 
-    Yu-Hsueh Chen
+    Kai-Hsin Wu (Boston Univ.) kaihsinwu@gmail.com 
+
+
+    Ying-Jer Kao (NTU, Taiwan): setuptool, cmake
+    Yen-Hsin Wu (NTU, Taiwan): Network optimization
+    Yu-Hsueh Chen (NTU, Taiwan): example, and testing
 
 ## References
 
@@ -393,7 +396,6 @@
     KHW whould like to thanks for the following contributor(s) for invaluable contribution to the library
 
     * PoChung Chen  (NCHU, Taiwan) : testing, and bug reporting
-    * Yu-Hsueh Chen (NTU, Taiwan)  : testing, and bug reporting 
 
 
 

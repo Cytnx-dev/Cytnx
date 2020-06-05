@@ -37,16 +37,16 @@ else
 endif
 
 ifeq ($(MKL_Enable),1)
-  CCFLAGS += -std=c++11 -g -Wformat=0 -fPIC -DUNI_MKL -w -Wno-c++11-narrowing
+  CCFLAGS += -std=c++11 -O3 -Wformat=0 -fPIC -DUNI_MKL -w -Wno-c++11-narrowing
   LDFLAGS += $(DOCKER_MKL) -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5 -ldl -lstdc++ 
 else
-  CCFLAGS += -std=c++11 -g -Wformat=0 -fPIC -w -Wno-c++11-narrowing
+  CCFLAGS += -std=c++11 -O3 -Wformat=0 -fPIC -w -Wno-c++11-narrowing
   LDFLAGS +=  -llapack -lblas -lstdc++ 
 endif
 
 
 NVCC:= $(CUDA_PATH)/bin/nvcc -ccbin $(CC)
-NVFLAGS:= -m64 -g 
+NVFLAGS:= -m64 -O3 
 SMS ?= 30
 GENCODE_FLAGS:= -arch=sm_$(SMS)
 
