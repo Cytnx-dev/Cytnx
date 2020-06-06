@@ -5,6 +5,13 @@
 ## Intro slide
 [Cytnx_v0.5.2a.pdf](https://drive.google.com/file/d/1tfruYcfNxtSR0bwJv0WQMnNKwcAeehuT/view?usp=sharing)
 
+
+## News
+    [v0.5.2a] 
+    1. example/iTEBD, please modify the argument rowrank->Rowrank if you encounter error in running them.
+    
+
+
 ## Stable Version:
     [v0.5.2 pre-release](https://github.com/kaihsin/Cytnx/tree/v0.5.2a)
 
