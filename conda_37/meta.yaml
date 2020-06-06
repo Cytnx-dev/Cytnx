@@ -1,6 +1,6 @@
 package:
   name: cytnx_37
-  version: "0.5.2a_rev1"
+  version: "0.5.2.1a"
 
 source:
   path: ../
@@ -34,8 +34,6 @@ requirements:
     - setuptools
     - graphviz
     - python-graphviz
-    - {{ compiler("c") }}
-    - {{ compiler("cxx") }}
 
   run:
     - python 3.7
@@ -47,7 +45,5 @@ requirements:
     - python-graphviz
     - graphviz
     - python-graphviz
-    - {{ compiler("c")}}
-    - {{ compiler("cxx")}}
 
 about:

@@ -3,6 +3,7 @@ from cytnx import cytnx_extension as cyx
 import numpy as np
 import scipy as sp
 from scipy import linalg
+
 ##
 # Author: Kai-Hsin Wu
 ##
@@ -13,8 +14,8 @@ from scipy import linalg
 ##-------------------------------------
 
 chi = 20
-J  = -1.0
-Hx = -1.0
+J  = 1.0
+Hx = 1.0
 CvgCrit = 1.0e-10
 dt = 0.1
 

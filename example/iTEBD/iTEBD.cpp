@@ -13,8 +13,8 @@ int main(int argc, char *argv[]){
 
 
     unsigned int chi = 20;
-    double Hz = -1.0;
-    double Hx = -1.0;
+    double J = 1.0;
+    double Hx = 1.0;
     double CvgCrit = 1.0e-10;
     double dt = 0.1;
 

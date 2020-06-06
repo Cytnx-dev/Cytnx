@@ -9,8 +9,8 @@ from cytnx import cytnx_extension as cyx
 ##-------------------------------------
 
 chi = 20
-J  = -1.0
-Hx = -1.0
+J  = 1.0
+Hx = 1.0
 CvgCrit = 1.0e-10
 dt = 0.1
 

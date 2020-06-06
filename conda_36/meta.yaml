@@ -1,6 +1,6 @@
 package:
   name: cytnx_36
-  version: "0.5.2a_rev1"
+  version: "0.5.2.1a"
 
 source:
   path: ../
@@ -34,8 +34,6 @@ requirements:
     - setuptools
     - python-graphviz
     - graphviz
-    - {{ compiler("c") }}
-    - {{ compiler("cxx") }}
 
   run:
     - python 3.6
@@ -46,7 +44,5 @@ requirements:
     - setuptools
     - python-graphviz
     - graphviz
-    - {{ compiler("c")}}
-    - {{ compiler("cxx")}}
 
 about:

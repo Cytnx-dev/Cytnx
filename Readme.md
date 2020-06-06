@@ -406,6 +406,6 @@
     KHW whould like to thanks for the following contributor(s) for invaluable contribution to the library
 
     * PoChung Chen  (NCHU, Taiwan) : testing, and bug reporting
-
+    * Wen-Han Kao (UMN, USA) : testing of conda install 
 
 
