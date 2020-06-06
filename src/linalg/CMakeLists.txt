@@ -4,6 +4,7 @@ target_sources_local(cytnx
     Add.cpp
     Min.cpp
     Max.cpp
+    Sum.cpp
     Conj.cpp
     Conj_.cpp
     Cpr.cpp

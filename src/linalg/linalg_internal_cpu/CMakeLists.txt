@@ -24,6 +24,8 @@ target_sources_local(cytnx
     Pow_internal.hpp
     Abs_internal.hpp
     MaxMin_internal.hpp
+    Sum_internal.hpp
+
     Add_internal.cpp
     Arithmetic_internal.cpp
     Conj_inplace_internal.cpp
@@ -48,6 +50,7 @@ target_sources_local(cytnx
     Abs_internal.cpp
     QR_internal.cpp
     MaxMin_internal.cpp
+    Sum_internal.cpp
 )
 
 

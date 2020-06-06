@@ -24,6 +24,7 @@
 #include "linalg/linalg_internal_cpu/Abs_internal.hpp"
 #include "linalg/linalg_internal_cpu/QR_internal.hpp"
 #include "linalg/linalg_internal_cpu/MaxMin_internal.hpp"
+#include "linalg/linalg_internal_cpu/Sum_internal.hpp"
 #ifdef UNI_GPU
     #include "linalg/linalg_internal_gpu/cuArithmetic_internal.hpp"
     #include "linalg/linalg_internal_gpu/cuSvd_internal.hpp"
@@ -83,6 +84,7 @@ namespace cytnx{
                 std::vector<Normfunc_oii> Norm_ii;
                 std::vector<Svdfunc_oii> QR_ii;
                 std::vector<MaxMinfunc_oii> MM_ii;
+                std::vector<MaxMinfunc_oii> Sum_ii;
 
                 #ifdef UNI_GPU
                 std::vector<std::vector<Arithmeticfunc_oii> > cuAri_ii;

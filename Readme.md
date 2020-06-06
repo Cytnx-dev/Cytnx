@@ -9,7 +9,7 @@
 ## News
     [v0.5.2a] 
     1. example/iTEBD, please modify the argument rowrank->Rowrank if you encounter error in running them.
-    
+    2. Fix bug in cytnx.linalg.Abs truncate floating point part. ---> v0.5.2a-rev1    
 
 
 ## Stable Version:
@@ -19,6 +19,7 @@
     v0.5.3
     1. Add xlinalg.QR
     2. enhance hosvd.
+    3. Fix bug in cytnx.linalg.Abs truncate the floating point part. 
 
 ## What's new:
 

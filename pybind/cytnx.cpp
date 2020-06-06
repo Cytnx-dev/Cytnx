@@ -1664,7 +1664,9 @@ PYBIND11_MODULE(cytnx,m){
     m_linalg.def("Abs_",&cytnx::linalg::Abs_, py::arg("Tn"));
     m_linalg.def("Max",&cytnx::linalg::Max, py::arg("Tn"));
     m_linalg.def("Min",&cytnx::linalg::Min, py::arg("Tn"));
+    m_linalg.def("Sum",&cytnx::linalg::Sum, py::arg("Tn"));
     m_linalg.def("Hosvd",&cytnx::linalg::Hosvd, py::arg("Tn"),py::arg("mode"),py::arg("is_core")=true,py::arg("is_Ls")=false,py::arg("truncate_dim")=std::vector<cytnx_int64>());
+
     // [Submodule physics]
     pybind11::module m_physics = m.def_submodule("physics","physics related.");
     m_physics.def("spin",[](const cytnx_double &S, const std::string &Comp, const int &device)->Tensor{

@@ -10,6 +10,7 @@
     v0.5.3
     1. Add xlinalg.QR
     2. enhance hosvd.
+    3. Fix bug in cytnx.linalg.Abs truncate the floating point part. 
 
 
     v0.5.2

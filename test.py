@@ -2,6 +2,12 @@ import numpy as np
 import cytnx as cy
 from cytnx import cytnx_extension as cyx
 
+
+x = cy.arange(10).astype(cy.Type.Double)*1.0e-5
+print(cy.linalg.Abs(x))
+exit(1)
+
+
 tt = cyx.Bond(3,cyx.BD_BRA,[[2],[0],[1]],[cyx.Symmetry.U1()])
 tt.Save("tt")
 print(tt)

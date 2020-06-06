@@ -290,6 +290,15 @@ namespace cytnx{
         */
         Tensor Max(const Tensor &Tn);
 
+        // Sum:
+        //==================================================
+        /**
+        @brief get the sum of all the elements.
+
+        */
+        Tensor Sum(const Tensor &Tn);
+
+
         // Matmul:
         //==================================================
         /**
