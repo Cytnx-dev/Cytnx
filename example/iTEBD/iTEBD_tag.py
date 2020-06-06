@@ -1,8 +1,6 @@
 import numpy as np
 import scipy as sp
 from scipy import linalg
-import sys
-sys.path.append("cytnx")
 import cytnx
 from cytnx import cytnx_extension as cyx
 
@@ -11,7 +9,8 @@ from cytnx import cytnx_extension as cyx
 ##-------------------------------------
 
 chi = 20
-Hx = 1.0
+J  = -1.0
+Hx = -1.0
 CvgCrit = 1.0e-10
 dt = 0.1
 
@@ -40,7 +39,7 @@ I[1,1] = 1
 TFterm = cytnx.linalg.Kron(Sx,I) + cytnx.linalg.Kron(I,Sx)
 ZZterm = cytnx.linalg.Kron(Sz,Sz)
 
-H = TFterm + ZZterm 
+H = Hx*TFterm + J*ZZterm 
 del TFterm, ZZterm
 
 eH = cytnx.linalg.ExpH(H,-dt) ## or equivantly ExpH(-dt*H)
@@ -62,16 +61,16 @@ H.print_diagram()
 #     |             |       
 #  ->-A-> ->la->  ->B-> ->lb->
 #
-A = cyx.CyTensor([cyx.Bond(chi,cyx.BD_KET),cyx.Bond(2,cyx.BD_BRA),cyx.Bond(chi,cyx.BD_BRA)],rowrank=1,labels=[-1,0,-2]); 
-B = cyx.CyTensor(A.bonds(),rowrank=1,labels=[-3,1,-4]);                                
+A = cyx.CyTensor([cyx.Bond(chi,cyx.BD_KET),cyx.Bond(2,cyx.BD_BRA),cyx.Bond(chi,cyx.BD_BRA)],Rowrank=1,labels=[-1,0,-2]); 
+B = cyx.CyTensor(A.bonds(),Rowrank=1,labels=[-3,1,-4]);                                
 cytnx.random.Make_normal(B.get_block_(),0,0.2); 
 cytnx.random.Make_normal(A.get_block_(),0,0.2); 
 A.print_diagram()
 B.print_diagram()
 #print(A)
 #print(B)
-la = cyx.CyTensor([cyx.Bond(chi,cyx.BD_KET),cyx.Bond(chi,cyx.BD_BRA)],rowrank=1,labels=[-2,-3],is_diag=True)
-lb = cyx.CyTensor(la.bonds(),rowrank=1,labels=[-4,-5],is_diag=True)
+la = cyx.CyTensor([cyx.Bond(chi,cyx.BD_KET),cyx.Bond(chi,cyx.BD_BRA)],Rowrank=1,labels=[-2,-3],is_diag=True)
+lb = cyx.CyTensor(la.bonds(),Rowrank=1,labels=[-4,-5],is_diag=True)
 la.put_block(cytnx.ones(chi));
 lb.put_block(cytnx.ones(chi));
 la.print_diagram()

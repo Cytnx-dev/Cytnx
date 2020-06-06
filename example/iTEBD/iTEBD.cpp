@@ -13,7 +13,8 @@ int main(int argc, char *argv[]){
 
 
     unsigned int chi = 20;
-    double Hx = 1.0;
+    double Hz = -1.0;
+    double Hx = -1.0;
     double CvgCrit = 1.0e-10;
     double dt = 0.1;
 
@@ -34,7 +35,7 @@ int main(int argc, char *argv[]){
     //> Build Evolution Operator
     Tensor TFterm = cytnx::linalg::Kron(Sx,I) + cytnx::linalg::Kron(I,Sx);
     Tensor ZZterm = cytnx::linalg::Kron(Sz,Sz);
-    Tensor tH = TFterm + ZZterm;
+    Tensor tH = Hx*TFterm + J*ZZterm;
 
 
     Tensor teH = cytnx::linalg::ExpH(tH,-dt);
