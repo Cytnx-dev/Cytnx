@@ -100,11 +100,7 @@ for i in range(Maxiter):
         #              chi
         # [Note] here "d" is used to indicate the original bond dimension of each rank, 
         #        in general, they could be different for each bond
-        lbl =U.labels()
-        tmp = U.get_block_()
-        tmp = tmp[:,:,:chi]
-        U = cyx.CyTensor(tmp,2)
-        U.set_labels(lbl)
+        U.truncate_(2,chi);
 
         cT = cyx.Contract(cT,U)
         U.set_labels(D.labels())
@@ -179,11 +175,7 @@ for i in range(Maxiter):
         #
         # [Note] here "d" is used to indicate the original bond dimension of each rank, 
         #        in general, they could be different for each bond
-        lbl =L.labels()
-        tmp = L.get_block_()
-        tmp = tmp[:,:,:chi]
-        L = cyx.CyTensor(tmp,2)
-        L.set_labels(lbl)
+        L.truncate_(2,chi);
 
         cT = cyx.Contract(cT,L)
         L.set_labels(R.labels())
