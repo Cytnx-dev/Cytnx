@@ -20,6 +20,8 @@
     1. Add xlinalg.QR
     2. enhance hosvd.
     3. Fix bug in cytnx.linalg.Abs truncate the floating point part. 
+    4. Add example for HOTRG
+    5. Add example for iDMRG
 
 ## What's new:
 
