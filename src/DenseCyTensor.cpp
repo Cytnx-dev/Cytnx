@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <utility>
 #include <vector>
+typedef cytnx::Accessor ac;
 namespace cytnx_extension{
     using namespace cytnx;
 
@@ -595,6 +596,45 @@ namespace cytnx_extension{
     void DenseCyTensor::_load_dispatch(std::fstream &f){
         this->_block._Load(f); 
     }
+
+
+    void DenseCyTensor::truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim, const bool &by_label){
+        // if it is diagonal tensor, truncate will be done on both index!
+        cytnx_error_msg(dim<1,"[ERROR][DenseCyTensor][truncate] dim should be >0.%s","\n");
+        cytnx_uint64 idx;
+        if(by_label){
+            auto it = std::find(this->_labels.begin(),this->_labels.end(),idx);
+            cytnx_error_msg(it==this->_labels.end(),"[ERROR][DenseCyTensor][truncate] Error, bond label does not exist in the current label list.%s","\n");
+            idx = std::distance(this->_labels.begin(),it);
+        }else{
+            idx = bond_idx;
+        }
+        cytnx_error_msg(idx>=this->_labels.size(),"[ERROR][DenseCyTensor][truncate] Error, index [%d] is out of range. Total rank: %d\n",idx,this->_labels.size());    
+        cytnx_error_msg(dim>this->_bonds[idx].dim(),"[ERROR][DenseCyTensor][truncate] dimension can only be <= the dimension of the instance bond.%s","\n");
+
+        // if dim is the same as the dimension, don't do anything.  
+        if(dim!=this->_bonds[idx].dim()){
+
+            // if diag type. 
+            if(this->_is_diag){
+                for(int i=0;i<this->_bonds.size();i++){
+                    this->_bonds[i]._impl->_dim = dim;
+                }
+                this->_block = this->_block.get({ac::range(0,dim)});
+            }else{
+                this->_bonds[idx]._impl->_dim = dim;
+
+                std::vector<ac> accessors(this->_bonds.size(),ac::all());
+                accessors[idx] = ac::range(0,dim);
+                this->_block = this->_block.get(accessors);
+            }
+
+        }
+        
+
+    }
+
+
 
 
 }

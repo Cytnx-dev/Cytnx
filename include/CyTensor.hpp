@@ -231,17 +231,33 @@ namespace cytnx_extension{
 
             virtual void tag();
 
+            virtual void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim, const bool &by_label=false);
+
             virtual bool elem_exists(const std::vector<cytnx_uint64> &locator) const;
+
             // this a workaround, as virtual function cannot template.
             virtual cytnx_complex128& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux);
             virtual cytnx_complex64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux);
             virtual cytnx_double& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux);
             virtual cytnx_float& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux);
+            virtual cytnx_uint64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint64 &aux);
+            virtual cytnx_int64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int64 &aux);
+            virtual cytnx_uint32& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint32 &aux);
+            virtual cytnx_int32& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int32 &aux);
+            virtual cytnx_uint16& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux);
+            virtual cytnx_int16& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
 
             virtual const cytnx_complex128& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux)const ;
             virtual const cytnx_complex64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux)const;
             virtual const cytnx_double& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux)const;
             virtual const cytnx_float& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux)const;
+            virtual const cytnx_uint64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint64 &aux) const;
+            virtual const cytnx_int64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int64 &aux) const;
+            virtual const cytnx_uint32& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint32 &aux) const;
+            virtual const cytnx_int32& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int32 &aux) const;
+            virtual const cytnx_uint16& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux) const;
+            virtual const cytnx_int16& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux) const;
+
             virtual void _save_dispatch(std::fstream &f) const;
             virtual void _load_dispatch(std::fstream &f);
 
@@ -473,6 +489,33 @@ namespace cytnx_extension{
                 cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
                 //return 0;
             }
+            const cytnx_uint64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint64 &aux) const{
+                cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
+                //return 0;
+            }
+            const cytnx_int64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int64 &aux) const{
+                cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
+                //return 0;
+            }
+            const cytnx_uint32& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint32 &aux)const {
+                cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
+                //return 0;
+
+            }
+            const cytnx_int32& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int32 &aux) const {
+                cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
+                //return 0;
+            }
+            const cytnx_uint16& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux)const {
+                cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
+                //return 0;
+
+            }
+            const cytnx_int16& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux) const {
+                cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
+                //return 0;
+            }
+
             cytnx_complex128& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux){
                 cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
                 //return cytnx_complex128(0,0);
@@ -489,6 +532,33 @@ namespace cytnx_extension{
                 cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
                 //return 0;
             }
+            cytnx_uint64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint64 &aux){
+                cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
+                //return 0;
+            }
+            cytnx_int64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int64 &aux){
+                cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
+                //return 0;
+            }
+            cytnx_uint32& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint32 &aux){
+                cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
+                //return 0;
+
+            }
+            cytnx_int32& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int32 &aux){
+                cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
+                //return 0;
+            }
+            cytnx_uint16& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux){
+                cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
+                //return 0;
+
+            }
+            cytnx_int16& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux){
+                cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseCyTensor, something wrong.%s","\n");
+                //return 0;
+            }
+
 
             bool elem_exists(const std::vector<cytnx_uint64> &locator) const{
                 cytnx_error_msg(true,"[ERROR][DenseCyTensor] elem_exists can only be used on CyTensor with Symmetry.%s","\n");
@@ -505,7 +575,8 @@ namespace cytnx_extension{
                     this->_is_braket_form = this->_update_braket();
                 }
             }
-            
+            void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim, const bool &by_label=false);
+
             void _save_dispatch(std::fstream &f) const;
             void _load_dispatch(std::fstream &f);
             // end virtual function              
@@ -886,17 +957,29 @@ namespace cytnx_extension{
                 // no-use!
             }
 
+            void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim, const bool &by_label=false);
+
             const cytnx_complex128& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux) const;
             const cytnx_complex64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux) const;
             const cytnx_double& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux) const;
             const cytnx_float& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux) const;
+            const cytnx_uint64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint64 &aux) const;
+            const cytnx_int64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int64 &aux) const;
+            const cytnx_uint32& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint32 &aux) const;
+            const cytnx_int32& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int32 &aux) const;
+            const cytnx_uint16& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux) const;
+            const cytnx_int16& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux) const;
             
             cytnx_complex128& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux);
             cytnx_complex64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux);
             cytnx_double& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux);
             cytnx_float& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux);
-
-
+            cytnx_uint64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint64 &aux);
+            cytnx_int64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int64 &aux);
+            cytnx_uint32& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint32 &aux);
+            cytnx_int32& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int32 &aux);
+            cytnx_uint16& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux);
+            cytnx_int16& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
 
             bool elem_exists(const std::vector<cytnx_uint64> &locator) const;
             void _save_dispatch(std::fstream &f) const;
@@ -1333,6 +1416,17 @@ namespace cytnx_extension{
             void Save(const char* fname) const;            
             static CyTensor Load(const std::string &fname);            
             static CyTensor  Load(const char* fname);            
+
+            CyTensor& truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim, const bool &by_label=false){
+                this->_impl->truncate_(bond_idx,dim,by_label);
+                return *this;
+            }
+            CyTensor truncate(const cytnx_int64 &bond_idx, const cytnx_uint64& dim, const bool &by_label=false) const{
+                CyTensor out = this->clone();
+                out.truncate_(bond_idx,dim,by_label);
+                return out;
+            }
+
 
             /// @cond
             void _Load(std::fstream &f);

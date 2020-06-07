@@ -65,15 +65,29 @@ void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc
 }
 
 void f_CyTensor_setelem_scal_d(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_double&rc){
-    if(self.dtype() == cytnx::Type.Double) 
+    if(self.dtype() == cytnx::Type.Double){ 
         self.set_elem<cytnx::cytnx_double>(locator,rc);
-    else if(self.dtype() == cytnx::Type.Float) 
+    }else if(self.dtype() == cytnx::Type.Float){ 
         self.set_elem<cytnx::cytnx_float>(locator,rc);
-    else if(self.dtype() == cytnx::Type.ComplexDouble) 
+    }else if(self.dtype() == cytnx::Type.ComplexDouble) {
         self.set_elem<cytnx::cytnx_complex128>(locator,cytnx_complex128(rc,0));
-    else if(self.dtype() == cytnx::Type.ComplexFloat) 
+    }else if(self.dtype() == cytnx::Type.ComplexFloat){
         self.set_elem<cytnx::cytnx_complex64>(locator,cytnx_complex64(rc,0));
-    else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
+    }else if(self.dtype() == cytnx::Type.Uint64){
+        self.set_elem<cytnx::cytnx_uint64>(locator,rc);
+    }else if(self.dtype() == cytnx::Type.Int64){
+        self.set_elem<cytnx::cytnx_int64>(locator,rc);
+    }else if(self.dtype() == cytnx::Type.Uint32){
+        self.set_elem<cytnx::cytnx_uint32>(locator,rc);
+    }else if(self.dtype() == cytnx::Type.Int32) {
+        self.set_elem<cytnx::cytnx_int32>(locator,rc);
+    }else if(self.dtype() == cytnx::Type.Uint16) {
+        self.set_elem<cytnx::cytnx_uint16>(locator,rc);
+    }else if(self.dtype() == cytnx::Type.Int16){
+        self.set_elem<cytnx::cytnx_int16>(locator,rc);
+    }else if(self.dtype() == cytnx::Type.Bool) {
+        self.set_elem<cytnx::cytnx_bool>(locator,rc);
+    }else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
 }
 
 void f_CyTensor_setelem_scal_f(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_float&rc){
@@ -85,6 +99,20 @@ void f_CyTensor_setelem_scal_f(cytnx_extension::CyTensor &self, const std::vecto
         self.set_elem<cytnx::cytnx_complex128>(locator,cytnx_complex128(rc,0));
     else if(self.dtype() == cytnx::Type.ComplexFloat) 
         self.set_elem<cytnx::cytnx_complex64>(locator,cytnx_complex64(rc,0));
+    else if(self.dtype() == cytnx::Type.Uint64) 
+        self.set_elem<cytnx::cytnx_uint64>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Int64) 
+        self.set_elem<cytnx::cytnx_int64>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Uint32) 
+        self.set_elem<cytnx::cytnx_uint32>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Int32) 
+        self.set_elem<cytnx::cytnx_int32>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Uint16) 
+        self.set_elem<cytnx::cytnx_uint16>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Int16) 
+        self.set_elem<cytnx::cytnx_int16>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Bool) 
+        self.set_elem<cytnx::cytnx_bool>(locator,rc);
     else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
 }
 void f_CyTensor_setelem_scal_u64(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_uint64&rc){
@@ -96,6 +124,20 @@ void f_CyTensor_setelem_scal_u64(cytnx_extension::CyTensor &self, const std::vec
         self.set_elem<cytnx::cytnx_complex128>(locator,cytnx_complex128(rc,0));
     else if(self.dtype() == cytnx::Type.ComplexFloat) 
         self.set_elem<cytnx::cytnx_complex64>(locator,cytnx_complex64(rc,0));
+    else if(self.dtype() == cytnx::Type.Uint64) 
+        self.set_elem<cytnx::cytnx_uint64>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Int64) 
+        self.set_elem<cytnx::cytnx_int64>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Uint32) 
+        self.set_elem<cytnx::cytnx_uint32>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Int32) 
+        self.set_elem<cytnx::cytnx_int32>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Uint16) 
+        self.set_elem<cytnx::cytnx_uint16>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Int16) 
+        self.set_elem<cytnx::cytnx_int16>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Bool) 
+        self.set_elem<cytnx::cytnx_bool>(locator,rc);
     else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
 }
 void f_CyTensor_setelem_scal_i64(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_int64&rc){
@@ -107,6 +149,20 @@ void f_CyTensor_setelem_scal_i64(cytnx_extension::CyTensor &self, const std::vec
         self.set_elem<cytnx::cytnx_complex128>(locator,cytnx_complex128(rc,0));
     else if(self.dtype() == cytnx::Type.ComplexFloat) 
         self.set_elem<cytnx::cytnx_complex64>(locator,cytnx_complex64(rc,0));
+    else if(self.dtype() == cytnx::Type.Uint64) 
+        self.set_elem<cytnx::cytnx_uint64>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Int64) 
+        self.set_elem<cytnx::cytnx_int64>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Uint32) 
+        self.set_elem<cytnx::cytnx_uint32>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Int32) 
+        self.set_elem<cytnx::cytnx_int32>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Uint16) 
+        self.set_elem<cytnx::cytnx_uint16>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Int16) 
+        self.set_elem<cytnx::cytnx_int16>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Bool) 
+        self.set_elem<cytnx::cytnx_bool>(locator,rc);
     else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
 }
 void f_CyTensor_setelem_scal_u32(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_uint32&rc){
@@ -118,6 +174,20 @@ void f_CyTensor_setelem_scal_u32(cytnx_extension::CyTensor &self, const std::vec
         self.set_elem<cytnx::cytnx_complex128>(locator,cytnx_complex128(rc,0));
     else if(self.dtype() == cytnx::Type.ComplexFloat) 
         self.set_elem<cytnx::cytnx_complex64>(locator,cytnx_complex64(rc,0));
+    else if(self.dtype() == cytnx::Type.Uint64) 
+        self.set_elem<cytnx::cytnx_uint64>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Int64) 
+        self.set_elem<cytnx::cytnx_int64>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Uint32) 
+        self.set_elem<cytnx::cytnx_uint32>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Int32) 
+        self.set_elem<cytnx::cytnx_int32>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Uint16) 
+        self.set_elem<cytnx::cytnx_uint16>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Int16) 
+        self.set_elem<cytnx::cytnx_int16>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Bool) 
+        self.set_elem<cytnx::cytnx_bool>(locator,rc);
     else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
 }
 void f_CyTensor_setelem_scal_i32(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_int32&rc){
@@ -129,6 +199,20 @@ void f_CyTensor_setelem_scal_i32(cytnx_extension::CyTensor &self, const std::vec
         self.set_elem<cytnx::cytnx_complex128>(locator,cytnx_complex128(rc,0));
     else if(self.dtype() == cytnx::Type.ComplexFloat) 
         self.set_elem<cytnx::cytnx_complex64>(locator,cytnx_complex64(rc,0));
+    else if(self.dtype() == cytnx::Type.Uint64) 
+        self.set_elem<cytnx::cytnx_uint64>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Int64) 
+        self.set_elem<cytnx::cytnx_int64>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Uint32) 
+        self.set_elem<cytnx::cytnx_uint32>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Int32) 
+        self.set_elem<cytnx::cytnx_int32>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Uint16) 
+        self.set_elem<cytnx::cytnx_uint16>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Int16) 
+        self.set_elem<cytnx::cytnx_int16>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Bool) 
+        self.set_elem<cytnx::cytnx_bool>(locator,rc);
     else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
 }
 void f_CyTensor_setelem_scal_u16(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_uint16&rc){
@@ -140,6 +224,20 @@ void f_CyTensor_setelem_scal_u16(cytnx_extension::CyTensor &self, const std::vec
         self.set_elem<cytnx::cytnx_complex128>(locator,cytnx_complex128(rc,0));
     else if(self.dtype() == cytnx::Type.ComplexFloat) 
         self.set_elem<cytnx::cytnx_complex64>(locator,cytnx_complex64(rc,0));
+    else if(self.dtype() == cytnx::Type.Uint64) 
+        self.set_elem<cytnx::cytnx_uint64>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Int64) 
+        self.set_elem<cytnx::cytnx_int64>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Uint32) 
+        self.set_elem<cytnx::cytnx_uint32>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Int32) 
+        self.set_elem<cytnx::cytnx_int32>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Uint16) 
+        self.set_elem<cytnx::cytnx_uint16>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Int16) 
+        self.set_elem<cytnx::cytnx_int16>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Bool) 
+        self.set_elem<cytnx::cytnx_bool>(locator,rc);
     else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
 }
 void f_CyTensor_setelem_scal_i16(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_int16&rc){
@@ -151,6 +249,20 @@ void f_CyTensor_setelem_scal_i16(cytnx_extension::CyTensor &self, const std::vec
         self.set_elem<cytnx::cytnx_complex128>(locator,cytnx_complex128(rc,0));
     else if(self.dtype() == cytnx::Type.ComplexFloat) 
         self.set_elem<cytnx::cytnx_complex64>(locator,cytnx_complex64(rc,0));
+    else if(self.dtype() == cytnx::Type.Uint64) 
+        self.set_elem<cytnx::cytnx_uint64>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Int64) 
+        self.set_elem<cytnx::cytnx_int64>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Uint32) 
+        self.set_elem<cytnx::cytnx_uint32>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Int32) 
+        self.set_elem<cytnx::cytnx_int32>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Uint16) 
+        self.set_elem<cytnx::cytnx_uint16>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Int16) 
+        self.set_elem<cytnx::cytnx_int16>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Bool) 
+        self.set_elem<cytnx::cytnx_bool>(locator,rc);
     else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
 }
 void f_CyTensor_setelem_scal_b(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_bool&rc){
@@ -162,19 +274,46 @@ void f_CyTensor_setelem_scal_b(cytnx_extension::CyTensor &self, const std::vecto
         self.set_elem<cytnx::cytnx_complex128>(locator,cytnx_complex128(rc,0));
     else if(self.dtype() == cytnx::Type.ComplexFloat) 
         self.set_elem<cytnx::cytnx_complex64>(locator,cytnx_complex64(rc,0));
+    else if(self.dtype() == cytnx::Type.Uint64) 
+        self.set_elem<cytnx::cytnx_uint64>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Int64) 
+        self.set_elem<cytnx::cytnx_int64>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Uint32) 
+        self.set_elem<cytnx::cytnx_uint32>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Int32) 
+        self.set_elem<cytnx::cytnx_int32>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Uint16) 
+        self.set_elem<cytnx::cytnx_uint16>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Int16) 
+        self.set_elem<cytnx::cytnx_int16>(locator,rc);
+    else if(self.dtype() == cytnx::Type.Bool) 
+        self.set_elem<cytnx::cytnx_bool>(locator,rc);
     else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
 }
 void f_CyTensor_setelem_scal_cd(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_complex128 &rc){
-    if(self.dtype() == cytnx::Type.Double){ 
+    if(self.dtype() == cytnx::Type.Double){
         cytnx_error_msg(true,"%s","[ERROR] cannot assign complex to real container.\n");
-    }else if(self.dtype() == cytnx::Type.Float){ 
+    }else if(self.dtype() == cytnx::Type.Float){
         cytnx_error_msg(true,"%s","[ERROR] cannot assign complex to real container.\n");
     }else if(self.dtype() == cytnx::Type.ComplexDouble){
         self.set_elem<cytnx::cytnx_complex128>(locator,rc);
     }else if(self.dtype() == cytnx::Type.ComplexFloat){
         self.set_elem<cytnx::cytnx_complex64>(locator,cytnx::cytnx_complex64(rc.real(),rc.imag()));
-    }
-    else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
+    }else if(self.dtype() == cytnx::Type.Uint64){
+        cytnx_error_msg(true,"%s","[ERROR] cannot assign complex to real container.\n");
+    }else if(self.dtype() == cytnx::Type.Int64){
+        cytnx_error_msg(true,"%s","[ERROR] cannot assign complex to real container.\n");
+    }else if(self.dtype() == cytnx::Type.Uint32){ 
+        cytnx_error_msg(true,"%s","[ERROR] cannot assign complex to real container.\n");
+    }else if(self.dtype() == cytnx::Type.Int32){ 
+        cytnx_error_msg(true,"%s","[ERROR] cannot assign complex to real container.\n");
+    }else if(self.dtype() == cytnx::Type.Uint16){ 
+        cytnx_error_msg(true,"%s","[ERROR] cannot assign complex to real container.\n");
+    }else if(self.dtype() == cytnx::Type.Int16){ 
+        cytnx_error_msg(true,"%s","[ERROR] cannot assign complex to real container.\n");
+    }else if(self.dtype() == cytnx::Type.Bool){ 
+        cytnx_error_msg(true,"%s","[ERROR] cannot assign complex to real container.\n");
+    }else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
 }
 void f_CyTensor_setelem_scal_cf(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_complex64 &rc){
     if(self.dtype() == cytnx::Type.Double){
@@ -185,6 +324,20 @@ void f_CyTensor_setelem_scal_cf(cytnx_extension::CyTensor &self, const std::vect
         self.set_elem<cytnx::cytnx_complex128>(locator,cytnx::cytnx_complex128(rc.real(),rc.imag()));
     }else if(self.dtype() == cytnx::Type.ComplexFloat){ 
         self.set_elem<cytnx::cytnx_complex64>(locator,rc);
+    }else if(self.dtype() == cytnx::Type.Uint64) {
+        cytnx_error_msg(true,"%s","[ERROR] cannot assign complex to real container.\n");
+    }else if(self.dtype() == cytnx::Type.Int64) {
+        cytnx_error_msg(true,"%s","[ERROR] cannot assign complex to real container.\n");
+    }else if(self.dtype() == cytnx::Type.Uint32) {
+        cytnx_error_msg(true,"%s","[ERROR] cannot assign complex to real container.\n");
+    }else if(self.dtype() == cytnx::Type.Int32) {
+        cytnx_error_msg(true,"%s","[ERROR] cannot assign complex to real container.\n");
+    }else if(self.dtype() == cytnx::Type.Uint16) {
+        cytnx_error_msg(true,"%s","[ERROR] cannot assign complex to real container.\n");
+    }else if(self.dtype() == cytnx::Type.Int16) {
+        cytnx_error_msg(true,"%s","[ERROR] cannot assign complex to real container.\n");
+    }else if(self.dtype() == cytnx::Type.Bool) {
+        cytnx_error_msg(true,"%s","[ERROR] cannot assign complex to real container.\n");
     }else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
 }
 
@@ -760,6 +913,20 @@ PYBIND11_MODULE(cytnx,m){
 
 
                 //arithmetic >>
+                .def("__neg__",[](cytnx::Tensor &self){
+                                    if(self.dtype() == Type.Double){
+                                        return cytnx::linalg::Mul(cytnx_double(-1),self);
+                                    }else if(self.dtype()==Type.ComplexDouble){
+                                        return cytnx::linalg::Mul(cytnx_complex128(-1,0),self);
+                                    }else if(self.dtype()==Type.Float){
+                                        return cytnx::linalg::Mul(cytnx_float(-1),self);
+                                    }else if(self.dtype()==Type.ComplexFloat){
+                                        return cytnx::linalg::Mul(cytnx_complex64(-1,0),self);
+                                    }else{
+                                        return cytnx::linalg::Mul(-1,self);
+                                    }
+                                  })
+                .def("__pos__",[](cytnx::Tensor &self){return self;})
                 .def("__add__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){return self.Add(rhs);})
                 .def("__add__",[](cytnx::Tensor &self, const cytnx::cytnx_complex128&rhs){return self.Add(rhs);})
                 .def("__add__",[](cytnx::Tensor &self, const cytnx::cytnx_complex64 &rhs){return self.Add(rhs);})
@@ -1415,6 +1582,20 @@ PYBIND11_MODULE(cytnx,m){
                 .def("contract", &cytnx_extension::CyTensor::contract)
 		
         		//arithmetic >>
+                .def("__neg__",[](cytnx_extension::CyTensor &self){
+                                    if(self.dtype() == Type.Double){
+                                        return cytnx_extension::xlinalg::Mul(cytnx_double(-1),self);
+                                    }else if(self.dtype()==Type.ComplexDouble){
+                                        return cytnx_extension::xlinalg::Mul(cytnx_complex128(-1,0),self);
+                                    }else if(self.dtype()==Type.Float){
+                                        return cytnx_extension::xlinalg::Mul(cytnx_float(-1),self);
+                                    }else if(self.dtype()==Type.ComplexFloat){
+                                        return cytnx_extension::xlinalg::Mul(cytnx_complex64(-1,0),self);
+                                    }else{
+                                        return cytnx_extension::xlinalg::Mul(-1,self);
+                                    }
+                                  })
+                .def("__pos__",[](cytnx_extension::CyTensor &self){return self;})
                 .def("__add__",[](cytnx_extension::CyTensor &self, const cytnx_extension::CyTensor &rhs){return self.Add(rhs);})
                 .def("__add__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex128&rhs){return self.Add(rhs);})
                 .def("__add__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex64 &rhs){return self.Add(rhs);})
@@ -1617,6 +1798,8 @@ PYBIND11_MODULE(cytnx,m){
                 .def("cDagger_",&cytnx_extension::CyTensor::Dagger_)
                 .def("Dagger",&cytnx_extension::CyTensor::Dagger)
                 .def("ctag",&cytnx_extension::CyTensor::tag)
+                .def("truncate",&cytnx_extension::CyTensor::truncate,py::arg("bond_idx"),py::arg("dim"),py::arg("by_label")=false)
+                .def("ctruncate_",&cytnx_extension::CyTensor::truncate_)
                 ;
     mext.def("Contract",cytnx_extension::Contract);
    

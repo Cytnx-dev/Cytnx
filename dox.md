@@ -13,6 +13,9 @@
     3. Fix bug in cytnx.linalg.Abs truncate the floating point part. 
     4. Add example for HOTRG
     5. Add example for iDMRG
+    6. Add CyTensor.truncate/truncate.
+    7. Add linalg::Sum. 
+    8. Complete set_elem for sparse CyTensor dispatch in binding.
 
     v0.5.2
     1. add Trace and Trace_ for CyTensor.

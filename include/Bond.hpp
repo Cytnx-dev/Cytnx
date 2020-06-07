@@ -19,13 +19,14 @@ namespace cytnx_extension{
     /// @cond
     class Bond_impl: public intrusive_ptr_base<Bond_impl>{
         private:
+
+        public:
+            friend class Bond;
             cytnx_uint64 _dim;
             bondType _type;
             std::vector< std::vector<cytnx_int64> > _qnums; //(dim, # of sym)
             std::vector<Symmetry> _syms;
 
-        public:
-            friend class Bond;
             Bond_impl(): _type(bondType::BD_REG) {};   
 
             void Init(const cytnx_uint64 &dim, const bondType &bd_type=bondType::BD_REG, const std::vector<std::vector<cytnx_int64> > &in_qnums = {}, const std::vector<Symmetry> &in_syms={});

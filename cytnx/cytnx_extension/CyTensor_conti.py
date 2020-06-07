@@ -62,3 +62,8 @@ def __ipow__(self,p):
 def Pow_(self,p):
     self.cPow_(p)
     return self
+
+@add_method(CyTensor)
+def truncate_(self,bond_idx,dim,by_label=False):
+    self.ctruncate_(bond_idx,dim,by_label);
+    return self

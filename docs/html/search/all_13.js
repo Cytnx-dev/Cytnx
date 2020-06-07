@@ -14,6 +14,8 @@ var searchData=
   ['transpose',['Transpose',['../classcytnx__extension_1_1CyTensor.html#a7428353980971cd718324b4ec9b76ed8',1,'cytnx_extension::CyTensor']]],
   ['transpose_5f',['Transpose_',['../classcytnx__extension_1_1CyTensor.html#a8dc7b81abf773eb9fb09853690823c6c',1,'cytnx_extension::CyTensor']]],
   ['tridiag',['Tridiag',['../namespacecytnx_1_1linalg.html#abc68d62e804d6d3e86aeec00015b07cd',1,'cytnx::linalg']]],
+  ['truncate',['truncate',['../classcytnx__extension_1_1CyTensor.html#a1995f324782a207b1efa83390735e2da',1,'cytnx_extension::CyTensor']]],
+  ['truncate_5f',['truncate_',['../classcytnx__extension_1_1CyTensor.html#a38db7239c7d8caede9d4f210e59d7539',1,'cytnx_extension::CyTensor']]],
   ['type',['type',['../classcytnx__extension_1_1Bond.html#af91e04952850b94a063195560ec3868f',1,'cytnx_extension::Bond::type()'],['../namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2',1,'cytnx::Type()']]],
   ['type_2ecpp',['Type.cpp',['../Type_8cpp.html',1,'']]],
   ['type_2ehpp',['Type.hpp',['../Type_8hpp.html',1,'']]]
