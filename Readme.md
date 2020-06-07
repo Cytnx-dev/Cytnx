@@ -25,7 +25,7 @@
     6. Add CyTensor.truncate/truncate.
     7. Add linalg::Sum. 
     8. Complete set_elem for sparse CyTensor dispatch in binding.
-
+    9. [Important] Change Inv/Inv_ to InvM/InvM_ for matrix inverse. 
 
 ## What's new:
 
@@ -342,7 +342,7 @@
       ==[tn]      |   x       |  Y  |  Y   |    Y (Cpr_) | Y  |   x 
       Svd         |   x       |  Y  |  Y   |    Y        | Y  |   Y
      *Svd_truncate|   x       |  Y  |  Y   |    N        | Y  |   Y
-      Inv         |   Inv_    |  Y  |  Y   |    Y        | Y  |   N
+      InvM        |   InvM_   |  Y  |  Y   |    Y        | Y  |   N
       Conj        |   Conj_   |  Y  |  Y   |    Y        | Y  |   Y
       Exp         |   Exp_    |  Y  |  Y   |    Y        | Y  |   N
       Expf        |   Expf_   |  Y  |  Y   |    Y        | Y  |   N

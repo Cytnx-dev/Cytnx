@@ -1,4 +1,4 @@
-#include "cuInv_inplace_internal.hpp"
+#include "cuInvM_inplace_internal.hpp"
 #include "cytnx_error.hpp"
 #include "Type.hpp"
 #include "lapack_wrapper.hpp"
@@ -7,7 +7,7 @@
 namespace cytnx{
     namespace linalg_internal{
 
-        void cuInv_inplace_internal_d(boost::intrusive_ptr<Storage_base> &ten, const cytnx_int32 &L){
+        void cuInvM_inplace_internal_d(boost::intrusive_ptr<Storage_base> &ten, const cytnx_int32 &L){
 
             // create handles:
             cusolverDnHandle_t cusolverH = NULL;
@@ -56,7 +56,7 @@ namespace cytnx{
             cusolverDnDestroy(cusolverH);
 
         }
-        void cuInv_inplace_internal_f(boost::intrusive_ptr<Storage_base> &ten, const cytnx_int32 &L){
+        void cuInvM_inplace_internal_f(boost::intrusive_ptr<Storage_base> &ten, const cytnx_int32 &L){
 
             // create handles:
             cusolverDnHandle_t cusolverH = NULL;
@@ -104,7 +104,7 @@ namespace cytnx{
             free(h_I);
             cusolverDnDestroy(cusolverH);
         }
-        void cuInv_inplace_internal_cd(boost::intrusive_ptr<Storage_base> &ten,  const cytnx_int32 &L){
+        void cuInvM_inplace_internal_cd(boost::intrusive_ptr<Storage_base> &ten,  const cytnx_int32 &L){
 
             // create handles:
             cusolverDnHandle_t cusolverH = NULL;
@@ -153,7 +153,7 @@ namespace cytnx{
             cusolverDnDestroy(cusolverH);
         }
 
-        void cuInv_inplace_internal_cf(boost::intrusive_ptr<Storage_base> &ten,  const cytnx_int32 &L){
+        void cuInvM_inplace_internal_cf(boost::intrusive_ptr<Storage_base> &ten,  const cytnx_int32 &L){
 
             // create handles:
             cusolverDnHandle_t cusolverH = NULL;

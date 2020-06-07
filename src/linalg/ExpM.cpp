@@ -39,7 +39,7 @@ namespace cytnx{
             s = cytnx::linalg::Diag(s);
             //cout << s << endl;
             //cout << u;
-            ut = Inv(su[1]); 
+            ut = InvM(su[1]); 
         
             ut = cytnx::linalg::Matmul(s,ut);
             ut = cytnx::linalg::Matmul(u,ut);

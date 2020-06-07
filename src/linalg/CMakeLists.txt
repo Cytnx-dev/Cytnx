@@ -20,8 +20,8 @@ target_sources_local(cytnx
     Expf_.cpp
     ExpH.cpp
     ExpM.cpp
-    Inv.cpp
-    Inv_.cpp
+    InvM.cpp
+    InvM_.cpp
     Matmul.cpp
     Mul.cpp
     Outer.cpp

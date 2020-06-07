@@ -16,6 +16,7 @@
     6. Add CyTensor.truncate/truncate.
     7. Add linalg::Sum. 
     8. Complete set_elem for sparse CyTensor dispatch in binding.
+    9. [Important] Change Inv/Inv_ to InvM/InvM_ for matrix inverse. 
 
     v0.5.2
     1. add Trace and Trace_ for CyTensor.
@@ -191,7 +192,7 @@
       ==  [tn]|   x       |  Y  |  Y   |    Y (\link cytnx::Tensor::Cpr_ Tensor.Cpr_\endlink)
       \link cytnx::linalg::Svd Svd\endlink     |   x       |  Y  |  Y   |    Y
       *\link cytnx::linalg::Svd_truncate Svd_truncate\endlink     |   x       |  Y  |  Y   |    N
-      \link cytnx::linalg::Inv Inv\endlink     |   \link cytnx::linalg::Inv_ Inv_\endlink    |  Y  |  Y   |    Y
+      \link cytnx::linalg::InvM InvM\endlink     |   \link cytnx::linalg::InvM_ InvM_\endlink    |  Y  |  Y   |    Y
       \link cytnx::linalg::Conj Conj\endlink    |   \link cytnx::linalg::Conj_ Conj_\endlink   |  Y  |  Y   |    Y 
       \link cytnx::linalg::Exp Exp\endlink     |   \link cytnx::linalg::Exp_ Exp_\endlink    |  Y  |  Y   |    Y
       \link cytnx::linalg::Expf Expf\endlink     |   \link cytnx::linalg::Expf_ Expf_\endlink    |  Y  |  Y   |    Y

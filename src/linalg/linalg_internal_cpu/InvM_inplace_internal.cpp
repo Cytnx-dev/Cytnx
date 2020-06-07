@@ -1,5 +1,5 @@
 #include "cytnx_error.hpp"
-#include "Inv_inplace_internal.hpp"
+#include "InvM_inplace_internal.hpp"
 #include "lapack_wrapper.hpp"
 
 
@@ -8,7 +8,7 @@ namespace cytnx{
     namespace linalg_internal{
 
         
-        void Inv_inplace_internal_d(boost::intrusive_ptr<Storage_base> &iten, const cytnx_int32 &L)
+        void InvM_inplace_internal_d(boost::intrusive_ptr<Storage_base> &iten, const cytnx_int32 &L)
         {
 
             cytnx_int32 *ipiv = (cytnx_int32*)malloc((L+1)*sizeof(cytnx_int32));
@@ -34,7 +34,7 @@ namespace cytnx{
             free(work);
         }
 
-        void Inv_inplace_internal_f(boost::intrusive_ptr<Storage_base> & iten, const cytnx_int32 &L)
+        void InvM_inplace_internal_f(boost::intrusive_ptr<Storage_base> & iten, const cytnx_int32 &L)
         {
 
             cytnx_int32 *ipiv = (cytnx_int32*)malloc((L+1)*sizeof(cytnx_int32));
@@ -59,7 +59,7 @@ namespace cytnx{
             free(work);
         }
 
-        void Inv_inplace_internal_cd(boost::intrusive_ptr<Storage_base> &iten, const cytnx_int32 &L)
+        void InvM_inplace_internal_cd(boost::intrusive_ptr<Storage_base> &iten, const cytnx_int32 &L)
         {
 
             cytnx_int32 *ipiv = (cytnx_int32*)malloc((L+1)*sizeof(cytnx_int32));
@@ -84,7 +84,7 @@ namespace cytnx{
             free(work);
         }
 
-        void Inv_inplace_internal_cf(boost::intrusive_ptr<Storage_base> &iten, const cytnx_int32 &L)
+        void InvM_inplace_internal_cf(boost::intrusive_ptr<Storage_base> &iten, const cytnx_int32 &L)
         {
 
             cytnx_int32 *ipiv = (cytnx_int32*)malloc((L+1)*sizeof(cytnx_int32));

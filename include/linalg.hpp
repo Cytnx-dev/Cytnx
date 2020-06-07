@@ -309,7 +309,7 @@ namespace cytnx{
         Tensor Matmul(const Tensor &TL, const Tensor &TR);
 
 
-        // Inv:
+        // InvM:
         //==================================================
         /**
         @brief Matrix inverse.
@@ -318,7 +318,7 @@ namespace cytnx{
 
         [Note] the Tin should be a rank-2 Tensor.
         */
-        Tensor Inv(const Tensor &Tin);
+        Tensor InvM(const Tensor &Tin);
         /**
         @brief inplace perform Matrix inverse.
 
@@ -327,7 +327,7 @@ namespace cytnx{
 
         [Note] the Tin should be a rank-2 Tensor.
         */
-        void Inv_(Tensor &Tin);
+        void InvM_(Tensor &Tin);
 
 
         // Inv_elem:

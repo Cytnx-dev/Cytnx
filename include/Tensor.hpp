@@ -980,8 +980,8 @@ namespace cytnx{
             // linalg:
             std::vector<Tensor> Svd(const bool &is_U=true, const bool &is_vT=true) const;
             std::vector<Tensor> Eigh(const bool &is_V=true,const bool &row_v=false) const;
-            Tensor& Inv_();
-            Tensor Inv() const; 
+            Tensor& InvM_();
+            Tensor InvM() const; 
             Tensor& Conj_();
             Tensor Conj() const;
             Tensor& Exp_();

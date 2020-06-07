@@ -94,8 +94,8 @@ def Exp_(self):
     self.cExp_()
     return self
 @add_method(Tensor)
-def Inv_(self):
-    self.cInv_()
+def InvM_(self):
+    self.cInvM_()
     return self
 @add_method(Tensor)
 def Abs_(self):

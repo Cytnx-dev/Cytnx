@@ -1138,8 +1138,8 @@ PYBIND11_MODULE(cytnx,m){
                 //linalg >>
                 .def("Svd",&cytnx::Tensor::Svd, py::arg("is_U"), py::arg("is_vT"))
                 .def("Eigh",&cytnx::Tensor::Eigh, py::arg("is_V")=true,py::arg("row_v")=false)
-                .def("cInv_",&cytnx::Tensor::Inv_)
-                .def("Inv",&cytnx::Tensor::Inv)
+                .def("cInvM_",&cytnx::Tensor::InvM_)
+                .def("InvM",&cytnx::Tensor::InvM)
                 .def("cConj_",&cytnx::Tensor::Conj_)
                 .def("Conj",&cytnx::Tensor::Conj)
                 .def("cExp_",&cytnx::Tensor::Exp_)
@@ -1828,8 +1828,8 @@ PYBIND11_MODULE(cytnx,m){
     m_linalg.def("ExpH",&cytnx::linalg::ExpH,py::arg("Tio"),py::arg("a")=1.0,py::arg("b")=0);
     m_linalg.def("ExpM",&cytnx::linalg::ExpM,py::arg("Tio"),py::arg("a")=1.0,py::arg("b")=0);
     m_linalg.def("QR",&cytnx::linalg::QR,py::arg("Tio"),py::arg("is_tau")=false);
-    m_linalg.def("Inv",&cytnx::linalg::Inv,py::arg("Tin"));
-    m_linalg.def("Inv_",&cytnx::linalg::Inv_,py::arg("Tio"));
+    m_linalg.def("InvM",&cytnx::linalg::InvM,py::arg("Tin"));
+    m_linalg.def("InvM_",&cytnx::linalg::InvM_,py::arg("Tio"));
     m_linalg.def("Conj",&cytnx::linalg::Conj,py::arg("Tin"));
     m_linalg.def("Conj_",&cytnx::linalg::Conj_,py::arg("Tio"));
     m_linalg.def("Matmul",&cytnx::linalg::Matmul,py::arg("T1"),py::arg("T2"));
