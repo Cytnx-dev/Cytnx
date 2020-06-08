@@ -3,8 +3,8 @@ import cytnx as cy
 from cytnx import cytnx_extension as cyx
 
 
-x = cy.arange(10).astype(cy.Type.Double)*1.0e-5
-print(cy.linalg.Abs(x))
+x = cy.ones(10).astype(cy.Type.Double)*1.0e-5
+print(cy.linalg.Inv(x,1.0e-4))
 exit(1)
 
 

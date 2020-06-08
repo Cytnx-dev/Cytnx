@@ -65,7 +65,7 @@ var searchData=
   ['sstev_5f',['sstev_',['../lapack__wrapper_8hpp.html#a796c53e5700497b9cc8ed94f14904906',1,'lapack_wrapper.hpp']]],
   ['ssyev',['ssyev',['../lapack__wrapper_8hpp.html#a814b714b9caf307e21c2c6d77b065e0b',1,'lapack_wrapper.hpp']]],
   ['ssyev_5f',['ssyev_',['../lapack__wrapper_8hpp.html#af1f323dfd315667f032ee059d8b3774c',1,'lapack_wrapper.hpp']]],
-  ['storage',['Storage',['../classcytnx_1_1Storage.html',1,'cytnx::Storage'],['../classcytnx_1_1Tensor.html#a0fd5918a0f64ebd74fe34cb8b8164c30',1,'cytnx::Tensor::storage()'],['../classcytnx_1_1Storage.html#a281c06bd64e9ea3338083c18c4c32eda',1,'cytnx::Storage::Storage(const unsigned long long &amp;size, const unsigned int &amp;dtype=Type.Double, int device=-1)'],['../classcytnx_1_1Storage.html#a49037d5a58e68e63998817fba38de5e2',1,'cytnx::Storage::Storage()']]],
+  ['storage',['Storage',['../classcytnx_1_1Storage.html',1,'cytnx::Storage'],['../classcytnx_1_1Storage.html#a281c06bd64e9ea3338083c18c4c32eda',1,'cytnx::Storage::Storage(const unsigned long long &amp;size, const unsigned int &amp;dtype=Type.Double, int device=-1)'],['../classcytnx_1_1Storage.html#a49037d5a58e68e63998817fba38de5e2',1,'cytnx::Storage::Storage()'],['../classcytnx_1_1Tensor.html#a0fd5918a0f64ebd74fe34cb8b8164c30',1,'cytnx::Tensor::storage()']]],
   ['storage_2ecpp',['Storage.cpp',['../Storage_8cpp.html',1,'']]],
   ['storage_2ehpp',['Storage.hpp',['../Storage_8hpp.html',1,'']]],
   ['storage_5fbase_2ecpp',['Storage_base.cpp',['../Storage__base_8cpp.html',1,'']]],

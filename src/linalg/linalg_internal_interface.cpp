@@ -264,6 +264,13 @@ namespace cytnx{
             InvM_inplace_ii[Type.Double       ] = InvM_inplace_internal_d;
             InvM_inplace_ii[Type.Float        ] = InvM_inplace_internal_f;
 
+            //=====================
+            Inv_inplace_ii = vector<Invinplacefunc_oii>(5);
+
+            Inv_inplace_ii[Type.ComplexDouble] = Inv_inplace_internal_cd;
+            Inv_inplace_ii[Type.ComplexFloat ] = Inv_inplace_internal_cf;
+            Inv_inplace_ii[Type.Double       ] = Inv_inplace_internal_d;
+            Inv_inplace_ii[Type.Float        ] = Inv_inplace_internal_f;
 
             //=====================
             Conj_inplace_ii = vector<Conjinplacefunc_oii>(3);
@@ -727,6 +734,16 @@ namespace cytnx{
                 cuInvM_inplace_ii[Type.ComplexFloat ] = cuInvM_inplace_internal_cf;
                 cuInvM_inplace_ii[Type.Double       ] = cuInvM_inplace_internal_d;
                 cuInvM_inplace_ii[Type.Float        ] = cuInvM_inplace_internal_f;
+
+
+                //=====================
+                cuInv_inplace_ii = vector<Invinplacefunc_oii>(5);
+
+                cuInv_inplace_ii[Type.ComplexDouble] = cuInv_inplace_internal_cd;
+                cuInv_inplace_ii[Type.ComplexFloat ] = cuInv_inplace_internal_cf;
+                cuInv_inplace_ii[Type.Double       ] = cuInv_inplace_internal_d;
+                cuInv_inplace_ii[Type.Float        ] = cuInv_inplace_internal_f;
+
 
                 //=====================
                 cuConj_inplace_ii = vector<Conjinplacefunc_oii>(3);

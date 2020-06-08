@@ -98,6 +98,12 @@ def InvM_(self):
     self.cInvM_()
     return self
 @add_method(Tensor)
+def Inv_(self,clip):
+    self.cInv_(clip)
+    return self
+
+
+@add_method(Tensor)
 def Abs_(self):
     self.cAbs_()
     return self

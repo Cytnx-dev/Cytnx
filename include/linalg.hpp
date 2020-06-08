@@ -330,8 +330,34 @@ namespace cytnx{
         void InvM_(Tensor &Tin);
 
 
-        // Inv_elem:
-        //Tensor Inv_elem(const Tensor &Tin, const double &clip);
+        //Inv:
+        //==================================================
+        /**
+        @brief Element-wise inverse with clip.
+        @return 
+            [Tensor]
+
+        description:
+            Performs Elementwise inverse with clip. if A[i] < clip, then 1/A[i] = 0 will be set.
+
+        [Note] For complex type Tensors, the square norm is used to determine the clip. 
+
+        */
+        Tensor Inv(const Tensor &Tin, const double &clip);
+
+        /**
+        @brief inplace perform Element-wise inverse with clip.
+        @return 
+            [Tensor]
+
+        description:
+            1. Performs Elementwise inverse with clip. if A[i] < clip, then 1/A[i] = 0 will be set.
+            2. on return, all the elements will be modified to it's inverse. if Tin is integer type, it will automatically promote to Type.Double. 
+
+        [Note] For complex type Tensors, the square norm is used to determine the clip. 
+
+        */
+        void Inv_(Tensor &Tin, const double &clip);
 
 
         // Conj:

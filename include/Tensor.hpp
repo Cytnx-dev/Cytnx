@@ -982,6 +982,9 @@ namespace cytnx{
             std::vector<Tensor> Eigh(const bool &is_V=true,const bool &row_v=false) const;
             Tensor& InvM_();
             Tensor InvM() const; 
+            Tensor& Inv_(const double &clip);
+            Tensor Inv(const double &clip) const; 
+
             Tensor& Conj_();
             Tensor Conj() const;
             Tensor& Exp_();

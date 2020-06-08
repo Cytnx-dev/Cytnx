@@ -521,6 +521,14 @@ namespace cytnx{
     Tensor Tensor::InvM() const{
         return linalg::InvM(*this); 
     }
+    Tensor& Tensor::Inv_(const double &clip){
+        linalg::Inv_(*this,clip);
+        return *this;
+    }
+    Tensor Tensor::Inv(const double &clip) const{
+        return linalg::Inv(*this,clip); 
+    }
+
     
     Tensor& Tensor::Conj_(){
         linalg::Conj_(*this);

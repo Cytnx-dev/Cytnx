@@ -22,6 +22,8 @@ target_sources_local(cytnx
     ExpM.cpp
     InvM.cpp
     InvM_.cpp
+    Inv_.cpp
+    Inv.cpp
     Matmul.cpp
     Mul.cpp
     Outer.cpp

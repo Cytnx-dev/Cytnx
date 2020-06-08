@@ -7,6 +7,8 @@ var searchData=
   ['int32storage_2ecpp',['Int32Storage.cpp',['../Int32Storage_8cpp.html',1,'']]],
   ['int64storage_2ecpp',['Int64Storage.cpp',['../Int64Storage_8cpp.html',1,'']]],
   ['intrusive_5fptr_5fbase_2ehpp',['intrusive_ptr_base.hpp',['../intrusive__ptr__base_8hpp.html',1,'']]],
+  ['inv',['Inv',['../classcytnx_1_1Tensor.html#a46740b4d5f24bfc3d3ce95b151dc6799',1,'cytnx::Tensor::Inv()'],['../namespacecytnx_1_1linalg.html#a8680f6a91b7110d68c1d9e9a4da700d6',1,'cytnx::linalg::Inv()']]],
+  ['inv_5f',['Inv_',['../classcytnx_1_1Tensor.html#a043e2b24d2765149fd8255936221d924',1,'cytnx::Tensor::Inv_()'],['../namespacecytnx_1_1linalg.html#aa664cc05d63056151c826d8457791c5d',1,'cytnx::linalg::Inv_()']]],
   ['invm',['InvM',['../classcytnx_1_1Tensor.html#a0cd186f9e001ee836ef4712eca40f049',1,'cytnx::Tensor::InvM()'],['../namespacecytnx_1_1linalg.html#af819d2fc4522d2a6287aa16dfbe3f787',1,'cytnx::linalg::InvM()']]],
   ['invm_5f',['InvM_',['../classcytnx_1_1Tensor.html#af099f62bda6ff3b15f89d7d33f2786ba',1,'cytnx::Tensor::InvM_()'],['../namespacecytnx_1_1linalg.html#ac414e561888051c1fbacde18c9039fbf',1,'cytnx::linalg::InvM_()']]],
   ['is_5fblockform',['is_blockform',['../classcytnx__extension_1_1CyTensor.html#a55d122e80e856bd1b283ce2cadcfacbd',1,'cytnx_extension::CyTensor']]],

@@ -26,6 +26,8 @@
     7. Add linalg::Sum. 
     8. Complete set_elem for sparse CyTensor dispatch in binding.
     9. [Important] Change Inv/Inv_ to InvM/InvM_ for matrix inverse. 
+    9. [Important] Add Inv/Inv_ for elementwise inverse with clip. 
+
 
 ## What's new:
 
@@ -343,6 +345,7 @@
       Svd         |   x       |  Y  |  Y   |    Y        | Y  |   Y
      *Svd_truncate|   x       |  Y  |  Y   |    N        | Y  |   Y
       InvM        |   InvM_   |  Y  |  Y   |    Y        | Y  |   N
+      Inv         |   Inv _   |  Y  |  Y   |    Y        | Y  |   N
       Conj        |   Conj_   |  Y  |  Y   |    Y        | Y  |   Y
       Exp         |   Exp_    |  Y  |  Y   |    Y        | Y  |   N
       Expf        |   Expf_   |  Y  |  Y   |    Y        | Y  |   N

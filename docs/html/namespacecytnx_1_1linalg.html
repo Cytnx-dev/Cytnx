@@ -166,6 +166,12 @@ Functions</h2></td></tr>
 <tr class="memitem:ac414e561888051c1fbacde18c9039fbf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#ac414e561888051c1fbacde18c9039fbf">InvM_</a> (<a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin)</td></tr>
 <tr class="memdesc:ac414e561888051c1fbacde18c9039fbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">inplace perform Matrix inverse.  <a href="#ac414e561888051c1fbacde18c9039fbf">More...</a><br /></td></tr>
 <tr class="separator:ac414e561888051c1fbacde18c9039fbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8680f6a91b7110d68c1d9e9a4da700d6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a8680f6a91b7110d68c1d9e9a4da700d6">Inv</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin, const double &amp;clip)</td></tr>
+<tr class="memdesc:a8680f6a91b7110d68c1d9e9a4da700d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Element-wise inverse with clip.  <a href="#a8680f6a91b7110d68c1d9e9a4da700d6">More...</a><br /></td></tr>
+<tr class="separator:a8680f6a91b7110d68c1d9e9a4da700d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa664cc05d63056151c826d8457791c5d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#aa664cc05d63056151c826d8457791c5d">Inv_</a> (<a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin, const double &amp;clip)</td></tr>
+<tr class="memdesc:aa664cc05d63056151c826d8457791c5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">inplace perform Element-wise inverse with clip.  <a href="#aa664cc05d63056151c826d8457791c5d">More...</a><br /></td></tr>
+<tr class="separator:aa664cc05d63056151c826d8457791c5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a470d0886432554a35ecaf961451c0806"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a470d0886432554a35ecaf961451c0806">Conj</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin)</td></tr>
 <tr class="memdesc:a470d0886432554a35ecaf961451c0806"><td class="mdescLeft">&#160;</td><td class="mdescRight">Conjugate all the element in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>.  <a href="#a470d0886432554a35ecaf961451c0806">More...</a><br /></td></tr>
 <tr class="separator:a470d0886432554a35ecaf961451c0806"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -994,6 +1000,75 @@ template&lt;class T &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8680f6a91b7110d68c1d9e9a4da700d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8680f6a91b7110d68c1d9e9a4da700d6">&#9670;&nbsp;</a></span>Inv()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> cytnx::linalg::Inv </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>Tin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double &amp;&#160;</td>
+          <td class="paramname"><em>clip</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Element-wise inverse with clip. </p>
+<dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>]</dd></dl>
+<p>description: Performs Elementwise inverse with clip. if A[i] &lt; clip, then 1/A[i] = 0 will be set.</p>
+<p>[Note] For complex type Tensors, the square norm is used to determine the clip. </p>
+
+</div>
+</div>
+<a id="aa664cc05d63056151c826d8457791c5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa664cc05d63056151c826d8457791c5d">&#9670;&nbsp;</a></span>Inv_()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cytnx::linalg::Inv_ </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>Tin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double &amp;&#160;</td>
+          <td class="paramname"><em>clip</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>inplace perform Element-wise inverse with clip. </p>
+<dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>]</dd></dl>
+<p>description:</p><ol type="1">
+<li>Performs Elementwise inverse with clip. if A[i] &lt; clip, then 1/A[i] = 0 will be set.</li>
+<li>on return, all the elements will be modified to it's inverse. if Tin is integer type, it will automatically promote to Type.Double.</li>
+</ol>
+<p>[Note] For complex type Tensors, the square norm is used to determine the clip. </p>
 
 </div>
 </div>
