@@ -19,7 +19,7 @@
     9. [Important] Change Inv/Inv_ to InvM/InvM_ for matrix inverse. 
     10. [Important] Add Inv/Inv_ for elementwise inverse with clip. 
     11. [Enhace] Add str_strip for removing " ", "\t", "\r" at the end.
-
+    12. [Enhance] Accessor::() allow negative input.
 
     v0.5.2
     1. add Trace and Trace_ for CyTensor.

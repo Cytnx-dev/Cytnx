@@ -11,6 +11,7 @@ var searchData=
   ['trace_5f',['Trace_',['../classcytnx__extension_1_1CyTensor.html#a34f7cf70d69f383a79e970cae263b183',1,'cytnx_extension::CyTensor']]],
   ['transpose',['Transpose',['../classcytnx__extension_1_1CyTensor.html#a7428353980971cd718324b4ec9b76ed8',1,'cytnx_extension::CyTensor']]],
   ['transpose_5f',['Transpose_',['../classcytnx__extension_1_1CyTensor.html#a8dc7b81abf773eb9fb09853690823c6c',1,'cytnx_extension::CyTensor']]],
+  ['tri',['tri',['../namespacecytnx__extension.html#a900047e32739f8eb922990f4b08d2462',1,'cytnx_extension']]],
   ['tridiag',['Tridiag',['../namespacecytnx_1_1linalg.html#abc68d62e804d6d3e86aeec00015b07cd',1,'cytnx::linalg']]],
   ['truncate',['truncate',['../classcytnx__extension_1_1CyTensor.html#a1995f324782a207b1efa83390735e2da',1,'cytnx_extension::CyTensor']]],
   ['truncate_5f',['truncate_',['../classcytnx__extension_1_1CyTensor.html#a38db7239c7d8caede9d4f210e59d7539',1,'cytnx_extension::CyTensor']]],

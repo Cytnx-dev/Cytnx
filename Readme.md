@@ -27,7 +27,9 @@
     8. Complete set_elem for sparse CyTensor dispatch in binding.
     9. [Important] Change Inv/Inv_ to InvM/InvM_ for matrix inverse. 
     10. [Important] Add Inv/Inv_ for elementwise inverse with clip. 
-    11. [Enhace] Add str_strip for removing " ", "\t", "\r" at the end.
+    11. [Enhance] Add str_strip for removing " ", "\t", "\r" at the end.
+    12. [Enhance] Accessor::() allow negative input.
+
 
 ## What's new:
 
