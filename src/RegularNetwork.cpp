@@ -64,6 +64,48 @@ namespace cytnx_extension{
         }
 
     }
+
+    /// This is debug function for printing special characters
+    void tri(const char *text){
+
+    for (const char* p = text; *p != '\0'; ++p)
+    {
+        int c = (unsigned char) *p;
+
+        switch (c)
+        {
+            case '\\':
+                printf("\\\\");
+                break;
+            case '\n':
+                printf("\\n");
+                break;
+            case '\r':
+                printf("\\r");
+                break;
+            case '\t':
+                printf("\\t");
+                break;
+
+            // TODO: Add other C character escapes here.  See:
+            // <https://en.wikipedia.org/wiki/Escape_sequences_in_C#Table_of_escape_sequences>
+
+            default:
+                if (isprint(c))
+                {
+                    putchar(c);
+                }
+                else
+                {
+                    printf("\\x%X", c);
+                }
+                break;
+        }
+    }
+
+
+    }
+    
     void _parse_TN_line_(vector<cytnx_int64> &lbls, cytnx_uint64 &TN_iBondNum, const string &line, const cytnx_uint64 &line_num){
         lbls.clear();
         vector<string> tmp = str_split(line,false,";");
@@ -87,6 +129,11 @@ namespace cytnx_extension{
         for(cytnx_uint64 i=0;i<bra_lbls.size();i++){
             string tmp = str_strip(bra_lbls[i]);
             cytnx_error_msg(tmp.length()==0,"[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",line_num,"\n");
+            
+            //tri(tmp.c_str());
+             
+            //cout << tmp.size() << endl;
+            //cout << tmp.find_first_not_of("0123456789-") << endl;
             cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
                             "[ERROR][Network][Fromfile] line:%d %s\n",line_num,"Invalid TN line. label contain non integer.");
             lbls.push_back(stoi(tmp,nullptr));

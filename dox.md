@@ -17,7 +17,8 @@
     7. Add linalg::Sum. 
     8. Complete set_elem for sparse CyTensor dispatch in binding.
     9. [Important] Change Inv/Inv_ to InvM/InvM_ for matrix inverse. 
-    9. [Important] Add Inv/Inv_ for elementwise inverse with clip. 
+    10. [Important] Add Inv/Inv_ for elementwise inverse with clip. 
+    11. [Enhace] Add str_strip for removing " ", "\t", "\r" at the end.
 
 
     v0.5.2
