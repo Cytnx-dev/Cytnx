@@ -69,9 +69,13 @@ namespace cytnx{
             
         }else if(this->type == Accessor::Singl){
             //check:
-            cytnx_error_msg(this->loc >= dim,"[ERROR] index is out of bound%s","\n");
+            //std::cout << this->loc << " " << dim << std::endl;
+            cytnx_error_msg(std::abs(this->loc) >= dim,"[ERROR] index is out of bound%s","\n");
             len = 1;
-            pos.push_back(this->loc);
+            if(this->loc<0)
+                pos.push_back(this->loc+dim);
+            else
+                pos.push_back(this->loc);
         }
     }
 
