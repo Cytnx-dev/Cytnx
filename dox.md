@@ -397,8 +397,11 @@
 ## Developer
 
     Kai-Hsin Wu kaihsinwu@gmail.com 
-    Yen-Hsin Wu
-    Yu-Hsueh Chen 
+    
+    Ying-Jer Kao (NTU, Taiwan): setuptool, cmake
+    Yen-Hsin Wu (NTU, Taiwan): Network optimization
+    Yu-Hsueh Chen (NTU, Taiwan): example, and testing
+    Po-Kwan Wu (OSU): Icon optimization
 
 ## Refereces:
 
