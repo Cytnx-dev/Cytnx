@@ -1,6 +1,6 @@
 # Cytnx
 
-![alt text](./Icon_dark.png)
+![alt text](./Tt1_dark.png)
 
 ## Intro slide
 [Cytnx_v0.5.2a.pdf](https://drive.google.com/file/d/1tfruYcfNxtSR0bwJv0WQMnNKwcAeehuT/view?usp=sharing)
@@ -407,7 +407,8 @@
     Ying-Jer Kao (NTU, Taiwan): setuptool, cmake
     Yen-Hsin Wu (NTU, Taiwan): Network optimization
     Yu-Hsueh Chen (NTU, Taiwan): example, and testing
-
+    Po-Kwan Wu (OSU): Icon optimization
+    
 ## References
 
     * example/DMRG:
