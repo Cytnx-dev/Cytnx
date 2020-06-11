@@ -6,6 +6,9 @@
 [Cytnx_v0.5.2a.pdf](https://drive.google.com/file/d/1tfruYcfNxtSR0bwJv0WQMnNKwcAeehuT/view?usp=sharing)
 
 
+![Alt text](cytnx_36)
+<img src="https://anaconda.org/kaihsinwu/cytnx_36/badges/version.svg">
+
 ## News
     [v0.5.2a] 
     1. example/iTEBD, please modify the argument rowrank->Rowrank if you encounter error in running them.
@@ -141,7 +144,9 @@
     [Currently Linux with Intel CPU only]
 
     * without CUDA
-      python 3.6: conda install -c kaihsinwu cytnx_36
+![Alt text](cytnx_36)
+<img src="https://anaconda.org/kaihsinwu/cytnx_36/badges/latest_release_date.svg">
+      python 3.6: conda install -c kaihsinwu cytnx_36 
       python 3.7: conda install -c kaihsinwu cytnx_37
 
     * with CUDA
