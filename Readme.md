@@ -30,6 +30,8 @@
     11. [Enhance] Add str_strip for removing " ", "\t", "\r" at the end.
     12. [Enhance] Accessor::() allow negative input.
     13. Add GPU Pow/Pow_
+    14. Add random.uniform()
+
 
 ## What's new:
 
@@ -392,6 +394,7 @@
     *Make_normal() |  Y  |  Y   | Y   |  Y
     *Make_uniform() |  Y  |  Y   | Y   |  N
     ^normal()      |  Y  |  x   | Y   |  Y
+    ^uniform()      |  Y  |  x   | Y   |  N
 
     * this is initializer
     ^ this is generator

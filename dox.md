@@ -21,6 +21,7 @@
     11. [Enhace] Add str_strip for removing " ", "\t", "\r" at the end.
     12. [Enhance] Accessor::() allow negative input.
     13. Add GPU Pow/Pow_
+    14. Add random.uniform()
 
     v0.5.2
     1. add Trace and Trace_ for CyTensor.

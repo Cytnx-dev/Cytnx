@@ -5,6 +5,7 @@ target_sources_local(cytnx
     Make_normal.cpp
     Make_uniform.cpp
     normal.cpp
+    uniform.cpp
 )
 
 add_subdirectory(random_internal_cpu)

@@ -112,7 +112,7 @@ ifeq ($(GPU_Enable),1)
 endif
 
 ## Random
-OBJS += Make_normal.o normal.o Make_uniform.o 
+OBJS += Make_normal.o normal.o Make_uniform.o uniform.o 
 
 
 ALLOBJS = $(OBJS)
@@ -391,6 +391,8 @@ Make_normal.o: $(CytnxPATH)/src/random/Make_normal.cpp $(CytnxPATH)/include/rand
 Make_uniform.o: $(CytnxPATH)/src/random/Make_uniform.cpp $(CytnxPATH)/include/random.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 normal.o: $(CytnxPATH)/src/random/normal.cpp $(CytnxPATH)/include/random.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+uniform.o: $(CytnxPATH)/src/random/uniform.cpp $(CytnxPATH)/include/random.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 ## Misc

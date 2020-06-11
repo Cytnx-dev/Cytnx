@@ -114,6 +114,37 @@ namespace cytnx{
         Tensor normal(const std::vector<cytnx_uint64> &Nelem, const double &mean, const double &std, const int &device=Device.cpu, const unsigned int &seed=std::random_device()());
         //@}    
 
+        // uniform:
+        //@{
+        /**
+        @brief create an Tensor with all the elements are initialized with uniform distribution
+        @param Nelem the number of elements     
+        @param low the lower-bound of range
+        @param high the upper-bound of range
+        @param device the device that the Tensor is put on. It can be any device defined in \link cytnx::Device cytnx::Device \endlink
+        @param seed the seed for the random generator. [Default] using device entropy
+
+        @return 
+            [Tensor]
+       
+        */    
+        Tensor uniform(const cytnx_uint64 &Nelem, const double &low, const double &high, const int &device=Device.cpu, const unsigned int &seed=std::random_device()());
+
+        /**
+        @brief create an Tensor with all the elements are initialized with uniform distribution
+        @param Nelem the number of elements     
+        @param low the lower-bound of range
+        @param high the upper-bound of range
+        @param device the device that the Tensor is put on. It can be any device defined in \link cytnx::Device cytnx::Device \endlink
+        @param seed the seed for the random generator. [Default] using device entropy
+
+        @return 
+            [Tensor]
+       
+        */    
+        Tensor uniform(const std::vector<cytnx_uint64> &Nelem, const double &low, const double &high, const int &device=Device.cpu, const unsigned int &seed=std::random_device()());
+        //@}    
+
 
 
     }
