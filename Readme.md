@@ -9,16 +9,16 @@
 ![](https://anaconda.org/kaihsinwu/cytnx_36/badges/version.svg)
 
 ## News
-    [v0.5.2a] 
-    1. example/iTEBD, please modify the argument rowrank->Rowrank if you encounter error in running them.
-    2. Fix bug in cytnx.linalg.Abs truncate floating point part. ---> v0.5.2a-build1
-    3. Fix bug in mkl blas package import bug with numpy.        ---> v0.5.2a-build1
+    [v0.5.3a] 
+
 
 ## Stable Version:
-    [v0.5.2 pre-release](https://github.com/kaihsin/Cytnx/tree/v0.5.2a)
+    [v0.5.3 pre-release](https://github.com/kaihsin/Cytnx/tree/v0.5.3a)
 
 ## Current dev Version:
-    v0.5.3
+    v0.5.4
+
+    v0.5.3a
     1. Add xlinalg.QR
     2. enhance hosvd.
     3. Fix bug in cytnx.linalg.Abs truncate the floating point part. 
@@ -35,9 +35,14 @@
     14. Add random.uniform()
     15. Fix bug in diagonal CyTensor reshape/reshape_ cause mismatch.
     16. Add a is_diag option for convert Tensor to CyTensor. 
-    
 
-## What's new:
+## Version log
+
+    v0.5.2a-build1
+    1. example/iTEBD, please modify the argument rowrank->Rowrank if you encounter error in running them.
+    2. Fix bug in cytnx.linalg.Abs truncate floating point part. ---> v0.5.2a-build1
+    3. Fix bug in mkl blas package import bug with numpy.        ---> v0.5.2a-build1
+
 
     v0.5.2a
     1. add Trace and Trace_ for CyTensor.
@@ -94,7 +99,7 @@
     52. Add Symmetry.Save/Load
     53. Symmetry/Tensor/Storage/Bond/CyTensor Save/Load re-invented for more simple usage
 
-## Version log
+
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn
     2. add Dot() for CPU and GPU, with unify API for Vec-Vec/Mat-Vec/Mat-Mat/Ten-Vec product.
