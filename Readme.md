@@ -9,8 +9,8 @@
 ## News
     [v0.5.2a] 
     1. example/iTEBD, please modify the argument rowrank->Rowrank if you encounter error in running them.
-    2. Fix bug in cytnx.linalg.Abs truncate floating point part. ---> v0.5.2a-rev1    
-
+    2. Fix bug in cytnx.linalg.Abs truncate floating point part. ---> v0.5.2a-build1
+    3. Fix bug in mkl blas package import bug with numpy.        ---> v0.5.2a-build1
 
 ## Stable Version:
     [v0.5.2 pre-release](https://github.com/kaihsin/Cytnx/tree/v0.5.2a)

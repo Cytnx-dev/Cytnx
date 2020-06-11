@@ -1,38 +1,38 @@
 package:
-  name: cytnx_37
-  version: "0.5.2a"
+  name: cytnx_37dev
+  version: "0.5.3dev"
 
 source:
   path: ../
 
 build:
   noarch: generic
-  number: 1
+  number: 0
 
 
 requirements:
   build:
     - python 3.7
-    - numpy >=1.18
     - cmake  
+    - numpy >=1.18
     - pybind11 
     - boost
     - mkl >=2019
-    - mkl-include >=2019
+    - mkl-include
     - intel-openmp
     - setuptools
     - graphviz
-    - blas * mkl
     - python-graphviz
-    - {{ compiler("c")}}
-    - {{ compiler("cxx")}}
+    - blas * mkl
+    - {{ compiler("c") }}
+    - {{ compiler("cxx") }}
 
   host:
     - python 3.7
     - boost
     - numpy >=1.18
     - mkl >=2019
-    - mkl-include >=2019
+    - mkl-include
     - intel-openmp
     - setuptools
     - graphviz
@@ -42,14 +42,14 @@ requirements:
   run:
     - python 3.7
     - boost
-    - mkl >=2019
-    - mkl-include >=2019
-    - intel-openmp
     - numpy >=1.18
+    - mkl >=2019
+    - mkl-include
+    - intel-openmp
     - setuptools
     - python-graphviz
-    - graphviz
     - blas * mkl
-    - python-graphviz
+    - graphviz
 
 about:
+

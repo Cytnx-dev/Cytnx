@@ -1,48 +1,54 @@
 package:
   name: cytnx_36
-  version: "0.5.2.1a"
+  version: "0.5.2a"
 
 source:
   path: ../
 
 build:
   noarch: generic
-  number: 0
+  number: 1
 
 
 requirements:
   build:
     - python 3.6
+    - numpy >=1.18
     - cmake  
     - pybind11 
     - boost
-    - mkl
-    - mkl-include
+    - mkl >=2019
+    - mkl-include >=2019
     - intel-openmp
     - setuptools
     - python-graphviz
     - graphviz
+    - blas * mkl
     - {{ compiler("c")}}
     - {{ compiler("cxx")}}
 
   host:
     - python 3.6
+    - numpy >=1.18
     - boost
-    - mkl
-    - mkl-include
+    - mkl >=2019
+    - mkl-include >=2019
     - intel-openmp
     - setuptools
     - python-graphviz
     - graphviz
+    - blas * mkl
 
   run:
     - python 3.6
+    - numpy >=1.18
     - boost
-    - mkl
-    - mkl-include
+    - mkl >=2019
+    - mkl-include >=2019
     - intel-openmp
     - setuptools
     - python-graphviz
     - graphviz
+    - blas * mkl
 
 about:
