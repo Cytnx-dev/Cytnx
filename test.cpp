@@ -17,6 +17,10 @@ int main(int argc, char *argv[]){
     auto TNtts = arange(16);
     cout << TNtts << endl;
 
+    TNtts.to_(Device.cuda);
+    linalg::Pow_(TNtts,2);
+    cout << TNtts << endl;
+    exit(1);
     TNtts[{0}] = TNtts[{1}] = 9999;
 
     //TNtts[{ac(4)}] = 99999;

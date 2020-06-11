@@ -25,7 +25,7 @@ namespace cytnx_extension{
         void CyTensor_base::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &Rowrank,const unsigned int &dtype,const int &device,const bool &is_diag){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
         }
-        void CyTensor_base::Init_by_Tensor(const Tensor &in_tensor, const cytnx_uint64 &Rowrank){
+        void CyTensor_base::Init_by_Tensor(const Tensor &in_tensor, const cytnx_uint64 &Rowrank, const bool &is_diag){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
         }   
         

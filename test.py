@@ -2,6 +2,8 @@ import numpy as np
 import cytnx as cy
 from cytnx import cytnx_extension as cyx
 
+net = cyx.Network("Factors.net")
+
 
 x = cy.ones(10).astype(cy.Type.Double)*1.0e-5
 print(cy.linalg.Inv(x,1.0e-4))

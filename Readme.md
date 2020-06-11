@@ -31,7 +31,9 @@
     12. [Enhance] Accessor::() allow negative input.
     13. Add GPU Pow/Pow_
     14. Add random.uniform()
-
+    15. Fix bug in diagonal CyTensor reshape/reshape_ cause mismatch.
+    16. Add a is_diag option for convert Tensor to CyTensor. 
+    
 
 ## What's new:
 

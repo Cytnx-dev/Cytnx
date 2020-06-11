@@ -1283,7 +1283,7 @@ PYBIND11_MODULE(cytnx,m){
 
     py::class_<cytnx_extension::CyTensor>(mext,"CyTensor")
                 .def(py::init<>())
-                .def(py::init<const cytnx::Tensor&, const cytnx_uint64&>())
+                .def(py::init<const cytnx::Tensor&, const cytnx_uint64&, const bool &>(),py::arg("Tin"),py::arg("Rowrank"),py::arg("is_diag")=false)
                 .def(py::init<const std::vector<cytnx_extension::Bond> &, const std::vector<cytnx_int64> &, const cytnx_int64 &, const unsigned int &,const int &, const bool &>(),py::arg("bonds"),py::arg("labels")=std::vector<cytnx_int64>(),py::arg("Rowrank")=(cytnx_int64)(-1),py::arg("dtype")=(unsigned int)(cytnx::Type.Double),py::arg("device")=(int)cytnx::Device.cpu,py::arg("is_diag")=false)
                 .def("set_name",&cytnx_extension::CyTensor::set_name)
                 .def("set_label",&cytnx_extension::CyTensor::set_label,py::arg("idx"),py::arg("new_label"))
@@ -1890,5 +1890,12 @@ PYBIND11_MODULE(cytnx,m){
     m_random.def("normal", [](const std::vector<cytnx_uint64>& Nelem,const double &mean, const double &std, const int&device, const unsigned int &seed){
                                    return cytnx::random::normal(Nelem,mean,std,device,seed);
                                   },py::arg("Nelem"),py::arg("mean"),py::arg("std"),py::arg("device")=-1,py::arg("seed")=std::random_device()());
+    m_random.def("uniform", [](const cytnx_uint64& Nelem,const double &low, const double &high, const int&device, const unsigned int &seed){
+                                   return cytnx::random::uniform(Nelem,low,high,device,seed);
+                                  },py::arg("Nelem"),py::arg("low"),py::arg("high"),py::arg("device")=-1,py::arg("seed")=std::random_device()());
+    m_random.def("uniform", [](const std::vector<cytnx_uint64>& Nelem,const double &low, const double &high, const int&device, const unsigned int &seed){
+                                   return cytnx::random::uniform(Nelem,low,high,device,seed);
+                                  },py::arg("Nelem"),py::arg("low"),py::arg("high"),py::arg("device")=-1,py::arg("seed")=std::random_device()());
+
 }
 

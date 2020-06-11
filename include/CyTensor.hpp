@@ -170,7 +170,7 @@ namespace cytnx_extension{
 
 
             virtual void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1,const unsigned int &dtype=Type.Double,const int &device = Device.cpu,const bool &is_diag=false);
-            virtual void Init_by_Tensor(const Tensor& in, const cytnx_uint64 &Rowrank);
+            virtual void Init_by_Tensor(const Tensor& in, const cytnx_uint64 &Rowrank, const bool &is_diag=false);
             virtual std::vector<cytnx_uint64> shape() const;
             virtual bool      is_blockform() const ;
             virtual bool     is_contiguous() const;
@@ -289,7 +289,7 @@ namespace cytnx_extension{
             // virtual functions
             void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
             // this only work for non-symm tensor
-            void Init_by_Tensor(const Tensor& in_tensor, const cytnx_uint64 &Rowrank);
+            void Init_by_Tensor(const Tensor& in_tensor, const cytnx_uint64 &Rowrank, const bool &is_diag=false);
             std::vector<cytnx_uint64> shape() const{ 
                 if(this->_is_diag){
                     std::vector<cytnx_uint64> shape = this->_block.shape();
@@ -414,19 +414,8 @@ namespace cytnx_extension{
             void set(const std::vector<Accessor> &accessors, const Tensor &rhs){
                 this->_block.set(accessors,rhs);
             }
-            void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank=0){
-                cytnx_error_msg(this->is_tag(),"[ERROR] cannot reshape a tagged CyTensor. suggestion: use untag() first.%s","\n");
-                cytnx_error_msg(Rowrank > new_shape.size(), "[ERROR] Rowrank cannot larger than the rank of reshaped CyTensor.%s","\n");
-                this->_block.reshape_(new_shape);
-                this->Init_by_Tensor(this->_block,Rowrank);
-            }
-            boost::intrusive_ptr<CyTensor_base> reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank=0){
-                cytnx_error_msg(this->is_tag(),"[ERROR] cannot reshape a tagged CyTensor. suggestion: use untag() first.%s","\n");
-                cytnx_error_msg(Rowrank > new_shape.size(), "[ERROR] Rowrank cannot larger than the rank of reshaped CyTensor.%s","\n");
-                boost::intrusive_ptr<CyTensor_base> out(new DenseCyTensor());
-                out->Init_by_Tensor(this->_block.reshape(new_shape),Rowrank);
-                return out;
-            }
+            void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank=0);
+            boost::intrusive_ptr<CyTensor_base> reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank=0);
             boost::intrusive_ptr<CyTensor_base> to_dense();
             void to_dense_();
 
@@ -650,7 +639,7 @@ namespace cytnx_extension{
 
             // virtual functions
             void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
-            void Init_by_Tensor(const Tensor& in_tensor, const cytnx_uint64 &Rowrank){
+            void Init_by_Tensor(const Tensor& in_tensor, const cytnx_uint64 &Rowrank, const bool &is_diag=false){
                 cytnx_error_msg(true,"[ERROR][SparseCyTensor] cannot use Init_by_tensor() on a SparseCyTensor.%s","\n");
             }
             std::vector<cytnx_uint64> shape() const{ 
@@ -1031,12 +1020,12 @@ namespace cytnx_extension{
             \verbinclude example/CyTensor/fromTensor.py.out
 
             */
-            CyTensor(const Tensor &in_tensor, const cytnx_uint64 &Rowrank): _impl(new CyTensor_base()){
-                this->Init(in_tensor,Rowrank);
+            CyTensor(const Tensor &in_tensor, const cytnx_uint64 &Rowrank, const bool &is_diag=false): _impl(new CyTensor_base()){
+                this->Init(in_tensor,Rowrank,is_diag);
             }
-            void Init(const Tensor &in_tensor, const cytnx_uint64 &Rowrank){
+            void Init(const Tensor &in_tensor, const cytnx_uint64 &Rowrank, const bool &is_diag=false){
                boost::intrusive_ptr<CyTensor_base> out(new DenseCyTensor());
-               out->Init_by_Tensor(in_tensor, Rowrank);
+               out->Init_by_Tensor(in_tensor, Rowrank,is_diag);
                this->_impl = out;
             }
             //@}

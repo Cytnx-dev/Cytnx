@@ -87,8 +87,12 @@ namespace cytnx_extension{
                 }          
     }
 
-    void DenseCyTensor::Init_by_Tensor(const Tensor& in_tensor, const cytnx_uint64 &Rowrank){
+    void DenseCyTensor::Init_by_Tensor(const Tensor& in_tensor, const cytnx_uint64 &Rowrank, const bool &is_diag){
+
                 cytnx_error_msg(in_tensor.dtype() == Type.Void,"[ERROR][Init_by_Tensor] cannot init a CyTensor from an un-initialize Tensor.%s","\n");
+                if(is_diag)
+                    cytnx_error_msg(in_tensor.shape().size()!=1,"[ERROR][Init_by_tensor] setting is_diag=True should have input Tensor to be rank-1 with diagonal elements.%s","\n");
+
                 if(in_tensor.storage().size() == 1){
                     //scalalr:
                     cytnx_error_msg(Rowrank != 0, "[ERROR][Init_by_Tensor] detect the input Tensor is a scalar with only one element. the Rowrank should be =0%s","\n");
@@ -96,16 +100,30 @@ namespace cytnx_extension{
                     this->_block = in_tensor;
                     this->_labels.clear();
                     this->_Rowrank = Rowrank;
+   
                 }else{
-                    std::vector<Bond> bds;
-                    for(cytnx_uint64 i=0;i<in_tensor.shape().size();i++){
-                        bds.push_back(Bond(in_tensor.shape()[i]));
+                    if(is_diag){
+                        std::vector<Bond> bds(2);
+                        bds[0] = Bond(in_tensor.shape()[0]);
+                        bds[1] = bds[0].clone();
+                        this->_bonds = bds;
+                        this->_block = in_tensor;
+                        this->_labels = utils_internal::range_cpu<cytnx_int64>(2);
+                        cytnx_error_msg(Rowrank != 1,"[ERROR][Init_by_tensor] Rowrank should be 1 for CyTensor with is_diag=True.%s","\n");
+                        this->_Rowrank = Rowrank;
+                        this->_is_diag = true;
+
+                    }else{
+                        std::vector<Bond> bds;
+                        for(cytnx_uint64 i=0;i<in_tensor.shape().size();i++){
+                            bds.push_back(Bond(in_tensor.shape()[i]));
+                        }
+                        this->_bonds = bds;
+                        this->_block = in_tensor;
+                        this->_labels = utils_internal::range_cpu<cytnx_int64>(in_tensor.shape().size());
+                        cytnx_error_msg(Rowrank > in_tensor.shape().size(),"[ERROR][Init_by_tensor] Rowrank exceed the rank of Tensor.%s","\n");
+                        this->_Rowrank = Rowrank;
                     }
-                    this->_bonds = bds;
-                    this->_block = in_tensor;
-                    this->_labels = utils_internal::range_cpu<cytnx_int64>(in_tensor.shape().size());
-                    cytnx_error_msg(Rowrank > in_tensor.shape().size(),"[ERROR][Init_by_tensor] Rowrank exceed the rank of Tensor.%s","\n");
-                    this->_Rowrank = Rowrank;
                 }
             }
 
@@ -262,7 +280,43 @@ namespace cytnx_extension{
         free(rlbl);
         free(buffer);
     }
+    void DenseCyTensor::reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank){
+        cytnx_error_msg(this->is_tag(),"[ERROR] cannot reshape a tagged CyTensor. suggestion: use untag() first.%s","\n");
+        cytnx_error_msg(Rowrank > new_shape.size(), "[ERROR] Rowrank cannot larger than the rank of reshaped CyTensor.%s","\n");
+        if(this->is_diag()){
+            if(new_shape.size()!=2){
+                this->_block = cytnx::linalg::Diag(this->_block);
+                this->_block.reshape_(new_shape);
+                this->Init_by_Tensor(this->_block,Rowrank); 
+            }else{
+                cytnx_error_msg(new_shape[0]!=new_shape[1],"[ERROR] invalid shape. The total elements does not match.%s","\n");
+                cytnx_error_msg(Rowrank!=1,"[ERROR] CyTensor with is_diag=True should have Rowrank=1.%s","\n");
+            }
+        }else{
+            this->_block.reshape_(new_shape);
+            this->Init_by_Tensor(this->_block,Rowrank); 
+        }
+    }
+    boost::intrusive_ptr<CyTensor_base> DenseCyTensor::reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank){
+        cytnx_error_msg(this->is_tag(),"[ERROR] cannot reshape a tagged CyTensor. suggestion: use untag() first.%s","\n");
+        cytnx_error_msg(Rowrank > new_shape.size(), "[ERROR] Rowrank cannot larger than the rank of reshaped CyTensor.%s","\n");
 
+        boost::intrusive_ptr<CyTensor_base> out(new DenseCyTensor());
+        if(this->is_diag()){
+            if(new_shape.size()!=2){
+                ((DenseCyTensor*)out.get())->_block = cytnx::linalg::Diag(this->_block);
+                ((DenseCyTensor*)out.get())->_block.reshape_(new_shape);
+                out->Init_by_Tensor(((DenseCyTensor*)out.get())->_block,Rowrank); 
+            }else{
+                cytnx_error_msg(new_shape[0]!=new_shape[1],"[ERROR] invalid shape. The total elements does not match.%s","\n");
+                cytnx_error_msg(Rowrank!=1,"[ERROR] CyTensor with is_diag=True should have Rowrank=1.%s","\n");
+                out = this->clone();    
+            }
+        }else{
+            out->Init_by_Tensor(this->_block.reshape(new_shape),Rowrank);
+        }
+        return out;
+    }
 
     void DenseCyTensor::combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back, const bool &by_label){
         cytnx_error_msg(indicators.size() < 2,"[ERROR] the number of bonds to combine must be > 1%s","\n");

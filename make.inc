@@ -9,14 +9,14 @@ ICPC=icpc
 # set compile modes:
 
 ## compile with CUDA support:
-GPU_Enable=0
+GPU_Enable=1
 CUDA_PATH=/usr/local/cuda
 
 ## compile with Openmp support:
 OMP_Enable=1
 
 ## compile with MKL library:
-MKL_Enable=0
+MKL_Enable=1
 
 
 

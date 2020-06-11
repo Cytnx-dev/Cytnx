@@ -89,63 +89,66 @@ $(function() {
 <li>[Important] Add Inv/Inv_ for elementwise inverse with clip.</li>
 <li>[Enhace] Add str_strip for removing " ", "\t", "\r" at the end.</li>
 <li>[Enhance] Accessor::() allow negative input.</li>
+<li>Add GPU Pow/Pow_</li>
+<li>Add <a class="el" href="namespacecytnx_1_1random.html#a2ff50c1d65999e6d951d1efcdb825b21" title="create an Tensor with all the elements are initialized with uniform distribution ">random.uniform()</a></li>
+<li>Fix bug in diagonal CyTensor reshape/reshape_ cause mismatch.</li>
+<li>Add a is_diag option for convert Tensor to CyTensor.</li>
 </ol>
-<p>v0.5.2</p><ol type="1">
-<li>add Trace and Trace_ for CyTensor.</li>
-<li>fix bug in Network.Launch does not return the output CyTensor</li>
-<li>Add Network.PrintNet, and ostream support.</li>
-<li>Add Network.Diagram() for plot the tensor network diagram (python only)</li>
-<li>Add support for floating type Vectordot on GPU.</li>
-<li>Fix bug in to from Anytype to ComplexFloat.</li>
-<li>Add QR for CPU.</li>
-<li>Add <a class="el" href="namespacecytnx.html#af8aa7e619c030f80c54e4d26b576484b" title="create an square rank-2 Tensor with all diagonal to be one. ">identity()</a> and it's alias function <a class="el" href="namespacecytnx.html#affbd9073156ce86d5e5c03742603c631" title="create an square rank-2 Tensor with all diagonal to be one. ">eye()</a>.</li>
-<li>Add physics namespace/submodule</li>
-<li>Add <a class="el" href="namespacecytnx_1_1physics.html#a9f018f04ccd068e899a8fcfe2e9b82d4" title="create Spin-S representation matrix. ">physics::spin()</a> for generating Spin-S representation.</li>
-<li>Add <a class="el" href="namespacecytnx_1_1physics.html#a1c6ebefa40751712dfb8976b015f48d6" title="create Pauli matrix. ">physics::pauli()</a> for pauli matrix.</li>
-<li>Add <a class="el" href="namespacecytnx__extension_1_1xlinalg.html#aa6039e19e0dd0e7b0e73032050a8aec3">ExpM()</a> for generic matrix (CPU only)</li>
-<li>Fix bug in python slice, and reverse range slice.</li>
-<li>Enhance optional Kron padding scheme</li>
-<li>Fix bug in CyTensor contract/Contract(A,B) for tensors with no common label</li>
-<li>Enhance error message in Network</li>
-<li>Add <a class="el" href="namespacecytnx_1_1linalg.html#a25b5f2fdfb550aabc9cc41daa963e1fb" title="get the minimum element. ">Min()</a>, <a class="el" href="namespacecytnx_1_1linalg.html#a93ef263824e2dcdab4832ea628959d19" title="get the maximum element. ">Max()</a> (CPU only)</li>
-<li>Fix bug in Abs.</li>
-<li>Fix bug in Div i32td.</li>
-<li>[Feature] Add optimal contraction order calculation in Network</li>
-<li>Fix SparseCyTensor contiguous address wrong calculation.</li>
-<li>Support at() directly from SparseCyTensor.</li>
-<li>Add Transpose, Dagger to CyTensor. For tagged CyTensor, Transpose/Dagger will reverse the direction of all bonds.</li>
-<li>Add xlinalg.Svd, xlinalg.Svd_truncate support for tagged CyTensor.</li>
-<li>Fix redundant print in optimal contraction order</li>
-<li>Add CyTensor.tag() for DenseCyTensor (regular type) directly convert to CyTensor with direction (tagged type)</li>
-<li>Add SparseCyTensor.at (currently only floating point type)</li>
-<li>SparseCyTensor.ele_exists.</li>
-<li>SparseCyTensor.Transpose, Conj.</li>
-<li>Symmetry.reverse_rule, Bond.calc_reverse_qnums</li>
-<li>Fix Tensor.numpy from GPU bug.</li>
-<li>Fix Tensor.setitem/getitem pybind bug.</li>
-<li>SparseCyTensor.get_elem/set_elem (currently floating type only (complex))</li>
-<li>Add xlinalg::ExpH, xlinalg::ExpM, xlinalg::Trace (ovld of CyTensor.Trace)</li>
-<li>support Mul/Div operation on SparseCyTensor</li>
-<li>Add Tensor.flatten()</li>
-<li>Add Network.Savefile. Network.PutCyTensors</li>
-<li>[Feature] Tensor can now use unify operator[] to get and set elements as python API</li>
-<li>fix ambiguous error message in Tensor arithmetic.</li>
-<li>fix bug in xlinalg::Svd</li>
-<li>fix bug in physics::pauli</li>
-<li>fix bug in CyTensor.set_label checking element.</li>
-<li>Add xlinalg::Hosvd (currently CyTensor only)</li>
-<li>change argument of init CyTensor rowrank-&gt;Rowrank</li>
-<li>Add PESS example</li>
-<li>Add support for Norm to generic rank-N Tensor</li>
-<li>Add @ operator in python API for shorthand of linalg::Dot</li>
-<li>Add DMRG example</li>
-<li>C++ API can now have accessor.size() &lt; rank()</li>
-<li>Remove redundant output of Inv.</li>
-<li>Add Pow, Pow_ for CyTensor.</li>
-<li>Add Symmetry.Save/Load</li>
-<li>Symmetry/Tensor/Storage/Bond/CyTensor Save/Load re-invented for more simple usage</li>
-</ol>
-<h2>Version log</h2>
+<pre class="fragment">v0.5.2
+1. add Trace and Trace_ for CyTensor.
+2. fix bug in Network.Launch does not return the output CyTensor
+3. Add Network.PrintNet, and ostream support.
+4. Add Network.Diagram() for plot the tensor network diagram (python only)    
+5. Add support for floating type Vectordot on GPU. 
+6. Fix bug in to from Anytype to ComplexFloat. 
+7. Add QR for CPU.
+8. Add identity() and it's alias function eye(). 
+9. Add physics namespace/submodule
+10. Add physics::spin() for generating Spin-S representation. 
+11. Add physics::pauli() for pauli matrix.
+12. Add ExpM() for generic matrix (CPU only)
+13. Fix bug in python slice, and reverse range slice.
+14. Enhance optional Kron padding scheme
+15. Fix bug in CyTensor contract/Contract(A,B) for tensors with no common label
+16. Enhance error message in Network
+17. Add Min(), Max() (CPU only)
+18. Fix bug in Abs. 
+19. Fix bug in Div i32td.    
+20. [Feature] Add optimal contraction order calculation in Network
+21. Fix SparseCyTensor contiguous address wrong calculation. 
+22. Support at() directly from SparseCyTensor.
+23. Add Transpose, Dagger to CyTensor. For tagged CyTensor, Transpose/Dagger will reverse the direction of all bonds.
+24. Add xlinalg.Svd, xlinalg.Svd_truncate support for tagged CyTensor.
+25. Fix redundant print in optimal contraction order
+26. Add CyTensor.tag() for DenseCyTensor (regular type) directly convert to CyTensor with direction (tagged type)
+27. Add SparseCyTensor.at (currently only floating point type) 
+28. SparseCyTensor.ele_exists. 
+29. SparseCyTensor.Transpose, Conj. 
+30. Symmetry.reverse_rule, Bond.calc_reverse_qnums
+31. Fix Tensor.numpy from GPU bug.
+32. Fix Tensor.setitem/getitem pybind bug.
+33. SparseCyTensor.get_elem/set_elem (currently floating type only (complex)) 
+34. Add xlinalg::ExpH, xlinalg::ExpM, xlinalg::Trace (ovld of CyTensor.Trace)
+35. support Mul/Div operation on SparseCyTensor 
+36. Add Tensor.flatten()
+37. Add Network.Savefile. Network.PutCyTensors
+38. [Feature] Tensor can now use unify operator[] to get and set elements as python API
+39. fix ambiguous error message in Tensor arithmetic.
+40. fix bug in xlinalg::Svd
+41. fix bug in physics::pauli
+42. fix bug in CyTensor.set_label checking element.
+43. Add xlinalg::Hosvd (currently CyTensor only)
+44. change argument of init CyTensor rowrank-&gt;Rowrank
+45. Add PESS example 
+46. Add support for Norm to generic rank-N Tensor
+47. Add @ operator in python API for shorthand of linalg::Dot
+48. Add DMRG example
+49. C++ API can now have accessor.size() &lt; rank()
+50. Remove redundant output of Inv.
+51. Add Pow, Pow_ for CyTensor.
+52. Add Symmetry.Save/Load
+53. Symmetry/Tensor/Storage/Bond/CyTensor Save/Load re-invented for more simple usage
+</pre><h2>Version log</h2>
 <p>v0.5.1a</p><ol type="1">
 <li>add <a class="el" href="namespacecytnx_1_1linalg.html#a9cd2be179860bb4742ebe320fa063680" title="calculate the norm of a tensor. ">Norm()</a> for CPU and GPU, add to call by Tn</li>
 <li>add <a class="el" href="namespacecytnx_1_1linalg.html#a215dbfd2aa7ef898450de7afff726bca" title="dot product of two arrays. ">Dot()</a> for CPU and GPU, with unify API for Vec-Vec/Mat-Vec/Mat-Mat/Ten-Vec product.</li>
@@ -296,7 +299,7 @@ $(function() {
 <tr>
 <td><a class="el" href="namespacecytnx_1_1linalg.html#a1137ae19828f715399d90634e4a71ba3">Eig</a> </td><td>x </td><td>Y </td><td>N </td><td>Y </td></tr>
 <tr>
-<td><a class="el" href="namespacecytnx_1_1linalg.html#a2919ef6c163a54360071c286df3fb92e">Pow</a> </td><td><a class="el" href="namespacecytnx_1_1linalg.html#a269ef291355dfee4421fa55ad0247aad">Pow_</a> </td><td>Y </td><td>N </td><td>Y </td></tr>
+<td><a class="el" href="namespacecytnx_1_1linalg.html#a2919ef6c163a54360071c286df3fb92e">Pow</a> </td><td><a class="el" href="namespacecytnx_1_1linalg.html#a269ef291355dfee4421fa55ad0247aad">Pow_</a> </td><td>Y </td><td>Y </td><td>Y </td></tr>
 <tr>
 <td><a class="el" href="namespacecytnx_1_1linalg.html#a3ded6435c7b47eb348d03783bfe72611">Abs</a> </td><td><a class="el" href="namespacecytnx_1_1linalg.html#a30687e6240a889c04637b33ef90c2525">Abs_</a> </td><td>Y </td><td>N </td><td>Y </td></tr>
 <tr>
