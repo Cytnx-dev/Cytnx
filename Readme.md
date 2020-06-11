@@ -140,15 +140,18 @@
 [https://kaihsin.github.io/Cytnx/docs/html/index.html](https://kaihsin.github.io/Cytnx/docs/html/index.html)
 
 ## conda install  
+    
     [Currently Linux with Intel CPU only]
 
-    * Without CUDA            
+* Without CUDA            
+
 :-------------------------:|:-------------------------:
 python 3.6: conda install -c kaihsinwu cytnx_36 | ![](https://anaconda.org/kaihsinwu/cytnx_36/badges/latest_release_date.svg)    
 python 3.7: conda install -c kaihsinwu cytnx_37 | ![](https://anaconda.org/kaihsinwu/cytnx_37/badges/latest_release_date.svg)    
 :-------------------------:|:-------------------------:
 
-    * with CUDA
+* with CUDA
+
 :-------------------------:|:-------------------------:
 python 3.6: conda install -c kaihsinwu cytnx_cuda_36 | ![](https://anaconda.org/kaihsinwu/cytnx_cuda_36/badges/latest_release_date.svg)    
 python 3.7: conda install -c kaihsinwu cytnx_cuda_37 | ![](https://anaconda.org/kaihsinwu/cytnx_cuda_37/badges/latest_release_date.svg)    
