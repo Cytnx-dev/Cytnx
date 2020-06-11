@@ -6,7 +6,7 @@
 [Cytnx_v0.5.2a.pdf](https://drive.google.com/file/d/1tfruYcfNxtSR0bwJv0WQMnNKwcAeehuT/view?usp=sharing)
 
 
-![](https://anaconda.org/kaihsinwu/cytnx_36/badges/version.svg)
+[!(https://anaconda.org/kaihsinwu/cytnx_36/badges/version.svg)]()
 
 ## News
     [v0.5.3a] 
