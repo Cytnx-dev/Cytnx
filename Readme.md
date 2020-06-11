@@ -134,7 +134,7 @@
 [https://kaihsin.github.io/Cytnx/docs/html/index.html](https://kaihsin.github.io/Cytnx/docs/html/index.html)
 
 ## conda install  
-    [Currently Linux only]
+    [Currently Linux with Intel CPU only]
 
     * without CUDA
       python 3.6: conda install -c kaihsinwu cytnx_36
