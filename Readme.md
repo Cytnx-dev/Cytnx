@@ -6,8 +6,7 @@
 [Cytnx_v0.5.2a.pdf](https://drive.google.com/file/d/1tfruYcfNxtSR0bwJv0WQMnNKwcAeehuT/view?usp=sharing)
 
 
-![Alt text](cytnx_36)
-<img src="https://anaconda.org/kaihsinwu/cytnx_36/badges/version.svg">
+![](https://anaconda.org/kaihsinwu/cytnx_36/badges/version.svg)
 
 ## News
     [v0.5.2a] 
@@ -143,15 +142,17 @@
 ## conda install  
     [Currently Linux with Intel CPU only]
 
-    * without CUDA
-![Alt text](cytnx_36)
-<img src="https://anaconda.org/kaihsinwu/cytnx_36/badges/latest_release_date.svg">
-      python 3.6: conda install -c kaihsinwu cytnx_36 
-      python 3.7: conda install -c kaihsinwu cytnx_37
+    * Without CUDA            
+    :-------------------------:|:-------------------------:
+    python 3.6: conda install -c kaihsinwu cytnx_36 |![](https://anaconda.org/kaihsinwu/cytnx_36/badges/latest_release_date.svg)    
+    python 3.7: conda install -c kaihsinwu cytnx_37 |![](https://anaconda.org/kaihsinwu/cytnx_37/badges/latest_release_date.svg)    
+    :-------------------------:|:-------------------------:
 
     * with CUDA
-      python 3.6: conda install -c kaihsinwu cytnx_cuda_36
-      python 3.7: conda install -c kaihsinwu cytnx_cuda_37
+    :-------------------------:|:-------------------------:
+    python 3.6: conda install -c kaihsinwu cytnx_cuda_36 |![](https://anaconda.org/kaihsinwu/cytnx_cuda_36/badges/latest_release_date.svg)    
+    python 3.7: conda install -c kaihsinwu cytnx_cuda_37 |![](https://anaconda.org/kaihsinwu/cytnx_cuda_37/badges/latest_release_date.svg)    
+    :-------------------------:|:-------------------------:
 
 
 
