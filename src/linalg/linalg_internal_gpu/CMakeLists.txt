@@ -7,6 +7,7 @@ target_sources_local(cytnx
     cuCpr_internal.hpp
     cuDiag_internal.hpp
     cuDiv_internal.hpp
+    cuPow_internal.hpp
     cuEigh_internal.hpp
     cuExp_internal.hpp
     cuInvM_inplace_internal.hpp
@@ -24,6 +25,7 @@ target_sources_local(cytnx
     cuCpr_internal.cu
     cuDiag_internal.cu
     cuDiv_internal.cu
+    cuPow_internal.cu
     cuEigh_internal.cu
     cuExp_internal.cu
     cuInvM_inplace_internal.cu

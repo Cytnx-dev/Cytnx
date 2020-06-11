@@ -20,6 +20,7 @@
     10. [Important] Add Inv/Inv_ for elementwise inverse with clip. 
     11. [Enhace] Add str_strip for removing " ", "\t", "\r" at the end.
     12. [Enhance] Accessor::() allow negative input.
+    13. Add GPU Pow/Pow_
 
     v0.5.2
     1. add Trace and Trace_ for CyTensor.
@@ -213,7 +214,7 @@
       \link cytnx::linalg::Tridiag Tridiag\endlink    | x | Y | N | N  
       *\link cytnx::linalg::Dot Dot\endlink | x | Y | Y | N
       \link cytnx::linalg::Eig Eig\endlink    |   x       |  Y  |  N   |    Y 
-      \link cytnx::linalg::Pow Pow\endlink    |   \link cytnx::linalg::Pow_ Pow_\endlink       |  Y  |  N   |    Y 
+      \link cytnx::linalg::Pow Pow\endlink    |   \link cytnx::linalg::Pow_ Pow_\endlink       |  Y  |  Y   |    Y 
       \link cytnx::linalg::Abs Abs\endlink    |   \link cytnx::linalg::Abs_ Abs_\endlink       |  Y  |  N   |    Y
       \link cytnx::linalg::QR QR\endlink    |  x       |  Y  |  N   |    N
       \link cytnx::linalg::Min Min\endlink    |  x       |  Y  |  N   |    Y

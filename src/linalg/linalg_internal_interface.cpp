@@ -679,6 +679,15 @@ namespace cytnx{
                 cuAri_ii[Type.Bool][Type.Int16        ] = cuArithmetic_internal_bti16;
                 cuAri_ii[Type.Bool][Type.Bool         ] = cuArithmetic_internal_btb;
 
+                //Pow
+                //====================
+                cuPow_ii = vector<Powfunc_oii>(5);
+
+                cuPow_ii[Type.ComplexDouble] = cuPow_internal_cd;
+                cuPow_ii[Type.ComplexFloat ] = cuPow_internal_cf;
+                cuPow_ii[Type.Double       ] = cuPow_internal_d;
+                cuPow_ii[Type.Float        ] = cuPow_internal_f;
+
 
                 //Norm
                 //====================
@@ -704,6 +713,7 @@ namespace cytnx{
                 cuEigh_ii[Type.ComplexFloat ] = cuEigh_internal_cf;
                 cuEigh_ii[Type.Double       ] = cuEigh_internal_d;
                 cuEigh_ii[Type.Float        ] = cuEigh_internal_f;
+
 
                 //=====================
                 cuExp_ii = vector<Expfunc_oii>(5);

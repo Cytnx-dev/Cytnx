@@ -29,7 +29,7 @@
     10. [Important] Add Inv/Inv_ for elementwise inverse with clip. 
     11. [Enhance] Add str_strip for removing " ", "\t", "\r" at the end.
     12. [Enhance] Accessor::() allow negative input.
-
+    13. Add GPU Pow/Pow_
 
 ## What's new:
 
@@ -364,7 +364,7 @@
      Norm         |   x       |  Y  |  Y   |    Y        | Y  |   N
     *Dot          |   x       |  Y  |  Y   |    N        | Y  |   N 
      Eig          |   x       |  Y  |  N   |    N        | Y  |   N 
-     Pow          |   Pow_    |  Y  |  N   |    Y        | Y  |   Y 
+     Pow          |   Pow_    |  Y  |  Y   |    Y        | Y  |   Y 
      Abs          |   Abs_    |  Y  |  N   |    Y        | Y  |   N 
      QR           |   x       |  Y  |  N   |    N        | Y  |   Y 
      Min          |   x       |  Y  |  N   |    Y        | Y  |   N 
