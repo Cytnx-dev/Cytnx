@@ -1,13 +1,13 @@
 package:
   name: cytnx_36
-  version: "0.5.2a"
+  version: "0.5.3a"
 
 source:
   path: ../
 
 build:
   noarch: generic
-  number: 1
+  number: 0
 
 
 requirements:
