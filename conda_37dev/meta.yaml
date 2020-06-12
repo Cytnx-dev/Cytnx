@@ -6,7 +6,6 @@ source:
   path: ../
 
 build:
-  noarch: generic
   number: 0
 
 

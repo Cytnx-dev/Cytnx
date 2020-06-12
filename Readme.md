@@ -6,11 +6,12 @@
 [Cytnx_v0.5.2a.pdf](https://drive.google.com/file/d/1tfruYcfNxtSR0bwJv0WQMnNKwcAeehuT/view?usp=sharing)
 
 
-[![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx_cuda_36/badges/version.svg)](https://anaconda.org/kaihsinwu/cytnx_cuda_36)
+[![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx_cuda_36/badges/version.svg)](https://anaconda.org/kaihsinwu/cytnx_cuda_36) [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx_37/badges/platforms.svg)](https://anaconda.org/kaihsinwu/cytnx_37)
+[![Build Status](https://travis-ci.com/kaihsin/Cytnx_build.svg?branch=master)](https://travis-ci.com/kaihsin/Cytnx_build)
 
 ## News
     [v0.5.3a] 
-
+    1. We are dropping off conda install with version < v0.5.2 as we moving to travis.ci for CICD 
  
 ## Stable Version:
     [v0.5.3 pre-release](https://github.com/kaihsin/Cytnx/tree/v0.5.3a)
@@ -144,17 +145,18 @@
 
 [https://kaihsin.github.io/Cytnx/docs/html/index.html](https://kaihsin.github.io/Cytnx/docs/html/index.html)
 
-## conda install  
-    
-    [Currently Linux with Intel CPU only]
+## conda install [![Build Status](https://travis-ci.com/kaihsin/Cytnx_build.svg?branch=master)](https://travis-ci.com/kaihsin/Cytnx_build)
+
+
+    [Note] For Windows user, please using WSL.
 
 * Without CUDA            
 
-    python 3.6: [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx_36/badges/latest_release_date.svg)](https://anaconda.org/kaihsinwu/cytnx_36)
+    python 3.6: [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx_36/badges/latest_release_date.svg)](https://anaconda.org/kaihsinwu/cytnx_36) [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx_36/badges/platforms.svg)](https://anaconda.org/kaihsinwu/cytnx_36)
 
         conda install -c kaihsinwu cytnx_36
 
-    python 3.7: [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx_37/badges/latest_release_date.svg)](https://anaconda.org/kaihsinwu/cytnx_37)
+    python 3.7: [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx_37/badges/latest_release_date.svg)](https://anaconda.org/kaihsinwu/cytnx_37) [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx_37/badges/platforms.svg)](https://anaconda.org/kaihsinwu/cytnx_37)
 
         conda install -c kaihsinwu cytnx_37   
 
