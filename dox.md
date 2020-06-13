@@ -1,13 +1,14 @@
 # Cytnx
 
 ## Stable Version:
-    [v0.5.2 pre-release](https://github.com/kaihsin/Cytnx/tree/v0.5.2a)
+    [v0.5.3 pre-release](https://github.com/kaihsin/Cytnx/tree/v0.5.3a)
 
 ## Current dev Version:
-    v0.5.3
+    v0.5.4
+    1. Add linalg::Det 
 
-## What's new:
-    v0.5.3
+
+    v0.5.3a
     1. Add xlinalg.QR
     2. enhance hosvd.
     3. Fix bug in cytnx.linalg.Abs truncate the floating point part. 
@@ -18,15 +19,22 @@
     8. Complete set_elem for sparse CyTensor dispatch in binding.
     9. [Important] Change Inv/Inv_ to InvM/InvM_ for matrix inverse. 
     10. [Important] Add Inv/Inv_ for elementwise inverse with clip. 
-    11. [Enhace] Add str_strip for removing " ", "\t", "\r" at the end.
+    11. [Enhance] Add str_strip for removing " ", "\t", "\r" at the end.
     12. [Enhance] Accessor::() allow negative input.
     13. Add GPU Pow/Pow_
     14. Add random.uniform()
     15. Fix bug in diagonal CyTensor reshape/reshape_ cause mismatch.
     16. Add a is_diag option for convert Tensor to CyTensor. 
 
+## Version log
 
-    v0.5.2
+    v0.5.2a-build1
+    1. example/iTEBD, please modify the argument rowrank->Rowrank if you encounter error in running them.
+    2. Fix bug in cytnx.linalg.Abs truncate floating point part. ---> v0.5.2a-build1
+    3. Fix bug in mkl blas package import bug with numpy.        ---> v0.5.2a-build1
+
+
+    v0.5.2a
     1. add Trace and Trace_ for CyTensor.
     2. fix bug in Network.Launch does not return the output CyTensor
     3. Add Network.PrintNet, and ostream support.
@@ -45,43 +53,7 @@
     16. Enhance error message in Network
     17. Add Min(), Max() (CPU only)
     18. Fix bug in Abs. 
-    19. Fix bug in Div i32td.    
-    20. [Feature] Add optimal contraction order calculation in Network
-    21. Fix SparseCyTensor contiguous address wrong calculation. 
-    22. Support at() directly from SparseCyTensor.
-    23. Add Transpose, Dagger to CyTensor. For tagged CyTensor, Transpose/Dagger will reverse the direction of all bonds.
-    24. Add xlinalg.Svd, xlinalg.Svd_truncate support for tagged CyTensor.
-    25. Fix redundant print in optimal contraction order
-    26. Add CyTensor.tag() for DenseCyTensor (regular type) directly convert to CyTensor with direction (tagged type)
-    27. Add SparseCyTensor.at (currently only floating point type) 
-    28. SparseCyTensor.ele_exists. 
-    29. SparseCyTensor.Transpose, Conj. 
-    30. Symmetry.reverse_rule, Bond.calc_reverse_qnums
-    31. Fix Tensor.numpy from GPU bug.
-    32. Fix Tensor.setitem/getitem pybind bug.
-    33. SparseCyTensor.get_elem/set_elem (currently floating type only (complex)) 
-    34. Add xlinalg::ExpH, xlinalg::ExpM, xlinalg::Trace (ovld of CyTensor.Trace)
-    35. support Mul/Div operation on SparseCyTensor 
-    36. Add Tensor.flatten()
-    37. Add Network.Savefile. Network.PutCyTensors
-    38. [Feature] Tensor can now use unify operator[] to get and set elements as python API
-    39. fix ambiguous error message in Tensor arithmetic.
-    40. fix bug in xlinalg::Svd
-    41. fix bug in physics::pauli
-    42. fix bug in CyTensor.set_label checking element.
-    43. Add xlinalg::Hosvd (currently CyTensor only)
-    44. change argument of init CyTensor rowrank->Rowrank
-    45. Add PESS example 
-    46. Add support for Norm to generic rank-N Tensor
-    47. Add @ operator in python API for shorthand of linalg::Dot
-    48. Add DMRG example
-    49. C++ API can now have accessor.size() < rank()
-    50. Remove redundant output of Inv.
-    51. Add Pow, Pow_ for CyTensor.
-    52. Add Symmetry.Save/Load
-    53. Symmetry/Tensor/Storage/Bond/CyTensor Save/Load re-invented for more simple usage
 
-## Version log
     v0.5.1a
     1. add Norm() for CPU and GPU, add to call by Tn
     2. add Dot() for CPU and GPU, with unify API for Vec-Vec/Mat-Vec/Mat-Mat/Ten-Vec product.

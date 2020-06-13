@@ -1,6 +1,6 @@
 # Cytnx
 
-![alt text](./Tt1_dark.png)
+![alt text](./Icon_small.png)
 
 ## Intro slide
 [Cytnx_v0.5.2a.pdf](https://drive.google.com/file/d/1tfruYcfNxtSR0bwJv0WQMnNKwcAeehuT/view?usp=sharing)

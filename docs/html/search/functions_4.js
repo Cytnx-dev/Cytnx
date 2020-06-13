@@ -10,6 +10,7 @@ var searchData=
   ['dcopy_5f',['dcopy_',['../lapack__wrapper_8hpp.html#ad01bd0880a9a1da35aa3ceb09eca7feb',1,'lapack_wrapper.hpp']]],
   ['ddot',['ddot',['../lapack__wrapper_8hpp.html#a090a298edf7b0a84f40f3faad2051b29',1,'lapack_wrapper.hpp']]],
   ['ddot_5f',['ddot_',['../lapack__wrapper_8hpp.html#a3b919051ae419d2238fe752e9671147b',1,'lapack_wrapper.hpp']]],
+  ['det',['Det',['../namespacecytnx_1_1linalg.html#a5fd73573057cda064a77f69c927a45dc',1,'cytnx::linalg']]],
   ['device',['device',['../classcytnx__extension_1_1CyTensor.html#a2a44dbd698bd783712959a0155771bbf',1,'cytnx_extension::CyTensor::device()'],['../classcytnx_1_1Storage.html#a4c3e27582d7f951e6b76ccbb92f7c537',1,'cytnx::Storage::device()'],['../classcytnx_1_1Tensor.html#ac6d3310eb4defbdacf662dcd81d8fe09',1,'cytnx::Tensor::device()']]],
   ['device_5fstr',['device_str',['../classcytnx__extension_1_1CyTensor.html#a5244dbc1cd5aaad9ba3a1bf578413c28',1,'cytnx_extension::CyTensor::device_str()'],['../classcytnx_1_1Storage.html#ae0d90d5275fa7e52a0a2dc10512ba71f',1,'cytnx::Storage::device_str()'],['../classcytnx_1_1Tensor.html#a335f7625fa01784f49b2223238d0c14e',1,'cytnx::Tensor::device_str()']]],
   ['dgeev_5f',['dgeev_',['../lapack__wrapper_8hpp.html#a80a9f9d86d9e3b594390783a807015d3',1,'lapack_wrapper.hpp']]],

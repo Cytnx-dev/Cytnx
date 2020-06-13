@@ -11,6 +11,7 @@ var searchData=
   ['ddot',['ddot',['../lapack__wrapper_8hpp.html#a090a298edf7b0a84f40f3faad2051b29',1,'lapack_wrapper.hpp']]],
   ['ddot_5f',['ddot_',['../lapack__wrapper_8hpp.html#a3b919051ae419d2238fe752e9671147b',1,'lapack_wrapper.hpp']]],
   ['densecytensor_2ecpp',['DenseCyTensor.cpp',['../DenseCyTensor_8cpp.html',1,'']]],
+  ['det',['Det',['../namespacecytnx_1_1linalg.html#a5fd73573057cda064a77f69c927a45dc',1,'cytnx::linalg']]],
   ['device',['device',['../classcytnx__extension_1_1CyTensor.html#a2a44dbd698bd783712959a0155771bbf',1,'cytnx_extension::CyTensor::device()'],['../classcytnx_1_1Storage.html#a4c3e27582d7f951e6b76ccbb92f7c537',1,'cytnx::Storage::device()'],['../classcytnx_1_1Tensor.html#ac6d3310eb4defbdacf662dcd81d8fe09',1,'cytnx::Tensor::device()'],['../namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a',1,'cytnx::Device()']]],
   ['device_2ecpp',['Device.cpp',['../Device_8cpp.html',1,'']]],
   ['device_2ehpp',['Device.hpp',['../Device_8hpp.html',1,'']]],
