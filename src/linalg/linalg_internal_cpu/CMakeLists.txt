@@ -26,6 +26,7 @@ target_sources_local(cytnx
     Abs_internal.hpp
     MaxMin_internal.hpp
     Sum_internal.hpp
+    Det_internal.hpp
 
     Add_internal.cpp
     Arithmetic_internal.cpp
@@ -53,6 +54,7 @@ target_sources_local(cytnx
     QR_internal.cpp
     MaxMin_internal.cpp
     Sum_internal.cpp
+    Det_internal.cpp
 )
 
 

@@ -308,11 +308,20 @@ namespace cytnx{
             Matvec_ii[Type.Bool         ] = Matvec_internal_b  ;
 
             //===================
-            Norm_ii = vector<Normfunc_oii>(N_Type);
+            Norm_ii = vector<Normfunc_oii>(5);
             Norm_ii[Type.ComplexDouble] = Norm_internal_cd;
             Norm_ii[Type.ComplexFloat ] = Norm_internal_cf;
             Norm_ii[Type.Double] = Norm_internal_d;
             Norm_ii[Type.Float ] = Norm_internal_f;
+
+
+            //===================
+            Det_ii = vector<Detfunc_oii>(5);
+            Det_ii[Type.ComplexDouble] = Det_internal_cd;
+            Det_ii[Type.ComplexFloat ] = Det_internal_cf;
+            Det_ii[Type.Double] = Det_internal_d;
+            Det_ii[Type.Float ] = Det_internal_f;
+
 
             //====================
             Vd_ii = vector<Vectordotfunc_oii>(N_Type);

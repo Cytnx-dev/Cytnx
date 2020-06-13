@@ -18,6 +18,8 @@
 
 ## Current dev Version:
     v0.5.4
+    1. Add linalg::Det 
+
 
     v0.5.3a
     1. Add xlinalg.QR
@@ -365,35 +367,43 @@
       Mul         |   x       |  Y  |  Y   |    Y        | Y  |   Y
       Div         |   x       |  Y  |  Y   |    Y        | Y  |   Y
       Cpr         |   x       |  Y  |  Y   |    Y        | Y  |   x
+    --------------|-----------|-----|------|-------------|----|-------
       +,+=[tn]    |   x       |  Y  |  Y   |    Y (Add_) | Y  |   Y
       -,-=[tn]    |   x       |  Y  |  Y   |    Y (Sub_) | Y  |   Y
       *,*=[tn]    |   x       |  Y  |  Y   |    Y (Mul_) | Y  |   Y
       /,/=[tn]    |   x       |  Y  |  Y   |    Y (Div_) | Y  |   Y
       ==[tn]      |   x       |  Y  |  Y   |    Y (Cpr_) | Y  |   x 
+    --------------|-----------|-----|------|-------------|----|-------
       Svd         |   x       |  Y  |  Y   |    Y        | Y  |   Y
      *Svd_truncate|   x       |  Y  |  Y   |    N        | Y  |   Y
       InvM        |   InvM_   |  Y  |  Y   |    Y        | Y  |   N
       Inv         |   Inv _   |  Y  |  Y   |    Y        | Y  |   N
       Conj        |   Conj_   |  Y  |  Y   |    Y        | Y  |   Y
+    --------------|-----------|-----|------|-------------|----|-------
       Exp         |   Exp_    |  Y  |  Y   |    Y        | Y  |   N
       Expf        |   Expf_   |  Y  |  Y   |    Y        | Y  |   N
       Eigh        |   x       |  Y  |  Y   |    Y        | Y  |   N
      *ExpH        |   x       |  Y  |  Y   |    N        | Y  |   Y
      *ExpM        |   x       |  Y  |  N   |    N        | Y  |   Y
+    --------------|-----------|-----|------|-------------|----|-------
       Matmul      |   x       |  Y  |  Y   |    N        | Y  |   N
       Diag        |   x       |  Y  |  Y   |    N        | Y  |   N
     *Tensordot    |   x       |  Y  |  Y   |    N        | Y  |   N
      Outer        |   x       |  Y  |  Y   |    N        | Y  |   N 
      Vectordot    |   x       |  Y  | .Y   |    N        | Y  |   N 
+    --------------|-----------|-----|------|-------------|----|-------
       Tridiag     |   x       |  Y  |  N   |    N        | Y  |   N
      Kron         |   x       |  Y  |  N   |    N        | Y  |   N
      Norm         |   x       |  Y  |  Y   |    Y        | Y  |   N
     *Dot          |   x       |  Y  |  Y   |    N        | Y  |   N 
      Eig          |   x       |  Y  |  N   |    N        | Y  |   N 
+    --------------|-----------|-----|------|-------------|----|-------
      Pow          |   Pow_    |  Y  |  Y   |    Y        | Y  |   Y 
      Abs          |   Abs_    |  Y  |  N   |    Y        | Y  |   N 
      QR           |   x       |  Y  |  N   |    N        | Y  |   Y 
+     Det          |   x       |  Y  |  N   |    N        | Y  |   N
      Min          |   x       |  Y  |  N   |    Y        | Y  |   N 
+    --------------|-----------|-----|------|-------------|----|-------
      Max          |   x       |  Y  |  N   |    Y        | Y  |   N 
     *Trace        |   x       |  Y  |  N   |    Y        | Y  |   Y
     

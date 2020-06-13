@@ -194,6 +194,19 @@ namespace cytnx{
         */
         Tensor Norm(const Tensor &Tl);
 
+        // Det:
+        //=================================================
+        /**
+        @brief calculate the determinant of a tensor.
+        @param Tl input Tensor 
+        @return Tensor
+        
+        [Note]
+            1. input tensor should be a NxN rank-2 Tensor.
+        */
+        Tensor Det(const Tensor &Tl);
+
+
 
         // Svd:
         //==================================================

@@ -10,6 +10,7 @@ target_sources_local(cytnx
     Cpr.cpp
     Diag.cpp
     Div.cpp
+    Det.cpp
     Eig.cpp
     Eigh.cpp
     QR.cpp
