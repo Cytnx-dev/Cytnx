@@ -47,6 +47,7 @@ target_sources_local(cytnx
     Generator.cpp
     Physics.cpp
     Accessor.cpp
+    LinOp.cpp
     Type.cpp
     Tensor.cpp
     Storage.cpp

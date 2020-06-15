@@ -23,6 +23,8 @@ using namespace cytnx;
 
 
 
+
+
 template<class T>
 void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc){
     cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to setelem to a empty Tensor%s","\n");

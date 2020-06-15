@@ -17,6 +17,8 @@
 #include "Symmetry.hpp"
 #include "Network.hpp"
 #include "Bond.hpp"
+
+#include "LinOp.hpp"
 #include "utils/is.hpp"
 
 

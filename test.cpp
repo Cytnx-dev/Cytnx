@@ -1,6 +1,7 @@
 #include "cytnx.hpp"
 #include <complex>
 #include <cstdarg>
+#include <functional>
 
 using namespace std;
 using namespace cytnx;
@@ -11,7 +12,39 @@ typedef cytnx::Accessor ac;
 
 
 
+Tensor myfunc(const Tensor &Tin){
+    // Tin should be a 4x4 tensor.
+    Tensor A = arange(16).reshape({4,4});
+    return linalg::Dot(A,Tin);
+
+}
+
+class MyOp: public LinOp{
+    // override!
+    Tensor matvec(const Tensor &Tin){
+        Tensor B = (arange(16)+1).reshape({4,4});
+        return linalg::Dot(B,Tin);
+    }
+
+
+};
+
+
 int main(int argc, char *argv[]){
+
+
+    LinOp HOp;
+    HOp.Init("mv",myfunc);
+    auto t = arange(4);
+    cout << HOp.matvec(t);    
+
+    LinOp *cu = new MyOp();
+    cout << cu->matvec(t);
+
+    free(cu);
+    exit(1);
+
+
 
 
     auto TNtts = arange(16);

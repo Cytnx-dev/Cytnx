@@ -20,7 +20,6 @@
     v0.5.4
     1. Add linalg::Det 
 
-
     v0.5.3a
     1. Add xlinalg.QR
     2. enhance hosvd.

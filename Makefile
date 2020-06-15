@@ -82,7 +82,7 @@ endif
 OBJS = Storage_base.o BoolStorage.o Uint16Storage.o Int16Storage.o Uint32Storage.o Int32Storage.o Uint64Storage.o Int64Storage.o FloatStorage.o DoubleStorage.o ComplexFloatStorage.o ComplexDoubleStorage.o Type.o Device.o
 
 
-OBJS += Storage.o Tensor.o Accessor.o Generator.o Physics.o
+OBJS += LinOp.o Storage.o Tensor.o Accessor.o Generator.o Physics.o
 OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o CyTensor_base.o DenseCyTensor.o SparseCyTensor.o CyTensor.o Bond.o Symmetry.o contraction_tree.o search_tree.o
 
 
@@ -195,6 +195,8 @@ FermionNetwork.o: $(CytnxPATH)/src/FermionNetwork.cpp $(CytnxPATH)/include/Netwo
 contraction_tree.o: $(CytnxPATH)/src/contraction_tree.cpp $(CytnxPATH)/include/contraction_tree.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 search_tree.o: $(CytnxPATH)/src/search_tree.cpp $(CytnxPATH)/include/search_tree.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+LinOp.o: $(CytnxPATH)/src/LinOp.cpp $(CytnxPATH)/include/LinOp.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 ##--------------------------------------------------------------------------

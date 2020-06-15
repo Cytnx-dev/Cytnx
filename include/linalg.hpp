@@ -5,8 +5,9 @@
 #include "cytnx_error.hpp"
 #include "Tensor.hpp"
 #include "Storage.hpp"
-
 #include "CyTensor.hpp"
+#include <functional>
+
 
 namespace cytnx_extension{
     namespace xlinalg{
@@ -650,6 +651,21 @@ namespace cytnx{
             
         */
         Tensor ExpM(const Tensor &in,const cytnx_double &a=1, const cytnx_double &b=0);
+
+
+
+
+
+
+
+        //Lanczos:
+        //===========================================
+        ///**
+        //@brief perform Lanczos for hermitian/symmetric matrices or linear function.
+        //@param 
+
+
+
 
 
     }// namespace linalg
