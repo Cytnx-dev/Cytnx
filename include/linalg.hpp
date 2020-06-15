@@ -661,10 +661,26 @@ namespace cytnx{
 
         //Lanczos:
         //===========================================
-        ///**
-        //@brief perform Lanczos for hermitian/symmetric matrices or linear function.
-        //@param 
-        //std::vector<Tensor> Lanczos(LinOp *Operator,const Tensor &Tin, const cytnx_uint64 &maxiter=10000, const double &CvgCrit=1.0e-12);
+        /**
+        @brief perform Lanczos for hermitian/symmetric matrices or linear function.
+        @param Hop the Linear Operator defined by LinOp class or it's inheritance (see LinOp).
+        @param Tin the initial vector, this should be rank-1
+        @param k the number of lowest k eigen values. 
+        @param is_V if set to true, the eigen vectors will be returned.
+        @param max_krydim the maximum krylov subspace dimension for each iteration.
+        @param maxiter the maximum interation steps for each k.
+        @param CvgCrit the convergence criterion of the energy.
+        @param is_row whether the return eigen vectors should be in row-major form. 
+        @return 
+            [eigvals (Tensor), eigvecs (Tensor)(option)] 
+
+        description:
+            This function calculate the eigen value problem using explicitly restarted Lanczos. 
+            
+        [Note]
+            To use, define a linear operator with LinOp class either by assign a custom function or create a class that inherit LinOp (see LinOp for further details)            
+        */
+        std::vector<Tensor> Lanczos_ER(LinOp *Hop, const Tensor &Tin, const cytnx_uint64 &k=1, const bool &is_V=true, const cytnx_uint32 &max_krydim=4, const cytnx_uint64 &maxiter=10000, const double &CvgCrit=1.0e-12, const bool &is_row=false);
 
 
 

@@ -6,7 +6,8 @@
 ## Current dev Version:
     v0.5.4
     1. Add linalg::Det 
-
+    2. Add Type.is_float
+    3. [Feature] Add LinOp class for custom linear operators used in iterative solver
 
     v0.5.3a
     1. Add xlinalg.QR

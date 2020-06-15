@@ -16,13 +16,13 @@ def myfunc(Tin):
 
 ## method 1
 t = cy.arange(4)
-lp = cy.LinOp()
-lp.Init("mv",myfunc)
+lp = cy.LinOp("mv")
+lp.set_func(myfunc)
 print(lp.matvec(t))
 
 
 ## method 2
-mylp = myOp()
+mylp = myOp("mv")
 print(mylp.matvec(t))
 
 

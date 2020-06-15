@@ -283,7 +283,7 @@ namespace cytnx{
 
                 // when used to set elems:
                 const Tensor& operator=(const Tensor &rhs){
-                    this->_insimpl->set(_accs,rhs);
+                    this->_insimpl->set(_accs,rhs._impl);
                     return rhs;
                 }
 

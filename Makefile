@@ -101,7 +101,7 @@ ifeq ($(GPU_Enable),1)
 endif
 
 ## Linalg
-OBJS += Det.o Sum.o Hosvd.o Min.o Max.o ExpM.o QR.o Abs_.o Abs.o Pow_.o Pow.o Trace.o Eig.o Dot.o Norm.o ExpH.o Kron.o Add.o Div.o Sub.o Mul.o Cpr.o Svd.o Svd_truncate.o Inv.o Inv_.o InvM.o InvM_.o Conj.o Conj_.o Exp.o Exp_.o Expf.o Expf_.o Eigh.o Diag.o Matmul.o Tensordot.o Outer.o Vectordot.o Tridiag.o 
+OBJS += Lanczos.o Det.o Sum.o Hosvd.o Min.o Max.o ExpM.o QR.o Abs_.o Abs.o Pow_.o Pow.o Trace.o Eig.o Dot.o Norm.o ExpH.o Kron.o Add.o Div.o Sub.o Mul.o Cpr.o Svd.o Svd_truncate.o Inv.o Inv_.o InvM.o InvM_.o Conj.o Conj_.o Exp.o Exp_.o Expf.o Expf_.o Eigh.o Diag.o Matmul.o Tensordot.o Outer.o Vectordot.o Tridiag.o 
 
 
 ## Random_internal
@@ -586,6 +586,9 @@ Abs_.o: $(CytnxPATH)/src/linalg/Abs_.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Hosvd.o: $(CytnxPATH)/src/linalg/Hosvd.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+Lanczos.o: $(CytnxPATH)/src/linalg/Lanczos.cpp $(CytnxPATH)/include/linalg.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+
 
 
 test.o: test.cpp

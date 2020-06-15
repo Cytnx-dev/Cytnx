@@ -506,8 +506,8 @@ PYBIND11_MODULE(cytnx,m){
  
 
     py::class_<LinOp,PyLinOp>(m,"LinOp")
-        .def(py::init<>())
-        .def("Init",&LinOp::Init)
+        .def(py::init<const std::string &, std::function<Tensor(const Tensor&)> >(),py::arg("type"),py::arg("custom_f")=nullptr)
+        .def("set_func",&LinOp::set_func)
         .def("matvec", &LinOp::matvec)
         ;
 

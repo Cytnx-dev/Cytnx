@@ -15,11 +15,14 @@ typedef cytnx::Accessor ac;
 Tensor myfunc(const Tensor &Tin){
     // Tin should be a 4x4 tensor.
     Tensor A = arange(16).reshape({4,4});
+    A += A.permute({1,0}).contiguous();
     return linalg::Dot(A,Tin);
 
 }
 
 class MyOp: public LinOp{
+    using LinOp::LinOp;
+
     // override!
     Tensor matvec(const Tensor &Tin){
         Tensor B = (arange(16)+1).reshape({4,4});
@@ -33,15 +36,19 @@ class MyOp: public LinOp{
 int main(int argc, char *argv[]){
 
 
-    LinOp HOp;
-    HOp.Init("mv",myfunc);
+    LinOp HOp("mv",myfunc);
     auto t = arange(4);
     cout << HOp.matvec(t);    
 
-    LinOp *cu = new MyOp();
+    LinOp *cu = new MyOp("mv");
     cout << cu->matvec(t);
 
     free(cu);
+
+
+    linalg::Lanczos_ER(&HOp,t);
+
+
     exit(1);
 
 

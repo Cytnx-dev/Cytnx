@@ -75,25 +75,28 @@ $(function() {
 <h2>Current dev Version:</h2>
 <p>v0.5.4</p><ol type="1">
 <li>Add linalg::Det</li>
+<li>Add Type.is_float</li>
+<li>[Feature] Add LinOp class for custom linear operators used in iterative solver</li>
 </ol>
-<pre class="fragment">v0.5.3a
-1. Add xlinalg.QR
-2. enhance hosvd.
-3. Fix bug in cytnx.linalg.Abs truncate the floating point part. 
-4. Add example for HOTRG
-5. Add example for iDMRG
-6. Add CyTensor.truncate/truncate.
-7. Add linalg::Sum. 
-8. Complete set_elem for sparse CyTensor dispatch in binding.
-9. [Important] Change Inv/Inv_ to InvM/InvM_ for matrix inverse. 
-10. [Important] Add Inv/Inv_ for elementwise inverse with clip. 
-11. [Enhance] Add str_strip for removing " ", "\t", "\r" at the end.
-12. [Enhance] Accessor::() allow negative input.
-13. Add GPU Pow/Pow_
-14. Add random.uniform()
-15. Fix bug in diagonal CyTensor reshape/reshape_ cause mismatch.
-16. Add a is_diag option for convert Tensor to CyTensor. 
-</pre><h2>Version log</h2>
+<p>v0.5.3a</p><ol type="1">
+<li>Add xlinalg.QR</li>
+<li>enhance hosvd.</li>
+<li>Fix bug in <a class="el" href="namespacecytnx_1_1linalg.html#a3ded6435c7b47eb348d03783bfe72611" title="Elementwise absolute value. ">cytnx.linalg.Abs</a> truncate the floating point part.</li>
+<li>Add example for HOTRG</li>
+<li>Add example for iDMRG</li>
+<li>Add CyTensor.truncate/truncate.</li>
+<li>Add linalg::Sum.</li>
+<li>Complete set_elem for sparse CyTensor dispatch in binding.</li>
+<li>[Important] Change Inv/Inv_ to InvM/InvM_ for matrix inverse.</li>
+<li>[Important] Add Inv/Inv_ for elementwise inverse with clip.</li>
+<li>[Enhance] Add str_strip for removing " ", "\t", "\r" at the end.</li>
+<li>[Enhance] Accessor::() allow negative input.</li>
+<li>Add GPU Pow/Pow_</li>
+<li>Add <a class="el" href="namespacecytnx_1_1random.html#a2ff50c1d65999e6d951d1efcdb825b21" title="create an Tensor with all the elements are initialized with uniform distribution ">random.uniform()</a></li>
+<li>Fix bug in diagonal CyTensor reshape/reshape_ cause mismatch.</li>
+<li>Add a is_diag option for convert Tensor to CyTensor.</li>
+</ol>
+<h2>Version log</h2>
 <pre class="fragment">v0.5.2a-build1
 1. example/iTEBD, please modify the argument rowrank-&gt;Rowrank if you encounter error in running them.
 2. Fix bug in cytnx.linalg.Abs truncate floating point part. ---&gt; v0.5.2a-build1

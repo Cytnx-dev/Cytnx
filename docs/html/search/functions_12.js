@@ -14,6 +14,7 @@ var searchData=
   ['sdot_5f',['sdot_',['../lapack__wrapper_8hpp.html#ac56276f8195f1a7178c95f5802011ebd',1,'lapack_wrapper.hpp']]],
   ['set',['set',['../classcytnx__extension_1_1CyTensor.html#a1d2ffd7af97a11cdc916f40a3e275c50',1,'cytnx_extension::CyTensor::set()'],['../classcytnx_1_1Tensor.html#a771f1f5b51f89abd8df4166e602214ac',1,'cytnx::Tensor::set(const std::vector&lt; cytnx::Accessor &gt; &amp;accessors, const Tensor &amp;rhs)'],['../classcytnx_1_1Tensor.html#ad93d654b978add6b2f0dfb9f91490209',1,'cytnx::Tensor::set(const std::vector&lt; cytnx::Accessor &gt; &amp;accessors, const T &amp;rc)']]],
   ['set_5felem',['set_elem',['../classcytnx__extension_1_1CyTensor.html#a58a211fad19e7386511e6b1cbf58c8cf',1,'cytnx_extension::CyTensor']]],
+  ['set_5ffunc',['set_func',['../classcytnx_1_1LinOp.html#abc102d058153d0310f1549e54d9f4a77',1,'cytnx::LinOp']]],
   ['set_5flabel',['set_label',['../classcytnx__extension_1_1CyTensor.html#ac2010783d128e4fdc66b514bde83fa70',1,'cytnx_extension::CyTensor']]],
   ['set_5flabels',['set_labels',['../classcytnx__extension_1_1CyTensor.html#a3900db5e5381b221940587b21c595f52',1,'cytnx_extension::CyTensor']]],
   ['set_5fname',['set_name',['../classcytnx__extension_1_1CyTensor.html#a91dc0b65e380a0714d616c7c785affca',1,'cytnx_extension::CyTensor']]],
