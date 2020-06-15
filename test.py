@@ -2,6 +2,33 @@ import numpy as np
 import cytnx as cy
 from cytnx import cytnx_extension as cyx
 
+
+class myOp(cy.LinOp):
+    def matvec(self,v):
+        A = cy.arange(16).reshape(4,4)
+        return cy.linalg.Dot(A,v)
+
+
+def myfunc(Tin):
+    A = (cy.arange(16)+4).reshape(4,4)
+    return cy.linalg.Dot(A,Tin)
+
+
+## method 1
+t = cy.arange(4)
+lp = cy.LinOp()
+lp.Init("mv",myfunc)
+print(lp.matvec(t))
+
+
+## method 2
+mylp = myOp()
+print(mylp.matvec(t))
+
+
+
+
+exit(1)
 net = cyx.Network("Factors.net")
 
 

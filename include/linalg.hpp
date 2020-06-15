@@ -6,6 +6,7 @@
 #include "Tensor.hpp"
 #include "Storage.hpp"
 #include "CyTensor.hpp"
+#include "LinOp.hpp"
 #include <functional>
 
 
@@ -663,7 +664,7 @@ namespace cytnx{
         ///**
         //@brief perform Lanczos for hermitian/symmetric matrices or linear function.
         //@param 
-
+        //std::vector<Tensor> Lanczos(LinOp *Operator,const Tensor &Tin, const cytnx_uint64 &maxiter=10000, const double &CvgCrit=1.0e-12);
 
 
 

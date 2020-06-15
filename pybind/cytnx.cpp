@@ -8,6 +8,7 @@
 #include <pybind11/iostream.h>
 #include <pybind11/numpy.h>
 #include <pybind11/buffer_info.h>
+#include <pybind11/functional.h>
 
 #include "cytnx.hpp"
 //#include "../include/cytnx_error.hpp"
@@ -21,10 +22,27 @@ using namespace cytnx;
 //ref: https://block.arch.ethz.ch/blog/2016/07/adding-methods-to-python-classes/
 //ref: https://medium.com/@mgarod/dynamically-add-a-method-to-a-class-in-python-c49204b85bd6
 
+class PyLinOp: public LinOp{
+    public:
+        /* inherit constructor */
+        using LinOp::LinOp;
+        
+        Tensor matvec(const Tensor& Tin) override {
+            PYBIND11_OVERLOAD(
+                Tensor, /* Return type */
+                LinOp,      /* Parent class */
+                matvec,          /* Name of function in C++ (must match Python name) */
+                Tin      /* Argument(s) */
+            );
+        }
+
+};
 
 
 
 
+
+//=============================================
 template<class T>
 void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc){
     cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to setelem to a empty Tensor%s","\n");
@@ -486,6 +504,12 @@ PYBIND11_MODULE(cytnx,m){
         return m;
      });
  
+
+    py::class_<LinOp,PyLinOp>(m,"LinOp")
+        .def(py::init<>())
+        .def("Init",&LinOp::Init)
+        .def("matvec", &LinOp::matvec)
+        ;
 
 
     py::class_<cytnx::Storage>(m,"Storage")
@@ -1228,6 +1252,8 @@ PYBIND11_MODULE(cytnx,m){
                      py::scoped_estream_redirect>())
                 .def("PrintNet",&cytnx_extension::Network::PrintNet)
                 ;
+
+
 
     py::class_<cytnx_extension::Symmetry>(mext,"Symmetry")
                 //construction
