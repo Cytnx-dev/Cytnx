@@ -124,7 +124,7 @@ endif
 TESTPATH=tests
 
 
-all: test
+all: test 
 
 
 #test: test.o $(ALLOBJS)
@@ -133,7 +133,9 @@ all: test
 test: test.o libcytnx.so
 	$(CC) -L. $(LDFLAGS) -o $@ $< -lcytnx
 	#export LD_LIBRARY_PATH=.
-
+#ed_ising: ed_ising.o libcytnx.so
+#	$(CC) -L. $(LDFLAGS) -o $@ $< -lcytnx
+#	#export LD_LIBRARY_PATH=.
 #demo: demo.o libcytnx.so
 #	$(CC) -L. $(LDFLAGS) -o $@ $< libcytnx.so
 #	#export LD_LIBRARY_PATH=.
@@ -593,6 +595,9 @@ Lanczos.o: $(CytnxPATH)/src/linalg/Lanczos.cpp $(CytnxPATH)/include/linalg.hpp
 
 test.o: test.cpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+
+#ed_ising.o: ed_ising.cpp
+#	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 .phony : clean cleanpy
 

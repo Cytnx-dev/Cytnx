@@ -34,7 +34,7 @@ L = 4
 J = 1
 Hx = 0.3
 H = Hising(L,J,Hx)
-
+v = cy.ones(16)
 print(cy.linalg.Lanczos_ER(H,3))
 
 

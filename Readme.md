@@ -24,7 +24,8 @@
     4. enhance arithmetic with scalar Tensors
     5. Add Tensor append with tensor. 
     6. [Feature] Add iterative solver Lanczos_ER
-
+    7. [Enhance] Tproxy +=,-=,/=,*= on C++ side
+    8. Add ED (using Lanczos) example.
 
     v0.5.3a
     1. Add xlinalg.QR
