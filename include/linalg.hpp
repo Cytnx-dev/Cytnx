@@ -687,7 +687,6 @@ namespace cytnx{
 
 
 
-
     }// namespace linalg
     
 

@@ -66,7 +66,7 @@ int main(int argc, char *argv[]){
     //exit(1);
     //cout << linalg::Eigh(ttA) << endl;
 
-    cout << linalg::Lanczos_ER(&cu,2);
+    //cout << linalg::Lanczos_ER(&cu,2);
 
     exit(1);
     //exit(1);

@@ -1,5 +1,6 @@
 from cytnx import *
 
+
 # LinOp class provides a base class that defines the operation on a vector.
 # This class or it's derived class are required 
 # for using the cytnx's iterative solver such as Lanczos and Arnodi. 
@@ -24,7 +25,10 @@ def myfunc(v):
     return out;
 
 
-lop = LinOp("mv",myfunc)
+## at init, we need to specify 
+## the dtype and device of the input and output vectors of custom function "myfunc".
+## Here, it's double type and on cpu. 
+lop = LinOp("mv",nx=4,dtype=Type.Double,device=Device.cpu,custom_f=myfunc)
 print(lop.matvec(t)) ## use .matvec(t) to get the output.
 
 
@@ -36,8 +40,9 @@ print(lop.matvec(t)) ## use .matvec(t) to get the output.
 class MyOp(LinOp):
     AddConst = 1 # let's make it a class member.
 
-    def __init__(self,typ,aconst):
-        LinOp.__init__(self,typ) ## Remember to init the mother class if you want to overload __init__ function.
+    def __init__(self,typ,nx,aconst):
+        ## here, we can simply set the type and device explicitly as we overload the matvec. 
+        LinOp.__init__(self,typ,nx,Type.Double,Device.cpu) ## Remember to init the mother class if you want to overload __init__ function.
         self.AddConst = aconst
 
     def matvec(self,v):
@@ -47,7 +52,7 @@ class MyOp(LinOp):
         out[2]+=self.AddConst #add the constant
         return out
 
-mylop = MyOp("mv",3) # let's add 3 instead of one. 
+mylop = MyOp("mv",nx=4,aconst=3) # let's add 3 instead of one. 
 print(mylop.matvec(t)) ## use .matvec(t) to get the output as usual.
 
 

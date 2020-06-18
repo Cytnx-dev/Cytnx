@@ -103,7 +103,7 @@ namespace cytnx{
         }
 
 
-
+        
         void _Lanczos_ER_f(std::vector<Tensor> &out, LinOp *Hop, std::vector<Tensor> &buffer, const cytnx_uint64 &k, const bool &is_V, const cytnx_uint32 &max_krydim, const cytnx_uint64 &maxiter, const double &CvgCrit){
 
                 std::vector<Tensor> converged_ev;
@@ -388,14 +388,14 @@ namespace cytnx{
                     out[1] = converged_ev[0];        
                 }
         }
-
+        
 
         // MERL
         // https://www.sciencedirect.com/science/article/pii/S0010465597001367               
 
         // explicitly re-started Lanczos        
         std::vector<Tensor> Lanczos_ER(LinOp *Hop, const cytnx_uint64 &k, const bool &is_V, const cytnx_uint64 &maxiter, const double &CvgCrit, const bool &is_row, const Tensor &Tin, const cytnx_uint32 &max_krydim){
-
+                
                 //check type:
                 cytnx_error_msg(!Type.is_float(Hop->dtype()),"[ERROR][Lanczos] Lanczos can only accept operator with floating types (complex/real)%s","\n");
 
@@ -416,13 +416,13 @@ namespace cytnx{
                     cytnx_error_msg(Tin.shape()[0]!=Hop->nx(),"[ERROR][Lanczos] Tin should have dimension consistent with Hop: [%d] %s",Hop->nx(),"\n");
                     buffer[0] = Tin;
                 }
-
+                
                 std::vector<Tensor> out;
                 if(is_V) out.resize(2);
                 else out.resize(1);
                 
                 out[0] = zeros({k},Type.is_complex(Hop->dtype())?Hop->dtype()-2:Hop->dtype(),Hop->device());
-               
+                
                 if(Hop->dtype()==Type.ComplexDouble){
                     _Lanczos_ER_cd(out,Hop, buffer,k,is_V,max_krydim,maxiter,CvgCrit);
                 }else if(Hop->dtype()==Type.Double){
@@ -436,9 +436,10 @@ namespace cytnx{
                 }
 
                 if(!is_row){
-                    if(Type.is_complex(Hop->dtype())){out[1].Conj_(); out[1].permute_({1,0});}
-                    else{out[1].permute_({1,0});}
+                    if(Type.is_complex(Hop->dtype())){out[1].Conj_(); if(out[1].shape().size()!=1) out[1].permute_({1,0});}
+                    else{ if(out[1].shape().size()!=1) out[1].permute_({1,0});}
                 }
+                
                 return out;                
  
         }// Lanczos_ER entry point

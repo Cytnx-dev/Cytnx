@@ -141,9 +141,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:adbdc402a8c4d6d738523a888bcf9c0c2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#adbdc402a8c4d6d738523a888bcf9c0c2">permute</a> (const std::vector&lt; <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &gt; &amp;rnks) const</td></tr>
 <tr class="memdesc:adbdc402a8c4d6d738523a888bcf9c0c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform tensor permute on the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">cytnx::Tensor</a> and return a new instance.  <a href="#adbdc402a8c4d6d738523a888bcf9c0c2">More...</a><br /></td></tr>
 <tr class="separator:adbdc402a8c4d6d738523a888bcf9c0c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a127e50508e1ee0eadf11601d66d76988"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#a127e50508e1ee0eadf11601d66d76988">contiguous</a> ()</td></tr>
-<tr class="memdesc:a127e50508e1ee0eadf11601d66d76988"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> contiguous by coalescing the memory (storage).  <a href="#a127e50508e1ee0eadf11601d66d76988">More...</a><br /></td></tr>
-<tr class="separator:a127e50508e1ee0eadf11601d66d76988"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d7da181303c588f2ab84bffda435525"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#a4d7da181303c588f2ab84bffda435525">contiguous</a> () const</td></tr>
+<tr class="memdesc:a4d7da181303c588f2ab84bffda435525"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> contiguous by coalescing the memory (storage).  <a href="#a4d7da181303c588f2ab84bffda435525">More...</a><br /></td></tr>
+<tr class="separator:a4d7da181303c588f2ab84bffda435525"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d4342299e6951dae13b6136b89f1d53"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#a3d4342299e6951dae13b6136b89f1d53">contiguous_</a> ()</td></tr>
 <tr class="memdesc:a3d4342299e6951dae13b6136b89f1d53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> contiguous by coalescing the memory (storage), inplacely.  <a href="#a3d4342299e6951dae13b6136b89f1d53">More...</a><br /></td></tr>
 <tr class="separator:a3d4342299e6951dae13b6136b89f1d53"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -559,7 +559,7 @@ Total elem: 60
 type  : Double (Float64)
 cytnx device: CPU
 Shape : (3,4,5)
-[[[4.64166e-310 1.06098e-153 8.19691e+247 5.39115e+228 1.23762e+224 ]
+[[[4.65466e-310 1.06098e-153 8.19691e+247 5.39115e+228 1.23762e+224 ]
   [2.66064e-260 4.42144e+257 2.41318e+185 7.86015e-85 5.31287e+276 ]
   [5.30886e+180 3.11633e-85 1.67772e+243 1.95327e-153 6.49237e-109 ]
   [1.18414e+224 7.86015e-85 9.03296e+271 4.98132e+151 1.06263e+248 ]]
@@ -579,7 +579,7 @@ Total elem: 60
 type  : Uint64
 cytnx device: CPU
 Shape : (3,4,5)
-[[[     93948179042576        288589890421                   0      93948179040768                   0 ]
+[[[     94211465982224        288589890421                   0      94211465980416                   0 ]
   [                  0                   0                   0                   0                   0 ]
   [                  0                   0                   0                   0                   0 ]
   [                  0                   0                   0                   0                   0 ]]
@@ -599,16 +599,16 @@ Total elem: 60
 type  : Double (Float64)
 cytnx device: CUDA/GPU-id:0
 Shape : (3,4,5)
-[[[-2.57143e-231 1.47652e-312 0.00000e+00 0.00000e+00 0.00000e+00 ]
-  [0.00000e+00 0.00000e+00 -9.09714e-174 2.39212e-308 0.00000e+00 ]
+[[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
-  [-1.73557e-18 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
  [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
-  [0.00000e+00 0.00000e+00 -1.28823e-231 -4.57146e-153 7.45051e-321 ]
-  [0.00000e+00 0.00000e+00 0.00000e+00 1.03750e+81 -2.66843e-57 ]]
- [[3.11079e+206 -4.26034e+307 8.30026e-317 0.00000e+00 0.00000e+00 ]
-  [0.00000e+00 -3.78577e-270 -1.73557e-18 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
 
@@ -1045,8 +1045,8 @@ False
 
 </div>
 </div>
-<a id="a127e50508e1ee0eadf11601d66d76988"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a127e50508e1ee0eadf11601d66d76988">&#9670;&nbsp;</a></span>contiguous()</h2>
+<a id="a4d7da181303c588f2ab84bffda435525"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d7da181303c588f2ab84bffda435525">&#9670;&nbsp;</a></span>contiguous()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1058,7 +1058,7 @@ False
           <td class="memname"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> cytnx::Tensor::contiguous </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -1073,7 +1073,7 @@ False
 <p>See also <a class="el" href="classcytnx_1_1Tensor.html#a3d4342299e6951dae13b6136b89f1d53">Tensor::contiguous_() </a></p>
 <h2>Example:</h2>
 <h3>c++ API:</h3>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacestd.html">std</a>;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A({3,4,5});</div><div class="line">    cout &lt;&lt; A.<a class="code" href="classcytnx_1_1Tensor.html#a6d0ab6d09633ad4d6099aa822ec5335a">shape</a>() &lt;&lt; endl;</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A.<a class="code" href="classcytnx_1_1Tensor.html#adbdc402a8c4d6d738523a888bcf9c0c2">permute</a>({0,2,1});</div><div class="line">    cout &lt;&lt; B.<a class="code" href="classcytnx_1_1Tensor.html#a6d0ab6d09633ad4d6099aa822ec5335a">shape</a>() &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">//[Note] permute will not actually move the internal memory (storage) layout.</span></div><div class="line">    <span class="comment">//       this is called non-contiguous status. </span></div><div class="line">    <span class="comment">//       the memory layout will only move when Tensor.contiguous() is called.</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> C = B.<a class="code" href="classcytnx_1_1Tensor.html#a127e50508e1ee0eadf11601d66d76988">contiguous</a>(); <span class="comment">//actual moving the memory</span></div><div class="line">    cout &lt;&lt; B.<a class="code" href="classcytnx_1_1Tensor.html#a6a1d9ed962b0e9a484e2bb0de15eb76d">is_contiguous</a>() &lt;&lt; endl; <span class="comment">// false.</span></div><div class="line">    cout &lt;&lt; C.<a class="code" href="classcytnx_1_1Tensor.html#a6a1d9ed962b0e9a484e2bb0de15eb76d">is_contiguous</a>() &lt;&lt; endl; <span class="comment">// true.</span></div><div class="line">    cout &lt;&lt; C.<a class="code" href="classcytnx_1_1Tensor.html#a6d0ab6d09633ad4d6099aa822ec5335a">shape</a>() &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacestd.html">std</a>;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A({3,4,5});</div><div class="line">    cout &lt;&lt; A.<a class="code" href="classcytnx_1_1Tensor.html#a6d0ab6d09633ad4d6099aa822ec5335a">shape</a>() &lt;&lt; endl;</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A.<a class="code" href="classcytnx_1_1Tensor.html#adbdc402a8c4d6d738523a888bcf9c0c2">permute</a>({0,2,1});</div><div class="line">    cout &lt;&lt; B.<a class="code" href="classcytnx_1_1Tensor.html#a6d0ab6d09633ad4d6099aa822ec5335a">shape</a>() &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">//[Note] permute will not actually move the internal memory (storage) layout.</span></div><div class="line">    <span class="comment">//       this is called non-contiguous status. </span></div><div class="line">    <span class="comment">//       the memory layout will only move when Tensor.contiguous() is called.</span></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> C = B.<a class="code" href="classcytnx_1_1Tensor.html#a4d7da181303c588f2ab84bffda435525">contiguous</a>(); <span class="comment">//actual moving the memory</span></div><div class="line">    cout &lt;&lt; B.<a class="code" href="classcytnx_1_1Tensor.html#a6a1d9ed962b0e9a484e2bb0de15eb76d">is_contiguous</a>() &lt;&lt; endl; <span class="comment">// false.</span></div><div class="line">    cout &lt;&lt; C.<a class="code" href="classcytnx_1_1Tensor.html#a6a1d9ed962b0e9a484e2bb0de15eb76d">is_contiguous</a>() &lt;&lt; endl; <span class="comment">// true.</span></div><div class="line">    cout &lt;&lt; C.<a class="code" href="classcytnx_1_1Tensor.html#a6d0ab6d09633ad4d6099aa822ec5335a">shape</a>() &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">Vector Print:
 Total Elements:3
 [3, 4, 5]
@@ -1122,7 +1122,7 @@ True
 </div><div class="memdoc">
 
 <p>Make the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> contiguous by coalescing the memory (storage), inplacely. </p>
-<p>See also <a class="el" href="classcytnx_1_1Tensor.html#a127e50508e1ee0eadf11601d66d76988">Tensor::contiguous() </a></p>
+<p>See also <a class="el" href="classcytnx_1_1Tensor.html#a4d7da181303c588f2ab84bffda435525">Tensor::contiguous() </a></p>
 <h2>Example:</h2>
 <h3>c++ API:</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacestd.html">std</a>;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A({3,4,5});</div><div class="line">    cout &lt;&lt; A.<a class="code" href="classcytnx_1_1Tensor.html#a6d0ab6d09633ad4d6099aa822ec5335a">shape</a>() &lt;&lt; endl;</div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> B = A.<a class="code" href="classcytnx_1_1Tensor.html#adbdc402a8c4d6d738523a888bcf9c0c2">permute</a>({0,2,1});</div><div class="line">    cout &lt;&lt; B.<a class="code" href="classcytnx_1_1Tensor.html#a6d0ab6d09633ad4d6099aa822ec5335a">shape</a>() &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">//[Note] permute will not actually move the internal memory (storage) layout.</span></div><div class="line">    <span class="comment">//       this is called non-contiguous status. </span></div><div class="line">    <span class="comment">//       the memory layout will only move when Tensor.contiguous() is called.</span></div><div class="line">    cout &lt;&lt; B.<a class="code" href="classcytnx_1_1Tensor.html#a6a1d9ed962b0e9a484e2bb0de15eb76d">is_contiguous</a>() &lt;&lt; endl; <span class="comment">// false.</span></div><div class="line">    B.<a class="code" href="classcytnx_1_1Tensor.html#a3d4342299e6951dae13b6136b89f1d53">contiguous_</a>(); <span class="comment">//actual moving the memory</span></div><div class="line">    cout &lt;&lt; B.<a class="code" href="classcytnx_1_1Tensor.html#a6a1d9ed962b0e9a484e2bb0de15eb76d">is_contiguous</a>() &lt;&lt; endl; <span class="comment">// true.</span></div><div class="line">    </div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
@@ -1876,7 +1876,7 @@ Total elem: 60
 type  : Double (Float64)
 cytnx device: CPU
 Shape : (3,4,5)
-[[[4.64166e-310 1.06098e-153 8.19691e+247 5.39115e+228 1.23762e+224 ]
+[[[4.65466e-310 1.06098e-153 8.19691e+247 5.39115e+228 1.23762e+224 ]
   [2.66064e-260 4.42144e+257 2.41318e+185 7.86015e-85 5.31287e+276 ]
   [5.30886e+180 3.11633e-85 1.67772e+243 1.95327e-153 6.49237e-109 ]
   [1.18414e+224 7.86015e-85 9.03296e+271 4.98132e+151 1.06263e+248 ]]
@@ -1896,7 +1896,7 @@ Total elem: 60
 type  : Uint64
 cytnx device: CPU
 Shape : (3,4,5)
-[[[     93948179042576        288589890421                   0      93948179040768                   0 ]
+[[[     94211465982224        288589890421                   0      94211465980416                   0 ]
   [                  0                   0                   0                   0                   0 ]
   [                  0                   0                   0                   0                   0 ]
   [                  0                   0                   0                   0                   0 ]]
@@ -1916,16 +1916,16 @@ Total elem: 60
 type  : Double (Float64)
 cytnx device: CUDA/GPU-id:0
 Shape : (3,4,5)
-[[[-2.57143e-231 1.47652e-312 0.00000e+00 0.00000e+00 0.00000e+00 ]
-  [0.00000e+00 0.00000e+00 -9.09714e-174 2.39212e-308 0.00000e+00 ]
+[[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
-  [-1.73557e-18 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
  [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
-  [0.00000e+00 0.00000e+00 -1.28823e-231 -4.57146e-153 7.45051e-321 ]
-  [0.00000e+00 0.00000e+00 0.00000e+00 1.03750e+81 -2.66843e-57 ]]
- [[3.11079e+206 -4.26034e+307 8.30026e-317 0.00000e+00 0.00000e+00 ]
-  [0.00000e+00 -3.78577e-270 -1.73557e-18 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
 

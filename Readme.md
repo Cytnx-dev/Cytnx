@@ -21,6 +21,10 @@
     1. Add linalg::Det 
     2. Add Type.is_float
     3. [Feature] Add LinOp class for custom linear operators used in iterative solver
+    4. enhance arithmetic with scalar Tensors
+    5. Add Tensor append with tensor. 
+    6. [Feature] Add iterative solver Lanczos_ER
+
 
     v0.5.3a
     1. Add xlinalg.QR
@@ -407,7 +411,13 @@
     --------------|-----------|-----|------|-------------|----|-------
      Max          |   x       |  Y  |  N   |    Y        | Y  |   N 
     *Trace        |   x       |  Y  |  N   |    Y        | Y  |   Y
+
+
+    iterative solver:
+     
+        Lanczos_ER           
     
+
     * this is a high level linalg 
     
     ^ this is temporary disable

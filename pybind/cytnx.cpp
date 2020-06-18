@@ -1887,7 +1887,9 @@ PYBIND11_MODULE(cytnx,m){
     m_linalg.def("Min",&cytnx::linalg::Min, py::arg("Tn"));
     m_linalg.def("Sum",&cytnx::linalg::Sum, py::arg("Tn"));
     m_linalg.def("Hosvd",&cytnx::linalg::Hosvd, py::arg("Tn"),py::arg("mode"),py::arg("is_core")=true,py::arg("is_Ls")=false,py::arg("truncate_dim")=std::vector<cytnx_int64>());
-    m_linalg.def("Lanczos_ER",&cytnx::linalg::Lanczos_ER, py::arg("Hop"),py::arg("k")=1,py::arg("is_V")=true,py::arg("maxiter")=10000,py::arg("CvgCrit")=1.0e-14,py::arg("is_row")=false,py::arg("Tin")=Tensor(),py::arg("max_krydim")=4);
+    m_linalg.def("c_Lanczos_ER",[](LinOp *Hop, const cytnx_uint64&k, const bool &is_V, const cytnx_uint64 &maxiter, const double &CvgCrit, const bool &is_row, const Tensor &Tin, const cytnx_uint32 &max_krydim){
+                                    return cytnx::linalg::Lanczos_ER(Hop,k,is_V,maxiter,CvgCrit,is_row,Tin,max_krydim);
+                                });
 
     // [Submodule physics]
     pybind11::module m_physics = m.def_submodule("physics","physics related.");
