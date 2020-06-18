@@ -14,19 +14,21 @@ typedef cytnx::Accessor ac;
 
 Tensor myfunc(const Tensor &Tin){
     // Tin should be a 4x4 tensor.
-    Tensor A = arange(16).reshape({4,4});
-    A += A.permute({1,0}).contiguous();
+    Tensor A = arange(25).reshape({5,5});
+    A += A.permute({1,0}).contiguous()+1;
+    
     return linalg::Dot(A,Tin);
 
 }
 
 class MyOp: public LinOp{
     using LinOp::LinOp;
-
+    public:
+        Tensor ori;
     // override!
     Tensor matvec(const Tensor &Tin){
-        Tensor B = (arange(16)+1).reshape({4,4});
-        return linalg::Dot(B,Tin);
+        //cout << ori << endl;
+        return linalg::Dot(ori,Tin);
     }
 
 
@@ -36,20 +38,38 @@ class MyOp: public LinOp{
 int main(int argc, char *argv[]){
 
 
-    LinOp HOp("mv",myfunc);
-    auto t = arange(4);
-    cout << HOp.matvec(t);    
 
-    LinOp *cu = new MyOp("mv");
-    cout << cu->matvec(t);
+    //LinOp *cu = new MyOp("mv",5,Type.Double,Device.cpu);
+    //cout << cu->matvec(t);
 
-    free(cu);
+    //free(cu);
 
 
-    linalg::Lanczos_ER(&HOp,t);
 
+
+    Tensor ttA = arange(25).reshape({5,5});
+    ttA += ttA.permute({1,0}).contiguous()+1;
+
+    auto outtr = linalg::Eigh(ttA);
+
+    ttA = linalg::Dot(linalg::Dot(outtr[1],linalg::Diag(arange(5)+1)),outtr[1].permute({1,0}).contiguous());
+    cout << ttA << endl;
+
+
+    //LinOp HOp("mv",5,Type.Double,Device.cpu,myfunc);
+    auto t = arange(5);
+    MyOp cu("mv",5,Type.Double,Device.cpu);    
+    cu.ori = ttA;
+    //cout << cu.matvec(t);    
+    //LinOp *tpp = &cu;
+    //cout << tpp->matvec(t);    
+    //exit(1);
+    //cout << linalg::Eigh(ttA) << endl;
+
+    cout << linalg::Lanczos_ER(&cu,2);
 
     exit(1);
+    //exit(1);
 
 
 

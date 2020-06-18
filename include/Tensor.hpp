@@ -584,7 +584,7 @@ namespace cytnx{
             #### output>
             \verbinclude example/Tensor/contiguous.py.out
             */
-            Tensor contiguous(){
+            Tensor contiguous()const {
                 Tensor out;
                 out._impl = this->_impl->contiguous();
                 return out;
@@ -942,7 +942,38 @@ namespace cytnx{
 
 
             void append(const Tensor &rhs){
-                cytnx_error_msg(true,"[ERROR] append a Tensor is under developing.%s","\n");
+                //Tensor in;
+                if(!this->is_contiguous())
+                    this->contiguous_();
+
+                // check Tensor in shape:
+                cytnx_error_msg(rhs.shape().size()==0 || this->shape().size()==0,"[ERROR] try to append a null Tensor.%s","\n");
+                cytnx_error_msg(rhs.shape().size()!=(this->shape().size()-1),"[ERROR] try to append a Tensor with rank not match.%s","\n");
+                cytnx_uint64 Nelem = 1; 
+                for(unsigned int i=0;i<rhs.shape().size();i++){
+                    cytnx_error_msg(rhs.shape()[i]!=this->shape()[i+1],"[ERROR] dimension mismatch @ rhs.rank: [%d] this: [%d] rhs: [%d]\n",i,this->shape()[i+1],rhs.shape()[i]);
+                    Nelem*=rhs.shape()[i];
+                }
+
+                //check type:
+                Tensor in;
+                if(rhs.dtype() != this->dtype()){
+                    in = rhs.astype(this->dtype());        
+                    if(!in.is_contiguous())
+                        in.contiguous_();
+                }else{
+                    if(!in.is_contiguous())
+                        in = rhs.contiguous();
+                    else
+                        in = rhs;
+                }     
+                this->_impl->_shape[0]+=1;
+                cytnx_uint64 oldsize = this->_impl->_storage.size();
+                this->_impl->_storage.resize(oldsize+Nelem);
+                memcpy(((char*)this->_impl->_storage.raw_ptr()) + oldsize*Type.typeSize(this->dtype())/sizeof(char),
+                       in._impl->_storage.raw_ptr(),
+                       Type.typeSize(in.dtype())*Nelem);
+
             }
             /*
             void append(const Tensor &rhs){

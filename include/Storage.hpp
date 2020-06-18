@@ -58,6 +58,10 @@ namespace cytnx{
             
             template<class T>   
             T* data() const;
+            
+            void* raw_ptr(){
+                return this->Mem;
+            }
             void print();
             void print_info();
             /*
@@ -862,6 +866,10 @@ namespace cytnx{
             template<class T> // this is c++ only
             T* data() const{
                 return this->_impl->data<T>();
+            }
+
+            void* raw_ptr(){
+                return this->_impl->raw_ptr();
             }
             ///@endcond
 

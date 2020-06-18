@@ -506,9 +506,14 @@ PYBIND11_MODULE(cytnx,m){
  
 
     py::class_<LinOp,PyLinOp>(m,"LinOp")
-        .def(py::init<const std::string &, std::function<Tensor(const Tensor&)> >(),py::arg("type"),py::arg("custom_f")=nullptr)
-        .def("set_func",&LinOp::set_func)
+        .def(py::init<const std::string &, const cytnx_uint64 &, const int &, const int &, std::function<Tensor(const Tensor&)> >(),py::arg("type"),py::arg("nx"),py::arg("dtype")=(int)Type.Double,py::arg("device")=(int)Device.cpu,py::arg("custom_f")=nullptr)
+        .def("set_func",&LinOp::set_func,py::arg("custom_f"),py::arg("dtype"),py::arg("device"))
         .def("matvec", &LinOp::matvec)
+        .def("set_device", &LinOp::set_device)
+        .def("set_dtype", &LinOp::set_dtype)
+        .def("device", &LinOp::device)
+        .def("dtype", &LinOp::dtype)
+        .def("nx", &LinOp::nx)
         ;
 
 
@@ -1882,6 +1887,7 @@ PYBIND11_MODULE(cytnx,m){
     m_linalg.def("Min",&cytnx::linalg::Min, py::arg("Tn"));
     m_linalg.def("Sum",&cytnx::linalg::Sum, py::arg("Tn"));
     m_linalg.def("Hosvd",&cytnx::linalg::Hosvd, py::arg("Tn"),py::arg("mode"),py::arg("is_core")=true,py::arg("is_Ls")=false,py::arg("truncate_dim")=std::vector<cytnx_int64>());
+    m_linalg.def("Lanczos_ER",&cytnx::linalg::Lanczos_ER, py::arg("Hop"),py::arg("k")=1,py::arg("is_V")=true,py::arg("maxiter")=10000,py::arg("CvgCrit")=1.0e-14,py::arg("is_row")=false,py::arg("Tin")=Tensor(),py::arg("max_krydim")=4);
 
     // [Submodule physics]
     pybind11::module m_physics = m.def_submodule("physics","physics related.");

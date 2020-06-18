@@ -5,27 +5,35 @@
 namespace cytnx {
     namespace linalg {
         Tensor Mul(const Tensor &Lt, const Tensor &Rt) {
-
-            cytnx_error_msg(Lt.shape() != Rt.shape(), "[Mul] error, the two tensor does not have the same shape.%s",
-                            "\n");
             cytnx_error_msg(Lt.device() != Rt.device(), "[Mul] error, two tensor cannot on different devices.%s", "\n");
-            //cytnx_error_msg(!(Lt.is_contiguous() && Rt.is_contiguous()), "[Mul] error two tensors must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
+            
 
-            Tensor out(Lt.shape(), Lt.dtype() < Rt.dtype() ? Lt.dtype() : Rt.dtype(), Lt.device());
+            Tensor out;
+            bool icnst=false;
+            if(Lt.shape().size()==1 && Lt.shape()[0]==1){
+                out.Init(Rt.shape(),Lt.dtype() < Rt.dtype()?Lt.dtype():Rt.dtype(),Lt.device());
+                icnst = true;
+            }else if(Rt.shape().size()==1 && Rt.shape()[0]==1){
+                out.Init(Lt.shape(),Lt.dtype() < Rt.dtype()?Lt.dtype():Rt.dtype(),Lt.device());
+                icnst = true;
+            }else{
+                cytnx_error_msg(Lt.shape() != Rt.shape(),"[Mul] error, the two tensor does not have the same shape.%s","\n");
+                out.Init(Lt.shape(),Lt.dtype() < Rt.dtype()?Lt.dtype():Rt.dtype(),Lt.device());
+            }
 
 
-            if (Lt.is_contiguous() && Rt.is_contiguous()) {
+            if((Lt.is_contiguous() && Rt.is_contiguous())||icnst){
                 // contiguous section
                 if (Lt.device() == Device.cpu) {
                     cytnx::linalg_internal::lii.Ari_ii[Lt.dtype()][Rt.dtype()](out._impl->storage()._impl,
                                                                                Lt._impl->storage()._impl,
                                                                                Rt._impl->storage()._impl,
-                                                                               Lt._impl->storage()._impl->size(), {},
+                                                                               out._impl->storage()._impl->size(), {},
                                                                                {}, {}, 1);
                 } else {
 #ifdef UNI_GPU
                     checkCudaErrors(cudaSetDevice(Rt.device()));
-                    cytnx::linalg_internal::lii.cuAri_ii[Lt.dtype()][Rt.dtype()](out._impl->storage()._impl,Lt._impl->storage()._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},1);
+                    cytnx::linalg_internal::lii.cuAri_ii[Lt.dtype()][Rt.dtype()](out._impl->storage()._impl,Lt._impl->storage()._impl,Rt._impl->storage()._impl, out._impl->storage()._impl->size(),{},{},{},1);
 #else
                     cytnx_error_msg(true, "[Mul] fatal error, the tensor is on GPU without CUDA support.%s", "\n");
 #endif

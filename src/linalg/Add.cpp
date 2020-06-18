@@ -5,20 +5,31 @@ namespace cytnx{
     namespace linalg{
         Tensor Add(const Tensor &Lt, const Tensor &Rt){
             
-            cytnx_error_msg(Lt.shape() != Rt.shape(),"[Add] error, the two tensor does not have the same shape.%s","\n");
             cytnx_error_msg(Lt.device() != Rt.device(),"[Add] error, two tensor cannot on different devices.%s","\n");
-     
-            Tensor out(Lt.shape(),Lt.dtype() < Rt.dtype()?Lt.dtype():Rt.dtype(),Lt.device());
+    
+            Tensor out;
+            bool icnst=false;
+            if(Lt.shape().size()==1 && Lt.shape()[0]==1){
+                out.Init(Rt.shape(),Lt.dtype() < Rt.dtype()?Lt.dtype():Rt.dtype(),Lt.device());
+                icnst = true;
+            }else if(Rt.shape().size()==1 && Rt.shape()[0]==1){
+                out.Init(Lt.shape(),Lt.dtype() < Rt.dtype()?Lt.dtype():Rt.dtype(),Lt.device());
+                icnst = true;
+            }else{
+                cytnx_error_msg(Lt.shape() != Rt.shape(),"[Add] error, the two tensor does not have the same shape.%s","\n");
+                out.Init(Lt.shape(),Lt.dtype() < Rt.dtype()?Lt.dtype():Rt.dtype(),Lt.device());
+            }
+ 
 
             // if contiguous, then no need to calculate the mappers
-            if(Lt.is_contiguous() && Rt.is_contiguous()){
+            if((Lt.is_contiguous() && Rt.is_contiguous()) || icnst){
                 // contiguous section. 
                 if(Lt.device() == Device.cpu){
-                    cytnx::linalg_internal::lii.Ari_ii[Lt.dtype()][Rt.dtype()](out._impl->storage()._impl,Lt._impl->storage()._impl,Rt._impl->storage()._impl,Lt._impl->storage()._impl->size(),{},{},{},0);
+                    cytnx::linalg_internal::lii.Ari_ii[Lt.dtype()][Rt.dtype()](out._impl->storage()._impl,Lt._impl->storage()._impl,Rt._impl->storage()._impl,out._impl->storage()._impl->size(),{},{},{},0);
                 }else{
                     #ifdef UNI_GPU
                         checkCudaErrors(cudaSetDevice(Rt.device()));
-                        linalg_internal::lii.cuAri_ii[Lt.dtype()][Rt.dtype()](out._impl->storage()._impl,Lt._impl->storage()._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},0);
+                        linalg_internal::lii.cuAri_ii[Lt.dtype()][Rt.dtype()](out._impl->storage()._impl,Lt._impl->storage()._impl,Rt._impl->storage()._impl,out._impl->storage()._impl->size(),{},{},{},0);
                     #else
                         cytnx_error_msg(true,"[Add] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
                     #endif
