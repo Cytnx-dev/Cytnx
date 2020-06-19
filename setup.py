@@ -39,7 +39,7 @@ class CMakeBuild(build_ext):
         build_args = ['--config', cfg]
         cmake_args += ['-DBUILD_PYTHON=ON','-DUSE_CUDA=OFF','-DUSE_MKL=ON']
         cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
-        build_args += ['--', '-j4']
+        build_args += ['--', '-j2']
 
         env = os.environ.copy()
         env['CXXFLAGS'] = '{} -DVERSION_INFO=\\"{}\\"'.format(env.get('CXXFLAGS', ''),
@@ -54,8 +54,8 @@ class CMakeBuild(build_ext):
 
 setup(
     name='cytnx',
-    version='0.5.3',
-    maintainer='Kai-Hsin Wu, Yen-Hsin Wu, Ying-Jer Kao',
+    version='0.5.4',
+    maintainer='Kai-Hsin Wu, Yen-Hsin Wu',
     maintainer_email="kaihsinwu@gmail.com",
     description='Project Cytnx',
     long_description="""This package provides cytnx: A Cross-section of Python & C++,Tensor network library """,

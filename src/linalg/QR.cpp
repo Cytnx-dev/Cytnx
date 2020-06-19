@@ -89,7 +89,7 @@ namespace cytnx_extension{
                 cytnx_error_msg(true, "[QR for sparse CyTensor is developling%s]","\n");
             }else{
                 // using rowrank to split the bond to form a matrix.
-                cytnx_error_msg(Tin.Rowrank() < 1 || Tin.rank()==1,"[QR][ERROR] QR for DenseCyTensor should have rank>1 and Rowrank>0%s","\n");
+                cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank()==1,"[QR][ERROR] QR for DenseCyTensor should have rank>1 and rowrank>0%s","\n");
 
                Tensor tmp;
                if(Tin.is_contiguous()) tmp = Tin.get_block_();
@@ -101,7 +101,7 @@ namespace cytnx_extension{
 
                // collapse as Matrix:
                cytnx_int64 rowdim = 1;
-               for(cytnx_uint64 i=0;i<Tin.Rowrank();i++) rowdim*= tmp.shape()[i];
+               for(cytnx_uint64 i=0;i<Tin.rowrank();i++) rowdim*= tmp.shape()[i];
                tmp.reshape_({rowdim,-1});
 
                vector<Tensor> outT = cytnx::linalg::QR(tmp,is_tau);    
@@ -122,7 +122,7 @@ namespace cytnx_extension{
                //Q 
                vector<cytnx_int64> Qshape;
                vector<cytnx_int64> Qlbl;
-               for(int i=0;i<Tin.Rowrank();i++){
+               for(int i=0;i<Tin.rowrank();i++){
                     Qshape.push_back(oldshape[i]);
                     Qlbl.push_back(oldlabel[i]);
                }
@@ -137,7 +137,7 @@ namespace cytnx_extension{
                Qlbl.clear();
                Qshape.push_back(-1);
                Qlbl.push_back(newlbl);
-                for (int i=Tin.Rowrank();i<Tin.rank();i++)
+                for (int i=Tin.rowrank();i<Tin.rank();i++)
                     Qshape.push_back(oldshape[i]); 
                outT[1].reshape_(Qshape);
                outCyT[1] = CyTensor(outT[1],1);
@@ -152,7 +152,7 @@ namespace cytnx_extension{
                if(Tin.is_tag()){
                     outCyT[0].tag();
                     outCyT[1].tag();
-                    for(int i=0;i<Tin.Rowrank();i++){
+                    for(int i=0;i<Tin.rowrank();i++){
                         outCyT[0].bonds()[i].set_type(Tin.bonds()[i].type());
                     }
                     outCyT[0].bonds().back().set_type(cytnx_extension::BD_BRA);
@@ -160,7 +160,7 @@ namespace cytnx_extension{
                     
                     outCyT[1].bonds()[0].set_type(cytnx_extension::BD_KET);
                     for(int i=1;i<outCyT[1].rank();i++){
-                        outCyT[1].bonds()[i].set_type(Tin.bonds()[Tin.Rowrank()+i-1].type());
+                        outCyT[1].bonds()[i].set_type(Tin.bonds()[Tin.rowrank()+i-1].type());
                     }
                     outCyT[1]._impl->_is_braket_form = outCyT[1]._impl->_update_braket();
                }

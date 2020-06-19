@@ -40,10 +40,10 @@ namespace cytnx{
         {
             lapack_int *ipiv = (lapack_int*)malloc((L+1)*sizeof(lapack_int));
             lapack_int info;
-            info = LAPACKE_zgetrf(LAPACK_COL_MAJOR, L, L, (cytnx_complex128*)iten->Mem, L, ipiv);
+            info = LAPACKE_zgetrf(LAPACK_COL_MAJOR, L, L, (lapack_complex_double*)iten->Mem, L, ipiv);
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'zgetrf': Lapack INFO = ", info);
 
-            info = LAPACKE_zgetri(LAPACK_COL_MAJOR, L, (cytnx_complex128*)iten->Mem, L, ipiv);
+            info = LAPACKE_zgetri(LAPACK_COL_MAJOR, L, (lapack_complex_double*)iten->Mem, L, ipiv);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'zgetri': Lapack INFO = ", info);
 
@@ -54,10 +54,10 @@ namespace cytnx{
         {
             lapack_int *ipiv = (lapack_int*)malloc((L+1)*sizeof(lapack_int));
             lapack_int info;
-            info = LAPACKE_cgetrf(LAPACK_COL_MAJOR, L, L, (cytnx_complex64*)iten->Mem, L, ipiv);
+            info = LAPACKE_cgetrf(LAPACK_COL_MAJOR, L, L, (lapack_complex_float*)iten->Mem, L, ipiv);
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'cgetrf': Lapack INFO = ", info);
 
-            info = LAPACKE_cgetri(LAPACK_COL_MAJOR, L, (cytnx_complex64*)iten->Mem, L, ipiv);
+            info = LAPACKE_cgetri(LAPACK_COL_MAJOR, L, (lapack_complex_float*)iten->Mem, L, ipiv);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'cgetri': Lapack INFO = ", info);
 

@@ -35,7 +35,7 @@ namespace cytnx{
 
  
             // call linalg:
-            info = LAPACKE_zgelqf(LAPACK_COL_MAJOR, N, M, pQ, ldA, ptau);
+            info = LAPACKE_zgelqf(LAPACK_COL_MAJOR, N, M, (lapack_complex_double*)pQ, ldA, (lapack_complex_double*)ptau);
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'zgelqf': Lapack INFO = ", info);
             
             //getR:
@@ -46,7 +46,7 @@ namespace cytnx{
             lapack_int col = M<N?N:M;
             
             // call linalg:
-            info = LAPACKE_zunglq(LAPACK_COL_MAJOR, N, col, K, pQ, ldA, ptau);
+            info = LAPACKE_zunglq(LAPACK_COL_MAJOR, N, col, K, (lapack_complex_double*)pQ, ldA, (lapack_complex_double*)ptau);
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'zunglq': Lapack INFO = ", info);
 
 
@@ -70,7 +70,7 @@ namespace cytnx{
 
  
             // call linalg:
-            info = LAPACKE_cgelqf(LAPACK_COL_MAJOR, N, M, pQ, ldA, ptau);
+            info = LAPACKE_cgelqf(LAPACK_COL_MAJOR, N, M, (lapack_complex_float*)pQ, ldA, (lapack_complex_float*)ptau);
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'cgelqf': Lapack INFO = ", info);
             
             //getR:
@@ -81,7 +81,7 @@ namespace cytnx{
             lapack_int col = M<N?N:M;
             
             // call linalg:
-            info = LAPACKE_cunglq(LAPACK_COL_MAJOR, N, col, K, pQ, ldA, ptau);
+            info = LAPACKE_cunglq(LAPACK_COL_MAJOR, N, col, K, (lapack_complex_float*)pQ, ldA, (lapack_complex_float*)ptau);
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'cunglq': Lapack INFO = ", info);
 
 

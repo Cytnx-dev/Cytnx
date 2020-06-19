@@ -58,10 +58,10 @@ namespace cytnx_extension{
                 cytnx_error_msg(true,"[ERROR][Hosvd] currently can only support regular CyTensor without tagged.%s","\n");
             }else{
                 std::vector<cytnx_int64> perm;
-                cytnx_uint64 oldRowrank = in.Rowrank();
+                cytnx_uint64 oldrowrank = in.rowrank();
 
                 for(int i=0;i<mode.size();i++){
-                    in.set_Rowrank(mode[i]);
+                    in.set_rowrank(mode[i]);
                 
                     if(truncate_dim.size()!=0){
                         auto tsvdout = Svd_truncate(in,truncate_dim[i],true,false);
@@ -95,7 +95,7 @@ namespace cytnx_extension{
                     
                 }      
                 
-                in.set_Rowrank(oldRowrank);
+                in.set_rowrank(oldrowrank);
 
                 if(is_core){
                     CyTensor s = Contract(in,out[0]);

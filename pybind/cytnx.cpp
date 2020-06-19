@@ -1320,14 +1320,14 @@ PYBIND11_MODULE(cytnx,m){
 
     py::class_<cytnx_extension::CyTensor>(mext,"CyTensor")
                 .def(py::init<>())
-                .def(py::init<const cytnx::Tensor&, const cytnx_uint64&, const bool &>(),py::arg("Tin"),py::arg("Rowrank"),py::arg("is_diag")=false)
-                .def(py::init<const std::vector<cytnx_extension::Bond> &, const std::vector<cytnx_int64> &, const cytnx_int64 &, const unsigned int &,const int &, const bool &>(),py::arg("bonds"),py::arg("labels")=std::vector<cytnx_int64>(),py::arg("Rowrank")=(cytnx_int64)(-1),py::arg("dtype")=(unsigned int)(cytnx::Type.Double),py::arg("device")=(int)cytnx::Device.cpu,py::arg("is_diag")=false)
+                .def(py::init<const cytnx::Tensor&, const cytnx_uint64&, const bool &>(),py::arg("Tin"),py::arg("rowrank"),py::arg("is_diag")=false)
+                .def(py::init<const std::vector<cytnx_extension::Bond> &, const std::vector<cytnx_int64> &, const cytnx_int64 &, const unsigned int &,const int &, const bool &>(),py::arg("bonds"),py::arg("labels")=std::vector<cytnx_int64>(),py::arg("rowrank")=(cytnx_int64)(-1),py::arg("dtype")=(unsigned int)(cytnx::Type.Double),py::arg("device")=(int)cytnx::Device.cpu,py::arg("is_diag")=false)
                 .def("set_name",&cytnx_extension::CyTensor::set_name)
                 .def("set_label",&cytnx_extension::CyTensor::set_label,py::arg("idx"),py::arg("new_label"))
                 .def("set_labels",&cytnx_extension::CyTensor::set_labels,py::arg("new_labels"))
-                .def("set_Rowrank",&cytnx_extension::CyTensor::set_Rowrank, py::arg("new_Rowrank"))
+                .def("set_rowrank",&cytnx_extension::CyTensor::set_rowrank, py::arg("new_rowrank"))
 
-                .def("Rowrank",&cytnx_extension::CyTensor::Rowrank)
+                .def("rowrank",&cytnx_extension::CyTensor::rowrank)
                 .def("dtype",&cytnx_extension::CyTensor::dtype)
                 .def("dtype_str",&cytnx_extension::CyTensor::dtype_str)
                 .def("device",&cytnx_extension::CyTensor::device)
@@ -1336,23 +1336,23 @@ PYBIND11_MODULE(cytnx,m){
 
                 .def("reshape",[](cytnx_extension::CyTensor &self, py::args args, py::kwargs kwargs)->cytnx_extension::CyTensor{
                     std::vector<cytnx::cytnx_int64> c_args = args.cast< std::vector<cytnx::cytnx_int64> >();
-                    cytnx_uint64 Rowrank = 0;
+                    cytnx_uint64 rowrank = 0;
                    
                     if(kwargs){
-                        if(kwargs.contains("Rowrank")) Rowrank = kwargs["Rowrank"].cast<cytnx::cytnx_int64>();
+                        if(kwargs.contains("rowrank")) rowrank = kwargs["rowrank"].cast<cytnx::cytnx_int64>();
                     }
  
-                    return self.reshape(c_args,Rowrank);
+                    return self.reshape(c_args,rowrank);
                 })
                 .def("reshape_",[](cytnx_extension::CyTensor &self, py::args args, py::kwargs kwargs){
                     std::vector<cytnx::cytnx_int64> c_args = args.cast< std::vector<cytnx::cytnx_int64> >();
-                    cytnx_uint64 Rowrank = 0;
+                    cytnx_uint64 rowrank = 0;
                    
                     if(kwargs){
-                        if(kwargs.contains("Rowrank")) Rowrank = kwargs["Rowrank"].cast<cytnx::cytnx_int64>();
+                        if(kwargs.contains("rowrank")) rowrank = kwargs["rowrank"].cast<cytnx::cytnx_int64>();
                     }
  
-                    self.reshape_(c_args,Rowrank);
+                    self.reshape_(c_args,rowrank);
                 })
                 .def("elem_exists",&cytnx_extension::CyTensor::elem_exists)
                 .def("item",[](cytnx_extension::CyTensor &self){
@@ -1532,34 +1532,34 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__deepcopy__",&cytnx_extension::CyTensor::clone)
                 .def("Save",[](cytnx_extension::CyTensor &self, const std::string &fname){self.Save(fname);},py::arg("fname"))
                 .def_static("Load",[](const std::string &fname){return cytnx_extension::CyTensor::Load(fname);},py::arg("fname"))
-                //.def("permute",&cytnx_extension::CyTensor::permute,py::arg("mapper"),py::arg("Rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
-                //.def("permute_",&cytnx_extension::CyTensor::permute_,py::arg("mapper"),py::arg("Rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
+                //.def("permute",&cytnx_extension::CyTensor::permute,py::arg("mapper"),py::arg("rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
+                //.def("permute_",&cytnx_extension::CyTensor::permute_,py::arg("mapper"),py::arg("rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
 
                 .def("permute_",[](cytnx_extension::CyTensor &self, const std::vector<cytnx::cytnx_int64> &c_args, py::kwargs kwargs){
-                    cytnx_int64 Rowrank = -1;
+                    cytnx_int64 rowrank = -1;
                     bool by_label = false;
                     if(kwargs){
-                        if(kwargs.contains("Rowrank")){
-                            Rowrank = kwargs["Rowrank"].cast<cytnx_int64>();
+                        if(kwargs.contains("rowrank")){
+                            rowrank = kwargs["rowrank"].cast<cytnx_int64>();
                         }
                         if(kwargs.contains("by_label")){ 
                             by_label = kwargs["by_label"].cast<bool>();
                         }
                     }
-                    self.permute_(c_args,Rowrank,by_label);
+                    self.permute_(c_args,rowrank,by_label);
                 })
                 .def("permute",[](cytnx_extension::CyTensor &self,const std::vector<cytnx::cytnx_int64> &c_args, py::kwargs kwargs)->cytnx_extension::CyTensor{
-                    cytnx_int64 Rowrank = -1;
+                    cytnx_int64 rowrank = -1;
                     bool by_label = false;
                     if(kwargs){
-                        if(kwargs.contains("Rowrank")){
-                            Rowrank = kwargs["Rowrank"].cast<cytnx_int64>();
+                        if(kwargs.contains("rowrank")){
+                            rowrank = kwargs["rowrank"].cast<cytnx_int64>();
                         }
                         if(kwargs.contains("by_label")){ 
                             by_label = kwargs["by_label"].cast<bool>();
                         }
                     }
-                    return self.permute(c_args,Rowrank,by_label);
+                    return self.permute(c_args,rowrank,by_label);
                 })
 
                 .def("make_contiguous",&cytnx_extension::CyTensor::contiguous)

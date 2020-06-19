@@ -23,7 +23,7 @@ namespace cytnx{
             lapack_int info;
             double *superb = (double*)malloc(sizeof(double)*(min-2));
 
-            info = LAPACKE_zgesvd(LAPACK_COL_MAJOR, jobv, jobu, N, M, Mij, ldA, (cytnx_double*)S->Mem, (cytnx_complex128*)vT->Mem, ldu, (cytnx_complex128*)U->Mem, ldvT, superb);
+            info = LAPACKE_zgesvd(LAPACK_COL_MAJOR, jobv, jobu, N, M, (lapack_complex_double*)Mij, ldA, (cytnx_double*)S->Mem, (lapack_complex_double*)vT->Mem, ldu, (lapack_complex_double*)U->Mem, ldvT, superb);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'zgesvd': Lapack INFO = ", info);
 
@@ -48,7 +48,7 @@ namespace cytnx{
             lapack_int info;
             float *superb = (float*)malloc(sizeof(float)*(min-2));
 
-            info = LAPACKE_cgesvd(LAPACK_COL_MAJOR, jobv, jobu, N, M, Mij, ldA, (cytnx_float*)S->Mem, (cytnx_complex64*)vT->Mem, ldu, (cytnx_complex64*)U->Mem, ldvT, superb);
+            info = LAPACKE_cgesvd(LAPACK_COL_MAJOR, jobv, jobu, N, M, (lapack_complex_float*)Mij, ldA, (cytnx_float*)S->Mem, (lapack_complex_float*)vT->Mem, ldu, (lapack_complex_float*)U->Mem, ldvT, superb);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'cgesvd': Lapack INFO = ", info);
 

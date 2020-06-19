@@ -41,7 +41,7 @@ ifeq ($(MKL_Enable),1)
   LDFLAGS += $(DOCKER_MKL) -Wl,--no-as-needed -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -ldl -lm   
 else
   CCFLAGS += -std=c++11 -O3 -Wformat=0 -fPIC -w -Wno-c++11-narrowing 
-  LDFLAGS +=  -llapack -lblas -lstdc++  
+  LDFLAGS +=  -llapacke -lblas -lstdc++  
 endif
 
 

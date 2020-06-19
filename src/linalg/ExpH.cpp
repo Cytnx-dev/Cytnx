@@ -73,7 +73,7 @@ namespace cytnx_extension{
 
             }else{
                 
-                cytnx_error_msg((Tin.Rowrank()==0) || (Tin.Rowrank()==Tin.rank()),"[ERROR][ExpH] The total dimension of row-space and col-space should be equal!!%s","\n");
+                cytnx_error_msg((Tin.rowrank()==0) || (Tin.rowrank()==Tin.rank()),"[ERROR][ExpH] The total dimension of row-space and col-space should be equal!!%s","\n");
                 //cytnx_error_msg(Tin.is_contiguous()==false,"[ERROR][ExpH] CyTensor must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
                 //CyTensor out = Tin.clone();
                 CyTensor out;
@@ -83,10 +83,10 @@ namespace cytnx_extension{
                     out = Tin.contiguous();
                 }
                 cytnx_int64 Drow=1,Dcol=1;
-                for(int i=0;i<Tin.Rowrank();i++){
+                for(int i=0;i<Tin.rowrank();i++){
                     Drow*=Tin.shape()[i];
                 }
-                for(int i=Tin.Rowrank();i<Tin.rank();i++){
+                for(int i=Tin.rowrank();i<Tin.rank();i++){
                     Dcol*=Tin.shape()[i];
                 }
                 cytnx_error_msg(Drow!=Dcol,"[ERROR][ExpH] The total dimension of row-space and col-space should be equal!!%s","\n");

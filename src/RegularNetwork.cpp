@@ -109,7 +109,7 @@ namespace cytnx_extension{
     void _parse_TN_line_(vector<cytnx_int64> &lbls, cytnx_uint64 &TN_iBondNum, const string &line, const cytnx_uint64 &line_num){
         lbls.clear();
         vector<string> tmp = str_split(line,false,";");
-        cytnx_error_msg(tmp.size()!=2,"[ERROR][Network][Fromfile] line:%d %s\n",line_num,"Invalid TN line. A \';\' should be used to indicate the Rowrank.\nexample1> \'Tn: 0, 1; 2, 3\'\nexample2> \'Tn: ; -1, 2, 3\'");
+        cytnx_error_msg(tmp.size()!=2,"[ERROR][Network][Fromfile] line:%d %s\n",line_num,"Invalid TN line. A \';\' should be used to indicate the rowrank.\nexample1> \'Tn: 0, 1; 2, 3\'\nexample2> \'Tn: ; -1, 2, 3\'");
 
         // handle col-space lbl
         vector<string> ket_lbls = str_split(tmp[0],false,",");
@@ -325,7 +325,7 @@ namespace cytnx_extension{
 
         //check shape:
         cytnx_error_msg(this->label_arr[idx].size()!=utensor.rank(),"[ERROR][RegularNetwork][PutCyTensor] tensor name: [%s], the rank of input CyTensor does not match the definition in network file.\n",this->names[idx].c_str());
-        cytnx_error_msg(this->iBondNums[idx]!=utensor.Rowrank(),"[ERROR][RegularNetwork][PutCyTensor] tensor name: [%s], the row-rank of input CyTensor does not match the semicolon defined in network file.\n",this->names[idx].c_str());
+        cytnx_error_msg(this->iBondNums[idx]!=utensor.rowrank(),"[ERROR][RegularNetwork][PutCyTensor] tensor name: [%s], the row-rank of input CyTensor does not match the semicolon defined in network file.\n",this->names[idx].c_str());
 
         if(is_clone){
             this->tensors[idx] = utensor.clone();

@@ -23,7 +23,7 @@ namespace cytnx{
             lapack_int info;
             lapack_int ONE = 1;
 
-            info = LAPACKE_zgeev(LAPACK_COL_MAJOR,jobs, 'N', L, buffer_A, ldA, (cytnx_complex128*)e->Mem, tA,L,nullptr,ONE);
+            info = LAPACKE_zgeev(LAPACK_COL_MAJOR,jobs, 'N', L, (lapack_complex_double*)buffer_A, ldA, (lapack_complex_double*)e->Mem, (lapack_complex_double*)tA,L,nullptr,ONE);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'zgeev': Lapack INFO = ", info);
 
@@ -46,7 +46,7 @@ namespace cytnx{
             lapack_int info;
             lapack_int ONE = 1;
 
-            info = LAPACKE_cgeev(LAPACK_COL_MAJOR,jobs, 'N', L, buffer_A, ldA, (cytnx_complex64*)e->Mem, tA,L,nullptr,ONE);
+            info = LAPACKE_cgeev(LAPACK_COL_MAJOR,jobs, 'N', L, (lapack_complex_float*)buffer_A, ldA, (lapack_complex_float*)e->Mem, (lapack_complex_float*)tA,L,nullptr,ONE);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'cgeev': Lapack INFO = ", info);
 

@@ -24,7 +24,7 @@ namespace cytnx{
             lapack_int ldA = L;
             lapack_int info;
             
-            info = LAPACKE_zheev(LAPACK_COL_MAJOR,jobs, 'U', L, tA, ldA, (cytnx_double*)e->Mem);
+            info = LAPACKE_zheev(LAPACK_COL_MAJOR,jobs, 'U', L, (lapack_complex_double*)tA, ldA, (cytnx_double*)e->Mem);
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'zheev': Lapack INFO = ", info);
 
             if(v->dtype==Type.Void)
@@ -48,7 +48,7 @@ namespace cytnx{
             lapack_int ldA = L;
             lapack_int info;
             
-            info = LAPACKE_cheev(LAPACK_COL_MAJOR, jobs, 'U', L, tA, ldA, (cytnx_float*)e->Mem);
+            info = LAPACKE_cheev(LAPACK_COL_MAJOR, jobs, 'U', L, (lapack_complex_float*)tA, ldA, (cytnx_float*)e->Mem);
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'cheev': Lapack INFO = ", info);
             if(v->dtype==Type.Void)
                 free(tA);
