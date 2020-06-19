@@ -1,4 +1,4 @@
-CYTNX_ROOT=/home/kaihsinwu/Dropbox/Cytnx
+CYTNX_ROOT=../
 CC := g++
 CCFLAGS := -std=c++11 
 INCFLAGS := $(CCFLAGS) -I$(CYTNX_ROOT)/include
@@ -100,6 +100,6 @@ CyTensor_fromTensor.e: ./CyTensor/fromTensor.cpp
 .phony: clean
 
 clean:
-	rm $(Tensor_example) $(Storage_example) $(Bond_example) $(Accessor_example) $(Symmetry_example) $(Network_example)
+	rm $(Tensor_example) $(Storage_example) $(Bond_example) $(Accessor_example) $(Symmetry_example) $(Network_example) $(CyTensor_example) 
 
 
