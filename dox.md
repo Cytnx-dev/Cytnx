@@ -1,10 +1,12 @@
 # Cytnx
 
 ## Stable Version:
-    [v0.5.3 pre-release](https://github.com/kaihsin/Cytnx/tree/v0.5.3a)
+    [v0.5.4 pre-release](https://github.com/kaihsin/Cytnx/tree/v0.5.4a)
 
 ## Current dev Version:
-    v0.5.4
+    v0.5.5
+
+    v0.5.4a
     1. Add linalg::Det 
     2. Add Type.is_float
     3. [Feature] Add LinOp class for custom linear operators used in iterative solver
@@ -16,94 +18,6 @@
     9. Change backend to mkl_ilp64, w/o mkl: OpenBLAS
     10. Change Rowrank->rowrank for CyTensor. 
 
-
-    v0.5.3a
-    1. Add xlinalg.QR
-    2. enhance hosvd.
-    3. Fix bug in cytnx.linalg.Abs truncate the floating point part. 
-    4. Add example for HOTRG
-    5. Add example for iDMRG
-    6. Add CyTensor.truncate/truncate.
-    7. Add linalg::Sum. 
-    8. Complete set_elem for sparse CyTensor dispatch in binding.
-    9. [Important] Change Inv/Inv_ to InvM/InvM_ for matrix inverse. 
-    10. [Important] Add Inv/Inv_ for elementwise inverse with clip. 
-    11. [Enhance] Add str_strip for removing " ", "\t", "\r" at the end.
-    12. [Enhance] Accessor::() allow negative input.
-    13. Add GPU Pow/Pow_
-    14. Add random.uniform()
-    15. Fix bug in diagonal CyTensor reshape/reshape_ cause mismatch.
-    16. Add a is_diag option for convert Tensor to CyTensor. 
-
-## Version log
-
-    v0.5.2a-build1
-    1. example/iTEBD, please modify the argument rowrank->Rowrank if you encounter error in running them.
-    2. Fix bug in cytnx.linalg.Abs truncate floating point part. ---> v0.5.2a-build1
-    3. Fix bug in mkl blas package import bug with numpy.        ---> v0.5.2a-build1
-
-
-    v0.5.2a
-    1. add Trace and Trace_ for CyTensor.
-    2. fix bug in Network.Launch does not return the output CyTensor
-    3. Add Network.PrintNet, and ostream support.
-    4. Add Network.Diagram() for plot the tensor network diagram (python only)    
-    5. Add support for floating type Vectordot on GPU. 
-    6. Fix bug in to from Anytype to ComplexFloat. 
-    7. Add QR for CPU.
-    8. Add identity() and it's alias function eye(). 
-    9. Add physics namespace/submodule
-    10. Add physics::spin() for generating Spin-S representation. 
-    11. Add physics::pauli() for pauli matrix.
-    12. Add ExpM() for generic matrix (CPU only)
-    13. Fix bug in python slice, and reverse range slice.
-    14. Enhance optional Kron padding scheme
-    15. Fix bug in CyTensor contract/Contract(A,B) for tensors with no common label
-    16. Enhance error message in Network
-    17. Add Min(), Max() (CPU only)
-    18. Fix bug in Abs. 
-
-    v0.5.1a
-    1. add Norm() for CPU and GPU, add to call by Tn
-    2. add Dot() for CPU and GPU, with unify API for Vec-Vec/Mat-Vec/Mat-Mat/Ten-Vec product.
-    3. add Tensor.rank() 
-    4. [Feature] support Tensor <-> numpy.ndarray
-    5. add random::Make_uniform()
-    6. Fix bug in Svd_truncate that will change the underlying block for contiguous CyTensor. 
-    7. Fix bug in Tensor->numpy if the underlying Tensor is non-contiguous. 
-    8. Add Eig.
-    9. Add real() imag() for Tensor. 
-    10. Enhance python API, Storage & Tensor are now iterable.
-    11. Fix buf in Conj and Conj_, for both C++ and python
-    12. Fix bug python inplace call return ID Conj_, Inv_, Exp_
-    13. Add Conj, Conj_ for CyTensor
-    14. Fix non-inplace Arithmetic for non-contiguous tensor. 
-    15. Add [trial version] Trace. 
-    16. Add Pow, Pow_.
-    17. Add Abs, Abs_ for cpu.
-
-    v0.5.0a
-    1. Add .imag() .real() for Storage. 
-    2. Add xlinalg under cytnx_extension for algebra on CyTensor
-    3. Add xlinalg::Svd()  
-    4. Change linalg::Eigh() to match numpy 
-    5. fix Diag uninitialize elemets bug
-    6. add linalg::ExpH()
-    7. add random::Make_normal()
-    8. add iTEBD example for both C++ and python @ example/iTEBD
-
-
-    v0.4
-    1. remove Otimes, add Kron and Outer 
-    2. Add Storage append, capacity, pre-alloc 32x address
-    3. Tensor can now allow redundant dimension (e.g. shape = (1,1,1,1,1...) 
-    4. Add Storage.from_vector, directly convert the C++ vector to Storage
-    5. Add more intruisive way to get slices for Tensor in C++, using operator[]
-    6. Add Tensor.append for rank-1 Tensor    
-    7. Add Exp() Expf() Exp\_() Expf\_()
-    8. Change UniTensor to CyTensor 
-    9. Guarded CyTensor, Bond, Symmetry and Network class with cytnx_extension namespace (cytnx_extension submodule in python).  
-       
 
 ## Feature:
 
@@ -394,12 +308,14 @@
 
 ## Developer
 
-    Kai-Hsin Wu kaihsinwu@gmail.com 
-    
+    Kai-Hsin Wu (Boston Univ.) kaihsinwu@gmail.com 
+
+## Contributors
+
     Ying-Jer Kao (NTU, Taiwan): setuptool, cmake
     Yen-Hsin Wu (NTU, Taiwan): Network optimization
     Yu-Hsueh Chen (NTU, Taiwan): example, and testing
-    Po-Kwan Wu (OSU): Icon optimization
+    Po-Kwan Wu (OSU): Icon optimization    
 
 ## Refereces:
 

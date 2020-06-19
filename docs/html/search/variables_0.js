@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['device',['Device',['../namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a',1,'cytnx']]]
+  ['_5f_5fblasintsize_5f_5f',['__blasINTsize__',['../namespacecytnx.html#afbd550656f35ac86a0703b2f122c09cc',1,'cytnx']]]
 ];

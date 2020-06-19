@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['symtype',['SymType',['../namespacecytnx__extension.html#a31616079e7c6c8112218345546d8c052',1,'cytnx_extension']]]
+  ['nttype',['NtType',['../namespacecytnx__extension.html#a40da1da84f9bd707fd5ec888a5693ccf',1,'cytnx_extension']]]
 ];

@@ -71,9 +71,10 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><h2>Stable Version:</h2>
-<p><a href="https://github.com/kaihsin/Cytnx/tree/v0.5.3a">v0.5.3 pre-release</a></p>
+<p><a href="https://github.com/kaihsin/Cytnx/tree/v0.5.4a">v0.5.4 pre-release</a></p>
 <h2>Current dev Version:</h2>
-<p>v0.5.4</p><ol type="1">
+<p>v0.5.5</p>
+<p>v0.5.4a</p><ol type="1">
 <li>Add linalg::Det</li>
 <li>Add Type.is_float</li>
 <li>[Feature] Add LinOp class for custom linear operators used in iterative solver</li>
@@ -82,93 +83,10 @@ $(function() {
 <li>[Feature] Add iterative solver Lanczos_ER</li>
 <li>[Enhance] Tproxy +=,-=,/=,*= on C++ side</li>
 <li>Add ED (using Lanczos) example.</li>
+<li>Change backend to mkl_ilp64, w/o mkl: OpenBLAS</li>
+<li>Change Rowrank-&gt;rowrank for CyTensor.</li>
 </ol>
-<p>v0.5.3a</p><ol type="1">
-<li>Add xlinalg.QR</li>
-<li>enhance hosvd.</li>
-<li>Fix bug in <a class="el" href="namespacecytnx_1_1linalg.html#a3ded6435c7b47eb348d03783bfe72611" title="Elementwise absolute value. ">cytnx.linalg.Abs</a> truncate the floating point part.</li>
-<li>Add example for HOTRG</li>
-<li>Add example for iDMRG</li>
-<li>Add CyTensor.truncate/truncate.</li>
-<li>Add linalg::Sum.</li>
-<li>Complete set_elem for sparse CyTensor dispatch in binding.</li>
-<li>[Important] Change Inv/Inv_ to InvM/InvM_ for matrix inverse.</li>
-<li>[Important] Add Inv/Inv_ for elementwise inverse with clip.</li>
-<li>[Enhance] Add str_strip for removing " ", "\t", "\r" at the end.</li>
-<li>[Enhance] Accessor::() allow negative input.</li>
-<li>Add GPU Pow/Pow_</li>
-<li>Add <a class="el" href="namespacecytnx_1_1random.html#a2ff50c1d65999e6d951d1efcdb825b21" title="create an Tensor with all the elements are initialized with uniform distribution ">random.uniform()</a></li>
-<li>Fix bug in diagonal CyTensor reshape/reshape_ cause mismatch.</li>
-<li>Add a is_diag option for convert Tensor to CyTensor.</li>
-</ol>
-<h2>Version log</h2>
-<pre class="fragment">v0.5.2a-build1
-1. example/iTEBD, please modify the argument rowrank-&gt;Rowrank if you encounter error in running them.
-2. Fix bug in cytnx.linalg.Abs truncate floating point part. ---&gt; v0.5.2a-build1
-3. Fix bug in mkl blas package import bug with numpy.        ---&gt; v0.5.2a-build1
-
-
-v0.5.2a
-1. add Trace and Trace_ for CyTensor.
-2. fix bug in Network.Launch does not return the output CyTensor
-3. Add Network.PrintNet, and ostream support.
-4. Add Network.Diagram() for plot the tensor network diagram (python only)    
-5. Add support for floating type Vectordot on GPU. 
-6. Fix bug in to from Anytype to ComplexFloat. 
-7. Add QR for CPU.
-8. Add identity() and it's alias function eye(). 
-9. Add physics namespace/submodule
-10. Add physics::spin() for generating Spin-S representation. 
-11. Add physics::pauli() for pauli matrix.
-12. Add ExpM() for generic matrix (CPU only)
-13. Fix bug in python slice, and reverse range slice.
-14. Enhance optional Kron padding scheme
-15. Fix bug in CyTensor contract/Contract(A,B) for tensors with no common label
-16. Enhance error message in Network
-17. Add Min(), Max() (CPU only)
-18. Fix bug in Abs. 
-
-v0.5.1a
-1. add Norm() for CPU and GPU, add to call by Tn
-2. add Dot() for CPU and GPU, with unify API for Vec-Vec/Mat-Vec/Mat-Mat/Ten-Vec product.
-3. add Tensor.rank() 
-4. [Feature] support Tensor &lt;-&gt; numpy.ndarray
-5. add random::Make_uniform()
-6. Fix bug in Svd_truncate that will change the underlying block for contiguous CyTensor. 
-7. Fix bug in Tensor-&gt;numpy if the underlying Tensor is non-contiguous. 
-8. Add Eig.
-9. Add real() imag() for Tensor. 
-10. Enhance python API, Storage &amp; Tensor are now iterable.
-11. Fix buf in Conj and Conj_, for both C++ and python
-12. Fix bug python inplace call return ID Conj_, Inv_, Exp_
-13. Add Conj, Conj_ for CyTensor
-14. Fix non-inplace Arithmetic for non-contiguous tensor. 
-15. Add [trial version] Trace. 
-16. Add Pow, Pow_.
-17. Add Abs, Abs_ for cpu.
-
-v0.5.0a
-1. Add .imag() .real() for Storage. 
-2. Add xlinalg under cytnx_extension for algebra on CyTensor
-3. Add xlinalg::Svd()  
-4. Change linalg::Eigh() to match numpy 
-5. fix Diag uninitialize elemets bug
-6. add linalg::ExpH()
-7. add random::Make_normal()
-8. add iTEBD example for both C++ and python @ example/iTEBD
-
-
-v0.4
-1. remove Otimes, add Kron and Outer 
-2. Add Storage append, capacity, pre-alloc 32x address
-3. Tensor can now allow redundant dimension (e.g. shape = (1,1,1,1,1...) 
-4. Add Storage.from_vector, directly convert the C++ vector to Storage
-5. Add more intruisive way to get slices for Tensor in C++, using operator[]
-6. Add Tensor.append for rank-1 Tensor    
-7. Add Exp() Expf() Exp\_() Expf\_()
-8. Change UniTensor to CyTensor 
-9. Guarded CyTensor, Bond, Symmetry and Network class with cytnx_extension namespace (cytnx_extension submodule in python).  
-</pre><h2>Feature:</h2>
+<h2>Feature:</h2>
 <h3>Python x C++</h3>
 <p>Benefit from both side. One can do simple prototype on python side and easy transfer to C++ with small effort!</p>
 <div class="fragment"><div class="line"><span class="comment">// c++ version:</span></div><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div><div class="line"><a class="code" href="classcytnx_1_1Tensor.html">cytnx::Tensor</a> A({3,4,5},<a class="code" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">cytnx::Type</a>.Double,<a class="code" href="namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a">cytnx::Device</a>.cpu)</div></div><!-- fragment --><div class="fragment"><div class="line"><span class="comment"># python version:</span></div><div class="line"><span class="keyword">import</span> cytnx</div><div class="line">A =  <a class="code" href="classcytnx_1_1Tensor.html">cytnx.Tensor</a>([3,4,5],dtype=cytnx.Type.Double,device=cytnx.Device.cpu)</div></div><!-- fragment --><h3>1. All the Storage and Tensor can now have mulitple type support.</h3>
@@ -324,8 +242,8 @@ v0.4
 <ul>
 <li>Boost v1.53+ [check_deleted, atomicadd, intrusive_ptr]</li>
 <li>C++11</li>
-<li>lapack</li>
-<li>blas</li>
+<li>lapack (lapacke or mkl)</li>
+<li>blas (or mkl)</li>
 <li>gcc v4.8.5+ (recommand v6+) (required -std=c++11)</li>
 </ul>
 <p>[CUDA support]</p><ul>
@@ -336,8 +254,11 @@ v0.4
 <li>openmp</li>
 </ul>
 <p>[Python]</p><ul>
-<li>pybind11 2.2.4</li>
+<li>pybind11</li>
 <li>numpy &gt;= 1.15</li>
+</ul>
+<p>[MKL]</p><ul>
+<li>icpc</li>
 </ul>
 <h2>conda install</h2>
 <p>[Currently Linux only]</p>
@@ -354,21 +275,23 @@ v0.4
 <p>$cd build</p>
 <p>2.) resolving the dependency </p><pre class="fragment">$cmake [flags (optional)] &lt;Cytnx repo folder&gt;
 
-[Note] there are several customize flags format as (-D&lt;flag name&gt;).
 
-* USE_ICPC (default = off)
+* -DUSE_ICPC (default = off)
 
-    The default compiler is g++-6. 
+    The default compiler is system's compiler. 
 
-* USE_CUDA (default = off)
+* -DUSE_CUDA (default = off)
 
     If USE_CUDA=1, the code will compile with GPU support.
 
-* USE_MKL (default = off)
+* -DUSE_MKL (default = off) [Recommend set it =on]
 
-    If USE_MKL=off, the code will compile with system LAPACK/BLAS library. 
+    If USE_MKL=off, the code will compile with the auto found blas/lapack vendors usually with blas_int=32bits. 
+    If USE_MKL=on, the code will always compile with threaded mkl ILP64 library with blas_int=64bits 
 
-* CMAKE_INSTALL_PREFIX (default is /usr/local)
+    [Note] If you are not sure which version you are compile against to, use cytnx::__blasINTsize__/cytnx.__blasINTsize__ to check it's 64bits (=8) or 32bits (=4). 
+
+* -DCMAKE_INSTALL_PREFIX (default is /usr/local)
 
     Set the install target path.
 </pre><p>3.) compile by running: </p><pre class="fragment">$make -Bj4
@@ -393,12 +316,12 @@ v0.4
 <pre class="fragment">See test.cpp for using C++ .
 See test.py for using python  
 </pre><h2>Developer</h2>
-<pre class="fragment">Kai-Hsin Wu kaihsinwu@gmail.com 
-
-Ying-Jer Kao (NTU, Taiwan): setuptool, cmake
+<pre class="fragment">Kai-Hsin Wu (Boston Univ.) kaihsinwu@gmail.com 
+</pre><h2>Contributors</h2>
+<pre class="fragment">Ying-Jer Kao (NTU, Taiwan): setuptool, cmake
 Yen-Hsin Wu (NTU, Taiwan): Network optimization
 Yu-Hsueh Chen (NTU, Taiwan): example, and testing
-Po-Kwan Wu (OSU): Icon optimization
+Po-Kwan Wu (OSU): Icon optimization    
 </pre><h2>Refereces:</h2>
 <pre class="fragment">* example/DMRG:
     https://www.tensors.net/dmrg</pre> </div></div><!-- contents -->

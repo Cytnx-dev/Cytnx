@@ -1,5 +1,6 @@
 var menudata={children:[
 {text:"Main Page",url:"index.html"},
+{text:"Related Pages",url:"pages.html"},
 {text:"Namespaces",url:"namespaces.html",children:[
 {text:"Namespace List",url:"namespaces.html"},
 {text:"Namespace Members",url:"namespacemembers.html",children:[
@@ -94,4 +95,4 @@ var menudata={children:[
 {text:"t",url:"functions_func_t.html#index_t"},
 {text:"u",url:"functions_func_u.html#index_u"},
 {text:"z",url:"functions_func_z.html#index_z"}]}]}]},
-{text:"tutorial",url:"https://github.com/kaihsin/Cytnx"}]}
+{text:"version log",url:"version_log.html"}]}
