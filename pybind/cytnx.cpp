@@ -1,8 +1,8 @@
 #include <vector>
 #include <map>
 #include <random>
-
-  #include <pybind11/pybind11.h>
+  
+#include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/operators.h>
 #include <pybind11/iostream.h>
@@ -13,6 +13,10 @@
 #include "cytnx.hpp"
 //#include "../include/cytnx_error.hpp"
 #include "complex.h"
+
+
+
+
 namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
@@ -366,8 +370,8 @@ void f_CyTensor_setelem_scal_cf(cytnx_extension::CyTensor &self, const std::vect
 
 PYBIND11_MODULE(cytnx,m){
 
-    m.attr("__version__") = "0.4.0";
-
+    m.attr("__version__") = "0.5.4a";
+    m.attr("__blasINTsize__") = cytnx::__blasINTsize__;
     //global vars
     //m.attr("cytnxdevice") = cytnx::cytnxdevice;
     //m.attr("Type")   = py::cast(cytnx::Type);    
@@ -410,7 +414,7 @@ PYBIND11_MODULE(cytnx,m){
     mdev.attr("cuda")=(cytnx_int64)cytnx::Device.cuda;
     //mdev.def("cudaDeviceSynchronize",[](){cytnx::Device.cudaDeviceSynchronize();});
     
-
+    
 
 
 

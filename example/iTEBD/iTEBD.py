@@ -58,16 +58,16 @@ H.print_diagram()
 #     |    |     
 #   --A-la-B-lb-- 
 #
-A = cyx.CyTensor([cyx.Bond(chi),cyx.Bond(2),cyx.Bond(chi)],Rowrank=1,labels=[-1,0,-2]); 
-B = cyx.CyTensor(A.bonds(),Rowrank=1,labels=[-3,1,-4]);                                
+A = cyx.CyTensor([cyx.Bond(chi),cyx.Bond(2),cyx.Bond(chi)],rowrank=1,labels=[-1,0,-2]); 
+B = cyx.CyTensor(A.bonds(),rowrank=1,labels=[-3,1,-4]);                                
 cytnx.random.Make_normal(B.get_block_(),0,0.2); 
 cytnx.random.Make_normal(A.get_block_(),0,0.2); 
 A.print_diagram()
 B.print_diagram()
 #print(A)
 #print(B)
-la = cyx.CyTensor([cyx.Bond(chi),cyx.Bond(chi)],Rowrank=1,labels=[-2,-3],is_diag=True)
-lb = cyx.CyTensor([cyx.Bond(chi),cyx.Bond(chi)],Rowrank=1,labels=[-4,-5],is_diag=True)
+la = cyx.CyTensor([cyx.Bond(chi),cyx.Bond(chi)],rowrank=1,labels=[-2,-3],is_diag=True)
+lb = cyx.CyTensor([cyx.Bond(chi),cyx.Bond(chi)],rowrank=1,labels=[-4,-5],is_diag=True)
 la.put_block(cytnx.ones(chi));
 lb.put_block(cytnx.ones(chi));
 la.print_diagram()
@@ -126,7 +126,7 @@ for i in range(10000):
     #  (-4) --= XeH =-- (-5)        (-4)--U--(-6)                          (-7)--Vt--(-5)
     #
 
-    XeH.set_Rowrank(2)
+    XeH.set_rowrank(2)
     la,A,B = cyx.xlinalg.Svd_truncate(XeH,chi)
     Norm = cytnx.linalg.Norm(la.get_block_()).item()
     la *= 1./Norm
@@ -141,8 +141,8 @@ for i in range(10000):
     #       --lb-A'-la-B'-lb-- 
     #
     # again, but A' and B' are updated 
-    A.set_labels([-1,0,-2]); A.set_Rowrank(1);
-    B.set_labels([-3,1,-4]); B.set_Rowrank(1);
+    A.set_labels([-1,0,-2]); A.set_rowrank(1);
+    B.set_labels([-3,1,-4]); B.set_rowrank(1);
 
     #A.print_diagram()
     #B.print_diagram()

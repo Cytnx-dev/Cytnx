@@ -5,6 +5,9 @@ from .Tensor_conti import *
 from .linalg_conti import *
 #from .CyTensor_conti import *
 
+__version__ = cytnx.__version__
+__blasINTsize__ = cytnx.__blasINTsize__
+
 def from_numpy(np_arr):
     tmp = np_arr
     if np_arr.flags['C_CONTIGUOUS'] == False:

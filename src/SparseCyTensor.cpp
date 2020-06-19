@@ -10,7 +10,7 @@ using namespace std;
 namespace cytnx_extension{
     using namespace cytnx;
     typedef Accessor ac;
-    void SparseCyTensor::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &Rowrank, const unsigned int &dtype,const int &device, const bool &is_diag){
+    void SparseCyTensor::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank, const unsigned int &dtype,const int &device, const bool &is_diag){
         //the entering is already check all the bonds have symmetry.
         // need to check:
         // 1. the # of symmetry and their type across all bonds
@@ -34,18 +34,18 @@ namespace cytnx_extension{
             N_ket += cytnx_uint32(bonds[i].type() == bondType::BD_KET);
         }
         
-        //check Rowrank:
+        //check rowrank:
         cytnx_error_msg((N_ket<1)||(N_ket>bonds.size()-1),"[ERROR][SparseCyTensor] must have at least one ket-bond and one bra-bond.%s","\n");
        
  
-        if(Rowrank<0){
-            this->_Rowrank = N_ket;
-            this->_inner_Rowrank = N_ket;
+        if(rowrank<0){
+            this->_rowrank = N_ket;
+            this->_inner_rowrank = N_ket;
         }
         else{
-            cytnx_error_msg((Rowrank<1) || (Rowrank>bonds.size()-1),"[ERROR][SparseCyTensor] Rowrank must be >=1 and <=rank-1.%s","\n");
-            this->_Rowrank = Rowrank;
-            this->_inner_Rowrank = Rowrank;
+            cytnx_error_msg((rowrank<1) || (rowrank>bonds.size()-1),"[ERROR][SparseCyTensor] rowrank must be >=1 and <=rank-1.%s","\n");
+            this->_rowrank = rowrank;
+            this->_inner_rowrank = rowrank;
             // update braket_form >>>
         }
 
@@ -126,7 +126,7 @@ namespace cytnx_extension{
             cytnx_error_msg(true,"[Developing!]%s","\n");
             return vector<Bond>();
         }else{
-            vector<Bond> cb_inbonds = vec_clone(this->_bonds,this->_Rowrank);
+            vector<Bond> cb_inbonds = vec_clone(this->_bonds,this->_rowrank);
             cytnx_uint64 N_sym;
             for(cytnx_uint64 i=0;i<cb_inbonds.size();i++){
                 N_sym = cb_inbonds[i].Nsym();
@@ -145,7 +145,7 @@ namespace cytnx_extension{
                 }
             }
             
-            vector<Bond> cb_outbonds = vec_clone(this->_bonds,this->_Rowrank,this->_bonds.size());
+            vector<Bond> cb_outbonds = vec_clone(this->_bonds,this->_rowrank,this->_bonds.size());
             for(cytnx_uint64 i=0;i<cb_outbonds.size();i++){
                 N_sym = cb_outbonds[i].Nsym();
 
@@ -171,7 +171,7 @@ namespace cytnx_extension{
         
 
     }
-    void SparseCyTensor::permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank,const bool &by_label){
+    void SparseCyTensor::permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank,const bool &by_label){
         std::vector<cytnx_uint64> mapper_u64;
         if(by_label){
             //cytnx_error_msg(true,"[Developing!]%s","\n");
@@ -215,9 +215,9 @@ namespace cytnx_extension{
         this->_contiguous= iconti;
 
         //check rowrank.
-        if(Rowrank>=0){
-            cytnx_error_msg((Rowrank>=this->_bonds.size()) || (Rowrank<=0),"[ERROR] Rowrank should >=1 and <= CyTensor.rank-1 for SparseCyTensor (CyTensor in blockform)(CyTensor with symmetries).%s","\n");
-            this->_Rowrank = Rowrank; //only update the outer meta.
+        if(rowrank>=0){
+            cytnx_error_msg((rowrank>=this->_bonds.size()) || (rowrank<=0),"[ERROR] rowrank should >=1 and <= CyTensor.rank-1 for SparseCyTensor (CyTensor in blockform)(CyTensor with symmetries).%s","\n");
+            this->_rowrank = rowrank; //only update the outer meta.
         }
 
         //update braket form status.
@@ -235,8 +235,8 @@ namespace cytnx_extension{
         sprintf(buffer,"valid bocks : %d\n",this->_blocks.size());      std::cout << std::string(buffer);
         sprintf(buffer,"on device   : %s\n",this->device_str().c_str());std::cout << std::string(buffer);
 
-        cytnx_uint64 Nin = this->_Rowrank;
-        cytnx_uint64 Nout = this->_labels.size() - this->_Rowrank;
+        cytnx_uint64 Nin = this->_rowrank;
+        cytnx_uint64 Nout = this->_labels.size() - this->_rowrank;
         cytnx_uint64 vl;
         if(Nin > Nout) vl = Nin;
         else           vl = Nout;
@@ -312,7 +312,7 @@ namespace cytnx_extension{
 
             // make new instance  
             SparseCyTensor* tmp = new SparseCyTensor();
-            tmp->Init(this->_bonds,this->_labels,this->_Rowrank,this->dtype(),this->device(),this->_is_diag);
+            tmp->Init(this->_bonds,this->_labels,this->_rowrank,this->dtype(),this->device(),this->_is_diag);
             
             //CyTensor tt; tt._impl = boost::intrusive_ptr<CyTensor_base>(tmp);
             //cout << tt << endl;
@@ -327,7 +327,7 @@ namespace cytnx_extension{
                 //cout << oldshape << endl;
                 //for(int t=0;t<oldshape.size();t++) cout << oldshape[t] << " "; cout << endl;//[DEBUG]
 
-                vector<cytnx_uint64> acc_in_old(this->_inner_Rowrank),acc_out_old(oldshape.size()-this->_inner_Rowrank);
+                vector<cytnx_uint64> acc_in_old(this->_inner_rowrank),acc_out_old(oldshape.size()-this->_inner_rowrank);
                 acc_out_old[acc_out_old.size()-1] = 1;
                 acc_in_old[ acc_in_old.size()-1 ] = 1;
                 for(unsigned int s=0;s<acc_out_old.size()-1;s++){
@@ -367,16 +367,16 @@ namespace cytnx_extension{
                         //caluclate new row col index:
                         cytnx_uint64 new_row = 0, new_col=0;
                         cytnx_uint64 buff=1;
-                        for(unsigned int k=0;k<tmp->labels().size()-tmp->Rowrank();k++){
+                        for(unsigned int k=0;k<tmp->labels().size()-tmp->rowrank();k++){
                             new_col += buff*tfidx.back();
                             tfidx.pop_back();
                             buff*=tmp->_bonds[tmp->_bonds.size()-1-k].dim();
                         }
                         buff = 1;
-                        for(unsigned int k=0;k<tmp->_Rowrank;k++){
+                        for(unsigned int k=0;k<tmp->_rowrank;k++){
                             new_row += buff*tfidx.back();
                             tfidx.pop_back();
-                            buff*=tmp->_bonds[tmp->_Rowrank-1-k].dim();
+                            buff*=tmp->_bonds[tmp->_rowrank-1-k].dim();
                         }
                         /* 
                         cout << new_col << " " << new_row << endl;
@@ -409,20 +409,20 @@ namespace cytnx_extension{
 // at_for_sparse;
 //=======================================================================
     // some helper function:
-    std::vector<cytnx_uint64> _locator_to_inner_ij(const std::vector<cytnx_uint64> &locator, const std::vector<cytnx_uint64> &current_shape, const cytnx_uint64 &inner_Rowrank, const std::vector<cytnx_uint64> &inv_mapper){
+    std::vector<cytnx_uint64> _locator_to_inner_ij(const std::vector<cytnx_uint64> &locator, const std::vector<cytnx_uint64> &current_shape, const cytnx_uint64 &inner_rowrank, const std::vector<cytnx_uint64> &inv_mapper){
         //1. map the locator to the memory layout:
         std::vector<cytnx_uint64> mem_locator = vec_map(locator,inv_mapper);
 
         //2. dispatch to row and column part:
-        std::vector<cytnx_uint64> row_locator(inner_Rowrank),col_locator(mem_locator.size() - inner_Rowrank);
+        std::vector<cytnx_uint64> row_locator(inner_rowrank),col_locator(mem_locator.size() - inner_rowrank);
         memcpy(&row_locator[0],&mem_locator[0],sizeof(cytnx_uint64)*row_locator.size());
-        memcpy(&col_locator[0],&mem_locator[inner_Rowrank],sizeof(cytnx_uint64)*col_locator.size());
+        memcpy(&col_locator[0],&mem_locator[inner_rowrank],sizeof(cytnx_uint64)*col_locator.size());
 
         //3. 
         // build accumulate index with current memory shape.
         vector<cytnx_uint64> oldshape = vec_map(current_shape,inv_mapper);
 
-        vector<cytnx_uint64> acc_in_old(inner_Rowrank),acc_out_old(oldshape.size()-inner_Rowrank);
+        vector<cytnx_uint64> acc_in_old(inner_rowrank),acc_out_old(oldshape.size()-inner_rowrank);
         acc_out_old[acc_out_old.size()-1] = 1;
         acc_in_old[ acc_in_old.size()-1 ] = 1;
         for(unsigned int s=0;s<acc_out_old.size()-1;s++){
@@ -448,7 +448,7 @@ namespace cytnx_extension{
         }
         
         //2. calculate the location in real memory using meta datas.
-        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_rowrank, this->_inv_mapper);
         cytnx_uint64 &i = ij[0];
         cytnx_uint64 &j = ij[1];
 
@@ -476,7 +476,7 @@ namespace cytnx_extension{
         }
         
         //2. calculate the location in real memory using meta datas.
-        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_rowrank, this->_inv_mapper);
         cytnx_uint64 &i = ij[0];
         cytnx_uint64 &j = ij[1];
 
@@ -505,7 +505,7 @@ namespace cytnx_extension{
         }
         
         //2. calculate the location in real memory using meta datas.
-        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_rowrank, this->_inv_mapper);
         cytnx_uint64 &i = ij[0];
         cytnx_uint64 &j = ij[1];
 
@@ -532,7 +532,7 @@ namespace cytnx_extension{
         }
         
         //2. calculate the location in real memory using meta datas.
-        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_rowrank, this->_inv_mapper);
         cytnx_uint64 &i = ij[0];
         cytnx_uint64 &j = ij[1];
 
@@ -561,7 +561,7 @@ namespace cytnx_extension{
         }
         
         //2. calculate the location in real memory using meta datas.
-        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_rowrank, this->_inv_mapper);
         cytnx_uint64 &i = ij[0];
         cytnx_uint64 &j = ij[1];
 
@@ -589,7 +589,7 @@ namespace cytnx_extension{
         }
         
         //2. calculate the location in real memory using meta datas.
-        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_rowrank, this->_inv_mapper);
         cytnx_uint64 &i = ij[0];
         cytnx_uint64 &j = ij[1];
 
@@ -617,7 +617,7 @@ namespace cytnx_extension{
         }
         
         //2. calculate the location in real memory using meta datas.
-        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_rowrank, this->_inv_mapper);
         cytnx_uint64 &i = ij[0];
         cytnx_uint64 &j = ij[1];
 
@@ -644,7 +644,7 @@ namespace cytnx_extension{
         }
         
         //2. calculate the location in real memory using meta datas.
-        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_rowrank, this->_inv_mapper);
         cytnx_uint64 &i = ij[0];
         cytnx_uint64 &j = ij[1];
 
@@ -672,7 +672,7 @@ namespace cytnx_extension{
         }
         
         //2. calculate the location in real memory using meta datas.
-        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_rowrank, this->_inv_mapper);
         cytnx_uint64 &i = ij[0];
         cytnx_uint64 &j = ij[1];
 
@@ -699,7 +699,7 @@ namespace cytnx_extension{
         }
         
         //2. calculate the location in real memory using meta datas.
-        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_rowrank, this->_inv_mapper);
         cytnx_uint64 &i = ij[0];
         cytnx_uint64 &j = ij[1];
 
@@ -727,7 +727,7 @@ namespace cytnx_extension{
         }
         
         //2. calculate the location in real memory using meta datas.
-        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_rowrank, this->_inv_mapper);
         cytnx_uint64 &i = ij[0];
         cytnx_uint64 &j = ij[1];
 
@@ -754,7 +754,7 @@ namespace cytnx_extension{
         }
         
         //2. calculate the location in real memory using meta datas.
-        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_rowrank, this->_inv_mapper);
         cytnx_uint64 &i = ij[0];
         cytnx_uint64 &j = ij[1];
 
@@ -782,7 +782,7 @@ namespace cytnx_extension{
         }
         
         //2. calculate the location in real memory using meta datas.
-        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_rowrank, this->_inv_mapper);
         cytnx_uint64 &i = ij[0];
         cytnx_uint64 &j = ij[1];
 
@@ -809,7 +809,7 @@ namespace cytnx_extension{
         }
         
         //2. calculate the location in real memory using meta datas.
-        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_rowrank, this->_inv_mapper);
         cytnx_uint64 &i = ij[0];
         cytnx_uint64 &j = ij[1];
 
@@ -837,7 +837,7 @@ namespace cytnx_extension{
         }
         
         //2. calculate the location in real memory using meta datas.
-        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_rowrank, this->_inv_mapper);
         cytnx_uint64 &i = ij[0];
         cytnx_uint64 &j = ij[1];
 
@@ -864,7 +864,7 @@ namespace cytnx_extension{
         }
         
         //2. calculate the location in real memory using meta datas.
-        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_rowrank, this->_inv_mapper);
         cytnx_uint64 &i = ij[0];
         cytnx_uint64 &j = ij[1];
 
@@ -892,7 +892,7 @@ namespace cytnx_extension{
         }
         
         //2. calculate the location in real memory using meta datas.
-        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_rowrank, this->_inv_mapper);
         cytnx_uint64 &i = ij[0];
         cytnx_uint64 &j = ij[1];
 
@@ -919,7 +919,7 @@ namespace cytnx_extension{
         }
         
         //2. calculate the location in real memory using meta datas.
-        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_rowrank, this->_inv_mapper);
         cytnx_uint64 &i = ij[0];
         cytnx_uint64 &j = ij[1];
 
@@ -947,7 +947,7 @@ namespace cytnx_extension{
         }
         
         //2. calculate the location in real memory using meta datas.
-        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_rowrank, this->_inv_mapper);
         cytnx_uint64 &i = ij[0];
         cytnx_uint64 &j = ij[1];
 
@@ -974,7 +974,7 @@ namespace cytnx_extension{
         }
         
         //2. calculate the location in real memory using meta datas.
-        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_rowrank, this->_inv_mapper);
         cytnx_uint64 &i = ij[0];
         cytnx_uint64 &j = ij[1];
 
@@ -1002,7 +1002,7 @@ namespace cytnx_extension{
         }
         
         //2. calculate the location in real memory using meta datas.
-        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_Rowrank, this->_inv_mapper);
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_rowrank, this->_inv_mapper);
         cytnx_uint64 &i = ij[0];
         cytnx_uint64 &j = ij[1];
         
@@ -1037,8 +1037,8 @@ namespace cytnx_extension{
     void SparseCyTensor::Transpose_(){
         
         //permute as usual:
-        vector<cytnx_int64> new_order = vec_concatenate(vec_range<cytnx_int64>(this->Rowrank(),this->rank()),vec_range<cytnx_int64>(0,this->Rowrank()));
-        this->permute_(new_order,this->rank() - this->Rowrank());
+        vector<cytnx_int64> new_order = vec_concatenate(vec_range<cytnx_int64>(this->rowrank(),this->rank()),vec_range<cytnx_int64>(0,this->rowrank()));
+        this->permute_(new_order,this->rank() - this->rowrank());
 
         //modify tag, and reverse qnum:
         for(int i=0;i<this->bonds().size();i++){

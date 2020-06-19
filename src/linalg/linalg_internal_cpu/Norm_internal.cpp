@@ -15,8 +15,8 @@ namespace cytnx{
             double* od = static_cast<double*>(out);
             cytnx_complex128 *_Rin = (cytnx_complex128*)Rin->Mem;
 
-            int32_t incx = 1;
-            int32_t Len = Rin->len;
+            blas_int incx = 1;
+            blas_int Len = Rin->len;
             *od = dznrm2(&Len,_Rin,&incx);
                 
         }
@@ -24,8 +24,8 @@ namespace cytnx{
             float* od = static_cast<float*>(out);
             cytnx_complex64 *_Rin = (cytnx_complex64*)Rin->Mem;
 
-            int32_t incx = 1;
-            int32_t Len = Rin->len;
+            blas_int incx = 1;
+            blas_int Len = Rin->len;
             *od = scnrm2(&Len,_Rin,&incx);
                 
         }
@@ -33,8 +33,8 @@ namespace cytnx{
             double* od = static_cast<double*>(out);
             cytnx_double *_Rin = (cytnx_double*)Rin->Mem;
 
-            int32_t incx = 1;
-            int32_t Len = Rin->len;
+            blas_int incx = 1;
+            blas_int Len = Rin->len;
             *od = dnrm2(&Len,_Rin,&incx);
                 
         }
@@ -42,8 +42,8 @@ namespace cytnx{
             float* od = static_cast<float*>(out);
             cytnx_float *_Rin = (cytnx_float*)Rin->Mem;
 
-            int32_t incx = 1;
-            int32_t Len = Rin->len;
+            blas_int incx = 1;
+            blas_int Len = Rin->len;
             *od = snrm2(&Len,_Rin,&incx);
                 
         }

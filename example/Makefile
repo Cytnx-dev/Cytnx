@@ -1,4 +1,4 @@
-CYTNX_ROOT=/home/kaywu/Dropbox/Cytnx
+CYTNX_ROOT=/home/kaihsinwu/Dropbox/Cytnx
 CC := g++
 CCFLAGS := -std=c++11 
 INCFLAGS := $(CCFLAGS) -I$(CYTNX_ROOT)/include

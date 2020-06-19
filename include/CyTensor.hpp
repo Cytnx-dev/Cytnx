@@ -45,7 +45,7 @@ namespace cytnx_extension{
             bool _is_braket_form;
             bool _is_tag;
             bool _is_diag;
-            cytnx_int64 _Rowrank;
+            cytnx_int64 _rowrank;
             std::string _name;
             std::vector<cytnx_int64> _labels;
             std::vector< Bond > _bonds;
@@ -58,7 +58,7 @@ namespace cytnx_extension{
                 if(this->_bonds[0].type()!= bondType::BD_REG){
                     //check:
                     for(unsigned int i=0;i<this->_bonds.size();i++){
-                        if(i<this->_Rowrank){
+                        if(i<this->_rowrank){
                             if(this->_bonds[i].type()!=bondType::BD_KET) return false;
                         }else{
                             if(this->_bonds[i].type()!=bondType::BD_BRA) return false;
@@ -74,13 +74,13 @@ namespace cytnx_extension{
             friend class DenseCyTensor;
             friend class SparseCyTensor;
 
-            CyTensor_base(): _is_tag(false), _name(std::string("")), _is_braket_form(false), _Rowrank(-1), _is_diag(false), uten_type_id(UTenType.Void){};
+            CyTensor_base(): _is_tag(false), _name(std::string("")), _is_braket_form(false), _rowrank(-1), _is_diag(false), uten_type_id(UTenType.Void){};
 
             //copy&assignment constr., use intrusive_ptr's !!
             CyTensor_base(const CyTensor_base &rhs);
             CyTensor_base& operator=(CyTensor_base &rhs);
 
-            cytnx_uint64 Rowrank() const{return this->_Rowrank;}
+            cytnx_uint64 rowrank() const{return this->_rowrank;}
             bool is_diag() const{ return this->_is_diag; }
             const bool&     is_braket_form() const{
                 return this->_is_braket_form;
@@ -169,8 +169,8 @@ namespace cytnx_extension{
             
 
 
-            virtual void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1,const unsigned int &dtype=Type.Double,const int &device = Device.cpu,const bool &is_diag=false);
-            virtual void Init_by_Tensor(const Tensor& in, const cytnx_uint64 &Rowrank, const bool &is_diag=false);
+            virtual void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1,const unsigned int &dtype=Type.Double,const int &device = Device.cpu,const bool &is_diag=false);
+            virtual void Init_by_Tensor(const Tensor& in, const cytnx_uint64 &rowrank, const bool &is_diag=false);
             virtual std::vector<cytnx_uint64> shape() const;
             virtual bool      is_blockform() const ;
             virtual bool     is_contiguous() const;
@@ -181,9 +181,9 @@ namespace cytnx_extension{
             virtual int          device() const;
             virtual std::string      dtype_str() const;
             virtual std::string     device_str() const;
-            virtual void set_Rowrank(const cytnx_uint64 &new_Rowrank);
-            virtual boost::intrusive_ptr<CyTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank=-1, const bool &by_label=false);
-            virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank=-1, const bool &by_label=false);
+            virtual void set_rowrank(const cytnx_uint64 &new_rowrank);
+            virtual boost::intrusive_ptr<CyTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank=-1, const bool &by_label=false);
+            virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1, const bool &by_label=false);
             virtual boost::intrusive_ptr<CyTensor_base> contiguous_();
             virtual boost::intrusive_ptr<CyTensor_base> contiguous();            
             virtual void print_diagram(const bool &bond_info=false);
@@ -210,8 +210,8 @@ namespace cytnx_extension{
             virtual boost::intrusive_ptr<CyTensor_base> get(const std::vector<Accessor> &accessors);
             // this will only work on non-symm tensor (DenseCyTensor)
             virtual void set(const std::vector<Accessor> &accessors, const Tensor &rhs);
-            virtual void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank=0);
-            virtual boost::intrusive_ptr<CyTensor_base> reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank=0);
+            virtual void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank=0);
+            virtual boost::intrusive_ptr<CyTensor_base> reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank=0);
             virtual boost::intrusive_ptr<CyTensor_base> to_dense();
             virtual void to_dense_();
             virtual void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back=false, const bool &by_label=true);
@@ -276,7 +276,7 @@ namespace cytnx_extension{
                 tmp->_bonds = vec_clone(this->_bonds);
                 tmp->_labels = this->_labels;
                 tmp->_is_braket_form = this->_is_braket_form;
-                tmp->_Rowrank = this->_Rowrank;
+                tmp->_rowrank = this->_rowrank;
                 tmp->_is_diag = this->_is_diag;
                 tmp->_name = this->_name;
                 tmp->_is_tag = this->_is_tag; 
@@ -287,9 +287,9 @@ namespace cytnx_extension{
             DenseCyTensor(){this->uten_type_id = UTenType.Dense;};
             friend class CyTensor; // allow wrapper to access the private elems
             // virtual functions
-            void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
+            void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
             // this only work for non-symm tensor
-            void Init_by_Tensor(const Tensor& in_tensor, const cytnx_uint64 &Rowrank, const bool &is_diag=false);
+            void Init_by_Tensor(const Tensor& in_tensor, const cytnx_uint64 &rowrank, const bool &is_diag=false);
             std::vector<cytnx_uint64> shape() const{ 
                 if(this->_is_diag){
                     std::vector<cytnx_uint64> shape = this->_block.shape();
@@ -312,9 +312,9 @@ namespace cytnx_extension{
                     return out;   
                 } 
             }
-            void set_Rowrank(const cytnx_uint64 &new_Rowrank){
-                cytnx_error_msg(new_Rowrank >= this->_labels.size(),"[ERROR] Rowrank cannot exceed the rank of CyTensor.%s","\n");
-                this->_Rowrank = new_Rowrank;
+            void set_rowrank(const cytnx_uint64 &new_rowrank){
+                cytnx_error_msg(new_rowrank >= this->_labels.size(),"[ERROR] rowrank cannot exceed the rank of CyTensor.%s","\n");
+                this->_rowrank = new_rowrank;
             }
 
             boost::intrusive_ptr<CyTensor_base> clone() const{
@@ -328,8 +328,8 @@ namespace cytnx_extension{
             int          device() const{return this->_block.device();}
             std::string      dtype_str() const{ return Type.getname(this->_block.dtype());}
             std::string     device_str() const{ return Device.getname(this->_block.device());}
-            boost::intrusive_ptr<CyTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank=-1,const bool &by_label=false);
-            void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank=-1, const bool &by_label=false);
+            boost::intrusive_ptr<CyTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank=-1,const bool &by_label=false);
+            void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1, const bool &by_label=false);
             boost::intrusive_ptr<CyTensor_base> contiguous_(){this->_block.contiguous_(); return boost::intrusive_ptr<CyTensor_base>(this);}
             boost::intrusive_ptr<CyTensor_base> contiguous(){
                 // if contiguous then return self! 
@@ -414,8 +414,8 @@ namespace cytnx_extension{
             void set(const std::vector<Accessor> &accessors, const Tensor &rhs){
                 this->_block.set(accessors,rhs);
             }
-            void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank=0);
-            boost::intrusive_ptr<CyTensor_base> reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank=0);
+            void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank=0);
+            boost::intrusive_ptr<CyTensor_base> reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank=0);
             boost::intrusive_ptr<CyTensor_base> to_dense();
             void to_dense_();
 
@@ -554,10 +554,10 @@ namespace cytnx_extension{
             }
             void tag(){
                 if(!this->is_tag()){
-                    for(int i=0;i<this->_Rowrank;i++){
+                    for(int i=0;i<this->_rowrank;i++){
                        this->_bonds[i].set_type(BD_KET); 
                     }
-                    for(int i=this->_Rowrank;i<this->_bonds.size();i++){
+                    for(int i=this->_rowrank;i<this->_bonds.size();i++){
                        this->_bonds[i].set_type(BD_BRA); 
                     }
                     this->_is_tag = true;
@@ -583,7 +583,7 @@ namespace cytnx_extension{
         
         public:
 
-            cytnx_uint64 _inner_Rowrank;
+            cytnx_uint64 _inner_rowrank;
             std::vector<std::vector<cytnx_int64> > _blockqnums;
             std::vector<cytnx_uint64> _mapper;
             std::vector<cytnx_uint64> _inv_mapper;
@@ -601,7 +601,7 @@ namespace cytnx_extension{
                     tmp->_bonds = vec_clone(this->_bonds);
                     tmp->_labels = this->_labels;
                     tmp->_is_braket_form = this->_is_braket_form;
-                    tmp->_Rowrank = this->_Rowrank;
+                    tmp->_rowrank = this->_rowrank;
                     tmp->_name = this->_name;
                 }
                 //comm meta
@@ -611,7 +611,7 @@ namespace cytnx_extension{
 
                 //inner meta    
                 if(inner){            
-                    tmp->_inner_Rowrank = this->_inner_Rowrank;
+                    tmp->_inner_rowrank = this->_inner_rowrank;
                     tmp->_inner2outer_row = this->_inner2outer_row;
                     tmp->_inner2outer_col = this->_inner2outer_col;
                     tmp->_outer2inner_row = this->_outer2inner_row;
@@ -638,8 +638,8 @@ namespace cytnx_extension{
             };
 
             // virtual functions
-            void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
-            void Init_by_Tensor(const Tensor& in_tensor, const cytnx_uint64 &Rowrank, const bool &is_diag=false){
+            void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
+            void Init_by_Tensor(const Tensor& in_tensor, const cytnx_uint64 &rowrank, const bool &is_diag=false){
                 cytnx_error_msg(true,"[ERROR][SparseCyTensor] cannot use Init_by_tensor() on a SparseCyTensor.%s","\n");
             }
             std::vector<cytnx_uint64> shape() const{ 
@@ -673,12 +673,12 @@ namespace cytnx_extension{
             bool     is_contiguous() const{
                 return this->_contiguous;
             };
-            void set_Rowrank(const cytnx_uint64 &new_Rowrank){
-                cytnx_error_msg((new_Rowrank < 1) || (new_Rowrank>= this->rank()),"[ERROR][SparseCyTensor] Rowrank should be [>=1] and [<CyTensor.rank].%s","\n");
-                cytnx_error_msg(new_Rowrank >= this->_labels.size(),"[ERROR] Rowrank cannot exceed the rank of CyTensor.%s","\n");
-                if(this->_Rowrank!= new_Rowrank)
+            void set_rowrank(const cytnx_uint64 &new_rowrank){
+                cytnx_error_msg((new_rowrank < 1) || (new_rowrank>= this->rank()),"[ERROR][SparseCyTensor] rowrank should be [>=1] and [<CyTensor.rank].%s","\n");
+                cytnx_error_msg(new_rowrank >= this->_labels.size(),"[ERROR] rowrank cannot exceed the rank of CyTensor.%s","\n");
+                if(this->_rowrank!= new_rowrank)
                     this->_contiguous = false;
-                this->_Rowrank = new_Rowrank;
+                this->_rowrank = new_rowrank;
                 this->_is_braket_form = this->_update_braket();
             }
 
@@ -706,10 +706,10 @@ namespace cytnx_extension{
                 #endif
                 return this->_blocks[0].device_str();
             };
-            void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank=-1,const bool &by_label=false);
-            boost::intrusive_ptr<CyTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank=-1, const bool &by_label=false){
+            void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1,const bool &by_label=false);
+            boost::intrusive_ptr<CyTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank=-1, const bool &by_label=false){
                 boost::intrusive_ptr<CyTensor_base> out = this->clone();
-                out->permute_(mapper,Rowrank,by_label);
+                out->permute_(mapper,rowrank,by_label);
                 return out;
             };
             boost::intrusive_ptr<CyTensor_base> contiguous();
@@ -883,10 +883,10 @@ namespace cytnx_extension{
             void set(const std::vector<Accessor> &accessors, const Tensor &rhs){
                 cytnx_error_msg(true,"[ERROR][SparseCyTensor][set] cannot use set on a CyTensor with Symmetry.\n suggestion: try get_block()/get_blocks() first.%s","\n");
             }
-            void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank=0){
+            void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank=0){
                 cytnx_error_msg(true,"[ERROR] cannot reshape a CyTensor with symmetry.%s","\n");
             }
-            boost::intrusive_ptr<CyTensor_base> reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank=0){
+            boost::intrusive_ptr<CyTensor_base> reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank=0){
                 cytnx_error_msg(true,"[ERROR] cannot reshape a CyTensor with symmetry.%s","\n");
                 return nullptr;
             }
@@ -1002,7 +1002,7 @@ namespace cytnx_extension{
             /**
             @brief Initialize a CyTensor with cytnx::Tensor. 
             @param in_tensor a cytnx::Tensor
-            @param Rowrank the Rowrank of the outcome CyTensor.
+            @param rowrank the rowrank of the outcome CyTensor.
     
             [Note] 
                 1. The constructed CyTensor will have same rank as the input Tensor, with default labels, and a shared view (shared instance) of interal block as the input Tensor. 
@@ -1020,12 +1020,12 @@ namespace cytnx_extension{
             \verbinclude example/CyTensor/fromTensor.py.out
 
             */
-            CyTensor(const Tensor &in_tensor, const cytnx_uint64 &Rowrank, const bool &is_diag=false): _impl(new CyTensor_base()){
-                this->Init(in_tensor,Rowrank,is_diag);
+            CyTensor(const Tensor &in_tensor, const cytnx_uint64 &rowrank, const bool &is_diag=false): _impl(new CyTensor_base()){
+                this->Init(in_tensor,rowrank,is_diag);
             }
-            void Init(const Tensor &in_tensor, const cytnx_uint64 &Rowrank, const bool &is_diag=false){
+            void Init(const Tensor &in_tensor, const cytnx_uint64 &rowrank, const bool &is_diag=false){
                boost::intrusive_ptr<CyTensor_base> out(new DenseCyTensor());
-               out->Init_by_Tensor(in_tensor, Rowrank,is_diag);
+               out->Init_by_Tensor(in_tensor, rowrank,is_diag);
                this->_impl = out;
             }
             //@}
@@ -1036,7 +1036,7 @@ namespace cytnx_extension{
             @brief Initialize a CyTensor. 
             @param bonds the bond list. when init, each bond will be copy( not a shared view of bond object with input bond) 
             @param in_labels the labels for each rank(bond)
-            @param Rowrank the rank of physical row space.
+            @param rowrank the rank of physical row space.
             @param dtype the dtype of the CyTensor. It can be any type defined in cytnx::Type.
             @param device the device that the CyTensor is put on. It can be any device defined in cytnx::Device.
             @param is_diag if the constructed CyTensor is a diagonal CyTensor. 
@@ -1047,10 +1047,10 @@ namespace cytnx_extension{
                 2. If the bonds are with symmetry (qnums), the symmetry types should be the same across all the bonds.
           
             */
-            CyTensor(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false): _impl(new CyTensor_base()){
-                this->Init(bonds,in_labels,Rowrank,dtype,device,is_diag);
+            CyTensor(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false): _impl(new CyTensor_base()){
+                this->Init(bonds,in_labels,rowrank,dtype,device,is_diag);
             }
-            void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &Rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false){
+            void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false){
 
                 // checking type:
                 bool is_sym = false;
@@ -1070,7 +1070,7 @@ namespace cytnx_extension{
                     boost::intrusive_ptr<CyTensor_base> out(new DenseCyTensor());
                     this->_impl = out;
                 }
-                this->_impl->Init(bonds, in_labels, Rowrank, dtype, device, is_diag);
+                this->_impl->Init(bonds, in_labels, rowrank, dtype, device, is_diag);
             }
             //@}            
 
@@ -1107,8 +1107,8 @@ namespace cytnx_extension{
             void set_labels(const std::vector<cytnx_int64> &new_labels){
                 this->_impl->set_labels(new_labels);
             }
-            void set_Rowrank(const cytnx_uint64 &new_Rowrank){
-                this->_impl->set_Rowrank(new_Rowrank);
+            void set_rowrank(const cytnx_uint64 &new_rowrank){
+                this->_impl->set_rowrank(new_rowrank);
             }
 
             template<class T>
@@ -1122,7 +1122,7 @@ namespace cytnx_extension{
             }
 
             cytnx_uint64 rank() const {return this->_impl->rank();}
-            cytnx_uint64 Rowrank() const{return this->_impl->Rowrank();}
+            cytnx_uint64 rowrank() const{return this->_impl->rowrank();}
             unsigned int  dtype() const{ return this->_impl->dtype(); }
             int uten_type() const{ return this->_impl->uten_type();}
             int          device() const{ return this->_impl->device();   }
@@ -1153,9 +1153,9 @@ namespace cytnx_extension{
                 out._impl = this->_impl->clone();
                 return out;
             }
-            CyTensor permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank=-1,const bool &by_label=false){CyTensor out; out._impl = this->_impl->permute(mapper,Rowrank,by_label); return out;}
-            void permute_(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank=-1,const bool &by_label=false){
-                this->_impl->permute_(mapper,Rowrank,by_label);
+            CyTensor permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank=-1,const bool &by_label=false){CyTensor out; out._impl = this->_impl->permute(mapper,rowrank,by_label); return out;}
+            void permute_(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank=-1,const bool &by_label=false){
+                this->_impl->permute_(mapper,rowrank,by_label);
             }
             CyTensor contiguous() const{
                 CyTensor out;
@@ -1258,13 +1258,13 @@ namespace cytnx_extension{
                 this->_impl->set(accessors, rhs);
             }
 
-            CyTensor reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank=0){
+            CyTensor reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank=0){
                 CyTensor out;
-                out._impl = this->_impl->reshape(new_shape,Rowrank);
+                out._impl = this->_impl->reshape(new_shape,rowrank);
                 return out;
             }
-            void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank=0){
-                this->_impl->reshape_(new_shape,Rowrank);
+            void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank=0){
+                this->_impl->reshape_(new_shape,rowrank);
             }
             CyTensor to_dense(){
                 CyTensor out;

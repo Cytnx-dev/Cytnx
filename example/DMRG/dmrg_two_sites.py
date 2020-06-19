@@ -187,7 +187,7 @@ for k in range(1, numsweeps+2):
         
         print('Sweep[r->l]: %d/%d, Loc:%d,Energy: %f'%(k,numsweeps,p,Ekeep[-1]))
 
-    A[0].set_Rowrank(1)
+    A[0].set_rowrank(1)
     _,A[0] = cyx.xlinalg.Svd(A[0],is_U=False, is_vT=True)
 
 
@@ -241,7 +241,7 @@ for k in range(1, numsweeps+2):
 
         print('Sweep[l->r]: %d of %d, Loc: %d,Energy: %f' % (k, numsweeps, p, Ekeep[-1]))
 
-    A[-1].set_Rowrank(2)
+    A[-1].set_rowrank(2)
     _,A[-1] = cyx.xlinalg.Svd(A[-1],is_U=True,is_vT=False) ## last one.
 
 

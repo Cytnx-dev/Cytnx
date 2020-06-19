@@ -22,10 +22,10 @@ namespace cytnx_extension{
     CyTensorType_class UTenType;
     //===================================================
 
-        void CyTensor_base::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &Rowrank,const unsigned int &dtype,const int &device,const bool &is_diag){
+        void CyTensor_base::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank,const unsigned int &dtype,const int &device,const bool &is_diag){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
         }
-        void CyTensor_base::Init_by_Tensor(const Tensor &in_tensor, const cytnx_uint64 &Rowrank, const bool &is_diag){
+        void CyTensor_base::Init_by_Tensor(const Tensor &in_tensor, const cytnx_uint64 &rowrank, const bool &is_diag){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
         }   
         
@@ -33,7 +33,7 @@ namespace cytnx_extension{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
             return std::vector<cytnx_uint64>();
         }
-        void CyTensor_base::set_Rowrank(const cytnx_uint64 &new_Rowrank){
+        void CyTensor_base::set_rowrank(const cytnx_uint64 &new_rowrank){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
         }
         
@@ -72,11 +72,11 @@ namespace cytnx_extension{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
             return std::string("");
         }
-        boost::intrusive_ptr<CyTensor_base> CyTensor_base::permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &Rowrank, const bool &by_label){
+        boost::intrusive_ptr<CyTensor_base> CyTensor_base::permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank, const bool &by_label){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
             return nullptr;
         }
-        void CyTensor_base::permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &Rowrank, const bool &by_label){
+        void CyTensor_base::permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank, const bool &by_label){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
         }
 
@@ -157,11 +157,11 @@ namespace cytnx_extension{
         }
         
        
-        void CyTensor_base::reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank){
+        void CyTensor_base::reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
 
         }
-        boost::intrusive_ptr<CyTensor_base> CyTensor_base::reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &Rowrank){
+        boost::intrusive_ptr<CyTensor_base> CyTensor_base::reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
             return nullptr;
         }

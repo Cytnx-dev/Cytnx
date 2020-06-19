@@ -16,7 +16,7 @@ namespace cytnx{
 
 
         /// QR
-        void QR_internal_cd(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &Q, boost::intrusive_ptr<Storage_base> &R, boost::intrusive_ptr<Storage_base> &tau, const cytnx_int32 &M, const cytnx_int32 &N){
+        void QR_internal_cd(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &Q, boost::intrusive_ptr<Storage_base> &R, boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M, const cytnx_int64 &N){
             // Q should be the same shape as in
             // tau should be the min(M,N)
 
@@ -29,46 +29,29 @@ namespace cytnx{
             memcpy(pQ, in->Mem, M * N * sizeof(cytnx_complex128));
 
             
-            cytnx_int32 min = std::min(M, N);
-            cytnx_int32 ldA = N;
-            cytnx_int32 lwork;
-            cytnx_complex128 worktest;
-            cytnx_int32 info;
-            cytnx_int32 K = N;
-            cytnx_complex128 *work;
+            lapack_int ldA = N;
+            lapack_int info;
+            lapack_int K = N;
 
-
-            //cytnx_double* rwork = (cytnx_double*) malloc(std::max((cytnx_int32)1, 5*min) * sizeof(cytnx_double));
-            //query lwork & alloc
-            lwork = -1;
-            zgelqf(&N, &M, pQ, &ldA, ptau, &worktest, &lwork, &info);
-            lwork = (cytnx_int32)worktest.real();
-            work = (cytnx_complex128*)malloc(sizeof(cytnx_complex128)*lwork);
-            
+ 
             // call linalg:
-            zgelqf(&N,&M, pQ, &ldA, ptau, work, &lwork, &info);
+            info = LAPACKE_zgelqf(LAPACK_COL_MAJOR, N, M, pQ, ldA, ptau);
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'zgelqf': Lapack INFO = ", info);
-            free(work);
             
             //getR:
             GetUpTri(pR,pQ,M,N);
             
             //getQ:
             //query lwork & alloc
-            lwork = -1;
-            cytnx_int32 col = M<N?N:M;
-            zunglq(&N, &col, &K, pQ, &ldA, ptau, &worktest, &lwork, &info);
-            lwork = (cytnx_int32)worktest.real();
-            work = (cytnx_complex128*)malloc(sizeof(cytnx_complex128)*lwork);
+            lapack_int col = M<N?N:M;
             
             // call linalg:
-            zunglq(&N,&col, &K, pQ, &ldA, ptau, work, &lwork, &info);
+            info = LAPACKE_zunglq(LAPACK_COL_MAJOR, N, col, K, pQ, ldA, ptau);
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'zunglq': Lapack INFO = ", info);
-            free(work);
 
 
         }
-        void QR_internal_cf(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &Q, boost::intrusive_ptr<Storage_base> &R, boost::intrusive_ptr<Storage_base> &tau, const cytnx_int32 &M, const cytnx_int32 &N){
+        void QR_internal_cf(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &Q, boost::intrusive_ptr<Storage_base> &R, boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M, const cytnx_int64 &N){
             // Q should be the same shape as in
             // tau should be the min(M,N)
 
@@ -81,48 +64,31 @@ namespace cytnx{
             memcpy(pQ, in->Mem, M * N * sizeof(cytnx_complex64));
 
             
-            cytnx_int32 min = std::min(M, N);
-            cytnx_int32 ldA = N;
-            cytnx_int32 lwork;
-            cytnx_complex64 worktest;
-            cytnx_int32 info;
-            cytnx_int32 K = N;
-            cytnx_complex64 *work;
+            lapack_int ldA = N;
+            lapack_int info;
+            lapack_int K = N;
 
-
-            //cytnx_double* rwork = (cytnx_double*) malloc(std::max((cytnx_int32)1, 5*min) * sizeof(cytnx_double));
-            //query lwork & alloc
-            lwork = -1;
-            cgelqf(&N, &M, pQ, &ldA, ptau, &worktest, &lwork, &info);
-            lwork = (cytnx_int32)worktest.real();
-            work = (cytnx_complex64*)malloc(sizeof(cytnx_complex64)*lwork);
-            
+ 
             // call linalg:
-            cgelqf(&N,&M, pQ, &ldA, ptau, work, &lwork, &info);
+            info = LAPACKE_cgelqf(LAPACK_COL_MAJOR, N, M, pQ, ldA, ptau);
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'cgelqf': Lapack INFO = ", info);
-            free(work);
             
             //getR:
             GetUpTri(pR,pQ,M,N);
             
             //getQ:
             //query lwork & alloc
-            lwork = -1;
-            cytnx_int32 col = M<N?N:M;
-            cunglq(&N, &col, &K, pQ, &ldA, ptau, &worktest, &lwork, &info);
-            lwork = (cytnx_int32)worktest.real();
-            work = (cytnx_complex64*)malloc(sizeof(cytnx_complex64)*lwork);
+            lapack_int col = M<N?N:M;
             
             // call linalg:
-            cunglq(&N,&col, &K, pQ, &ldA, ptau, work, &lwork, &info);
+            info = LAPACKE_cunglq(LAPACK_COL_MAJOR, N, col, K, pQ, ldA, ptau);
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'cunglq': Lapack INFO = ", info);
-            free(work);
 
 
 
 
         }
-        void QR_internal_d(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &Q, boost::intrusive_ptr<Storage_base> &R, boost::intrusive_ptr<Storage_base> &tau, const cytnx_int32 &M, const cytnx_int32 &N){
+        void QR_internal_d(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &Q, boost::intrusive_ptr<Storage_base> &R, boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M, const cytnx_int64 &N){
             // Q should be the same shape as in
             // tau should be the min(M,N)
 
@@ -131,50 +97,29 @@ namespace cytnx{
             cytnx_double *ptau = (cytnx_double*)tau->Mem;
 
 
-            //cytnx_complex128* Mij = (cytnx_complex128*)malloc(M * N * sizeof(cytnx_complex128));
             memcpy(pQ, in->Mem, M * N * sizeof(cytnx_double));
 
             
-            cytnx_int32 min = std::min(M, N);
-            cytnx_int32 ldA = N;
-            cytnx_int32 lwork;
-            cytnx_double worktest;
-            cytnx_int32 info;
-            cytnx_int32 K = N;
-            cytnx_double *work;
+            lapack_int ldA = N;
+            lapack_int info;
+            lapack_int K = N;
 
-
-            //cytnx_double* rwork = (cytnx_double*) malloc(std::max((cytnx_int32)1, 5*min) * sizeof(cytnx_double));
-            //query lwork & alloc
-            lwork = -1;
-            dgelqf(&N, &M, pQ, &ldA, ptau, &worktest, &lwork, &info);
-            lwork = (cytnx_int32)worktest;
-            work = (cytnx_double*)malloc(sizeof(cytnx_double)*lwork);
-            
             // call linalg:
-            dgelqf(&N,&M, pQ, &ldA, ptau, work, &lwork, &info);
+            info = LAPACKE_dgelqf(LAPACK_COL_MAJOR, N, M, pQ, ldA, ptau);
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dgelqf': Lapack INFO = ", info);
-            free(work);
             
             //getR:
             GetUpTri(pR,pQ,M,N);
             
             //getQ:
             //query lwork & alloc
-            lwork = -1;
-            cytnx_int32 col = M<N?N:M;
-            dorglq(&N, &col, &K, pQ, &ldA, ptau, &worktest, &lwork, &info);
-            lwork = (cytnx_int32)worktest;
-            work = (cytnx_double*)malloc(sizeof(cytnx_double)*lwork);
-            
-            // call linalg:
-            dorglq(&N,&col, &K, pQ, &ldA, ptau, work, &lwork, &info);
+            lapack_int col = M<N?N:M;
+            info = LAPACKE_dorglq(LAPACK_COL_MAJOR, N, col, K, pQ, ldA, ptau);            
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dorglq': Lapack INFO = ", info);
-            free(work);
 
 
         }
-        void QR_internal_f(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &Q, boost::intrusive_ptr<Storage_base> &R, boost::intrusive_ptr<Storage_base> &tau, const cytnx_int32 &M, const cytnx_int32 &N){
+        void QR_internal_f(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &Q, boost::intrusive_ptr<Storage_base> &R, boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M, const cytnx_int64 &N){
             // Q should be the same shape as in
             // tau should be the min(M,N)
 
@@ -187,42 +132,22 @@ namespace cytnx{
             memcpy(pQ, in->Mem, M * N * sizeof(cytnx_float));
 
             
-            cytnx_int32 min = std::min(M, N);
-            cytnx_int32 ldA = N;
-            cytnx_int32 lwork;
-            cytnx_float worktest;
-            cytnx_int32 info;
-            cytnx_int32 K = N;
-            cytnx_float *work;
+            lapack_int ldA = N;
+            lapack_int info;
+            lapack_int K = N;
 
-
-            //cytnx_float* rwork = (cytnx_float*) malloc(std::max((cytnx_int32)1, 5*min) * sizeof(cytnx_float));
-            //query lwork & alloc
-            lwork = -1;
-            sgelqf(&N, &M, pQ, &ldA, ptau, &worktest, &lwork, &info);
-            lwork = (cytnx_int32)worktest;
-            work = (cytnx_float*)malloc(sizeof(cytnx_float)*lwork);
-            
             // call linalg:
-            sgelqf(&N,&M, pQ, &ldA, ptau, work, &lwork, &info);
+            info = LAPACKE_sgelqf(LAPACK_COL_MAJOR, N, M, pQ, ldA, ptau);
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'sgelqf': Lapack INFO = ", info);
-            free(work);
             
             //getR:
             GetUpTri(pR,pQ,M,N);
             
             //getQ:
             //query lwork & alloc
-            lwork = -1;
-            cytnx_int32 col = M<N?N:M;
-            sorglq(&N, &col, &K, pQ, &ldA, ptau, &worktest, &lwork, &info);
-            lwork = (cytnx_int32)worktest;
-            work = (cytnx_float*)malloc(sizeof(cytnx_float)*lwork);
-            
-            // call linalg:
-            sorglq(&N,&col, &K, pQ, &ldA, ptau, work, &lwork, &info);
+            lapack_int col = M<N?N:M;
+            info = LAPACKE_sorglq(LAPACK_COL_MAJOR, N, col, K, pQ, ldA, ptau);            
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'sorglq': Lapack INFO = ", info);
-            free(work);
 
 
         }

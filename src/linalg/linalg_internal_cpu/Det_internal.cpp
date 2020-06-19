@@ -16,16 +16,16 @@ namespace cytnx{
             cytnx_complex128 *_Rin = (cytnx_complex128*)malloc(sizeof(cytnx_complex128)*Rin->len);
             memcpy(_Rin,Rin->Mem,sizeof(cytnx_complex128)*Rin->len);            
 
-            cytnx_int32 *ipiv = (cytnx_int32*)malloc((L+1)*sizeof(cytnx_int32));
-            cytnx_int32 lwork = 64 * L;
-            cytnx_int32 N = L;
+            blas_int *ipiv = (blas_int*)malloc((L+1)*sizeof(blas_int));
+            blas_int lwork = 64 * L;
+            blas_int N = L;
             cytnx_complex128 *work = (cytnx_complex128*)malloc(lwork * sizeof(cytnx_complex128));
-            int32_t info;
-            zgetrf(&N,&N,_Rin,&N,ipiv,&info);
+            blas_int info;
+            info = LAPACKE_zgetrf(LAPACK_COL_MAJOR,N,N,_Rin,N,ipiv);
             cytnx_error_msg( info != 0, "%s %d", "[ERROR][Det_internal] Error in Lapack function 'zgetrf': Lapack INFO = ", info );
             od[0] = 1;
             bool neg = 0;
-            for (cytnx_int32 i = 0; i < N; i++) {
+            for (blas_int i = 0; i < N; i++) {
                 od[0] *= _Rin[i * N + i];
                 if (ipiv[i] != (i+1)) neg = !neg;
             }
@@ -43,16 +43,16 @@ namespace cytnx{
             memcpy(_Rin,Rin->Mem,sizeof(cytnx_complex64)*Rin->len);            
             
 
-            cytnx_int32 *ipiv = (cytnx_int32*)malloc((L+1)*sizeof(cytnx_int32));
-            cytnx_int32 lwork = 64 * L;
-            cytnx_int32 N = L;
+            blas_int *ipiv = (blas_int*)malloc((L+1)*sizeof(blas_int));
+            blas_int lwork = 64 * L;
+            blas_int N = L;
             cytnx_complex64 *work = (cytnx_complex64*)malloc(lwork * sizeof(cytnx_complex64));
-            int32_t info;
-            cgetrf(&N,&N,_Rin,&N,ipiv,&info);
+            blas_int info;
+            info = LAPACKE_cgetrf(LAPACK_COL_MAJOR,N,N,_Rin,N,ipiv);
             cytnx_error_msg( info != 0, "%s %d", "[ERROR][Det_internal] Error in Lapack function 'cgetrf': Lapack INFO = ", info );
             od[0] = 1;
             bool neg = 0;
-            for (cytnx_int32 i = 0; i < N; i++) {
+            for (blas_int i = 0; i < N; i++) {
                 od[0] *= _Rin[i * N + i];
                 if (ipiv[i] != (i+1)) neg = !neg;
             }
@@ -68,16 +68,16 @@ namespace cytnx{
             cytnx_double *_Rin = (cytnx_double*)malloc(sizeof(cytnx_double)*Rin->len);
             memcpy(_Rin,Rin->Mem,sizeof(cytnx_double)*Rin->len);            
 
-            cytnx_int32 *ipiv = (cytnx_int32*)malloc((L+1)*sizeof(cytnx_int32));
-            cytnx_int32 lwork = 64 * L;
-            cytnx_int32 N = L;
+            blas_int *ipiv = (blas_int*)malloc((L+1)*sizeof(blas_int));
+            blas_int lwork = 64 * L;
+            blas_int N = L;
             double *work = (double*)malloc(lwork * sizeof(double));
-            int32_t info;
-            dgetrf(&N,&N,_Rin,&N,ipiv,&info);
+            blas_int info;
+            info = LAPACKE_dgetrf(LAPACK_COL_MAJOR,N,N,_Rin,N,ipiv);
             cytnx_error_msg( info != 0, "%s %d", "[ERROR][Det_internal] Error in Lapack function 'dgetrf': Lapack INFO = ", info );
             od[0] = 1;
             bool neg = 0;
-            for (cytnx_int32 i = 0; i < N; i++) {
+            for (blas_int i = 0; i < N; i++) {
                 od[0] *= _Rin[i * N + i];
                 if (ipiv[i] != (i+1)) neg = !neg;
             }
@@ -94,16 +94,16 @@ namespace cytnx{
             memcpy(_Rin,Rin->Mem,sizeof(cytnx_float)*Rin->len);            
 
 
-            cytnx_int32 *ipiv = (cytnx_int32*)malloc((L+1)*sizeof(cytnx_int32));
-            cytnx_int32 lwork = 64 * L;
-            cytnx_int32 N = L;
+            blas_int *ipiv = (blas_int*)malloc((L+1)*sizeof(blas_int));
+            blas_int lwork = 64 * L;
+            blas_int N = L;
             float *work = (float*)malloc(lwork * sizeof(float));
-            int32_t info;
-            sgetrf(&N,&N,_Rin,&N,ipiv,&info);
+            blas_int info;
+            info = LAPACKE_sgetrf(LAPACK_COL_MAJOR,N,N,_Rin,N,ipiv);
             cytnx_error_msg( info != 0, "%s %d", "[ERROR][Det_internal] Error in Lapack function 'sgetrf': Lapack INFO = ", info );
             od[0] = 1;
             bool neg = 0;
-            for (cytnx_int32 i = 0; i < N; i++) {
+            for (blas_int i = 0; i < N; i++) {
                 od[0] *= _Rin[i * N + i];
                 if (ipiv[i] != (i+1)) neg = !neg;
             }

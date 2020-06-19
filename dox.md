@@ -13,6 +13,8 @@
     6. [Feature] Add iterative solver Lanczos_ER
     7. [Enhance] Tproxy +=,-=,/=,*= on C++ side
     8. Add ED (using Lanczos) example.
+    9. Change backend to mkl_ilp64, w/o mkl: OpenBLAS
+
 
     v0.5.3a
     1. Add xlinalg.QR

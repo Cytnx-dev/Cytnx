@@ -51,7 +51,7 @@ s2 = s1.clone()
 A = cyx.CyTensor(cy.random.normal([D,2,D],0,0.5),2)
 B = cyx.CyTensor(cy.random.normal([D,2,D],0,0.5),2)
 C = cyx.CyTensor(cy.random.normal([D,2,D],0,0.5),2)
-Ls1 = [cyx.CyTensor([cyx.Bond(D),cyx.Bond(D)],Rowrank=1,is_diag=True) for i in range(3)]
+Ls1 = [cyx.CyTensor([cyx.Bond(D),cyx.Bond(D)],rowrank=1,is_diag=True) for i in range(3)]
 for i in Ls1:
     i.put_block(cy.ones(D))
 Ls2 = [i.clone() for i in Ls1]
@@ -84,7 +84,7 @@ for i in range(maxit):
 
 
     T = cyx.Contract(cyx.Contract(cyx.Contract(A,s1),B),C)
-    T.set_Rowrank(0)
+    T.set_rowrank(0)
     ## calculate up energy:
     NE = cyx.Network("measure.net")
     NE.PutCyTensors(["T","Tt","Op"],[T,T,Hu]);
@@ -108,7 +108,7 @@ for i in range(maxit):
 
     ## calculate down energy:
     T = cyx.Contract(cyx.Contract(cyx.Contract(A,s1),B),C)
-    T.set_Rowrank(0)
+    T.set_rowrank(0)
     NE.PutCyTensors(["T","Tt","Op"],[T,T,Hd]);
     Edown = NE.Launch(True).item()/cyx.Contract(T,T).item();
    

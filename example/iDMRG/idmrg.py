@@ -240,7 +240,7 @@ for i in range(Niter):
     #     --A--s  --B--    =>      --sR--A'  --B--    
     #       |       |                    |     |
     #
-    A.set_Rowrank(1)
+    A.set_rowrank(1)
     sR,_,A = cyx.xlinalg.Svd(cyx.Contract(A,s1))
 
 
@@ -260,7 +260,7 @@ for i in range(Niter):
     #     --A--  s--B--    =>      --A--   B'--sL    
     #       |       |                |     |
     #
-    B.set_Rowrank(2)
+    B.set_rowrank(2)
     sL,B,_ = cyx.xlinalg.Svd(cyx.Contract(s1,B))
 
     ## now, we change it just to be consistent with the notation in the paper

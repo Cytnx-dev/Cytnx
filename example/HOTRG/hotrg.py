@@ -109,7 +109,7 @@ for i in range(Maxiter):
         ## set back to the original shape:
         cT.set_labels([1,3,0,2])
         cT.permute_([0,1,2,3],by_label=True)
-        cT.set_Rowrank(2)
+        cT.set_rowrank(2)
 
     else: 
         # * if combined bond dimension <= chi then we just combined the bond, and return it's original form
@@ -126,7 +126,7 @@ for i in range(Maxiter):
         cT.permute_([0,1,4,5,3,6],by_label=True)
         cT.contiguous_()
         cT.reshape_(cT.shape()[0],cT.shape()[1]*cT.shape()[2],cT.shape()[3],cT.shape()[4]*cT.shape()[5])
-        cT.set_Rowrank(2)
+        cT.set_rowrank(2)
 
 
 
@@ -184,7 +184,7 @@ for i in range(Maxiter):
         ## set back to the original shape:
         cT.set_labels([1,3,2,0])
         cT.permute_([0,1,2,3],by_label=True)
-        cT.set_Rowrank(2)
+        cT.set_rowrank(2)
     else:
         # * if combined bond dimension <= chi then we just combined the bond, and return it's original form
         #
@@ -203,7 +203,7 @@ for i in range(Maxiter):
         cT.permute_([0,6,1,2,4,5],by_label=True)
         cT.contiguous_()
         cT.reshape_(cT.shape()[0]*cT.shape()[1],cT.shape()[2],cT.shape()[3]*cT.shape()[4],cT.shape()[5])
-        cT.set_Rowrank(2)
+        cT.set_rowrank(2)
 
 
     #normalize:

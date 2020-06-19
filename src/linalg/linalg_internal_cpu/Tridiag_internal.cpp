@@ -6,7 +6,7 @@ namespace cytnx{
 
     namespace linalg_internal{
 
-        void Tridiag_internal_d( const boost::intrusive_ptr<Storage_base> &diag, const boost::intrusive_ptr<Storage_base> &s_diag, boost::intrusive_ptr<Storage_base> &S, boost::intrusive_ptr<Storage_base> &U, const cytnx_int32 &L){
+        void Tridiag_internal_d( const boost::intrusive_ptr<Storage_base> &diag, const boost::intrusive_ptr<Storage_base> &s_diag, boost::intrusive_ptr<Storage_base> &S, boost::intrusive_ptr<Storage_base> &U, const cytnx_int64 &L){
             
             char job;
             job = (U->dtype ==Type.Void) ? 'N': 'V';
@@ -18,26 +18,22 @@ namespace cytnx{
             cytnx_double* Dsv = (cytnx_double*)malloc((L-1) * sizeof(cytnx_double));
             memcpy(Dsv,s_diag->Mem, (L-1) * sizeof(cytnx_double));
 
-            cytnx_int32 ldz = 1;
-            cytnx_int32 info = 0;
-            double *work;
+            lapack_int ldz = 1;
+            lapack_int info;
 
             //check if compute eigV 
             if(U->dtype != Type.Void){
-                //cytnx_error_msg((k<1) || (k>L),"[interal][Tridiag_internal_d] error, compute eigenvalue should have k>=1 and k<=L %s","\n");
                 ldz = L;
-                work = (double*)malloc(sizeof(double)*(2*L-2));
             }
 
-            dstev(&job,&L,(cytnx_double*)S->Mem, Dsv, (cytnx_double*)U->Mem,&ldz,work,&info);
+            info = LAPACKE_dstev(LAPACK_COL_MAJOR, job, L,(cytnx_double*)S->Mem, Dsv, (cytnx_double*)U->Mem, ldz);
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dstev': Lapack INFO = ", info);
 
             //house keeping
-            if(U->dtype != Type.Void) free(work);
             free(Dsv);
 
         }
-        void Tridiag_internal_f( const boost::intrusive_ptr<Storage_base> &diag, const boost::intrusive_ptr<Storage_base> &s_diag, boost::intrusive_ptr<Storage_base> &S, boost::intrusive_ptr<Storage_base> &U, const cytnx_int32 &L){
+        void Tridiag_internal_f( const boost::intrusive_ptr<Storage_base> &diag, const boost::intrusive_ptr<Storage_base> &s_diag, boost::intrusive_ptr<Storage_base> &S, boost::intrusive_ptr<Storage_base> &U, const cytnx_int64 &L){
 
             char job;
             job = (U->dtype ==Type.Void) ? 'N': 'V';
@@ -49,22 +45,18 @@ namespace cytnx{
             cytnx_float* Dsv = (cytnx_float*)malloc((L-1) * sizeof(cytnx_float));
             memcpy(Dsv,s_diag->Mem, (L-1) * sizeof(cytnx_float));
 
-            cytnx_int32 ldz = 1;
-            cytnx_int32 info = 0;
-            float *work;
+            lapack_int ldz = 1;
+            lapack_int info;
 
             //check if compute eigV 
             if(U->dtype != Type.Void){
-                //cytnx_error_msg((k<1) || (k>L),"[interal][Tridiag_internal_d] error, compute eigenvalue should have k>=1 and k<=L %s","\n");
                 ldz = L;
-                work = (float*)malloc(sizeof(float)*(2*L-2));
             }
 
-            sstev(&job,&L,(cytnx_float*)S->Mem, Dsv, (cytnx_float*)U->Mem,&ldz,work,&info);
-            cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dstev': Lapack INFO = ", info);
+            info = LAPACKE_sstev(LAPACK_COL_MAJOR, job, L,(cytnx_float*)S->Mem, Dsv, (cytnx_float*)U->Mem, ldz);
+            cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'sstev': Lapack INFO = ", info);
 
             //house keeping
-            if(U->dtype != Type.Void) free(work);
             free(Dsv);
 
         }

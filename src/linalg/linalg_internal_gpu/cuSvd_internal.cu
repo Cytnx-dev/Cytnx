@@ -8,7 +8,7 @@ namespace cytnx{
     namespace linalg_internal{
 
         /// cuSvd
-        void cuSvd_internal_cd(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &U, boost::intrusive_ptr<Storage_base> &vT, boost::intrusive_ptr<Storage_base> &S, const cytnx_int32 &M, const cytnx_int32 &N){
+        void cuSvd_internal_cd(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &U, boost::intrusive_ptr<Storage_base> &vT, boost::intrusive_ptr<Storage_base> &S, const cytnx_int64 &M, const cytnx_int64 &N){
             signed char jobu, jobv;
 
             // if U and vT are NULL ptr, then it will not be computed. 
@@ -27,6 +27,8 @@ namespace cytnx{
             cytnx_int32 min = std::min(M, N);
             cytnx_int32 ldA = N, ldu = N, ldvT = min;
             cytnx_int32 lwork = 0;
+
+
 
             // query working space :
             checkCudaErrors(cusolverDnZgesvd_bufferSize(cusolverH, N, M, &lwork));
@@ -59,7 +61,7 @@ namespace cytnx{
 
 
         }
-        void cuSvd_internal_cf(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &U, boost::intrusive_ptr<Storage_base> &vT, boost::intrusive_ptr<Storage_base> &S, const cytnx_int32 &M, const cytnx_int32 &N){
+        void cuSvd_internal_cf(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &U, boost::intrusive_ptr<Storage_base> &vT, boost::intrusive_ptr<Storage_base> &S, const cytnx_int64 &M, const cytnx_int64 &N){
             signed char jobu, jobv;
 
             // if U and vT are NULL ptr, then it will not be computed. 
@@ -108,7 +110,7 @@ namespace cytnx{
             cudaFree(devinfo);
             cusolverDnDestroy(cusolverH);
         }
-        void cuSvd_internal_d( const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &U, boost::intrusive_ptr<Storage_base> &vT, boost::intrusive_ptr<Storage_base> &S, const cytnx_int32 &M, const cytnx_int32 &N){
+        void cuSvd_internal_d( const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &U, boost::intrusive_ptr<Storage_base> &vT, boost::intrusive_ptr<Storage_base> &S, const cytnx_int64 &M, const cytnx_int64 &N){
             signed char jobu, jobv;
 
             // if U and vT are NULL ptr, then it will not be computed. 
@@ -157,7 +159,7 @@ namespace cytnx{
             cudaFree(devinfo);
             cusolverDnDestroy(cusolverH);
         }
-        void cuSvd_internal_f( const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &U, boost::intrusive_ptr<Storage_base> &vT, boost::intrusive_ptr<Storage_base> &S, const cytnx_int32 &M, const cytnx_int32 &N){
+        void cuSvd_internal_f( const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &U, boost::intrusive_ptr<Storage_base> &vT, boost::intrusive_ptr<Storage_base> &S, const cytnx_int64 &M, const cytnx_int64 &N){
             signed char jobu, jobv;
 
             // if U and vT are NULL ptr, then it will not be computed. 

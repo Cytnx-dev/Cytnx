@@ -1,5 +1,16 @@
 #include "Type.hpp"
 #include "cytnx_error.hpp"
+#ifdef UNI_MKL 
+    #include <mkl.h>
+    namespace cytnx{
+        int __blasINTsize__ = sizeof(MKL_INT);
+    }
+#else
+    #include <lapacke.h>
+    namespace cytnx{
+        int __blasINTsize__ = sizeof(lapack_int);
+    }
+#endif
 using namespace std;
 
 

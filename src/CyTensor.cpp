@@ -231,7 +231,7 @@ namespace cytnx_extension{
         f.write((char*)&this->_impl->_is_braket_form,sizeof(bool));
         f.write((char*)&this->_impl->_is_tag,sizeof(bool));
         f.write((char*)&this->_impl->_is_diag,sizeof(bool));
-        f.write((char*)&this->_impl->_Rowrank,sizeof(cytnx_int64));
+        f.write((char*)&this->_impl->_rowrank,sizeof(cytnx_int64));
 
         cytnx_uint32 len_name = this->_impl->_name.size();
         f.write((char*)&len_name,sizeof(cytnx_uint32));
@@ -271,7 +271,7 @@ namespace cytnx_extension{
         f.read((char*)&this->_impl->_is_braket_form,sizeof(bool));
         f.read((char*)&this->_impl->_is_tag,sizeof(bool));
         f.read((char*)&this->_impl->_is_diag,sizeof(bool));
-        f.read((char*)&this->_impl->_Rowrank,sizeof(cytnx_int64));
+        f.read((char*)&this->_impl->_rowrank,sizeof(cytnx_int64));
 
         cytnx_uint32 len_name;
         f.read((char*)&len_name,sizeof(cytnx_uint32));

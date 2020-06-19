@@ -7,7 +7,7 @@ namespace cytnx{
     namespace linalg_internal{
 
         /// Eig
-        void Eig_internal_cd(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int32 &L){
+        void Eig_internal_cd(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L){
             char jobs = 'N';
 
             cytnx_complex128 *tA;
@@ -19,30 +19,18 @@ namespace cytnx{
             }
 
 
-            cytnx_int32 ldA = L;
-            cytnx_int32 lwork = -1;
-            cytnx_double *rwork = (cytnx_double*)calloc(2*L,sizeof(cytnx_double));
-            cytnx_complex128 workspace = 0;
-            cytnx_int32 info;
-            cytnx_int32 ONE = 1;
+            lapack_int ldA = L;
+            lapack_int info;
+            lapack_int ONE = 1;
 
-
-            /// query lwork
-            zgeev(&jobs, (char*)"N", &L, buffer_A, &ldA, (cytnx_complex128*)e->Mem, tA,&L,nullptr, &ONE, &workspace, &lwork, rwork, &info);
+            info = LAPACKE_zgeev(LAPACK_COL_MAJOR,jobs, 'N', L, buffer_A, ldA, (cytnx_complex128*)e->Mem, tA,L,nullptr,ONE);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'zgeev': Lapack INFO = ", info);
 
-            lwork = cytnx_int32(workspace.real());
-            cytnx_complex128* work= (cytnx_complex128*)calloc(lwork,sizeof(cytnx_complex128));
-            zgeev(&jobs, (char*)"N", &L, buffer_A, &ldA, (cytnx_complex128*)e->Mem, tA,&L,nullptr, &ONE,work, &lwork, rwork, &info);
-
-            cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'zgeev': Lapack INFO = ", info);
-            free(work);
             free(buffer_A);
-            free(rwork);
 
         }
-        void Eig_internal_cf(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int32 &L){
+        void Eig_internal_cf(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L){
             char jobs = 'N';
 
             cytnx_complex64 *tA;
@@ -54,28 +42,18 @@ namespace cytnx{
             }
 
 
-            cytnx_int32 ldA = L;
-            cytnx_int32 lwork = -1;
-            cytnx_float *rwork = (cytnx_float*)calloc(2*L,sizeof(cytnx_float));
-            cytnx_complex64 workspace = 0;
-            cytnx_int32 info;
-            cytnx_int32 ONE = 1;
+            lapack_int ldA = L;
+            lapack_int info;
+            lapack_int ONE = 1;
 
-            /// query lwork
-            cgeev(&jobs, (char*)"N", &L, buffer_A, &ldA, (cytnx_complex64*)e->Mem, tA,&L,nullptr, &ONE,&workspace, &lwork, rwork, &info);
+            info = LAPACKE_cgeev(LAPACK_COL_MAJOR,jobs, 'N', L, buffer_A, ldA, (cytnx_complex64*)e->Mem, tA,L,nullptr,ONE);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'cgeev': Lapack INFO = ", info);
-            lwork = cytnx_int32(workspace.real());
-            cytnx_complex64* work= (cytnx_complex64*)calloc(lwork,sizeof(cytnx_complex64));
-            cgeev(&jobs, (char*)"N", &L, buffer_A, &ldA, (cytnx_complex64*)e->Mem, tA,&L,nullptr, &ONE,work, &lwork, rwork, &info);
 
-            cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'cgeev': Lapack INFO = ", info);
-            free(work);
             free(buffer_A);
-            free(rwork);
         }
 
-        void Eig_internal_d( const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int32 &L){
+        void Eig_internal_d( const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L){
             /*
             char jobs = 'N';
 
@@ -91,18 +69,18 @@ namespace cytnx{
             }
 
 
-            cytnx_int32 ldA = L;
-            cytnx_int32 lwork = -1;
+            lapack_int ldA = L;
+            lapack_int lwork = -1;
             cytnx_double *rwork = (cytnx_double*)malloc(sizeof(cytnx_double)*2*L);
             cytnx_double workspace = 0;
-            cytnx_int32 info;
-            cytnx_int32 ONE = 1;
-            cytnx_int32 TWO = 2;
+            lapack_int info;
+            lapack_int ONE = 1;
+            lapack_int TWO = 2;
             /// query lwork
             dgeev(&jobs, (char*)"N", &L, buffer_A, &ldA, e_real, e_imag, tA, &L,nullptr, &ONE,&workspace, &lwork,  &info);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dgeev': Lapack INFO = ", info);
-            lwork = cytnx_int32(workspace);
+            lwork = lapack_int(workspace);
             cytnx_double* work= (cytnx_double*)malloc(sizeof(cytnx_double)*lwork);
             dgeev(&jobs, (char*)"N", &L, buffer_A, &ldA, e_real, e_imag, tA, &L,nullptr, &ONE,work, &lwork,  &info);
 
@@ -119,7 +97,7 @@ namespace cytnx{
             free(e_imag);
             */
         }
-        void Eig_internal_f( const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int32 &L){
+        void Eig_internal_f( const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L){
             /*
             char jobs = 'N';
 
@@ -135,18 +113,18 @@ namespace cytnx{
             }
 
 
-            cytnx_int32 ldA = L;
-            cytnx_int32 lwork = -1;
+            lapack_int ldA = L;
+            lapack_int lwork = -1;
             cytnx_float *rwork = (cytnx_float*)malloc(sizeof(cytnx_float)*2*L);
             cytnx_float workspace = 0;
-            cytnx_int32 info;
-            cytnx_int32 ONE = 1;
-            cytnx_int32 TWO = 2;
+            lapack_int info;
+            lapack_int ONE = 1;
+            lapack_int TWO = 2;
             /// query lwork
             sgeev(&jobs, (char*)"N", &L, buffer_A, &ldA, e_real, e_imag, tA, &L,nullptr, &ONE,&workspace, &lwork,  &info);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'sgeev': Lapack INFO = ", info);
-            lwork = cytnx_int32(workspace);
+            lwork = lapack_int(workspace);
             cytnx_float* work= (cytnx_float*)malloc(sizeof(cytnx_float)*lwork);
             sgeev(&jobs, (char*)"N", &L, buffer_A, &ldA, e_real, e_imag, tA, &L,nullptr, &ONE,work, &lwork,  &info);
 

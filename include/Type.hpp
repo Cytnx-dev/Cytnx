@@ -10,6 +10,7 @@
 //#ifdef UNI_MKL
 #define MKL_Complex8 std::complex<float>
 #define MKL_Complex16 std::complex<double>
+
 //#endif 
 
 namespace cytnx{
@@ -46,7 +47,9 @@ namespace cytnx{
 
     const int N_Type=12;
     const int N_fType=5;
+
     class Type_class{
+        private:
         public:
             enum:unsigned int{
                 Void,
@@ -62,7 +65,6 @@ namespace cytnx{
                 Uint16,
                 Bool
             };
-
             std::string getname(const unsigned int &type_id);
             unsigned int c_typename_to_id(const std::string &c_name);
             unsigned int typeSize(const unsigned int &type_id);
@@ -72,8 +74,8 @@ namespace cytnx{
     };
     /// @endcond
 
-    extern Type_class Type;
-
+    extern Type_class Type; 
+    extern int __blasINTsize__;
 }//namespace cytnx
 
 

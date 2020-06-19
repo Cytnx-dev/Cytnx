@@ -3,6 +3,7 @@
 #include <cstdarg>
 #include <functional>
 
+
 using namespace std;
 using namespace cytnx;
 using namespace cytnx_extension;
@@ -34,10 +35,12 @@ class MyOp: public LinOp{
 
 };
 
-
+ 
 int main(int argc, char *argv[]){
+    auto TNs = arange(16).astype(Type.Double).reshape({4,4});
 
-
+    cout << linalg::Svd(TNs) << endl;
+    exit(1);
 
     //LinOp *cu = new MyOp("mv",5,Type.Double,Device.cpu);
     //cout << cu->matvec(t);
@@ -92,7 +95,6 @@ int main(int argc, char *argv[]){
     return 0;
 
 
-    auto TNs = arange(16).astype(Type.Double).reshape({4,4});
     TNs = TNs + TNs.permute({1,0});
     
     cout << linalg::ExpH(TNs);   

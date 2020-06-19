@@ -20,21 +20,31 @@ namespace cytnx{
             _out[0] = 0;
             unsigned long long remain = len;
             unsigned long long bias = 0; 
-            cytnx_int32 ONE = 1;
-            cytnx_int32 MAXX = INT_MAX; 
+            blas_int ONE = 1;
             cytnx_complex128 acres;
-            while(remain!=0){
-                if(remain>=INT_MAX) MAXX = INT_MAX;
-                else MAXX = remain;
-                
+            if(sizeof(blas_int)==8){
+                blas_int MAXX = remain; 
                 if(is_conj)
                     zdotc(&acres,&MAXX,&_Lin[bias],&ONE,&_Rin[bias],&ONE);
                 else
                     zdotu(&acres,&MAXX,&_Lin[bias],&ONE,&_Rin[bias],&ONE);
                 
                 _out[0] += acres;
-                remain -= MAXX;
-                bias += MAXX;
+            }else{
+                blas_int MAXX = INT_MAX; 
+                while(remain!=0){
+                    if(remain>=INT_MAX) MAXX = INT_MAX;
+                    else MAXX = remain;
+                    
+                    if(is_conj)
+                        zdotc(&acres,&MAXX,&_Lin[bias],&ONE,&_Rin[bias],&ONE);
+                    else
+                        zdotu(&acres,&MAXX,&_Lin[bias],&ONE,&_Rin[bias],&ONE);
+                    
+                    _out[0] += acres;
+                    remain -= MAXX;
+                    bias += MAXX;
+                }
             }
         }
         void Vectordot_internal_cf(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const bool &is_conj){
@@ -44,21 +54,31 @@ namespace cytnx{
             _out[0] = 0;
             unsigned long long remain = len;
             unsigned long long bias = 0; 
-            cytnx_int32 ONE = 1;
-            cytnx_int32 MAXX = INT_MAX; 
+            blas_int ONE = 1;
             cytnx_complex64 acres;
-            while(remain!=0){
-                if(remain>=INT_MAX) MAXX = INT_MAX;
-                else MAXX = remain;
-                
+            if(sizeof(blas_int)==8){
+                blas_int MAXX = remain; 
                 if(is_conj)
                     cdotc(&acres,&MAXX,&_Lin[bias],&ONE,&_Rin[bias],&ONE);
                 else
                     cdotu(&acres,&MAXX,&_Lin[bias],&ONE,&_Rin[bias],&ONE);
                 
                 _out[0] += acres;
-                remain -= MAXX;
-                bias += MAXX;
+            }else{
+                blas_int MAXX = INT_MAX; 
+                while(remain!=0){
+                    if(remain>=INT_MAX) MAXX = INT_MAX;
+                    else MAXX = remain;
+                    
+                    if(is_conj)
+                        cdotc(&acres,&MAXX,&_Lin[bias],&ONE,&_Rin[bias],&ONE);
+                    else
+                        cdotu(&acres,&MAXX,&_Lin[bias],&ONE,&_Rin[bias],&ONE);
+                    
+                    _out[0] += acres;
+                    remain -= MAXX;
+                    bias += MAXX;
+                }
             }
 
         }
@@ -70,20 +90,25 @@ namespace cytnx{
             _out[0] = 0;
             unsigned long long remain = len;
             unsigned long long bias = 0; 
-            cytnx_int32 ONE = 1;
-            cytnx_int32 MAXX = INT_MAX; 
+            blas_int ONE = 1;
             cytnx_double acres;
-            while(remain!=0){
-                if(remain>=INT_MAX) MAXX = INT_MAX;
-                else MAXX = remain;
-                
-                acres = ddot(&MAXX,&_Lin[bias],&ONE,&_Rin[bias],&ONE);
-                
-                _out[0] += acres;
-                remain -= MAXX;
-                bias += MAXX;
+            if(sizeof(blas_int)==8){
+                blas_int MAXX = remain; 
+                    acres = ddot(&MAXX,&_Lin[bias],&ONE,&_Rin[bias],&ONE);                    
+                    _out[0] += acres;
+            }else{
+                blas_int MAXX = INT_MAX; 
+                while(remain!=0){
+                    if(remain>=INT_MAX) MAXX = INT_MAX;
+                    else MAXX = remain;
+                    
+                    acres = ddot(&MAXX,&_Lin[bias],&ONE,&_Rin[bias],&ONE);
+                    
+                    _out[0] += acres;
+                    remain -= MAXX;
+                    bias += MAXX;
+                }
             }
-
         }
         void Vectordot_internal_f(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const bool &is_conj){
             cytnx_float *_out = (cytnx_float*)out->Mem;
@@ -93,18 +118,24 @@ namespace cytnx{
             _out[0] = 0;
             unsigned long long remain = len;
             unsigned long long bias = 0; 
-            cytnx_int32 ONE = 1;
-            cytnx_int32 MAXX = INT_MAX; 
+            blas_int ONE = 1;
             cytnx_float acres;
-            while(remain!=0){
-                if(remain>=INT_MAX) MAXX = INT_MAX;
-                else MAXX = remain;
-                
-                acres = sdot(&MAXX,&_Lin[bias],&ONE,&_Rin[bias],&ONE);
-                
-                _out[0] += acres;
-                remain -= MAXX;
-                bias += MAXX;
+            if(sizeof(blas_int)==8){
+                blas_int MAXX = remain; 
+                    acres = sdot(&MAXX,&_Lin[bias],&ONE,&_Rin[bias],&ONE);                    
+                    _out[0] += acres;
+            }else{
+                blas_int MAXX = INT_MAX; 
+                while(remain!=0){
+                    if(remain>=INT_MAX) MAXX = INT_MAX;
+                    else MAXX = remain;
+                    
+                    acres = sdot(&MAXX,&_Lin[bias],&ONE,&_Rin[bias],&ONE);
+                    
+                    _out[0] += acres;
+                    remain -= MAXX;
+                    bias += MAXX;
+                }
             }
 
         }
@@ -167,12 +198,12 @@ namespace cytnx{
 
         }
         void Vectordot_internal_i32(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin, const unsigned long long &len, const bool &is_conj){
-            cytnx_int32 *_out = (cytnx_int32*)out->Mem;
-            cytnx_int32 *_Lin = (cytnx_int32*)Lin->Mem;
-            cytnx_int32 *_Rin = (cytnx_int32*)Rin->Mem;
+            blas_int *_out = (blas_int*)out->Mem;
+            blas_int *_Lin = (blas_int*)Lin->Mem;
+            blas_int *_Rin = (blas_int*)Rin->Mem;
 
             #ifdef UNI_OMP
-                std::vector<cytnx_int32> tmp;
+                std::vector<blas_int> tmp;
                 #pragma omp parallel
                 {
                     if(omp_get_thread_num()==0) tmp.assign(omp_get_num_threads(),0);

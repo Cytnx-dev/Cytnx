@@ -13,10 +13,10 @@ namespace cytnx{
     namespace linalg_internal{
 
         /// cuEigh
-        void cuEigh_internal_cd(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int32 &L);
-        void cuEigh_internal_cf(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int32 &L);
-        void cuEigh_internal_d(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int32 &L);
-        void cuEigh_internal_f(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int32 &L);
+        void cuEigh_internal_cd(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L);
+        void cuEigh_internal_cf(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L);
+        void cuEigh_internal_d(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L);
+        void cuEigh_internal_f(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L);
     }    
 }
 

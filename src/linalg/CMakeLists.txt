@@ -42,6 +42,7 @@ target_sources_local(cytnx
     Abs_.cpp
     Dot.cpp
     Norm.cpp
+    Lanczos.cpp
     linalg_internal_interface.cpp
 )
 

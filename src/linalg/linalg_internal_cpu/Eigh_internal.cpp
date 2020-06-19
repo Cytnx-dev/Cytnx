@@ -7,7 +7,7 @@ namespace cytnx{
     namespace linalg_internal{
 
         /// Eigh
-        void Eigh_internal_cd(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int32 &L){
+        void Eigh_internal_cd(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L){
             char jobs = 'N';
 
             cytnx_complex128 *tA;
@@ -21,30 +21,17 @@ namespace cytnx{
             }
 
 
-            cytnx_int32 ldA = L;
-            cytnx_int32 lwork = -1;
-            cytnx_complex128 worktest;
-            cytnx_int32 info;
-            cytnx_double *rwork = (cytnx_double*)calloc((3*L+1),sizeof(cytnx_double));
-
-
-            zheev(&jobs, (char*)"U", &L, tA, &ldA, (cytnx_double*)e->Mem, &worktest, &lwork, rwork, &info);
-
-            cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dsyev': Lapack INFO = ", info);
-
-            lwork = (cytnx_int32)(worktest.real());
-            cytnx_complex128* work= (cytnx_complex128*)calloc(lwork,sizeof(cytnx_complex128));
+            lapack_int ldA = L;
+            lapack_int info;
             
-            zheev(&jobs, (char*)"U", &L, tA, &ldA, (cytnx_double*)e->Mem, work, &lwork, rwork, &info);
+            info = LAPACKE_zheev(LAPACK_COL_MAJOR,jobs, 'U', L, tA, ldA, (cytnx_double*)e->Mem);
+            cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'zheev': Lapack INFO = ", info);
 
-            cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dsyev': Lapack INFO = ", info);
-            free(rwork);
-            free(work);
             if(v->dtype==Type.Void)
                 free(tA);
 
         }
-        void Eigh_internal_cf(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int32 &L){
+        void Eigh_internal_cf(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L){
             char jobs = 'N';
 
             cytnx_complex64 *tA;
@@ -58,28 +45,15 @@ namespace cytnx{
             }
 
 
-            cytnx_int32 ldA = L;
-            cytnx_int32 lwork = -1;
-            cytnx_complex64 worktest;
-            cytnx_int32 info;
-            cytnx_float *rwork = (cytnx_float*)calloc((3*L+1),sizeof(cytnx_float));
-
-
-            cheev(&jobs, (char*)"U", &L, tA, &ldA, (cytnx_float*)e->Mem, &worktest, &lwork, rwork, &info);
-
-            cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dsyev': Lapack INFO = ", info);
-
-            lwork = (cytnx_int32)(worktest.real());
-            cytnx_complex64* work= (cytnx_complex64*)calloc(lwork,sizeof(cytnx_complex64));
-            cheev(&jobs, (char*)"U", &L, tA, &ldA, (cytnx_float*)e->Mem, work, &lwork, rwork, &info);
-
-            cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dsyev': Lapack INFO = ", info);
-            free(rwork);
-            free(work);
+            lapack_int ldA = L;
+            lapack_int info;
+            
+            info = LAPACKE_cheev(LAPACK_COL_MAJOR, jobs, 'U', L, tA, ldA, (cytnx_float*)e->Mem);
+            cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'cheev': Lapack INFO = ", info);
             if(v->dtype==Type.Void)
                 free(tA);
         }
-        void Eigh_internal_d( const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int32 &L){
+        void Eigh_internal_d( const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L){
 
             char jobs = 'N';
 
@@ -94,26 +68,17 @@ namespace cytnx{
             }
 
 
-            cytnx_int32 ldA = L;
-            cytnx_int32 lwork = -1;
-            cytnx_double worktest;
-            cytnx_int32 info;
-            dsyev(&jobs, (char*)"U", &L, tA, &ldA, (cytnx_double*)e->Mem, &worktest, &lwork, &info);
+            lapack_int ldA = L;
+            lapack_int info;
+            info = LAPACKE_dsyev(LAPACK_COL_MAJOR,jobs, 'U', L, tA, ldA, (cytnx_double*)e->Mem);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dsyev': Lapack INFO = ", info);
 
-            lwork = (cytnx_int32)worktest;
-            cytnx_double* work= (cytnx_double*)calloc(lwork,sizeof(cytnx_double));
-            dsyev(&jobs, (char*)"U", &L, tA, &ldA, (cytnx_double*)e->Mem, work, &lwork, &info);
-
-            cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dsyev': Lapack INFO = ", info);
-
-            free(work);
             if(v->dtype==Type.Void)
                 free(tA);
 
         }
-        void Eigh_internal_f( const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int32 &L){
+        void Eigh_internal_f( const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &e, boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L){
             char jobs = 'N';
 
             cytnx_float *tA;
@@ -127,21 +92,11 @@ namespace cytnx{
             }
 
 
-            cytnx_int32 ldA = L;
-            cytnx_int32 lwork = -1;
-            cytnx_float worktest;
-            cytnx_int32 info;
-            ssyev(&jobs, (char*)"U", &L, tA, &ldA, (cytnx_float*)e->Mem, &worktest, &lwork, &info);
+            lapack_int ldA = L;
+            lapack_int info;
+            info = LAPACKE_ssyev(LAPACK_COL_MAJOR,jobs, 'U', L, tA, ldA, (cytnx_float*)e->Mem);
 
-            cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dsyev': Lapack INFO = ", info);
-
-            lwork = (cytnx_int32)worktest;
-            cytnx_float* work= (cytnx_float*)calloc(lwork,sizeof(cytnx_float)*lwork);
-            ssyev(&jobs, (char*)"U", &L, tA, &ldA, (cytnx_float*)e->Mem, work, &lwork, &info);
-
-            cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dsyev': Lapack INFO = ", info);
-
-            free(work);
+            cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'ssyev': Lapack INFO = ", info);
             if(v->dtype==Type.Void)
                 free(tA);
         }
