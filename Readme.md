@@ -30,25 +30,6 @@
     9. Change backend to mkl_ilp64, w/o mkl: OpenBLAS
     10. Change Rowrank->rowrank for CyTensor. 
 
-    v0.5.3a
-    1. Add xlinalg.QR
-    2. enhance hosvd.
-    3. Fix bug in cytnx.linalg.Abs truncate the floating point part. 
-    4. Add example for HOTRG
-    5. Add example for iDMRG
-    6. Add CyTensor.truncate/truncate.
-    7. Add linalg::Sum. 
-    8. Complete set_elem for sparse CyTensor dispatch in binding.
-    9. [Important] Change Inv/Inv_ to InvM/InvM_ for matrix inverse. 
-    10. [Important] Add Inv/Inv_ for elementwise inverse with clip. 
-    11. [Enhance] Add str_strip for removing " ", "\t", "\r" at the end.
-    12. [Enhance] Accessor::() allow negative input.
-    13. Add GPU Pow/Pow_
-    14. Add random.uniform()
-    15. Fix bug in diagonal CyTensor reshape/reshape_ cause mismatch.
-    16. Add a is_diag option for convert Tensor to CyTensor. 
-
-
 
 ## Documentation:
 
