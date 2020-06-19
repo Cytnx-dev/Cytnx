@@ -185,8 +185,8 @@
 ## Requirements
     * Boost v1.53+ [check_deleted, atomicadd, intrusive_ptr]
     * C++11
-    * lapack 
-    * openblas (or mkl) 
+    * lapack (lapacke or mkl) 
+    * blas (or mkl) 
     * gcc v4.8.5+ (recommand v6+) (required -std=c++11) 
 
     [CUDA support]
@@ -205,7 +205,7 @@
     
 
 ## ubuntu
-    sudo apt-get install libboost-all-dev libopenblas-dev liblapack-dev cmake make curl g++ libomp-dev 
+    sudo apt-get install libboost-all-dev libopenblas-dev liblapack-dev liblapacke-dev cmake make curl g++ libomp-dev 
 
 
 ## Install 
@@ -229,8 +229,10 @@
 
         * -DUSE_MKL (default = off) [Recommend set it =on]
 
-            If USE_MKL=off, the code will compile with openBLAS/LAPACK library with blas_int=32bits
-            If USE_MKL=on, the code will compile with threaded mkl ILP64 library with blas_int=64bits 
+            If USE_MKL=off, the code will compile with the auto found blas/lapack vendors usually with blas_int=32bits. 
+            If USE_MKL=on, the code will always compile with threaded mkl ILP64 library with blas_int=64bits 
+
+            [Note] If you are not sure which version you are compile against to, use cytnx::__blasINTsize__/cytnx.__blasINTsize__ to check it's 64bits (=8) or 32bits (=4). 
 
         * -DCMAKE_INSTALL_PREFIX (default is /usr/local)
     

@@ -181,7 +181,7 @@ int main(int argc, char *argv[]){
 
 
 
-    H.set_Rowrank(1 ); H.contiguous_();
+    H.set_rowrank(1 ); H.contiguous_();
     H.print_diagram();
 
     auto Hcp = H.Transpose();

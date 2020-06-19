@@ -14,6 +14,7 @@
     7. [Enhance] Tproxy +=,-=,/=,*= on C++ side
     8. Add ED (using Lanczos) example.
     9. Change backend to mkl_ilp64, w/o mkl: OpenBLAS
+    10. Change Rowrank->rowrank for CyTensor. 
 
 
     v0.5.3a
@@ -242,9 +243,9 @@
 ## Requirements
     * Boost v1.53+ [check_deleted, atomicadd, intrusive_ptr]
     * C++11
-    * lapack 
-    * blas 
-    * gcc v4.8.5+ (recommand v6+) (required -std=c++11)
+    * lapack (lapacke or mkl) 
+    * blas (or mkl) 
+    * gcc v4.8.5+ (recommand v6+) (required -std=c++11) 
 
     [CUDA support]
     * CUDA v10+
@@ -254,8 +255,11 @@
     * openmp
 
     [Python]
-    * pybind11 2.2.4
+    * pybind11 
     * numpy >= 1.15 
+
+    [MKL]
+    * icpc 
 
 
 ## conda install  
@@ -279,21 +283,23 @@
 
         $cmake [flags (optional)] <Cytnx repo folder>
 
-        [Note] there are several customize flags format as (-D<flag name>).
 
-        * USE_ICPC (default = off)
+        * -DUSE_ICPC (default = off)
             
-            The default compiler is g++-6. 
+            The default compiler is system's compiler. 
             
-        * USE_CUDA (default = off)
+        * -DUSE_CUDA (default = off)
 
             If USE_CUDA=1, the code will compile with GPU support.
 
-        * USE_MKL (default = off)
+        * -DUSE_MKL (default = off) [Recommend set it =on]
 
-            If USE_MKL=off, the code will compile with system LAPACK/BLAS library. 
+            If USE_MKL=off, the code will compile with the auto found blas/lapack vendors usually with blas_int=32bits. 
+            If USE_MKL=on, the code will always compile with threaded mkl ILP64 library with blas_int=64bits 
 
-        * CMAKE_INSTALL_PREFIX (default is /usr/local)
+            [Note] If you are not sure which version you are compile against to, use cytnx::__blasINTsize__/cytnx.__blasINTsize__ to check it's 64bits (=8) or 32bits (=4). 
+
+        * -DCMAKE_INSTALL_PREFIX (default is /usr/local)
     
             Set the install target path.
         
