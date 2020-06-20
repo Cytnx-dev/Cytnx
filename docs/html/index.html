@@ -73,7 +73,9 @@ $(function() {
 <div class="textblock"><h2>Stable Version:</h2>
 <p><a href="https://github.com/kaihsin/Cytnx/tree/v0.5.4a">v0.5.4 pre-release</a></p>
 <h2>Current dev Version:</h2>
-<p>v0.5.5</p>
+<p>v0.5.5</p><ol type="1">
+<li>[Feature] Tensor can now using operator() to access elements just like python.</li>
+</ol>
 <p>v0.5.4a</p><ol type="1">
 <li>Add linalg::Det</li>
 <li>Add Type.is_float</li>
@@ -310,7 +312,7 @@ $(function() {
 <li>vitual swap and permute. All the permute and swap will not change the underlying memory</li>
 <li>Use Contiguous() when needed to actual moving the memory layout. <div class="fragment"><div class="line">Tensor A({3,4,5,2},<a class="code" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">Type</a>.Double);</div><div class="line">A.<a class="code" href="classcytnx_1_1Tensor.html#a4239ec84bd34f634a822eeff416f4d63">permute_</a>({0,3,1,2}); <span class="comment">// this will not change the memory, only the shape info is changed.</span></div><div class="line">cout &lt;&lt; A.<a class="code" href="classcytnx_1_1Tensor.html#a6a1d9ed962b0e9a484e2bb0de15eb76d">is_contiguous</a>() &lt;&lt; endl; <span class="comment">// this will be false!</span></div><div class="line"></div><div class="line">A.<a class="code" href="classcytnx_1_1Tensor.html#a3d4342299e6951dae13b6136b89f1d53">contiguous_</a>(); <span class="comment">// call Configuous() to actually move the memory.</span></div><div class="line">cout &lt;&lt; A.<a class="code" href="classcytnx_1_1Tensor.html#a6a1d9ed962b0e9a484e2bb0de15eb76d">is_contiguous</a>() &lt;&lt; endl; <span class="comment">// this will be true!</span></div></div><!-- fragment --></li>
 <li>access single element using .at <div class="fragment"><div class="line">Tensor A({3,4,5},<a class="code" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">Type</a>.Double);</div><div class="line"><span class="keywordtype">double</span> val = A.<a class="code" href="classcytnx_1_1Tensor.html#a697b114d1df390ca558ea9211c2d683b">at</a>&lt;<span class="keywordtype">double</span>&gt;({0,2,2});</div></div><!-- fragment --></li>
-<li>access elements with python slices similarity: <div class="fragment"><div class="line"><span class="keyword">typedef</span> Accessor <a class="code" href="DenseCyTensor_8cpp.html#abb126f94f3d42e9104cf6bb7d4c035b8">ac</a>;</div><div class="line">Tensor A({3,4,5},<a class="code" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">Type</a>.Double);</div><div class="line">Tensor out = A.<a class="code" href="classcytnx_1_1Tensor.html#ad7b928e4cb89d40cbd99aefab9aa0075">get</a>({<a class="code" href="DenseCyTensor_8cpp.html#abb126f94f3d42e9104cf6bb7d4c035b8">ac</a>(0),<a class="code" href="classcytnx_1_1Accessor.html#a71b8c4af7182a2c9144929bdef9ff4fd">ac::all</a>(),<a class="code" href="classcytnx_1_1Accessor.html#a7a5a508a58b71897c3dd162195aceaa9">ac::range</a>(1,4)}); </div><div class="line"><span class="comment">// equivalent to python: out = A[0,:,1:4]    </span></div></div><!-- fragment --></li>
+<li>access elements with python slices similarity: <div class="fragment"><div class="line"><span class="keyword">typedef</span> Accessor <a class="code" href="DenseCyTensor_8cpp.html#abb126f94f3d42e9104cf6bb7d4c035b8">ac</a>;</div><div class="line">Tensor A({3,4,5},<a class="code" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">Type</a>.Double);</div><div class="line">Tensor out = A(0,<span class="stringliteral">&quot;:&quot;</span>,<a class="code" href="classcytnx_1_1Accessor.html#a7a5a508a58b71897c3dd162195aceaa9">ac::range</a>(1,4)); </div><div class="line"><span class="comment">// equivalent to python: out = A[0,:,1:4]    </span></div></div><!-- fragment --></li>
 </ul>
 <h2>Fast Examples</h2>
 <pre class="fragment">See test.cpp for using C++ .

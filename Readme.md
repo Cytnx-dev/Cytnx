@@ -237,7 +237,7 @@
 ```c++
             typedef Accessor ac;
             Tensor A({3,4,5},Type.Double);
-            Tensor out = A[{ac(0),ac::all(),ac::range(1,4)}]; 
+            Tensor out = A(0,":",ac::range(1,4)); 
             // equivalent to python: out = A[0,:,1:4]
             
 ```
