@@ -17,6 +17,7 @@
 
 ## Current dev Version:
     v0.5.5
+    1. [Feature] Tensor can now using operator() to access elements just like python. 
 
     v0.5.4a
     1. Add linalg::Det 

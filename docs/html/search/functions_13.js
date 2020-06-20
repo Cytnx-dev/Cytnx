@@ -15,5 +15,5 @@ var searchData=
   ['tridiag',['Tridiag',['../namespacecytnx_1_1linalg.html#abc68d62e804d6d3e86aeec00015b07cd',1,'cytnx::linalg']]],
   ['truncate',['truncate',['../classcytnx__extension_1_1CyTensor.html#a1995f324782a207b1efa83390735e2da',1,'cytnx_extension::CyTensor']]],
   ['truncate_5f',['truncate_',['../classcytnx__extension_1_1CyTensor.html#a38db7239c7d8caede9d4f210e59d7539',1,'cytnx_extension::CyTensor']]],
-  ['type',['type',['../classcytnx__extension_1_1Bond.html#af91e04952850b94a063195560ec3868f',1,'cytnx_extension::Bond']]]
+  ['type',['type',['../classcytnx_1_1Accessor.html#a8777a35162dcf47f9992295b58735743',1,'cytnx::Accessor::type()'],['../classcytnx__extension_1_1Bond.html#af91e04952850b94a063195560ec3868f',1,'cytnx_extension::Bond::type()']]]
 ];

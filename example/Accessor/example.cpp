@@ -24,9 +24,10 @@ int main(){
     /*
         3. Accessing elements using accessor
         This is similar as python slices. 
-        -> A[0,:,0:4:1]
+        -> A[0,:,0:2:1] 
+        
     */
-    Tensor B = A.get({ac(0),ac::all(),ac::range(0,2,1)});
+    Tensor B = A(0,ac::all(),ac::range(0,2,1));
     cout << B << endl;
 
 

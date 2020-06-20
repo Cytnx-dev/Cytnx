@@ -12,6 +12,7 @@
 #include "Accessor.hpp"
 #include <vector>
 #include <initializer_list>
+#include <string>
 namespace cytnx{
 
 
@@ -336,10 +337,45 @@ namespace cytnx{
                     return out;
                 }
 
-            };
+            };// proxy class of Tensor. 
+
             /// @endcond
 
-           
+            /// @cond 
+            // these two are using the python way!
+            //----------------------------------------
+            template<class ... Ts>
+            Tproxy operator()(const std::string &e1, const Ts&...elems){
+                //std::cout << e1 << std::endl;
+                std::vector<cytnx::Accessor> tmp = Indices_resolver(e1,elems...);
+                return (*this)[tmp];
+            }
+            template<class ... Ts>
+            Tproxy operator()(const cytnx_int64 &e1, const Ts&...elems){
+                //std::cout << e1<< std::endl;
+                std::vector<cytnx::Accessor> tmp = Indices_resolver(e1,elems...);
+                return (*this)[tmp];
+            }
+            template<class ... Ts>   
+            Tproxy operator()(const cytnx::Accessor &e1, const Ts&...elems){
+                //std::cout << e1 << std::endl;
+                std::vector<cytnx::Accessor> tmp = Indices_resolver(e1,elems...);
+                return (*this)[tmp];
+            }   
+            
+            template<class ... Ts>
+            const Tproxy operator()(const cytnx_int64 &e1, const Ts&...elems) const{
+                std::vector<cytnx::Accessor> tmp = Indices_resolver(e1,elems...);
+                return (*this)[tmp];
+            }
+            template<class ... Ts>   
+            const Tproxy operator()(const cytnx::Accessor &e1, const Ts&...elems) const{
+                std::vector<cytnx::Accessor> tmp = Indices_resolver(e1,elems...);
+                return (*this)[tmp];
+            }   
+            //-----------------------------------------
+
+             
             Tproxy operator[](const std::initializer_list<cytnx::Accessor> &accs){
                 std::vector<cytnx::Accessor> tmp = accs;
                 return (*this)[tmp];
@@ -347,6 +383,8 @@ namespace cytnx{
             Tproxy operator[](const std::vector<cytnx::Accessor> &accs){
                 return Tproxy(this->_impl,accs);
             }
+
+
             const Tproxy operator[](const std::vector<cytnx::Accessor> &accs) const{
                 return Tproxy(this->_impl,accs);
             }
@@ -354,7 +392,6 @@ namespace cytnx{
                 std::vector<cytnx::Accessor> tmp = accs;
                 return (*this)[tmp];
             }
-
 
             Tproxy operator[](const std::initializer_list<cytnx_int64> &accs){
                 std::vector<cytnx_int64> tmp = accs;
@@ -378,7 +415,8 @@ namespace cytnx{
                 }
                 return Tproxy(this->_impl,acc_in);
             }
-
+            ///@endcond
+            //-------------------------------------------
             
 
             /// @cond 
@@ -784,6 +822,7 @@ namespace cytnx{
             @return [Tensor]
 
             See also \link cytnx::Accessor Accessor\endlink for cordinate with Accessor in C++ API.
+            
 
             ## Note:
                 1. the return will be a new Tensor instance, which not share memory with the current Tensor.

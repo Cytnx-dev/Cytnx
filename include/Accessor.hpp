@@ -6,22 +6,24 @@
 #include <vector>
 #include <cstring>
 #include <string>
+#include <iostream>
 namespace cytnx{
     /**
     * @brief object that mimic the python slice to access elements in C++ [this is for c++ API only]. 
     */
     class Accessor{
         private:
-            cytnx_int64 type; 
+            cytnx_int64 _type; 
+
+        public:
+            ///@cond
             cytnx_int64 min{}, max{}, step{};
             cytnx_int64 loc{};
-
             // if type is singl, min/max/step     are not used
             // if type is all  , min/max/step/loc are not used
             // if type is range, loc              are not used.
 
-        public:
-            ///@cond
+
             enum : cytnx_int64{
                 none,
                 Singl,
@@ -29,13 +31,15 @@ namespace cytnx{
                 Range
             };
 
-            Accessor(): type(Accessor::none){};
+            Accessor(): _type(Accessor::none){};
             ///@endcond
 
             // single constructor
             /**
             @brief access the specific index at the assigned rank in Tensor.
             @param loc the specify index 
+
+                See also \link cytnx::Tensor.get() cytnx::Tensor.get() \endlink for how to using them.
             
             ## Example:
             ### c++ API:
@@ -62,6 +66,13 @@ namespace cytnx{
             Accessor& operator=(const Accessor& rhs);
             ///@endcond
 
+            int type() const{
+                return this->_type;
+            }
+
+
+
+
             //handy generator function :
             /**
             @brief access the whole rank, this is similar to [:] in python 
@@ -77,8 +88,10 @@ namespace cytnx{
             \verbinclude example/Accessor/example.py.out
             */
             static Accessor all(){
-                return Accessor(std::string("s"));
+                return Accessor(std::string(":"));
             };
+
+
             /**
             @brief access the range at assigned rank, this is similar to [min:max:step] in python 
             @param min 
@@ -108,7 +121,36 @@ namespace cytnx{
             // if type is singl, pos will be pos, and len == 0 
             void get_len_pos(const cytnx_uint64 &dim, cytnx_uint64 &len, std::vector<cytnx_uint64> &pos) const;
             ///@endcond
-    };
+    };//class Accessor
+
+    ///@cond
+    /// layout:
+    std::ostream& operator<<(std::ostream& os, const Accessor &in);
+
+    // elements resolver
+    template<class T>
+    void _resolve_elems(std::vector<cytnx::Accessor> &cool, const T& a){
+        cool.push_back(cytnx::Accessor(a));
+    }
+
+    template<class T, class ... Ts>
+    void _resolve_elems(std::vector<cytnx::Accessor> &cool,const T&a, const Ts&... args){
+        cool.push_back(cytnx::Accessor(a));
+        _resolve_elems(cool,args...);
+    } 
+
+    template<class T,class ... Ts>
+    std::vector<cytnx::Accessor> Indices_resolver(const T&a, const Ts&... args){
+        //std::cout << a << std::endl;;
+        std::vector<cytnx::Accessor> idxs;
+        _resolve_elems(idxs,a,args...);
+        //cout << idxs << endl;
+        return idxs;
+    }
+
+
+
+    ///@endcond
 
 }// namespace cytnx
 

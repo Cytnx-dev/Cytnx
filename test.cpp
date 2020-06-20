@@ -13,6 +13,8 @@ typedef cytnx::Accessor ac;
 
 
 
+//-------------------------------------------
+
 Tensor myfunc(const Tensor &Tin){
     // Tin should be a 4x4 tensor.
     Tensor A = arange(25).reshape({5,5});
@@ -37,9 +39,16 @@ class MyOp: public LinOp{
 
  
 int main(int argc, char *argv[]){
+
+    
+    //cout << testta << endl;
     auto TNs = arange(16).astype(Type.Double).reshape({4,4});
 
-    cout << linalg::Svd(TNs) << endl;
+    cout << TNs(":",3);
+    //cout << TNs(ac::all(),3)/2;
+    
+    //cout << TNs(3);
+    //cout << linalg::Svd(TNs) << endl;
     exit(1);
 
     //LinOp *cu = new MyOp("mv",5,Type.Double,Device.cpu);
