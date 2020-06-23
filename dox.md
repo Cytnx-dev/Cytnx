@@ -7,6 +7,7 @@
     v0.5.5
     1. [Feature] Tensor can now using operator() to access elements just like python. 
     2. [Enhance] Access Tensor can now exactly the same using slice string as in python.
+    3. [Enhance] at/reshape/permute in Tensor can now give args without braket{} as in python.
 
     v0.5.4a
     1. Add linalg::Det 
@@ -277,7 +278,7 @@
 ```{.cpp}
 
         Tensor A({3,4,5,2},Type.Double);
-        A.permute_({0,3,1,2}); // this will not change the memory, only the shape info is changed.
+        A.permute_(0,3,1,2); // this will not change the memory, only the shape info is changed.
         cout << A.is_contiguous() << endl; // this will be false!
 
         A.contiguous_(); // call Configuous() to actually move the memory.
@@ -288,7 +289,7 @@
 ```{.cpp}
 
         Tensor A({3,4,5},Type.Double);
-        double val = A.at<double>({0,2,2});
+        double val = A.at<double>(0,2,2);
 
 ```
     * access elements with python slices similarity:
@@ -296,7 +297,7 @@
 
         typedef Accessor ac;
         Tensor A({3,4,5},Type.Double);
-        Tensor out = A(0,":",ac::range(1,4)); 
+        Tensor out = A(0,":","1:4"); 
         // equivalent to python: out = A[0,:,1:4]    
 
 ```

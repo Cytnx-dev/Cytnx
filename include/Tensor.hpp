@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include "utils/vec_range.hpp"
+#include "utils/dynamic_arg_resolver.hpp"
 #include "Accessor.hpp"
 #include <vector>
 #include <initializer_list>
@@ -618,6 +619,14 @@ namespace cytnx{
                 this->_impl->permute_(rnks);
                 return *this;
             }
+            /// @cond
+            template<class ... Ts>
+            Tensor permute_(const cytnx_uint64 &e1, const Ts&... elems){
+                std::vector<cytnx_uint64> argv = dynamic_arg_uint64_resolver(e1,elems...);
+                this->_impl->permute_(argv);
+                return *this;
+            }
+            /// @endcond
             
             /**
             @brief perform tensor permute on the cytnx::Tensor and return a new instance.
@@ -639,6 +648,13 @@ namespace cytnx{
                 out._impl = this->_impl->permute(rnks);
                 return out;
             }
+            /// @cond
+            template<class ... Ts>
+            Tensor permute(const cytnx_uint64 &e1, const Ts&... elems) const{  
+                std::vector<cytnx_uint64> argv = dynamic_arg_uint64_resolver(e1,elems...);
+                return this->permute(argv);
+            }
+            /// @endcond
 
 
             /**
@@ -710,7 +726,12 @@ namespace cytnx{
             void reshape_(const std::initializer_list<cytnx_int64> &new_shape){
                 std::vector<cytnx_int64> shape = new_shape;
                 this->_impl->reshape_(shape);
-            } 
+            }
+            template<class ...Ts>
+            void reshape_(const cytnx_int64 &e1, const Ts...elems){
+                std::vector<cytnx_int64> shape = dynamic_arg_int64_resolver(e1,elems...);
+                this->_impl->reshape(shape);
+            }
             /// @endcond
 
             /**
@@ -735,7 +756,13 @@ namespace cytnx{
                 out._impl = this->_impl->reshape(new_shape);
                 return out;
             }
-
+            /// @cond
+            template<class ... Ts>
+            Tensor reshape(const cytnx_int64 &e1, const Ts&...elems){
+                std::vector<cytnx_int64> argv = dynamic_arg_int64_resolver(e1,elems...);
+                return this->reshape(argv);
+            }
+            /// @endcond
 
             /**
             @brief return a new Tensor that cast to different dtype.
@@ -792,6 +819,19 @@ namespace cytnx{
             const T& at(const std::vector<cytnx_uint64> &locator) const{
                 return this->_impl->at<T>(locator);
             }
+            /// @cond
+            template<class T, class...Ts>
+            const T& at(const cytnx_uint64 &e1, const Ts&...elems) const{   
+                std::vector<cytnx_uint64> argv = dynamic_arg_uint64_resolver(e1,elems...);
+                return this->at<T>(argv);
+            }
+            template<class T, class...Ts>
+            T& at(const cytnx_uint64 &e1, const Ts&...elems){   
+                std::vector<cytnx_uint64> argv = dynamic_arg_uint64_resolver(e1,elems...);
+                return this->at<T>(argv);
+            }
+            /// @endcond
+
             /**
             @brief get an from a rank-0 Tensor
             @return [T] 

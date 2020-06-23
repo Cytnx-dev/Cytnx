@@ -13,6 +13,7 @@
 #include "vec2d_col_sort.hpp"
 #include "str_utils.hpp"
 #include "vec_print.hpp"
+#include "dynamic_arg_resolver.hpp"
 /// Helper function to print vector with ODT:
 #include <vector>
 #include <iostream>

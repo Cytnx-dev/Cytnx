@@ -97,10 +97,11 @@ namespace cytnx{
 
 
             /**
-            @brief access the range at assigned rank, this is similar to [min:max:step] in python 
+            @brief access the range at assigned rank, this is similar to min:max:step in python 
             @param min
             @param max
             @param step
+
             
             ## Example:
             ### c++ API:
