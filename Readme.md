@@ -3,7 +3,7 @@
 ![alt text](./Icon_small.png)
 
 ## Intro slide
-[Cytnx_v0.5.pdf](https://drive.google.com/file/d/1tfruYcfNxtSR0bwJv0WQMnNKwcAeehuT/view?usp=sharing)
+[Cytnx_v0.5.pdf (dated 06/23/2020)](https://drive.google.com/file/d/1gkk5pYqDXrZh8H1HB_SEw45jdRSVM-Az/view?usp=sharing)
 
 
 [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx_cuda_36/badges/version.svg)](https://anaconda.org/kaihsinwu/cytnx_cuda_36) [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx_37/badges/platforms.svg)](https://anaconda.org/kaihsinwu/cytnx_37)
@@ -13,7 +13,7 @@
     [v0.5.4a] 
  
 ## Stable Version:
-    [v0.5.4a](https://github.com/kaihsin/Cytnx/tree/v0.5.4a)
+[v0.5.4a](https://github.com/kaihsin/Cytnx/tree/v0.5.4a)
 
 ## Current dev Version:
     v0.5.5
