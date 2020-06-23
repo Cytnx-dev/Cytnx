@@ -244,6 +244,20 @@
             
 ```
 
+### 4. CyTensor
+        * extension of Tensor, specifically design for Tensor network simulation. 
+
+        * See Intro slide for more details
+```c++
+            Tensor A({3,4,5},Type.Double);
+            CyTensor tA = CyTensor(A,2); // convert directly.
+
+            CyTensor tB = CyTensor({Bond(3),Bond(4),Bond(5)},{},2); // init from scratch. 
+```
+
+
+
+
 ## Examples
     
     See example/ folder or documentation for how to use API
