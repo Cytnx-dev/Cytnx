@@ -47,6 +47,7 @@ var searchData=
   ['sparsecytensor_2ecpp',['SparseCyTensor.cpp',['../SparseCyTensor_8cpp.html',1,'']]],
   ['spin',['spin',['../namespacecytnx_1_1physics.html#a9f018f04ccd068e899a8fcfe2e9b82d4',1,'cytnx::physics::spin(const cytnx_double &amp;S, const std::string &amp;Comp, const int &amp;device=Device.cpu)'],['../namespacecytnx_1_1physics.html#af2c0256f7e3502785679b5e6805973e8',1,'cytnx::physics::spin(const cytnx_double &amp;S, const char &amp;Comp, const int &amp;device)']]],
   ['sqrt_5fswap',['sqrt_swap',['../namespacecytnx__extension_1_1qgates.html#ab7a56e1ce6d867f5c9e86237961c715c',1,'cytnx_extension::qgates']]],
+  ['step',['step',['../classcytnx_1_1Accessor.html#a6b86335651e6d8c9da971e5337545178',1,'cytnx::Accessor']]],
   ['storage',['Storage',['../classcytnx_1_1Storage.html',1,'cytnx::Storage'],['../classcytnx_1_1Tensor.html#a0fd5918a0f64ebd74fe34cb8b8164c30',1,'cytnx::Tensor::storage()'],['../classcytnx_1_1Storage.html#a281c06bd64e9ea3338083c18c4c32eda',1,'cytnx::Storage::Storage(const unsigned long long &amp;size, const unsigned int &amp;dtype=Type.Double, int device=-1)'],['../classcytnx_1_1Storage.html#a49037d5a58e68e63998817fba38de5e2',1,'cytnx::Storage::Storage()']]],
   ['storage_2ecpp',['Storage.cpp',['../Storage_8cpp.html',1,'']]],
   ['storage_2ehpp',['Storage.hpp',['../Storage_8hpp.html',1,'']]],

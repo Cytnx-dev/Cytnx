@@ -22,17 +22,19 @@ int main(){
 
     //Method 1, Using operator():
     //-----------------------------------------
-    Tensor B = A(2,":",ac::range(2,5,1)); 
+    Tensor B = A(2,":","2:5:1"); 
     cout << B << endl;
 
     /* [Note] 
         This is equivalent as:
         > Tensor B = A(2,ac::all(),ac::range(2,5,1));
+        
+        See also cytnx::Accessor.
     */
 
     //Method 2, Using operator[] or low-level API get():
     //----------------------------------------
-    Tensor B2 = A[{ac(int(2)),ac::all(),ac::range(2,5,1)}]; // remember the {}braket
+    Tensor B2 = A[{ac(2),ac::all(),ac::range(2,5,1)}]; // remember the {}braket
     cout << B2 << endl;
 
     /* [Note] 

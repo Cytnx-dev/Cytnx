@@ -44,7 +44,8 @@ int main(int argc, char *argv[]){
     //cout << testta << endl;
     auto TNs = arange(16).astype(Type.Double).reshape({4,4});
 
-    cout << TNs(":",3);
+    cout << TNs;
+    cout << TNs(":","-1::-1");
     //cout << TNs(ac::all(),3)/2;
     
     //cout << TNs(3);

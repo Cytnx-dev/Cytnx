@@ -18,6 +18,7 @@
 ## Current dev Version:
     v0.5.5
     1. [Feature] Tensor can now using operator() to access elements just like python. 
+    2. [Enhance] Access Tensor can now exactly the same using slice string as in python.
 
     v0.5.4a
     1. Add linalg::Det 

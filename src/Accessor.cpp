@@ -1,6 +1,8 @@
 #include "Accessor.hpp"
 #include "utils/str_utils.hpp"
 #include<iostream>
+#include<algorithm>
+#include<utility>
 using namespace std;
 namespace cytnx{
 
@@ -15,20 +17,43 @@ namespace cytnx{
         if((str=="all") || (str==":"))
             this->_type = Accessor::All;
         else{
-            cytnx_error_msg(true,"[ERROR] only Accessor::all() can use string to init.%s","\n");
-            //std::vector<std::string> token = str_split(str,false,":");
+            //cytnx_error_msg(true,"[ERROR] only Accessor::all() can use string to init.%s","\n");
+            std::vector<std::string> token = str_split(str,false,":");
             
-            //cytnx_error_msg(token.size()<=1,"[ERROR] no ':' in resolving accessor. use integer directly.%s","\n");
-            //cytnx_error_msg(token.size()>3,"[ERROR] invalid string to Accessor, make sure no space exist.%s","\n");
-            //this->min = token[0].size()==0?0,std::stoll(token[0]);
-            //this->max = token[1].size()==0?std::stoll(token[1]);
-            //if(token.size()==3)
-            //    this->step = std::stoll(token[2]);
-            //else
-            //    this->step = 1;
-            //this->_type = Accessor::Range;
+            cytnx_error_msg(token.size()<=1,"[ERROR] no ':' in resolving accessor. use integer directly.%s","\n");
+            cytnx_error_msg(token.size()>3,"[ERROR] invalid string to Accessor, make sure no space exist.%s","\n");
 
-            //cout << token << endl;
+            /// min :            
+            this->_min = token[0].size()==0?0:std::stoll(token[0]);
+            
+            /// max :
+            if(token[1].size()==0){
+                this->_type = Accessor::Tilend;
+            }else{
+                this->_type = Accessor::Range;
+                this->_max = std::stoll(token[1]);
+            }
+
+            /// step:
+            if(token.size()==3){
+                if(token[2].size()==0){
+                    this->_step = 1;
+                }else{
+                    this->_step = std::stoll(token[2]);
+                }
+                if((token[0].size() == 0) && (token[1].size()==0)){
+                    this->_type = Accessor::Step;    
+                }
+            }else{
+                this->_step = 1;
+            }
+
+            
+
+            //cout << this->min;
+            //cout << this->max;
+            //cout << this->step << endl;
+            //std::cout << token << std::endl;
         }
     }
 
@@ -36,28 +61,28 @@ namespace cytnx{
     Accessor::Accessor(const cytnx_int64 &min, const cytnx_int64 &max, const cytnx_int64 &step){
         cytnx_error_msg(step==0,"[ERROR] cannot have step=0 for range%s","\n");
         this->_type = Accessor::Range;
-        this->min = min;
-        this->max = max;
-        this->step = step;
+        this->_min = min;
+        this->_max = max;
+        this->_step = step;
     }
 
 
     //copy constructor:
     Accessor::Accessor(const Accessor& rhs){
         this->_type = rhs._type;
-        this->min  = rhs.min;
-        this->max  = rhs.max;
+        this->_min  = rhs._min;
+        this->_max  = rhs._max;
         this->loc  = rhs.loc;
-        this->step = rhs.step;
+        this->_step = rhs._step;
     }
 
     //copy assignment:
     Accessor& Accessor::operator=(const Accessor& rhs){
         this->_type = rhs._type;
-        this->min  = rhs.min;
-        this->max  = rhs.max;
+        this->_min  = rhs._min;
+        this->_max  = rhs._max;
         this->loc  = rhs.loc;
-        this->step = rhs.step;
+        this->_step = rhs._step;
         return *this;
     }
 
@@ -75,17 +100,57 @@ namespace cytnx{
         if(this->_type == Accessor::All){
             len = dim;
         }else if(this->_type == Accessor::Range){
-            cytnx_int64 r_min=this->min,r_max=this->max;
-            cytnx_error_msg((r_max-r_min)/this->step<0,"%s","[ERROR] upper bound and larger bound inconsistent with step sign");
-            len = (r_max-r_min)/this->step;
+            
+            cytnx_int64 r_min=this->_min<0?(this->_min+dim)%dim:this->_min;
+            cytnx_int64 r_max=this->_max<0?(this->_max+dim)%dim:this->_max;
+            cytnx_error_msg((r_min<0 || r_max < 0),"%s","[ERROR] index is out of bounds\n");
+            cytnx_error_msg((r_max-r_min)/this->_step<=0,"%s","[ERROR] upper bound and larger bound inconsistent with step sign resulting a null Tensor.");
+
+            //len = (r_max-r_min)/this->step;
             //std::cout << len << " " << dim << std::endl;
             //if((r_max-r_min)%this->step) len+=1;
             
-            for(cytnx_int64 i = r_min; i!=r_max; i+=this->step){
-                pos.push_back((i%dim+dim)%dim);
-                //std::cout << pos.back() << std::endl;
+            len = 0;
+            if(this->step < 0){
+                for(cytnx_int64 i = r_min; i>r_max; i+=this->_step){
+                    pos.push_back(i);
+                    //std::cout << pos.back() << std::endl;
+                    len++;
+                }
+            }else{
+                for(cytnx_int64 i = r_min; i<r_max; i+=this->_step){
+                    pos.push_back(i);
+                    //std::cout << pos.back() << std::endl;
+                    len++;
+                }
             }
             
+        }else if(this->_type == Accessor::Tilend){
+            cytnx_int64 r_min=this->_min,r_max=dim;
+            if(this->_step<0){
+                r_min = (this->_min + dim)%dim;
+                r_max = 0;
+            }else{
+                r_min = (this->_min + dim)%dim;
+                r_max  = dim-1;
+            }
+            cytnx_error_msg((r_min<0 || r_max < 0),"%s","[ERROR] index is out of bounds\n");
+            cytnx_error_msg((r_max-r_min)/this->_step<0,"%s","[ERROR] upper bound and larger bound inconsistent with step sign");
+            len = 0;
+            if(this->_step < 0){
+                for(cytnx_int64 i = r_min; i>=r_max; i+=this->_step){
+                    pos.push_back(i);
+                    //std::cout << pos.back() << std::endl;
+                    len++;
+                }
+            }else{
+                for(cytnx_int64 i = r_min; i<=r_max; i+=this->_step){
+                    pos.push_back(i);
+                    //std::cout << pos.back() << std::endl;
+                    len++;
+                }
+            }
+
         }else if(this->_type == Accessor::Singl){
             //check:
             //std::cout << this->loc << " " << dim << std::endl;
@@ -95,6 +160,33 @@ namespace cytnx{
                 pos.push_back(this->loc+dim);
             else
                 pos.push_back(this->loc);
+        }else if(this->_type == Accessor::Step){
+            cytnx_int64 r_min,r_max; 
+            if(this->_step < 0){
+                r_min = dim - 1;
+                r_max = 0;
+            }else{
+                r_min = 0;
+                r_max = dim - 1;
+           
+            }
+            cytnx_error_msg((r_max-r_min)/this->_step<=0,"%s","[ERROR] upper bound and larger bound inconsistent with step sign");
+                        
+            len = 0;
+            if(this->_step < 0){
+                for(cytnx_int64 i = r_min; i>=r_max; i+=this->_step){
+                    pos.push_back(i);
+                    //std::cout << pos.back() << std::endl;
+                    len++;
+                }
+            }else{
+                for(cytnx_int64 i = r_min; i<=r_max; i+=this->_step){
+                    pos.push_back(i);
+                    //std::cout << pos.back() << std::endl;
+                    len++;
+                }
+            }
+
         }
     }
     //============================================
@@ -104,7 +196,14 @@ namespace cytnx{
         }else if(in.type()==Accessor::All){
             os << ":";
         }else if(in.type()==Accessor::Range){
-            os << in.min << ":" << in.max << ":" << in.step;
+            os << in._min << ":" << in._max << ":" << in._step;
+        }else if(in.type()==Accessor::Tilend){
+            if(in._step==1)
+                os << in._min << ":";
+            else
+                os << in._min << ":" << ":" << in._step;
+        }else if(in.type()==Accessor::Step){
+            os << "::" << in._step;
         }else{
             cytnx_error_msg(true,"[ERROR][cout] Accessor is Void!%s","\n");
         }

@@ -17,18 +17,21 @@ namespace cytnx{
 
         public:
             ///@cond
-            cytnx_int64 min{}, max{}, step{};
+            cytnx_int64 _min{}, _max{}, _step{};
             cytnx_int64 loc{};
-            // if type is singl, min/max/step     are not used
-            // if type is all  , min/max/step/loc are not used
+            
+            // if type is singl, _min/_max/_step     are not used
+            // if type is all  , _min/_max/_step/loc are not used
             // if type is range, loc              are not used.
-
+            // if type is tilend, loc/_max are not used. 
 
             enum : cytnx_int64{
                 none,
                 Singl,
                 All,
-                Range
+                Range,
+                Tilend,
+                Step
             };
 
             Accessor(): _type(Accessor::none){};
@@ -39,7 +42,7 @@ namespace cytnx{
             @brief access the specific index at the assigned rank in Tensor.
             @param loc the specify index 
 
-                See also \link cytnx::Tensor.get() cytnx::Tensor.get() \endlink for how to using them.
+            See also \link cytnx::Tensor.get() cytnx::Tensor.get() \endlink for how to using them.
             
             ## Example:
             ### c++ API:
@@ -59,6 +62,7 @@ namespace cytnx{
 
             // range constr. 
             Accessor(const cytnx_int64 &min, const cytnx_int64 &max, const cytnx_int64 &step);
+
 
             //copy constructor:
             Accessor(const Accessor& rhs);
@@ -94,7 +98,7 @@ namespace cytnx{
 
             /**
             @brief access the range at assigned rank, this is similar to [min:max:step] in python 
-            @param min 
+            @param min
             @param max
             @param step
             
@@ -114,6 +118,24 @@ namespace cytnx{
                 return Accessor(min,max,step);
             };
 
+            static Accessor tilend(const cytnx_int64 &min, const cytnx_int64 &step=1){
+                cytnx_error_msg(step==0,"[ERROR] cannot have _step=0 for tilend%s","\n");
+                Accessor out; 
+                out._type = Accessor::Tilend;
+                out._min = min;
+                out._step = step; 
+                return out;
+            };
+
+            static Accessor step(const cytnx_int64 &step){
+                cytnx_error_msg(step==0,"[ERROR] cannot have _step=0 for _step%s","\n");
+                Accessor out; 
+                out._type = Accessor::Step;
+                //out._min = 0;
+                out._step = step; 
+                return out;
+            };
+
             ///@cond
             // get the real len from dim
             // if type is all, pos will be null, and len == dim
@@ -123,8 +145,8 @@ namespace cytnx{
             ///@endcond
     };//class Accessor
 
-    ///@cond
-    /// layout:
+    /// @cond
+    //layout:
     std::ostream& operator<<(std::ostream& os, const Accessor &in);
 
     // elements resolver
@@ -147,9 +169,6 @@ namespace cytnx{
         //cout << idxs << endl;
         return idxs;
     }
-
-
-
     ///@endcond
 
 }// namespace cytnx

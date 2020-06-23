@@ -30,6 +30,14 @@ int main(){
     Tensor B = A(0,ac::all(),ac::range(0,2,1));
     cout << B << endl;
 
+    /* [Note] Conversion from python slice to ac:
+            [::x]   = ac::step(x)
+            [a::x]  = ac::tilend(a,x)
+            [a::]   = ac::tilend(a)
+            [:b:]   = ac::range(0,b,1)
+            [a:b:x] = ac::range(a,b,x)
+    */
+
 
     return 0;
 }
