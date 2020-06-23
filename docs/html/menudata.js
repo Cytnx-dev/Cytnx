@@ -95,4 +95,5 @@ var menudata={children:[
 {text:"t",url:"functions_func_t.html#index_t"},
 {text:"u",url:"functions_func_u.html#index_u"},
 {text:"z",url:"functions_func_z.html#index_z"}]}]}]},
-{text:"version log",url:"version_log.html"}]}
+{text:"version log",url:"version_log.html"},
+{text:"User Guide",url:"https://kaihsinwu.gitlab.io/Cytnx_doc"}]}
