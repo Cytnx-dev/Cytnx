@@ -1,32 +1,26 @@
 User Guide
 =================================
+To use the library, simply include/import cytnx: 
 
-Basic objects
------------------
+In Python, using import 
+
+.. code-block:: python
+
+    import cytnx
+
+In C++, using include
+
+.. code-block:: c++
+
+    #include "cytnx.hpp"
+
+
+
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 3
 
-
-Linear algebra
------------------
-.. toctree::
-    :maxdepth: 2
-
-
-Iterative solver
------------------
-.. toctree::
-    :maxdepth: 2
-
-Cytnx extension
------------------
-.. toctree::
-    :maxdepth: 2
-
-
-linalg extension
------------------
-.. toctree::
-    :maxdepth: 2
-
-
+    guide/basic_obj.rst
+    guide/linalg.rst
+    guide/itersol.rst
+    guide/cyx.rst
+    guide/xlinalg.rst

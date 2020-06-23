@@ -23,7 +23,7 @@
     <script src="_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Examples" href="Examples.html" />
+    <link rel="next" title="Basic objects" href="guide/basic_obj.html" />
     <link rel="prev" title="Introdoction" href="Intro.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
@@ -47,19 +47,19 @@
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">User Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#basic-objects">Basic objects</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="guide/basic_obj.html">Basic objects</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#linear-algebra">Linear algebra</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="guide/linalg.html">Linear algebra</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#iterative-solver">Iterative solver</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="guide/itersol.html">Iterative solver</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#cytnx-extension">Cytnx extension</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="guide/cyx.html">Cytnx extensions</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#linalg-extension">linalg extension</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="guide/xlinalg.html">linalg extension</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -129,8 +129,8 @@
                <a href="Intro.html" title="Previous Chapter: Introdoction" class="btn btn-primary" role="botton" accesskey="P">
                    &laquo; Introdoction
                </a>
-               <a href="Examples.html" title="Next Chapter: Examples" class="btn btn-primary" role="botton" accesskey="N">
-                   Examples &raquo;
+               <a href="guide/basic_obj.html" title="Next Chapter: Basic objects" class="btn btn-primary" role="botton" accesskey="N">
+                   Basic objects &raquo;
                </a>
            </div>
        </div>
@@ -152,19 +152,19 @@
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">User Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#basic-objects">Basic objects</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="guide/basic_obj.html">Basic objects</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#linear-algebra">Linear algebra</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="guide/linalg.html">Linear algebra</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#iterative-solver">Iterative solver</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="guide/itersol.html">Iterative solver</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#cytnx-extension">Cytnx extension</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="guide/cyx.html">Cytnx extensions</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#linalg-extension">linalg extension</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="guide/xlinalg.html">linalg extension</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -185,8 +185,8 @@
   <p class="topless"><a href="Intro.html"
                         title="previous chapter">Introdoction</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="Examples.html"
-                        title="next chapter">Examples</a></p>
+  <p class="topless"><a href="guide/basic_obj.html"
+                        title="next chapter">Basic objects</a></p>
 <div id="searchbox" style="display: none">
     <form class="form search" action="search.html" method="get">
       <input type="text" name="q" class="form-control" placeholder="Search..." />
@@ -210,30 +210,33 @@
             
   <div class="section" id="user-guide">
 <h1>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="basic-objects">
-<h2>Basic objects<a class="headerlink" href="#basic-objects" title="Permalink to this headline">¶</a></h2>
+<p>To use the library, simply include/import cytnx:</p>
+<p>In Python, using import</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cytnx</span>
+</pre></div>
+</div>
+<p>In C++, using include</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;cytnx.hpp&quot;</span><span class="cp"></span>
+</pre></div>
+</div>
 <div class="toctree-wrapper compound">
-</div>
-</div>
-<div class="section" id="linear-algebra">
-<h2>Linear algebra<a class="headerlink" href="#linear-algebra" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-</div>
-</div>
-<div class="section" id="iterative-solver">
-<h2>Iterative solver<a class="headerlink" href="#iterative-solver" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-</div>
-</div>
-<div class="section" id="cytnx-extension">
-<h2>Cytnx extension<a class="headerlink" href="#cytnx-extension" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-</div>
-</div>
-<div class="section" id="linalg-extension">
-<h2>linalg extension<a class="headerlink" href="#linalg-extension" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-</div>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="guide/basic_obj.html">Basic objects</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guide/linalg.html">Linear algebra</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guide/itersol.html">Iterative solver</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guide/cyx.html">Cytnx extensions</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guide/xlinalg.html">linalg extension</a><ul class="simple">
+</ul>
+</li>
+</ul>
 </div>
 </div>
 
