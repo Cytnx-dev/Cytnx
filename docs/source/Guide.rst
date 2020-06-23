@@ -1,4 +1,4 @@
-Tutorial
+User Guide
 =================================
 
 Basic objects

@@ -1,6 +1,6 @@
 Examples
 =================================
-Here, we show some example of commonly seen Quantum simualtion methods.
+Here, we provide some examples of commonly seen Quantum simualtion methods.
 
 .. toctree::
     :maxdepth: 2

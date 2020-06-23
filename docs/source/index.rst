@@ -6,16 +6,19 @@
 .. image:: Icon_small.png
     :width: 350    
 
-Cytnx Tutorial and examples
+Cytnx user guide and examples
 =================================
     Cytnx is a library design for Quantum physics simulation using GPUs and CPUs.
 
-    
+.. toctree::
+   :maxdepth: 1
+
+   Intro.rst
+
 .. toctree::
    :maxdepth: 3
 
-   Intro.rst
-   Tutorial.rst
+   Guide.rst
    Examples.rst
 
 
