@@ -244,11 +244,14 @@
             
 ```
 
-## Example
+## Examples
     
     See example/ folder or documentation for how to use API
     See example/iTEBD folder for implementation on iTEBD algo.
     See example/DMRG folder for implementation on DMRG algo.
+    See example/iDMRG folder for implementation on iDMRG algo.
+    See example/HOTRG folder for implementation on HOTRG algo for classical system.
+    See example/ED folder for implementation using LinOp & Lanczos. 
 
 
 ## Avaliable linear-algebra function (Keep updating):
@@ -340,10 +343,12 @@
     Kai-Hsin Wu (Boston Univ.) kaihsinwu@gmail.com 
 
 
+## Contributors
+
     Ying-Jer Kao (NTU, Taiwan): setuptool, cmake
     Yen-Hsin Wu (NTU, Taiwan): Network optimization
     Yu-Hsueh Chen (NTU, Taiwan): example, and testing
-    Po-Kwan Wu (OSU): Icon optimization
+    Po-Kwan Wu (OSU): Icon optimization    
     
 ## References
 
