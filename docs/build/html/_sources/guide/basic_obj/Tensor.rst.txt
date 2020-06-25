@@ -141,7 +141,7 @@ For devices, Cytnx currently supports
 ----------------------
 Next, let's look at the operations that are commonly used to manipulate Tensor object. 
 
-2.1 reshape & permute
+2.1 reshape 
 **********************
 Suppose we want to create a rank-3 Tensor with shape=(2,3,4), starting with a rank-1 Tensor with shape=(24) initialized using **arange()**. 
 
@@ -242,8 +242,9 @@ Thus we see that using underscore version modify the instance itself.
 .. Note::
     In general, all the funcions in Cytnx that end with a underscore _ is either a inplace function that modify the instance that calls it, or return the reference of some class member. 
 
-
-Now, let's again use the same rank-3  with shape=(2,3,4). This time we want to do permute on the Tensor to exchange axes from indices (0,1,2)->(1,2,0)
+2.1 permute
+**********************
+Now, let's again use the same rank-3  with shape=(2,3,4) as example. This time we want to do permute on the Tensor to exchange axes from indices (0,1,2)->(1,2,0)
 
 This can be achieved with **Tensor.permute** 
 
@@ -307,6 +308,9 @@ This can be achieved with **Tensor.permute**
 .. Hint::
 
     In some situation where we don't want to create a copy of object, using inplace version of functions can reduce the memory usage.
+
+
+
 
 
 .. toctree::
