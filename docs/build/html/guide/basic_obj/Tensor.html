@@ -49,7 +49,8 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../../Guide.html">User Guide</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../basic_obj.html">Basic objects</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Tensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#define-a-tensor">Define a Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#define-a-tensor">1. Define a Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#manipulate-tensor">2. Manipulate Tensor</a></li>
 </ul>
 </li>
 </ul>
@@ -165,7 +166,8 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../../Guide.html">User Guide</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../basic_obj.html">Basic objects</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Tensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#define-a-tensor">Define a Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#define-a-tensor">1. Define a Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#manipulate-tensor">2. Manipulate Tensor</a></li>
 </ul>
 </li>
 </ul>
@@ -229,7 +231,7 @@
 In fact, the API of Tensor is almost the same as torch.tensor.</p>
 <p>Let’s take a look on how to use it.</p>
 <div class="section" id="define-a-tensor">
-<h2>Define a Tensor<a class="headerlink" href="#define-a-tensor" title="Permalink to this headline">¶</a></h2>
+<h2>1. Define a Tensor<a class="headerlink" href="#define-a-tensor" title="Permalink to this headline">¶</a></h2>
 <p>Just like numpy.array / torch.tensor, Tensor is generally created using generator such as <strong>zero()</strong>, <strong>arange()</strong>, <strong>ones()</strong>.</p>
 <p>For example, suppose we want to define a rank-3 tensor with shape (3,4,5), and initialize all elements with zero:</p>
 <ul class="simple">
@@ -259,7 +261,7 @@ In fact, the API of Tensor is almost the same as torch.tensor.</p>
 2
 3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>     <span class="c1">#rank-1 Tensor from [0,10) with step 1</span>
 <span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span> <span class="c1">#rank-1 Tensor from [0,10) with step 2</span>
-<span class="n">C</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">});</span>  <span class="c1">#Tensor of shape (3,4,5) with all elements set to one.</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]);</span>  <span class="c1">#Tensor of shape (3,4,5) with all elements set to one.</span>
 </pre></div>
 </td></tr></table></div>
 <ul class="simple">
@@ -269,7 +271,7 @@ In fact, the API of Tensor is almost the same as torch.tensor.</p>
 2
 3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>     <span class="c1">//rank-1 Tensor from [0,10) with step 1</span>
 <span class="k">auto</span> <span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span> <span class="c1">//rank-1 Tensor from [0,10) with step 2</span>
-<span class="k">auto</span> <span class="n">C</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]);</span>  <span class="c1">//Tensor of shape (3,4,5) with all elements set to one.</span>
+<span class="k">auto</span> <span class="n">C</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">});</span>  <span class="c1">//Tensor of shape (3,4,5) with all elements set to one.</span>
 </pre></div>
 </td></tr></table></div>
 <dl class="field-list simple">
@@ -277,6 +279,118 @@ In fact, the API of Tensor is almost the same as torch.tensor.</p>
 <dd class="field-odd"><p>In C++, you could make use of <em>auto</em> to simplify your code!</p>
 </dd>
 </dl>
+<div class="section" id="tensor-with-different-dtype-and-device">
+<h3>1.1. Tensor with different dtype and device<a class="headerlink" href="#tensor-with-different-dtype-and-device" title="Permalink to this headline">¶</a></h3>
+<p>By default, the Tensor will be created with <em>double</em> type (or <em>float</em> in python) on CPU if there is no additional arguments provided upon creating the Tensor.</p>
+<p>You can create a Tensor with different data type, and/or on different devices simply by specify the <strong>dtype</strong> and the <strong>device</strong> arguments upon initialization. For example, the following codes create a Tensor with 64bit integer on cuda-enabled GPU.</p>
+<p>In python:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">Int64</span><span class="p">,</span><span class="n">device</span><span class="o">=</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">cuda</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In c++:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="p">.</span><span class="n">zeros</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">},</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Type</span><span class="o">::</span><span class="n">Int64</span><span class="p">,</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Device</span><span class="o">::</span><span class="n">cuda</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ol class="arabic">
+<li><p>Remember the difference of . in python and :: in C++ when you use Type and Device classes.</p></li>
+<li><p>If you have multiple GPUs, you can specify which GPU you want to init Tensor by adding gpu-id to cytnx::Device::cuda.</p>
+<blockquote>
+<div><p>For example:</p>
+<blockquote>
+<div><p>device=cytnx.Device.cuda+2   #will create Tensor on GPU id=2</p>
+<p>device=cytnx.Device.cuda+4   #will create Tensor on GPU id=4</p>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p>In C++, there is no keyword argument as python, so make sure you put the argument in the correct order. Check <a class="reference external" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">API documentation</a> for function signatures!</p></li>
+</ol>
+</div>
+<p>Currently, there are several data types supported by cytnx:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 37%" />
+<col style="width: 32%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>cytnx type</p></th>
+<th class="head"><p>c++ type</p></th>
+<th class="head"><p>Type object</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>cytnx_double</p></td>
+<td><p>double</p></td>
+<td><p>Type.Double</p></td>
+</tr>
+<tr class="row-odd"><td><p>cytnx_float</p></td>
+<td><p>float</p></td>
+<td><p>Type.Float</p></td>
+</tr>
+<tr class="row-even"><td><p>cytnx_uint64</p></td>
+<td><p>uint64_t</p></td>
+<td><p>Type.Uint64</p></td>
+</tr>
+<tr class="row-odd"><td><p>cytnx_uint32</p></td>
+<td><p>uint32_t</p></td>
+<td><p>Type.Uint32</p></td>
+</tr>
+<tr class="row-even"><td><p>cytnx_uint16</p></td>
+<td><p>uint16_t</p></td>
+<td><p>Type.Uint16</p></td>
+</tr>
+<tr class="row-odd"><td><p>cytnx_int64</p></td>
+<td><p>int64_t</p></td>
+<td><p>Type.Int64</p></td>
+</tr>
+<tr class="row-even"><td><p>cytnx_int32</p></td>
+<td><p>int32_t</p></td>
+<td><p>Type.Int32</p></td>
+</tr>
+<tr class="row-odd"><td><p>cytnx_int16</p></td>
+<td><p>int16_t</p></td>
+<td><p>Type.Int16</p></td>
+</tr>
+<tr class="row-even"><td><p>cytnx_complex128</p></td>
+<td><p>std::complex&lt;double&gt;</p></td>
+<td><p>Type.ComplexDouble</p></td>
+</tr>
+<tr class="row-odd"><td><p>cytnx_complex64</p></td>
+<td><p>std::complex&lt;float&gt;</p></td>
+<td><p>Type.ComplexFloat</p></td>
+</tr>
+<tr class="row-even"><td><p>cytnx_bool</p></td>
+<td><p>bool</p></td>
+<td><p>Type.Bool</p></td>
+</tr>
+</tbody>
+</table>
+<p>For devices, Cytnx currently supports</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 55%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>cytnx type</p></th>
+<th class="head"><p>Device object</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>CPU</p></td>
+<td><p>Device.cpu</p></td>
+</tr>
+<tr class="row-odd"><td><p>CUDA-enabled GPU</p></td>
+<td><p>Device.cuda+x</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="manipulate-tensor">
+<h2>2. Manipulate Tensor<a class="headerlink" href="#manipulate-tensor" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 </div>
 </div>
