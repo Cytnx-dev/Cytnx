@@ -1,7 +1,7 @@
 Tensor
 ==========
 Tensor is the basic building block of Cytnx. 
-In fact, the API of Tensor in cytnx is very similar to `torch.tensor <https://pytorch.org/docs/stable/tensors.html>`_ (so numpy.array, since they are also similar to each other)
+In fact, the API of Tensor in cytnx is very similar to `torch.tensor <https://pytorch.org/docs/stable/tensors.html>`_ (so as numpy.array, since they are also similar to each other)
 
 
 Let's take a look on how to use it.
@@ -30,7 +30,7 @@ For example, suppose we want to define a rank-3 tensor with shape (3,4,5), and i
 
 .. Note::
 
-    1. In cytnx, the conversion of python list will equivalent to C++ *vector* or in some case like here, it is a *initializer list*. 
+    1. In cytnx, the conversion of python list is equivalent to C++ *vector*; or in some case like here, it is a *initializer list*. 
 
     2. The conversion in between is pretty straight forward, one simply replace [] in python with {}, and you are all set!
 
@@ -56,6 +56,7 @@ Other options such as **arange()** (similar as np.arange), and **ones** (similar
     auto B = cytnx::arange(0,10,2); //rank-1 Tensor from [0,10) with step 2
     auto C = cytnx::ones({3,4,5});  //Tensor of shape (3,4,5) with all elements set to one.
 
+
 :Tips: In C++, you could make use of *auto* to simplify your code! 
 
 
@@ -65,13 +66,13 @@ By default, the Tensor will be created with *double* type (or *float* in python)
 
 You can create a Tensor with different data type, and/or on different devices simply by specify the **dtype** and the **device** arguments upon initialization. For example, the following codes create a Tensor with 64bit integer on cuda-enabled GPU. 
 
-In python:
+* In python:
 
 .. code-block:: python
 
     A = cytnx.zeros([3,4,5],dtype=cytnx.Type.Int64,device=cytnx.Device.cuda)
 
-In c++:
+* In c++:
 
 .. code-block:: c++
 
@@ -142,7 +143,110 @@ Next, let's look at the operations that are commonly used to manipulate Tensor o
 
 2.1 permute & reshape
 **********************
-Consider a rank-4 Tensor with shape (3,4,5,6) as example. 
+Suppose we want to create a rank-4 Tensor with shape=(2,3,4), starting with a rank-1 Tensor with shape=(24) initialized using **arange()**. 
+
+This operation is called *reshape* 
+
+We can use **Tensor.reshape** function to do this. 
+
+* In python:
+
+.. code-block:: python 
+    :linenos:
+
+    A = cytnx.arange(24)
+    B = A.reshape(2,3,4)
+    print(A)
+    print(B)
+
+* In C++:
+
+.. code-block:: c++
+    :linenos:
+
+    A = cytnx::arange(24)
+    B = A.reshape(2,3,4)
+    cout << A << endl;
+    cout << B << endl;
+   
+>> Output:
+
+.. code-block:: text
+
+    Total elem: 24
+    type  : Double (Float64)
+    cytnx device: CPU
+    Shape : (24)
+    [0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]
+
+    Total elem: 24
+    type  : Double (Float64)
+    cytnx device: CPU
+    Shape : (2,3,4)
+    [[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 ]
+      [4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 ]
+      [8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]]
+     [[1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 ]
+      [1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]
+      [2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]]]
+ 
+
+
+There is the other function **Tensor.reshape_** (with a underscore) that also performs reshape, but instead of return a new reshaped object, it performs inplace reshape to the instance that calls the function. For example:
+
+* In python:
+
+.. code-block:: python
+    :linenos:
+
+    A = cytnx.arange(24)
+    print(A)
+    A.reshape_(2,3,4)
+    print(A)
+
+* In C++:
+
+.. code-block:: c++
+    :linenos:
+
+    A = cytnx::arange(24)
+    cout << A << endl;
+    A.reshape_(2,3,4)
+    cout << A << endl;
+
+>> Output:
+
+.. code-block:: text
+
+    Total elem: 24
+    type  : Double (Float64)
+    cytnx device: CPU
+    Shape : (24)
+    [0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]
+
+    Total elem: 24
+    type  : Double (Float64)
+    cytnx device: CPU
+    Shape : (2,3,4)
+    [[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 ]
+      [4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 ]
+      [8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]]
+     [[1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 ]
+      [1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]
+      [2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]]]
+
+
+
+.. Note::
+    In general, all the funcions in Cytnx that end with a underscore _ is either a inplace function that modify the instance that calls it, or return the reference of some class member. 
+
+
+
+
+
+
+
+
 
 
 .. toctree::
