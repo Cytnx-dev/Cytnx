@@ -244,15 +244,22 @@ In fact, the API of Tensor is almost the same as torch.tensor.</p>
 <div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">cytnx</span><span class="o">::</span><span class="n">Tensor</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">zeros</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">});</span>
 </pre></div>
 </td></tr></table></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ol class="arabic simple">
+<li><p>In cytnx, the conversion of python list will equivalent to C++ <em>vector</em> or in some case like here, it is a <em>initializer list</em>.</p></li>
+<li><p>The conversion in between is pretty straight forward, one simply replace [] in python with {}, and you are all set!</p></li>
+</ol>
+</div>
 <p>Other options such as <strong>arange()</strong> (similar as np.arange), and <strong>ones</strong> (similar as np.ones) can also be done.</p>
 <ul class="simple">
-<li><p>In pyhton :</p></li>
+<li><p>In python :</p></li>
 </ul>
 <div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
-3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>     <span class="c1">#rank-1 Tensor from [0,10) with step 1</span>
-<span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span> <span class="c1">#rank-1 Tensor from [0,10) with step 2</span>
-<span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">});</span>  <span class="c1">#Tensor of shape (3,4,5) with all elements set to one.</span>
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>     <span class="c1">#rank-1 Tensor from [0,10) with step 1</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span> <span class="c1">#rank-1 Tensor from [0,10) with step 2</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">});</span>  <span class="c1">#Tensor of shape (3,4,5) with all elements set to one.</span>
 </pre></div>
 </td></tr></table></div>
 <ul class="simple">
@@ -260,16 +267,16 @@ In fact, the API of Tensor is almost the same as torch.tensor.</p>
 </ul>
 <div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
-3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>     <span class="c1">//rank-1 Tensor from [0,10) with step 1</span>
-<span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span> <span class="c1">//rank-1 Tensor from [0,10) with step 2</span>
-<span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]);</span>  <span class="c1">//Tensor of shape (3,4,5) with all elements set to one.</span>
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>     <span class="c1">//rank-1 Tensor from [0,10) with step 1</span>
+<span class="k">auto</span> <span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span> <span class="c1">//rank-1 Tensor from [0,10) with step 2</span>
+<span class="k">auto</span> <span class="n">C</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]);</span>  <span class="c1">//Tensor of shape (3,4,5) with all elements set to one.</span>
 </pre></div>
 </td></tr></table></div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>In cytnx, the conversion of python list will equivalent to C++ <strong>vector</strong> or in some case like here, it is a <em>initializer list</em>.</p>
-<p>The conversion is pretty straight forward, one simple replace [] in python with {}, and you are all set!</p>
-</div>
+<dl class="field-list simple">
+<dt class="field-odd">Tips</dt>
+<dd class="field-odd"><p>In C++, you could make use of <em>auto</em> to simplify your code!</p>
+</dd>
+</dl>
 <div class="toctree-wrapper compound">
 </div>
 </div>
