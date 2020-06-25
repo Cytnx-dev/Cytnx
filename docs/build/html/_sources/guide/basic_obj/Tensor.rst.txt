@@ -1,14 +1,15 @@
 Tensor
 ==========
-Tensor is the basic building block of Cytnx, just like numpy.array or torch.tensor. 
-In fact, the API of Tensor is almost the same as torch.tensor. 
+Tensor is the basic building block of Cytnx. 
+In fact, the API of Tensor in cytnx is very similar to `torch.tensor <https://pytorch.org/docs/stable/tensors.html>`_ (so numpy.array, since they are also similar to each other)
+
 
 Let's take a look on how to use it.
 
 
 1. Define a Tensor
 -------------------
-Just like numpy.array / torch.tensor, Tensor is generally created using generator such as **zero()**, **arange()**, **ones()**.
+Just like `numpy.array <https://numpy.org/doc/1.18/reference/generated/numpy.array.html>` / `torch.tensor <https://pytorch.org/docs/stable/tensors.html>`_, Tensor is generally created using generator such as **zero()**, **arange()**, **ones()**.
 
 For example, suppose we want to define a rank-3 tensor with shape (3,4,5), and initialize all elements with zero:
 
@@ -134,10 +135,17 @@ For devices, Cytnx currently supports
 +------------------+----------------------+
 
 
+
 2. Manipulate Tensor
 ----------------------
+Next, let's look at the operations that are commonly used to manipulate Tensor object. 
 
+2.1 permute & reshape
+**********************
+Consider a rank-4 Tensor with shape (3,4,5,6) as example. 
 
 
 .. toctree::
+
+
 

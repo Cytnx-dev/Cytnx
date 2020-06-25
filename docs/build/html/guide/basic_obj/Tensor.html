@@ -227,12 +227,12 @@
             
   <div class="section" id="tensor">
 <h1>Tensor<a class="headerlink" href="#tensor" title="Permalink to this headline">¶</a></h1>
-<p>Tensor is the basic building block of Cytnx, just like numpy.array or torch.tensor.
-In fact, the API of Tensor is almost the same as torch.tensor.</p>
+<p>Tensor is the basic building block of Cytnx.
+In fact, the API of Tensor in cytnx is very similar to <a class="reference external" href="https://pytorch.org/docs/stable/tensors.html">torch.tensor</a> (so numpy.array, since they are also similar to each other)</p>
 <p>Let’s take a look on how to use it.</p>
 <div class="section" id="define-a-tensor">
 <h2>1. Define a Tensor<a class="headerlink" href="#define-a-tensor" title="Permalink to this headline">¶</a></h2>
-<p>Just like numpy.array / torch.tensor, Tensor is generally created using generator such as <strong>zero()</strong>, <strong>arange()</strong>, <strong>ones()</strong>.</p>
+<p>Just like <cite>numpy.array &lt;https://numpy.org/doc/1.18/reference/generated/numpy.array.html&gt;</cite> / <a class="reference external" href="https://pytorch.org/docs/stable/tensors.html">torch.tensor</a>, Tensor is generally created using generator such as <strong>zero()</strong>, <strong>arange()</strong>, <strong>ones()</strong>.</p>
 <p>For example, suppose we want to define a rank-3 tensor with shape (3,4,5), and initialize all elements with zero:</p>
 <ul class="simple">
 <li><p>In python:</p></li>
@@ -391,7 +391,12 @@ In fact, the API of Tensor is almost the same as torch.tensor.</p>
 </div>
 <div class="section" id="manipulate-tensor">
 <h2>2. Manipulate Tensor<a class="headerlink" href="#manipulate-tensor" title="Permalink to this headline">¶</a></h2>
+<p>Next, let’s look at the operations that are commonly used to manipulate Tensor object.</p>
+<div class="section" id="permute-reshape">
+<h3>2.1 permute &amp; reshape<a class="headerlink" href="#permute-reshape" title="Permalink to this headline">¶</a></h3>
+<p>Consider a rank-4 Tensor with shape (3,4,5,6) as example.</p>
 <div class="toctree-wrapper compound">
+</div>
 </div>
 </div>
 </div>
