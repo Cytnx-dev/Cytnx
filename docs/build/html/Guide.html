@@ -47,7 +47,11 @@
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">User Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="guide/basic_obj.html">Basic objects</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="guide/basic_obj.html">Basic objects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="guide/basic_obj/Tensor.html">Tensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/basic_obj/Tensor.html#define-a-tensor">Define a Tensor</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="guide/linalg.html">Linear algebra</a><ul class="simple">
@@ -152,7 +156,11 @@
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">User Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="guide/basic_obj.html">Basic objects</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="guide/basic_obj.html">Basic objects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="guide/basic_obj/Tensor.html">Tensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/basic_obj/Tensor.html#define-a-tensor">Define a Tensor</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="guide/linalg.html">Linear algebra</a><ul class="simple">
@@ -210,21 +218,39 @@
             
   <div class="section" id="user-guide">
 <h1>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">¶</a></h1>
-<p>To use the library, simply include/import cytnx.
-For convenient, sometimes a shorthand alias can be used.</p>
+<p>To use the library, simply include/import cytnx.</p>
 <p>In Python, using import</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cytnx</span>
-<span class="c1"># import cytnx as cy //shorthand alias</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cytnx</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>In C++, using include header</p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;cytnx.hpp&quot;;</span><span class="cp"></span>
-<span class="c1">//namespace cy=cytnx; //shorthand alias</span>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;cytnx.hpp&quot;;</span><span class="cp"></span>
 </pre></div>
+</td></tr></table></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In C++, there is a namespace <strong>cytnx</strong>.</p>
 </div>
+<p>There are equivalence of alias between python module and c++ namespace, for example if we want to alias cytnx as cy,</p>
+<p>In python :</p>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cytnx</span> <span class="k">as</span> <span class="nn">cy</span>
+</pre></div>
+</td></tr></table></div>
+<p>This is equivalent in C++ as:</p>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;cytnx.hpp&quot;;</span><span class="cp"></span>
+<span class="k">namespace</span> <span class="n">cy</span><span class="o">=</span><span class="n">cytnx</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p><strong>Now we are ready to start using cytnx!</strong></p>
+<p>Continue reading:</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="guide/basic_obj.html">Basic objects</a><ul class="simple">
+<li class="toctree-l1"><a class="reference internal" href="guide/basic_obj.html">Basic objects</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guide/basic_obj/Tensor.html">Tensor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="guide/basic_obj/Tensor.html#define-a-tensor">Define a Tensor</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="guide/linalg.html">Linear algebra</a><ul class="simple">

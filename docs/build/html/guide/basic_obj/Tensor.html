@@ -22,7 +22,9 @@
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Linear algebra" href="../linalg.html" />
+    <link rel="prev" title="Basic objects" href="../basic_obj.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -43,9 +45,13 @@
 </ul>
 </li>
 </ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../Guide.html">User Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../basic_obj.html">Basic objects</a><ul class="simple">
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../Guide.html">User Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../basic_obj.html">Basic objects</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Tensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#define-a-tensor">Define a Tensor</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../linalg.html">Linear algebra</a><ul class="simple">
@@ -120,10 +126,23 @@
     <div class="related d-flex justify-content-between bg-light flex-wrap" role="navigation" aria-label="related navigation">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="../../index.html">Cytnx  documentation</a></li>
+                <li class="breadcrumb-item"><a href="../../Guide.html"
+                       >User Guide</a></li>
+                <li class="breadcrumb-item"><a href="../basic_obj.html"
+                       
+                         accesskey="U"
+                         class="active"
+                       >Basic objects</a></li>
             <li class="breadcrumb-item active">Tensor</li>
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+               <a href="../basic_obj.html" title="Previous Chapter: Basic objects" class="btn btn-primary" role="botton" accesskey="P">
+                   &laquo; Basic objects
+               </a>
+               <a href="../linalg.html" title="Next Chapter: Linear algebra" class="btn btn-primary" role="botton" accesskey="N">
+                   Linear algebra &raquo;
+               </a>
            </div>
        </div>
     </div>
@@ -142,9 +161,13 @@
 </ul>
 </li>
 </ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../Guide.html">User Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../basic_obj.html">Basic objects</a><ul class="simple">
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../Guide.html">User Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../basic_obj.html">Basic objects</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Tensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#define-a-tensor">Define a Tensor</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../linalg.html">Linear algebra</a><ul class="simple">
@@ -173,6 +196,12 @@
               </div>
             
           
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../basic_obj.html"
+                        title="previous chapter">Basic objects</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../linalg.html"
+                        title="next chapter">Linear algebra</a></p>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../../search.html" method="get">
       <input type="text" name="q" class="form-control" placeholder="Search..." />
@@ -201,8 +230,48 @@ In fact, the API of Tensor is almost the same as torch.tensor.</p>
 <p>Let’s take a look on how to use it.</p>
 <div class="section" id="define-a-tensor">
 <h2>Define a Tensor<a class="headerlink" href="#define-a-tensor" title="Permalink to this headline">¶</a></h2>
-<p>Just like numpy.array/torch.tensor, Tensor is created using generator such as zero(),arange(),ones().</p>
-<p>For example, suppose we want to define a rank-3 tensor with shape (3,4,5).</p>
+<p>Just like numpy.array / torch.tensor, Tensor is generally created using generator such as <strong>zero()</strong>, <strong>arange()</strong>, <strong>ones()</strong>.</p>
+<p>For example, suppose we want to define a rank-3 tensor with shape (3,4,5), and initialize all elements with zero:</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]);</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>In c++:</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">cytnx</span><span class="o">::</span><span class="n">Tensor</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">zeros</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">});</span>
+</pre></div>
+</td></tr></table></div>
+<p>Other options such as <strong>arange()</strong> (similar as np.arange), and <strong>ones</strong> (similar as np.ones) can also be done.</p>
+<ul class="simple">
+<li><p>In pyhton :</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>     <span class="c1">#rank-1 Tensor from [0,10) with step 1</span>
+<span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span> <span class="c1">#rank-1 Tensor from [0,10) with step 2</span>
+<span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">});</span>  <span class="c1">#Tensor of shape (3,4,5) with all elements set to one.</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>In c++:</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>     <span class="c1">//rank-1 Tensor from [0,10) with step 1</span>
+<span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span> <span class="c1">//rank-1 Tensor from [0,10) with step 2</span>
+<span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]);</span>  <span class="c1">//Tensor of shape (3,4,5) with all elements set to one.</span>
+</pre></div>
+</td></tr></table></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In cytnx, the conversion of python list will equivalent to C++ <strong>vector</strong> or in some case like here, it is a <em>initializer list</em>.</p>
+<p>The conversion is pretty straight forward, one simple replace [] in python with {}, and you are all set!</p>
+</div>
+<div class="toctree-wrapper compound">
+</div>
 </div>
 </div>
 

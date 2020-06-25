@@ -1,22 +1,46 @@
 User Guide
 =================================
 To use the library, simply include/import cytnx. 
-For convenient, sometimes a shorthand alias can be used.
 
 In Python, using import 
 
 .. code-block:: python
+    :linenos:
 
     import cytnx
-    # import cytnx as cy //shorthand alias
 
 In C++, using include header
 
 .. code-block:: c++
+    :linenos:
 
     #include "cytnx.hpp";
-    //namespace cy=cytnx; //shorthand alias
 
+
+.. Note::
+    In C++, there is a namespace **cytnx**. 
+
+There are equivalence of alias between python module and c++ namespace, for example if we want to alias cytnx as cy, 
+
+In python :
+
+.. code-block:: python
+    :linenos:
+
+    import cytnx as cy
+
+This is equivalent in C++ as:
+
+.. code-block:: c++
+    :linenos:
+
+    #include "cytnx.hpp";
+    namespace cy=cytnx;
+    
+
+**Now we are ready to start using cytnx!**
+
+Continue reading:
 
 .. toctree::
     :maxdepth: 3
