@@ -141,9 +141,9 @@ For devices, Cytnx currently supports
 ----------------------
 Next, let's look at the operations that are commonly used to manipulate Tensor object. 
 
-2.1 permute & reshape
+2.1 reshape & permute
 **********************
-Suppose we want to create a rank-4 Tensor with shape=(2,3,4), starting with a rank-1 Tensor with shape=(24) initialized using **arange()**. 
+Suppose we want to create a rank-3 Tensor with shape=(2,3,4), starting with a rank-1 Tensor with shape=(24) initialized using **arange()**. 
 
 This operation is called *reshape* 
 
@@ -164,8 +164,8 @@ We can use **Tensor.reshape** function to do this.
 .. code-block:: c++
     :linenos:
 
-    A = cytnx::arange(24)
-    B = A.reshape(2,3,4)
+    auto A = cytnx::arange(24);
+    auto B = A.reshape(2,3,4);
     cout << A << endl;
     cout << B << endl;
    
@@ -191,6 +191,7 @@ We can use **Tensor.reshape** function to do this.
       [2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]]]
  
 
+Notice that calling **reshape()** returns a new object *B*, so the original object *A* is not changed after calls reshape. 
 
 There is the other function **Tensor.reshape_** (with a underscore) that also performs reshape, but instead of return a new reshaped object, it performs inplace reshape to the instance that calls the function. For example:
 
@@ -209,9 +210,9 @@ There is the other function **Tensor.reshape_** (with a underscore) that also pe
 .. code-block:: c++
     :linenos:
 
-    A = cytnx::arange(24)
+    auto A = cytnx::arange(24);
     cout << A << endl;
-    A.reshape_(2,3,4)
+    A.reshape_(2,3,4);
     cout << A << endl;
 
 >> Output:
@@ -235,18 +236,77 @@ There is the other function **Tensor.reshape_** (with a underscore) that also pe
       [1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]
       [2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]]]
 
+Thus we see that using underscore version modify the instance itself. 
 
 
 .. Note::
     In general, all the funcions in Cytnx that end with a underscore _ is either a inplace function that modify the instance that calls it, or return the reference of some class member. 
 
 
+Now, let's again use the same rank-3  with shape=(2,3,4). This time we want to do permute on the Tensor to exchange axes from indices (0,1,2)->(1,2,0)
+
+This can be achieved with **Tensor.permute** 
+
+* In python:
+
+.. code-block:: python 
+    :linenos:
+    
+    A = cytnx.arange(24).reshape(2,3,4)
+    B = A.permute(1,2,0)
+    print(A)
+    print(B)
+
+* In c++:
+
+.. code-block:: c++ 
+    :linenos:
+
+    auto A = cytnx::arange(24).reshape(2,3,4);
+    auto B = A.permute(1,2,0);
+    cout << A << endl;
+    cout << B << endl;
+
+>> Output:
+
+.. code-block:: text
+
+    Total elem: 24
+    type  : Double (Float64)
+    cytnx device: CPU
+    Shape : (2,3,4)
+    [[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 ]
+      [4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 ]
+      [8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]]
+     [[1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 ]
+      [1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]
+      [2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]]]
+
+    Total elem: 24
+    type  : Double (Float64)
+    cytnx device: CPU
+    Shape : (3,4,2)
+    [[[0.00000e+00 1.20000e+01 ]
+      [1.00000e+00 1.30000e+01 ]
+      [2.00000e+00 1.40000e+01 ]
+      [3.00000e+00 1.50000e+01 ]]
+     [[4.00000e+00 1.60000e+01 ]
+      [5.00000e+00 1.70000e+01 ]
+      [6.00000e+00 1.80000e+01 ]
+      [7.00000e+00 1.90000e+01 ]]
+     [[8.00000e+00 2.00000e+01 ]
+      [9.00000e+00 2.10000e+01 ]
+      [1.00000e+01 2.20000e+01 ]
+      [1.10000e+01 2.30000e+01 ]]]
+
+.. Note::
+
+    Just like before, there is an equivalent **Tensor.permute_** end with underscore that performs inplace permute on the instance that calls it. 
 
 
+.. Hint::
 
-
-
-
+    In some situation where we don't want to create a copy of object, using inplace version of functions can reduce the memory usage.
 
 
 .. toctree::

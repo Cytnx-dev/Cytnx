@@ -125,6 +125,7 @@ html_theme_options = {
 
     # Html table header class.
     # Values: 'inverse', 'light' (Deafult: 'inverse')
-    'table_thead_class' : 'inverse'
+    'table_thead_class' : 'inverse',
+
 }
 
