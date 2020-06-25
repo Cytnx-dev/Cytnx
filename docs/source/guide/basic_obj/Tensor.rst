@@ -9,7 +9,7 @@ Let's take a look on how to use it.
 
 1. Define a Tensor
 -------------------
-Just like `numpy.array <https://numpy.org/doc/1.18/reference/generated/numpy.array.html>` / `torch.tensor <https://pytorch.org/docs/stable/tensors.html>`_, Tensor is generally created using generator such as **zero()**, **arange()**, **ones()**.
+Just like `numpy.array <https://numpy.org/doc/1.18/reference/generated/numpy.array.html>`_ / `torch.tensor <https://pytorch.org/docs/stable/tensors.html>`_, Tensor is generally created using generator such as **zero()**, **arange()**, **ones()**.
 
 For example, suppose we want to define a rank-3 tensor with shape (3,4,5), and initialize all elements with zero:
 
