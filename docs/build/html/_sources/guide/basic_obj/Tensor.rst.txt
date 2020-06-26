@@ -7,7 +7,7 @@ In fact, the API of Tensor in cytnx is very similar to `torch.tensor <https://py
 Let's take a look on how to use it.
 
 
-1. Define a Tensor
+1. Create a Tensor
 -------------------
 Just like `numpy.array <https://numpy.org/doc/1.18/reference/generated/numpy.array.html>`_ / `torch.tensor <https://pytorch.org/docs/stable/tensors.html>`_, Tensor is generally created using generator such as **zero()**, **arange()**, **ones()**.
 
@@ -135,6 +135,95 @@ For devices, Cytnx currently supports
 | CUDA-enabled GPU | Device.cuda+x        |
 +------------------+----------------------+
 
+1.2 Type conversion 
+**********************
+It is possible to convert a Tensor to a different data type. To convert the data type, simply use **Tensor.astype()**.
+
+For example, consider a Tensor *A* with **dtype=Type.Int64**, and we want to convert it to **Type.Double**
+
+* In python:
+
+.. code-block:: python 
+    :linenos:
+    
+    A = cytnx.ones([3,4],dtype=cytnx.Type.Int64)
+    B = A.astype(cytnx.Type.Double)
+    print(A.dtype_str())
+    print(B.dtype_str())
+
+* In c++:
+
+.. code-block:: c++
+    :linenos:
+
+    auto A = cytnx::ones({3,4},cytnx::Type::Int64);
+    auto B = A.astype(cytnx::Type::Double);
+    cout << A.dtype_str() << endl;
+    cout << B.dtype_str() << endl;
+
+>> Output:
+
+.. code-block:: text
+    
+    Int64
+    Double (Float64)
+
+
+
+.. Note::
+    
+    1. Use Tensor.dtype() will return a type-id, where Tensor.dtype_str() will return the type name. 
+    2. Complex data type cannot directly convert to real data type. Use Tensor.real()/Tensor.imag() if you want to get the real/imag part.
+
+
+1.3 Transfer btwn devices
+***************************
+To move a Tensor between different devices is very easy. We can use **Tensor.to()** to move the Tensor to a different device.
+
+For example, let's create a Tensor on cpu and transfer to GPU with gpu-id=0. 
+
+* In python:
+
+.. code-block:: python 
+    :linenos:
+
+    A = cytnx.ones([2,2]) #on CPU
+    print(A)
+    A.to(cytnx.Device.cuda+0)
+    print(A)
+
+* In c++:
+
+.. code-block:: c++
+    :linenos:
+
+    auto A = cytnx::ones([2,2]); //on CPU
+    cout << A << endl;
+    A.to(cytnx.Device.cuda+0);
+    cout << A << endl;
+
+>> Output:
+
+.. code-block:: text
+
+    Total elem: 4
+    type  : Double (Float64)
+    cytnx device: CPU
+    Shape : (2,2)
+    [[1.00000e+00 1.00000e+00 ]
+     [1.00000e+00 1.00000e+00 ]]
+
+    Total elem: 4
+    type  : Double (Float64)
+    cytnx device: CUDA/GPU-id:0
+    Shape : (2,2)
+    [[1.00000e+00 1.00000e+00 ]
+     [1.00000e+00 1.00000e+00 ]]
+
+
+.. Note::
+    
+    You can use **Tensor.device()** to get the current device-id (cpu = -1), where as **Tensor.device_str()** returns the device name. 
 
 
 2. Manipulate Tensor

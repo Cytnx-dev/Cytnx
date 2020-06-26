@@ -49,7 +49,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../../Guide.html">User Guide</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../basic_obj.html">Basic objects</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Tensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#define-a-tensor">1. Define a Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#create-a-tensor">1. Create a Tensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#manipulate-tensor">2. Manipulate Tensor</a></li>
 </ul>
 </li>
@@ -166,7 +166,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../../Guide.html">User Guide</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../basic_obj.html">Basic objects</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Tensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#define-a-tensor">1. Define a Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#create-a-tensor">1. Create a Tensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#manipulate-tensor">2. Manipulate Tensor</a></li>
 </ul>
 </li>
@@ -230,8 +230,8 @@
 <p>Tensor is the basic building block of Cytnx.
 In fact, the API of Tensor in cytnx is very similar to <a class="reference external" href="https://pytorch.org/docs/stable/tensors.html">torch.tensor</a> (so as numpy.array, since they are also similar to each other)</p>
 <p>Let’s take a look on how to use it.</p>
-<div class="section" id="define-a-tensor">
-<h2>1. Define a Tensor<a class="headerlink" href="#define-a-tensor" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="create-a-tensor">
+<h2>1. Create a Tensor<a class="headerlink" href="#create-a-tensor" title="Permalink to this headline">¶</a></h2>
 <p>Just like <a class="reference external" href="https://numpy.org/doc/1.18/reference/generated/numpy.array.html">numpy.array</a> / <a class="reference external" href="https://pytorch.org/docs/stable/tensors.html">torch.tensor</a>, Tensor is generally created using generator such as <strong>zero()</strong>, <strong>arange()</strong>, <strong>ones()</strong>.</p>
 <p>For example, suppose we want to define a rank-3 tensor with shape (3,4,5), and initialize all elements with zero:</p>
 <ul class="simple">
@@ -391,6 +391,96 @@ In fact, the API of Tensor in cytnx is very similar to <a class="reference exter
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section" id="type-conversion">
+<h3>1.2 Type conversion<a class="headerlink" href="#type-conversion" title="Permalink to this headline">¶</a></h3>
+<p>It is possible to convert a Tensor to a different data type. To convert the data type, simply use <strong>Tensor.astype()</strong>.</p>
+<p>For example, consider a Tensor <em>A</em> with <strong>dtype=Type.Int64</strong>, and we want to convert it to <strong>Type.Double</strong></p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">Int64</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">Double</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">dtype_str</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">dtype_str</span><span class="p">())</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>In c++:</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">},</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Type</span><span class="o">::</span><span class="n">Int64</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="n">astype</span><span class="p">(</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Type</span><span class="o">::</span><span class="n">Double</span><span class="p">);</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">A</span><span class="p">.</span><span class="n">dtype_str</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">B</span><span class="p">.</span><span class="n">dtype_str</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>&gt;&gt; Output:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Int64
+Double (Float64)
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ol class="arabic simple">
+<li><p>Use Tensor.dtype() will return a type-id, where Tensor.dtype_str() will return the type name.</p></li>
+<li><p>Complex data type cannot directly convert to real data type. Use Tensor.real()/Tensor.imag() if you want to get the real/imag part.</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="transfer-btwn-devices">
+<h3>1.3 Transfer btwn devices<a class="headerlink" href="#transfer-btwn-devices" title="Permalink to this headline">¶</a></h3>
+<p>To move a Tensor between different devices is very easy. We can use <strong>Tensor.to()</strong> to move the Tensor to a different device.</p>
+<p>For example, let’s create a Tensor on cpu and transfer to GPU with gpu-id=0.</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span> <span class="c1">#on CPU</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="n">A</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">cuda</span><span class="o">+</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>In c++:</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]);</span> <span class="c1">//on CPU</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">A</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="n">A</span><span class="p">.</span><span class="n">to</span><span class="p">(</span><span class="n">cytnx</span><span class="p">.</span><span class="n">Device</span><span class="p">.</span><span class="n">cuda</span><span class="o">+</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">A</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>&gt;&gt; Output:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 4
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (2,2)
+[[1.00000e+00 1.00000e+00 ]
+ [1.00000e+00 1.00000e+00 ]]
+
+Total elem: 4
+type  : Double (Float64)
+cytnx device: CUDA/GPU-id:0
+Shape : (2,2)
+[[1.00000e+00 1.00000e+00 ]
+ [1.00000e+00 1.00000e+00 ]]
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can use <strong>Tensor.device()</strong> to get the current device-id (cpu = -1), where as <strong>Tensor.device_str()</strong> returns the device name.</p>
+</div>
 </div>
 </div>
 <div class="section" id="manipulate-tensor">
