@@ -32,7 +32,7 @@
     </button>
       <div class="navbar-collapse collapse" id="exCollapsingNavbar2">
            <a class="navbar-brand py-1" href="../../index.html">
-                  Cytnx
+              <img class="logo" src="../../_static/Icon_i.png" alt="Cytnx"/>
           </a>
           <ul class="navbar-nav mr-auto">
           
@@ -101,7 +101,7 @@
           <div class="collapse navbar-toggleable-xs container" id="exCollapsingNavbar2">
               <div class="container">
              　　 <a class="navbar-brand" href="../../index.html">
-                      Cytnx
+                      <img class="logo" src="../../_static/Icon_i.png" alt="Cytnx"/>
                   </a>
               </div>
               <ul class="nav navbar-nav">
@@ -330,6 +330,10 @@ Shape : (2,3,4)
 <p class="admonition-title">Note</p>
 <p>In general, all the funcions in Cytnx that end with a underscore _ is either a inplace function that modify the instance that calls it, or return the reference of some class member.</p>
 </div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>You can use <strong>Tensor.shape()</strong> to get the shape of Tensor.</p>
+</div>
 </div>
 <div class="section" id="permute">
 <h2>2.1 permute<a class="headerlink" href="#permute" title="Permalink to this headline">¶</a></h2>
@@ -395,10 +399,7 @@ Shape : (3,4,2)
 </div>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
-<ol class="arabic simple">
-<li><p>You can use <strong>Tensor.shape()</strong> to get the shape of Tensor.</p></li>
-<li><p>In some situation where we don’t want to create a copy of object, using inplace version of functions can reduce the memory usage.</p></li>
-</ol>
+<p>In some situation where we don’t want to create a copy of object, using inplace version of functions can reduce the memory usage.</p>
 </div>
 <p>In Cytnx, the permute operation does not moving the elements in the memory immediately. Only the meta-data that is seen by user are changed.
 This can avoid the redudant moving of elements. Note that this approach is also taken in <a class="reference external" href="https://numpy.org/doc/1.18/reference/generated/numpy.array.html">numpy.array</a> and <a class="reference external" href="https://pytorch.org/docs/stable/tensors.html">torch.tensor</a> .</p>

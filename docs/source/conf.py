@@ -45,8 +45,7 @@ exclude_patterns = []
 
 # -- Options for HTML output -------------------------------------------------
 
-#html_logo = '' 
-#'Icon_small.png' 
+html_logo = 'Icon_i.png' 
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.

@@ -101,7 +101,12 @@ Thus we see that using underscore version modify the instance itself.
 
 
 .. Note::
+
     In general, all the funcions in Cytnx that end with a underscore _ is either a inplace function that modify the instance that calls it, or return the reference of some class member. 
+
+.. Hint::
+
+    You can use **Tensor.shape()** to get the shape of Tensor.
 
 2.1 permute
 **********************
@@ -168,8 +173,7 @@ This can be achieved with **Tensor.permute**
 
 .. Hint::
     
-    1. You can use **Tensor.shape()** to get the shape of Tensor.
-    2. In some situation where we don't want to create a copy of object, using inplace version of functions can reduce the memory usage.
+    In some situation where we don't want to create a copy of object, using inplace version of functions can reduce the memory usage.
 
 
 In Cytnx, the permute operation does not moving the elements in the memory immediately. Only the meta-data that is seen by user are changed. 
