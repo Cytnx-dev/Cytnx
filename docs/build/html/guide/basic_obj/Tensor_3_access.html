@@ -1,0 +1,393 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>3. Access elements &#8212; Cytnx  documentation</title>
+
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/sphinxbootstrap4.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <script src="../../_static/sphinxbootstrap4.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Linear algebra" href="../linalg.html" />
+    <link rel="prev" title="2. Manipulate Tensor" href="Tensor_2_manip.html" /> 
+  </head><body>
+  <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
+    <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
+      &#9776;
+    </button>
+      <div class="navbar-collapse collapse" id="exCollapsingNavbar2">
+           <a class="navbar-brand py-1" href="../../index.html">
+                  Cytnx
+          </a>
+          <ul class="navbar-nav mr-auto">
+          
+              <li class="nav-item dropdown d-none d-sm-block" id="navbar-pages">
+                  <a class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
+                  <ul class="dropdown-menu">
+                  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Intro.html">Introdoction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../Intro.html#features">Features</a></li>
+</ul>
+</li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../Guide.html">User Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../basic_obj.html">Basic objects</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="Tensor.html">Tensor</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_creat.html">1. Create a Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html">2. Manipulate Tensor</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">3. Access elements</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../linalg.html">Linear algebra</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../itersol.html">Iterative solver</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cyx.html">Cytnx extensions</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">linalg extension</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../Examples.html">Examples</a><ul class="simple">
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">API Documentations</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">Github</a></li>
+</ul>
+
+                  </ul>
+              </li>
+              <li class="nav-item">
+              
+                  <a  class="nav-link" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">API Doc</a></li>
+              <li class="nav-item">
+              
+                  <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
+          </ul>
+          <div class="dropdown-divider d-block d-sm-none mb-4"></div>
+             
+<form class="form-inline" action="../../search.html" method="get">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      </div>
+
+      <!--<div class="row hidden-sm-up">
+          <div class="collapse navbar-toggleable-xs container" id="exCollapsingNavbar2">
+              <div class="container">
+             　　 <a class="navbar-brand" href="../../index.html">
+                      Cytnx
+                  </a>
+              </div>
+              <ul class="nav navbar-nav">
+                  <li>
+                  
+                      <a  class="nav-link" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">API Doc</a></li>
+                  <li>
+                  
+                      <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
+              </ul>
+              <div class="dropdown-divider"></div>
+              <div class="navbar-text">search<div>
+              
+<form class="form-inline" action="../../search.html" method="get">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          </div>
+      </div>-->
+    </nav>
+  </div>
+
+    <div class="related d-flex justify-content-between bg-light flex-wrap" role="navigation" aria-label="related navigation">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="../../index.html">Cytnx  documentation</a></li>
+                <li class="breadcrumb-item"><a href="../../Guide.html"
+                       >User Guide</a></li>
+                <li class="breadcrumb-item"><a href="../basic_obj.html"
+                       >Basic objects</a></li>
+                <li class="breadcrumb-item"><a href="Tensor.html"
+                       
+                         accesskey="U"
+                         class="active"
+                       >Tensor</a></li>
+            <li class="breadcrumb-item active">3. Access elements</li>
+        </ol>
+       <div>
+          <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+               <a href="Tensor_2_manip.html" title="Previous Chapter: 2. Manipulate Tensor" class="btn btn-primary" role="botton" accesskey="P">
+                   &laquo; 2. Manipulate Tensor
+               </a>
+               <a href="../linalg.html" title="Next Chapter: Linear algebra" class="btn btn-primary" role="botton" accesskey="N">
+                   Linear algebra &raquo;
+               </a>
+           </div>
+       </div>
+    </div>
+
+  <div class="main container-fluid">
+    <div class="row"> 
+      <div class="sphinxsidebar d-none d-md-block">
+        <div class="sphinxsidebarwrapper">          
+            <h4>Table Of Contents</h4>
+            
+            
+              <div class="sidebartoctree">
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Intro.html">Introdoction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../Intro.html#features">Features</a></li>
+</ul>
+</li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../Guide.html">User Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../basic_obj.html">Basic objects</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="Tensor.html">Tensor</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_creat.html">1. Create a Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html">2. Manipulate Tensor</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">3. Access elements</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../linalg.html">Linear algebra</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../itersol.html">Iterative solver</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cyx.html">Cytnx extensions</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">linalg extension</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../Examples.html">Examples</a><ul class="simple">
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">API Documentations</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">Github</a></li>
+</ul>
+
+              </div>
+            
+          
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Tensor_2_manip.html"
+                        title="previous chapter">2. Manipulate Tensor</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../linalg.html"
+                        title="next chapter">Linear algebra</a></p>
+<div id="searchbox" style="display: none">
+    <form class="form search" action="../../search.html" method="get">
+      <input type="text" name="q" class="form-control" placeholder="Search..." />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <ul class="this-page-menu list-unstyled text-right">
+    <li><a href="../../_sources/guide/basic_obj/Tensor_3_access.rst.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+        </div>
+      </div> 
+
+      <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="access-elements">
+<h1>3. Access elements<a class="headerlink" href="#access-elements" title="Permalink to this headline">¶</a></h1>
+<p>Next, let’s take a look on how we can access elements inside a Tensor.</p>
+<div class="section" id="get-elements">
+<h2>3.1 Get elements<a class="headerlink" href="#get-elements" title="Permalink to this headline">¶</a></h2>
+<p>Just like python list/numpy.array/torch.tensor, on the python side, we can simply use <em>slice</em> to get the elements. See <a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.indexing.html">This page</a> .
+In c++, cytnx take this approach from python and bring it to our C++ API. You can simply use the <strong>slice string</strong> to access elements.</p>
+<p>For example:</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+
+<span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">,:,</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+
+<span class="n">C</span> <span class="o">=</span> <span class="n">A</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>In C++:</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">24</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">A</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+<span class="k">auto</span> <span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="s">&quot;:&quot;</span><span class="p">,</span><span class="s">&quot;1:4:2&quot;</span><span class="p">);</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">B</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+<span class="k">auto</span> <span class="n">C</span> <span class="o">=</span> <span class="n">A</span><span class="p">(</span><span class="s">&quot;:&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">C</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output&gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 24
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (2,3,4)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 ]
+  [4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 ]
+  [8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]]
+ [[1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 ]
+  [1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]
+  [2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]]]
+
+
+Total elem: 6
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,2)
+[[1.00000e+00 3.00000e+00 ]
+ [5.00000e+00 7.00000e+00 ]
+ [9.00000e+00 1.10000e+01 ]]
+
+
+Total elem: 8
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (2,4)
+[[4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 ]
+ [1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]]
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ol class="arabic simple">
+<li><p>To convert in between python and C++ APIs, notice that in C++, we use operator() instead of operator[] if you are using slice string to acess elements.</p></li>
+<li><p>The return will always be Tensor object, even it is only one elements in the Tensor.</p></li>
+</ol>
+</div>
+<p>In the case where you have only one element in a Tensor, we can use <strong>item()</strong> to get the element in the standard python type/c++ type.</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>In C++:</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">24</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+<span class="kt">double</span> <span class="n">C</span> <span class="o">=</span> <span class="n">B</span><span class="p">.</span><span class="n">item</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
+
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">B</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">C</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output&gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 1
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (1)
+[1.00000e+00 ]
+
+
+1.0
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In C++, using <strong>item&lt;&gt;()</strong> to get the element require explicitly specify the type that match the dtype of the Tensor. If the type specify does not match, an error will be prompt.</p>
+</div>
+</div>
+<div class="section" id="set-elememts">
+<h2>3.2 Set elememts<a class="headerlink" href="#set-elememts" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="low-level-api-c-only">
+<h2>3.3 Low-level API (C++ only)<a class="headerlink" href="#low-level-api-c-only" title="Permalink to this headline">¶</a></h2>
+<p>On C++ side, cytnx provide lower-level API with slightly smaller overhead for getting elements.</p>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+      <div class="clearer"></div>
+      </div>
+    </div>
+<footer class="footer d-flex justify-content-between flex-wrap">
+    <div class="copyright">
+        <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.0.4 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+    </div>
+    <div>
+        <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>
+    </div>
+</footer>
+  </body>
+</html>
