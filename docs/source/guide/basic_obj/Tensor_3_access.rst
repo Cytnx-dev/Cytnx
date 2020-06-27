@@ -212,8 +212,71 @@ Output>>
 
 3.3 Low-level API (C++ only) 
 *******************************
-On C++ side, cytnx provide lower-level API with slightly smaller overhead for getting elements. 
+On C++ side, cytnx provide lower-level APIs with slightly smaller overhead for getting elements. 
+These low-level APIs require using with **Accessor** object. 
 
+* Accessor:
+    **Accessor** object is equivalent to python *slice*. It is sometimes convenient to use alias to simplify the expression when using it.
+    
+    .. code-block:: C++
+        :linenos:
+
+            typedef ac=cytnx::Accessor;
+
+            ac(4);     // this equal to index '4' in python
+            ac::all(); // this equal to ':' in python 
+            ac::range(0,4,2); // this equal to '0:4:2' in python 
+
+
+
+In the following, let's see how it can be used to get/set the elements from/to Tensor.
+
+1. operator[] (middle level API) :
+    
+.. code-block:: c++
+    :linenos:
+
+        typedef ac=cytnx::Accessor;
+        auto A = cytnx::arange(24).reshape(2,3,4);
+        auto B = cytnx::zeros({3,2});
+
+        // [get] this is equal to A[0,:,1:4:2] in python:
+        auto C = A[{ac(0},ac::all(),ac::range(1,4,2)}];
+        
+        // [set] this is equal to A[1,:,0:4:2] = B in python:
+        A[{ac(1),ac::all(),ac::range(0,4,2)}] = B;
+
+
+.. Note::
+
+    Remember to put a braket{}. This because C++ operator[] can only accept one argument. 
+
+
+2. get/set (lowest level API) :
+    get() and set() is the lowest-level API. Operator() and Operator[] are all build base on these.
+    
+.. code-block:: c++
+    :linenos:
+
+        typedef ac=cytnx::Accessor;
+        auto A = cytnx::arange(24).reshape(2,3,4);
+        auto B = cytnx::zeros({3,2});
+
+        // [get] this is equal to A[0,:,1:4:2] in python:
+        auto C = A.get({ac(0},ac::all(),ac::range(1,4,2)});
+        
+        // [set] this is equal to A[1,:,0:4:2] = B in python:
+        A.set({ac(1),ac::all(),ac::range(0,4,2)}, B);
+
+
+
+.. Hint::
+
+    1. Similarly, you can also pass a c++ *vector<cytnx_int64>* as argument. 
+
+.. Tip::
+
+    If your code requires frequently get/set elements, using low-level API can reduce the overhead.
 
 
 

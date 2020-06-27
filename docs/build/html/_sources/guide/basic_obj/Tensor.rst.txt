@@ -12,3 +12,4 @@ Let's take a look on how to use it:
     Tensor_1_creat.rst
     Tensor_2_manip.rst
     Tensor_3_access.rst
+    Tensor_4_arithmetic.rst

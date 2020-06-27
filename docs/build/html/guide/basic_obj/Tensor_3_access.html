@@ -23,7 +23,7 @@
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Linear algebra" href="../linalg.html" />
+    <link rel="next" title="4. Tensor arithmetic" href="Tensor_4_arithmetic.html" />
     <link rel="prev" title="2. Manipulate Tensor" href="Tensor_2_manip.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
@@ -52,6 +52,7 @@
 <li class="toctree-l4"><a class="reference internal" href="Tensor_1_creat.html">1. Create a Tensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html">2. Manipulate Tensor</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">3. Access elements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_4_arithmetic.html">4. Tensor arithmetic</a></li>
 </ul>
 </li>
 </ul>
@@ -144,8 +145,8 @@
                <a href="Tensor_2_manip.html" title="Previous Chapter: 2. Manipulate Tensor" class="btn btn-primary" role="botton" accesskey="P">
                    &laquo; 2. Manipulate Tensor
                </a>
-               <a href="../linalg.html" title="Next Chapter: Linear algebra" class="btn btn-primary" role="botton" accesskey="N">
-                   Linear algebra &raquo;
+               <a href="Tensor_4_arithmetic.html" title="Next Chapter: 4. Tensor arithmetic" class="btn btn-primary" role="botton" accesskey="N">
+                   4. Tensor arithmetic &raquo;
                </a>
            </div>
        </div>
@@ -172,6 +173,7 @@
 <li class="toctree-l4"><a class="reference internal" href="Tensor_1_creat.html">1. Create a Tensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html">2. Manipulate Tensor</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">3. Access elements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_4_arithmetic.html">4. Tensor arithmetic</a></li>
 </ul>
 </li>
 </ul>
@@ -206,8 +208,8 @@
   <p class="topless"><a href="Tensor_2_manip.html"
                         title="previous chapter">2. Manipulate Tensor</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../linalg.html"
-                        title="next chapter">Linear algebra</a></p>
+  <p class="topless"><a href="Tensor_4_arithmetic.html"
+                        title="next chapter">4. Tensor arithmetic</a></p>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../../search.html" method="get">
       <input type="text" name="q" class="form-control" placeholder="Search..." />
@@ -462,7 +464,89 @@ Shape : (2,3,4)
 </div>
 <div class="section" id="low-level-api-c-only">
 <h2>3.3 Low-level API (C++ only)<a class="headerlink" href="#low-level-api-c-only" title="Permalink to this headline">¶</a></h2>
-<p>On C++ side, cytnx provide lower-level API with slightly smaller overhead for getting elements.</p>
+<p>On C++ side, cytnx provide lower-level APIs with slightly smaller overhead for getting elements.
+These low-level APIs require using with <strong>Accessor</strong> object.</p>
+<ul>
+<li><dl>
+<dt>Accessor:</dt><dd><p><strong>Accessor</strong> object is equivalent to python <em>slice</em>. It is sometimes convenient to use alias to simplify the expression when using it.</p>
+<div class="highlight-C++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span>    <span class="k">typedef</span> <span class="n">ac</span><span class="o">=</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Accessor</span><span class="p">;</span>
+
+    <span class="n">ac</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>     <span class="c1">// this equal to index &#39;4&#39; in python</span>
+    <span class="n">ac</span><span class="o">::</span><span class="n">all</span><span class="p">();</span> <span class="c1">// this equal to &#39;:&#39; in python</span>
+    <span class="n">ac</span><span class="o">::</span><span class="n">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span> <span class="c1">// this equal to &#39;0:4:2&#39; in python</span>
+</pre></div>
+</td></tr></table></div>
+</dd>
+</dl>
+</li>
+</ul>
+<p>In the following, let’s see how it can be used to get/set the elements from/to Tensor.</p>
+<ol class="arabic simple">
+<li><p>operator[] (middle level API) :</p></li>
+</ol>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span>    <span class="k">typedef</span> <span class="n">ac</span><span class="o">=</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Accessor</span><span class="p">;</span>
+    <span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">24</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+    <span class="k">auto</span> <span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">zeros</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">});</span>
+
+    <span class="c1">// [get] this is equal to A[0,:,1:4:2] in python:</span>
+    <span class="k">auto</span> <span class="n">C</span> <span class="o">=</span> <span class="n">A</span><span class="p">[{</span><span class="n">ac</span><span class="p">(</span><span class="mi">0</span><span class="p">},</span><span class="n">ac</span><span class="o">::</span><span class="n">all</span><span class="p">(),</span><span class="n">ac</span><span class="o">::</span><span class="n">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">)}];</span>
+
+    <span class="c1">// [set] this is equal to A[1,:,0:4:2] = B in python:</span>
+    <span class="n">A</span><span class="p">[{</span><span class="n">ac</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">ac</span><span class="o">::</span><span class="n">all</span><span class="p">(),</span><span class="n">ac</span><span class="o">::</span><span class="n">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">)}]</span> <span class="o">=</span> <span class="n">B</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Remember to put a braket{}. This because C++ operator[] can only accept one argument.</p>
+</div>
+<ol class="arabic simple" start="2">
+<li><dl class="simple">
+<dt>get/set (lowest level API) :</dt><dd><p>get() and set() is the lowest-level API. Operator() and Operator[] are all build base on these.</p>
+</dd>
+</dl>
+</li>
+</ol>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span>    <span class="k">typedef</span> <span class="n">ac</span><span class="o">=</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Accessor</span><span class="p">;</span>
+    <span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">24</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+    <span class="k">auto</span> <span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">zeros</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">});</span>
+
+    <span class="c1">// [get] this is equal to A[0,:,1:4:2] in python:</span>
+    <span class="k">auto</span> <span class="n">C</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="n">get</span><span class="p">({</span><span class="n">ac</span><span class="p">(</span><span class="mi">0</span><span class="p">},</span><span class="n">ac</span><span class="o">::</span><span class="n">all</span><span class="p">(),</span><span class="n">ac</span><span class="o">::</span><span class="n">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">)});</span>
+
+    <span class="c1">// [set] this is equal to A[1,:,0:4:2] = B in python:</span>
+    <span class="n">A</span><span class="p">.</span><span class="n">set</span><span class="p">({</span><span class="n">ac</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">ac</span><span class="o">::</span><span class="n">all</span><span class="p">(),</span><span class="n">ac</span><span class="o">::</span><span class="n">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">)},</span> <span class="n">B</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<ol class="arabic simple">
+<li><p>Similarly, you can also pass a c++ <em>vector&lt;cytnx_int64&gt;</em> as argument.</p></li>
+</ol>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If your code requires frequently get/set elements, using low-level API can reduce the overhead.</p>
+</div>
 <div class="toctree-wrapper compound">
 </div>
 </div>
