@@ -123,6 +123,90 @@ Output>>
 
 3.2 Set elememts
 ***************************
+Setting elements is pretty much the same as numpy.array/torch.tensor. You can assign a Tensor to a specific slice, our set all the elements in that slice to be the same value. 
+
+For example:
+
+* In python:
+
+.. code-block:: python
+    :linenos:
+
+    A = cytnx.arange(24).reshape(2,3,4)
+    B = cytnx.zeros([3,2])
+    print(A)
+    print(B)
+
+    A[1,:,::2] = B
+    print(A)
+
+    A[0,::2,2] = 4
+    print(A)
+    
+* In c++:
+
+.. code-block:: c++
+    :linenos:
+
+    auto A = cytnx::arange(24).reshape(2,3,4);
+    auto B = cytnx::zeros({3,2});
+    cout << A << endl;
+    cout << B << endl;
+
+    A(1,":","::2") = B;
+    cout << A << endl;
+
+    A(0,"::2",2) = 4;
+    cout << A << endl;
+
+Output>>
+
+.. code-block:: text
+
+    Total elem: 24
+    type  : Double (Float64)
+    cytnx device: CPU
+    Shape : (2,3,4)
+    [[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 ]
+      [4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 ]
+      [8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]]
+     [[1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 ]
+      [1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]
+      [2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]]]
+
+
+    Total elem: 6
+    type  : Double (Float64)
+    cytnx device: CPU
+    Shape : (3,2)
+    [[0.00000e+00 0.00000e+00 ]
+     [0.00000e+00 0.00000e+00 ]
+     [0.00000e+00 0.00000e+00 ]]
+
+
+    Total elem: 24
+    type  : Double (Float64)
+    cytnx device: CPU
+    Shape : (2,3,4)
+    [[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 ]
+      [4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 ]
+      [8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]]
+     [[0.00000e+00 1.30000e+01 0.00000e+00 1.50000e+01 ]
+      [0.00000e+00 1.70000e+01 0.00000e+00 1.90000e+01 ]
+      [0.00000e+00 2.10000e+01 0.00000e+00 2.30000e+01 ]]]
+
+
+    Total elem: 24
+    type  : Double (Float64)
+    cytnx device: CPU
+    Shape : (2,3,4)
+    [[[0.00000e+00 1.00000e+00 4.00000e+00 3.00000e+00 ]
+      [4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 ]
+      [8.00000e+00 9.00000e+00 4.00000e+00 1.10000e+01 ]]
+     [[0.00000e+00 1.30000e+01 0.00000e+00 1.50000e+01 ]
+      [0.00000e+00 1.70000e+01 0.00000e+00 1.90000e+01 ]
+      [0.00000e+00 2.10000e+01 0.00000e+00 2.30000e+01 ]]]
+
 
 
 

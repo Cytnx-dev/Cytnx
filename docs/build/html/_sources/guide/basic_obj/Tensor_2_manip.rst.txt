@@ -167,8 +167,9 @@ This can be achieved with **Tensor.permute**
 
 
 .. Hint::
-
-    In some situation where we don't want to create a copy of object, using inplace version of functions can reduce the memory usage.
+    
+    1. You can use **Tensor.shape()** to get the shape of Tensor.
+    2. In some situation where we don't want to create a copy of object, using inplace version of functions can reduce the memory usage.
 
 
 In Cytnx, the permute operation does not moving the elements in the memory immediately. Only the meta-data that is seen by user are changed. 

@@ -395,7 +395,10 @@ Shape : (3,4,2)
 </div>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
-<p>In some situation where we don’t want to create a copy of object, using inplace version of functions can reduce the memory usage.</p>
+<ol class="arabic simple">
+<li><p>You can use <strong>Tensor.shape()</strong> to get the shape of Tensor.</p></li>
+<li><p>In some situation where we don’t want to create a copy of object, using inplace version of functions can reduce the memory usage.</p></li>
+</ol>
 </div>
 <p>In Cytnx, the permute operation does not moving the elements in the memory immediately. Only the meta-data that is seen by user are changed.
 This can avoid the redudant moving of elements. Note that this approach is also taken in <a class="reference external" href="https://numpy.org/doc/1.18/reference/generated/numpy.array.html">numpy.array</a> and <a class="reference external" href="https://pytorch.org/docs/stable/tensors.html">torch.tensor</a> .</p>
