@@ -1,9 +1,9 @@
-4. Tensor arithmetic
+Tensor arithmetic
 ----------------------
 
 In cytnx, Tensor can performs arithmetic operation such as **+, -, x, /, +=, -=, *=, /=** with another Tensor or scalalr, just like the standard way you do in python. 
 
-4.1 Type promotion
+Type promotion
 ********************
 Arithmetic operation in Cytnx follows the similar pattern of type promotion as standard C++/python. 
 When Tensor performs arithmetic operation with another Tensor or scalar, the output Tensor will have the dtype as the one that has stronger type. 
@@ -23,18 +23,18 @@ The Types order from strong to weak as:
     * Type.Bool 
 
 
-4.2 Tensor-Tensor arithmetic
+Tensor-Tensor arithmetic
 ****************************
 Tensor can performs arithmetic operation with another Tensor with the same shape. 
 
 
-4.3 Tensor-scalar arithmetic
+Tensor-scalar arithmetic
 *****************************
 Tensor can also performs arithmetic operation with scalar. 
 
 
 
-4.4 Equivalent APIs
+Equivalent APIs
 *********************
 Following are some equivalent APIs that  are also provided in Cytnx for users who are familiar and coming from pytorch and other librariy communities. 
 
@@ -53,3 +53,4 @@ Following are some equivalent APIs that  are also provided in Cytnx for users wh
 
 
 .. toctree::
+    :numbered:

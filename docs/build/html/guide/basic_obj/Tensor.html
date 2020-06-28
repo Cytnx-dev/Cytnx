@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
-    <title>Tensor &#8212; Cytnx  documentation</title>
+    <title>1. Tensor &#8212; Cytnx  documentation</title>
 
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -23,7 +23,7 @@
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="1. Create a Tensor" href="Tensor_1_creat.html" />
+    <link rel="next" title="1.1. Create a Tensor" href="Tensor_1_creat.html" />
     <link rel="prev" title="Basic objects" href="../basic_obj.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
@@ -48,11 +48,11 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../../Guide.html">User Guide</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../basic_obj.html">Basic objects</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Tensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_creat.html">1. Create a Tensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html">2. Manipulate Tensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html">3. Access elements</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_4_arithmetic.html">4. Tensor arithmetic</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">1. Tensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_creat.html">1.1. Create a Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html">1.2. Manipulate Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html">1.3. Access elements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_4_arithmetic.html">1.4. Tensor arithmetic</a></li>
 </ul>
 </li>
 </ul>
@@ -136,15 +136,15 @@
                          accesskey="U"
                          class="active"
                        >Basic objects</a></li>
-            <li class="breadcrumb-item active">Tensor</li>
+            <li class="breadcrumb-item active"><span class="section-number">1. </span>Tensor</li>
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
                <a href="../basic_obj.html" title="Previous Chapter: Basic objects" class="btn btn-primary" role="botton" accesskey="P">
                    &laquo; Basic objects
                </a>
-               <a href="Tensor_1_creat.html" title="Next Chapter: 1. Create a Tensor" class="btn btn-primary" role="botton" accesskey="N">
-                   1. Create a Tensor &raquo;
+               <a href="Tensor_1_creat.html" title="Next Chapter: 1.1. Create a Tensor" class="btn btn-primary" role="botton" accesskey="N">
+                   1.1. Create a Tensor &raquo;
                </a>
            </div>
        </div>
@@ -167,11 +167,11 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../../Guide.html">User Guide</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../basic_obj.html">Basic objects</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Tensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_creat.html">1. Create a Tensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html">2. Manipulate Tensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html">3. Access elements</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_4_arithmetic.html">4. Tensor arithmetic</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">1. Tensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_creat.html">1.1. Create a Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html">1.2. Manipulate Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html">1.3. Access elements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_4_arithmetic.html">1.4. Tensor arithmetic</a></li>
 </ul>
 </li>
 </ul>
@@ -207,7 +207,7 @@
                         title="previous chapter">Basic objects</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="Tensor_1_creat.html"
-                        title="next chapter">1. Create a Tensor</a></p>
+                        title="next chapter"><span class="section-number">1.1. </span>Create a Tensor</a></p>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../../search.html" method="get">
       <input type="text" name="q" class="form-control" placeholder="Search..." />
@@ -230,16 +230,16 @@
           <div class="body">
             
   <div class="section" id="tensor">
-<h1>Tensor<a class="headerlink" href="#tensor" title="Permalink to this headline">¶</a></h1>
+<h1><span class="section-number">1. </span>Tensor<a class="headerlink" href="#tensor" title="Permalink to this headline">¶</a></h1>
 <p>Tensor is the basic building block of Cytnx.
 In fact, the API of Tensor in cytnx is very similar to <a class="reference external" href="https://pytorch.org/docs/stable/tensors.html">torch.tensor</a> (so as numpy.array, since they are also similar to each other)</p>
 <p>Let’s take a look on how to use it:</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Tensor_1_creat.html">1. Create a Tensor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Tensor_2_manip.html">2. Manipulate Tensor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Tensor_3_access.html">3. Access elements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Tensor_4_arithmetic.html">4. Tensor arithmetic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tensor_1_creat.html">1.1. Create a Tensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tensor_2_manip.html">1.2. Manipulate Tensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tensor_3_access.html">1.3. Access elements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tensor_4_arithmetic.html">1.4. Tensor arithmetic</a></li>
 </ul>
 </div>
 </div>

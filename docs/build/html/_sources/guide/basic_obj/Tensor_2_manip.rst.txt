@@ -1,8 +1,8 @@
-2. Manipulate Tensor
+Manipulate Tensor
 ----------------------
 Next, let's look at the operations that are commonly used to manipulate Tensor object. 
 
-2.1 reshape 
+reshape 
 **********************
 Suppose we want to create a rank-3 Tensor with shape=(2,3,4), starting with a rank-1 Tensor with shape=(24) initialized using **arange()**. 
 
@@ -108,7 +108,7 @@ Thus we see that using underscore version modify the instance itself.
 
     You can use **Tensor.shape()** to get the shape of Tensor.
 
-2.1 permute
+permute
 **********************
 Now, let's again use the same rank-3  with shape=(2,3,4) as example. This time we want to do permute on the Tensor to exchange axes from indices (0,1,2)->(1,2,0)
 
@@ -265,3 +265,4 @@ Output>>
 
 
 .. toctree::
+    :numbered:

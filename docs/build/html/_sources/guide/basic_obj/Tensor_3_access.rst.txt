@@ -1,8 +1,8 @@
-3. Access elements
+Access elements
 ----------------------
 Next, let's take a look on how we can access elements inside a Tensor.
 
-3.1 Get elements 
+Get elements 
 ***************************
 Just like python list/numpy.array/torch.tensor, on the python side, we can simply use *slice* to get the elements. See `This page <https://numpy.org/doc/stable/reference/arrays.indexing.html>`_ .
 In c++, cytnx take this approach from python and bring it to our C++ API. You can simply use the **slice string** to access elements. 
@@ -121,7 +121,7 @@ Output>>
 
 
 
-3.2 Set elememts
+Set elememts
 ***************************
 Setting elements is pretty much the same as numpy.array/torch.tensor. You can assign a Tensor to a specific slice, our set all the elements in that slice to be the same value. 
 
@@ -210,7 +210,7 @@ Output>>
 
 
 
-3.3 Low-level API (C++ only) 
+Low-level API (C++ only) 
 *******************************
 On C++ side, cytnx provide lower-level APIs with slightly smaller overhead for getting elements. 
 These low-level APIs require using with **Accessor** object. 
@@ -281,3 +281,4 @@ In the following, let's see how it can be used to get/set the elements from/to T
 
 
 .. toctree::
+    :numbered:

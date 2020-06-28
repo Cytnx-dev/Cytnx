@@ -1,4 +1,4 @@
-1. Create a Tensor
+Create a Tensor
 -------------------
 Just like `numpy.array <https://numpy.org/doc/1.18/reference/generated/numpy.array.html>`_ / `torch.tensor <https://pytorch.org/docs/stable/tensors.html>`_, Tensor is generally created using generator such as **zero()**, **arange()**, **ones()**.
 
@@ -51,7 +51,7 @@ Other options such as **arange()** (similar as np.arange), and **ones** (similar
 :Tips: In C++, you could make use of *auto* to simplify your code! 
 
 
-1.1. Tensor with different dtype and device 
+Tensor with different dtype and device 
 *******************************************
 By default, the Tensor will be created with *double* type (or *float* in python) on CPU if there is no additional arguments provided upon creating the Tensor. 
 
@@ -126,7 +126,7 @@ For devices, Cytnx currently supports
 | CUDA-enabled GPU | Device.cuda+x        |
 +------------------+----------------------+
 
-1.2 Type conversion 
+Type conversion 
 **********************
 It is possible to convert a Tensor to a different data type. To convert the data type, simply use **Tensor.astype()**.
 
@@ -167,7 +167,7 @@ For example, consider a Tensor *A* with **dtype=Type.Int64**, and we want to con
     2. Complex data type cannot directly convert to real data type. Use Tensor.real()/Tensor.imag() if you want to get the real/imag part.
 
 
-1.3 Transfer btwn devices
+Transfer btwn devices
 ***************************
 To move a Tensor between different devices is very easy. We can use **Tensor.to()** to move the Tensor to a different device.
 
@@ -217,4 +217,4 @@ For example, let's create a Tensor on cpu and transfer to GPU with gpu-id=0.
     You can use **Tensor.device()** to get the current device-id (cpu = -1), where as **Tensor.device_str()** returns the device name. 
 
 .. toctree::
-
+    :numbered:
