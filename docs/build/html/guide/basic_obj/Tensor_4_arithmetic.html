@@ -233,8 +233,54 @@
             
   <div class="section" id="tensor-arithmetic">
 <h1>4. Tensor arithmetic<a class="headerlink" href="#tensor-arithmetic" title="Permalink to this headline">¶</a></h1>
-<p>Next, let’s take a look on how we can performs arithmetic operation to Tensors.</p>
+<p>In cytnx, Tensor can performs arithmetic operation such as <strong>+, -, x, /, +=, -=, *=, /=</strong> with another Tensor or scalalr, just like the standard way you do in python.</p>
+<div class="section" id="type-promotion">
+<h2>4.1 Type promotion<a class="headerlink" href="#type-promotion" title="Permalink to this headline">¶</a></h2>
+<p>Arithmetic operation in Cytnx follows the similar pattern of type promotion as standard C++/python.
+When Tensor performs arithmetic operation with another Tensor or scalar, the output Tensor will have the dtype as the one that has stronger type.</p>
+<p>The Types order from strong to weak as:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Type.ComplexDouble</p></li>
+<li><p>Type.ComplexFloat</p></li>
+<li><p>Type.Double</p></li>
+<li><p>Type.Float</p></li>
+<li><p>Type.Int64</p></li>
+<li><p>Type.Uint64</p></li>
+<li><p>Type.Int32</p></li>
+<li><p>Type.Uint32</p></li>
+<li><p>Type.Int16</p></li>
+<li><p>Type.Uint16</p></li>
+<li><p>Type.Bool</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="tensor-tensor-arithmetic">
+<h2>4.2 Tensor-Tensor arithmetic<a class="headerlink" href="#tensor-tensor-arithmetic" title="Permalink to this headline">¶</a></h2>
+<p>Tensor can performs arithmetic operation with another Tensor with the same shape.</p>
+</div>
+<div class="section" id="tensor-scalar-arithmetic">
+<h2>4.3 Tensor-scalar arithmetic<a class="headerlink" href="#tensor-scalar-arithmetic" title="Permalink to this headline">¶</a></h2>
+<p>Tensor can also performs arithmetic operation with scalar.</p>
+</div>
+<div class="section" id="equivalent-apis">
+<h2>4.4 Equivalent APIs<a class="headerlink" href="#equivalent-apis" title="Permalink to this headline">¶</a></h2>
+<p>Following are some equivalent APIs that  are also provided in Cytnx for users who are familiar and coming from pytorch and other librariy communities.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>1. All the arithmetic operation function such as <strong>Add,Sub,Mul,Div…</strong>, as well as linear algebra functions all start with capital characters.
+While in pytorch, they are all lower-case.
+2. All the arithmetic operations with a underscore (such as <strong>Add_, Sub_, Mul_, Div_</strong>)are the inplace version that modify the current instance.</p>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<ol class="arabic simple">
+<li><p>ComplexDouble/ComplexFloat/Double/Float, these 4 types internally calls BLAS/cuBLAS/MKL ?axpy when the inputs are in the same types.</p></li>
+<li><p>Arithmetic between other types (Including different types) are accelerated with OpenMP on CPU. For GPU, custom kernels are used to perform operation.</p></li>
+</ol>
+</div>
 <div class="toctree-wrapper compound">
+</div>
 </div>
 </div>
 
