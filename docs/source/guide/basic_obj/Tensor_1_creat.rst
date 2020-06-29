@@ -217,4 +217,3 @@ For example, let's create a Tensor on cpu and transfer to GPU with gpu-id=0.
     You can use **Tensor.device()** to get the current device-id (cpu = -1), where as **Tensor.device_str()** returns the device name. 
 
 .. toctree::
-    :numbered:

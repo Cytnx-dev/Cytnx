@@ -265,4 +265,3 @@ Output>>
 
 
 .. toctree::
-    :numbered:

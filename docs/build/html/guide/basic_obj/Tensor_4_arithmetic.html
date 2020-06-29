@@ -255,22 +255,184 @@ When Tensor performs arithmetic operation with another Tensor or scalar, the out
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="tensor-tensor-arithmetic">
-<h2><span class="section-number">1.4.2. </span>Tensor-Tensor arithmetic<a class="headerlink" href="#tensor-tensor-arithmetic" title="Permalink to this headline">¶</a></h2>
-<p>Tensor can performs arithmetic operation with another Tensor with the same shape.</p>
-</div>
 <div class="section" id="tensor-scalar-arithmetic">
-<h2><span class="section-number">1.4.3. </span>Tensor-scalar arithmetic<a class="headerlink" href="#tensor-scalar-arithmetic" title="Permalink to this headline">¶</a></h2>
-<p>Tensor can also performs arithmetic operation with scalar.</p>
+<h2><span class="section-number">1.4.2. </span>Tensor-scalar arithmetic<a class="headerlink" href="#tensor-scalar-arithmetic" title="Permalink to this headline">¶</a></h2>
+<p>Tensor can also performs arithmetic operation with scalar.
+For example:</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span>    <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+
+    <span class="n">B</span> <span class="o">=</span> <span class="n">A</span> <span class="o">+</span> <span class="mi">4</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+
+    <span class="n">C</span> <span class="o">=</span> <span class="n">A</span> <span class="o">-</span> <span class="mi">7</span><span class="n">j</span> <span class="c1"># type promotion</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>In C++:</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span>    <span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">});</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">A</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+    <span class="k">auto</span> <span class="n">B</span> <span class="o">=</span> <span class="n">A</span> <span class="o">+</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">B</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+    <span class="k">auto</span> <span class="n">C</span> <span class="o">=</span> <span class="n">A</span> <span class="o">-</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">7</span><span class="p">);</span> <span class="c1">//type promotion</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">C</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output&gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 12
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4)
+[[1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
+ [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
+ [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]]
+
+
+Total elem: 12
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4)
+[[5.00000e+00 5.00000e+00 5.00000e+00 5.00000e+00 ]
+ [5.00000e+00 5.00000e+00 5.00000e+00 5.00000e+00 ]
+ [5.00000e+00 5.00000e+00 5.00000e+00 5.00000e+00 ]]
+
+
+Total elem: 12
+type  : Complex Double (Complex Float64)
+cytnx device: CPU
+Shape : (3,4)
+[[1.00000e+00-7.00000e+00j 1.00000e+00-7.00000e+00j 1.00000e+00-7.00000e+00j 1.00000e+00-7.00000e+00j ]
+ [1.00000e+00-7.00000e+00j 1.00000e+00-7.00000e+00j 1.00000e+00-7.00000e+00j 1.00000e+00-7.00000e+00j ]
+ [1.00000e+00-7.00000e+00j 1.00000e+00-7.00000e+00j 1.00000e+00-7.00000e+00j 1.00000e+00-7.00000e+00j ]]
+</pre></div>
 </div>
-<div class="section" id="equivalent-apis">
-<h2><span class="section-number">1.4.4. </span>Equivalent APIs<a class="headerlink" href="#equivalent-apis" title="Permalink to this headline">¶</a></h2>
-<p>Following are some equivalent APIs that  are also provided in Cytnx for users who are familiar and coming from pytorch and other librariy communities.</p>
+</div>
+<div class="section" id="tensor-tensor-arithmetic">
+<h2><span class="section-number">1.4.3. </span>Tensor-Tensor arithmetic<a class="headerlink" href="#tensor-tensor-arithmetic" title="Permalink to this headline">¶</a></h2>
+<p>Tensor can performs arithmetic operation with another Tensor with the same shape.
+For example:</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span>    <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+
+    <span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span><span class="o">*</span><span class="mi">4</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+
+    <span class="n">C</span> <span class="o">=</span> <span class="n">A</span> <span class="o">*</span> <span class="n">B</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>In C++:</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span>    <span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">A</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+    <span class="k">auto</span> <span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="p">.</span><span class="n">ones</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">})</span><span class="o">*</span><span class="mi">4</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">B</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+    <span class="k">auto</span> <span class="n">C</span> <span class="o">=</span> <span class="n">A</span> <span class="o">*</span> <span class="n">B</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">C</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output&gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 12
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4)
+[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 ]
+ [4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 ]
+ [8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]]
+
+
+Total elem: 12
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4)
+[[4.00000e+00 4.00000e+00 4.00000e+00 4.00000e+00 ]
+ [4.00000e+00 4.00000e+00 4.00000e+00 4.00000e+00 ]
+ [4.00000e+00 4.00000e+00 4.00000e+00 4.00000e+00 ]]
+
+
+Total elem: 12
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4)
+[[0.00000e+00 4.00000e+00 8.00000e+00 1.20000e+01 ]
+ [1.60000e+01 2.00000e+01 2.40000e+01 2.80000e+01 ]
+ [3.20000e+01 3.60000e+01 4.00000e+01 4.40000e+01 ]]
+</pre></div>
+</div>
+</div>
+<div class="section" id="equivalent-apis-c-only">
+<h2><span class="section-number">1.4.4. </span>Equivalent APIs (C++ only)<a class="headerlink" href="#equivalent-apis-c-only" title="Permalink to this headline">¶</a></h2>
+<p>Cytnx also provides some equivelant APIs for users who are familiar and coming from pytorch and other library communities.
+For example, suppose we want to do + operation, there are two other ways: Use <strong>Tensor.Add()/Tensor.Add_()</strong> and <strong>linalg.Add()</strong></p>
+<ul class="simple">
+<li><p>In C++:</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span>    <span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">})</span>
+    <span class="k">auto</span> <span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+
+    <span class="c1">// these two are equivalent to C = A+B;</span>
+    <span class="k">auto</span> <span class="n">C</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">B</span><span class="p">);</span>
+    <span class="k">auto</span> <span class="n">D</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">linalg</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">);</span>
+
+    <span class="c1">// this is equivalent to A+=B;</span>
+    <span class="n">A</span><span class="p">.</span><span class="n">Add_</span><span class="p">(</span><span class="n">B</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>1. All the arithmetic operation function such as <strong>Add,Sub,Mul,Div…</strong>, as well as linear algebra functions all start with capital characters.
-While in pytorch, they are all lower-case.
-2. All the arithmetic operations with a underscore (such as <strong>Add_, Sub_, Mul_, Div_</strong>)are the inplace version that modify the current instance.</p>
+<ol class="arabic simple">
+<li><p>All the arithmetic operation function such as <strong>Add,Sub,Mul,Div…</strong>, as well as linear algebra functions all start with capital characters. While in pytorch, they are all lower-case.</p></li>
+<li><p>All the arithmetic operations with a underscore (such as <strong>Add_, Sub_, Mul_, Div_</strong>)are the inplace version that modify the current instance.</p></li>
+</ol>
 </div>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
