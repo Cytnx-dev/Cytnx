@@ -17,4 +17,5 @@ In the following, let's see how to use it:
     Storage_1_create.rst
     Storage_2_access.rst
     Storage_3_expand.rst
-    Storage_4_c++.rst
+    Storage_4_vec.rst
+    Storage_5_io.rst

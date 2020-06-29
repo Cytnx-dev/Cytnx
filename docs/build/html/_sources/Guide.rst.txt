@@ -46,6 +46,7 @@ Continue reading:
     :maxdepth: 3
     :numbered:
 
+    guide/behavior.rst
     guide/basic_obj/Tensor.rst
     guide/basic_obj/Storage.rst
     guide/linalg.rst

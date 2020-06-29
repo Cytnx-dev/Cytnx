@@ -15,4 +15,4 @@ Let's take a look on how to use it:
     Tensor_4_arithmetic.rst
     Tensor_5_numpy.rst
     Tensor_6_app.rst
-
+    Tensor_7_io.rst

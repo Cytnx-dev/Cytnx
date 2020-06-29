@@ -7,3 +7,5 @@ B = A.to(cytnx.Device.cuda+0);
 print(A)
 print(B)
 
+A.to_(cytnx.Device.cuda)
+print(A)

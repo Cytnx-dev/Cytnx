@@ -179,9 +179,13 @@ For example, let's create a Tensor on cpu and transfer to GPU with gpu-id=0.
     :linenos:
 
     A = cytnx.ones([2,2]) #on CPU
-    print(A)
-    A.to(cytnx.Device.cuda+0)
-    print(A)
+    B = A.to(cytnx.Device.cuda+0)
+    print(A) # on CPU
+    print(B) # on GPU
+
+    A.to_(cytnx.Device.cuda) 
+    print(A) # on GPU
+
 
 * In c++:
 
@@ -189,9 +193,13 @@ For example, let's create a Tensor on cpu and transfer to GPU with gpu-id=0.
     :linenos:
 
     auto A = cytnx::ones([2,2]); //on CPU
-    cout << A << endl;
-    A.to(cytnx.Device.cuda+0);
-    cout << A << endl;
+    auto B = A.to(cytnx::Device::cuda+0);
+    cout << A << endl; // on CPU
+    cout << B << endl; // on GPU
+    
+    A.to_(cytnx::Device::cuda);
+    cout << A << endl; // on GPU
+
 
 >> Output:
 
@@ -211,9 +219,19 @@ For example, let's create a Tensor on cpu and transfer to GPU with gpu-id=0.
     [[1.00000e+00 1.00000e+00 ]
      [1.00000e+00 1.00000e+00 ]]
 
+    Total elem: 4
+    type  : Double (Float64)
+    cytnx device: CUDA/GPU-id:0
+    Shape : (2,2)
+    [[1.00000e+00 1.00000e+00 ]
+     [1.00000e+00 1.00000e+00 ]]
+
 
 .. Note::
     
-    You can use **Tensor.device()** to get the current device-id (cpu = -1), where as **Tensor.device_str()** returns the device name. 
+    1. You can use **Tensor.device()** to get the current device-id (cpu = -1), where as **Tensor.device_str()** returns the device name. 
+
+    2. **Tensor.to()** will return a copy on a target device. If you want to move the current Tensor to device, use **Tensor.to_()** (with underscore). 
+
 
 .. toctree::

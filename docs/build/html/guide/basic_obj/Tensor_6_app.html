@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
-    <title>1.6. Append elements &#8212; Cytnx  documentation</title>
+    <title>2.6. Append elements &#8212; Cytnx  documentation</title>
 
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -23,8 +23,8 @@
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="2. Storage" href="Storage.html" />
-    <link rel="prev" title="1.5. To/From numpy.array" href="Tensor_5_numpy.html" /> 
+    <link rel="next" title="2.7. Save/Load" href="Tensor_7_io.html" />
+    <link rel="prev" title="2.5. To/From numpy.array" href="Tensor_5_numpy.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -47,70 +47,88 @@
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../../Guide.html">User Guide</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="Tensor.html">1. Tensor</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="Tensor_1_create.html">1.1. Create a Tensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-with-different-dtype-and-device">1.1.1. Tensor with different dtype and device</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#type-conversion">1.1.2. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-btwn-devices">1.1.3. Transfer btwn devices</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">1.2. Manipulate Tensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#reshape">1.2.1. reshape</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#permute">1.2.2. permute</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_3_access.html">1.3. Access elements</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#get-elements">1.3.1. Get elements</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#set-elememts">1.3.2. Set elememts</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#low-level-api-c-only">1.3.3. Low-level API (C++ only)</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_4_arithmetic.html">1.4. Tensor arithmetic</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_4_arithmetic.html#type-promotion">1.4.1. Type promotion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_4_arithmetic.html#tensor-scalar-arithmetic">1.4.2. Tensor-scalar arithmetic</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_4_arithmetic.html#tensor-tensor-arithmetic">1.4.3. Tensor-Tensor arithmetic</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_4_arithmetic.html#equivalent-apis-c-only">1.4.4. Equivalent APIs (C++ only)</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_5_numpy.html">1.5. To/From numpy.array</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">1.6. Append elements</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="../behavior.html">1. Objects behavior</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../behavior.html#eveything-is-reference">1.1. Eveything is reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../behavior.html#clone">1.2. clone</a><ul class="simple">
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="Storage.html">2. Storage</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Storage_1_create.html">2.1. Create a Storage</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#type-conversion">2.1.1. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#transfer-btwn-devices">2.1.2. Transfer btwn devices</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="Tensor.html">2. Tensor</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Tensor_1_create.html">2.1. Create a Tensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-with-different-dtype-and-device">2.1.1. Tensor with different dtype and device</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#type-conversion">2.1.2. Type conversion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-btwn-devices">2.1.3. Transfer btwn devices</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Storage_2_access.html">2.2. Access elements</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">2.2. Manipulate Tensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#reshape">2.2.1. reshape</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#permute">2.2.2. permute</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Storage_3_expand.html">2.3. Increase Length</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#append">2.3.1. Append</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#resize">2.3.2. Resize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Tensor_3_access.html">2.3. Access elements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#get-elements">2.3.1. Get elements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#set-elememts">2.3.2. Set elememts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#low-level-api-c-only">2.3.3. Low-level API (C++ only)</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Storage_4_c++.html">2.4. C++ only APIs</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Storage_4_c++.html#to-from-vector">2.4.1. to/from vector</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Storage_4_c++.html#acquired-raw-pointer">2.4.2. Acquired raw pointer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Tensor_4_arithmetic.html">2.4. Tensor arithmetic</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_4_arithmetic.html#type-promotion">2.4.1. Type promotion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_4_arithmetic.html#tensor-scalar-arithmetic">2.4.2. Tensor-scalar arithmetic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_4_arithmetic.html#tensor-tensor-arithmetic">2.4.3. Tensor-Tensor arithmetic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_4_arithmetic.html#equivalent-apis-c-only">2.4.4. Equivalent APIs (C++ only)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Tensor_5_numpy.html">2.5. To/From numpy.array</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">2.6. Append elements</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Tensor_7_io.html">2.7. Save/Load</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_7_io.html#save-a-tensor">2.7.1. Save a Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_7_io.html#load-a-tensor">2.7.2. Load a Tensor</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../linalg.html">3. Linear algebra</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="Storage.html">3. Storage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Storage_1_create.html">3.1. Create a Storage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#type-conversion">3.1.1. Type conversion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#transfer-btwn-devices">3.1.2. Transfer btwn devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#get-storage-of-tensor">3.1.3. Get Storage of Tensor</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../itersol.html">4. Iterative solver</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="Storage_2_access.html">3.2. Access elements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Storage_2_access.html#get-set-element">3.2.1. Get/Set element</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_2_access.html#get-raw-pointer-c-only">3.2.2. Get raw-pointer (C++ only)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../cyx.html">5. Cytnx extensions</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="Storage_3_expand.html">3.3. Increase size</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#append">3.3.1. Append</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#resize">3.3.2. Resize</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">6. linalg extension</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="Storage_4_vec.html">3.4. To c++.vector</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Storage_5_io.html">3.5. Save/Load</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#save-a-storage">3.5.1. Save a Storage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#load-a-storage">3.5.2. Load a Storage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../linalg.html">4. Linear algebra</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../itersol.html">5. Iterative solver</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cyx.html">6. Cytnx extensions</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">7. linalg extension</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -182,16 +200,16 @@
                        
                          accesskey="U"
                          class="active"
-                       ><span class="section-number">1. </span>Tensor</a></li>
-            <li class="breadcrumb-item active"><span class="section-number">1.6. </span>Append elements</li>
+                       ><span class="section-number">2. </span>Tensor</a></li>
+            <li class="breadcrumb-item active"><span class="section-number">2.6. </span>Append elements</li>
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-               <a href="Tensor_5_numpy.html" title="Previous Chapter: 1.5. To/From numpy.array" class="btn btn-primary" role="botton" accesskey="P">
-                   &laquo; 1.5. To/From ...
+               <a href="Tensor_5_numpy.html" title="Previous Chapter: 2.5. To/From numpy.array" class="btn btn-primary" role="botton" accesskey="P">
+                   &laquo; 2.5. To/From ...
                </a>
-               <a href="Storage.html" title="Next Chapter: 2. Storage" class="btn btn-primary" role="botton" accesskey="N">
-                   2. Storage &raquo;
+               <a href="Tensor_7_io.html" title="Next Chapter: 2.7. Save/Load" class="btn btn-primary" role="botton" accesskey="N">
+                   2.7. Save/Load &raquo;
                </a>
            </div>
        </div>
@@ -213,70 +231,88 @@
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../../Guide.html">User Guide</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="Tensor.html">1. Tensor</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="Tensor_1_create.html">1.1. Create a Tensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-with-different-dtype-and-device">1.1.1. Tensor with different dtype and device</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#type-conversion">1.1.2. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-btwn-devices">1.1.3. Transfer btwn devices</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">1.2. Manipulate Tensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#reshape">1.2.1. reshape</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#permute">1.2.2. permute</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_3_access.html">1.3. Access elements</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#get-elements">1.3.1. Get elements</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#set-elememts">1.3.2. Set elememts</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#low-level-api-c-only">1.3.3. Low-level API (C++ only)</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_4_arithmetic.html">1.4. Tensor arithmetic</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_4_arithmetic.html#type-promotion">1.4.1. Type promotion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_4_arithmetic.html#tensor-scalar-arithmetic">1.4.2. Tensor-scalar arithmetic</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_4_arithmetic.html#tensor-tensor-arithmetic">1.4.3. Tensor-Tensor arithmetic</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_4_arithmetic.html#equivalent-apis-c-only">1.4.4. Equivalent APIs (C++ only)</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_5_numpy.html">1.5. To/From numpy.array</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">1.6. Append elements</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="../behavior.html">1. Objects behavior</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../behavior.html#eveything-is-reference">1.1. Eveything is reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../behavior.html#clone">1.2. clone</a><ul class="simple">
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="Storage.html">2. Storage</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Storage_1_create.html">2.1. Create a Storage</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#type-conversion">2.1.1. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#transfer-btwn-devices">2.1.2. Transfer btwn devices</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="Tensor.html">2. Tensor</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Tensor_1_create.html">2.1. Create a Tensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-with-different-dtype-and-device">2.1.1. Tensor with different dtype and device</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#type-conversion">2.1.2. Type conversion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-btwn-devices">2.1.3. Transfer btwn devices</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Storage_2_access.html">2.2. Access elements</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">2.2. Manipulate Tensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#reshape">2.2.1. reshape</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#permute">2.2.2. permute</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Storage_3_expand.html">2.3. Increase Length</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#append">2.3.1. Append</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#resize">2.3.2. Resize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Tensor_3_access.html">2.3. Access elements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#get-elements">2.3.1. Get elements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#set-elememts">2.3.2. Set elememts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#low-level-api-c-only">2.3.3. Low-level API (C++ only)</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Storage_4_c++.html">2.4. C++ only APIs</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Storage_4_c++.html#to-from-vector">2.4.1. to/from vector</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Storage_4_c++.html#acquired-raw-pointer">2.4.2. Acquired raw pointer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Tensor_4_arithmetic.html">2.4. Tensor arithmetic</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_4_arithmetic.html#type-promotion">2.4.1. Type promotion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_4_arithmetic.html#tensor-scalar-arithmetic">2.4.2. Tensor-scalar arithmetic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_4_arithmetic.html#tensor-tensor-arithmetic">2.4.3. Tensor-Tensor arithmetic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_4_arithmetic.html#equivalent-apis-c-only">2.4.4. Equivalent APIs (C++ only)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Tensor_5_numpy.html">2.5. To/From numpy.array</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">2.6. Append elements</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Tensor_7_io.html">2.7. Save/Load</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_7_io.html#save-a-tensor">2.7.1. Save a Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_7_io.html#load-a-tensor">2.7.2. Load a Tensor</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../linalg.html">3. Linear algebra</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="Storage.html">3. Storage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Storage_1_create.html">3.1. Create a Storage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#type-conversion">3.1.1. Type conversion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#transfer-btwn-devices">3.1.2. Transfer btwn devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#get-storage-of-tensor">3.1.3. Get Storage of Tensor</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../itersol.html">4. Iterative solver</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="Storage_2_access.html">3.2. Access elements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Storage_2_access.html#get-set-element">3.2.1. Get/Set element</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_2_access.html#get-raw-pointer-c-only">3.2.2. Get raw-pointer (C++ only)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../cyx.html">5. Cytnx extensions</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="Storage_3_expand.html">3.3. Increase size</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#append">3.3.1. Append</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#resize">3.3.2. Resize</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">6. linalg extension</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="Storage_4_vec.html">3.4. To c++.vector</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Storage_5_io.html">3.5. Save/Load</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#save-a-storage">3.5.1. Save a Storage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#load-a-storage">3.5.2. Load a Storage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../linalg.html">4. Linear algebra</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../itersol.html">5. Iterative solver</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cyx.html">6. Cytnx extensions</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">7. linalg extension</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -298,10 +334,10 @@
           
   <h4>Previous topic</h4>
   <p class="topless"><a href="Tensor_5_numpy.html"
-                        title="previous chapter"><span class="section-number">1.5. </span>To/From numpy.array</a></p>
+                        title="previous chapter"><span class="section-number">2.5. </span>To/From numpy.array</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="Storage.html"
-                        title="next chapter"><span class="section-number">2. </span>Storage</a></p>
+  <p class="topless"><a href="Tensor_7_io.html"
+                        title="next chapter"><span class="section-number">2.7. </span>Save/Load</a></p>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../../search.html" method="get">
       <input type="text" name="q" class="form-control" placeholder="Search..." />
@@ -324,7 +360,7 @@
           <div class="body">
             
   <div class="section" id="append-elements">
-<h1><span class="section-number">1.6. </span>Append elements<a class="headerlink" href="#append-elements" title="Permalink to this headline">¶</a></h1>
+<h1><span class="section-number">2.6. </span>Append elements<a class="headerlink" href="#append-elements" title="Permalink to this headline">¶</a></h1>
 <p>The size of Tensor can be expanded using <strong>Tensor.append</strong>.</p>
 <p>One can append a scalar in to a rank-1 Tensor.
 For example:</p>
