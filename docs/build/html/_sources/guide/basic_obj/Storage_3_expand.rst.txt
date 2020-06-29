@@ -49,7 +49,36 @@ Output>>
 
 Resize
 ********
+Equvalent to c++ *vector.resize*, we can do the same thing in cytnx.
 
+* In python:
+
+.. code-block:: python
+    :linenos:
+
+    A = cytnx.Storage(4);
+    print(A.size());
+
+    A.resize(5);
+    print(A.size());
+
+* In c++:
+
+.. code-block:: c++
+    :linenos:
+
+    auto A = cytnx::Storage(4);
+    cout << A.size() << endl;
+
+    A.resize(5);    
+    cout << A.size() << endl;
+
+Output>>
+
+.. code-block:: text
+
+    4
+    5
 
 .. Note::
     

@@ -19,7 +19,7 @@ To create a Storage, with dtype=Type.Double on cpu,
 .. code-block:: c++
     :linenos:
 
-    auto A = cytnx::Storage(10,cytnx::Type::Double,cytnx::Device::cpu);
+    auto A = cytnx::Storage(10,cytnx::Type.Double,cytnx::Device.cpu);
     A.set_zeros();
     
     cout << A << endl;
@@ -73,7 +73,7 @@ The available data types are the same as Tensor.
     auto A = cytnx::Storage(10);
     A.set_zeros();
 
-    auto B = A.astype(cytnx::Type::ComplexDouble);
+    auto B = A.astype(cytnx::Type.ComplexDouble);
 
     cout << A << endl;
     cout << B << endl;
@@ -120,11 +120,11 @@ We can also moving the storage between different devices. Just like Tensor, we c
 
     auto A = cytnx::Storage(4);
 
-    auto B = A.to(cytnx::Device::cuda);
+    auto B = A.to(cytnx::Device.cuda);
     cout << A.device_str() << endl;
     cout << B.device_str() << endl;
 
-    A.to_(cytnx::Device::cuda);
+    A.to_(cytnx::Device.cuda);
     cout << A.device_str() << endl;
 
 Output>>

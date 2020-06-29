@@ -109,7 +109,7 @@
 <li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#resize">3.3.2. Resize</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Storage_4_vec.html">3.4. To c++.vector</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="Storage_4_vec.html">3.4. From c++.vector</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Storage_5_io.html">3.5. Save/Load</a><ul>
@@ -293,7 +293,7 @@
 <li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#resize">3.3.2. Resize</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Storage_4_vec.html">3.4. To c++.vector</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="Storage_4_vec.html">3.4. From c++.vector</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Storage_5_io.html">3.5. Save/Load</a><ul>
@@ -381,7 +381,7 @@
 <div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
-4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">Storage</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Type</span><span class="o">::</span><span class="n">Double</span><span class="p">,</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Device</span><span class="o">::</span><span class="n">cpu</span><span class="p">);</span>
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">Storage</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">);</span>
 <span class="n">A</span><span class="p">.</span><span class="n">set_zeros</span><span class="p">();</span>
 
 <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">A</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
@@ -439,7 +439,7 @@ size  : 10
 7</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">Storage</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
 <span class="n">A</span><span class="p">.</span><span class="n">set_zeros</span><span class="p">();</span>
 
-<span class="k">auto</span> <span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="n">astype</span><span class="p">(</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Type</span><span class="o">::</span><span class="n">ComplexDouble</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="n">astype</span><span class="p">(</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Type</span><span class="p">.</span><span class="n">ComplexDouble</span><span class="p">);</span>
 
 <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">A</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
 <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">B</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
@@ -494,11 +494,11 @@ size  : 10
 7
 8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">Storage</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
 
-<span class="k">auto</span> <span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="n">to</span><span class="p">(</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Device</span><span class="o">::</span><span class="n">cuda</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="n">to</span><span class="p">(</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Device</span><span class="p">.</span><span class="n">cuda</span><span class="p">);</span>
 <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">A</span><span class="p">.</span><span class="n">device_str</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
 <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">B</span><span class="p">.</span><span class="n">device_str</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
 
-<span class="n">A</span><span class="p">.</span><span class="n">to_</span><span class="p">(</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Device</span><span class="o">::</span><span class="n">cuda</span><span class="p">);</span>
+<span class="n">A</span><span class="p">.</span><span class="n">to_</span><span class="p">(</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Device</span><span class="p">.</span><span class="n">cuda</span><span class="p">);</span>
 <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">A</span><span class="p">.</span><span class="n">device_str</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
 </pre></div>
 </td></tr></table></div>

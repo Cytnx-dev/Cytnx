@@ -67,7 +67,7 @@ You can create a Tensor with different data type, and/or on different devices si
 
 .. code-block:: c++
 
-    auto A = cytnx.zeros({3,4,5},cytnx::Type::Int64,cytnx::Device::cuda);
+    auto A = cytnx.zeros({3,4,5},cytnx::Type.Int64,cytnx::Device.cuda);
 
 .. Note:: 
 
@@ -147,8 +147,8 @@ For example, consider a Tensor *A* with **dtype=Type.Int64**, and we want to con
 .. code-block:: c++
     :linenos:
 
-    auto A = cytnx::ones({3,4},cytnx::Type::Int64);
-    auto B = A.astype(cytnx::Type::Double);
+    auto A = cytnx::ones({3,4},cytnx::Type.Int64);
+    auto B = A.astype(cytnx::Type.Double);
     cout << A.dtype_str() << endl;
     cout << B.dtype_str() << endl;
 
@@ -193,11 +193,11 @@ For example, let's create a Tensor on cpu and transfer to GPU with gpu-id=0.
     :linenos:
 
     auto A = cytnx::ones([2,2]); //on CPU
-    auto B = A.to(cytnx::Device::cuda+0);
+    auto B = A.to(cytnx::Device.cuda+0);
     cout << A << endl; // on CPU
     cout << B << endl; // on GPU
     
-    A.to_(cytnx::Device::cuda);
+    A.to_(cytnx::Device.cuda);
     cout << A << endl; // on GPU
 
 

@@ -24,7 +24,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="4. Linear algebra" href="../linalg.html" />
-    <link rel="prev" title="3.4. To c++.vector" href="Storage_4_vec.html" /> 
+    <link rel="prev" title="3.4. From c++.vector" href="Storage_4_vec.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -109,7 +109,7 @@
 <li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#resize">3.3.2. Resize</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Storage_4_vec.html">3.4. To c++.vector</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="Storage_4_vec.html">3.4. From c++.vector</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">3.5. Save/Load</a><ul>
@@ -205,8 +205,8 @@
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-               <a href="Storage_4_vec.html" title="Previous Chapter: 3.4. To c++.vector" class="btn btn-primary" role="botton" accesskey="P">
-                   &laquo; 3.4. To c++.vector
+               <a href="Storage_4_vec.html" title="Previous Chapter: 3.4. From c++.vector" class="btn btn-primary" role="botton" accesskey="P">
+                   &laquo; 3.4. From c++.vector
                </a>
                <a href="../linalg.html" title="Next Chapter: 4. Linear algebra" class="btn btn-primary" role="botton" accesskey="N">
                    4. Linear algebra &raquo;
@@ -293,7 +293,7 @@
 <li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#resize">3.3.2. Resize</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Storage_4_vec.html">3.4. To c++.vector</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="Storage_4_vec.html">3.4. From c++.vector</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">3.5. Save/Load</a><ul>
@@ -334,7 +334,7 @@
           
   <h4>Previous topic</h4>
   <p class="topless"><a href="Storage_4_vec.html"
-                        title="previous chapter"><span class="section-number">3.4. </span>To c++.vector</a></p>
+                        title="previous chapter"><span class="section-number">3.4. </span>From c++.vector</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="../linalg.html"
                         title="next chapter"><span class="section-number">4. </span>Linear algebra</a></p>
@@ -361,11 +361,58 @@
             
   <div class="section" id="save-load">
 <h1><span class="section-number">3.5. </span>Save/Load<a class="headerlink" href="#save-load" title="Permalink to this headline">¶</a></h1>
+<p>We can save/read Storage to/from file.</p>
 <div class="section" id="save-a-storage">
 <h2><span class="section-number">3.5.1. </span>Save a Storage<a class="headerlink" href="#save-a-storage" title="Permalink to this headline">¶</a></h2>
+<p>To save a Storage to file, simply call <strong>Storage.Save(filepath)</strong>.</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Storage</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">A</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<span class="n">A</span><span class="o">.</span><span class="n">Save</span><span class="p">(</span><span class="s2">&quot;S1&quot;</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>In c++:</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">Storage</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="n">A</span><span class="p">.</span><span class="n">fill</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+<span class="n">A</span><span class="p">.</span><span class="n">Save</span><span class="p">(</span><span class="s">&quot;S1&quot;</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<p>This will save Storage <em>A</em> to the current directory as <strong>T1.cyst</strong>, with extension <em>.cyst</em></p>
 </div>
 <div class="section" id="load-a-storage">
 <h2><span class="section-number">3.5.2. </span>Load a Storage<a class="headerlink" href="#load-a-storage" title="Permalink to this headline">¶</a></h2>
+<p>Now, let’s try to load the Storage from the file.</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">Load</span><span class="p">(</span><span class="s2">&quot;S1.cyst&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>In c++:</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">Storage</span><span class="o">::</span><span class="n">Load</span><span class="p">(</span><span class="s">&quot;S1.cyst&quot;</span><span class="p">);</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">A</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output&gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>dtype : Double (Float64)
+device: cytnx device: CPU
+size  : 4
+[ 6.00000e+00 6.00000e+00 6.00000e+00 6.00000e+00 ]
+</pre></div>
+</div>
 <div class="toctree-wrapper compound">
 </div>
 </div>
