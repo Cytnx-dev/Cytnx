@@ -26,6 +26,9 @@ Cytnx user guide and examples
     API Documentations <https://kaihsin.github.io/Cytnx/docs/html/index.html>   
     Github <https://kaihsin.github.io/Cytnx/docs/html/index.html>   
 
+.. toctree::
+    
+    Developer.rst
 
 
 Indices and tables

@@ -23,7 +23,7 @@
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="3. Linear algebra" href="../linalg.html" />
+    <link rel="next" title="2.2. Access elements" href="Storage_2_access.html" />
     <link rel="prev" title="2. Storage" href="Storage.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
@@ -81,7 +81,22 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="Storage.html">2. Storage</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">2.1. Create a Storage</a><ul class="simple">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">2.1. Create a Storage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#type-conversion">2.1.1. Type conversion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#transfer-btwn-devices">2.1.2. Transfer btwn devices</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Storage_2_access.html">2.2. Access elements</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Storage_3_expand.html">2.3. Increase Length</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#append">2.3.1. Append</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#resize">2.3.2. Resize</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Storage_4_c++.html">2.4. C++ only APIs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Storage_4_c++.html#to-from-vector">2.4.1. to/from vector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_4_c++.html#acquired-raw-pointer">2.4.2. Acquired raw pointer</a></li>
 </ul>
 </li>
 </ul>
@@ -107,6 +122,9 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">API Documentations</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">Github</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Developer.html">Developer</a></li>
 </ul>
 
                   </ul>
@@ -172,8 +190,8 @@
                <a href="Storage.html" title="Previous Chapter: 2. Storage" class="btn btn-primary" role="botton" accesskey="P">
                    &laquo; 2. Storage
                </a>
-               <a href="../linalg.html" title="Next Chapter: 3. Linear algebra" class="btn btn-primary" role="botton" accesskey="N">
-                   3. Linear algebra &raquo;
+               <a href="Storage_2_access.html" title="Next Chapter: 2.2. Access elements" class="btn btn-primary" role="botton" accesskey="N">
+                   2.2. Access elements &raquo;
                </a>
            </div>
        </div>
@@ -229,7 +247,22 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="Storage.html">2. Storage</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">2.1. Create a Storage</a><ul class="simple">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">2.1. Create a Storage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#type-conversion">2.1.1. Type conversion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#transfer-btwn-devices">2.1.2. Transfer btwn devices</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Storage_2_access.html">2.2. Access elements</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Storage_3_expand.html">2.3. Increase Length</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#append">2.3.1. Append</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#resize">2.3.2. Resize</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Storage_4_c++.html">2.4. C++ only APIs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Storage_4_c++.html#to-from-vector">2.4.1. to/from vector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_4_c++.html#acquired-raw-pointer">2.4.2. Acquired raw pointer</a></li>
 </ul>
 </li>
 </ul>
@@ -256,6 +289,9 @@
 <li class="toctree-l1"><a class="reference external" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">API Documentations</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">Github</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Developer.html">Developer</a></li>
+</ul>
 
               </div>
             
@@ -264,8 +300,8 @@
   <p class="topless"><a href="Storage.html"
                         title="previous chapter"><span class="section-number">2. </span>Storage</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../linalg.html"
-                        title="next chapter"><span class="section-number">3. </span>Linear algebra</a></p>
+  <p class="topless"><a href="Storage_2_access.html"
+                        title="next chapter"><span class="section-number">2.2. </span>Access elements</a></p>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../../search.html" method="get">
       <input type="text" name="q" class="form-control" placeholder="Search..." />
@@ -289,7 +325,109 @@
             
   <div class="section" id="create-a-storage">
 <h1><span class="section-number">2.1. </span>Create a Storage<a class="headerlink" href="#create-a-storage" title="Permalink to this headline">¶</a></h1>
+<p>The storage can be created in a similar way as in Tensor. Note that Storage does not have the concept of <em>shape</em>, and basically just like <strong>vector</strong> in C++.</p>
+<p>To create a Storage, with dtype=Type.Double on cpu,</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Storage</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">Double</span><span class="p">,</span><span class="n">device</span><span class="o">=</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">cpu</span><span class="p">)</span>
+<span class="n">A</span><span class="o">.</span><span class="n">set_zeros</span><span class="p">();</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>In c++:</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">Storage</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Type</span><span class="o">::</span><span class="n">Double</span><span class="p">,</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Device</span><span class="o">::</span><span class="n">cpu</span><span class="p">);</span>
+<span class="n">A</span><span class="p">.</span><span class="n">set_zeros</span><span class="p">();</span>
+
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">A</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output&gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>dtype : Double (Float64)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Storage by itself only allocate memory (using malloc) without initialize it’s elements.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<ol class="arabic simple">
+<li><p>Use <strong>Storage.set_zeros()</strong> or <strong>Storage.fill()</strong> if you want to set all the elements to zero or some arbitrary numbers.</p></li>
+<li><p>For complex type Storage, you can use <strong>.real()</strong> and <strong>.imag()</strong> to get the real part/imaginary part of the data.</p></li>
+</ol>
+</div>
+<div class="section" id="type-conversion">
+<h2><span class="section-number">2.1.1. </span>Type conversion<a class="headerlink" href="#type-conversion" title="Permalink to this headline">¶</a></h2>
+<p>Conversion between different data type is possible for Storage. Just like Tensor, call <strong>Storage.astype()</strong> to convert in between different data types.</p>
+<p>The available data types are the same as Tensor.</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Storage</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">A</span><span class="o">.</span><span class="n">set_zeros</span><span class="p">()</span>
+
+<span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">ComplexDouble</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>In c++:</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">Storage</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="n">A</span><span class="p">.</span><span class="n">set_zeros</span><span class="p">();</span>
+
+<span class="k">auto</span> <span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="n">astype</span><span class="p">(</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Type</span><span class="o">::</span><span class="n">ComplexDouble</span><span class="p">);</span>
+
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">A</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">B</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output &gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>dtype : Double (Float64)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+
+
+dtype : Complex Double (Complex Float64)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j  ]
+</pre></div>
+</div>
+</div>
+<div class="section" id="transfer-btwn-devices">
+<h2><span class="section-number">2.1.2. </span>Transfer btwn devices<a class="headerlink" href="#transfer-btwn-devices" title="Permalink to this headline">¶</a></h2>
+<p>We can also moving the storage between different devices. Just like Tensor, we can use <strong>Storage.to()</strong>.</p>
 <div class="toctree-wrapper compound">
+</div>
 </div>
 </div>
 

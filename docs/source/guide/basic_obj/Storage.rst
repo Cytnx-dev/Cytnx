@@ -15,4 +15,6 @@ In the following, let's see how to use it:
     :maxdepth: 1
 
     Storage_1_create.rst
-
+    Storage_2_access.rst
+    Storage_3_expand.rst
+    Storage_4_c++.rst

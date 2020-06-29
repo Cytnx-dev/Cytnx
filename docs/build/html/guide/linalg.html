@@ -24,7 +24,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="4. Iterative solver" href="itersol.html" />
-    <link rel="prev" title="2.1. Create a Storage" href="basic_obj/Storage_1_create.html" /> 
+    <link rel="prev" title="2.4. C++ only APIs" href="basic_obj/Storage_4_c++.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -81,7 +81,22 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="basic_obj/Storage.html">2. Storage</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="basic_obj/Storage_1_create.html">2.1. Create a Storage</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="basic_obj/Storage_1_create.html">2.1. Create a Storage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="basic_obj/Storage_1_create.html#type-conversion">2.1.1. Type conversion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="basic_obj/Storage_1_create.html#transfer-btwn-devices">2.1.2. Transfer btwn devices</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="basic_obj/Storage_2_access.html">2.2. Access elements</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="basic_obj/Storage_3_expand.html">2.3. Increase Length</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="basic_obj/Storage_3_expand.html#append">2.3.1. Append</a></li>
+<li class="toctree-l4"><a class="reference internal" href="basic_obj/Storage_3_expand.html#resize">2.3.2. Resize</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="basic_obj/Storage_4_c++.html">2.4. C++ only APIs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="basic_obj/Storage_4_c++.html#to-from-vector">2.4.1. to/from vector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="basic_obj/Storage_4_c++.html#acquired-raw-pointer">2.4.2. Acquired raw pointer</a></li>
 </ul>
 </li>
 </ul>
@@ -107,6 +122,9 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">API Documentations</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">Github</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Developer.html">Developer</a></li>
 </ul>
 
                   </ul>
@@ -167,8 +185,8 @@
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-               <a href="basic_obj/Storage_1_create.html" title="Previous Chapter: 2.1. Create a Storage" class="btn btn-primary" role="botton" accesskey="P">
-                   &laquo; 2.1. Create a Storage
+               <a href="basic_obj/Storage_4_c++.html" title="Previous Chapter: 2.4. C++ only APIs" class="btn btn-primary" role="botton" accesskey="P">
+                   &laquo; 2.4. C++ only APIs
                </a>
                <a href="itersol.html" title="Next Chapter: 4. Iterative solver" class="btn btn-primary" role="botton" accesskey="N">
                    4. Iterative solver &raquo;
@@ -227,7 +245,22 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="basic_obj/Storage.html">2. Storage</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="basic_obj/Storage_1_create.html">2.1. Create a Storage</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="basic_obj/Storage_1_create.html">2.1. Create a Storage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="basic_obj/Storage_1_create.html#type-conversion">2.1.1. Type conversion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="basic_obj/Storage_1_create.html#transfer-btwn-devices">2.1.2. Transfer btwn devices</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="basic_obj/Storage_2_access.html">2.2. Access elements</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="basic_obj/Storage_3_expand.html">2.3. Increase Length</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="basic_obj/Storage_3_expand.html#append">2.3.1. Append</a></li>
+<li class="toctree-l4"><a class="reference internal" href="basic_obj/Storage_3_expand.html#resize">2.3.2. Resize</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="basic_obj/Storage_4_c++.html">2.4. C++ only APIs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="basic_obj/Storage_4_c++.html#to-from-vector">2.4.1. to/from vector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="basic_obj/Storage_4_c++.html#acquired-raw-pointer">2.4.2. Acquired raw pointer</a></li>
 </ul>
 </li>
 </ul>
@@ -254,13 +287,16 @@
 <li class="toctree-l1"><a class="reference external" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">API Documentations</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">Github</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Developer.html">Developer</a></li>
+</ul>
 
               </div>
             
           
   <h4>Previous topic</h4>
-  <p class="topless"><a href="basic_obj/Storage_1_create.html"
-                        title="previous chapter"><span class="section-number">2.1. </span>Create a Storage</a></p>
+  <p class="topless"><a href="basic_obj/Storage_4_c++.html"
+                        title="previous chapter"><span class="section-number">2.4. </span>C++ only APIs</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="itersol.html"
                         title="next chapter"><span class="section-number">4. </span>Iterative solver</a></p>
