@@ -1371,7 +1371,7 @@ namespace cytnx{
             cytnx_complex128 *_out = (cytnx_complex128*)out->Mem;
             cytnx_double *_Lin   = (cytnx_double*)Lin->Mem;
             cytnx_complex128 *_Rin  = (cytnx_complex128*)Rin->Mem;
-            std::cout << _Rin[0] << std::endl;
+            //std::cout << _Rin[0] << std::endl;
 
             if(Lin->size()==1){
                 #ifdef UNI_OMP
