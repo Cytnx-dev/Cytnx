@@ -15,7 +15,7 @@
 
  
 ## Stable Version:
-[v0.5.4a-rev1](https://github.com/kaihsin/Cytnx/tree/v0.5.4a)
+[v0.5.4a-rev1](https://github.com/kaihsin/Cytnx/tree/v0.5.4a_rev1)
 
 ## Current dev Version:
     v0.5.5
