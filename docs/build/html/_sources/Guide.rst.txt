@@ -44,8 +44,10 @@ Continue reading:
 
 .. toctree::
     :maxdepth: 3
+    :numbered:
 
-    guide/basic_obj.rst
+    guide/basic_obj/Tensor.rst
+    guide/basic_obj/Storage.rst
     guide/linalg.rst
     guide/itersol.rst
     guide/cyx.rst

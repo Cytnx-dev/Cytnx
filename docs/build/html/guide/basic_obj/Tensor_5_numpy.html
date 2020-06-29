@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
-    <title>1. Tensor &#8212; Cytnx  documentation</title>
+    <title>1.5. To/From numpy.array &#8212; Cytnx  documentation</title>
 
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -23,8 +23,8 @@
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="1.1. Create a Tensor" href="Tensor_1_create.html" />
-    <link rel="prev" title="User Guide" href="../../Guide.html" /> 
+    <link rel="next" title="2. Linear algebra" href="../linalg.html" />
+    <link rel="prev" title="1.4. Tensor arithmetic" href="Tensor_4_arithmetic.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -47,11 +47,11 @@
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../../Guide.html">User Guide</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">1. Tensor</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_1_create.html">1.1. Create a Tensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-with-different-dtype-and-device">1.1.1. Tensor with different dtype and device</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#type-conversion">1.1.2. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-btwn-devices">1.1.3. Transfer btwn devices</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="Tensor.html">1. Tensor</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Tensor_1_creat.html">1.1. Create a Tensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_creat.html#tensor-with-different-dtype-and-device">1.1.1. Tensor with different dtype and device</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_creat.html#type-conversion">1.1.2. Type conversion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_creat.html#transfer-btwn-devices">1.1.3. Transfer btwn devices</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">1.2. Manipulate Tensor</a><ul>
@@ -72,10 +72,7 @@
 <li class="toctree-l4"><a class="reference internal" href="Tensor_4_arithmetic.html#equivalent-apis-c-only">1.4.4. Equivalent APIs (C++ only)</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_5_numpy.html">1.5. To/From numpy.array</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_6_app.html">1.6. Append elements</a><ul class="simple">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">1.5. To/From numpy.array</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -153,19 +150,21 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="../../index.html">Cytnx  documentation</a></li>
                 <li class="breadcrumb-item"><a href="../../Guide.html"
+                       >User Guide</a></li>
+                <li class="breadcrumb-item"><a href="Tensor.html"
                        
                          accesskey="U"
                          class="active"
-                       >User Guide</a></li>
-            <li class="breadcrumb-item active"><span class="section-number">1. </span>Tensor</li>
+                       ><span class="section-number">1. </span>Tensor</a></li>
+            <li class="breadcrumb-item active"><span class="section-number">1.5. </span>To/From numpy.array</li>
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-               <a href="../../Guide.html" title="Previous Chapter: User Guide" class="btn btn-primary" role="botton" accesskey="P">
-                   &laquo; User Guide
+               <a href="Tensor_4_arithmetic.html" title="Previous Chapter: 1.4. Tensor arithmetic" class="btn btn-primary" role="botton" accesskey="P">
+                   &laquo; 1.4. Tensor a...
                </a>
-               <a href="Tensor_1_create.html" title="Next Chapter: 1.1. Create a Tensor" class="btn btn-primary" role="botton" accesskey="N">
-                   1.1. Create a Tensor &raquo;
+               <a href="../linalg.html" title="Next Chapter: 2. Linear algebra" class="btn btn-primary" role="botton" accesskey="N">
+                   2. Linear algebra &raquo;
                </a>
            </div>
        </div>
@@ -187,11 +186,11 @@
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../../Guide.html">User Guide</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">1. Tensor</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_1_create.html">1.1. Create a Tensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-with-different-dtype-and-device">1.1.1. Tensor with different dtype and device</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#type-conversion">1.1.2. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-btwn-devices">1.1.3. Transfer btwn devices</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="Tensor.html">1. Tensor</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Tensor_1_creat.html">1.1. Create a Tensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_creat.html#tensor-with-different-dtype-and-device">1.1.1. Tensor with different dtype and device</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_creat.html#type-conversion">1.1.2. Type conversion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_creat.html#transfer-btwn-devices">1.1.3. Transfer btwn devices</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">1.2. Manipulate Tensor</a><ul>
@@ -212,10 +211,7 @@
 <li class="toctree-l4"><a class="reference internal" href="Tensor_4_arithmetic.html#equivalent-apis-c-only">1.4.4. Equivalent APIs (C++ only)</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_5_numpy.html">1.5. To/From numpy.array</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_6_app.html">1.6. Append elements</a><ul class="simple">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">1.5. To/From numpy.array</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -247,11 +243,11 @@
             
           
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../../Guide.html"
-                        title="previous chapter">User Guide</a></p>
+  <p class="topless"><a href="Tensor_4_arithmetic.html"
+                        title="previous chapter"><span class="section-number">1.4. </span>Tensor arithmetic</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="Tensor_1_create.html"
-                        title="next chapter"><span class="section-number">1.1. </span>Create a Tensor</a></p>
+  <p class="topless"><a href="../linalg.html"
+                        title="next chapter"><span class="section-number">2. </span>Linear algebra</a></p>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../../search.html" method="get">
       <input type="text" name="q" class="form-control" placeholder="Search..." />
@@ -262,7 +258,7 @@
 
 <script type="text/javascript">$('#searchbox').show(0);</script>
   <ul class="this-page-menu list-unstyled text-right">
-    <li><a href="../../_sources/guide/basic_obj/Tensor.rst.txt"
+    <li><a href="../../_sources/guide/basic_obj/Tensor_5_numpy.rst.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
         </div>
@@ -273,20 +269,68 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="tensor">
-<h1><span class="section-number">1. </span>Tensor<a class="headerlink" href="#tensor" title="Permalink to this headline">¶</a></h1>
-<p>Tensor is the basic building block of Cytnx.
-In fact, the API of Tensor in cytnx is very similar to <a class="reference external" href="https://pytorch.org/docs/stable/tensors.html">torch.tensor</a> (so as numpy.array, since they are also similar to each other)</p>
-<p>Let’s take a look on how to use it:</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="Tensor_1_create.html">1.1. Create a Tensor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Tensor_2_manip.html">1.2. Manipulate Tensor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Tensor_3_access.html">1.3. Access elements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Tensor_4_arithmetic.html">1.4. Tensor arithmetic</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Tensor_5_numpy.html">1.5. To/From numpy.array</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Tensor_6_app.html">1.6. Append elements</a></li>
+  <div class="section" id="to-from-numpy-array">
+<h1><span class="section-number">1.5. </span>To/From numpy.array<a class="headerlink" href="#to-from-numpy-array" title="Permalink to this headline">¶</a></h1>
+<p>Cytnx also provides conversion from and to numpy.array in python API.</p>
+<ul class="simple">
+<li><p>To convert from Tensor to numpy array, using <strong>Tensor.numpy()</strong></p></li>
 </ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span>    <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">B</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output&gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 12
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4)
+[[1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
+ [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
+ [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]]
+
+
+&lt;class &#39;numpy.ndarray&#39;&gt;
+[[1. 1. 1. 1.]
+ [1. 1. 1. 1.]
+ [1. 1. 1. 1.]]
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>To convert from numpy array to Tensor, using <strong>cytnx.from_numpy()</strong></p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span>    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output&gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[[1. 1. 1. 1.]
+ [1. 1. 1. 1.]
+ [1. 1. 1. 1.]]
+
+Total elem: 12
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4)
+[[1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
+ [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
+ [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]]
+</pre></div>
+</div>
+<div class="toctree-wrapper compound">
 </div>
 </div>
 
