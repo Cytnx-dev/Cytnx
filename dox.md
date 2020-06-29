@@ -3,6 +3,10 @@
 ## Stable Version:
     [v0.5.4 pre-release](https://github.com/kaihsin/Cytnx/tree/v0.5.4a)
 
+
+## News
+    1. [Important] Fix Subtraction real - complex bug.
+
 ## Current dev Version:
     v0.5.5
     1. [Feature] Tensor can now using operator() to access elements just like python. 

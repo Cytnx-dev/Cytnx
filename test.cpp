@@ -41,6 +41,11 @@ class MyOp: public LinOp{
 int main(int argc, char *argv[]){
 
     
+    auto TNss = zeros({3,4});
+
+    cout << TNss - std::complex<double>(0,7) << endl;
+    return 0;
+
     //cout << testta << endl;
     auto TNs = arange(16).astype(Type.Double).reshape({4,4});
 

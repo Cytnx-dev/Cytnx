@@ -1371,22 +1371,23 @@ namespace cytnx{
             cytnx_complex128 *_out = (cytnx_complex128*)out->Mem;
             cytnx_double *_Lin   = (cytnx_double*)Lin->Mem;
             cytnx_complex128 *_Rin  = (cytnx_complex128*)Rin->Mem;
+            std::cout << _Rin[0] << std::endl;
 
             if(Lin->size()==1){
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[i] ;
-                        _out[i].real(_Lin[0]-_out[i].real());
+                        _out[i] = -_Rin[i] ;
+                        _out[i].real(_Lin[0]+_out[i].real());
                     }
             }else if(Rin->size()==1){
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[0] ;
-                        _out[i].real(_Lin[i] - _out[i].real());
+                        _out[i] = -_Rin[0];
+                        _out[i].real(_Lin[i] + _out[i].real());
                     }
             }else{
                 if(shape.size()==0){
@@ -1394,8 +1395,8 @@ namespace cytnx{
                         #pragma omp parallel for schedule(dynamic) 
                     #endif
                         for(unsigned long long i=0;i<len;i++){
-                            _out[i] = _Rin[i];
-                            _out[i].real(_Lin[i] - _out[i].real());
+                            _out[i] = -_Rin[i];
+                            _out[i].real(_Lin[i] + _out[i].real());
                         }
                 }else{
 
@@ -1420,8 +1421,8 @@ namespace cytnx{
                     #endif
                         for(cytnx_uint64 i=0;i<len;i++){
                             std::vector<cytnx_uint64> tmpv = c2cartesian(i,accu_shape);
-                            _out[i] = _Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
-                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] - _out[i].real());
+                            _out[i] = -_Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
+                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] + _out[i].real());
                         }
 
                     
@@ -1439,16 +1440,16 @@ namespace cytnx{
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[i] ;
-                        _out[i].real(_Lin[0]-_out[i].real());
+                        _out[i] = -_Rin[i] ;
+                        _out[i].real(_Lin[0]+_out[i].real());
                     }
             }else if(Rin->size()==1){
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[0] ;
-                        _out[i].real(_Lin[i] - _out[i].real());
+                        _out[i] = -_Rin[0] ;
+                        _out[i].real(_Lin[i] + _out[i].real());
                     }
             }else{
                 if(shape.size()==0){
@@ -1456,8 +1457,8 @@ namespace cytnx{
                         #pragma omp parallel for schedule(dynamic) 
                     #endif
                         for(unsigned long long i=0;i<len;i++){
-                            _out[i] = _Rin[i];
-                            _out[i].real(_Lin[i] - _out[i].real());
+                            _out[i] = -_Rin[i];
+                            _out[i].real(_Lin[i] + _out[i].real());
                         }
                 }else{
 
@@ -1482,8 +1483,8 @@ namespace cytnx{
                     #endif
                         for(cytnx_uint64 i=0;i<len;i++){
                             std::vector<cytnx_uint64> tmpv = c2cartesian(i,accu_shape);
-                            _out[i] = _Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
-                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] - _out[i].real());
+                            _out[i] = -_Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
+                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] + _out[i].real());
                         }
 
                     
@@ -2038,16 +2039,16 @@ namespace cytnx{
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[i] ;
-                        _out[i].real(_Lin[0]-_out[i].real());
+                        _out[i] = -_Rin[i] ;
+                        _out[i].real(_Lin[0]+_out[i].real());
                     }
             }else if(Rin->size()==1){
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[0] ;
-                        _out[i].real(_Lin[i] - _out[i].real());
+                        _out[i] = -_Rin[0] ;
+                        _out[i].real(_Lin[i] + _out[i].real());
                     }
             }else{
                 if(shape.size()==0){
@@ -2055,7 +2056,8 @@ namespace cytnx{
                         #pragma omp parallel for schedule(dynamic) 
                     #endif
                         for(unsigned long long i=0;i<len;i++){
-                            _out[i] = _Lin[i] - _Rin[i];
+                            _out[i] = -_Rin[i] ;
+                            _out[i].real(_Lin[i] + _out[i].real());
                         }
                 }else{
 
@@ -2080,8 +2082,8 @@ namespace cytnx{
                     #endif
                         for(cytnx_uint64 i=0;i<len;i++){
                             std::vector<cytnx_uint64> tmpv = c2cartesian(i,accu_shape);
-                            _out[i] = _Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] 
-                                    - _Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
+                            _out[i] = - _Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
+                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] + _out[i].real());
                         }
 
                     
@@ -2098,16 +2100,16 @@ namespace cytnx{
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[i] ;
-                        _out[i].real(_Lin[0]-_out[i].real());
+                        _out[i] = -_Rin[i] ;
+                        _out[i].real(_Lin[0]+_out[i].real());
                     }
             }else if(Rin->size()==1){
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[0] ;
-                        _out[i].real(_Lin[i] - _out[i].real());
+                        _out[i] = -_Rin[0] ;
+                        _out[i].real(_Lin[i] + _out[i].real());
                     }
             }else{
                 if(shape.size()==0){
@@ -2115,7 +2117,8 @@ namespace cytnx{
                         #pragma omp parallel for schedule(dynamic) 
                     #endif
                         for(unsigned long long i=0;i<len;i++){
-                            _out[i] = _Lin[i] - _Rin[i];
+                            _out[i] = -_Rin[i] ;
+                            _out[i].real(_Lin[i] + _out[i].real());
                         }
                 }else{
 
@@ -2140,8 +2143,8 @@ namespace cytnx{
                     #endif
                         for(cytnx_uint64 i=0;i<len;i++){
                             std::vector<cytnx_uint64> tmpv = c2cartesian(i,accu_shape);
-                            _out[i] = _Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] 
-                                    - _Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
+                            _out[i] = - _Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
+                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] + _out[i].real());
                         }
 
                     
@@ -2690,16 +2693,16 @@ namespace cytnx{
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[i] ;
-                        _out[i].real(_Lin[0]-_out[i].real());
+                        _out[i] = -_Rin[i] ;
+                        _out[i].real(_Lin[0]+_out[i].real());
                     }
             }else if(Rin->size()==1){
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[0] ;
-                        _out[i].real(_Lin[i] - _out[i].real());
+                        _out[i] = -_Rin[0] ;
+                        _out[i].real(_Lin[i] + _out[i].real());
                     }
             }else{
                 if(shape.size()==0){
@@ -2707,8 +2710,8 @@ namespace cytnx{
                         #pragma omp parallel for schedule(dynamic) 
                     #endif
                         for(unsigned long long i=0;i<len;i++){
-                            _out[i] = _Rin[i];
-                            _out[i].real(_Lin[i] - _out[i].real());
+                            _out[i] = -_Rin[i];
+                            _out[i].real(_Lin[i] + _out[i].real());
                         }
                 }else{
 
@@ -2733,8 +2736,8 @@ namespace cytnx{
                     #endif
                         for(cytnx_uint64 i=0;i<len;i++){
                             std::vector<cytnx_uint64> tmpv = c2cartesian(i,accu_shape);
-                            _out[i] = _Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
-                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] - _out[i].real());
+                            _out[i] = -_Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
+                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] + _out[i].real());
                         }
 
                     
@@ -2751,16 +2754,16 @@ namespace cytnx{
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[i] ;
-                        _out[i].real(_Lin[0]-_out[i].real());
+                        _out[i] = -_Rin[i] ;
+                        _out[i].real(_Lin[0]+_out[i].real());
                     }
             }else if(Rin->size()==1){
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[0] ;
-                        _out[i].real(_Lin[i] - _out[i].real());
+                        _out[i] = -_Rin[0] ;
+                        _out[i].real(_Lin[i] + _out[i].real());
                     }
             }else{
                 if(shape.size()==0){
@@ -2768,8 +2771,8 @@ namespace cytnx{
                         #pragma omp parallel for schedule(dynamic) 
                     #endif
                         for(unsigned long long i=0;i<len;i++){
-                            _out[i] = _Rin[i];
-                            _out[i].real(_Lin[i] - _out[i].real());
+                            _out[i] = -_Rin[i];
+                            _out[i].real(_Lin[i] + _out[i].real());
                         }
                 }else{
 
@@ -2794,8 +2797,8 @@ namespace cytnx{
                     #endif
                         for(cytnx_uint64 i=0;i<len;i++){
                             std::vector<cytnx_uint64> tmpv = c2cartesian(i,accu_shape);
-                            _out[i] = _Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
-                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] - _out[i].real());
+                            _out[i] = -_Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
+                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] + _out[i].real());
                         }
 
                     
@@ -3341,16 +3344,16 @@ namespace cytnx{
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[i] ;
-                        _out[i].real(_Lin[0]-_out[i].real());
+                        _out[i] = -_Rin[i] ;
+                        _out[i].real(_Lin[0]+_out[i].real());
                     }
             }else if(Rin->size()==1){
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[0] ;
-                        _out[i].real(_Lin[i] - _out[i].real());
+                        _out[i] = -_Rin[0] ;
+                        _out[i].real(_Lin[i] + _out[i].real());
                     }
             }else{
                 if(shape.size()==0){
@@ -3358,8 +3361,8 @@ namespace cytnx{
                         #pragma omp parallel for schedule(dynamic) 
                     #endif
                         for(unsigned long long i=0;i<len;i++){
-                            _out[i] = _Rin[i];
-                            _out[i].real(_Lin[i] - _out[i].real());
+                            _out[i] = -_Rin[i];
+                            _out[i].real(_Lin[i] + _out[i].real());
                         }
                 }else{
 
@@ -3384,8 +3387,8 @@ namespace cytnx{
                     #endif
                         for(cytnx_uint64 i=0;i<len;i++){
                             std::vector<cytnx_uint64> tmpv = c2cartesian(i,accu_shape);
-                            _out[i] = _Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
-                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] - _out[i].real());
+                            _out[i] = -_Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
+                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] + _out[i].real());
                         }
 
                     
@@ -3402,16 +3405,16 @@ namespace cytnx{
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[i] ;
-                        _out[i].real(_Lin[0]-_out[i].real());
+                        _out[i] = -_Rin[i] ;
+                        _out[i].real(_Lin[0]+_out[i].real());
                     }
             }else if(Rin->size()==1){
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[0] ;
-                        _out[i].real(_Lin[i] - _out[i].real());
+                        _out[i] = -_Rin[0] ;
+                        _out[i].real(_Lin[i] + _out[i].real());
                     }
             }else{
                 if(shape.size()==0){
@@ -3419,8 +3422,8 @@ namespace cytnx{
                         #pragma omp parallel for schedule(dynamic) 
                     #endif
                         for(unsigned long long i=0;i<len;i++){
-                            _out[i] = _Rin[i];
-                            _out[i].real(_Lin[i] - _out[i].real());
+                            _out[i] = -_Rin[i];
+                            _out[i].real(_Lin[i] + _out[i].real());
                         }
                 }else{
 
@@ -3445,8 +3448,8 @@ namespace cytnx{
                     #endif
                         for(cytnx_uint64 i=0;i<len;i++){
                             std::vector<cytnx_uint64> tmpv = c2cartesian(i,accu_shape);
-                            _out[i] = _Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
-                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] - _out[i].real());
+                            _out[i] = -_Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
+                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] + _out[i].real());
                         }
 
                     
@@ -3993,16 +3996,16 @@ namespace cytnx{
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[i] ;
-                        _out[i].real(_Lin[0]-_out[i].real());
+                        _out[i] = -_Rin[i] ;
+                        _out[i].real(_Lin[0]+_out[i].real());
                     }
             }else if(Rin->size()==1){
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[0] ;
-                        _out[i].real(_Lin[i] - _out[i].real());
+                        _out[i] = -_Rin[0] ;
+                        _out[i].real(_Lin[i] + _out[i].real());
                     }
             }else{
                 if(shape.size()==0){
@@ -4010,8 +4013,8 @@ namespace cytnx{
                         #pragma omp parallel for schedule(dynamic) 
                     #endif
                         for(unsigned long long i=0;i<len;i++){
-                            _out[i] = _Rin[i];
-                            _out[i].real(_Lin[i] - _out[i].real());
+                            _out[i] = -_Rin[i];
+                            _out[i].real(_Lin[i] + _out[i].real());
                         }
                 }else{
 
@@ -4036,8 +4039,8 @@ namespace cytnx{
                     #endif
                         for(cytnx_uint64 i=0;i<len;i++){
                             std::vector<cytnx_uint64> tmpv = c2cartesian(i,accu_shape);
-                            _out[i] = _Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
-                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] - _out[i].real());
+                            _out[i] = -_Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
+                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] + _out[i].real());
                         }
 
                     
@@ -4055,16 +4058,16 @@ namespace cytnx{
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[i] ;
-                        _out[i].real(_Lin[0]-_out[i].real());
+                        _out[i] = -_Rin[i] ;
+                        _out[i].real(_Lin[0]+_out[i].real());
                     }
             }else if(Rin->size()==1){
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[0] ;
-                        _out[i].real(_Lin[i] - _out[i].real());
+                        _out[i] = -_Rin[0] ;
+                        _out[i].real(_Lin[i] + _out[i].real());
                     }
             }else{
                 if(shape.size()==0){
@@ -4072,8 +4075,8 @@ namespace cytnx{
                         #pragma omp parallel for schedule(dynamic) 
                     #endif
                         for(unsigned long long i=0;i<len;i++){
-                            _out[i] = _Rin[i];
-                            _out[i].real(_Lin[i] - _out[i].real());
+                            _out[i] = -_Rin[i];
+                            _out[i].real(_Lin[i] + _out[i].real());
                         }
                 }else{
 
@@ -4098,8 +4101,8 @@ namespace cytnx{
                     #endif
                         for(cytnx_uint64 i=0;i<len;i++){
                             std::vector<cytnx_uint64> tmpv = c2cartesian(i,accu_shape);
-                            _out[i] = _Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
-                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] - _out[i].real());
+                            _out[i] = -_Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
+                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] + _out[i].real());
                         }
 
                     
@@ -4651,16 +4654,16 @@ namespace cytnx{
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[i] ;
-                        _out[i].real(_Lin[0]-_out[i].real());
+                        _out[i] = -_Rin[i] ;
+                        _out[i].real(_Lin[0]+_out[i].real());
                     }
             }else if(Rin->size()==1){
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[0] ;
-                        _out[i].real(_Lin[i] - _out[i].real());
+                        _out[i] = -_Rin[0] ;
+                        _out[i].real(_Lin[i] + _out[i].real());
                     }
             }else{
                 if(shape.size()==0){
@@ -4668,8 +4671,8 @@ namespace cytnx{
                         #pragma omp parallel for schedule(dynamic) 
                     #endif
                         for(unsigned long long i=0;i<len;i++){
-                            _out[i] = _Rin[i];
-                            _out[i].real(_Lin[i] - _out[i].real());
+                            _out[i] = -_Rin[i];
+                            _out[i].real(_Lin[i] + _out[i].real());
                         }
                 }else{
 
@@ -4694,8 +4697,8 @@ namespace cytnx{
                     #endif
                         for(cytnx_uint64 i=0;i<len;i++){
                             std::vector<cytnx_uint64> tmpv = c2cartesian(i,accu_shape);
-                            _out[i] = _Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
-                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] - _out[i].real());
+                            _out[i] = -_Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
+                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] + _out[i].real());
                         }
 
                     
@@ -4713,16 +4716,16 @@ namespace cytnx{
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[i] ;
-                        _out[i].real(_Lin[0]-_out[i].real());
+                        _out[i] = -_Rin[i] ;
+                        _out[i].real(_Lin[0]+_out[i].real());
                     }
             }else if(Rin->size()==1){
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[0] ;
-                        _out[i].real(_Lin[i] - _out[i].real());
+                        _out[i] = -_Rin[0] ;
+                        _out[i].real(_Lin[i] + _out[i].real());
                     }
             }else{
                 if(shape.size()==0){
@@ -4730,8 +4733,8 @@ namespace cytnx{
                         #pragma omp parallel for schedule(dynamic) 
                     #endif
                         for(unsigned long long i=0;i<len;i++){
-                            _out[i] = _Rin[i];
-                            _out[i].real(_Lin[i]-_out[i].real());
+                            _out[i] = -_Rin[i];
+                            _out[i].real(_Lin[i]+_out[i].real());
                         }
                 }else{
 
@@ -4756,8 +4759,8 @@ namespace cytnx{
                     #endif
                         for(cytnx_uint64 i=0;i<len;i++){
                             std::vector<cytnx_uint64> tmpv = c2cartesian(i,accu_shape);
-                            _out[i] = _Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
-                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] - _out[i].real());
+                            _out[i] = -_Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
+                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] + _out[i].real());
                         }
 
                     
@@ -5304,16 +5307,16 @@ namespace cytnx{
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[i] ;
-                        _out[i].real(_Lin[0]-_out[i].real());
+                        _out[i] = -_Rin[i] ;
+                        _out[i].real(_Lin[0]+_out[i].real());
                     }
             }else if(Rin->size()==1){
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[0] ;
-                        _out[i].real(_Lin[i] - _out[i].real());
+                        _out[i] = -_Rin[0] ;
+                        _out[i].real(_Lin[i] + _out[i].real());
                     }
             }else{
                 if(shape.size()==0){
@@ -5321,8 +5324,8 @@ namespace cytnx{
                         #pragma omp parallel for schedule(dynamic) 
                     #endif
                         for(unsigned long long i=0;i<len;i++){
-                            _out[i] = _Rin[i];
-                            _out[i].real(_Lin[i] - _out[i].real());
+                            _out[i] = -_Rin[i];
+                            _out[i].real(_Lin[i] + _out[i].real());
                         }
                 }else{
 
@@ -5347,8 +5350,8 @@ namespace cytnx{
                     #endif
                         for(cytnx_uint64 i=0;i<len;i++){
                             std::vector<cytnx_uint64> tmpv = c2cartesian(i,accu_shape);
-                            _out[i] = _Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
-                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] - _out[i].real());
+                            _out[i] = -_Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
+                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] + _out[i].real());
                         }
 
                     
@@ -5366,16 +5369,16 @@ namespace cytnx{
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[i] ;
-                        _out[i].real(_Lin[0]-_out[i].real());
+                        _out[i] = -_Rin[i] ;
+                        _out[i].real(_Lin[0]+_out[i].real());
                     }
             }else if(Rin->size()==1){
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[0] ;
-                        _out[i].real(_Lin[i] - _out[i].real());
+                        _out[i] = -_Rin[0] ;
+                        _out[i].real(_Lin[i] + _out[i].real());
                     }
             }else{
                 if(shape.size()==0){
@@ -5383,8 +5386,8 @@ namespace cytnx{
                         #pragma omp parallel for schedule(dynamic) 
                     #endif
                         for(unsigned long long i=0;i<len;i++){
-                            _out[i] = _Rin[i];
-                            _out[i].real(_Lin[i]-_out[i].real());
+                            _out[i] = -_Rin[i];
+                            _out[i].real(_Lin[i]+_out[i].real());
                         }
                 }else{
 
@@ -5409,8 +5412,8 @@ namespace cytnx{
                     #endif
                         for(cytnx_uint64 i=0;i<len;i++){
                             std::vector<cytnx_uint64> tmpv = c2cartesian(i,accu_shape);
-                            _out[i] = _Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
-                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] - _out[i].real());
+                            _out[i] = -_Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
+                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] + _out[i].real());
                         }
 
                     
@@ -5957,16 +5960,16 @@ namespace cytnx{
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[i] ;
-                        _out[i].real(_Lin[0]-_out[i].real());
+                        _out[i] = -_Rin[i] ;
+                        _out[i].real(_Lin[0]+_out[i].real());
                     }
             }else if(Rin->size()==1){
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[0] ;
-                        _out[i].real(_Lin[i] - _out[i].real());
+                        _out[i] = -_Rin[0] ;
+                        _out[i].real(_Lin[i] + _out[i].real());
                     }
             }else{
                 if(shape.size()==0){
@@ -5974,8 +5977,8 @@ namespace cytnx{
                         #pragma omp parallel for schedule(dynamic) 
                     #endif
                         for(unsigned long long i=0;i<len;i++){
-                            _out[i] = _Rin[i];
-                            _out[i].real(_Lin[i] - _out[i].real());
+                            _out[i] = -_Rin[i];
+                            _out[i].real(_Lin[i] + _out[i].real());
                         }
                 }else{
 
@@ -6000,8 +6003,8 @@ namespace cytnx{
                     #endif
                         for(cytnx_uint64 i=0;i<len;i++){
                             std::vector<cytnx_uint64> tmpv = c2cartesian(i,accu_shape);
-                            _out[i] = _Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
-                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] - _out[i].real());
+                            _out[i] = -_Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
+                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] + _out[i].real());
                         }
 
                     
@@ -6019,16 +6022,16 @@ namespace cytnx{
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[i] ;
-                        _out[i].real(_Lin[0]-_out[i].real());
+                        _out[i] = -_Rin[i] ;
+                        _out[i].real(_Lin[0]+_out[i].real());
                     }
             }else if(Rin->size()==1){
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Rin[0] ;
-                        _out[i].real(_Lin[i] - _out[i].real());
+                        _out[i] = -_Rin[0] ;
+                        _out[i].real(_Lin[i] + _out[i].real());
                     }
             }else{
                 if(shape.size()==0){
@@ -6036,8 +6039,8 @@ namespace cytnx{
                         #pragma omp parallel for schedule(dynamic) 
                     #endif
                         for(unsigned long long i=0;i<len;i++){
-                            _out[i] = _Rin[i];
-                            _out[i].real(_Lin[i]-_out[i].real());
+                            _out[i] = -_Rin[i];
+                            _out[i].real(_Lin[i]+_out[i].real());
                         }
                 }else{
 
@@ -6062,8 +6065,8 @@ namespace cytnx{
                     #endif
                         for(cytnx_uint64 i=0;i<len;i++){
                             std::vector<cytnx_uint64> tmpv = c2cartesian(i,accu_shape);
-                            _out[i] = _Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
-                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] - _out[i].real());
+                            _out[i] = -_Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
+                            _out[i].real(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)] + _out[i].real());
                         }
 
                     
