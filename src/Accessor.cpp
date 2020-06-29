@@ -111,7 +111,7 @@ namespace cytnx{
             //if((r_max-r_min)%this->step) len+=1;
             
             len = 0;
-            if(this->step < 0){
+            if(this->_step < 0){
                 for(cytnx_int64 i = r_min; i>r_max; i+=this->_step){
                     pos.push_back(i);
                     //std::cout << pos.back() << std::endl;
