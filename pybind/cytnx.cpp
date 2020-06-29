@@ -657,6 +657,8 @@ PYBIND11_MODULE(cytnx,m){
                 .def("imag",&cytnx::Storage::imag)
                 ;
 
+
+    //entry.Tensor
     py::class_<cytnx::Tensor>(m,"Tensor")
                 .def("numpy",[](Tensor &self)-> py::array {
 
@@ -818,6 +820,19 @@ PYBIND11_MODULE(cytnx,m){
                 .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_int16    >, py::arg("val"))
                 .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_uint16   >, py::arg("val"))
                 .def("fill",&cytnx::Tensor::fill<cytnx::cytnx_bool     >, py::arg("val"))
+
+                .def("append",&cytnx::Tensor::append<cytnx::cytnx_complex128>, py::arg("val"))
+                .def("append",&cytnx::Tensor::append<cytnx::cytnx_complex64>, py::arg("val"))
+                .def("append",&cytnx::Tensor::append<cytnx::cytnx_double   >, py::arg("val"))
+                .def("append",&cytnx::Tensor::append<cytnx::cytnx_float    >, py::arg("val"))
+                .def("append",&cytnx::Tensor::append<cytnx::cytnx_int64    >, py::arg("val"))
+                .def("append",&cytnx::Tensor::append<cytnx::cytnx_uint64   >, py::arg("val"))
+                .def("append",&cytnx::Tensor::append<cytnx::cytnx_int32    >, py::arg("val"))
+                .def("append",&cytnx::Tensor::append<cytnx::cytnx_uint32   >, py::arg("val"))
+                .def("append",&cytnx::Tensor::append<cytnx::cytnx_int16    >, py::arg("val"))
+                .def("append",&cytnx::Tensor::append<cytnx::cytnx_uint16   >, py::arg("val"))
+                .def("append",&cytnx::Tensor::append<cytnx::cytnx_bool     >, py::arg("val"))
+                .def("append",[](cytnx::Tensor &self,const cytnx::Tensor &rhs){self.append(rhs);}, py::arg("val"))
 
                 .def("Save",[](cytnx::Tensor &self, const std::string &fname){self.Save(fname);},py::arg("fname"))
                 .def_static("Load",[](const std::string &fname){return cytnx::Tensor::Load(fname);},py::arg("fname"))
@@ -1317,7 +1332,7 @@ PYBIND11_MODULE(cytnx,m){
             .def_static("Load",[](const std::string &fname){return cytnx_extension::Bond::Load(fname);},py::arg("fname"))
             ;
 
-
+    //entry.CyTenor
     py::class_<cytnx_extension::CyTensor>(mext,"CyTensor")
                 .def(py::init<>())
                 .def(py::init<const cytnx::Tensor&, const cytnx_uint64&, const bool &>(),py::arg("Tin"),py::arg("rowrank"),py::arg("is_diag")=false)

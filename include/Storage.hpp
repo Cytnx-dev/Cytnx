@@ -1007,7 +1007,15 @@ namespace cytnx{
                     This function is C++ only
             */
             template<class T>
-            void from_vector(const std::vector<T> &vin,const int device=-1){
+            static Storage from_vector(const std::vector<T> &vin,const int device=-1){
+                Storage out;
+                out._from_vector(vin,device);
+                return out;
+            }
+
+            /// @cond
+            template<class T>
+            void _from_vector(const std::vector<T> &vin,const int device=-1){
                 //auto dispatch:
                 //check:
                 if(typeid(T) == typeid(cytnx_float)){
@@ -1038,7 +1046,9 @@ namespace cytnx{
                 this->_impl->Init(vin.size(),device);
                 memcpy(this->_impl->Mem,&vin[0],sizeof(T)*vin.size());
             }
-            
+            /// @endcond            
+
+
             /**
             @brief Get the real part form a Complex type Storage
 

@@ -12,6 +12,7 @@
     1. [Feature] Tensor can now using operator() to access elements just like python. 
     2. [Enhance] Access Tensor can now exactly the same using slice string as in python.
     3. [Enhance] at/reshape/permute in Tensor can now give args without braket{} as in python.
+    4. [Enhance] Storage.Load to static, so it can match Tensor
 
     v0.5.4a
     1. Add linalg::Det 
