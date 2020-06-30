@@ -23,7 +23,7 @@
     <script src="../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="6. Cytnx extensions" href="cyx.html" />
+    <link rel="next" title="5.1. LinOp object" href="itersol/LinOp.html" />
     <link rel="prev" title="4. Linear algebra" href="linalg.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
@@ -109,7 +109,7 @@
 <li class="toctree-l4"><a class="reference internal" href="basic_obj/Storage_3_expand.html#resize">3.3.2. Resize</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="basic_obj/Storage_4_vec.html">3.4. To c++.vector</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="basic_obj/Storage_4_vec.html">3.4. From c++.vector</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="basic_obj/Storage_5_io.html">3.5. Save/Load</a><ul>
@@ -122,7 +122,11 @@
 <li class="toctree-l2"><a class="reference internal" href="linalg.html">4. Linear algebra</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">5. Iterative solver</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">5. Iterative solver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="itersol/LinOp.html">5.1. LinOp object</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="itersol/Lanczos.html">5.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cyx.html">6. Cytnx extensions</a><ul class="simple">
@@ -133,7 +137,8 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../Examples.html">Examples</a><ul class="simple">
+<li class="toctree-l1"><a class="reference internal" href="../Examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../example/ED.html">1. Exact Diagonalization</a></li>
 </ul>
 </li>
 </ul>
@@ -206,8 +211,8 @@
                <a href="linalg.html" title="Previous Chapter: 4. Linear algebra" class="btn btn-primary" role="botton" accesskey="P">
                    &laquo; 4. Linear algebra
                </a>
-               <a href="cyx.html" title="Next Chapter: 6. Cytnx extensions" class="btn btn-primary" role="botton" accesskey="N">
-                   6. Cytnx extensions &raquo;
+               <a href="itersol/LinOp.html" title="Next Chapter: 5.1. LinOp object" class="btn btn-primary" role="botton" accesskey="N">
+                   5.1. LinOp object &raquo;
                </a>
            </div>
        </div>
@@ -291,7 +296,7 @@
 <li class="toctree-l4"><a class="reference internal" href="basic_obj/Storage_3_expand.html#resize">3.3.2. Resize</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="basic_obj/Storage_4_vec.html">3.4. To c++.vector</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="basic_obj/Storage_4_vec.html">3.4. From c++.vector</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="basic_obj/Storage_5_io.html">3.5. Save/Load</a><ul>
@@ -304,7 +309,11 @@
 <li class="toctree-l2"><a class="reference internal" href="linalg.html">4. Linear algebra</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">5. Iterative solver</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">5. Iterative solver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="itersol/LinOp.html">5.1. LinOp object</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="itersol/Lanczos.html">5.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cyx.html">6. Cytnx extensions</a><ul class="simple">
@@ -315,7 +324,8 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../Examples.html">Examples</a><ul class="simple">
+<li class="toctree-l1"><a class="reference internal" href="../Examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../example/ED.html">1. Exact Diagonalization</a></li>
 </ul>
 </li>
 </ul>
@@ -334,8 +344,8 @@
   <p class="topless"><a href="linalg.html"
                         title="previous chapter"><span class="section-number">4. </span>Linear algebra</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="cyx.html"
-                        title="next chapter"><span class="section-number">6. </span>Cytnx extensions</a></p>
+  <p class="topless"><a href="itersol/LinOp.html"
+                        title="next chapter"><span class="section-number">5.1. </span>LinOp object</a></p>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../search.html" method="get">
       <input type="text" name="q" class="form-control" placeholder="Search..." />
@@ -359,7 +369,17 @@
             
   <div class="section" id="iterative-solver">
 <h1><span class="section-number">5. </span>Iterative solver<a class="headerlink" href="#iterative-solver" title="Permalink to this headline">¶</a></h1>
+<p>Beside the basic linear algebra functions for direct solving of dense Tensor, Cytnx also provides the iterative solver that solve the eigen value problem. Together with LinOp class, user can define a custom linear operator as a function/class, similar as
+<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html">scipy.LinearOperator</a>.</p>
+<p>This is more general than the conventional case of using the standard sparse storage format.</p>
+<p>In the following, we show how one can define a customize linear operator using <strong>LinOp</strong> class, and solving the eigen value problem using iterative solver.</p>
 <div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="itersol/LinOp.html">5.1. LinOp object</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="itersol/Lanczos.html">5.2. Lanczos solver</a></li>
+</ul>
 </div>
 </div>
 

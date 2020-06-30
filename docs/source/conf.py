@@ -1,4 +1,10 @@
 import os,sys
+sys.path.append('.')
+from link import *
+
+html_theme = 'sphinxbootstrap4theme'
+import sphinxbootstrap4theme
+html_theme_path = [sphinxbootstrap4theme.get_path()]
 
 # Configuration file for the Sphinx documentation builder.
 #
@@ -29,8 +35,8 @@ author = 'Kai-Hsin Wu'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinxcontrib.bibtex']
-
+extensions = ['sphinxcontrib.bibtex']#,'sphinx.ext.autosectionlabel']
+extensions.append('sphinx.ext.extlinks')
 
 
 
@@ -66,9 +72,6 @@ html_static_path = ['_static']
 #p, html_theme, needs_sphinx = utils.set_psphinxtheme(html_theme)
 #html_theme_path = p
 
-html_theme = 'sphinxbootstrap4theme'
-import sphinxbootstrap4theme
-html_theme_path = [sphinxbootstrap4theme.get_path()]
 
 
 

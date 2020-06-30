@@ -2,14 +2,14 @@ User Guide
 =================================
 To use the library, simply include/import cytnx. 
 
-In Python, using import 
+* In Python, using import 
 
 .. code-block:: python
     :linenos:
 
     import cytnx
 
-In C++, using include header
+* In C++, using include header
 
 .. code-block:: c++
     :linenos:

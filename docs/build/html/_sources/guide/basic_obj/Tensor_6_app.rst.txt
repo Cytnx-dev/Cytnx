@@ -47,7 +47,7 @@ Output>>
     
    It is not possible to append a scalar into a Tensor with rank>1, as this operation is by itself ambiguous.
 
-For Tensor with rank>1, you can append a Tensor into it, provided the shape is matching. This operation is equivalent as `numpy.vstack <https://numpy.org/doc/stable/reference/generated/numpy.vstack.html>`_.
+For Tensor with rank>1, you can append a Tensor into it, provided the shape is matching. This operation is equivalent as :numpy-vstack:`numpy.vstack <>`.
 
 For example, consider a Tensor with shape (3,4,5), you can append a Tensor with shape (4,5) into it, and the resulting output will be in shape (4,4,5).
 

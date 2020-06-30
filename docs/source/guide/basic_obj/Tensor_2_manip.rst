@@ -177,7 +177,7 @@ This can be achieved with **Tensor.permute**
 
 
 In Cytnx, the permute operation does not moving the elements in the memory immediately. Only the meta-data that is seen by user are changed. 
-This can avoid the redudant moving of elements. Note that this approach is also taken in `numpy.array <https://numpy.org/doc/1.18/reference/generated/numpy.array.html>`_ and `torch.tensor <https://pytorch.org/docs/stable/tensors.html>`_ .
+This can avoid the redudant moving of elements. Note that this approach is also taken in :numpy-arr:`numpy.array <>` and :torch-tn:`torch.tensor <>` .
 
 If the meta-data is distached from the real memery layout, we call the Tensor in this status *non-contiguous*. We can use **Tensor.is_contiguous()** to check if the current Tensor is in contiguous status. 
 

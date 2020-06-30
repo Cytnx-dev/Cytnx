@@ -82,7 +82,8 @@ In some cases where user might want to get the raw-pointer from Storage. It is p
 
 .. Note::
 
-    If the current Storage instance is allocate on GPU, the return pointer will be a device pointer. See `this page <https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html>`_.
+    If the current Storage instance is allocate on GPU, the return pointer will be a device pointer. 
+    See :cuda-mem:`this page <>`.
 
 .. Warning::
 

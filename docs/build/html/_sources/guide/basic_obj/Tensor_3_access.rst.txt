@@ -4,7 +4,7 @@ Next, let's take a look on how we can access elements inside a Tensor.
 
 Get elements 
 ***************************
-Just like python list/numpy.array/torch.tensor, on the python side, we can simply use *slice* to get the elements. See `This page <https://numpy.org/doc/stable/reference/arrays.indexing.html>`_ .
+Just like python list/numpy.array/torch.tensor, on the python side, we can simply use *slice* to get the elements. See :numpy-slice:`This page <>` .
 In c++, cytnx take this approach from python and bring it to our C++ API. You can simply use the **slice string** to access elements. 
 
 For example:

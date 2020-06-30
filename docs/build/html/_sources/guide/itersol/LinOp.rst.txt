@@ -1,0 +1,5 @@
+LinOp object
+--------------
+
+
+.. toctree::
