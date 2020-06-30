@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
-    <title>5.1. LinOp object &#8212; Cytnx  documentation</title>
+    <title>5.1. LinOp class &#8212; Cytnx  documentation</title>
 
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -123,7 +123,9 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../itersol.html">5. Iterative solver</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">5.1. LinOp object</a><ul class="simple">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">5.1. LinOp class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pass-a-function">5.1.1. Pass a function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#inherit-the-linop-class">5.1.2. Inherit the LinOp class</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Lanczos.html">5.2. Lanczos solver</a></li>
@@ -206,7 +208,7 @@
                          accesskey="U"
                          class="active"
                        ><span class="section-number">5. </span>Iterative solver</a></li>
-            <li class="breadcrumb-item active"><span class="section-number">5.1. </span>LinOp object</li>
+            <li class="breadcrumb-item active"><span class="section-number">5.1. </span>LinOp class</li>
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
@@ -312,7 +314,9 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../itersol.html">5. Iterative solver</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">5.1. LinOp object</a><ul class="simple">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">5.1. LinOp class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pass-a-function">5.1.1. Pass a function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#inherit-the-linop-class">5.1.2. Inherit the LinOp class</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Lanczos.html">5.2. Lanczos solver</a></li>
@@ -369,9 +373,230 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="linop-object">
-<h1><span class="section-number">5.1. </span>LinOp object<a class="headerlink" href="#linop-object" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="linop-class">
+<h1><span class="section-number">5.1. </span>LinOp class<a class="headerlink" href="#linop-class" title="Permalink to this headline">¶</a></h1>
+<p>Cytnx provide a way for user to customize a linear operator with <strong>LinOp</strong> class.</p>
+<p>Before dive into the <strong>LinOp</strong> class, let’s first take a look at a simple example:</p>
+<p>In linear algebra, a linear operator can be think as a matrix <img class="math" src="../../_images/math/36f485fb15fe233844b63d7f2aa88b0b199586c9.png" alt="\boldsymbol{\hat{H}}"/> that operate on a vector <img class="math" src="../../_images/math/fa44d7cdd2d3f90f81820cfe85818a142149d124.png" alt="\boldsymbol{x}"/>, resulting as a output vector <img class="math" src="../../_images/math/4df01c383b374404655399d92084f496748f073a.png" alt="\boldsymbol{y}"/> as</p>
+<div class="math">
+<p><img src="../../_images/math/e1e0f3ed26114e17db61562fda9af9df64ad91be.png" alt="y = \hat{H} x"/></p>
+</div><p>If we consider <img class="math" src="../../_images/math/36f485fb15fe233844b63d7f2aa88b0b199586c9.png" alt="\boldsymbol{\hat{H}}"/> to a matrix, this matrix-vector multiplication can be simply achieve using <strong>linalg.Dot</strong>.
+Let’s consider a vector <img class="math" src="../../_images/math/fa44d7cdd2d3f90f81820cfe85818a142149d124.png" alt="\boldsymbol{x}"/> with dimension 4, and matrix <img class="math" src="../../_images/math/36f485fb15fe233844b63d7f2aa88b0b199586c9.png" alt="\boldsymbol{\hat{H}}"/> with shape (4,4) as</p>
+<ul class="simple">
+<li><p>In python :</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">H</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>In c++:</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">H</span> <span class="o">=</span> <span class="n">cytnx</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">16</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+
+<span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="n">cytnx</span><span class="p">.</span><span class="n">linalg</span><span class="p">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">H</span><span class="p">,</span><span class="n">x</span><span class="p">);</span>
+
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">H</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output&gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 4
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4)
+[1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
+
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 ]
+ [4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 ]
+ [8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]
+ [1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 ]]
+
+
+Total elem: 4
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4)
+[2.40000e+01 2.80000e+01 3.20000e+01 3.60000e+01 ]
+</pre></div>
+</div>
+<p>The above example consider a matrix <img class="math" src="../../_images/math/36f485fb15fe233844b63d7f2aa88b0b199586c9.png" alt="\boldsymbol{\hat{H}}"/> that is small, with shape (4,4).</p>
+<p><strong>What if the matrix is very large but sparse?</strong></p>
+<p>Clearly using dense structure is not only very memory insufficient, but also post large computational cost as most of the elements are zero.
+One way to solve such problem is to use sparse representation with pre-defined sparse structure. Indeed, most of the linear algebra library does provide those standardized sparse data structure.</p>
+<p>There is, however, a more general way to represent linear operator <img class="math" src="../../_images/math/36f485fb15fe233844b63d7f2aa88b0b199586c9.png" alt="\boldsymbol{\hat{H}}"/>.
+Instead of think it as a matrix, and defines different internal data structure, we can think this linear operator <img class="math" src="../../_images/math/36f485fb15fe233844b63d7f2aa88b0b199586c9.png" alt="\boldsymbol{\hat{H}}"/> as a <strong>function</strong> that maps the input vector <img class="math" src="../../_images/math/fa44d7cdd2d3f90f81820cfe85818a142149d124.png" alt="\boldsymbol{x}"/> to a output vector <img class="math" src="../../_images/math/4df01c383b374404655399d92084f496748f073a.png" alt="\boldsymbol{y}"/>.</p>
+<p>This is exactly what LinOp is designed to do. User can define the mapping operation from input <img class="math" src="../../_images/math/fa44d7cdd2d3f90f81820cfe85818a142149d124.png" alt="\boldsymbol{x}"/> to <img class="math" src="../../_images/math/4df01c383b374404655399d92084f496748f073a.png" alt="\boldsymbol{y}"/> inside LinOp.</p>
+<p>There are two ways we can define a linear operator: 1. Pass a callable function with proper signature to LinOp object. 2. Inherit the LinOp class, and overload the <strong>matvec</strong> member function.</p>
+<p>Let’s consider a simple example of a operator that operate on a input vector <img class="math" src="../../_images/math/fa44d7cdd2d3f90f81820cfe85818a142149d124.png" alt="\boldsymbol{x}"/> with dimension 4 that interchange the 1st and 4th elements and add one to both the 2nd and 3rd elements. Then output a dim=4 vector math:<cite>boldsymbol{y}</cite>.</p>
+<div class="section" id="pass-a-function">
+<h2><span class="section-number">5.1.1. </span>Pass a function<a class="headerlink" href="#pass-a-function" title="Permalink to this headline">¶</a></h2>
+<p>The simplest way is to define a function and pass it into LinOp class.</p>
+<p>First, let’s define the function:</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="k">def</span> <span class="nf">myfunc</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+     <span class="n">out</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+     <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">out</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#swap</span>
+     <span class="n">out</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+=</span><span class="mi">1</span> <span class="c1">#add 1</span>
+     <span class="n">out</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+=</span><span class="mi">1</span> <span class="c1">#add 1</span>
+     <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>In c++:</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="k">using</span> <span class="k">namespace</span> <span class="n">cytnx</span><span class="p">;</span>
+ <span class="n">Tensor</span> <span class="nf">myfunc</span><span class="p">(</span><span class="k">const</span> <span class="n">Tensor</span> <span class="o">&amp;</span><span class="n">v</span><span class="p">){</span>
+     <span class="n">Tensor</span> <span class="n">out</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+     <span class="n">out</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="n">v</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span> <span class="c1">//swap</span>
+     <span class="n">out</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="n">v</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="c1">//swap</span>
+     <span class="n">out</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+=</span><span class="mi">1</span><span class="p">;</span> <span class="c1">//add 1</span>
+     <span class="n">out</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+=</span><span class="mi">1</span><span class="p">;</span> <span class="c1">//add 1</span>
+     <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+ <span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The function should have signature <strong>Tensor f(const Tensor &amp;)</strong> with NO additional argument. Thus it is less flexible if additional arguments are required. In such case, See next section <em>Inherit the LinOp class</em> instead.</p>
+</div>
+<p>Next, we create a <strong>LinOp</strong> object, and pass this <em>myfunc</em> into it.</p>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">H</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="p">(</span><span class="s2">&quot;mv&quot;</span><span class="p">,</span><span class="n">nx</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>\
+                 <span class="n">dtype</span><span class="o">=</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">Double</span><span class="p">,</span>\
+                 <span class="n">device</span><span class="o">=</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">cpu</span><span class="p">,</span>\
+                 <span class="n">custom_f</span><span class="o">=</span><span class="n">myfunc</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>In c++:</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="k">auto</span> <span class="n">H</span> <span class="o">=</span> <span class="n">LinOp</span><span class="p">(</span><span class="s">&quot;mv&quot;</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span>
+                       <span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">,</span>
+                       <span class="n">myfunc</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<p>The meaning of the arguments are:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 3%" />
+<col style="width: 21%" />
+<col style="width: 76%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>“mv”</p></td>
+<td><p>indicate matrix-vector multiplication</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>nx=4</p></td>
+<td><p>indicate the input dimension = 4</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>dtype=Type.Double</p></td>
+<td><p>indicate the data type of input/output vector of custom function</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>device=Device.cpu</p></td>
+<td><p>indicate the device type of input/output vector of custom function</p></td>
+</tr>
+<tr class="row-odd"><td><p>5</p></td>
+<td><p>custom_f=myfunc</p></td>
+<td><p>the custom funtion.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Finally, we can use this object by calling <strong>LinOp.matvec</strong>:</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">H</span><span class="o">.</span><span class="n">matvec</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>In c++:</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="n">H</span><span class="p">.</span><span class="n">matvec</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output&gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 4
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4)
+[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 ]
+
+
+Total elem: 4
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4)
+[3.00000e+00 2.00000e+00 3.00000e+00 0.00000e+00 ]
+</pre></div>
+</div>
+</div>
+<div class="section" id="inherit-the-linop-class">
+<h2><span class="section-number">5.1.2. </span>Inherit the LinOp class<a class="headerlink" href="#inherit-the-linop-class" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
+</div>
 </div>
 </div>
 

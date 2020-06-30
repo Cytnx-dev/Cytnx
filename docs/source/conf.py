@@ -37,7 +37,7 @@ author = 'Kai-Hsin Wu'
 # ones.
 extensions = ['sphinxcontrib.bibtex']#,'sphinx.ext.autosectionlabel']
 extensions.append('sphinx.ext.extlinks')
-
+extensions.append('sphinx.ext.imgmath')
 
 
 # Add any paths that contain templates here, relative to this directory.
