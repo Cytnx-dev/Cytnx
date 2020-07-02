@@ -28,6 +28,7 @@ html_theme_path = [sphinxbootstrap4theme.get_path()]
 project = 'Cytnx'
 copyright = '2019-, Kai-Hsin Wu'
 author = 'Kai-Hsin Wu'
+_version = 'v0.5.5a'
 #version = 'v0.5.5a'
 
 # -- General configuration ---------------------------------------------------
@@ -106,7 +107,8 @@ html_theme_options = {
     # False indicates path of pages in the document.
     'navbar_links' : [
          ('API Doc', 'https://kaihsin.github.io/Cytnx/docs/html/index.html', True),
-         ("Github", "https://github.com/kaihsin/Cytnx", True)
+         ("Github", "https://github.com/kaihsin/Cytnx", True),
+         ("%s"%(_version), "#", False)
     ],
 
     # Total width(%) of the document and the sidebar.
