@@ -206,9 +206,207 @@ Output>>
 
 Inherit the LinOp class
 ************************
+Cytnx also expose the interface **LinOp.matvec**, which provides more flexibility for users who want to include additional data/functions associate with the mapping. This can be achieve with inheritance of **LinOp** class. 
+
+Let's demonstrate how to use this with the similar example. Again, we consider a operator that interchange the 1st and 4th elements. But this time, we want the 2nd and 3rd elements add with a constant as an external parameter. 
+
+First, let's create a class that inherit **LinOp** object, with a class member **AddConst**. 
+
+* In python:
+
+.. code-block:: python
+    :linenos:
+
+    class MyOp(cytnx.LinOp):
+        AddConst = 1# class member.
+
+        def __init__(self,aconst):
+            # here, we fix nx=4, dtype=double on CPU, 
+            # so the constructor only take external argument 'aconst'
+            
+            ## Remember to init the mother class. 
+            ## Here, we don't specify the custom_f!
+            LinOp.__init__(self,"mv",4,cytnx.Type.Double,\
+                                       cytnx.Device.cpu )
+
+            self.AddConst = aconst
+
+* In c++:
+
+.. code-block:: c++
+    :linenos:
+
+    using namespace cytnx;
+    class MyOp: public LinOp{
+        public:
+            double AddConst;
+
+            MyOp(double aconst):
+                LinOp("mv",4,Type.Double,Device.cpu){ //invoke base class constructor!
+
+                this->AddConst = aconst;
+            }
+
+    };
+
+
+Next, the most important part is to overload the **matvec** member function, as it defines the mapping from input :math:`\boldsymbol{x}` to output :math:`\boldsymbol{y}`.
+
+* In python:
+
+.. code-block:: python
+    :linenos:
+    :emphasize-lines: 15-20
+
+    class MyOp(cytnx.LinOp):
+        AddConst = 1# class member.
+
+        def __init__(self,aconst):
+            # here, we fix nx=4, dtype=double on CPU, 
+            # so the constructor only take external argument 'aconst'
+            
+            ## Remember to init the mother class. 
+            ## Here, we don't specify the custom_f!
+            cytnx.LinOp.__init__(self,"mv",4,cytnx.Type.Double,\
+                                             cytnx.Device.cpu )
+
+            self.AddConst = aconst
+
+        def matvec(self, v):
+            out = v.clone()
+            out[0],out[3] = v[3],v[0] # swap
+            out[1]+=self.AddConst #add constant
+            out[2]+=self.AddConst #add constant
+            return out
+
+
+* In c++:
+
+.. code-block:: c++
+    :linenos:
+    :emphasize-lines: 12-19
+
+    using namespace cytnx;
+    class MyOp: public LinOp{
+        public:
+            double AddConst;
+
+            MyOp(double aconst):
+                LinOp("mv",4,Type.Double,Device.cpu){ //invoke base class constructor!
+
+                this->AddConst = aconst;
+            }
+
+            Tensor matvec(const Tensor& v) override{
+                auto out = v.clone();
+                out(0) = v(3); //swap
+                out(3) = v(0); //swap
+                out[1]+=this->AddConst; //add const
+                out[2]+=this->AddConst; //add const
+                return out;
+            }
+
+    };
+
+Finally, the class can be simply used as following, here, we set the constant to add as 7. 
+
+* In python:
+
+.. code-block:: python
+    :linenos:
+
+    myop = MyOp(7)
+    x = cytnx.arange(4)
+    y = myop.matvec(x)
+
+    print(x)
+    print(y)
 
 
 
+* In c++:
+
+.. code-block:: c++
+    :linenos:
+
+    auto myop = MyOp(7);
+    auto x = cytnx::arange(4);
+    auto y = myop.matvec(x);
+
+    cout << x << endl;
+    cout << y << endl;
+
+Output>>
+
+.. code-block:: text
+    
+    Total elem: 4
+    type  : Double (Float64)
+    cytnx device: CPU
+    Shape : (4)
+    [0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 ]
+
+
+    Total elem: 4
+    type  : Double (Float64)
+    cytnx device: CPU
+    Shape : (4)
+    [3.00000e+00 8.00000e+00 9.00000e+00 0.00000e+00 ]
+
+
+
+Note that with this flexibility, the user can define their own sparse data structure of an operator. 
+
+For example, if we want to define a sparse matrix :math:`\boldsymbol{A}` with shape=(1000,1000) with ONLY two non-zero elements A[1,100]=4 and A[100,1]=7. other elements are zero, we don't have to really define a dense tensor with size :math:`10^6`. We can simply use **LinOp** class as
+
+* In python:
+
+.. code-block:: python
+    :linenos:
+
+    class Oper(cytnx.LinOp):
+        Loc = []
+        Val = []
+
+        def __init__(self):
+            cytnx.LinOp.__init__(self,"mv",1000)
+
+            self.Loc.append([1,100])
+            self.Val.append(4.)
+
+            self.Loc.append([100,1])
+            self.Val.append(7.)
+
+        def matvec(self,v):
+            out = cytnx.zeros(v.shape(),v.dtype(),v.device())
+            for i in range(len(self.Loc)):
+                out[self.Loc[i][0]] += v[self.Loc[i][1]]*self.Val[i]
+            return out
+
+
+    A = Oper();
+    x = cytnx.arange(1000)
+    y = A.matvec(x)
+
+    print(x[1].item(),x[100].item())
+    print(y[1].item(),y[100].item())
+
+
+Output>>
+
+.. code-block:: text
+    
+    1.0 100.0
+    400.0 7.0
+
+
+
+.. Hint::
+
+    Here, we use python API as example, but the same thing can be done with C++ API as well. 
+    
+
+Next session, we will see how we can benefit from LinOp class by pass this object to Cytnx's iteractive solver and solve for the eigen value problem with our custom Operator. 
 
 
 
