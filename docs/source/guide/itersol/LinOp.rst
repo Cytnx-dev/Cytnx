@@ -85,7 +85,7 @@ This is exactly what LinOp is designed to do. User can define the mapping operat
 
 There are two ways we can define a linear operator: 1. Pass a callable function with proper signature to LinOp object. 2. Inherit the LinOp class, and overload the **matvec** member function.
 
-Let's consider a simple example of a operator that operate on a input vector :math:`\boldsymbol{x}` with dimension 4 that interchange the 1st and 4th elements and add one to both the 2nd and 3rd elements. Then output a dim=4 vector math:`\boldsymbol{y}`. 
+Let's consider a simple example of a operator that operate on a input vector :math:`\boldsymbol{x}` with dimension 4 that interchange the 1st and 4th elements and add one to both the 2nd and 3rd elements. Then output a dim=4 vector :math:`\boldsymbol{y}`. 
 
 
 Pass a function
@@ -354,8 +354,9 @@ Output>>
     [3.00000e+00 8.00000e+00 9.00000e+00 0.00000e+00 ]
 
 
-
-Note that with this flexibility, the user can define their own sparse data structure of an operator. 
+Ex: make sparse data structure
+*******************************
+With this flexibility, the user can actually define their own sparse data structure of an operator. 
 
 For example, if we want to define a sparse matrix :math:`\boldsymbol{A}` with shape=(1000,1000) with ONLY two non-zero elements A[1,100]=4 and A[100,1]=7. other elements are zero, we don't have to really define a dense tensor with size :math:`10^6`. We can simply use **LinOp** class as
 
