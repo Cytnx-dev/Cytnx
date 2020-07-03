@@ -4,7 +4,6 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -142,7 +141,11 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../Examples.html">Examples</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">1. Exact Diagonalization</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">1. Exact Diagonalization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bit-representation-of-basis-states">1.1. Bit representation of basis states</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation">1.2. Implementation</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -336,7 +339,11 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../Examples.html">Examples</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">1. Exact Diagonalization</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">1. Exact Diagonalization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bit-representation-of-basis-states">1.1. Bit representation of basis states</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation">1.2. Implementation</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -380,13 +387,264 @@
             
   <div class="section" id="exact-diagonalization">
 <h1><span class="section-number">1. </span>Exact Diagonalization<a class="headerlink" href="#exact-diagonalization" title="Permalink to this headline">¶</a></h1>
-<p>Here, let’s consider the example of a 1D transverse field Ising model with Hamiltonain defines as</p>
+<p>Consider the example of a 1D transverse field Ising model with Hamiltonain defines as</p>
 <div class="math">
-<p><img src="../_images/math/8f51d655127868031a72a44c12b73285658f41f6.png" alt="H = -\sum_{\left&lt;ij\right&gt;}\sigma^{z}_i\sigma^{z}_j - h\sum_i \sigma^{x}_i"/></p>
+<p><img src="../_images/math/1ae2ab3d128ee9b8146be3d153453b54b8f1e810.png" alt="H = J\sum_{\left&lt;ij\right&gt;}\sigma^{z}_i\sigma^{z}_j - H_x\sum_i \sigma^{x}_i"/></p>
 </div><p>where <img class="math" src="../_images/math/f19a54dab8b2981a9c593dbceb749a37f4fe8b30.png" alt="\left&lt;ij\right&gt;"/> denotes nearest neighbor interaction, and <img class="math" src="../_images/math/ce3f0bb97c9c7f72ed406b3c0d9940a240b13304.png" alt="\sigma^{x,z}"/> is the pauli-matrices.</p>
-<p>The model undergoes a phase transition  at <img class="math" src="../_images/math/98d7cf364024f40f27e83f29a928279d2d499b9a.png" alt="h_c = 1"/> with avoid level crossing. For further information, see <em>insert url!</em></p>
-<p>Generally, the native way to calculate the energy specturm of this Hamiltonian is through the product of local pauli-matrices. Hoever, the size of this many-body Hamiltonian growth exponentially with size of chain <img class="math" src="../_images/math/19eef1966f7c545af3ac8c0fa486974d873e3c65.png" alt="L"/> as <img class="math" src="../_images/math/1ac025bcd85e9ce8b501ce17ba7877971fbdf625.png" alt="2^{L}"/>. It is not pratical to store this large Hamiltonain.</p>
-<p>Notice that this many-body Hamiltonain is very sparse, with lots of elements are zero. We can use LinOp to represent this Hamiltonain, and call <strong>Lanczos_ER</strong> to get the low-level energies.</p>
+<p>The model undergoes a phase transition  at <img class="math" src="../_images/math/c980699a020a974dc1ee6d602c7c08e3c4c19021.png" alt="H_x^c/J = 1"/> with avoid level crossing. For further information, see <em>insert url!</em></p>
+<p>Here, we are interesting to observe this avoid level crossing where the gap closes with increasing system size. For this, we want to get the low-level energy spectrums.</p>
+<p>Generally, the native way to calculate the energy specturm of this Hamiltonian is through the product of local pauli-matrices. However, the size of this many-body Hamiltonian growth exponentially with size of chain <img class="math" src="../_images/math/19eef1966f7c545af3ac8c0fa486974d873e3c65.png" alt="L"/> as <img class="math" src="../_images/math/1ac025bcd85e9ce8b501ce17ba7877971fbdf625.png" alt="2^{L}"/>. It is not pratical to store this large Hamiltonain.</p>
+<p>Notice that this many-body Hamiltonain is very sparse, with lots of elements equal to zero. Thus it is very useful to use LinOp to represent this Hamiltonain, and call <strong>Lanczos_ER</strong> to get the low-level energies.</p>
+<div class="section" id="bit-representation-of-basis-states">
+<h2><span class="section-number">1.1. </span>Bit representation of basis states<a class="headerlink" href="#bit-representation-of-basis-states" title="Permalink to this headline">¶</a></h2>
+<p>First thing we want to do is to represent the basis states using bit-representation.
+Here, let’s choose the <img class="math" src="../_images/math/8d051150f8669295ecdbe92367941012175a824d.png" alt="z"/> -basis.
+For example:</p>
+<div class="math">
+<p><img src="../_images/math/95c5e9a26cba272a50897d4f58d47911d23b1d80.png" alt="| \uparrow\uparrow\uparrow \cdots \uparrow\downarrow &gt; = \mathrm{bit}(000...01) = \mathrm{int}(1)
+
+| \uparrow\uparrow\uparrow \cdots \downarrow\downarrow &gt; = \mathrm{bit}(000...11) = \mathrm{int}(3)"/></p>
+</div><p>This each configuration (basis state) can be identify with a integer ID.</p>
+<p>Now, since we want to consider the Hamiltonian as <em>operation</em> that acting on the input vector and mapping to the output vector, we can think of pauli-matrices <img class="math" src="../_images/math/ce3f0bb97c9c7f72ed406b3c0d9940a240b13304.png" alt="\sigma^{x,z}"/> acting on the basis state, and map from input state to output state with coefficient <img class="math" src="../_images/math/d520a12f1579170834c32ad5f656de081bbb36fe.png" alt="c"/> as <img class="math" src="../_images/math/762973d4c74cabf88d4e2fa5daf82a7ab16ad8de.png" alt="c|\psi_{out}&gt; = \sigma^{x,z}|\psi_{in}&gt;"/> .</p>
+<p>For example:</p>
+<div class="math">
+<p><img src="../_images/math/5abd48ee35e0499c04cf5ec46d6e14640f87390a.png" alt="J\sigma_0^{z}\sigma_1^{z} | \uparrow\uparrow\uparrow \cdots \uparrow\downarrow &gt; = -J | \uparrow\uparrow\uparrow \cdots \uparrow\downarrow &gt;
+
+H_x\sigma_0^{x} | \uparrow\uparrow\uparrow \cdots \uparrow\downarrow &gt; = H_x | \uparrow\uparrow\uparrow \cdots \uparrow\uparrow &gt;"/></p>
+</div><p>The first example, <img class="math" src="../_images/math/79875dec455d1476b856c590eb791b9ac3782d3a.png" alt="J\sigma_0^{z}\sigma_1^{z}"/> map from basis with ID=1 to ID=1 with coefficient <img class="math" src="../_images/math/49a62c5fa55d184e16e67b79eabfb5244dd1d524.png" alt="-J"/>, which is a diagonal elements in the many body Hamiltonian.
+The second example which <img class="math" src="../_images/math/d7109c8614516be709ab98d3095bf08aedaa20b8.png" alt="H_x\sigma_0^{x}"/> operate on state with ID=1 resulting as a state with ID=0 and corresponding coefficient <img class="math" src="../_images/math/43570e4cdde42ee9772f213df372ef4432d99766.png" alt="H_x"/>, which is a off-diagonal elements in the many-body Hamiltonian.</p>
+<p>With aformentioned rule, we are now ready to implement the TFIM Hamiltonian using <strong>LinOp</strong> class.</p>
+</div>
+<div class="section" id="implementation">
+<h2><span class="section-number">1.2. </span>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Let’s inherit the <strong>LinOp</strong> class, and implement the aformentioned mapping in the overload of <strong>matvec</strong>:</p></li>
+</ol>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cytnx</span> <span class="k">as</span> <span class="nn">cy</span>
+
+<span class="k">class</span> <span class="nc">Hising</span><span class="p">(</span><span class="n">cy</span><span class="o">.</span><span class="n">LinOp</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">J</span><span class="p">,</span><span class="n">Hx</span><span class="p">):</span>
+        <span class="n">cy</span><span class="o">.</span><span class="n">LinOp</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;mv&quot;</span><span class="p">,</span><span class="mi">2</span><span class="o">**</span><span class="n">L</span><span class="p">,</span><span class="n">cy</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">Double</span><span class="p">,</span><span class="n">cy</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">cpu</span><span class="p">)</span>
+        <span class="c1">## custom members:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">J</span>  <span class="o">=</span> <span class="n">J</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Hx</span> <span class="o">=</span> <span class="n">Hx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L</span>  <span class="o">=</span> <span class="n">L</span>
+
+    <span class="k">def</span> <span class="nf">SzSz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">ipt_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ipt_id</span><span class="p">,(</span><span class="mf">1.</span> <span class="o">-</span> <span class="mf">2.</span><span class="o">*</span><span class="p">(((</span><span class="n">ipt_id</span><span class="o">&gt;&gt;</span><span class="n">i</span><span class="p">)</span><span class="o">&amp;</span><span class="mh">0x1</span><span class="p">)</span><span class="o">^</span><span class="p">((</span><span class="n">ipt_id</span><span class="o">&gt;&gt;</span><span class="n">j</span><span class="p">)</span><span class="o">&amp;</span><span class="mh">0x1</span><span class="p">)))</span>
+
+    <span class="k">def</span> <span class="nf">Sx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">ipt_id</span><span class="p">):</span>
+        <span class="n">out_id</span> <span class="o">=</span> <span class="n">ipt_id</span><span class="o">^</span><span class="p">((</span><span class="mh">0x1</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out_id</span><span class="p">,</span><span class="mf">1.0</span>
+
+    <span class="c1">## let&#39;s overload this with custom operation:</span>
+    <span class="k">def</span> <span class="nf">matvec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">v</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">cy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="o">.</span><span class="n">dtype</span><span class="p">(),</span><span class="n">v</span><span class="o">.</span><span class="n">device</span><span class="p">());</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">):</span>
+                <span class="n">oid</span><span class="p">,</span><span class="n">amp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">SzSz</span><span class="p">(</span><span class="n">i</span><span class="p">,(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span><span class="n">a</span><span class="p">)</span>
+                <span class="n">out</span><span class="p">[</span><span class="n">oid</span><span class="p">]</span> <span class="o">+=</span> <span class="n">amp</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">J</span><span class="o">*</span><span class="n">v</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+
+                <span class="n">oid</span><span class="p">,</span><span class="n">amp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Sx</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">a</span><span class="p">)</span>
+                <span class="n">out</span><span class="p">[</span><span class="n">oid</span><span class="p">]</span> <span class="o">+=</span> <span class="n">amp</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">Hx</span><span class="p">)</span><span class="o">*</span><span class="n">v</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>In C++:</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">namespace</span> <span class="n">cy</span><span class="o">=</span><span class="n">cytnx</span><span class="p">;</span>
+<span class="k">class</span> <span class="nc">Hising</span><span class="o">:</span> <span class="k">public</span> <span class="n">cy</span><span class="o">::</span><span class="n">LinOp</span><span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">cytnx_double</span> <span class="n">J</span><span class="p">,</span><span class="n">Hx</span><span class="p">;</span>
+        <span class="n">cytnx_uint32</span> <span class="n">L</span><span class="p">;</span>
+
+    <span class="n">Hising</span><span class="p">(</span><span class="n">cytnx_uint32</span> <span class="n">L</span><span class="p">,</span> <span class="n">cytnx_double</span> <span class="n">J</span><span class="p">,</span> <span class="n">cytnx_double</span> <span class="n">Hx</span><span class="p">)</span><span class="o">:</span>
+        <span class="n">cy</span><span class="o">::</span><span class="n">LinOp</span><span class="p">(</span><span class="s">&quot;mv&quot;</span><span class="p">,</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">L</span><span class="p">),</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span><span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">)</span> <span class="c1">//rememeber to invoke base class constructor</span>
+    <span class="p">{</span>
+        <span class="c1">//custom members</span>
+        <span class="k">this</span><span class="o">-&gt;</span><span class="n">J</span>  <span class="o">=</span> <span class="n">J</span><span class="p">;</span>
+        <span class="k">this</span><span class="o">-&gt;</span><span class="n">Hx</span> <span class="o">=</span> <span class="n">Hx</span><span class="p">;</span>
+        <span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span>  <span class="o">=</span> <span class="n">L</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">double</span> <span class="n">SzSz</span><span class="p">(</span><span class="k">const</span> <span class="n">cytnx_uint32</span> <span class="o">&amp;</span><span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="n">cytnx_uint32</span> <span class="o">&amp;</span><span class="n">j</span><span class="p">,</span> <span class="k">const</span> <span class="n">cytnx_uint32</span> <span class="o">&amp;</span><span class="n">ipt_id</span><span class="p">,</span> <span class="n">cytnx_uint32</span> <span class="o">&amp;</span><span class="n">out_id</span><span class="p">){</span>
+        <span class="n">out_id</span> <span class="o">=</span> <span class="n">ipt_id</span><span class="p">;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="mf">2.</span><span class="o">*</span><span class="p">(((</span><span class="n">ipt_id</span><span class="o">&gt;&gt;</span><span class="n">i</span><span class="p">)</span><span class="o">&amp;</span><span class="mh">0x1</span><span class="p">)</span><span class="o">^</span><span class="p">((</span><span class="n">ipt_id</span><span class="o">&gt;&gt;</span><span class="n">j</span><span class="p">)</span><span class="o">&amp;</span><span class="mh">0x1</span><span class="p">)));</span>
+    <span class="p">}</span>
+
+    <span class="kt">double</span> <span class="n">Sx</span><span class="p">(</span><span class="k">const</span> <span class="n">cytnx_uint32</span> <span class="o">&amp;</span><span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="n">cytnx_uint32</span> <span class="o">&amp;</span><span class="n">ipt_id</span><span class="p">,</span> <span class="n">cytnx_uint32</span> <span class="o">&amp;</span><span class="n">out_id</span><span class="p">){</span>
+        <span class="n">out_id</span> <span class="o">=</span> <span class="n">ipt_id</span><span class="o">^</span><span class="p">((</span><span class="mh">0x1</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">i</span><span class="p">);</span>
+        <span class="k">return</span> <span class="mf">1.0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// let&#39;s overload this with custom operation:</span>
+    <span class="n">Tensor</span> <span class="n">matvec</span><span class="p">(</span><span class="k">const</span> <span class="n">Tensor</span> <span class="o">&amp;</span><span class="n">v</span><span class="p">)</span> <span class="k">override</span><span class="p">{</span>
+        <span class="k">auto</span> <span class="n">out</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">.</span><span class="n">dtype</span><span class="p">(),</span><span class="n">v</span><span class="p">.</span><span class="n">device</span><span class="p">());</span>
+        <span class="n">cytnx_uint32</span> <span class="n">oid</span><span class="p">;</span>
+        <span class="kt">double</span> <span class="n">amp</span><span class="p">;</span>
+
+        <span class="k">for</span><span class="p">(</span><span class="n">cytnx_uint32</span> <span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">a</span><span class="o">&lt;</span><span class="n">v</span><span class="p">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">];</span><span class="n">a</span><span class="o">++</span><span class="p">){</span>
+            <span class="k">for</span><span class="p">(</span><span class="n">cytnx_uint32</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+                <span class="n">amp</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">SzSz</span><span class="p">(</span><span class="n">i</span><span class="p">,(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">oid</span><span class="p">);</span>
+                <span class="n">out</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span> <span class="o">+=</span> <span class="n">amp</span><span class="o">*</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">J</span><span class="o">*</span><span class="n">v</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+
+                <span class="n">amp</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">Sx</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">oid</span><span class="p">);</span>
+                <span class="n">out</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span> <span class="o">+=</span> <span class="n">amp</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">Hx</span><span class="p">)</span><span class="o">*</span><span class="n">v</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</td></tr></table></div>
+<p>Note that here, we defone two member functions <strong>SzSz()</strong> and  <strong>Sx()</strong> that operate on site <img class="math" src="../_images/math/5183ea9096ac86aff6e13dd3d4389ae47617b059.png" alt="i,j"/> with basis ID <img class="math" src="../_images/math/2a6e197a3ae23b617ffd3a2148dbb2ca9914228c.png" alt="ipt_id"/> and return the output basis ID and corresponding coefficients.</p>
+<p>Inside the overload <strong>matvec</strong>, we then traversal all the basis states coefficients in input vector <strong>v</strong>, and using <strong>SzSz()</strong> and <strong>Sx()</strong> to calculate the mapping to the output vector <strong>out</strong>.</p>
+<p>The class constructor takes three arguments: <strong>L</strong>, the size of ising chain; <strong>J</strong>, the ZZ coupling and <strong>Hx</strong>, the transverse field.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Here, we consider periodic boundary condition, you can modify the boundary condition or adding additional terms by properly modify the <strong>matvec</strong>.</p>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Now, we can then using Lanczos method to get the low-level energy spectrum of this Hamiltonian. Since we are interesting in the property of avoid level crossing, let’s get the lowest 3 energy states.</p></li>
+</ol>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">J</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="n">Hx</span> <span class="o">=</span> <span class="mf">0.3</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">Hising</span><span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">J</span><span class="p">,</span><span class="n">Hx</span><span class="p">)</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">cy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Lanczos_ER</span><span class="p">(</span><span class="n">H</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>In c++:</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">cytnx_uint32</span> <span class="n">L</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">J</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">Hx</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">;</span>
+<span class="k">auto</span> <span class="n">H</span> <span class="o">=</span> <span class="n">Hising</span><span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">J</span><span class="p">,</span><span class="n">Hx</span><span class="p">);</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">cy</span><span class="o">::</span><span class="n">linalg</span><span class="o">::</span><span class="n">Lanczos_ER</span><span class="p">(</span><span class="o">&amp;</span><span class="n">H</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output&gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 3
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3)
+[-4.09296e+00 -4.08806e+00 -8.29256e-01 ]
+
+
+Total elem: 48
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (16,3)
+[[-6.98371e-01 9.23730e-02 -6.99613e-01 ]
+ [-5.41014e-02 -2.44076e-01 -5.13407e-02 ]
+ [-5.41014e-02 -2.44076e-01 -5.13407e-02 ]
+ [-1.58618e-02 -3.53197e-01 -4.22330e-08 ]
+ [-5.41014e-02 -2.44076e-01 -5.13407e-02 ]
+ [-8.02201e-03 -6.06493e-02 -1.74782e-08 ]
+ [-1.58618e-02 -3.53197e-01 -3.78828e-08 ]
+ [-5.41017e-02 -2.44076e-01 5.13405e-02 ]
+ [-5.41014e-02 -2.44076e-01 -5.13407e-02 ]
+ [-1.58618e-02 -3.53197e-01 -3.79224e-08 ]
+ [-8.02201e-03 -6.06493e-02 -1.71013e-08 ]
+ [-5.41017e-02 -2.44076e-01 5.13405e-02 ]
+ [-1.58618e-02 -3.53197e-01 -4.22106e-08 ]
+ [-5.41017e-02 -2.44076e-01 5.13405e-02 ]
+ [-5.41017e-02 -2.44076e-01 5.13405e-02 ]
+ [-6.98374e-01 9.23730e-02 6.99610e-01 ]]
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -400,7 +658,7 @@
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.0.4 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>
