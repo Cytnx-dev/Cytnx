@@ -380,6 +380,13 @@
             
   <div class="section" id="exact-diagonalization">
 <h1><span class="section-number">1. </span>Exact Diagonalization<a class="headerlink" href="#exact-diagonalization" title="Permalink to this headline">¶</a></h1>
+<p>Here, let’s consider the example of a 1D transverse field Ising model with Hamiltonain defines as</p>
+<div class="math">
+<p><img src="../_images/math/8f51d655127868031a72a44c12b73285658f41f6.png" alt="H = -\sum_{\left&lt;ij\right&gt;}\sigma^{z}_i\sigma^{z}_j - h\sum_i \sigma^{x}_i"/></p>
+</div><p>where <img class="math" src="../_images/math/f19a54dab8b2981a9c593dbceb749a37f4fe8b30.png" alt="\left&lt;ij\right&gt;"/> denotes nearest neighbor interaction, and <img class="math" src="../_images/math/ce3f0bb97c9c7f72ed406b3c0d9940a240b13304.png" alt="\sigma^{x,z}"/> is the pauli-matrices.</p>
+<p>The model undergoes a phase transition  at <img class="math" src="../_images/math/98d7cf364024f40f27e83f29a928279d2d499b9a.png" alt="h_c = 1"/> with avoid level crossing. For further information, see <em>insert url!</em></p>
+<p>Generally, the native way to calculate the energy specturm of this Hamiltonian is through the product of local pauli-matrices. Hoever, the size of this many-body Hamiltonian growth exponentially with size of chain <img class="math" src="../_images/math/19eef1966f7c545af3ac8c0fa486974d873e3c65.png" alt="L"/> as <img class="math" src="../_images/math/1ac025bcd85e9ce8b501ce17ba7877971fbdf625.png" alt="2^{L}"/>. It is not pratical to store this large Hamiltonain.</p>
+<p>Notice that this many-body Hamiltonain is very sparse, with lots of elements are zero. We can use LinOp to represent this Hamiltonain, and call <strong>Lanczos_ER</strong> to get the low-level energies.</p>
 </div>
 
 
