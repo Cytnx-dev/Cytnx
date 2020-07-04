@@ -141,7 +141,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Examples.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../example/ED.html">1. Exact Diagonalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/ED.html">1. Exact Diagonalization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../example/ED.html#bit-representation-of-basis-states">1.1. Bit representation of basis states</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../example/ED.html#implementation">1.2. Implementation</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -335,7 +339,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Examples.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../example/ED.html">1. Exact Diagonalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/ED.html">1. Exact Diagonalization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../example/ED.html#bit-representation-of-basis-states">1.1. Bit representation of basis states</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../example/ED.html#implementation">1.2. Implementation</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -379,20 +387,321 @@
             
   <div class="section" id="linear-algebra">
 <h1><span class="section-number">4. </span>Linear algebra<a class="headerlink" href="#linear-algebra" title="Permalink to this headline">¶</a></h1>
+<p>Currently, cytnx have these linear algebra functions:</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 49%" />
-<col style="width: 51%" />
+<col style="width: 20%" />
+<col style="width: 16%" />
+<col style="width: 7%" />
+<col style="width: 9%" />
+<col style="width: 19%" />
+<col style="width: 6%" />
+<col style="width: 23%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-</pre></div>
-</td></tr></table></div>
-</td>
-<td><div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-</pre></div>
-</td></tr></table></div>
-</td>
+<tr class="row-odd"><td><p>func</p></td>
+<td><p>inplace</p></td>
+<td><p>CPU</p></td>
+<td><p>GPU</p></td>
+<td><p>callby tn</p></td>
+<td><p>Tn</p></td>
+<td><p>CyTn (xlinalg)</p></td>
+</tr>
+<tr class="row-even"><td><p>Add</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sub</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-even"><td><p>Mul</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p>Div</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-even"><td><p>Cpr</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>x</p></td>
+</tr>
+<tr class="row-odd"><td><p>+,+=[tn]</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-even"><td><p>-,-=[tn]</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p><a href="#id1"><span class="problematic" id="id2">*</span></a>,*=[tn]</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-even"><td><p>/,/=[tn]</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p>==[tn]</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>x</p></td>
+</tr>
+<tr class="row-even"><td><p>Svd</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p><a href="#id3"><span class="problematic" id="id4">*</span></a>Svd_truncate</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-even"><td><p>InvM</p></td>
+<td><p><a href="#id15"><span class="problematic" id="id16">InvM_</span></a></p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-odd"><td><p>Inv</p></td>
+<td><p>Inv _</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-even"><td><p>Conj</p></td>
+<td><p><a href="#id17"><span class="problematic" id="id18">Conj_</span></a></p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p>Exp</p></td>
+<td><p><a href="#id19"><span class="problematic" id="id20">Exp_</span></a></p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-even"><td><p>Expf</p></td>
+<td><p><a href="#id21"><span class="problematic" id="id22">Expf_</span></a></p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-odd"><td><p>Eigh</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-even"><td><p><a href="#id5"><span class="problematic" id="id6">*</span></a>ExpH</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p><a href="#id7"><span class="problematic" id="id8">*</span></a>ExpM</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-even"><td><p>Matmul</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-odd"><td><p>Diag</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-even"><td><p><a href="#id9"><span class="problematic" id="id10">*</span></a>Tensordot</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-odd"><td><p>Outer</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-even"><td><p>Vectordot</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>.Y</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-odd"><td><p>Tridiag</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-even"><td><p>Kron</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-odd"><td><p>Norm</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-even"><td><p><a href="#id11"><span class="problematic" id="id12">*</span></a>Dot</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-odd"><td><p>Eig</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-even"><td><p>Pow</p></td>
+<td><p><a href="#id23"><span class="problematic" id="id24">Pow_</span></a></p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p>Abs</p></td>
+<td><p><a href="#id25"><span class="problematic" id="id26">Abs_</span></a></p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-even"><td><p>QR</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p>Det</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-even"><td><p>Min</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-odd"><td><p>Max</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-even"><td><p><a href="#id13"><span class="problematic" id="id14">*</span></a>Trace</p></td>
+<td><p>x</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
 </tr>
 </tbody>
 </table>
