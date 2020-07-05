@@ -27,7 +27,8 @@ Cytnx user guide and examples
     Github <https://kaihsin.github.io/Cytnx/docs/html/index.html>   
 
 .. toctree::
-    
+
+    FAQ.rst    
     Developer.rst
 
 
