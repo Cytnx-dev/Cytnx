@@ -4,6 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -23,7 +24,7 @@
     <script src="../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="7. linalg extension" href="xlinalg.html" />
+    <link rel="next" title="6.1. Tensor Notation" href="cyx/TNotation.html" />
     <link rel="prev" title="5.2. Lanczos solver" href="itersol/Lanczos.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
@@ -132,7 +133,19 @@
 <li class="toctree-l3"><a class="reference internal" href="itersol/Lanczos.html">5.2. Lanczos solver</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">6. Cytnx extensions</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">6. Cytnx extensions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cyx/TNotation.html">6.1. Tensor Notation</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cyx/Bond.html">6.2. Bond</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cyx/CyTensor.html">6.3. CyTensor</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cyx/Network.html">6.4. Network</a><ul class="simple">
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="xlinalg.html">7. linalg extension</a><ul class="simple">
@@ -141,7 +154,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Examples.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../example/ED.html">1. Exact Diagonalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/ED.html">1. Exact Diagonalization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../example/ED.html#bit-representation-of-basis-states">1.1. Bit representation of basis states</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../example/ED.html#implementation">1.2. Implementation</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -150,6 +167,7 @@
 <li class="toctree-l1"><a class="reference external" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">Github</a></li>
 </ul>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../FAQ.html">FAQs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Developer.html">Developer</a></li>
 </ul>
 
@@ -218,8 +236,8 @@
                <a href="itersol/Lanczos.html" title="Previous Chapter: 5.2. Lanczos solver" class="btn btn-primary" role="botton" accesskey="P">
                    &laquo; 5.2. Lanczos solver
                </a>
-               <a href="xlinalg.html" title="Next Chapter: 7. linalg extension" class="btn btn-primary" role="botton" accesskey="N">
-                   7. linalg extension &raquo;
+               <a href="cyx/TNotation.html" title="Next Chapter: 6.1. Tensor Notation" class="btn btn-primary" role="botton" accesskey="N">
+                   6.1. Tensor Notation &raquo;
                </a>
            </div>
        </div>
@@ -326,7 +344,19 @@
 <li class="toctree-l3"><a class="reference internal" href="itersol/Lanczos.html">5.2. Lanczos solver</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">6. Cytnx extensions</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">6. Cytnx extensions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cyx/TNotation.html">6.1. Tensor Notation</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cyx/Bond.html">6.2. Bond</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cyx/CyTensor.html">6.3. CyTensor</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cyx/Network.html">6.4. Network</a><ul class="simple">
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="xlinalg.html">7. linalg extension</a><ul class="simple">
@@ -335,7 +365,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Examples.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../example/ED.html">1. Exact Diagonalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/ED.html">1. Exact Diagonalization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../example/ED.html#bit-representation-of-basis-states">1.1. Bit representation of basis states</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../example/ED.html#implementation">1.2. Implementation</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -344,6 +378,7 @@
 <li class="toctree-l1"><a class="reference external" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">Github</a></li>
 </ul>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../FAQ.html">FAQs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Developer.html">Developer</a></li>
 </ul>
 
@@ -354,8 +389,8 @@
   <p class="topless"><a href="itersol/Lanczos.html"
                         title="previous chapter"><span class="section-number">5.2. </span>Lanczos solver</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="xlinalg.html"
-                        title="next chapter"><span class="section-number">7. </span>linalg extension</a></p>
+  <p class="topless"><a href="cyx/TNotation.html"
+                        title="next chapter"><span class="section-number">6.1. </span>Tensor Notation</a></p>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../search.html" method="get">
       <input type="text" name="q" class="form-control" placeholder="Search..." />
@@ -379,7 +414,25 @@
             
   <div class="section" id="cytnx-extensions">
 <h1><span class="section-number">6. </span>Cytnx extensions<a class="headerlink" href="#cytnx-extensions" title="Permalink to this headline">¶</a></h1>
+<p>cytnx_extension submodule/namespace provides objects that are designed specifically for Tensor network simulations, base on the <strong>cytnx.Tensor</strong>.</p>
+<p>The <strong>cytnx_extension.CyTensor</strong> which is a enhanced version of <strong>cytnx.Tensor</strong>, provides features such as labels for each rank (which is so called “bond”), Bra/Ket (In/Out) convention of bonds. These features are handy for multiple Tensor contraction, as well as implementation of Tensor network diagram.</p>
+<p>The <strong>cytnx_extensioin.Network</strong> object provides a skeleton of a Tensor network diagram. Users can write a <em>Network file</em>, which will serve as the blue print of a TN structure, and contract multiple Tensors at once with optimal contraction order optimized automatically within the <strong>Network</strong> object. Further more, user can plot the Tensor network diagram from <em>Network file</em> directly in python API to check the implementation.</p>
+<p>In the following, let’s look into these objects:</p>
 <div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cyx/TNotation.html">6.1. Tensor Notation</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cyx/Bond.html">6.2. Bond</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cyx/CyTensor.html">6.3. CyTensor</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cyx/Network.html">6.4. Network</a><ul class="simple">
+</ul>
+</li>
+</ul>
 </div>
 </div>
 
@@ -394,7 +447,7 @@
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.0.4 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>
