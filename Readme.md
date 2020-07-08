@@ -37,9 +37,13 @@
     10. Change Rowrank->rowrank for CyTensor. 
 
 
-## Documentation:
+## API Documentation:
 
 [https://kaihsin.github.io/Cytnx/docs/html/index.html](https://kaihsin.github.io/Cytnx/docs/html/index.html)
+
+## User Guide [under construction!]:
+
+[Cytnx User Guide](https://kaihsinwu.gitlab.io/Cytnx_doc/)
 
 ## conda install [![Build Status](https://travis-ci.com/kaihsin/Cytnx_build.svg?branch=master)](https://travis-ci.com/kaihsin/Cytnx_build)
 
