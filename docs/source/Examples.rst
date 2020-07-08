@@ -7,3 +7,8 @@ Here, we provide some examples of commonly seen Quantum simualtion methods.
     :numbered:
 
     example/ED.rst
+    example/iTEBD.rst
+    example/DMRG.rst
+    example/iDMRG.rst
+    example/HOTRG.rst
+
