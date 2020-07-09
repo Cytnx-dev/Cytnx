@@ -2,6 +2,8 @@ import os,sys
 sys.path.append('.')
 from link import *
 
+
+
 html_theme = 'sphinxbootstrap4theme'
 import sphinxbootstrap4theme
 html_theme_path = [sphinxbootstrap4theme.get_path()]
@@ -39,7 +41,7 @@ _version = 'v0.5.5a'
 extensions = ['sphinxcontrib.bibtex']#,'sphinx.ext.autosectionlabel']
 extensions.append('sphinx.ext.extlinks')
 extensions.append('sphinx.ext.imgmath')
-
+#extensions.append('ablog')
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -64,14 +66,6 @@ html_logo = 'Icon_i.png'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
-
-
-#html_theme = 'p-main_theme'
-#import os
-#from PSphinxTheme import utils
-
-#p, html_theme, needs_sphinx = utils.set_psphinxtheme(html_theme)
-#html_theme_path = p
 
 
 
@@ -132,4 +126,10 @@ html_theme_options = {
     'table_thead_class' : 'inverse',
 
 }
+
+## ablog
+#import ablog
+#templates_path.append(ablog.get_html_templates_path())
+#disqus_shortname='kaihsinwu'
+
 
