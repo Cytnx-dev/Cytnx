@@ -14,5 +14,5 @@ Consider the Hamiltonain of TFIM:
 where :math:`\sigma^{x,z}` are the pauli matrices. 
 
 
-.. bibliography:: ref.bib
+.. bibliography:: ref.itebd.bib
     :cited:
