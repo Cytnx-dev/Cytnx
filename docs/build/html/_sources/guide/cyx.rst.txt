@@ -13,9 +13,8 @@ In the following, let's look into these objects:
     :maxdepth: 3
 
     cyx/TNotation.rst
-    cyx/Bond.rst
     cyx/CyTensor.rst
     cyx/Network.rst
-       
+    cyx/Bond.rst
 
 
