@@ -134,7 +134,8 @@
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../cyx.html">6. Cytnx extensions</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">6.1. Tensor Notation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#tensor-dot-contraction">6.1.1. Tensor dot, Contraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tensor-contraction">6.1.1. Tensor Contraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#direction-of-bond">6.1.2. Direction of bond</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Bond.html">6.2. Bond</a><ul class="simple">
@@ -353,7 +354,8 @@
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../cyx.html">6. Cytnx extensions</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">6.1. Tensor Notation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#tensor-dot-contraction">6.1.1. Tensor dot, Contraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tensor-contraction">6.1.1. Tensor Contraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#direction-of-bond">6.1.2. Direction of bond</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Bond.html">6.2. Bond</a><ul class="simple">
@@ -439,8 +441,29 @@ This is where the graphical tensor notation is useful.</p>
 The number of bonds represent the <em>rank</em> of a tensor.</p>
 <a class="reference internal image-reference" href="../../_images/Not.png"><img alt="../../_images/Not.png" class="align-center" src="../../_images/Not.png" style="width: 600px;" /></a>
 <p>For example as show in above, (a) represent a rank-0 tensor, which is a scalar. (b) is a rank-1 tensor which is a <em>vector</em>, (c) is a rank-2 tensor which is <em>matrix</em> and (d) is a rank-3 tensor.</p>
-<div class="section" id="tensor-dot-contraction">
-<h2><span class="section-number">6.1.1. </span>Tensor dot, Contraction<a class="headerlink" href="#tensor-dot-contraction" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="tensor-contraction">
+<h2><span class="section-number">6.1.1. </span>Tensor Contraction<a class="headerlink" href="#tensor-contraction" title="Permalink to this headline">¶</a></h2>
+<p>One of the most important operation of tensors is to multiply multiple tensors together, and summing over the indices.
+For example, consider three tensors <img class="math" src="../../_images/math/b85aa5d096f451f74c3f19d187450e4b7166a35d.png" alt="A_{\alpha\beta\gamma}"/> a rank-3 tensor, <img class="math" src="../../_images/math/fa446b61e5e692f8a1a28bd18aa4a6c8c719c782.png" alt="B_{\beta\delta}"/> is a rank-2 tensor (matrix) and <img class="math" src="../../_images/math/f91e96efdad1125a56c558402dc4a8d4e0d4c458.png" alt="C_{\gamma}"/> is a rank-1 tensor (vector) multiply together to get a rank-2 tensor <img class="math" src="../../_images/math/614881ca167324e5065b49ad0e9f7fa7bc1d386b.png" alt="D_{\alpha\delta}"/> by summing over the common indices <img class="math" src="../../_images/math/8ceb890e86f3ee05f7699fc14911c5beff97d33d.png" alt="\beta,\gamma"/>. With einstain notation:</p>
+<div class="math">
+<p><img src="../../_images/math/d9fe6fda84befbd70840b57a6bb43febfff650b5.png" alt="D_{\alpha\delta} = A_{\alpha\beta\gamma}B_{\beta\delta}C_{\gamma}"/></p>
+</div><p>In the tensor notation, this is equivalent as the following diagram:</p>
+<a class="reference internal image-reference" href="../../_images/cont.png"><img alt="../../_images/cont.png" class="align-center" src="../../_images/cont.png" style="width: 550px;" /></a>
+<p>where the dash line indicate connetion of two bonds with the same indices. Summing over a index simply reprent by the connection of bonds and two (or more) tensors are called to <em>contract</em> together.</p>
+</div>
+<div class="section" id="direction-of-bond">
+<h2><span class="section-number">6.1.2. </span>Direction of bond<a class="headerlink" href="#direction-of-bond" title="Permalink to this headline">¶</a></h2>
+<p>Above, we have shown that every symbolic tensor notation can be represented by graphical tensor notation, and each bond can be interpreted as vector space.
+In quantum system, sometimes we want to indicate the physical space with <em>bra</em> (<img class="math" src="../../_images/math/4d1af477d226b33f70c5b4077bf289a3ffe49094.png" alt="&lt;\psi|"/>) and <em>ket</em> (<img class="math" src="../../_images/math/68721ce7388cc7b4aaf53a2230b45e0a4a8c43e2.png" alt="|\psi&gt;"/>). For example, a matrix can be generally represent as <img class="math" src="../../_images/math/f6dd51a0baa3db7eca832958d5a45215145d8e69.png" alt="A = |\alpha&gt;&lt;\beta|"/>, and <em>ket</em> can only multiply (contract) with a <em>bra</em>.
+In terms of tensor notation, we give each bond a <strong>direction</strong> (arrow) where bond with arrow pointing into the node indicates a <em>ket</em> and arrow pointing away from the node indicates a <em>bra</em> as shown in the following:</p>
+<a class="reference internal image-reference" href="../../_images/braket.png"><img alt="../../_images/braket.png" class="align-center" src="../../_images/braket.png" style="width: 500px;" /></a>
+<p>(a) indicate a rank-3 tensor <img class="math" src="../../_images/math/31f0d0f836f2f138befe5ea1abd0fe6f6b263f31.png" alt="A = |\alpha&gt;&lt;\beta|&lt;\delta|"/> and (b) is a rank-2 tensor <img class="math" src="../../_images/math/faa1d73b8efd0c7668bb794d95d48b7eeeef57f8.png" alt="B = |\alpha&gt;&lt;\beta|"/>.
+Just like in physics, a <em>ket</em> bond cannot multiply with a <em>bra</em> bond. In the tensor notation, this can be very straightforwardly presented, as two bonds with conflict direction cannot contract with each other, as shown in the following:</p>
+<a class="reference internal image-reference" href="../../_images/braket_cont.png"><img alt="../../_images/braket_cont.png" class="align-center" src="../../_images/braket_cont.png" style="width: 350px;" /></a>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Generally, each bond can represent different basis that is not interchangable, especially in the more complicated cases where each bond carries different quantum number.</p>
+</div>
 <div class="toctree-wrapper compound">
 </div>
 </div>
