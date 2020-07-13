@@ -11,7 +11,18 @@ Consider the Hamiltonain of TFIM:
 
     H = J\sum_{ij} \sigma^{z}_i\sigma^{z}_j - H_x\sum_i \sigma^{x}_i
 
-where :math:`\sigma^{x,z}` are the pauli matrices. 
+where :math:`\sigma^{x,z}` are the pauli matrices. The ground state can be represent by MPS as variational ansatz, where the *virtual bonds* dimension :math:`\chi` effectively controls the number of variational parameters, and the *physical bonds* dimension :math:`d` is the real physical dimension (here, for Ising spins :math:`d=2`). 
+
+Because the system has translational invariant, thus it is legit to choose unit-cell consist with two sites, and the infinite system ground state can be represented with only two sites MPS with local tensors :math:`\Gamma_A` and :math:`\Gamma_B` associate with the schmit basis and :math:`\lambda_A`, :math:`\lambda_B` are the diagonal matrices of Schmidt coefficients. 
+
+
+
+
+
+
+
+
+
 
 
 .. bibliography:: ref.itebd.bib
