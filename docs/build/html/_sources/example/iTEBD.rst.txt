@@ -19,15 +19,20 @@ Because the system has translational invariant, thus it is legit to choose unit-
     :width: 600
     :align: center
 
+To optimize the MPS for the ground state wave function, in TEBD, we perform imaginary time evolution with Hamiltonian :math:`H` with evolution operator :math:`e^{\tau H}`. The manybody Hamiltonian is then decomposed into local two-sites gate via Trotter-Suzuki decomposition where :math:`e^{\tau H} \approx e^{\delta \tau H_{a}}e^{\delta \tau H_{b}} \cdots`, and :math:`H_a` and :math:`H_b` are two sites operator:
 
+.. math::
 
+    H_{a,b} = J\sigma^{z}_{A,B}\sigma^{z}_{B,A} - \frac{H_x}{2}(\sigma^{x}_A + \sigma^{x}_B) 
+
+In terms of tensor notation, This can be represented as:
 
 
 
 
 .. Hint::
     
-    The complete example code can be found in Github repo under example/ED folder.
+    The complete example code can be found in Github repo under example/iTEBD folder.
 
 
 .. bibliography:: ref.itebd.bib
