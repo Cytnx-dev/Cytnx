@@ -446,13 +446,152 @@
 The infinite size ground state can be represent by MPS as variational ansatz, where the <em>virtual bonds</em> dimension <img class="math" src="../_images/math/52b130781cb6e2b47a5efb235ac1cb4162210d12.png" alt="\chi"/> effectively controls the number of variational parameters (shown as orange bonds), and the <em>physical bonds</em> dimension <img class="math" src="../_images/math/badad346f6fbe2e237af99bfbd9a93a4da53a3da.png" alt="d"/> is the real physical dimension (shown as the blue bonds. Here, for Ising spins <img class="math" src="../_images/math/70c185d024e038ba37d7018dc84eefd8616db41a.png" alt="d=2"/>).</p>
 <p>Because the system has translational invariant, thus it is legit to choose unit-cell consist with two sites, and the infinite system ground state can be represented with only two sites MPS with local tensors <img class="math" src="../_images/math/17ca72775d1128f2596ed085770dff83acf1994d.png" alt="\Gamma_A"/> and <img class="math" src="../_images/math/bd37fd9ad58efa5555782b2dbfcdd4361959155c.png" alt="\Gamma_B"/> associate with the schmit basis and <img class="math" src="../_images/math/ae4a4ff6a04edd704c3af024c35da4d525293ff1.png" alt="\lambda_A"/>, <img class="math" src="../_images/math/2aabf014844c25aea519f1a026c22dc9db822208.png" alt="\lambda_B"/> are the diagonal matrices of Schmidt coefficients as shown in the following:</p>
 <a class="reference internal image-reference" href="../_images/itebd_MPS.png"><img alt="../_images/itebd_MPS.png" class="align-center" src="../_images/itebd_MPS.png" style="width: 600px;" /></a>
-<p>To optimize the MPS for the ground state wave function, in TEBD, we perform imaginary time evolution with Hamiltonian <img class="math" src="../_images/math/cb5de54f699cf4b3c7c1a3e87313d11d536c0d88.png" alt="H"/> with evolution operator <img class="math" src="../_images/math/fcedc25030b70c3797d0cea5c3d331d0bcaa32f9.png" alt="e^{\tau H}"/>.
-The manybody Hamiltonian is then decomposed into local two-sites evolution operator (or sometimes also called gate in quantum computation language) via Trotter-Suzuki decomposition where <img class="math" src="../_images/math/4bfd4056b6b6a1035d6a3ac2ebc230c1b271eebf.png" alt="e^{\tau H} \approx e^{\delta \tau H_{a}}e^{\delta \tau H_{b}} \cdots"/>, and <img class="math" src="../_images/math/a8144f0742116176fb284b1b86e67a94d7900596.png" alt="H_a"/> and <img class="math" src="../_images/math/a2e069526944114f5a7fecaac2e260cb4fb043fe.png" alt="H_b"/> are two sites operator:</p>
-<div class="math">
-<p><img src="../_images/math/35c71ae8d4959b8284e0f147b27600b369e9c92e.png" alt="H_{a,b} = J\sigma^{z}_{A,B}\sigma^{z}_{B,A} - \frac{H_x}{2}(\sigma^{x}_A + \sigma^{x}_B)"/></p>
-</div><p>In terms of tensor notation, This can be represented as:</p>
+<p>Let’s first create this two-site  MPS wave function (here, we set virtual bond dimension <img class="math" src="../_images/math/8abc784ccde5e4b0b30fdb7d8343db21c4a06bd6.png" alt="\chi = 10"/> as example)</p>
+<ul class="simple">
+<li><p>In python</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cytnx</span>
+<span class="kn">import</span> <span class="nn">cytnx.cytnx_extension</span> <span class="k">as</span> <span class="nn">cyx</span>
+
+<span class="n">chi</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">.</span><span class="n">CyTensor</span><span class="p">([</span><span class="n">cyx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">),</span><span class="n">cyx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">cyx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">.</span><span class="n">CyTensor</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">bonds</span><span class="p">(),</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span>
+<span class="n">cytnx</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Make_normal</span><span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">get_block_</span><span class="p">(),</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">cytnx</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Make_normal</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">get_block_</span><span class="p">(),</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">A</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="n">B</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+
+<span class="n">la</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">.</span><span class="n">CyTensor</span><span class="p">([</span><span class="n">cyx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">),</span><span class="n">cyx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span><span class="n">is_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">lb</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">.</span><span class="n">CyTensor</span><span class="p">([</span><span class="n">cyx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">),</span><span class="n">cyx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">],</span><span class="n">is_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">la</span><span class="o">.</span><span class="n">put_block</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">chi</span><span class="p">))</span>
+<span class="n">lb</span><span class="o">.</span><span class="n">put_block</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">chi</span><span class="p">))</span>
+
+<span class="n">la</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="n">lb</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>In c++</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">namespace</span> <span class="n">cyx</span> <span class="o">=</span> <span class="n">cytnx_extension</span><span class="p">;</span>
+<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">chi</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">CyTensor</span><span class="p">({</span><span class="n">cyx</span><span class="o">::</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">),</span><span class="n">cyx</span><span class="o">::</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">cyx</span><span class="o">::</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">)},{</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">},</span><span class="mi">1</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">B</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">CyTensor</span><span class="p">(</span><span class="n">A</span><span class="p">.</span><span class="n">bonds</span><span class="p">(),{</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">},</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">cytnx</span><span class="o">::</span><span class="n">random</span><span class="o">::</span><span class="n">Make_normal</span><span class="p">(</span><span class="n">B</span><span class="p">.</span><span class="n">get_block_</span><span class="p">(),</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.2</span><span class="p">);</span>
+<span class="n">cytnx</span><span class="o">::</span><span class="n">random</span><span class="o">::</span><span class="n">Make_normal</span><span class="p">(</span><span class="n">A</span><span class="p">.</span><span class="n">get_block_</span><span class="p">(),</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.2</span><span class="p">);</span>
+<span class="n">A</span><span class="p">.</span><span class="n">print_diagram</span><span class="p">();</span>
+<span class="n">B</span><span class="p">.</span><span class="n">print_diagram</span><span class="p">();</span>
+
+<span class="k">auto</span> <span class="n">la</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">CyTensor</span><span class="p">({</span><span class="n">cyx</span><span class="o">::</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">),</span><span class="n">cyx</span><span class="o">::</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">)},{</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">},</span><span class="mi">1</span><span class="p">,</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span><span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">,</span><span class="nb">true</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">lb</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">CyTensor</span><span class="p">({</span><span class="n">cyx</span><span class="o">::</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">),</span><span class="n">cyx</span><span class="o">::</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">)},{</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">},</span><span class="mi">1</span><span class="p">,</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span><span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">,</span><span class="nb">true</span><span class="p">);</span>
+<span class="n">la</span><span class="p">.</span><span class="n">put_block</span><span class="p">(</span><span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">(</span><span class="n">chi</span><span class="p">));</span>
+<span class="n">lb</span><span class="p">.</span><span class="n">put_block</span><span class="p">(</span><span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">(</span><span class="n">chi</span><span class="p">));</span>
+
+<span class="n">la</span><span class="p">.</span><span class="n">print_diagram</span><span class="p">();</span>
+<span class="n">lb</span><span class="p">.</span><span class="n">print_diagram</span><span class="p">();</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output &gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-----------------------
+tensor Name :
+tensor Rank : 3
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+            -------------
+           /             \
+    -1 ____| 10        2 |____ 0
+           |             |
+           |          10 |____ -2
+           \             /
+            -------------
+-----------------------
+tensor Name :
+tensor Rank : 3
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+            -------------
+           /             \
+    -3 ____| 10        2 |____ 1
+           |             |
+           |          10 |____ -4
+           \             /
+            -------------
+-----------------------
+tensor Name :
+tensor Rank : 2
+block_form  : false
+is_diag     : True
+on device   : cytnx device: CPU
+            -------------
+           /             \
+    -2 ____| 10       10 |____ -3
+           \             /
+            -------------
+-----------------------
+tensor Name :
+tensor Rank : 2
+block_form  : false
+is_diag     : True
+on device   : cytnx device: CPU
+            -------------
+           /             \
+    -4 ____| 10       10 |____ -5
+           \             /
+            -------------
+</pre></div>
+</div>
+<p>Here, we use <strong>random::Make_normal</strong> to initialize the elements of CyTensor <em>A</em> and <em>B</em> with normal distribution as initial MPS wavefuncion.
+The <em>la</em>, <em>lb</em> are the weight matrix (schmit coefficients), hence only diagonal elements contains non-zero values. Thus, we set <strong>is_diag=True</strong> to only store diagonal entries.
+We then initialize the elements to be all one for this weight matrices.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In general, there are other ways you can set-up a trial initial MPS wavefunction, as long as not all the elements are zero.</p>
+</div>
 <div class="section" id="update-procedure">
 <h2><span class="section-number">2.1. </span>Update procedure<a class="headerlink" href="#update-procedure" title="Permalink to this headline">¶</a></h2>
+<p>To optimize the MPS for the ground state wave function, in TEBD, we perform imaginary time evolution with Hamiltonian <img class="math" src="../_images/math/cb5de54f699cf4b3c7c1a3e87313d11d536c0d88.png" alt="H"/> with evolution operator <img class="math" src="../_images/math/fcedc25030b70c3797d0cea5c3d331d0bcaa32f9.png" alt="e^{\tau H}"/>.
+The manybody Hamiltonian is then decomposed into local two-sites evolution operator (or sometimes also called gate in quantum computation language) via
+Trotter-Suzuki decomposition, where <img class="math" src="../_images/math/3d84f2bb873798ab8373c8e1116b97b17150dcfc.png" alt="U = e^{\tau H} \approx e^{\delta \tau H_{a}}e^{\delta \tau H_{b}} \cdots = U_a U_b"/>, <img class="math" src="../_images/math/73a9fe327915a6411d5622c6cc395603e0a14a2c.png" alt="U_{a,b} = e^{\delta \tau H_{a,b}}"/> are the local evolution operators with <img class="math" src="../_images/math/a8144f0742116176fb284b1b86e67a94d7900596.png" alt="H_a"/> and <img class="math" src="../_images/math/a2e069526944114f5a7fecaac2e260cb4fb043fe.png" alt="H_b"/> are the local two sites operator:</p>
+<div class="math">
+<p><img src="../_images/math/35c71ae8d4959b8284e0f147b27600b369e9c92e.png" alt="H_{a,b} = J\sigma^{z}_{A,B}\sigma^{z}_{B,A} - \frac{H_x}{2}(\sigma^{x}_A + \sigma^{x}_B)"/></p>
+</div><p>This is equivalent as acting theses two-site gates consecutively on the MPS, which in terms of tensor notation looks like following Figure(a):</p>
+<a class="reference internal image-reference" href="../_images/itebd_upd.png"><img alt="../_images/itebd_upd.png" class="align-center" src="../_images/itebd_upd.png" style="width: 500px;" /></a>
+<p>Since we represent this infinite system MPS using the translational invariant, the Figure(a) can be further simplified into two step.
+First, acting <img class="math" src="../_images/math/2363059a61e3ed5453b95a6de83aad3f7525f156.png" alt="U_a"/> as shown in Figure(1), then acting <img class="math" src="../_images/math/d1585c1af4e036c3f5a0e577a2a8fdc54953a8c7.png" alt="U_b"/> as shown in Figure(2).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>In general, the accurate ground state can be acquired with a higher order Trotter-Suzuki expansion, and with decreasing <img class="math" src="../_images/math/8a17be931fc7513e42c70062ac24c65407c44dca.png" alt="\delta \tau"/> along the iteraction. (See <a class="bibtex reference internal" href="#itebd-vidal" id="id2">[Vid07]</a> for further details), Here, for demonstration, we use fixed value of <img class="math" src="../_images/math/8a17be931fc7513e42c70062ac24c65407c44dca.png" alt="\delta \tau"/>.</p>

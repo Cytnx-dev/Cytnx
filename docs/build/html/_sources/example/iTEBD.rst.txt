@@ -20,20 +20,140 @@ Because the system has translational invariant, thus it is legit to choose unit-
     :width: 600
     :align: center
 
+Let's first create this two-site  MPS wave function (here, we set virtual bond dimension :math:`\chi = 10` as example)
+
+* In python
+
+.. code-block:: python
+    :linenos:
+
+    import cytnx
+    import cytnx.cytnx_extension as cyx
+
+    chi = 10
+    A = cyx.CyTensor([cyx.Bond(chi),cyx.Bond(2),cyx.Bond(chi)],rowrank=1,labels=[-1,0,-2])
+    B = cyx.CyTensor(A.bonds(),rowrank=1,labels=[-3,1,-4])
+    cytnx.random.Make_normal(B.get_block_(),0,0.2)
+    cytnx.random.Make_normal(A.get_block_(),0,0.2)
+    A.print_diagram()
+    B.print_diagram()
+
+    la = cyx.CyTensor([cyx.Bond(chi),cyx.Bond(chi)],rowrank=1,labels=[-2,-3],is_diag=True)
+    lb = cyx.CyTensor([cyx.Bond(chi),cyx.Bond(chi)],rowrank=1,labels=[-4,-5],is_diag=True)
+    la.put_block(cytnx.ones(chi))
+    lb.put_block(cytnx.ones(chi))
+
+    la.print_diagram()
+    lb.print_diagram()
+
+
+* In c++
+
+.. code-block:: c++
+    :linenos:
+
+    namespace cyx = cytnx_extension;
+    unsigned int chi = 20;
+    auto A = cyx::CyTensor({cyx::Bond(chi),cyx::Bond(2),cyx::Bond(chi)},{-1,0,-2},1);
+    auto B = cyx::CyTensor(A.bonds(),{-3,1,-4},1);
+    cytnx::random::Make_normal(B.get_block_(),0,0.2);
+    cytnx::random::Make_normal(A.get_block_(),0,0.2);
+    A.print_diagram();
+    B.print_diagram();
+
+    auto la = cyx::CyTensor({cyx::Bond(chi),cyx::Bond(chi)},{-2,-3},1,Type.Double,Device.cpu,true);
+    auto lb = cyx::CyTensor({cyx::Bond(chi),cyx::Bond(chi)},{-4,-5},1,Type.Double,Device.cpu,true);
+    la.put_block(cytnx::ones(chi));
+    lb.put_block(cytnx::ones(chi));
+
+    la.print_diagram();
+    lb.print_diagram();
+
+
+Output >>
+
+.. code-block:: text
+    
+    -----------------------
+    tensor Name : 
+    tensor Rank : 3
+    block_form  : false
+    is_diag     : False
+    on device   : cytnx device: CPU
+                -------------      
+               /             \     
+        -1 ____| 10        2 |____ 0  
+               |             |     
+               |          10 |____ -2 
+               \             /     
+                -------------      
+    -----------------------
+    tensor Name : 
+    tensor Rank : 3
+    block_form  : false
+    is_diag     : False
+    on device   : cytnx device: CPU
+                -------------      
+               /             \     
+        -3 ____| 10        2 |____ 1  
+               |             |     
+               |          10 |____ -4 
+               \             /     
+                -------------      
+    -----------------------
+    tensor Name : 
+    tensor Rank : 2
+    block_form  : false
+    is_diag     : True
+    on device   : cytnx device: CPU
+                -------------      
+               /             \     
+        -2 ____| 10       10 |____ -3 
+               \             /     
+                -------------      
+    -----------------------
+    tensor Name : 
+    tensor Rank : 2
+    block_form  : false
+    is_diag     : True
+    on device   : cytnx device: CPU
+                -------------      
+               /             \     
+        -4 ____| 10       10 |____ -5 
+               \             /     
+                -------------      
+
+
+
+Here, we use **random::Make_normal** to initialize the elements of CyTensor *A* and *B* with normal distribution as initial MPS wavefuncion. 
+The *la*, *lb* are the weight matrix (schmit coefficients), hence only diagonal elements contains non-zero values. Thus, we set **is_diag=True** to only store diagonal entries. 
+We then initialize the elements to be all one for this weight matrices. 
+
+.. Note::
+    
+    In general, there are other ways you can set-up a trial initial MPS wavefunction, as long as not all the elements are zero. 
+
+
+Update procedure
+******************
 To optimize the MPS for the ground state wave function, in TEBD, we perform imaginary time evolution with Hamiltonian :math:`H` with evolution operator :math:`e^{\tau H}`. 
-The manybody Hamiltonian is then decomposed into local two-sites evolution operator (or sometimes also called gate in quantum computation language) via Trotter-Suzuki decomposition where :math:`e^{\tau H} \approx e^{\delta \tau H_{a}}e^{\delta \tau H_{b}} \cdots`, and :math:`H_a` and :math:`H_b` are two sites operator:
+The manybody Hamiltonian is then decomposed into local two-sites evolution operator (or sometimes also called gate in quantum computation language) via 
+Trotter-Suzuki decomposition, where :math:`U = e^{\tau H} \approx e^{\delta \tau H_{a}}e^{\delta \tau H_{b}} \cdots = U_a U_b`, :math:`U_{a,b} = e^{\delta \tau H_{a,b}}` are the local evolution operators with :math:`H_a` and :math:`H_b` are the local two sites operator:
 
 .. math::
 
     H_{a,b} = J\sigma^{z}_{A,B}\sigma^{z}_{B,A} - \frac{H_x}{2}(\sigma^{x}_A + \sigma^{x}_B) 
 
-In terms of tensor notation, This can be represented as:
+This is equivalent as acting theses two-site gates consecutively on the MPS, which in terms of tensor notation looks like following Figure(a):
 
+.. image:: image/itebd_upd.png
+    :width: 500
+    :align: center
+
+Since we represent this infinite system MPS using the translational invariant, the Figure(a) can be further simplified into two step. 
+First, acting :math:`U_a` as shown in Figure(1), then acting :math:`U_b` as shown in Figure(2). 
 
     
-
-Update procedure
-******************
 
 
 
