@@ -214,5 +214,8 @@ Output>>
      [-6.98374e-01 9.23730e-02 6.99610e-01 ]]
 
 
+.. Hint::
+    
+    The complete example code can be found in Github repo under example/ED folder.
 
 
