@@ -164,7 +164,8 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">2. iTEBD</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#update-procedure">2.1. Update procedure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#imaginary-time-evolution">2.1. Imaginary time evolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#update-procedure">2.2. Update procedure</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="DMRG.html">3. DMRG</a></li>
@@ -387,7 +388,8 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">2. iTEBD</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#update-procedure">2.1. Update procedure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#imaginary-time-evolution">2.1. Imaginary time evolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#update-procedure">2.2. Update procedure</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="DMRG.html">3. DMRG</a></li>
@@ -506,7 +508,11 @@ The infinite size ground state can be represent by MPS as variational ansatz, wh
 13
 14
 15
-16</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">namespace</span> <span class="n">cyx</span> <span class="o">=</span> <span class="n">cytnx_extension</span><span class="p">;</span>
+16
+17
+18</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;cytnx.hpp&quot;</span><span class="cp"></span>
+<span class="k">namespace</span> <span class="n">cyx</span> <span class="o">=</span> <span class="n">cytnx_extension</span><span class="p">;</span>
+
 <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">chi</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
 <span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">CyTensor</span><span class="p">({</span><span class="n">cyx</span><span class="o">::</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">),</span><span class="n">cyx</span><span class="o">::</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">cyx</span><span class="o">::</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">)},{</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">},</span><span class="mi">1</span><span class="p">);</span>
 <span class="k">auto</span> <span class="n">B</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">CyTensor</span><span class="p">(</span><span class="n">A</span><span class="p">.</span><span class="n">bonds</span><span class="p">(),{</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">},</span><span class="mi">1</span><span class="p">);</span>
@@ -582,8 +588,8 @@ We then initialize the elements to be all one for this weight matrices.</p>
 <p class="admonition-title">Note</p>
 <p>In general, there are other ways you can set-up a trial initial MPS wavefunction, as long as not all the elements are zero.</p>
 </div>
-<div class="section" id="update-procedure">
-<h2><span class="section-number">2.1. </span>Update procedure<a class="headerlink" href="#update-procedure" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="imaginary-time-evolution">
+<h2><span class="section-number">2.1. </span>Imaginary time evolution<a class="headerlink" href="#imaginary-time-evolution" title="Permalink to this headline">¶</a></h2>
 <p>To optimize the MPS for the ground state wave function, in TEBD, we perform imaginary time evolution with Hamiltonian <img class="math" src="../_images/math/cb5de54f699cf4b3c7c1a3e87313d11d536c0d88.png" alt="H"/> with evolution operator <img class="math" src="../_images/math/fcedc25030b70c3797d0cea5c3d331d0bcaa32f9.png" alt="e^{\tau H}"/>.
 The manybody Hamiltonian is then decomposed into local two-sites evolution operator (or sometimes also called gate in quantum computation language) via
 Trotter-Suzuki decomposition, where <img class="math" src="../_images/math/3d84f2bb873798ab8373c8e1116b97b17150dcfc.png" alt="U = e^{\tau H} \approx e^{\delta \tau H_{a}}e^{\delta \tau H_{b}} \cdots = U_a U_b"/>, <img class="math" src="../_images/math/73a9fe327915a6411d5622c6cc395603e0a14a2c.png" alt="U_{a,b} = e^{\delta \tau H_{a,b}}"/> are the local evolution operators with <img class="math" src="../_images/math/a8144f0742116176fb284b1b86e67a94d7900596.png" alt="H_a"/> and <img class="math" src="../_images/math/a2e069526944114f5a7fecaac2e260cb4fb043fe.png" alt="H_b"/> are the local two sites operator:</p>
@@ -592,11 +598,171 @@ Trotter-Suzuki decomposition, where <img class="math" src="../_images/math/3d84f
 </div><p>This is equivalent as acting theses two-site gates consecutively on the MPS, which in terms of tensor notation looks like following Figure(a):</p>
 <a class="reference internal image-reference" href="../_images/itebd_upd.png"><img alt="../_images/itebd_upd.png" class="align-center" src="../_images/itebd_upd.png" style="width: 500px;" /></a>
 <p>Since we represent this infinite system MPS using the translational invariant, the Figure(a) can be further simplified into two step.
-First, acting <img class="math" src="../_images/math/2363059a61e3ed5453b95a6de83aad3f7525f156.png" alt="U_a"/> as shown in Figure(1), then acting <img class="math" src="../_images/math/d1585c1af4e036c3f5a0e577a2a8fdc54953a8c7.png" alt="U_b"/> as shown in Figure(2).</p>
+First, acting <img class="math" src="../_images/math/2363059a61e3ed5453b95a6de83aad3f7525f156.png" alt="U_a"/> as shown in Figure(1) then acting <img class="math" src="../_images/math/d1585c1af4e036c3f5a0e577a2a8fdc54953a8c7.png" alt="U_b"/> as shown in Figure(2).</p>
+<p>Let’s construct this imaginary time evolution operator with parameter <img class="math" src="../_images/math/636cc35d45eb12a3401c57f100a3c446f25b5953.png" alt="J=-1"/>, <img class="math" src="../_images/math/b83617f1d6b91090379d598d42a3bf0c56ca690f.png" alt="H_x = -0.3"/> and (imaginary) time step <img class="math" src="../_images/math/1aae7466a9f6dd8274ba90a156145c6d97b5e28d.png" alt="\delta \tau = 0.1"/></p>
+<ul class="simple">
+<li><p>In python</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">J</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
+<span class="n">Hx</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.3</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">0.1</span>
+
+<span class="c1">## Create single site operator</span>
+<span class="n">Sz</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">physics</span><span class="o">.</span><span class="n">pauli</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">real</span><span class="p">()</span>
+<span class="n">Sx</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">physics</span><span class="o">.</span><span class="n">pauli</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">real</span><span class="p">()</span>
+<span class="n">I</span>  <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Sz</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Sx</span><span class="p">)</span>
+
+
+<span class="c1">## Construct the local Hamiltonian</span>
+<span class="n">TFterm</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Kron</span><span class="p">(</span><span class="n">Sx</span><span class="p">,</span><span class="n">I</span><span class="p">)</span> <span class="o">+</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Kron</span><span class="p">(</span><span class="n">I</span><span class="p">,</span><span class="n">Sx</span><span class="p">)</span>
+<span class="n">ZZterm</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Kron</span><span class="p">(</span><span class="n">Sz</span><span class="p">,</span><span class="n">Sz</span><span class="p">)</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">Hx</span><span class="o">*</span><span class="n">TFterm</span> <span class="o">+</span> <span class="n">J</span><span class="o">*</span><span class="n">ZZterm</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
+
+
+<span class="c1">## Build Evolution Operator</span>
+<span class="n">eH</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">ExpH</span><span class="p">(</span><span class="n">H</span><span class="p">,</span><span class="o">-</span><span class="n">dt</span><span class="p">)</span> <span class="c1">## or equivantly ExpH(-dt*H)</span>
+<span class="n">eH</span><span class="o">.</span><span class="n">reshape_</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">U</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">.</span><span class="n">CyTensor</span><span class="p">(</span><span class="n">eH</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">U</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>In c++</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">double</span> <span class="n">J</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">Hx</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">dt</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">;</span>
+
+<span class="c1">// Create single site operator</span>
+<span class="k">auto</span> <span class="n">Sz</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">physics</span><span class="o">::</span><span class="n">pauli</span><span class="p">(</span><span class="sc">&#39;z&#39;</span><span class="p">).</span><span class="n">real</span><span class="p">();</span>
+<span class="k">auto</span> <span class="n">Sx</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">physics</span><span class="o">::</span><span class="n">pauli</span><span class="p">(</span><span class="sc">&#39;x&#39;</span><span class="p">).</span><span class="n">real</span><span class="p">();</span>
+<span class="k">auto</span> <span class="n">I</span>  <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">Sz</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">Sx</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+
+<span class="c1">// Construct the local Hamiltonian</span>
+<span class="k">auto</span> <span class="n">TFterm</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">linalg</span><span class="o">::</span><span class="n">Kron</span><span class="p">(</span><span class="n">Sx</span><span class="p">,</span><span class="n">I</span><span class="p">)</span> <span class="o">+</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">linalg</span><span class="o">::</span><span class="n">Kron</span><span class="p">(</span><span class="n">I</span><span class="p">,</span><span class="n">Sx</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">ZZterm</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">linalg</span><span class="o">::</span><span class="n">Kron</span><span class="p">(</span><span class="n">Sz</span><span class="p">,</span><span class="n">Sz</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">H</span> <span class="o">=</span> <span class="n">Hx</span><span class="o">*</span><span class="n">TFterm</span> <span class="o">+</span> <span class="n">J</span><span class="o">*</span><span class="n">ZZterm</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">H</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+
+<span class="c1">// Build Evolution Operator</span>
+<span class="c1">// [Note] eH is cytnx.Tensor and U is CyTensor.</span>
+<span class="k">auto</span> <span class="n">eH</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">linalg</span><span class="o">::</span><span class="n">ExpH</span><span class="p">(</span><span class="n">H</span><span class="p">,</span><span class="o">-</span><span class="n">dt</span><span class="p">);</span> <span class="c1">//or equivantly ExpH(-dt*H)</span>
+<span class="n">eH</span><span class="p">.</span><span class="n">reshape_</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">U</span> <span class="o">=</span> <span class="n">cyx</span><span class="p">.</span><span class="n">CyTensor</span><span class="p">(</span><span class="n">eH</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+<span class="n">U</span><span class="p">.</span><span class="n">print_diagram</span><span class="p">();</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output&gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 4
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (2,2)
+[[1.00000e+00 0.00000e+00 ]
+ [0.00000e+00 -1.00000e+00 ]]
+
+
+Total elem: 4
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (2,2)
+[[0.00000e+00 1.00000e+00 ]
+ [1.00000e+00 0.00000e+00 ]]
+
+
+Total elem: 16
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,4)
+[[-1.00000e+00 3.00000e-01 3.00000e-01 0.00000e+00 ]
+ [3.00000e-01 1.00000e+00 0.00000e+00 3.00000e-01 ]
+ [3.00000e-01 0.00000e+00 1.00000e+00 3.00000e-01 ]
+ [0.00000e+00 3.00000e-01 3.00000e-01 -1.00000e+00 ]]
+
+-----------------------
+tensor Name :
+tensor Rank : 4
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+            -------------
+           /             \
+     0 ____| 2         2 |____ 2
+           |             |
+     1 ____| 2         2 |____ 3
+           \             /
+            -------------
+</pre></div>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>In general, the accurate ground state can be acquired with a higher order Trotter-Suzuki expansion, and with decreasing <img class="math" src="../_images/math/8a17be931fc7513e42c70062ac24c65407c44dca.png" alt="\delta \tau"/> along the iteraction. (See <a class="bibtex reference internal" href="#itebd-vidal" id="id2">[Vid07]</a> for further details), Here, for demonstration, we use fixed value of <img class="math" src="../_images/math/8a17be931fc7513e42c70062ac24c65407c44dca.png" alt="\delta \tau"/>.</p>
+<ol class="arabic simple">
+<li><p>Since <img class="math" src="../_images/math/2363059a61e3ed5453b95a6de83aad3f7525f156.png" alt="U_a"/> and <img class="math" src="../_images/math/d1585c1af4e036c3f5a0e577a2a8fdc54953a8c7.png" alt="U_b"/> have the same content(matrix elements) but acting on different sites, we only need to define a single CyTensor.</p></li>
+<li><p>Here as a simple example, we directly convert a <strong>cytnx.Tensor</strong> to <strong>cyx.CyTensor</strong>, which we don’t impose any bra-ket constrain (direction of bonds). In general, it is also possible to give bond direction (which we refering to <em>tagged</em>) that constrain the bonds to be more physical. See Github example/iTEBD/iTEBD_tag.py for demonstration.</p></li>
+<li><p>In general, the accurate ground state can be acquired with a higher order Trotter-Suzuki expansion, and with decreasing <img class="math" src="../_images/math/8a17be931fc7513e42c70062ac24c65407c44dca.png" alt="\delta \tau"/> along the iteraction. (See <a class="bibtex reference internal" href="#itebd-vidal" id="id2">[Vid07]</a> for further details), Here, for demonstration, we use fixed value of <img class="math" src="../_images/math/8a17be931fc7513e42c70062ac24c65407c44dca.png" alt="\delta \tau"/>.</p></li>
+</ol>
 </div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Here, <strong>physics.pauli</strong> returns complex type <strong>cytnx.Tensor</strong>. Since we know pauli-z and pauli-x should be real, we use <em>.real()</em> to get the real part.</p>
+</div>
+</div>
+<div class="section" id="update-procedure">
+<h2><span class="section-number">2.2. </span>Update procedure<a class="headerlink" href="#update-procedure" title="Permalink to this headline">¶</a></h2>
+<p>Now we have prepared the initial trial wavefunction in terms of MPS with two sites unit cell and the time evolution operator, we are ready to use the aformentioned scheme to find the (variational) ground state MPS.</p>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <p>The complete example code can be found in Github repo under example/iTEBD folder.</p>
