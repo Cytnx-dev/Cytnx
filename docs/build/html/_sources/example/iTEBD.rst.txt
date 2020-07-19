@@ -153,9 +153,9 @@ This is equivalent as acting theses two-site gates consecutively on the MPS, whi
     :align: center
 
 Since we represent this infinite system MPS using the translational invariant, the Figure(a) can be further simplified into two step. 
-First, acting :math:`U_a` as shown in Figure(1) then acting :math:`U_b` as shown in Figure(2). 
+First, acting :math:`U_a` as shown in Figure(1) then acting :math:`U_b` as shown in Figure(2). This two procedures then repeat until the energy is converged. 
 
-Let's construct this imaginary time evolution operator with parameter :math:`J=-1`, :math:`H_x = -0.3` and (imaginary) time step :math:`\delta \tau = 0.1`
+Here, let's construct this imaginary time evolution operator with parameter :math:`J=-1`, :math:`H_x = -0.3` and (imaginary) time step :math:`\delta \tau = 0.1`
 
 * In python 
 
