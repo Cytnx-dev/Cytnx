@@ -9,7 +9,7 @@ Bond_exes = [ x for x in exes if "Bond_" in x]
 Accessor_exes = [ x for x in exes if "Accessor_" in x]
 Symmetry_exes = [x for x in exes if "Symmetry_" in x]
 Network_exes = [x for x in exes if "Network_" in x]
-CyTensor_exes = [x for x in exes if "CyTensor_" in x]
+UniTensor_exes = [x for x in exes if "UniTensor_" in x]
 
 ## generate output
 for texe in Tensor_exes:
@@ -60,12 +60,12 @@ for texe in Network_exes:
     os.system("cat Network/%s"%(output_name))
     print("================") 
 
-for texe in CyTensor_exes:
-    output_name = (texe.split(".e")[0]).split("CyTensor_")[-1] + ".cpp.out"
-    os.system("./%s > CyTensor/%s"%(texe,output_name))
+for texe in UniTensor_exes:
+    output_name = (texe.split(".e")[0]).split("UniTensor_")[-1] + ".cpp.out"
+    os.system("./%s > UniTensor/%s"%(texe,output_name))
     print(texe)
     print("================") 
-    os.system("cat CyTensor/%s"%(output_name))
+    os.system("cat UniTensor/%s"%(output_name))
     print("================") 
 
 

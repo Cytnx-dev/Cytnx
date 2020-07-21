@@ -1,5 +1,4 @@
 from cytnx import *
-from cytnx.cytnx_extension import *
 #example of Z2 symmetry object 
 #------------------------------------
 sym_z2 = Symmetry.Zn(2);

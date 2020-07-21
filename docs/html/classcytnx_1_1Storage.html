@@ -150,9 +150,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a48f0424f051a4b3a821eb964be4cd5db"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Storage.html#a48f0424f051a4b3a821eb964be4cd5db">fill</a> (const T &amp;val)</td></tr>
 <tr class="memdesc:a48f0424f051a4b3a821eb964be4cd5db"><td class="mdescLeft">&#160;</td><td class="mdescRight">set all the elements to the assigned value val  <a href="#a48f0424f051a4b3a821eb964be4cd5db">More...</a><br /></td></tr>
 <tr class="separator:a48f0424f051a4b3a821eb964be4cd5db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2af56dfad6b8de844e810ac154b12770"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:a2af56dfad6b8de844e810ac154b12770"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Storage.html#a2af56dfad6b8de844e810ac154b12770">from_vector</a> (const std::vector&lt; T &gt; &amp;vin, const int <a class="el" href="classcytnx_1_1Storage.html#a4c3e27582d7f951e6b76ccbb92f7c537">device</a>=-1)</td></tr>
-<tr class="separator:a2af56dfad6b8de844e810ac154b12770"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c28604bf7751c817c44dc3286d6520f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Storage.html">Storage</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Storage.html#a1c28604bf7751c817c44dc3286d6520f">real</a> () const</td></tr>
 <tr class="memdesc:a1c28604bf7751c817c44dc3286d6520f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the real part form a Complex type <a class="el" href="classcytnx_1_1Storage.html" title="an memeory storage with multi-type/multi-device support ">Storage</a>.  <a href="#a1c28604bf7751c817c44dc3286d6520f">More...</a><br /></td></tr>
 <tr class="separator:a1c28604bf7751c817c44dc3286d6520f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -167,6 +164,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a830f293f47a42ede8dbc57d3a3bff605"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace206b1c452015d7c43a389d55f5ea86"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcytnx_1_1Storage.html">Storage</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Storage.html#ace206b1c452015d7c43a389d55f5ea86">Load</a> (const char *fname)</td></tr>
 <tr class="separator:ace206b1c452015d7c43a389d55f5ea86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92f5d8c9eea09dd899c8eea1c125d94b"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:a92f5d8c9eea09dd899c8eea1c125d94b"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="classcytnx_1_1Storage.html">Storage</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Storage.html#a92f5d8c9eea09dd899c8eea1c125d94b">from_vector</a> (const std::vector&lt; T &gt; &amp;vin, const int <a class="el" href="classcytnx_1_1Storage.html#a4c3e27582d7f951e6b76ccbb92f7c537">device</a>=-1)</td></tr>
+<tr class="separator:a92f5d8c9eea09dd899c8eea1c125d94b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>an memeory storage with multi-type/multi-device support </p>
@@ -549,8 +549,8 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
-<a id="a2af56dfad6b8de844e810ac154b12770"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2af56dfad6b8de844e810ac154b12770">&#9670;&nbsp;</a></span>from_vector()</h2>
+<a id="a92f5d8c9eea09dd899c8eea1c125d94b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92f5d8c9eea09dd899c8eea1c125d94b">&#9670;&nbsp;</a></span>from_vector()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -561,7 +561,7 @@ template&lt;class T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void cytnx::Storage::from_vector </td>
+          <td class="memname">static <a class="el" href="classcytnx_1_1Storage.html">Storage</a> cytnx::Storage::from_vector </td>
           <td>(</td>
           <td class="paramtype">const std::vector&lt; T &gt; &amp;&#160;</td>
           <td class="paramname"><em>vin</em>, </td>
@@ -580,7 +580,7 @@ template&lt;class T &gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -736,13 +736,13 @@ size  : 10
 <pre class="fragment">dtype : Double (Float64)
 device: cytnx device: CPU
 size  : 10
-[ 4.64752e-310 0.00000e+00 0.00000e+00 1.48220e-323 4.64752e-310 0.00000e+00 0.00000e+00 8.32188e-315 4.64752e-310 0.00000e+00 ]
+[ 4.67742e-310 0.00000e+00 0.00000e+00 1.48220e-323 4.67742e-310 0.00000e+00 0.00000e+00 8.32188e-315 4.67742e-310 0.00000e+00 ]
 
 
 dtype : Uint64
 device: cytnx device: CPU
 size  : 10
-[      94066941854960           540028971     140163388321584     140163360569520     140163389538992     140163389386608     140163389694448     140163389727344     140163389695344     140163360712176  ]
+[      94671956686064           540028971     139771551821680     139771524073776     139771553043120     139771552890736     139771553198576     139771553231472     139771553199472     139771523831408  ]
 
 
 dtype : Double (Float64)

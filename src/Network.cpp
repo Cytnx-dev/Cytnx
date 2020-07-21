@@ -5,8 +5,7 @@
 
 using namespace std;
 
-namespace cytnx_extension{
-    using namespace cytnx;
+namespace cytnx{
     std::string NetworkType_class::getname(const int &nwrktype_id){
         if(nwrktype_id==this->Regular){
             return string("Regular");

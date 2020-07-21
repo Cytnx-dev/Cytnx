@@ -1,7 +1,7 @@
 <map id="src/search_tree.cpp" name="src/search_tree.cpp">
 <area shape="rect" id="node2" href="$search__tree_8hpp.html" title="search_tree.hpp" alt="" coords="2420,80,2535,107"/>
 <area shape="rect" id="node3" href="$Type_8hpp.html" title="Type.hpp" alt="" coords="915,379,991,405"/>
-<area shape="rect" id="node9" href="$CyTensor_8hpp.html" title="CyTensor.hpp" alt="" coords="1444,155,1548,181"/>
+<area shape="rect" id="node9" href="$UniTensor_8hpp.html" title="UniTensor.hpp" alt="" coords="1443,155,1549,181"/>
 <area shape="rect" id="node10" href="$cytnx__error_8hpp.html" title="cytnx_error.hpp" alt="" coords="740,379,852,405"/>
 <area shape="rect" id="node31" href="$utils_8hpp.html" title="utils/utils.hpp" alt="" coords="2628,379,2727,405"/>
 <area shape="rect" id="node17" href="$Storage_8hpp.html" title="Storage.hpp" alt="" coords="1189,304,1281,331"/>

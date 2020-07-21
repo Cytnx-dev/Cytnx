@@ -88,7 +88,7 @@ void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc
     
 }
 
-void f_CyTensor_setelem_scal_d(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_double&rc){
+void f_UniTensor_setelem_scal_d(UniTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_double&rc){
     if(self.dtype() == cytnx::Type.Double){ 
         self.set_elem<cytnx::cytnx_double>(locator,rc);
     }else if(self.dtype() == cytnx::Type.Float){ 
@@ -114,7 +114,7 @@ void f_CyTensor_setelem_scal_d(cytnx_extension::CyTensor &self, const std::vecto
     }else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
 }
 
-void f_CyTensor_setelem_scal_f(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_float&rc){
+void f_UniTensor_setelem_scal_f(UniTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_float&rc){
     if(self.dtype() == cytnx::Type.Double) 
         self.set_elem<cytnx::cytnx_double>(locator,rc);
     else if(self.dtype() == cytnx::Type.Float) 
@@ -139,7 +139,7 @@ void f_CyTensor_setelem_scal_f(cytnx_extension::CyTensor &self, const std::vecto
         self.set_elem<cytnx::cytnx_bool>(locator,rc);
     else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
 }
-void f_CyTensor_setelem_scal_u64(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_uint64&rc){
+void f_UniTensor_setelem_scal_u64(UniTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_uint64&rc){
     if(self.dtype() == cytnx::Type.Double) 
         self.set_elem<cytnx::cytnx_double>(locator,rc);
     else if(self.dtype() == cytnx::Type.Float) 
@@ -164,7 +164,7 @@ void f_CyTensor_setelem_scal_u64(cytnx_extension::CyTensor &self, const std::vec
         self.set_elem<cytnx::cytnx_bool>(locator,rc);
     else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
 }
-void f_CyTensor_setelem_scal_i64(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_int64&rc){
+void f_UniTensor_setelem_scal_i64(UniTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_int64&rc){
     if(self.dtype() == cytnx::Type.Double) 
         self.set_elem<cytnx::cytnx_double>(locator,rc);
     else if(self.dtype() == cytnx::Type.Float) 
@@ -189,7 +189,7 @@ void f_CyTensor_setelem_scal_i64(cytnx_extension::CyTensor &self, const std::vec
         self.set_elem<cytnx::cytnx_bool>(locator,rc);
     else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
 }
-void f_CyTensor_setelem_scal_u32(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_uint32&rc){
+void f_UniTensor_setelem_scal_u32(UniTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_uint32&rc){
     if(self.dtype() == cytnx::Type.Double) 
         self.set_elem<cytnx::cytnx_double>(locator,rc);
     else if(self.dtype() == cytnx::Type.Float) 
@@ -214,7 +214,7 @@ void f_CyTensor_setelem_scal_u32(cytnx_extension::CyTensor &self, const std::vec
         self.set_elem<cytnx::cytnx_bool>(locator,rc);
     else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
 }
-void f_CyTensor_setelem_scal_i32(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_int32&rc){
+void f_UniTensor_setelem_scal_i32(UniTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_int32&rc){
     if(self.dtype() == cytnx::Type.Double) 
         self.set_elem<cytnx::cytnx_double>(locator,rc);
     else if(self.dtype() == cytnx::Type.Float) 
@@ -239,7 +239,7 @@ void f_CyTensor_setelem_scal_i32(cytnx_extension::CyTensor &self, const std::vec
         self.set_elem<cytnx::cytnx_bool>(locator,rc);
     else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
 }
-void f_CyTensor_setelem_scal_u16(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_uint16&rc){
+void f_UniTensor_setelem_scal_u16(UniTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_uint16&rc){
     if(self.dtype() == cytnx::Type.Double) 
         self.set_elem<cytnx::cytnx_double>(locator,rc);
     else if(self.dtype() == cytnx::Type.Float) 
@@ -264,7 +264,7 @@ void f_CyTensor_setelem_scal_u16(cytnx_extension::CyTensor &self, const std::vec
         self.set_elem<cytnx::cytnx_bool>(locator,rc);
     else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
 }
-void f_CyTensor_setelem_scal_i16(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_int16&rc){
+void f_UniTensor_setelem_scal_i16(UniTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_int16&rc){
     if(self.dtype() == cytnx::Type.Double) 
         self.set_elem<cytnx::cytnx_double>(locator,rc);
     else if(self.dtype() == cytnx::Type.Float) 
@@ -289,7 +289,7 @@ void f_CyTensor_setelem_scal_i16(cytnx_extension::CyTensor &self, const std::vec
         self.set_elem<cytnx::cytnx_bool>(locator,rc);
     else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
 }
-void f_CyTensor_setelem_scal_b(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_bool&rc){
+void f_UniTensor_setelem_scal_b(UniTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_bool&rc){
     if(self.dtype() == cytnx::Type.Double) 
         self.set_elem<cytnx::cytnx_double>(locator,rc);
     else if(self.dtype() == cytnx::Type.Float) 
@@ -314,7 +314,7 @@ void f_CyTensor_setelem_scal_b(cytnx_extension::CyTensor &self, const std::vecto
         self.set_elem<cytnx::cytnx_bool>(locator,rc);
     else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
 }
-void f_CyTensor_setelem_scal_cd(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_complex128 &rc){
+void f_UniTensor_setelem_scal_cd(UniTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_complex128 &rc){
     if(self.dtype() == cytnx::Type.Double){
         cytnx_error_msg(true,"%s","[ERROR] cannot assign complex to real container.\n");
     }else if(self.dtype() == cytnx::Type.Float){
@@ -339,7 +339,7 @@ void f_CyTensor_setelem_scal_cd(cytnx_extension::CyTensor &self, const std::vect
         cytnx_error_msg(true,"%s","[ERROR] cannot assign complex to real container.\n");
     }else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
 }
-void f_CyTensor_setelem_scal_cf(cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_complex64 &rc){
+void f_UniTensor_setelem_scal_cf(UniTensor &self, const std::vector<cytnx_uint64> &locator, const cytnx::cytnx_complex64 &rc){
     if(self.dtype() == cytnx::Type.Double){
         cytnx_error_msg(true,"%s","[ERROR] cannot assign complex to real container.\n");
     }else if(self.dtype() == cytnx::Type.Float){ 
@@ -1207,149 +1207,149 @@ PYBIND11_MODULE(cytnx,m){
                 ;
 
 
-    auto mext = m.def_submodule("cytnx_extension_c");
-    py::enum_<cytnx_extension::__sym::__stype>(mext,"SymType")
-        .value("Z",cytnx_extension::__sym::__stype::Z)
-        .value("U",cytnx_extension::__sym::__stype::U)
+    //auto mext = m.def_submodule("cytnx_extension_c");
+    py::enum_<__sym::__stype>(m,"SymType")
+        .value("Z",__sym::__stype::Z)
+        .value("U",__sym::__stype::U)
         .export_values();
 
-    py::enum_<cytnx_extension::__ntwk::__nttype>(mext,"NtType")
-        .value("Regular",cytnx_extension::__ntwk::__nttype::Regular)
-        .value("Fermion",cytnx_extension::__ntwk::__nttype::Fermion)
-        .value("Void"   ,cytnx_extension::__ntwk::__nttype::Void)
+    py::enum_<__ntwk::__nttype>(m,"NtType")
+        .value("Regular",__ntwk::__nttype::Regular)
+        .value("Fermion",__ntwk::__nttype::Fermion)
+        .value("Void"   ,__ntwk::__nttype::Void)
         .export_values();
     
-    py::enum_<cytnx_extension::bondType>(mext,"bondType")
-        .value("BD_BRA", cytnx_extension::bondType::BD_BRA)
-        .value("BD_KET", cytnx_extension::bondType::BD_KET)
-        .value("BD_REG", cytnx_extension::bondType::BD_REG)
+    py::enum_<bondType>(m,"bondType")
+        .value("BD_BRA", bondType::BD_BRA)
+        .value("BD_KET", bondType::BD_KET)
+        .value("BD_REG", bondType::BD_REG)
         .export_values();
 
 
 
-    py::class_<cytnx_extension::Network>(mext,"Network")
+    py::class_<Network>(m,"Network")
                 .def(py::init<>())
-                .def(py::init<const std::string &, const int&>(),py::arg("fname"),py::arg("network_type")=(int)cytnx_extension::NtType.Regular)
-                .def("_cget_tn_names",[](cytnx_extension::Network &self){
+                .def(py::init<const std::string &, const int&>(),py::arg("fname"),py::arg("network_type")=(int)NtType.Regular)
+                .def("_cget_tn_names",[](Network &self){
                     return self._impl->names;
                 })
-                .def("_cget_tn_labels",[](cytnx_extension::Network &self){
+                .def("_cget_tn_labels",[](Network &self){
                     return self._impl->label_arr;
                 })
-                .def("_cget_tn_out_labels",[](cytnx_extension::Network &self){
+                .def("_cget_tn_out_labels",[](Network &self){
                     return self._impl->TOUT_labels;
                 })
-                .def("isLoad",[](cytnx_extension::Network &self)->bool{
+                .def("isLoad",[](Network &self)->bool{
                     return self._impl->tensors.size()==0?false:true;
                 })
-                .def("isAllset",[](cytnx_extension::Network &self)->bool{
+                .def("isAllset",[](Network &self)->bool{
                     bool out = true;
                     for(int i=0;i<self._impl->tensors.size();i++){
-                        if(self._impl->tensors[i].uten_type()==cytnx_extension::UTenType.Void)
+                        if(self._impl->tensors[i].uten_type()==UTenType.Void)
                             out = false;
                     }
                     return out;
                 })
-                .def("_cget_filename",[](cytnx_extension::Network &self){
+                .def("_cget_filename",[](Network &self){
                     return self._impl->filename;
                 })
-                .def("Fromfile",&cytnx_extension::Network::Fromfile,py::arg("fname"),py::arg("network_type")=(int)cytnx_extension::NtType.Regular)
-                .def("Savefile",&cytnx_extension::Network::Savefile,py::arg("fname"))
-                .def("PutCyTensor",[](cytnx_extension::Network &self,const std::string &name, const cytnx_extension::CyTensor &utensor, const bool &is_clone){
-                                                self.PutCyTensor(name,utensor,is_clone);
+                .def("Fromfile",&Network::Fromfile,py::arg("fname"),py::arg("network_type")=(int)NtType.Regular)
+                .def("Savefile",&Network::Savefile,py::arg("fname"))
+                .def("PutUniTensor",[](Network &self,const std::string &name, const UniTensor &utensor, const bool &is_clone){
+                                                self.PutUniTensor(name,utensor,is_clone);
                                         },py::arg("name"),py::arg("utensor"),py::arg("is_clone")=true)
-                .def("PutCyTensor",[](cytnx_extension::Network &self,const cytnx_uint64 &idx, const cytnx_extension::CyTensor &utensor, const bool &is_clone){
-                                                self.PutCyTensor(idx,utensor,is_clone);
+                .def("PutUniTensor",[](Network &self,const cytnx_uint64 &idx, const UniTensor &utensor, const bool &is_clone){
+                                                self.PutUniTensor(idx,utensor,is_clone);
                                         },py::arg("idx"),py::arg("utensor"),py::arg("is_clone")=true)
-                .def("PutCyTensors",[](cytnx_extension::Network &self,const std::vector<std::string> &names, const std::vector<cytnx_extension::CyTensor> &utensors, const bool &is_clone){
-                                                self.PutCyTensors(names,utensors,is_clone);
+                .def("PutUniTensors",[](Network &self,const std::vector<std::string> &names, const std::vector<UniTensor> &utensors, const bool &is_clone){
+                                                self.PutUniTensors(names,utensors,is_clone);
                                         },py::arg("names"),py::arg("utensors"),py::arg("is_clone")=true)
-                .def("Launch",&cytnx_extension::Network::Launch,py::arg("optimal")=false)
-                .def("clear",&cytnx_extension::Network::clear)
-                .def("clone",&cytnx_extension::Network::clone)
-                .def("__copy__",&cytnx_extension::Network::clone)
-                .def("__deepcopy__",&cytnx_extension::Network::clone)
-                .def("__repr__",[](cytnx_extension::Network &self)->std::string{
+                .def("Launch",&Network::Launch,py::arg("optimal")=false)
+                .def("clear",&Network::clear)
+                .def("clone",&Network::clone)
+                .def("__copy__",&Network::clone)
+                .def("__deepcopy__",&Network::clone)
+                .def("__repr__",[](Network &self)->std::string{
                     self.PrintNet();
                     return std::string("");
                  },py::call_guard<py::scoped_ostream_redirect,
                      py::scoped_estream_redirect>())
-                .def("PrintNet",&cytnx_extension::Network::PrintNet)
+                .def("PrintNet",&Network::PrintNet)
                 ;
 
 
 
-    py::class_<cytnx_extension::Symmetry>(mext,"Symmetry")
+    py::class_<Symmetry>(m,"Symmetry")
                 //construction
                 .def(py::init<>())
                 //.def(py::init<const int &, const int&>())
-                .def("U1",&cytnx_extension::Symmetry::U1)
-                .def("Zn",&cytnx_extension::Symmetry::Zn)
-                .def("clone",&cytnx_extension::Symmetry::clone)
-                .def("stype", &cytnx_extension::Symmetry::stype)
-                .def("stype_str", &cytnx_extension::Symmetry::stype_str)
-                .def("n",&cytnx_extension::Symmetry::n)
-                .def("clone",&cytnx_extension::Symmetry::clone)
-                .def("__copy__",&cytnx_extension::Symmetry::clone)
-                .def("__deepcopy__",&cytnx_extension::Symmetry::clone)
-                .def("__eq__",&cytnx_extension::Symmetry::operator==)
-                .def("Save",[](cytnx_extension::Symmetry &self, const std::string &fname){self.Save(fname);},py::arg("fname"))
-                .def_static("Load",[](const std::string &fname){return cytnx_extension::Symmetry::Load(fname);},py::arg("fname"))
-                //.def("combine_rule",&cytnx_extension::Symmetry::combine_rule,py::arg("qnums_1"),py::arg("qnums_2"))
-                //.def("combine_rule_",&cytnx_extension::Symmetry::combine_rule_,py::arg("qnums_l"),py::arg("qnums_r"))
-                //.def("check_qnum", &cytnx_extension::Symmetry::check_qnum,py::arg("qnum"))
-                //.def("check_qnums", &cytnx_extension::Symmetry::check_qnums, py::arg("qnums"))
+                .def("U1",&Symmetry::U1)
+                .def("Zn",&Symmetry::Zn)
+                .def("clone",&Symmetry::clone)
+                .def("stype", &Symmetry::stype)
+                .def("stype_str", &Symmetry::stype_str)
+                .def("n",&Symmetry::n)
+                .def("clone",&Symmetry::clone)
+                .def("__copy__",&Symmetry::clone)
+                .def("__deepcopy__",&Symmetry::clone)
+                .def("__eq__",&Symmetry::operator==)
+                .def("Save",[](Symmetry &self, const std::string &fname){self.Save(fname);},py::arg("fname"))
+                .def_static("Load",[](const std::string &fname){return Symmetry::Load(fname);},py::arg("fname"))
+                //.def("combine_rule",&Symmetry::combine_rule,py::arg("qnums_1"),py::arg("qnums_2"))
+                //.def("combine_rule_",&Symmetry::combine_rule_,py::arg("qnums_l"),py::arg("qnums_r"))
+                //.def("check_qnum", &Symmetry::check_qnum,py::arg("qnum"))
+                //.def("check_qnums", &Symmetry::check_qnums, py::arg("qnums"))
                 ;
-    py::class_<cytnx_extension::Bond>(mext,"Bond")
+    py::class_<Bond>(m,"Bond")
             //construction
             .def(py::init<>())
-            .def(py::init<const cytnx_uint64 &, const cytnx_extension::bondType &, const std::vector<std::vector<cytnx_int64> > &, const std::vector<cytnx_extension::Symmetry>& >(),py::arg("dim"),py::arg("bond_type")=cytnx_extension::bondType::BD_REG,py::arg("qnums")=std::vector<std::vector<cytnx_int64> >(),py::arg("symmetries")=std::vector<cytnx_extension::Symmetry>())
-            .def("Init",&cytnx_extension::Bond::Init,py::arg("dim"),py::arg("bond_type")=cytnx_extension::bondType::BD_REG,py::arg("qnums")=std::vector<std::vector<cytnx_int64> >(),py::arg("symmetries")=std::vector<cytnx_extension::Symmetry>())
+            .def(py::init<const cytnx_uint64 &, const bondType &, const std::vector<std::vector<cytnx_int64> > &, const std::vector<Symmetry>& >(),py::arg("dim"),py::arg("bond_type")=bondType::BD_REG,py::arg("qnums")=std::vector<std::vector<cytnx_int64> >(),py::arg("symmetries")=std::vector<Symmetry>())
+            .def("Init",&Bond::Init,py::arg("dim"),py::arg("bond_type")=bondType::BD_REG,py::arg("qnums")=std::vector<std::vector<cytnx_int64> >(),py::arg("symmetries")=std::vector<Symmetry>())
 
-            .def("__repr__",[](cytnx_extension::Bond &self){
+            .def("__repr__",[](Bond &self){
                 std::cout << self << std::endl;
                 return std::string("");
              },py::call_guard<py::scoped_ostream_redirect,
                      py::scoped_estream_redirect>())
-            .def("__eq__",&cytnx_extension::Bond::operator==)
-            .def("type",&cytnx_extension::Bond::type)
-            .def("qnums",[](cytnx_extension::Bond &self){return self.qnums();})
-            .def("qnums_clone",[](cytnx_extension::Bond &self){return self.qnums_clone();})
-            .def("dim", &cytnx_extension::Bond::dim)
-            .def("Nsym", &cytnx_extension::Bond::Nsym)
-            .def("syms", [](cytnx_extension::Bond &self){return self.syms();})
-            .def("syms_clone", [](cytnx_extension::Bond &self){return self.syms_clone();})
-            .def("set_type", &cytnx_extension::Bond::set_type)
-            .def("clear_type", &cytnx_extension::Bond::clear_type)
-            .def("clone", &cytnx_extension::Bond::clone)
-            .def("__copy__",&cytnx_extension::Bond::clone)
-            .def("__deepcopy__",&cytnx_extension::Bond::clone)
-            .def("combineBond", &cytnx_extension::Bond::combineBond)
-            .def("combineBond_",&cytnx_extension::Bond::combineBond_)
-            .def("combineBonds",&cytnx_extension::Bond::combineBonds)
-            .def("combineBonds_", &cytnx_extension::Bond::combineBonds_)
-            .def("Save",[](cytnx_extension::Bond &self, const std::string &fname){self.Save(fname);},py::arg("fname"))
-            .def_static("Load",[](const std::string &fname){return cytnx_extension::Bond::Load(fname);},py::arg("fname"))
+            .def("__eq__",&Bond::operator==)
+            .def("type",&Bond::type)
+            .def("qnums",[](Bond &self){return self.qnums();})
+            .def("qnums_clone",[](Bond &self){return self.qnums_clone();})
+            .def("dim", &Bond::dim)
+            .def("Nsym", &Bond::Nsym)
+            .def("syms", [](Bond &self){return self.syms();})
+            .def("syms_clone", [](Bond &self){return self.syms_clone();})
+            .def("set_type", &Bond::set_type)
+            .def("clear_type", &Bond::clear_type)
+            .def("clone", &Bond::clone)
+            .def("__copy__",&Bond::clone)
+            .def("__deepcopy__",&Bond::clone)
+            .def("combineBond", &Bond::combineBond)
+            .def("combineBond_",&Bond::combineBond_)
+            .def("combineBonds",&Bond::combineBonds)
+            .def("combineBonds_", &Bond::combineBonds_)
+            .def("Save",[](Bond &self, const std::string &fname){self.Save(fname);},py::arg("fname"))
+            .def_static("Load",[](const std::string &fname){return Bond::Load(fname);},py::arg("fname"))
             ;
 
     //entry.CyTenor
-    py::class_<cytnx_extension::CyTensor>(mext,"CyTensor")
+    py::class_<UniTensor>(m,"UniTensor")
                 .def(py::init<>())
                 .def(py::init<const cytnx::Tensor&, const cytnx_uint64&, const bool &>(),py::arg("Tin"),py::arg("rowrank"),py::arg("is_diag")=false)
-                .def(py::init<const std::vector<cytnx_extension::Bond> &, const std::vector<cytnx_int64> &, const cytnx_int64 &, const unsigned int &,const int &, const bool &>(),py::arg("bonds"),py::arg("labels")=std::vector<cytnx_int64>(),py::arg("rowrank")=(cytnx_int64)(-1),py::arg("dtype")=(unsigned int)(cytnx::Type.Double),py::arg("device")=(int)cytnx::Device.cpu,py::arg("is_diag")=false)
-                .def("set_name",&cytnx_extension::CyTensor::set_name)
-                .def("set_label",&cytnx_extension::CyTensor::set_label,py::arg("idx"),py::arg("new_label"))
-                .def("set_labels",&cytnx_extension::CyTensor::set_labels,py::arg("new_labels"))
-                .def("set_rowrank",&cytnx_extension::CyTensor::set_rowrank, py::arg("new_rowrank"))
+                .def(py::init<const std::vector<Bond> &, const std::vector<cytnx_int64> &, const cytnx_int64 &, const unsigned int &,const int &, const bool &>(),py::arg("bonds"),py::arg("labels")=std::vector<cytnx_int64>(),py::arg("rowrank")=(cytnx_int64)(-1),py::arg("dtype")=(unsigned int)(cytnx::Type.Double),py::arg("device")=(int)cytnx::Device.cpu,py::arg("is_diag")=false)
+                .def("set_name",&UniTensor::set_name)
+                .def("set_label",&UniTensor::set_label,py::arg("idx"),py::arg("new_label"))
+                .def("set_labels",&UniTensor::set_labels,py::arg("new_labels"))
+                .def("set_rowrank",&UniTensor::set_rowrank, py::arg("new_rowrank"))
 
-                .def("rowrank",&cytnx_extension::CyTensor::rowrank)
-                .def("dtype",&cytnx_extension::CyTensor::dtype)
-                .def("dtype_str",&cytnx_extension::CyTensor::dtype_str)
-                .def("device",&cytnx_extension::CyTensor::device)
-                .def("device_str",&cytnx_extension::CyTensor::device_str)
-                .def("name",&cytnx_extension::CyTensor::name)
+                .def("rowrank",&UniTensor::rowrank)
+                .def("dtype",&UniTensor::dtype)
+                .def("dtype_str",&UniTensor::dtype_str)
+                .def("device",&UniTensor::device)
+                .def("device_str",&UniTensor::device_str)
+                .def("name",&UniTensor::name)
 
-                .def("reshape",[](cytnx_extension::CyTensor &self, py::args args, py::kwargs kwargs)->cytnx_extension::CyTensor{
+                .def("reshape",[](UniTensor &self, py::args args, py::kwargs kwargs)->UniTensor{
                     std::vector<cytnx::cytnx_int64> c_args = args.cast< std::vector<cytnx::cytnx_int64> >();
                     cytnx_uint64 rowrank = 0;
                    
@@ -1359,7 +1359,7 @@ PYBIND11_MODULE(cytnx,m){
  
                     return self.reshape(c_args,rowrank);
                 })
-                .def("reshape_",[](cytnx_extension::CyTensor &self, py::args args, py::kwargs kwargs){
+                .def("reshape_",[](UniTensor &self, py::args args, py::kwargs kwargs){
                     std::vector<cytnx::cytnx_int64> c_args = args.cast< std::vector<cytnx::cytnx_int64> >();
                     cytnx_uint64 rowrank = 0;
                    
@@ -1369,8 +1369,8 @@ PYBIND11_MODULE(cytnx,m){
  
                     self.reshape_(c_args,rowrank);
                 })
-                .def("elem_exists",&cytnx_extension::CyTensor::elem_exists)
-                .def("item",[](cytnx_extension::CyTensor &self){
+                .def("elem_exists",&UniTensor::elem_exists)
+                .def("item",[](UniTensor &self){
                     py::object out;
                     if(self.dtype() == cytnx::Type.Double) 
                         out =  py::cast(self.item<cytnx::cytnx_double>());
@@ -1394,13 +1394,13 @@ PYBIND11_MODULE(cytnx,m){
                         out = py::cast(self.item<cytnx::cytnx_int16>());
                     else if(self.dtype() == cytnx::Type.Bool) 
                         out = py::cast(self.item<cytnx::cytnx_bool>());
-                    else cytnx_error_msg(true, "%s","[ERROR] try to get element from a empty CyTensor.");
+                    else cytnx_error_msg(true, "%s","[ERROR] try to get element from a empty UniTensor.");
                     return out;
                  })
 
-                .def("__getitem__",[](const cytnx_extension::CyTensor &self, py::object locators){
-                    cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to getitem from a empty CyTensor%s","\n");
-                    cytnx_error_msg(self.uten_type() == cytnx_extension::UTenType.Sparse,"[ERROR] cannot get element using [] from SparseCyTensor. Use at() instead.%s","\n");
+                .def("__getitem__",[](const UniTensor &self, py::object locators){
+                    cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to getitem from a empty UniTensor%s","\n");
+                    cytnx_error_msg(self.uten_type() == UTenType.Sparse,"[ERROR] cannot get element using [] from SparseUniTensor. Use at() instead.%s","\n");
  
                     ssize_t start, stop, step, slicelength; 
                     std::vector<cytnx::Accessor> accessors;
@@ -1450,9 +1450,9 @@ PYBIND11_MODULE(cytnx,m){
                     return self.get(accessors);
                     
                 })
-                .def("__setitem__",[](cytnx_extension::CyTensor &self, py::object locators, const cytnx::Tensor &rhs){
-                    cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to setelem to a empty CyTensor%s","\n");
-                    cytnx_error_msg(self.uten_type() == cytnx_extension::UTenType.Sparse,"[ERROR] cannot set element using [] from SparseCyTensor. Use at() instead.%s","\n");
+                .def("__setitem__",[](UniTensor &self, py::object locators, const cytnx::Tensor &rhs){
+                    cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to setelem to a empty UniTensor%s","\n");
+                    cytnx_error_msg(self.uten_type() == UTenType.Sparse,"[ERROR] cannot set element using [] from SparseUniTensor. Use at() instead.%s","\n");
                     
                     ssize_t start, stop, step, slicelength; 
                     std::vector<cytnx::Accessor> accessors;
@@ -1502,7 +1502,7 @@ PYBIND11_MODULE(cytnx,m){
                     self.set(accessors,rhs);
                     
                 })
-                .def("get_elem",[](cytnx_extension::CyTensor &self, const std::vector<cytnx_uint64> &locator){
+                .def("get_elem",[](UniTensor &self, const std::vector<cytnx_uint64> &locator){
                     py::object out;
                     if(self.dtype() == cytnx::Type.Double) 
                         out = py::cast(self.get_elem<cytnx::cytnx_double>(locator));
@@ -1515,42 +1515,42 @@ PYBIND11_MODULE(cytnx,m){
                     else cytnx_error_msg(true, "%s","[ERROR] try to get element from a void Storage.");
                     return out;
                 })
-                .def("set_elem",&f_CyTensor_setelem_scal_cd)
-                .def("set_elem",&f_CyTensor_setelem_scal_cf)
-                .def("set_elem",&f_CyTensor_setelem_scal_d)
-                .def("set_elem",&f_CyTensor_setelem_scal_f)
-                .def("set_elem",&f_CyTensor_setelem_scal_u64)
-                .def("set_elem",&f_CyTensor_setelem_scal_i64)
-                .def("set_elem",&f_CyTensor_setelem_scal_u32)
-                .def("set_elem",&f_CyTensor_setelem_scal_i32)
-                .def("set_elem",&f_CyTensor_setelem_scal_u16)
-                .def("set_elem",&f_CyTensor_setelem_scal_i16)
-                .def("set_elem",&f_CyTensor_setelem_scal_b)
+                .def("set_elem",&f_UniTensor_setelem_scal_cd)
+                .def("set_elem",&f_UniTensor_setelem_scal_cf)
+                .def("set_elem",&f_UniTensor_setelem_scal_d)
+                .def("set_elem",&f_UniTensor_setelem_scal_f)
+                .def("set_elem",&f_UniTensor_setelem_scal_u64)
+                .def("set_elem",&f_UniTensor_setelem_scal_i64)
+                .def("set_elem",&f_UniTensor_setelem_scal_u32)
+                .def("set_elem",&f_UniTensor_setelem_scal_i32)
+                .def("set_elem",&f_UniTensor_setelem_scal_u16)
+                .def("set_elem",&f_UniTensor_setelem_scal_i16)
+                .def("set_elem",&f_UniTensor_setelem_scal_b)
 
 
-                .def("is_contiguous", &cytnx_extension::CyTensor::is_contiguous)
-                .def("is_diag",&cytnx_extension::CyTensor::is_diag)
-                .def("is_tag" ,&cytnx_extension::CyTensor::is_tag)
-                .def("is_braket_form",&cytnx_extension::CyTensor::is_braket_form)
-                .def("labels",&cytnx_extension::CyTensor::labels)
-                .def("bonds",[](cytnx_extension::CyTensor &self){
+                .def("is_contiguous", &UniTensor::is_contiguous)
+                .def("is_diag",&UniTensor::is_diag)
+                .def("is_tag" ,&UniTensor::is_tag)
+                .def("is_braket_form",&UniTensor::is_braket_form)
+                .def("labels",&UniTensor::labels)
+                .def("bonds",[](UniTensor &self){
                     return self.bonds();
                     })
-                .def("shape",&cytnx_extension::CyTensor::shape)
-                .def("to_",&cytnx_extension::CyTensor::to_)
-                .def("to_different_device" ,[](cytnx_extension::CyTensor &self,const cytnx_int64 &device){
+                .def("shape",&UniTensor::shape)
+                .def("to_",&UniTensor::to_)
+                .def("to_different_device" ,[](UniTensor &self,const cytnx_int64 &device){
                                                     cytnx_error_msg(self.device() == device, "[ERROR][pybind][to_diffferent_device] same device for to() should be handle in python side.%s","\n");
                                                     return self.to(device);
                                                 } , py::arg("device"))
-                .def("clone",&cytnx_extension::CyTensor::clone)
-                .def("__copy__",&cytnx_extension::CyTensor::clone)
-                .def("__deepcopy__",&cytnx_extension::CyTensor::clone)
-                .def("Save",[](cytnx_extension::CyTensor &self, const std::string &fname){self.Save(fname);},py::arg("fname"))
-                .def_static("Load",[](const std::string &fname){return cytnx_extension::CyTensor::Load(fname);},py::arg("fname"))
-                //.def("permute",&cytnx_extension::CyTensor::permute,py::arg("mapper"),py::arg("rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
-                //.def("permute_",&cytnx_extension::CyTensor::permute_,py::arg("mapper"),py::arg("rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
+                .def("clone",&UniTensor::clone)
+                .def("__copy__",&UniTensor::clone)
+                .def("__deepcopy__",&UniTensor::clone)
+                .def("Save",[](UniTensor &self, const std::string &fname){self.Save(fname);},py::arg("fname"))
+                .def_static("Load",[](const std::string &fname){return UniTensor::Load(fname);},py::arg("fname"))
+                //.def("permute",&UniTensor::permute,py::arg("mapper"),py::arg("rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
+                //.def("permute_",&UniTensor::permute_,py::arg("mapper"),py::arg("rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
 
-                .def("permute_",[](cytnx_extension::CyTensor &self, const std::vector<cytnx::cytnx_int64> &c_args, py::kwargs kwargs){
+                .def("permute_",[](UniTensor &self, const std::vector<cytnx::cytnx_int64> &c_args, py::kwargs kwargs){
                     cytnx_int64 rowrank = -1;
                     bool by_label = false;
                     if(kwargs){
@@ -1563,7 +1563,7 @@ PYBIND11_MODULE(cytnx,m){
                     }
                     self.permute_(c_args,rowrank,by_label);
                 })
-                .def("permute",[](cytnx_extension::CyTensor &self,const std::vector<cytnx::cytnx_int64> &c_args, py::kwargs kwargs)->cytnx_extension::CyTensor{
+                .def("permute",[](UniTensor &self,const std::vector<cytnx::cytnx_int64> &c_args, py::kwargs kwargs)->UniTensor{
                     cytnx_int64 rowrank = -1;
                     bool by_label = false;
                     if(kwargs){
@@ -1577,311 +1577,332 @@ PYBIND11_MODULE(cytnx,m){
                     return self.permute(c_args,rowrank,by_label);
                 })
 
-                .def("make_contiguous",&cytnx_extension::CyTensor::contiguous)
-                .def("contiguous_",&cytnx_extension::CyTensor::contiguous_)
-                .def("print_diagram",&cytnx_extension::CyTensor::print_diagram,py::arg("bond_info")=false,py::call_guard<py::scoped_ostream_redirect,
+                .def("make_contiguous",&UniTensor::contiguous)
+                .def("contiguous_",&UniTensor::contiguous_)
+                .def("print_diagram",&UniTensor::print_diagram,py::arg("bond_info")=false,py::call_guard<py::scoped_ostream_redirect,
                      py::scoped_estream_redirect>())
                         
-                .def("get_block", [](const cytnx_extension::CyTensor &self, const cytnx_uint64&idx){
+                .def("get_block", [](const UniTensor &self, const cytnx_uint64&idx){
                                         return self.get_block(idx);
                                   },py::arg("idx")=(cytnx_uint64)(0))
 
-                .def("get_block", [](const cytnx_extension::CyTensor &self, const std::vector<cytnx_int64>&qnum){
+                .def("get_block", [](const UniTensor &self, const std::vector<cytnx_int64>&qnum){
                                         return self.get_block(qnum);
                                   },py::arg("qnum"))
 
-                .def("get_block_",[](const cytnx_extension::CyTensor &self, const std::vector<cytnx_int64>&qnum){
+                .def("get_block_",[](const UniTensor &self, const std::vector<cytnx_int64>&qnum){
                                         return self.get_block_(qnum);
                                   },py::arg("qnum"))
-                .def("get_block_",[](cytnx_extension::CyTensor &self, const std::vector<cytnx_int64>&qnum){
+                .def("get_block_",[](UniTensor &self, const std::vector<cytnx_int64>&qnum){
                                         return self.get_block_(qnum);
                                   },py::arg("qnum"))
-                .def("get_block_", [](const cytnx_extension::CyTensor &self, const cytnx_uint64&idx){
+                .def("get_block_", [](const UniTensor &self, const cytnx_uint64&idx){
                                         return self.get_block_(idx);
                                   },py::arg("idx")=(cytnx_uint64)(0))
-                .def("get_block_", [](cytnx_extension::CyTensor &self, const cytnx_uint64&idx){
+                .def("get_block_", [](UniTensor &self, const cytnx_uint64&idx){
                                         return self.get_block_(idx);
                                   },py::arg("idx")=(cytnx_uint64)(0))
-                .def("get_blocks", [](const cytnx_extension::CyTensor &self){
+                .def("get_blocks", [](const UniTensor &self){
                                         return self.get_blocks();
                                   })
-                .def("get_blocks_", [](const cytnx_extension::CyTensor &self){
+                .def("get_blocks_", [](const UniTensor &self){
                                         return self.get_blocks_();
                                   })
-                .def("get_blocks_", [](cytnx_extension::CyTensor &self){
+                .def("get_blocks_", [](UniTensor &self){
                                         return self.get_blocks_();
                                   })
-                .def("put_block", [](cytnx_extension::CyTensor &self, const cytnx::Tensor &in, const cytnx_uint64&idx){
+                .def("put_block", [](UniTensor &self, const cytnx::Tensor &in, const cytnx_uint64&idx){
                                         self.put_block(in,idx);
                                   },py::arg("in"),py::arg("idx")=(cytnx_uint64)(0))
 
-                .def("put_block", [](cytnx_extension::CyTensor &self, const cytnx::Tensor &in, const std::vector<cytnx_int64>&qnum){
+                .def("put_block", [](UniTensor &self, const cytnx::Tensor &in, const std::vector<cytnx_int64>&qnum){
                                         self.put_block(in,qnum);
                                   },py::arg("in"),py::arg("qnum"))
-                .def("put_block_", [](cytnx_extension::CyTensor &self, cytnx::Tensor &in, const cytnx_uint64&idx){
+                .def("put_block_", [](UniTensor &self, cytnx::Tensor &in, const cytnx_uint64&idx){
                                         self.put_block_(in,idx);
                                   },py::arg("in"),py::arg("idx")=(cytnx_uint64)(0))
 
-                .def("put_block_", [](cytnx_extension::CyTensor &self, cytnx::Tensor &in, const std::vector<cytnx_int64>&qnum){
+                .def("put_block_", [](UniTensor &self, cytnx::Tensor &in, const std::vector<cytnx_int64>&qnum){
                                         self.put_block_(in,qnum);
                                   },py::arg("in"),py::arg("qnum"))
-                .def("__repr__",[](cytnx_extension::CyTensor &self)->std::string{
+                .def("__repr__",[](UniTensor &self)->std::string{
                     std::cout << self << std::endl;
                     return std::string("");
                  },py::call_guard<py::scoped_ostream_redirect,
                      py::scoped_estream_redirect>()) 
-                .def("to_dense",&cytnx_extension::CyTensor::to_dense)
-                .def("to_dense_",&cytnx_extension::CyTensor::to_dense_)
-                .def("combineBonds",&cytnx_extension::CyTensor::combineBonds,py::arg("indicators"),py::arg("permute_back")=true,py::arg("by_label")=true)
-                .def("contract", &cytnx_extension::CyTensor::contract)
+                .def("to_dense",&UniTensor::to_dense)
+                .def("to_dense_",&UniTensor::to_dense_)
+                .def("combineBonds",&UniTensor::combineBonds,py::arg("indicators"),py::arg("permute_back")=true,py::arg("by_label")=true)
+                .def("contract", &UniTensor::contract)
 		
         		//arithmetic >>
-                .def("__neg__",[](cytnx_extension::CyTensor &self){
+                .def("__neg__",[](UniTensor &self){
                                     if(self.dtype() == Type.Double){
-                                        return cytnx_extension::xlinalg::Mul(cytnx_double(-1),self);
+                                        return linalg::Mul(cytnx_double(-1),self);
                                     }else if(self.dtype()==Type.ComplexDouble){
-                                        return cytnx_extension::xlinalg::Mul(cytnx_complex128(-1,0),self);
+                                        return linalg::Mul(cytnx_complex128(-1,0),self);
                                     }else if(self.dtype()==Type.Float){
-                                        return cytnx_extension::xlinalg::Mul(cytnx_float(-1),self);
+                                        return linalg::Mul(cytnx_float(-1),self);
                                     }else if(self.dtype()==Type.ComplexFloat){
-                                        return cytnx_extension::xlinalg::Mul(cytnx_complex64(-1,0),self);
+                                        return linalg::Mul(cytnx_complex64(-1,0),self);
                                     }else{
-                                        return cytnx_extension::xlinalg::Mul(-1,self);
+                                        return linalg::Mul(-1,self);
                                     }
                                   })
-                .def("__pos__",[](cytnx_extension::CyTensor &self){return self;})
-                .def("__add__",[](cytnx_extension::CyTensor &self, const cytnx_extension::CyTensor &rhs){return self.Add(rhs);})
-                .def("__add__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex128&rhs){return self.Add(rhs);})
-                .def("__add__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex64 &rhs){return self.Add(rhs);})
-                .def("__add__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_double    &rhs){return self.Add(rhs);})
-                .def("__add__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_float     &rhs){return self.Add(rhs);})
-                .def("__add__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int64     &rhs){return self.Add(rhs);})
-                .def("__add__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint64    &rhs){return self.Add(rhs);})
-                .def("__add__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int32     &rhs){return self.Add(rhs);})
-                .def("__add__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint32    &rhs){return self.Add(rhs);})
-                .def("__add__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int16     &rhs){return self.Add(rhs);})
-                .def("__add__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint16    &rhs){return self.Add(rhs);})
-                .def("__add__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_bool      &rhs){return self.Add(rhs);})
+                .def("__pos__",[](UniTensor &self){return self;})
+                .def("__add__",[](UniTensor &self, const UniTensor &rhs){return self.Add(rhs);})
+                .def("__add__",[](UniTensor &self, const cytnx::cytnx_complex128&rhs){return self.Add(rhs);})
+                .def("__add__",[](UniTensor &self, const cytnx::cytnx_complex64 &rhs){return self.Add(rhs);})
+                .def("__add__",[](UniTensor &self, const cytnx::cytnx_double    &rhs){return self.Add(rhs);})
+                .def("__add__",[](UniTensor &self, const cytnx::cytnx_float     &rhs){return self.Add(rhs);})
+                .def("__add__",[](UniTensor &self, const cytnx::cytnx_int64     &rhs){return self.Add(rhs);})
+                .def("__add__",[](UniTensor &self, const cytnx::cytnx_uint64    &rhs){return self.Add(rhs);})
+                .def("__add__",[](UniTensor &self, const cytnx::cytnx_int32     &rhs){return self.Add(rhs);})
+                .def("__add__",[](UniTensor &self, const cytnx::cytnx_uint32    &rhs){return self.Add(rhs);})
+                .def("__add__",[](UniTensor &self, const cytnx::cytnx_int16     &rhs){return self.Add(rhs);})
+                .def("__add__",[](UniTensor &self, const cytnx::cytnx_uint16    &rhs){return self.Add(rhs);})
+                .def("__add__",[](UniTensor &self, const cytnx::cytnx_bool      &rhs){return self.Add(rhs);})
                 
-                .def("__radd__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex128&lhs){return cytnx_extension::xlinalg::Add(lhs,self);})
-                .def("__radd__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex64 &lhs){return cytnx_extension::xlinalg::Add(lhs,self);})
-                .def("__radd__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_double    &lhs){return cytnx_extension::xlinalg::Add(lhs,self);})
-                .def("__radd__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_float     &lhs){return cytnx_extension::xlinalg::Add(lhs,self);})
-                .def("__radd__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int64     &lhs){return cytnx_extension::xlinalg::Add(lhs,self);})
-                .def("__radd__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint64    &lhs){return cytnx_extension::xlinalg::Add(lhs,self);})
-                .def("__radd__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int32     &lhs){return cytnx_extension::xlinalg::Add(lhs,self);})
-                .def("__radd__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint32    &lhs){return cytnx_extension::xlinalg::Add(lhs,self);})
-                .def("__radd__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int16     &lhs){return cytnx_extension::xlinalg::Add(lhs,self);})
-                .def("__radd__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint16    &lhs){return cytnx_extension::xlinalg::Add(lhs,self);})
-                .def("__radd__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_bool      &lhs){return cytnx_extension::xlinalg::Add(lhs,self);})
+                .def("__radd__",[](UniTensor &self, const cytnx::cytnx_complex128&lhs){return linalg::Add(lhs,self);})
+                .def("__radd__",[](UniTensor &self, const cytnx::cytnx_complex64 &lhs){return linalg::Add(lhs,self);})
+                .def("__radd__",[](UniTensor &self, const cytnx::cytnx_double    &lhs){return linalg::Add(lhs,self);})
+                .def("__radd__",[](UniTensor &self, const cytnx::cytnx_float     &lhs){return linalg::Add(lhs,self);})
+                .def("__radd__",[](UniTensor &self, const cytnx::cytnx_int64     &lhs){return linalg::Add(lhs,self);})
+                .def("__radd__",[](UniTensor &self, const cytnx::cytnx_uint64    &lhs){return linalg::Add(lhs,self);})
+                .def("__radd__",[](UniTensor &self, const cytnx::cytnx_int32     &lhs){return linalg::Add(lhs,self);})
+                .def("__radd__",[](UniTensor &self, const cytnx::cytnx_uint32    &lhs){return linalg::Add(lhs,self);})
+                .def("__radd__",[](UniTensor &self, const cytnx::cytnx_int16     &lhs){return linalg::Add(lhs,self);})
+                .def("__radd__",[](UniTensor &self, const cytnx::cytnx_uint16    &lhs){return linalg::Add(lhs,self);})
+                .def("__radd__",[](UniTensor &self, const cytnx::cytnx_bool      &lhs){return linalg::Add(lhs,self);})
                 
-                .def("__iadd__",[](cytnx_extension::CyTensor &self, const cytnx_extension::CyTensor &rhs){return self.Add_(rhs);}) // these will return self!
-                .def("__iadd__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex128&rhs){return self.Add_(rhs);})
-                .def("__iadd__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex64 &rhs){return self.Add_(rhs);})
-                .def("__iadd__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_double    &rhs){return self.Add_(rhs);})
-                .def("__iadd__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_float     &rhs){return self.Add_(rhs);})
-                .def("__iadd__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int64     &rhs){return self.Add_(rhs);})
-                .def("__iadd__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint64    &rhs){return self.Add_(rhs);})
-                .def("__iadd__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int32     &rhs){return self.Add_(rhs);})
-                .def("__iadd__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint32    &rhs){return self.Add_(rhs);})
-                .def("__iadd__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int16     &rhs){return self.Add_(rhs);})
-                .def("__iadd__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint16    &rhs){return self.Add_(rhs);})
-                .def("__iadd__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_bool      &rhs){return self.Add_(rhs);})
+                .def("__iadd__",[](UniTensor &self, const UniTensor &rhs){return self.Add_(rhs);}) // these will return self!
+                .def("__iadd__",[](UniTensor &self, const cytnx::cytnx_complex128&rhs){return self.Add_(rhs);})
+                .def("__iadd__",[](UniTensor &self, const cytnx::cytnx_complex64 &rhs){return self.Add_(rhs);})
+                .def("__iadd__",[](UniTensor &self, const cytnx::cytnx_double    &rhs){return self.Add_(rhs);})
+                .def("__iadd__",[](UniTensor &self, const cytnx::cytnx_float     &rhs){return self.Add_(rhs);})
+                .def("__iadd__",[](UniTensor &self, const cytnx::cytnx_int64     &rhs){return self.Add_(rhs);})
+                .def("__iadd__",[](UniTensor &self, const cytnx::cytnx_uint64    &rhs){return self.Add_(rhs);})
+                .def("__iadd__",[](UniTensor &self, const cytnx::cytnx_int32     &rhs){return self.Add_(rhs);})
+                .def("__iadd__",[](UniTensor &self, const cytnx::cytnx_uint32    &rhs){return self.Add_(rhs);})
+                .def("__iadd__",[](UniTensor &self, const cytnx::cytnx_int16     &rhs){return self.Add_(rhs);})
+                .def("__iadd__",[](UniTensor &self, const cytnx::cytnx_uint16    &rhs){return self.Add_(rhs);})
+                .def("__iadd__",[](UniTensor &self, const cytnx::cytnx_bool      &rhs){return self.Add_(rhs);})
 
-                .def("__sub__",[](cytnx_extension::CyTensor &self, const cytnx_extension::CyTensor &rhs){return self.Sub(rhs);})
-                .def("__sub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex128&rhs){return self.Sub(rhs);})
-                .def("__sub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex64 &rhs){return self.Sub(rhs);})
-                .def("__sub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_double    &rhs){return self.Sub(rhs);})
-                .def("__sub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_float     &rhs){return self.Sub(rhs);})
-                .def("__sub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int64     &rhs){return self.Sub(rhs);})
-                .def("__sub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint64    &rhs){return self.Sub(rhs);})
-                .def("__sub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int32     &rhs){return self.Sub(rhs);})
-                .def("__sub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint32    &rhs){return self.Sub(rhs);})
-                .def("__sub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int16     &rhs){return self.Sub(rhs);})
-                .def("__sub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint16    &rhs){return self.Sub(rhs);})
-                .def("__sub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_bool      &rhs){return self.Sub(rhs);})
+                .def("__sub__",[](UniTensor &self, const UniTensor &rhs){return self.Sub(rhs);})
+                .def("__sub__",[](UniTensor &self, const cytnx::cytnx_complex128&rhs){return self.Sub(rhs);})
+                .def("__sub__",[](UniTensor &self, const cytnx::cytnx_complex64 &rhs){return self.Sub(rhs);})
+                .def("__sub__",[](UniTensor &self, const cytnx::cytnx_double    &rhs){return self.Sub(rhs);})
+                .def("__sub__",[](UniTensor &self, const cytnx::cytnx_float     &rhs){return self.Sub(rhs);})
+                .def("__sub__",[](UniTensor &self, const cytnx::cytnx_int64     &rhs){return self.Sub(rhs);})
+                .def("__sub__",[](UniTensor &self, const cytnx::cytnx_uint64    &rhs){return self.Sub(rhs);})
+                .def("__sub__",[](UniTensor &self, const cytnx::cytnx_int32     &rhs){return self.Sub(rhs);})
+                .def("__sub__",[](UniTensor &self, const cytnx::cytnx_uint32    &rhs){return self.Sub(rhs);})
+                .def("__sub__",[](UniTensor &self, const cytnx::cytnx_int16     &rhs){return self.Sub(rhs);})
+                .def("__sub__",[](UniTensor &self, const cytnx::cytnx_uint16    &rhs){return self.Sub(rhs);})
+                .def("__sub__",[](UniTensor &self, const cytnx::cytnx_bool      &rhs){return self.Sub(rhs);})
 
-                .def("__rsub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex128&lhs){return cytnx_extension::xlinalg::Sub(lhs,self);})
-                .def("__rsub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex64 &lhs){return cytnx_extension::xlinalg::Sub(lhs,self);})
-                .def("__rsub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_double    &lhs){return cytnx_extension::xlinalg::Sub(lhs,self);})
-                .def("__rsub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_float     &lhs){return cytnx_extension::xlinalg::Sub(lhs,self);})
-                .def("__rsub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int64     &lhs){return cytnx_extension::xlinalg::Sub(lhs,self);})
-                .def("__rsub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint64    &lhs){return cytnx_extension::xlinalg::Sub(lhs,self);})
-                .def("__rsub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int32     &lhs){return cytnx_extension::xlinalg::Sub(lhs,self);})
-                .def("__rsub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint32    &lhs){return cytnx_extension::xlinalg::Sub(lhs,self);})
-                .def("__rsub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int16     &lhs){return cytnx_extension::xlinalg::Sub(lhs,self);})
-                .def("__rsub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint16    &lhs){return cytnx_extension::xlinalg::Sub(lhs,self);})
-                .def("__rsub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_bool      &lhs){return cytnx_extension::xlinalg::Sub(lhs,self);})
+                .def("__rsub__",[](UniTensor &self, const cytnx::cytnx_complex128&lhs){return linalg::Sub(lhs,self);})
+                .def("__rsub__",[](UniTensor &self, const cytnx::cytnx_complex64 &lhs){return linalg::Sub(lhs,self);})
+                .def("__rsub__",[](UniTensor &self, const cytnx::cytnx_double    &lhs){return linalg::Sub(lhs,self);})
+                .def("__rsub__",[](UniTensor &self, const cytnx::cytnx_float     &lhs){return linalg::Sub(lhs,self);})
+                .def("__rsub__",[](UniTensor &self, const cytnx::cytnx_int64     &lhs){return linalg::Sub(lhs,self);})
+                .def("__rsub__",[](UniTensor &self, const cytnx::cytnx_uint64    &lhs){return linalg::Sub(lhs,self);})
+                .def("__rsub__",[](UniTensor &self, const cytnx::cytnx_int32     &lhs){return linalg::Sub(lhs,self);})
+                .def("__rsub__",[](UniTensor &self, const cytnx::cytnx_uint32    &lhs){return linalg::Sub(lhs,self);})
+                .def("__rsub__",[](UniTensor &self, const cytnx::cytnx_int16     &lhs){return linalg::Sub(lhs,self);})
+                .def("__rsub__",[](UniTensor &self, const cytnx::cytnx_uint16    &lhs){return linalg::Sub(lhs,self);})
+                .def("__rsub__",[](UniTensor &self, const cytnx::cytnx_bool      &lhs){return linalg::Sub(lhs,self);})
  
-                .def("__isub__",[](cytnx_extension::CyTensor &self, const cytnx_extension::CyTensor &rhs){return self.Sub_(rhs);}) // these will return self!
-                .def("__isub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex128&rhs){return self.Sub_(rhs);})
-                .def("__isub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex64 &rhs){return self.Sub_(rhs);})
-                .def("__isub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_double    &rhs){return self.Sub_(rhs);})
-                .def("__isub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_float     &rhs){return self.Sub_(rhs);})
-                .def("__isub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int64     &rhs){return self.Sub_(rhs);})
-                .def("__isub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint64    &rhs){return self.Sub_(rhs);})
-                .def("__isub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int32     &rhs){return self.Sub_(rhs);})
-                .def("__isub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint32    &rhs){return self.Sub_(rhs);})
-                .def("__isub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int16     &rhs){return self.Sub_(rhs);})
-                .def("__isub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint16    &rhs){return self.Sub_(rhs);})
-                .def("__isub__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_bool      &rhs){return self.Sub_(rhs);})
+                .def("__isub__",[](UniTensor &self, const UniTensor &rhs){return self.Sub_(rhs);}) // these will return self!
+                .def("__isub__",[](UniTensor &self, const cytnx::cytnx_complex128&rhs){return self.Sub_(rhs);})
+                .def("__isub__",[](UniTensor &self, const cytnx::cytnx_complex64 &rhs){return self.Sub_(rhs);})
+                .def("__isub__",[](UniTensor &self, const cytnx::cytnx_double    &rhs){return self.Sub_(rhs);})
+                .def("__isub__",[](UniTensor &self, const cytnx::cytnx_float     &rhs){return self.Sub_(rhs);})
+                .def("__isub__",[](UniTensor &self, const cytnx::cytnx_int64     &rhs){return self.Sub_(rhs);})
+                .def("__isub__",[](UniTensor &self, const cytnx::cytnx_uint64    &rhs){return self.Sub_(rhs);})
+                .def("__isub__",[](UniTensor &self, const cytnx::cytnx_int32     &rhs){return self.Sub_(rhs);})
+                .def("__isub__",[](UniTensor &self, const cytnx::cytnx_uint32    &rhs){return self.Sub_(rhs);})
+                .def("__isub__",[](UniTensor &self, const cytnx::cytnx_int16     &rhs){return self.Sub_(rhs);})
+                .def("__isub__",[](UniTensor &self, const cytnx::cytnx_uint16    &rhs){return self.Sub_(rhs);})
+                .def("__isub__",[](UniTensor &self, const cytnx::cytnx_bool      &rhs){return self.Sub_(rhs);})
 
-                .def("__mul__",[](cytnx_extension::CyTensor &self, const cytnx_extension::CyTensor &rhs){return self.Mul(rhs);})
-                .def("__mul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex128&rhs){return self.Mul(rhs);})
-                .def("__mul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex64 &rhs){return self.Mul(rhs);})
-                .def("__mul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_double    &rhs){return self.Mul(rhs);})
-                .def("__mul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_float     &rhs){return self.Mul(rhs);})
-                .def("__mul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int64     &rhs){return self.Mul(rhs);})
-                .def("__mul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint64    &rhs){return self.Mul(rhs);})
-                .def("__mul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int32     &rhs){return self.Mul(rhs);})
-                .def("__mul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint32    &rhs){return self.Mul(rhs);})
-                .def("__mul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int16     &rhs){return self.Mul(rhs);})
-                .def("__mul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint16    &rhs){return self.Mul(rhs);})
-                .def("__mul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_bool    &rhs){return self.Mul(rhs);})
+                .def("__mul__",[](UniTensor &self, const UniTensor &rhs){return self.Mul(rhs);})
+                .def("__mul__",[](UniTensor &self, const cytnx::cytnx_complex128&rhs){return self.Mul(rhs);})
+                .def("__mul__",[](UniTensor &self, const cytnx::cytnx_complex64 &rhs){return self.Mul(rhs);})
+                .def("__mul__",[](UniTensor &self, const cytnx::cytnx_double    &rhs){return self.Mul(rhs);})
+                .def("__mul__",[](UniTensor &self, const cytnx::cytnx_float     &rhs){return self.Mul(rhs);})
+                .def("__mul__",[](UniTensor &self, const cytnx::cytnx_int64     &rhs){return self.Mul(rhs);})
+                .def("__mul__",[](UniTensor &self, const cytnx::cytnx_uint64    &rhs){return self.Mul(rhs);})
+                .def("__mul__",[](UniTensor &self, const cytnx::cytnx_int32     &rhs){return self.Mul(rhs);})
+                .def("__mul__",[](UniTensor &self, const cytnx::cytnx_uint32    &rhs){return self.Mul(rhs);})
+                .def("__mul__",[](UniTensor &self, const cytnx::cytnx_int16     &rhs){return self.Mul(rhs);})
+                .def("__mul__",[](UniTensor &self, const cytnx::cytnx_uint16    &rhs){return self.Mul(rhs);})
+                .def("__mul__",[](UniTensor &self, const cytnx::cytnx_bool    &rhs){return self.Mul(rhs);})
 
-                .def("__rmul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex128&lhs){return cytnx_extension::xlinalg::Mul(lhs,self);})
-                .def("__rmul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex64 &lhs){return cytnx_extension::xlinalg::Mul(lhs,self);})
-                .def("__rmul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_double    &lhs){return cytnx_extension::xlinalg::Mul(lhs,self);})
-                .def("__rmul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_float     &lhs){return cytnx_extension::xlinalg::Mul(lhs,self);})
-                .def("__rmul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int64     &lhs){return cytnx_extension::xlinalg::Mul(lhs,self);})
-                .def("__rmul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint64    &lhs){return cytnx_extension::xlinalg::Mul(lhs,self);})
-                .def("__rmul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int32     &lhs){return cytnx_extension::xlinalg::Mul(lhs,self);})
-                .def("__rmul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint32    &lhs){return cytnx_extension::xlinalg::Mul(lhs,self);})
-                .def("__rmul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int16     &lhs){return cytnx_extension::xlinalg::Mul(lhs,self);})
-                .def("__rmul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint16    &lhs){return cytnx_extension::xlinalg::Mul(lhs,self);})
-                .def("__rmul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_bool      &lhs){return cytnx_extension::xlinalg::Mul(lhs,self);})
+                .def("__rmul__",[](UniTensor &self, const cytnx::cytnx_complex128&lhs){return linalg::Mul(lhs,self);})
+                .def("__rmul__",[](UniTensor &self, const cytnx::cytnx_complex64 &lhs){return linalg::Mul(lhs,self);})
+                .def("__rmul__",[](UniTensor &self, const cytnx::cytnx_double    &lhs){return linalg::Mul(lhs,self);})
+                .def("__rmul__",[](UniTensor &self, const cytnx::cytnx_float     &lhs){return linalg::Mul(lhs,self);})
+                .def("__rmul__",[](UniTensor &self, const cytnx::cytnx_int64     &lhs){return linalg::Mul(lhs,self);})
+                .def("__rmul__",[](UniTensor &self, const cytnx::cytnx_uint64    &lhs){return linalg::Mul(lhs,self);})
+                .def("__rmul__",[](UniTensor &self, const cytnx::cytnx_int32     &lhs){return linalg::Mul(lhs,self);})
+                .def("__rmul__",[](UniTensor &self, const cytnx::cytnx_uint32    &lhs){return linalg::Mul(lhs,self);})
+                .def("__rmul__",[](UniTensor &self, const cytnx::cytnx_int16     &lhs){return linalg::Mul(lhs,self);})
+                .def("__rmul__",[](UniTensor &self, const cytnx::cytnx_uint16    &lhs){return linalg::Mul(lhs,self);})
+                .def("__rmul__",[](UniTensor &self, const cytnx::cytnx_bool      &lhs){return linalg::Mul(lhs,self);})
  
-                .def("__imul__",[](cytnx_extension::CyTensor &self, const cytnx_extension::CyTensor &rhs){return self.Mul_(rhs);}) // these will return self!
-                .def("__imul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex128&rhs){return self.Mul_(rhs);})
-                .def("__imul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex64 &rhs){return self.Mul_(rhs);})
-                .def("__imul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_double    &rhs){return self.Mul_(rhs);})
-                .def("__imul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_float     &rhs){return self.Mul_(rhs);})
-                .def("__imul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int64     &rhs){return self.Mul_(rhs);})
-                .def("__imul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint64    &rhs){return self.Mul_(rhs);})
-                .def("__imul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int32     &rhs){return self.Mul_(rhs);})
-                .def("__imul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint32    &rhs){return self.Mul_(rhs);})
-                .def("__imul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int16     &rhs){return self.Mul_(rhs);})
-                .def("__imul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint16    &rhs){return self.Mul_(rhs);})
-                .def("__imul__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_bool      &rhs){return self.Mul_(rhs);})
+                .def("__imul__",[](UniTensor &self, const UniTensor &rhs){return self.Mul_(rhs);}) // these will return self!
+                .def("__imul__",[](UniTensor &self, const cytnx::cytnx_complex128&rhs){return self.Mul_(rhs);})
+                .def("__imul__",[](UniTensor &self, const cytnx::cytnx_complex64 &rhs){return self.Mul_(rhs);})
+                .def("__imul__",[](UniTensor &self, const cytnx::cytnx_double    &rhs){return self.Mul_(rhs);})
+                .def("__imul__",[](UniTensor &self, const cytnx::cytnx_float     &rhs){return self.Mul_(rhs);})
+                .def("__imul__",[](UniTensor &self, const cytnx::cytnx_int64     &rhs){return self.Mul_(rhs);})
+                .def("__imul__",[](UniTensor &self, const cytnx::cytnx_uint64    &rhs){return self.Mul_(rhs);})
+                .def("__imul__",[](UniTensor &self, const cytnx::cytnx_int32     &rhs){return self.Mul_(rhs);})
+                .def("__imul__",[](UniTensor &self, const cytnx::cytnx_uint32    &rhs){return self.Mul_(rhs);})
+                .def("__imul__",[](UniTensor &self, const cytnx::cytnx_int16     &rhs){return self.Mul_(rhs);})
+                .def("__imul__",[](UniTensor &self, const cytnx::cytnx_uint16    &rhs){return self.Mul_(rhs);})
+                .def("__imul__",[](UniTensor &self, const cytnx::cytnx_bool      &rhs){return self.Mul_(rhs);})
 
-                .def("__truediv__",[](cytnx_extension::CyTensor &self, const cytnx_extension::CyTensor &rhs){return self.Div(rhs);})
-                .def("__truediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex128&rhs){return self.Div(rhs);})
-                .def("__truediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex64 &rhs){return self.Div(rhs);})
-                .def("__truediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_double    &rhs){return self.Div(rhs);})
-                .def("__truediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_float     &rhs){return self.Div(rhs);})
-                .def("__truediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int64     &rhs){return self.Div(rhs);})
-                .def("__truediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint64    &rhs){return self.Div(rhs);})
-                .def("__truediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int32     &rhs){return self.Div(rhs);})
-                .def("__truediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint32    &rhs){return self.Div(rhs);})
-                .def("__truediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int16     &rhs){return self.Div(rhs);})
-                .def("__truediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint16    &rhs){return self.Div(rhs);})
-                .def("__truediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_bool      &rhs){return self.Div(rhs);})
+                .def("__truediv__",[](UniTensor &self, const UniTensor &rhs){return self.Div(rhs);})
+                .def("__truediv__",[](UniTensor &self, const cytnx::cytnx_complex128&rhs){return self.Div(rhs);})
+                .def("__truediv__",[](UniTensor &self, const cytnx::cytnx_complex64 &rhs){return self.Div(rhs);})
+                .def("__truediv__",[](UniTensor &self, const cytnx::cytnx_double    &rhs){return self.Div(rhs);})
+                .def("__truediv__",[](UniTensor &self, const cytnx::cytnx_float     &rhs){return self.Div(rhs);})
+                .def("__truediv__",[](UniTensor &self, const cytnx::cytnx_int64     &rhs){return self.Div(rhs);})
+                .def("__truediv__",[](UniTensor &self, const cytnx::cytnx_uint64    &rhs){return self.Div(rhs);})
+                .def("__truediv__",[](UniTensor &self, const cytnx::cytnx_int32     &rhs){return self.Div(rhs);})
+                .def("__truediv__",[](UniTensor &self, const cytnx::cytnx_uint32    &rhs){return self.Div(rhs);})
+                .def("__truediv__",[](UniTensor &self, const cytnx::cytnx_int16     &rhs){return self.Div(rhs);})
+                .def("__truediv__",[](UniTensor &self, const cytnx::cytnx_uint16    &rhs){return self.Div(rhs);})
+                .def("__truediv__",[](UniTensor &self, const cytnx::cytnx_bool      &rhs){return self.Div(rhs);})
 
-                .def("__rtruediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex128&lhs){return cytnx_extension::xlinalg::Div(lhs,self);})
-                .def("__rtruediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex64 &lhs){return cytnx_extension::xlinalg::Div(lhs,self);})
-                .def("__rtruediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_double    &lhs){return cytnx_extension::xlinalg::Div(lhs,self);})
-                .def("__rtruediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_float     &lhs){return cytnx_extension::xlinalg::Div(lhs,self);})
-                .def("__rtruediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int64     &lhs){return cytnx_extension::xlinalg::Div(lhs,self);})
-                .def("__rtruediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint64    &lhs){return cytnx_extension::xlinalg::Div(lhs,self);})
-                .def("__rtruediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int32     &lhs){return cytnx_extension::xlinalg::Div(lhs,self);})
-                .def("__rtruediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint32    &lhs){return cytnx_extension::xlinalg::Div(lhs,self);})
-                .def("__rtruediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int16     &lhs){return cytnx_extension::xlinalg::Div(lhs,self);})
-                .def("__rtruediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint16    &lhs){return cytnx_extension::xlinalg::Div(lhs,self);})
-                .def("__rtruediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_bool      &lhs){return cytnx_extension::xlinalg::Div(lhs,self);})
+                .def("__rtruediv__",[](UniTensor &self, const cytnx::cytnx_complex128&lhs){return linalg::Div(lhs,self);})
+                .def("__rtruediv__",[](UniTensor &self, const cytnx::cytnx_complex64 &lhs){return linalg::Div(lhs,self);})
+                .def("__rtruediv__",[](UniTensor &self, const cytnx::cytnx_double    &lhs){return linalg::Div(lhs,self);})
+                .def("__rtruediv__",[](UniTensor &self, const cytnx::cytnx_float     &lhs){return linalg::Div(lhs,self);})
+                .def("__rtruediv__",[](UniTensor &self, const cytnx::cytnx_int64     &lhs){return linalg::Div(lhs,self);})
+                .def("__rtruediv__",[](UniTensor &self, const cytnx::cytnx_uint64    &lhs){return linalg::Div(lhs,self);})
+                .def("__rtruediv__",[](UniTensor &self, const cytnx::cytnx_int32     &lhs){return linalg::Div(lhs,self);})
+                .def("__rtruediv__",[](UniTensor &self, const cytnx::cytnx_uint32    &lhs){return linalg::Div(lhs,self);})
+                .def("__rtruediv__",[](UniTensor &self, const cytnx::cytnx_int16     &lhs){return linalg::Div(lhs,self);})
+                .def("__rtruediv__",[](UniTensor &self, const cytnx::cytnx_uint16    &lhs){return linalg::Div(lhs,self);})
+                .def("__rtruediv__",[](UniTensor &self, const cytnx::cytnx_bool      &lhs){return linalg::Div(lhs,self);})
  
-                .def("__itruediv__",[](cytnx_extension::CyTensor &self, const cytnx_extension::CyTensor &rhs){return self.Div_(rhs);}) // these will return self!
-                .def("__itruediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex128&rhs){return self.Div_(rhs);})
-                .def("__itruediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex64 &rhs){return self.Div_(rhs);})
-                .def("__itruediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_double    &rhs){return self.Div_(rhs);})
-                .def("__itruediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_float     &rhs){return self.Div_(rhs);})
-                .def("__itruediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int64     &rhs){return self.Div_(rhs);})
-                .def("__itruediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint64    &rhs){return self.Div_(rhs);})
-                .def("__itruediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int32     &rhs){return self.Div_(rhs);})
-                .def("__itruediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint32    &rhs){return self.Div_(rhs);})
-                .def("__itruediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int16     &rhs){return self.Div_(rhs);})
-                .def("__itruediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint16    &rhs){return self.Div_(rhs);})
-                .def("__itruediv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_bool      &rhs){return self.Div_(rhs);})
+                .def("__itruediv__",[](UniTensor &self, const UniTensor &rhs){return self.Div_(rhs);}) // these will return self!
+                .def("__itruediv__",[](UniTensor &self, const cytnx::cytnx_complex128&rhs){return self.Div_(rhs);})
+                .def("__itruediv__",[](UniTensor &self, const cytnx::cytnx_complex64 &rhs){return self.Div_(rhs);})
+                .def("__itruediv__",[](UniTensor &self, const cytnx::cytnx_double    &rhs){return self.Div_(rhs);})
+                .def("__itruediv__",[](UniTensor &self, const cytnx::cytnx_float     &rhs){return self.Div_(rhs);})
+                .def("__itruediv__",[](UniTensor &self, const cytnx::cytnx_int64     &rhs){return self.Div_(rhs);})
+                .def("__itruediv__",[](UniTensor &self, const cytnx::cytnx_uint64    &rhs){return self.Div_(rhs);})
+                .def("__itruediv__",[](UniTensor &self, const cytnx::cytnx_int32     &rhs){return self.Div_(rhs);})
+                .def("__itruediv__",[](UniTensor &self, const cytnx::cytnx_uint32    &rhs){return self.Div_(rhs);})
+                .def("__itruediv__",[](UniTensor &self, const cytnx::cytnx_int16     &rhs){return self.Div_(rhs);})
+                .def("__itruediv__",[](UniTensor &self, const cytnx::cytnx_uint16    &rhs){return self.Div_(rhs);})
+                .def("__itruediv__",[](UniTensor &self, const cytnx::cytnx_bool      &rhs){return self.Div_(rhs);})
 
-                .def("__floordiv__",[](cytnx_extension::CyTensor &self, const cytnx_extension::CyTensor &rhs){return self.Div(rhs);})
-                .def("__floordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex128&rhs){return self.Div(rhs);})
-                .def("__floordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex64 &rhs){return self.Div(rhs);})
-                .def("__floordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_double    &rhs){return self.Div(rhs);})
-                .def("__floordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_float     &rhs){return self.Div(rhs);})
-                .def("__floordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int64     &rhs){return self.Div(rhs);})
-                .def("__floordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint64    &rhs){return self.Div(rhs);})
-                .def("__floordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int32     &rhs){return self.Div(rhs);})
-                .def("__floordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint32    &rhs){return self.Div(rhs);})
-                .def("__floordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int16     &rhs){return self.Div(rhs);})
-                .def("__floordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint16    &rhs){return self.Div(rhs);})
-                .def("__floordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_bool      &rhs){return self.Div(rhs);})
+                .def("__floordiv__",[](UniTensor &self, const UniTensor &rhs){return self.Div(rhs);})
+                .def("__floordiv__",[](UniTensor &self, const cytnx::cytnx_complex128&rhs){return self.Div(rhs);})
+                .def("__floordiv__",[](UniTensor &self, const cytnx::cytnx_complex64 &rhs){return self.Div(rhs);})
+                .def("__floordiv__",[](UniTensor &self, const cytnx::cytnx_double    &rhs){return self.Div(rhs);})
+                .def("__floordiv__",[](UniTensor &self, const cytnx::cytnx_float     &rhs){return self.Div(rhs);})
+                .def("__floordiv__",[](UniTensor &self, const cytnx::cytnx_int64     &rhs){return self.Div(rhs);})
+                .def("__floordiv__",[](UniTensor &self, const cytnx::cytnx_uint64    &rhs){return self.Div(rhs);})
+                .def("__floordiv__",[](UniTensor &self, const cytnx::cytnx_int32     &rhs){return self.Div(rhs);})
+                .def("__floordiv__",[](UniTensor &self, const cytnx::cytnx_uint32    &rhs){return self.Div(rhs);})
+                .def("__floordiv__",[](UniTensor &self, const cytnx::cytnx_int16     &rhs){return self.Div(rhs);})
+                .def("__floordiv__",[](UniTensor &self, const cytnx::cytnx_uint16    &rhs){return self.Div(rhs);})
+                .def("__floordiv__",[](UniTensor &self, const cytnx::cytnx_bool      &rhs){return self.Div(rhs);})
 
-                .def("__rfloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex128&lhs){return cytnx_extension::xlinalg::Div(lhs,self);})
-                .def("__rfloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex64 &lhs){return cytnx_extension::xlinalg::Div(lhs,self);})
-                .def("__rfloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_double    &lhs){return cytnx_extension::xlinalg::Div(lhs,self);})
-                .def("__rfloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_float     &lhs){return cytnx_extension::xlinalg::Div(lhs,self);})
-                .def("__rfloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int64     &lhs){return cytnx_extension::xlinalg::Div(lhs,self);})
-                .def("__rfloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint64    &lhs){return cytnx_extension::xlinalg::Div(lhs,self);})
-                .def("__rfloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int32     &lhs){return cytnx_extension::xlinalg::Div(lhs,self);})
-                .def("__rfloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint32    &lhs){return cytnx_extension::xlinalg::Div(lhs,self);})
-                .def("__rfloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int16     &lhs){return cytnx_extension::xlinalg::Div(lhs,self);})
-                .def("__rfloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint16    &lhs){return cytnx_extension::xlinalg::Div(lhs,self);})
-                .def("__rfloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_bool      &lhs){return cytnx_extension::xlinalg::Div(lhs,self);})
+                .def("__rfloordiv__",[](UniTensor &self, const cytnx::cytnx_complex128&lhs){return linalg::Div(lhs,self);})
+                .def("__rfloordiv__",[](UniTensor &self, const cytnx::cytnx_complex64 &lhs){return linalg::Div(lhs,self);})
+                .def("__rfloordiv__",[](UniTensor &self, const cytnx::cytnx_double    &lhs){return linalg::Div(lhs,self);})
+                .def("__rfloordiv__",[](UniTensor &self, const cytnx::cytnx_float     &lhs){return linalg::Div(lhs,self);})
+                .def("__rfloordiv__",[](UniTensor &self, const cytnx::cytnx_int64     &lhs){return linalg::Div(lhs,self);})
+                .def("__rfloordiv__",[](UniTensor &self, const cytnx::cytnx_uint64    &lhs){return linalg::Div(lhs,self);})
+                .def("__rfloordiv__",[](UniTensor &self, const cytnx::cytnx_int32     &lhs){return linalg::Div(lhs,self);})
+                .def("__rfloordiv__",[](UniTensor &self, const cytnx::cytnx_uint32    &lhs){return linalg::Div(lhs,self);})
+                .def("__rfloordiv__",[](UniTensor &self, const cytnx::cytnx_int16     &lhs){return linalg::Div(lhs,self);})
+                .def("__rfloordiv__",[](UniTensor &self, const cytnx::cytnx_uint16    &lhs){return linalg::Div(lhs,self);})
+                .def("__rfloordiv__",[](UniTensor &self, const cytnx::cytnx_bool      &lhs){return linalg::Div(lhs,self);})
  
-                .def("__ifloordiv__",[](cytnx_extension::CyTensor &self, const cytnx_extension::CyTensor &rhs){return self.Div_(rhs);}) // these will return self!
-                .def("__ifloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex128&rhs){return self.Div_(rhs);})
-                .def("__ifloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_complex64 &rhs){return self.Div_(rhs);})
-                .def("__ifloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_double    &rhs){return self.Div_(rhs);})
-                .def("__ifloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_float     &rhs){return self.Div_(rhs);})
-                .def("__ifloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int64     &rhs){return self.Div_(rhs);})
-                .def("__ifloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint64    &rhs){return self.Div_(rhs);})
-                .def("__ifloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int32     &rhs){return self.Div_(rhs);})
-                .def("__ifloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint32    &rhs){return self.Div_(rhs);})
-                .def("__ifloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_int16     &rhs){return self.Div_(rhs);})
-                .def("__ifloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_uint16    &rhs){return self.Div_(rhs);})
-                .def("__ifloordiv__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_bool      &rhs){return self.Div_(rhs);})
-                .def("__pow__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_double &p){return self.Pow(p);})
-                .def("c__ipow__",[](cytnx_extension::CyTensor &self, const cytnx::cytnx_double &p){self.Pow_(p);})
-                .def("Pow",&cytnx_extension::CyTensor::Pow)
-                .def("cPow_",&cytnx_extension::CyTensor::Pow_)
-                .def("cConj_",&cytnx_extension::CyTensor::Conj_)
-                .def("Conj",&cytnx_extension::CyTensor::Conj)
-                .def("cTrace_",&cytnx_extension::CyTensor::Trace_,py::arg("a"),py::arg("b"),py::arg("by_label")=false)
-                .def("Trace",&cytnx_extension::CyTensor::Trace,py::arg("a"),py::arg("b"),py::arg("by_label")=false)
-                .def("cTranspose_",&cytnx_extension::CyTensor::Transpose_)
-                .def("Transpose",&cytnx_extension::CyTensor::Transpose)
-                .def("cDagger_",&cytnx_extension::CyTensor::Dagger_)
-                .def("Dagger",&cytnx_extension::CyTensor::Dagger)
-                .def("ctag",&cytnx_extension::CyTensor::tag)
-                .def("truncate",&cytnx_extension::CyTensor::truncate,py::arg("bond_idx"),py::arg("dim"),py::arg("by_label")=false)
-                .def("ctruncate_",&cytnx_extension::CyTensor::truncate_)
+                .def("__ifloordiv__",[](UniTensor &self, const UniTensor &rhs){return self.Div_(rhs);}) // these will return self!
+                .def("__ifloordiv__",[](UniTensor &self, const cytnx::cytnx_complex128&rhs){return self.Div_(rhs);})
+                .def("__ifloordiv__",[](UniTensor &self, const cytnx::cytnx_complex64 &rhs){return self.Div_(rhs);})
+                .def("__ifloordiv__",[](UniTensor &self, const cytnx::cytnx_double    &rhs){return self.Div_(rhs);})
+                .def("__ifloordiv__",[](UniTensor &self, const cytnx::cytnx_float     &rhs){return self.Div_(rhs);})
+                .def("__ifloordiv__",[](UniTensor &self, const cytnx::cytnx_int64     &rhs){return self.Div_(rhs);})
+                .def("__ifloordiv__",[](UniTensor &self, const cytnx::cytnx_uint64    &rhs){return self.Div_(rhs);})
+                .def("__ifloordiv__",[](UniTensor &self, const cytnx::cytnx_int32     &rhs){return self.Div_(rhs);})
+                .def("__ifloordiv__",[](UniTensor &self, const cytnx::cytnx_uint32    &rhs){return self.Div_(rhs);})
+                .def("__ifloordiv__",[](UniTensor &self, const cytnx::cytnx_int16     &rhs){return self.Div_(rhs);})
+                .def("__ifloordiv__",[](UniTensor &self, const cytnx::cytnx_uint16    &rhs){return self.Div_(rhs);})
+                .def("__ifloordiv__",[](UniTensor &self, const cytnx::cytnx_bool      &rhs){return self.Div_(rhs);})
+                .def("__pow__",[](UniTensor &self, const cytnx::cytnx_double &p){return self.Pow(p);})
+                .def("c__ipow__",[](UniTensor &self, const cytnx::cytnx_double &p){self.Pow_(p);})
+                .def("Pow",&UniTensor::Pow)
+                .def("cPow_",&UniTensor::Pow_)
+                .def("cConj_",&UniTensor::Conj_)
+                .def("Conj",&UniTensor::Conj)
+                .def("cTrace_",&UniTensor::Trace_,py::arg("a"),py::arg("b"),py::arg("by_label")=false)
+                .def("Trace",&UniTensor::Trace,py::arg("a"),py::arg("b"),py::arg("by_label")=false)
+                .def("cTranspose_",&UniTensor::Transpose_)
+                .def("Transpose",&UniTensor::Transpose)
+                .def("cDagger_",&UniTensor::Dagger_)
+                .def("Dagger",&UniTensor::Dagger)
+                .def("ctag",&UniTensor::tag)
+                .def("truncate",&UniTensor::truncate,py::arg("bond_idx"),py::arg("dim"),py::arg("by_label")=false)
+                .def("ctruncate_",&UniTensor::truncate_)
                 ;
-    mext.def("Contract",cytnx_extension::Contract);
+    m.def("Contract",Contract);
    
-    // [Submodule linalg]
-    pybind11::module mext_xlinalg = mext.def_submodule("xlinalg","linear algebra for cytnx_extension.");
-    mext_xlinalg.def("Svd",&cytnx_extension::xlinalg::Svd,py::arg("Tin"),py::arg("is_U")=true,py::arg("is_vT")=true);
-    mext_xlinalg.def("Svd_truncate",&cytnx_extension::xlinalg::Svd_truncate,py::arg("Tin"),py::arg("keepdim"),py::arg("is_U")=true,py::arg("is_vT")=true);
-    mext_xlinalg.def("ExpH",&cytnx_extension::xlinalg::ExpH,py::arg("Tin"),py::arg("a")=1.,py::arg("b")=0.);
-    mext_xlinalg.def("ExpM",&cytnx_extension::xlinalg::ExpM,py::arg("Tin"),py::arg("a")=1.,py::arg("b")=0.);
-    mext_xlinalg.def("Trace",&cytnx_extension::xlinalg::Trace,py::arg("Tin"),py::arg("a"),py::arg("b"),py::arg("by_label")=false);
-    mext_xlinalg.def("Hosvd",&cytnx_extension::xlinalg::Hosvd, py::arg("Tin"),py::arg("mode"),py::arg("is_core")=true,py::arg("is_Ls")=false,py::arg("truncate_dim")=std::vector<cytnx_int64>());
-    mext_xlinalg.def("Pow",&cytnx_extension::xlinalg::Pow,py::arg("Tin"),py::arg("p"));
-    mext_xlinalg.def("Pow_",&cytnx_extension::xlinalg::Pow_,py::arg("Tin"),py::arg("p"));
-    mext_xlinalg.def("QR",&cytnx_extension::xlinalg::QR,py::arg("Tin"),py::arg("is_tau")=false);
 
     // [Submodule linalg] 
     pybind11::module m_linalg = m.def_submodule("linalg","linear algebra related.");
 
-    m_linalg.def("Svd",&cytnx::linalg::Svd,py::arg("Tin"),py::arg("is_U")=true,py::arg("is_vT")=true);
+    m_linalg.def("Svd",[](const cytnx::Tensor &Tin, const bool &is_U, const bool &is_vT){
+                            return cytnx::linalg::Svd(Tin,is_U,is_vT);
+                          },py::arg("Tin"),py::arg("is_U")=true,py::arg("is_vT")=true);
+    m_linalg.def("Svd",[](const cytnx::UniTensor &Tin, const bool &is_U, const bool &is_vT){
+                            return cytnx::linalg::Svd(Tin,is_U,is_vT);
+                          },py::arg("Tin"),py::arg("is_U")=true,py::arg("is_vT")=true);
+
+    m_linalg.def("Svd_truncate",[](const Tensor &Tin, const cytnx_uint64 &keepdim,const bool &is_U, const bool &is_vT){
+                                        return cytnx::linalg::Svd_truncate(Tin,keepdim,is_U,is_vT);
+                                   },py::arg("Tin"),py::arg("keepdim"),py::arg("is_U")=true,py::arg("is_vT")=true);
+    m_linalg.def("Svd_truncate",[](const UniTensor &Tin, const cytnx_uint64 &keepdim,const bool &is_U, const bool &is_vT){
+                                        return cytnx::linalg::Svd_truncate(Tin,keepdim,is_U,is_vT);
+                                   },py::arg("Tin"),py::arg("keepdim"),py::arg("is_U")=true,py::arg("is_vT")=true);
+
     m_linalg.def("Eigh",&cytnx::linalg::Eigh,py::arg("Tin"),py::arg("is_V")=true,py::arg("row_v")=false);
     m_linalg.def("Eig",&cytnx::linalg::Eig,py::arg("Tin"),py::arg("is_V")=true,py::arg("row_v")=false);
     m_linalg.def("Exp",&cytnx::linalg::Exp,py::arg("Tin"));
     m_linalg.def("Exp_",&cytnx::linalg::Exp_,py::arg("Tio"));
     m_linalg.def("Expf_",&cytnx::linalg::Expf_,py::arg("Tio"));
     m_linalg.def("Expf",&cytnx::linalg::Expf,py::arg("Tio"));
-    m_linalg.def("ExpH",&cytnx::linalg::ExpH,py::arg("Tio"),py::arg("a")=1.0,py::arg("b")=0);
-    m_linalg.def("ExpM",&cytnx::linalg::ExpM,py::arg("Tio"),py::arg("a")=1.0,py::arg("b")=0);
-    m_linalg.def("QR",&cytnx::linalg::QR,py::arg("Tio"),py::arg("is_tau")=false);
+
+    m_linalg.def("ExpH",[](const Tensor &in,const cytnx_double &a, const cytnx_double &b){
+                                return cytnx::linalg::ExpH(in,a,b);
+                          },py::arg("Tio"),py::arg("a")=1.0,py::arg("b")=0);
+    m_linalg.def("ExpH",[](const UniTensor &in,const cytnx_double &a, const cytnx_double &b){
+                                return cytnx::linalg::ExpH(in,a,b);
+                          },py::arg("Tio"),py::arg("a")=1.0,py::arg("b")=0);
+
+    m_linalg.def("ExpM",[](const Tensor &in,const cytnx_double &a, const cytnx_double &b){
+                                return cytnx::linalg::ExpH(in,a,b);
+                          },py::arg("Tio"),py::arg("a")=1.0,py::arg("b")=0);
+    m_linalg.def("ExpM",[](const UniTensor &in,const cytnx_double &a, const cytnx_double &b){
+                                return cytnx::linalg::ExpH(in,a,b);
+                          },py::arg("Tio"),py::arg("a")=1.0,py::arg("b")=0);
+
+    m_linalg.def("QR",[](const cytnx::UniTensor &Tin, const bool &is_tau){
+                            return cytnx::linalg::QR(Tin,is_tau);
+                        },py::arg("Tio"),py::arg("is_tau")=false);
+    m_linalg.def("QR",[](const cytnx::Tensor &Tin, const bool &is_tau){
+                            return cytnx::linalg::QR(Tin,is_tau);
+                        },py::arg("Tio"),py::arg("is_tau")=false);
+
     m_linalg.def("InvM",&cytnx::linalg::InvM,py::arg("Tin"));
     m_linalg.def("InvM_",&cytnx::linalg::InvM_,py::arg("Tio"));
     m_linalg.def("Inv_",&cytnx::linalg::Inv_,py::arg("Tio"),py::arg("clip"));
@@ -1897,15 +1918,43 @@ PYBIND11_MODULE(cytnx,m){
     m_linalg.def("Vectordot",&cytnx::linalg::Vectordot, py::arg("T1"),py::arg("T2"),py::arg("is_conj")=false);
     m_linalg.def("Norm",&cytnx::linalg::Norm, py::arg("T1"));
     m_linalg.def("Dot",&cytnx::linalg::Dot, py::arg("T1"),py::arg("T2"));
-    m_linalg.def("Trace",&cytnx::linalg::Trace, py::arg("Tn"),py::arg("axisA")=0,py::arg("axisB")=1);
-    m_linalg.def("Pow",&cytnx::linalg::Pow, py::arg("Tn"),py::arg("p"));
-    m_linalg.def("Pow_",&cytnx::linalg::Pow_, py::arg("Tn"),py::arg("p"));
+    
+    m_linalg.def("Trace",[](const cytnx::Tensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b){
+                                return cytnx::linalg::Trace(Tin,a,b);
+                            }, py::arg("Tn"),py::arg("axisA")=0,py::arg("axisB")=1);
+    m_linalg.def("Trace",[](const cytnx::UniTensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label){
+                                return cytnx::linalg::Trace(Tin,a,b,by_label);
+                            }, py::arg("Tn"),py::arg("axisA"),py::arg("axisB"),py::arg("by_label")=false);
+
+    m_linalg.def("Pow",[](const UniTensor &Tin, const double &p){
+                                return cytnx::linalg::Pow(Tin,p);
+                          }, py::arg("Tn"),py::arg("p"));
+    m_linalg.def("Pow",[](const Tensor &Tin, const double &p){
+                                return cytnx::linalg::Pow(Tin,p);
+                          }, py::arg("Tn"),py::arg("p"));
+
+    m_linalg.def("Pow_",[](UniTensor &Tin, const double &p){
+                            cytnx::linalg::Pow_(Tin,p);
+                          }, py::arg("Tn"),py::arg("p"));
+    m_linalg.def("Pow_",[](Tensor &Tin, const double &p){
+                            cytnx::linalg::Pow_(Tin,p);
+                          }, py::arg("Tn"),py::arg("p"));
+
+
     m_linalg.def("Abs",&cytnx::linalg::Abs, py::arg("Tn"));
     m_linalg.def("Abs_",&cytnx::linalg::Abs_, py::arg("Tn"));
     m_linalg.def("Max",&cytnx::linalg::Max, py::arg("Tn"));
     m_linalg.def("Min",&cytnx::linalg::Min, py::arg("Tn"));
     m_linalg.def("Sum",&cytnx::linalg::Sum, py::arg("Tn"));
-    m_linalg.def("Hosvd",&cytnx::linalg::Hosvd, py::arg("Tn"),py::arg("mode"),py::arg("is_core")=true,py::arg("is_Ls")=false,py::arg("truncate_dim")=std::vector<cytnx_int64>());
+    m_linalg.def("Hosvd",[](const cytnx::Tensor &Tin, const std::vector<cytnx_uint64> &mode, const bool &is_core, const bool &is_Ls,const std::vector<cytnx_int64> &truncate_dim){
+                                return cytnx::linalg::Hosvd(Tin,mode,is_core,is_Ls,truncate_dim);
+                            }, py::arg("Tn"),py::arg("mode"),py::arg("is_core")=true,py::arg("is_Ls")=false,py::arg("truncate_dim")=std::vector<cytnx_int64>());
+    m_linalg.def("Hosvd",[](const cytnx::UniTensor &Tin, const std::vector<cytnx_uint64> &mode, const bool &is_core, const bool &is_Ls,const std::vector<cytnx_int64> &truncate_dim){
+                                return cytnx::linalg::Hosvd(Tin,mode,is_core,is_Ls,truncate_dim);
+                            }, py::arg("Tn"),py::arg("mode"),py::arg("is_core")=true,py::arg("is_Ls")=false,py::arg("truncate_dim")=std::vector<cytnx_int64>());
+
+
+
     m_linalg.def("c_Lanczos_ER",[](LinOp *Hop, const cytnx_uint64&k, const bool &is_V, const cytnx_uint64 &maxiter, const double &CvgCrit, const bool &is_row, const Tensor &Tin, const cytnx_uint32 &max_krydim){
                                     return cytnx::linalg::Lanczos_ER(Hop,k,is_V,maxiter,CvgCrit,is_row,Tin,max_krydim);
                                 });

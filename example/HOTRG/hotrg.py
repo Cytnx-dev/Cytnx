@@ -1,6 +1,5 @@
 import cytnx 
 from  cytnx import linalg as cLA
-from cytnx import cytnx_extension as cyx
 import numpy as np
 
 """
@@ -34,7 +33,7 @@ T.reshape_(2,2,2,2)
 #            for l in range(2):
 #                for a in range(2):
 #                    Tchk[i,j,k,l] += W[a,i]*W[a,j]*W[a,k]*W[a,l]
-cT = cyx.CyTensor(T,2)
+cT = cytnx.UniTensor(T,2)
 
 
 ## Let's start by normalize the block with it's local partition function 
@@ -68,14 +67,14 @@ for i in range(Maxiter):
     #
     cT2 = cT.clone()
     cT2.set_labels([2,4,5,6])
-    cT = cyx.Contract(cT,cT2)
+    cT = cytnx.Contract(cT,cT2)
 
     ## Now, let's check the dimension growth onto a point where truncation is needed:
     if(cT.shape()[1]*cT.shape()[3]>chi):
         # * if combined bond dimension > chi then:
         # 1) Do Hosvd get only U and D, with it's Ls matrices. 
         cT.permute_([1,4,3,6,0,5],by_label=True)
-        U,D,Lu,Ld=cyx.xlinalg.Hosvd(cT,[2,2],is_core=False,is_Ls=True)
+        U,D,Lu,Ld=cytnx.linalg.Hosvd(cT,[2,2],is_core=False,is_Ls=True)
 
         # 2) Using Ls matrix to determine if U is used to truncate or D is used to truncate
         if(Lu.get_block_()[chi:].Norm().item() < Ld.get_block_()[chi:].Norm().item()):
@@ -102,9 +101,9 @@ for i in range(Maxiter):
         #        in general, they could be different for each bond
         U.truncate_(2,chi);
 
-        cT = cyx.Contract(cT,U)
+        cT = cytnx.Contract(cT,U)
         U.set_labels(D.labels())
-        cT = cyx.Contract(cT,U)
+        cT = cytnx.Contract(cT,U)
 
         ## set back to the original shape:
         cT.set_labels([1,3,0,2])
@@ -147,14 +146,14 @@ for i in range(Maxiter):
     #
     cT2 = cT.clone()
     cT2.set_labels([6,3,4,5])
-    cT = cyx.Contract(cT,cT2)
+    cT = cytnx.Contract(cT,cT2)
     
     ## check the dimension growth onto a point where truncation is needed:
     if(cT.shape()[2]*cT.shape()[4]>chi):
         # * if combined bond dimension > chi then:
         # 1) Do Hosvd get only L and R, with it's Ls matrices. 
         cT.permute_([2,4,0,6,1,5],by_label=True)
-        L,R,Ll,Lr=cyx.xlinalg.Hosvd(cT,[2,2],is_core=False,is_Ls=True)
+        L,R,Ll,Lr=cytnx.linalg.Hosvd(cT,[2,2],is_core=False,is_Ls=True)
 
         # 2) Using Ls matrix to determine if L is used to truncate or R is used to truncate
         if(Ll.get_block_()[chi:].Norm().item() < Lr.get_block_()[chi:].Norm().item()):
@@ -177,9 +176,9 @@ for i in range(Maxiter):
         #        in general, they could be different for each bond
         L.truncate_(2,chi);
 
-        cT = cyx.Contract(cT,L)
+        cT = cytnx.Contract(cT,L)
         L.set_labels(R.labels())
-        cT = cyx.Contract(cT,L)
+        cT = cytnx.Contract(cT,L)
 
         ## set back to the original shape:
         cT.set_labels([1,3,2,0])

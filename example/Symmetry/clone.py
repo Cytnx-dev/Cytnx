@@ -1,5 +1,4 @@
 from cytnx import *
-from cytnx.cytnx_extension import *
 
 sym_A = Symmetry.U1()
 sym_C = Symmetry.U1()

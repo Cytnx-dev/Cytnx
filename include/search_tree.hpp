@@ -2,33 +2,32 @@
 #define _H_search_tree_
 
 #include "Type.hpp"
-#include "CyTensor.hpp"
+#include "UniTensor.hpp"
 #include "cytnx_error.hpp"
 #include "utils/utils.hpp"
 #include <vector>
 #include <map>
 #include <string>
 
-namespace cytnx_extension{
-    using namespace cytnx;
+namespace cytnx{
     /// @cond
-    class PsudoCyTensor{
+    class PsudoUniTensor{
         public:
-            //CyTensor utensor; //don't worry about copy, because everything are references in cytnx!
+            //UniTensor utensor; //don't worry about copy, because everything are references in cytnx!
             std::vector<cytnx_int64> labels;
             std::vector<cytnx_uint64> shape; 
             bool is_assigned;
-            PsudoCyTensor *left;
-            PsudoCyTensor *right;
-            PsudoCyTensor *root;
+            PsudoUniTensor *left;
+            PsudoUniTensor *right;
+            PsudoUniTensor *root;
             cytnx_float cost;
             cytnx_uint64 ID;
             
             std::string accu_str;
 
-            PsudoCyTensor():is_assigned(false), left(nullptr), right(nullptr), root(nullptr), cost(0),ID(0){
+            PsudoUniTensor():is_assigned(false), left(nullptr), right(nullptr), root(nullptr), cost(0),ID(0){
             };
-            PsudoCyTensor(const PsudoCyTensor &rhs){
+            PsudoUniTensor(const PsudoUniTensor &rhs){
                 this->left = rhs.left;
                 this->right = rhs.right;
                 this->root  = rhs.root;
@@ -39,7 +38,7 @@ namespace cytnx_extension{
                 this->accu_str = rhs.accu_str;
                 this->ID = rhs.ID;
             }
-            PsudoCyTensor& operator==(const PsudoCyTensor &rhs){
+            PsudoUniTensor& operator==(const PsudoUniTensor &rhs){
                 this->left = rhs.left;
                 this->right = rhs.right;
                 this->root  = rhs.root;
@@ -51,7 +50,7 @@ namespace cytnx_extension{
                 this->ID = rhs.ID;
                 return *this;
             }
-            void from_utensor(const CyTensor &in_uten){
+            void from_utensor(const UniTensor &in_uten){
                 this->labels  = in_uten.labels();
                 this->shape   = in_uten.shape();
                 this->is_assigned = true;    
@@ -72,9 +71,9 @@ namespace cytnx_extension{
 
     class SearchTree{
         public:
-            std::vector< std::vector<PsudoCyTensor> > nodes_container;
-            //std::vector<PsudoCyTensor> nodes_container; // this contains intermediate layer.
-            std::vector<PsudoCyTensor> base_nodes; // this is the button layer.
+            std::vector< std::vector<PsudoUniTensor> > nodes_container;
+            //std::vector<PsudoUniTensor> nodes_container; // this contains intermediate layer.
+            std::vector<PsudoUniTensor> base_nodes; // this is the button layer.
 
             SearchTree(){};
             SearchTree(const SearchTree &rhs){

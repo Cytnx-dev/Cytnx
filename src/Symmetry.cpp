@@ -8,18 +8,17 @@
 using namespace std;
 
 
-namespace cytnx_extension{
+namespace cytnx{
 
-    using namespace cytnx;
-    bool cytnx_extension::Symmetry::operator==(const cytnx_extension::Symmetry &rhs) const{
+    bool cytnx::Symmetry::operator==(const cytnx::Symmetry &rhs) const{
         return(this->stype() == rhs.stype()) && (this->n() == rhs.n());
     }
-    bool cytnx_extension::Symmetry::operator!=(const cytnx_extension::Symmetry &rhs) const{
+    bool cytnx::Symmetry::operator!=(const cytnx::Symmetry &rhs) const{
         return !(*this == rhs);
     }
     //=============================
 
-    std::string cytnx_extension::SymmetryType_class::getname(const int &stype_id){
+    std::string cytnx::SymmetryType_class::getname(const int &stype_id){
         if(stype_id==this->U){
             return string("U");
         }else if(stype_id==this->Z){
@@ -52,34 +51,34 @@ namespace cytnx_extension{
     }
 
 
-    bool cytnx_extension::Symmetry_base::check_qnum(const cytnx_int64 &qnum){
+    bool cytnx::Symmetry_base::check_qnum(const cytnx_int64 &qnum){
         cytnx_error_msg(1,"%s","[ERROR][Internal] should not call Symmerty base!");
         return false;
     }
-    bool cytnx_extension::Symmetry_base::check_qnums(const std::vector<cytnx_int64> &qnums){
+    bool cytnx::Symmetry_base::check_qnums(const std::vector<cytnx_int64> &qnums){
         cytnx_error_msg(1,"%s","[ERROR][Internal] should not call Symmerty base!"); 
         return false;
     }
-    void cytnx_extension::Symmetry_base::combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR){
+    void cytnx::Symmetry_base::combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR){
         cytnx_error_msg(1,"%s","[ERROR][Internal] should not call Symmerty base!");
     }
-    void cytnx_extension::Symmetry_base::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR){
+    void cytnx::Symmetry_base::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR){
         cytnx_error_msg(1,"%s","[ERROR][Internal] should not call Symmerty base!");
     }
-    void cytnx_extension::Symmetry_base::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in){
+    void cytnx::Symmetry_base::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in){
         cytnx_error_msg(1,"%s","[ERROR][Internal] should not call Symmerty base!");
     }
 
     ///=========================
-    bool cytnx_extension::U1Symmetry::check_qnum(const cytnx_int64 &qnum){
+    bool cytnx::U1Symmetry::check_qnum(const cytnx_int64 &qnum){
         return true;
     }
-    bool cytnx_extension::U1Symmetry::check_qnums(const std::vector<cytnx_int64> &qnums){
+    bool cytnx::U1Symmetry::check_qnums(const std::vector<cytnx_int64> &qnums){
         return true;
     }
 
 
-    void cytnx_extension::U1Symmetry::combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR){
+    void cytnx::U1Symmetry::combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR){
         out.resize(inL.size()*inR.size());
         #ifdef UNI_OMP
         #pragma omp parallel for schedule(dynamic)
@@ -89,19 +88,19 @@ namespace cytnx_extension{
         }    
 
     }
-    void cytnx_extension::U1Symmetry::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR){
+    void cytnx::U1Symmetry::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR){
         out = inL + inR;
     }
-    void cytnx_extension::U1Symmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in){
+    void cytnx::U1Symmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in){
         out = in*-1;
     }
 
     ///========================
-    bool cytnx_extension::ZnSymmetry::check_qnum(const cytnx_int64 &qnum){
+    bool cytnx::ZnSymmetry::check_qnum(const cytnx_int64 &qnum){
         return ( qnum >= 0 ) && (qnum < this->n);
     }
 
-    bool cytnx_extension::ZnSymmetry::check_qnums(const std::vector<cytnx_int64> &qnums){
+    bool cytnx::ZnSymmetry::check_qnums(const std::vector<cytnx_int64> &qnums){
         #ifdef UNI_OMP
             std::vector<bool> buf(1,true);
             #pragma omp parallel
@@ -130,7 +129,7 @@ namespace cytnx_extension{
 
     }
 
-    void cytnx_extension::ZnSymmetry::combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR){
+    void cytnx::ZnSymmetry::combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR){
         out.resize(inL.size()*inR.size());
         #ifdef UNI_OMP
         #pragma omp parallel for schedule(dynamic)
@@ -140,16 +139,16 @@ namespace cytnx_extension{
         }    
 
     }
-    void cytnx_extension::ZnSymmetry::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR){
+    void cytnx::ZnSymmetry::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR){
         out = (inL + inR)%(this->n);
     }
-    void cytnx_extension::ZnSymmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in){
+    void cytnx::ZnSymmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in){
         out = in*-1;
     }
 
 
 
-    void cytnx_extension::Symmetry::Save(const std::string &fname) const{
+    void cytnx::Symmetry::Save(const std::string &fname) const{
         fstream f;
         f.open((fname+".cysym"),ios::out|ios::trunc|ios::binary);
         if(!f.is_open()){
@@ -158,7 +157,7 @@ namespace cytnx_extension{
         this->_Save(f);
         f.close();
     }
-    void cytnx_extension::Symmetry::Save(const char* fname) const{
+    void cytnx::Symmetry::Save(const char* fname) const{
         fstream f;
         string ffname = string(fname) + ".cysym";
         f.open((ffname),ios::out|ios::trunc|ios::binary);
@@ -169,7 +168,7 @@ namespace cytnx_extension{
         f.close();
     }
 
-    cytnx_extension::Symmetry cytnx_extension::Symmetry::Load(const std::string &fname){
+    cytnx::Symmetry cytnx::Symmetry::Load(const std::string &fname){
         Symmetry out;
         fstream f;
         f.open(fname,ios::in|ios::binary);
@@ -181,7 +180,7 @@ namespace cytnx_extension{
         return out;
     }
 
-    cytnx_extension::Symmetry cytnx_extension::Symmetry::Load(const char* fname){
+    cytnx::Symmetry cytnx::Symmetry::Load(const char* fname){
         Symmetry out;
         fstream f;
         f.open(fname,ios::in|ios::binary);
@@ -194,7 +193,7 @@ namespace cytnx_extension{
     }
 
     //==================
-    void cytnx_extension::Symmetry::_Save(fstream &f) const{
+    void cytnx::Symmetry::_Save(fstream &f) const{
         cytnx_error_msg(!f.is_open(),"[ERROR][Symmetry] invalid fstream%s","\n");
         unsigned int IDDs = 777;
         f.write((char*)&IDDs,sizeof(unsigned int));
@@ -202,7 +201,7 @@ namespace cytnx_extension{
         f.write((char*)&this->_impl->n,sizeof(int));
                 
     }
-    void cytnx_extension::Symmetry::_Load(fstream &f){
+    void cytnx::Symmetry::_Load(fstream &f){
         cytnx_error_msg(!f.is_open(),"[ERROR][Symmetry] invalid fstream%s","\n");
         unsigned int tmpIDDs;
         f.read((char*)&tmpIDDs,sizeof(unsigned int));

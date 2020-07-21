@@ -13,7 +13,7 @@ var searchData=
   ['zgemm_5f',['zgemm_',['../lapack__wrapper_8hpp.html#a787eb106ccd2cff5a99d0a27b2436f77',1,'lapack_wrapper.hpp']]],
   ['zgemv',['zgemv',['../lapack__wrapper_8hpp.html#a5d0e10248570e3955e289d2dcef7d906',1,'lapack_wrapper.hpp']]],
   ['zgemv_5f',['zgemv_',['../lapack__wrapper_8hpp.html#a222487ba301216d60af208f0917533ac',1,'lapack_wrapper.hpp']]],
-  ['zn',['Zn',['../classcytnx__extension_1_1Symmetry.html#a3b927ac210a3755137a7723f1134d91a',1,'cytnx_extension::Symmetry']]],
+  ['zn',['Zn',['../classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359',1,'cytnx::Symmetry']]],
   ['zscal',['zscal',['../lapack__wrapper_8hpp.html#a13050bbc730a2e635e4f4de8cd324a80',1,'lapack_wrapper.hpp']]],
   ['zscal_5f',['zscal_',['../lapack__wrapper_8hpp.html#acbbc1b5929d2ee44eda004717aead5e3',1,'lapack_wrapper.hpp']]]
 ];

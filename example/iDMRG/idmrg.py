@@ -1,6 +1,5 @@
 import numpy as np
 import cytnx
-from cytnx import cytnx_extension as cyx
 
 """
 Reference: https://arxiv.org/abs/0804.2509v1
@@ -16,12 +15,12 @@ def Inv_e(a):
     return a
 
 def Projector(psi, L, M1, M2, R):
-    ''' psi is Tensor, while L,M1,M2,R are CyTensor.
+    ''' psi is Tensor, while L,M1,M2,R are UniTensor.
     Return: h|psi> (Tensor)'''
-    psi_p = cyx.CyTensor(psi,0) ## share memory, no copy
+    psi_p = cytnx.UniTensor(psi,0) ## share memory, no copy
     psi_p.reshape_(L.shape()[1],M1.shape()[2],M2.shape()[2],R.shape()[1])
-    anet = cyx.Network("projector.net")
-    anet.PutCyTensors(["psi","L","M1","M2","R"],[psi_p,L,M1,M2,R]);
+    anet = cytnx.Network("projector.net")
+    anet.PutUniTensors(["psi","L","M1","M2","R"],[psi_p,L,M1,M2,R]);
     H_psi = anet.Launch(optimal=True).get_block_() # get_block_ without copy
     H_psi.flatten_() # only change meta, without copy.
     psi.flatten_() ## this just in case psi is something shared. 
@@ -100,16 +99,16 @@ M = cytnx.zeros([3, 3, d, d])
 M[0,0] = M[2,2] = eye
 M[0,1] = M[1,2] = sz
 M[0,2] = 2*Hx*sx
-M = cyx.CyTensor(M,0)
+M = cytnx.UniTensor(M,0)
 
-L0 = cyx.CyTensor(cytnx.zeros([3,1,1]),0) #Left boundary
-R0 = cyx.CyTensor(cytnx.zeros([3,1,1]),0) #Right boundary
+L0 = cytnx.UniTensor(cytnx.zeros([3,1,1]),0) #Left boundary
+R0 = cytnx.UniTensor(cytnx.zeros([3,1,1]),0) #Right boundary
 L0.get_block_()[0,0,0] = 1.; R0.get_block_()[2,0,0] = 1.;
 
 ## Local Measurement Operator:
 ## Here, we consider a local measurement of energy.
 H = J*cytnx.linalg.Kron(sz,sz) + Hx*(cytnx.linalg.Kron(sx,eye) + cytnx.linalg.Kron(eye,sx))
-H = cyx.CyTensor(H.reshape(2,2,2,2),2)
+H = cytnx.UniTensor(H.reshape(2,2,2,2),2)
 
 ## Init the left and right enviroment
 #
@@ -146,14 +145,14 @@ R = R0
 #    --A[0]--s[0]--B[0]--
 #       |           |
 #    
-psi = cyx.CyTensor(cytnx.random.normal([1,d,d,1],1,2),2)
+psi = cytnx.UniTensor(cytnx.random.normal([1,d,d,1],1,2),2)
 shp = psi.shape()
 psi_T = psi.get_block_(); psi_T.flatten_() ## flatten to 1d
 psi_T, Entemp = eig_Lanczos(psi_T, Projector, (L,M,M,R), maxit, krydim);
 psi_T.reshape_(*shp)
-psi = cyx.CyTensor(psi_T,2)
+psi = cytnx.UniTensor(psi_T,2)
 
-s0,A,B = cyx.xlinalg.Svd_truncate(psi,min(chi,d)) ## Svd
+s0,A,B = cytnx.linalg.Svd_truncate(psi,min(chi,d)) ## Svd
 s0/=s0.get_block_().Norm().item() ## normalize
 
 # absorb A[0], B[0] to left & right enviroment.
@@ -165,11 +164,11 @@ s0/=s0.get_block_().Norm().item() ## normalize
 #      |    |              |     |
 #      ----A*[0]-       -B*[0]----
 #
-anet = cyx.Network("L_AMAH.net")
-anet.PutCyTensors(["L","A","A_Conj","M"],[L,A,A.Conj(),M],is_clone=False);
+anet = cytnx.Network("L_AMAH.net")
+anet.PutUniTensors(["L","A","A_Conj","M"],[L,A,A.Conj(),M],is_clone=False);
 L = anet.Launch(optimal=True)
-anet = cyx.Network("R_AMAH.net")
-anet.PutCyTensors(["R","B","B_Conj","M"],[R,B,B.Conj(),M],is_clone=False);
+anet = cytnx.Network("R_AMAH.net")
+anet.PutUniTensors(["R","B","B_Conj","M"],[R,B,B.Conj(),M],is_clone=False);
 R = anet.Launch(optimal=True)
 
 
@@ -194,13 +193,13 @@ R = anet.Launch(optimal=True)
 #    --A[1]--s[1]--B[1]--
 #       |           |
 #
-psi = cyx.CyTensor(cytnx.random.normal([d,d,d,d],0,2),2)
+psi = cytnx.UniTensor(cytnx.random.normal([d,d,d,d],0,2),2)
 shp = psi.shape()
 psi_T = psi.get_block_(); psi_T.flatten_() ## flatten to 1d
 psi_T, Entemp = eig_Lanczos(psi_T, Projector, (L,M,M,R), maxit, krydim);
 psi_T.reshape_(*shp)
-psi = cyx.CyTensor(psi_T,2)
-s1,A,B = cyx.xlinalg.Svd_truncate(psi,min(chi,d*d))
+psi = cytnx.UniTensor(psi_T,2)
+s1,A,B = cytnx.linalg.Svd_truncate(psi,min(chi,d*d))
 s1/=s1.get_block_().Norm().item()
 
 # absorb A[1], B[1] to left & right enviroment.
@@ -212,11 +211,11 @@ s1/=s1.get_block_().Norm().item()
 #      |    |              |     |
 #      ----A*[1]-       -B*[1]----
 #
-anet = cyx.Network("L_AMAH.net")
-anet.PutCyTensors(["L","A","A_Conj","M"],[L,A,A.Conj(),M],is_clone=False);
+anet = cytnx.Network("L_AMAH.net")
+anet.PutUniTensors(["L","A","A_Conj","M"],[L,A,A.Conj(),M],is_clone=False);
 L = anet.Launch(optimal=True)
-anet = cyx.Network("R_AMAH.net")
-anet.PutCyTensors(["R","B","B_Conj","M"],[R,B,B.Conj(),M],is_clone=False);
+anet = cytnx.Network("R_AMAH.net")
+anet.PutUniTensors(["R","B","B_Conj","M"],[R,B,B.Conj(),M],is_clone=False);
 R = anet.Launch(optimal=True)
 
 
@@ -241,7 +240,7 @@ for i in range(Niter):
     #       |       |                    |     |
     #
     A.set_rowrank(1)
-    sR,_,A = cyx.xlinalg.Svd(cyx.Contract(A,s1))
+    sR,_,A = cytnx.linalg.Svd(cytnx.Contract(A,s1))
 
 
 
@@ -261,7 +260,7 @@ for i in range(Niter):
     #       |       |                |     |
     #
     B.set_rowrank(2)
-    sL,B,_ = cyx.xlinalg.Svd(cyx.Contract(s1,B))
+    sL,B,_ = cytnx.linalg.Svd(cytnx.Contract(s1,B))
 
     ## now, we change it just to be consistent with the notation in the paper
     #
@@ -292,12 +291,12 @@ for i in range(Niter):
     sL.set_label(1,0)
     s0 = 1./s0
     s0.set_labels([0,1])
-    s2 = cyx.Contract(cyx.Contract(sL,s0),sR)
+    s2 = cytnx.Contract(cytnx.Contract(sL,s0),sR)
 
     s2.set_labels([-10,-11])
     A.set_label(2,-10)
     B.set_label(0,-11)
-    psi = cyx.Contract(cyx.Contract(A,s2),B)
+    psi = cytnx.Contract(cytnx.Contract(A,s2),B)
 
     ## optimize wave function:
     #  again use Lanczos to get the (local) ground state, the projector is in shape
@@ -312,8 +311,8 @@ for i in range(Niter):
     psi_T = psi.get_block_(); psi_T.flatten_() ## flatten to 1d
     psi_T, Entemp = eig_Lanczos(psi_T, Projector, (L,M,M,R), maxit, krydim);
     psi_T.reshape_(*shp)
-    psi = cyx.CyTensor(psi_T,2)
-    s2,A,B = cyx.xlinalg.Svd_truncate(psi,min(chi,psi.shape()[0]*psi.shape()[1]))
+    psi = cytnx.UniTensor(psi_T,2)
+    s2,A,B = cytnx.linalg.Svd_truncate(psi,min(chi,psi.shape()[0]*psi.shape()[1]))
     s2/=s2.get_block_().Norm().item()
 
 
@@ -342,12 +341,12 @@ for i in range(Niter):
     #      ----A*[n]-       -B*[n]----
     #
     # 
-    anet = cyx.Network("L_AMAH.net")
-    anet.PutCyTensors(["L","A","A_Conj","M"],[L,A,A.Conj(),M],is_clone=False);
+    anet = cytnx.Network("L_AMAH.net")
+    anet.PutUniTensors(["L","A","A_Conj","M"],[L,A,A.Conj(),M],is_clone=False);
     L = anet.Launch(optimal=True)
 
-    anet = cyx.Network("R_AMAH.net")
-    anet.PutCyTensors(["R","B","B_Conj","M"],[R,B,B.Conj(),M],is_clone=False);
+    anet = cytnx.Network("R_AMAH.net")
+    anet.PutUniTensors(["R","B","B_Conj","M"],[R,B,B.Conj(),M],is_clone=False);
     R = anet.Launch(optimal=True)
 
     s0 = s1
@@ -362,8 +361,8 @@ for i in range(Niter):
 #     |   |     |   |
 #     ----A*-s*-B*---
 #
-anet = cyx.Network("Measure.net")
-anet.PutCyTensors(["psi","psi_conj","M"],[psi,psi,H])
+anet = cytnx.Network("Measure.net")
+anet.PutUniTensors(["psi","psi_conj","M"],[psi,psi,H])
 E = anet.Launch(optimal=True).item()
 print("ground state E",E)
 

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['cytensor',['CyTensor',['../classcytnx__extension_1_1CyTensor.html',1,'cytnx_extension']]]
+  ['linop',['LinOp',['../classcytnx_1_1LinOp.html',1,'cytnx']]]
 ];

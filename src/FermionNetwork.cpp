@@ -7,8 +7,7 @@
 
 using namespace std;
 
-namespace cytnx_extension{
-    using namespace cytnx;
+namespace cytnx{
     ///Fermion Network is developing!
 
 

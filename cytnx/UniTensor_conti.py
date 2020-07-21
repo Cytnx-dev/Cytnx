@@ -1,0 +1,68 @@
+from .utils import *
+from cytnx import *
+## load the submodule from pybind and inject the methods
+
+
+
+"""
+@add_method(Storage)
+def astype(self, new_type):
+    if(self.dtype() == new_type):
+        return self
+
+    else:
+        return self.astype_different_type(new_type)
+"""
+@add_method(UniTensor)
+def to(self, device):
+    if(self.device() == device):
+        return self
+
+    else:
+        return self.to_different_device(device)
+
+@add_method(UniTensor)
+def contiguous(self):
+    if(self.is_contiguous()):
+        return self
+
+    else:
+        return self.make_contiguous()
+@add_method(UniTensor)
+def Conj_(self):
+    self.cConj_();
+    return self
+
+@add_method(UniTensor)
+def Trace_(self,a,b,by_label=False):
+    self.cTrace_(a,b,by_label);
+    return self
+
+@add_method(UniTensor)
+def Transpose_(self):
+    self.cTranspose_();
+    return self
+
+@add_method(UniTensor)
+def Dagger_(self):
+    self.cDagger_();
+    return self
+
+@add_method(UniTensor)
+def tag(self):
+    self.ctag();
+    return self
+
+@add_method(UniTensor)
+def __ipow__(self,p):
+    self.c__ipow__(p);
+    return self
+@add_method(UniTensor)
+def Pow_(self,p):
+    self.cPow_(p)
+    return self
+
+@add_method(UniTensor)
+def truncate_(self,bond_idx,dim,by_label=False):
+    self.ctruncate_(bond_idx,dim,by_label);
+    return self

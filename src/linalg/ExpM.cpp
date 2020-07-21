@@ -55,9 +55,9 @@ namespace cytnx{
 
 }//cytnx namespace
 
-namespace cytnx_extension{
-    namespace xlinalg{
-        CyTensor ExpM(const CyTensor &Tin, const cytnx_double &a, const cytnx_double &b){
+namespace cytnx{
+    namespace linalg{
+        UniTensor ExpM(const UniTensor &Tin, const cytnx_double &a, const cytnx_double &b){
             
             if(Tin.is_blockform()){
                 cytnx_error_msg(true,"[Developing]%s","\n");
@@ -67,9 +67,9 @@ namespace cytnx_extension{
             }else{
                 
                 cytnx_error_msg((Tin.rowrank()==0) || (Tin.rowrank()==Tin.rank()),"[ERROR][ExpM] The total dimension of row-space and col-space should be equal!!%s","\n");
-                //cytnx_error_msg(Tin.is_contiguous()==false,"[ERROR][ExpH] CyTensor must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
-                //CyTensor out = Tin.clone();
-                CyTensor out;
+                //cytnx_error_msg(Tin.is_contiguous()==false,"[ERROR][ExpH] UniTensor must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
+                //UniTensor out = Tin.clone();
+                UniTensor out;
                 if(Tin.is_contiguous()){
                     out = Tin.clone();
                 }else{

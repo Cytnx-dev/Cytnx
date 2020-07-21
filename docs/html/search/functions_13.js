@@ -1,20 +1,20 @@
 var searchData=
 [
-  ['tag',['tag',['../classcytnx__extension_1_1CyTensor.html#ade0642978f75480bec50233d21b77f83',1,'cytnx_extension::CyTensor']]],
+  ['tag',['tag',['../classcytnx_1_1UniTensor.html#a6277ec38895990021ec885f98791b47c',1,'cytnx::UniTensor']]],
   ['tensor',['Tensor',['../classcytnx_1_1Tensor.html#afdcff16b2096d10b524161be52ba767e',1,'cytnx::Tensor']]],
   ['tensordot',['Tensordot',['../namespacecytnx_1_1linalg.html#a460e44db6b3d5d2c30c2d2723ff8f788',1,'cytnx::linalg']]],
   ['tilend',['tilend',['../classcytnx_1_1Accessor.html#a23eb8386fd97d8b5d3d7ec7998a30dca',1,'cytnx::Accessor']]],
-  ['to',['to',['../classcytnx__extension_1_1CyTensor.html#a7146a4d1f4c881031f03a4a4e9a78c03',1,'cytnx_extension::CyTensor::to()'],['../classcytnx_1_1Storage.html#a2abfcaacf807934be5dd21c254fdb30e',1,'cytnx::Storage::to()'],['../classcytnx_1_1Tensor.html#acf7f697a9434f9bc98a7d00a555ee982',1,'cytnx::Tensor::to()']]],
-  ['to_5f',['to_',['../classcytnx__extension_1_1CyTensor.html#af5905baad6bf1b569efb78a072d05418',1,'cytnx_extension::CyTensor::to_()'],['../classcytnx_1_1Storage.html#a0bbf2cbefb5d0835bcb4f0d05e400870',1,'cytnx::Storage::to_()'],['../classcytnx_1_1Tensor.html#a114a31fbb8bf4a90f150b6a67e42183a',1,'cytnx::Tensor::to_()']]],
-  ['to_5fdense',['to_dense',['../classcytnx__extension_1_1CyTensor.html#a7b08dc32d0f6d1bb328dd7aa5cc338c0',1,'cytnx_extension::CyTensor']]],
-  ['to_5fdense_5f',['to_dense_',['../classcytnx__extension_1_1CyTensor.html#aad18381348f11c03958b268a10a851cc',1,'cytnx_extension::CyTensor']]],
-  ['trace',['Trace',['../classcytnx__extension_1_1CyTensor.html#a72ab6c3fa93aaaa12ee572deee16c0b0',1,'cytnx_extension::CyTensor::Trace()'],['../classcytnx_1_1Tensor.html#aa595f269f86406f408db8d515e008fcb',1,'cytnx::Tensor::Trace()'],['../namespacecytnx__extension_1_1xlinalg.html#aa03370f68ce65d322100ea2cb0e2d424',1,'cytnx_extension::xlinalg::Trace()'],['../namespacecytnx_1_1linalg.html#a02d7105bf16d23128687ba92fb231b54',1,'cytnx::linalg::Trace()']]],
-  ['trace_5f',['Trace_',['../classcytnx__extension_1_1CyTensor.html#a34f7cf70d69f383a79e970cae263b183',1,'cytnx_extension::CyTensor']]],
-  ['transpose',['Transpose',['../classcytnx__extension_1_1CyTensor.html#a7428353980971cd718324b4ec9b76ed8',1,'cytnx_extension::CyTensor']]],
-  ['transpose_5f',['Transpose_',['../classcytnx__extension_1_1CyTensor.html#a8dc7b81abf773eb9fb09853690823c6c',1,'cytnx_extension::CyTensor']]],
-  ['tri',['tri',['../namespacecytnx__extension.html#a900047e32739f8eb922990f4b08d2462',1,'cytnx_extension']]],
+  ['to',['to',['../classcytnx_1_1Storage.html#a2abfcaacf807934be5dd21c254fdb30e',1,'cytnx::Storage::to()'],['../classcytnx_1_1Tensor.html#acf7f697a9434f9bc98a7d00a555ee982',1,'cytnx::Tensor::to()'],['../classcytnx_1_1UniTensor.html#a025f4a2d775a9892b7f86aeff364fa49',1,'cytnx::UniTensor::to()']]],
+  ['to_5f',['to_',['../classcytnx_1_1Storage.html#a0bbf2cbefb5d0835bcb4f0d05e400870',1,'cytnx::Storage::to_()'],['../classcytnx_1_1Tensor.html#a114a31fbb8bf4a90f150b6a67e42183a',1,'cytnx::Tensor::to_()'],['../classcytnx_1_1UniTensor.html#a9aa08f2c848cc7d31bceac7656b4a976',1,'cytnx::UniTensor::to_()']]],
+  ['to_5fdense',['to_dense',['../classcytnx_1_1UniTensor.html#a4aeec131076ae541e8be7cdb930e151b',1,'cytnx::UniTensor']]],
+  ['to_5fdense_5f',['to_dense_',['../classcytnx_1_1UniTensor.html#a169c56f48f851fe173067632e30200dc',1,'cytnx::UniTensor']]],
+  ['trace',['Trace',['../classcytnx_1_1Tensor.html#aa595f269f86406f408db8d515e008fcb',1,'cytnx::Tensor::Trace()'],['../classcytnx_1_1UniTensor.html#ae343b96758291f478d77bb7eb6b0be45',1,'cytnx::UniTensor::Trace()'],['../namespacecytnx_1_1linalg.html#a192d864aeaaa105337569dfca0eee4a7',1,'cytnx::linalg::Trace(const cytnx::UniTensor &amp;Tin, const cytnx_int64 &amp;a, const cytnx_int64 &amp;b, const bool &amp;by_label=false)'],['../namespacecytnx_1_1linalg.html#a02d7105bf16d23128687ba92fb231b54',1,'cytnx::linalg::Trace(const Tensor &amp;Tn, const cytnx_uint64 &amp;axisA=0, const cytnx_uint64 &amp;axisB=1)']]],
+  ['trace_5f',['Trace_',['../classcytnx_1_1UniTensor.html#a6a06d637db7c5a0f95c2557157f6bfcf',1,'cytnx::UniTensor']]],
+  ['transpose',['Transpose',['../classcytnx_1_1UniTensor.html#a647f7d7cb96c53243484678ad8625e15',1,'cytnx::UniTensor']]],
+  ['transpose_5f',['Transpose_',['../classcytnx_1_1UniTensor.html#a2d47f327bf3b3129461a6b92444d8e00',1,'cytnx::UniTensor']]],
+  ['tri',['tri',['../namespacecytnx.html#a840d1bc0c881c1d15f69058d487a48c1',1,'cytnx']]],
   ['tridiag',['Tridiag',['../namespacecytnx_1_1linalg.html#abc68d62e804d6d3e86aeec00015b07cd',1,'cytnx::linalg']]],
-  ['truncate',['truncate',['../classcytnx__extension_1_1CyTensor.html#a1995f324782a207b1efa83390735e2da',1,'cytnx_extension::CyTensor']]],
-  ['truncate_5f',['truncate_',['../classcytnx__extension_1_1CyTensor.html#a38db7239c7d8caede9d4f210e59d7539',1,'cytnx_extension::CyTensor']]],
-  ['type',['type',['../classcytnx_1_1Accessor.html#a8777a35162dcf47f9992295b58735743',1,'cytnx::Accessor::type()'],['../classcytnx__extension_1_1Bond.html#af91e04952850b94a063195560ec3868f',1,'cytnx_extension::Bond::type()']]]
+  ['truncate',['truncate',['../classcytnx_1_1UniTensor.html#ae47d9591f73d1e2bbe510a2f25cc3b50',1,'cytnx::UniTensor']]],
+  ['truncate_5f',['truncate_',['../classcytnx_1_1UniTensor.html#a57b848704ff6ba0ca3cfc949a7a2f50f',1,'cytnx::UniTensor']]],
+  ['type',['type',['../classcytnx_1_1Accessor.html#a8777a35162dcf47f9992295b58735743',1,'cytnx::Accessor::type()'],['../classcytnx_1_1Bond.html#a8517743cec9589ed551114ea7e55fbb1',1,'cytnx::Bond::type()']]]
 ];

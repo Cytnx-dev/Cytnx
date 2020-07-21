@@ -4,7 +4,7 @@
 #include "Device.hpp"
 #include "cytnx_error.hpp"
 #include "Tensor.hpp"
-#include "CyTensor.hpp"
+#include "UniTensor.hpp"
 #include <vector>
 #include <initializer_list>
 #include <string>
@@ -51,15 +51,15 @@ namespace cytnx{
 }//namespace cytnx
 
 /// @cond
-namespace cytnx_extension{
+namespace cytnx{
     namespace qgates{
-        CyTensor pauli_x(const int &device=Device.cpu);
-        CyTensor pauli_y(const int &device=Device.cpu);
-        CyTensor pauli_z(const int &device=Device.cpu);
-        CyTensor hadamard(const int &device=Device.cpu);
-        CyTensor phase_shift(const cytnx_double &phase, const int &device=Device.cpu);
-        CyTensor swap(const int &device=Device.cpu);
-        CyTensor sqrt_swap(const int &device=Device.cpu);
+        UniTensor pauli_x(const int &device=Device.cpu);
+        UniTensor pauli_y(const int &device=Device.cpu);
+        UniTensor pauli_z(const int &device=Device.cpu);
+        UniTensor hadamard(const int &device=Device.cpu);
+        UniTensor phase_shift(const cytnx_double &phase, const int &device=Device.cpu);
+        UniTensor swap(const int &device=Device.cpu);
+        UniTensor sqrt_swap(const int &device=Device.cpu);
     }
 }
 /// @endcond

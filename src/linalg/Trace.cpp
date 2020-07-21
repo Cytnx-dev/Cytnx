@@ -6,9 +6,9 @@
 #endif
 
 using namespace std;
-namespace cytnx_extension{
-    namespace xlinalg{
-        cytnx_extension::CyTensor Trace(const cytnx_extension::CyTensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label){
+namespace cytnx{
+    namespace linalg{
+        cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label){
             return Tin.Trace(a,b,by_label);
         }
     }

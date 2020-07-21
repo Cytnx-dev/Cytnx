@@ -3,11 +3,10 @@
 
 using namespace std;
 
-namespace cytnx_extension{
-    using namespace cytnx;
+namespace cytnx{
 
 
-    cytnx_float get_cost(const PsudoCyTensor &t1, const PsudoCyTensor &t2){
+    cytnx_float get_cost(const PsudoUniTensor &t1, const PsudoUniTensor &t2){
         cytnx_float cost = 1;
         vector<cytnx_uint64> shape1 = t1.shape;
         vector<cytnx_uint64> shape2 = t2.shape;
@@ -32,8 +31,8 @@ namespace cytnx_extension{
 
     }
 
-    PsudoCyTensor pContract(PsudoCyTensor &t1, PsudoCyTensor &t2){
-        PsudoCyTensor t3;
+    PsudoUniTensor pContract(PsudoUniTensor &t1, PsudoUniTensor &t2){
+        PsudoUniTensor t3;
         t3.ID = t1.ID ^ t2.ID;
         t3.cost = get_cost(t1,t2);
         vector<cytnx_uint64> loc1,loc2;
@@ -74,8 +73,8 @@ namespace cytnx_extension{
                     for(int i1=0;i1<n1;i1++){
                         int i2_start = (d1==d2)?i1+1:0;
                         for(int i2=i2_start;i2<n2;i2++){
-                            PsudoCyTensor &t1 = this->nodes_container[d1][i1];
-                            PsudoCyTensor &t2 = this->nodes_container[d2][i2];
+                            PsudoUniTensor &t1 = this->nodes_container[d1][i1];
+                            PsudoUniTensor &t2 = this->nodes_container[d2][i2];
                            
                             // No common labels
                             if(cytnx::vec_intersect(t1.labels,t2.labels).size()==0)
@@ -84,7 +83,7 @@ namespace cytnx_extension{
                             if((t1.ID & t2.ID)>0)
                                 continue;
                             
-                            PsudoCyTensor t3 = pContract(t1,t2);
+                            PsudoUniTensor t3 = pContract(t1,t2);
                             bool exist = false;
                             for(int i=0;i<nodes_container[c].size();i++){
                                 if(t3.ID == nodes_container[c][i].ID){

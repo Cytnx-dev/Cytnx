@@ -2,19 +2,18 @@
 #define _H_contraction_tree_
 
 #include "Type.hpp"
-#include "CyTensor.hpp"
+#include "UniTensor.hpp"
 #include "cytnx_error.hpp"
 #include "utils/utils.hpp"
 #include <vector>
 #include <map>
 #include <string>
 
-namespace cytnx_extension{
-    using namespace cytnx;
+namespace cytnx{
     /// @cond
     class Node{
         public:
-            CyTensor utensor; //don't worry about copy, because everything are references in cytnx!
+            UniTensor utensor; //don't worry about copy, because everything are references in cytnx!
             bool is_assigned;
             Node *left;
             Node *right;
@@ -37,20 +36,20 @@ namespace cytnx_extension{
                 this->is_assigned = rhs.is_assigned;
                 return *this;
             }
-            Node(Node *in_left, Node *in_right, const CyTensor &in_uten=CyTensor()):is_assigned(false), left(nullptr), right(nullptr), root(nullptr){
+            Node(Node *in_left, Node *in_right, const UniTensor &in_uten=UniTensor()):is_assigned(false), left(nullptr), right(nullptr), root(nullptr){
                 this->left = in_left;
                 this->right = in_right;
                 in_left->root = this;
                 in_right->root = this;
                 if(in_uten.uten_type()!=UTenType.Void) this->utensor = in_uten;
             }
-            void assign_utensor(const CyTensor &in_uten){
+            void assign_utensor(const UniTensor &in_uten){
                 this->utensor = in_uten;
                 this->is_assigned = true;    
             }
             void clear_utensor(){
                 this->is_assigned = false;
-                this->utensor = CyTensor();
+                this->utensor = UniTensor();
             }
 
     };

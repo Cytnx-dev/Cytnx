@@ -27,17 +27,16 @@ namespace cytnx{
 }
 
 
-namespace cytnx_extension{
-    namespace xlinalg{
+namespace cytnx{
+    namespace linalg{
         using namespace std;
-        using namespace cytnx;
         typedef Accessor ac;
-        std::vector<cytnx_extension::CyTensor> Svd_truncate(const cytnx_extension::CyTensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U, const bool &is_vT){
+        std::vector<cytnx::UniTensor> Svd_truncate(const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U, const bool &is_vT){
             if(Tin.is_blockform()){
-                cytnx_error_msg(true,"[Svd][Developing] Svd for SparseCyTensor is developing.%s","\n");
+                cytnx_error_msg(true,"[Svd][Developing] Svd for SparseUniTensor is developing.%s","\n");
             }else{
                // using rowrank to split the bond to form a matrix.
-               cytnx_error_msg((Tin.rowrank() < 1 || Tin.rank()==1),"[Svd][ERROR] Svd for DenseCyTensor should have rank>1 and rowrank>0%s","\n");
+               cytnx_error_msg((Tin.rowrank() < 1 || Tin.rank()==1),"[Svd][ERROR] Svd for DenseUniTensor should have rank>1 and rowrank>0%s","\n");
                
                Tensor tmp;
                if(Tin.is_contiguous()) tmp = Tin.get_block_();
@@ -58,13 +57,13 @@ namespace cytnx_extension{
               
 
                int t=0;
-               vector<cytnx_extension::CyTensor> outCyT(outT.size());
+               vector<cytnx::UniTensor> outCyT(outT.size());
 
                //s
                cytnx_error_msg(keepdim>outT[t].shape()[0],"[ERROR][Svd_truncate] keepdim should <= dimension of singular tensor%s","\n");
 
-               cytnx_extension::CyTensor &Cy_S = outCyT[t];  
-               cytnx_extension::Bond newBond(keepdim);
+               cytnx::UniTensor &Cy_S = outCyT[t];  
+               cytnx::Bond newBond(keepdim);
                cytnx_int64 newlbl = -1;
                for(int i=0;i<oldlabel.size();i++){
                    if(oldlabel[i]<=newlbl) newlbl = oldlabel[i]-1;
@@ -75,7 +74,7 @@ namespace cytnx_extension{
                t++; 
 
                if(is_U){
-                   cytnx_extension::CyTensor &Cy_U = outCyT[t]; 
+                   cytnx::UniTensor &Cy_U = outCyT[t]; 
                    // shape
                    vector<cytnx_int64> shapeU = vec_clone(oldshape,Tin.rowrank());
                    shapeU.push_back(-1);
@@ -93,7 +92,7 @@ namespace cytnx_extension{
                }
 
                if(is_vT){
-                   cytnx_extension::CyTensor &Cy_vT = outCyT[t]; 
+                   cytnx::UniTensor &Cy_vT = outCyT[t]; 
                    //shape
                    vector<cytnx_int64> shapevT(Tin.rank()-Tin.rowrank()+1);
                    shapevT[0] = -1; memcpy(&shapevT[1],&oldshape[Tin.rowrank()],sizeof(cytnx_int64)*(shapevT.size()-1));
@@ -115,19 +114,19 @@ namespace cytnx_extension{
                    Cy_S.tag();                
                    t = 1;
                    if(is_U){
-                        cytnx_extension::CyTensor &Cy_U = outCyT[t]; 
+                        cytnx::UniTensor &Cy_U = outCyT[t]; 
                         Cy_U._impl->_is_tag = true;
                         for(int i=0;i<Cy_U.rowrank();i++){
                             Cy_U.bonds()[i].set_type(Tin.bonds()[i].type());
                         }
-                        Cy_U.bonds().back().set_type(cytnx_extension::BD_BRA);
+                        Cy_U.bonds().back().set_type(cytnx::BD_BRA);
                         Cy_U._impl->_is_braket_form = Cy_U._impl->_update_braket();
                         t++;
                    }
                    if(is_vT){
-                        cytnx_extension::CyTensor &Cy_vT = outCyT[t]; 
+                        cytnx::UniTensor &Cy_vT = outCyT[t]; 
                         Cy_vT._impl->_is_tag = true;
-                        Cy_vT.bonds()[0].set_type(cytnx_extension::BD_KET);
+                        Cy_vT.bonds()[0].set_type(cytnx::BD_KET);
                         for(int i=1;i<Cy_vT.rank();i++){
                             Cy_vT.bonds()[i].set_type(Tin.bonds()[Tin.rowrank()+i-1].type());
                         }
@@ -144,5 +143,5 @@ namespace cytnx_extension{
             
         }// Svd_truncate
 
-    }// xlinalg
-}//cytnx_extension
+    }// linalg
+}//cytnx

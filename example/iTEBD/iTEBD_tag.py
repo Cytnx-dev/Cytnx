@@ -2,7 +2,6 @@ import numpy as np
 import scipy as sp
 from scipy import linalg
 import cytnx
-from cytnx import cytnx_extension as cyx
 
 #Example of 1D Ising model 
 ## iTEBD
@@ -47,11 +46,11 @@ eH.reshape_(2,2,2,2)
 print(eH)
 H.reshape_(2,2,2,2)
 
-eH = cyx.CyTensor(eH,2)
+eH = cytnx.UniTensor(eH,2)
 eH.tag() # this will tag with in/out(ket/bra) on each bond.
 eH.print_diagram()
 
-H = cyx.CyTensor(H,2)
+H = cytnx.UniTensor(H,2)
 H.tag()
 H.print_diagram()
 
@@ -61,16 +60,16 @@ H.print_diagram()
 #     |             |       
 #  ->-A-> ->la->  ->B-> ->lb->
 #
-A = cyx.CyTensor([cyx.Bond(chi,cyx.BD_KET),cyx.Bond(2,cyx.BD_BRA),cyx.Bond(chi,cyx.BD_BRA)],Rowrank=1,labels=[-1,0,-2]); 
-B = cyx.CyTensor(A.bonds(),Rowrank=1,labels=[-3,1,-4]);                                
+A = cytnx.UniTensor([cytnx.Bond(chi,cytnx.BD_KET),cytnx.Bond(2,cytnx.BD_BRA),cytnx.Bond(chi,cytnx.BD_BRA)],rowrank=1,labels=[-1,0,-2]); 
+B = cytnx.UniTensor(A.bonds(),rowrank=1,labels=[-3,1,-4]);                                
 cytnx.random.Make_normal(B.get_block_(),0,0.2); 
 cytnx.random.Make_normal(A.get_block_(),0,0.2); 
 A.print_diagram()
 B.print_diagram()
 #print(A)
 #print(B)
-la = cyx.CyTensor([cyx.Bond(chi,cyx.BD_KET),cyx.Bond(chi,cyx.BD_BRA)],Rowrank=1,labels=[-2,-3],is_diag=True)
-lb = cyx.CyTensor(la.bonds(),Rowrank=1,labels=[-4,-5],is_diag=True)
+la = cytnx.UniTensor([cytnx.Bond(chi,cytnx.BD_KET),cytnx.Bond(chi,cytnx.BD_BRA)],rowrank=1,labels=[-2,-3],is_diag=True)
+lb = cytnx.UniTensor(la.bonds(),rowrank=1,labels=[-4,-5],is_diag=True)
 la.put_block(cytnx.ones(chi));
 lb.put_block(cytnx.ones(chi));
 la.print_diagram()
@@ -88,10 +87,10 @@ for i in range(10000):
     lb.set_labels([-4,-5])
 
     ## contract all
-    X = cyx.Contract(cyx.Contract(A,la),cyx.Contract(B,lb))
+    X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
     #X.print_diagram()
     lb.set_label(idx=1,new_label=-1)
-    X = cyx.Contract(lb,X)
+    X = cytnx.Contract(lb,X)
 
     ## X =
     #           (0)  (1)
@@ -106,10 +105,10 @@ for i in range(10000):
 
     ## calculate norm and energy for this step
     # Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element
-    XNorm = cyx.Contract(X,Xt).item()
-    XH = cyx.Contract(X,H)
+    XNorm = cytnx.Contract(X,Xt).item()
+    XH = cytnx.Contract(X,H)
     XH.set_labels([-4,-5,0,1])
-    XHX = cyx.Contract(Xt,XH).item() ## rank-0
+    XHX = cytnx.Contract(Xt,XH).item() ## rank-0
     E = XHX/XNorm
     
     ## check if converged.
@@ -120,7 +119,7 @@ for i in range(10000):
     Elast = E
 
     ## Time evolution the MPS
-    XeH = cyx.Contract(X,eH)
+    XeH = cytnx.Contract(X,eH)
     XeH.permute_([-4,2,3,-5],by_label=True)
     #XeH.print_diagram()
     
@@ -131,8 +130,8 @@ for i in range(10000):
     #  (-4) ->= XeH =-> (-5)        (-4)->U->(-6)                          (-7)->Vt->(-5)
     #
 
-    XeH.set_Rowrank(2)
-    la,A,B = cyx.xlinalg.Svd_truncate(XeH,chi)
+    XeH.set_rowrank(2)
+    la,A,B = cytnx.linalg.Svd_truncate(XeH,chi)
     Norm = cytnx.linalg.Norm(la.get_block_()).item()
     la *= 1./Norm
     #A.print_diagram()
@@ -146,15 +145,15 @@ for i in range(10000):
     #       ->lb-A'-la-B'-lb-> 
     #
     # again, but A' and B' are updated 
-    A.set_labels([-1,0,-2]); A.set_Rowrank(1);
-    B.set_labels([-3,1,-4]); B.set_Rowrank(1);
+    A.set_labels([-1,0,-2]); A.set_rowrank(1);
+    B.set_labels([-3,1,-4]); B.set_rowrank(1);
 
     #A.print_diagram()
     #B.print_diagram()
 
     lb_inv = 1./lb
-    A = cyx.Contract(lb_inv,A)
-    B = cyx.Contract(B,lb_inv)
+    A = cytnx.Contract(lb_inv,A)
+    B = cytnx.Contract(B,lb_inv)
 
     #A.print_diagram()
     #B.print_diagram()

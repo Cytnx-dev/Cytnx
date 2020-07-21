@@ -1,7 +1,5 @@
 import numpy as np 
-
 import cytnx as cy
-from cytnx import cytnx_extension as cyx
 
 ##
 # Author: Kai-Hsin Wu
@@ -42,24 +40,24 @@ Hup = H
 Hdown = Hup.clone()
 
 ## Hamiltonain 
-Hu = cyx.CyTensor(Hup,3)
-Hd = cyx.CyTensor(Hdown,3)
+Hu = cy.UniTensor(Hup,3)
+Hd = cy.UniTensor(Hdown,3)
 
 ## create 3PESS:
-s1 = cyx.CyTensor(cy.random.normal([D,D,D],0,0.5),0)
+s1 = cy.UniTensor(cy.random.normal([D,D,D],0,0.5),0)
 s2 = s1.clone()
-A = cyx.CyTensor(cy.random.normal([D,2,D],0,0.5),2)
-B = cyx.CyTensor(cy.random.normal([D,2,D],0,0.5),2)
-C = cyx.CyTensor(cy.random.normal([D,2,D],0,0.5),2)
-Ls1 = [cyx.CyTensor([cyx.Bond(D),cyx.Bond(D)],rowrank=1,is_diag=True) for i in range(3)]
+A = cy.UniTensor(cy.random.normal([D,2,D],0,0.5),2)
+B = cy.UniTensor(cy.random.normal([D,2,D],0,0.5),2)
+C = cy.UniTensor(cy.random.normal([D,2,D],0,0.5),2)
+Ls1 = [cy.UniTensor([cy.Bond(D),cy.Bond(D)],rowrank=1,is_diag=True) for i in range(3)]
 for i in Ls1:
     i.put_block(cy.ones(D))
 Ls2 = [i.clone() for i in Ls1]
 
 
 ## gates:
-eHu = cyx.xlinalg.ExpH(Hu ,-tau)
-eHd = cyx.xlinalg.ExpH(Hd,-tau)
+eHu = cy.linalg.ExpH(Hu ,-tau)
+eHd = cy.linalg.ExpH(Hd,-tau)
 
 ## iterator:
 Eup_old,Edown_old = 0,0
@@ -67,50 +65,50 @@ cov = False
 for i in range(maxit):
 
     ## first do up >>>>>>>>>>>>>>>>>>
-    Nup = cyx.Network("up.net")
-    Nup.PutCyTensors(["A","B","C","L2A","L2B","L2C","eHu","s1"],[A,B,C,Ls2[0],Ls2[1],Ls2[2],eHu,s1]) 
+    Nup = cy.Network("up.net")
+    Nup.PutUniTensors(["A","B","C","L2A","L2B","L2C","eHu","s1"],[A,B,C,Ls2[0],Ls2[1],Ls2[2],eHu,s1]) 
     T = Nup.Launch(True)
-    Nrm = cyx.Contract(T,T).item();
+    Nrm = cy.Contract(T,T).item();
     T/=np.sqrt(Nrm); #normalize for numerical stability.
-    A,B,C,s1,Ls1[0],Ls1[1],Ls1[2] = cyx.xlinalg.Hosvd(T,[2,2,2],True,True,[D,D,D])
+    A,B,C,s1,Ls1[0],Ls1[1],Ls1[2] = cy.linalg.Hosvd(T,[2,2,2],True,True,[D,D,D])
     
     ## de-contract Ls'
     Ls2[0].set_labels([-10,A.labels()[0]]); Ls2[0] = 1./Ls2[0];
     Ls2[1].set_labels([-11,B.labels()[0]]); Ls2[1] = 1./Ls2[1];
     Ls2[2].set_labels([-12,C.labels()[0]]); Ls2[2] = 1./Ls2[2];
-    A = cyx.Contract(Ls2[0],A);
-    B = cyx.Contract(Ls2[1],B);
-    C = cyx.Contract(Ls2[2],C);
+    A = cy.Contract(Ls2[0],A);
+    B = cy.Contract(Ls2[1],B);
+    C = cy.Contract(Ls2[2],C);
 
 
-    T = cyx.Contract(cyx.Contract(cyx.Contract(A,s1),B),C)
+    T = cy.Contract(cy.Contract(cy.Contract(A,s1),B),C)
     T.set_rowrank(0)
     ## calculate up energy:
-    NE = cyx.Network("measure.net")
-    NE.PutCyTensors(["T","Tt","Op"],[T,T,Hu]);
-    Eup = NE.Launch(True).item()/cyx.Contract(T,T).item();    
+    NE = cy.Network("measure.net")
+    NE.PutUniTensors(["T","Tt","Op"],[T,T,Hu]);
+    Eup = NE.Launch(True).item()/cy.Contract(T,T).item();    
 
     ## then do down>>>>>>>>>>>>>> 
-    Ndown = cyx.Network("down.net")
-    Ndown.PutCyTensors(["A","B","C","L1A","L1B","L1C","eHd","s2"],[A,B,C,Ls1[0],Ls1[1],Ls1[2],eHd,s2])
+    Ndown = cy.Network("down.net")
+    Ndown.PutUniTensors(["A","B","C","L1A","L1B","L1C","eHd","s2"],[A,B,C,Ls1[0],Ls1[1],Ls1[2],eHd,s2])
     T = Ndown.Launch(True)
-    Nrm = cyx.Contract(T,T).item();
+    Nrm = cy.Contract(T,T).item();
     T/=np.sqrt(Nrm); #normalize for numerical stability.
-    A,B,C,s2,Ls2[0],Ls2[1],Ls2[2] = cyx.xlinalg.Hosvd(T,[2,2,2],True,True,[D,D,D])
+    A,B,C,s2,Ls2[0],Ls2[1],Ls2[2] = cy.linalg.Hosvd(T,[2,2,2],True,True,[D,D,D])
 
     ## de-contract Ls'
     Ls1[0].set_labels([-10,A.labels()[0]]); Ls1[0] = 1./Ls1[0];
     Ls1[1].set_labels([-11,B.labels()[0]]); Ls1[1] = 1./Ls1[1];
     Ls1[2].set_labels([-12,C.labels()[0]]); Ls1[2] = 1./Ls1[2];
-    A = cyx.Contract(Ls1[0],A);
-    B = cyx.Contract(Ls1[1],B);
-    C = cyx.Contract(Ls1[2],C);
+    A = cy.Contract(Ls1[0],A);
+    B = cy.Contract(Ls1[1],B);
+    C = cy.Contract(Ls1[2],C);
 
     ## calculate down energy:
-    T = cyx.Contract(cyx.Contract(cyx.Contract(A,s1),B),C)
+    T = cy.Contract(cy.Contract(cy.Contract(A,s1),B),C)
     T.set_rowrank(0)
-    NE.PutCyTensors(["T","Tt","Op"],[T,T,Hd]);
-    Edown = NE.Launch(True).item()/cyx.Contract(T,T).item();
+    NE.PutUniTensors(["T","Tt","Op"],[T,T,Hd]);
+    Edown = NE.Launch(True).item()/cy.Contract(T,T).item();
    
     ##permute to the current order of bond for next iteration:
     A.permute_([2,1,0]);

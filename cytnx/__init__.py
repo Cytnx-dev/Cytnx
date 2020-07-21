@@ -3,7 +3,7 @@ from .cytnx import *
 from .Storage_conti import *
 from .Tensor_conti import *
 from .linalg_conti import *
-#from .CyTensor_conti import *
+from .UniTensor_conti import *
 
 __version__ = cytnx.__version__
 __blasINTsize__ = cytnx.__blasINTsize__

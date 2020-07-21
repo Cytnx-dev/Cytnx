@@ -21,7 +21,7 @@ Bond_exes = [ x for x in os.listdir("./Bond") if ".py" in x and not "out" in x]
 Accessor_exes = [ x for x in os.listdir("./Accessor") if ".py" in x and not "out" in x]
 Symmetry_exes = [ x for x in os.listdir("./Symmetry") if ".py" in x and not "out" in x]
 Network_exes = [ x for x in os.listdir("./Network") if ".py" in x and not "out" in x]
-CyTensor_exes = [ x for x in os.listdir("./CyTensor") if ".py" in x and not "out" in x]
+UniTensor_exes = [ x for x in os.listdir("./UniTensor") if ".py" in x and not "out" in x]
 LinOp_exes = [ x for x in os.listdir("./LinOp") if ".py" in x and not "out" in x]
 ## generate output
 for texe in Tensor_exes:
@@ -66,11 +66,11 @@ for texe in Network_exes:
     os.system("python %s > %s"%(os.path.join("./Network",texe),os.path.join("./Network",output_name)))
 
 ## generate output
-for texe in CyTensor_exes:
+for texe in UniTensor_exes:
     print(texe)
     print("================")
     output_name = texe + ".out"
-    os.system("python %s > %s"%(os.path.join("./CyTensor",texe),os.path.join("./CyTensor",output_name)))
+    os.system("python %s > %s"%(os.path.join("./UniTensor",texe),os.path.join("./UniTensor",output_name)))
 
 ## generate output
 for texe in LinOp_exes:

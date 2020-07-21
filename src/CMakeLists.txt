@@ -36,10 +36,10 @@ target_sources_local(cytnx
     RegularNetwork.cpp
     FermionNetwork.cpp
     Bond.cpp
-    CyTensor_base.cpp
-    CyTensor.cpp
-    DenseCyTensor.cpp
-    SparseCyTensor.cpp
+    UniTensor_base.cpp
+    UniTensor.cpp
+    DenseUniTensor.cpp
+    SparseUniTensor.cpp
     Symmetry.cpp
     contraction_tree.cpp
     search_tree.cpp

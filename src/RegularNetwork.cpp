@@ -8,8 +8,7 @@
 
 using namespace std;
 
-namespace cytnx_extension{
-    using namespace cytnx;
+namespace cytnx{
     // these two are internal functions:
     void _parse_ORDER_line_(vector<string> &tokens, const string &line, const cytnx_uint64 &line_num){
 
@@ -312,20 +311,20 @@ namespace cytnx_extension{
 
     }
 
-    void RegularNetwork::PutCyTensors(const std::vector<string> &names, const std::vector<CyTensor> &utensors, const bool &is_clone){
-        cytnx_error_msg(names.size()!=utensors.size(),"[ERROR][RegularNetwork][PutCyTensors] total number of names does not match number of input CyTensors.%s","\n");
+    void RegularNetwork::PutUniTensors(const std::vector<string> &names, const std::vector<UniTensor> &utensors, const bool &is_clone){
+        cytnx_error_msg(names.size()!=utensors.size(),"[ERROR][RegularNetwork][PutUniTensors] total number of names does not match number of input UniTensors.%s","\n");
         for(int i=0;i<names.size();i++){
-            this->PutCyTensor(names[i],utensors[i],is_clone);
+            this->PutUniTensor(names[i],utensors[i],is_clone);
         }        
     }
 
-    void RegularNetwork::PutCyTensor(const cytnx_uint64 &idx, const CyTensor &utensor, const bool &is_clone){
+    void RegularNetwork::PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor, const bool &is_clone){
 
-        cytnx_error_msg(idx>=this->CtTree.base_nodes.size(),"[ERROR][RegularNetwork][PutCyTensor] index=%d out of range.\n",idx);
+        cytnx_error_msg(idx>=this->CtTree.base_nodes.size(),"[ERROR][RegularNetwork][PutUniTensor] index=%d out of range.\n",idx);
 
         //check shape:
-        cytnx_error_msg(this->label_arr[idx].size()!=utensor.rank(),"[ERROR][RegularNetwork][PutCyTensor] tensor name: [%s], the rank of input CyTensor does not match the definition in network file.\n",this->names[idx].c_str());
-        cytnx_error_msg(this->iBondNums[idx]!=utensor.rowrank(),"[ERROR][RegularNetwork][PutCyTensor] tensor name: [%s], the row-rank of input CyTensor does not match the semicolon defined in network file.\n",this->names[idx].c_str());
+        cytnx_error_msg(this->label_arr[idx].size()!=utensor.rank(),"[ERROR][RegularNetwork][PutUniTensor] tensor name: [%s], the rank of input UniTensor does not match the definition in network file.\n",this->names[idx].c_str());
+        cytnx_error_msg(this->iBondNums[idx]!=utensor.rowrank(),"[ERROR][RegularNetwork][PutUniTensor] tensor name: [%s], the row-rank of input UniTensor does not match the semicolon defined in network file.\n",this->names[idx].c_str());
 
         if(is_clone){
             this->tensors[idx] = utensor.clone();
@@ -391,14 +390,14 @@ namespace cytnx_extension{
 
     }
 
-    void RegularNetwork::PutCyTensor(const std::string &name, const CyTensor &utensor, const bool &is_clone){
+    void RegularNetwork::PutUniTensor(const std::string &name, const UniTensor &utensor, const bool &is_clone){
         cytnx_uint64 idx;
         try{idx=this->name2pos.at(name);}
         catch(std::out_of_range){
-            cytnx_error_msg(true,"[ERROR][RegularNetwork][PutCyTensor] cannot find the tensor name: [%s] in current network.\n", name.c_str());
+            cytnx_error_msg(true,"[ERROR][RegularNetwork][PutUniTensor] cannot find the tensor name: [%s] in current network.\n", name.c_str());
         }
     
-        this->PutCyTensor(idx,utensor,is_clone);    
+        this->PutUniTensor(idx,utensor,is_clone);    
         
     }
 
@@ -452,7 +451,7 @@ namespace cytnx_extension{
     }
 
 
-    CyTensor RegularNetwork::Launch(const bool &optimal){
+    UniTensor RegularNetwork::Launch(const bool &optimal){
 
 
         //1. check tensors are all set, and put all unitensor on node for contraction:
@@ -551,7 +550,7 @@ namespace cytnx_extension{
         }while(!stk.empty());
         
         //3. get result:
-        CyTensor out = this->CtTree.nodes_container.back().utensor;
+        UniTensor out = this->CtTree.nodes_container.back().utensor;
         //std::cout << out << std::endl;    
         //out.print_diagram();
 
@@ -568,7 +567,7 @@ namespace cytnx_extension{
             out.permute_(TOUT_labels,TOUT_iBondNum,true);
         }
         
-        //CyTensor out;
+        //UniTensor out;
         return out;
 
     }

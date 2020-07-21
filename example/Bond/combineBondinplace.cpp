@@ -3,7 +3,6 @@
 
 
 using namespace cytnx;
-using namespace cytnx_extension; //To use Bond, using this namespace
 using namespace std;
 int main(){ 
 

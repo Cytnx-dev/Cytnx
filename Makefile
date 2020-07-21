@@ -87,7 +87,7 @@ OBJS = Storage_base.o BoolStorage.o Uint16Storage.o Int16Storage.o Uint32Storage
 
 
 OBJS += LinOp.o Storage.o Tensor.o Accessor.o Generator.o Physics.o
-OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o CyTensor_base.o DenseCyTensor.o SparseCyTensor.o CyTensor.o Bond.o Symmetry.o contraction_tree.o search_tree.o
+OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o UniTensor_base.o DenseUniTensor.o SparseUniTensor.o UniTensor.o Bond.o Symmetry.o contraction_tree.o search_tree.o
 
 
 ## Utils
@@ -182,14 +182,14 @@ Bond.o : $(CytnxPATH)/src/Bond.cpp $(CytnxPATH)/include/Bond.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 Symmetry.o: $(CytnxPATH)/src/Symmetry.cpp $(CytnxPATH)/include/Symmetry.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-CyTensor.o: $(CytnxPATH)/src/CyTensor.cpp $(CytnxPATH)/include/CyTensor.hpp
+UniTensor.o: $(CytnxPATH)/src/UniTensor.cpp $(CytnxPATH)/include/UniTensor.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-CyTensor_base.o: $(CytnxPATH)/src/CyTensor_base.cpp $(CytnxPATH)/include/CyTensor.hpp
+UniTensor_base.o: $(CytnxPATH)/src/UniTensor_base.cpp $(CytnxPATH)/include/UniTensor.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-DenseCyTensor.o: $(CytnxPATH)/src/DenseCyTensor.cpp $(CytnxPATH)/include/CyTensor.hpp
+DenseUniTensor.o: $(CytnxPATH)/src/DenseUniTensor.cpp $(CytnxPATH)/include/UniTensor.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-SparseCyTensor.o: $(CytnxPATH)/src/SparseCyTensor.cpp $(CytnxPATH)/include/CyTensor.hpp
+SparseUniTensor.o: $(CytnxPATH)/src/SparseUniTensor.cpp $(CytnxPATH)/include/UniTensor.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 Network.o: $(CytnxPATH)/src/Network.cpp $(CytnxPATH)/include/Network.hpp

@@ -26,11 +26,11 @@ namespace cytnx{
     }
 }// cytnx
 
-namespace cytnx_extension{
-    namespace xlinalg{
-        void Pow_(CyTensor &Tin, const double &p){
+namespace cytnx{
+    namespace linalg{
+        void Pow_(UniTensor &Tin, const double &p){
             if(Tin.is_blockform()){
-                //cytnx_error_msg(true,"[Pow][SparseCyTensor] Developing%s","\n");
+                //cytnx_error_msg(true,"[Pow][SparseUniTensor] Developing%s","\n");
                 auto tmp = Tin.get_blocks_();
                 for(int i=0;i<tmp.size();i++){
                     tmp[i].Pow_(p);

@@ -13,6 +13,7 @@
     2. [Enhance] Access Tensor can now exactly the same using slice string as in python.
     3. [Enhance] at/reshape/permute in Tensor can now give args without braket{} as in python.
     4. [Enhance] Storage.Load to static, so it can match Tensor
+    5. [Major] Remove cytnx_extension class, rename CyTensor->UniTensor 
 
     v0.5.4a
     1. Add linalg::Det 
@@ -80,11 +81,11 @@
 ## Objects:
     * \link cytnx::Storage Storage \endlink   [binded]
     * \link cytnx::Tensor Tensor \endlink   [binded]
-    * \link cytnx_extension::Bond Bond \endlink     [binded] 
+    * \link cytnx::Bond Bond \endlink     [binded] 
     * \link cytnx::Accessor Accessor \endlink [c++ only]
-    * \link cytnx_extension::Symmetry Symmetry \endlink [binded]
-    * \link cytnx_extension::CyTensor CyTensor \endlink [binded]
-    * \link cytnx_extension::Network Network \endlink [binded]
+    * \link cytnx::Symmetry Symmetry \endlink [binded]
+    * \link cytnx::CyTensor CyTensor \endlink [binded]
+    * \link cytnx::Network Network \endlink [binded]
 
 ## linear algebra functions: 
     See \link cytnx::linalg cytnx::linalg \endlink for further details

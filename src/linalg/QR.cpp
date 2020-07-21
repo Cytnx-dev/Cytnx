@@ -82,14 +82,14 @@ namespace cytnx{
 
 }//cytnx namespace
 
-namespace cytnx_extension{
-    namespace xlinalg{
-        std::vector<CyTensor> QR(const CyTensor &Tin, const bool &is_tau){
+namespace cytnx{
+    namespace linalg{
+        std::vector<UniTensor> QR(const UniTensor &Tin, const bool &is_tau){
             if(Tin.is_blockform()){
-                cytnx_error_msg(true, "[QR for sparse CyTensor is developling%s]","\n");
+                cytnx_error_msg(true, "[QR for sparse UniTensor is developling%s]","\n");
             }else{
                 // using rowrank to split the bond to form a matrix.
-                cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank()==1,"[QR][ERROR] QR for DenseCyTensor should have rank>1 and rowrank>0%s","\n");
+                cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank()==1,"[QR][ERROR] QR for DenseUniTensor should have rank>1 and rowrank>0%s","\n");
 
                Tensor tmp;
                if(Tin.is_contiguous()) tmp = Tin.get_block_();
@@ -109,7 +109,7 @@ namespace cytnx_extension{
                 tmp.reshape_(oldshape);
                
                int t=0;
-               vector<cytnx_extension::CyTensor> outCyT(outT.size());
+               vector<cytnx::UniTensor> outCyT(outT.size());
 
 
                 cytnx_int64 newlbl=INT64_MAX;
@@ -129,7 +129,7 @@ namespace cytnx_extension{
                Qshape.push_back(-1);
                Qlbl.push_back(newlbl);
                outT[0].reshape_(Qshape);
-               outCyT[0] = CyTensor(outT[0],Qshape.size()-1);
+               outCyT[0] = UniTensor(outT[0],Qshape.size()-1);
                outCyT[0].set_labels(Qlbl);
                
                //R
@@ -140,12 +140,12 @@ namespace cytnx_extension{
                 for (int i=Tin.rowrank();i<Tin.rank();i++)
                     Qshape.push_back(oldshape[i]); 
                outT[1].reshape_(Qshape);
-               outCyT[1] = CyTensor(outT[1],1);
+               outCyT[1] = UniTensor(outT[1],1);
                outCyT[1].set_labels(Qlbl);
 
                // tau
                if(is_tau){
-                   outCyT[2] = CyTensor(outT[2],0);
+                   outCyT[2] = UniTensor(outT[2],0);
                }
             
                
@@ -155,10 +155,10 @@ namespace cytnx_extension{
                     for(int i=0;i<Tin.rowrank();i++){
                         outCyT[0].bonds()[i].set_type(Tin.bonds()[i].type());
                     }
-                    outCyT[0].bonds().back().set_type(cytnx_extension::BD_BRA);
+                    outCyT[0].bonds().back().set_type(cytnx::BD_BRA);
                     outCyT[0]._impl->_is_braket_form = outCyT[0]._impl->_update_braket();
                     
-                    outCyT[1].bonds()[0].set_type(cytnx_extension::BD_KET);
+                    outCyT[1].bonds()[0].set_type(cytnx::BD_KET);
                     for(int i=1;i<outCyT[1].rank();i++){
                         outCyT[1].bonds()[i].set_type(Tin.bonds()[Tin.rowrank()+i-1].type());
                     }
@@ -175,6 +175,6 @@ namespace cytnx_extension{
 
 
         }
-    } // xlinalg
-}// cytnx_extension
+    } // linalg
+}// cytnx
 

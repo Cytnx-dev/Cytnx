@@ -5,113 +5,113 @@
 #include "cytnx_error.hpp"
 #include "Tensor.hpp"
 #include "Storage.hpp"
-#include "CyTensor.hpp"
+#include "UniTensor.hpp"
 #include "LinOp.hpp"
 #include <functional>
 
 
-namespace cytnx_extension{
-    namespace xlinalg{
+namespace cytnx{
+    namespace linalg{
         
         // Add:
         //==================================================
         /**
         @brief element-wise add 
         */
-        cytnx_extension::CyTensor Add(const cytnx_extension::CyTensor &Lt, const cytnx_extension::CyTensor &Rt);
+        cytnx::UniTensor Add(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
         template<class T>
-        cytnx_extension::CyTensor Add(const T &lc,const cytnx_extension::CyTensor &Rt);
+        cytnx::UniTensor Add(const T &lc,const cytnx::UniTensor &Rt);
         template<class T>
-        cytnx_extension::CyTensor Add(const cytnx_extension::CyTensor &Lt,const T &rc);
+        cytnx::UniTensor Add(const cytnx::UniTensor &Lt,const T &rc);
         
         // Sub:
         //==================================================
         /**
         @brief element-wise subtract 
         */
-        cytnx_extension::CyTensor Sub(const cytnx_extension::CyTensor &Lt, const cytnx_extension::CyTensor &Rt);
+        cytnx::UniTensor Sub(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
         template<class T>
-        cytnx_extension::CyTensor Sub(const T &lc, const cytnx_extension::CyTensor &Rt);    
+        cytnx::UniTensor Sub(const T &lc, const cytnx::UniTensor &Rt);    
         template<class T>
-        cytnx_extension::CyTensor Sub(const cytnx_extension::CyTensor &Lt, const T &rc);
+        cytnx::UniTensor Sub(const cytnx::UniTensor &Lt, const T &rc);
 
         // Mul:
         //==================================================
         /**
         @brief element-wise subtract 
         */
-        cytnx_extension::CyTensor Mul(const cytnx_extension::CyTensor &Lt, const cytnx_extension::CyTensor &Rt);
+        cytnx::UniTensor Mul(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
         template<class T>
-        cytnx_extension::CyTensor Mul(const T &lc,const cytnx_extension::CyTensor &Rt);
+        cytnx::UniTensor Mul(const T &lc,const cytnx::UniTensor &Rt);
         template<class T>
-        cytnx_extension::CyTensor Mul(const cytnx_extension::CyTensor &Lt,const T &rc);
+        cytnx::UniTensor Mul(const cytnx::UniTensor &Lt,const T &rc);
 
         // Div:
         //==================================================
         /**
         @brief element-wise divide
         */
-        cytnx_extension::CyTensor Div(const cytnx_extension::CyTensor &Lt, const cytnx_extension::CyTensor &Rt);
+        cytnx::UniTensor Div(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
         template<class T>
-        cytnx_extension::CyTensor Div(const T &lc,const cytnx_extension::CyTensor &Rt);
+        cytnx::UniTensor Div(const T &lc,const cytnx::UniTensor &Rt);
         template<class T>
-        cytnx_extension::CyTensor Div(const cytnx_extension::CyTensor &Lt,const T &rc);
+        cytnx::UniTensor Div(const cytnx::UniTensor &Lt,const T &rc);
 
-        std::vector<cytnx_extension::CyTensor> Svd(const cytnx_extension::CyTensor &Tin, const bool &is_U=true, const bool &is_vT=true);
-        std::vector<cytnx_extension::CyTensor> Svd_truncate(const cytnx_extension::CyTensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U=true, const bool &is_vT=true);
-        std::vector<cytnx_extension::CyTensor> Hosvd(const cytnx_extension::CyTensor &Tin, const std::vector<cytnx_uint64> &mode, const bool &is_core=true, const bool &is_Ls=false,const std::vector<cytnx_int64> &trucate_dim=std::vector<cytnx_int64>());
+        std::vector<cytnx::UniTensor> Svd(const cytnx::UniTensor &Tin, const bool &is_U=true, const bool &is_vT=true);
+        std::vector<cytnx::UniTensor> Svd_truncate(const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U=true, const bool &is_vT=true);
+        std::vector<cytnx::UniTensor> Hosvd(const cytnx::UniTensor &Tin, const std::vector<cytnx_uint64> &mode, const bool &is_core=true, const bool &is_Ls=false,const std::vector<cytnx_int64> &trucate_dim=std::vector<cytnx_int64>());
 
-        cytnx_extension::CyTensor ExpH(const cytnx_extension::CyTensor &Tin, const double &a=1, const double &b=0);
-        cytnx_extension::CyTensor ExpM(const cytnx_extension::CyTensor &Tin, const double &a=1, const double &b=0);
-        cytnx_extension::CyTensor Trace(const cytnx_extension::CyTensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false);
-        std::vector<cytnx_extension::CyTensor> QR(const cytnx_extension::CyTensor &Tin, const bool &is_tau=false);
+        cytnx::UniTensor ExpH(const cytnx::UniTensor &Tin, const double &a=1, const double &b=0);
+        cytnx::UniTensor ExpM(const cytnx::UniTensor &Tin, const double &a=1, const double &b=0);
+        cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false);
+        std::vector<cytnx::UniTensor> QR(const cytnx::UniTensor &Tin, const bool &is_tau=false);
 
         // Pow:
         //==================================================
         /**
-        @brief take power p on all the elements in CyTensor.
+        @brief take power p on all the elements in UniTensor.
         @param p, the power
         @return 
-            [CyTensor]
+            [UniTensor]
     
         */
-        CyTensor Pow(const CyTensor &Tin, const double &p);
+        UniTensor Pow(const UniTensor &Tin, const double &p);
         
         /**
-        @brief inplace perform power on all the elements in CyTensor.
-        @param Tin, the input CyTensor.
+        @brief inplace perform power on all the elements in UniTensor.
+        @param Tin, the input UniTensor.
         @param p, the power.
         
         description:
             on return, the elements in Tin will be modified to it's exponetial value. 
         */
-        void Pow_(CyTensor &Tin, const double &p);
+        void Pow_(UniTensor &Tin, const double &p);
 
-    }//xlinalg
+    }//linalg
 
-    cytnx_extension::CyTensor operator+(const cytnx_extension::CyTensor &Lt, const cytnx_extension::CyTensor &Rt);
+    cytnx::UniTensor operator+(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
     template<class T>
-    cytnx_extension::CyTensor operator+(const T &lc, const cytnx_extension::CyTensor &Rt);
+    cytnx::UniTensor operator+(const T &lc, const cytnx::UniTensor &Rt);
     template<class T>
-    cytnx_extension::CyTensor operator+(const cytnx_extension::CyTensor &Lt, const T &rc);
+    cytnx::UniTensor operator+(const cytnx::UniTensor &Lt, const T &rc);
     
-    cytnx_extension::CyTensor operator-(const cytnx_extension::CyTensor &Lt, const cytnx_extension::CyTensor &Rt);
+    cytnx::UniTensor operator-(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
     template<class T>
-    cytnx_extension::CyTensor operator-(const T &lc, const cytnx_extension::CyTensor &Rt);
+    cytnx::UniTensor operator-(const T &lc, const cytnx::UniTensor &Rt);
     template<class T>
-    cytnx_extension::CyTensor operator-(const cytnx_extension::CyTensor &Lt, const T &rc);
+    cytnx::UniTensor operator-(const cytnx::UniTensor &Lt, const T &rc);
     
-    cytnx_extension::CyTensor operator*(const cytnx_extension::CyTensor &Lt, const cytnx_extension::CyTensor &Rt);
+    cytnx::UniTensor operator*(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
     template<class T>
-    cytnx_extension::CyTensor operator*(const T &lc, const cytnx_extension::CyTensor &Rt);
+    cytnx::UniTensor operator*(const T &lc, const cytnx::UniTensor &Rt);
     template<class T>
-    cytnx_extension::CyTensor operator*(const cytnx_extension::CyTensor &Lt, const T &rc);
+    cytnx::UniTensor operator*(const cytnx::UniTensor &Lt, const T &rc);
     
-    cytnx_extension::CyTensor operator/(const cytnx_extension::CyTensor &Lt, const cytnx_extension::CyTensor &Rt);
+    cytnx::UniTensor operator/(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
     template<class T>
-    cytnx_extension::CyTensor operator/(const T &lc, const cytnx_extension::CyTensor &Rt);
+    cytnx::UniTensor operator/(const T &lc, const cytnx::UniTensor &Rt);
     template<class T>
-    cytnx_extension::CyTensor operator/(const cytnx_extension::CyTensor &Lt, const T &rc);
+    cytnx::UniTensor operator/(const cytnx::UniTensor &Lt, const T &rc);
 
 
 }

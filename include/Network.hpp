@@ -12,10 +12,9 @@
 #include "intrusive_ptr_base.hpp"
 #include "utils/utils.hpp"
 #include "Network.hpp"
-#include "CyTensor.hpp"
+#include "UniTensor.hpp"
 #include "contraction_tree.hpp"
-namespace cytnx_extension{
-    using namespace cytnx;
+namespace cytnx{
     /// @cond
     struct __ntwk{
         enum __nttype{
@@ -42,7 +41,7 @@ namespace cytnx_extension{
         public:
             int nwrktype_id;
             std::string filename;
-            std::vector<CyTensor> tensors; 
+            std::vector<UniTensor> tensors; 
             std::vector<cytnx_int64> TOUT_labels;
             cytnx_uint64 TOUT_iBondNum;
 
@@ -69,7 +68,7 @@ namespace cytnx_extension{
             Network_base():nwrktype_id(NtType.Void){};
            
 
-            bool HasPutAllCyTensor(){
+            bool HasPutAllUniTensor(){
                 for(cytnx_uint64 i=0;i<this->tensors.size();i++){
                     if(this->tensors[i].uten_type()==UTenType.Void) return false;
                 }
@@ -80,19 +79,19 @@ namespace cytnx_extension{
 
             //void PreConstruct(bool force = true);
             
-            //void PutTensor(cytnx_int64 idx, const CyTensor& UniT, bool force = true);
+            //void PutTensor(cytnx_int64 idx, const UniTensor& UniT, bool force = true);
             
-            //void PutTensor(const std::string  &name, const CyTensor &UniT, bool force = true);
+            //void PutTensor(const std::string  &name, const UniTensor &UniT, bool force = true);
             
-            //CyTensor Launch(const std::string &Tname="");
+            //UniTensor Launch(const std::string &Tname="");
             
             //std::string GetContractOrder() const;
-            virtual void PutCyTensor(const std::string &name, const CyTensor &utensor, const bool &is_clone);
-            virtual void PutCyTensor(const cytnx_uint64 &idx, const CyTensor &utensor, const bool &is_clone);
-            virtual void PutCyTensors(const std::vector<std::string> &name, const std::vector<CyTensor> &utensors, const bool &is_clone);
+            virtual void PutUniTensor(const std::string &name, const UniTensor &utensor, const bool &is_clone);
+            virtual void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor, const bool &is_clone);
+            virtual void PutUniTensors(const std::vector<std::string> &name, const std::vector<UniTensor> &utensors, const bool &is_clone);
             virtual void Fromfile(const std::string& fname);
             virtual void clear();
-            virtual CyTensor Launch(const bool &optimal=false);
+            virtual UniTensor Launch(const bool &optimal=false);
             virtual void PrintNet(std::ostream &os);
             virtual boost::intrusive_ptr<Network_base> clone();
             virtual void Savefile(const std::string &fname);
@@ -106,9 +105,9 @@ namespace cytnx_extension{
         public:
             RegularNetwork(){this->nwrktype_id = NtType.Regular;};
             void Fromfile(const std::string &fname);
-            void PutCyTensor(const std::string &name, const CyTensor &utensor, const bool &is_clone=true);
-            void PutCyTensor(const cytnx_uint64 &idx, const CyTensor &utensor, const bool &is_clone=true);
-            void PutCyTensors(const std::vector<std::string> &name, const std::vector<CyTensor> &utensors, const bool &is_clone=true);
+            void PutUniTensor(const std::string &name, const UniTensor &utensor, const bool &is_clone=true);
+            void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor, const bool &is_clone=true);
+            void PutUniTensors(const std::vector<std::string> &name, const std::vector<UniTensor> &utensors, const bool &is_clone=true);
             void clear(){
                 this->name2pos.clear();
                 this->CtTree.clear();
@@ -119,7 +118,7 @@ namespace cytnx_extension{
                 this->TOUT_iBondNum = 0;
                 this->ORDER_tokens.clear();
             }
-            CyTensor Launch(const bool &optimal=false);
+            UniTensor Launch(const bool &optimal=false);
             boost::intrusive_ptr<Network_base> clone(){
                 RegularNetwork *tmp = new RegularNetwork();
                 tmp->name2pos = this->name2pos;
@@ -147,9 +146,9 @@ namespace cytnx_extension{
         public:
             FermionNetwork(){this->nwrktype_id=NtType.Fermion;};
             void Fromfile(const std::string &fname){};
-            void PutCyTensor(const std::string &name, const CyTensor &utensor, const bool &is_clone=true){};
-            void PutCyTensor(const cytnx_uint64 &idx, const CyTensor &utensor, const bool &is_clone=true){};
-            void PutCyTensors(const std::vector<std::string> &name, const std::vector<CyTensor> &utensors, const bool &is_clone=true){};
+            void PutUniTensor(const std::string &name, const UniTensor &utensor, const bool &is_clone=true){};
+            void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor, const bool &is_clone=true){};
+            void PutUniTensors(const std::vector<std::string> &name, const std::vector<UniTensor> &utensors, const bool &is_clone=true){};
             void clear(){
                 this->name2pos.clear();
                 this->CtTree.clear();
@@ -160,7 +159,7 @@ namespace cytnx_extension{
                 this->TOUT_iBondNum = 0;
                 this->ORDER_tokens.clear();
             }
-            CyTensor Launch(const bool &optimal=false){return CyTensor();};
+            UniTensor Launch(const bool &optimal=false){return UniTensor();};
             boost::intrusive_ptr<Network_base> clone(){
                 FermionNetwork *tmp = new FermionNetwork();
                 tmp->name2pos = this->name2pos;
@@ -210,10 +209,10 @@ namespace cytnx_extension{
             ##detail:
                 Format of a network file:
 
-                - each line defines a CyTensor, that takes the format '[name] : [Labels]' 
+                - each line defines a UniTensor, that takes the format '[name] : [Labels]' 
                 - the name can be any alphabets A-Z, a-z
                 - There are two reserved name: 'TOUT' and 'ORDER' (all capital) 
-                - One can use 'TOUT' line to specify the output CyTensor's bond order using labels
+                - One can use 'TOUT' line to specify the output UniTensor's bond order using labels
                 - The 'ORDER' line is used to specify the contraction order
                
                 About [Labels]:
@@ -260,16 +259,16 @@ namespace cytnx_extension{
                 this->Fromfile(fname,network_type);
             }
 
-            void PutCyTensor(const std::string &name, const CyTensor &utensor, const bool &is_clone=true){
-                this->_impl->PutCyTensor(name,utensor,is_clone);
+            void PutUniTensor(const std::string &name, const UniTensor &utensor, const bool &is_clone=true){
+                this->_impl->PutUniTensor(name,utensor,is_clone);
             }
-            void PutCyTensor(const cytnx_uint64 &idx, const CyTensor &utensor, const bool &is_clone=true){
-                this->_impl->PutCyTensor(idx,utensor,is_clone);
+            void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor, const bool &is_clone=true){
+                this->_impl->PutUniTensor(idx,utensor,is_clone);
             }
-            void PutCyTensors(const std::vector<std::string> &name, const std::vector<CyTensor> &utensors, const bool &is_clone=true){
-                this->_impl->PutCyTensors(name,utensors,is_clone);
+            void PutUniTensors(const std::vector<std::string> &name, const std::vector<UniTensor> &utensors, const bool &is_clone=true){
+                this->_impl->PutUniTensors(name,utensors,is_clone);
             }
-            CyTensor Launch(const bool &optimal=false){
+            UniTensor Launch(const bool &optimal=false){
                 return this->_impl->Launch(optimal);
             }
             void clear(){

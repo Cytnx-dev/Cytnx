@@ -533,28 +533,28 @@ template<> Tensor operator*<cytnx_bool>( const cytnx_bool&,const Tensor &);
 
 }
 
-namespace cytnx_extension{
-    namespace xlinalg{
+namespace cytnx{
+    namespace linalg{
 
         //============================================
-        // cytnx_extension::CyTensor
+        // UniTensor
         //============================================
 
-        cytnx_extension::CyTensor Mul(const cytnx_extension::CyTensor &Lt, const cytnx_extension::CyTensor &Rt){
+        UniTensor Mul(const UniTensor &Lt, const UniTensor &Rt){
             cytnx_error_msg(true,"[Developing!]%s","\n");
-            return cytnx_extension::CyTensor();
+            return UniTensor();
         }
 
         //-----------------------------------------------------------------------------------
 
         template<class T>
-        cytnx_extension::CyTensor Mul(const T &lc, const cytnx_extension::CyTensor &Rt){
-            cytnx_extension::CyTensor out = Rt.clone();
+        UniTensor Mul(const T &lc, const UniTensor &Rt){
+            UniTensor out = Rt.clone();
             if(Rt.is_blockform()){
                 //developing
-                //cytnx_error_msg(true,"[Developing][Mul][Sparsecytnx_extension::CyTensor]%s","\n");
+                //cytnx_error_msg(true,"[Developing][Mul][SparseUniTensor]%s","\n");
                         
-                SparseCyTensor *out_raw = (SparseCyTensor*)out._impl.get();
+                SparseUniTensor *out_raw = (SparseUniTensor*)out._impl.get();
                 for(int i=0;i<out_raw->_blocks.size();i++){
                     out_raw->_blocks[i] = cytnx::linalg::Mul(lc,out_raw->_blocks[i]);
                 }                
@@ -566,130 +566,130 @@ namespace cytnx_extension{
             return out;
         }
 
-        template cytnx_extension::CyTensor Mul<cytnx_complex128>(const cytnx_complex128 &lc, const cytnx_extension::CyTensor &Rt);
-        template cytnx_extension::CyTensor Mul<cytnx_complex64>(const cytnx_complex64 &lc, const cytnx_extension::CyTensor &Rt);
-        template cytnx_extension::CyTensor Mul<cytnx_double>(const cytnx_double &lc, const cytnx_extension::CyTensor &Rt);
-        template cytnx_extension::CyTensor Mul<cytnx_float>(const cytnx_float &lc, const cytnx_extension::CyTensor &Rt);
-        template cytnx_extension::CyTensor Mul<cytnx_int64>(const cytnx_int64 &lc, const cytnx_extension::CyTensor &Rt);
-        template cytnx_extension::CyTensor Mul<cytnx_uint64>(const cytnx_uint64 &lc, const cytnx_extension::CyTensor &Rt);
-        template cytnx_extension::CyTensor Mul<cytnx_int32>(const cytnx_int32 &lc, const cytnx_extension::CyTensor &Rt);
-        template cytnx_extension::CyTensor Mul<cytnx_uint32>(const cytnx_uint32 &lc, const cytnx_extension::CyTensor &Rt);
-        template cytnx_extension::CyTensor Mul<cytnx_int16>(const cytnx_int16 &lc, const cytnx_extension::CyTensor &Rt);
-        template cytnx_extension::CyTensor Mul<cytnx_uint16>(const cytnx_uint16 &lc, const cytnx_extension::CyTensor &Rt);
-        template cytnx_extension::CyTensor Mul<cytnx_bool>(const cytnx_bool &lc, const cytnx_extension::CyTensor &Rt);
+        template UniTensor Mul<cytnx_complex128>(const cytnx_complex128 &lc, const UniTensor &Rt);
+        template UniTensor Mul<cytnx_complex64>(const cytnx_complex64 &lc, const UniTensor &Rt);
+        template UniTensor Mul<cytnx_double>(const cytnx_double &lc, const UniTensor &Rt);
+        template UniTensor Mul<cytnx_float>(const cytnx_float &lc, const UniTensor &Rt);
+        template UniTensor Mul<cytnx_int64>(const cytnx_int64 &lc, const UniTensor &Rt);
+        template UniTensor Mul<cytnx_uint64>(const cytnx_uint64 &lc, const UniTensor &Rt);
+        template UniTensor Mul<cytnx_int32>(const cytnx_int32 &lc, const UniTensor &Rt);
+        template UniTensor Mul<cytnx_uint32>(const cytnx_uint32 &lc, const UniTensor &Rt);
+        template UniTensor Mul<cytnx_int16>(const cytnx_int16 &lc, const UniTensor &Rt);
+        template UniTensor Mul<cytnx_uint16>(const cytnx_uint16 &lc, const UniTensor &Rt);
+        template UniTensor Mul<cytnx_bool>(const cytnx_bool &lc, const UniTensor &Rt);
 
         //-----------------------------------------------------------------------------------
         template<>
-        cytnx_extension::CyTensor Mul<cytnx_complex128>(const cytnx_extension::CyTensor &Lt, const cytnx_complex128 &rc){
+        UniTensor Mul<cytnx_complex128>(const UniTensor &Lt, const cytnx_complex128 &rc){
             return Mul(rc,Lt);
         }
         template<>
-        cytnx_extension::CyTensor Mul<cytnx_complex64>(const cytnx_extension::CyTensor &Lt, const cytnx_complex64 &rc){
+        UniTensor Mul<cytnx_complex64>(const UniTensor &Lt, const cytnx_complex64 &rc){
             return Mul(rc,Lt);
         }
         template<>
-        cytnx_extension::CyTensor Mul<cytnx_double>(const cytnx_extension::CyTensor &Lt, const cytnx_double &rc){
+        UniTensor Mul<cytnx_double>(const UniTensor &Lt, const cytnx_double &rc){
             return Mul(rc,Lt);
         }
         template<>
-        cytnx_extension::CyTensor Mul<cytnx_float>(const cytnx_extension::CyTensor &Lt, const cytnx_float &rc){
+        UniTensor Mul<cytnx_float>(const UniTensor &Lt, const cytnx_float &rc){
             return Mul(rc,Lt);
         }
         template<>
-        cytnx_extension::CyTensor Mul<cytnx_int64>(const cytnx_extension::CyTensor &Lt, const cytnx_int64 &rc){
+        UniTensor Mul<cytnx_int64>(const UniTensor &Lt, const cytnx_int64 &rc){
             return Mul(rc,Lt);
         }
         template<>
-        cytnx_extension::CyTensor Mul<cytnx_uint64>(const cytnx_extension::CyTensor &Lt, const cytnx_uint64 &rc){
+        UniTensor Mul<cytnx_uint64>(const UniTensor &Lt, const cytnx_uint64 &rc){
             return Mul(rc,Lt);
         }
         template<>
-        cytnx_extension::CyTensor Mul<cytnx_int32>(const cytnx_extension::CyTensor &Lt, const cytnx_int32 &rc){
+        UniTensor Mul<cytnx_int32>(const UniTensor &Lt, const cytnx_int32 &rc){
             return Mul(rc,Lt);
         }
         template<>
-        cytnx_extension::CyTensor Mul<cytnx_uint32>(const cytnx_extension::CyTensor &Lt, const cytnx_uint32 &rc){
+        UniTensor Mul<cytnx_uint32>(const UniTensor &Lt, const cytnx_uint32 &rc){
             return Mul(rc,Lt);
         }
         template<>
-        cytnx_extension::CyTensor Mul<cytnx_int16>(const cytnx_extension::CyTensor &Lt, const cytnx_int16 &rc){
+        UniTensor Mul<cytnx_int16>(const UniTensor &Lt, const cytnx_int16 &rc){
             return Mul(rc,Lt);
         }
         template<>
-        cytnx_extension::CyTensor Mul<cytnx_uint16>(const cytnx_extension::CyTensor &Lt, const cytnx_uint16 &rc){
+        UniTensor Mul<cytnx_uint16>(const UniTensor &Lt, const cytnx_uint16 &rc){
             return Mul(rc,Lt);
         }
         template<>
-        cytnx_extension::CyTensor Mul<cytnx_bool>(const cytnx_extension::CyTensor &Lt, const cytnx_bool &rc){
+        UniTensor Mul<cytnx_bool>(const UniTensor &Lt, const cytnx_bool &rc){
             return Mul(rc,Lt);
         }
     }//linalg
 
     //-------------------------------------------
-    cytnx_extension::CyTensor operator*(const cytnx_extension::CyTensor &Lt, const cytnx_extension::CyTensor &Rt){
-        return cytnx_extension::xlinalg::Mul(Lt,Rt);
+    UniTensor operator*(const UniTensor &Lt, const UniTensor &Rt){
+        return linalg::Mul(Lt,Rt);
     }
 
     template<class T>
-    cytnx_extension::CyTensor operator*(const T &lc, const cytnx_extension::CyTensor &Rt){
-        return cytnx_extension::xlinalg::Mul(lc,Rt);
+    UniTensor operator*(const T &lc, const UniTensor &Rt){
+        return linalg::Mul(lc,Rt);
     }
 
-    template cytnx_extension::CyTensor operator*<cytnx_complex128>(const cytnx_complex128 &lc, const cytnx_extension::CyTensor &Rt);
-    template cytnx_extension::CyTensor operator*<cytnx_complex64>(const cytnx_complex64 &lc, const cytnx_extension::CyTensor &Rt);
-    template cytnx_extension::CyTensor operator*<cytnx_double>(const cytnx_double &lc, const cytnx_extension::CyTensor &Rt);
-    template cytnx_extension::CyTensor operator*<cytnx_float>(const cytnx_float &lc, const cytnx_extension::CyTensor &Rt);
-    template cytnx_extension::CyTensor operator*<cytnx_int64>(const cytnx_int64 &lc, const cytnx_extension::CyTensor &Rt);
-    template cytnx_extension::CyTensor operator*<cytnx_uint64>(const cytnx_uint64 &lc, const cytnx_extension::CyTensor &Rt);
-    template cytnx_extension::CyTensor operator*<cytnx_int32>(const cytnx_int32 &lc, const cytnx_extension::CyTensor &Rt);
-    template cytnx_extension::CyTensor operator*<cytnx_uint32>(const cytnx_uint32 &lc, const cytnx_extension::CyTensor &Rt);
-    template cytnx_extension::CyTensor operator*<cytnx_int16>(const cytnx_int16 &lc, const cytnx_extension::CyTensor &Rt);
-    template cytnx_extension::CyTensor operator*<cytnx_uint16>(const cytnx_uint16 &lc, const cytnx_extension::CyTensor &Rt);
-    template cytnx_extension::CyTensor operator*<cytnx_bool>(const cytnx_bool &lc, const cytnx_extension::CyTensor &Rt);
+    template UniTensor operator*<cytnx_complex128>(const cytnx_complex128 &lc, const UniTensor &Rt);
+    template UniTensor operator*<cytnx_complex64>(const cytnx_complex64 &lc, const UniTensor &Rt);
+    template UniTensor operator*<cytnx_double>(const cytnx_double &lc, const UniTensor &Rt);
+    template UniTensor operator*<cytnx_float>(const cytnx_float &lc, const UniTensor &Rt);
+    template UniTensor operator*<cytnx_int64>(const cytnx_int64 &lc, const UniTensor &Rt);
+    template UniTensor operator*<cytnx_uint64>(const cytnx_uint64 &lc, const UniTensor &Rt);
+    template UniTensor operator*<cytnx_int32>(const cytnx_int32 &lc, const UniTensor &Rt);
+    template UniTensor operator*<cytnx_uint32>(const cytnx_uint32 &lc, const UniTensor &Rt);
+    template UniTensor operator*<cytnx_int16>(const cytnx_int16 &lc, const UniTensor &Rt);
+    template UniTensor operator*<cytnx_uint16>(const cytnx_uint16 &lc, const UniTensor &Rt);
+    template UniTensor operator*<cytnx_bool>(const cytnx_bool &lc, const UniTensor &Rt);
 
     template<>
-    cytnx_extension::CyTensor operator*<cytnx_complex128>(const cytnx_extension::CyTensor &Lt, const cytnx_complex128 &rc){
-       return cytnx_extension::xlinalg::Mul(Lt,rc);
+    UniTensor operator*<cytnx_complex128>(const UniTensor &Lt, const cytnx_complex128 &rc){
+       return linalg::Mul(Lt,rc);
     }
     template<>
-    cytnx_extension::CyTensor operator*<cytnx_complex64>(const cytnx_extension::CyTensor &Lt, const cytnx_complex64 &rc){
-       return cytnx_extension::xlinalg::Mul(Lt,rc);
+    UniTensor operator*<cytnx_complex64>(const UniTensor &Lt, const cytnx_complex64 &rc){
+       return linalg::Mul(Lt,rc);
     }
     template<>
-    cytnx_extension::CyTensor operator*<cytnx_double>(const cytnx_extension::CyTensor &Lt, const cytnx_double &rc){
-       return cytnx_extension::xlinalg::Mul(Lt,rc);
+    UniTensor operator*<cytnx_double>(const UniTensor &Lt, const cytnx_double &rc){
+       return linalg::Mul(Lt,rc);
     }
     template<>
-    cytnx_extension::CyTensor operator*<cytnx_float>(const cytnx_extension::CyTensor &Lt, const cytnx_float &rc){
-       return cytnx_extension::xlinalg::Mul(Lt,rc);
+    UniTensor operator*<cytnx_float>(const UniTensor &Lt, const cytnx_float &rc){
+       return linalg::Mul(Lt,rc);
     }
     template<>
-    cytnx_extension::CyTensor operator*<cytnx_int64>(const cytnx_extension::CyTensor &Lt, const cytnx_int64 &rc){
-       return cytnx_extension::xlinalg::Mul(Lt,rc);
+    UniTensor operator*<cytnx_int64>(const UniTensor &Lt, const cytnx_int64 &rc){
+       return linalg::Mul(Lt,rc);
     }
     template<>
-    cytnx_extension::CyTensor operator*<cytnx_uint64>(const cytnx_extension::CyTensor &Lt, const cytnx_uint64 &rc){
-       return cytnx_extension::xlinalg::Mul(Lt,rc);
+    UniTensor operator*<cytnx_uint64>(const UniTensor &Lt, const cytnx_uint64 &rc){
+       return linalg::Mul(Lt,rc);
     }
     template<>
-    cytnx_extension::CyTensor operator*<cytnx_int32>(const cytnx_extension::CyTensor &Lt, const cytnx_int32 &rc){
-       return cytnx_extension::xlinalg::Mul(Lt,rc);
+    UniTensor operator*<cytnx_int32>(const UniTensor &Lt, const cytnx_int32 &rc){
+       return linalg::Mul(Lt,rc);
     }
     template<>
-    cytnx_extension::CyTensor operator*<cytnx_uint32>(const cytnx_extension::CyTensor &Lt, const cytnx_uint32 &rc){
-       return cytnx_extension::xlinalg::Mul(Lt,rc);
+    UniTensor operator*<cytnx_uint32>(const UniTensor &Lt, const cytnx_uint32 &rc){
+       return linalg::Mul(Lt,rc);
     }
     template<>
-    cytnx_extension::CyTensor operator*<cytnx_int16>(const cytnx_extension::CyTensor &Lt, const cytnx_int16 &rc){
-       return cytnx_extension::xlinalg::Mul(Lt,rc);
+    UniTensor operator*<cytnx_int16>(const UniTensor &Lt, const cytnx_int16 &rc){
+       return linalg::Mul(Lt,rc);
     }
     template<>
-    cytnx_extension::CyTensor operator*<cytnx_uint16>(const cytnx_extension::CyTensor &Lt, const cytnx_uint16 &rc){
-       return cytnx_extension::xlinalg::Mul(Lt,rc);
+    UniTensor operator*<cytnx_uint16>(const UniTensor &Lt, const cytnx_uint16 &rc){
+       return linalg::Mul(Lt,rc);
     }
     template<>
-    cytnx_extension::CyTensor operator*<cytnx_bool>(const cytnx_extension::CyTensor &Lt, const cytnx_bool &rc){
-       return cytnx_extension::xlinalg::Mul(Lt,rc);
+    UniTensor operator*<cytnx_bool>(const UniTensor &Lt, const cytnx_bool &rc){
+       return linalg::Mul(Lt,rc);
     }
 
 

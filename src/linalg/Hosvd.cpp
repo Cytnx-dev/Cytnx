@@ -26,10 +26,9 @@ namespace cytnx{
 
 }//cytnx namespace
 
-namespace cytnx_extension{
-    namespace xlinalg{
-        using namespace cytnx;
-        std::vector<cytnx_extension::CyTensor> Hosvd(const cytnx_extension::CyTensor &Tin, const std::vector<cytnx_uint64> &mode, const bool &is_core, const bool &is_Ls,const std::vector<cytnx_int64> &truncate_dim){
+namespace cytnx{
+    namespace linalg{
+        std::vector<cytnx::UniTensor> Hosvd(const cytnx::UniTensor &Tin, const std::vector<cytnx_uint64> &mode, const bool &is_core, const bool &is_Ls,const std::vector<cytnx_int64> &truncate_dim){
 
 
             //checking mode:
@@ -45,17 +44,17 @@ namespace cytnx_extension{
             }
             cytnx_error_msg(tot>Tin.rank(),"[Hosvd] error the total sum of elements in mode should be equal or smaller to the rank of Tin.%s","\n");
 
-            CyTensor in;
+            UniTensor in;
             if(!Tin.is_contiguous())
                 in = Tin.contiguous();
             else
                 in = Tin;
 
-            std::vector<CyTensor> out;
-            std::vector<CyTensor> Ls;
+            std::vector<UniTensor> out;
+            std::vector<UniTensor> Ls;
 
             if(Tin.is_tag()){
-                cytnx_error_msg(true,"[ERROR][Hosvd] currently can only support regular CyTensor without tagged.%s","\n");
+                cytnx_error_msg(true,"[ERROR][Hosvd] currently can only support regular UniTensor without tagged.%s","\n");
             }else{
                 std::vector<cytnx_int64> perm;
                 cytnx_uint64 oldrowrank = in.rowrank();
@@ -98,7 +97,7 @@ namespace cytnx_extension{
                 in.set_rowrank(oldrowrank);
 
                 if(is_core){
-                    CyTensor s = Contract(in,out[0]);
+                    UniTensor s = Contract(in,out[0]);
                     for(int i=1;i<out.size();i++){
                         s = Contract(s,out[i]);
                     }
@@ -117,6 +116,6 @@ namespace cytnx_extension{
 
 
     }//linalg namespace
-}//cytnx_extension namespace
+}//cytnx namespace
 
 

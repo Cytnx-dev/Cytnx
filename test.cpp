@@ -6,9 +6,7 @@
 
 using namespace std;
 using namespace cytnx;
-using namespace cytnx_extension;
 
-namespace cyx = cytnx_extension;
 typedef cytnx::Accessor ac;
 
 
@@ -40,7 +38,15 @@ class MyOp: public LinOp{
  
 int main(int argc, char *argv[]){
 
+    vector<double> XvA(4,6);
     
+    auto XA = cytnx::Storage::from_vector(XvA);
+    auto XB = cytnx::Storage::from_vector(XvA,Device.cuda);
+
+    cout << XA << endl;
+    cout << XB << endl;
+
+    return 0 ;    
     auto TNss = zeros({3,4});
 
     cout << TNss - std::complex<double>(0,7) << endl;
@@ -114,9 +120,9 @@ int main(int argc, char *argv[]){
     
     cout << linalg::ExpH(TNs);   
 
-    auto Tuu = cyx::CyTensor(TNs.reshape({2,2,2,2}),2);
+    auto Tuu = UniTensor(TNs.reshape({2,2,2,2}),2);
     Tuu.print_diagram();
-    auto Tuux = cyx::xlinalg::ExpH(Tuu);
+    auto Tuux = linalg::ExpH(Tuu);
     Tuux.print_diagram();
     Tuux.combineBonds({0,1}); 
     Tuux.combineBonds({2,3}); 
@@ -125,7 +131,7 @@ int main(int argc, char *argv[]){
 
 
     auto Tori = zeros({4,4});
-    auto cTori = cyx::CyTensor(Tori,2);
+    auto cTori = UniTensor(Tori,2);
     cTori.at<cytnx_double>({0,0}) = 1.456;
     cout << cTori << endl;
     cout << Tori << endl;
@@ -140,9 +146,9 @@ int main(int argc, char *argv[]){
     Hn.print_diagram();
     
     //return 0;
-    auto Bd1 = cyx::Bond(2,cyx::BD_KET); //# 1 = 0.5 , so it is spin-1/2
-    auto Bd2 = cyx::Bond(2,cyx::BD_BRA);//# 1 = 0.5, so it is spin-1/2
-    auto Htag = cyx::CyTensor({Bd1,Bd1,Bd2,Bd2},{},1);
+    auto Bd1 = Bond(2,BD_KET); //# 1 = 0.5 , so it is spin-1/2
+    auto Bd2 = Bond(2,BD_BRA);//# 1 = 0.5, so it is spin-1/2
+    auto Htag = UniTensor({Bd1,Bd1,Bd2,Bd2},{},1);
     Htag.print_diagram();
     Htag.Transpose_();
     Htag.print_diagram();
@@ -152,9 +158,9 @@ int main(int argc, char *argv[]){
     //return 0;
     // Ket = IN
     // Bra = OUT
-    auto Bd_i = cyx::Bond(3,cyx::BD_KET,{{2},{0},{-2}},{cyx::Symmetry::U1()}); //# 1 = 0.5 , so it is spin-1
-    auto Bd_o = cyx::Bond(3,cyx::BD_BRA,{{2},{0},{-2}},{cyx::Symmetry::U1()});//# 1 = 0.5, so it is spin-1
-    auto H = cyx::CyTensor({Bd_i,Bd_i,Bd_o,Bd_o},{},2);
+    auto Bd_i = Bond(3,BD_KET,{{2},{0},{-2}},{Symmetry::U1()}); //# 1 = 0.5 , so it is spin-1
+    auto Bd_o = Bond(3,BD_BRA,{{2},{0},{-2}},{Symmetry::U1()});//# 1 = 0.5, so it is spin-1
+    auto H = UniTensor({Bd_i,Bd_i,Bd_o,Bd_o},{},2);
     
 
     H.set_elem<cytnx_double>({0,0,0,0},1);
@@ -239,41 +245,41 @@ int main(int argc, char *argv[]){
     return 0;
     
 
-    auto a1 = cyx::CyTensor(cytnx::zeros({2,2,2,2}),0); a1.set_name("a1");
-    auto a2 = cyx::CyTensor(cytnx::zeros({2,2,2,2}),0); a2.set_name("a2");
-    auto b1 = cyx::CyTensor(cytnx::zeros({2,2,2,2}),0); b1.set_name("b1");
-    auto b2 = cyx::CyTensor(cytnx::zeros({2,2,2,2}),0); b2.set_name("b2");
+    auto a1 = UniTensor(cytnx::zeros({2,2,2,2}),0); a1.set_name("a1");
+    auto a2 = UniTensor(cytnx::zeros({2,2,2,2}),0); a2.set_name("a2");
+    auto b1 = UniTensor(cytnx::zeros({2,2,2,2}),0); b1.set_name("b1");
+    auto b2 = UniTensor(cytnx::zeros({2,2,2,2}),0); b2.set_name("b2");
 
-    auto lx1 = cyx::CyTensor(cytnx::zeros({2,2}),0); lx1.set_name("lx1"); 
-    auto lx2 = cyx::CyTensor(cytnx::zeros({2,2}),0); lx2.set_name("lx2");
-    auto lya1 = cyx::CyTensor(cytnx::zeros({2,2}),0); lya1.set_name("lya1"); 
-    auto lya2 = cyx::CyTensor(cytnx::zeros({2,2}),0); lya2.set_name("lya2"); 
-    auto lyb1 = cyx::CyTensor(cytnx::zeros({2,2}),0); lyb1.set_name("lyb1"); 
-    auto lyb2 = cyx::CyTensor(cytnx::zeros({2,2}),0); lyb2.set_name("lyb2"); 
-    auto lza1 = cyx::CyTensor(cytnx::zeros({2,2}),0); lza1.set_name("lza1"); 
-    auto lza2 = cyx::CyTensor(cytnx::zeros({2,2}),0); lza2.set_name("lza2"); 
-    auto lzb1 = cyx::CyTensor(cytnx::zeros({2,2}),0); lzb1.set_name("lzb1"); 
-    auto lzb2 = cyx::CyTensor(cytnx::zeros({2,2}),0); lzb2.set_name("lzb2"); 
+    auto lx1 = UniTensor(cytnx::zeros({2,2}),0); lx1.set_name("lx1"); 
+    auto lx2 = UniTensor(cytnx::zeros({2,2}),0); lx2.set_name("lx2");
+    auto lya1 = UniTensor(cytnx::zeros({2,2}),0); lya1.set_name("lya1"); 
+    auto lya2 = UniTensor(cytnx::zeros({2,2}),0); lya2.set_name("lya2"); 
+    auto lyb1 = UniTensor(cytnx::zeros({2,2}),0); lyb1.set_name("lyb1"); 
+    auto lyb2 = UniTensor(cytnx::zeros({2,2}),0); lyb2.set_name("lyb2"); 
+    auto lza1 = UniTensor(cytnx::zeros({2,2}),0); lza1.set_name("lza1"); 
+    auto lza2 = UniTensor(cytnx::zeros({2,2}),0); lza2.set_name("lza2"); 
+    auto lzb1 = UniTensor(cytnx::zeros({2,2}),0); lzb1.set_name("lzb1"); 
+    auto lzb2 = UniTensor(cytnx::zeros({2,2}),0); lzb2.set_name("lzb2"); 
 
-    auto N = cyx::Network("f.net");
+    auto N = Network("f.net");
     //#N.Diagram()
-    N.PutCyTensor("a1",a1,true);
-    N.PutCyTensor("a2",a2,true);
-    N.PutCyTensor("b1",b1,true);
-    N.PutCyTensor("b2",b2,true);
+    N.PutUniTensor("a1",a1,true);
+    N.PutUniTensor("a2",a2,true);
+    N.PutUniTensor("b1",b1,true);
+    N.PutUniTensor("b2",b2,true);
 
-    N.PutCyTensor("lx1",lx1,true);
-    N.PutCyTensor("lx2",lx2,true);
+    N.PutUniTensor("lx1",lx1,true);
+    N.PutUniTensor("lx2",lx2,true);
 
-    N.PutCyTensor("lya1",lya1,true);
-    N.PutCyTensor("lya2",lya2,true);
-    N.PutCyTensor("lyb1",lyb1,true);
-    N.PutCyTensor("lyb2",lyb2,true);
+    N.PutUniTensor("lya1",lya1,true);
+    N.PutUniTensor("lya2",lya2,true);
+    N.PutUniTensor("lyb1",lyb1,true);
+    N.PutUniTensor("lyb2",lyb2,true);
 
-    N.PutCyTensor("lza1",lza1,true);
-    N.PutCyTensor("lza2",lza2,true);
-    N.PutCyTensor("lzb1",lzb1,true);
-    N.PutCyTensor("lzb2",lzb2,true);
+    N.PutUniTensor("lza1",lza1,true);
+    N.PutUniTensor("lza2",lza2,true);
+    N.PutUniTensor("lzb1",lzb1,true);
+    N.PutUniTensor("lzb2",lzb2,true);
     cout << N;
 
     auto T = N.Launch(true);
@@ -312,7 +318,7 @@ int main(int argc, char *argv[]){
     exit(1);
 
 
-    cyx::Network N2 = cyx::Network("t2.net");
+    Network N2 = Network("t2.net");
     cout << N2 << endl;
 
     exit(1);
@@ -320,10 +326,10 @@ int main(int argc, char *argv[]){
     random::Make_normal(ttr,0,0.1,99);
     cout << ttr ;
     
-    cytnx_extension::CyTensor TTT(ttr,1);
+    UniTensor TTT(ttr,1);
     
-    cytnx_extension::CyTensor cTT = TTT.clone();
-    cytnx_extension::CyTensor cTTr = TTT;
+    UniTensor cTT = TTT.clone();
+    UniTensor cTTr = TTT;
 
 
    cout << is(cTTr,TTT) << endl;
@@ -338,7 +344,7 @@ int main(int argc, char *argv[]){
     random::Make_normal(ttr,0,0.1,99);
     cout << ttr ;
     
-    cytnx_extension::CyTensor TTT(ttr,1);
+    UniTensor TTT(ttr,1);
     cout << TTT;
 
     TTT*=3;
@@ -366,11 +372,11 @@ int main(int argc, char *argv[]){
 
 
     Tensor Tproto = arange(24).reshape({3,4,2});
-    CyTensor U_test_svd; U_test_svd.Init(Tproto,1);
+    UniTensor U_test_svd; U_test_svd.Init(Tproto,1);
     cout << U_test_svd;
 
 
-    vector<CyTensor> outCy = xlinalg::Svd(U_test_svd);
+    vector<UniTensor> outCy = linalg::Svd(U_test_svd);
     //cout << outCy[1] << endl;
     cout << outCy << endl;
 
@@ -394,14 +400,14 @@ int main(int argc, char *argv[]){
     std::vector<Bond> dbds = {bd_dqu3,bd_dqu4,bd_dqu1,bd_dqu2}; 
 
     cout << "[OK]" << endl;        
-    CyTensor dut1(dbds,{},2);
+    UniTensor dut1(dbds,{},2);
     dut1.print_diagram(true);
     dut1.permute_({2,3,0,1},1);
     dut1.print_diagram(true);
 
     cout << dut1.is_contiguous() << endl;
 
-    CyTensor dut2 = dut1.contiguous();
+    UniTensor dut2 = dut1.contiguous();
 
 
     dut2.print_diagram(true);
@@ -635,8 +641,8 @@ int main(int argc, char *argv[]){
     std::vector<Bond> bds = {bd_1,bd_2,bd_3}; 
     std::vector<cytnx_int64> labels = {};
         
-    CyTensor ut1(bds,{},2);
-    CyTensor ut2 = ut1.clone();
+    UniTensor ut1(bds,{},2);
+    UniTensor ut2 = ut1.clone();
     ut1.print_diagram();
     cout << ut1 << endl;
     ut1.combineBonds({2,0},true,false);
@@ -645,7 +651,7 @@ int main(int argc, char *argv[]){
     ut2.set_label(2,-4);
     ut2.print_diagram();
 
-    CyTensor ut3 = Contract(ut1,ut2);
+    UniTensor ut3 = Contract(ut1,ut2);
     ut3.print_diagram();
 
 
@@ -695,18 +701,18 @@ int main(int argc, char *argv[]){
     //cout << ut2 << endl;
 
 
-    CyTensor T1 = CyTensor(Tensor({2,3,4,5}),2);
-    CyTensor T2 = CyTensor(Tensor({4,6,7,8}),3);
-    CyTensor T3 = CyTensor(Tensor({5,6,7,2}),4);
+    UniTensor T1 = UniTensor(Tensor({2,3,4,5}),2);
+    UniTensor T2 = UniTensor(Tensor({4,6,7,8}),3);
+    UniTensor T3 = UniTensor(Tensor({5,6,7,2}),4);
     
     
 
     Network net;
     net.Fromfile("test.net");
     
-    net.PutCyTensor("A",T1,false);
-    net.PutCyTensor("B",T2,false);
-    net.PutCyTensor("C",T3,false);
+    net.PutUniTensor("A",T1,false);
+    net.PutUniTensor("B",T2,false);
+    net.PutUniTensor("C",T3,false);
 
 
     net.Launch();
@@ -744,7 +750,7 @@ int main(int argc, char *argv[]){
     sss.at<double>({0,0,0}) = 3;
     cout << ut1 << endl;
        
-    CyTensor re(sss,2); // construct by block will not copy, and share same memory.
+    UniTensor re(sss,2); // construct by block will not copy, and share same memory.
     cout << re << endl;
     */
      

@@ -11,15 +11,15 @@ namespace cytnx{
     }
 }
 
-namespace cytnx_extension{
-    bool is(const cytnx_extension::Bond &L, const cytnx_extension::Bond &R){
+namespace cytnx{
+    bool is(const cytnx::Bond &L, const cytnx::Bond &R){
         return (L._impl == R._impl);
     }
 
-    bool is(const cytnx_extension::Symmetry &L, const cytnx_extension::Symmetry &R){
+    bool is(const cytnx::Symmetry &L, const cytnx::Symmetry &R){
         return (L._impl == R._impl);
     }
-    bool is(const cytnx_extension::CyTensor &L, const cytnx_extension::CyTensor &R){
+    bool is(const cytnx::UniTensor &L, const cytnx::UniTensor &R){
         return (L._impl == R._impl);
     }
 }

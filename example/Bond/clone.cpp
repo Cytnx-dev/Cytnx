@@ -3,7 +3,6 @@
 
 using namespace std;
 using namespace cytnx;
-using namespace cytnx_extension; //[Note] To use the Symmetry, use this namespace
 
 int main(){ 
 

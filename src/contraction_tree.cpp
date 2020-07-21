@@ -4,8 +4,7 @@
 
 using namespace std;
 
-namespace cytnx_extension{
-    using namespace cytnx;
+namespace cytnx{
     void ContractionTree::build_default_contraction_tree(){
         this->reset_contraction_order();
         cytnx_error_msg(this->base_nodes.size()<2,"[ERROR][ContractionTree][build_default_contraction_order] contraction tree should contain >=2 tensors in order to build contraction order.%s","\n");

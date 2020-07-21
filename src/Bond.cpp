@@ -5,8 +5,7 @@
 #include <algorithm>
 #include "utils/utils_internal_interface.hpp"
 using namespace std;
-namespace cytnx_extension{
-    using namespace cytnx;
+namespace cytnx{
     void Bond_impl::Init(const cytnx_uint64 &dim, const bondType &bd_type, const std::vector<std::vector<cytnx_int64> > &in_qnums,const std::vector<Symmetry> &in_syms){
        
         cytnx_error_msg(dim==0,"%s","[ERROR] Bond_impl cannot have 0 or negative dimension.");

@@ -13,7 +13,7 @@
 #include "utils/utils.hpp"
 #include "random.hpp"
 
-#include "CyTensor.hpp"
+#include "UniTensor.hpp"
 #include "Symmetry.hpp"
 #include "Network.hpp"
 #include "Bond.hpp"

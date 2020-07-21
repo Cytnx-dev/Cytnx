@@ -81,6 +81,8 @@ $(function() {
 <li>[Feature] Tensor can now using operator() to access elements just like python.</li>
 <li>[Enhance] Access Tensor can now exactly the same using slice string as in python.</li>
 <li>[Enhance] at/reshape/permute in Tensor can now give args without braket{} as in python.</li>
+<li>[Enhance] Storage.Load to static, so it can match Tensor</li>
+<li>[Major] Remove cytnx_extension class, rename CyTensor-&gt;UniTensor</li>
 </ol>
 <p>v0.5.4a</p><ol type="1">
 <li>Add linalg::Det</li>
@@ -133,11 +135,11 @@ $(function() {
 <ul>
 <li><a class="el" href="classcytnx_1_1Storage.html">Storage </a> [binded]</li>
 <li><a class="el" href="classcytnx_1_1Tensor.html">Tensor </a> [binded]</li>
-<li><a class="el" href="classcytnx__extension_1_1Bond.html">Bond </a> [binded]</li>
+<li><a class="el" href="classcytnx_1_1Bond.html">Bond </a> [binded]</li>
 <li><a class="el" href="classcytnx_1_1Accessor.html">Accessor </a> [c++ only]</li>
-<li><a class="el" href="classcytnx__extension_1_1Symmetry.html">Symmetry </a> [binded]</li>
-<li><a class="el" href="classcytnx__extension_1_1CyTensor.html">CyTensor </a> [binded]</li>
-<li><a class="el" href="classcytnx__extension_1_1Network.html">Network </a> [binded]</li>
+<li><a class="el" href="classcytnx_1_1Symmetry.html">Symmetry </a> [binded]</li>
+<li><a class="el" href="">CyTensor </a> [binded]</li>
+<li><a class="el" href="classcytnx_1_1Network.html">Network </a> [binded]</li>
 </ul>
 <h2>linear algebra functions:</h2>
 <p>See <a class="el" href="namespacecytnx_1_1linalg.html">cytnx::linalg </a> for further details</p>
@@ -145,13 +147,13 @@ $(function() {
 <tr>
 <th>func </th><th>inplace </th><th>CPU </th><th>GPU </th><th>callby tn  </th></tr>
 <tr>
-<td><a class="el" href="namespacecytnx_1_1linalg.html#af36e9e20e4c7d74f2f6f838902482d98">Add</a> </td><td>x </td><td>Y </td><td>Y </td><td>Y </td></tr>
+<td><a class="el" href="namespacecytnx_1_1linalg.html#ac61bd0f99306496fae81f8601fa4070c">Add</a> </td><td>x </td><td>Y </td><td>Y </td><td>Y </td></tr>
 <tr>
-<td><a class="el" href="namespacecytnx_1_1linalg.html#a78477b25b3eed121847f1a13b878a925">Sub</a> </td><td>x </td><td>Y </td><td>Y </td><td>Y </td></tr>
+<td><a class="el" href="namespacecytnx_1_1linalg.html#a9918295b0d2d78fa475390e91ccbf57b">Sub</a> </td><td>x </td><td>Y </td><td>Y </td><td>Y </td></tr>
 <tr>
-<td><a class="el" href="namespacecytnx_1_1linalg.html#a2fc49876b7b53f6f6e97ce70f475f636">Mul</a> </td><td>x </td><td>Y </td><td>Y </td><td>Y </td></tr>
+<td><a class="el" href="namespacecytnx_1_1linalg.html#a8705f85e347439577708173ab963f909">Mul</a> </td><td>x </td><td>Y </td><td>Y </td><td>Y </td></tr>
 <tr>
-<td><a class="el" href="namespacecytnx_1_1linalg.html#abc1940e0e7364299ea1481c81003ba13">Div</a> </td><td>x </td><td>Y </td><td>Y </td><td>Y </td></tr>
+<td><a class="el" href="namespacecytnx_1_1linalg.html#affc6138760ac67505ae194edf14525e8">Div</a> </td><td>x </td><td>Y </td><td>Y </td><td>Y </td></tr>
 <tr>
 <td><a class="el" href="namespacecytnx_1_1linalg.html#aea125f2928934007725809426bb77e38">Cpr</a> </td><td>x </td><td>Y </td><td>Y </td><td>Y </td></tr>
 <tr>
@@ -165,9 +167,9 @@ $(function() {
 <tr>
 <td>== [tn]</td><td>x </td><td>Y </td><td>Y </td><td>Y (<a class="el" href="classcytnx_1_1Tensor.html#ae9e9ea98664899db1ce86b88e136595e">Tensor.Cpr_</a>) </td></tr>
 <tr>
-<td><a class="el" href="namespacecytnx_1_1linalg.html#ac17f16959a4849ea91bce712d24d4e4e">Svd</a> </td><td>x </td><td>Y </td><td>Y </td><td>Y </td></tr>
+<td><a class="el" href="namespacecytnx_1_1linalg.html#a7867037a2719ac34ed08ba14bf925a13">Svd</a> </td><td>x </td><td>Y </td><td>Y </td><td>Y </td></tr>
 <tr>
-<td>*<a class="el" href="namespacecytnx_1_1linalg.html#a37887f24c0050785a9675ecbb7601952">Svd_truncate</a> </td><td>x </td><td>Y </td><td>Y </td><td>N </td></tr>
+<td>*<a class="el" href="namespacecytnx_1_1linalg.html#a9f05ff7ecf0de503d1d43a14e04e3d70">Svd_truncate</a> </td><td>x </td><td>Y </td><td>Y </td><td>N </td></tr>
 <tr>
 <td><a class="el" href="namespacecytnx_1_1linalg.html#af819d2fc4522d2a6287aa16dfbe3f787">InvM</a> </td><td><a class="el" href="namespacecytnx_1_1linalg.html#ac414e561888051c1fbacde18c9039fbf">InvM_</a> </td><td>Y </td><td>Y </td><td>Y </td></tr>
 <tr>
@@ -179,9 +181,9 @@ $(function() {
 <tr>
 <td><a class="el" href="namespacecytnx_1_1linalg.html#a5831918722e5d18f4eaf37834b8fbf77">Expf</a> </td><td><a class="el" href="namespacecytnx_1_1linalg.html#a5de1faf71c76cdc6b7fa5ba3a3e21bbb">Expf_</a> </td><td>Y </td><td>Y </td><td>Y </td></tr>
 <tr>
-<td>*<a class="el" href="namespacecytnx_1_1linalg.html#a003ad2d2784202e936ce4a16e850e17e">ExpH</a> </td><td>x </td><td>Y </td><td>Y </td><td>N </td></tr>
+<td>*<a class="el" href="namespacecytnx_1_1linalg.html#afac9f1b57eedbfcb88a2e7d704d3a680">ExpH</a> </td><td>x </td><td>Y </td><td>Y </td><td>N </td></tr>
 <tr>
-<td>*<a class="el" href="namespacecytnx_1_1linalg.html#a671e57fbd0efcae9e438130ace6bf1cd">ExpM</a> </td><td>x </td><td>Y </td><td>Y </td><td>N </td></tr>
+<td>*<a class="el" href="namespacecytnx_1_1linalg.html#a6fe901dd335d202f3e76970b6a1c8940">ExpM</a> </td><td>x </td><td>Y </td><td>Y </td><td>N </td></tr>
 <tr>
 <td><a class="el" href="namespacecytnx_1_1linalg.html#aeb91cc90ebd85069ea9e7808e64068a2">Eigh</a> </td><td>x </td><td>Y </td><td>Y </td><td>Y </td></tr>
 <tr>
@@ -205,17 +207,17 @@ $(function() {
 <tr>
 <td><a class="el" href="namespacecytnx_1_1linalg.html#a1137ae19828f715399d90634e4a71ba3">Eig</a> </td><td>x </td><td>Y </td><td>N </td><td>Y </td></tr>
 <tr>
-<td><a class="el" href="namespacecytnx_1_1linalg.html#a2919ef6c163a54360071c286df3fb92e">Pow</a> </td><td><a class="el" href="namespacecytnx_1_1linalg.html#a269ef291355dfee4421fa55ad0247aad">Pow_</a> </td><td>Y </td><td>Y </td><td>Y </td></tr>
+<td><a class="el" href="namespacecytnx_1_1linalg.html#af2e15ace1ea23939174fdea1829430fd">Pow</a> </td><td><a class="el" href="namespacecytnx_1_1linalg.html#a31c366a1a4ea1c78e855cb6a79cb6115">Pow_</a> </td><td>Y </td><td>Y </td><td>Y </td></tr>
 <tr>
 <td><a class="el" href="namespacecytnx_1_1linalg.html#a3ded6435c7b47eb348d03783bfe72611">Abs</a> </td><td><a class="el" href="namespacecytnx_1_1linalg.html#a30687e6240a889c04637b33ef90c2525">Abs_</a> </td><td>Y </td><td>N </td><td>Y </td></tr>
 <tr>
-<td><a class="el" href="namespacecytnx_1_1linalg.html#a44a1aaacc828eb5202eb912f787626b8">QR</a> </td><td>x </td><td>Y </td><td>N </td><td>N </td></tr>
+<td><a class="el" href="namespacecytnx_1_1linalg.html#ab2137390b1317b9b0e91039512773ec2">QR</a> </td><td>x </td><td>Y </td><td>N </td><td>N </td></tr>
 <tr>
 <td><a class="el" href="namespacecytnx_1_1linalg.html#a25b5f2fdfb550aabc9cc41daa963e1fb">Min</a> </td><td>x </td><td>Y </td><td>N </td><td>Y </td></tr>
 <tr>
 <td><a class="el" href="namespacecytnx_1_1linalg.html#a93ef263824e2dcdab4832ea628959d19">Max</a> </td><td>x </td><td>Y </td><td>N </td><td>Y </td></tr>
 <tr>
-<td>*<a class="el" href="namespacecytnx_1_1linalg.html#a02d7105bf16d23128687ba92fb231b54">Trace</a> </td><td>x </td><td>Y </td><td>N </td><td>N </td></tr>
+<td>*<a class="el" href="namespacecytnx_1_1linalg.html#a192d864aeaaa105337569dfca0eee4a7">Trace</a> </td><td>x </td><td>Y </td><td>N </td><td>N </td></tr>
 </table>
 <pre class="fragment">iterative solver
 
@@ -318,7 +320,7 @@ $(function() {
 <li>vitual swap and permute. All the permute and swap will not change the underlying memory</li>
 <li>Use Contiguous() when needed to actual moving the memory layout. <div class="fragment"><div class="line">Tensor A({3,4,5,2},<a class="code" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">Type</a>.Double);</div><div class="line">A.<a class="code" href="classcytnx_1_1Tensor.html#a4239ec84bd34f634a822eeff416f4d63">permute_</a>(0,3,1,2); <span class="comment">// this will not change the memory, only the shape info is changed.</span></div><div class="line">cout &lt;&lt; A.<a class="code" href="classcytnx_1_1Tensor.html#a6a1d9ed962b0e9a484e2bb0de15eb76d">is_contiguous</a>() &lt;&lt; endl; <span class="comment">// this will be false!</span></div><div class="line"></div><div class="line">A.<a class="code" href="classcytnx_1_1Tensor.html#a3d4342299e6951dae13b6136b89f1d53">contiguous_</a>(); <span class="comment">// call Configuous() to actually move the memory.</span></div><div class="line">cout &lt;&lt; A.<a class="code" href="classcytnx_1_1Tensor.html#a6a1d9ed962b0e9a484e2bb0de15eb76d">is_contiguous</a>() &lt;&lt; endl; <span class="comment">// this will be true!</span></div></div><!-- fragment --></li>
 <li>access single element using .at <div class="fragment"><div class="line">Tensor A({3,4,5},<a class="code" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">Type</a>.Double);</div><div class="line"><span class="keywordtype">double</span> val = A.<a class="code" href="classcytnx_1_1Tensor.html#a697b114d1df390ca558ea9211c2d683b">at</a>&lt;<span class="keywordtype">double</span>&gt;(0,2,2);</div></div><!-- fragment --></li>
-<li>access elements with python slices similarity: <div class="fragment"><div class="line"><span class="keyword">typedef</span> Accessor <a class="code" href="DenseCyTensor_8cpp.html#abb126f94f3d42e9104cf6bb7d4c035b8">ac</a>;</div><div class="line">Tensor A({3,4,5},<a class="code" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">Type</a>.Double);</div><div class="line">Tensor out = A(0,<span class="stringliteral">&quot;:&quot;</span>,<span class="stringliteral">&quot;1:4&quot;</span>); </div><div class="line"><span class="comment">// equivalent to python: out = A[0,:,1:4]    </span></div></div><!-- fragment --></li>
+<li>access elements with python slices similarity: <div class="fragment"><div class="line"><span class="keyword">typedef</span> Accessor <a class="code" href="DenseUniTensor_8cpp.html#abb126f94f3d42e9104cf6bb7d4c035b8">ac</a>;</div><div class="line">Tensor A({3,4,5},<a class="code" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">Type</a>.Double);</div><div class="line">Tensor out = A(0,<span class="stringliteral">&quot;:&quot;</span>,<span class="stringliteral">&quot;1:4&quot;</span>); </div><div class="line"><span class="comment">// equivalent to python: out = A[0,:,1:4]    </span></div></div><!-- fragment --></li>
 </ul>
 <h2>Fast Examples</h2>
 <pre class="fragment">See test.cpp for using C++ .
