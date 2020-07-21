@@ -27,21 +27,20 @@ Let's first create this two-site  MPS wave function (here, we set virtual bond d
 .. code-block:: python
     :linenos:
 
-    import cytnx
-    import cytnx.cytnx_extension as cyx
+    from cytnx import *
 
     chi = 10
-    A = cyx.CyTensor([cyx.Bond(chi),cyx.Bond(2),cyx.Bond(chi)],rowrank=1,labels=[-1,0,-2])
-    B = cyx.CyTensor(A.bonds(),rowrank=1,labels=[-3,1,-4])
-    cytnx.random.Make_normal(B.get_block_(),0,0.2)
-    cytnx.random.Make_normal(A.get_block_(),0,0.2)
+    A = CyTensor([Bond(chi),Bond(2),Bond(chi)],rowrank=1,labels=[-1,0,-2])
+    B = CyTensor(A.bonds(),rowrank=1,labels=[-3,1,-4])
+    random.Make_normal(B.get_block_(),0,0.2)
+    random.Make_normal(A.get_block_(),0,0.2)
     A.print_diagram()
     B.print_diagram()
 
-    la = cyx.CyTensor([cyx.Bond(chi),cyx.Bond(chi)],rowrank=1,labels=[-2,-3],is_diag=True)
-    lb = cyx.CyTensor([cyx.Bond(chi),cyx.Bond(chi)],rowrank=1,labels=[-4,-5],is_diag=True)
-    la.put_block(cytnx.ones(chi))
-    lb.put_block(cytnx.ones(chi))
+    la = CyTensor([Bond(chi),Bond(chi)],rowrank=1,labels=[-2,-3],is_diag=True)
+    lb = CyTensor([Bond(chi),Bond(chi)],rowrank=1,labels=[-4,-5],is_diag=True)
+    la.put_block(ones(chi))
+    lb.put_block(ones(chi))
 
     la.print_diagram()
     lb.print_diagram()
@@ -53,20 +52,20 @@ Let's first create this two-site  MPS wave function (here, we set virtual bond d
     :linenos:
 
     #include "cytnx.hpp"
-    namespace cyx = cytnx_extension;
+    using namespace cytnx;
 
     unsigned int chi = 20;
-    auto A = cyx::CyTensor({cyx::Bond(chi),cyx::Bond(2),cyx::Bond(chi)},{-1,0,-2},1);
-    auto B = cyx::CyTensor(A.bonds(),{-3,1,-4},1);
-    cytnx::random::Make_normal(B.get_block_(),0,0.2);
-    cytnx::random::Make_normal(A.get_block_(),0,0.2);
+    auto A = CyTensor({Bond(chi),Bond(2),Bond(chi)},{-1,0,-2},1);
+    auto B = CyTensor(A.bonds(),{-3,1,-4},1);
+    random::Make_normal(B.get_block_(),0,0.2);
+    random::Make_normal(A.get_block_(),0,0.2);
     A.print_diagram();
     B.print_diagram();
 
-    auto la = cyx::CyTensor({cyx::Bond(chi),cyx::Bond(chi)},{-2,-3},1,Type.Double,Device.cpu,true);
-    auto lb = cyx::CyTensor({cyx::Bond(chi),cyx::Bond(chi)},{-4,-5},1,Type.Double,Device.cpu,true);
-    la.put_block(cytnx::ones(chi));
-    lb.put_block(cytnx::ones(chi));
+    auto la = CyTensor({Bond(chi),Bond(chi)},{-2,-3},1,Type.Double,Device.cpu,true);
+    auto lb = CyTensor({Bond(chi),Bond(chi)},{-4,-5},1,Type.Double,Device.cpu,true);
+    la.put_block(ones(chi));
+    lb.put_block(ones(chi));
 
     la.print_diagram();
     lb.print_diagram();
@@ -167,24 +166,24 @@ Here, let's construct this imaginary time evolution operator with parameter :mat
     dt = 0.1
 
     ## Create single site operator
-    Sz = cytnx.physics.pauli('z').real()
-    Sx = cytnx.physics.pauli('x').real()
-    I  = cytnx.eye(2)
+    Sz = physics.pauli('z').real()
+    Sx = physics.pauli('x').real()
+    I  = eye(2)
     print(Sz)
     print(Sx)
 
 
     ## Construct the local Hamiltonian
-    TFterm = cytnx.linalg.Kron(Sx,I) + cytnx.linalg.Kron(I,Sx)
-    ZZterm = cytnx.linalg.Kron(Sz,Sz)
+    TFterm = linalg.Kron(Sx,I) + linalg.Kron(I,Sx)
+    ZZterm = linalg.Kron(Sz,Sz)
     H = Hx*TFterm + J*ZZterm
     print(H)
 
 
     ## Build Evolution Operator
-    eH = cytnx.linalg.ExpH(H,-dt) ## or equivantly ExpH(-dt*H)
+    eH = linalg.ExpH(H,-dt) ## or equivantly ExpH(-dt*H)
     eH.reshape_(2,2,2,2)
-    U = cyx.CyTensor(eH,2)
+    U = CyTensor(eH,2)
     U.print_diagram()
 
 
@@ -198,25 +197,25 @@ Here, let's construct this imaginary time evolution operator with parameter :mat
     double dt = 0.1;
 
     // Create single site operator
-    auto Sz = cytnx::physics::pauli('z').real();
-    auto Sx = cytnx::physics::pauli('x').real();
-    auto I  = cytnx::eye(2);
+    auto Sz = physics::pauli('z').real();
+    auto Sx = physics::pauli('x').real();
+    auto I  = eye(2);
     cout << Sz << endl;
     cout << Sx << endl;
 
 
     // Construct the local Hamiltonian
-    auto TFterm = cytnx::linalg::Kron(Sx,I) + cytnx::linalg::Kron(I,Sx);
-    auto ZZterm = cytnx::linalg::Kron(Sz,Sz);
+    auto TFterm = linalg::Kron(Sx,I) + linalg::Kron(I,Sx);
+    auto ZZterm = linalg::Kron(Sz,Sz);
     auto H = Hx*TFterm + J*ZZterm;
     cout << H << endl;
 
 
     // Build Evolution Operator
     // [Note] eH is cytnx.Tensor and U is CyTensor.
-    auto eH = cytnx::linalg::ExpH(H,-dt); //or equivantly ExpH(-dt*H)
+    auto eH = linalg::ExpH(H,-dt); //or equivantly ExpH(-dt*H)
     eH.reshape_(2,2,2,2);
-    auto U = cyx.CyTensor(eH,2);
+    auto U = CyTensor(eH,2);
     U.print_diagram();
 
 Output>>

@@ -1,4 +1,4 @@
-Manipulate CyTensor
+Manipulate UniTensor
 --------------------
 
 .. toctree::

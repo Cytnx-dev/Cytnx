@@ -138,9 +138,9 @@
 <li class="toctree-l4"><a class="reference internal" href="cyx/TNotation.html#direction-of-bond">6.1.2. Direction of bond</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="cyx/CyTensor.html">6.2. CyTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="cyx/CyTensor_1_create.html">6.2.1. Create CyTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="cyx/CyTensor_2_manip.html">6.2.2. Manipulate CyTensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cyx/UniTensor.html">6.2. UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cyx/UniTensor_1_create.html">6.2.1. Create UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cyx/UniTensor_2_manip.html">6.2.2. Manipulate UniTensor</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="cyx/Network.html">6.3. Network</a><ul class="simple">
@@ -362,9 +362,9 @@
 <li class="toctree-l4"><a class="reference internal" href="cyx/TNotation.html#direction-of-bond">6.1.2. Direction of bond</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="cyx/CyTensor.html">6.2. CyTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="cyx/CyTensor_1_create.html">6.2.1. Create CyTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="cyx/CyTensor_2_manip.html">6.2.2. Manipulate CyTensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cyx/UniTensor.html">6.2. UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cyx/UniTensor_1_create.html">6.2.1. Create UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cyx/UniTensor_2_manip.html">6.2.2. Manipulate UniTensor</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="cyx/Network.html">6.3. Network</a><ul class="simple">
@@ -439,9 +439,9 @@
             
   <div class="section" id="cytnx-extensions">
 <h1><span class="section-number">6. </span>Cytnx extensions<a class="headerlink" href="#cytnx-extensions" title="Permalink to this headline">¶</a></h1>
-<p>cytnx_extension submodule/namespace provides objects that are designed specifically for Tensor network simulations, base on the <strong>cytnx.Tensor</strong>.</p>
-<p>The <strong>cytnx_extension.CyTensor</strong> which is a enhanced version of <strong>cytnx.Tensor</strong>, provides features such as labels for each rank (which is so called “bond”), Bra/Ket (In/Out) convention of bonds. These features are handy for multiple Tensor contraction, as well as implementation of Tensor network diagram.</p>
-<p>The <strong>cytnx_extensioin.Network</strong> object provides a skeleton of a Tensor network diagram. Users can write a <em>Network file</em>, which will serve as the blue print of a TN structure, and contract multiple Tensors at once with optimal contraction order optimized automatically within the <strong>Network</strong> object. Further more, user can plot the Tensor network diagram from <em>Network file</em> directly in python API to check the implementation.</p>
+<p>Cytnx provides objects that are designed specifically for Tensor network simulations, base on the <strong>cytnx.Tensor</strong>.</p>
+<p>The <strong>UniTensor</strong> which is a enhanced version of <strong>cytnx.Tensor</strong>, provides features such as labels for each rank (which is so called “bond”), Bra/Ket (In/Out) convention of bonds. These features are handy for multiple Tensor contraction, as well as implementation of Tensor network diagram.</p>
+<p>The <strong>Network</strong> object provides a skeleton of a Tensor network diagram. Users can write a <em>Network file</em>, which will serve as the blue print of a TN structure, and contract multiple Tensors at once with optimal contraction order optimized automatically within the <strong>Network</strong> object. Further more, user can plot the Tensor network diagram from <em>Network file</em> directly in python API to check the implementation.</p>
 <p>In the following, let’s look into these objects:</p>
 <div class="toctree-wrapper compound">
 <ul>
@@ -452,11 +452,11 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="cyx/CyTensor.html">6.2. CyTensor</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="cyx/CyTensor_1_create.html">6.2.1. Create CyTensor</a><ul class="simple">
+<li class="toctree-l1"><a class="reference internal" href="cyx/UniTensor.html">6.2. UniTensor</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cyx/UniTensor_1_create.html">6.2.1. Create UniTensor</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cyx/CyTensor_2_manip.html">6.2.2. Manipulate CyTensor</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="cyx/UniTensor_2_manip.html">6.2.2. Manipulate UniTensor</a><ul class="simple">
 </ul>
 </li>
 </ul>

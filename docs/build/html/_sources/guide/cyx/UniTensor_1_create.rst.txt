@@ -1,4 +1,4 @@
-Create CyTensor
+Create UniTensor
 -----------------
 
 .. toctree::
