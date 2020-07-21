@@ -252,15 +252,15 @@
             
 ```
 
-### 4. CyTensor
+### 4. UniTensor
         * extension of Tensor, specifically design for Tensor network simulation. 
 
         * See Intro slide for more details
 ```c++
             Tensor A({3,4,5},Type.Double);
-            CyTensor tA = CyTensor(A,2); // convert directly.
+            UniTensor tA = UniTensor(A,2); // convert directly.
 
-            CyTensor tB = CyTensor({Bond(3),Bond(4),Bond(5)},{},2); // init from scratch. 
+            UniTensor tB = UniTensor({Bond(3),Bond(4),Bond(5)},{},2); // init from scratch. 
 ```
 
 
