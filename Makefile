@@ -38,7 +38,7 @@ endif
 
 ifeq ($(MKL_Enable),1)
   CCFLAGS += -std=c++11 -O3 -Wformat=0 -m64 -fPIC -DUNI_MKL -w -Wno-c++11-narrowing -DMKL_ILP64
-  LDFLAGS += $(DOCKER_MKL) -Wl,--no-as-needed -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -ldl -lm   
+  LDFLAGS += $(DOCKER_MKL) -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -ldl -lm   
 else
   CCFLAGS += -std=c++11 -O3 -Wformat=0 -fPIC -w -Wno-c++11-narrowing 
   LDFLAGS +=  -llapacke -lblas -lstdc++  
@@ -141,15 +141,15 @@ test: test.o libcytnx.so
 libcytnx.so: $(ALLOBJS)
 	$(CC) -shared -o $@ $^ $(CCFLAGS) $(LDFLAGS)
 
-#pyobj: $(ALLOBJS)
-#	$(CC) $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes)  pybind/cytnx.cpp $^ $(LDFLAGS) -shared -o cytnx/cytnx$(shell python3-config --extension-suffix)
+pyobj: $(ALLOBJS)
+	$(CC) $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes)  pybind/cytnx.cpp $^ $(LDFLAGS) -shared -o cytnx/cytnx$(shell python3-config --extension-suffix)
 
 
-cytnx.o: pybind/cytnx.cpp
-	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes)  $< -o $@
+#cytnx.o: pybind/cytnx.cpp
+#	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes)  $< -o $@
 
-pyobj: cytnx.o 
-	$(CC) -L. $< -shared -o cytnx/cytnx$(shell python3-config --extension-suffix) $(LDFLAGS) -lcytnx
+#pyobj: cytnx.o 
+#	$(CC) -L. $< -shared -o cytnx/cytnx$(shell python3-config --extension-suffix) $(LDFLAGS) -lcytnx
 
 
 
