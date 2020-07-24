@@ -215,6 +215,10 @@
 
             If USE_CUDA=1, the code will compile with GPU support.
 
+        * -DUSE_OMP (default = on)
+
+            if USE_OMP=1, the code compiles with openmp accleration. 
+
         * -DUSE_MKL (default = off) [Recommend set it =on]
 
             If USE_MKL=off, the code will compile with the auto found blas/lapack vendors usually with blas_int=32bits. 
@@ -325,6 +329,7 @@
     Yen-Hsin Wu (NTU, Taiwan): Network optimization
     Yu-Hsueh Chen (NTU, Taiwan): example, and testing
     Po-Kwan Wu (OSU): Icon optimization    
+    Wen-Han Kao (UMN, USA) : testing of conda install 
 
 ## Refereces:
 

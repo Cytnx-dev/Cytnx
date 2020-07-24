@@ -101,6 +101,13 @@
     sudo apt-get install libboost-all-dev libopenblas-dev liblapack-dev liblapacke-dev cmake make curl g++ libomp-dev 
 
 
+## MacOS
+    1. brew install boost openblas lapack
+    2. install anaconda, and conda install pybind11, numpy
+    3. install intel mkl 
+
+    For MacOS, there is no lapacke, so please use intel mkl instead. 
+
 ## Install 
     1.) create a build folder, and cd to the folder
         $mkdir build
@@ -119,6 +126,10 @@
         * -DUSE_CUDA (default = off)
 
             If USE_CUDA=1, the code will compile with GPU support.
+
+        * -DUSE_OMP (default = on)
+
+            if USE_OMP=1, the code compiles with openmp accleration. 
 
         * -DUSE_MKL (default = off) [Recommend set it =on]
 
