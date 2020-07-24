@@ -271,6 +271,7 @@ namespace cytnx{
         protected:
         public:
             Tensor _block;
+            std::vector<Tensor> _interface_block; // this is serves as interface for get_blocks_();
             DenseUniTensor* clone_meta() const{
                 DenseUniTensor* tmp = new DenseUniTensor();
                 tmp->_bonds = vec_clone(this->_bonds);
@@ -367,15 +368,12 @@ namespace cytnx{
                 return out; // this will not share memory!!
             }
             const std::vector<Tensor>& get_blocks_() const {
-                std::vector<Tensor> out;
-                //out.push_back(this->_block);
                 cytnx_error_msg(true,"[ERROR][DenseUniTensor] cannot use get_blocks_(), use get_block_() instead!%s","\n");
-                return out; // this will not share memory!!
+                return this->_interface_block; // this will not share memory!!
             }
             std::vector<Tensor>& get_blocks_(){
-                std::vector<Tensor> out;
                 cytnx_error_msg(true,"[ERROR][DenseUniTensor] cannot use get_blocks_(), use get_block_() instead!%s","\n");
-                return out; // this will not share memory!!
+                return this->_interface_block; // this will not share memory!!
             }
 
             void put_block(const Tensor &in, const cytnx_uint64 &idx=0){

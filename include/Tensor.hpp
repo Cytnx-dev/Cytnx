@@ -296,7 +296,7 @@ namespace cytnx{
                 }
         
                 template<class T>
-                Tensor& operator+=(const T &rc){
+                Tensor operator+=(const T &rc){
                     Tensor self;
                     self._impl = _insimpl->get(_accs);
                     self += rc;
@@ -305,7 +305,7 @@ namespace cytnx{
                     return self;
                 }
                 template<class T>
-                Tensor& operator-=(const T &rc){
+                Tensor operator-=(const T &rc){
                     Tensor self;
                     self._impl = _insimpl->get(_accs);
                     self -= rc;
@@ -314,7 +314,7 @@ namespace cytnx{
                     return self;
                 }
                 template<class T>
-                Tensor& operator/=(const T &rc){
+                Tensor operator/=(const T &rc){
                     Tensor self;
                     self._impl = _insimpl->get(_accs);
                     self /= rc;
@@ -323,7 +323,7 @@ namespace cytnx{
                     return self;
                 }
                 template<class T>
-                Tensor& operator*=(const T &rc){
+                Tensor operator*=(const T &rc){
                     Tensor self;
                     self._impl = _insimpl->get(_accs);
                     self *= rc;

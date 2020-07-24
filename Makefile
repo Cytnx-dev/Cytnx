@@ -37,10 +37,10 @@ else
 endif
 
 ifeq ($(MKL_Enable),1)
-  CCFLAGS += -std=c++11 -O3 -Wformat=0 -m64 -fPIC -DUNI_MKL -w -Wno-c++11-narrowing -DMKL_ILP64
+  CCFLAGS += -std=c++11 -g -Wformat=0 -m64 -fPIC -DUNI_MKL -w -Wno-c++11-narrowing -DMKL_ILP64
   LDFLAGS += $(DOCKER_MKL) -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -ldl -lm   
 else
-  CCFLAGS += -std=c++11 -O3 -Wformat=0 -fPIC -w -Wno-c++11-narrowing 
+  CCFLAGS += -std=c++11 -g -Wformat=0 -fPIC -w -Wno-c++11-narrowing 
   LDFLAGS +=  -llapacke -lblas -lstdc++  
 endif
 

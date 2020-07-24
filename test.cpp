@@ -38,6 +38,10 @@ class MyOp: public LinOp{
  
 int main(int argc, char *argv[]){
 
+    auto At = cytnx::zeros(24).reshape(2,3,4);
+    cout << At << endl;
+
+    return 0;
     vector<double> XvA(4,6);
     
     auto XA = cytnx::Storage::from_vector(XvA);
