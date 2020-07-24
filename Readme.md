@@ -24,7 +24,7 @@
     3. [Enhance] at/reshape/permute in Tensor can now give args without braket{} as in python.
     4. [Enhance] Storage.Load to static, so it can match Tensor
     5. [Major] Remove cytnx_extension class, rename CyTensor->UniTensor 
-    6. Fix small bug in return ref of Tproxy, UniTensor get_block_, get_blocks_()
+    6. Fix small bug in return ref of Tproxy 
     
     v0.5.4a
     1. Add linalg::Det 

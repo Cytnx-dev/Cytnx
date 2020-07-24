@@ -458,8 +458,9 @@ namespace cytnx{
                 return *this;
             }
 
-            Tensor& operator=(const Tproxy &rhsp){ // this is used to handle proxy assignment
+            void operator=(const Tproxy &rhsp){ // this is used to handle proxy assignment
                 this->_impl = rhsp._insimpl->get(rhsp._accs);
+                
             }
             ///@endcond
 
