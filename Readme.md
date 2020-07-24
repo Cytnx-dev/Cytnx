@@ -25,7 +25,8 @@
     4. [Enhance] Storage.Load to static, so it can match Tensor
     5. [Major] Remove cytnx_extension class, rename CyTensor->UniTensor 
     6. Fix small bug in return ref of Tproxy 
-    
+    7. Fix bug in buffer size allocation in Svd_internal 
+   
     v0.5.4a
     1. Add linalg::Det 
     2. Add Type.is_float
@@ -372,7 +373,8 @@
     Yen-Hsin Wu (NTU, Taiwan): Network optimization
     Yu-Hsueh Chen (NTU, Taiwan): example, and testing
     Po-Kwan Wu (OSU): Icon optimization    
-    
+    Wen-Han Kao (UMN, USA) : testing of conda install 
+
 ## References
 
     * example/DMRG:
@@ -382,6 +384,5 @@
     KHW whould like to thanks for the following contributor(s) for invaluable contribution to the library
 
     * PoChung Chen  (NCHU, Taiwan) : testing, and bug reporting
-    * Wen-Han Kao (UMN, USA) : testing of conda install 
 
 

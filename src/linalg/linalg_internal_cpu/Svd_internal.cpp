@@ -21,7 +21,7 @@ namespace cytnx{
             lapack_int min = std::min(M, N);
             lapack_int ldA = N, ldu = N, ldvT = min;
             lapack_int info;
-            double *superb = (double*)malloc(sizeof(double)*(min-2));
+            double *superb = (double*)malloc(sizeof(double)*(min-1));
 
             info = LAPACKE_zgesvd(LAPACK_COL_MAJOR, jobv, jobu, N, M, (lapack_complex_double*)Mij, ldA, (cytnx_double*)S->Mem, (lapack_complex_double*)vT->Mem, ldu, (lapack_complex_double*)U->Mem, ldvT, superb);
 
@@ -46,7 +46,7 @@ namespace cytnx{
             lapack_int min = std::min(M, N);
             lapack_int ldA = N, ldu = N, ldvT = min;
             lapack_int info;
-            float *superb = (float*)malloc(sizeof(float)*(min-2));
+            float *superb = (float*)malloc(sizeof(float)*(min-1));
 
             info = LAPACKE_cgesvd(LAPACK_COL_MAJOR, jobv, jobu, N, M, (lapack_complex_float*)Mij, ldA, (cytnx_float*)S->Mem, (lapack_complex_float*)vT->Mem, ldu, (lapack_complex_float*)U->Mem, ldvT, superb);
 
@@ -73,7 +73,7 @@ namespace cytnx{
             lapack_int ldA = N, ldu = N, ldvT = min;
             lapack_int info;
             
-            double *superb = (double*)malloc(sizeof(double)*(min-2));
+            double *superb = (double*)malloc(sizeof(double)*(min-1));
             info = LAPACKE_dgesvd(LAPACK_COL_MAJOR, jobv, jobu, N, M, Mij, ldA, (cytnx_double*)S->Mem, (cytnx_double*)vT->Mem, ldu, (cytnx_double*)U->Mem, ldvT, superb);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dgesvd': Lapack INFO = ", info);
@@ -97,7 +97,7 @@ namespace cytnx{
             lapack_int ldA = N, ldu = N, ldvT = min;
             lapack_int info;
             
-            float *superb = (float*)malloc(sizeof(float)*(min-2));
+            float *superb = (float*)malloc(sizeof(float)*(min-1));
             info = LAPACKE_sgesvd(LAPACK_COL_MAJOR, jobv, jobu, N, M, Mij, ldA, (cytnx_float*)S->Mem, (cytnx_float*)vT->Mem, ldu, (cytnx_float*)U->Mem, ldvT, superb);
 
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'sgesvd': Lapack INFO = ", info);
