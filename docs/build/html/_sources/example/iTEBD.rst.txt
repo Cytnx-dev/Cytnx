@@ -30,15 +30,15 @@ Let's first create this two-site  MPS wave function (here, we set virtual bond d
     from cytnx import *
 
     chi = 10
-    A = CyTensor([Bond(chi),Bond(2),Bond(chi)],rowrank=1,labels=[-1,0,-2])
-    B = CyTensor(A.bonds(),rowrank=1,labels=[-3,1,-4])
+    A = UniTensor([Bond(chi),Bond(2),Bond(chi)],rowrank=1,labels=[-1,0,-2])
+    B = UniTensor(A.bonds(),rowrank=1,labels=[-3,1,-4])
     random.Make_normal(B.get_block_(),0,0.2)
     random.Make_normal(A.get_block_(),0,0.2)
     A.print_diagram()
     B.print_diagram()
 
-    la = CyTensor([Bond(chi),Bond(chi)],rowrank=1,labels=[-2,-3],is_diag=True)
-    lb = CyTensor([Bond(chi),Bond(chi)],rowrank=1,labels=[-4,-5],is_diag=True)
+    la = UniTensor([Bond(chi),Bond(chi)],rowrank=1,labels=[-2,-3],is_diag=True)
+    lb = UniTensor([Bond(chi),Bond(chi)],rowrank=1,labels=[-4,-5],is_diag=True)
     la.put_block(ones(chi))
     lb.put_block(ones(chi))
 
@@ -55,15 +55,15 @@ Let's first create this two-site  MPS wave function (here, we set virtual bond d
     using namespace cytnx;
 
     unsigned int chi = 20;
-    auto A = CyTensor({Bond(chi),Bond(2),Bond(chi)},{-1,0,-2},1);
-    auto B = CyTensor(A.bonds(),{-3,1,-4},1);
+    auto A = UniTensor({Bond(chi),Bond(2),Bond(chi)},{-1,0,-2},1);
+    auto B = UniTensor(A.bonds(),{-3,1,-4},1);
     random::Make_normal(B.get_block_(),0,0.2);
     random::Make_normal(A.get_block_(),0,0.2);
     A.print_diagram();
     B.print_diagram();
 
-    auto la = CyTensor({Bond(chi),Bond(chi)},{-2,-3},1,Type.Double,Device.cpu,true);
-    auto lb = CyTensor({Bond(chi),Bond(chi)},{-4,-5},1,Type.Double,Device.cpu,true);
+    auto la = UniTensor({Bond(chi),Bond(chi)},{-2,-3},1,Type.Double,Device.cpu,true);
+    auto lb = UniTensor({Bond(chi),Bond(chi)},{-4,-5},1,Type.Double,Device.cpu,true);
     la.put_block(ones(chi));
     lb.put_block(ones(chi));
 
@@ -126,7 +126,7 @@ Output >>
 
 
 
-Here, we use **random::Make_normal** to initialize the elements of CyTensor *A* and *B* with normal distribution as initial MPS wavefuncion. 
+Here, we use **random::Make_normal** to initialize the elements of UniTensor *A* and *B* with normal distribution as initial MPS wavefuncion. 
 The *la*, *lb* are the weight matrix (schmit coefficients), hence only diagonal elements contains non-zero values. Thus, we set **is_diag=True** to only store diagonal entries. 
 We then initialize the elements to be all one for this weight matrices. 
 
@@ -183,7 +183,7 @@ Here, let's construct this imaginary time evolution operator with parameter :mat
     ## Build Evolution Operator
     eH = linalg.ExpH(H,-dt) ## or equivantly ExpH(-dt*H)
     eH.reshape_(2,2,2,2)
-    U = CyTensor(eH,2)
+    U = UniTensor(eH,2)
     U.print_diagram()
 
 
@@ -212,10 +212,10 @@ Here, let's construct this imaginary time evolution operator with parameter :mat
 
 
     // Build Evolution Operator
-    // [Note] eH is cytnx.Tensor and U is CyTensor.
+    // [Note] eH is cytnx.Tensor and U is UniTensor.
     auto eH = linalg::ExpH(H,-dt); //or equivantly ExpH(-dt*H)
     eH.reshape_(2,2,2,2);
-    auto U = CyTensor(eH,2);
+    auto U = UniTensor(eH,2);
     U.print_diagram();
 
 Output>>
@@ -266,8 +266,8 @@ Output>>
 
 .. Note::
 
-    1. Since :math:`U_a` and :math:`U_b` have the same content(matrix elements) but acting on different sites, we only need to define a single CyTensor. 
-    2. Here as a simple example, we directly convert a **cytnx.Tensor** to **cyx.CyTensor**, which we don't impose any bra-ket constrain (direction of bonds). In general, it is also possible to give bond direction (which we refering to *tagged*) that constrain the bonds to be more physical. See Github example/iTEBD/iTEBD_tag.py for demonstration. 
+    1. Since :math:`U_a` and :math:`U_b` have the same content(matrix elements) but acting on different sites, we only need to define a single UniTensor. 
+    2. Here as a simple example, we directly convert a **cytnx.Tensor** to **cytnx.UniTensor**, which we don't impose any bra-ket constrain (direction of bonds). In general, it is also possible to give bond direction (which we refering to *tagged*) that constrain the bonds to be more physical. See Github example/iTEBD/iTEBD_tag.py for demonstration. 
     3. In general, the accurate ground state can be acquired with a higher order Trotter-Suzuki expansion, and with decreasing :math:`\delta \tau` along the iteraction. (See :cite:`itebd-vidal` for further details), Here, for demonstration, we use fixed value of :math:`\delta \tau`. 
     
 .. Tip::
