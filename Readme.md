@@ -10,15 +10,16 @@
 [![Build Status](https://travis-ci.com/kaihsin/Cytnx_build.svg?branch=master)](https://travis-ci.com/kaihsin/Cytnx_build)
 
 ## News
-    [v0.5.4a] 
-    1. [Important] Fix Subtraction real - complex bug.
+    [v0.5.5a] 
 
  
 ## Stable Version:
-[v0.5.4a-rev1](https://github.com/kaihsin/Cytnx/tree/v0.5.4a_rev1)
+[v0.5.5a](https://github.com/kaihsin/Cytnx/tree/v0.5.5a)
 
 ## Current dev Version:
-    v0.5.5
+    v0.5.6
+
+    v0.5.5a
     1. [Feature] Tensor can now using operator() to access elements just like python. 
     2. [Enhance] Access Tensor can now exactly the same using slice string as in python.
     3. [Enhance] at/reshape/permute in Tensor can now give args without braket{} as in python.
@@ -27,17 +28,6 @@
     6. Fix small bug in return ref of Tproxy 
     7. Fix bug in buffer size allocation in Svd_internal 
    
-    v0.5.4a
-    1. Add linalg::Det 
-    2. Add Type.is_float
-    3. [Feature] Add LinOp class for custom linear operators used in iterative solver
-    4. enhance arithmetic with scalar Tensors
-    5. Add Tensor append with tensor. 
-    6. [Feature] Add iterative solver Lanczos_ER
-    7. [Enhance] Tproxy +=,-=,/=,*= on C++ side
-    8. Add ED (using Lanczos) example.
-    9. Change backend to mkl_ilp64, w/o mkl: OpenBLAS
-    10. Change Rowrank->rowrank for CyTensor. 
 
 
 ## API Documentation:

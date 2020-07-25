@@ -1,4 +1,19 @@
 
+v0.5.4a-build1
+1. [Important] Fix Subtraction real - complex bug.
+
+v0.5.4a
+1. Add linalg::Det 
+2. Add Type.is_float
+3. [Feature] Add LinOp class for custom linear operators used in iterative solver
+4. enhance arithmetic with scalar Tensors
+5. Add Tensor append with tensor. 
+6. [Feature] Add iterative solver Lanczos_ER
+7. [Enhance] Tproxy +=,-=,/=,*= on C++ side
+8. Add ED (using Lanczos) example.
+9. Change backend to mkl_ilp64, w/o mkl: OpenBLAS
+10. Change Rowrank->rowrank for CyTensor. 
+
 v0.5.3a
 1. Add xlinalg.QR
 2. enhance hosvd.

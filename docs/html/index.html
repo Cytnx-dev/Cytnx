@@ -71,30 +71,16 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><h2>Stable Version:</h2>
-<p><a href="https://github.com/kaihsin/Cytnx/tree/v0.5.4a_rev1">v0.5.4 pre-release</a></p>
+<p><a href="https://github.com/kaihsin/Cytnx/tree/v0.5.5a">v0.5.5 pre-release</a></p>
 <h2>News</h2>
-<ol type="1">
-<li>[Important] Fix Subtraction real - complex bug.</li>
-</ol>
 <h2>Current dev Version:</h2>
-<p>v0.5.5</p><ol type="1">
+<p>v0.5.6</p>
+<p>v0.5.5a</p><ol type="1">
 <li>[Feature] Tensor can now using operator() to access elements just like python.</li>
 <li>[Enhance] Access Tensor can now exactly the same using slice string as in python.</li>
 <li>[Enhance] at/reshape/permute in Tensor can now give args without braket{} as in python.</li>
 <li>[Enhance] Storage.Load to static, so it can match Tensor</li>
 <li>[Major] Remove cytnx_extension class, rename CyTensor-&gt;UniTensor</li>
-</ol>
-<p>v0.5.4a</p><ol type="1">
-<li>Add linalg::Det</li>
-<li>Add Type.is_float</li>
-<li>[Feature] Add LinOp class for custom linear operators used in iterative solver</li>
-<li>enhance arithmetic with scalar Tensors</li>
-<li>Add Tensor append with tensor.</li>
-<li>[Feature] Add iterative solver Lanczos_ER</li>
-<li>[Enhance] Tproxy +=,-=,/=,*= on C++ side</li>
-<li>Add ED (using Lanczos) example.</li>
-<li>Change backend to mkl_ilp64, w/o mkl: OpenBLAS</li>
-<li>Change Rowrank-&gt;rowrank for CyTensor.</li>
 </ol>
 <h2>Feature:</h2>
 <h3>Python x C++</h3>
@@ -294,6 +280,10 @@ $(function() {
 
     If USE_CUDA=1, the code will compile with GPU support.
 
+* -DUSE_OMP (default = on)
+
+    if USE_OMP=1, the code compiles with openmp accleration. 
+
 * -DUSE_MKL (default = off) [Recommend set it =on]
 
     If USE_MKL=off, the code will compile with the auto found blas/lapack vendors usually with blas_int=32bits. 
@@ -332,6 +322,7 @@ See test.py for using python
 Yen-Hsin Wu (NTU, Taiwan): Network optimization
 Yu-Hsueh Chen (NTU, Taiwan): example, and testing
 Po-Kwan Wu (OSU): Icon optimization    
+Wen-Han Kao (UMN, USA) : testing of conda install 
 </pre><h2>Refereces:</h2>
 <pre class="fragment">* example/DMRG:
     https://www.tensors.net/dmrg</pre> </div></div><!-- contents -->
