@@ -54,7 +54,7 @@ class CMakeBuild(build_ext):
 
 setup(
     name='cytnx',
-    version='0.5.4',
+    version='0.5.5',
     maintainer='Kai-Hsin Wu, Yen-Hsin Wu',
     maintainer_email="kaihsinwu@gmail.com",
     description='Project Cytnx',
