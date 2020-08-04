@@ -52,6 +52,38 @@ class CMakeBuild(build_ext):
         subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
         subprocess.check_call(['cmake', '--build', '.'] + build_args, cwd=self.build_temp)
 
+        ""
+        build_temp_dir = os.path.abspath(self.build_temp)
+        #print(">>>build_temp_dir",build_temp_dir)
+
+        # now, construct the Cpp:
+        # 1. lib file (cpp)
+        Cpplib_dir = os.path.join(extdir,"lib")
+        if not os.path.exists(Cpplib_dir):
+            os.mkdir(Cpplib_dir)
+
+        # copy libcytnx.a:
+        for fn in os.listdir(build_temp_dir):
+            print(fn)
+            if 'libcytnx' in fn:
+                self.copy_file(os.path.join(build_temp_dir,fn),Cpplib_dir)
+                print("[Relocate Cpp]>> find c++ dylib: ",fn)
+                break
+
+        # 2. header file (cpp)
+        Cppinc_dir = os.path.join(extdir,"include")
+        if not os.path.exists(Cppinc_dir):
+            os.mkdir(Cppinc_dir)
+
+        self.copy_tree(os.path.join(ext.sourcedir,"include"),Cppinc_dir)
+        print("[Relocate Cpp]>> find c++ header:")
+        #print(">>>sourcedir",ext.sourcedir)
+
+        #print(">>>!!!")
+        ""
+
+
+
 setup(
     name='cytnx',
     version='0.5.5',
