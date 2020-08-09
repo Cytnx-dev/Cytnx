@@ -40,6 +40,7 @@ target_sources_local(cytnx
     UniTensor.cpp
     DenseUniTensor.cpp
     SparseUniTensor.cpp
+    AnyonUniTensor.cpp
     Symmetry.cpp
     contraction_tree.cpp
     search_tree.cpp

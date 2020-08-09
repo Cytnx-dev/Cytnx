@@ -29,6 +29,7 @@ namespace cytnx{
                 Void=-99,
                 Dense=0,
                 Sparse=1,
+                Anyon=2
             };
             std::string getname(const int &ut_type);
     };
@@ -38,6 +39,7 @@ namespace cytnx{
     /// @cond
     //class DenseUniTensor;
     //class SparseUniTensor; 
+    //class AnyonUniTensor; 
     class UniTensor_base: public intrusive_ptr_base<UniTensor_base>{
 
         public:
@@ -976,6 +978,290 @@ namespace cytnx{
 
     };
     /// @endcond
+
+
+    /// @cond
+    class AnyonUniTensor: public UniTensor_base{
+        protected:
+        
+        public:
+
+            cytnx_uint64 _inner_rowrank;
+            std::vector<std::vector<cytnx_int64> > _blockqnums;
+            std::vector<cytnx_uint64> _mapper;
+            std::vector<cytnx_uint64> _inv_mapper;
+            std::vector<std::vector<cytnx_uint64> > _inner2outer_row;
+            std::vector<std::vector<cytnx_uint64> > _inner2outer_col;
+            std::map<cytnx_uint64,std::pair<cytnx_uint64,cytnx_uint64> > _outer2inner_row;
+            std::map<cytnx_uint64, std::pair<cytnx_uint64,cytnx_uint64> > _outer2inner_col;
+
+            std::vector<Tensor> _blocks;
+
+            bool _contiguous;
+            void set_meta(AnyonUniTensor *tmp, const bool &inner, const bool &outer)const{
+                //outer meta
+                if(outer){
+                    tmp->_bonds = vec_clone(this->_bonds);
+                    tmp->_labels = this->_labels;
+                    tmp->_is_braket_form = this->_is_braket_form;
+                    tmp->_rowrank = this->_rowrank;
+                    tmp->_name = this->_name;
+                }
+                //comm meta
+                tmp->_mapper = this->_mapper;
+                tmp->_inv_mapper = this->_inv_mapper;
+                tmp->_contiguous = this->_contiguous;
+
+                //inner meta    
+                if(inner){            
+                    tmp->_inner_rowrank = this->_inner_rowrank;
+                    tmp->_inner2outer_row = this->_inner2outer_row;
+                    tmp->_inner2outer_col = this->_inner2outer_col;
+                    tmp->_outer2inner_row = this->_outer2inner_row;
+                    tmp->_outer2inner_col = this->_outer2inner_col;
+                    tmp->_blockqnums = this->_blockqnums;
+                }
+
+            }
+            AnyonUniTensor* clone_meta(const bool &inner, const bool &outer) const{
+                AnyonUniTensor* tmp = new AnyonUniTensor();
+                this->set_meta(tmp,inner,outer);
+                return tmp;
+            };
+
+
+
+            //===================================
+            friend class UniTensor; // allow wrapper to access the private elems
+            AnyonUniTensor(){
+                this->uten_type_id = UTenType.Anyon;
+                this->_is_tag = true; 
+            };
+
+            // virtual functions
+            void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
+            void Init_by_Tensor(const Tensor& in_tensor, const cytnx_uint64 &rowrank, const bool &is_diag=false){
+                cytnx_error_msg(true,"[ERROR][AnyonUniTensor] cannot use Init_by_tensor() on a AnyonUniTensor.%s","\n");
+            }
+            std::vector<cytnx_uint64> shape() const{ 
+                cytnx_error_msg(true,"[ERROR][AnyonUniTensor] Developing.%s","\n");
+            }
+            bool is_blockform() const{return true;}
+            void to_(const int &device){
+                for(cytnx_uint64 i=0;i<this->_blocks.size();i++){
+                    this->_blocks[i].to_(device);
+                }
+            };
+            boost::intrusive_ptr<UniTensor_base> to(const int &device){
+                if(this->device() == device){
+                    return this;
+                }else{
+                    boost::intrusive_ptr<UniTensor_base> out = this->clone();
+                    out->to_(device);
+                    return out;
+                }
+            };
+            boost::intrusive_ptr<UniTensor_base> clone() const{
+                AnyonUniTensor* tmp = this->clone_meta(true,true);
+                tmp->_blocks = vec_clone(this->_blocks);
+                boost::intrusive_ptr<UniTensor_base> out(tmp);
+                return out;
+            };
+            bool     is_contiguous() const{
+                return this->_contiguous;
+            };
+            void set_rowrank(const cytnx_uint64 &new_rowrank){
+                cytnx_error_msg(true,"[ERROR][AnyonUniTensor] Developing.%s","\n");
+            }
+
+            unsigned int  dtype() const{
+                #ifdef UNI_DEBUG
+                cytnx_error_msg(this->_blocks.size()==0,"[ERROR][internal] empty blocks for blockform.%s","\n");
+                #endif
+                return this->_blocks[0].dtype();
+            };
+            int          device() const{
+                #ifdef UNI_DEBUG
+                cytnx_error_msg(this->_blocks.size()==0,"[ERROR][internal] empty blocks for blockform.%s","\n");
+                #endif
+                return this->_blocks[0].device();
+            };
+            std::string      dtype_str() const{
+                #ifdef UNI_DEBUG
+                cytnx_error_msg(this->_blocks.size()==0,"[ERROR][internal] empty blocks for blockform.%s","\n");
+                #endif
+                return this->_blocks[0].dtype_str();
+            };
+            std::string     device_str() const{
+                #ifdef UNI_DEBUG
+                cytnx_error_msg(this->_blocks.size()==0,"[ERROR][internal] empty blocks for blockform.%s","\n");
+                #endif
+                return this->_blocks[0].device_str();
+            };
+            void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1,const bool &by_label=false);
+            boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank=-1, const bool &by_label=false){
+                cytnx_error_msg(true,"[ERROR][AnyonUniTensor] Developing.%s","\n");
+            };
+            boost::intrusive_ptr<UniTensor_base> contiguous();
+            boost::intrusive_ptr<UniTensor_base> contiguous_(){
+                cytnx_error_msg(true,"[ERROR][AnyonUniTensor] Developing.%s","\n");
+            }
+            void print_diagram(const bool &bond_info=false);
+
+            Tensor get_block(const cytnx_uint64 &idx=0) const{
+                cytnx_error_msg(true,"[ERROR][AnyonUniTensor] Developing.%s","\n");
+            };
+
+            Tensor get_block(const std::vector<cytnx_int64> &qnum) const{
+                cytnx_error_msg(true,"[ERROR][AnyonUniTensor] Developing.%s","\n");
+                return Tensor();
+            };
+
+            // return a share view of block, this only work for symm tensor in contiguous form.
+            Tensor& get_block_(const cytnx_uint64 &idx=0){
+                cytnx_error_msg(true,"[ERROR][AnyonUniTensor] Developing.%s","\n");
+            }
+            const Tensor& get_block_(const cytnx_uint64 &idx=0) const{
+                cytnx_error_msg(true,"[ERROR][AnyonUniTensor] Developing.%s","\n");
+            }
+
+            Tensor& get_block_(const std::vector<cytnx_int64> &qnum){
+                cytnx_error_msg(true,"[ERROR][AnyonUniTensor] Developing.%s","\n");
+            }
+            const Tensor& get_block_(const std::vector<cytnx_int64> &qnum) const{
+                cytnx_error_msg(true,"[ERROR][AnyonUniTensor] Developing.%s","\n");
+            }
+
+            std::vector<Tensor> get_blocks() const {
+                cytnx_error_msg(true,"[ERROR][AnyonUniTensor] Developing.%s","\n");
+            };
+
+            const std::vector<Tensor>& get_blocks_() const {
+               cytnx_error_msg(true,"[ERROR][AnyonUniTensor] Developing.%s","\n");
+            };
+            std::vector<Tensor>& get_blocks_(){
+                cytnx_error_msg(true,"[ERROR][AnyonUniTensor] Developing.%s","\n");
+            };
+
+
+            void put_block_(Tensor &in,const cytnx_uint64 &idx=0){
+                cytnx_error_msg(true,"[ERROR][AnyonUniTensor] Developing.%s","\n");
+            };
+            void put_block(const Tensor &in,const cytnx_uint64 &idx=0){
+                cytnx_error_msg(true,"[ERROR][AnyonUniTensor] Developing.%s","\n");
+            };
+            void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum){
+                cytnx_error_msg(true,"[ERROR][AnyonUniTensor] Developing.%s","\n");
+            };
+            void put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum){
+                cytnx_error_msg(true,"[ERROR][AnyonUniTensor] Developing.%s","\n");
+            };
+
+            // this will only work on non-symm tensor (DenseUniTensor)
+            boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors){
+                cytnx_error_msg(true,"[ERROR][AnyonUniTensor][get] cannot use get on a UniTensor with Symmetry.\n suggestion: try get_block()/get_blocks() first.%s","\n");
+                return nullptr;  
+            }
+            // this will only work on non-symm tensor (DenseUniTensor)
+            void set(const std::vector<Accessor> &accessors, const Tensor &rhs){
+                cytnx_error_msg(true,"[ERROR][AnyonUniTensor][set] cannot use set on a UniTensor with Symmetry.\n suggestion: try get_block()/get_blocks() first.%s","\n");
+            }
+            void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank=0){
+                cytnx_error_msg(true,"[ERROR] cannot reshape a UniTensor with symmetry.%s","\n");
+            }
+            boost::intrusive_ptr<UniTensor_base> reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank=0){
+                cytnx_error_msg(true,"[ERROR] cannot reshape a UniTensor with symmetry.%s","\n");
+                return nullptr;
+            }
+            boost::intrusive_ptr<UniTensor_base> to_dense(){
+                cytnx_error_msg(true,"[ERROR] cannot to_dense a UniTensor with symmetry.%s","\n");
+                return nullptr;
+            }
+            void to_dense_(){
+                cytnx_error_msg(true,"[ERROR] cannot to_dense_ a UniTensor with symmetry.%s","\n");
+            }
+            void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back=true, const bool &by_label=true){
+                cytnx_error_msg(true,"[Developing]%s","\n");
+            };
+            boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs);
+            std::vector<Bond> getTotalQnums(const bool &physical=false);
+            ~AnyonUniTensor(){};
+
+
+            boost::intrusive_ptr<UniTensor_base> Conj(){
+                cytnx_error_msg(true,"[Developing]%s","\n");
+            }
+
+            void Conj_(){
+                cytnx_error_msg(true,"[Developing]%s","\n");
+            };
+            boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false) const{
+                cytnx_error_msg(true,"[Developing]%s","\n");
+                return nullptr;
+            };
+            void Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false){
+                cytnx_error_msg(true,"[Developing]%s","\n");
+                //return nullptr;
+            }
+
+            void Transpose_();
+            boost::intrusive_ptr<UniTensor_base> Transpose(){
+                cytnx_error_msg(true,"[Developing]%s","\n");
+            }
+
+            boost::intrusive_ptr<UniTensor_base> Dagger(){
+                cytnx_error_msg(true,"[Developing]%s","\n");
+            }
+            void Dagger_(){
+                cytnx_error_msg(true,"[Developing]%s","\n"); 
+            }
+
+            void tag(){
+                // no-use!
+            }
+
+            void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim, const bool &by_label=false);
+
+            const cytnx_complex128& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux) const;
+            const cytnx_complex64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux) const;
+            const cytnx_double& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux) const;
+            const cytnx_float& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux) const;
+            const cytnx_uint64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint64 &aux) const;
+            const cytnx_int64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int64 &aux) const;
+            const cytnx_uint32& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint32 &aux) const;
+            const cytnx_int32& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int32 &aux) const;
+            const cytnx_uint16& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux) const;
+            const cytnx_int16& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux) const;
+            
+            cytnx_complex128& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux);
+            cytnx_complex64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux);
+            cytnx_double& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux);
+            cytnx_float& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux);
+            cytnx_uint64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint64 &aux);
+            cytnx_int64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int64 &aux);
+            cytnx_uint32& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint32 &aux);
+            cytnx_int32& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int32 &aux);
+            cytnx_uint16& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux);
+            cytnx_int16& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
+
+            bool elem_exists(const std::vector<cytnx_uint64> &locator) const;
+            void _save_dispatch(std::fstream &f) const;
+            void _load_dispatch(std::fstream &f);
+            // end virtual func
+
+
+    };
+    /// @endcond
+
+
+
+
+
+
+
+
+
+
 
     //======================================================================
 
