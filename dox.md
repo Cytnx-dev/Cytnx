@@ -13,6 +13,8 @@
     3. Add Qdr for UniTensor and Tensor.
     4. Fix minor bug in internal, Type.is_float for Uint32.
     5. [Enhance] accessor can now specify with vector. 
+    6. [Enhance] Tproxy.item()
+    7. Fix inplace reshape_() in new way templ. does not perform inplace operation
 
     v0.5.5a
     1. [Feature] Tensor can now using operator() to access elements just like python. 

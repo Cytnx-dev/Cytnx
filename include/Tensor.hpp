@@ -331,6 +331,12 @@ namespace cytnx{
                     self._impl = this->_insimpl;
                     return self;
                 }
+                template<class T>
+                T item() const{
+                    Tensor out;
+                    out._impl = _insimpl->get(_accs);
+                    return out.item<T>(); 
+                }
                 // when used to get elems:
                 operator Tensor () const{
                     Tensor out;
@@ -731,7 +737,8 @@ namespace cytnx{
             template<class ...Ts>
             void reshape_(const cytnx_int64 &e1, const Ts...elems){
                 std::vector<cytnx_int64> shape = dynamic_arg_int64_resolver(e1,elems...);
-                this->_impl->reshape(shape);
+                //std::cout << shape << std::endl;
+                this->_impl->reshape_(shape);
             }
             /// @endcond
 
@@ -857,6 +864,14 @@ namespace cytnx{
                 cytnx_error_msg(this->_impl->storage().size()!=1,"[ERROR][Tensor.item<T>]%s","item can only be called from a Tensor with only one element\n");
                 return this->_impl->storage().at<T>(0);
             }
+
+            ///@cond
+            template<class T>
+            const T& item() const{
+                cytnx_error_msg(this->_impl->storage().size()!=1,"[ERROR][Tensor.item<T>]%s","item can only be called from a Tensor with only one element\n");
+                return this->_impl->storage().at<T>(0);
+            }
+            ///@endcond
 
             /**
             @brief get elements using Accessor (C++ API) / slices (python API)

@@ -55,6 +55,8 @@ int main(int argc, char *argv[]){
     //Tensor rar = qr[{ac::all(),ac::all()}];
     cout << rar;
 
+    cout << qr(0,0).item<double>() << endl;
+
 
     return 0;
     auto At = cytnx::zeros(24).reshape(2,3,4);

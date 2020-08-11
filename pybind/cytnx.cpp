@@ -1902,6 +1902,12 @@ PYBIND11_MODULE(cytnx,m){
     m_linalg.def("Qr",[](const cytnx::Tensor &Tin, const bool &is_tau){
                             return cytnx::linalg::Qr(Tin,is_tau);
                         },py::arg("Tio"),py::arg("is_tau")=false);
+    m_linalg.def("Qdr",[](const cytnx::UniTensor &Tin, const bool &is_tau){
+                            return cytnx::linalg::Qdr(Tin,is_tau);
+                        },py::arg("Tio"),py::arg("is_tau")=false);
+    m_linalg.def("Qdr",[](const cytnx::Tensor &Tin, const bool &is_tau){
+                            return cytnx::linalg::Qdr(Tin,is_tau);
+                        },py::arg("Tio"),py::arg("is_tau")=false);
 
     m_linalg.def("InvM",&cytnx::linalg::InvM,py::arg("Tin"));
     m_linalg.def("InvM_",&cytnx::linalg::InvM_,py::arg("Tio"));
