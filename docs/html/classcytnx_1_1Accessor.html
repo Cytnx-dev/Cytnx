@@ -89,6 +89,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9f6fa9087f09756e020355a05196d384"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Accessor.html#a9f6fa9087f09756e020355a05196d384">Accessor</a> (const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;loc)</td></tr>
 <tr class="memdesc:a9f6fa9087f09756e020355a05196d384"><td class="mdescLeft">&#160;</td><td class="mdescRight">access the specific index at the assigned rank in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>.  <a href="#a9f6fa9087f09756e020355a05196d384">More...</a><br /></td></tr>
 <tr class="separator:a9f6fa9087f09756e020355a05196d384"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78c4b2a0565d79fb0852c785b937872c"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:a78c4b2a0565d79fb0852c785b937872c"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Accessor.html#a78c4b2a0565d79fb0852c785b937872c">Accessor</a> (const std::initializer_list&lt; T &gt; &amp;list)</td></tr>
+<tr class="separator:a78c4b2a0565d79fb0852c785b937872c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae83236323b25e5e3696f79ff5d764662"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:ae83236323b25e5e3696f79ff5d764662"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Accessor.html#ae83236323b25e5e3696f79ff5d764662">Accessor</a> (const std::vector&lt; T &gt; &amp;list)</td></tr>
+<tr class="separator:ae83236323b25e5e3696f79ff5d764662"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8777a35162dcf47f9992295b58735743"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Accessor.html#a8777a35162dcf47f9992295b58735743">type</a> () const</td></tr>
 <tr class="separator:a8777a35162dcf47f9992295b58735743"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -109,7 +115,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="textblock"><p>object that mimic the python slice to access elements in C++ [this is for c++ API only]. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a9f6fa9087f09756e020355a05196d384"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9f6fa9087f09756e020355a05196d384">&#9670;&nbsp;</a></span>Accessor()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f6fa9087f09756e020355a05196d384">&#9670;&nbsp;</a></span>Accessor() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -193,9 +199,62 @@ Shape : (3,2)
 
 
 
-</pre> <p>min :</p>
-<p>max :</p>
-<p>step: </p>
+</pre> 
+</div>
+</div>
+<a id="a78c4b2a0565d79fb0852c785b937872c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78c4b2a0565d79fb0852c785b937872c">&#9670;&nbsp;</a></span>Accessor() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cytnx::Accessor::Accessor </td>
+          <td>(</td>
+          <td class="paramtype">const std::initializer_list&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>list</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae83236323b25e5e3696f79ff5d764662"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae83236323b25e5e3696f79ff5d764662">&#9670;&nbsp;</a></span>Accessor() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cytnx::Accessor::Accessor </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>list</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>

@@ -71,6 +71,7 @@ namespace cytnx{
             bool is_unsigned(const unsigned int &type_id);
             bool is_complex(const unsigned int &type_id);
             bool is_float(const unsigned int &type_id);
+            bool is_int(const unsigned int &type_id);
     };
     /// @endcond
 

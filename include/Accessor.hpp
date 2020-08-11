@@ -3,10 +3,12 @@
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
+//#include "Tensor.hpp"
 #include <vector>
 #include <cstring>
 #include <string>
 #include <iostream>
+#include <initializer_list>
 namespace cytnx{
     /**
     * @brief object that mimic the python slice to access elements in C++ [this is for c++ API only]. 
@@ -19,7 +21,8 @@ namespace cytnx{
             ///@cond
             cytnx_int64 _min{}, _max{}, _step{};
             cytnx_int64 loc{};
-            
+            std::vector<cytnx_int64> idx_list;
+
             // if type is singl, _min/_max/_step     are not used
             // if type is all  , _min/_max/_step/loc are not used
             // if type is range, loc              are not used.
@@ -31,7 +34,9 @@ namespace cytnx{
                 All,
                 Range,
                 Tilend,
-                Step
+                Step,
+                Tn,
+                list
             };
 
             Accessor(): _type(Accessor::none){};
@@ -55,10 +60,34 @@ namespace cytnx{
             \verbinclude example/Accessor/example.py.out
             */
             explicit Accessor(const cytnx_int64 &loc);
+            //explicit Accessor(const Tensor &tn);// construct from Tensor, should be 1d with dtype integer.
 
+
+
+            template<class T>
+            explicit Accessor(const std::initializer_list<T> &list){
+                std::vector<T> tmp = list;
+                this->_type = this->list;
+                this->idx_list = std::vector<cytnx_int64>(tmp.begin(),tmp.end());
+                //std::cout << "VV" << this->idx_list.size() << std::endl;
+            };// construct from vector/list, should be 1d with dtype integer.
+
+            template<class T>
+            explicit Accessor(const std::vector<T> &list){
+                this->_type = this->list;
+                this->idx_list = std::vector<cytnx_int64>(list.begin(),list.end());
+            };// construct from vector/list, should be 1d with dtype integer.
+
+
+            
             ///@cond
+
+
             // all constr. ( use string to dispatch )            
             explicit Accessor(const std::string &str);
+
+            
+
 
             // range constr. 
             Accessor(const cytnx_int64 &min, const cytnx_int64 &max, const cytnx_int64 &step);

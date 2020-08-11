@@ -51,6 +51,11 @@ int main(int argc, char *argv[]){
     cout << linalg::Matmul(dd[0],dd[1]);
 
 
+    Tensor rar = qr(":",ac({0,0,1,1}));
+    //Tensor rar = qr[{ac::all(),ac::all()}];
+    cout << rar;
+
+
     return 0;
     auto At = cytnx::zeros(24).reshape(2,3,4);
     cout << At << endl;

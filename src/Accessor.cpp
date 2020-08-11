@@ -10,6 +10,30 @@ namespace cytnx{
         this->_type = Accessor::Singl;
         this->loc  = loc; 
     } 
+    
+    /*
+    Accessor::Accessor(const Tensor &tn){
+        this->_type = Accessor::Tn;
+        if(Type.is_int(tn.dtype()){
+            cytnx_error_msg(tn.shape().size()!=1,"[ERROR] Accessor with Tensor can only accept rank=1.%s","\n");
+            cytnx_error_msg(tn.device()!=Device.cpu,"[ERROR] Accessor with Tensor can only accept Tensor on cpu.\n Suggestion: Use to_() or to() first.%s","\n");
+            this->idx_list.clear();
+            if(tn.dtype()!=Type.Int64){
+                Tensor tmp = tn.astype(Type.Int64);
+                this->idx_list.resize(tmp.storage().size());
+                memcpy(&(this->idx_list[0]),tmp.storage().data<cytnx_int64>(),sizeof(cytnx_int64)*this->idx_list.size());
+            }else{
+                this->idx_list.resize(tn.storage().size());
+                memcpy(&(this->idx_list[0]),tn.storage().data<cytnx_int64>(),sizeof(cytnx_int64)*this->idx_list.size());
+            }
+            
+        }else{
+            cytnx_error_msg(true,"[ERROR] Accessor with Tensor can only accept int type.%s","\n");
+        }
+        
+    } 
+    */
+    
 
     // all constr. ( use string to dispatch )            
     Accessor::Accessor(const std::string &str){
@@ -74,7 +98,9 @@ namespace cytnx{
         this->_max  = rhs._max;
         this->loc  = rhs.loc;
         this->_step = rhs._step;
+        this->idx_list = rhs.idx_list;
     }
+
 
     //copy assignment:
     Accessor& Accessor::operator=(const Accessor& rhs){
@@ -83,6 +109,7 @@ namespace cytnx{
         this->_max  = rhs._max;
         this->loc  = rhs.loc;
         this->_step = rhs._step;
+        this->idx_list = rhs.idx_list;
         return *this;
     }
 
@@ -185,6 +212,27 @@ namespace cytnx{
                     //std::cout << pos.back() << std::endl;
                     len++;
                 }
+            }
+
+        }else if(this->_type == Accessor::list){
+            pos.clear();
+            pos.resize(this->idx_list.size());
+            len = pos.size();
+            //cout << "list in accessor len:" <<len << endl;
+            #ifdef UNI_OMP
+            #pragma omp parallel for schedule(dynamic)
+            #endif
+            for(cytnx_uint64 i=0;i<this->idx_list.size();i++){
+                //checking:
+                if(this->idx_list[i]< 0){
+                    cytnx_error_msg(this->idx_list[i]+dim < 0,"[ERROR] invalid position at %d in accessor. type: list.\n",i);
+                    pos[i] = this->idx_list[i]+dim;
+                }else{
+                    cytnx_error_msg(this->idx_list[i] >= dim,"[ERROR] invalid position at %d in accessor. type: list.\n",i);
+                    pos[i] = idx_list[i];
+                } 
+                
+                
             }
 
         }

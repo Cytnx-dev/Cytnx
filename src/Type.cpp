@@ -31,11 +31,11 @@ bool cytnx::Type_class::is_float(const unsigned int &type_id){
         case Type_class::Int64:
             return false;
         case Type_class::Uint64:
-            return true;
+            return false;
         case Type_class::Int32:
             return false;
         case Type_class::Uint32:
-            return true;
+            return false;
         case Type_class::Int16:
             return false;
         case Type_class::Uint16:
@@ -48,6 +48,43 @@ bool cytnx::Type_class::is_float(const unsigned int &type_id){
     }
 
 }
+
+bool cytnx::Type_class::is_int(const unsigned int &type_id){
+
+
+    switch (type_id){
+        case Type_class::Void:
+            return false;
+        case Type_class::ComplexDouble:
+            return false;
+        case Type_class::ComplexFloat:
+            return false;
+        case Type_class::Double:
+            return false;
+        case Type_class::Float:
+            return false;
+        case Type_class::Int64:
+            return true;
+        case Type_class::Uint64:
+            return true;
+        case Type_class::Int32:
+            return true;
+        case Type_class::Uint32:
+            return true;
+        case Type_class::Int16:
+            return true;
+        case Type_class::Uint16:
+            return true;
+        case Type_class::Bool:
+            return false;
+        default:
+            cytnx_error_msg(1,"%s","[ERROR] invalid type");
+            return false;
+    }
+
+}
+
+
 
 
 bool cytnx::Type_class::is_complex(const unsigned int &type_id){
