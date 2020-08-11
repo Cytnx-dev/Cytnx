@@ -18,6 +18,8 @@
 
 ## Current dev Version:
     v0.5.6
+    1. [Enhance] change linalg::QR -> linalg::Qr for unify the function call 
+
 
     v0.5.5a
     1. [Feature] Tensor can now using operator() to access elements just like python. 
@@ -321,7 +323,7 @@
     --------------|-----------|-----|------|-------------|----|-------
      Pow          |   Pow_    |  Y  |  Y   |    Y        | Y  |   Y 
      Abs          |   Abs_    |  Y  |  N   |    Y        | Y  |   N 
-     QR           |   x       |  Y  |  N   |    N        | Y  |   Y 
+     Qr           |   x       |  Y  |  N   |    N        | Y  |   Y 
      Det          |   x       |  Y  |  N   |    N        | Y  |   N
      Min          |   x       |  Y  |  N   |    Y        | Y  |   N 
     --------------|-----------|-----|------|-------------|----|-------

@@ -8,6 +8,7 @@
 
 ## Current dev Version:
     v0.5.6
+    1. [Enhance] change linalg::QR -> linalg::Qr for unify the function call 
 
     v0.5.5a
     1. [Feature] Tensor can now using operator() to access elements just like python. 
@@ -112,7 +113,7 @@
       \link cytnx::linalg::Eig Eig\endlink    |   x       |  Y  |  N   |    Y 
       \link cytnx::linalg::Pow Pow\endlink    |   \link cytnx::linalg::Pow_ Pow_\endlink       |  Y  |  Y   |    Y 
       \link cytnx::linalg::Abs Abs\endlink    |   \link cytnx::linalg::Abs_ Abs_\endlink       |  Y  |  N   |    Y
-      \link cytnx::linalg::QR QR\endlink    |  x       |  Y  |  N   |    N
+      \link cytnx::linalg::Qr Qr\endlink    |  x       |  Y  |  N   |    N
       \link cytnx::linalg::Min Min\endlink    |  x       |  Y  |  N   |    Y
       \link cytnx::linalg::Max Max\endlink    |  x       |  Y  |  N   |    Y
       *\link cytnx::linalg::Trace Trace\endlink | x | Y | N | N

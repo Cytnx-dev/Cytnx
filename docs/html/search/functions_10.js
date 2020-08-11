@@ -2,5 +2,5 @@ var searchData=
 [
   ['qnums',['qnums',['../classcytnx_1_1Bond.html#a9276b15ab9b96dc7b1fac4dc407b9aa6',1,'cytnx::Bond::qnums() const'],['../classcytnx_1_1Bond.html#a528aa25d76bcfb057ab7b56cf28f0ed4',1,'cytnx::Bond::qnums()']]],
   ['qnums_5fclone',['qnums_clone',['../classcytnx_1_1Bond.html#a86503fa193140358b4def496a634b5b6',1,'cytnx::Bond']]],
-  ['qr',['QR',['../namespacecytnx_1_1linalg.html#ab2137390b1317b9b0e91039512773ec2',1,'cytnx::linalg::QR(const cytnx::UniTensor &amp;Tin, const bool &amp;is_tau=false)'],['../namespacecytnx_1_1linalg.html#a44a1aaacc828eb5202eb912f787626b8',1,'cytnx::linalg::QR(const Tensor &amp;Tin, const bool &amp;is_tau=false)']]]
+  ['qr',['Qr',['../namespacecytnx_1_1linalg.html#afd6f4e9ff98e972a75d8f28d0d2a81ff',1,'cytnx::linalg::Qr(const cytnx::UniTensor &amp;Tin, const bool &amp;is_tau=false)'],['../namespacecytnx_1_1linalg.html#a41dd0bff3fb563a2c3f127b3d8251350',1,'cytnx::linalg::Qr(const Tensor &amp;Tin, const bool &amp;is_tau=false)']]]
 ];
