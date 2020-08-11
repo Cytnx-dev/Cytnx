@@ -13,7 +13,8 @@ target_sources_local(cytnx
     Det.cpp
     Eig.cpp
     Eigh.cpp
-    QR.cpp
+    Qr.cpp
+    Qdr.cpp
     Exp.cpp
     ExpM.cpp
     Exp_.cpp

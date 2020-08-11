@@ -105,7 +105,7 @@ ifeq ($(GPU_Enable),1)
 endif
 
 ## Linalg
-OBJS += Lanczos.o Det.o Sum.o Hosvd.o Min.o Max.o ExpM.o QR.o Abs_.o Abs.o Pow_.o Pow.o Trace.o Eig.o Dot.o Norm.o ExpH.o Kron.o Add.o Div.o Sub.o Mul.o Cpr.o Svd.o Svd_truncate.o Inv.o Inv_.o InvM.o InvM_.o Conj.o Conj_.o Exp.o Exp_.o Expf.o Expf_.o Eigh.o Diag.o Matmul.o Tensordot.o Outer.o Vectordot.o Tridiag.o 
+OBJS += Lanczos.o Det.o Sum.o Hosvd.o Min.o Max.o ExpM.o Qdr.o Qr.o Abs_.o Abs.o Pow_.o Pow.o Trace.o Eig.o Dot.o Norm.o ExpH.o Kron.o Add.o Div.o Sub.o Mul.o Cpr.o Svd.o Svd_truncate.o Inv.o Inv_.o InvM.o InvM_.o Conj.o Conj_.o Exp.o Exp_.o Expf.o Expf_.o Eigh.o Diag.o Matmul.o Tensordot.o Outer.o Vectordot.o Tridiag.o 
 
 
 ## Random_internal
@@ -560,7 +560,9 @@ Eigh.o: $(CytnxPATH)/src/linalg/Eigh.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Eig.o: $(CytnxPATH)/src/linalg/Eig.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
-QR.o: $(CytnxPATH)/src/linalg/QR.cpp $(CytnxPATH)/include/linalg.hpp
+Qr.o: $(CytnxPATH)/src/linalg/Qr.cpp $(CytnxPATH)/include/linalg.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+Qdr.o: $(CytnxPATH)/src/linalg/Qdr.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Max.o: $(CytnxPATH)/src/linalg/Max.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<

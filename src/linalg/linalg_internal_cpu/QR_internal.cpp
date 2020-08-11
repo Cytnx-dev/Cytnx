@@ -28,6 +28,7 @@ namespace cytnx{
         }
 
 
+
         /// QR
         void QR_internal_cd(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &Q, boost::intrusive_ptr<Storage_base> &R, boost::intrusive_ptr<Storage_base> &D, boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M, const cytnx_int64 &N, const bool &is_d){
             // Q should be the same shape as in
@@ -54,6 +55,18 @@ namespace cytnx{
             //getR:
             GetUpTri(pR,pQ,M,N);
             
+            //getD:
+            if(is_d){
+                cytnx_complex128 *pD = (cytnx_complex128*)D->Mem;
+                GetDiag(pD,pR,M,N,N);
+                cytnx_uint64 min = M<N?M:N;
+                //normalize:
+                for(cytnx_uint64 i=0;i<min;i++){
+                    for(cytnx_uint64 j=0;j< N-i;j++){
+                        pR[i*N+i+j] /= pD[i];
+                    }
+                }
+            }
 
             
             //getQ:
@@ -90,6 +103,21 @@ namespace cytnx{
             
             //getR:
             GetUpTri(pR,pQ,M,N);
+
+            //getD:
+            if(is_d){
+                cytnx_complex64 *pD = (cytnx_complex64*)D->Mem;
+                GetDiag(pD,pR,M,N,N);
+                cytnx_uint64 min = M<N?M:N;
+                //normalize:
+                for(cytnx_uint64 i=0;i<min;i++){
+                    for(cytnx_uint64 j=0;j< N-i;j++){
+                        pR[i*N+i+j] /= pD[i];
+                    }
+                }
+            }
+
+
             
             //getQ:
             //query lwork & alloc
@@ -125,6 +153,19 @@ namespace cytnx{
             
             //getR:
             GetUpTri(pR,pQ,M,N);
+
+            //getD:
+            if(is_d){
+                cytnx_double *pD = (cytnx_double*)D->Mem;
+                GetDiag(pD,pR,M,N,N);
+                cytnx_uint64 min = M<N?M:N;
+                //normalize:
+                for(cytnx_uint64 i=0;i<min;i++){
+                    for(cytnx_uint64 j=0;j< N-i;j++){
+                        pR[i*N+i+j] /= pD[i];
+                    }
+                }
+            }
             
             //getQ:
             //query lwork & alloc
@@ -157,6 +198,20 @@ namespace cytnx{
             
             //getR:
             GetUpTri(pR,pQ,M,N);
+
+            //getD:
+            if(is_d){
+                cytnx_float *pD = (cytnx_float*)D->Mem;
+                GetDiag(pD,pR,M,N,N);
+                cytnx_uint64 min = M<N?M:N;
+                //normalize:
+                for(cytnx_uint64 i=0;i<min;i++){
+                    for(cytnx_uint64 j=0;j< N-i;j++){
+                        pR[i*N+i+j] /= pD[i];
+                    }
+                }
+            }
+            
             
             //getQ:
             //query lwork & alloc

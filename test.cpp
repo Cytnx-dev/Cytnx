@@ -37,7 +37,21 @@ class MyOp: public LinOp{
 
  
 int main(int argc, char *argv[]){
+    Tensor qr = arange(12).reshape({4,3});
+    cout << qr;
 
+
+    auto c = linalg::Qr(qr);
+    cout << c;
+    cout << linalg::Matmul(c[0],c[1]);
+
+    auto dd = linalg::Qdr(qr);
+    cout << dd;
+    dd[1] = linalg::Matmul(linalg::Diag(dd[1]),dd[2]);
+    cout << linalg::Matmul(dd[0],dd[1]);
+
+
+    return 0;
     auto At = cytnx::zeros(24).reshape(2,3,4);
     cout << At << endl;
 
@@ -299,18 +313,6 @@ int main(int argc, char *argv[]){
     cout << tsc%3 << endl;
     //exit(1);
 
-    Tensor qr = arange(12).reshape({3,4});
-    cout << qr;
-
-    Tensor qrflip = qr.get({ac::all(),ac::range(3,-1,-1)});
-    cout << qrflip;
-
-    exit(1);
-    auto c = linalg::Qr(qr);
-    cout << c;
-    c[0] = c[0][{ac::all(),ac::range(0,3)}];
-    cout << linalg::Matmul(c[0],c[1]);
-    exit(1);
  
 
 
