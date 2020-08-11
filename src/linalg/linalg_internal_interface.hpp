@@ -52,6 +52,7 @@ namespace cytnx{
         typedef void (*Detfunc_oii)(void *, const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
         typedef void (*Arithmeticfunc_oii)(boost::intrusive_ptr<Storage_base> &,boost::intrusive_ptr<Storage_base> &,boost::intrusive_ptr<Storage_base> &,const unsigned long long & len, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L, const std::vector<cytnx_uint64> &invmapper_R, const char &type);
         typedef void (*Svdfunc_oii)(const boost::intrusive_ptr<Storage_base> &, boost::intrusive_ptr<Storage_base> &,boost::intrusive_ptr<Storage_base> &,  boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &, const cytnx_int64&);
+        typedef void (*Qrfunc_oii)(const boost::intrusive_ptr<Storage_base> &, boost::intrusive_ptr<Storage_base> &,boost::intrusive_ptr<Storage_base> &,boost::intrusive_ptr<Storage_base> &,  boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &, const cytnx_int64&, const bool &);
         typedef void (*Eighfunc_oii)(const boost::intrusive_ptr<Storage_base> &, boost::intrusive_ptr<Storage_base> &,  boost::intrusive_ptr<Storage_base> &, const cytnx_int64&);
         typedef void (*InvMinplacefunc_oii)(boost::intrusive_ptr<Storage_base> &, const cytnx_int64&);
         typedef void (*Conjinplacefunc_oii)(boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
@@ -88,7 +89,7 @@ namespace cytnx{
                 std::vector<Vectordotfunc_oii> Vd_ii;
                 std::vector<Tdfunc_oii> Td_ii;
                 std::vector<Normfunc_oii> Norm_ii;
-                std::vector<Svdfunc_oii> QR_ii;
+                std::vector<Qrfunc_oii> QR_ii;
                 std::vector<MaxMinfunc_oii> MM_ii;
                 std::vector<MaxMinfunc_oii> Sum_ii;
                 std::vector<Detfunc_oii> Det_ii;

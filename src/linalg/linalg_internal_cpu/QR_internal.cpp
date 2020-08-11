@@ -14,9 +14,22 @@ namespace cytnx{
             }
         }
 
+        template<class T>
+        void GetDiag(T* out, const T* elem, const cytnx_uint64 &M, const cytnx_uint64 &N, const cytnx_uint64 &diag_N){
+            cytnx_uint64 min = M < N? M : N;
+            min = min < diag_N ? min : diag_N;
+
+            #ifdef UNI_OMP
+            #pragma omp parallel for schedule(dynamic)
+            #endif
+            for(cytnx_uint64 i = 0; i < min; i++)
+                out[i] = elem[i * N + i];
+    
+        }
+
 
         /// QR
-        void QR_internal_cd(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &Q, boost::intrusive_ptr<Storage_base> &R, boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M, const cytnx_int64 &N){
+        void QR_internal_cd(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &Q, boost::intrusive_ptr<Storage_base> &R, boost::intrusive_ptr<Storage_base> &D, boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M, const cytnx_int64 &N, const bool &is_d){
             // Q should be the same shape as in
             // tau should be the min(M,N)
 
@@ -41,6 +54,8 @@ namespace cytnx{
             //getR:
             GetUpTri(pR,pQ,M,N);
             
+
+            
             //getQ:
             //query lwork & alloc
             lapack_int col = M<N?N:M;
@@ -51,7 +66,7 @@ namespace cytnx{
 
 
         }
-        void QR_internal_cf(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &Q, boost::intrusive_ptr<Storage_base> &R, boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M, const cytnx_int64 &N){
+        void QR_internal_cf(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &Q, boost::intrusive_ptr<Storage_base> &R, boost::intrusive_ptr<Storage_base> &D, boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M, const cytnx_int64 &N, const bool &is_d){
             // Q should be the same shape as in
             // tau should be the min(M,N)
 
@@ -88,7 +103,7 @@ namespace cytnx{
 
 
         }
-        void QR_internal_d(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &Q, boost::intrusive_ptr<Storage_base> &R, boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M, const cytnx_int64 &N){
+        void QR_internal_d(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &Q, boost::intrusive_ptr<Storage_base> &R, boost::intrusive_ptr<Storage_base> &D, boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M, const cytnx_int64 &N, const bool &is_d){
             // Q should be the same shape as in
             // tau should be the min(M,N)
 
@@ -119,7 +134,7 @@ namespace cytnx{
 
 
         }
-        void QR_internal_f(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &Q, boost::intrusive_ptr<Storage_base> &R, boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M, const cytnx_int64 &N){
+        void QR_internal_f(const boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &Q, boost::intrusive_ptr<Storage_base> &R, boost::intrusive_ptr<Storage_base> &D, boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M, const cytnx_int64 &N, const bool &is_d){
             // Q should be the same shape as in
             // tau should be the min(M,N)
 

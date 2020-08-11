@@ -306,7 +306,7 @@ int main(int argc, char *argv[]){
     cout << qrflip;
 
     exit(1);
-    auto c = linalg::QR(qr);
+    auto c = linalg::Qr(qr);
     cout << c;
     c[0] = c[0][{ac::all(),ac::range(0,3)}];
     cout << linalg::Matmul(c[0],c[1]);

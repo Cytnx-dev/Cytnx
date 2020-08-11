@@ -1896,11 +1896,11 @@ PYBIND11_MODULE(cytnx,m){
                                 return cytnx::linalg::ExpH(in,a,b);
                           },py::arg("Tio"),py::arg("a")=1.0,py::arg("b")=0);
 
-    m_linalg.def("QR",[](const cytnx::UniTensor &Tin, const bool &is_tau){
-                            return cytnx::linalg::QR(Tin,is_tau);
+    m_linalg.def("Qr",[](const cytnx::UniTensor &Tin, const bool &is_tau){
+                            return cytnx::linalg::Qr(Tin,is_tau);
                         },py::arg("Tio"),py::arg("is_tau")=false);
-    m_linalg.def("QR",[](const cytnx::Tensor &Tin, const bool &is_tau){
-                            return cytnx::linalg::QR(Tin,is_tau);
+    m_linalg.def("Qr",[](const cytnx::Tensor &Tin, const bool &is_tau){
+                            return cytnx::linalg::Qr(Tin,is_tau);
                         },py::arg("Tio"),py::arg("is_tau")=false);
 
     m_linalg.def("InvM",&cytnx::linalg::InvM,py::arg("Tin"));

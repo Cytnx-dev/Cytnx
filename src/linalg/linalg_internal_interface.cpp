@@ -146,7 +146,7 @@ namespace cytnx{
 
 
             //=====================
-            QR_ii = vector<Svdfunc_oii>(5);
+            QR_ii = vector<Qrfunc_oii>(5);
 
             QR_ii[Type.ComplexDouble] = QR_internal_cd;
             QR_ii[Type.ComplexFloat ] = QR_internal_cf;
