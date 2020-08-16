@@ -165,7 +165,7 @@ if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES))
     find_package( LAPACK REQUIRED)
     message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}" )
   else()
-    #set(BLA_VENDOR OpenBLAS)
+    set(BLA_VENDOR OpenBLAS)
     find_package( BLAS REQUIRED)
     find_package( LAPACK REQUIRED)
     message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}" )
@@ -391,8 +391,8 @@ endif()
 set(libname "${CMAKE_SHARED_LIBRARY_PREFIX}cytnx.${CYTNX_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 
-
-
+# create a file that contain all the link flags:
+FILE(WRITE "${CMAKE_BINARY_DIR}/linkflags.tmp" "" "")
 
 ######################################################################
 # Information Messages
@@ -409,10 +409,8 @@ message(STATUS " Installation Prefix: ${CMAKE_INSTALL_PREFIX}")
 message(STATUS " CXX Compiler: ${CMAKE_CXX_COMPILER}")
 message(STATUS " CXX Flags: ${CMAKE_CXX_FLAGS}")
 message(STATUS " BLAS and LAPACK Libraries: ${LAPACK_LIBRARIES}")
-
-
-
-
+message(STATUS " Link libraries: ${CYTNX_LINK_Libs}")
+FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${LAPACK_LIBRARIES}" "")
 
 
 if(BUILD_PYTHON)
@@ -428,6 +426,7 @@ if(USE_CUDA)
   message( STATUS "  - CUDA Version: ${CUDA_VERSION_STRING}")
   message( STATUS "  - CUDA Toolkit Root: ${CUDA_TOOLKIT_ROOT_DIR}")
   message( STATUS "  - CuSolver library: ${CUDA_cusolver_LIBRARY}")
+  FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cusolver_LIBRARY}" "")
 else()
   message( STATUS " Build CUDA Support: NO")
 endif()
@@ -453,6 +452,7 @@ message(STATUS "")
 message(STATUS "")
 
 
+install(FILES ${CMAKE_BINARY_DIR}/linkflags.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
 
 
 if (BUILD_PACKAGES)
