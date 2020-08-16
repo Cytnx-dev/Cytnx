@@ -332,6 +332,30 @@ namespace cytnx{
                     return self;
                 }
                 template<class T>
+                Tensor operator+(const T &rc) const{
+                    Tensor out;
+                    out._impl = _insimpl->get(_accs);
+                    return out + rc;
+                }
+                template<class T>
+                Tensor operator-(const T &rc) const{
+                    Tensor out;
+                    out._impl = _insimpl->get(_accs);
+                    return out - rc;
+                }
+                template<class T>
+                Tensor operator*(const T &rc) const{
+                    Tensor out;
+                    out._impl = _insimpl->get(_accs);
+                    return out * rc;
+                }
+                template<class T>
+                Tensor operator/(const T &rc) const{
+                    Tensor out;
+                    out._impl = _insimpl->get(_accs);
+                    return out / rc;
+                }
+                template<class T>
                 T item() const{
                     Tensor out;
                     out._impl = _insimpl->get(_accs);

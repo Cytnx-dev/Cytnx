@@ -25,7 +25,7 @@
     5. [Enhance] accessor can now specify with vector. 
     6. [Enhance] Tproxy.item()
     7. Fix inplace reshape_() in new way templ. does not perform inplace operation
-
+    8. [Enhance] Tproxy operator+-/*
 
     v0.5.5a
     1. [Feature] Tensor can now using operator() to access elements just like python. 
