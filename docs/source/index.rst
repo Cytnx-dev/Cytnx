@@ -18,6 +18,7 @@ Cytnx user guide and examples
 .. toctree::
    :maxdepth: 3
 
+   install.rst
    Guide.rst
    Examples.rst
 

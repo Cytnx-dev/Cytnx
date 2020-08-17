@@ -5,5 +5,8 @@ extlinks = {'splo':("https://docs.scipy.org/doc/scipy/reference/generated/scipy.
             'numpy-slice':("https://numpy.org/doc/stable/reference/arrays.indexing.html%s",''),\
             'numpy-vstack':("https://numpy.org/doc/stable/reference/generated/numpy.vstack.html%s",''),\
             'cuda-mem':("https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html%s",''),\
-            'lanczos-er':("https://www.sciencedirect.com/science/article/pii/S0010465597001367%s",'')\
+            'lanczos-er':("https://www.sciencedirect.com/science/article/pii/S0010465597001367%s",''),\
+            'anaconda':("https://repo.anaconda.com/archive/%s",''),\
+            'miniconda':("https://repo.anaconda.com/miniconda/%s",''),\
+            'virtualenv':("https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#%s",'')\
             } 
