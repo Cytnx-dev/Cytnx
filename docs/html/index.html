@@ -272,42 +272,13 @@ $(function() {
 <p>without CUDA</p><ul>
 <li>python 3.6: conda install -c kaihsinwu cytnx_36</li>
 <li>python 3.7: conda install -c kaihsinwu cytnx_37</li>
+<li>python 3.8: conda install -c kaihsinwu cytnx_38</li>
 </ul>
 <p>with CUDA</p><ul>
 <li>python 3.6: conda install -c kaihsinwu cytnx_cuda_36</li>
 <li>python 3.7: conda install -c kaihsinwu cytnx_cuda_37</li>
 </ul>
-<h2>compile</h2>
-<p>1.) create a build folder, and cd to the folder $mkdir build</p>
-<p>$cd build</p>
-<p>2.) resolving the dependency </p><pre class="fragment">$cmake [flags (optional)] &lt;Cytnx repo folder&gt;
-
-
-* -DUSE_ICPC (default = off)
-
-    The default compiler is system's compiler. 
-
-* -DUSE_CUDA (default = off)
-
-    If USE_CUDA=1, the code will compile with GPU support.
-
-* -DUSE_OMP (default = on)
-
-    if USE_OMP=1, the code compiles with openmp accleration. 
-
-* -DUSE_MKL (default = off) [Recommend set it =on]
-
-    If USE_MKL=off, the code will compile with the auto found blas/lapack vendors usually with blas_int=32bits. 
-    If USE_MKL=on, the code will always compile with threaded mkl ILP64 library with blas_int=64bits 
-
-    [Note] If you are not sure which version you are compile against to, use cytnx::__blasINTsize__/cytnx.__blasINTsize__ to check it's 64bits (=8) or 32bits (=4). 
-
-* -DCMAKE_INSTALL_PREFIX (default is /usr/local)
-
-    Set the install target path.
-</pre><p>3.) compile by running: </p><pre class="fragment">$make -Bj4
-</pre><p>4.) install to the target path. </p><pre class="fragment">$make install
-</pre><h2>Some snippets:</h2>
+<h2>Some snippets:</h2>
 <h3>Storage</h3>
 <ul>
 <li>Memory container with GPU/CPU support. maintain type conversions (type casting btwn Storages) and moving btwn devices.</li>
