@@ -2,6 +2,12 @@
 
 ![alt text](./Icon_small.png)
 
+
+## Install 
+See The following user guide for install and using of cytnx:
+
+    https://kaihsinwu.gitlab.io/Cytnx_doc/install.html
+
 ## Intro slide
 [Cytnx_v0.5.pdf (dated 07/25/2020)](https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing)
 
@@ -26,6 +32,7 @@
     6. [Enhance] Tproxy.item()
     7. Fix inplace reshape_() in new way templ. does not perform inplace operation
     8. [Enhance] Tproxy operator+-/*
+    9. [Enhance] Release Python API and C++ API together in conda install 
 
     v0.5.5a
     1. [Feature] Tensor can now using operator() to access elements just like python. 
@@ -46,6 +53,8 @@
 
 [Cytnx User Guide](https://kaihsinwu.gitlab.io/Cytnx_doc/)
 
+
+
 ## conda install [![Build Status](https://travis-ci.com/kaihsin/Cytnx_build.svg?branch=master)](https://travis-ci.com/kaihsin/Cytnx_build)
 
 
@@ -60,6 +69,10 @@
     python 3.7: [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx_37/badges/latest_release_date.svg)](https://anaconda.org/kaihsinwu/cytnx_37) [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx_37/badges/platforms.svg)](https://anaconda.org/kaihsinwu/cytnx_37)
 
         conda install -c kaihsinwu cytnx_37   
+
+    python 3.8: [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx_38/badges/latest_release_date.svg)](https://anaconda.org/kaihsinwu/cytnx_38) [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx_38/badges/platforms.svg)](https://anaconda.org/kaihsinwu/cytnx_38)
+
+        conda install -c kaihsinwu cytnx_38
 
 * with CUDA
 
@@ -100,13 +113,15 @@
 
 
 ## MacOS
+    (This is deprecated, please see the user guide for install instruction!)
+
     1. brew install boost openblas lapack
     2. install anaconda, and conda install pybind11, numpy
     3. install intel mkl 
 
     For MacOS, there is no lapacke, so please use intel mkl instead. 
 
-## Install 
+## Build from source 
     1.) create a build folder, and cd to the folder
         $mkdir build
 
