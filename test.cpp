@@ -38,8 +38,9 @@ class MyOp: public LinOp{
  
 int main(int argc, char *argv[]){
     Tensor qr = arange(12).reshape({4,3});
-    cout << qr;
-
+    cout << qr.Div(cytnx_int64(3));
+    return 0;
+    
 
     auto c = linalg::Qr(qr);
     cout << c;

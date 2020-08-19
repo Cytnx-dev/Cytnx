@@ -72,6 +72,7 @@ def __imul__(self,right):
 
 @add_method(Tensor)
 def __itruediv__(self,right):
+    #print("K")
     self.c__itruediv__(right);
     return self
 
@@ -79,6 +80,7 @@ def __itruediv__(self,right):
 def __ifloordiv__(self,right):
     self.c__ifloordiv__(right);
     return self
+
 @add_method(Tensor)
 def __imatmul(self,rhs):
     self.c__imatmul__(rhs);

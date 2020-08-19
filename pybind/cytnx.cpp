@@ -1121,7 +1121,8 @@ PYBIND11_MODULE(cytnx,m){
                 .def("c__itruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_complex64 &rhs){return self.Div_(rhs);})
                 .def("c__itruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_double    &rhs){return self.Div_(rhs);})
                 .def("c__itruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_float     &rhs){return self.Div_(rhs);})
-                .def("c__itruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_int64     &rhs){return self.Div_(rhs);})
+                .def("c__itruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_int64     &rhs){//std::cout << "vchkp_i64" << std::endl; 
+                                                                                                return self.Div_(rhs);})
                 .def("c__itruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint64    &rhs){return self.Div_(rhs);})
                 .def("c__itruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_int32     &rhs){return self.Div_(rhs);})
                 .def("c__itruediv__",[](cytnx::Tensor &self, const cytnx::cytnx_uint32    &rhs){return self.Div_(rhs);})

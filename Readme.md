@@ -33,6 +33,7 @@ See The following user guide for install and using of cytnx:
     7. Fix inplace reshape_() in new way templ. does not perform inplace operation
     8. [Enhance] Tproxy operator+-/*
     9. [Enhance] Release Python API and C++ API together in conda install 
+    10. Fix bug in division dti64 becomes subtraction bug. 
 
     v0.5.5a
     1. [Feature] Tensor can now using operator() to access elements just like python. 
