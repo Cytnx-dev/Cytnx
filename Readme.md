@@ -6,7 +6,7 @@
 ## Install 
 See The following user guide for install and using of cytnx:
 
-    https://kaihsinwu.gitlab.io/Cytnx_doc/install.html
+[https://kaihsinwu.gitlab.io/Cytnx_doc/install.html](https://kaihsinwu.gitlab.io/Cytnx_doc/install.html)
 
 ## Intro slide
 [Cytnx_v0.5.pdf (dated 07/25/2020)](https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing)
