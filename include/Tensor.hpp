@@ -1074,9 +1074,16 @@ namespace cytnx{
            Tensor Cpr(const T &rhs){
                 return *this == rhs;
            }
+
+           //template<class T>
+           //Tensor& Cpr_(const T &rhs){
+           //     
+           //     return *this == rhs; 
+           //}
+
            template<class T>
-           Tensor& Cpr_(const T &rhs){
-                return *this == rhs; 
+           Tensor Mod(const T &rhs){
+                return *this % rhs;
            }
 
 

@@ -57,6 +57,19 @@ namespace cytnx{
         template<class T>
         cytnx::UniTensor Div(const cytnx::UniTensor &Lt,const T &rc);
 
+
+        // Mod:
+        //==================================================
+        /**
+        @brief element-wise modulo
+        */
+        cytnx::UniTensor Mod(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
+        template<class T>
+        cytnx::UniTensor Mod(const T &lc,const cytnx::UniTensor &Rt);
+        template<class T>
+        cytnx::UniTensor Mod(const cytnx::UniTensor &Lt,const T &rc);
+
+
         std::vector<cytnx::UniTensor> Svd(const cytnx::UniTensor &Tin, const bool &is_U=true, const bool &is_vT=true);
         std::vector<cytnx::UniTensor> Svd_truncate(const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U=true, const bool &is_vT=true);
         std::vector<cytnx::UniTensor> Hosvd(const cytnx::UniTensor &Tin, const std::vector<cytnx_uint64> &mode, const bool &is_core=true, const bool &is_Ls=false,const std::vector<cytnx_int64> &trucate_dim=std::vector<cytnx_int64>());
@@ -114,7 +127,11 @@ namespace cytnx{
     template<class T>
     cytnx::UniTensor operator/(const cytnx::UniTensor &Lt, const T &rc);
 
-
+    cytnx::UniTensor operator%(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
+    template<class T>
+    cytnx::UniTensor operator%(const T &lc, const cytnx::UniTensor &Rt);
+    template<class T>
+    cytnx::UniTensor operator%(const cytnx::UniTensor &Lt, const T &rc);
 }
 
 //====================================================================================
@@ -169,6 +186,18 @@ namespace cytnx{
         Tensor Div(const T &lc, const Tensor &Rt);    
         template<class T>
         Tensor Div(const Tensor &Lt, const T &rc);
+
+        // Mod:
+        //==================================================
+        /**
+        @brief element-wise divide
+        */
+        Tensor Mod(const Tensor &Lt, const Tensor &Rt);
+        template<class T>
+        Tensor Mod(const T &lc, const Tensor &Rt);    
+        template<class T>
+        Tensor Mod(const Tensor &Lt, const T &rc);
+
 
 
         // Cpr:
@@ -735,6 +764,12 @@ namespace cytnx{
     template<class T>
     Tensor operator/(const Tensor &Lt, const T &rc);
 
+    //----------------------------------
+    Tensor operator%(const Tensor &Lt, const Tensor &Rt);
+    template<class T>
+    Tensor operator%(const T &lc, const Tensor &Rt);
+    template<class T>
+    Tensor operator%(const Tensor &Lt, const T &rc);
 
 
     //----------------------------------

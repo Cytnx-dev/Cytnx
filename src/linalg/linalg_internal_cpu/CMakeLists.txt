@@ -16,6 +16,7 @@ target_sources_local(cytnx
     Matmul_internal.hpp
     Matvec_internal.hpp
     Mul_internal.hpp
+    Mod_internal.hpp
     Outer_internal.hpp
     Kron_internal.hpp
     Sub_internal.hpp
@@ -42,6 +43,7 @@ target_sources_local(cytnx
     Matmul_internal.cpp
     Matvec_internal.cpp
     Mul_internal.cpp
+    Mod_internal.cpp
     Outer_internal.cpp
     Kron_internal.cpp
     Tridiag_internal.cpp

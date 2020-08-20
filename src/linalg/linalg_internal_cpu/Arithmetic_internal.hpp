@@ -9,7 +9,7 @@
 #include "Sub_internal.hpp"
 #include "Div_internal.hpp"
 #include "Cpr_internal.hpp"
-
+#include "Mod_internal.hpp"
 namespace cytnx{
     namespace linalg_internal{
         

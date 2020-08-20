@@ -1,12 +1,12 @@
 package:
   name: cytnx_cuda_36
-  version: "0.5.5a"
+  version: "0.5.6a"
 
 source:
   path: ../
 
 build:
-  number: 2
+  number: 0
 
 
 requirements:

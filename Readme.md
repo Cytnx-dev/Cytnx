@@ -16,13 +16,15 @@ See The following user guide for install and using of cytnx:
 [![Build Status](https://travis-ci.com/kaihsin/Cytnx_build.svg?branch=master)](https://travis-ci.com/kaihsin/Cytnx_build)
 
 ## News
-    [v0.5.5a] 
+    [v0.5.6a] 
 
  
 ## Stable Version:
-[v0.5.5a](https://github.com/kaihsin/Cytnx/tree/v0.5.5a)
+[v0.5.6a](https://github.com/kaihsin/Cytnx/tree/v0.5.6a)
 
 ## Current dev Version:
+    v0.5.7
+
     v0.5.6
     1. [Enhance] change linalg::QR -> linalg::Qr for unify the function call 
     2. Fix bug in UniTensor Qr, R UniTensor labels bug.
@@ -34,16 +36,8 @@ See The following user guide for install and using of cytnx:
     8. [Enhance] Tproxy operator+-/*
     9. [Enhance] Release Python API and C++ API together in conda install 
     10. Fix bug in division dti64 becomes subtraction bug. 
+    11. [New] Add Mod funciton. 
 
-    v0.5.5a
-    1. [Feature] Tensor can now using operator() to access elements just like python. 
-    2. [Enhance] Access Tensor can now exactly the same using slice string as in python.
-    3. [Enhance] at/reshape/permute in Tensor can now give args without braket{} as in python.
-    4. [Enhance] Storage.Load to static, so it can match Tensor
-    5. [Major] Remove cytnx_extension class, rename CyTensor->UniTensor 
-    6. Fix small bug in return ref of Tproxy 
-    7. Fix bug in buffer size allocation in Svd_internal 
-   
 
 
 ## API Documentation:
@@ -352,7 +346,7 @@ See The following user guide for install and using of cytnx:
      Min          |   x       |  Y  |  N   |    Y        | Y  |   N 
      Max          |   x       |  Y  |  N   |    Y        | Y  |   N 
     *Trace        |   x       |  Y  |  N   |    Y        | Y  |   Y
-
+     Mod          |   x       |  Y  |  Y   |    Y        | Y  |   Y 
 
     iterative solver:
      

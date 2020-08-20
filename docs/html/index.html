@@ -71,9 +71,10 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><h2>Stable Version:</h2>
-<p><a href="https://github.com/kaihsin/Cytnx/tree/v0.5.5a">v0.5.5 pre-release</a></p>
+<p><a href="https://github.com/kaihsin/Cytnx/tree/v0.5.6a">v0.5.6 pre-release</a></p>
 <h2>News</h2>
 <h2>Current dev Version:</h2>
+<p>v0.5.7</p>
 <p>v0.5.6</p><ol type="1">
 <li>[Enhance] change linalg::QR -&gt; linalg::Qr for unify the function call</li>
 <li>Fix bug in UniTensor Qr, R UniTensor labels bug.</li>
@@ -84,13 +85,6 @@ $(function() {
 <li>Fix inplace reshape_() in new way templ. does not perform inplace operation</li>
 <li>[Enhance] Tproxy operator+-/*</li>
 <li>Fix bug in division dti64 becomes subtraction bug.</li>
-</ol>
-<p>v0.5.5a</p><ol type="1">
-<li>[Feature] Tensor can now using operator() to access elements just like python.</li>
-<li>[Enhance] Access Tensor can now exactly the same using slice string as in python.</li>
-<li>[Enhance] at/reshape/permute in Tensor can now give args without braket{} as in python.</li>
-<li>[Enhance] Storage.Load to static, so it can match Tensor</li>
-<li>[Major] Remove cytnx_extension class, rename CyTensor-&gt;UniTensor</li>
 </ol>
 <h2>Feature:</h2>
 <h3>Python x C++</h3>
@@ -153,6 +147,8 @@ $(function() {
 <tr>
 <td><a class="el" href="namespacecytnx_1_1linalg.html#aea125f2928934007725809426bb77e38">Cpr</a> </td><td>x </td><td>Y </td><td>Y </td><td>Y </td></tr>
 <tr>
+<td><a class="el" href="namespacecytnx_1_1linalg.html#a56d73db3d0cdd3a2ca5ed5f88f0738ff">Mod</a> </td><td>x </td><td>Y </td><td>Y </td><td>Y </td></tr>
+<tr>
 <td>+,+=[tn]</td><td>x </td><td>Y </td><td>Y </td><td>Y (<a class="el" href="classcytnx_1_1Tensor.html#ac7ab4b9ee38f619a60c26f203539db65">Tensor.Add_</a>) </td></tr>
 <tr>
 <td>-,-=[tn]</td><td>x </td><td>Y </td><td>Y </td><td>Y (<a class="el" href="classcytnx_1_1Tensor.html#a3482ddb0ebd4ae6585dcea7c96702e0c">Tensor.Sub_</a>) </td></tr>
@@ -161,7 +157,7 @@ $(function() {
 <tr>
 <td>/,/=[tn]</td><td>x </td><td>Y </td><td>Y </td><td>Y (<a class="el" href="classcytnx_1_1Tensor.html#a030748d3e2003f655b1cf73fe0d55a63">Tensor.Div_</a>) </td></tr>
 <tr>
-<td>== [tn]</td><td>x </td><td>Y </td><td>Y </td><td>Y (<a class="el" href="classcytnx_1_1Tensor.html#ae9e9ea98664899db1ce86b88e136595e">Tensor.Cpr_</a>) </td></tr>
+<td>== [tn]</td><td>x </td><td>Y </td><td>Y </td><td>Y (<a class="el" href="">Tensor.Cpr_</a>) </td></tr>
 <tr>
 <td><a class="el" href="namespacecytnx_1_1linalg.html#a7867037a2719ac34ed08ba14bf925a13">Svd</a> </td><td>x </td><td>Y </td><td>Y </td><td>Y </td></tr>
 <tr>

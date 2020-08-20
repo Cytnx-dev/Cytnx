@@ -38,4 +38,5 @@ target_sources_local(cytnx
     cuSub_internal.cu
     cuSvd_internal.cu
     cuNorm_internal.cu
+    cuMod_internal.cu
 )

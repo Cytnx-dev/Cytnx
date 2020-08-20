@@ -247,7 +247,7 @@ if(USE_CUDA)
   set_target_properties(cytnx PROPERTIES 
       CUDA_SEPARABLE_COMPILATION ON
                                    )
-
+  set_target_properties(cytnx PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
   set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Xcudafe=--display_error_number")
   #set(CMAKE_CUDA_FLAGS "-Xcompiler=-Wall -Xcompiler=-Wno-deprecated-gpu-targets -Xcudafe=--display_error_number")
   ##set(CMAKE_CUDA_FLAGS "-Xcompiler=-Wall -Wno-deprecated-gpu-targets -Xcudafe=--display_error_number")
@@ -415,7 +415,7 @@ message(STATUS " CXX Compiler: ${CMAKE_CXX_COMPILER}")
 message(STATUS " CXX Flags: ${CMAKE_CXX_FLAGS}")
 message(STATUS " BLAS and LAPACK Libraries: ${LAPACK_LIBRARIES}")
 message(STATUS " Link libraries: ${CYTNX_LINK_Libs}")
-FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${LAPACK_LIBRARIES}" "")
+FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${LAPACK_LIBRARIES}\n" "")
 
 
 if(BUILD_PYTHON)
@@ -431,7 +431,15 @@ if(USE_CUDA)
   message( STATUS "  - CUDA Version: ${CUDA_VERSION_STRING}")
   message( STATUS "  - CUDA Toolkit Root: ${CUDA_TOOLKIT_ROOT_DIR}")
   message( STATUS "  - CuSolver library: ${CUDA_cusolver_LIBRARY}")
-  FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cusolver_LIBRARY}" "")
+  FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cusolver_LIBRARY}\n" "")
+  message( STATUS "  - Curand library: ${CUDA_curand_LIBRARY}")
+  FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_curand_LIBRARY}\n" "")
+  message( STATUS "  - CuBlas library: ${CUDA_cublas_LIBRARY}")
+  FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cublas_LIBRARY}\n" "")
+  message( STATUS "  - Cuda rt library: ${CUDA_cudart_static_LIBRARY} -ldl")
+  FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cudart_static_LIBRARY} -ldl\n" "") # use > to indicate special rt processing 
+  message( STATUS "  - Cuda devrt library: ${CUDA_cudadevrt_LIBRARY} -lrt")
+  FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cudadevrt_LIBRARY} -lrt\n" "") # use > to indicate special rt processing 
 else()
   message( STATUS " Build CUDA Support: NO")
 endif()

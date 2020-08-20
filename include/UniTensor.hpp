@@ -1331,6 +1331,11 @@ namespace cytnx{
                 return *this /= rhs;
             }
 
+            template<class T>
+            UniTensor Mod(const T &rhs){
+                return *this % rhs;
+            }
+
             UniTensor Conj(){
                 UniTensor out;
                 out._impl = this->_impl->Conj();

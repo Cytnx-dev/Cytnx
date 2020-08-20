@@ -28,6 +28,7 @@ target_sources_local(cytnx
     Inv.cpp
     Matmul.cpp
     Mul.cpp
+    Mod.cpp
     Outer.cpp
     Kron.cpp
     Trace.cpp

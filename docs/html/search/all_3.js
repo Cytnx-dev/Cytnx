@@ -31,7 +31,6 @@ var searchData=
   ['contraction_5ftree_2ecpp',['contraction_tree.cpp',['../contraction__tree_8cpp.html',1,'']]],
   ['contraction_5ftree_2ehpp',['contraction_tree.hpp',['../contraction__tree_8hpp.html',1,'']]],
   ['cpr',['Cpr',['../classcytnx_1_1Tensor.html#aeee6153da17147b82857e342e2a35c52',1,'cytnx::Tensor::Cpr()'],['../namespacecytnx_1_1linalg.html#aea125f2928934007725809426bb77e38',1,'cytnx::linalg::Cpr(const Tensor &amp;Lt, const Tensor &amp;Rt)'],['../namespacecytnx_1_1linalg.html#a12d6a02bc402d9ae1bb7652f7ec92865',1,'cytnx::linalg::Cpr(const T &amp;lc, const Tensor &amp;Rt)'],['../namespacecytnx_1_1linalg.html#ac59f29dd40385b5b2705299d0366876f',1,'cytnx::linalg::Cpr(const Tensor &amp;Lt, const T &amp;rc)']]],
-  ['cpr_5f',['Cpr_',['../classcytnx_1_1Tensor.html#ae9e9ea98664899db1ce86b88e136595e',1,'cytnx::Tensor']]],
   ['cytnx',['cytnx',['../namespacecytnx.html',1,'']]],
   ['cytnx_2ehpp',['cytnx.hpp',['../cytnx_8hpp.html',1,'']]],
   ['cytnx_5fbool',['cytnx_bool',['../namespacecytnx.html#a33aeeaf2c3d5b78b26cc6440916acbf2',1,'cytnx']]],

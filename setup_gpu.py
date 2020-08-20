@@ -70,6 +70,15 @@ class CMakeBuild(build_ext):
                 print("[Relocate Cpp]>> find c++ dylib: ",fn)
                 break
 
+        # copy linkflags.tmp
+        for fn in os.listdir(build_temp_dir):
+            print(fn)
+            if 'linkflags.tmp' in fn:
+                self.copy_file(os.path.join(build_temp_dir,fn),extdir)
+                print("[Relocate linkflags.tmp]: ",fn)
+                break
+
+
         # 2. header file (cpp)
         Cppinc_dir = os.path.join(extdir,"include")
         if not os.path.exists(Cppinc_dir):
@@ -86,7 +95,7 @@ class CMakeBuild(build_ext):
 
 setup(
     name='cytnx',
-    version='0.5.5',
+    version='0.5.6',
     maintainer='Kai-Hsin Wu, Yen-Hsin Wu',
     maintainer_email="kaihsinwu@gmail.com",
     description='Project Cytnx',

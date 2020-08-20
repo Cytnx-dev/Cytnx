@@ -9,7 +9,7 @@
 #include "linalg/linalg_internal_gpu/cuSub_internal.hpp"
 #include "linalg/linalg_internal_gpu/cuDiv_internal.hpp"
 #include "linalg/linalg_internal_gpu/cuCpr_internal.hpp"
-
+#include "linalg/linalg_internal_gpu/cuMod_internal.hpp"
 namespace cytnx{
     namespace linalg_internal{
         

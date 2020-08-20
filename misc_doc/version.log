@@ -1,4 +1,15 @@
 
+
+v0.5.5a
+1. [Feature] Tensor can now using operator() to access elements just like python. 
+2. [Enhance] Access Tensor can now exactly the same using slice string as in python.
+3. [Enhance] at/reshape/permute in Tensor can now give args without braket{} as in python.
+4. [Enhance] Storage.Load to static, so it can match Tensor
+5. [Major] Remove cytnx_extension class, rename CyTensor->UniTensor 
+6. Fix small bug in return ref of Tproxy 
+7. Fix bug in buffer size allocation in Svd_internal 
+   
+
 v0.5.4a-build1
 1. [Important] Fix Subtraction real - complex bug.
 

@@ -1,5 +1,5 @@
 package:
-  name: cytnx_cuda_37
+  name: cytnx_cuda_38
   version: "0.5.6a"
 
 source:
@@ -11,7 +11,7 @@ build:
 
 requirements:
   build:
-    - python 3.7
+    - python 3.8
     - numpy >=1.18
     - cmake  
     - pybind11 
@@ -28,7 +28,7 @@ requirements:
     - {{ compiler("cxx")}}
 
   host:
-    - python 3.7
+    - python 3.8
     - numpy >=1.18
     - boost
     - mkl >=2019
@@ -41,7 +41,7 @@ requirements:
     - blas * mkl
 
   run:
-    - python 3.7
+    - python 3.8
     - numpy >=1.18
     - boost
     - mkl >=2019
