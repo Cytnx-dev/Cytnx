@@ -1,5 +1,5 @@
 Install Cytnx
-------------------
+====================
 To install cytnx, we recommend user to use anaconda/miniconda to install. However, advanced user can also build from soruce if nessasary. 
 Note that both python API and C++ API will be installed together.
 
@@ -140,9 +140,141 @@ The first three lines are the python inline execution to get the three attribute
     [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
     
 
-%Build from source
-%*********************
-%For advanced user who wish to build cytnx from source, we provides the cmake install. 
+Build from source
+*********************
+For advanced user who wish to build cytnx from source, we provides the cmake install. 
+
+
+Dependencies
+----------------
+Cytnx required the following minimum dependencies:
+    
+* cmake >=3.14
+* Boost v1.53+ [check_deleted, atomicadd, intrusive_ptr]
+* openblas (lapacke)
+* gcc v4.8.5+ (recommand v6+ or equivalent clang on Mac with C++11 support) (required -std=c++11)
+
+
+In addition, you might want to install the following optional dependencies if you want cytnx to compile with features like openmp, mkl and/or CUDA support. 
+
+[Openmp]
+
+* openmp 
+
+[MKL]
+
+* intel mkl 
+
+[CUDA]
+
+* Nvidia cuda library v10+
+* Nvidia cuDNN library 
+
+[Python API]
+
+* python >=3.6
+* pybind11 
+* python-graphviz 
+* graphviz
+
+.. note::
+
+    For MacOS, standard brew install openblas will not work since it lack lapacke.h wrapper support. 
+
+    If you are using MacOS, please install intel mkl (free) instead. 
+
+    For python API, we recommend install of python using anaconda or miniconda
+
+
+OS specific installation of minimum dependencies:
+
+* Ubuntu:
+
+.. code-block:: shell 
+
+    $sudo apt-get install libboost-all-dev libopenblas-dev liblapack-dev liblapacke-dev cmake make curl g++ libomp-dev 
+
+* MacOS:
+
+1. install boost:    
+
+.. code-block:: shell
+
+    $brew install boost 
+
+
+2. download and install intel mkl via :mkl-mac:`intel mkl <>`
+    
+
+* Windows:
+
+.. note:: 
+
+    For Windows user, please use :wsl:`WSL <>`. We recommend using ubuntu distribution, and follow the instruction of Ubuntu to install cytnx and dependencies. 
+
+
+
+Compiling process
+--------------------
+Please see the following steps for the standard cmake compiling process and all the compiling options:
+
+1. create a build directory:
+
+.. code-block:: shell
+
+    $make build
+    $cd build
+
+2. use cmake to auto matically generate compiling files:
+
+.. code-block:: shell
+
+    $cmake [option] <cytnx repo directory>
+
+The following are the avaliable compiling option flags that you can specify in **[option]**:
+
+* -DCMAKE_INSTALL_PREFIX=<Destination path> 
+
+    This specify the install destination you want cytnx to be installed. 
+    The default is /usr/local/cytnx
+
+* -DBUILD_PYTHON=on
+
+    This specify if the cytnx python API will be installed. 
+    The default is *off*
+
+* -DUSE_MKL=on 
+
+    This specify if the cytnx is compiled against intel mkl library. 
+    The default is *off* 
+
+.. note::
+
+        if USE_MKL=off, the default linking library for linear algebra is openblas.
+
+* -DUSE_OMP=on
+
+    This specify if the cytnx is compiled with openmp acceleration. 
+    The default is *off*
+
+.. note::
+
+        if USE_MKL=on, then USE_OMP=on will be forced
+
+* -DUSE_CUDA=on
+
+    This specify if the cytnx is compiled with CUDA-gpu support. 
+    The default is *off*
+
+
+3. compile the code:
+    
+    $make 
+
+4. install to the target location:
+
+    $make install 
+
 
 
 .. toctree::

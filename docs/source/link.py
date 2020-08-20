@@ -8,5 +8,7 @@ extlinks = {'splo':("https://docs.scipy.org/doc/scipy/reference/generated/scipy.
             'lanczos-er':("https://www.sciencedirect.com/science/article/pii/S0010465597001367%s",''),\
             'anaconda':("https://repo.anaconda.com/archive/%s",''),\
             'miniconda':("https://repo.anaconda.com/miniconda/%s",''),\
-            'virtualenv':("https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#%s",'')\
+            'virtualenv':("https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#%s",''),\
+            'mkl-mac':("https://software.intel.com/content/www/us/en/develop/tools/math-kernel-library/choose-download/macos.html%s",''),\
+            'wsl':("https://docs.microsoft.com/en-us/windows/wsl/install-win10%s",'')\
             } 

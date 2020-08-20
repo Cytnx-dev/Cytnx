@@ -49,7 +49,12 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Install Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#conda-install">Conda install</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#using-python-api">Using python API</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#using-c-api">Using C++ API</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="#using-c-api">Using C++ API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#build-from-source">Build from source</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dependencies">Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compiling-process">Compiling process</a><ul class="simple">
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -200,7 +205,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="./">v0.5.5a</a></li>
+              <a  class="nav-link" href="./">v0.5.6a</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -226,7 +231,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="./">v0.5.5a</a></li>
+                  <a  class="nav-link" href="./">v0.5.6a</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -276,7 +281,12 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Install Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#conda-install">Conda install</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#using-python-api">Using python API</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#using-c-api">Using C++ API</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="#using-c-api">Using C++ API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#build-from-source">Build from source</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dependencies">Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compiling-process">Compiling process</a><ul class="simple">
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -593,10 +603,148 @@ Shape : (4)
 [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
 </pre></div>
 </div>
-<p>%Build from source
-%*********************
-%For advanced user who wish to build cytnx from source, we provides the cmake install.</p>
+</div>
+<div class="section" id="build-from-source">
+<h2>Build from source<a class="headerlink" href="#build-from-source" title="Permalink to this headline">¶</a></h2>
+<p>For advanced user who wish to build cytnx from source, we provides the cmake install.</p>
+<div class="section" id="dependencies">
+<h3>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h3>
+<p>Cytnx required the following minimum dependencies:</p>
+<ul class="simple">
+<li><p>cmake &gt;=3.14</p></li>
+<li><p>Boost v1.53+ [check_deleted, atomicadd, intrusive_ptr]</p></li>
+<li><p>openblas (lapacke)</p></li>
+<li><p>gcc v4.8.5+ (recommand v6+ or equivalent clang on Mac with C++11 support) (required -std=c++11)</p></li>
+</ul>
+<p>In addition, you might want to install the following optional dependencies if you want cytnx to compile with features like openmp, mkl and/or CUDA support.</p>
+<p>[Openmp]</p>
+<ul class="simple">
+<li><p>openmp</p></li>
+</ul>
+<p>[MKL]</p>
+<ul class="simple">
+<li><p>intel mkl</p></li>
+</ul>
+<p>[CUDA]</p>
+<ul class="simple">
+<li><p>Nvidia cuda library v10+</p></li>
+<li><p>Nvidia cuDNN library</p></li>
+</ul>
+<p>[Python API]</p>
+<ul class="simple">
+<li><p>python &gt;=3.6</p></li>
+<li><p>pybind11</p></li>
+<li><p>python-graphviz</p></li>
+<li><p>graphviz</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For MacOS, standard brew install openblas will not work since it lack lapacke.h wrapper support.</p>
+<p>If you are using MacOS, please install intel mkl (free) instead.</p>
+<p>For python API, we recommend install of python using anaconda or miniconda</p>
+</div>
+<p>OS specific installation of minimum dependencies:</p>
+<ul class="simple">
+<li><p>Ubuntu:</p></li>
+</ul>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$sudo</span> apt-get install libboost-all-dev libopenblas-dev liblapack-dev liblapacke-dev cmake make curl g++ libomp-dev
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>MacOS:</p></li>
+</ul>
+<ol class="arabic simple">
+<li><p>install boost:</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$brew</span> install boost
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>download and install intel mkl via <a class="reference external" href="https://software.intel.com/content/www/us/en/develop/tools/math-kernel-library/choose-download/macos.html">intel mkl</a></p></li>
+</ol>
+<ul class="simple">
+<li><p>Windows:</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For Windows user, please use <a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">WSL</a>. We recommend using ubuntu distribution, and follow the instruction of Ubuntu to install cytnx and dependencies.</p>
+</div>
+</div>
+<div class="section" id="compiling-process">
+<h3>Compiling process<a class="headerlink" href="#compiling-process" title="Permalink to this headline">¶</a></h3>
+<p>Please see the following steps for the standard cmake compiling process and all the compiling options:</p>
+<ol class="arabic simple">
+<li><p>create a build directory:</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$make</span> build
+<span class="nv">$cd</span> build
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>use cmake to auto matically generate compiling files:</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$cmake</span> <span class="o">[</span>option<span class="o">]</span> &lt;cytnx repo directory&gt;
+</pre></div>
+</div>
+<p>The following are the avaliable compiling option flags that you can specify in <strong>[option]</strong>:</p>
+<ul>
+<li><p>-DCMAKE_INSTALL_PREFIX=&lt;Destination path&gt;</p>
+<blockquote>
+<div><p>This specify the install destination you want cytnx to be installed.
+The default is /usr/local/cytnx</p>
+</div></blockquote>
+</li>
+<li><p>-DBUILD_PYTHON=on</p>
+<blockquote>
+<div><p>This specify if the cytnx python API will be installed.
+The default is <em>off</em></p>
+</div></blockquote>
+</li>
+<li><p>-DUSE_MKL=on</p>
+<blockquote>
+<div><p>This specify if the cytnx is compiled against intel mkl library.
+The default is <em>off</em></p>
+</div></blockquote>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>if USE_MKL=off, the default linking library for linear algebra is openblas.</p>
+</div>
+<ul>
+<li><p>-DUSE_OMP=on</p>
+<blockquote>
+<div><p>This specify if the cytnx is compiled with openmp acceleration.
+The default is <em>off</em></p>
+</div></blockquote>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>if USE_MKL=on, then USE_OMP=on will be forced</p>
+</div>
+<ul>
+<li><p>-DUSE_CUDA=on</p>
+<blockquote>
+<div><p>This specify if the cytnx is compiled with CUDA-gpu support.
+The default is <em>off</em></p>
+</div></blockquote>
+</li>
+</ul>
+<ol class="arabic" start="3">
+<li><p>compile the code:</p>
+<blockquote>
+<div><p>$make</p>
+</div></blockquote>
+</li>
+<li><p>install to the target location:</p>
+<blockquote>
+<div><p>$make install</p>
+</div></blockquote>
+</li>
+</ol>
 <div class="toctree-wrapper compound">
+</div>
 </div>
 </div>
 </div>
