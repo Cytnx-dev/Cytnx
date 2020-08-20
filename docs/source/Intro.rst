@@ -8,7 +8,7 @@ Introdoction
     
     Cytnx also support multi-devices (CPUs/GPUs) directly in the base container level. Especially, not only the container but also our linear algebra fucntions share the same APIs regadless of the devices where the input Tensors are, just like pytorch. This provides users ability to accelerate the code without worrying too much details about multi-devices programming. 
     
-    From the physics side, cytnx_extension namespace/submodule provides powerful tools such as CyTensor, Network, Bond, Symmetry etc. These objects are built on top of Tensor objects, spcifically aiming for reduce the developing work of Tensor network algorithm by simplify the user interfaces. 
+    From the physics side, cytnx provides powerful tools such as UniTensor, Network, Bond, Symmetry etc. These objects are built on top of Tensor objects, spcifically aiming for reduce the developing work of Tensor network algorithm by simplify the user interfaces. 
 
     In this user guide, both python and C++ APIs will be discussed, provided side-by-side for users to better understand how to use Cytnx, and understand the conversion in between Python API and C++ API. 
     
