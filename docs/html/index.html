@@ -242,28 +242,6 @@ $(function() {
 </ul>
 <p>^ this is generator</p>
 <p>[Note] The difference of initializer and generator is that initializer is used to initialize the Tensor, and generator generates a new Tensor.</p>
-<h2>Requirements</h2>
-<ul>
-<li>Boost v1.53+ [check_deleted, atomicadd, intrusive_ptr]</li>
-<li>C++11</li>
-<li>lapack (lapacke or mkl)</li>
-<li>blas (or mkl)</li>
-<li>gcc v4.8.5+ (recommand v6+) (required -std=c++11)</li>
-</ul>
-<p>[CUDA support]</p><ul>
-<li>CUDA v10+</li>
-<li>cuDNN</li>
-</ul>
-<p>[OpenMp support]</p><ul>
-<li>openmp</li>
-</ul>
-<p>[Python]</p><ul>
-<li>pybind11</li>
-<li>numpy &gt;= 1.15</li>
-</ul>
-<p>[MKL]</p><ul>
-<li>icpc</li>
-</ul>
 <h2>conda install</h2>
 <p>[Currently Linux only]</p>
 <p>without CUDA</p><ul>

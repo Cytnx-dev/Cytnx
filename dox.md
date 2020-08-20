@@ -156,30 +156,6 @@
 
     [Note] The difference of initializer and generator is that initializer is used to initialize the Tensor, and generator generates a new Tensor.
 
-
-    
-## Requirements
-    * Boost v1.53+ [check_deleted, atomicadd, intrusive_ptr]
-    * C++11
-    * lapack (lapacke or mkl) 
-    * blas (or mkl) 
-    * gcc v4.8.5+ (recommand v6+) (required -std=c++11) 
-
-    [CUDA support]
-    * CUDA v10+
-    * cuDNN
-
-    [OpenMp support]
-    * openmp
-
-    [Python]
-    * pybind11 
-    * numpy >= 1.15 
-
-    [MKL]
-    * icpc 
-
-
 ## conda install  
     [Currently Linux only]
 
