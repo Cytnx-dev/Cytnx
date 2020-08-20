@@ -12,7 +12,7 @@ See The following user guide for install and using of cytnx:
 [Cytnx_v0.5.pdf (dated 07/25/2020)](https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing)
 
 
-[![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx_cuda_36/badges/version.svg)](https://anaconda.org/kaihsinwu/cytnx_cuda_36) [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx_37/badges/platforms.svg)](https://anaconda.org/kaihsinwu/cytnx_37)
+[![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx_38/badges/version.svg)](https://anaconda.org/kaihsinwu/cytnx_38) [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx_38/badges/platforms.svg)](https://anaconda.org/kaihsinwu/cytnx_38)
 [![Build Status](https://travis-ci.com/kaihsin/Cytnx_build.svg?branch=master)](https://travis-ci.com/kaihsin/Cytnx_build)
 
 ## News
