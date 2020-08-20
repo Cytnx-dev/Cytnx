@@ -93,7 +93,7 @@ set(CYTNX_VERSION
 
 option(USE_ICPC "Build Cytnx with Intel Compilers" OFF)
 option(USE_CUDA "Build using Nvidia CUDA for GPU library" OFF)
-option(BUILD_PYTHON "Build Python wrapper" ON)
+option(BUILD_PYTHON "Build Python wrapper" OFF)
 option(USE_MKL "Build using MKL" OFF)
 option(USE_OMP "Build Cytnx with OpenMP" ON)
 option(BUILD_DOC "Build API docuemntation" OFF)
