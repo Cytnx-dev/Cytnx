@@ -32,18 +32,6 @@
 ######################################################################
 cmake_minimum_required(VERSION 3.11)
 
-
-if(USE_ML)
-  execute_process (
-    COMMAND bash -c "python -c 'import torch;print(torch.utils.cmake_prefix_path)'"
-    OUTPUT_VARIABLE TORCH_CMAKE_PATH_C
-  )
-  string(REGEX REPLACE "\n$" "" TORCH_CMAKE_PATH_C "${TORCH_CMAKE_PATH_C}")
-  set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${TORCH_CMAKE_PATH_C})
-  #message(STATUS "${TORCH_CMAKE_PATH_C}")
-  message(STATUS ${CMAKE_PREFIX_PATH})
-endif()
-
 include(cmake/target_sources_local.cmake)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 message(STATUS ${CMAKE_MODULE_PATH})
@@ -91,8 +79,8 @@ endif()
 ######################################################################
 set(CYTNX_VERSION_MAJOR 0)
 set(CYTNX_VERSION_MINOR 5)
-set(CYTNX_VERSION_PATCH 5)
-set(CYTNX_VERSION COUNT 1)
+set(CYTNX_VERSION_PATCH 3)
+set(CYTNX_VERSION COUNT 0)
 set(CYTNX_VERSION
   ${CYTNX_VERSION_MAJOR}.${CYTNX_VERSION_MINOR}.${CYTNX_VERSION_PATCH}
 )
@@ -105,10 +93,8 @@ set(CYTNX_VERSION
 
 option(USE_ICPC "Build Cytnx with Intel Compilers" OFF)
 option(USE_CUDA "Build using Nvidia CUDA for GPU library" OFF)
-option(BUILD_PYTHON "Build Python wrapper" OFF)
+option(BUILD_PYTHON "Build Python wrapper" ON)
 option(USE_MKL "Build using MKL" OFF)
-option(USE_OMP "Build Cytnx with OpenMP" ON)
-option(USE_ML "Build Cytnx with ML" OFF)
 option(BUILD_DOC "Build API docuemntation" OFF)
 if (USE_ICPC)
   message(STATUS, "Build Cytnx with Intel Compilers")
@@ -139,7 +125,6 @@ if (USE_MKL)
   option(MKL_MLT "Use multi-threading libary. [Default]" ON)
   mark_as_advanced(MKL_SDL MKL_MLT)
 endif()
-
 
 
 ######################################################################
@@ -174,10 +159,18 @@ add_subdirectory(src)
 ######################################################################
 if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES))
   if (USE_MKL)
-    set(BLA_VENDOR Intel10_64ilp)
-    find_package( BLAS REQUIRED)
-    find_package( LAPACK REQUIRED)
-    message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}" )
+  #  find_package(MKL REQUIRED)
+  #  target_compile_definitions(cytnx PRIVATE UNI_MKL)
+  #  set(LAPACK_LIBRARIES ${MKL_MINIMAL_LIBRARY})
+  #  message("MKL found: ${MKL_MINIMAL_LIBRARY}")
+  #    if(NOT TARGET MKL::MKL_CXX)
+  #      add_library(MKL::MKL_CXX IMPORTED INTERFACE)
+  #      set_property(TARGET MKL::MKL_CXX
+  #                   PROPERTY INTERFACE_COMPILE_OPTIONS "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:-lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5 -ldl -lstdc++>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:>")
+        # Only works if the same flag is passed to the linker; use CMake 3.9+ otherwise (Intel, AppleClang)
+  #    endif()
+  #  target_link_libraries(cytnx PRIVATE MKL::MKL_CXX)
+  
   else()
     set(BLA_VENDOR OpenBLAS)
     find_package( BLAS REQUIRED)
@@ -191,8 +184,6 @@ endif()
 
 if (USE_MKL)
     target_compile_definitions(cytnx PRIVATE UNI_MKL)
-    target_compile_definitions(cytnx PRIVATE MKL_ILP64)
-    set(USE_OMP ON FORCE)
 endif()
 
 
@@ -200,30 +191,25 @@ find_package(Boost REQUIRED)
 message(STATUS ${COMPILE_DEFINITIONS})
 # ----------------------------------------
 # Find OpenMP
-if(USE_OMP)
-    if(USE_MKL)
-        target_compile_definitions(cytnx PRIVATE UNI_OMP)
-    else()
-        find_package( OpenMP )
-        if ( OPENMP_FOUND )
-          if(NOT TARGET OpenMP::OpenMP_CXX)
-            find_package(Threads REQUIRED)
-            add_library(OpenMP::OpenMP_CXX IMPORTED INTERFACE)
-            set_property(TARGET OpenMP::OpenMP_CXX
-                         PROPERTY INTERFACE_COMPILE_OPTIONS "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>")
-            # Only works if the same flag is passed to the linker; use CMake 3.9+ otherwise (Intel, AppleClang)
-            set_property(TARGET OpenMP::OpenMP_CXX
-                         PROPERTY INTERFACE_LINK_LIBRARIES "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>" Threads::Threads)
+find_package( OpenMP )
+if ( OPENMP_FOUND )
+  if(NOT TARGET OpenMP::OpenMP_CXX)
+    find_package(Threads REQUIRED)
+    add_library(OpenMP::OpenMP_CXX IMPORTED INTERFACE)
+    set_property(TARGET OpenMP::OpenMP_CXX
+                 PROPERTY INTERFACE_COMPILE_OPTIONS "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>")
+    # Only works if the same flag is passed to the linker; use CMake 3.9+ otherwise (Intel, AppleClang)
+    set_property(TARGET OpenMP::OpenMP_CXX
+                 PROPERTY INTERFACE_LINK_LIBRARIES "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>" Threads::Threads)
 
-          else()
-            set_property(TARGET OpenMP::OpenMP_CXX
-                         PROPERTY INTERFACE_COMPILE_OPTIONS "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>")    
-          endif()
-          target_link_libraries(cytnx PRIVATE OpenMP::OpenMP_CXX)
-          target_compile_definitions(cytnx PRIVATE UNI_OMP)
-        endif()
-    endif()
+  else()
+    set_property(TARGET OpenMP::OpenMP_CXX
+                 PROPERTY INTERFACE_COMPILE_OPTIONS "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>")    
+  endif()
+  target_link_libraries(cytnx PRIVATE OpenMP::OpenMP_CXX)
+  target_compile_definitions(cytnx PRIVATE UNI_OMP)
 endif()
+
 target_link_libraries(cytnx PUBLIC Boost::boost ${LAPACK_LIBRARIES})
 
 
@@ -261,7 +247,7 @@ if(USE_CUDA)
   set_target_properties(cytnx PROPERTIES 
       CUDA_SEPARABLE_COMPILATION ON
                                    )
-  set_target_properties(cytnx PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
+
   set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Xcudafe=--display_error_number")
   #set(CMAKE_CUDA_FLAGS "-Xcompiler=-Wall -Xcompiler=-Wno-deprecated-gpu-targets -Xcudafe=--display_error_number")
   ##set(CMAKE_CUDA_FLAGS "-Xcompiler=-Wall -Wno-deprecated-gpu-targets -Xcudafe=--display_error_number")
@@ -283,14 +269,6 @@ if(USE_CUDA)
 endif()
 
 
-## pytorch:
-if(USE_ML)
-  find_package(Torch REQUIRED)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}") 
-  target_compile_definitions(cytnx PRIVATE UNI_ML)
-  target_link_libraries(cytnx PRIVATE ${TORCH_LIBRARIES})
-  set_property(TARGET cytnx PROPERTY CXX_STANDARD 14)
-endif()
 
 
 ######################################################################
@@ -352,7 +330,7 @@ INSTALL(TARGETS cytnx EXPORT cytnx_targets
           DESTINATION ${CMAKE_INSTALL_LIBDIR}
           COMPONENT libraries
         PUBLIC_HEADER
-          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/cytnx
           COMPONENT Development
       )
 if(BUILD_PYTHON)
@@ -371,7 +349,7 @@ install(EXPORT cytnx_targets
         DESTINATION ${INSTALL_CONFIGDIR}
         )
 install(DIRECTORY include/
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/cytnx
         COMPONENT headers
         FILES_MATCHING PATTERN 		"*.h*")
 
@@ -418,8 +396,8 @@ endif()
 set(libname "${CMAKE_SHARED_LIBRARY_PREFIX}cytnx.${CYTNX_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 
-# create a file that contain all the link flags:
-FILE(WRITE "${CMAKE_BINARY_DIR}/linkflags.tmp" "" "")
+
+
 
 ######################################################################
 # Information Messages
@@ -436,8 +414,10 @@ message(STATUS " Installation Prefix: ${CMAKE_INSTALL_PREFIX}")
 message(STATUS " CXX Compiler: ${CMAKE_CXX_COMPILER}")
 message(STATUS " CXX Flags: ${CMAKE_CXX_FLAGS}")
 message(STATUS " BLAS and LAPACK Libraries: ${LAPACK_LIBRARIES}")
-message(STATUS " Link libraries: ${CYTNX_LINK_Libs}")
-FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${LAPACK_LIBRARIES}\n" "")
+
+
+
+
 
 
 if(BUILD_PYTHON)
@@ -453,37 +433,14 @@ if(USE_CUDA)
   message( STATUS "  - CUDA Version: ${CUDA_VERSION_STRING}")
   message( STATUS "  - CUDA Toolkit Root: ${CUDA_TOOLKIT_ROOT_DIR}")
   message( STATUS "  - CuSolver library: ${CUDA_cusolver_LIBRARY}")
-  FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cusolver_LIBRARY}\n" "")
-  message( STATUS "  - Curand library: ${CUDA_curand_LIBRARY}")
-  FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_curand_LIBRARY}\n" "")
-  message( STATUS "  - CuBlas library: ${CUDA_cublas_LIBRARY}")
-  FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cublas_LIBRARY}\n" "")
-  message( STATUS "  - Cuda rt library: ${CUDA_cudart_static_LIBRARY} -ldl")
-  FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cudart_static_LIBRARY} -ldl\n" "") # use > to indicate special rt processing 
-  message( STATUS "  - Cuda devrt library: ${CUDA_cudadevrt_LIBRARY} -lrt")
-  FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cudadevrt_LIBRARY} -lrt\n" "") # use > to indicate special rt processing 
 else()
   message( STATUS " Build CUDA Support: NO")
 endif()
-if(USE_OMP)
-    if(USE_MKL)
-          message( STATUS " Build OMP Support: YES (force with MKL=on)")
-    else()
-        if(OPENMP_FOUND)
-          message( STATUS " Build OMP Support: YES")
-        else()
-          message( STATUS " Build OMP Support: NO  (Not found)")
-        endif()
-    endif()
+if(OPENMP_FOUND)
+  message( STATUS " Build OMP Support: YES")
 else()
-      message( STATUS " Build OMP Support: NO")
+  message( STATUS " Build OMP Support: NO")
 endif()
-if(USE_ML)
-    message( STATUS " Build ML Support: YES")
-    FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${TORCH_LIBRARIES}\n" "") 
-endif()
-
-
 if(BUILD_DOC)
   message( STATUS " Build Documentation: YES")
   message( STATUS "  - Doxygen: ${DOXYGEN_EXECUTABLE}")
@@ -496,7 +453,6 @@ message(STATUS "")
 message(STATUS "")
 
 
-install(FILES ${CMAKE_BINARY_DIR}/linkflags.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
 
 
 if (BUILD_PACKAGES)

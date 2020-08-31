@@ -75,7 +75,29 @@ namespace cytnx{
     };
     /// @endcond
 
+    /// @cond
+    class EngType_class{
+        public:
+            enum:unsigned int{
+                Non,
+                Mt19937,
+                Mt19937_64,
+            };
+
+            bool is_cuda(const unsigned int &eng_type_id);
+            bool is_cpu(const unsigned int &eng_type_id);
+            std::string getname(const unsigned int &eng_type_id);
+            unsigned int word_size(const unsigned int &eng_type_id);
+            
+            
+    };
+    /// @endcond
+
+
+
+
     extern Type_class Type; 
+    extern EngType_class EngType;
     extern int __blasINTsize__;
 }//namespace cytnx
 

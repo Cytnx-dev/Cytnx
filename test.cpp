@@ -11,6 +11,8 @@ typedef cytnx::Accessor ac;
 
 
 
+
+
 //-------------------------------------------
 
 Tensor myfunc(const Tensor &Tin){
@@ -18,6 +20,8 @@ Tensor myfunc(const Tensor &Tin){
     Tensor A = arange(25).reshape({5,5});
     A += A.permute({1,0}).contiguous()+1;
     
+
+
     return linalg::Dot(A,Tin);
 
 }
@@ -39,6 +43,7 @@ class MyOp: public LinOp{
 int main(int argc, char *argv[]){
     Tensor qr = arange(12).reshape({4,3});
     cout << qr.Div(cytnx_int64(3));
+
     return 0;
     
 

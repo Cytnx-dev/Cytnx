@@ -18,6 +18,8 @@ OMP_Enable=1
 ## compile with MKL library:
 MKL_Enable=1
 
+## compile with ML/torch part:
+ML_Enable=1
 
 
 

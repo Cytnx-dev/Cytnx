@@ -5,10 +5,10 @@
 #include "cytnx_error.hpp"
 #include "Tensor.hpp"
 #include "Storage.hpp"
+#include "rand_gen.hpp"
 #include <vector>
 #include <initializer_list>
 #include <random>
-
 
 namespace cytnx{
     namespace random{

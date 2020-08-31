@@ -257,7 +257,75 @@ unsigned int cytnx::Type_class::typeSize(const unsigned int &type_id){
     }
 
 }
+//--------------------------------------------------------------------------
+bool cytnx::EngType_class::is_cpu(const unsigned int &type_id){
+
+
+    switch (type_id){
+        case EngType_class::Non:
+            return false;
+        case EngType_class::Mt19937:
+            return true;
+        case EngType_class::Mt19937_64:
+            return true;
+        default:
+            cytnx_error_msg(1,"%s","[ERROR] invalid type");
+            return 0;
+    }
+
+}
         
+bool cytnx::EngType_class::is_cuda(const unsigned int &type_id){
+
+    switch (type_id){
+        case EngType_class::Non:
+            return false;
+        case EngType_class::Mt19937:
+            return false;
+        case EngType_class::Mt19937_64:
+            return false;
+        default:
+            cytnx_error_msg(1,"%s","[ERROR] invalid type");
+            return 0;
+    }
+
+}
+
+std::string cytnx::EngType_class::getname(const unsigned int &type_id){
+
+    switch (type_id){
+        case EngType_class::Non:
+            return "non";
+        case EngType_class::Mt19937:
+            return "mt19937";
+        case EngType_class::Mt19937_64:
+            return "mt19937_64";
+        default:
+            cytnx_error_msg(1,"%s","[ERROR] invalid type");
+            return "";
+    }
+
+}
+
+unsigned int cytnx::EngType_class::word_size(const unsigned int &type_id){
+
+    switch (type_id){
+        case EngType_class::Non:
+            return 0;
+        case EngType_class::Mt19937:
+            return 32;
+        case EngType_class::Mt19937_64:
+            return 64;
+        default:
+            cytnx_error_msg(1,"%s","[ERROR] invalid type");
+            return 0;
+    }
+
+}
+
+
+//=============================================
 namespace cytnx{
     Type_class Type;
+    EngType_class EngType;
 }

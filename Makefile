@@ -36,13 +36,21 @@ else
   CCFLAGS:= 
 endif
 
+ifeq ($(ML_Enable),1)
+  CCFLAGS += -std=c++14 -D_GLIBCXX_USE_CXX11_ABI=0
+else
+  CCFLAGS += -std=c++11
+endif
+
 ifeq ($(MKL_Enable),1)
-  CCFLAGS += -std=c++11 -g -Wformat=0 -m64 -fPIC -DUNI_MKL -w -Wno-c++11-narrowing -DMKL_ILP64
+  CCFLAGS += -g -Wformat=0 -m64 -fPIC -DUNI_MKL -w -Wno-c++11-narrowing -DMKL_ILP64
   LDFLAGS += $(DOCKER_MKL) -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -ldl -lm   
 else
-  CCFLAGS += -std=c++11 -g -Wformat=0 -fPIC -w -Wno-c++11-narrowing 
+  CCFLAGS += -g -Wformat=0 -fPIC -w -Wno-c++11-narrowing 
   LDFLAGS +=  -llapacke -lblas -lstdc++  
 endif
+
+
 
 
 NVCC:= $(CUDA_PATH)/bin/nvcc -ccbin $(CC)
@@ -73,6 +81,16 @@ else
   ALL_CCFLAGS += $(CCFLAGS)
 endif
 
+ifeq ($(ML_Enable),1)
+  TORCH_DIR_c := $(shell python -c "exec(\"import torch,os\nprint(os.path.dirname(os.path.dirname(torch.utils.cmake_prefix_path)))\")") 
+  TORCH_DIR = $(strip $(TORCH_DIR_c))
+  LDFLAGS += -L$(TORCH_DIR)/lib/ -Wl,--no-as-needed,-rpath=$(TORCH_DIR)/lib
+  LDFLAGS += -ltorch -ltorch_cpu -ltorch_cuda -lc10 -lc10_cuda
+  INCFLAGS += -I$(TORCH_DIR)/include/torch/csrc/api/include
+  INCFLAGS += -I$(TORCH_DIR)/include
+  CCFLAGS += -DUNI_ML
+endif
+
 ALL_LDFLAGS :=
 ifeq ($(GPU_Enable),1)
   LDFLAGS += -lcublas -lcusolver -lcurand -lcudart
@@ -82,6 +100,8 @@ ifeq ($(GPU_Enable),1)
 else
   ALL_LDFLAGS += $(LDFLAGS)
 endif
+
+
 
 OBJS = Storage_base.o BoolStorage.o Uint16Storage.o Int16Storage.o Uint32Storage.o Int32Storage.o Uint64Storage.o Int64Storage.o FloatStorage.o DoubleStorage.o ComplexFloatStorage.o ComplexDoubleStorage.o Type.o Device.o
 
@@ -116,7 +136,13 @@ ifeq ($(GPU_Enable),1)
 endif
 
 ## Random
-OBJS += Make_normal.o normal.o Make_uniform.o uniform.o 
+OBJS += Make_normal.o normal.o Make_uniform.o uniform.o rand_gen.o 
+
+
+## Torch/ML related:
+ifeq ($(ML_Enable),1)
+  OBJS += TypeConvert.o CyTensor_base.o DenseCyTensor.o SparseCyTensor.o CyTensor.o
+endif
 
 
 ALLOBJS = $(OBJS)
@@ -135,7 +161,7 @@ all: test
 #	$(CC) -o $@ $^ $(CCFLAGS) $(LDFLAGS)
 
 test: test.o libcytnx.so
-	$(CC) -L. -o $@  $< -lcytnx
+	$(CC) -L. $(LDFLAGS) -o $@  $< -lcytnx 
 	#export LD_LIBRARY_PATH=.
 
 libcytnx.so: $(ALLOBJS)
@@ -208,6 +234,24 @@ LinOp.o: $(CytnxPATH)/src/LinOp.cpp $(CytnxPATH)/include/LinOp.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 ##--------------------------------------------------------------------------
+
+## Torch/ML
+##########################
+ifeq ($(ML_Enable),1)
+TypeConvert.o: $(CytnxPATH)/src/ml/TypeConvert.cpp $(CytnxPATH)/include/ml/TypeConvert.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+
+CyTensor.o: $(CytnxPATH)/src/ml/CyTensor.cpp $(CytnxPATH)/include/ml/CyTensor.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+
+CyTensor_base.o: $(CytnxPATH)/src/ml/CyTensor_base.cpp $(CytnxPATH)/include/ml/CyTensor.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+DenseCyTensor.o: $(CytnxPATH)/src/ml/DenseCyTensor.cpp $(CytnxPATH)/include/ml/CyTensor.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+SparseCyTensor.o: $(CytnxPATH)/src/ml/SparseCyTensor.cpp $(CytnxPATH)/include/ml/CyTensor.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+endif
+
 
 
 ## Storage 
@@ -421,6 +465,8 @@ Type.o : $(CytnxPATH)/src/Type.cpp $(CytnxPATH)/include/Type.hpp
 Device.o: $(CytnxPATH)/src/Device.cpp $(CytnxPATH)/include/Device.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
+rand_gen.o: $(CytnxPATH)/src/rand_gen.cpp $(CytnxPATH)/include/rand_gen.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 ## Utils
 ##########################
