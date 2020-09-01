@@ -1,13 +1,12 @@
 #include <typeinfo>
+#include "torcyx.hpp"
 #include "ml/CyTensor.hpp"
 #include "utils/utils.hpp"
 #include "utils/utils_internal_interface.hpp"
-#include "ml/xlinalg.hpp"
 
 using namespace std;
 
-namespace cytnx{
-    namespace ml{
+namespace torcyx{
         /*
         // += 
         template<> CyTensor& CyTensor::operator+=<CyTensor>(const CyTensor &rc){
@@ -346,5 +345,4 @@ namespace cytnx{
         }            
         */
 
-    }//ml
 }//cytnx

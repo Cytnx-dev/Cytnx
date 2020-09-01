@@ -11,17 +11,13 @@
 #include <initializer_list>
 #include <fstream>
 #include <algorithm>
-#include "Symmetry.hpp"
-#include "Bond.hpp"
-#include "Accessor.hpp"
-#include "TypeConvert.hpp"
+#include "torcyx.hpp"
 //#include "linalg.hpp"
 
 //namespace cytnx{
-namespace cytnx{ 
-    using namespace cytnx;
+namespace torcyx{ 
+    //using namespace cytnx;
     
-    namespace ml{
         /// @cond 
         class CyTensorType_class{
             public:
@@ -1403,7 +1399,6 @@ namespace cytnx{
         */
         //CyTensor Contract(const CyTensor &inL, const CyTensor &inR);
         
-    }//ml
 
-}//cytnx
+}//torcyx
 #endif

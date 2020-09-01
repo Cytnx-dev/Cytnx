@@ -1,8 +1,8 @@
 #include "ml/TypeConvert.hpp"
 #include "cytnx_error.hpp"
+
 using namespace std;
-namespace cytnx{
-    namespace ml{
+namespace torcyx{
 
         TypeCvrt_class::TypeCvrt_class(){
 
@@ -57,7 +57,6 @@ namespace cytnx{
 
         TypeCvrt_class type_converter;
 
-    }
 }
 
 

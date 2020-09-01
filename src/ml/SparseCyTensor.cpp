@@ -1,15 +1,13 @@
 #include "ml/CyTensor.hpp"
 #include "ml/xlinalg.hpp"
-#include "Accessor.hpp"
+#include "torcyx.hpp"
 #include "utils/utils.hpp"
 #include "utils/utils_internal_interface.hpp"
-#include "linalg.hpp"
-#include "Generator.hpp"
 #include <vector>
 #include "utils/vec_print.hpp"
+
 using namespace std;
-namespace cytnx{
-    namespace ml{
+namespace torcyx{
         typedef Accessor ac;
         /*
         void SparseCyTensor::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank, const unsigned int &dtype,const int &device, const bool &is_diag){
@@ -1091,6 +1089,4 @@ namespace cytnx{
             cytnx_error_msg(true,"[ERROR] Save for SparseCyTensor is under developing!!%s","\n");
         }
         */
-
-    }//namespace ml
 }//namespace cytnx

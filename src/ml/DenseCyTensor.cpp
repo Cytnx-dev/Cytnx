@@ -1,16 +1,12 @@
 #include "ml/CyTensor.hpp"
+#include "ml/xlinalg.hpp"
+#include "torcyx.hpp"
 #include "utils/utils.hpp"
 #include "utils/utils_internal_interface.hpp"
-//#include "Generator.hpp"
-#include "ml/xlinalg.hpp"
-//#include "linalg.hpp"
-#include "Accessor.hpp"
 #include <algorithm>
 #include <utility>
 #include <vector>
-typedef cytnx::Accessor ac;
-namespace cytnx{
-    namespace ml{
+namespace torcyx{
         
         void DenseCyTensor::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank, const unsigned int &dtype,const int &device, const bool &is_diag){
             /*
@@ -695,6 +691,5 @@ namespace cytnx{
         }
         */        
 
-    }//namespace ml
 
 }// namespace cytnx

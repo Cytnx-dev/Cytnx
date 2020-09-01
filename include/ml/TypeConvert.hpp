@@ -1,13 +1,14 @@
 #ifndef _TYPECONVERT_H_
 #define _TYPECONVERT_H_
 
+
 #include "Type.hpp"
 #include "Device.hpp"
 #include <torch/torch.h>
 
-namespace cytnx{
-    namespace ml{
-
+namespace torcyx{
+    using cytnx::Type;
+    using cytnx::Device;
 
     /// @cond
         //typedef torch::TensorOptions (*Tor2Cy_io)(const unsigned int &dtype, const unsigned int &device);
@@ -25,8 +26,6 @@ namespace cytnx{
         extern TypeCvrt_class type_converter;
     /// @endcond
 
-
-    }
 }
 
 

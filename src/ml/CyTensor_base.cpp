@@ -1,11 +1,12 @@
 #include "ml/CyTensor.hpp"
-//#include "Tensor.hpp"
 #include "ml/xlinalg.hpp"
+#include "torcyx.hpp"
 #include <string>
 #include "utils/utils.hpp"
-namespace cytnx{
-    namespace ml{
-        //using namespace torch;
+
+namespace torcyx{
+        using cytnx::vec_unique;
+
         //====================================================    
         std::string CyTensorType_class::getname(const int &ut_type){
             if(ut_type==this->Void){
@@ -341,6 +342,5 @@ namespace cytnx{
             }
             */
             
-    }//ml        
 }//cytnx
 
