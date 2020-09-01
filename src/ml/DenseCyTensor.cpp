@@ -1,5 +1,6 @@
 #include "ml/CyTensor.hpp"
 #include "ml/xlinalg.hpp"
+#include "ml/TypeConvert.hpp"
 #include "torcyx.hpp"
 #include "utils/utils.hpp"
 #include "utils/utils_internal_interface.hpp"
@@ -7,94 +8,98 @@
 #include <utility>
 #include <vector>
 namespace torcyx{
-        
+        using cytnx::vec_unique;        
+        namespace utils_internal=cytnx::utils_internal;
         void DenseCyTensor::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank, const unsigned int &dtype,const int &device, const bool &is_diag){
-            /*
-                    //check for all bonds
-                    this->_is_tag =false;
-                    cytnx_uint32 N_ket = 0;
-                    if(bonds.size()!=0) this->_is_tag = (bonds[0].type() != bondType::BD_REG);
-                    for(cytnx_uint64 i=0;i<bonds.size();i++){
-                        //check 
-                        cytnx_error_msg(bonds[i].qnums().size()!=0,"%s","[ERROR][DenseCyTensor] All bonds must have non symmetries.");
-                        if(this->_is_tag){
-                            cytnx_error_msg(bonds[i].type() == bondType::BD_REG,"%s","[ERROR][DenseCyTensor] cannot mix tagged bond with un-tagged bond!%s","\n");
-                            N_ket += cytnx_uint32(bonds[i].type() == bondType::BD_KET);
-                        }else{
-                            cytnx_error_msg(bonds[i].type() != bondType::BD_REG,"%s","[ERROR][DenseCyTensor] cannot mix tagged bond with un-tagged bond!%s","\n");
-                        }
-                        cytnx_error_msg(bonds[i].dim()==0,"%s","[ERROR] All bonds must have dimension >=1");
-                    }
-                    
-                    //check rowrank
-                    if(this->_is_tag){
-                        if(rowrank < 0){this->_rowrank = N_ket;}
-                        else{
-                            cytnx_error_msg(rowrank > bonds.size(),"[ERROR] rowrank cannot exceed total rank of Tensor.%s","\n");
-                            this->_rowrank = rowrank;
-                        }
-                    }else{ 
-                        if(bonds.size()==0) this->_rowrank = 0;    
-                        else{
-                            cytnx_error_msg(rowrank <0, "[ERROR] initialize a non-symmetry, un-tagged tensor should assign a >=0 rowrank.%s","\n");
-                            cytnx_error_msg(rowrank > bonds.size(),"[ERROR] rowrank cannot exceed total rank of Tensor.%s","\n");
-                            this->_rowrank = rowrank;
-                        }
-                    }
-                                    
-                    //check labels:
-                    if(in_labels.size()==0){
-                        for(cytnx_int64 i=0;i<bonds.size();i++)
-                            this->_labels.push_back(i);
-        
-                    }else{
-                        //check bonds & labels dim                 
-                        cytnx_error_msg(bonds.size()!=in_labels.size(),"%s","[ERROR] labels must have same lenth as # of bonds.");
-
-                        std::vector<cytnx_int64> tmp = vec_unique(in_labels);
-                        cytnx_error_msg(tmp.size()!=in_labels.size(),"[ERROR] labels cannot contain duplicated elements.%s","\n");
-                        this->_labels = in_labels;
-                    }
-
-                    if(is_diag){
-                        cytnx_error_msg(bonds.size()!=2,"[ERROR] is_diag= ture should have the shape for initializing the CyTensor is square, 2-rank tensor.%s","\n");
-                        cytnx_error_msg(bonds[0].dim() != bonds[1].dim(),"[ERROR] is_diag= ture should have the shape for initializing the CyTensor is square, 2-rank tensor.%s","\n");
-                    }
-
-
-                    //copy bonds, otherwise it will share objects:
-                    this->_bonds = vec_clone(bonds);
-                    this->_is_braket_form = this->_update_braket();
-
-
-                    //non symmetry, initialize memory.
-                    if(this->_bonds.size()==0){
-                        //scalar:
-                        this->_block = torch::zeros({1},dtype,device);
-                    }else{
-                        if(is_diag){
-                            this->_block = zeros({_bonds[0].dim()},dtype,device);
-                            this->_is_diag = is_diag;
-                        }else{
-                            std::vector<cytnx_uint64> _shape(bonds.size());
-                            for(unsigned int i=0;i<_shape.size();i++)
-                                _shape[i] = bonds[i].dim();
-
-                            this->_block = zeros(_shape,dtype,device);
-                        }
-                    }          
-            */
+                auto option = type_converter.Cy2Tor(dtype,device);
+                this->Init(bonds,in_labels,rowrank,is_diag,option);
         }
+
 
         void DenseCyTensor::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank, const bool &is_diag, const torch::TensorOptions &options){
+            
+                //check for all bonds
+                this->_is_tag =false;
+                cytnx_uint32 N_ket = 0;
+                if(bonds.size()!=0) this->_is_tag = (bonds[0].type() != bondType::BD_REG);
+                for(cytnx_uint64 i=0;i<bonds.size();i++){
+                    //check 
+                    cytnx_error_msg(bonds[i].qnums().size()!=0,"%s","[ERROR][DenseCyTensor] All bonds must have non symmetries.");
+                    if(this->_is_tag){
+                        cytnx_error_msg(bonds[i].type() == bondType::BD_REG,"%s","[ERROR][DenseCyTensor] cannot mix tagged bond with un-tagged bond!%s","\n");
+                        N_ket += cytnx_uint32(bonds[i].type() == bondType::BD_KET);
+                    }else{
+                        cytnx_error_msg(bonds[i].type() != bondType::BD_REG,"%s","[ERROR][DenseCyTensor] cannot mix tagged bond with un-tagged bond!%s","\n");
+                    }
+                    cytnx_error_msg(bonds[i].dim()==0,"%s","[ERROR] All bonds must have dimension >=1");
+                }
+                
+                //check rowrank
+                if(this->_is_tag){
+                    if(rowrank < 0){this->_rowrank = N_ket;}
+                    else{
+                        cytnx_error_msg(rowrank > bonds.size(),"[ERROR] rowrank cannot exceed total rank of Tensor.%s","\n");
+                        this->_rowrank = rowrank;
+                    }
+                }else{ 
+                    if(bonds.size()==0) this->_rowrank = 0;    
+                    else{
+                        cytnx_error_msg(rowrank <0, "[ERROR] initialize a non-symmetry, un-tagged tensor should assign a >=0 rowrank.%s","\n");
+                        cytnx_error_msg(rowrank > bonds.size(),"[ERROR] rowrank cannot exceed total rank of Tensor.%s","\n");
+                        this->_rowrank = rowrank;
+                    }
+                }
+                                
+                //check labels:
+                if(in_labels.size()==0){
+                    for(cytnx_int64 i=0;i<bonds.size();i++)
+                        this->_labels.push_back(i);
+    
+                }else{
+                    //check bonds & labels dim                 
+                    cytnx_error_msg(bonds.size()!=in_labels.size(),"%s","[ERROR] labels must have same lenth as # of bonds.");
+
+                    std::vector<cytnx_int64> tmp = vec_unique(in_labels);
+                    cytnx_error_msg(tmp.size()!=in_labels.size(),"[ERROR] labels cannot contain duplicated elements.%s","\n");
+                    this->_labels = in_labels;
+                }
+
+                if(is_diag){
+                    cytnx_error_msg(bonds.size()!=2,"[ERROR] is_diag= ture should have the shape for initializing the CyTensor is square, 2-rank tensor.%s","\n");
+                    cytnx_error_msg(bonds[0].dim() != bonds[1].dim(),"[ERROR] is_diag= ture should have the shape for initializing the CyTensor is square, 2-rank tensor.%s","\n");
+                }
+
+
+                //copy bonds, otherwise it will share objects:
+                this->_bonds = vec_clone(bonds);
+                this->_is_braket_form = this->_update_braket();
+
+
+                //non symmetry, initialize memory.
+                if(this->_bonds.size()==0){
+                    //scalar:
+                    this->_block = torch::zeros({1},options);
+                }else{
+                    if(is_diag){
+                        this->_block = torch::zeros({_bonds[0].dim()},options);
+                        this->_is_diag = is_diag;
+                    }else{
+                        std::vector<cytnx_uint64> _shape(bonds.size());
+                        for(unsigned int i=0;i<_shape.size();i++)
+                            _shape[i] = bonds[i].dim();
+
+                        this->_block = torch::zeros(std::vector<int64_t>(_shape.begin(),_shape.end()),options);
+                    }
+                }          
+            
         }
         void DenseCyTensor::Init_by_Tensor(const torch::Tensor& in_tensor, const cytnx_uint64 &rowrank, const bool &is_diag){
-            /*
-            cytnx_error_msg(in_tensor.dtype() == Type.Void,"[ERROR][Init_by_Tensor] cannot init a CyTensor from an un-initialize Tensor.%s","\n");
+            
+            //cytnx_error_msg(in_tensor.dtype() == Type.Void,"[ERROR][Init_by_Tensor] cannot init a CyTensor from an un-initialize Tensor.%s","\n");
             if(is_diag)
-                cytnx_error_msg(in_tensor.shape().size()!=1,"[ERROR][Init_by_tensor] setting is_diag=True should have input Tensor to be rank-1 with diagonal elements.%s","\n");
+                cytnx_error_msg(in_tensor.sizes().size()!=1,"[ERROR][Init_by_tensor] setting is_diag=True should have input Tensor to be rank-1 with diagonal elements.%s","\n");
 
-            if(in_tensor.storage().size() == 1){
+            if(in_tensor.numel() == 1){
                 //scalalr:
                 cytnx_error_msg(rowrank != 0, "[ERROR][Init_by_Tensor] detect the input Tensor is a scalar with only one element. the rowrank should be =0%s","\n");
                 this->_bonds.clear();
@@ -105,7 +110,7 @@ namespace torcyx{
             }else{
                 if(is_diag){
                     std::vector<Bond> bds(2);
-                    bds[0] = Bond(in_tensor.shape()[0]);
+                    bds[0] = Bond(in_tensor.sizes()[0]);
                     bds[1] = bds[0].clone();
                     this->_bonds = bds;
                     this->_block = in_tensor;
@@ -116,72 +121,30 @@ namespace torcyx{
 
                 }else{
                     std::vector<Bond> bds;
-                    for(cytnx_uint64 i=0;i<in_tensor.shape().size();i++){
-                        bds.push_back(Bond(in_tensor.shape()[i]));
+                    for(cytnx_uint64 i=0;i<in_tensor.sizes().size();i++){
+                        bds.push_back(Bond(in_tensor.sizes()[i]));
                     }
                     this->_bonds = bds;
                     this->_block = in_tensor;
-                    this->_labels = utils_internal::range_cpu<cytnx_int64>(in_tensor.shape().size());
-                    cytnx_error_msg(rowrank > in_tensor.shape().size(),"[ERROR][Init_by_tensor] rowrank exceed the rank of Tensor.%s","\n");
+                    this->_labels = utils_internal::range_cpu<cytnx_int64>(in_tensor.sizes().size());
+                    cytnx_error_msg(rowrank > in_tensor.sizes().size(),"[ERROR][Init_by_tensor] rowrank exceed the rank of Tensor.%s","\n");
                     this->_rowrank = rowrank;
                 }
-            }
-            */
-        }
-
-        /*
-        boost::intrusive_ptr<CyTensor_base> DenseCyTensor::permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank, const bool &by_label){
-            boost::intrusive_ptr<CyTensor_base> out = this->clone();
-            out->permute_(mapper,rowrank,by_label);
-            return out;
-        }
-        void DenseCyTensor::permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank, const bool& by_label){
-            std::vector<cytnx_uint64> mapper_u64;
-            if(by_label){
-                //cytnx_error_msg(true,"[Developing!]%s","\n");
-                std::vector<cytnx_int64>::iterator it;
-                for(cytnx_uint64 i=0;i<mapper.size();i++){
-                    it = std::find(this->_labels.begin(),this->_labels.end(),mapper[i]);
-                    cytnx_error_msg(it == this->_labels.end(),"[ERROR] label %d does not exist in current CyTensor.\n",mapper[i]);
-                    mapper_u64.push_back(std::distance(this->_labels.begin(),it));
-                }
-                
-            }else{
-                mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(),mapper.end());
-            }
-
-            if(this->_is_diag){
-                if(rowrank>=0){
-                    cytnx_error_msg(rowrank!=1,"[ERROR] rowrank should be =1 for CyTensor with is_diag=true%s","\n");
-                }
-                this->_bonds = vec_map(vec_clone(this->bonds()),mapper_u64);// this will check validity
-                this->_labels = vec_map(this->labels(),mapper_u64);
-                this->_is_braket_form = this->_update_braket();
-
-            }else{
-                
-                this->_bonds = vec_map(vec_clone(this->bonds()),mapper_u64);// this will check validity
-                this->_labels = vec_map(this->labels(),mapper_u64);
-                this->_block.permute_(mapper_u64);
-                if(rowrank>=0){
-                    cytnx_error_msg((rowrank>this->_bonds.size()) || (rowrank < 0),"[ERROR] rowrank cannot exceed the rank of CyTensor, and should be >=0.%s","\n");
-                    this->_rowrank = rowrank;
-                }
-                this->_is_braket_form = this->_update_braket();
             }
             
-        };
+        }
 
 
         void DenseCyTensor::print_diagram(const bool &bond_info){
             char *buffer = (char*)malloc(256*sizeof(char));
             
-            sprintf(buffer,"-----------------------%s","\n");         std::cout << std::string(buffer);
+            sprintf(buffer,"--------CyTensor-------%s","\n");         std::cout << std::string(buffer);
             sprintf(buffer,"tensor Name : %s\n",this->_name.c_str()); std::cout << std::string(buffer);
             sprintf(buffer,"tensor Rank : %d\n",this->_labels.size());std::cout << std::string(buffer);
             sprintf(buffer,"block_form  : false%s","\n");             std::cout << std::string(buffer);
             sprintf(buffer,"is_diag     : %s\n",this->_is_diag?"True":"False"); std::cout << std::string(buffer);
-            sprintf(buffer,"on device   : %s\n",this->device_str().c_str());    std::cout << std::string(buffer);
+            //sprintf(buffer,"on device   : %s\n",this->device_str().c_str());    std::cout << std::string(buffer);
+            std::cout << this->options() << std::endl;
 
             cytnx_uint64 Nin = this->_rowrank;
             cytnx_uint64 Nout = this->_labels.size() - this->_rowrank;
@@ -282,6 +245,52 @@ namespace torcyx{
             free(rlbl);
             free(buffer);
         }
+
+
+        /*
+        boost::intrusive_ptr<CyTensor_base> DenseCyTensor::permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank, const bool &by_label){
+            boost::intrusive_ptr<CyTensor_base> out = this->clone();
+            out->permute_(mapper,rowrank,by_label);
+            return out;
+        }
+        void DenseCyTensor::permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank, const bool& by_label){
+            std::vector<cytnx_uint64> mapper_u64;
+            if(by_label){
+                //cytnx_error_msg(true,"[Developing!]%s","\n");
+                std::vector<cytnx_int64>::iterator it;
+                for(cytnx_uint64 i=0;i<mapper.size();i++){
+                    it = std::find(this->_labels.begin(),this->_labels.end(),mapper[i]);
+                    cytnx_error_msg(it == this->_labels.end(),"[ERROR] label %d does not exist in current CyTensor.\n",mapper[i]);
+                    mapper_u64.push_back(std::distance(this->_labels.begin(),it));
+                }
+                
+            }else{
+                mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(),mapper.end());
+            }
+
+            if(this->_is_diag){
+                if(rowrank>=0){
+                    cytnx_error_msg(rowrank!=1,"[ERROR] rowrank should be =1 for CyTensor with is_diag=true%s","\n");
+                }
+                this->_bonds = vec_map(vec_clone(this->bonds()),mapper_u64);// this will check validity
+                this->_labels = vec_map(this->labels(),mapper_u64);
+                this->_is_braket_form = this->_update_braket();
+
+            }else{
+                
+                this->_bonds = vec_map(vec_clone(this->bonds()),mapper_u64);// this will check validity
+                this->_labels = vec_map(this->labels(),mapper_u64);
+                this->_block.permute_(mapper_u64);
+                if(rowrank>=0){
+                    cytnx_error_msg((rowrank>this->_bonds.size()) || (rowrank < 0),"[ERROR] rowrank cannot exceed the rank of CyTensor, and should be >=0.%s","\n");
+                    this->_rowrank = rowrank;
+                }
+                this->_is_braket_form = this->_update_braket();
+            }
+            
+        };
+
+
         void DenseCyTensor::reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank){
             cytnx_error_msg(this->is_tag(),"[ERROR] cannot reshape a tagged CyTensor. suggestion: use untag() first.%s","\n");
             cytnx_error_msg(rowrank > new_shape.size(), "[ERROR] rowrank cannot larger than the rank of reshaped CyTensor.%s","\n");

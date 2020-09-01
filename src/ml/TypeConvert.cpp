@@ -54,6 +54,24 @@ namespace torcyx{
             };
 
         }
+        
+        unsigned int TypeCvrt_class::Tor2Cy(const torch::ScalarType &scalar_type){
+
+            if(scalar_type==torch::kFloat64){
+                return Type.Double;
+            }else if(scalar_type==torch::kFloat32){
+                return Type.Float;
+            }else if(scalar_type==torch::kInt64){
+                return Type.Int64;
+            }else if(scalar_type==torch::kInt32){
+                return Type.Int32;
+            }else if(scalar_type==torch::kInt16){
+                return Type.Int16;
+            }else{
+                cytnx_error_msg(true,"[ERROR] Invalid Torch type that is not support in cytnx.%s","\n");
+            }
+
+        }
 
         TypeCvrt_class type_converter;
 

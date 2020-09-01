@@ -170,36 +170,54 @@ namespace torcyx{
 
                 virtual void Init_by_Tensor(const torch::Tensor& in, const cytnx_uint64 &rowrank, const bool &is_diag=false);
 
-                /*
-                virtual std::vector<cytnx_uint64> shape() const;
+                
+                virtual std::vector<cytnx_int64> shape() const;
                 virtual bool      is_blockform() const ;
                 virtual bool     is_contiguous() const;
+
+                
+                virtual torch::TensorOptions options() const;
+
+
+            
+                virtual torch::Tensor get_block(const cytnx_uint64 &idx=0) const; // return a copy of block
+                virtual torch::Tensor get_block(const std::vector<cytnx_int64> &qnum) const; //return a copy of block
+
+                virtual const torch::Tensor& get_block_(const cytnx_uint64 &idx=0) const; // return a share view of block, this only work for non-symm tensor.
+                virtual const torch::Tensor& get_block_(const std::vector<cytnx_int64> &qnum) const; //return a copy of block
+                virtual torch::Tensor& get_block_(const cytnx_uint64 &idx=0); // return a share view of block, this only work for non-symm tensor.
+                virtual torch::Tensor& get_block_(const std::vector<cytnx_int64> &qnum); //return a copy of block
+
+                virtual std::vector<torch::Tensor> get_blocks() const;
+                virtual const std::vector<torch::Tensor>& get_blocks_() const;
+                virtual std::vector<torch::Tensor>& get_blocks_();
+
+
+
+                virtual void print_diagram(const bool &bond_info=false);
+
+
+                // [Future]
+                //virtual torch::ScalarType    scalar_type()  const;
+                //virtual torch::Device        device() const;
+               
+                // [Old][cyx]
+                //virtual unsigned int  dtype_cyx() const;
+                //virtual int          device_cyx() const;
+                //virtual std::string      dtype_str_cyx() const;
+                //virtual std::string     device_str_cyx() const;
+
+
+                /*
                 virtual void to_(const int &device);
                 virtual boost::intrusive_ptr<CyTensor_base> to(const int &device);
                 virtual boost::intrusive_ptr<CyTensor_base> clone() const;
-                virtual unsigned int  dtype() const;
-                virtual int          device() const;
-                virtual std::string      dtype_str() const;
-                virtual std::string     device_str() const;
                 virtual void set_rowrank(const cytnx_uint64 &new_rowrank);
                 virtual boost::intrusive_ptr<CyTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank=-1, const bool &by_label=false);
                 virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1, const bool &by_label=false);
                 virtual boost::intrusive_ptr<CyTensor_base> contiguous_();
                 virtual boost::intrusive_ptr<CyTensor_base> contiguous();            
-                virtual void print_diagram(const bool &bond_info=false);
 
-                virtual Tensor get_block(const cytnx_uint64 &idx=0) const; // return a copy of block
-                virtual Tensor get_block(const std::vector<cytnx_int64> &qnum) const; //return a copy of block
-
-                virtual const Tensor& get_block_(const cytnx_uint64 &idx=0) const; // return a share view of block, this only work for non-symm tensor.
-                virtual const Tensor& get_block_(const std::vector<cytnx_int64> &qnum) const; //return a copy of block
-                virtual Tensor& get_block_(const cytnx_uint64 &idx=0); // return a share view of block, this only work for non-symm tensor.
-                virtual Tensor& get_block_(const std::vector<cytnx_int64> &qnum); //return a copy of block
-
-
-                virtual std::vector<Tensor> get_blocks() const;
-                virtual const std::vector<Tensor>& get_blocks_() const;
-                virtual std::vector<Tensor>& get_blocks_();
 
                 virtual void put_block(const Tensor &in, const cytnx_uint64 &idx=0);
                 virtual void put_block_(Tensor &in, const cytnx_uint64 &idx=0);
@@ -297,19 +315,60 @@ namespace torcyx{
 
                 // this only work for non-symm tensor
                 void Init_by_Tensor(const torch::Tensor& in_tensor, const cytnx_uint64 &rowrank, const bool &is_diag=false);
-                /*
-                std::vector<cytnx_uint64> shape() const{ 
+                
+                std::vector<cytnx_int64> shape() const{ 
                     if(this->_is_diag){
-                        std::vector<cytnx_uint64> shape = this->_block.shape();
+                        std::vector<cytnx_int64> shape = this->_block.sizes().vec();
                         shape.push_back(shape[0]);
                         return shape;
                     }else{
-                        return this->_block.shape();
+                        return this->_block.sizes().vec();
                     }
                 }
 
                
                 bool is_blockform() const{ return false;}
+                bool is_contiguous() const{return this->_block.is_contiguous();}
+                torch::TensorOptions options() const{
+                    return this->_block.options();
+                }
+
+
+
+                torch::Tensor get_block(const cytnx_uint64 &idx=0) const{ return this->_block.clone(); }
+                torch::Tensor get_block(const std::vector<cytnx_int64> &qnum) const{cytnx_error_msg(true,"[ERROR][DenseCyTensor] try to get_block() using qnum on a non-symmetry CyTensor%s","\n"); return torch::Tensor();}
+                // return a share view of block, this only work for non-symm tensor.
+                const torch::Tensor& get_block_(const std::vector<cytnx_int64> &qnum) const{cytnx_error_msg(true,"[ERROR][DenseCyTensor] try to get_block_() using qnum on a non-symmetry CyTensor%s","\n"); return this->_block;}
+                torch::Tensor& get_block_(const std::vector<cytnx_int64> &qnum){cytnx_error_msg(true,"[ERROR][DenseCyTensor] try to get_block_() using qnum on a non-symmetry CyTensor%s","\n"); return this->_block;}
+
+                // return a share view of block, this only work for non-symm tensor.
+                torch::Tensor& get_block_(const cytnx_uint64 &idx=0){
+                    return this->_block;
+                }
+                // return a share view of block, this only work for non-symm tensor.
+                const torch::Tensor& get_block_(const cytnx_uint64 &idx=0) const{
+                    return this->_block;
+                }
+
+
+                std::vector<torch::Tensor> get_blocks() const {
+                    std::vector<torch::Tensor> out;
+                    cytnx_error_msg(true,"[ERROR][DenseCyTensor] cannot use get_blocks(), use get_block() instead!%s","\n");
+                    return out; // this will not share memory!!
+                }
+                const std::vector<torch::Tensor>& get_blocks_() const {
+                    cytnx_error_msg(true,"[ERROR][DenseCyTensor] cannot use get_blocks_(), use get_block_() instead!%s","\n");
+                    return this->_interface_block; // this will not share memory!!
+                }
+                std::vector<torch::Tensor>& get_blocks_(){
+                    cytnx_error_msg(true,"[ERROR][DenseCyTensor] cannot use get_blocks_(), use get_block_() instead!%s","\n");
+                    return this->_interface_block; // this will not share memory!!
+                }
+
+
+                void print_diagram(const bool &bond_info=false);         
+
+                /*
                 void to_(const int &device){
                     this->_block.to_(device);
                 }
@@ -333,7 +392,6 @@ namespace torcyx{
                     boost::intrusive_ptr<CyTensor_base> out(tmp);
                     return out;
                 };
-                bool     is_contiguous() const{return this->_block.is_contiguous();}
                 unsigned int  dtype() const{return this->_block.dtype();}
                 int          device() const{return this->_block.device();}
                 std::string      dtype_str() const{ return Type.getname(this->_block.dtype());}
@@ -352,37 +410,6 @@ namespace torcyx{
                         boost::intrusive_ptr<CyTensor_base> out(tmp);
                         return out;
                     }
-                }
-                void print_diagram(const bool &bond_info=false);         
-                Tensor get_block(const cytnx_uint64 &idx=0) const{ return this->_block.clone(); }
-
-                Tensor get_block(const std::vector<cytnx_int64> &qnum) const{cytnx_error_msg(true,"[ERROR][DenseCyTensor] try to get_block() using qnum on a non-symmetry CyTensor%s","\n"); return Tensor();}
-                // return a share view of block, this only work for non-symm tensor.
-                const Tensor& get_block_(const std::vector<cytnx_int64> &qnum) const{cytnx_error_msg(true,"[ERROR][DenseCyTensor] try to get_block_() using qnum on a non-symmetry CyTensor%s","\n"); return this->_block;}
-                Tensor& get_block_(const std::vector<cytnx_int64> &qnum){cytnx_error_msg(true,"[ERROR][DenseCyTensor] try to get_block_() using qnum on a non-symmetry CyTensor%s","\n"); return this->_block;}
-
-                // return a share view of block, this only work for non-symm tensor.
-                Tensor& get_block_(const cytnx_uint64 &idx=0){
-                    return this->_block;
-                }
-                // return a share view of block, this only work for non-symm tensor.
-                const Tensor& get_block_(const cytnx_uint64 &idx=0) const{
-                    return this->_block;
-                }
-
-
-                std::vector<Tensor> get_blocks() const {
-                    std::vector<Tensor> out;
-                    cytnx_error_msg(true,"[ERROR][DenseCyTensor] cannot use get_blocks(), use get_block() instead!%s","\n");
-                    return out; // this will not share memory!!
-                }
-                const std::vector<Tensor>& get_blocks_() const {
-                    cytnx_error_msg(true,"[ERROR][DenseCyTensor] cannot use get_blocks_(), use get_block_() instead!%s","\n");
-                    return this->_interface_block; // this will not share memory!!
-                }
-                std::vector<Tensor>& get_blocks_(){
-                    cytnx_error_msg(true,"[ERROR][DenseCyTensor] cannot use get_blocks_(), use get_block_() instead!%s","\n");
-                    return this->_interface_block; // this will not share memory!!
                 }
 
                 void put_block(const Tensor &in, const cytnx_uint64 &idx=0){
@@ -588,7 +615,7 @@ namespace torcyx{
 
         //======================================================================
         /// @cond
-        /*
+        
         class SparseCyTensor: public CyTensor_base{
             protected:
             
@@ -603,7 +630,7 @@ namespace torcyx{
                 std::map<cytnx_uint64,std::pair<cytnx_uint64,cytnx_uint64> > _outer2inner_row;
                 std::map<cytnx_uint64, std::pair<cytnx_uint64,cytnx_uint64> > _outer2inner_col;
 
-                std::vector<Tensor> _blocks;
+                std::vector<torch::Tensor> _blocks;
 
                 bool _contiguous;
                 void set_meta(SparseCyTensor *tmp, const bool &inner, const bool &outer)const{
@@ -650,49 +677,147 @@ namespace torcyx{
 
                 // virtual functions
                 void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
-                void Init_by_Tensor(const Tensor& in_tensor, const cytnx_uint64 &rowrank, const bool &is_diag=false){
+                void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const bool &is_diag=false, const torch::TensorOptions &options=torch::TensorOptions().dtype(torch::kFloat64).device(torch::kCPU));
+                void Init_by_Tensor(const torch::Tensor& in_tensor, const cytnx_uint64 &rowrank, const bool &is_diag=false){
                     cytnx_error_msg(true,"[ERROR][SparseCyTensor] cannot use Init_by_tensor() on a SparseCyTensor.%s","\n");
                 }
-                std::vector<cytnx_uint64> shape() const{ 
-                    std::vector<cytnx_uint64> out(this->_bonds.size());
+                
+                std::vector<cytnx_int64> shape() const{ 
+                    std::vector<cytnx_int64> out(this->_bonds.size());
                     for(cytnx_uint64 i=0;i<out.size();i++){
                         out[i] = this->_bonds[i].dim();
                     }
                     return out;
                 }
                 bool is_blockform() const{return true;}
-                void to_(const int &device){
-                    for(cytnx_uint64 i=0;i<this->_blocks.size();i++){
-                        this->_blocks[i].to_(device);
-                    }
-                };
-                boost::intrusive_ptr<CyTensor_base> to(const int &device){
-                    if(this->device() == device){
-                        return this;
-                    }else{
-                        boost::intrusive_ptr<CyTensor_base> out = this->clone();
-                        out->to_(device);
-                        return out;
-                    }
-                };
-                boost::intrusive_ptr<CyTensor_base> clone() const{
-                    SparseCyTensor* tmp = this->clone_meta(true,true);
-                    tmp->_blocks = vec_clone(this->_blocks);
-                    boost::intrusive_ptr<CyTensor_base> out(tmp);
-                    return out;
-                };
-                bool     is_contiguous() const{
+                bool is_contiguous() const{
                     return this->_contiguous;
                 };
-                void set_rowrank(const cytnx_uint64 &new_rowrank){
-                    cytnx_error_msg((new_rowrank < 1) || (new_rowrank>= this->rank()),"[ERROR][SparseCyTensor] rowrank should be [>=1] and [<CyTensor.rank].%s","\n");
-                    cytnx_error_msg(new_rowrank >= this->_labels.size(),"[ERROR] rowrank cannot exceed the rank of CyTensor.%s","\n");
-                    if(this->_rowrank!= new_rowrank)
-                        this->_contiguous = false;
-                    this->_rowrank = new_rowrank;
-                    this->_is_braket_form = this->_update_braket();
+                torch::TensorOptions options() const{
+                    #ifdef UNI_DEBUG
+                    cytnx_error_msg(this->_blocks.size()==0,"[ERROR][internal] empty blocks for blockform.%s","\n");
+                    #endif
+                    return this->_blocks[0].options();
                 }
 
+
+                torch::Tensor get_block(const cytnx_uint64 &idx=0) const{
+                    cytnx_error_msg(idx>=this->_blocks.size(),"[ERROR][SparseCyTensor] index out of range%s","\n");
+                    if(this->_contiguous){
+                        return this->_blocks[idx].clone();
+                    }else{
+                        cytnx_error_msg(true,"[Developing] get block from a non-contiguous SparseCyTensor is currently not support. Call contiguous()/contiguous_() first.%s","\n");
+                        return torch::Tensor();
+                    }
+                };
+
+                torch::Tensor get_block(const std::vector<cytnx_int64> &qnum) const{
+                    cytnx_error_msg(!this->is_braket_form(),"[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch the row/col space.\n permute to the correct physical space first, then get block.%s","\n");
+                    //std::cout << "get_block" <<std::endl;
+                    if(this->_contiguous){
+                        //std::cout << "contiguous" << std::endl;
+                        //get dtype from qnum:
+                        cytnx_int64 idx=-1;
+                        for(int i=0;i<this->_blockqnums.size();i++){
+                            //for(int j=0;j<this->_blockqnums[i].size();j++)
+                            //    std::cout << this->_blockqnums[i][j]<< " ";
+                            //std::cout << std::endl;
+                            if(qnum==this->_blockqnums[i]){idx=i; break;}
+                        }
+                        cytnx_error_msg(idx<0,"[ERROR][SparseCyTensor] no block with [qnum] exists in the current CyTensor.%s","\n");
+                        return this->get_block(idx);
+                    }else{
+                        cytnx_error_msg(true,"[Developing] get block from a non-contiguous SparseCyTensor is currently not support. Call contiguous()/contiguous_() first.%s","\n");
+                        return torch::Tensor();
+                    }
+                    return torch::Tensor();
+                };
+
+                // return a share view of block, this only work for symm tensor in contiguous form.
+                torch::Tensor& get_block_(const cytnx_uint64 &idx=0){
+                    cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseCyTensor] cannot use get_block_() on non-contiguous CyTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call get_block_()\n  2) Try get_block()/get_blocks()%s","\n");
+                    
+                    cytnx_error_msg(idx >= this->_blocks.size(),"[ERROR][SparseCyTensor] index exceed the number of blocks.%s","\n");
+
+                    return this->_blocks[idx];
+                }
+                const torch::Tensor& get_block_(const cytnx_uint64 &idx=0) const{
+                    cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseCyTensor] cannot use get_block_() on non-contiguous CyTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call get_block_()\n  2) Try get_block()/get_blocks()%s","\n");
+                    
+                    cytnx_error_msg(idx >= this->_blocks.size(),"[ERROR][SparseCyTensor] index exceed the number of blocks.%s","\n");
+
+                    return this->_blocks[idx];
+                }
+
+                torch::Tensor& get_block_(const std::vector<cytnx_int64> &qnum){
+                    cytnx_error_msg(!this->is_braket_form(),"[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch the row/col space.\n permute to the correct physical space first, then get block.%s","\n");
+                    cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseCyTensor] cannot use get_block_() on non-contiguous CyTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call get_blocks_()\n  2) Try get_block()/get_blocks()%s","\n");
+                    
+                    //get dtype from qnum:
+                    cytnx_int64 idx=-1;
+                    for(int i=0;i<this->_blockqnums.size();i++){
+                        if(qnum==this->_blockqnums[i]){idx=i; break;}
+                    }
+                    cytnx_error_msg(idx<0,"[ERROR][SparseCyTensor] no block with [qnum] exists in the current CyTensor.%s","\n");
+                    return this->get_block_(idx);
+                    //cytnx_error_msg(true,"[Developing]%s","\n");
+                }
+                const torch::Tensor& get_block_(const std::vector<cytnx_int64> &qnum) const{
+                    cytnx_error_msg(!this->is_braket_form(),"[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch the row/col space.\n permute to the correct physical space first, then get block.%s","\n");
+                    cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseCyTensor] cannot use get_block_() on non-contiguous CyTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call get_blocks_()\n  2) Try get_block()/get_blocks()%s","\n");
+                    
+                    //get dtype from qnum:
+                    cytnx_int64 idx=-1;
+                    for(int i=0;i<this->_blockqnums.size();i++){
+                        if(qnum==this->_blockqnums[i]){idx=i; break;}
+                    }
+                    cytnx_error_msg(idx<0,"[ERROR][SparseCyTensor] no block with [qnum] exists in the current CyTensor.%s","\n");
+                    return this->get_block_(idx);
+                }
+
+                std::vector<torch::Tensor> get_blocks() const {
+                    /*
+                    if(this->_contiguous){
+                        return vec_clone(this->_blocks);
+                    }else{
+                        //cytnx_error_msg(true,"[Developing]%s","\n");
+                        boost::intrusive_ptr<CyTensor_base> tmp = this->clone();
+                        tmp->contiguous_(); 
+                        SparseCyTensor *ttmp = (SparseCyTensor*)tmp.get();
+                        return ttmp->_blocks;
+                    }
+                    */
+                    cytnx_error_msg(true,"[Developing]%s","\n");
+                };
+
+                const std::vector<torch::Tensor>& get_blocks_() const {
+                    
+                    //cout << "[call this]" << endl;
+                    if(this->_contiguous){
+                        return this->_blocks;
+                    }else{
+                        //cytnx_error_msg(true,"[Developing]%s","\n");
+                        cytnx_error_msg(true,"[ERROR][SparseCyTensor] cannot call get_blocks_() with a non-contiguous CyTensor. \ntry: \n1) get_blocks()\n2) call contiguous/contiguous_() first, then get_blocks_()%s","\n");
+                        return this->_blocks;
+                    }
+                    //cytnx_error_msg(true,"[Developing]%s","\n");
+                };
+
+                std::vector<torch::Tensor>& get_blocks_(){
+                    //cout << "[call this]" << endl;
+                    if(this->_contiguous){
+                        return this->_blocks;
+                    }else{
+                        cytnx_error_msg(true,"[ERROR][SparseCyTensor] cannot call get_blocks_() with a non-contiguous CyTensor. \ntry: \n1) get_blocks()\n2) call contiguous/contiguous_() first, then get_blocks_()%s","\n");
+                        return this->_blocks;
+                    }
+                };
+
+
+
+
+                void print_diagram(const bool &bond_info=false);
+                /*
                 unsigned int  dtype() const{
                     #ifdef UNI_DEBUG
                     cytnx_error_msg(this->_blocks.size()==0,"[ERROR][internal] empty blocks for blockform.%s","\n");
@@ -717,6 +842,37 @@ namespace torcyx{
                     #endif
                     return this->_blocks[0].device_str();
                 };
+                */
+
+                /*
+                void to_(const int &device){
+                    for(cytnx_uint64 i=0;i<this->_blocks.size();i++){
+                        this->_blocks[i].to_(device);
+                    }
+                };
+                boost::intrusive_ptr<CyTensor_base> to(const int &device){
+                    if(this->device() == device){
+                        return this;
+                    }else{
+                        boost::intrusive_ptr<CyTensor_base> out = this->clone();
+                        out->to_(device);
+                        return out;
+                    }
+                };
+                boost::intrusive_ptr<CyTensor_base> clone() const{
+                    SparseCyTensor* tmp = this->clone_meta(true,true);
+                    tmp->_blocks = vec_clone(this->_blocks);
+                    boost::intrusive_ptr<CyTensor_base> out(tmp);
+                    return out;
+                };
+                void set_rowrank(const cytnx_uint64 &new_rowrank){
+                    cytnx_error_msg((new_rowrank < 1) || (new_rowrank>= this->rank()),"[ERROR][SparseCyTensor] rowrank should be [>=1] and [<CyTensor.rank].%s","\n");
+                    cytnx_error_msg(new_rowrank >= this->_labels.size(),"[ERROR] rowrank cannot exceed the rank of CyTensor.%s","\n");
+                    if(this->_rowrank!= new_rowrank)
+                        this->_contiguous = false;
+                    this->_rowrank = new_rowrank;
+                    this->_is_braket_form = this->_update_braket();
+                }
                 void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1,const bool &by_label=false);
                 boost::intrusive_ptr<CyTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank=-1, const bool &by_label=false){
                     boost::intrusive_ptr<CyTensor_base> out = this->clone();
@@ -735,113 +891,7 @@ namespace torcyx{
                     return boost::intrusive_ptr<CyTensor_base>(this);
                     
                 }
-                void print_diagram(const bool &bond_info=false);
 
-                Tensor get_block(const cytnx_uint64 &idx=0) const{
-                    cytnx_error_msg(idx>=this->_blocks.size(),"[ERROR][SparseCyTensor] index out of range%s","\n");
-                    if(this->_contiguous){
-                        return this->_blocks[idx].clone();
-                    }else{
-                        cytnx_error_msg(true,"[Developing] get block from a non-contiguous SparseCyTensor is currently not support. Call contiguous()/contiguous_() first.%s","\n");
-                        return Tensor();
-                    }
-                };
-
-                Tensor get_block(const std::vector<cytnx_int64> &qnum) const{
-                    cytnx_error_msg(!this->is_braket_form(),"[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch the row/col space.\n permute to the correct physical space first, then get block.%s","\n");
-                    //std::cout << "get_block" <<std::endl;
-                    if(this->_contiguous){
-                        //std::cout << "contiguous" << std::endl;
-                        //get dtype from qnum:
-                        cytnx_int64 idx=-1;
-                        for(int i=0;i<this->_blockqnums.size();i++){
-                            //for(int j=0;j<this->_blockqnums[i].size();j++)
-                            //    std::cout << this->_blockqnums[i][j]<< " ";
-                            //std::cout << std::endl;
-                            if(qnum==this->_blockqnums[i]){idx=i; break;}
-                        }
-                        cytnx_error_msg(idx<0,"[ERROR][SparseCyTensor] no block with [qnum] exists in the current CyTensor.%s","\n");
-                        return this->get_block(idx);
-                    }else{
-                        cytnx_error_msg(true,"[Developing] get block from a non-contiguous SparseCyTensor is currently not support. Call contiguous()/contiguous_() first.%s","\n");
-                        return Tensor();
-                    }
-                    return Tensor();
-                };
-
-                // return a share view of block, this only work for symm tensor in contiguous form.
-                Tensor& get_block_(const cytnx_uint64 &idx=0){
-                    cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseCyTensor] cannot use get_block_() on non-contiguous CyTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call get_block_()\n  2) Try get_block()/get_blocks()%s","\n");
-                    
-                    cytnx_error_msg(idx >= this->_blocks.size(),"[ERROR][SparseCyTensor] index exceed the number of blocks.%s","\n");
-
-                    return this->_blocks[idx];
-                }
-                const Tensor& get_block_(const cytnx_uint64 &idx=0) const{
-                    cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseCyTensor] cannot use get_block_() on non-contiguous CyTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call get_block_()\n  2) Try get_block()/get_blocks()%s","\n");
-                    
-                    cytnx_error_msg(idx >= this->_blocks.size(),"[ERROR][SparseCyTensor] index exceed the number of blocks.%s","\n");
-
-                    return this->_blocks[idx];
-                }
-
-                Tensor& get_block_(const std::vector<cytnx_int64> &qnum){
-                    cytnx_error_msg(!this->is_braket_form(),"[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch the row/col space.\n permute to the correct physical space first, then get block.%s","\n");
-                    cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseCyTensor] cannot use get_block_() on non-contiguous CyTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call get_blocks_()\n  2) Try get_block()/get_blocks()%s","\n");
-                    
-                    //get dtype from qnum:
-                    cytnx_int64 idx=-1;
-                    for(int i=0;i<this->_blockqnums.size();i++){
-                        if(qnum==this->_blockqnums[i]){idx=i; break;}
-                    }
-                    cytnx_error_msg(idx<0,"[ERROR][SparseCyTensor] no block with [qnum] exists in the current CyTensor.%s","\n");
-                    return this->get_block_(idx);
-                    //cytnx_error_msg(true,"[Developing]%s","\n");
-                }
-                const Tensor& get_block_(const std::vector<cytnx_int64> &qnum) const{
-                    cytnx_error_msg(!this->is_braket_form(),"[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch the row/col space.\n permute to the correct physical space first, then get block.%s","\n");
-                    cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseCyTensor] cannot use get_block_() on non-contiguous CyTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call get_blocks_()\n  2) Try get_block()/get_blocks()%s","\n");
-                    
-                    //get dtype from qnum:
-                    cytnx_int64 idx=-1;
-                    for(int i=0;i<this->_blockqnums.size();i++){
-                        if(qnum==this->_blockqnums[i]){idx=i; break;}
-                    }
-                    cytnx_error_msg(idx<0,"[ERROR][SparseCyTensor] no block with [qnum] exists in the current CyTensor.%s","\n");
-                    return this->get_block_(idx);
-                }
-
-                std::vector<Tensor> get_blocks() const {
-                    if(this->_contiguous){
-                        return vec_clone(this->_blocks);
-                    }else{
-                        //cytnx_error_msg(true,"[Developing]%s","\n");
-                        boost::intrusive_ptr<CyTensor_base> tmp = this->clone();
-                        tmp->contiguous_(); 
-                        SparseCyTensor *ttmp = (SparseCyTensor*)tmp.get();
-                        return ttmp->_blocks;
-                    }
-                };
-
-                const std::vector<Tensor>& get_blocks_() const {
-                    //cout << "[call this]" << endl;
-                    if(this->_contiguous){
-                        return this->_blocks;
-                    }else{
-                        //cytnx_error_msg(true,"[Developing]%s","\n");
-                        cytnx_error_msg(true,"[ERROR][SparseCyTensor] cannot call get_blocks_() with a non-contiguous CyTensor. \ntry: \n1) get_blocks()\n2) call contiguous/contiguous_() first, then get_blocks_()%s","\n");
-                        return this->_blocks;
-                    }
-                };
-                std::vector<Tensor>& get_blocks_(){
-                    //cout << "[call this]" << endl;
-                    if(this->_contiguous){
-                        return this->_blocks;
-                    }else{
-                        cytnx_error_msg(true,"[ERROR][SparseCyTensor] cannot call get_blocks_() with a non-contiguous CyTensor. \ntry: \n1) get_blocks()\n2) call contiguous/contiguous_() first, then get_blocks_()%s","\n");
-                        return this->_blocks;
-                    }
-                };
 
 
                 void put_block_(Tensor &in,const cytnx_uint64 &idx=0){
@@ -913,7 +963,6 @@ namespace torcyx{
                 };
                 boost::intrusive_ptr<CyTensor_base> contract(const boost::intrusive_ptr<CyTensor_base> &rhs);
                 std::vector<Bond> getTotalQnums(const bool &physical=false);
-                ~SparseCyTensor(){};
 
 
                 boost::intrusive_ptr<CyTensor_base> Conj(){
@@ -985,14 +1034,15 @@ namespace torcyx{
                 void _save_dispatch(std::fstream &f) const;
                 void _load_dispatch(std::fstream &f);
                 // end virtual func
+                */
+                ~SparseCyTensor(){};
 
-
-        };
-        */
+        }; //SpaceCyTensor
+        
         /// @endcond
 
         //======================================================================
-        /*
+        
         ///@brief An Enhanced tensor specifically designed for physical Tensor network simulation 
         class CyTensor{
 
@@ -1014,9 +1064,9 @@ namespace torcyx{
                     this->Init(in_tensor,rowrank,is_diag);
                 }
                 void Init(const torch::Tensor &in_tensor, const cytnx_uint64 &rowrank, const bool &is_diag=false){
-                   //boost::intrusive_ptr<CyTensor_base> out(new DenseCyTensor());
-                   //out->Init_by_Tensor(in_tensor, rowrank,is_diag);
-                   //this->_impl = out;
+                   boost::intrusive_ptr<CyTensor_base> out(new DenseCyTensor());
+                   out->Init_by_Tensor(in_tensor, rowrank,is_diag);
+                   this->_impl = out;
                 }
                 //@}
 
@@ -1024,8 +1074,11 @@ namespace torcyx{
                 CyTensor(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false): _impl(new CyTensor_base()){
                     this->Init(bonds,in_labels,rowrank,dtype,device,is_diag);
                 }
-                void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false){
+                CyTensor(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const bool &is_diag=false, const torch::TensorOptions &options=torch::TensorOptions().dtype(torch::kFloat64).device(torch::kCPU)): _impl(new CyTensor_base()){
+                    this->Init(bonds,in_labels,rowrank,is_diag,options);
+                }
 
+                void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const bool &is_diag=false, const torch::TensorOptions &options=torch::TensorOptions().dtype(torch::kFloat64).device(torch::kCPU)){
                     // checking type:
                     bool is_sym = false;
                     for(cytnx_uint64 i=0;i<bonds.size();i++){
@@ -1044,20 +1097,118 @@ namespace torcyx{
                         boost::intrusive_ptr<CyTensor_base> out(new DenseCyTensor());
                         this->_impl = out;
                     }
-                    this->_impl->Init(bonds, in_labels, rowrank, dtype, device, is_diag);
+                    this->_impl->Init(bonds, in_labels, rowrank, is_diag,options);
                 }
-                //@}            
+                void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false){
+                    auto options = type_converter.Cy2Tor(dtype,device);
+                    this->Init(bonds,in_labels,rowrank,is_diag,options);
+                }
+                //@}
+                const std::vector<Bond> &bonds() const {return this->_impl->bonds();}       
+                std::vector<Bond>       &bonds() {return this->_impl->bonds();}       
+                int           cten_type() const{ return this->_impl->cten_type();}
+                std::string   cten_type_str() const {return this->_impl->cten_type_str();}
+                //unsigned int  dtype() const{ return this->_impl->dtype(); }
+                //int           device() const{ return this->_impl->device();   }
+                //std::string   dtype_str() const{ return this->_impl->dtype_str();}
+                //std::string   device_str() const{ return this->_impl->device_str();}
 
+                bool is_contiguous() const{ return this->_impl->is_contiguous();}
+                bool is_diag() const{ return this->_impl->is_diag(); }
+                bool is_tag() const { return this->_impl->is_tag();}
+                const bool&     is_braket_form() const{
+                    return this->_impl->is_braket_form();
+                }
+                bool is_blockform() const{ return this->_impl->is_blockform();}
+
+                const std::vector<cytnx_int64>& labels() const{ return this->_impl->labels();}
+
+                std::string name() const { return this->_impl->name();}
+
+                cytnx_uint64 rank() const {return this->_impl->rank();}
+                cytnx_uint64 rowrank() const{return this->_impl->rowrank();}
+                std::vector<cytnx_int64> shape() const{return this->_impl->shape();}
+                
                 void set_name(const std::string &in){
                     this->_impl->set_name(in);
                 }
                 void set_label(const cytnx_uint64 &idx, const cytnx_int64 &new_label){
                     this->_impl->set_label(idx,new_label);
                 }
-
                 void set_labels(const std::vector<cytnx_int64> &new_labels){
                     this->_impl->set_labels(new_labels);
                 }
+                torch::TensorOptions options() const{
+                    return this->_impl->options();
+                }
+
+                //[Access blocks]
+                // return a clone of block
+                torch::Tensor get_block(const cytnx_uint64 &idx=0) const{
+                    return this->_impl->get_block(idx);
+                };
+                //================================
+                // return a clone of block
+                torch::Tensor get_block(const std::vector<cytnx_int64> &qnum) const{
+                    return this->_impl->get_block(qnum);
+                }
+                torch::Tensor get_block(const std::initializer_list<cytnx_int64> &qnum) const{
+                    std::vector<cytnx_int64> tmp = qnum;
+                    return get_block(tmp);
+                }
+                //================================
+                // this only work for non-symm tensor. return a shared view of block
+                const torch::Tensor& get_block_(const cytnx_uint64 &idx=0) const{
+                    return this->_impl->get_block_(idx);
+                }
+                //================================
+                // this only work for non-symm tensor. return a shared view of block
+                torch::Tensor& get_block_(const cytnx_uint64 &idx=0){
+                    return this->_impl->get_block_(idx);
+                }
+                //================================
+                // this only work for non-symm tensor. return a shared view of block
+                torch::Tensor& get_block_(const std::vector<cytnx_int64> &qnum){
+                    return this->_impl->get_block_(qnum);
+                }
+                torch::Tensor& get_block_(const std::initializer_list<cytnx_int64> &qnum){
+                    std::vector<cytnx_int64> tmp = qnum;
+                    return get_block_(tmp);
+                }
+                //================================
+
+                // this only work for non-symm tensor. return a shared view of block
+                const torch::Tensor& get_block_(const std::vector<cytnx_int64> &qnum) const{
+                    return this->_impl->get_block_(qnum);
+                }
+                const torch::Tensor& get_block_(const std::initializer_list<cytnx_int64> &qnum) const{
+                    std::vector<cytnx_int64> tmp = qnum;
+                    return this->_impl->get_block_(tmp);
+                }
+                //================================
+                // this return a shared view of blocks for non-symm tensor.
+                // for symmetry tensor, it call contiguous first and return a shared view of blocks. [dev]
+                std::vector<torch::Tensor> get_blocks() const {
+                    return this->_impl->get_blocks();
+                }
+                // this return a shared view of blocks for non-symm tensor.
+                // for symmetry tensor, it call contiguous first and return a shared view of blocks. [dev]
+                const std::vector<torch::Tensor>& get_blocks_() const {
+                    return this->_impl->get_blocks_();
+                }
+                // for symmetry tensor, it call contiguous first and return a shared view of blocks. [dev]
+                std::vector<torch::Tensor>& get_blocks_(){
+                    return this->_impl->get_blocks_();
+                }
+
+
+
+
+
+                void print_diagram(const bool &bond_info=false){
+                   this->_impl->print_diagram(bond_info);
+                }
+                /*
                 void set_rowrank(const cytnx_uint64 &new_rowrank){
                     this->_impl->set_rowrank(new_rowrank);
                 }
@@ -1072,26 +1223,6 @@ namespace torcyx{
 
                 }
 
-                cytnx_uint64 rank() const {return this->_impl->rank();}
-                cytnx_uint64 rowrank() const{return this->_impl->rowrank();}
-                unsigned int  dtype() const{ return this->_impl->dtype(); }
-                int cten_type() const{ return this->_impl->cten_type();}
-                int          device() const{ return this->_impl->device();   }
-                std::string name() const { return this->_impl->name();}
-                std::string      dtype_str() const{ return this->_impl->dtype_str();}
-                std::string     device_str() const{ return this->_impl->device_str();}
-                std::string     cten_type_str() const {return this->_impl->cten_type_str();}
-                bool     is_contiguous() const{ return this->_impl->is_contiguous();}
-                bool is_diag() const{ return this->_impl->is_diag(); }
-                bool is_tag() const { return this->_impl->is_tag();}
-                const bool&     is_braket_form() const{
-                    return this->_impl->is_braket_form();
-                }
-                const std::vector<cytnx_int64>& labels() const{ return this->_impl->labels();}
-                const std::vector<Bond> &bonds() const {return this->_impl->bonds();}       
-                std::vector<Bond> &bonds() {return this->_impl->bonds();}       
-                std::vector<cytnx_uint64> shape() const{return this->_impl->shape();}
-                bool      is_blockform() const{ return this->_impl->is_blockform();}
 
                 void to_(const int &device){this->_impl->to_(device);}
                 CyTensor to(const int &device) const{ 
@@ -1116,9 +1247,6 @@ namespace torcyx{
                 void contiguous_(){
                     this->_impl = this->_impl->contiguous_();
                 }
-                void print_diagram(const bool &bond_info=false){
-                   this->_impl->print_diagram(bond_info);
-                }
                 
                 template<class T>
                 T& at(const std::vector<cytnx_uint64> &locator){
@@ -1126,63 +1254,6 @@ namespace torcyx{
                 }
 
 
-                // return a clone of block
-                Tensor get_block(const cytnx_uint64 &idx=0) const{
-                    return this->_impl->get_block(idx);
-                };
-                //================================
-                // return a clone of block
-                Tensor get_block(const std::vector<cytnx_int64> &qnum) const{
-                    return this->_impl->get_block(qnum);
-                }
-                Tensor get_block(const std::initializer_list<cytnx_int64> &qnum) const{
-                    std::vector<cytnx_int64> tmp = qnum;
-                    return get_block(tmp);
-                }
-                //================================
-                // this only work for non-symm tensor. return a shared view of block
-                const Tensor& get_block_(const cytnx_uint64 &idx=0) const{
-                    return this->_impl->get_block_(idx);
-                }
-                //================================
-                // this only work for non-symm tensor. return a shared view of block
-                Tensor& get_block_(const cytnx_uint64 &idx=0){
-                    return this->_impl->get_block_(idx);
-                }
-                //================================
-                // this only work for non-symm tensor. return a shared view of block
-                Tensor& get_block_(const std::vector<cytnx_int64> &qnum){
-                    return this->_impl->get_block_(qnum);
-                }
-                Tensor& get_block_(const std::initializer_list<cytnx_int64> &qnum){
-                    std::vector<cytnx_int64> tmp = qnum;
-                    return get_block_(tmp);
-                }
-                //================================
-
-                // this only work for non-symm tensor. return a shared view of block
-                const Tensor& get_block_(const std::vector<cytnx_int64> &qnum) const{
-                    return this->_impl->get_block_(qnum);
-                }
-                const Tensor& get_block_(const std::initializer_list<cytnx_int64> &qnum) const{
-                    std::vector<cytnx_int64> tmp = qnum;
-                    return this->_impl->get_block_(tmp);
-                }
-                //================================
-                // this return a shared view of blocks for non-symm tensor.
-                // for symmetry tensor, it call contiguous first and return a shared view of blocks. [dev]
-                std::vector<Tensor> get_blocks() const {
-                    return this->_impl->get_blocks();
-                }
-                // this return a shared view of blocks for non-symm tensor.
-                // for symmetry tensor, it call contiguous first and return a shared view of blocks. [dev]
-                const std::vector<Tensor>& get_blocks_() const {
-                    return this->_impl->get_blocks_();
-                }
-                // for symmetry tensor, it call contiguous first and return a shared view of blocks. [dev]
-                std::vector<Tensor>& get_blocks_(){
-                    return this->_impl->get_blocks_();
-                }
 
                 // the put block will have shared view with the internal block, i.e. non-clone. 
                 void put_block(const Tensor &in,const cytnx_uint64 &idx=0){
@@ -1377,14 +1448,15 @@ namespace torcyx{
                 void _Load(std::fstream &f);
                 void _Save(std::fstream &f) const;
                 /// @endcond
-                
+                */
+        
         };//class CyTensor
-        */
+        
 
 
 
         ///@cond
-        //std::ostream& operator<<(std::ostream& os, const CyTensor &in);
+        std::ostream& operator<<(std::ostream& os, const CyTensor &in);
         ///@endcond
 
         /**

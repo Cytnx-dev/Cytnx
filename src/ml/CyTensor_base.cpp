@@ -29,26 +29,15 @@ namespace torcyx{
                 cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
             }
             void CyTensor_base::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank, const bool &is_diag, const torch::TensorOptions &options){
+                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
             }
             void CyTensor_base::Init_by_Tensor(const torch::Tensor &in_tensor, const cytnx_uint64 &rowrank, const bool &is_diag){
                 cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
             }
-            void CyTensor_base::set_labels(const std::vector<cytnx_int64> &new_labels){
-                    cytnx_error_msg(new_labels.size()!=this->_labels.size(),"[ERROR][set_labels][CyTensor] %s\n","the len(new_labels) does not match the rank of the UniTenosr");
-                    //check duplicate:
-                    std::vector<cytnx_int64> tmp = vec_unique<cytnx_int64>(new_labels);
-                    cytnx_error_msg(tmp.size() != new_labels.size(), "[ERROR][set_labels][CyTensor] %s\n","the input labels cannot contain duplicated element(s).");
-                    this->_labels = new_labels;
-            }
-            /* 
-            std::vector<cytnx_uint64> CyTensor_base::shape() const{
+            std::vector<cytnx_int64> CyTensor_base::shape() const{
                 cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
-                return std::vector<cytnx_uint64>();
+                return std::vector<cytnx_int64>();
             }
-            void CyTensor_base::set_rowrank(const cytnx_uint64 &new_rowrank){
-                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
-            }
-            
             bool      CyTensor_base::is_blockform() const{
                 cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
                 return false;
@@ -56,6 +45,74 @@ namespace torcyx{
             bool     CyTensor_base::is_contiguous() const{
                 cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
                 return false;
+            }
+            torch::TensorOptions  CyTensor_base::options() const{
+                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+                return torch::TensorOptions();
+            }
+
+            
+            torch::Tensor CyTensor_base::get_block(const cytnx_uint64 &idx) const{
+                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+                return torch::Tensor();
+            }
+            torch::Tensor CyTensor_base::get_block(const std::vector<cytnx_int64> &qnum) const{
+                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+                return torch::Tensor();
+            }
+            // return a share view of block, this only work for non-symm tensor.
+            const torch::Tensor& CyTensor_base::get_block_(const cytnx_uint64 &idx) const{
+                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+                torch::Tensor t;
+                return t;
+            }
+            // return a share view of block, this only work for non-symm tensor.
+            torch::Tensor& CyTensor_base::get_block_(const cytnx_uint64 &idx){
+                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+                torch::Tensor t;
+                return t;
+            }
+            const torch::Tensor& CyTensor_base::get_block_(const std::vector<cytnx_int64> &qnum) const{
+                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+                torch::Tensor t;
+                return t;
+            }
+            torch::Tensor& CyTensor_base::get_block_(const std::vector<cytnx_int64> &qnum){
+                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+                torch::Tensor t;
+                return t;
+            }
+            std::vector<torch::Tensor> CyTensor_base::get_blocks() const{
+                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+                return std::vector<torch::Tensor>();
+            }
+            const std::vector<torch::Tensor>& CyTensor_base::get_blocks_() const{
+                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+                return std::vector<torch::Tensor>();
+            }
+            std::vector<torch::Tensor>& CyTensor_base::get_blocks_(){
+                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+                std::vector<torch::Tensor> t;
+                return t;
+            }
+
+
+            void CyTensor_base::print_diagram(const bool &bond_info){
+                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+            }
+
+
+            /*
+            void CyTensor_base::set_labels(const std::vector<cytnx_int64> &new_labels){
+                    cytnx_error_msg(new_labels.size()!=this->_labels.size(),"[ERROR][set_labels][CyTensor] %s\n","the len(new_labels) does not match the rank of the UniTenosr");
+                    //check duplicate:
+                    std::vector<cytnx_int64> tmp = vec_unique<cytnx_int64>(new_labels);
+                    cytnx_error_msg(tmp.size() != new_labels.size(), "[ERROR][set_labels][CyTensor] %s\n","the input labels cannot contain duplicated element(s).");
+                    this->_labels = new_labels;
+            }
+             
+            void CyTensor_base::set_rowrank(const cytnx_uint64 &new_rowrank){
+                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
             }
             void CyTensor_base::to_(const int &device){
                 cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
@@ -100,53 +157,6 @@ namespace torcyx{
                 boost::intrusive_ptr<CyTensor_base> out(new CyTensor_base());
                 return out;
             }            
-            void CyTensor_base::print_diagram(const bool &bond_info){
-                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
-            }
-
-            Tensor CyTensor_base::get_block(const cytnx_uint64 &idx) const{
-                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
-                return Tensor();
-            }
-            Tensor CyTensor_base::get_block(const std::vector<cytnx_int64> &qnum) const{
-                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
-                return Tensor();
-            }
-            // return a share view of block, this only work for non-symm tensor.
-            const Tensor& CyTensor_base::get_block_(const cytnx_uint64 &idx) const{
-                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
-                Tensor t;
-                return t;
-            }
-            // return a share view of block, this only work for non-symm tensor.
-            Tensor& CyTensor_base::get_block_(const cytnx_uint64 &idx){
-                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
-                Tensor t;
-                return t;
-            }
-            const Tensor& CyTensor_base::get_block_(const std::vector<cytnx_int64> &qnum) const{
-                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
-                Tensor t;
-                return t;
-            }
-            Tensor& CyTensor_base::get_block_(const std::vector<cytnx_int64> &qnum){
-                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
-                Tensor t;
-                return t;
-            }
-            std::vector<Tensor> CyTensor_base::get_blocks() const{
-                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
-                return std::vector<Tensor>();
-            }
-            const std::vector<Tensor>& CyTensor_base::get_blocks_() const{
-                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
-                return std::vector<Tensor>();
-            }
-            std::vector<Tensor>& CyTensor_base::get_blocks_(){
-                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
-                std::vector<Tensor> t;
-                return t;
-            }
 
             void CyTensor_base::put_block(const Tensor &in, const cytnx_uint64 &idx){
                 cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
@@ -315,7 +325,7 @@ namespace torcyx{
             }
             */
             //-----------------------------------------
-            /*
+            
             std::ostream& operator<<(std::ostream& os, const CyTensor &in){
                 char* buffer = (char*)malloc(sizeof(char)*256);
                 sprintf(buffer,"Tensor name: %s\n",in.name().c_str()); os << std::string(buffer);
@@ -323,20 +333,20 @@ namespace torcyx{
                     sprintf(buffer,"braket_form : %s\n", in.is_braket_form()?"True":"False"); os << std::string(buffer);
                 
                 if(in.is_blockform()){
-                    std::vector<Tensor> tmp = in.get_blocks();
+                    std::vector<torch::Tensor> tmp = in.get_blocks();
                     for(cytnx_uint64 i=0;i<tmp.size();i++)
                         os << tmp[i] << std::endl;
                     
                 }else{
                     sprintf(buffer,"is_diag    : %s\n",in.is_diag()?"True":"False"); os << std::string(buffer);
-                    Tensor tmp = in.get_block();
+                    torch::Tensor tmp = in.get_block();
                     os << tmp << std::endl;     
                 }         
                 free(buffer);
                 return os;
             
             }
-
+            /*
             CyTensor Contract(const CyTensor &inL, const CyTensor &inR){
                 return inL.contract(inR);
             }

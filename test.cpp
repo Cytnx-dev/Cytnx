@@ -59,7 +59,12 @@ int main(int argc, char *argv[]){
     torch::Tensor qr = torch::arange(12).to(torch::kFloat).reshape({4,3});
     auto out = qr.div(cytnx_int64(3));
     cout << out << endl;
+
+    auto A = torcyx::CyTensor(qr,1);
     
+    cout << A << endl;    
+    A.print_diagram();
+
 
     return 0;
     /*
