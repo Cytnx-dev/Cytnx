@@ -51,7 +51,7 @@ template<class T>
 void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc){
     cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to setelem to a empty Tensor%s","\n");
     
-    ssize_t start, stop, step, slicelength; 
+    size_t start, stop, step, slicelength; 
     std::vector<cytnx::Accessor> accessors;
     if(py::isinstance<py::tuple>(locators)){
         py::tuple Args = locators.cast<py::tuple>();
@@ -62,7 +62,7 @@ void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc
             // check type:
             if(py::isinstance<py::slice>(Args[axis])){
                 py::slice sls = Args[axis].cast<py::slice>();
-                if(!sls.compute((ssize_t)self.shape()[axis],&start,&stop,&step, &slicelength))
+                if(!sls.compute((size_t)self.shape()[axis],&start,&stop,&step, &slicelength))
                     throw py::error_already_set();
                 //std::cout << start << " " << stop << " " << step << slicelength << std::endl;
                 //if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
@@ -848,7 +848,7 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__getitem__",[](const cytnx::Tensor &self, py::object locators){
                     cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to getitem from a empty Tensor%s","\n");
                     
-                    ssize_t start, stop, step, slicelength; 
+                    size_t start, stop, step, slicelength; 
                     std::vector<cytnx::Accessor> accessors;
                     if(py::isinstance<py::tuple>(locators)){
                         py::tuple Args = locators.cast<py::tuple>();
@@ -859,7 +859,7 @@ PYBIND11_MODULE(cytnx,m){
                                 // check type:
                                 if(py::isinstance<py::slice>(Args[axis])){
                                     py::slice sls = Args[axis].cast<py::slice>();
-                                    if(!sls.compute((ssize_t)self.shape()[axis],&start,&stop,&step, &slicelength))
+                                    if(!sls.compute((size_t)self.shape()[axis],&start,&stop,&step, &slicelength))
                                         throw py::error_already_set();
                                     //std::cout << start << " " << stop << " " << step << slicelength << std::endl;
                                     //if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
@@ -875,7 +875,7 @@ PYBIND11_MODULE(cytnx,m){
                         }
                     }else if(py::isinstance<py::slice>(locators)){
                         py::slice sls = locators.cast<py::slice>();
-                        if(!sls.compute((ssize_t)self.shape()[0],&start,&stop,&step, &slicelength))
+                        if(!sls.compute((size_t)self.shape()[0],&start,&stop,&step, &slicelength))
                             throw py::error_already_set();
                         //if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
                         accessors.push_back(cytnx::Accessor::range(start,stop,step));
@@ -902,7 +902,7 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__setitem__",[](cytnx::Tensor &self, py::object locators, const cytnx::Tensor &rhs){
                     cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to setelem to a empty Tensor%s","\n");
                     
-                    ssize_t start, stop, step, slicelength; 
+                    size_t start, stop, step, slicelength; 
                     std::vector<cytnx::Accessor> accessors;
                     if(py::isinstance<py::tuple>(locators)){
                         py::tuple Args = locators.cast<py::tuple>();
@@ -913,7 +913,7 @@ PYBIND11_MODULE(cytnx,m){
                                 // check type:
                                 if(py::isinstance<py::slice>(Args[axis])){
                                     py::slice sls = Args[axis].cast<py::slice>();
-                                    if(!sls.compute((ssize_t)self.shape()[axis],&start,&stop,&step, &slicelength))
+                                    if(!sls.compute((size_t)self.shape()[axis],&start,&stop,&step, &slicelength))
                                         throw py::error_already_set();
                                     //std::cout << start << " " << stop << " " << step << slicelength << std::endl;
                                     //if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
@@ -929,7 +929,7 @@ PYBIND11_MODULE(cytnx,m){
                         }
                     }else if(py::isinstance<py::slice>(locators)){
                         py::slice sls = locators.cast<py::slice>();
-                        if(!sls.compute((ssize_t)self.shape()[0],&start,&stop,&step, &slicelength))
+                        if(!sls.compute((size_t)self.shape()[0],&start,&stop,&step, &slicelength))
                             throw py::error_already_set();
                         //if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
                         accessors.push_back(cytnx::Accessor::range(start,stop,step));
@@ -1429,7 +1429,7 @@ PYBIND11_MODULE(cytnx,m){
                     cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to getitem from a empty UniTensor%s","\n");
                     cytnx_error_msg(self.uten_type() == UTenType.Sparse,"[ERROR] cannot get element using [] from SparseUniTensor. Use at() instead.%s","\n");
  
-                    ssize_t start, stop, step, slicelength; 
+                    size_t start, stop, step, slicelength; 
                     std::vector<cytnx::Accessor> accessors;
                     if(py::isinstance<py::tuple>(locators)){
                         py::tuple Args = locators.cast<py::tuple>();
@@ -1440,7 +1440,7 @@ PYBIND11_MODULE(cytnx,m){
                                 // check type:
                                 if(py::isinstance<py::slice>(Args[axis])){
                                     py::slice sls = Args[axis].cast<py::slice>();
-                                    if(!sls.compute((ssize_t)self.shape()[axis],&start,&stop,&step, &slicelength))
+                                    if(!sls.compute((size_t)self.shape()[axis],&start,&stop,&step, &slicelength))
                                         throw py::error_already_set();
                                     //std::cout << start << " " << stop << " " << step << slicelength << std::endl;
                                     //if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
@@ -1456,7 +1456,7 @@ PYBIND11_MODULE(cytnx,m){
                         }
                     }else if(py::isinstance<py::slice>(locators)){
                         py::slice sls = locators.cast<py::slice>();
-                        if(!sls.compute((ssize_t)self.shape()[0],&start,&stop,&step, &slicelength))
+                        if(!sls.compute((size_t)self.shape()[0],&start,&stop,&step, &slicelength))
                             throw py::error_already_set();
                         //if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
                         accessors.push_back(cytnx::Accessor::range(start,stop,step));
@@ -1481,7 +1481,7 @@ PYBIND11_MODULE(cytnx,m){
                     cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to setelem to a empty UniTensor%s","\n");
                     cytnx_error_msg(self.uten_type() == UTenType.Sparse,"[ERROR] cannot set element using [] from SparseUniTensor. Use at() instead.%s","\n");
                     
-                    ssize_t start, stop, step, slicelength; 
+                    size_t start, stop, step, slicelength; 
                     std::vector<cytnx::Accessor> accessors;
                     if(py::isinstance<py::tuple>(locators)){
                         py::tuple Args = locators.cast<py::tuple>();
@@ -1492,7 +1492,7 @@ PYBIND11_MODULE(cytnx,m){
                                 // check type:
                                 if(py::isinstance<py::slice>(Args[axis])){
                                     py::slice sls = Args[axis].cast<py::slice>();
-                                    if(!sls.compute((ssize_t)self.shape()[axis],&start,&stop,&step, &slicelength))
+                                    if(!sls.compute((size_t)self.shape()[axis],&start,&stop,&step, &slicelength))
                                         throw py::error_already_set();
                                     //std::cout << start << " " << stop << " " << step << slicelength << std::endl;
                                     //if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
@@ -1508,7 +1508,7 @@ PYBIND11_MODULE(cytnx,m){
                         }
                     }else if(py::isinstance<py::slice>(locators)){
                         py::slice sls = locators.cast<py::slice>();
-                        if(!sls.compute((ssize_t)self.shape()[0],&start,&stop,&step, &slicelength))
+                        if(!sls.compute((size_t)self.shape()[0],&start,&stop,&step, &slicelength))
                             throw py::error_already_set();
                         //if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
                         accessors.push_back(cytnx::Accessor::range(start,stop,step));

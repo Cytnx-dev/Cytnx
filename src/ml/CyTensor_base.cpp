@@ -6,7 +6,6 @@
 
 namespace torcyx{
         using cytnx::vec_unique;
-
         //====================================================    
         std::string CyTensorType_class::getname(const int &ut_type){
             if(ut_type==this->Void){
@@ -25,9 +24,9 @@ namespace torcyx{
 
         //===================================================
             
-            void CyTensor_base::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank,const unsigned int &dtype,const int &device,const bool &is_diag){
-                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
-            }
+            //void CyTensor_base::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank,const unsigned int &dtype,const int &device,const bool &is_diag){
+            //    cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+            //}
             void CyTensor_base::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank, const bool &is_diag, const torch::TensorOptions &options){
                 cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
             }
@@ -101,7 +100,21 @@ namespace torcyx{
                 cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
             }
 
-
+            void CyTensor_base::to_(const torch::Device &device, const bool &non_blocking){
+                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+            }
+            boost::intrusive_ptr<CyTensor_base> CyTensor_base::to(const torch::Device &device, const bool &non_blocking){
+                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+                return nullptr;
+            }
+            boost::intrusive_ptr<CyTensor_base> CyTensor_base::clone() const{
+                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+                return nullptr;
+            }
+            torch::Device  CyTensor_base::device() const{
+                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
+                return torch::kCPU;
+            }
             /*
             void CyTensor_base::set_labels(const std::vector<cytnx_int64> &new_labels){
                     cytnx_error_msg(new_labels.size()!=this->_labels.size(),"[ERROR][set_labels][CyTensor] %s\n","the len(new_labels) does not match the rank of the UniTenosr");
@@ -114,24 +127,9 @@ namespace torcyx{
             void CyTensor_base::set_rowrank(const cytnx_uint64 &new_rowrank){
                 cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
             }
-            void CyTensor_base::to_(const int &device){
-                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
-            }
-            boost::intrusive_ptr<CyTensor_base> CyTensor_base::to(const int &device){
-                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
-                return nullptr;
-            }
-            boost::intrusive_ptr<CyTensor_base> CyTensor_base::clone() const{
-                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
-                return nullptr;
-            }
             unsigned int  CyTensor_base::dtype() const{
                 cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
                 return 0;
-            }
-           int          CyTensor_base::device() const{
-                cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");
-                return -1;
             }
             std::string      CyTensor_base::dtype_str() const{
                 cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize CyTensor_base%s","\n");

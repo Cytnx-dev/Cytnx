@@ -10,10 +10,10 @@
 namespace torcyx{
         using cytnx::vec_unique;        
         namespace utils_internal=cytnx::utils_internal;
-        void DenseCyTensor::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank, const unsigned int &dtype,const int &device, const bool &is_diag){
-                auto option = type_converter.Cy2Tor(dtype,device);
-                this->Init(bonds,in_labels,rowrank,is_diag,option);
-        }
+        //void DenseCyTensor::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank, const unsigned int &dtype,const int &device, const bool &is_diag){
+        //        auto option = type_converter.Cy2Tor(dtype,device);
+        //        this->Init(bonds,in_labels,rowrank,is_diag,option);
+        //}
 
 
         void DenseCyTensor::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank, const bool &is_diag, const torch::TensorOptions &options){

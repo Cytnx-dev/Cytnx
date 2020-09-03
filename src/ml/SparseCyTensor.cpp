@@ -11,8 +11,6 @@ using namespace std;
 namespace torcyx{
         typedef Accessor ac;
         void SparseCyTensor::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank, const bool &is_diag, const torch::TensorOptions &options){
-        }
-        void SparseCyTensor::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank, const unsigned int &dtype,const int &device, const bool &is_diag){
             /*
             //the entering is already check all the bonds have symmetry.
             // need to check:

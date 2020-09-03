@@ -344,5 +344,18 @@ namespace torcyx{
             return out;
         }            
         */
+    
 
-}//cytnx
+        std::vector<torch::Tensor> vec_clone(const std::vector<torch::Tensor>& in_vec){
+            std::vector<torch::Tensor> out(in_vec.size());
+            for(cytnx_uint64 i=0;i<in_vec.size();i++){
+                out[i] = in_vec[i].clone();
+            }
+            return out;
+        }
+
+        
+
+}//torcyx
+
+

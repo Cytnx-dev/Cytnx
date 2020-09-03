@@ -17,7 +17,9 @@
 //namespace cytnx{
 namespace torcyx{ 
     //using namespace cytnx;
-    
+        using cytnx::vec_clone;   
+        std::vector<torch::Tensor> vec_clone(const std::vector<torch::Tensor>& in_vec);//speciailization
+
         /// @cond 
         class CyTensorType_class{
             public:
@@ -164,7 +166,7 @@ namespace torcyx{
                 
 
 
-                virtual void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1,const unsigned int &dtype=Type.Double,const int &device = Device.cpu,const bool &is_diag=false); //API that match UniTensor
+                //virtual void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1,const unsigned int &dtype=Type.Double,const int &device = Device.cpu,const bool &is_diag=false); //API that match UniTensor
 
                 virtual void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1,const bool &is_diag=false, const torch::TensorOptions &options=torch::TensorOptions().dtype(torch::kFloat64).device(torch::kCPU)); //API for pytorch TensorOptions
 
@@ -197,9 +199,15 @@ namespace torcyx{
                 virtual void print_diagram(const bool &bond_info=false);
 
 
+                virtual void to_(const torch::Device &device, const bool &non_blocking=false);
+                virtual boost::intrusive_ptr<CyTensor_base> to(const torch::Device &device, const bool &non_blocking=false);
+                
+
+                virtual torch::Device        device() const;
+                virtual boost::intrusive_ptr<CyTensor_base> clone() const;
+
                 // [Future]
                 //virtual torch::ScalarType    scalar_type()  const;
-                //virtual torch::Device        device() const;
                
                 // [Old][cyx]
                 //virtual unsigned int  dtype_cyx() const;
@@ -209,9 +217,6 @@ namespace torcyx{
 
 
                 /*
-                virtual void to_(const int &device);
-                virtual boost::intrusive_ptr<CyTensor_base> to(const int &device);
-                virtual boost::intrusive_ptr<CyTensor_base> clone() const;
                 virtual void set_rowrank(const cytnx_uint64 &new_rowrank);
                 virtual boost::intrusive_ptr<CyTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank=-1, const bool &by_label=false);
                 virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1, const bool &by_label=false);
@@ -309,7 +314,7 @@ namespace torcyx{
                 //friend class CyTensor; // allow wrapper to access the private elems
 
                 // virtual functions
-                void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
+                //void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
                 
                 void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1,const bool &is_diag=false, const torch::TensorOptions &options=torch::TensorOptions().dtype(torch::kFloat64).device(torch::kCPU)); //API for pytorch TensorOptions
 
@@ -368,32 +373,35 @@ namespace torcyx{
 
                 void print_diagram(const bool &bond_info=false);         
 
-                /*
-                void to_(const int &device){
-                    this->_block.to_(device);
+
+                void to_(const torch::Device &device,const bool &non_blocking=false){
+                    this->_block.to(device,non_blocking,false);
                 }
-                boost::intrusive_ptr<CyTensor_base> to(const int &device){
+                boost::intrusive_ptr<CyTensor_base> to(const torch::Device &device, const bool &non_blocking=false){
                     if(this->device() == device){
                         return this;
                     }else{
                         boost::intrusive_ptr<CyTensor_base> out = this->clone();
-                        out->to_(device);
+                        out->to_(device,non_blocking);
                         return out;   
                     } 
                 }
-                void set_rowrank(const cytnx_uint64 &new_rowrank){
-                    cytnx_error_msg(new_rowrank >= this->_labels.size(),"[ERROR] rowrank cannot exceed the rank of CyTensor.%s","\n");
-                    this->_rowrank = new_rowrank;
-                }
 
+
+                torch::Device device() const{return this->_block.device();}
                 boost::intrusive_ptr<CyTensor_base> clone() const{
                     DenseCyTensor* tmp = this->clone_meta();
                     tmp->_block = this->_block.clone();
                     boost::intrusive_ptr<CyTensor_base> out(tmp);
                     return out;
                 };
+                /*
+                void set_rowrank(const cytnx_uint64 &new_rowrank){
+                    cytnx_error_msg(new_rowrank >= this->_labels.size(),"[ERROR] rowrank cannot exceed the rank of CyTensor.%s","\n");
+                    this->_rowrank = new_rowrank;
+                }
+
                 unsigned int  dtype() const{return this->_block.dtype();}
-                int          device() const{return this->_block.device();}
                 std::string      dtype_str() const{ return Type.getname(this->_block.dtype());}
                 std::string     device_str() const{ return Device.getname(this->_block.device());}
                 boost::intrusive_ptr<CyTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank=-1,const bool &by_label=false);
@@ -676,7 +684,7 @@ namespace torcyx{
                 };
 
                 // virtual functions
-                void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
+                //void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
                 void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const bool &is_diag=false, const torch::TensorOptions &options=torch::TensorOptions().dtype(torch::kFloat64).device(torch::kCPU));
                 void Init_by_Tensor(const torch::Tensor& in_tensor, const cytnx_uint64 &rowrank, const bool &is_diag=false){
                     cytnx_error_msg(true,"[ERROR][SparseCyTensor] cannot use Init_by_tensor() on a SparseCyTensor.%s","\n");
@@ -817,18 +825,20 @@ namespace torcyx{
 
 
                 void print_diagram(const bool &bond_info=false);
+
+                torch::Device  device() const{
+                    #ifdef UNI_DEBUG
+                    cytnx_error_msg(this->_blocks.size()==0,"[ERROR][internal] empty blocks for blockform.%s","\n");
+                    #endif
+                    return this->_blocks[0].device();
+                };
+
                 /*
                 unsigned int  dtype() const{
                     #ifdef UNI_DEBUG
                     cytnx_error_msg(this->_blocks.size()==0,"[ERROR][internal] empty blocks for blockform.%s","\n");
                     #endif
                     return this->_blocks[0].dtype();
-                };
-                int          device() const{
-                    #ifdef UNI_DEBUG
-                    cytnx_error_msg(this->_blocks.size()==0,"[ERROR][internal] empty blocks for blockform.%s","\n");
-                    #endif
-                    return this->_blocks[0].device();
                 };
                 std::string      dtype_str() const{
                     #ifdef UNI_DEBUG
@@ -843,19 +853,17 @@ namespace torcyx{
                     return this->_blocks[0].device_str();
                 };
                 */
-
-                /*
-                void to_(const int &device){
+                void to_(const torch::Device &device, const bool &non_blocking=false){
                     for(cytnx_uint64 i=0;i<this->_blocks.size();i++){
-                        this->_blocks[i].to_(device);
+                        this->_blocks[i].to(device,non_blocking,false);
                     }
                 };
-                boost::intrusive_ptr<CyTensor_base> to(const int &device){
+                boost::intrusive_ptr<CyTensor_base> to(const torch::Device &device, const bool &non_blocking=false){
                     if(this->device() == device){
                         return this;
                     }else{
                         boost::intrusive_ptr<CyTensor_base> out = this->clone();
-                        out->to_(device);
+                        out->to_(device,non_blocking);
                         return out;
                     }
                 };
@@ -865,6 +873,7 @@ namespace torcyx{
                     boost::intrusive_ptr<CyTensor_base> out(tmp);
                     return out;
                 };
+                /*
                 void set_rowrank(const cytnx_uint64 &new_rowrank){
                     cytnx_error_msg((new_rowrank < 1) || (new_rowrank>= this->rank()),"[ERROR][SparseCyTensor] rowrank should be [>=1] and [<CyTensor.rank].%s","\n");
                     cytnx_error_msg(new_rowrank >= this->_labels.size(),"[ERROR] rowrank cannot exceed the rank of CyTensor.%s","\n");
@@ -1071,9 +1080,9 @@ namespace torcyx{
                 //@}
 
 
-                CyTensor(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false): _impl(new CyTensor_base()){
-                    this->Init(bonds,in_labels,rowrank,dtype,device,is_diag);
-                }
+                //CyTensor(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false): _impl(new CyTensor_base()){
+                //    this->Init(bonds,in_labels,rowrank,dtype,device,is_diag);
+                //}
                 CyTensor(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const bool &is_diag=false, const torch::TensorOptions &options=torch::TensorOptions().dtype(torch::kFloat64).device(torch::kCPU)): _impl(new CyTensor_base()){
                     this->Init(bonds,in_labels,rowrank,is_diag,options);
                 }
@@ -1099,17 +1108,19 @@ namespace torcyx{
                     }
                     this->_impl->Init(bonds, in_labels, rowrank, is_diag,options);
                 }
-                void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false){
-                    auto options = type_converter.Cy2Tor(dtype,device);
-                    this->Init(bonds,in_labels,rowrank,is_diag,options);
-                }
+                //void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false){
+                //    auto options = type_converter.Cy2Tor(dtype,device);
+                //    this->Init(bonds,in_labels,rowrank,is_diag,options);
+                //}
                 //@}
+
+
                 const std::vector<Bond> &bonds() const {return this->_impl->bonds();}       
                 std::vector<Bond>       &bonds() {return this->_impl->bonds();}       
                 int           cten_type() const{ return this->_impl->cten_type();}
                 std::string   cten_type_str() const {return this->_impl->cten_type_str();}
                 //unsigned int  dtype() const{ return this->_impl->dtype(); }
-                //int           device() const{ return this->_impl->device();   }
+                torch::Device   device() const{ return this->_impl->device();   }
                 //std::string   dtype_str() const{ return this->_impl->dtype_str();}
                 //std::string   device_str() const{ return this->_impl->device_str();}
 

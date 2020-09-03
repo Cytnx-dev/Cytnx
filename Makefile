@@ -170,6 +170,8 @@ libcytnx.so: $(ALLOBJS)
 pyobj: $(ALLOBJS)
 	$(CC) $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes)  pybind/cytnx.cpp $^ $(LDFLAGS) -shared -o cytnx/cytnx$(shell python3-config --extension-suffix)
 
+torobj: $(ALLOBJS)
+	$(CC) $(INCFLAGS) $(CCFLAGS)  $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes)  pybind/torcyx.cpp $^ $(LDFLAGS) -shared -o torcyx/torcyx$(shell python3-config --extension-suffix)
 
 #cytnx.o: pybind/cytnx.cpp
 #	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes)  $< -o $@

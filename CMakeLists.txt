@@ -290,6 +290,9 @@ if(USE_ML)
   target_compile_definitions(cytnx PRIVATE UNI_ML)
   target_link_libraries(cytnx PRIVATE ${TORCH_LIBRARIES})
   set_property(TARGET cytnx PROPERTY CXX_STANDARD 14)
+
+    
+
 endif()
 
 
@@ -331,8 +334,21 @@ IF(BUILD_PYTHON)
         endif()
     endif()
     pybind11_add_module(pycytnx SHARED pybind/cytnx.cpp)
-    target_link_libraries(pycytnx PRIVATE cytnx)
+    if(USE_ML)
+        target_link_libraries(pycytnx PRIVATE cytnx ${TORCH_LIBRARIES})
+    else()
+        target_link_libraries(pycytnx PRIVATE cytnx)
+    endif()
     set_target_properties(pycytnx PROPERTIES OUTPUT_NAME cytnx)
+
+    if(USE_ML)
+        pybind11_add_module(pytorcyx SHARED pybind/torcyx.cpp)
+        target_link_libraries(pytorcyx PRIVATE cytnx ${TORCH_LIBRARIES})
+        #target_link_libraries(pytorcyx PRIVATE ${TORCH_LIBRARIES})
+        set_property(TARGET pytorcyx PROPERTY CXX_STANDARD 14)
+        set_target_properties(pytorcyx PROPERTIES OUTPUT_NAME torcyx)
+    endif()
+
     #add_library(cytnx MODULE pybind/cytnx.cpp)
     #target_link_libraries(cytnx PRIVATE pybind11::module)
     #set_target_properties(cytnx PROPERTIES PREFIX "${PYTHON_MODULE_PREFIX}"
@@ -364,6 +380,16 @@ if(BUILD_PYTHON)
               DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx
               COMPONENT libraries
           )
+    if(USE_ML)
+        install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/torcyx
+            DESTINATION ${CMAKE_INSTALL_PREFIX}
+            )
+        INSTALL(TARGETS pytorcyx EXPORT pytorcyx_targets
+                LIBRARY
+                  DESTINATION ${CMAKE_INSTALL_PREFIX}/torcyx
+                  COMPONENT libraries
+              )
+    endif()
 endif()
 install(EXPORT cytnx_targets
         FILE CytnxTargets.cmake
@@ -416,7 +442,6 @@ endif()
 
 
 set(libname "${CMAKE_SHARED_LIBRARY_PREFIX}cytnx.${CYTNX_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
-
 
 # create a file that contain all the link flags:
 FILE(WRITE "${CMAKE_BINARY_DIR}/linkflags.tmp" "" "")
