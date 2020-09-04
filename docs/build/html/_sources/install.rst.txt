@@ -35,16 +35,14 @@ Following we show how to install cytnx from conda.
     
 .. code-block:: shell
     
-    $conda install -c kaihsinwu cytnx_37
+    $conda install -c kaihsinwu cytnx
 
 .. note::
 
-    * depending on your version of python, you need to replace the cytnx_* to the one corresponds to your python version. 
+    * to install the GPU (CUDA) support version, use:
 
-    For example:
-        * python=3.6 -> cytnx_36
-        * python=3.7 -> cytnx_37
-        * pyhton=3.8 -> cytnx_38
+    $conda install -c kaihsinwu cytnx_cuda 
+
 
 Once it is installed, we are all set, and ready to start using cytnx. 
 

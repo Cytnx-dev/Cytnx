@@ -493,22 +493,15 @@ Note that both python API and C++ API will be installed together.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span> activate cytnx
 </pre></div>
 </div>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span> install -c kaihsinwu cytnx_37
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span> install -c kaihsinwu cytnx
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p>depending on your version of python, you need to replace the cytnx_* to the one corresponds to your python version.</p></li>
+<li><p>to install the GPU (CUDA) support version, use:</p></li>
 </ul>
-<dl class="simple">
-<dt>For example:</dt><dd><ul class="simple">
-<li><p>python=3.6 -&gt; cytnx_36</p></li>
-<li><p>python=3.7 -&gt; cytnx_37</p></li>
-<li><p>pyhton=3.8 -&gt; cytnx_38</p></li>
-</ul>
-</dd>
-</dl>
+<p>$conda install -c kaihsinwu cytnx_cuda</p>
 </div>
 <p>Once it is installed, we are all set, and ready to start using cytnx.</p>
 </div>
