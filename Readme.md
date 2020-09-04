@@ -17,7 +17,7 @@ See The following user guide for install and using of cytnx:
 
 ## News
     [v0.5.6a] 
-
+ 
  
 ## Stable Version:
 [v0.5.6a](https://github.com/kaihsin/Cytnx/tree/v0.5.6a)
