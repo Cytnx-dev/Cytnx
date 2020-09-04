@@ -71,17 +71,10 @@ See The following user guide for install and using of cytnx:
 
 * with CUDA
 
-    python 3.6: [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx_cuda_36/badges/latest_release_date.svg)](https://anaconda.org/kaihsinwu/cytnx_cuda_36)
+    python 3.6/3.7/3.8: [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx_cuda/badges/latest_release_date.svg)](https://anaconda.org/kaihsinwu/cytnx_cuda)
 
-        conda install -c kaihsinwu cytnx_cuda_36
+        conda install -c kaihsinwu cytnx_cuda
     
-    python 3.7: [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx_cuda_37/badges/latest_release_date.svg)](https://anaconda.org/kaihsinwu/cytnx_cuda_37)
-
-        conda install -c kaihsinwu cytnx_cuda_37  
-
-    python 3.8: [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx_cuda_38/badges/latest_release_date.svg)](https://anaconda.org/kaihsinwu/cytnx_cuda_38)
-
-        conda install -c kaihsinwu cytnx_cuda_38
 
 
 
