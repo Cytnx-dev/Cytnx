@@ -37,6 +37,15 @@ class MyOp: public LinOp{
 
  
 int main(int argc, char *argv[]){
+    vector<int> uA(10);
+
+    void *Tt = (void*)&uA[0];
+    vector<float> fA(10);
+    float *Ta = &fA[0];
+
+    std::memcpy(Ta,Tt,sizeof(float)*10);
+    return 0;
+
     Tensor qr = arange(12).reshape({4,3});
     cout << qr.Div(cytnx_int64(3));
     return 0;

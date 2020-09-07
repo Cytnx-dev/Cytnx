@@ -1375,7 +1375,7 @@ PYBIND11_MODULE(cytnx,m){
                 .def("device",&UniTensor::device)
                 .def("device_str",&UniTensor::device_str)
                 .def("name",&UniTensor::name)
-
+                .def("is_blockform",&UniTensor::is_blockform)
                 .def("reshape",[](UniTensor &self, py::args args, py::kwargs kwargs)->UniTensor{
                     std::vector<cytnx::cytnx_int64> c_args = args.cast< std::vector<cytnx::cytnx_int64> >();
                     cytnx_uint64 rowrank = 0;
