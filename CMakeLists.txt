@@ -401,10 +401,6 @@ set(libname "${CMAKE_SHARED_LIBRARY_PREFIX}cytnx.${CYTNX_VERSION}${CMAKE_SHARED_
 FILE(WRITE "${CMAKE_BINARY_DIR}/linkflags.tmp" "" "")
 FILE(WRITE "${CMAKE_BINARY_DIR}/cxxflags.tmp" "" "")
 
-# GET  INFOS
-get_target_property(ALL_CXXDEF cytnx COMPILE_DEFINITIONS)
-
-
 
 ######################################################################
 # Information Messages
@@ -420,8 +416,6 @@ message(STATUS " Build Target: ${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 message(STATUS " Installation Prefix: ${CMAKE_INSTALL_PREFIX}")
 message(STATUS " CXX Compiler: ${CMAKE_CXX_COMPILER}")
 message(STATUS " CXX Flags: ${CMAKE_CXX_FLAGS}")
-get_target_property(IDDD cytnx INCLUDE_DIRECTORIES)
-message(STATUS " CXX INC dirs: ${IDDD}")
 message(STATUS " BLAS and LAPACK Libraries: ${LAPACK_LIBRARIES}")
 message(STATUS " Link libraries: ${CYTNX_LINK_Libs}")
 #message(STATUS " Boost libs: ${Boost_LIBRARIES}")
