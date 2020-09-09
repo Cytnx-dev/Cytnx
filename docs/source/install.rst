@@ -83,11 +83,12 @@ Cytnx provides a simple way for user to easily compiling their C++ code. In cytn
     cytnx.__cpp_include__
     cytnx.__cpp_lib__ 
     cytnx.__cpp_linkflags__
+    cytnx.__cpp_flags__
 
 * The first one **cytnx.__cpp_include__** gives you the cytnx header files directory path.
 * The second one **cytnx.__cpp_lib__** gives you the cytnx library file directory path. 
 * The thrid one **cytnx.__cpp_linkflags__** gives you the essential linking flags that are required when you link your own programs that using cytnx. 
-
+* The fourth one **cytnx.__cpp_flags__** gives you the essential compiling flags that are required when you link your own programs that using cytnx. 
 
 Let's see the same simple example as aformentioned in python API. Here, we want to compile the **test.cpp** that using cytnx:
 
@@ -115,11 +116,12 @@ Now, to compile and linking the above **test.cpp** to produce an executable **te
     export CYTNX_INC=$(python -c "exec(\"import cytnx\nprint(cytnx.__cpp_include__)\")")
     export CYTNX_LIB=$(python -c "exec(\"import cytnx\nprint(cytnx.__cpp_lib__)\")")
     export CYTNX_LINK="$(python -c "exec(\"import cytnx\nprint(cytnx.__cpp_linkflags__)\")")"
+    export CYTNX_CXXFLAGS="$(python -c "exec(\"import cytnx\nprint(cytnx.__cpp_flags__)\")")"
 
-    g++ -std=c++11 -I${CYTNX_INC} test.cpp ${CYTNX_LIB}/libcytnx.a ${CYTNX_LINK} -o test
+    g++ -I${CYTNX_INC} ${CYTNX_CXXFLAGS} test.cpp ${CYTNX_LIB}/libcytnx.a ${CYTNX_LINK} -o test
 
 
-The first three lines are the python inline execution to get the three attributes and store them into **CYTNX_INC**, **CYTNX_LIB** and **CYTNX_LINK** variables. The last line is the standard simple compiling of the C++ code **test.cpp**. After execute these steps, we can then run this program with the executable **test**. 
+The first four lines are the python inline execution to get the three attributes and store them into **CYTNX_INC**, **CYTNX_LIB**, **CYTNX_LINK** and **CYTNX_CXXFLAGS** variables. The last line is the standard simple compiling of the C++ code **test.cpp**. After execute these steps, we can then run this program with the executable **test**. 
 
 
 .. code-block:: shell
