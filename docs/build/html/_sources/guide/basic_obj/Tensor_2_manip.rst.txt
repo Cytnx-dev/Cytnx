@@ -52,7 +52,7 @@ We can use **Tensor.reshape** function to do this.
       [2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]]]
  
 
-Notice that calling **reshape()** returns a new object *B*, so the original object *A* is not changed after calls reshape. 
+Notice that calling **reshape()** returns a new object *B*, so the original object *A*'s shape is not changed after calls reshape. 
 
 There is the other function **Tensor.reshape_** (with a underscore) that also performs reshape, but instead of return a new reshaped object, it performs inplace reshape to the instance that calls the function. For example:
 
@@ -169,11 +169,6 @@ This can be achieved with **Tensor.permute**
 .. Note::
 
     Just like before, there is an equivalent **Tensor.permute_** end with underscore that performs inplace permute on the instance that calls it. 
-
-
-.. Hint::
-    
-    In some situation where we don't want to create a copy of object, using inplace version of functions can reduce the memory usage.
 
 
 In Cytnx, the permute operation does not moving the elements in the memory immediately. Only the meta-data that is seen by user are changed. 

@@ -15,7 +15,7 @@ Let's look at the following example. Consider the **Tensor** object in Cytnx
     A = cytnx.Tensor([2,3])
     B = A
 
-    print(B is A) # false
+    print(B is A) # true
 
 
 * In c++:

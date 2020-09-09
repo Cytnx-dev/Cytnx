@@ -516,7 +516,7 @@ Shape : (2,3,4)
   [2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]]]
 </pre></div>
 </div>
-<p>Notice that calling <strong>reshape()</strong> returns a new object <em>B</em>, so the original object <em>A</em> is not changed after calls reshape.</p>
+<p>Notice that calling <strong>reshape()</strong> returns a new object <em>B</em>, so the original object <em>A</em>’s shape is not changed after calls reshape.</p>
 <p>There is the other function <strong>Tensor.reshape_</strong> (with a underscore) that also performs reshape, but instead of return a new reshaped object, it performs inplace reshape to the instance that calls the function. For example:</p>
 <ul class="simple">
 <li><p>In python:</p></li>
@@ -632,10 +632,6 @@ Shape : (3,4,2)
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Just like before, there is an equivalent <strong>Tensor.permute_</strong> end with underscore that performs inplace permute on the instance that calls it.</p>
-</div>
-<div class="admonition hint">
-<p class="admonition-title">Hint</p>
-<p>In some situation where we don’t want to create a copy of object, using inplace version of functions can reduce the memory usage.</p>
 </div>
 <p>In Cytnx, the permute operation does not moving the elements in the memory immediately. Only the meta-data that is seen by user are changed.
 This can avoid the redudant moving of elements. Note that this approach is also taken in <a class="reference external" href="https://numpy.org/doc/1.18/reference/generated/numpy.array.html">numpy.array</a> and <a class="reference external" href="https://pytorch.org/docs/stable/tensors.html">torch.tensor</a> .</p>
