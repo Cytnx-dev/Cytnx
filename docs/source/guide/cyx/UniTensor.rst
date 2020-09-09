@@ -3,6 +3,11 @@ UniTensor
 UniTensor is an extension object base on **cytnx.Tensor**. 
 A UniTensor consist of three imporant parts: 
 
+.. image:: image/UT.png
+    :width: 600
+    :align: center
+
+
 1. Block(s), which is a **Cytnx.Tensor** (or a list/vector of **cytnx.Tensor**). Block(s) store all the numbers(elements). 
 
 2. Bonds, which defines the bond information associate to each rank. 
