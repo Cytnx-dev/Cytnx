@@ -23,8 +23,8 @@ def from_numpy(np_arr):
         tmp = numpy.ascontiguousarray(np_arr)
     return cytnx._from_numpy(tmp)
 
-def _resolve_cpp_linkflags__():
-    f = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"linkflags.tmp"))
+def _resolve_cpp_compileflags__():
+    f = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"cxxflags.tmp"))
     lines = f.readlines()
     out = ""
     for line in lines:
@@ -34,14 +34,19 @@ def _resolve_cpp_linkflags__():
     f.close()
     return out
 
-def _resolve_cpp_compileflags__():
-    f = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"cxxflags.tmp"))
+def _resolve_cpp_linkflags__():
+    f = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"linkflags.tmp"))
     lines = f.readlines()
     out = ""
-    for line in lines:
-        line = line.strip()
-        out+=line.replace(";"," ")
+    lapack_ldir = ""
+    for i in range(len(lines)):
+        line = lines[i].strip()
+        line = line.replace(";"," ")
+        out+=line
         out+=" "
+        if i == 0:
+            lapack_ldir=os.path.dirname(line.split(' ')[0].strip())
+    out += "-Wl,-rpath,%s "%(lapack_ldir)
     f.close()
     return out
 
