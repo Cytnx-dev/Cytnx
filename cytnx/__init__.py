@@ -34,7 +34,17 @@ def _resolve_cpp_linkflags__():
     f.close()
     return out
 
+def _resolve_cpp_compileflags__():
+    f = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"cxxflags.tmp"))
+    lines = f.readlines()
+    out = ""
+    for line in lines:
+        line = line.strip()
+        out+=line.replace(";"," ")
+        out+=" "
+    f.close()
+    return out
 
 __cpp_linkflags__ = _resolve_cpp_linkflags__()
-
+__cpp_flags__ = _resolve_cpp_compileflags__()
 

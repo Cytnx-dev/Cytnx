@@ -81,6 +81,14 @@ class CMakeBuild(build_ext):
                 print("[Relocate linkflags.tmp]: ",fn)
                 break
 
+        # copy cxxflags.tmp
+        for fn in os.listdir(build_temp_dir):
+            print(fn)
+            if 'cxxflags.tmp' in fn:
+                self.copy_file(os.path.join(build_temp_dir,fn),extdir)
+                print("[Relocate cxxflags.tmp]: ",fn)
+                break
+
 
         # 2. header file (cpp)
         Cppinc_dir = os.path.join(extdir,"include")

@@ -79,7 +79,7 @@ endif()
 ######################################################################
 set(CYTNX_VERSION_MAJOR 0)
 set(CYTNX_VERSION_MINOR 5)
-set(CYTNX_VERSION_PATCH 5)
+set(CYTNX_VERSION_PATCH 6)
 set(CYTNX_VERSION COUNT 1)
 set(CYTNX_VERSION
   ${CYTNX_VERSION_MAJOR}.${CYTNX_VERSION_MINOR}.${CYTNX_VERSION_PATCH}
@@ -183,6 +183,7 @@ endif()
 
 
 find_package(Boost REQUIRED)
+message(STATUS "Boost INCCC: ${Boost_INCLUDE_DIRS}")
 message(STATUS ${COMPILE_DEFINITIONS})
 # ----------------------------------------
 # Find OpenMP
@@ -398,6 +399,12 @@ set(libname "${CMAKE_SHARED_LIBRARY_PREFIX}cytnx.${CYTNX_VERSION}${CMAKE_SHARED_
 
 # create a file that contain all the link flags:
 FILE(WRITE "${CMAKE_BINARY_DIR}/linkflags.tmp" "" "")
+FILE(WRITE "${CMAKE_BINARY_DIR}/cxxflags.tmp" "" "")
+
+# GET  INFOS
+get_target_property(ALL_CXXDEF cytnx COMPILE_DEFINITIONS)
+
+
 
 ######################################################################
 # Information Messages
@@ -413,9 +420,19 @@ message(STATUS " Build Target: ${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 message(STATUS " Installation Prefix: ${CMAKE_INSTALL_PREFIX}")
 message(STATUS " CXX Compiler: ${CMAKE_CXX_COMPILER}")
 message(STATUS " CXX Flags: ${CMAKE_CXX_FLAGS}")
+get_target_property(IDDD cytnx INCLUDE_DIRECTORIES)
+message(STATUS " CXX INC dirs: ${IDDD}")
 message(STATUS " BLAS and LAPACK Libraries: ${LAPACK_LIBRARIES}")
 message(STATUS " Link libraries: ${CYTNX_LINK_Libs}")
+#message(STATUS " Boost libs: ${Boost_LIBRARIES}")
 FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${LAPACK_LIBRARIES}\n" "")
+
+FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-I${Boost_INCLUDE_DIRS}\n" "")
+FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "${CMAKE_CXX_FLAGS}\n" "")
+FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-std=c++11\n" "")
+#foreach(vars ${ALL_CXXDEF})
+#    FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-D${vars}\n" "")
+#endforeach(vars)
 
 
 if(BUILD_PYTHON)
@@ -470,7 +487,7 @@ message(STATUS "")
 
 
 install(FILES ${CMAKE_BINARY_DIR}/linkflags.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
-
+install(FILES ${CMAKE_BINARY_DIR}/cxxflags.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
 
 if (BUILD_PACKAGES)
 include("Package.cmake")
