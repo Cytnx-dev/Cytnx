@@ -468,8 +468,14 @@
   <div class="section" id="unitensor">
 <h1><span class="section-number">6.2. </span>UniTensor<a class="headerlink" href="#unitensor" title="Permalink to this headline">¶</a></h1>
 <p>UniTensor is an extension object base on <strong>cytnx.Tensor</strong>.
-A UniTensor consist of three imporant parts: 1. Block, which is a <strong>Cytnx.Tensor</strong>, 2. Bonds, which defines the bond information associate to each rank. 3. labels, which gives each rank/bond unique ID. In the most simple example where we don’t consider any symmetry in our system, UniTensor can be think of adding these bonds and labels meta data around <strong>cytnx.Tensor</strong>.</p>
-<p>A UniTensor can be constructed using <strong>Bond</strong> object, or in the simple case directly converted from a <strong>Cytnx.Tensor</strong>.</p>
+A UniTensor consist of three imporant parts:</p>
+<ol class="arabic simple">
+<li><p>Block(s), which is a <strong>Cytnx.Tensor</strong> (or a list/vector of <strong>cytnx.Tensor</strong>). Block(s) store all the numbers(elements).</p></li>
+<li><p>Bonds, which defines the bond information associate to each rank.</p></li>
+<li><p>labels, which gives each rank/bond unique ID.</p></li>
+</ol>
+<p>In the most simple example where we don’t consider any symmetry in our system, UniTensor can be think of adding these bonds and labels meta data around <strong>cytnx.Tensor</strong>.
+A UniTensor can be constructed using <strong>Bond</strong> object, or in the simple case directly converted from a <strong>Cytnx.Tensor</strong>.</p>
 <p>Let’s take a look at this:</p>
 <div class="toctree-wrapper compound">
 <ul>
