@@ -39,8 +39,22 @@ class MyOp: public LinOp{
 int main(int argc, char *argv[]){
 
 
-    auto XxA = zeros({3,4,5});
+    auto XxA = arange(60).reshape({3,4,5});
     auto XxB = XxA.permute(0,2,1).contiguous();
+    auto XxC = XxA.permute(0,2,1);
+
+    cout << XxA << endl;
+    cout << XxC << endl;
+    //cout << XxA.same_data(XxC) << endl;     
+    print(XxA.same_data(XxC));    
+
+    XxC.contiguous_();
+
+    cout << XxA << endl;
+    cout << XxC << endl;
+    cout << XxA.same_data(XxC) << endl; 
+    
+    return 0; 
 
     cout << is(XxA,XxB) << endl;
 

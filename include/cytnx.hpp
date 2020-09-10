@@ -20,6 +20,6 @@
 
 #include "LinOp.hpp"
 #include "utils/is.hpp"
-
+#include "utils/print.hpp"
 
 #endif

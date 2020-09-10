@@ -194,7 +194,8 @@ namespace cytnx{
                     for(cytnx_uint64 i=0;i<this->_shape.size();i++){
                         oldshape[i] = this->_shape[this->_invmapper[i]];
                     }
-                    this->_storage._impl->Move_memory_(oldshape,this->_mapper, this->_invmapper);
+                    
+                    this->_storage._impl = this->_storage._impl->Move_memory(oldshape,this->_mapper, this->_invmapper);
                     this->_mapper = vec_range(this->_invmapper.size());
                     this->_invmapper = this->_mapper;
                     this->_contiguous = true;
