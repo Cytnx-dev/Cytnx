@@ -29,7 +29,7 @@
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.6</span>
+   &#160;<span id="projectnumber">v0.6.0</span>
    </div>
   </td>
  </tr>
@@ -71,26 +71,17 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><h2>Stable Version:</h2>
-<p><a href="https://github.com/kaihsin/Cytnx/tree/v0.5.6a">v0.5.6 pre-release</a></p>
+<p><a href="https://github.com/kaihsin/Cytnx/tree/v0.6.0">v0.6.0</a></p>
 <h2>News</h2>
 <h2>Current dev Version:</h2>
-<p>v0.6</p><ol type="1">
+<p>v0.6.1</p>
+<p>v0.6.0</p><ol type="1">
 <li>[Enhance] behavior change the behavior of permute to prevent redundant copy in UniTensor and Tensor.</li>
 <li>add Tensor::same_data to check if two Tensor has same storage.</li>
 <li>[Enhance] the behavior of reshape in Tensor to prevent redundant copy.</li>
 <li>[Enhance] behavior change all linalg to follow the same disipline for permute/reshape/contiguous</li>
 </ol>
-<pre class="fragment">v0.5.6
-1. [Enhance] change linalg::QR -&gt; linalg::Qr for unify the function call 
-2. Fix bug in UniTensor Qr, R UniTensor labels bug.
-3. Add Qdr for UniTensor and Tensor.
-4. Fix minor bug in internal, Type.is_float for Uint32.
-5. [Enhance] accessor can now specify with vector. 
-6. [Enhance] Tproxy.item()
-7. Fix inplace reshape_() in new way templ. does not perform inplace operation
-8. [Enhance] Tproxy operator+-/*
-10. Fix bug in division dti64 becomes subtraction bug. 
-</pre><h2>Feature:</h2>
+<h2>Feature:</h2>
 <h3>Python x C++</h3>
 <p>Benefit from both side. One can do simple prototype on python side and easy transfer to C++ with small effort!</p>
 <div class="fragment"><div class="line"><span class="comment">// c++ version:</span></div><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div><div class="line"><a class="code" href="classcytnx_1_1Tensor.html">cytnx::Tensor</a> A({3,4,5},<a class="code" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">cytnx::Type</a>.Double,<a class="code" href="namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a">cytnx::Device</a>.cpu)</div></div><!-- fragment --><div class="fragment"><div class="line"><span class="comment"># python version:</span></div><div class="line"><span class="keyword">import</span> cytnx</div><div class="line">A =  <a class="code" href="classcytnx_1_1Tensor.html">cytnx.Tensor</a>([3,4,5],dtype=cytnx.Type.Double,device=cytnx.Device.cpu)</div></div><!-- fragment --><h3>1. All the Storage and Tensor can now have mulitple type support.</h3>
