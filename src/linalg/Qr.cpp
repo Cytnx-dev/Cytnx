@@ -13,14 +13,13 @@ namespace cytnx{
         std::vector<Tensor> Qr(const Tensor &Tin, const bool &is_tau){
             
             cytnx_error_msg(Tin.shape().size() != 2,"[Qr] error, Qr can only operate on rank-2 Tensor.%s","\n");
-            cytnx_error_msg(!Tin.is_contiguous(), "[Qr] error tensor must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
+            //cytnx_error_msg(!Tin.is_contiguous(), "[Qr] error tensor must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
             
             
             cytnx_uint64 n_tau = std::max(cytnx_uint64(1),std::min(Tin.shape()[0],Tin.shape()[1])); 
 
-            Tensor in;
-            if(Tin.dtype() > Type.Float) in = Tin.astype(Type.Double);
-            else in = Tin;
+            Tensor in = Tin.contiguous();
+            if(Tin.dtype() > Type.Float) in = in.astype(Type.Double);
 
             
             

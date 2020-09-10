@@ -195,7 +195,7 @@ namespace cytnx{
             virtual const Tensor& get_block_(const std::vector<cytnx_int64> &qnum) const; //return a copy of block
             virtual Tensor& get_block_(const cytnx_uint64 &idx=0); // return a share view of block, this only work for non-symm tensor.
             virtual Tensor& get_block_(const std::vector<cytnx_int64> &qnum); //return a copy of block
-
+            virtual bool same_data(const boost::intrusive_ptr<UniTensor_base> &rhs) const;
 
             virtual std::vector<Tensor> get_blocks() const;
             virtual const std::vector<Tensor>& get_blocks_() const;
@@ -423,6 +423,14 @@ namespace cytnx{
                 cytnx_error_msg(true,"[ERROR][DenseUniTensor] %s","getTotalQnums can only operate on UniTensor with symmetry.\n");
                 return std::vector<Bond>();
             }        
+            bool same_data(const boost::intrusive_ptr<UniTensor_base> &rhs) const{
+                if(rhs->uten_type()!=UTenType.Dense) return false;
+                
+                return this->get_block_().same_data(rhs->get_block_());
+
+            }
+
+
             ~DenseUniTensor(){};
 
 
@@ -705,11 +713,7 @@ namespace cytnx{
                 return this->_blocks[0].device_str();
             };
             void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1,const bool &by_label=false);
-            boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank=-1, const bool &by_label=false){
-                boost::intrusive_ptr<UniTensor_base> out = this->clone();
-                out->permute_(mapper,rowrank,by_label);
-                return out;
-            };
+            boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank=-1, const bool &by_label=false);
             boost::intrusive_ptr<UniTensor_base> contiguous();
             boost::intrusive_ptr<UniTensor_base> contiguous_(){
                 if(!this->_contiguous){
@@ -829,6 +833,18 @@ namespace cytnx{
                     return this->_blocks;
                 }
             };
+
+            bool same_data(const boost::intrusive_ptr<UniTensor_base> &rhs) const{
+                if(rhs->uten_type()!=UTenType.Sparse) return false;
+                if(rhs->get_blocks_().size() != this->get_blocks_().size()) return false;
+
+                for(int i=0;i<rhs->get_blocks_().size();i++)                
+                    if(this->get_blocks_()[i].same_data(rhs->get_blocks_()[i])==false) return false;
+
+                return true;
+
+            }
+
 
 
             void put_block_(Tensor &in,const cytnx_uint64 &idx=0){
@@ -1284,6 +1300,17 @@ namespace cytnx{
                 return this->_impl->getTotalQnums(physical);
             }
 
+            
+            bool same_data(const UniTensor &rhs) const{
+
+                // check same type:
+                if(this->_impl->uten_type() != rhs._impl->uten_type())
+                    return false;
+
+                                
+
+                return this->_impl->same_data(rhs._impl);
+            }
                         
             //Arithmetic:
             template<class T>

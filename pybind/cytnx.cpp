@@ -756,6 +756,7 @@ PYBIND11_MODULE(cytnx,m){
                     //std::cout << c_args.size() << std::endl;
                     return self.permute(c_args);
                 })
+                .def("same_data",&cytnx::Tensor::same_data)
                 .def("flatten",&cytnx::Tensor::flatten)
                 .def("flatten_",&cytnx::Tensor::flatten_)
                 .def("make_contiguous",&cytnx::Tensor::contiguous) // this will be rename by python side conti
@@ -1370,6 +1371,8 @@ PYBIND11_MODULE(cytnx,m){
                 .def("set_rowrank",&UniTensor::set_rowrank, py::arg("new_rowrank"))
 
                 .def("rowrank",&UniTensor::rowrank)
+                .def("rank",&UniTensor::rank)
+
                 .def("dtype",&UniTensor::dtype)
                 .def("dtype_str",&UniTensor::dtype_str)
                 .def("device",&UniTensor::device)

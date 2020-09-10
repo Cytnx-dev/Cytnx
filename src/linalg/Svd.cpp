@@ -11,13 +11,12 @@ namespace cytnx{
         std::vector<Tensor> Svd(const Tensor &Tin, const bool &is_U, const bool &is_vT){
             
             cytnx_error_msg(Tin.shape().size() != 2,"[Svd] error, Svd can only operate on rank-2 Tensor.%s","\n");
-            cytnx_error_msg(!Tin.is_contiguous(), "[Svd] error tensor must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
+            //cytnx_error_msg(!Tin.is_contiguous(), "[Svd] error tensor must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
             
             cytnx_uint64 n_singlu = std::max(cytnx_uint64(1),std::min(Tin.shape()[0],Tin.shape()[1])); 
 
-            Tensor in;
-            if(Tin.dtype() > Type.Float) in = Tin.astype(Type.Double);
-            else in = Tin;
+            Tensor in = Tin.contiguous();
+            if(Tin.dtype() > Type.Float) in = in.astype(Type.Double);
 
             //std::cout << n_singlu << std::endl;
 

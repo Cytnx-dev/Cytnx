@@ -13,7 +13,7 @@ namespace cytnx{
         Tensor ExpM(const Tensor &Tin, const cytnx_double &a, const cytnx_double &b){
             
             cytnx_error_msg(Tin.shape().size() != 2,"[ExpH] error, ExpH can only operate on rank-2 Tensor.%s","\n");
-            cytnx_error_msg(!Tin.is_contiguous(), "[ExpH] error tensor must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
+            //cytnx_error_msg(!Tin.is_contiguous(), "[ExpH] error tensor must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
             
             
             cytnx_error_msg(Tin.shape()[0] != Tin.shape()[1],"[ExpH] error, ExpM can only operator on square Tensor (#row = #col%s","\n");

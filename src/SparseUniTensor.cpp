@@ -170,6 +170,69 @@ namespace cytnx{
         
 
     }
+    boost::intrusive_ptr<UniTensor_base> SparseUniTensor::permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank, const bool &by_label){
+        //boost::intrusive_ptr<UniTensor_base> out = this->clone();
+        //out->permute_(mapper,rowrank,by_label);
+        //return out;
+        
+        SparseUniTensor* out_raw = this->clone_meta(true,true);
+        out_raw->_blocks = this->_blocks; //share content!!
+
+        std::vector<cytnx_uint64> mapper_u64;
+        if(by_label){
+            //cytnx_error_msg(true,"[Developing!]%s","\n");
+            std::vector<cytnx_int64>::iterator it;
+            for(cytnx_uint64 i=0;i<mapper.size();i++){
+                it = std::find(out_raw->_labels.begin(),out_raw->_labels.end(),mapper[i]);
+                cytnx_error_msg(it == out_raw->_labels.end(),"[ERROR] label %d does not exist in current UniTensor.\n",mapper[i]);
+                mapper_u64.push_back(std::distance(out_raw->_labels.begin(),it));
+            }
+            
+        }else{
+            mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(),mapper.end());
+        }
+
+
+        out_raw->_bonds = vec_map(vec_clone(out_raw->bonds()),mapper_u64);// this will check validity
+        out_raw->_labels = vec_map(out_raw->labels(),mapper_u64);
+
+        std::vector<cytnx_uint64> new_fwdmap(out_raw->_mapper.size());
+        std::vector<cytnx_uint64> new_shape(out_raw->_mapper.size());
+        std::vector<cytnx_uint64> new_idxmap(out_raw->_mapper.size());
+
+        for(cytnx_uint32 i=0;i<mapper_u64.size();i++){
+            if(mapper_u64[i] >= mapper_u64.size()){
+                cytnx_error_msg(1,"%s","invalid rank index.\n");
+            }
+            //std::cout << this->_mapper[rnks[i]] << " " << i << std::endl;
+            new_idxmap[out_raw->_mapper[mapper_u64[i]]] = i;
+            new_fwdmap[i] =out_raw->_mapper[mapper_u64[i]];
+        }
+
+        out_raw->_inv_mapper = new_idxmap;
+        out_raw->_mapper = new_fwdmap;
+        
+        ///checking if permute back to contiguous:
+        bool iconti=true;
+        for(cytnx_uint32 i=0;i<mapper_u64.size();i++){
+            if(new_fwdmap[i]!=new_idxmap[i]){iconti = false; break;}
+            if(new_fwdmap[i] != i){iconti=false; break;}
+        }
+        out_raw->_contiguous= iconti;
+
+        //check rowrank.
+        if(rowrank>=0){
+            cytnx_error_msg((rowrank>=out_raw->_bonds.size()) || (rowrank<=0),"[ERROR] rowrank should >=1 and <= UniTensor.rank-1 for SparseUniTensor (UniTensor in blockform)(UniTensor with symmetries).%s","\n");
+            out_raw->_rowrank = rowrank; //only update the outer meta.
+        }
+
+        //update braket form status.
+        out_raw->_is_braket_form = out_raw->_update_braket();
+
+        boost::intrusive_ptr<UniTensor_base> out(out_raw);
+        return out;
+
+    };
     void SparseUniTensor::permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank,const bool &by_label){
         std::vector<cytnx_uint64> mapper_u64;
         if(by_label){

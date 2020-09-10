@@ -7,14 +7,13 @@ namespace cytnx{
         std::vector<Tensor> Eigh(const Tensor &Tin, const bool &is_V, const bool &row_v){
             
             cytnx_error_msg(Tin.shape().size() != 2,"[Eigh] error, Eigh can only operate on rank-2 Tensor.%s","\n");
-            cytnx_error_msg(!Tin.is_contiguous(), "[Eigh] error tensor must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
+            //cytnx_error_msg(!Tin.is_contiguous(), "[Eigh] error tensor must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
             
             cytnx_error_msg(Tin.shape()[0] != Tin.shape()[1],"[Eigh] error, Eigh should accept a Hermition Tensor%s","\n");
 
 
-            Tensor in;
-            if(Tin.dtype() > Type.Float) in = Tin.astype(Type.Double);
-            else in = Tin;
+            Tensor in = Tin.contiguous();
+            if(Tin.dtype() > Type.Float) in = in.astype(Type.Double);
 
 
             Tensor S,V;

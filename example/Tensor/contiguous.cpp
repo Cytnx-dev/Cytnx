@@ -20,6 +20,10 @@ int main(){
     cout << C.is_contiguous() << endl; // true.
     cout << C.shape() << endl;
 
+    cout << C.same_data(B) << endl; //false
+    cout << B.same_data(A) << endl; //true
+    
+
     return 0;
 }
 

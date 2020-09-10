@@ -7,17 +7,16 @@ namespace cytnx{
         std::vector<Tensor> Eig(const Tensor &Tin, const bool &is_V, const bool &row_v){
             
             cytnx_error_msg(Tin.shape().size() != 2,"[Eig] error, Eig can only operate on rank-2 Tensor.%s","\n");
-            cytnx_error_msg(!Tin.is_contiguous(), "[Eig] error tensor must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
+            //cytnx_error_msg(!Tin.is_contiguous(), "[Eig] error tensor must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
             
             cytnx_error_msg(Tin.shape()[0] != Tin.shape()[1],"[Eig] error, Eig should accept a square matrix%s","\n");
 
 
-            Tensor in;
-            if(Tin.dtype() > Type.Float) in = Tin.astype(Type.ComplexDouble);
+            Tensor in = Tin.contiguous();
+            if(Tin.dtype() > Type.Float) in = in.astype(Type.ComplexDouble);
             else{ 
-                if(Tin.dtype()==Type.Float) in = Tin.astype(Type.ComplexFloat);
-                else if(Tin.dtype() == Type.Double) in = Tin.astype(Type.ComplexDouble);
-                else in = Tin;
+                if(Tin.dtype()==Type.Float) in = in.astype(Type.ComplexFloat);
+                else if(Tin.dtype() == Type.Double) in = in.astype(Type.ComplexDouble);
             }
 
             Tensor S,V;

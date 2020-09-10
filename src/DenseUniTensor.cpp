@@ -128,9 +128,49 @@ namespace cytnx{
 
 
     boost::intrusive_ptr<UniTensor_base> DenseUniTensor::permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank, const bool &by_label){
-        boost::intrusive_ptr<UniTensor_base> out = this->clone();
-        out->permute_(mapper,rowrank,by_label);
+        //boost::intrusive_ptr<UniTensor_base> out = this->clone();
+        //out->permute_(mapper,rowrank,by_label);
+        //return out;
+        DenseUniTensor *out_raw = this->clone_meta();
+        //boost::intrusive_ptr<UniTensor_base> out(this->clone_meta());
+
+        std::vector<cytnx_uint64> mapper_u64;
+        if(by_label){
+            //cytnx_error_msg(true,"[Developing!]%s","\n");
+            std::vector<cytnx_int64>::iterator it;
+            for(cytnx_uint64 i=0;i<mapper.size();i++){
+                it = std::find(out_raw->_labels.begin(),out_raw->_labels.end(),mapper[i]);
+                cytnx_error_msg(it == out_raw->_labels.end(),"[ERROR] label %d does not exist in current UniTensor.\n",mapper[i]);
+                mapper_u64.push_back(std::distance(out_raw->_labels.begin(),it));
+            }
+            
+        }else{
+            mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(),mapper.end());
+        }
+
+        if(out_raw->_is_diag){
+            if(rowrank>=0){
+                cytnx_error_msg(rowrank!=1,"[ERROR] rowrank should be =1 for UniTensor with is_diag=true%s","\n");
+            }
+            out_raw->_bonds = vec_map(vec_clone(out_raw->bonds()),mapper_u64);// this will check validity
+            out_raw->_labels = vec_map(out_raw->labels(),mapper_u64);
+            out_raw->_is_braket_form = out_raw->_update_braket();
+            out_raw->_block = this->_block; // share mem
+        }else{
+            
+            out_raw->_bonds = vec_map(vec_clone(out_raw->bonds()),mapper_u64);// this will check validity
+            out_raw->_labels = vec_map(out_raw->labels(),mapper_u64);
+            out_raw->_block = this->_block.permute(mapper_u64); //share mem
+
+            if(rowrank>=0){
+                cytnx_error_msg((rowrank>out_raw->_bonds.size()) || (rowrank < 0),"[ERROR] rowrank cannot exceed the rank of UniTensor, and should be >=0.%s","\n");
+                out_raw->_rowrank = rowrank;
+            }
+            out_raw->_is_braket_form = out_raw->_update_braket();
+        }
+        boost::intrusive_ptr<UniTensor_base> out(out_raw);
         return out;
+
     }
     void DenseUniTensor::permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank, const bool& by_label){
         std::vector<cytnx_uint64> mapper_u64;
@@ -283,14 +323,14 @@ namespace cytnx{
         cytnx_error_msg(this->is_tag(),"[ERROR] cannot reshape a tagged UniTensor. suggestion: use untag() first.%s","\n");
         cytnx_error_msg(rowrank > new_shape.size(), "[ERROR] rowrank cannot larger than the rank of reshaped UniTensor.%s","\n");
         if(this->is_diag()){
-            if(new_shape.size()!=2){
+            //if(new_shape.size()!=2){
                 this->_block = cytnx::linalg::Diag(this->_block);
                 this->_block.reshape_(new_shape);
                 this->Init_by_Tensor(this->_block,rowrank); 
-            }else{
-                cytnx_error_msg(new_shape[0]!=new_shape[1],"[ERROR] invalid shape. The total elements does not match.%s","\n");
-                cytnx_error_msg(rowrank!=1,"[ERROR] UniTensor with is_diag=True should have rowrank=1.%s","\n");
-            }
+            //}else{
+            //    cytnx_error_msg(new_shape[0]!=new_shape[1],"[ERROR] invalid shape. The total elements does not match.%s","\n");
+            //    cytnx_error_msg(rowrank!=1,"[ERROR] UniTensor with is_diag=True should have rowrank=1.%s","\n");
+            //}
         }else{
             this->_block.reshape_(new_shape);
             this->Init_by_Tensor(this->_block,rowrank); 
@@ -302,15 +342,15 @@ namespace cytnx{
 
         boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
         if(this->is_diag()){
-            if(new_shape.size()!=2){
+            //if(new_shape.size()!=2){
                 ((DenseUniTensor*)out.get())->_block = cytnx::linalg::Diag(this->_block);
                 ((DenseUniTensor*)out.get())->_block.reshape_(new_shape);
                 out->Init_by_Tensor(((DenseUniTensor*)out.get())->_block,rowrank); 
-            }else{
-                cytnx_error_msg(new_shape[0]!=new_shape[1],"[ERROR] invalid shape. The total elements does not match.%s","\n");
-                cytnx_error_msg(rowrank!=1,"[ERROR] UniTensor with is_diag=True should have rowrank=1.%s","\n");
-                out = this->clone();    
-            }
+            //}else{
+            //    cytnx_error_msg(new_shape[0]!=new_shape[1],"[ERROR] invalid shape. The total elements does not match.%s","\n");
+            //    cytnx_error_msg(rowrank!=1,"[ERROR] UniTensor with is_diag=True should have rowrank=1.%s","\n");
+            //    out = this->clone();    
+            //}
         }else{
             out->Init_by_Tensor(this->_block.reshape(new_shape),rowrank);
         }

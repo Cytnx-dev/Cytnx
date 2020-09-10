@@ -6,14 +6,19 @@
 namespace cytnx{
 
     namespace linalg{
-        Tensor Kron(const Tensor &Tl, const Tensor &Tr, const bool &Tl_pad_left, const bool &Tr_pad_left){
+        Tensor Kron(const Tensor &_Tl, const Tensor &_Tr, const bool &Tl_pad_left, const bool &Tr_pad_left){
             
             //checking:
-            cytnx_error_msg(Tl.shape().size()==0,"[ERROR] pass empty tensor in param #1%s","\n");
-            cytnx_error_msg(Tr.shape().size()==0,"[ERROR] pass empty tensor in param #2%s","\n");
-            cytnx_error_msg(Tl.device()!= Tr.device(),"[ERROR] two tensor cannot on different devices.%s","\n");
-            cytnx_error_msg(!Tl.is_contiguous(),"[ERROR] tensor #1 should be contiguous. suggestion: call Tensor.contiguous() or Tensor.contiguous_() first.%s","\n");
-            cytnx_error_msg(!Tr.is_contiguous(),"[ERROR] tensor #2 should be contiguous. suggestion: call Tensor.contiguous() or Tensor.contiguous_() first.%s","\n");
+            cytnx_error_msg(_Tl.shape().size()==0,"[ERROR] pass empty tensor in param #1%s","\n");
+            cytnx_error_msg(_Tr.shape().size()==0,"[ERROR] pass empty tensor in param #2%s","\n");
+            cytnx_error_msg(_Tl.device()!= _Tr.device(),"[ERROR] two tensor cannot on different devices.%s","\n");
+            //cytnx_error_msg(!Tl.is_contiguous(),"[ERROR] tensor #1 should be contiguous. suggestion: call Tensor.contiguous() or Tensor.contiguous_() first.%s","\n");
+            //cytnx_error_msg(!Tr.is_contiguous(),"[ERROR] tensor #2 should be contiguous. suggestion: call Tensor.contiguous() or Tensor.contiguous_() first.%s","\n");
+
+
+            auto Tl = _Tl.contiguous();
+            auto Tr = _Tr.contiguous();
+                        
 
             //check the new shape:
            

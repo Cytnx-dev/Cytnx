@@ -9,9 +9,9 @@ namespace cytnx{
             cytnx_error_msg(Tl.shape().size() != 2,"[Matmul] error, tensor Tl ,Matmul can only operate on rank-2 Tensor.%s","\n");
             cytnx_error_msg(Tr.shape().size() != 2,"[Matmul] error, tensor Tr ,Matmul can only operate on rank-2 Tensor.%s","\n");
 
-            cytnx_error_msg(!Tl.is_contiguous(), "[Matmul] error tensor Tl must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
+            //cytnx_error_msg(!Tl.is_contiguous(), "[Matmul] error tensor Tl must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
 
-            cytnx_error_msg(!Tr.is_contiguous(), "[Matmul] error tensor Tr must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
+            //cytnx_error_msg(!Tr.is_contiguous(), "[Matmul] error tensor Tr must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
 
             //check device:
             cytnx_error_msg(Tl.device()!=Tr.device(),"[Matmul] error two tensor should be on same device.%s","\n");
@@ -21,22 +21,18 @@ namespace cytnx{
     
 
             //check type:
-            Tensor _tl,_tr;
+            Tensor _tl = Tl.contiguous(), _tr = Tr.contiguous();
             Tensor out;
             if(Tl.dtype() != Tr.dtype()){
                 //do conversion:
                 if(Tl.dtype() < Tr.dtype()){
-                    _tr = Tr.astype(Tl.dtype());
-                    _tl = Tl;
+                    _tr = _tr.astype(Tl.dtype());
                     out.Init({Tl.shape()[0],Tr.shape()[1]},Tl.dtype(),Tl.device()); 
                 }else{
-                    _tl = Tl.astype(Tr.dtype());
-                    _tr = Tr;
+                    _tl = _tl.astype(Tr.dtype());
                     out.Init({Tl.shape()[0],Tr.shape()[1]},Tr.dtype(),Tr.device());
                 }
             }else{
-                _tl = Tl;
-                _tr = Tr;
                 out.Init({Tl.shape()[0],Tr.shape()[1]},Tr.dtype(),Tr.device());
             }
             out.storage().set_zeros();

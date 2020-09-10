@@ -37,10 +37,10 @@ namespace cytnx{
             }
 
             //permute!
-            Tensor tmpL = Tl.permute(mapperL);
-            Tensor tmpR = Tr.permute(mapperR);
-            tmpL.reshape_({-1,comm_dim});
-            tmpR.reshape_({comm_dim,-1});
+            Tensor tmpL = Tl.permute(mapperL).reshape({-1,comm_dim});
+            Tensor tmpR = Tr.permute(mapperR).reshape({comm_dim,-1});
+            //tmpL.reshape_({-1,comm_dim});
+            //tmpR.reshape_({comm_dim,-1});
                         
             Tensor out = Matmul(tmpL,tmpR); 
             out.reshape_(new_shape);

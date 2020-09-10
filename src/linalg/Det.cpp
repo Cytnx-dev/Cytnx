@@ -8,19 +8,18 @@ namespace cytnx{
             
             cytnx_error_msg(Tl.shape().size() != 2,"[Det] error, tensor Tl , Det can only operate on rank-2 Tensor.%s","\n");
             cytnx_error_msg(Tl.shape()[0] != Tl.shape()[1] ,"[Det] error, tensor Tl , Det can only operate on NxN Tensor.%s","\n");
-            cytnx_error_msg(!Tl.is_contiguous(), "[Det] error tensor Tl must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
-
+    
+            
             
             //check type:
-            Tensor _tl;
+            Tensor _tl = Tl.contiguous();
             Tensor out;
 
             if(Tl.dtype() > 4){
                 //do conversion:
-                _tl = Tl.astype(Type.Double);
+                _tl = _tl.astype(Type.Double);
                 out.Init({1},Type.Double,_tl.device());
             }else{
-                _tl = Tl;
                 out.Init({1},_tl.dtype(),_tl.device());
             }
            

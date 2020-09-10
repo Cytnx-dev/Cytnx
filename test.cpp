@@ -37,6 +37,23 @@ class MyOp: public LinOp{
 
  
 int main(int argc, char *argv[]){
+
+
+    auto XxA = zeros({3,4,5});
+    auto XxB = XxA.permute(0,2,1).contiguous();
+
+    cout << is(XxA,XxB) << endl;
+
+    cout << XxA.same_data(XxB) << endl;
+
+    XxA(0,0,0) = 300;
+    
+    cout << XxA << endl;
+    cout << XxB << endl;
+
+
+    return 0;
+
     vector<int> uA(10);
 
     void *Tt = (void*)&uA[0];

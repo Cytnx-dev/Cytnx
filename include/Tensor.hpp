@@ -125,11 +125,7 @@ namespace cytnx{
 
             void permute_(const std::vector<cytnx_uint64> &rnks);
 
-            boost::intrusive_ptr<Tensor_impl> permute(const std::vector<cytnx_uint64> &rnks){
-                boost::intrusive_ptr<Tensor_impl> out = this->clone();
-                out->permute_(rnks);
-                return out;
-            }            
+            boost::intrusive_ptr<Tensor_impl> permute(const std::vector<cytnx_uint64> &rnks);
  
             template<class T> 
             T& at(const std::vector<cytnx_uint64> &locator) const {
@@ -154,8 +150,7 @@ namespace cytnx{
                 return this->_storage.at<T>(RealRank);
             }
             
-            
-            
+                        
             boost::intrusive_ptr<Tensor_impl> get(const std::vector<cytnx::Accessor> &accessors);
             void set(const std::vector<cytnx::Accessor> &accessors, const boost::intrusive_ptr<Tensor_impl> &rhs);
 
@@ -172,6 +167,7 @@ namespace cytnx{
                 // return self if act on contiguous tensor
                 if(this->_contiguous){
                     boost::intrusive_ptr<Tensor_impl> out(this);
+                    //out->_storage = this->_storage;
                     return out;
                 }else{
                     boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
@@ -243,12 +239,9 @@ namespace cytnx{
 
             boost::intrusive_ptr<Tensor_impl> reshape(const std::vector<cytnx_int64> &new_shape){
                 boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
-                if(!this->_contiguous){
-                    out = this->contiguous();
-                }else{
-                    out = this->clone();
-                }
-                
+                out = this->contiguous();
+                out = this->clone();
+                 
                 out->reshape_(new_shape);
                 return out;
             }
@@ -1168,6 +1161,7 @@ namespace cytnx{
                 this->_impl->_storage.append(rhs);         
             }
 
+            bool same_data(const Tensor &rhs) const;
  
             // linalg:
             std::vector<Tensor> Svd(const bool &is_U=true, const bool &is_vT=true) const;

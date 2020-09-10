@@ -7,8 +7,12 @@ namespace cytnx{
         Tensor Dot(const Tensor &Tl, const Tensor &Tr){
 
             //checking contiguous
-            cytnx_error_msg(!Tl.is_contiguous(), "[Dot] error tensor Tl must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
-            cytnx_error_msg(!Tr.is_contiguous(), "[Dot] error tensor Tr must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
+            //cytnx_error_msg(!Tl.is_contiguous(), "[Dot] error tensor Tl must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
+            //cytnx_error_msg(!Tr.is_contiguous(), "[Dot] error tensor Tr must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
+
+            //auto Tl = _Tl.contiguous();
+            //auto Tr = _Tr.contiguous();
+
 
             //check device:
             cytnx_error_msg(Tl.device()!=Tr.device(),"[Dot] error two tensor should be on same device.%s","\n");
@@ -31,7 +35,7 @@ namespace cytnx{
 
 
                 //check type:
-                Tensor _tl,_tr;
+                Tensor _tl = Tl.contiguous(),_tr = Tr.contiguous();
                 Tensor out;
                 std::vector<cytnx_uint64> newshape = Tl.shape();
                 newshape.pop_back();
@@ -41,17 +45,13 @@ namespace cytnx{
                 if(Tl.dtype() != Tr.dtype()){
                     //do conversion:
                     if(Tl.dtype() < Tr.dtype()){
-                        _tr = Tr.astype(Tl.dtype());
-                        _tl = Tl;
+                        _tr = _tr.astype(Tl.dtype());
                         out.Init(newshape,Tl.dtype(),Tl.device());
                     }else{
-                        _tl = Tl.astype(Tr.dtype());
-                        _tr = Tr;
+                        _tl = _tl.astype(Tr.dtype());
                         out.Init(newshape,Tr.dtype(),Tr.device());
                     }
                 }else{
-                    _tl = Tl;
-                    _tr = Tr;
                     out.Init(newshape,Tr.dtype(),Tr.device());
                 }
 

@@ -23,7 +23,12 @@ See The following user guide for install and using of cytnx:
 [v0.5.6a](https://github.com/kaihsin/Cytnx/tree/v0.5.6a)
 
 ## Current dev Version:
-    v0.5.7
+    v0.6.0
+    1. [Enhance] behavior change the behavior of permute to prevent redundant copy in UniTensor and Tensor.
+    2. add Tensor::same_data to check if two Tensor has same storage.
+    3. [Enhance] the behavior of reshape in Tensor to prevent redundant copy.    
+    4. [Enhance] behavior change all linalg to follow the same disipline for permute/reshape/contiguous
+    
 
     v0.5.6
     1. [Enhance] change linalg::QR -> linalg::Qr for unify the function call 

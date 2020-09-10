@@ -7,8 +7,8 @@ namespace cytnx{
         std::vector<Tensor> Tridiag(const Tensor &Diag, const Tensor &Sub_diag, const bool &is_V){
             
             cytnx_error_msg(Diag.shape().size() != 1,"[Tridiag] error, Tridiag can only accept on vector (rank-1) Tensor.%s","\n");
-            cytnx_error_msg(!Diag.is_contiguous(), "[Tridiag] error tensor [#1][Diag] must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
-            cytnx_error_msg(!Sub_diag.is_contiguous(), "[Tridiag] error tensor [#2][SubDiag] must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
+            //cytnx_error_msg(!Diag.is_contiguous(), "[Tridiag] error tensor [#1][Diag] must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
+            cytnx_error_msg(Sub_diag.shape().size() !=1, "[Tridiag] error tensor [#2][SubDiag] must be vector (rank-1) Tensor%s","\n");
             cytnx_error_msg(Diag.device()!=Sub_diag.device(), "[Tridiag] error, two input tensors must in the same device. Call to() or to_() first%s","\n" );      
             cytnx_error_msg(Diag.dtype()<=2 || Sub_diag.dtype()<=2,"[Tridiag] error, tri-diagonalize can only accept real vectors%s","\n");
  

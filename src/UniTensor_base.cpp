@@ -27,7 +27,10 @@ namespace cytnx{
         void UniTensor_base::Init_by_Tensor(const Tensor &in_tensor, const cytnx_uint64 &rowrank, const bool &is_diag){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }   
-        
+        bool UniTensor_base::same_data(const boost::intrusive_ptr<UniTensor_base> &rhs) const{
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+            return false;
+        }        
         std::vector<cytnx_uint64> UniTensor_base::shape() const{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
             return std::vector<cytnx_uint64>();

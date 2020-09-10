@@ -2,7 +2,7 @@
 #include "Tensor.hpp"
 #include "utils/utils_internal_interface.hpp"
 #include "linalg.hpp"
-
+#include "utils/is.hpp"
 using namespace std;
 
 namespace cytnx{        
@@ -25,6 +25,51 @@ namespace cytnx{
         this->_invmapper = this->_mapper;
         this->_contiguous = true;
 
+    }
+
+
+    boost::intrusive_ptr<Tensor_impl> Tensor_impl::permute(const std::vector<cytnx_uint64> &rnks){
+
+        //check::
+        if(rnks.size()!=this->_shape.size()){
+            cytnx_error_msg(true,"%s","reshape a tensor with a specify shape that does not match with the shape of the incident tensor.");
+        }
+
+        std::vector<cytnx_uint64> new_fwdmap(this->_shape.size());
+        std::vector<cytnx_uint64> new_shape(this->_shape.size());
+        std::vector<cytnx_uint64> new_idxmap(this->_shape.size());
+
+        //for(int i=0;i<this->_shape.size();i++)
+        //    std::cout << this->_mapper[i] << " " << this->_invmapper[i] << std::endl;                
+
+
+        for(cytnx_uint32 i=0;i<rnks.size();i++){
+            if(rnks[i] >= rnks.size()){
+                cytnx_error_msg(1,"%s","reshape a tensor with invalid rank index.");
+            }
+            //std::cout << this->_mapper[rnks[i]] << " " << i << std::endl;
+            new_idxmap[this->_mapper[rnks[i]]] = i;
+            new_fwdmap[i] = this->_mapper[rnks[i]];
+            new_shape[i] = this->_shape[rnks[i]];
+
+        }
+
+        boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
+        out->_invmapper = new_idxmap;
+        out->_shape = new_shape;
+        out->_mapper = new_fwdmap;
+
+        ///checking if permute back to contiguous:
+        bool iconti=true;
+        for(cytnx_uint32 i=0;i<rnks.size();i++){
+            if(new_fwdmap[i]!=new_idxmap[i]){iconti = false; break;}
+            if(new_fwdmap[i] != i){iconti=false; break;}
+        }
+        out->_contiguous= iconti;
+        
+        //ref storage
+        out->_storage = this->_storage;
+        return out;
     }
 
     void Tensor_impl::permute_(const std::vector<cytnx_uint64> &rnks){
@@ -577,6 +622,11 @@ namespace cytnx{
         Tensor out = linalg::Trace(*this,a,b);
         return out;
     }
+
+    bool Tensor::same_data(const Tensor &rhs)const{
+        return is(this->_impl->storage(),rhs.storage());
+    }
+
 
 }//namespace cytnx
 
