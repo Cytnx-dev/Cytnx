@@ -16,3 +16,4 @@ Let's take a look on how to use it:
     Tensor_5_numpy.rst
     Tensor_6_app.rst
     Tensor_7_io.rst
+    Tensor_8_cp.rst
