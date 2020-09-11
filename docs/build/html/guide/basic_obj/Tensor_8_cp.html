@@ -107,6 +107,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#reference-copy-of-object">2.8.1. Reference &amp; Copy of object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#permute">2.8.2. Permute</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#contiguous">2.8.3. Contiguous</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reshape">2.8.4. Reshape</a></li>
 </ul>
 </li>
 </ul>
@@ -352,6 +353,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#reference-copy-of-object">2.8.1. Reference &amp; Copy of object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#permute">2.8.2. Permute</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#contiguous">2.8.3. Contiguous</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reshape">2.8.4. Reshape</a></li>
 </ul>
 </li>
 </ul>
@@ -479,8 +481,8 @@
             
   <div class="section" id="when-will-data-be-copied">
 <h1><span class="section-number">2.8. </span>When will data be copied?<a class="headerlink" href="#when-will-data-be-copied" title="Permalink to this headline">¶</a></h1>
-<p>There are 2 operations of <strong>cytnx.Tensor</strong> that user need to be careful about: <strong>permute</strong> and <strong>reshape</strong> These 2 operations are stratigically designed to avoid the redundant copy as much as possible. <strong>cytnx.Tensor</strong> follows the same discipline as <strong>numpy.array</strong> and <strong>torch.Tensor</strong> on these 2 operation.</p>
-<p>The following figure shows the strucutre of the Tensor object:</p>
+<p>There are two operations of <strong>cytnx.Tensor</strong> that are very important: <strong>permute</strong> and <strong>reshape</strong>. These two operations are stratigically designed to avoid the redundant copy as much as possible. <strong>cytnx.Tensor</strong> follows the same discipline as <strong>numpy.array</strong> and <strong>torch.Tensor</strong> on these two operations.</p>
+<p>The following figure shows the strucutre of a Tensor object:</p>
 <a class="reference internal image-reference" href="../../_images/Tnbasic.png"><img alt="../../_images/Tnbasic.png" class="align-center" src="../../_images/Tnbasic.png" style="width: 500px;" /></a>
 <p>Two important concepts need to be brought up: the Tensor <strong>object</strong> itself, and the things that inside Tensor object. Each Tensor object contains two ingredients:</p>
 <blockquote>
@@ -491,7 +493,7 @@
 </div></blockquote>
 <div class="section" id="reference-copy-of-object">
 <h2><span class="section-number">2.8.1. </span>Reference &amp; Copy of object<a class="headerlink" href="#reference-copy-of-object" title="Permalink to this headline">¶</a></h2>
-<p>If you are familiar with python, then one of the most important feature in python 101 is the <em>referencing</em> of objects. All the cytnx objects follow the same behavior:</p>
+<p>If you are familiar with python, then one of the most important feature in python is the <em>referencing</em> of objects. All the cytnx objects follow the same behavior:</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
@@ -522,8 +524,8 @@
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>True
 </pre></div>
 </div>
-<p>Here, <strong>B</strong> is a reference of <strong>A</strong>, so essentially <strong>B</strong> and <strong>A</strong> are the same object. We can use <strong>is</strong> checks if two objects are the same. Since they are the same object, all the change made to <strong>B</strong> will affect <strong>A</strong> as well.</p>
-<p>To really create a copy of <strong>A</strong>, we can use <strong>clone()</strong>. <strong>clone()</strong> creates a new object with same meta and a new allocated <strong>Storage</strong> that has the same elemenets as storage of <strong>A</strong>:</p>
+<p>Here, <strong>B</strong> is a reference of <strong>A</strong>, so essentially <strong>B</strong> and <strong>A</strong> are the same object. We can use <strong>is</strong> to check if two objects are the same. Since they are the same object, all the change made to <strong>B</strong> will affect <strong>A</strong> as well.</p>
+<p>To really create a copy of <strong>A</strong>, we can use <strong>clone()</strong> method. <strong>clone()</strong> creates a new object with same meta and a new allocated <strong>Storage</strong> with the same content as storage of <strong>A</strong>:</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
@@ -557,7 +559,7 @@
 </div>
 <div class="section" id="permute">
 <h2><span class="section-number">2.8.2. </span>Permute<a class="headerlink" href="#permute" title="Permalink to this headline">¶</a></h2>
-<p>Now let’s take a look on what happened if we performs <strong>permute()</strong> on a Tensor:</p>
+<p>Now let’s take a look at what happened if we perform <strong>permute()</strong> on a Tensor:</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
@@ -626,7 +628,7 @@ Shape : (2,4,3)
 False
 </pre></div>
 </div>
-<p>We see <strong>A</strong> and <strong>B</strong> now are two different objects (as it should be, they have different shape!). Now let’s see what happened if we try to change the element in <strong>A</strong>:</p>
+<p>We see <strong>A</strong> and <strong>B</strong> are now two different objects (as it should be, they have different shape!). Now let’s see what happened if we try to change the element in <strong>A</strong>:</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
@@ -679,9 +681,9 @@ Shape : (2,4,3)
   [0.00000e+00 0.00000e+00 0.00000e+00 ]]]
 </pre></div>
 </div>
-<p>Notice that the element in <strong>B</strong> is also changed! So what actually happend? When we call <strong>permute()</strong>, a new object is created that has different <em>meta</em>, but two objects actually shares the <em>same</em> data storage! There is NO copy of data made:</p>
+<p>Notice that the element in <strong>B</strong> is also changed! So what actually happend? When we call <strong>permute()</strong>, a new object is created, which has different <em>meta</em>, but two objects actually share the <em>same</em> data storage! There is NO copy of memory made:</p>
 <a class="reference internal image-reference" href="../../_images/Tnsdat.png"><img alt="../../_images/Tnsdat.png" class="align-center" src="../../_images/Tnsdat.png" style="width: 500px;" /></a>
-<p>We can use <strong>Tensor.same_data()</strong> to check if two objects shares the same memory content:</p>
+<p>We can use <strong>Tensor.same_data()</strong> to check if two objects share the same memory storage:</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
@@ -793,12 +795,20 @@ False
 </div>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
-<p>We can also make <strong>B</strong> itself to be contiguous by calling <strong>B.contiguous_()</strong>. But notice that this will make a new internal stoarge of <strong>B</strong>, so after calling <strong>B.contiguous_()</strong>, <strong>B.same_data(A)</strong> will be false!</p>
+<p>We can also make <strong>B</strong> itself contiguous by calling <strong>B.contiguous_()</strong> (with underscore). Notice that this will make a new internal stoarge of <strong>B</strong>, so after calling <strong>B.contiguous_()</strong>, <strong>B.same_data(A)</strong> will be false!</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>calling <strong>contiguous()</strong> on a Tensor that is already in contiguous status will return itself, and no new object is created!</p>
 </div>
+</div>
+<div class="section" id="reshape">
+<h2><span class="section-number">2.8.4. </span>Reshape<a class="headerlink" href="#reshape" title="Permalink to this headline">¶</a></h2>
+<p>Reshape is an operation that combine/split axes of a Tensor while keep the same total number of elements. <strong>Tensor.reshape()</strong> always create a new object, but whether the internal storage is shared or not follows the rule:</p>
+<ol class="arabic simple">
+<li><p>If the Tensor object is in <em>contiguous</em> status, then only the <em>meta</em> is changed, and the storage is shared</p></li>
+<li><p>If the Tensor object is in <em>non-contiguous</em> status, then the <em>contiguous()</em> will be called first, then the <em>meta</em> will be changed.</p></li>
+</ol>
 <div class="toctree-wrapper compound">
 </div>
 </div>
