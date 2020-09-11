@@ -230,9 +230,9 @@ namespace cytnx{
             os << Device.getname(this->device) << std::endl;
 
             sprintf(buffer,"%s","Shape :"); os << string(buffer);
-            sprintf(buffer," (%llu",shape[0]);
+            sprintf(buffer," (%d",shape[0]); os << string(buffer);
             for(cytnx_size_t i=1;i<shape.size();i++){
-                sprintf(buffer,",%llu",shape[i]); os << string(buffer);
+                sprintf(buffer,",%d",shape[i]); os << string(buffer);
             }
             os << ")"<< std::endl;
 

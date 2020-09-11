@@ -40,6 +40,10 @@ int main(int argc, char *argv[]){
 
 
     auto XxA = arange(60).reshape({3,4,5});
+    auto XxD = XxA;
+    
+    cout << (XxD == XxA) << endl;
+
     auto XxB = XxA.permute(0,2,1).contiguous();
     auto XxC = XxA.permute(0,2,1);
 

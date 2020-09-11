@@ -31,8 +31,8 @@ See The following user guide for install and using of cytnx:
     3. [Enhance] the behavior of reshape in Tensor to prevent redundant copy.    
     4. [Enhance] behavior change all linalg to follow the same disipline for permute/reshape/contiguous
     5. [Enhance] add print() in C++ API    
-
-
+    6. [Fix] reshape() does not share memory
+    7. [Fix] BoolStorage print_elem does not show the first element in shape
 
 
 ## API Documentation:
