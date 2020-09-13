@@ -1188,7 +1188,7 @@ namespace cytnx{
     };// class Tensor
 
     std::ostream& operator<<(std::ostream& os, const Tensor &in);
-
+    std::ostream& operator<<(std::ostream& os, const Tensor::Tproxy &in){ os << Tensor(in);};
 }
 
 #endif

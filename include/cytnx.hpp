@@ -2,6 +2,8 @@
 #define __cytnx_H_
 #include <iostream>
 #include <typeinfo>
+
+#include "Scalar.hpp"
 #include "Accessor.hpp"
 #include "Device.hpp"
 #include "Type.hpp"
@@ -12,6 +14,8 @@
 #include "linalg.hpp"
 #include "utils/utils.hpp"
 #include "random.hpp"
+
+
 
 #include "UniTensor.hpp"
 #include "Symmetry.hpp"

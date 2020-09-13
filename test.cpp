@@ -9,6 +9,17 @@ using namespace cytnx;
 
 typedef cytnx::Accessor ac;
 
+class test{
+    public:
+    double A;
+
+    template<class T>
+    operator T () const{
+        return T(this->A);
+    };
+
+};
+
 
 
 //-------------------------------------------
@@ -37,6 +48,34 @@ class MyOp: public LinOp{
 
  
 int main(int argc, char *argv[]){
+
+    Scalar Xval = cytnx_complex128(400,0);
+    Scalar Xval2;
+    Scalar Xval3 = 400.1;
+
+    Xval3.print();
+
+    Xval = complex64(Xval);
+    
+    Xval.print();
+
+    //cout << Xval << endl;
+    //cout << Xval2 << endl;
+
+
+    return 0;
+
+    auto tclass = test();
+    
+    tclass.A = 400;
+
+    //cout << typeid(tclass.A).name();
+    //cout << typeid(float(tclass)).name() << endl; 
+
+
+
+
+    return 0;
 
 
     auto XxA = arange(60).reshape({3,4,5});
