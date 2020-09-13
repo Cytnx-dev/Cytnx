@@ -24,6 +24,7 @@ See The following user guide for install and using of cytnx:
 
 ## Current dev Version:
     v0.6.1
+    1. [Enhace] add Scalar class 
 
     v0.6.0
     1. [Enhance] behavior change the behavior of permute to prevent redundant copy in UniTensor and Tensor.
