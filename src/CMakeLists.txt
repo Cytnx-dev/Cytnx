@@ -31,6 +31,7 @@
 
 target_sources_local(cytnx
   PRIVATE
+    Scalar.cpp
     Network_base.cpp
     Network.cpp
     RegularNetwork.cpp

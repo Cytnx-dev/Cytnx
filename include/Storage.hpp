@@ -16,7 +16,7 @@
 #include "Device.hpp"
 #include "intrusive_ptr_base.hpp"
 #include "cytnx_error.hpp"
-
+#include "Scalar.hpp"
 
 
 namespace cytnx{
@@ -54,14 +54,15 @@ namespace cytnx{
 
 
             template<class T>
-            T& at(const unsigned int &idx) const;
+            T& at(const cytnx_uint64 &idx) const;
             
             template<class T>   
             T* data() const;
             
-            void* raw_ptr(){
+            void* data() const{
                 return this->Mem;
             }
+
             void print();
             void print_info();
             /*
@@ -172,6 +173,21 @@ namespace cytnx{
             virtual void append(const cytnx_uint16     &val);
             virtual void append(const cytnx_bool       &val);
 
+            virtual Scalar get_item(const cytnx_uint64 &in) const;
+            /*
+            virtual void set_item(const cytnx_uint64 &idx,const cytnx_complex128 &val);
+            virtual void set_item(const cytnx_uint64 &idx,const cytnx_complex64  &val);
+            virtual void set_item(const cytnx_uint64 &idx,const cytnx_double     &val);
+            virtual void set_item(const cytnx_uint64 &idx,const cytnx_float      &val);
+            virtual void set_item(const cytnx_uint64 &idx,const cytnx_int64      &val);
+            virtual void set_item(const cytnx_uint64 &idx,const cytnx_uint64     &val);
+            virtual void set_item(const cytnx_uint64 &idx,const cytnx_int32      &val);
+            virtual void set_item(const cytnx_uint64 &idx,const cytnx_uint32     &val);
+            virtual void set_item(const cytnx_uint64 &idx,const cytnx_int16      &val);
+            virtual void set_item(const cytnx_uint64 &idx,const cytnx_uint16     &val);
+            virtual void set_item(const cytnx_uint64 &idx,const cytnx_bool       &val);
+            */
+
     };        
     ///@endcond
 
@@ -220,6 +236,20 @@ namespace cytnx{
             void append(const cytnx_int16      &val);
             void append(const cytnx_uint16     &val);
             void append(const cytnx_bool       &val);
+            Scalar get_item(const cytnx_uint64 &in) const;
+            /*
+            void set_item(const cytnx_uint64 &idx,const cytnx_complex128 &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_complex64  &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_double     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_float      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int64      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint64     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int32      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint32     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int16      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint16     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_bool       &val);
+            */
 
     };          
     ///@endcond
@@ -268,7 +298,7 @@ namespace cytnx{
             void append(const cytnx_int16      &val);
             void append(const cytnx_uint16     &val);
             void append(const cytnx_bool       &val);
-
+            Scalar get_item(const cytnx_uint64 &in) const;
     };
     ///@endcond
 
@@ -317,7 +347,7 @@ namespace cytnx{
             void append(const cytnx_int16      &val);
             void append(const cytnx_uint16     &val);
             void append(const cytnx_bool       &val);
-
+            Scalar get_item(const cytnx_uint64 &in) const;
     };
     ///@endcond
 
@@ -365,7 +395,7 @@ namespace cytnx{
             void append(const cytnx_int16      &val);
             void append(const cytnx_uint16     &val);
             void append(const cytnx_bool       &val);
-
+            Scalar get_item(const cytnx_uint64 &in) const;
     };
     ///@endcond
 
@@ -414,7 +444,7 @@ namespace cytnx{
             void append(const cytnx_int16      &val);
             void append(const cytnx_uint16     &val);
             void append(const cytnx_bool       &val);
-
+            Scalar get_item(const cytnx_uint64 &in) const;
     };          
     ///@endcond
 
@@ -463,6 +493,7 @@ namespace cytnx{
             void append(const cytnx_int16      &val);
             void append(const cytnx_uint16     &val);
             void append(const cytnx_bool       &val);
+            Scalar get_item(const cytnx_uint64 &in) const;
     };          
     ///@endcond
     ///@cond
@@ -508,6 +539,7 @@ namespace cytnx{
             void append(const cytnx_int16      &val);
             void append(const cytnx_uint16     &val);
             void append(const cytnx_bool       &val);
+            Scalar get_item(const cytnx_uint64 &in) const;
     };          
     ///@endcond
 
@@ -555,6 +587,7 @@ namespace cytnx{
             void append(const cytnx_int16      &val);
             void append(const cytnx_uint16     &val);
             void append(const cytnx_bool       &val);
+            Scalar get_item(const cytnx_uint64 &in) const;
     };          
     ///@endcond
 
@@ -601,6 +634,7 @@ namespace cytnx{
             void append(const cytnx_int16      &val);
             void append(const cytnx_uint16     &val);
             void append(const cytnx_bool       &val);
+            Scalar get_item(const cytnx_uint64 &in) const;
     };          
     ///@endcond
 
@@ -647,6 +681,7 @@ namespace cytnx{
             void append(const cytnx_int16      &val);
             void append(const cytnx_uint16     &val);
             void append(const cytnx_bool       &val);
+            Scalar get_item(const cytnx_uint64 &in) const;
     };          
     ///@endcond
 
@@ -693,6 +728,7 @@ namespace cytnx{
             void append(const cytnx_int16      &val);
             void append(const cytnx_uint16     &val);
             void append(const cytnx_bool       &val);
+            Scalar get_item(const cytnx_uint64 &in) const;
     };          
     ///@endcond
 
@@ -868,8 +904,8 @@ namespace cytnx{
                 return this->_impl->data<T>();
             }
 
-            void* raw_ptr(){
-                return this->_impl->raw_ptr();
+            void* data() const{
+                return this->_impl->data();
             }
             ///@endcond
 
@@ -1085,6 +1121,17 @@ namespace cytnx{
             Storage imag() const{
                 return Storage(this->_impl->imag());
             };
+
+            Scalar get_item(const cytnx_uint64 &idx) const{
+                return this->_impl->get_item(idx);
+            };
+
+            //template<class T>
+            //void set_item(const cytnx_uint64 &idx, const T &elem){
+                
+            //};
+
+                        
 
     };
 

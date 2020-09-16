@@ -303,9 +303,32 @@ namespace cytnx{
 
             return out;
         }
+        
+        template<>
+        Tensor Add<Scalar>(const Scalar &lc, const Tensor &Rt){
+            Storage Cnst(1,lc.dtype());
+            /*    
+            Cnst = lc;
+            Tensor out;
+            out._impl = Rt._impl->_clone_meta_only(); 
+            out._impl->storage() = Storage(Rt._impl->storage().size(),Type.Bool < Rt.dtype()?Type.Bool:Rt.dtype(),Rt.device());
+            //Tensor out(Rt.shape(),Type.Bool < Rt.dtype()?Type.Bool:Rt.dtype(),Rt.device());
 
+            if(Rt.device()==Device.cpu){
+                linalg_internal::lii.Ari_ii[Type.Bool][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},0);
+            }else{
+                #ifdef UNI_GPU
+                    checkCudaErrors(cudaSetDevice(Rt.device()));
+                    linalg_internal::lii.cuAri_ii[Type.Bool][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},0);
+                #else
+                    cytnx_error_msg(true,"[Add] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
+                #endif 
+            }        
 
-
+            return out;
+            */
+        }
+        
         //-----------------------------------------------------------------------------------
         template<>
         Tensor Add<cytnx_complex128>(const Tensor &Lt, const cytnx_complex128 &rc){

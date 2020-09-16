@@ -49,6 +49,7 @@ class MyOp: public LinOp{
  
 int main(int argc, char *argv[]){
 
+    
     Scalar Xval = cytnx_complex128(400,0);
     Scalar Xval2;
     Scalar Xval3 = 400.1;
@@ -59,9 +60,28 @@ int main(int argc, char *argv[]){
     
     Xval.print();
 
+
+    //auto sA = Storage(10);
+    //cout << sA << endl;
+
+    //cout << sA.get_item(1) << endl;
+    //sA
+    
+    //sA.data<cytnx_int64>();
+    //sA.data();
+
+    auto tA = Tensor({10});
+    print(tA);
+
+    tA.append(10);
+    print(tA);    
+    print(tA.storage().capacity());
+
+    //cout << Xval.item<cytnx_complex128>() << endl;
+
     //cout << Xval << endl;
     //cout << Xval2 << endl;
-
+    
 
     return 0;
 

@@ -83,7 +83,7 @@ else
   ALL_LDFLAGS += $(LDFLAGS)
 endif
 
-OBJS = Storage_base.o BoolStorage.o Uint16Storage.o Int16Storage.o Uint32Storage.o Int32Storage.o Uint64Storage.o Int64Storage.o FloatStorage.o DoubleStorage.o ComplexFloatStorage.o ComplexDoubleStorage.o Type.o Device.o
+OBJS = Scalar.o Storage_base.o BoolStorage.o Uint16Storage.o Int16Storage.o Uint32Storage.o Int32Storage.o Uint64Storage.o Int64Storage.o FloatStorage.o DoubleStorage.o ComplexFloatStorage.o ComplexDoubleStorage.o Type.o Device.o
 
 
 OBJS += LinOp.o Storage.o Tensor.o Accessor.o Generator.o Physics.o
@@ -421,6 +421,8 @@ Type.o : $(CytnxPATH)/src/Type.cpp $(CytnxPATH)/include/Type.hpp
 Device.o: $(CytnxPATH)/src/Device.cpp $(CytnxPATH)/include/Device.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
+Scalar.o : $(CytnxPATH)/src/Scalar.cpp $(CytnxPATH)/include/Scalar.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 ## Utils
 ##########################

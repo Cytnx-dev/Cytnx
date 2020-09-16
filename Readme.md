@@ -24,7 +24,10 @@ See The following user guide for install and using of cytnx:
 
 ## Current dev Version:
     v0.6.1
-    1. [Enhace] add Scalar class 
+    1. [Enhance] add Scalar class (shadow)
+    2. [Enhance] change default allocation from Malloc to Calloc.
+    3. [Enhance] change storage.raw_ptr() to storage.data() and storage.data<>() 
+    
 
     v0.6.0
     1. [Enhance] behavior change the behavior of permute to prevent redundant copy in UniTensor and Tensor.

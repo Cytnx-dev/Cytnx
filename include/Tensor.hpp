@@ -1125,8 +1125,8 @@ namespace cytnx{
                 this->_impl->_shape[0]+=1;
                 cytnx_uint64 oldsize = this->_impl->_storage.size();
                 this->_impl->_storage.resize(oldsize+Nelem);
-                memcpy(((char*)this->_impl->_storage.raw_ptr()) + oldsize*Type.typeSize(this->dtype())/sizeof(char),
-                       in._impl->_storage.raw_ptr(),
+                memcpy(((char*)this->_impl->_storage.data()) + oldsize*Type.typeSize(this->dtype())/sizeof(char),
+                       in._impl->_storage.data(),
                        Type.typeSize(in.dtype())*Nelem);
 
             }
@@ -1188,7 +1188,8 @@ namespace cytnx{
     };// class Tensor
 
     std::ostream& operator<<(std::ostream& os, const Tensor &in);
-    std::ostream& operator<<(std::ostream& os, const Tensor::Tproxy &in){ os << Tensor(in);};
+    std::ostream& operator<<(std::ostream& os, const Tensor::Tproxy &in);
+    //{ os << Tensor(in);};
 }
 
 #endif

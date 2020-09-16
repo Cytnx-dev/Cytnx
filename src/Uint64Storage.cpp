@@ -22,12 +22,14 @@ namespace cytnx{
 
 
         if(device==Device.cpu){
-            this->Mem = utils_internal::Malloc_cpu(this->cap*sizeof(cytnx_uint64));
+            //this->Mem = utils_internal::Malloc_cpu(this->cap*sizeof(cytnx_uint64));
+            this->Mem = utils_internal::Calloc_cpu(this->cap,sizeof(cytnx_uint64));
         }else{
             #ifdef UNI_GPU
                 cytnx_error_msg(device>=Device.Ngpus,"%s","[ERROR] invalid device.");
                 cudaSetDevice(device);
-                this->Mem = utils_internal::cuMalloc_gpu(this->cap*sizeof(cytnx_uint64));
+                //this->Mem = utils_internal::cuMalloc_gpu(this->cap*sizeof(cytnx_uint64));
+                this->Mem = utils_internal::cuCalloc_gpu(this->cap,sizeof(cytnx_uint64));
             #else
                 cytnx_error_msg(1,"%s","[ERROR] cannot init a Storage on gpu without CUDA support.");
             #endif
@@ -621,5 +623,7 @@ namespace cytnx{
     boost::intrusive_ptr<Storage_base> Uint64Storage::imag(){
         cytnx_error_msg(true,"[ERROR] Storage.imag() can only be called from complex type.%s","\n");
     }   
-
+    Scalar Uint64Storage::get_item(const cytnx_uint64 &idx)const{
+        return Scalar(this->at<cytnx_uint64>(idx));
+    }
 }//namespace cytnx

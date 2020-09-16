@@ -240,7 +240,10 @@ namespace cytnx{
         else in._impl->storage()._impl->PrintElem_byShape(os,in.shape(),in._impl->invmapper());
         return os;
     }       
-
+    std::ostream& operator<<(std::ostream& os,const Tensor::Tproxy &in){
+        os << Tensor(in) << std::endl;
+        return os;
+    }       
     //===================================================================
     //wrapper
 

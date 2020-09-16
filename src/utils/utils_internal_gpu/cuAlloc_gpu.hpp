@@ -11,7 +11,7 @@ namespace cytnx{
     namespace utils_internal{
 
     #ifdef UNI_GPU    
-        //void* Calloc_gpu(const cytnx_uint64&N, const cytnx_uint64 &perelem_bytes);
+        void* cuCalloc_gpu(const cytnx_uint64&N, const cytnx_uint64 &perelem_bytes);
         void* cuMalloc_gpu(const cytnx_uint64 &bytes);
     #endif
     }

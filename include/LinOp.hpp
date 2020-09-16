@@ -30,8 +30,8 @@ namespace cytnx{
             int _dtype;
 
             // pre-storage data:
-            std::map<cytnx_uint64,std::pair<std::vector<cytnx_uint64>,Storage> > _elems; //map[i] -> pair[<js>,<Storage>]
-            std::map<cytnx_uint64,std::pair<std::vector<cytnx_uint64>,Storage> >::iterator _elems_it; 
+            std::map<cytnx_uint64,std::pair<std::vector<cytnx_uint64>,Tensor> > _elems; //map[i] -> pair[<js>,<Storage>]
+            std::map<cytnx_uint64,std::pair<std::vector<cytnx_uint64>,Tensor> >::iterator _elems_it; 
 
             //Tensor _mv_elemfunc(const Tensor &);
 
@@ -104,13 +104,13 @@ namespace cytnx{
             this->_elems_it = this->_elems.find(i);
             if(this->_elems_it == this->_elems.end()){
                 //not exists:
-                Storage x(0,this->_dtype);
+                Tensor x(0,this->_dtype);
                 x.append(elem);                
-                this->_elems[i] = std::pair<std::vector<cytnx_uint64>,Storage>({j},x);
+                this->_elems[i] = std::pair<std::vector<cytnx_uint64>,Tensor>({j},x);
 
             }else{
                 std::vector<cytnx_uint64> &vi = this->_elems_it->second.first; // pair:
-                Storage &ie = this->_elems_it->second.second;
+                Tensor &ie = this->_elems_it->second.second;
                 if(check_exists){
                     cytnx_error_msg(std::find(vi.begin(), vi.end(), j)!=vi.end(),"[ERROR] the element is set%s","\n");
                 }
