@@ -156,6 +156,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad7557a7109f2764fe97049a348971b39"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Storage.html">Storage</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Storage.html#ad7557a7109f2764fe97049a348971b39">imag</a> () const</td></tr>
 <tr class="memdesc:ad7557a7109f2764fe97049a348971b39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the imaginary part form a Complex type <a class="el" href="classcytnx_1_1Storage.html" title="an memeory storage with multi-type/multi-device support ">Storage</a>.  <a href="#ad7557a7109f2764fe97049a348971b39">More...</a><br /></td></tr>
 <tr class="separator:ad7557a7109f2764fe97049a348971b39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad583a657f357cf1e9c0a1067f6dd8d47"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Scalar.html">Scalar</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Storage.html#ad583a657f357cf1e9c0a1067f6dd8d47">get_item</a> (const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;idx) const</td></tr>
+<tr class="separator:ad583a657f357cf1e9c0a1067f6dd8d47"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -587,6 +589,32 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
+<a id="ad583a657f357cf1e9c0a1067f6dd8d47"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad583a657f357cf1e9c0a1067f6dd8d47">&#9670;&nbsp;</a></span>get_item()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx_1_1Scalar.html">Scalar</a> cytnx::Storage::get_item </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;&#160;</td>
+          <td class="paramname"><em>idx</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ad7557a7109f2764fe97049a348971b39"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad7557a7109f2764fe97049a348971b39">&#9670;&nbsp;</a></span>imag()</h2>
 
@@ -724,7 +752,7 @@ size  : 10
 dtype : Uint64
 device: cytnx device: CPU
 size  : 10
-[                   0           540028971                   0                   0                   0                   0                   0                   0                   0                   0  ]
+[                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0  ]
 
 dtype : Double (Float64)
 device: cytnx device: CUDA/GPU-id:0
@@ -736,13 +764,13 @@ size  : 10
 <pre class="fragment">dtype : Double (Float64)
 device: cytnx device: CPU
 size  : 10
-[ 4.68977e-310 0.00000e+00 0.00000e+00 1.48220e-323 4.68977e-310 0.00000e+00 0.00000e+00 8.32188e-315 4.68977e-310 0.00000e+00 ]
+[ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
 
 
 dtype : Uint64
 device: cytnx device: CPU
 size  : 10
-[      94922082583584           540028971     140509593464528     140509593472016     140509593485360     140509593472096     140509593485504     140509593479408     140509593480464     140509593480528  ]
+[                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0  ]
 
 
 dtype : Double (Float64)

@@ -7,6 +7,7 @@ var searchData=
   ['get_5fblocks_5f',['get_blocks_',['../classcytnx_1_1UniTensor.html#afdda64ed1e4a12367153f2d5d302c414',1,'cytnx::UniTensor::get_blocks_() const'],['../classcytnx_1_1UniTensor.html#a0d09bed486df0e81a70e81b2489b9177',1,'cytnx::UniTensor::get_blocks_()']]],
   ['get_5fcost',['get_cost',['../namespacecytnx.html#a1d3b4464330ff6cb6e5de4f02b6e6382',1,'cytnx']]],
   ['get_5felem',['get_elem',['../classcytnx_1_1UniTensor.html#a0c5a3ca425fdb2467007c3bf9816dde7',1,'cytnx::UniTensor']]],
+  ['get_5fitem',['get_item',['../classcytnx_1_1Storage.html#ad583a657f357cf1e9c0a1067f6dd8d47',1,'cytnx::Storage']]],
   ['getdegeneracy',['getDegeneracy',['../classcytnx_1_1Bond.html#a121d5fb24f782cf66889771146af5da8',1,'cytnx::Bond::getDegeneracy(const std::vector&lt; cytnx_int64 &gt; &amp;qnum) const'],['../classcytnx_1_1Bond.html#a8d714304116d09bd23e6f05d05aaf7dd',1,'cytnx::Bond::getDegeneracy(const std::vector&lt; cytnx_int64 &gt; &amp;qnum, std::vector&lt; cytnx_uint64 &gt; &amp;indices) const']]],
   ['gettotalqnums',['getTotalQnums',['../classcytnx_1_1UniTensor.html#afe298e97a7f517a86bb19925565bff4a',1,'cytnx::UniTensor']]],
   ['getuniqueqnums',['getUniqueQnums',['../classcytnx_1_1Bond.html#a863dc35428fbf86ea7ac8674c8a18517',1,'cytnx::Bond::getUniqueQnums(std::vector&lt; cytnx_uint64 &gt; &amp;counts)'],['../classcytnx_1_1Bond.html#afb1358f27ec9d746056af2ac439a5d9a',1,'cytnx::Bond::getUniqueQnums()']]]
