@@ -17,7 +17,7 @@ See The following user guide for install and using of cytnx:
 
 ## News
     [v0.6.0] 
-    build-1
+    build-2
     8. [Fatal  ] Fix bug in Dot for Matrix-Vector multiplication on both GPU and CPU with complex&real float dtypes.
  
 ## Stable Version:
