@@ -16,22 +16,23 @@ See The following user guide for install and using of cytnx:
 [![Build Status](https://travis-ci.org/kaihsin/Cytnx_build.svg?branch=master)](https://travis-ci.org/kaihsin/Cytnx_build)
 
 ## News
-    [v0.6.0] 
-    build-2
-    8. [Fatal  ] Fix bug in Dot for Matrix-Vector multiplication on both GPU and CPU with complex&real float dtypes.
+    [v0.6.1] 
  
 ## Stable Version:
-[v0.6.0](https://github.com/kaihsin/Cytnx/tree/v0.6.0)
+[v0.6.1](https://github.com/kaihsin/Cytnx/tree/v0.6.1)
 
 ## Current dev Version:
+    v0.6.2
+
     v0.6.1
     1. [Enhance] add Scalar class (shadow)
     2. [Enhance] change default allocation from Malloc to Calloc.
     3. [Enhance] change storage.raw_ptr() to storage.data() and storage.data<>() 
     4. [Enhance] change storage.cap to STORAGE_DEFT_SZ that can be tune.
     5. [Enhance] adding Tproxy/Tproxy, Tproxy/Tensor, Tensor/Tproxy operation 
-    7. [Enhance] Add mv_elem type for LinOp, which intrinsically omp the matvec operation.    
- 
+    6. [Enhance] Add mv_elem type for LinOp, which intrinsically omp the matvec operation.    
+    7. [Fatal  ] Fix bug in Dot for Matrix-Vector multiplication on both GPU and CPU with complex&real float dtypes.
+
     v0.6.0
     1. [Enhance] behavior change the behavior of permute to prevent redundant copy in UniTensor and Tensor.
     2. add Tensor::same_data to check if two Tensor has same storage.

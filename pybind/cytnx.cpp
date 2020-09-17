@@ -370,7 +370,7 @@ void f_UniTensor_setelem_scal_cf(UniTensor &self, const std::vector<cytnx_uint64
 
 PYBIND11_MODULE(cytnx,m){
 
-    m.attr("__version__") = "0.5.5a";
+    m.attr("__version__") = "0.6.1a";
     m.attr("__blasINTsize__") = cytnx::__blasINTsize__;
     //global vars
     //m.attr("cytnxdevice") = cytnx::cytnxdevice;
@@ -512,12 +512,28 @@ PYBIND11_MODULE(cytnx,m){
     py::class_<LinOp,PyLinOp>(m,"LinOp")
         .def(py::init<const std::string &, const cytnx_uint64 &, const int &, const int &, std::function<Tensor(const Tensor&)> >(),py::arg("type"),py::arg("nx"),py::arg("dtype")=(int)Type.Double,py::arg("device")=(int)Device.cpu,py::arg("custom_f")=nullptr)
         .def("set_func",&LinOp::set_func,py::arg("custom_f"),py::arg("dtype"),py::arg("device"))
+        .def("set_elem",&LinOp::set_elem<cytnx_complex128>,py::arg("i"),py::arg("j"),py::arg("elem"),py::arg("check_exists")=true)
+        .def("set_elem",&LinOp::set_elem<cytnx_complex64>,py::arg("i"),py::arg("j"),py::arg("elem"),py::arg("check_exists")=true)
+        .def("set_elem",&LinOp::set_elem<cytnx_double>,py::arg("i"),py::arg("j"),py::arg("elem"),py::arg("check_exists")=true)
+        .def("set_elem",&LinOp::set_elem<cytnx_float>,py::arg("i"),py::arg("j"),py::arg("elem"),py::arg("check_exists")=true)
+        .def("set_elem",&LinOp::set_elem<cytnx_int64>,py::arg("i"),py::arg("j"),py::arg("elem"),py::arg("check_exists")=true)
+        .def("set_elem",&LinOp::set_elem<cytnx_uint64>,py::arg("i"),py::arg("j"),py::arg("elem"),py::arg("check_exists")=true)
+        .def("set_elem",&LinOp::set_elem<cytnx_int32>,py::arg("i"),py::arg("j"),py::arg("elem"),py::arg("check_exists")=true)
+        .def("set_elem",&LinOp::set_elem<cytnx_uint32>,py::arg("i"),py::arg("j"),py::arg("elem"),py::arg("check_exists")=true)
+        .def("set_elem",&LinOp::set_elem<cytnx_int16>,py::arg("i"),py::arg("j"),py::arg("elem"),py::arg("check_exists")=true)
+        .def("set_elem",&LinOp::set_elem<cytnx_uint16>,py::arg("i"),py::arg("j"),py::arg("elem"),py::arg("check_exists")=true)
+        .def("set_elem",&LinOp::set_elem<cytnx_bool>,py::arg("i"),py::arg("j"),py::arg("elem"),py::arg("check_exists")=true)
         .def("matvec", &LinOp::matvec)
         .def("set_device", &LinOp::set_device)
         .def("set_dtype", &LinOp::set_dtype)
         .def("device", &LinOp::device)
         .def("dtype", &LinOp::dtype)
         .def("nx", &LinOp::nx)
+        .def("__repr__",[](cytnx::LinOp &self)->std::string{
+            self._print();
+            return std::string("");
+         },py::call_guard<py::scoped_ostream_redirect,
+             py::scoped_estream_redirect>())
         ;
 
 
