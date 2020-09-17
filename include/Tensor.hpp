@@ -264,6 +264,8 @@ namespace cytnx{
     };
     ///@endcond
 
+    class Tensor;
+
     /// @brief an tensor (multi-dimensional array) 
     class Tensor{
         private:
@@ -288,7 +290,13 @@ namespace cytnx{
                     this->_insimpl->set(_accs,rc);
                     return rc;
                 }
-        
+                const Tproxy& operator=(const Tproxy &rc){
+                    Tensor tmp = Tensor(rc);
+                    this->_insimpl->set(_accs,tmp._impl);
+                    return rc;
+                }            
+
+
                 template<class T>
                 Tensor operator+=(const T &rc){
                     Tensor self;
@@ -298,6 +306,8 @@ namespace cytnx{
                     self._impl = this->_insimpl;
                     return self;
                 }
+                Tensor operator+=(const Tproxy &rc);
+
                 template<class T>
                 Tensor operator-=(const T &rc){
                     Tensor self;
@@ -307,6 +317,8 @@ namespace cytnx{
                     self._impl = this->_insimpl;
                     return self;
                 }
+                Tensor operator-=(const Tproxy &rc);
+
                 template<class T>
                 Tensor operator/=(const T &rc){
                     Tensor self;
@@ -316,6 +328,8 @@ namespace cytnx{
                     self._impl = this->_insimpl;
                     return self;
                 }
+                Tensor operator/=(const Tproxy &rc);
+
                 template<class T>
                 Tensor operator*=(const T &rc){
                     Tensor self;
@@ -325,30 +339,41 @@ namespace cytnx{
                     self._impl = this->_insimpl;
                     return self;
                 }
+                Tensor operator*=(const Tproxy &rc);
+
                 template<class T>
                 Tensor operator+(const T &rc) const{
                     Tensor out;
                     out._impl = _insimpl->get(_accs);
-                    return out + rc;
+                    return out.Add(rc);
                 }
+                Tensor operator+(const Tproxy &rc) const;
+
                 template<class T>
                 Tensor operator-(const T &rc) const{
                     Tensor out;
                     out._impl = _insimpl->get(_accs);
-                    return out - rc;
+                    return out.Sub(rc);
                 }
+                Tensor operator-(const Tproxy &rc) const;
+
+
                 template<class T>
                 Tensor operator*(const T &rc) const{
                     Tensor out;
                     out._impl = _insimpl->get(_accs);
-                    return out * rc;
+                    return out.Mul(rc);
                 }
+                Tensor operator*(const Tproxy &rc) const;
+                
                 template<class T>
                 Tensor operator/(const T &rc) const{
                     Tensor out;
                     out._impl = _insimpl->get(_accs);
-                    return out / rc;
+                    return out.Div(rc);
                 }
+                Tensor operator/(const Tproxy &rc) const;
+
                 template<class T>
                 T item() const{
                     Tensor out;
@@ -1027,6 +1052,25 @@ namespace cytnx{
            Tensor& operator*=(const T &rc);
            template<class T>           
            Tensor& operator/=(const T &rc);
+
+           //Tensor &operator+=(const Tproxy &rc);
+           //Tensor &operator-=(const Tproxy &rc);
+           //Tensor &operator*=(const Tproxy &rc);
+           //Tensor &operator/=(const Tproxy &rc);
+           /*
+           Tensor operator+(const Tproxy &rc){
+                return *this + Tensor(rc);
+           }
+           Tensor operator-(const Tproxy &rc){
+                return *this - Tensor(rc);
+           }
+           Tensor operator*(const Tproxy &rc){
+                return *this * Tensor(rc);
+           }
+           Tensor operator/(const Tproxy &rc){
+                return *this / Tensor(rc);
+           }
+           */
            
            template<class T>
            Tensor Add(const T &rhs){
@@ -1186,6 +1230,12 @@ namespace cytnx{
             Tensor Min() const;
 
     };// class Tensor
+
+    Tensor operator+(const Tensor &lhs, const Tensor::Tproxy &rhs);
+    Tensor operator-(const Tensor &lhs, const Tensor::Tproxy &rhs);
+    Tensor operator*(const Tensor &lhs, const Tensor::Tproxy &rhs);
+    Tensor operator/(const Tensor &lhs, const Tensor::Tproxy &rhs);
+
 
     std::ostream& operator<<(std::ostream& os, const Tensor &in);
     std::ostream& operator<<(std::ostream& os, const Tensor::Tproxy &in);

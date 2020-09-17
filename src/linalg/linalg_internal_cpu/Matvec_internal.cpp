@@ -38,7 +38,7 @@ namespace cytnx{
                 cytnx_complex128 alpha = cytnx_complex128(1,0), beta=cytnx_complex128(0,0);
                 blas_int ONE=1;
                 blas_int blsMl=Ml,blsNr=Nr;
-                zgemv((char*)"N",&blsMl, &blsNr, &alpha, _inl, &blsMl, _inr,&ONE, &beta, _out, &ONE);
+                zgemv((char*)"T",&blsMl, &blsNr, &alpha, _inl, &blsMl, _inr,&ONE, &beta, _out, &ONE);
 
         }
         
@@ -50,7 +50,7 @@ namespace cytnx{
                 cytnx_complex64 alpha = cytnx_complex64(1,0), beta= cytnx_complex64(0,0);
                 blas_int ONE=1;
                 blas_int blsMl=Ml,blsNr=Nr;
-                cgemv((char*)"N",&blsMl, &blsNr, &alpha, _inl, &blsMl, _inr,&ONE, &beta, _out, &ONE);
+                cgemv((char*)"T",&blsMl, &blsNr, &alpha, _inl, &blsMl, _inr,&ONE, &beta, _out, &ONE);
 
         }
 
@@ -62,7 +62,7 @@ namespace cytnx{
                 cytnx_double alpha = 1, beta=0;
                 blas_int ONE=1;
                 blas_int blsMl=Ml,blsNr=Nr;
-                dgemv((char*)"N",&blsMl, &blsNr, &alpha, _inl, &blsMl, _inr,&ONE, &beta, _out, &ONE);
+                dgemv((char*)"T",&blsMl, &blsNr, &alpha, _inl, &blsMl, _inr,&ONE, &beta, _out, &ONE);
         }
 
         void Matvec_internal_f(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &inl, const boost::intrusive_ptr<Storage_base> &inr, const cytnx_int64 &Ml,  const cytnx_int64 &Nr){
@@ -73,7 +73,7 @@ namespace cytnx{
                 cytnx_float alpha = 1, beta=0;
                 blas_int ONE=1;
                 blas_int blsMl=Ml,blsNr=Nr;
-                sgemv((char*)"N",&blsMl, &blsNr, &alpha, _inl, &blsMl, _inr,&ONE, &beta, _out, &ONE);
+                sgemv((char*)"T",&blsMl, &blsNr, &alpha, _inl, &blsMl, _inr,&ONE, &beta, _out, &ONE);
         }
 
         void Matvec_internal_i64(boost::intrusive_ptr<Storage_base> &out, const boost::intrusive_ptr<Storage_base> &inl, const boost::intrusive_ptr<Storage_base> &inr, const cytnx_int64 &Ml,  const cytnx_int64 &Nr){

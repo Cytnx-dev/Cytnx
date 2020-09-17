@@ -33,7 +33,7 @@ namespace cytnx{
             std::map<cytnx_uint64,std::pair<std::vector<cytnx_uint64>,Tensor> > _elems; //map[i] -> pair[<js>,<Storage>]
             std::map<cytnx_uint64,std::pair<std::vector<cytnx_uint64>,Tensor> >::iterator _elems_it; 
 
-            //Tensor _mv_elemfunc(const Tensor &);
+            Tensor _mv_elemfunc(const Tensor &);
 
 
         public:
@@ -104,8 +104,8 @@ namespace cytnx{
             this->_elems_it = this->_elems.find(i);
             if(this->_elems_it == this->_elems.end()){
                 //not exists:
-                Tensor x(0,this->_dtype);
-                x.append(elem);                
+                Tensor x({1},this->_dtype);
+                x(0) = elem;                
                 this->_elems[i] = std::pair<std::vector<cytnx_uint64>,Tensor>({j},x);
 
             }else{
@@ -136,6 +136,8 @@ namespace cytnx{
         cytnx_uint64 nx() const{
             return this->_nx;
         };
+
+        void _print();
 
         /// @cond
         // this expose to interitance:

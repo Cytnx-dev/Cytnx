@@ -13,8 +13,8 @@ namespace cytnx{
         this->dtype = Type.Int16;
 
 
-        if(this->len%32){
-            this->cap = ((unsigned long long)((this->len)/32)+1)*32;
+        if(this->len%STORAGE_DEFT_SZ){
+            this->cap = ((unsigned long long)((this->len)/STORAGE_DEFT_SZ)+1)*STORAGE_DEFT_SZ;
         }else{
             this->cap = this->len;
         }
@@ -45,7 +45,7 @@ namespace cytnx{
         }else{
             this->cap = len_in;
         }
-        cytnx_error_msg(this->cap%32 != 0, "%s", "[ERROR] _Init_by_ptr cannot have not 32x cap_in.");
+        cytnx_error_msg(this->cap%STORAGE_DEFT_SZ != 0,  "[ERROR] _Init_by_ptr cannot have not %dx cap_in.",STORAGE_DEFT_SZ);
 
 
 
@@ -510,8 +510,8 @@ namespace cytnx{
         //cytnx_error_msg(newsize < 1,"[ERROR]resize should have size > 0%s","\n");
 
         if(newsize > this->cap){
-            if(newsize%32){
-                this->cap = ((unsigned long long)((newsize)/32)+1)*32;
+            if(newsize%STORAGE_DEFT_SZ){
+                this->cap = ((unsigned long long)((newsize)/STORAGE_DEFT_SZ)+1)*STORAGE_DEFT_SZ;
             }else{
                 this->cap = newsize;
             }

@@ -19,6 +19,8 @@
 #include "Scalar.hpp"
 
 
+#define STORAGE_DEFT_SZ 2
+
 namespace cytnx{
 
     ///@cond    

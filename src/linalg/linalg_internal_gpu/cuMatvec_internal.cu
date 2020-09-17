@@ -37,7 +37,7 @@ namespace cytnx{
 
             // query working space :
             cytnx_int32 blsMl = Ml,blsNr=Nr;
-            checkCudaErrors(cublasZgemv(cublasH,CUBLAS_OP_N,blsMl,blsNr,(cuDoubleComplex*)&alpha,_inr,blsMl,_inl,1,(cuDoubleComplex*)&beta,_out,1));
+            checkCudaErrors(cublasZgemv(cublasH,CUBLAS_OP_T,blsMl,blsNr,(cuDoubleComplex*)&alpha,_inl,blsMl,_inr,1,(cuDoubleComplex*)&beta,_out,1));
             
             cublasDestroy(cublasH);
 
@@ -56,7 +56,7 @@ namespace cytnx{
 
             // query working space :
             cytnx_int32 blsMl = Ml,blsNr=Nr;
-            checkCudaErrors(cublasCgemv(cublasH,CUBLAS_OP_N,blsMl,blsNr,(cuFloatComplex*)&alpha,_inr,blsMl,_inl,1,(cuFloatComplex*)&beta,_out,1));
+            checkCudaErrors(cublasCgemv(cublasH,CUBLAS_OP_T,blsMl,blsNr,(cuFloatComplex*)&alpha,_inl,blsMl,_inr,1,(cuFloatComplex*)&beta,_out,1));
             
             cublasDestroy(cublasH);
 
@@ -75,7 +75,7 @@ namespace cytnx{
             
             // query working space :
             cytnx_int32 blsMl = Ml,blsNr=Nr;
-            checkCudaErrors(cublasDgemv(cublasH,CUBLAS_OP_N,blsMl,blsNr,&alpha,_inr,blsMl,_inl,1,&beta,_out,1));
+            checkCudaErrors(cublasDgemv(cublasH,CUBLAS_OP_T,blsMl,blsNr,&alpha,_inl,blsMl,_inr,1,&beta,_out,1));
 
             cublasDestroy(cublasH);
 
@@ -92,7 +92,7 @@ namespace cytnx{
             
             // query working space :
             cytnx_int32 blsMl = Ml,blsNr=Nr;
-            checkCudaErrors(cublasSgemv(cublasH,CUBLAS_OP_N,blsMl,blsNr,&alpha,_inr,blsMl,_inl,1,&beta,_out,1));
+            checkCudaErrors(cublasSgemv(cublasH,CUBLAS_OP_T,blsMl,blsNr,&alpha,_inr,blsMl,_inl,1,&beta,_out,1));
 
             cublasDestroy(cublasH);
         }

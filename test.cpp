@@ -34,21 +34,53 @@ Tensor myfunc(const Tensor &Tin){
 }
 
 class MyOp: public LinOp{
-    using LinOp::LinOp;
     public:
-        Tensor ori;
-    // override!
-    Tensor matvec(const Tensor &Tin){
-        //cout << ori << endl;
-        return linalg::Dot(ori,Tin);
-    }
+        
+        void pre_construct(){
+            int cnt = 0;
+            for(int i=0;i<this->nx();i++)
+                for(int j=0;j<this->nx();j++){
+                    //cout << i << j << endl;
+                    this->set_elem(i,j,cnt); cnt++;
+                }
+        }
 
+        MyOp(int dtype):
+            LinOp("mv_elem",3,dtype,Device.cpu){ //invoke base class constructor!
+
+        }
 
 };
 
  
 int main(int argc, char *argv[]){
 
+    auto XOP = MyOp(Type.Double);
+    XOP.pre_construct();
+
+    //XOP._print();
+    
+    //auto v1 = random::normal(3,0,1);
+    auto v1 = ones(3);
+    
+    cout << v1 << endl;
+    cout << XOP.matvec(v1) << endl;
+
+    cout << v1 << endl;
+    auto M = arange(9).reshape(3,3);
+    cout << M << endl;
+
+    M.to_(Device.cuda);
+    v1.to_(Device.cuda);
+
+    cout << M << endl;
+    cout << v1 << endl;
+
+    cout << linalg::Dot(M,v1) << endl;    
+
+
+    
+    return 0;
     
     Scalar Xval = cytnx_complex128(400,0);
     Scalar Xval2;
@@ -70,8 +102,24 @@ int main(int argc, char *argv[]){
     //sA.data<cytnx_int64>();
     //sA.data();
 
-    auto tA = Tensor({10});
+    auto tA = Tensor({10})+1;
+    auto tB = tA.clone()+4;
+
     print(tA);
+    print(tB);
+
+    auto tC = tA.clone();
+    auto tBB = Tensor(tB(":3"));
+
+    tC(":3") += tBB;
+    print(tC);
+    print(tB);
+    print(tA);
+
+    tC(":3") = tA(":3") + tB("2:5");
+
+    tC(":3") += tA(":3");    
+
 
     tA.append(10);
     print(tA);    
@@ -213,8 +261,6 @@ int main(int argc, char *argv[]){
 
     //LinOp HOp("mv",5,Type.Double,Device.cpu,myfunc);
     auto t = arange(5);
-    MyOp cu("mv",5,Type.Double,Device.cpu);    
-    cu.ori = ttA;
     //cout << cu.matvec(t);    
     //LinOp *tpp = &cu;
     //cout << tpp->matvec(t);    
