@@ -571,6 +571,27 @@ namespace cytnx{
         */
         Tensor Tensordot(const Tensor &Tl, const Tensor &Tr, const std::vector<cytnx_uint64> &idxl, const std::vector<cytnx_uint64> &idxr);
 
+        //Tensordot_dg:
+        //==================================================
+        /**
+        @brief perform tensor dot by sum out the indices assigned of two Tensors, with either one of them to be a rank-2 diagonal tensor represented by a rank-2 tensor.
+        @param Tl Tensor #1
+        @param Tr Tensor #2
+        @param idxl the indices of rank of Tensor #1 that is going to sum with Tensor #2
+        @param idxr the indices of rank of Tensor #2 that is going to sum with Tensor #1
+        @param diag_L if Tl(true)/Tr(false) is a diagnal matrix, represented by a rank-1 tensor.
+        @return 
+            [Tensor]
+
+        [Note]
+            1. the elements in idxl and idxr have one to one correspondence. 
+            2. two tensors should on same device.
+            3. if diag_L=true, Tl should be a rank-1 tensor as the diagonal elements of a diagonal matrix. if false, Tr should be a rank-1 tensor
+        */
+        Tensor Tensordot_dg(const Tensor &Tl, const Tensor &Tr, const std::vector<cytnx_uint64> &idxl, const std::vector<cytnx_uint64> &idxr, const bool &diag_L);
+
+
+
         //Outer:
         //==================================================
         /**

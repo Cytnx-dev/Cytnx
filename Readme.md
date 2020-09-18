@@ -25,7 +25,8 @@ See The following user guide for install and using of cytnx:
     v0.6.2
     1. [Fix] Bug in CUDA Matmul interface passing the wrong object bug.  
     2. [Enhance] Add Matmul_dg for diagonal matrix mutiply dense matrix. 
-    
+    3. [Enhance] Add Tensordot_dg for tensordot with either Tl or Tr is diagonal matrix
+    4. [Enhance] Contract dense & sparse memory optimized.      
 
 
     v0.6.1
@@ -265,8 +266,9 @@ See The following user guide for install and using of cytnx:
      Max          |   x       |  Y  |  N   |    Y        | Y  |   N 
     *Trace        |   x       |  Y  |  N   |    Y        | Y  |   Y
      Mod          |   x       |  Y  |  Y   |    Y        | Y  |   Y 
-    Matmul_dg     |   x       |  N  |  Y   |    N        | Y  |   N 
-
+    Matmul_dg     |   x       |  Y  |  Y   |    N        | Y  |   N 
+    --------------|-----------|-----|------|-------------|----|-------
+    *Tensordot_dg |   x       |  Y  |  Y   |    N        | Y  |   N
 
     iterative solver:
      

@@ -7,6 +7,7 @@ var searchData=
   ['tag',['tag',['../classcytnx_1_1UniTensor.html#a6277ec38895990021ec885f98791b47c',1,'cytnx::UniTensor']]],
   ['tensor',['Tensor',['../classcytnx_1_1Tensor.html#afdcff16b2096d10b524161be52ba767e',1,'cytnx::Tensor']]],
   ['tensordot',['Tensordot',['../namespacecytnx_1_1linalg.html#a460e44db6b3d5d2c30c2d2723ff8f788',1,'cytnx::linalg']]],
+  ['tensordot_5fdg',['Tensordot_dg',['../namespacecytnx_1_1linalg.html#ac77faf8e0c0153e1890610a6e21f36af',1,'cytnx::linalg']]],
   ['tilend',['tilend',['../classcytnx_1_1Accessor.html#a23eb8386fd97d8b5d3d7ec7998a30dca',1,'cytnx::Accessor']]],
   ['to',['to',['../classcytnx_1_1Storage.html#a2abfcaacf807934be5dd21c254fdb30e',1,'cytnx::Storage::to()'],['../classcytnx_1_1Tensor.html#acf7f697a9434f9bc98a7d00a555ee982',1,'cytnx::Tensor::to()'],['../classcytnx_1_1UniTensor.html#a025f4a2d775a9892b7f86aeff364fa49',1,'cytnx::UniTensor::to()']]],
   ['to_5f',['to_',['../classcytnx_1_1Storage.html#a0bbf2cbefb5d0835bcb4f0d05e400870',1,'cytnx::Storage::to_()'],['../classcytnx_1_1Tensor.html#a114a31fbb8bf4a90f150b6a67e42183a',1,'cytnx::Tensor::to_()'],['../classcytnx_1_1UniTensor.html#a9aa08f2c848cc7d31bceac7656b4a976',1,'cytnx::UniTensor::to_()']]],

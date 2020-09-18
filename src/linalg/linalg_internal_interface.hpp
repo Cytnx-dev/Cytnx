@@ -14,6 +14,7 @@
 #include "linalg/linalg_internal_cpu/Conj_inplace_internal.hpp"
 #include "linalg/linalg_internal_cpu/Exp_internal.hpp"
 #include "linalg/linalg_internal_cpu/Matmul_internal.hpp"
+#include "linalg/linalg_internal_cpu/Matmul_dg_internal.hpp"
 #include "linalg/linalg_internal_cpu/Diag_internal.hpp"
 #include "linalg/linalg_internal_cpu/Outer_internal.hpp"
 #include "linalg/linalg_internal_cpu/Kron_internal.hpp"
@@ -85,7 +86,7 @@ namespace cytnx{
                 std::vector<Absfunc_oii> Abs_ii;
                 std::vector<Diagfunc_oii> Diag_ii;
                 std::vector<Matmulfunc_oii> Matmul_ii;
-                //std::vector<Matmul_func_oii> Matmul_ds_ii;
+                std::vector<Matmul_dgfunc_oii> Matmul_dg_ii;
                 std::vector<Matvecfunc_oii> Matvec_ii;
                 std::vector<std::vector<Outerfunc_oii> >Outer_ii;
                 std::vector<std::vector<Kronfunc_oii> >Kron_ii;

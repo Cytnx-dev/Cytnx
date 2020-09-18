@@ -242,6 +242,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a53feb441b4b1bd263714ed33e093728f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a53feb441b4b1bd263714ed33e093728f">Matmul</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;TL, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;TR)</td></tr>
 <tr class="memdesc:a53feb441b4b1bd263714ed33e093728f"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform matrix multiplication on two tensors.  <a href="#a53feb441b4b1bd263714ed33e093728f">More...</a><br /></td></tr>
 <tr class="separator:a53feb441b4b1bd263714ed33e093728f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2e6723dc80031eb28fc10cc19826dda"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#af2e6723dc80031eb28fc10cc19826dda">Matmul_dg</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tl, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tr)</td></tr>
+<tr class="memdesc:af2e6723dc80031eb28fc10cc19826dda"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform matrix multiplication on two Tensors with one rank-1 and the other rank-2 where the rank-1 represent the diagonal elements of the specific tensor.  <a href="#af2e6723dc80031eb28fc10cc19826dda">More...</a><br /></td></tr>
+<tr class="separator:af2e6723dc80031eb28fc10cc19826dda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af819d2fc4522d2a6287aa16dfbe3f787"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#af819d2fc4522d2a6287aa16dfbe3f787">InvM</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin)</td></tr>
 <tr class="memdesc:af819d2fc4522d2a6287aa16dfbe3f787"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix inverse.  <a href="#af819d2fc4522d2a6287aa16dfbe3f787">More...</a><br /></td></tr>
 <tr class="separator:af819d2fc4522d2a6287aa16dfbe3f787"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -290,6 +293,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a460e44db6b3d5d2c30c2d2723ff8f788"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a460e44db6b3d5d2c30c2d2723ff8f788">Tensordot</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tl, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tr, const std::vector&lt; <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &gt; &amp;idxl, const std::vector&lt; <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &gt; &amp;idxr)</td></tr>
 <tr class="memdesc:a460e44db6b3d5d2c30c2d2723ff8f788"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform tensor dot by sum out the indices assigned of two Tensors.  <a href="#a460e44db6b3d5d2c30c2d2723ff8f788">More...</a><br /></td></tr>
 <tr class="separator:a460e44db6b3d5d2c30c2d2723ff8f788"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac77faf8e0c0153e1890610a6e21f36af"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#ac77faf8e0c0153e1890610a6e21f36af">Tensordot_dg</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tl, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tr, const std::vector&lt; <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &gt; &amp;idxl, const std::vector&lt; <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &gt; &amp;idxr, const bool &amp;diag_L)</td></tr>
+<tr class="memdesc:ac77faf8e0c0153e1890610a6e21f36af"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform tensor dot by sum out the indices assigned of two Tensors, with either one of them to be a rank-2 diagonal tensor represented by a rank-2 tensor.  <a href="#ac77faf8e0c0153e1890610a6e21f36af">More...</a><br /></td></tr>
+<tr class="separator:ac77faf8e0c0153e1890610a6e21f36af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e8edc89fdabb9c0f9b342198a31798b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a3e8edc89fdabb9c0f9b342198a31798b">Outer</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tl, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tr)</td></tr>
 <tr class="memdesc:a3e8edc89fdabb9c0f9b342198a31798b"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform outer produces of two rank-1 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>.  <a href="#a3e8edc89fdabb9c0f9b342198a31798b">More...</a><br /></td></tr>
 <tr class="separator:a3e8edc89fdabb9c0f9b342198a31798b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1693,6 +1699,37 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
+<a id="af2e6723dc80031eb28fc10cc19826dda"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2e6723dc80031eb28fc10cc19826dda">&#9670;&nbsp;</a></span>Matmul_dg()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> cytnx::linalg::Matmul_dg </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>Tl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>Tr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>perform matrix multiplication on two Tensors with one rank-1 and the other rank-2 where the rank-1 represent the diagonal elements of the specific tensor. </p>
+<p>[Note] the TL and TR one of them should be rank-1 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> and the other should be rank-2 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>. </p>
+
+</div>
+</div>
 <a id="a93ef263824e2dcdab4832ea628959d19"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a93ef263824e2dcdab4832ea628959d19">&#9670;&nbsp;</a></span>Max()</h2>
 
@@ -2866,6 +2903,70 @@ template&lt;class T &gt; </div>
 <p>[Note]</p><ol type="1">
 <li>the elements in idxl and idxr have one to one correspondence.</li>
 <li>two tensors should on same device. </li>
+</ol>
+
+</div>
+</div>
+<a id="ac77faf8e0c0153e1890610a6e21f36af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac77faf8e0c0153e1890610a6e21f36af">&#9670;&nbsp;</a></span>Tensordot_dg()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> cytnx::linalg::Tensordot_dg </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>Tl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>Tr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>idxl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>idxr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramname"><em>diag_L</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>perform tensor dot by sum out the indices assigned of two Tensors, with either one of them to be a rank-2 diagonal tensor represented by a rank-2 tensor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Tl</td><td><a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> #1 </td></tr>
+    <tr><td class="paramname">Tr</td><td><a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> #2 </td></tr>
+    <tr><td class="paramname">idxl</td><td>the indices of rank of <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> #1 that is going to sum with <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> #2 </td></tr>
+    <tr><td class="paramname">idxr</td><td>the indices of rank of <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> #2 that is going to sum with <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> #1 </td></tr>
+    <tr><td class="paramname">diag_L</td><td>if Tl(true)/Tr(false) is a diagnal matrix, represented by a rank-1 tensor. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>]</dd></dl>
+<p>[Note]</p><ol type="1">
+<li>the elements in idxl and idxr have one to one correspondence.</li>
+<li>two tensors should on same device.</li>
+<li>if diag_L=true, Tl should be a rank-1 tensor as the diagonal elements of a diagonal matrix. if false, Tr should be a rank-1 tensor </li>
 </ol>
 
 </div>

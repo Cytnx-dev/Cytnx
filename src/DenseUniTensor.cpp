@@ -525,11 +525,11 @@ namespace cytnx{
             tmp->_is_tag = this->is_tag();
             tmp->_rowrank = this->rowrank() + rhs->rowrank();
 
-            if((this->is_diag() == rhs->is_diag()) && this->is_diag()){
-                tmp->_block = linalg::Kron(this->_block, rhs->get_block_());
-                tmp->_block.reshape_({-1});
-                tmp->_is_diag = true;
-            }else{
+            //if((this->is_diag() == rhs->is_diag()) && this->is_diag()){
+            //    tmp->_block = linalg::Kron(linalg::Diag(this->_block), linalg::Diag(rhs->get_block_()));
+            //    tmp->_block.reshape_({-1});
+            //    tmp->_is_diag = true;
+            //}else{
                 Tensor tmpL,tmpR;
                 if(this->is_diag()) tmpL = linalg::Diag(this->_block);
                 else{ 
@@ -557,7 +557,7 @@ namespace cytnx{
                 //tmpR.reshape_(old_shapeR);
                 tmp->_is_diag = false;
 
-            }
+            //}
             tmp->_is_braket_form = tmp->_update_braket();
 
         }else{
@@ -596,13 +596,23 @@ namespace cytnx{
                 }
                 tmp->_is_diag = true;
             }else{
-                // diag x dense:
-                Tensor tmpL,tmpR;
-                if(this->is_diag()) tmpL = linalg::Diag(this->_block);
-                else tmpL = this->_block; 
-                if(rhs->is_diag()) tmpR = linalg::Diag(rhs->get_block_());
-                else tmpR =  rhs->get_block_(); // share view!!
-                tmp->_block = linalg::Tensordot(tmpL,tmpR,comm_idx1,comm_idx2);
+                if(this->is_diag()!=rhs->is_diag()){
+                    // diag x dense:
+                    //Tensor tmpL,tmpR;
+
+                    //if(this->is_diag()) tmpL = linalg::Diag(this->_block);
+                    //else tmpL = this->_block; 
+                    //if(rhs->is_diag()) tmpR = linalg::Diag(rhs->get_block_());
+                    //else tmpR =  rhs->get_block_(); // share view!!
+                    tmp->_block = linalg::Tensordot_dg(this->_block,rhs->get_block_(),comm_idx1,comm_idx2,this->is_diag());
+
+                }else{
+                    // dense x dense:
+                    //Tensor tmpL,tmpR;
+                    //tmpL = this->_block; 
+                    //tmpR =  rhs->get_block_(); // share view!!
+                    tmp->_block = linalg::Tensordot(this->_block,rhs->get_block_(),comm_idx1,comm_idx2);
+                }
                 tmp->_is_diag = false;
             }
             tmp->_is_braket_form = tmp->_update_braket();

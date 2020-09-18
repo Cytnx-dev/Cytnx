@@ -43,13 +43,13 @@ namespace cytnx{
 
             if(Tl.device()==Device.cpu){
 
-                /*
-                cytnx::linalg_internal::lii.Matmul_ii[_tl.dtype()](out._impl->storage()._impl, 
+                
+                cytnx::linalg_internal::lii.Matmul_dg_ii[_tl.dtype()](out._impl->storage()._impl, 
                                                         _tl._impl->storage()._impl,
                                                         _tr._impl->storage()._impl,  
-                                                        _tl.shape()[0],_tl.shape()[1],_tr.shape()[1]);
-                */
-                cytnx_error_msg(true,"[Developing][Matmul_dg][CPU]%s","\n");
+                                                        _tl.shape()[0],_tl.shape().back(),_tr.shape().back(),diag_L);
+                
+                //cytnx_error_msg(true,"[Developing][Matmul_dg][CPU]%s","\n");
 
                 return out;
 

@@ -55,6 +55,41 @@ class MyOp: public LinOp{
  
 int main(int argc, char *argv[]){
 
+
+
+    auto rA = cytnx::UniTensor(cytnx::arange(12).reshape(4,3),1);
+    auto la = cytnx::UniTensor(cytnx::arange(3)+1,1,true);
+    la.set_labels({1,2});
+    /*
+    print(rA);
+    print(la);
+
+    print(cytnx::Contract(rA,la));
+    print(cytnx::Contract(la,rA));
+    */
+    //rA.to_(cytnx::Device.cuda);
+    //la.to_(cytnx::Device.cuda);
+
+    /*
+    print("=================");
+    print(rA);
+    print(la);
+    */
+
+    //print(cytnx::Contract(rA,la));
+    print(cytnx::Contract(la,rA));
+
+
+    print(cytnx::linalg::Matmul_dg(rA.get_block_(),la.get_block_()));
+    //print(cytnx::linalg::Matmul_dg(la.get_block_(),rA.get_block_()));
+
+    print(Contract(rA,la));
+    //print(Contract(la,rA));
+
+
+
+    return 0;
+
     auto XOP = MyOp(Type.Double);
     XOP.pre_construct();
 
