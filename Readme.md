@@ -27,7 +27,7 @@ See The following user guide for install and using of cytnx:
     2. [Enhance] Add Matmul_dg for diagonal matrix mutiply dense matrix. 
     3. [Enhance] Add Tensordot_dg for tensordot with either Tl or Tr is diagonal matrix
     4. [Enhance] Contract dense & sparse memory optimized.      
-
+    5. [example] Add iTEBD_gpu.py example
 
     v0.6.1
     1. [Enhance] add Scalar class (shadow)
