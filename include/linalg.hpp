@@ -369,6 +369,17 @@ namespace cytnx{
         Tensor Matmul(const Tensor &TL, const Tensor &TR);
 
 
+        // Matmul:
+        //==================================================
+        /**
+        @brief perform matrix multiplication on two Tensors with one rank-1 and the other rank-2 where the rank-1 represent the diagonal elements of the specific tensor.
+
+        [Note] the TL and TR one of them should be rank-1 Tensor and the other should be rank-2 Tensor.
+        */
+        Tensor Matmul_dg(const Tensor &Tl, const Tensor &Tr);
+
+
+
         // InvM:
         //==================================================
         /**

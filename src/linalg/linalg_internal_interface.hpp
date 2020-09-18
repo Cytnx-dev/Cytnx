@@ -36,6 +36,7 @@
     #include "linalg/linalg_internal_gpu/cuConj_inplace_internal.hpp"
     #include "linalg/linalg_internal_gpu/cuExp_internal.hpp"
     #include "linalg/linalg_internal_gpu/cuMatmul_internal.hpp"
+    #include "linalg/linalg_internal_gpu/cuMatmul_dg_internal.hpp"
     #include "linalg/linalg_internal_gpu/cuDiag_internal.hpp"
     #include "linalg/linalg_internal_gpu/cuOuter_internal.hpp"
     #include "linalg/linalg_internal_gpu/cuNorm_internal.hpp"
@@ -59,6 +60,7 @@ namespace cytnx{
         typedef void (*Expfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
         typedef void (*Diagfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
         typedef void (*Matmulfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &,const boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &, const cytnx_int64 &, const cytnx_int64&);
+        typedef void (*Matmul_dgfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &,const boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &, const cytnx_int64 &, const cytnx_int64&, const int &);
         typedef void (*Matvecfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &,const boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &, const cytnx_int64 &);
         typedef void (*Outerfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base>&, const cytnx_uint64 &, const cytnx_uint64 &);
         typedef void (*Vectordotfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base>&,const unsigned long long &, const bool &);
@@ -83,6 +85,7 @@ namespace cytnx{
                 std::vector<Absfunc_oii> Abs_ii;
                 std::vector<Diagfunc_oii> Diag_ii;
                 std::vector<Matmulfunc_oii> Matmul_ii;
+                //std::vector<Matmul_func_oii> Matmul_ds_ii;
                 std::vector<Matvecfunc_oii> Matvec_ii;
                 std::vector<std::vector<Outerfunc_oii> >Outer_ii;
                 std::vector<std::vector<Kronfunc_oii> >Kron_ii;
@@ -104,6 +107,7 @@ namespace cytnx{
                 std::vector<Diagfunc_oii> cuDiag_ii;
                 std::vector<Eighfunc_oii> cuEigh_ii;
                 std::vector<Matmulfunc_oii> cuMatmul_ii;
+                std::vector<Matmul_dgfunc_oii> cuMatmul_dg_ii;
                 std::vector<Matvecfunc_oii> cuMatvec_ii;
                 std::vector<std::vector<Outerfunc_oii> > cuOuter_ii;
                 std::vector<Normfunc_oii> cuNorm_ii;

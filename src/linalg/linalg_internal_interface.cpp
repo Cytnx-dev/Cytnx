@@ -293,6 +293,9 @@ namespace cytnx{
             Matmul_ii[Type.Uint16       ] = Matmul_internal_u16;
             Matmul_ii[Type.Bool         ] = Matmul_internal_b  ;
 
+
+
+
             //=====================
             Matvec_ii = vector<Matvecfunc_oii>(N_Type);
             Matvec_ii[Type.ComplexDouble] = Matvec_internal_cd ;
@@ -784,6 +787,21 @@ namespace cytnx{
                 cuMatmul_ii[Type.Int16        ] = cuMatmul_internal_i16;
                 cuMatmul_ii[Type.Uint16       ] = cuMatmul_internal_u16;
                 cuMatmul_ii[Type.Bool         ] = cuMatmul_internal_b;
+
+                //=====================
+                cuMatmul_dg_ii = vector<Matmul_dgfunc_oii>(N_Type);
+                cuMatmul_dg_ii[Type.ComplexDouble] = cuMatmul_dg_internal_cd ;
+                cuMatmul_dg_ii[Type.ComplexFloat ] = cuMatmul_dg_internal_cf ;
+                cuMatmul_dg_ii[Type.Double       ] = cuMatmul_dg_internal_d  ;
+                cuMatmul_dg_ii[Type.Float        ] = cuMatmul_dg_internal_f  ;
+                cuMatmul_dg_ii[Type.Int64        ] = cuMatmul_dg_internal_i64;
+                cuMatmul_dg_ii[Type.Uint64       ] = cuMatmul_dg_internal_u64;
+                cuMatmul_dg_ii[Type.Int32        ] = cuMatmul_dg_internal_i32;
+                cuMatmul_dg_ii[Type.Uint32       ] = cuMatmul_dg_internal_u32;
+                cuMatmul_dg_ii[Type.Int16        ] = cuMatmul_dg_internal_i16;
+                cuMatmul_dg_ii[Type.Uint16       ] = cuMatmul_dg_internal_u16;
+                cuMatmul_dg_ii[Type.Bool         ] = cuMatmul_dg_internal_b;
+
 
                 //=====================
                 

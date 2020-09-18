@@ -5,6 +5,9 @@
 namespace cytnx{
     namespace linalg{
         Tensor Matmul(const Tensor &Tl, const Tensor &Tr){
+
+            //std::cout << "matmul" << std::endl;
+            //std::cout << Tl << Tr << std::endl;
             
             cytnx_error_msg(Tl.shape().size() != 2,"[Matmul] error, tensor Tl ,Matmul can only operate on rank-2 Tensor.%s","\n");
             cytnx_error_msg(Tr.shape().size() != 2,"[Matmul] error, tensor Tr ,Matmul can only operate on rank-2 Tensor.%s","\n");
@@ -35,7 +38,7 @@ namespace cytnx{
             }else{
                 out.Init({Tl.shape()[0],Tr.shape()[1]},Tr.dtype(),Tr.device());
             }
-            out.storage().set_zeros();
+            //out.storage().set_zeros();
 
             if(Tl.device()==Device.cpu){
 
@@ -52,10 +55,13 @@ namespace cytnx{
                     checkCudaErrors(cudaSetDevice(Tl.device()));
                     cytnx::linalg_internal::lii.cuMatmul_ii[_tl.dtype()](out._impl->storage()._impl,
                                                             _tl._impl->storage()._impl,
-                                                            _tl._impl->storage()._impl,
+                                                            _tr._impl->storage()._impl,
                                                             _tl.shape()[0],_tl.shape()[1],_tr.shape()[1]);
 
                     
+                    //std::cout << "GPU Matmul OUT" << std::endl;
+                    //std::cout << out <<std::endl;
+                    //std::cout << "xxxxxxxxxxxxxx\n";
                     return out;
                 #else
                     cytnx_error_msg(true,"[Matmul] fatal error,%s","try to call the gpu section without CUDA support.\n");

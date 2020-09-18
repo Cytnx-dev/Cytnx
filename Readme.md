@@ -23,6 +23,10 @@ See The following user guide for install and using of cytnx:
 
 ## Current dev Version:
     v0.6.2
+    1. [Fix] Bug in CUDA Matmul interface passing the wrong object bug.  
+    2. [Enhance] Add Matmul_dg for diagonal matrix mutiply dense matrix. 
+    
+
 
     v0.6.1
     1. [Enhance] add Scalar class (shadow)
@@ -261,6 +265,8 @@ See The following user guide for install and using of cytnx:
      Max          |   x       |  Y  |  N   |    Y        | Y  |   N 
     *Trace        |   x       |  Y  |  N   |    Y        | Y  |   Y
      Mod          |   x       |  Y  |  Y   |    Y        | Y  |   Y 
+    Matmul_dg     |   x       |  N  |  Y   |    N        | Y  |   N 
+
 
     iterative solver:
      
