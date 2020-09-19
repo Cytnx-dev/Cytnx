@@ -9,6 +9,7 @@ target_sources_local(cytnx
     cuSetElems_gpu.hpp
     cuSetZeros_gpu.hpp
     cuComplexmem_gpu.hpp
+    cuReduce_gpu.hpp
     cuAlloc_gpu.cu
     cuCast_gpu.cu
     cuFill_gpu.cu
@@ -18,4 +19,5 @@ target_sources_local(cytnx
     cuSetElems_gpu.cu
     cuSetZeros_gpu.cu
     cuComplexmem_gpu.cu
+    cuReduce_gpu.cu
   )

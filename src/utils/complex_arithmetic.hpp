@@ -261,7 +261,7 @@ namespace cytnx{
     bool operator==(const cytnx_bool &rn,const cytnx_complex64 &ln);
 #endif
 
-#if (defined(UNI_GPU) && (!defined(UNI_ICPC)))
+#if defined(UNI_GPU)
     //__host__ __device__ bool operator==(const cuDoubleComplex &ln, const cuDoubleComplex &rn);
     __host__ __device__ bool operator==(const cuDoubleComplex &ln, const cuFloatComplex &rn);
     __host__ __device__ bool operator==(const cuDoubleComplex &ln, const cytnx_double &rn);

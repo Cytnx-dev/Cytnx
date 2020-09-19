@@ -15,6 +15,7 @@
     #include "utils_internal_gpu/cuCast_gpu.hpp"
     #include "utils_internal_gpu/cuAlloc_gpu.hpp"
     #include "utils_internal_gpu/cuMovemem_gpu.hpp"
+    #include "utils_internal_gpu/cuReduce_gpu.hpp"
     #include "utils_internal_gpu/cuSetZeros_gpu.hpp"
     #include "utils_internal_gpu/cuFill_gpu.hpp"
     #include "utils_internal_gpu/cuSetArange_gpu.hpp"

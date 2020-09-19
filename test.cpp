@@ -60,6 +60,17 @@ int main(int argc, char *argv[]){
     auto rA = cytnx::UniTensor(cytnx::arange(12).reshape(4,3),1);
     auto la = cytnx::UniTensor(cytnx::arange(3)+1,1,true);
     la.set_labels({1,2});
+
+    auto ff = cytnx::arange(10).astype(Type.ComplexDouble).to(cytnx::Device.cuda);
+    auto fg = cytnx::arange(10).astype(Type.ComplexDouble).to(cytnx::Device.cuda);
+
+    //auto ff = cytnx::ones(600).astype(Type.Double).to(cytnx::Device.cuda);
+    //auto fg = cytnx::ones(600).astype(Type.Double).to(cytnx::Device.cuda);
+
+    print(cytnx::linalg::Vectordot(ff,fg));
+    exit(1);
+
+
     /*
     print(rA);
     print(la);

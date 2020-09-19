@@ -94,7 +94,7 @@ OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o UniTensor_bas
 OBJS += utils_internal_interface.o
 OBJS += utils.o Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o vec_print.o vec2d_col_sort.o vec_range.o complex_arithmetic.o is.o vec_intersect.o vec_concatenate.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_cpu.o SetElems_cpu.o cartesian.o str_utils.o Complexmem_cpu.o
 ifeq ($(GPU_Enable),1)
-  OBJS += cucomplex_arithmetic.o cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o cuFill_gpu.o cuSetArange_gpu.o cuGetElems_gpu.o  cuSetElems_gpu.o cuComplexmem_gpu.o
+  OBJS += cucomplex_arithmetic.o cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o cuFill_gpu.o cuSetArange_gpu.o cuGetElems_gpu.o  cuSetElems_gpu.o cuComplexmem_gpu.o cuReduce_gpu.o
 endif
 
 ## Linalg_internal
@@ -510,6 +510,8 @@ cuMovemem_gpu.o: $(CytnxPATH)/src/utils/utils_internal_gpu/cuMovemem_gpu.cu $(Cy
 cuComplexmem_gpu.o: $(CytnxPATH)/src/utils/utils_internal_gpu/cuComplexmem_gpu.cu $(CytnxPATH)/src/utils/utils_internal_gpu/cuComplexmem_gpu.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 cuSetZeros_gpu.o: $(CytnxPATH)/src/utils/utils_internal_gpu/cuSetZeros_gpu.cu $(CytnxPATH)/src/utils/utils_internal_gpu/cuSetZeros_gpu.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+cuReduce_gpu.o: $(CytnxPATH)/src/utils/utils_internal_gpu/cuReduce_gpu.cu $(CytnxPATH)/src/utils/utils_internal_gpu/cuReduce_gpu.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 cuSetArange_gpu.o: $(CytnxPATH)/src/utils/utils_internal_gpu/cuSetArange_gpu.cu $(CytnxPATH)/src/utils/utils_internal_gpu/cuSetArange_gpu.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
