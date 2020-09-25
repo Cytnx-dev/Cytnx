@@ -4,6 +4,7 @@
 #ifdef UNI_OMP
     #include <omp.h>
 #endif
+#include "lapack_wrapper.hpp"
 
 namespace cytnx{
 
@@ -22,12 +23,21 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_complex128 a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_complex128)*len);
+                zscal(&N,&a,_out,&ONE);
+
+
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -36,6 +46,7 @@ namespace cytnx{
                         for(unsigned long long i=0;i<len;i++){
                             _out[i] = _Lin[i] / _Rin[i];
                         }
+                    
                 }else{
 
                     ///handle non-contiguous:
@@ -80,12 +91,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_complex128 a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_complex128)*len);
+                zscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -141,6 +159,7 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 //#ifdef UNI_OMP
                 //    #pragma omp parallel for schedule(dynamic) 
                 //#endif
@@ -148,6 +167,12 @@ namespace cytnx{
                         //std::cout << i << std::endl;
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_complex128 a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_complex128)*len);
+                zscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -201,12 +226,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_complex128 a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_complex128)*len);
+                zscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -261,12 +293,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_complex128 a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_complex128)*len);
+                zscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -321,12 +360,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_complex128 a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_complex128)*len);
+                zscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -381,12 +427,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_complex128 a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_complex128)*len);
+                zscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -441,12 +494,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_complex128 a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_complex128)*len);
+                zscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -500,12 +560,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_complex128 a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_complex128)*len);
+                zscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -559,12 +626,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_complex128 a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_complex128)*len);
+                zscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -618,12 +692,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / cytnx_complex128(_Rin[i],0);
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Lin[i] / cytnx_complex128(_Rin[0],0);
+                        _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_complex128 a = 1/cytnx_complex128(_Rin[0],0);
+                memcpy(_out,_Lin,sizeof(cytnx_complex128)*len);
+                zscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -737,12 +818,11 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
-                #ifdef UNI_OMP
-                    #pragma omp parallel for schedule(dynamic) 
-                #endif
-                    for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Lin[i] / _Rin[0];
-                    }
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_complex64 a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_complex64)*len);
+                cscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -796,12 +876,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_complex64 a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_complex64)*len);
+                cscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -855,12 +942,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_complex64 a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_complex64)*len);
+                cscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -913,12 +1007,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_complex64 a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_complex64)*len);
+                cscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -972,12 +1073,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_complex64 a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_complex64)*len);
+                cscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -1031,12 +1139,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_complex64 a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_complex64)*len);
+                cscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -1089,12 +1204,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_complex64 a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_complex64)*len);
+                cscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -1147,12 +1269,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_complex64 a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_complex64)*len);
+                cscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -1205,12 +1334,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_complex64 a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_complex64)*len);
+                cscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -1263,12 +1399,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / cytnx_complex64(_Rin[i],0);
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Lin[i] / cytnx_complex64(_Rin[0],0);
+                        _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_complex64 a = 1/cytnx_complex64(_Rin[0],0);
+                memcpy(_out,_Lin,sizeof(cytnx_complex64)*len);
+                cscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -1439,12 +1582,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_double a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_double)*len);
+                dscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -1499,12 +1649,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_double a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_double)*len);
+                dscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -1558,12 +1715,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_double a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_double)*len);
+                dscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -1618,12 +1782,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_double a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_double)*len);
+                dscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -1677,12 +1848,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_double a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_double)*len);
+                dscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -1737,12 +1915,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_double a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_double)*len);
+                dscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -1797,12 +1982,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_double a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_double)*len);
+                dscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -1857,12 +2049,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_double a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_double)*len);
+                dscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -1917,12 +2116,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / double(_Rin[i]);
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Lin[i] / double(_Rin[0]);
+                        _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_double a = 1/double(_Rin[0]);
+                memcpy(_out,_Lin,sizeof(cytnx_double)*len);
+                dscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -2151,12 +2357,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_float a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_float)*len);
+                sscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -2210,12 +2423,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_float a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_float)*len);
+                sscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -2269,12 +2489,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_float a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_float)*len);
+                sscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -2327,12 +2554,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_float a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_float)*len);
+                sscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -2386,12 +2620,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_float a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_float)*len);
+                sscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -2445,12 +2686,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_float a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_float)*len);
+                sscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -2504,12 +2752,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / _Rin[i];
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
                         _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_float a = 1/_Rin[0];
+                memcpy(_out,_Lin,sizeof(cytnx_float)*len);
+                sscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP
@@ -2563,12 +2818,19 @@ namespace cytnx{
                         _out[i] = _Lin[0] / float(_Rin[i]);
                     }
             }else if(Rin->size()==1){
+                /*
                 #ifdef UNI_OMP
                     #pragma omp parallel for schedule(dynamic) 
                 #endif
                     for(unsigned long long i=0;i<len;i++){
-                        _out[i] = _Lin[i] / float(_Rin[0]);
+                        _out[i] = _Lin[i] / _Rin[0];
                     }
+                */
+                blas_int N = len;
+                blas_int ONE = 1;
+                cytnx_float a = 1/float(_Rin[0]);
+                memcpy(_out,_Lin,sizeof(cytnx_float)*len);
+                sscal(&N,&a,_out,&ONE);
             }else{
                 if(shape.size()==0){
                     #ifdef UNI_OMP

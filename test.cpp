@@ -57,18 +57,46 @@ int main(int argc, char *argv[]){
 
 
 
-    auto rA = cytnx::UniTensor(cytnx::arange(12).reshape(4,3),1);
-    auto la = cytnx::UniTensor(cytnx::arange(3)+1,1,true);
-    la.set_labels({1,2});
+    //auto rA = cytnx::UniTensor(cytnx::arange(12).reshape(4,3),1);
+    auto rA = cytnx::arange(12).reshape(4,3);
+    print(rA*double(2));
+    print(double(2)*rA);
+    print(rA*cytnx_complex128(2,1));
+    print(cytnx_complex128(2,1)*rA);
+    
+    //auto la = cytnx::UniTensor(cytnx::arange(3)+1,1,true);
+    //la.set_labels({1,2});
 
-    auto ff = cytnx::arange(10).astype(Type.ComplexDouble).to(cytnx::Device.cuda);
-    auto fg = cytnx::arange(10).astype(Type.ComplexDouble).to(cytnx::Device.cuda);
+    //auto ff = cytnx::arange(10).astype(Type.ComplexDouble).to(cytnx::Device.cuda);
+    //auto fg = cytnx::arange(10).astype(Type.ComplexDouble).to(cytnx::Device.cuda);
 
     //auto ff = cytnx::ones(600).astype(Type.Double).to(cytnx::Device.cuda);
     //auto fg = cytnx::ones(600).astype(Type.Double).to(cytnx::Device.cuda);
 
-    print(cytnx::linalg::Vectordot(ff,fg));
-    exit(1);
+    //print(cytnx::linalg::Vectordot(ff,fg));
+
+
+    //auto sc1 = cytnx::ones(4);
+    //print(sc1*double(4));
+    //print(double(4)*sc1);
+
+    //sc1 = sc1.astype(Type.Float);
+    //print(sc1*float(4));
+    //print(float(4)*sc1);
+    uint64_t D = 20;
+    int Ntimes = 100;
+    //auto rA = cytnx::UniTensor(cytnx::Tensor({D,D,D}),1);
+    auto rB = cytnx::UniTensor(cytnx::Tensor({D,D,D}),1);
+    //rA.set_labels({0,1,2});
+    rB.set_labels({3,4,1});
+
+
+    //for(int i=0;i<Ntimes;i++)
+    //    auto rT = Contract(rA,rB);
+    
+
+
+    return 0;
 
 
     /*
@@ -88,13 +116,13 @@ int main(int argc, char *argv[]){
     */
 
     //print(cytnx::Contract(rA,la));
-    print(cytnx::Contract(la,rA));
+    //print(cytnx::Contract(la,rA));
 
 
-    print(cytnx::linalg::Matmul_dg(rA.get_block_(),la.get_block_()));
+    //print(cytnx::linalg::Matmul_dg(rA.get_block_(),la.get_block_()));
     //print(cytnx::linalg::Matmul_dg(la.get_block_(),rA.get_block_()));
 
-    print(Contract(rA,la));
+   // print(Contract(rA,la));
     //print(Contract(la,rA));
 
 

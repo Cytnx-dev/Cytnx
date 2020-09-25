@@ -29,7 +29,9 @@ See The following user guide for install and using of cytnx:
     4. [Enhance] Contract dense & sparse memory optimized.      
     5. [example] Add iTEBD_gpu.py example
     6. [Fix] Bug in CUDA cuVectordot d and f seg fault 
-    6. [Enhance] Add cuReduce for optimized reduction. 
+    7. [Enhance] Add cuReduce for optimized reduction. 
+    8. [Enhance] Optimize performance for Mul_internal_cpu. 
+    9. [Enhance] Optimize performance for Div_internal_cpu. 
 
     v0.6.1
     1. [Enhance] add Scalar class (shadow)
