@@ -79,7 +79,7 @@ endif()
 ######################################################################
 set(CYTNX_VERSION_MAJOR 0)
 set(CYTNX_VERSION_MINOR 6)
-set(CYTNX_VERSION_PATCH 1)
+set(CYTNX_VERSION_PATCH 2)
 set(CYTNX_VERSION COUNT 0)
 set(CYTNX_VERSION
   ${CYTNX_VERSION_MAJOR}.${CYTNX_VERSION_MINOR}.${CYTNX_VERSION_PATCH}

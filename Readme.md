@@ -16,12 +16,14 @@ See The following user guide for install and using of cytnx:
 [![Build Status](https://travis-ci.org/kaihsin/Cytnx_build.svg?branch=master)](https://travis-ci.org/kaihsin/Cytnx_build)
 
 ## News
-    [v0.6.1] 
+    [v0.6.2] 
  
 ## Stable Version:
-[v0.6.1a](https://github.com/kaihsin/Cytnx/tree/v0.6.1a)
+[v0.6.2a](https://github.com/kaihsin/Cytnx/tree/v0.6.2a)
 
 ## Current dev Version:
+    v0.6.3
+
     v0.6.2
     1. [Fix] Bug in CUDA Matmul interface passing the wrong object bug.  
     2. [Enhance] Add Matmul_dg for diagonal matrix mutiply dense matrix. 

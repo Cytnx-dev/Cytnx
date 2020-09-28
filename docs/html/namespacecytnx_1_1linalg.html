@@ -29,7 +29,7 @@
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.6.1</span>
+   &#160;<span id="projectnumber">v0.6.2</span>
    </div>
   </td>
  </tr>
@@ -317,9 +317,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a671e57fbd0efcae9e438130ace6bf1cd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a671e57fbd0efcae9e438130ace6bf1cd">ExpM</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;in, const <a class="el" href="namespacecytnx.html#a17b847d265f6551b952fd9847198a464">cytnx_double</a> &amp;a=1, const <a class="el" href="namespacecytnx.html#a17b847d265f6551b952fd9847198a464">cytnx_double</a> &amp;b=0)</td></tr>
 <tr class="memdesc:a671e57fbd0efcae9e438130ace6bf1cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform matrix exponential for generic matrix  <a href="#a671e57fbd0efcae9e438130ace6bf1cd">More...</a><br /></td></tr>
 <tr class="separator:a671e57fbd0efcae9e438130ace6bf1cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44e6ad2ff7acfaca9dfb4d00f747daf9"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a44e6ad2ff7acfaca9dfb4d00f747daf9">Lanczos_ER</a> (<a class="el" href="classcytnx_1_1LinOp.html">LinOp</a> *Hop, const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;k=1, const bool &amp;is_V=true, const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;maxiter=10000, const double &amp;CvgCrit=1.0e-14, const bool &amp;is_row=false, const Tensor &amp;Tin=Tensor(), const cytnx_uint32 &amp;max_krydim=4)</td></tr>
-<tr class="memdesc:a44e6ad2ff7acfaca9dfb4d00f747daf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform Lanczos for hermitian/symmetric matrices or linear function.  <a href="#a44e6ad2ff7acfaca9dfb4d00f747daf9">More...</a><br /></td></tr>
-<tr class="separator:a44e6ad2ff7acfaca9dfb4d00f747daf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97bb4cbdb277d6525759c7e5dbd67662"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a97bb4cbdb277d6525759c7e5dbd67662">Lanczos_ER</a> (<a class="el" href="classcytnx_1_1LinOp.html">LinOp</a> *Hop, const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;k=1, const bool &amp;is_V=true, const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;maxiter=10000, const double &amp;CvgCrit=1.0e-14, const bool &amp;is_row=false, const Tensor &amp;Tin=Tensor(), const cytnx_uint32 &amp;max_krydim=4, const bool &amp;verbose=false)</td></tr>
+<tr class="memdesc:a97bb4cbdb277d6525759c7e5dbd67662"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform Lanczos for hermitian/symmetric matrices or linear function.  <a href="#a97bb4cbdb277d6525759c7e5dbd67662">More...</a><br /></td></tr>
+<tr class="separator:a97bb4cbdb277d6525759c7e5dbd67662"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>linear algebra related functions. </p>
@@ -1585,8 +1585,8 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
-<a id="a44e6ad2ff7acfaca9dfb4d00f747daf9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a44e6ad2ff7acfaca9dfb4d00f747daf9">&#9670;&nbsp;</a></span>Lanczos_ER()</h2>
+<a id="a97bb4cbdb277d6525759c7e5dbd67662"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a97bb4cbdb277d6525759c7e5dbd67662">&#9670;&nbsp;</a></span>Lanczos_ER()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1637,7 +1637,13 @@ template&lt;class T &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="namespacecytnx.html#a335d8fee19dee02206dbecec6e5ec610">cytnx_uint32</a> &amp;&#160;</td>
-          <td class="paramname"><em>max_krydim</em> = <code>4</code>&#160;</td>
+          <td class="paramname"><em>max_krydim</em> = <code>4</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramname"><em>verbose</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
