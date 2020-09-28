@@ -95,9 +95,15 @@ namespace cytnx{
 
     boost::intrusive_ptr<Tensor_impl> Tensor_impl::permute(const std::vector<cytnx_uint64> &rnks){
 
+        
+
         //check::
         if(rnks.size()!=this->_shape.size()){
             cytnx_error_msg(true,"%s","reshape a tensor with a specify shape that does not match with the shape of the incident tensor.");
+        }
+
+        if(vec_unique(rnks).size()!=rnks.size()){
+            cytnx_error_msg(true,"%s","tensor permute with duplicated index.\n");
         }
 
         std::vector<cytnx_uint64> new_fwdmap(this->_shape.size());
@@ -141,6 +147,10 @@ namespace cytnx{
         //check::
         if(rnks.size()!=this->_shape.size()){
             cytnx_error_msg(true,"%s","reshape a tensor with a specify shape that does not match with the shape of the incident tensor.");
+        }
+
+        if(vec_unique(rnks).size()!=rnks.size()){
+            cytnx_error_msg(true,"%s","tensor permute with duplicated index.\n");
         }
 
         std::vector<cytnx_uint64> new_fwdmap(this->_shape.size());

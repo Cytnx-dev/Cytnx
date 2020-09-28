@@ -760,7 +760,7 @@ namespace cytnx{
         #[Note]
             To use, define a linear operator with LinOp class either by assign a custom function or create a class that inherit LinOp (see LinOp for further details)            
         */
-        std::vector<Tensor> Lanczos_ER(LinOp *Hop, const cytnx_uint64 &k=1, const bool &is_V=true, const cytnx_uint64 &maxiter=10000, const double &CvgCrit=1.0e-14, const bool &is_row=false, const Tensor &Tin=Tensor(), const cytnx_uint32 &max_krydim=4);
+        std::vector<Tensor> Lanczos_ER(LinOp *Hop, const cytnx_uint64 &k=1, const bool &is_V=true, const cytnx_uint64 &maxiter=10000, const double &CvgCrit=1.0e-14, const bool &is_row=false, const Tensor &Tin=Tensor(), const cytnx_uint32 &max_krydim=4, const bool &verbose=false);
 
 
 

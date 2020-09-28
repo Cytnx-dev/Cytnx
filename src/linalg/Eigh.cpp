@@ -12,6 +12,7 @@ namespace cytnx{
             cytnx_error_msg(Tin.shape()[0] != Tin.shape()[1],"[Eigh] error, Eigh should accept a Hermition Tensor%s","\n");
 
 
+            //std::cout << Tin << std::endl;
             Tensor in = Tin.contiguous();
             if(Tin.dtype() > Type.Float) in = in.astype(Type.Double);
 

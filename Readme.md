@@ -32,6 +32,7 @@ See The following user guide for install and using of cytnx:
     7. [Enhance] Add cuReduce for optimized reduction. 
     8. [Enhance] Optimize performance for Mul_internal_cpu. 
     9. [Enhance] Optimize performance for Div_internal_cpu. 
+    10. [Fix] Bug in permute of UniTensor/Tensor with duplicate entries does not return error.
 
     v0.6.1
     1. [Enhance] add Scalar class (shadow)

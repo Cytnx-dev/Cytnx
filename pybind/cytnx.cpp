@@ -2034,8 +2034,8 @@ PYBIND11_MODULE(cytnx,m){
 
 
 
-    m_linalg.def("c_Lanczos_ER",[](LinOp *Hop, const cytnx_uint64&k, const bool &is_V, const cytnx_uint64 &maxiter, const double &CvgCrit, const bool &is_row, const Tensor &Tin, const cytnx_uint32 &max_krydim){
-                                    return cytnx::linalg::Lanczos_ER(Hop,k,is_V,maxiter,CvgCrit,is_row,Tin,max_krydim);
+    m_linalg.def("c_Lanczos_ER",[](LinOp *Hop, const cytnx_uint64&k, const bool &is_V, const cytnx_uint64 &maxiter, const double &CvgCrit, const bool &is_row, const Tensor &Tin, const cytnx_uint32 &max_krydim, const bool &verbose){
+                                    return cytnx::linalg::Lanczos_ER(Hop,k,is_V,maxiter,CvgCrit,is_row,Tin,max_krydim,verbose);
                                 });
 
     // [Submodule physics]

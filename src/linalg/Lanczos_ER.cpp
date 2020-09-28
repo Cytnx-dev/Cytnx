@@ -7,7 +7,7 @@ namespace cytnx{
         typedef Accessor ac;
 
        
-        void _Lanczos_ER_d(std::vector<Tensor> &out, LinOp *Hop, std::vector<Tensor> &buffer, const cytnx_uint64 &k, const bool &is_V, const cytnx_uint32 &max_krydim, const cytnx_uint64 &maxiter, const double &CvgCrit){
+        void _Lanczos_ER_d(std::vector<Tensor> &out, LinOp *Hop, std::vector<Tensor> &buffer, const cytnx_uint64 &k, const bool &is_V, const cytnx_uint32 &max_krydim, const cytnx_uint64 &maxiter, const double &CvgCrit, const bool &verbose){
 
                 std::vector<Tensor> converged_ev;
                 //std::cout << max_krydim << std::endl;
@@ -53,8 +53,12 @@ namespace cytnx{
                         buffer[0] = tmp[1].get({ac(0)})*buffer[0];
                         for( cytnx_int64 ip=1;ip<krydim;ip++)
                             buffer[0] += buffer[ip]*tmp[1].get({ac(ip)});
+                        
 
                         // check converge
+                        if(verbose){
+                            printf("iter[%d] Enr: %11.14f, diff from last iter: %11.14f\n",iter,tmp[0].storage().at<cytnx_double>(0),std::abs(tmp[0].storage().at<cytnx_double>(0) - Elast));
+                        }
                         if(std::abs(tmp[0].storage().at<cytnx_double>(0) - Elast) < CvgCrit){
                             cvg = true;
                             break;
@@ -104,7 +108,7 @@ namespace cytnx{
 
 
         
-        void _Lanczos_ER_f(std::vector<Tensor> &out, LinOp *Hop, std::vector<Tensor> &buffer, const cytnx_uint64 &k, const bool &is_V, const cytnx_uint32 &max_krydim, const cytnx_uint64 &maxiter, const double &CvgCrit){
+        void _Lanczos_ER_f(std::vector<Tensor> &out, LinOp *Hop, std::vector<Tensor> &buffer, const cytnx_uint64 &k, const bool &is_V, const cytnx_uint32 &max_krydim, const cytnx_uint64 &maxiter, const double &CvgCrit, const bool &verbose){
 
                 std::vector<Tensor> converged_ev;
                 //std::cout << max_krydim << std::endl;
@@ -199,7 +203,7 @@ namespace cytnx{
                 }
         }
 
-        void _Lanczos_ER_cf(std::vector<Tensor> &out, LinOp *Hop, std::vector<Tensor> &buffer, const cytnx_uint64 &k, const bool &is_V, const cytnx_uint32 &max_krydim, const cytnx_uint64 &maxiter, const double &CvgCrit){
+        void _Lanczos_ER_cf(std::vector<Tensor> &out, LinOp *Hop, std::vector<Tensor> &buffer, const cytnx_uint64 &k, const bool &is_V, const cytnx_uint32 &max_krydim, const cytnx_uint64 &maxiter, const double &CvgCrit, const bool &verbose){
 
                 std::vector<Tensor> converged_ev;
                 //std::cout << max_krydim << std::endl;
@@ -294,7 +298,7 @@ namespace cytnx{
                 }
         }
 
-        void _Lanczos_ER_cd(std::vector<Tensor> &out, LinOp *Hop, std::vector<Tensor> &buffer, const cytnx_uint64 &k, const bool &is_V, const cytnx_uint32 &max_krydim, const cytnx_uint64 &maxiter, const double &CvgCrit){
+        void _Lanczos_ER_cd(std::vector<Tensor> &out, LinOp *Hop, std::vector<Tensor> &buffer, const cytnx_uint64 &k, const bool &is_V, const cytnx_uint32 &max_krydim, const cytnx_uint64 &maxiter, const double &CvgCrit, const bool &verbose){
 
                 std::vector<Tensor> converged_ev;
                 //std::cout << max_krydim << std::endl;
@@ -394,7 +398,7 @@ namespace cytnx{
         // https://www.sciencedirect.com/science/article/pii/S0010465597001367               
 
         // explicitly re-started Lanczos        
-        std::vector<Tensor> Lanczos_ER(LinOp *Hop, const cytnx_uint64 &k, const bool &is_V, const cytnx_uint64 &maxiter, const double &CvgCrit, const bool &is_row, const Tensor &Tin, const cytnx_uint32 &max_krydim){
+        std::vector<Tensor> Lanczos_ER(LinOp *Hop, const cytnx_uint64 &k, const bool &is_V, const cytnx_uint64 &maxiter, const double &CvgCrit, const bool &is_row, const Tensor &Tin, const cytnx_uint32 &max_krydim, const bool &verbose){
                 
                 //check type:
                 cytnx_error_msg(!Type.is_float(Hop->dtype()),"[ERROR][Lanczos] Lanczos can only accept operator with floating types (complex/real)%s","\n");
@@ -424,15 +428,15 @@ namespace cytnx{
                 out[0] = zeros({k},Type.is_complex(Hop->dtype())?Hop->dtype()-2:Hop->dtype(),Hop->device());
                 
                 if(Hop->dtype()==Type.ComplexDouble){
-                    _Lanczos_ER_cd(out,Hop, buffer,k,is_V,max_krydim,maxiter,CvgCrit);
+                    _Lanczos_ER_cd(out,Hop, buffer,k,is_V,max_krydim,maxiter,CvgCrit,verbose);
                 }else if(Hop->dtype()==Type.Double){
-                    _Lanczos_ER_d(out,Hop, buffer,k,is_V,max_krydim,maxiter,CvgCrit);
+                    _Lanczos_ER_d(out,Hop, buffer,k,is_V,max_krydim,maxiter,CvgCrit,verbose);
                 }else if(Hop->dtype()==Type.ComplexFloat){
                     cytnx_error_msg(CvgCrit<1.0e-7,"[ERROR][CvgCrit] for float precision type, CvgCrit cannot exceed it's own type precision limit 1e-7.%s","\n");
-                    _Lanczos_ER_cf(out,Hop, buffer,k,is_V,max_krydim,maxiter,CvgCrit);
+                    _Lanczos_ER_cf(out,Hop, buffer,k,is_V,max_krydim,maxiter,CvgCrit,verbose);
                 }else{
                     cytnx_error_msg(CvgCrit<1.0e-7,"[ERROR][CvgCrit] for float precision type, CvgCrit cannot exceed it's own type precision limit 1e-7.%s","\n");
-                    _Lanczos_ER_f(out,Hop, buffer,k,is_V,max_krydim,maxiter,CvgCrit);
+                    _Lanczos_ER_f(out,Hop, buffer,k,is_V,max_krydim,maxiter,CvgCrit,verbose);
                 }
 
                 if(!is_row){

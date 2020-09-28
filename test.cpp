@@ -59,11 +59,15 @@ int main(int argc, char *argv[]){
 
     //auto rA = cytnx::UniTensor(cytnx::arange(12).reshape(4,3),1);
     auto rA = cytnx::arange(12).reshape(4,3);
+    auto uxA = cytnx::UniTensor(rA,1);
+    
     print(rA*double(2));
     print(double(2)*rA);
     print(rA*cytnx_complex128(2,1));
     print(cytnx_complex128(2,1)*rA);
     
+    uxA.permute({1,0});
+
     //auto la = cytnx::UniTensor(cytnx::arange(3)+1,1,true);
     //la.set_labels({1,2});
 
