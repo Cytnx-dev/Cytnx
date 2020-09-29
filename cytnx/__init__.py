@@ -70,7 +70,17 @@ def _resolve_cpp_linkflags__():
     f.close()
     return out
 
+def _get_variant_info__():
+    f = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"vinfo.tmp"),'r')
+    lines = f.readlines()
+    out = []
+    for line in lines:
+        line = line.strip()
+        out+=line.split()
+    f.close()
+    return "\n".join(out)
 
 __cpp_linkflags__ = _resolve_cpp_linkflags__()
 __cpp_flags__ = _resolve_cpp_compileflags__()
 __version__ = _get_version__()
+__variant_info__ = _get_variant_info__()

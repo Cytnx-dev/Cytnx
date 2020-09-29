@@ -97,6 +97,14 @@ class CMakeBuild(build_ext):
                 print("[Relocate version.tmp]: ",fn)
                 break
 
+        # copy version.tmp
+        for fn in os.listdir(build_temp_dir):
+            print(fn)
+            if 'vinfo.tmp' in fn:
+                self.copy_file(os.path.join(build_temp_dir,fn),extdir)
+                print("[Relocate vinfo.tmp]: ",fn)
+                break
+
         # copy hptt
         for fn in os.listdir(build_temp_dir):
             print(fn)
