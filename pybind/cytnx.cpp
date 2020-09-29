@@ -370,7 +370,7 @@ void f_UniTensor_setelem_scal_cf(UniTensor &self, const std::vector<cytnx_uint64
 
 PYBIND11_MODULE(cytnx,m){
 
-    //m.attr("__version__") = "0.6.3a";
+    m.attr("__version__") = "0.6.3a";
     m.attr("__blasINTsize__") = cytnx::__blasINTsize__;
     //global vars
     //m.attr("cytnxdevice") = cytnx::cytnxdevice;

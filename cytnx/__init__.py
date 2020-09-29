@@ -6,7 +6,6 @@ from .Tensor_conti import *
 from .linalg_conti import *
 from .UniTensor_conti import *
 
-__version__ = cytnx.__version__
 if(os.path.exists(os.path.join(os.path.dirname(__file__),"include"))):
     # this only set if using anaconda install. 
     __cpp_include__=os.path.join(os.path.dirname(__file__),"include")
@@ -74,5 +73,4 @@ def _resolve_cpp_linkflags__():
 
 __cpp_linkflags__ = _resolve_cpp_linkflags__()
 __cpp_flags__ = _resolve_cpp_compileflags__()
-
-__version__ = _get_version__() 
+__version__ = _get_version__()
