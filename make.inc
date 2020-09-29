@@ -19,6 +19,9 @@ OMP_Enable=1
 MKL_Enable=1
 
 
+## compile with HPTT library:
+HPTT_Enable=1
+
 
 
 #### DO NOT USE BELOW WHEN CUSTOM INSTALL !!

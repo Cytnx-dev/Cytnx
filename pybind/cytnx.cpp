@@ -412,6 +412,8 @@ PYBIND11_MODULE(cytnx,m){
     auto mdev = m.def_submodule("Device");
     mdev.attr("cpu")=(cytnx_int64)cytnx::Device.cpu;
     mdev.attr("cuda")=(cytnx_int64)cytnx::Device.cuda;
+    mdev.attr("Ngpus")=cytnx::Device.Ngpus;
+    mdev.attr("Ncpus")=cytnx::Device.Ncpus;
     //mdev.def("cudaDeviceSynchronize",[](){cytnx::Device.cudaDeviceSynchronize();});
     
     

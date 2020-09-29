@@ -33,6 +33,7 @@
 cmake_minimum_required(VERSION 3.11)
 
 include(cmake/target_sources_local.cmake)
+include(ExternalProject)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 message(STATUS ${CMAKE_MODULE_PATH})
 include(GNUInstallDirs)
@@ -97,6 +98,8 @@ option(BUILD_PYTHON "Build Python wrapper" OFF)
 option(USE_MKL "Build using MKL" OFF)
 option(USE_OMP "Build Cytnx with OpenMP" ON)
 option(BUILD_DOC "Build API docuemntation" OFF)
+option(USE_HPTT "Build Cytnx with HPTT" OFF)
+
 if (USE_ICPC)
   message(STATUS, "Build Cytnx with Intel Compilers")
   message(STATUS, "Finding Intel Compilers....")
@@ -127,6 +130,22 @@ if (USE_MKL)
   mark_as_advanced(MKL_SDL MKL_MLT)
 endif()
 
+if (USE_HPTT)
+option(HPTT_ENABLE_ARM "HPTT option ARM" OFF)
+option(HPTT_ENABLE_AVX "HPTT option AVX" OFF)
+option(HPTT_ENABLE_IBM "HPTT option IBM" OFF)
+
+ExternalProject_Add(hptt
+  PREFIX hptt_src
+  GIT_REPOSITORY https://github.com/kaihsin/hptt.git
+  GIT_TAG 6127f49f309d82c8e8d0ae70467f4b5c1c268216
+  BINARY_DIR hptt_src/build
+  INSTALL_DIR hptt
+  CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DENABLE_ARM=${HPTT_ENABLE_ARM} -DENABLE_AVX=${HPTT_ENABLE_AVX} -DENABLE_IBM=${HPTT_ENABLE_IBM}
+)
+endif()
+
+
 
 ######################################################################
 ### PROJECT
@@ -153,6 +172,17 @@ target_compile_features(cytnx PUBLIC cxx_std_11)
 
 add_subdirectory(src)
 
+#####################################################################
+### Dependency of HPTT
+#####################################################################
+if(USE_HPTT)
+    ExternalProject_Get_Property(hptt install_dir)
+    include_directories(${install_dir}/include)
+    message(STATUS "hptt install dir: ${install_dir}")
+    add_dependencies(cytnx hptt)
+    target_compile_definitions(cytnx PRIVATE UNI_HPTT)
+    target_link_libraries(cytnx PRIVATE ${install_dir}/lib/libhptt.a)
+endif()
 
 
 ######################################################################
@@ -190,6 +220,7 @@ message(STATUS ${COMPILE_DEFINITIONS})
 if(USE_OMP)
     if(USE_MKL)
         target_compile_definitions(cytnx PRIVATE UNI_OMP)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
     else()
         find_package( OpenMP )
         if ( OPENMP_FOUND )
@@ -468,12 +499,21 @@ else()
       message( STATUS " Build OMP Support: NO")
 endif()
 
+if(USE_HPTT)    
+    message( STATUS " Build HPTT Support: YES")
+    message( STATUS " --HPTT option ARM: ${HPTT_ENABLE_ARM}")
+    message( STATUS " --HPTT option AVX: ${HPTT_ENABLE_AVX}")
+    message( STATUS " --HPTT option IBM: ${HPTT_ENABLE_IBM}")
+endif()
+
 if(BUILD_DOC)
   message( STATUS " Build Documentation: YES")
   message( STATUS "  - Doxygen: ${DOXYGEN_EXECUTABLE}")
 else()
   message( STATUS " Build Documentation: NO")
 endif()
+
+
 
 message(STATUS "")
 message(STATUS "")
@@ -482,6 +522,9 @@ message(STATUS "")
 
 install(FILES ${CMAKE_BINARY_DIR}/linkflags.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
 install(FILES ${CMAKE_BINARY_DIR}/cxxflags.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
+if(USE_HPTT) # relocate HPTT library 
+install(DIRECTORY ${CMAKE_BINARY_DIR}/hptt DESTINATION ${CMAKE_INSTALL_PREFIX})
+endif()
 
 if (BUILD_PACKAGES)
 include("Package.cmake")

@@ -23,6 +23,15 @@ def from_numpy(np_arr):
         tmp = numpy.ascontiguousarray(np_arr)
     return cytnx._from_numpy(tmp)
 
+def _find_hptt__():
+    hptt_path = None
+    if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)),"hptt")):
+        hptt_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),"hptt")
+    elif os.path.exists(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),"hptt")):
+        hptt_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),"hptt")
+            
+    return hptt_path
+
 def _resolve_cpp_compileflags__():
     f = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"cxxflags.tmp"))
     lines = f.readlines()
@@ -47,8 +56,14 @@ def _resolve_cpp_linkflags__():
         if i == 0:
             lapack_ldir=os.path.dirname(line.split(' ')[0].strip())
     out += "-Wl,-rpath,%s "%(lapack_ldir)
+
+    hptt_path = _find_hptt__()
+    if not hptt_path is None:
+        out += os.path.join(hptt_path,"lib/libhptt.a")
+
     f.close()
     return out
+
 
 __cpp_linkflags__ = _resolve_cpp_linkflags__()
 __cpp_flags__ = _resolve_cpp_compileflags__()

@@ -13,7 +13,7 @@ from distutils.errors import DistutilsArgError
 import setuptools.command.install
 
 
-#help(build_ext)
+#help(build_ext.copy_file)
 #exit(1)
 
 class CMakeExtension(Extension):
@@ -40,7 +40,7 @@ class CMakeBuild(build_ext):
 
         cfg = 'Debug' if self.debug else 'Release'
         build_args = ['--config', cfg]
-        cmake_args += ['-DBUILD_PYTHON=ON','-DUSE_CUDA=OFF','-DUSE_MKL=ON']
+        cmake_args += ['-DBUILD_PYTHON=ON','-DUSE_CUDA=OFF','-DUSE_MKL=ON','-DUSE_HPTT=ON']
         cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
         build_args += ['--', '-j2']
 
@@ -88,7 +88,13 @@ class CMakeBuild(build_ext):
                 self.copy_file(os.path.join(build_temp_dir,fn),extdir)
                 print("[Relocate cxxflags.tmp]: ",fn)
                 break
-
+        # copy hptt
+        for fn in os.listdir(build_temp_dir):
+            print(fn)
+            if 'hptt' == fn:
+                self.copy_tree(os.path.join(build_temp_dir,fn),os.path.join(extdir,"hptt"))
+                print("[Relocate hptt]: ",fn)
+                break
 
         # 2. header file (cpp)
         Cppinc_dir = os.path.join(extdir,"include")

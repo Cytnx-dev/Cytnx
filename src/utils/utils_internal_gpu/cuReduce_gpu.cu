@@ -1,5 +1,5 @@
-#include "cuReduce_gpu.hpp";
-#include "utils/complex_arithmetic.hpp";
+#include "cuReduce_gpu.hpp"
+#include "utils/complex_arithmetic.hpp"
 
 namespace cytnx{
     namespace utils_internal{

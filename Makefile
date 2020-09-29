@@ -27,6 +27,7 @@ endif
 CytnxPATH=.
 INCFLAGS :=-I$(CytnxPATH)/include -I$(CytnxPATH)/src
 
+HPTT_PATH=./thirdparty/hptt
 
 ifeq ($(ICPC_Enable),1)
   CC:= $(ICPC)
@@ -41,7 +42,7 @@ ifeq ($(MKL_Enable),1)
   LDFLAGS += $(DOCKER_MKL) -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -ldl -lm   
 else
   CCFLAGS += -std=c++11 -O3 -Wformat=0 -fPIC -w -Wno-c++11-narrowing 
-  LDFLAGS +=  -llapacke -lblas -lstdc++  
+  LDFLAGS += -llapacke -lblas -lstdc++  
 endif
 
 
@@ -52,7 +53,7 @@ GENCODE_FLAGS:= -arch=sm_$(SMS)
 
 ifeq ($(OMP_Enable),1)
 	ifeq ($(MKL_Enable),1)
-		CCFLAGS += -DUNI_OMP 
+		CCFLAGS += -DUNI_OMP -fopenmp
 	else
 		CCFLAGS += -DUNI_OMP -fopenmp
 	endif
@@ -61,6 +62,15 @@ endif
 ifeq ($(DEBUG_Enable),1)
   CCFLAGS += -DUNI_DEBUG
 endif
+
+ifeq ($(HPTT_Enable),1)
+  CCFLAGS += -DUNI_HPTT 
+  INCFLAGS+= -I$(HPTT_PATH)/include
+  LDFLAGS += $(HPTT_PATH)/lib/libhptt.a
+endif
+
+
+
 
 ALL_CCFLAGS := 
 ifeq ($(GPU_Enable),1)
@@ -135,11 +145,11 @@ all: test
 #	$(CC) -o $@ $^ $(CCFLAGS) $(LDFLAGS)
 
 test: test.o libcytnx.so
-	$(CC) -L. -o $@  $< -lcytnx
+	$(CC) -L. -o $@ $< -fopenmp $(LDFLAGS) -lcytnx 
 	#export LD_LIBRARY_PATH=.
 
 libcytnx.so: $(ALLOBJS)
-	$(CC) -shared -o $@ $^ $(CCFLAGS) $(LDFLAGS)
+	$(CC) -shared -o $@ $^ $(LDFLAGS)
 
 pyobj: $(ALLOBJS)
 	$(CC) $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes)  pybind/cytnx.cpp $^ $(LDFLAGS) -shared -o cytnx/cytnx$(shell python3-config --extension-suffix)

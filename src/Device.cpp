@@ -1,9 +1,12 @@
 #include "Device.hpp"
 #include "cytnx_error.hpp"
+#ifdef UNI_OMP
+#include <omp.h>
+#endif
 
 using namespace std;
 namespace cytnx{
-Device_class::Device_class(): Ngpus(0){
+Device_class::Device_class(): Ngpus(0), Ncpus(1){
     #ifdef UNI_GPU
         //get all available gpus
         checkCudaErrors(cudaGetDeviceCount(&Ngpus));
@@ -27,6 +30,16 @@ Device_class::Device_class(): Ngpus(0){
             }
         }
     #endif
+    
+    #ifdef UNI_OMP
+        #pragma omp parallel
+        {
+            if(omp_get_thread_num()==0){
+                Ncpus = omp_get_num_threads();
+            }
+        }
+    #endif
+
 
 };
 string Device_class::getname(const int &device_id){

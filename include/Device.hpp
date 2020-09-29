@@ -21,6 +21,7 @@ namespace cytnx{
                 cuda=0
             };
             int Ngpus;
+            int Ncpus;
             std::vector<std::vector<bool> > CanAccessPeer;
             Device_class();
             void Print_Property();

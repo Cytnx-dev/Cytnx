@@ -3,6 +3,7 @@
 #include <cstdarg>
 #include <functional>
 
+#include "hptt.h"
 
 using namespace std;
 using namespace cytnx;
@@ -68,6 +69,28 @@ int main(int argc, char *argv[]){
     
     uxA.permute({1,0});
 
+    auto rrrA = cytnx::arange(24).reshape(2,3,4);
+    auto rrrB = rrrA.clone(); rrrB.storage().set_zeros();
+    rrrB.permute_({0,2,1});
+    rrrB.contiguous_();    
+    cout << rrrA << rrrB<<endl;
+
+    double *ptrA = rrrA.storage().data<double>();
+    double *ptrB = rrrB.storage().data<double>();
+
+    int dim = rrrA.rank();
+    vector<int> permute = {0,2,1};
+    vector<int> size(rrrA.shape().begin(),rrrA.shape().end());
+    
+    auto plan = hptt::create_plan(&permute[0],permute.size(),1,ptrA,&size[0],NULL,0,ptrB,NULL,hptt::ESTIMATE,cytnx::Device.Ncpus,nullptr,true);
+    plan->execute();
+
+    std::cout << cytnx::Device.Ncpus << endl;
+    std::cout << rrrA << rrrB << endl;
+    std::cout << rrrA.permute({0,2,1}) << endl;
+    
+    rrrA.reshape_(6,4);
+    cout << cytnx::linalg::Svd(rrrA) << endl;
     //auto la = cytnx::UniTensor(cytnx::arange(3)+1,1,true);
     //la.set_labels({1,2});
 
