@@ -32,6 +32,13 @@ def _find_hptt__():
             
     return hptt_path
 
+def _get_version__():
+    f = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"version.tmp"))
+    line = f.readline()
+    f.close()
+    line = line.strip()
+    return line
+
 def _resolve_cpp_compileflags__():
     f = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"cxxflags.tmp"))
     lines = f.readlines()
@@ -68,3 +75,4 @@ def _resolve_cpp_linkflags__():
 __cpp_linkflags__ = _resolve_cpp_linkflags__()
 __cpp_flags__ = _resolve_cpp_compileflags__()
 
+__version__ = _get_version__() 

@@ -25,6 +25,8 @@ See The following user guide for install and using of cytnx:
     v0.6.3
     1. [Enhance] Add Device.Ncpus for detecting avaliable omp threads
     2. [Enhance] Add HPTT support on CPU permute.
+    3. [Internal] Build version centralize
+    4. [Enhance] More info for Device. 
 
     v0.6.2
     1. [Fix] Bug in CUDA Matmul interface passing the wrong object bug.  

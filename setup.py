@@ -88,6 +88,15 @@ class CMakeBuild(build_ext):
                 self.copy_file(os.path.join(build_temp_dir,fn),extdir)
                 print("[Relocate cxxflags.tmp]: ",fn)
                 break
+
+        # copy version.tmp
+        for fn in os.listdir(build_temp_dir):
+            print(fn)
+            if 'version.tmp' in fn:
+                self.copy_file(os.path.join(build_temp_dir,fn),extdir)
+                print("[Relocate version.tmp]: ",fn)
+                break
+
         # copy hptt
         for fn in os.listdir(build_temp_dir):
             print(fn)
@@ -109,11 +118,27 @@ class CMakeBuild(build_ext):
         ""
     
 
- 
+def get_version():
+    f = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"version.cmake"),'r')
+    version = ['','','']
+    for line in f.readlines():
+        if 'set' in line:
+            if 'MAJOR' in line:
+                version[0] = line.strip().split(')')[0].split()[-1]           
+            elif 'MINOR' in line:
+                version[1] = line.strip().split(')')[0].split()[-1]           
+            elif 'PATCH' in line:
+                version[2] = line.strip().split(')')[0].split()[-1]           
 
+    f.close()
+
+    return "%s.%s.%s"%(version[0] ,version[1] ,version[2])
+
+#print(get_version())
+#exit(1)
 setup(
     name='cytnx',
-    version='0.6.2',
+    version=get_version(),
     maintainer='Kai-Hsin Wu, Yen-Hsin Wu',
     maintainer_email="kaihsinwu@gmail.com",
     description='Project Cytnx',

@@ -18,66 +18,79 @@ namespace cytnx{
             cytnx_error_msg(in->dtype != Type.ComplexDouble,"[DEBUG][internal error] in.dtype_str is [%s] but call Movemem_cpu with type ComplexDouble",in->dtype_str().c_str());
             #endif
 
-            std::vector<cytnx_uint64> newshape(old_shape.size());
-            for(cytnx_uint64 i=0;i<old_shape.size();i++)
-                newshape[i] = old_shape[mapper[i]];
-
-            std::vector<cytnx_uint64> shifter_old(old_shape.size());
-            std::vector<cytnx_uint64> shifter_new(old_shape.size());
-
-            cytnx_uint64 accu_old=1,accu_new=1;
-            for(cytnx_int64 i=old_shape.size()-1;i>=0;i--){
-                shifter_old[i] = accu_old;
-                shifter_new[i] = accu_new;
-                accu_old*=old_shape[i];
-                accu_new*=newshape[i];
-            }
-            
-
             cytnx_complex128 *des = (cytnx_complex128*)malloc(in->cap*sizeof(cytnx_complex128));
             cytnx_complex128 *src = static_cast<cytnx_complex128*>(in->Mem);
+            cytnx_uint64 accu_old=1,accu_new=1;
 
-            #ifdef UNI_OMP
-                std::vector<std::vector<cytnx_uint64> > old_inds;
-                #pragma omp parallel
-                {
-                    if(omp_get_thread_num()==0) old_inds = std::vector<std::vector<cytnx_uint64> >(omp_get_num_threads(),std::vector<cytnx_uint64>(old_shape.size()));
-                }
-
-                #pragma omp parallel for schedule(dynamic)
-                for(cytnx_uint64 n=0;n<accu_old;n++){
-                    //calc new id:
-                    cytnx_uint64 j;
-                    cytnx_uint64 old_loc = n;
-                    for(j=0;j<old_shape.size();j++){
-                        old_inds[omp_get_thread_num()][j] = old_loc/shifter_old[j];
-                        old_loc= old_loc%shifter_old[j];
-                    }
-                    old_loc =0; // position:
-                    for(j=0;j<old_shape.size();j++){
-                        old_loc += shifter_new[j]*old_inds[omp_get_thread_num()][mapper[j]];
-                    }
-                    des[old_loc] = src[n];
-                }
+            #ifdef UNI_HPTT
+                #ifdef UNI_DEBUG
+                    cytnx_error_msg(true, "[DEBUG][Internal prompt] USE HPTT%s","\n");
+                #endif
+                std::vector<int> perm(mapper.begin(),mapper.end());
+                std::vector<int> size(old_shape.begin(),old_shape.end());
+                auto plan = hptt::create_plan(&perm[0],perm.size(),1,src,&size[0],NULL,0,des,NULL,hptt::ESTIMATE,cytnx::Device.Ncpus,nullptr,true);
+                plan->execute();
+                accu_old = in->size();
 
             #else
-                std::vector<cytnx_uint64> old_inds(old_shape.size());
-                cytnx_uint64 j,old_loc;
-                for(cytnx_uint64 n=0;n<accu_old;n++){
-                    //calc new id:
-                    old_loc = n;
-                    for(j=0;j<old_shape.size();j++){
-                        old_inds[j] = old_loc/shifter_old[j];
-                        old_loc= old_loc%shifter_old[j];
-                    }
-                    old_loc =0; // position:
-                    for(j=0;j<old_shape.size();j++){
-                        old_loc += shifter_new[j]*old_inds[mapper[j]];
-                    }
-                    des[old_loc] = src[n];
+                
+                std::vector<cytnx_uint64> newshape(old_shape.size());
+                for(cytnx_uint64 i=0;i<old_shape.size();i++)
+                    newshape[i] = old_shape[mapper[i]];
+
+                std::vector<cytnx_uint64> shifter_old(old_shape.size());
+                std::vector<cytnx_uint64> shifter_new(old_shape.size());
+
+
+                for(cytnx_int64 i=old_shape.size()-1;i>=0;i--){
+                    shifter_old[i] = accu_old;
+                    shifter_new[i] = accu_new;
+                    accu_old*=old_shape[i];
+                    accu_new*=newshape[i];
                 }
-            #endif
-            
+                
+
+                #ifdef UNI_OMP
+                    std::vector<std::vector<cytnx_uint64> > old_inds;
+                    #pragma omp parallel
+                    {
+                        if(omp_get_thread_num()==0) old_inds = std::vector<std::vector<cytnx_uint64> >(omp_get_num_threads(),std::vector<cytnx_uint64>(old_shape.size()));
+                    }
+
+                    #pragma omp parallel for schedule(dynamic)
+                    for(cytnx_uint64 n=0;n<accu_old;n++){
+                        //calc new id:
+                        cytnx_uint64 j;
+                        cytnx_uint64 old_loc = n;
+                        for(j=0;j<old_shape.size();j++){
+                            old_inds[omp_get_thread_num()][j] = old_loc/shifter_old[j];
+                            old_loc= old_loc%shifter_old[j];
+                        }
+                        old_loc =0; // position:
+                        for(j=0;j<old_shape.size();j++){
+                            old_loc += shifter_new[j]*old_inds[omp_get_thread_num()][mapper[j]];
+                        }
+                        des[old_loc] = src[n];
+                    }
+
+                #else
+                    std::vector<cytnx_uint64> old_inds(old_shape.size());
+                    cytnx_uint64 j,old_loc;
+                    for(cytnx_uint64 n=0;n<accu_old;n++){
+                        //calc new id:
+                        old_loc = n;
+                        for(j=0;j<old_shape.size();j++){
+                            old_inds[j] = old_loc/shifter_old[j];
+                            old_loc= old_loc%shifter_old[j];
+                        }
+                        old_loc =0; // position:
+                        for(j=0;j<old_shape.size();j++){
+                            old_loc += shifter_new[j]*old_inds[mapper[j]];
+                        }
+                        des[old_loc] = src[n];
+                    }
+                #endif
+            #endif //hptt
             
             boost::intrusive_ptr<Storage_base> out(new ComplexDoubleStorage());
             if(is_inplace){
@@ -96,65 +109,82 @@ namespace cytnx{
             cytnx_error_msg(in->dtype != Type.ComplexFloat,"[DEBUG][internal error] in.dtype_str is [%s] but call Movemem_cpu with type ComplexFloat",in->dtype_str().c_str());
             #endif
 
-            std::vector<cytnx_uint64> newshape(old_shape.size());
-            for(cytnx_uint64 i=0;i<old_shape.size();i++)
-                newshape[i] = old_shape[mapper[i]];
-
-            std::vector<cytnx_uint64> shifter_old(old_shape.size());
-            std::vector<cytnx_uint64> shifter_new(old_shape.size());
-
-            cytnx_uint64 accu_old=1,accu_new=1;
-            for(cytnx_int64 i=old_shape.size()-1;i>=0;i--){
-                shifter_old[i] = accu_old;
-                shifter_new[i] = accu_new;
-                accu_old*=old_shape[i];
-                accu_new*=newshape[i];
-            }
-
             cytnx_complex64 *des = (cytnx_complex64*)malloc(in->cap*sizeof(cytnx_complex64));
             cytnx_complex64 *src = static_cast<cytnx_complex64*>(in->Mem);
+            cytnx_uint64 accu_old=1,accu_new=1;
 
-            #ifdef UNI_OMP
-                std::vector<std::vector<cytnx_uint64> > old_inds;
-                #pragma omp parallel
-                {
-                    if(omp_get_thread_num()==0) old_inds = std::vector<std::vector<cytnx_uint64> >(omp_get_num_threads(),std::vector<cytnx_uint64>(old_shape.size()));
-                }
 
-                #pragma omp parallel for schedule(dynamic)
-                for(cytnx_uint64 n=0;n<accu_old;n++){
-                    //calc new id:
-                    cytnx_uint64 j;
-                    cytnx_uint64 old_loc = n;
-                    for(j=0;j<old_shape.size();j++){
-                        old_inds[omp_get_thread_num()][j] = old_loc/shifter_old[j];
-                        old_loc= old_loc%shifter_old[j];
-                    }
-                    old_loc =0; // position:
-                    for(j=0;j<old_shape.size();j++){
-                        old_loc += shifter_new[j]*old_inds[omp_get_thread_num()][mapper[j]];
-                    }
-                    des[old_loc] = src[n];
-                }
+            #ifdef UNI_HPTT
+                #ifdef UNI_DEBUG
+                    cytnx_error_msg(true, "[DEBUG][Internal prompt] USE HPTT%s","\n");
+                #endif
+                std::vector<int> perm(mapper.begin(),mapper.end());
+                std::vector<int> size(old_shape.begin(),old_shape.end());
+                auto plan = hptt::create_plan(&perm[0],perm.size(),1,src,&size[0],NULL,0,des,NULL,hptt::ESTIMATE,cytnx::Device.Ncpus,nullptr,true);
+                plan->execute();
+                accu_old = in->size();
+
 
             #else
-                std::vector<cytnx_uint64> old_inds(old_shape.size());
-                cytnx_uint64 j,old_loc;
-                for(cytnx_uint64 n=0;n<accu_old;n++){
-                    //calc new id:
-                    old_loc = n;
-                    for(j=0;j<old_shape.size();j++){
-                        old_inds[j] = old_loc/shifter_old[j];
-                        old_loc= old_loc%shifter_old[j];
-                    }
-                    old_loc =0; // position:
-                    for(j=0;j<old_shape.size();j++){
-                        old_loc += shifter_new[j]*old_inds[mapper[j]];
-                    }
-                    des[old_loc] = src[n];
+                
+                std::vector<cytnx_uint64> newshape(old_shape.size());
+                for(cytnx_uint64 i=0;i<old_shape.size();i++)
+                    newshape[i] = old_shape[mapper[i]];
+
+                std::vector<cytnx_uint64> shifter_old(old_shape.size());
+                std::vector<cytnx_uint64> shifter_new(old_shape.size());
+
+
+                for(cytnx_int64 i=old_shape.size()-1;i>=0;i--){
+                    shifter_old[i] = accu_old;
+                    shifter_new[i] = accu_new;
+                    accu_old*=old_shape[i];
+                    accu_new*=newshape[i];
                 }
-            #endif
-            
+
+
+
+                #ifdef UNI_OMP
+                    std::vector<std::vector<cytnx_uint64> > old_inds;
+                    #pragma omp parallel
+                    {
+                        if(omp_get_thread_num()==0) old_inds = std::vector<std::vector<cytnx_uint64> >(omp_get_num_threads(),std::vector<cytnx_uint64>(old_shape.size()));
+                    }
+
+                    #pragma omp parallel for schedule(dynamic)
+                    for(cytnx_uint64 n=0;n<accu_old;n++){
+                        //calc new id:
+                        cytnx_uint64 j;
+                        cytnx_uint64 old_loc = n;
+                        for(j=0;j<old_shape.size();j++){
+                            old_inds[omp_get_thread_num()][j] = old_loc/shifter_old[j];
+                            old_loc= old_loc%shifter_old[j];
+                        }
+                        old_loc =0; // position:
+                        for(j=0;j<old_shape.size();j++){
+                            old_loc += shifter_new[j]*old_inds[omp_get_thread_num()][mapper[j]];
+                        }
+                        des[old_loc] = src[n];
+                    }
+
+                #else
+                    std::vector<cytnx_uint64> old_inds(old_shape.size());
+                    cytnx_uint64 j,old_loc;
+                    for(cytnx_uint64 n=0;n<accu_old;n++){
+                        //calc new id:
+                        old_loc = n;
+                        for(j=0;j<old_shape.size();j++){
+                            old_inds[j] = old_loc/shifter_old[j];
+                            old_loc= old_loc%shifter_old[j];
+                        }
+                        old_loc =0; // position:
+                        for(j=0;j<old_shape.size();j++){
+                            old_loc += shifter_new[j]*old_inds[mapper[j]];
+                        }
+                        des[old_loc] = src[n];
+                    }
+                #endif
+            #endif //hptt
 
             
             boost::intrusive_ptr<Storage_base> out(new ComplexFloatStorage());
@@ -180,8 +210,9 @@ namespace cytnx{
             cytnx_uint64 accu_old=1,accu_new=1;
 
             #ifdef UNI_HPTT
-                std::cout << "USE HPTT" << std::endl;
-
+                #ifdef UNI_DEBUG
+                    cytnx_error_msg(true, "[DEBUG][Internal prompt] USE HPTT%s","\n");
+                #endif
                 std::vector<int> perm(mapper.begin(),mapper.end());
                 std::vector<int> size(old_shape.begin(),old_shape.end());
                 auto plan = hptt::create_plan(&perm[0],perm.size(),1,src,&size[0],NULL,0,des,NULL,hptt::ESTIMATE,cytnx::Device.Ncpus,nullptr,true);
@@ -267,65 +298,76 @@ namespace cytnx{
             cytnx_error_msg(in->dtype != Type.Float,"[DEBUG][internal error] in.dtype_str is [%s] but call Movemem_cpu with type Float",in->dtype_str().c_str());
             #endif
 
-            std::vector<cytnx_uint64> newshape(old_shape.size());
-            for(cytnx_uint64 i=0;i<old_shape.size();i++)
-                newshape[i] = old_shape[mapper[i]];
-
-            std::vector<cytnx_uint64> shifter_old(old_shape.size());
-            std::vector<cytnx_uint64> shifter_new(old_shape.size());
-
-            cytnx_uint64 accu_old=1,accu_new=1;
-            for(cytnx_int64 i=old_shape.size()-1;i>=0;i--){
-                shifter_old[i] = accu_old;
-                shifter_new[i] = accu_new;
-                accu_old*=old_shape[i];
-                accu_new*=newshape[i];
-            }
-
             cytnx_float *des = (cytnx_float*)malloc(in->cap*sizeof(cytnx_float));
             cytnx_float *src = static_cast<cytnx_float*>(in->Mem);
-
-            #ifdef UNI_OMP
-                std::vector<std::vector<cytnx_uint64> > old_inds;
-                #pragma omp parallel
-                {
-                    if(omp_get_thread_num()==0) old_inds = std::vector<std::vector<cytnx_uint64> >(omp_get_num_threads(),std::vector<cytnx_uint64>(old_shape.size()));
-                }
-
-                #pragma omp parallel for schedule(dynamic)
-                for(cytnx_uint64 n=0;n<accu_old;n++){
-                    //calc new id:
-                    cytnx_uint64 j;
-                    cytnx_uint64 old_loc = n;
-                    for(j=0;j<old_shape.size();j++){
-                        old_inds[omp_get_thread_num()][j] = old_loc/shifter_old[j];
-                        old_loc= old_loc%shifter_old[j];
-                    }
-                    old_loc =0; // position:
-                    for(j=0;j<old_shape.size();j++){
-                        old_loc += shifter_new[j]*old_inds[omp_get_thread_num()][mapper[j]];
-                    }
-                    des[old_loc] = src[n];
-                }
-
+            cytnx_uint64 accu_old=1,accu_new=1;
+            #ifdef UNI_HPTT
+                #ifdef UNI_DEBUG
+                    cytnx_error_msg(true, "[DEBUG][Internal prompt] USE HPTT%s","\n");
+                #endif
+                std::vector<int> perm(mapper.begin(),mapper.end());
+                std::vector<int> size(old_shape.begin(),old_shape.end());
+                auto plan = hptt::create_plan(&perm[0],perm.size(),1,src,&size[0],NULL,0,des,NULL,hptt::ESTIMATE,cytnx::Device.Ncpus,nullptr,true);
+                plan->execute();
+                accu_old = in->size();
             #else
-                std::vector<cytnx_uint64> old_inds(old_shape.size());
-                cytnx_uint64 j,old_loc;
-                for(cytnx_uint64 n=0;n<accu_old;n++){
-                    //calc new id:
-                    old_loc = n;
-                    for(j=0;j<old_shape.size();j++){
-                        old_inds[j] = old_loc/shifter_old[j];
-                        old_loc= old_loc%shifter_old[j];
-                    }
-                    old_loc =0; // position:
-                    for(j=0;j<old_shape.size();j++){
-                        old_loc += shifter_new[j]*old_inds[mapper[j]];
-                    }
-                    des[old_loc] = src[n];
+                
+                std::vector<cytnx_uint64> newshape(old_shape.size());
+                for(cytnx_uint64 i=0;i<old_shape.size();i++)
+                    newshape[i] = old_shape[mapper[i]];
+
+                std::vector<cytnx_uint64> shifter_old(old_shape.size());
+                std::vector<cytnx_uint64> shifter_new(old_shape.size());
+
+
+                for(cytnx_int64 i=old_shape.size()-1;i>=0;i--){
+                    shifter_old[i] = accu_old;
+                    shifter_new[i] = accu_new;
+                    accu_old*=old_shape[i];
+                    accu_new*=newshape[i];
                 }
-            #endif
-            
+
+                #ifdef UNI_OMP
+                    std::vector<std::vector<cytnx_uint64> > old_inds;
+                    #pragma omp parallel
+                    {
+                        if(omp_get_thread_num()==0) old_inds = std::vector<std::vector<cytnx_uint64> >(omp_get_num_threads(),std::vector<cytnx_uint64>(old_shape.size()));
+                    }
+
+                    #pragma omp parallel for schedule(dynamic)
+                    for(cytnx_uint64 n=0;n<accu_old;n++){
+                        //calc new id:
+                        cytnx_uint64 j;
+                        cytnx_uint64 old_loc = n;
+                        for(j=0;j<old_shape.size();j++){
+                            old_inds[omp_get_thread_num()][j] = old_loc/shifter_old[j];
+                            old_loc= old_loc%shifter_old[j];
+                        }
+                        old_loc =0; // position:
+                        for(j=0;j<old_shape.size();j++){
+                            old_loc += shifter_new[j]*old_inds[omp_get_thread_num()][mapper[j]];
+                        }
+                        des[old_loc] = src[n];
+                    }
+
+                #else
+                    std::vector<cytnx_uint64> old_inds(old_shape.size());
+                    cytnx_uint64 j,old_loc;
+                    for(cytnx_uint64 n=0;n<accu_old;n++){
+                        //calc new id:
+                        old_loc = n;
+                        for(j=0;j<old_shape.size();j++){
+                            old_inds[j] = old_loc/shifter_old[j];
+                            old_loc= old_loc%shifter_old[j];
+                        }
+                        old_loc =0; // position:
+                        for(j=0;j<old_shape.size();j++){
+                            old_loc += shifter_new[j]*old_inds[mapper[j]];
+                        }
+                        des[old_loc] = src[n];
+                    }
+                #endif
+            #endif // hptt            
 
             
             boost::intrusive_ptr<Storage_base> out(new FloatStorage());

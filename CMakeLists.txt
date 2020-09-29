@@ -78,13 +78,14 @@ endif()
 ######################################################################
 # Version information
 ######################################################################
-set(CYTNX_VERSION_MAJOR 0)
-set(CYTNX_VERSION_MINOR 6)
-set(CYTNX_VERSION_PATCH 2)
-set(CYTNX_VERSION COUNT 0)
-set(CYTNX_VERSION
-  ${CYTNX_VERSION_MAJOR}.${CYTNX_VERSION_MINOR}.${CYTNX_VERSION_PATCH}
-)
+include(version.cmake)
+#set(CYTNX_VERSION_MAJOR 0)
+#set(CYTNX_VERSION_MINOR 6)
+#set(CYTNX_VERSION_PATCH 2)
+#set(CYTNX_VERSION COUNT 0)
+#set(CYTNX_VERSION
+#  ${CYTNX_VERSION_MAJOR}.${CYTNX_VERSION_MINOR}.${CYTNX_VERSION_PATCH}
+#)
 
 
 
@@ -94,7 +95,7 @@ set(CYTNX_VERSION
 
 option(USE_ICPC "Build Cytnx with Intel Compilers" OFF)
 option(USE_CUDA "Build using Nvidia CUDA for GPU library" OFF)
-option(BUILD_PYTHON "Build Python wrapper" OFF)
+option(BUILD_PYTHON "Build Python wrapper" ON)
 option(USE_MKL "Build using MKL" OFF)
 option(USE_OMP "Build Cytnx with OpenMP" ON)
 option(BUILD_DOC "Build API docuemntation" OFF)
@@ -432,6 +433,8 @@ set(libname "${CMAKE_SHARED_LIBRARY_PREFIX}cytnx.${CYTNX_VERSION}${CMAKE_SHARED_
 FILE(WRITE "${CMAKE_BINARY_DIR}/linkflags.tmp" "" "")
 FILE(WRITE "${CMAKE_BINARY_DIR}/cxxflags.tmp" "" "")
 
+FILE(WRITE "${CMAKE_BINARY_DIR}/version.tmp" "" "")
+FILE(APPEND "${CMAKE_BINARY_DIR}/version.tmp" "${CYTNX_VERSION}" "")
 
 ######################################################################
 # Information Messages
@@ -522,6 +525,8 @@ message(STATUS "")
 
 install(FILES ${CMAKE_BINARY_DIR}/linkflags.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
 install(FILES ${CMAKE_BINARY_DIR}/cxxflags.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
+install(FILES ${CMAKE_BINARY_DIR}/version.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
+
 if(USE_HPTT) # relocate HPTT library 
 install(DIRECTORY ${CMAKE_BINARY_DIR}/hptt DESTINATION ${CMAKE_INSTALL_PREFIX})
 endif()
