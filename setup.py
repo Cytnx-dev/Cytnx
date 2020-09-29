@@ -134,11 +134,9 @@ def get_version():
 
     return "%s.%s.%s"%(version[0] ,version[1] ,version[2])
 
-#print(get_version())
-#exit(1)
 setup(
     name='cytnx',
-    version=get_version(),
+    version="0.6.3",
     maintainer='Kai-Hsin Wu, Yen-Hsin Wu',
     maintainer_email="kaihsinwu@gmail.com",
     description='Project Cytnx',
