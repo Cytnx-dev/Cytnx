@@ -333,6 +333,10 @@ See The following user guide for install and using of cytnx:
     * example/DMRG:
         https://www.tensors.net/dmrg
 
+    * hptt library:
+        https://github.com/springer13/hptt
+
+
 ## Acknowledgement
     KHW whould like to thanks for the following contributor(s) for invaluable contribution to the library
 
