@@ -87,6 +87,7 @@ set(CYTNX_VERSION
   ${CYTNX_VERSION_MAJOR}.${CYTNX_VERSION_MINOR}.${CYTNX_VERSION_PATCH}
 )
 
+set(CYTNX_VARIANT_INFO "")
 
 
 ######################################################################
@@ -129,17 +130,18 @@ if (USE_MKL)
   option(MKL_SDL "Link to a single MKL dynamic libary." ON)
   option(MKL_MLT "Use multi-threading libary. [Default]" ON)
   mark_as_advanced(MKL_SDL MKL_MLT)
+  set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_MKL")
 endif()
 
 if (USE_HPTT)
 option(HPTT_ENABLE_ARM "HPTT option ARM" OFF)
 option(HPTT_ENABLE_AVX "HPTT option AVX" OFF)
 option(HPTT_ENABLE_IBM "HPTT option IBM" OFF)
-
+set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_HPTT")
 ExternalProject_Add(hptt
   PREFIX hptt_src
   GIT_REPOSITORY https://github.com/kaihsin/hptt.git
-  GIT_TAG 6127f49f309d82c8e8d0ae70467f4b5c1c268216
+  GIT_TAG a0e17ebd57d0f69b75ffcae82d6e4e24be08ec18
   BINARY_DIR hptt_src/build
   INSTALL_DIR hptt
   CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DENABLE_ARM=${HPTT_ENABLE_ARM} -DENABLE_AVX=${HPTT_ENABLE_AVX} -DENABLE_IBM=${HPTT_ENABLE_IBM}
@@ -219,6 +221,7 @@ message(STATUS ${COMPILE_DEFINITIONS})
 # ----------------------------------------
 # Find OpenMP
 if(USE_OMP)
+    set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_OMP")
     if(USE_MKL)
         target_compile_definitions(cytnx PRIVATE UNI_OMP)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
@@ -270,6 +273,7 @@ target_link_libraries(cytnx PUBLIC Boost::boost ${LAPACK_LIBRARIES})
 ### SMS ?= 30
 
 if(USE_CUDA)
+  set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_CUDA")
   enable_language(CUDA)
   find_package(CUDA REQUIRED)
   if(NOT DEFINED CMAKE_CUDA_STANDARD)
@@ -436,6 +440,9 @@ FILE(WRITE "${CMAKE_BINARY_DIR}/cxxflags.tmp" "" "")
 FILE(WRITE "${CMAKE_BINARY_DIR}/version.tmp" "" "")
 FILE(APPEND "${CMAKE_BINARY_DIR}/version.tmp" "${CYTNX_VERSION}" "")
 
+FILE(WRITE "${CMAKE_BINARY_DIR}/vinfo.tmp" "" "")
+FILE(APPEND "${CMAKE_BINARY_DIR}/vinfo.tmp" "${CYTNX_VARIANT_INFO}" "")
+
 ######################################################################
 # Information Messages
 ######################################################################
@@ -526,6 +533,7 @@ message(STATUS "")
 install(FILES ${CMAKE_BINARY_DIR}/linkflags.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
 install(FILES ${CMAKE_BINARY_DIR}/cxxflags.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
 install(FILES ${CMAKE_BINARY_DIR}/version.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
+install(FILES ${CMAKE_BINARY_DIR}/vinfo.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
 
 if(USE_HPTT) # relocate HPTT library 
 install(DIRECTORY ${CMAKE_BINARY_DIR}/hptt DESTINATION ${CMAKE_INSTALL_PREFIX})
