@@ -218,6 +218,7 @@ Compiling process
 --------------------
 Please see the following steps for the standard cmake compiling process and all the compiling options:
 
+
 1. create a build directory:
 
 .. code-block:: shell
@@ -233,38 +234,38 @@ Please see the following steps for the standard cmake compiling process and all 
 
 The following are the avaliable compiling option flags that you can specify in **[option]**:
 
-* -DCMAKE_INSTALL_PREFIX=<Destination path> 
++------------------------+-------------------+------------------------------------+
+|       options          | default           |          description               |
++------------------------+-------------------+------------------------------------+
+| -DCMAME_INSTALL_PREFIX | /usr/local/cytnx  | Install desination of the library  |
++------------------------+-------------------+------------------------------------+
+| -DBUILD_PYTHON         |   ON              | Compile and install python API     |
++------------------------+-------------------+------------------------------------+
+| -DUSE_MKL              |   OFF             | Compile Cytnx with intel MKL lib.  |
+|                        |                   | If =off, default link to openblas  |
++------------------------+-------------------+------------------------------------+
+| -DUSE_OMP              |   OFF             | Compile with openmp acceleration   |
+|                        |                   | If USE_MKL=on, USE_OMP is forced=on|
++------------------------+-------------------+------------------------------------+
+| -DUSE_CUDA             |   OFF             | Compile with CUDA GPU support      |
++------------------------+-------------------+------------------------------------+
+| -DUSE_HPTT             |   OFF             | Accelerate tensor transpose with   |
+|                        |                   | hptt                               |
++------------------------+-------------------+------------------------------------+
 
-    This specify the install destination you want cytnx to be installed. 
-    The default is /usr/local/cytnx
+Additional options for HPTT if -DUSE_HPTT=on:
 
-* -DBUILD_PYTHON=on
-
-    This specify if the cytnx python API will be installed. 
-    The default is *off*
-
-* -DUSE_MKL=on 
-
-    This specify if the cytnx is compiled against intel mkl library. 
-    The default is *off* 
-
-.. note::
-
-        if USE_MKL=off, the default linking library for linear algebra is openblas.
-
-* -DUSE_OMP=on
-
-    This specify if the cytnx is compiled with openmp acceleration. 
-    The default is *off*
-
-.. note::
-
-        if USE_MKL=on, then USE_OMP=on will be forced
-
-* -DUSE_CUDA=on
-
-    This specify if the cytnx is compiled with CUDA-gpu support. 
-    The default is *off*
++-------------------------+-------------------+------------------------------------+
+|       options           | default           |          description               |
++-------------------------+-------------------+------------------------------------+
+| -DHPTT_ENABLE_FINE_TUNE |  OFF              | HPTT optimized with native hardware|
++-------------------------+-------------------+------------------------------------+
+| -DHPTT_ENABLE_AVX       |  OFF              | Compile HPTT with AVX instruction  |
++-------------------------+-------------------+------------------------------------+
+| -DHPTT_ENABLE_ARM       |  OFF              | Compile HPTT with ARM arch.        | 
++-------------------------+-------------------+------------------------------------+
+| -DHPTT_ENABLE_IBM       |  OFF              | Compile HPTT with ppc64le arch     | 
++-------------------------+-------------------+------------------------------------+
 
 
 3. compile the code:
