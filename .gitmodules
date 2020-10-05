@@ -1,3 +1,6 @@
 [submodule "thirdparty/hptt"]
 	path = thirdparty/hptt
 	url = https://github.com/kaihsin/hptt.git
+[submodule "thirdparty/cutt"]
+	path = thirdparty/cutt
+	url = https://github.com/kaihsin/cutt.git
