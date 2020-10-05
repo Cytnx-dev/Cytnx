@@ -1,0 +1,5 @@
+#Jekyll configuration
+name: cytnx
+description: cytnx
+url: "http://kaihsinwu.github.io/Cytnx"
+markdown: kramdown
