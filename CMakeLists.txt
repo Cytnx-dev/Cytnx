@@ -1,31 +1,3 @@
-###
-#  @file CMakeLists.txt
-#  @license
-#    Copyright (c) 2013-
-#    National Taiwan University
-#    National Tsing-Hua University
-#
-#    This file is part of Cytnx.
-#
-#    Cytnx is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    cytnx is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with cytnx.  If not, see <http://www.gnu.org/licenses/>.
-#  @endlicense
-#  @brief Main specification file for CMake
-#  @author Kai-Hsin Wu, Ying-Jer Kao,
-#  @date 2020-01-08
-#  @since 0.4.0
-#  
-###
 
 ######################################################################
 ### CMAKE VERSION
@@ -142,7 +114,7 @@ set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_HPTT")
 ExternalProject_Add(hptt
   PREFIX hptt_src
   GIT_REPOSITORY https://github.com/kaihsin/hptt.git
-  GIT_TAG 1ec5975099a6f9631dee7ee5e646e5deaa0068d5
+  GIT_TAG fc9c8cb9b71f4f6d16aad435bdce20025b342a73
   BINARY_DIR hptt_src/build
   INSTALL_DIR hptt
   CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DENABLE_ARM=${HPTT_ENABLE_ARM} -DENABLE_AVX=${HPTT_ENABLE_AVX} -DENABLE_IBM=${HPTT_ENABLE_IBM} -DFINE_TUNE=${HPTT_ENABLE_FINE_TUNE}
