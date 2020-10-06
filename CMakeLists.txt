@@ -109,7 +109,7 @@ if (USE_HPTT)
 option(HPTT_ENABLE_ARM "HPTT option ARM" OFF)
 option(HPTT_ENABLE_AVX "HPTT option AVX" OFF)
 option(HPTT_ENABLE_IBM "HPTT option IBM" OFF)
-option(HPTT_ENABLE_FINE_TUNE "HPTT option FINE_TNUE" OFF)
+option(HPTT_ENABLE_FINE_TUNE "HPTT option FINE_TUNE" OFF)
 set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_HPTT")
 ExternalProject_Add(hptt
   PREFIX hptt_src
@@ -121,7 +121,22 @@ ExternalProject_Add(hptt
 )
 endif()
 
-
+if (USE_CUDA)
+    if (USE_CUTT)
+    option(CUTT_ENABLE_FINE_TUNE "CUTT option FINE_TUNE" OFF)
+    option(CUTT_ENABLE_NVTOOLS "CUTT option NVTOOLS" OFF)
+    option(CUTT_NO_ALIGN_ALLOC "CUTT option NO_ALIGN_ALLIC" OFF)
+    set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_CUTT")
+    ExternalProject_Add(cutt
+      PREFIX cutt_src
+      GIT_REPOSITORY https://github.com/kaihsin/cutt.git
+      GIT_TAG c63720412d9d922a5e3eaafb54de6fa92e07a899
+      BINARY_DIR cutt_src/build
+      INSTALL_DIR cutt
+      CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DNO_ALIGN_ALLOC=${CUTT_NO_ALIGN_ALLOC} -DENABLE_NVTOOLS=${CUTT_ENABLE_NVTOOLS} -DFINE_TUNE=${CUTT_ENABLE_FINE_TUNE}
+    )
+    endif()
+endif()
 
 ######################################################################
 ### PROJECT
@@ -147,6 +162,22 @@ target_compile_features(cytnx PUBLIC cxx_std_11)
 #set_property(TARGET cytnx PROPERTY CXX_STANDARD 11)
 
 add_subdirectory(src)
+
+
+
+#####################################################################
+### Dependency of CUTT
+#####################################################################
+if(USE_CUDA)
+    if(USE_CUTT)
+        ExternalProject_Get_Property(cutt install_dir)
+        include_directories(${install_dir}/include)
+        message(STATUS "cutt install dir: ${install_dir}")
+        add_dependencies(cytnx cutt)
+        target_compile_definitions(cytnx PRIVATE UNI_CUTT)
+        target_link_libraries(cytnx PRIVATE ${install_dir}/lib/libcutt.a)
+    endif()
+endif()
 
 #####################################################################
 ### Dependency of HPTT
@@ -466,9 +497,17 @@ if(USE_CUDA)
   FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cudart_static_LIBRARY} -ldl\n" "") # use > to indicate special rt processing 
   message( STATUS "  - Cuda devrt library: ${CUDA_cudadevrt_LIBRARY} -lrt")
   FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cudadevrt_LIBRARY} -lrt\n" "") # use > to indicate special rt processing 
+  if(USE_CUTT)    
+        message( STATUS " Build CUTT Support: YES")
+        message( STATUS " --CUTT option FINE_TUNE: ${CUTT_ENABLE_FINE_TUNE}")
+        message( STATUS " --CUTT option NVTOOLS: ${CUTT_ENABLE_NVTOOLS}")
+        message( STATUS " --CUTT option NO_ALIGN_ALLOC: ${HPTT_NO_ALIGN_ALLOC}")
+  endif()
 else()
   message( STATUS " Build CUDA Support: NO")
 endif()
+
+
 if(USE_OMP)
     if(USE_MKL)
           message( STATUS " Build OMP Support: YES (force with MKL=on)")
@@ -513,6 +552,13 @@ install(FILES ${CMAKE_BINARY_DIR}/vinfo.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/
 if(USE_HPTT) # relocate HPTT library 
 install(DIRECTORY ${CMAKE_BINARY_DIR}/hptt DESTINATION ${CMAKE_INSTALL_PREFIX})
 endif()
+
+if(USE_CUDA)
+    if(USE_CUTT)
+        install(DIRECTORY ${CMAKE_BINARY_DIR}/cutt DESTINATION ${CMAKE_INSTALL_PREFIX})
+    endif()
+endif()
+
 
 if (BUILD_PACKAGES)
 include("Package.cmake")

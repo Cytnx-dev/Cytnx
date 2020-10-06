@@ -113,6 +113,15 @@ class CMakeBuild(build_ext):
                 print("[Relocate hptt]: ",fn)
                 break
 
+        # copy cutt
+        for fn in os.listdir(build_temp_dir):
+            print(fn)
+            if 'cutt' == fn:
+                self.copy_tree(os.path.join(build_temp_dir,fn),os.path.join(extdir,"cutt"))
+                print("[Relocate cutt]: ",fn)
+                break
+
+
         # 2. header file (cpp)
         Cppinc_dir = os.path.join(extdir,"include")
         if not os.path.exists(Cppinc_dir):
