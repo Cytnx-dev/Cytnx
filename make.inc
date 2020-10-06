@@ -22,7 +22,8 @@ MKL_Enable=1
 ## compile with HPTT library:
 HPTT_Enable=1
 
-
+## compile with CUTT library:
+CUTT_Enable=1
 
 #### DO NOT USE BELOW WHEN CUSTOM INSTALL !!
 #-------------------------------------------

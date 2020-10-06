@@ -4,7 +4,7 @@
 #include <functional>
 
 #include "hptt.h"
-
+#include "cutt.h"
 using namespace std;
 using namespace cytnx;
 
@@ -20,7 +20,17 @@ class test{
     };
 
 };
-
+        template <class BidirectionalIterator>
+        void reverse_perm(BidirectionalIterator first, BidirectionalIterator last,int N)
+        {
+          while ((first!=last)&&(first!=--last)) {
+            *first = (N-1) - *first;
+            *last = (N-1) - *last;
+            std::iter_swap (first,last);
+            ++first;
+          }
+          if(N%2) *first = (N-1) - *first;
+        }
 
 
 //-------------------------------------------
@@ -53,10 +63,30 @@ class MyOp: public LinOp{
 
 };
 
+#define cuttCheck(stmt) do {                                 \
+  cuttResult err = stmt;                            \
+  if (err != CUTT_SUCCESS) {                          \
+    fprintf(stderr, "%s in file %s, function %s\n", #stmt,__FILE__,__FUNCTION__); \
+    exit(1); \
+  }                                                  \
+} while(0)
  
 int main(int argc, char *argv[]){
+    /*
+    vector<int> testV = {0,2,1};
+    reverse_perm(testV.begin(),testV.end(),testV.size());
+    cout << testV << endl;
+    */
 
+    auto rS = cytnx::arange(32).reshape(2,2,2,2,2).to(cytnx::Device.cuda);
+        
+    auto rD = rS.permute(0,2,1,4,3).contiguous();
+    cout << rD << endl;
+   
+    auto rH = rS.to(cytnx::Device.cpu);
+    cout << rH.permute(0,2,1,4,3).contiguous();
 
+    return 0;
 
     //auto rA = cytnx::UniTensor(cytnx::arange(12).reshape(4,3),1);
     auto rA = cytnx::arange(12).reshape(4,3);

@@ -28,6 +28,8 @@ CytnxPATH=.
 INCFLAGS :=-I$(CytnxPATH)/include -I$(CytnxPATH)/src
 
 HPTT_PATH=./thirdparty/hptt
+CUTT_PATH=./thirdparty/cutt
+
 
 ifeq ($(ICPC_Enable),1)
   CC:= $(ICPC)
@@ -39,7 +41,7 @@ endif
 
 ifeq ($(MKL_Enable),1)
   CCFLAGS += -std=c++11 -O3 -Wformat=0 -m64 -fPIC -DUNI_MKL -w -Wno-c++11-narrowing -DMKL_ILP64
-  LDFLAGS += $(DOCKER_MKL) -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -ldl -lm   
+  LDFLAGS += $(DOCKER_MKL) -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -ldl -lm 
 else
   CCFLAGS += -std=c++11 -O3 -Wformat=0 -fPIC -w -Wno-c++11-narrowing 
   LDFLAGS += -llapacke -lblas -lstdc++  
@@ -70,10 +72,14 @@ ifeq ($(HPTT_Enable),1)
 endif
 
 
-
-
 ALL_CCFLAGS := 
 ifeq ($(GPU_Enable),1)
+  ifeq ($(CUTT_Enable),1)
+   CCFLAGS += -DUNI_CUTT
+   INCFLAGS+= -I$(CUTT_PATH)/include
+   LDFLAGS+= $(CUTT_PATH)/lib/libcutt.a
+  endif
+
   CCFLAGS += -I$(CUDA_PATH)/include -DUNI_GPU
   ALL_CCFLAGS += $(NVFLAGS)
   ALL_CCFLAGS += $(addprefix -Xcompiler , $(CCFLAGS))
