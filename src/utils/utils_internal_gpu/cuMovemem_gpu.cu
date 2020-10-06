@@ -143,8 +143,23 @@ namespace cytnx{
             cytnx_error_msg(in->device == Device.cpu,"%s", "[DEBUG][internal error] in.device is on cpu but all cuda function.");
             #endif
 
-            
+            cuFloatComplex *dtmp;
+            dtmp = (cuFloatComplex*)cuMalloc_gpu(sizeof(cuFloatComplex)*in->cap); 
+            cytnx_uint64 Nelem = in->len;
 
+            #ifdef UNI_CUTT
+                std::vector<int> perm(mapper.begin(),mapper.end());
+                std::vector<int> size(old_shape.begin(),old_shape.end());
+                std::reverse(size.begin(),size.end()); //matching API CUTT
+                reverse_perm(perm.begin(),perm.end(),perm.size()); //matching API CUTT
+                                
+                cuttHandle plan;
+                cuttPlan(&plan,perm.size(),size.data(),perm.data(),sizeof(double),0);
+                cuttExecute(plan,in->Mem,dtmp);
+
+                cuttDestroy(plan);
+
+            #else
             std::vector<cytnx_uint64> newshape(old_shape.size());
             for(cytnx_uint64 i=0;i<old_shape.size();i++)
                 newshape[i] = old_shape[mapper[i]];
@@ -167,13 +182,10 @@ namespace cytnx{
 
             ///allocate a GPU for psn-vec/so-vec/tmp des-vec
             cytnx_uint64 *dshifter_old, *dperm_shifter_new;
-            cuFloatComplex *dtmp;
-            cytnx_uint64 Nelem = accu_old;        
 
             cudaSetDevice(in->device); // ensure the following allocation on the same device as src.
             checkCudaErrors(cudaMalloc((void**)&dshifter_old, sizeof(cytnx_uint64)*shifter_old.size()));
             checkCudaErrors(cudaMalloc((void**)&dperm_shifter_new, sizeof(cytnx_uint64)*permuted_shifter_new.size()));
-            dtmp = (cuFloatComplex*)cuMalloc_gpu(sizeof(cuFloatComplex)*in->cap); 
 
             /// copy psn-vec/so-vec to device
             checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0], sizeof(cytnx_uint64)*permuted_shifter_new.size(),cudaMemcpyHostToDevice));
@@ -191,6 +203,7 @@ namespace cytnx{
             ///house keeping:
             checkCudaErrors(cudaFree(dshifter_old));
             checkCudaErrors(cudaFree(dperm_shifter_new));
+            #endif
 
             boost::intrusive_ptr<Storage_base> out(new ComplexFloatStorage());
             if(is_inplace){

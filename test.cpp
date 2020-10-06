@@ -78,7 +78,7 @@ int main(int argc, char *argv[]){
     cout << testV << endl;
     */
 
-    auto rS = cytnx::arange(32).reshape(2,2,2,2,2).to(cytnx::Device.cuda);
+    auto rS = cytnx::arange(32).reshape(2,2,2,2,2).astype(cytnx::Type.ComplexFloat).to(cytnx::Device.cuda);
         
     auto rD = rS.permute(0,2,1,4,3).contiguous();
     cout << rD << endl;
