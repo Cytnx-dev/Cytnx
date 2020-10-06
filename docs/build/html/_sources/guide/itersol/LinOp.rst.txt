@@ -354,8 +354,8 @@ Output>>
     [3.00000e+00 8.00000e+00 9.00000e+00 0.00000e+00 ]
 
 
-Ex: make sparse data structure
-*******************************
+Ex: sparse data structure with mapping function 
+****************************************************
 With this flexibility, the user can actually define their own sparse data structure of an operator. 
 
 For example, if we want to define a sparse matrix :math:`\boldsymbol{A}` with shape=(1000,1000) with ONLY two non-zero elements A[1,100]=4 and A[100,1]=7. other elements are zero, we don't have to really define a dense tensor with size :math:`10^6`. We can simply use **LinOp** class as
@@ -407,7 +407,38 @@ Output>>
     Here, we use python API as example, but the same thing can be done with C++ API as well. 
     
 
-Next session, we will see how we can benefit from LinOp class by pass this object to Cytnx's iteractive solver and solve for the eigen value problem with our custom Operator. 
+Prestore/preconstruct sparse elements
+****************************************
+In above, we show how to represent linear operator in terms of function action by overload the **matvec** member function of LinOp class. Now of course this is simple and straight forward. But in the case where the custom mapping contains lots of for-loop, clearly, handling them in python side does not seem to be a good idea. 
+
+In v0.6.3a, we introduce a new option **"mv_elem"** for LinOp class. It allows user to pre-store the location and elements, similar as the standard sparse storage structure, and let cytnx to handle and optimize the matvec performance. Again, let's use the same example as considered previously: a sparse matrix :math:`\boldsymbol{A}` with shape=(1000,1000) with ONLY two non-zero elements A[1,100]=4 and A[100,1]=7.  
+
+* In python:
+
+.. code-block:: python 
+    :linenos:
+    :emphasize-lines: 6,7
+    
+    class Oper(cytnx.LinOp):
+
+        def __init__(self):
+            cytnx.LinOp.__init__(self,"mv_elem",1000)
+
+            self.set_elem(1,100,4.)
+            self.set_elem(100,1,7.)
+
+    A = Oper();
+    x = cytnx.arange(1000)
+    y = A.matvec(x)
+
+    print(x[1].item(),x[100].item())
+    print(y[1].item(),y[100].item())
+
+
+Notice that instead of overload **matvec** driving function, we use **set_elem** member function from LinOp class to set the location and the element. This information will be stored internally inside LinOp class, and we let LinOp class to internally optimize and handle **matvec**. 
+
+
+Next session, we will see how we can benefit from LinOp class by pass this object to Cytnx's iteractive solver and solve for the eigen value problem with our customized operator. 
 
 
 
