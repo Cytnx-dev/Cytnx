@@ -14,7 +14,9 @@ def Projector(psi, L, M1, M2, R):
     psi_p = cytnx.UniTensor(psi,0) ## share memory, no copy
     psi_p.reshape_(L.shape()[1],M1.shape()[2],M2.shape()[2],R.shape()[1])
     anet = cytnx.Network("projector.net")
-    anet.PutUniTensors(["psi","L","M1","M2","R"],[psi_p,L,M1,M2,R]);
+    anet.PutUniTensor("M2",M2)
+    anet.PutUniTensors(["psi","L","M1","R"],[psi_p,L,M1,R],False);
+    #anet.PutUniTensors(["psi","L","M1","R"],[psi_p,L,M1,R]);
     H_psi = anet.Launch(optimal=True).get_block_() # get_block_ without copy
     H_psi.flatten_() # only change meta, without copy.
     psi.flatten_() ## this just in case psi is something shared. 
@@ -258,7 +260,7 @@ EnExact = 2*sum(D[D < 0])
 ##### Plot results
 plt.figure(1)
 plt.yscale('log')
-plt.plot(range(len(Ekeep)), np.array(Ekeep) - EnExact, 'b', label="chi = 32", marker = 'o')
+plt.plot(range(len(Ekeep)), np.array(Ekeep) - EnExact, 'b', label="chi = %d"%(chi), marker = 'o')
 plt.legend()
 plt.title('DMRG for XX model')
 plt.xlabel('Update Step')

@@ -42,6 +42,11 @@ namespace cytnx{
             
             std::vector<cytnx_uint64> inv_mapperL,inv_mapperR;
             std::vector<cytnx_uint64> oldshapeL,oldshapeR;
+
+            //check if two tensor has same data, to prevent conflict!
+            if(mv_elem_l && mv_elem_r){
+                cytnx_error_msg(Tl.same_data(Tr),"[ERROR] tensordot with both mv_elem options = True cannot have both two input tensors to be the same.%s","\n");
+            }
             if(mv_elem_l){
                 // calculate reverse mapper:
                 inv_mapperL.resize(mapperL.size());

@@ -329,6 +329,10 @@ namespace cytnx{
         if(is_clone){
             this->tensors[idx] = utensor.clone();
         }else{
+            for(int i=0;i<this->tensors.size();i++)
+                if(this->tensors[i].uten_type()!=UTenType.Void)
+                    cytnx_error_msg(this->tensors[i].same_data(utensor),"[ERROR] [%s] and [%d] has same_data. Network cannot have two tensor with same_data(). If two tensors in a Network has the same data, consider set is_clone on either one of them.\n",this->names[i].c_str(),this->names[idx].c_str());
+            
             this->tensors[idx] = utensor;
         }
 
@@ -398,6 +402,8 @@ namespace cytnx{
         }
     
         this->PutUniTensor(idx,utensor,is_clone);    
+
+
         
     }
 
@@ -454,9 +460,11 @@ namespace cytnx{
     UniTensor RegularNetwork::Launch(const bool &optimal){
 
 
+
         //1. check tensors are all set, and put all unitensor on node for contraction:
         cytnx_error_msg(this->tensors.size()==0,"[ERROR][Launch][RegularNetwork] cannot launch an un-initialize network.%s","\n");
         cytnx_error_msg(this->tensors.size()<2,"[ERROR][Launch][RegularNetwork] Network should contain >=2 tensors.%s","\n");
+
 
         vector<vector<cytnx_int64> > old_labels;
         for(cytnx_uint64 idx=0;idx<this->tensors.size();idx++){
@@ -465,7 +473,7 @@ namespace cytnx{
             old_labels.push_back(this->tensors[idx].labels());
             
             //modify the label of unitensor (shared):
-            this->tensors[idx].set_labels(this->label_arr[idx]);
+            this->tensors[idx].set_labels(this->label_arr[idx]);//this conflict
             
             this->CtTree.base_nodes[idx].utensor = this->tensors[idx];
             //this->CtTree.base_nodes[idx].name = this->tensors[idx].name();

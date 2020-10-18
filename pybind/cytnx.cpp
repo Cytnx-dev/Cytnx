@@ -1928,7 +1928,7 @@ PYBIND11_MODULE(cytnx,m){
                 .def("truncate",&UniTensor::truncate,py::arg("bond_idx"),py::arg("dim"),py::arg("by_label")=false)
                 .def("ctruncate_",&UniTensor::truncate_)
                 ;
-    m.def("Contract",Contract);
+    m.def("Contract",Contract,py::arg("Tl"),py::arg("Tr"),py::arg("cacheL")=false,py::arg("cacheR")=false);
    
 
     // [Submodule linalg] 
