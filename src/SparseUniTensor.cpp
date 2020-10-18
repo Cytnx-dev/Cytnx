@@ -1114,7 +1114,7 @@ namespace cytnx{
 
     }
 
-    boost::intrusive_ptr<UniTensor_base> SparseUniTensor::contract(const boost::intrusive_ptr<UniTensor_base> &rhs){
+    boost::intrusive_ptr<UniTensor_base> SparseUniTensor::contract(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &mv_elem_self, const bool &mv_elem_rhs){
         cytnx_error_msg(true,"[ERROR][Developing.]%s","\n");
         
         //checking type

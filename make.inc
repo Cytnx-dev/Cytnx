@@ -1,6 +1,8 @@
 
 ## set default compiler:
 GCC=g++
+OPTIM= -g -O3
+
 
 ## compile using intel icpc compiler
 ICPC_Enable=0

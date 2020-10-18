@@ -78,11 +78,16 @@ int main(int argc, char *argv[]){
     cout << testV << endl;
     */
 
-    auto rS = cytnx::arange(24).reshape(2,2,2,3);//.astype(cytnx::Type.Float).to(cytnx::Device.cuda);
+    auto rS = cytnx::arange(24).reshape(2,2,2,3);///.astype(cytnx::Type.Float).to(cytnx::Device.cuda);
     auto rD = rS + 4;
-
-    auto outSD = cytnx::linalg::Tensordot(rS,rD,{0,2},{2,1});
+ 
+    cout << rS << endl;       
     
+    for(int i=0;i<4;i++){
+        auto outSD = cytnx::linalg::Tensordot(rS,rD,{0,2},{2,1},true,true);
+    }
+        
+    /*
     auto rSbak = rS.clone();
     auto rDbak = rD.clone();
 
@@ -97,7 +102,7 @@ int main(int argc, char *argv[]){
     cout << "rD" << rD.is_contiguous() << endl;
     cout << "rSbak" << rSbak.is_contiguous() << endl;
     cout << "rDbak" << rDbak.is_contiguous() << endl;
-
+    */
   
     //auto rD = rS.permute(0,2,1,4,3).contiguous();
     //cout << rD << endl;

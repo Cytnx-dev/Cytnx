@@ -1992,7 +1992,7 @@ PYBIND11_MODULE(cytnx,m){
     m_linalg.def("Matmul_dg",&cytnx::linalg::Matmul_dg,py::arg("T1"),py::arg("T2"));
     m_linalg.def("Diag",&cytnx::linalg::Diag, py::arg("Tin"));
     m_linalg.def("Det",&cytnx::linalg::Det, py::arg("Tin"));
-    m_linalg.def("Tensordot",&cytnx::linalg::Tensordot, py::arg("T1"),py::arg("T2"),py::arg("indices_1"),py::arg("indices_2"));
+    m_linalg.def("Tensordot",&cytnx::linalg::Tensordot, py::arg("T1"),py::arg("T2"),py::arg("indices_1"),py::arg("indices_2"),py::arg("mv_elem_l")=false,py::arg("mv_elem_r")=false);
     m_linalg.def("Tensordot_dg",&cytnx::linalg::Tensordot_dg, py::arg("T1"),py::arg("T2"),py::arg("indices_1"),py::arg("indices_2"),py::arg("diag_L"));
     m_linalg.def("Outer",&cytnx::linalg::Outer, py::arg("T1"),py::arg("T2"));
     m_linalg.def("Kron",&cytnx::linalg::Kron, py::arg("T1"),py::arg("T2"),py::arg("Tl_pad_left")=false,py::arg("Tr_pad_left")=false);

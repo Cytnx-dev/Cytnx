@@ -496,7 +496,7 @@ namespace cytnx{
                 this->_is_diag = false;
     }
 
-    boost::intrusive_ptr<UniTensor_base> DenseUniTensor::contract(const boost::intrusive_ptr<UniTensor_base> &rhs){
+    boost::intrusive_ptr<UniTensor_base> DenseUniTensor::contract(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &mv_elem_self, const bool &mv_elem_rhs){
         //checking :
         cytnx_error_msg(rhs->is_blockform() ,"[ERROR] cannot contract non-symmetry UniTensor with symmetry UniTensor%s","\n");
         cytnx_error_msg(this->is_tag() != rhs->is_tag(), "[ERROR] cannot contract tagged UniTensor with untagged UniTensor.%s","\n");
@@ -611,7 +611,7 @@ namespace cytnx{
                     //Tensor tmpL,tmpR;
                     //tmpL = this->_block; 
                     //tmpR =  rhs->get_block_(); // share view!!
-                    tmp->_block = linalg::Tensordot(this->_block,rhs->get_block_(),comm_idx1,comm_idx2);
+                    tmp->_block = linalg::Tensordot(this->_block,rhs->get_block_(),comm_idx1,comm_idx2,mv_elem_self,mv_elem_rhs);
                 }
                 tmp->_is_diag = false;
             }

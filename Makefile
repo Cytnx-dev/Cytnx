@@ -40,16 +40,16 @@ else
 endif
 
 ifeq ($(MKL_Enable),1)
-  CCFLAGS += -std=c++11 -O3 -Wformat=0 -m64 -fPIC -DUNI_MKL -w -Wno-c++11-narrowing -DMKL_ILP64
+  CCFLAGS += -std=c++11 ${OPTIM} -Wformat=0 -m64 -fPIC -DUNI_MKL -w -Wno-c++11-narrowing -DMKL_ILP64
   LDFLAGS += $(DOCKER_MKL) -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -ldl -lm 
 else
-  CCFLAGS += -std=c++11 -O3 -Wformat=0 -fPIC -w -Wno-c++11-narrowing 
+  CCFLAGS += -std=c++11 ${OPTIM} -Wformat=0 -fPIC -w -Wno-c++11-narrowing 
   LDFLAGS += -llapacke -lblas -lstdc++  
 endif
 
 
 NVCC:= $(CUDA_PATH)/bin/nvcc -ccbin $(CC)
-NVFLAGS:= -m64 -O3 
+NVFLAGS:= -m64 ${OPTIM} -lineinfo
 SMS ?= 30
 GENCODE_FLAGS:= -arch=sm_$(SMS)
 
@@ -92,7 +92,7 @@ endif
 ALL_LDFLAGS :=
 ifeq ($(GPU_Enable),1)
   LDFLAGS += -lcublas -lcusolver -lcurand -lcudart
-  ALL_LDFLAGS += $(addprefix -Xlinker , $(LDFLAGS))
+  ALL_LDFLAGS += $(addprefix -Xlinker , $(LDFLAGS)) 
   ALL_LDFLAGS += -L$(CUDA_PATH)/lib64
   LDFLAGS += -L$(CUDA_PATH)/lib64 
 else
@@ -148,7 +148,8 @@ all: test
 
 
 #test: test.o $(ALLOBJS)
-#	$(CC) -o $@ $^ $(CCFLAGS) $(LDFLAGS)
+#	#$(CC) -o $@ $^ $(CCFLAGS) $(LDFLAGS)
+#	$(NVCC) $(ALL_CCFLAGS) $(ALL_LDFLAGS) $^ -o $@
 
 test: test.o libcytnx.so
 	$(CC) -L. -o $@ $< -fopenmp $(LDFLAGS) -lcytnx 
