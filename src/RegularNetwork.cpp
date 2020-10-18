@@ -330,7 +330,7 @@ namespace cytnx{
             this->tensors[idx] = utensor.clone();
         }else{
             for(int i=0;i<this->tensors.size();i++)
-                if(this->tensors[i].uten_type()!=UTenType.Void)
+                if(this->tensors[i].uten_type()!=UTenType.Void && i!=idx)
                     cytnx_error_msg(this->tensors[i].same_data(utensor),"[ERROR] [%s] and [%d] has same_data. Network cannot have two tensor with same_data(). If two tensors in a Network has the same data, consider set is_clone on either one of them.\n",this->names[i].c_str(),this->names[idx].c_str());
             
             this->tensors[idx] = utensor;
