@@ -23,6 +23,9 @@ See The following user guide for install and using of cytnx:
 [v0.6.3a](https://github.com/kaihsin/Cytnx/tree/v0.6.3a)
 
 ## Current dev Version:
+    v0.6.4
+    1. [Enhance] Add option mv_elem for Tensordot, which actually move elements in input tensor. This is beneficial when same tensordot is called multiple times.
+    
 
     v0.6.3
     1. [Enhance] Add Device.Ncpus for detecting avaliable omp threads

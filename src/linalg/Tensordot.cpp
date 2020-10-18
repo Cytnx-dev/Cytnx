@@ -4,7 +4,7 @@
 namespace cytnx{
 
     namespace linalg{
-        Tensor Tensordot(const Tensor &Tl, const Tensor &Tr, const std::vector<cytnx_uint64> &idxl, const std::vector<cytnx_uint64> &idxr){
+        Tensor Tensordot(const Tensor &Tl, const Tensor &Tr, const std::vector<cytnx_uint64> &idxl, const std::vector<cytnx_uint64> &idxr, const bool &mv_elem_l, const bool &mv_elem_r){
             //checking:
             cytnx_error_msg(idxl.size() != idxr.size(),"[ERROR] the number of index to trace must be consist across two tensors.%s","\n");
             cytnx_error_msg(idxl.size()==0,"[ERROR] pass empty index list for trace. suggestion: call linalg::Otimes() instead?%s","\n");
@@ -36,14 +36,58 @@ namespace cytnx{
                 new_shape.push_back(1);
             }
 
+            
+            Tensor tmpL = Tl;
+            Tensor tmpR = Tr;
+            
+            std::vector<cytnx_uint64> inv_mapperL,inv_mapperR;
+            std::vector<cytnx_uint64> oldshapeL,oldshapeR;
+            if(mv_elem_l){
+                // calculate reverse mapper:
+                inv_mapperL.resize(mapperL.size());
+                for(int i=0;i<mapperL.size();i++){
+                    inv_mapperL[mapperL[i]] = i;
+                }
+                tmpL.permute_(mapperL); 
+                oldshapeL = tmpL.shape();     
+                tmpL.reshape_({-1,comm_dim});
+                
+            }else{
+                tmpL = Tl.permute(mapperL).reshape({-1,comm_dim});
+            }
+            if(mv_elem_r){
+                // calculate reverse mapper:
+                inv_mapperR.resize(mapperR.size());
+                for(int i=0;i<mapperR.size();i++){
+                    inv_mapperR[mapperR[i]] = i;
+                }
+                tmpR.permute_(mapperR);
+                oldshapeR = tmpR.shape();
+                tmpR.reshape_({comm_dim,-1});
+
+
+
+            }else{
+                tmpR = Tr.permute(mapperR).reshape({comm_dim,-1});
+            }
+
+
             //permute!
-            Tensor tmpL = Tl.permute(mapperL).reshape({-1,comm_dim});
-            Tensor tmpR = Tr.permute(mapperR).reshape({comm_dim,-1});
-            //tmpL.reshape_({-1,comm_dim});
-            //tmpR.reshape_({comm_dim,-1});
-                        
+            //Tensor tmpL = Tl.permute(mapperL).reshape({-1,comm_dim});
+            //Tensor tmpR = Tr.permute(mapperR).reshape({comm_dim,-1});
+          
             Tensor out = Matmul(tmpL,tmpR); 
             out.reshape_(new_shape);
+
+            if(mv_elem_l){
+                tmpL.reshape_(oldshapeL);
+                tmpL.permute_(inv_mapperL);
+            }
+            if(mv_elem_r){
+                tmpR.reshape_(oldshapeR);
+                tmpR.permute_(inv_mapperR);
+            }
+
             
             return out;
 

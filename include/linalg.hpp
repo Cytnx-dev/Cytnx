@@ -569,7 +569,7 @@ namespace cytnx{
             1. the elements in idxl and idxr have one to one correspondence. 
             2. two tensors should on same device.
         */
-        Tensor Tensordot(const Tensor &Tl, const Tensor &Tr, const std::vector<cytnx_uint64> &idxl, const std::vector<cytnx_uint64> &idxr);
+        Tensor Tensordot(const Tensor &Tl, const Tensor &Tr, const std::vector<cytnx_uint64> &idxl, const std::vector<cytnx_uint64> &idxr, const bool &mv_elem_l=false, const bool &mv_elem_r=false);
 
         //Tensordot_dg:
         //==================================================

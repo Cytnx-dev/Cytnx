@@ -4,7 +4,7 @@
 #include <functional>
 
 #include "hptt.h"
-#include "cutt.h"
+//#include "cutt.h"
 using namespace std;
 using namespace cytnx;
 
@@ -78,13 +78,32 @@ int main(int argc, char *argv[]){
     cout << testV << endl;
     */
 
-    auto rS = cytnx::arange(32).reshape(2,2,2,2,2).astype(cytnx::Type.Float).to(cytnx::Device.cuda);
-        
-    auto rD = rS.permute(0,2,1,4,3).contiguous();
-    cout << rD << endl;
+    auto rS = cytnx::arange(24).reshape(2,2,2,3);//.astype(cytnx::Type.Float).to(cytnx::Device.cuda);
+    auto rD = rS + 4;
+
+    auto outSD = cytnx::linalg::Tensordot(rS,rD,{0,2},{2,1});
+    
+    auto rSbak = rS.clone();
+    auto rDbak = rD.clone();
+
+    auto outSDinp = cytnx::linalg::Tensordot(rS,rD,{0,2},{2,1},true,true);
+
+    cout << (outSD == outSDinp);
+    
+    cout << (rS == rSbak);
+    cout << (rD == rDbak);
+
+    cout << "rS" << rS.is_contiguous() << endl;
+    cout << "rD" << rD.is_contiguous() << endl;
+    cout << "rSbak" << rSbak.is_contiguous() << endl;
+    cout << "rDbak" << rDbak.is_contiguous() << endl;
+
+  
+    //auto rD = rS.permute(0,2,1,4,3).contiguous();
+    //cout << rD << endl;
    
-    auto rH = rS.to(cytnx::Device.cpu);
-    cout << rH.permute(0,2,1,4,3).contiguous();
+    //auto rH = rS.to(cytnx::Device.cpu);
+    //cout << rH.permute(0,2,1,4,3).contiguous();
 
     return 0;
 
