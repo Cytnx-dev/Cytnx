@@ -1,0 +1,7 @@
+tensordot with input cache
+*****************************
+
+
+
+
+

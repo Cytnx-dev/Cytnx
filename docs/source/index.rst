@@ -21,7 +21,7 @@ Cytnx user guide and examples
    install.rst
    Guide.rst
    Examples.rst
-
+   Perf_tune.rst
 
 .. toctree::
     API Documentations <https://kaihsin.github.io/Cytnx/docs/html/index.html>   
