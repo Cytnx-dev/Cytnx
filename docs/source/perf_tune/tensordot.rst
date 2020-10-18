@@ -71,7 +71,7 @@ We can clearly see the downside of this: every time **Tensordot()** is called, w
 
 .. Tip::
     
-    You can also choose to only cache either one of the tensor, for example, setting *cacheL=False* and *cacheR=True* will only cache *A* Tensor. 
+    You can also choose to only cache either one of the tensor, for example, setting *cacheL=True* and *cacheR=False* will only cache *A* Tensor. 
 
 In the following we show the performance benchmark with the above code running with Nloop=4000 and average over 10 times of runs.
 
