@@ -2041,6 +2041,10 @@ PYBIND11_MODULE(cytnx,m){
                                     return cytnx::linalg::Lanczos_ER(Hop,k,is_V,maxiter,CvgCrit,is_row,Tin,max_krydim,verbose);
                                 });
 
+    m_linalg.def("c_Lanczos_Gnd",[](LinOp *Hop, const double &CvgCrit, const bool &is_V, const Tensor &Tin, const bool &verbose, const cytnx_uint64 &maxiter){
+                                    return cytnx::linalg::Lanczos_Gnd(Hop,CvgCrit,is_V,Tin,verbose,maxiter);
+                                });
+
     // [Submodule physics]
     pybind11::module m_physics = m.def_submodule("physics","physics related.");
     m_physics.def("spin",[](const cytnx_double &S, const std::string &Comp, const int &device)->Tensor{

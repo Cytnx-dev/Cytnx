@@ -484,23 +484,24 @@ namespace cytnx{
 
         
         //1.5 contraction order:
-        if(optimal==true){
-            // Creat a SearchTree to search for optim contraction order. 
-            SearchTree Stree;
-            Stree.base_nodes.resize(this->tensors.size()); 
-            for(cytnx_uint64 t = 0; t < this->tensors.size(); t ++){
-                Stree.base_nodes[t].from_utensor(this->tensors[t]); //create psudotensors from base tensors
-                Stree.base_nodes[t].accu_str = this->names[t];
-            }
-    
-            Stree.search_order();
-            string Optim_ORDERline = Stree.nodes_container.back()[0].accu_str;
-            this->ORDER_tokens.clear();
-            _parse_ORDER_line_(ORDER_tokens,Optim_ORDERline,999999);
+        if(ORDER_tokens.size()!=0){
+            // *set by user
             CtTree.build_contraction_tree_by_tokens(this->name2pos,ORDER_tokens);
+
         }else{
-            if(ORDER_tokens.size()!=0){ 
-                // *set by user
+            if(optimal==true){
+                // Creat a SearchTree to search for optim contraction order. 
+                SearchTree Stree;
+                Stree.base_nodes.resize(this->tensors.size()); 
+                for(cytnx_uint64 t = 0; t < this->tensors.size(); t ++){
+                    Stree.base_nodes[t].from_utensor(this->tensors[t]); //create psudotensors from base tensors
+                    Stree.base_nodes[t].accu_str = this->names[t];
+                }
+        
+                Stree.search_order();
+                string Optim_ORDERline = Stree.nodes_container.back()[0].accu_str;
+                this->ORDER_tokens.clear();
+                _parse_ORDER_line_(ORDER_tokens,Optim_ORDERline,999999);
                 CtTree.build_contraction_tree_by_tokens(this->name2pos,ORDER_tokens);
             }else{
                 CtTree.build_default_contraction_tree(); 

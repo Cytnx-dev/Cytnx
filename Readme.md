@@ -31,8 +31,8 @@ See The following user guide for install and using of cytnx:
     5. [Enhance] Add Tridiag python API, and option is_row
     6. [Enhance] C++ API storage add .back<>() function. 
     7. [Enhance] C++ API storage fix from_vector() for bool type. 
-    
-
+    8. [Enhance] Change Network Launch optimal=True behavior. if user order is given, optimal will not have effect.   
+    9. [Enhance] Add example/iDMRG/dmrg_optim.py for better performace with Lanczos_Gnd and Network cache.
     
     v0.6.3
     1. [Enhance] Add Device.Ncpus for detecting avaliable omp threads

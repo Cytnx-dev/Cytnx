@@ -6,81 +6,48 @@ Reference: https://arxiv.org/abs/0804.2509v1
 Author: Kai-Hsin Wu 
 """
 
-def Inv_e(a):
-    for i in range(a.shape()[0]):
-        if a[i].item() < 1.0e-15:
-            a[i] = 0;
-        else:
-            a[i] = 1./a[i].item();
-    return a
 
-def Projector(psi, L, M1, M2, R):
-    ''' psi is Tensor, while L,M1,M2,R are UniTensor.
-    Return: h|psi> (Tensor)'''
-    psi_p = cytnx.UniTensor(psi,0) ## share memory, no copy
-    psi_p.reshape_(L.shape()[1],M1.shape()[2],M2.shape()[2],R.shape()[1])
-    anet = cytnx.Network("projector.net")
-    anet.PutUniTensor("M2",M2) 
-    anet.PutUniTensors(["psi","L","M1","R"],[psi_p,L,M1,R],False);
-    H_psi = anet.Launch(optimal=True).get_block_() # get_block_ without copy
-    H_psi.flatten_() # only change meta, without copy.
-    psi.flatten_() ## this just in case psi is something shared. 
-    return H_psi
+class Projector(cytnx.LinOp):
+   
+    
+
+    def __init__(self,L,M1,M2,R,psi_dim,psi_dtype,psi_device):
+        cytnx.LinOp.__init__(self,"mv",psi_dim,psi_dtype,psi_device)
+        
+        self.anet = cytnx.Network("projector.net")
+        self.anet.PutUniTensor("M2",M2)
+        self.anet.PutUniTensors(["L","M1","R"],[L,M1,R],False)
+        self.psi_shape = [L.shape()[1],M1.shape()[2],M2.shape()[2],R.shape()[1]]      
+  
+    def matvec(self,psi):
+        
+        psi_p = cytnx.UniTensor(psi.clone(),0)  ## clone here
+        psi_p.reshape_(*self.psi_shape)
+
+        self.anet.PutUniTensor("psi",psi_p,False) ## no- redundant clone here
+        H_psi = self.anet.Launch(optimal=True).get_block_() # get_block_ without copy
+
+        H_psi.flatten_()
+        return H_psi
 
 
-def eig_Lanczos(psivec, linFunct, functArgs, maxit=2, krydim=4, Cvgcrit=1.0e-14):
+
+def eig_Lanczos(psivec, functArgs, Cvgcrit=1.0e-15,maxit=100000):
     """ Lanczos method for finding smallest algebraic eigenvector of linear \
     operator defined as a function"""
     #print(eig_Lanczos)
 
-    psi_columns = cytnx.zeros([len(psivec), krydim + 1])
-    krylov_matrix = cytnx.zeros([krydim, krydim])
-    Elast = 0
-    cvg = False;
-    for ik in range(maxit):
-        norm = psivec.Norm().item()
-        psi_columns[:, 0] = psivec / norm
-        for ip in range(1, krydim + 1):
+    Hop = Projector(*functArgs,psivec.shape()[0],psivec.dtype(),psivec.device())
+    gs_energy ,psivec = cytnx.linalg.Lanczos_Gnd(Hop,Cvgcrit,Tin=psivec,maxiter=maxit)
 
-
-            psi_columns[:, ip] = linFunct(psi_columns[:, ip - 1], *functArgs)
-            for ig in range(ip):
-                krylov_matrix[ip - 1, ig] = cytnx.linalg.Dot(psi_columns[:, ip], psi_columns[:, ig])
-                krylov_matrix[ig, ip - 1] = krylov_matrix[ip - 1, ig]
-
-            for ig in range(ip):
-                # print(cytnx.linalg.Dot(psi_columns[:, ig], psi_columns[:, ip]))
-                vp = psi_columns[:, ip];
-                vg = psi_columns[:, ig]
-                vp = vp - cytnx.linalg.Dot(vg, vp).item()*vg;
-
-                # print('psi_columns[:,ip].reshape(-1).Norm().item() = ', psi_columns[:,ip].reshape(-1).Norm().item())
-                norm =  vp.Norm().item()
-                psi_columns[:, ip] = vp / norm ## only access set() once!! 
-
-        [energy, psi_columns_basis] = cytnx.linalg.Eigh(krylov_matrix)
-        psivec = cytnx.linalg.Matmul(psi_columns[:, :krydim],psi_columns_basis[:, 0].reshape(krydim,1)).flatten()
-        if(abs(energy[0].item() -Elast)<Cvgcrit):
-            cvg = True
-            break
-        Elast = energy[0].item()
-        
-
-    if(cvg==False):
-        print("[WARNING!!] Lanczos does not fully converge!")
-
-    norm = psivec.Norm().item()
-    psivec = psivec / norm
-    gs_energy = energy[0].item()
-    return psivec, gs_energy
-
+    return psivec, gs_energy.item()
+    
 
 
 ##### Set bond dimensions and simulation options
 chi = 64;
 Niter = 100; # number of iteration of DMRG
-maxit = 10000 # iterations of Lanczos method
-krydim = 4 # dimension of Krylov subspace
+maxit = 100000 # iterations of Lanczos method
 
 ## Initialiaze MPO 
 ##>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -149,7 +116,7 @@ R = R0
 psi = cytnx.UniTensor(cytnx.random.normal([1,d,d,1],1,2),2)
 shp = psi.shape()
 psi_T = psi.get_block_(); psi_T.flatten_() ## flatten to 1d
-psi_T, Entemp = eig_Lanczos(psi_T, Projector, (L,M,M,R), maxit, krydim);
+psi_T, Entemp = eig_Lanczos(psi_T, (L,M,M,R), maxit=maxit);
 psi_T.reshape_(*shp)
 psi = cytnx.UniTensor(psi_T,2)
 
@@ -197,7 +164,7 @@ R = anet.Launch(optimal=True)
 psi = cytnx.UniTensor(cytnx.random.normal([d,d,d,d],0,2),2)
 shp = psi.shape()
 psi_T = psi.get_block_(); psi_T.flatten_() ## flatten to 1d
-psi_T, Entemp = eig_Lanczos(psi_T, Projector, (L,M,M,R), maxit, krydim);
+psi_T, Entemp = eig_Lanczos(psi_T, (L,M,M,R), maxit=maxit);
 psi_T.reshape_(*shp)
 psi = cytnx.UniTensor(psi_T,2)
 s1,A,B = cytnx.linalg.Svd_truncate(psi,min(chi,d*d))
@@ -310,7 +277,7 @@ for i in range(Niter):
     #
     shp = psi.shape()
     psi_T = psi.get_block_(); psi_T.flatten_() ## flatten to 1d
-    psi_T, Entemp = eig_Lanczos(psi_T, Projector, (L,M,M,R), maxit, krydim);
+    psi_T, Entemp = eig_Lanczos(psi_T, (L,M,M,R), maxit=maxit);
     psi_T.reshape_(*shp)
     psi = cytnx.UniTensor(psi_T,2)
     s2,A,B = cytnx.linalg.Svd_truncate(psi,min(chi,psi.shape()[0]*psi.shape()[1]))
