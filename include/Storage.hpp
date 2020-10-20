@@ -58,12 +58,17 @@ namespace cytnx{
             template<class T>
             T& at(const cytnx_uint64 &idx) const;
             
+            template<class T>
+            T& back() const;
+            
             template<class T>   
             T* data() const;
             
             void* data() const{
                 return this->Mem;
             }
+
+            void _cpy_bool(void *ptr, const std::vector<cytnx_bool> &vin);
 
             void print();
             void print_info();
@@ -897,9 +902,14 @@ namespace cytnx{
             ///@cond
             template<class T> // this is c++ only
             T& at(const unsigned int &idx) const{
-                cytnx_error_msg(idx>=this->size(),"[ERROR] trying to access elements out of bound.%s","\n");
                 return this->_impl->at<T>(idx);
             }
+
+            template<class T> // this is c++ only
+            T& back() const{
+                return this->_impl->back<T>();
+            }
+
 
             template<class T> // this is c++ only
             T* data() const{
@@ -1052,37 +1062,71 @@ namespace cytnx{
             }
 
             /// @cond
+            
             template<class T>
             void _from_vector(const std::vector<T> &vin,const int device=-1){
                 //auto dispatch:
                 //check:
-                if(typeid(T) == typeid(cytnx_float)){
-                   this->_impl = __SII.USIInit[Type.Float]();
-                }else if(typeid(T) == typeid(cytnx_double)){
-                   this->_impl = __SII.USIInit[Type.Double]();
-                }else if(typeid(T) == typeid(cytnx_uint64)){
-                   this->_impl = __SII.USIInit[Type.Uint64]();
-                }else if(typeid(T) == typeid(cytnx_uint32)){
-                   this->_impl = __SII.USIInit[Type.Uint32]();
-                }else if(typeid(T) == typeid(cytnx_int64)){
-                   this->_impl = __SII.USIInit[Type.Int64]();
-                }else if(typeid(T) == typeid(cytnx_int32)){
-                   this->_impl = __SII.USIInit[Type.Int32]();
-                }else if(typeid(T) == typeid(cytnx_complex128)){
-                   this->_impl = __SII.USIInit[Type.ComplexDouble]();
-                }else if(typeid(T) == typeid(cytnx_complex64)){
-                   this->_impl = __SII.USIInit[Type.ComplexFloat]();
-                }else if(typeid(T) == typeid(cytnx_int16)){
-                   this->_impl = __SII.USIInit[Type.Int16]();
-                }else if(typeid(T) == typeid(cytnx_uint16)){
-                   this->_impl = __SII.USIInit[Type.Uint16]();
-                }else if(typeid(T) == typeid(cytnx_bool)){
-                   this->_impl = __SII.USIInit[Type.Bool]();
-                }else{
-                    cytnx_error_msg(1,"[FATAL] ERROR unsupport type%s","\n");
-                }
+                cytnx_error_msg(1,"[FATAL] ERROR unsupport type%s","\n");
+                //this->_impl->Init(vin.size(),device);
+                //memcpy(this->_impl->Mem,&vin[0],sizeof(T)*vin.size());
+            }
+            
+            void _from_vector(const std::vector<cytnx_complex128> &vin, const int device=-1){
+                this->_impl = __SII.USIInit[Type.ComplexDouble]();
                 this->_impl->Init(vin.size(),device);
-                memcpy(this->_impl->Mem,&vin[0],sizeof(T)*vin.size());
+                memcpy(this->_impl->Mem,&vin[0],sizeof(cytnx_complex128)*vin.size());
+            }
+            void _from_vector(const std::vector<cytnx_complex64> &vin, const int device=-1){
+                this->_impl = __SII.USIInit[Type.ComplexFloat]();
+                this->_impl->Init(vin.size(),device);
+                memcpy(this->_impl->Mem,&vin[0],sizeof(cytnx_complex64)*vin.size());
+            }
+            void _from_vector(const std::vector<cytnx_double> &vin, const int device=-1){
+                this->_impl = __SII.USIInit[Type.Double]();
+                this->_impl->Init(vin.size(),device);
+                memcpy(this->_impl->Mem,&vin[0],sizeof(cytnx_double)*vin.size());
+            }
+            void _from_vector(const std::vector<cytnx_float> &vin, const int device=-1){
+                this->_impl = __SII.USIInit[Type.Float]();
+                this->_impl->Init(vin.size(),device);
+                memcpy(this->_impl->Mem,&vin[0],sizeof(cytnx_float)*vin.size());
+            }
+            void _from_vector(const std::vector<cytnx_uint64> &vin, const int device=-1){
+                this->_impl = __SII.USIInit[Type.Uint64]();
+                this->_impl->Init(vin.size(),device);
+                memcpy(this->_impl->Mem,&vin[0],sizeof(cytnx_uint64)*vin.size());
+            }
+            void _from_vector(const std::vector<cytnx_int64> &vin, const int device=-1){
+                this->_impl = __SII.USIInit[Type.Int64]();
+                this->_impl->Init(vin.size(),device);
+                memcpy(this->_impl->Mem,&vin[0],sizeof(cytnx_int64)*vin.size());
+            }
+            void _from_vector(const std::vector<cytnx_uint32> &vin, const int device=-1){
+                this->_impl = __SII.USIInit[Type.Uint32]();
+                this->_impl->Init(vin.size(),device);
+                memcpy(this->_impl->Mem,&vin[0],sizeof(cytnx_uint32)*vin.size());
+            }
+            void _from_vector(const std::vector<cytnx_int32> &vin, const int device=-1){
+                this->_impl = __SII.USIInit[Type.Int32]();
+                this->_impl->Init(vin.size(),device);
+                memcpy(this->_impl->Mem,&vin[0],sizeof(cytnx_int32)*vin.size());
+            }
+            void _from_vector(const std::vector<cytnx_uint16> &vin, const int device=-1){
+                this->_impl = __SII.USIInit[Type.Uint16]();
+                this->_impl->Init(vin.size(),device);
+                memcpy(this->_impl->Mem,&vin[0],sizeof(cytnx_uint16)*vin.size());
+            }
+            void _from_vector(const std::vector<cytnx_int16> &vin, const int device=-1){
+                this->_impl = __SII.USIInit[Type.Int16]();
+                this->_impl->Init(vin.size(),device);
+                memcpy(this->_impl->Mem,&vin[0],sizeof(cytnx_int16)*vin.size());
+            }
+            void _from_vector(const std::vector<cytnx_bool> &vin, const int device=-1){
+                this->_impl = __SII.USIInit[Type.Bool]();
+                this->_impl->Init(vin.size(),device);
+                this->_impl->_cpy_bool(this->_impl->Mem,vin);
+                //memcpy(this->_impl->Mem,vin.data(),sizeof(cytnx_bool)*vin.size());
             }
             /// @endcond            
 

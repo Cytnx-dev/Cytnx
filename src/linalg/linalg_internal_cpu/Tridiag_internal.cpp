@@ -10,7 +10,7 @@ namespace cytnx{
             
             char job;
             job = (U->dtype ==Type.Void) ? 'N': 'V';
-            std::cout << L << std::endl;       
+            //std::cout << L << std::endl;       
             //copy from in to S[out]     
             memcpy(S->Mem,diag->Mem, L * sizeof(cytnx_double));
 
@@ -37,7 +37,7 @@ namespace cytnx{
 
             char job;
             job = (U->dtype ==Type.Void) ? 'N': 'V';
-            std::cout << L << std::endl;       
+            //std::cout << L << std::endl;       
             //copy from in to S[out]     
             memcpy(S->Mem,diag->Mem, L * sizeof(cytnx_float));
 

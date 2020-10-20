@@ -27,8 +27,13 @@ See The following user guide for install and using of cytnx:
     1. [Enhance] Add option mv_elem for Tensordot, which actually move elements in input tensor. This is beneficial when same tensordot is called multiple times.
     2. [Enhance] Add option cacheL, cacheR to Contract of unitensor. which mv the elements of input tensors to the matmul handy position. 
     3. [Enhance] optimize Network contraction policy to reduce contiguous permute, with is_clone argument when PutUniTensor.
+    4. [Enhance] Add Lanczos_Gnd for fast get ground state and it's eigen value (currently only real float). 
+    5. [Enhance] Add Tridiag python API, and option is_row
+    6. [Enhance] C++ API storage add .back<>() function. 
+    7. [Enhance] C++ API storage fix from_vector() for bool type. 
     
 
+    
     v0.6.3
     1. [Enhance] Add Device.Ncpus for detecting avaliable omp threads
     2. [Enhance] Add HPTT support on CPU permute.

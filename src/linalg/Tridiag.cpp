@@ -4,7 +4,7 @@
 
 namespace cytnx{
     namespace linalg{
-        std::vector<Tensor> Tridiag(const Tensor &Diag, const Tensor &Sub_diag, const bool &is_V){
+        std::vector<Tensor> Tridiag(const Tensor &Diag, const Tensor &Sub_diag, const bool &is_V, const bool &is_row){
             
             cytnx_error_msg(Diag.shape().size() != 1,"[Tridiag] error, Tridiag can only accept on vector (rank-1) Tensor.%s","\n");
             //cytnx_error_msg(!Diag.is_contiguous(), "[Tridiag] error tensor [#1][Diag] must be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
@@ -48,7 +48,12 @@ namespace cytnx{
                 
                 std::vector<Tensor> out;
                 out.push_back(S);
-                if(is_V) out.push_back(vT);
+                if(is_V){
+                    out.push_back(vT);
+                    if(!is_row)
+                        out.back().permute_(1,0);
+                    
+                }
                 
                 return out;
 

@@ -600,6 +600,11 @@ namespace cytnx{
     Tensor operator/<cytnx_bool>(const cytnx_bool &lc, const Tensor &Rt){
         return cytnx::linalg::Div(lc,Rt);
     }
+    template<>
+    Tensor operator/<Tensor::Tproxy>(const Tensor::Tproxy &lc, const Tensor &Rt){
+        return lc.operator/(Rt);
+    }
+
 
     template<>
     Tensor operator/<cytnx_complex128>(const Tensor &Lt, const cytnx_complex128 &rc){

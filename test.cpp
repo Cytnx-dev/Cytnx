@@ -63,6 +63,22 @@ class MyOp: public LinOp{
 
 };
 
+class MyOp2: public LinOp{
+    public:
+        
+        Tensor H;
+        MyOp2(int dtype,const Tensor &Hin):
+            LinOp("mv",4,dtype,Device.cpu){ //invoke base class constructor!
+            H = Hin.clone();
+        }
+
+        Tensor matvec(const Tensor &in){
+            return linalg::Dot(this->H,in);
+        }
+
+};
+
+
 #define cuttCheck(stmt) do {                                 \
   cuttResult err = stmt;                            \
   if (err != CUTT_SUCCESS) {                          \
@@ -70,7 +86,10 @@ class MyOp: public LinOp{
     exit(1); \
   }                                                  \
 } while(0)
- 
+
+
+
+
 int main(int argc, char *argv[]){
     /*
     vector<int> testV = {0,2,1};
@@ -78,6 +97,7 @@ int main(int argc, char *argv[]){
     cout << testV << endl;
     */
 
+    /*
     auto rS = cytnx::arange(24).reshape(2,2,2,3);///.astype(cytnx::Type.Float).to(cytnx::Device.cuda);
     auto rD = rS + 4;
  
@@ -86,7 +106,41 @@ int main(int argc, char *argv[]){
     for(int i=0;i<4;i++){
         auto outSD = cytnx::linalg::Tensordot(rS,rD,{0,2},{2,1},true,true);
     }
-        
+    */
+
+    auto rS = cytnx::arange(16).reshape(4,4);
+    rS += rS.permute(1,0);
+
+    print(rS);
+    print(linalg::Eigh(rS));
+    auto Opi = MyOp2(rS.dtype(),rS);
+    
+    print(linalg::Lanczos_ER(&Opi,1,true,100000,1.0e-14,false,Tensor(),3));
+    
+
+    print(linalg::Lanczos_Gnd(&Opi,1.0e-14,true,ones(4),true,100000));
+
+    //return 0;
+    cout << "==========" << endl;
+    auto As = 3*ones(4);
+    auto Bs = -1*ones(3);
+    auto rds = zeros({4,4});
+    for(int i=0;i<Bs.shape()[0];i++){
+        rds(i,i) = As(i)/2;   
+        rds(i,i+1) = Bs(i);
+    }
+    rds(3,3) = As(3)/2;
+    rds += rds.permute(1,0);
+ 
+    print(As);
+    print(Bs);
+    print(rds);
+
+    print("rsss");
+    print(linalg::Eigh(rds));
+ 
+    print(linalg::Tridiag(As,Bs,true));
+
     /*
     auto rSbak = rS.clone();
     auto rDbak = rD.clone();

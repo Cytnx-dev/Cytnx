@@ -303,7 +303,8 @@ namespace cytnx{
 
             return out;
         }
-        
+       
+ 
         template<>
         Tensor Add<Scalar>(const Scalar &lc, const Tensor &Rt){
             Storage Cnst(1,lc.dtype());
@@ -431,7 +432,10 @@ namespace cytnx{
     Tensor operator+<cytnx_bool>(const cytnx_bool &lc, const Tensor &Rt){
         return linalg::Add(lc,Rt);
     }
-
+    template<>
+    Tensor operator+<Tensor::Tproxy>(const Tensor::Tproxy &lc, const Tensor &Rt){
+        return lc.operator+(Rt);
+    }
 
 
     template<>

@@ -432,11 +432,17 @@ namespace cytnx{
                 }else if(Hop->dtype()==Type.Double){
                     _Lanczos_ER_d(out,Hop, buffer,k,is_V,max_krydim,maxiter,CvgCrit,verbose);
                 }else if(Hop->dtype()==Type.ComplexFloat){
-                    cytnx_error_msg(CvgCrit<1.0e-7,"[ERROR][CvgCrit] for float precision type, CvgCrit cannot exceed it's own type precision limit 1e-7.%s","\n");
-                    _Lanczos_ER_cf(out,Hop, buffer,k,is_V,max_krydim,maxiter,CvgCrit,verbose);
+                    cytnx_warning_msg(CvgCrit<1.0e-7,"[ERROR][CvgCrit] for float precision type, CvgCrit cannot exceed it's own type precision limit 1e-7, and it's auto capped to 1.0e-7.%s","\n");
+                    if(CvgCrit<1.0e-7)
+                        _Lanczos_ER_cf(out,Hop, buffer,k,is_V,max_krydim,maxiter,1.0e-7,verbose);
+                    else
+                        _Lanczos_ER_cf(out,Hop, buffer,k,is_V,max_krydim,maxiter,CvgCrit,verbose);
                 }else{
-                    cytnx_error_msg(CvgCrit<1.0e-7,"[ERROR][CvgCrit] for float precision type, CvgCrit cannot exceed it's own type precision limit 1e-7.%s","\n");
-                    _Lanczos_ER_f(out,Hop, buffer,k,is_V,max_krydim,maxiter,CvgCrit,verbose);
+                    cytnx_warning_msg(CvgCrit<1.0e-7,"[ERROR][CvgCrit] for float precision type, CvgCrit cannot exceed it's own type precision limit 1e-7, and it's auto capped to 1.0e-7.%s","\n");
+                    if(CvgCrit<1.0e-7)
+                        _Lanczos_ER_f(out,Hop, buffer,k,is_V,max_krydim,maxiter,1.0e-7,verbose);
+                    else
+                        _Lanczos_ER_f(out,Hop, buffer,k,is_V,max_krydim,maxiter,CvgCrit,verbose);
                 }
 
                 if(!is_row){

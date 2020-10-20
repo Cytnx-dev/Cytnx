@@ -562,6 +562,8 @@ namespace cytnx{
         @param Tr Tensor #2
         @param idxl the indices of rank of Tensor #1 that is going to sum with Tensor #2
         @param idxr the indices of rank of Tensor #2 that is going to sum with Tensor #1
+        @param cacheL cache Tensor #1 (See user-guide for details)
+        @param cacheR cache Tensor #2 (See user-guide for details)
         @return 
             [Tensor]
 
@@ -569,7 +571,7 @@ namespace cytnx{
             1. the elements in idxl and idxr have one to one correspondence. 
             2. two tensors should on same device.
         */
-        Tensor Tensordot(const Tensor &Tl, const Tensor &Tr, const std::vector<cytnx_uint64> &idxl, const std::vector<cytnx_uint64> &idxr, const bool &mv_elem_l=false, const bool &mv_elem_r=false);
+        Tensor Tensordot(const Tensor &Tl, const Tensor &Tr, const std::vector<cytnx_uint64> &idxl, const std::vector<cytnx_uint64> &idxr, const bool &cacheL=false, const bool &cacheR=false);
 
         //Tensordot_dg:
         //==================================================
@@ -694,7 +696,7 @@ namespace cytnx{
             performance tune: This function have better performance when two vectors with same types, and are one of following type: cytnx_double, cytnx_float. In general all real type can be use as input, which will be promote to floating point type for calculation.  
             
         */
-        std::vector<Tensor> Tridiag(const Tensor &Diag, const Tensor &Sub_diag, const bool &is_V=false);
+        std::vector<Tensor> Tridiag(const Tensor &Diag, const Tensor &Sub_diag, const bool &is_V=true, const bool &is_row=false);
 
 
 
@@ -748,6 +750,7 @@ namespace cytnx{
         @param is_row whether the return eigen vectors should be in row-major form. 
         @param Tin the initial vector, this should be rank-1
         @param max_krydim the maximum krylov subspace dimension for each iteration.
+        @param verbose print out iteration info.
         @return 
             [eigvals (Tensor), eigvecs (Tensor)(option)] 
 
@@ -762,8 +765,27 @@ namespace cytnx{
         */
         std::vector<Tensor> Lanczos_ER(LinOp *Hop, const cytnx_uint64 &k=1, const bool &is_V=true, const cytnx_uint64 &maxiter=10000, const double &CvgCrit=1.0e-14, const bool &is_row=false, const Tensor &Tin=Tensor(), const cytnx_uint32 &max_krydim=4, const bool &verbose=false);
 
+        //Lanczos:
+        //===========================================
+        /**
+        @brief perform Lanczos for hermitian/symmetric matrices or linear function to get ground state and lowest eigen value
+        @param Hop the Linear Operator defined by LinOp class or it's inheritance (see LinOp).
+        @param CvgCrit the convergence criterion of the energy.
+        @param is_V if set to true, the eigen vectors will be returned.
+        @param Tin the initial vector, this should be rank-1
+        @param verbose print out iteration info.
+        @param maxiter the maximum interation steps for each k.
+        @return 
+            [eigvals (Tensor), eigvecs (Tensor)(option)] 
 
-
+        #description:
+            This function calculate the eigen value problem using naive Lanczos to get ground state and lowest eigen value. 
+         
+   
+        #[Note]
+            To use, define a linear operator with LinOp class either by assign a custom function or create a class that inherit LinOp (see LinOp for further details)            
+        */
+        std::vector<Tensor> Lanczos_Gnd(LinOp *Hop, const double &CvgCrit=1.0e-14, const bool &is_V=true, const Tensor &Tin=Tensor(), const bool &verbose=false, const unsigned int &Maxiter=100000);
     }// namespace linalg
     
 

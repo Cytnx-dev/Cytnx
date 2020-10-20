@@ -692,6 +692,11 @@ namespace cytnx {
     Tensor operator-<cytnx_bool>(const cytnx_bool &lc, const Tensor &Rt){
         return cytnx::linalg::Sub(lc,Rt);
     }
+    template<>
+    Tensor operator-<Tensor::Tproxy>(const Tensor::Tproxy &lc, const Tensor &Rt){
+        return lc.operator-(Rt);
+    }
+
 
     template<>
     Tensor operator-<cytnx_complex128>(const Tensor &Lt, const cytnx_complex128 &rc){
@@ -737,7 +742,6 @@ namespace cytnx {
     Tensor operator-<cytnx_bool>(const Tensor &Lt, const cytnx_bool &rc){
        return cytnx::linalg::Sub(Lt,rc);
     }
-
 
 }//cytnx
 

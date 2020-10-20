@@ -50,7 +50,7 @@ namespace cytnx{
             Tensor_impl(): _contiguous(true){};
 
             void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype=Type.Double, int device=-1);
-                
+            void Init(const Storage &in);                
             /*
             template<class T>
             void From_vec(const T &ndvec){
@@ -539,11 +539,19 @@ namespace cytnx{
                 this->_impl = tmp;
                 this->_impl->Init(shape,dtype,device);
             }
-
             Tensor(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype=Type.Double, const int &device=-1):_impl(new Tensor_impl()){
                 this->Init(shape,dtype,device);
-            } 
+            }
             //@}
+
+            static Tensor from_storage(const Storage &in){
+                Tensor out;
+                boost::intrusive_ptr<Tensor_impl> tmp(new Tensor_impl());
+                out._impl = tmp;
+                out._impl->Init(in);
+                return out;
+            }
+            
 
             /**
             @brief the dtype-id of the Tensor
@@ -839,6 +847,8 @@ namespace cytnx{
                 return out;
             }
 
+
+            
             //Tensor diagonal(){
             //    for(unsigned int i=0;i<this->shape().size();i++){
             //        if(this->shape()[i] != this->shape()[0],"[ERROR] Tensor.diagonal() can only be called when the subject has equal dimension in each rank.%s","\n");

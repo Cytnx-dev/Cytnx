@@ -91,6 +91,14 @@ namespace cytnx{
         this->_contiguous = true;
 
     }
+    void Tensor_impl::Init(const Storage &in){
+        cytnx_error_msg(in.dtype()==Type.Void,"[ERROR] cannot init Tensor using un-initialized Storage%s","\n");
+        this->_storage = in;
+        this->_shape.clear(); this->_shape.push_back(in.size());
+        this->_mapper.clear(); this->_mapper.push_back(0);
+        this->_invmapper = this->_mapper;
+        this->_contiguous=true;
+    }    
 
 
     boost::intrusive_ptr<Tensor_impl> Tensor_impl::permute(const std::vector<cytnx_uint64> &rnks){

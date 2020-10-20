@@ -506,6 +506,7 @@ namespace cytnx{
     template<>
     float& Storage_base::at<float>(const cytnx_uint64 &idx) const{
         cytnx_error_msg(dtype != Type.Float, "[ERROR] type mismatch. try to get <float> type from raw data of type %s", Type.getname(dtype).c_str());
+        cytnx_error_msg(idx>=this->len, "[ERROR] index [%d] out of bound [%d]\n",idx,this->len);
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -515,6 +516,7 @@ namespace cytnx{
     template<>
     double& Storage_base::at<double>(const cytnx_uint64 &idx)const{
         cytnx_error_msg(dtype != Type.Double, "[ERROR] type mismatch. try to get <double> type from raw data of type %s", Type.getname(dtype).c_str());
+        cytnx_error_msg(idx>=this->len, "[ERROR] index [%d] out of bound [%d]\n",idx,this->len);
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -524,6 +526,7 @@ namespace cytnx{
     template<>
     std::complex<float>& Storage_base::at<std::complex<float> >(const cytnx_uint64 &idx)const{
         cytnx_error_msg(dtype != Type.ComplexFloat, "[ERROR] type mismatch. try to get < complex<float> > type from raw data of type %s", Type.getname(dtype).c_str());
+        cytnx_error_msg(idx>=this->len, "[ERROR] index [%d] out of bound [%d]\n",idx,this->len);
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -535,6 +538,7 @@ namespace cytnx{
     template<>
     std::complex<double>& Storage_base::at<std::complex<double> >(const cytnx_uint64 &idx)const{
         cytnx_error_msg(dtype != Type.ComplexDouble, "[ERROR] type mismatch. try to get < complex<double> > type from raw data of type %s", Type.getname(dtype).c_str());
+        cytnx_error_msg(idx>=this->len, "[ERROR] index [%d] out of bound [%d]\n",idx,this->len);
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -545,6 +549,7 @@ namespace cytnx{
     template<>
     uint32_t& Storage_base::at<uint32_t>(const cytnx_uint64 &idx)const{
         cytnx_error_msg(dtype != Type.Uint32, "[ERROR] type mismatch. try to get <uint32_t> type from raw data of type %s", Type.getname(dtype).c_str());
+        cytnx_error_msg(idx>=this->len, "[ERROR] index [%d] out of bound [%d]\n",idx,this->len);
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -554,6 +559,7 @@ namespace cytnx{
     template<>
     int32_t& Storage_base::at<int32_t>(const cytnx_uint64 &idx)const{
         cytnx_error_msg(dtype != Type.Int32, "[ERROR] type mismatch. try to get <int32_t> type from raw data of type %s", Type.getname(dtype).c_str());
+        cytnx_error_msg(idx>=this->len, "[ERROR] index [%d] out of bound [%d]\n",idx,this->len);
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -563,6 +569,7 @@ namespace cytnx{
     template<>
     uint64_t& Storage_base::at<uint64_t>(const cytnx_uint64 &idx) const{
         cytnx_error_msg(dtype != Type.Uint64, "[ERROR] type mismatch. try to get <uint64_t> type from raw data of type %s", Type.getname(dtype).c_str());
+        cytnx_error_msg(idx>=this->len, "[ERROR] index [%d] out of bound [%d]\n",idx,this->len);
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -572,6 +579,7 @@ namespace cytnx{
     template<>
     int64_t& Storage_base::at<int64_t>(const cytnx_uint64 &idx)const{
         cytnx_error_msg(dtype != Type.Int64, "[ERROR] type mismatch. try to get <int64_t> type from raw data of type %s", Type.getname(dtype).c_str());
+        cytnx_error_msg(idx>=this->len, "[ERROR] index [%d] out of bound [%d]\n",idx,this->len);
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -581,6 +589,7 @@ namespace cytnx{
     template<>
     uint16_t& Storage_base::at<uint16_t>(const cytnx_uint64 &idx)const{
         cytnx_error_msg(dtype != Type.Uint16, "[ERROR] type mismatch. try to get <uint16_t> type from raw data of type %s", Type.getname(dtype).c_str());
+        cytnx_error_msg(idx>=this->len, "[ERROR] index [%d] out of bound [%d]\n",idx,this->len);
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -590,6 +599,7 @@ namespace cytnx{
     template<>
     int16_t& Storage_base::at<int16_t>(const cytnx_uint64 &idx)const{
         cytnx_error_msg(dtype != Type.Int16, "[ERROR] type mismatch. try to get <int16_t> type from raw data of type %s", Type.getname(dtype).c_str());
+        cytnx_error_msg(idx>=this->len, "[ERROR] index [%d] out of bound [%d]\n",idx,this->len);
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
@@ -599,10 +609,138 @@ namespace cytnx{
     template<>
     bool& Storage_base::at<bool>(const cytnx_uint64 &idx)const{
         cytnx_error_msg(dtype != Type.Bool, "[ERROR] type mismatch. try to get <bool> type from raw data of type %s", Type.getname(dtype).c_str());
+        cytnx_error_msg(idx>=this->len, "[ERROR] index [%d] out of bound [%d]\n",idx,this->len);
     #ifdef UNI_GPU
         cudaDeviceSynchronize();
     #endif
         return static_cast<bool*>(this->Mem)[idx];
+    }
+
+    //instantiation:
+    //====================================================
+    template<>
+    float& Storage_base::back<float>() const{
+        cytnx_error_msg(dtype != Type.Float, "[ERROR] type mismatch. try to get <float> type from raw data of type %s", Type.getname(dtype).c_str());
+        cytnx_error_msg(this->len==0,"[ERROR] cannot call back on empty stoarge.%s","\n");
+
+        #ifdef UNI_GPU
+            cudaDeviceSynchronize();
+        #endif
+        return static_cast<float*>(this->Mem)[this->len-1];
+    }
+
+    template<>
+    double& Storage_base::back<double>()const{
+        cytnx_error_msg(dtype != Type.Double, "[ERROR] type mismatch. try to get <double> type from raw data of type %s", Type.getname(dtype).c_str());
+        cytnx_error_msg(this->len==0,"[ERROR] cannot call back on empty stoarge.%s","\n");
+    #ifdef UNI_GPU
+        cudaDeviceSynchronize();
+    #endif
+        return static_cast<double*>(this->Mem)[this->len-1];
+    }
+
+    template<>
+    std::complex<float>& Storage_base::back<std::complex<float> >()const{
+        cytnx_error_msg(dtype != Type.ComplexFloat, "[ERROR] type mismatch. try to get < complex<float> > type from raw data of type %s", Type.getname(dtype).c_str());
+        cytnx_error_msg(this->len==0,"[ERROR] cannot call back on empty stoarge.%s","\n");
+    #ifdef UNI_GPU
+        cudaDeviceSynchronize();
+    #endif
+
+        return static_cast<complex<float>*>(this->Mem)[this->len-1];
+    }
+
+
+    template<>
+    std::complex<double>& Storage_base::back<std::complex<double> >()const{
+        cytnx_error_msg(dtype != Type.ComplexDouble, "[ERROR] type mismatch. try to get < complex<double> > type from raw data of type %s", Type.getname(dtype).c_str());
+        cytnx_error_msg(this->len==0,"[ERROR] cannot call back on empty stoarge.%s","\n");
+    #ifdef UNI_GPU
+        cudaDeviceSynchronize();
+    #endif
+        return static_cast<complex<double>*>(this->Mem)[this->len-1];
+    }
+
+
+    template<>
+    uint32_t& Storage_base::back<uint32_t>()const{
+        cytnx_error_msg(dtype != Type.Uint32, "[ERROR] type mismatch. try to get <uint32_t> type from raw data of type %s", Type.getname(dtype).c_str());
+        cytnx_error_msg(this->len==0,"[ERROR] cannot call back on empty stoarge.%s","\n");
+    #ifdef UNI_GPU
+        cudaDeviceSynchronize();
+    #endif
+        return static_cast<uint32_t*>(this->Mem)[this->len-1];
+    }
+
+    template<>
+    int32_t& Storage_base::back<int32_t>()const{
+        cytnx_error_msg(dtype != Type.Int32, "[ERROR] type mismatch. try to get <int32_t> type from raw data of type %s", Type.getname(dtype).c_str());
+        cytnx_error_msg(this->len==0,"[ERROR] cannot call back on empty stoarge.%s","\n");
+    #ifdef UNI_GPU
+        cudaDeviceSynchronize();
+    #endif
+        return static_cast<int32_t*>(this->Mem)[this->len-1];
+    }
+
+    template<>
+    uint64_t& Storage_base::back<uint64_t>() const{
+        cytnx_error_msg(dtype != Type.Uint64, "[ERROR] type mismatch. try to get <uint64_t> type from raw data of type %s", Type.getname(dtype).c_str());
+        cytnx_error_msg(this->len==0,"[ERROR] cannot call back on empty stoarge.%s","\n");
+    #ifdef UNI_GPU
+        cudaDeviceSynchronize();
+    #endif
+        return static_cast<uint64_t*>(this->Mem)[this->len-1];
+    }
+
+    template<>
+    int64_t& Storage_base::back<int64_t>()const{
+        cytnx_error_msg(dtype != Type.Int64, "[ERROR] type mismatch. try to get <int64_t> type from raw data of type %s", Type.getname(dtype).c_str());
+        cytnx_error_msg(this->len==0,"[ERROR] cannot call back on empty stoarge.%s","\n");
+    #ifdef UNI_GPU
+        cudaDeviceSynchronize();
+    #endif
+        return static_cast<int64_t*>(this->Mem)[this->len-1];
+    }
+
+    template<>
+    uint16_t& Storage_base::back<uint16_t>()const{
+        cytnx_error_msg(dtype != Type.Uint16, "[ERROR] type mismatch. try to get <uint16_t> type from raw data of type %s", Type.getname(dtype).c_str());
+        cytnx_error_msg(this->len==0,"[ERROR] cannot call back on empty stoarge.%s","\n");
+    #ifdef UNI_GPU
+        cudaDeviceSynchronize();
+    #endif
+        return static_cast<uint16_t*>(this->Mem)[this->len-1];
+    }
+
+    template<>
+    int16_t& Storage_base::back<int16_t>()const{
+        cytnx_error_msg(dtype != Type.Int16, "[ERROR] type mismatch. try to get <int16_t> type from raw data of type %s", Type.getname(dtype).c_str());
+        cytnx_error_msg(this->len==0,"[ERROR] cannot call back on empty stoarge.%s","\n");
+    #ifdef UNI_GPU
+        cudaDeviceSynchronize();
+    #endif
+        return static_cast<int16_t*>(this->Mem)[this->len-1];
+    }
+
+    template<>
+    bool& Storage_base::back<bool>()const{
+        cytnx_error_msg(dtype != Type.Bool, "[ERROR] type mismatch. try to get <bool> type from raw data of type %s", Type.getname(dtype).c_str());
+        cytnx_error_msg(this->len==0,"[ERROR] cannot call back on empty stoarge.%s","\n");
+    #ifdef UNI_GPU
+        cudaDeviceSynchronize();
+    #endif
+        return static_cast<bool*>(this->Mem)[this->len-1];
+    }
+
+    void Storage_base::_cpy_bool(void *ptr, const std::vector<cytnx_bool> &vin){
+        bool *tmp = static_cast<bool*>(ptr);
+
+        #ifdef UNI_OMP
+        #pragma omp parallel for schedule(dynamic)
+        #endif
+        for(cytnx_uint64 i=0;i<vin.size();i++){
+            tmp[i] = vin[i];        
+        }
     }
 
 

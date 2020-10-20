@@ -4,7 +4,7 @@
 namespace cytnx{
 
     namespace linalg{
-        Tensor Tensordot(const Tensor &Tl, const Tensor &Tr, const std::vector<cytnx_uint64> &idxl, const std::vector<cytnx_uint64> &idxr, const bool &mv_elem_l, const bool &mv_elem_r){
+        Tensor Tensordot(const Tensor &Tl, const Tensor &Tr, const std::vector<cytnx_uint64> &idxl, const std::vector<cytnx_uint64> &idxr, const bool &cacheL, const bool &cacheR){
             //checking:
             cytnx_error_msg(idxl.size() != idxr.size(),"[ERROR] the number of index to trace must be consist across two tensors.%s","\n");
             cytnx_error_msg(idxl.size()==0,"[ERROR] pass empty index list for trace. suggestion: call linalg::Otimes() instead?%s","\n");
@@ -44,10 +44,10 @@ namespace cytnx{
             std::vector<cytnx_uint64> oldshapeL,oldshapeR;
 
             //check if two tensor has same data, to prevent conflict!
-            if(mv_elem_l && mv_elem_r){
+            if(cacheL && cacheR){
                 cytnx_error_msg(Tl.same_data(Tr),"[ERROR] tensordot with both mv_elem options = True cannot have both two input tensors to be the same.%s","\n");
             }
-            if(mv_elem_l){
+            if(cacheL){
                 // calculate reverse mapper:
                 inv_mapperL.resize(mapperL.size());
                 for(int i=0;i<mapperL.size();i++){
@@ -60,7 +60,7 @@ namespace cytnx{
             }else{
                 tmpL = Tl.permute(mapperL).reshape({-1,comm_dim});
             }
-            if(mv_elem_r){
+            if(cacheR){
                 // calculate reverse mapper:
                 inv_mapperR.resize(mapperR.size());
                 for(int i=0;i<mapperR.size();i++){
@@ -84,11 +84,11 @@ namespace cytnx{
             Tensor out = Matmul(tmpL,tmpR); 
             out.reshape_(new_shape);
 
-            if(mv_elem_l){
+            if(cacheL){
                 tmpL.reshape_(oldshapeL);
                 tmpL.permute_(inv_mapperL);
             }
-            if(mv_elem_r){
+            if(cacheR){
                 tmpR.reshape_(oldshapeR);
                 tmpR.permute_(inv_mapperR);
             }
