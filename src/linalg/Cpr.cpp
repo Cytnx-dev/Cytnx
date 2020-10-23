@@ -6,7 +6,7 @@ namespace cytnx{
     namespace linalg{
         Tensor Cpr(const Tensor &Lt, const Tensor &Rt){
             
-            cytnx_error_msg(Lt.shape() != Rt.shape(),"[Cpr] error, the two tensor does not have the same type.%s","\n");
+            cytnx_error_msg(Lt.shape() != Rt.shape(),"[Cpr] error, the two tensor does not have the same shape.%s","\n");
             cytnx_error_msg(Lt.device() != Rt.device(),"[Cpr] error, two tensor cannot on different devices.%s","\n");
             //std::cout << "g1 Cpr" << std::endl;
             Tensor out(Lt.shape(),Type.Bool,Lt.device());

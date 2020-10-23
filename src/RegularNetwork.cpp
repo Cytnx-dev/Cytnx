@@ -396,6 +396,12 @@ namespace cytnx{
 
     void RegularNetwork::PutUniTensor(const std::string &name, const UniTensor &utensor, const bool &is_clone){
         cytnx_uint64 idx;
+        /*
+        std::cout << "|" << name <<"|" << std::endl;
+        for(auto it=this->name2pos.begin();it!=this->name2pos.end();it++){
+            std::cout << "|"<<it->first<<"|"<<it->second<<"|" << std::endl;
+        }
+        */
         try{idx=this->name2pos.at(name);}
         catch(std::out_of_range){
             cytnx_error_msg(true,"[ERROR][RegularNetwork][PutUniTensor] cannot find the tensor name: [%s] in current network.\n", name.c_str());

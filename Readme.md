@@ -33,7 +33,9 @@ See The following user guide for install and using of cytnx:
     7. [Enhance] C++ API storage fix from_vector() for bool type. 
     8. [Enhance] Change Network Launch optimal=True behavior. if user order is given, optimal will not have effect.   
     9. [Enhance] Add example/iDMRG/dmrg_optim.py for better performace with Lanczos_Gnd and Network cache.
-    
+    10. [Fix] wrong error message in linalg::Cpr
+    11. [Fix] reshape() on a already contiguous Tensor will resulting as the change in original tensor, which should not happened.
+
     v0.6.3
     1. [Enhance] Add Device.Ncpus for detecting avaliable omp threads
     2. [Enhance] Add HPTT support on CPU permute.

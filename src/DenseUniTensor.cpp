@@ -505,6 +505,9 @@ namespace cytnx{
         std::vector<cytnx_int64> comm_labels;
         std::vector<cytnx_uint64> comm_idx1,comm_idx2;
         vec_intersect_(comm_labels,this->labels(),rhs->labels(),comm_idx1,comm_idx2);
+        //std::cout << comm_idx1 << std::endl;
+        //std::cout << comm_idx2 << std::endl;
+        
         //output instance:
         DenseUniTensor *tmp = new DenseUniTensor();
             
@@ -569,9 +572,10 @@ namespace cytnx{
             }
 
             //process meta
+            //std::cout << this->rank() << " " << rhs->rank() << std::endl;
             std::vector<cytnx_uint64> non_comm_idx1 = vec_erase(utils_internal::range_cpu(this->rank()),comm_idx1);
             std::vector<cytnx_uint64> non_comm_idx2 = vec_erase(utils_internal::range_cpu(rhs->rank()),comm_idx2);
-                
+               
             vec_concatenate_(tmp->_labels,vec_clone(this->_labels,non_comm_idx1),vec_clone(rhs->_labels,non_comm_idx2));
             
             // these two cannot omp parallel, due to intrusive_ptr
@@ -611,6 +615,9 @@ namespace cytnx{
                     //Tensor tmpL,tmpR;
                     //tmpL = this->_block; 
                     //tmpR =  rhs->get_block_(); // share view!!
+                    //std::cout << "dkd" << std::endl;
+                    //std::cout << this->_block.shape() << std::endl;
+                    //std::cout << rhs->get_block_().shape() << std::endl;
                     tmp->_block = linalg::Tensordot(this->_block,rhs->get_block_(),comm_idx1,comm_idx2,mv_elem_self,mv_elem_rhs);
                 }
                 tmp->_is_diag = false;

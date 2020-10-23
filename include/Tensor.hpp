@@ -240,7 +240,12 @@ namespace cytnx{
 
             boost::intrusive_ptr<Tensor_impl> reshape(const std::vector<cytnx_int64> &new_shape){
                 boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
-                out = this->contiguous();
+                if(this->is_contiguous()){
+                    out = this->_clone_meta_only();
+                    out->_storage = this->_storage;
+                }else{
+                    out = this->contiguous();
+                }
                 //out = this->clone();
                  
                 out->reshape_(new_shape);

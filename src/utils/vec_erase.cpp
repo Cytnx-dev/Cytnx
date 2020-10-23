@@ -1,4 +1,5 @@
 #include "utils/vec_erase.hpp"
+#include "utils/vec_print.hpp"
 #include "cytnx_error.hpp"
 #include <algorithm>
 #include <vector>
@@ -15,6 +16,7 @@ namespace cytnx{
         std::vector<T> out = in;
         std::vector<cytnx_uint64> idxs = eraseper;
         std::sort(idxs.begin(),idxs.end(),_largeTosmall);
+        
 
         for(cytnx_uint64 i=0;i<idxs.size();i++){
             cytnx_error_msg(idxs[i] >= in.size(),"[ERROR][vec_erase] eraseper exceed the size of in vector%s","\n");
