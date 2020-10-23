@@ -16,13 +16,14 @@ See The following user guide for install and using of cytnx:
 [![Build Status](https://travis-ci.org/kaihsin/Cytnx_build.svg?branch=master)](https://travis-ci.org/kaihsin/Cytnx_build)
 
 ## News
-    [v0.6.3] 
-        Enhance transpose on cd/cf/d/f with HPTT
+    [v0.6.4] 
  
 ## Stable Version:
-[v0.6.3a](https://github.com/kaihsin/Cytnx/tree/v0.6.3a)
+[v0.6.4a](https://github.com/kaihsin/Cytnx/tree/v0.6.4a)
 
 ## Current dev Version:
+    v0.6.5
+
     v0.6.4
     1. [Enhance] Add option mv_elem for Tensordot, which actually move elements in input tensor. This is beneficial when same tensordot is called multiple times.
     2. [Enhance] Add option cacheL, cacheR to Contract of unitensor. which mv the elements of input tensors to the matmul handy position. 

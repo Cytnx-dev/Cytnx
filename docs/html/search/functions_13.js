@@ -6,7 +6,7 @@ var searchData=
   ['operator_2f_3d_3ctensor_3a_3atproxy_20_3e',['operator/=&lt;Tensor::Tproxy &gt;',['../namespacecytnx.html#abe24bbb6c8a7a61152a0f826914cfc55',1,'cytnx']]],
   ['tag',['tag',['../classcytnx_1_1UniTensor.html#a6277ec38895990021ec885f98791b47c',1,'cytnx::UniTensor']]],
   ['tensor',['Tensor',['../classcytnx_1_1Tensor.html#afdcff16b2096d10b524161be52ba767e',1,'cytnx::Tensor']]],
-  ['tensordot',['Tensordot',['../namespacecytnx_1_1linalg.html#a460e44db6b3d5d2c30c2d2723ff8f788',1,'cytnx::linalg']]],
+  ['tensordot',['Tensordot',['../namespacecytnx_1_1linalg.html#a242f1b9c1ee7938ba050121773ab4b55',1,'cytnx::linalg']]],
   ['tensordot_5fdg',['Tensordot_dg',['../namespacecytnx_1_1linalg.html#ac77faf8e0c0153e1890610a6e21f36af',1,'cytnx::linalg']]],
   ['tilend',['tilend',['../classcytnx_1_1Accessor.html#a23eb8386fd97d8b5d3d7ec7998a30dca',1,'cytnx::Accessor']]],
   ['to',['to',['../classcytnx_1_1Storage.html#a2abfcaacf807934be5dd21c254fdb30e',1,'cytnx::Storage::to()'],['../classcytnx_1_1Tensor.html#acf7f697a9434f9bc98a7d00a555ee982',1,'cytnx::Tensor::to()'],['../classcytnx_1_1UniTensor.html#a025f4a2d775a9892b7f86aeff364fa49',1,'cytnx::UniTensor::to()']]],
@@ -18,7 +18,7 @@ var searchData=
   ['transpose',['Transpose',['../classcytnx_1_1UniTensor.html#a647f7d7cb96c53243484678ad8625e15',1,'cytnx::UniTensor']]],
   ['transpose_5f',['Transpose_',['../classcytnx_1_1UniTensor.html#a2d47f327bf3b3129461a6b92444d8e00',1,'cytnx::UniTensor']]],
   ['tri',['tri',['../namespacecytnx.html#a840d1bc0c881c1d15f69058d487a48c1',1,'cytnx']]],
-  ['tridiag',['Tridiag',['../namespacecytnx_1_1linalg.html#abc68d62e804d6d3e86aeec00015b07cd',1,'cytnx::linalg']]],
+  ['tridiag',['Tridiag',['../namespacecytnx_1_1linalg.html#ac43789f8171018748ed9ecf7e95411ef',1,'cytnx::linalg']]],
   ['truncate',['truncate',['../classcytnx_1_1UniTensor.html#ae47d9591f73d1e2bbe510a2f25cc3b50',1,'cytnx::UniTensor']]],
   ['truncate_5f',['truncate_',['../classcytnx_1_1UniTensor.html#a57b848704ff6ba0ca3cfc949a7a2f50f',1,'cytnx::UniTensor']]],
   ['type',['type',['../classcytnx_1_1Accessor.html#a8777a35162dcf47f9992295b58735743',1,'cytnx::Accessor::type()'],['../classcytnx_1_1Bond.html#a8517743cec9589ed551114ea7e55fbb1',1,'cytnx::Bond::type()']]]

@@ -201,8 +201,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a169c56f48f851fe173067632e30200dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a75eb4843d626eacb86fc42a75d1c13"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1UniTensor.html#a0a75eb4843d626eacb86fc42a75d1c13">combineBonds</a> (const std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &amp;indicators, const bool &amp;permute_back=true, const bool &amp;by_label=true)</td></tr>
 <tr class="separator:a0a75eb4843d626eacb86fc42a75d1c13"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24534b89eccb629a67d51ee7ae36a112"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1UniTensor.html#a24534b89eccb629a67d51ee7ae36a112">contract</a> (const <a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> &amp;inR) const</td></tr>
-<tr class="separator:a24534b89eccb629a67d51ee7ae36a112"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb9e74ecee1a85af02b7f2a8e835c969"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1UniTensor.html#abb9e74ecee1a85af02b7f2a8e835c969">contract</a> (const <a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> &amp;inR, const bool &amp;mv_elem_self=false, const bool &amp;mv_elem_rhs=false) const</td></tr>
+<tr class="separator:abb9e74ecee1a85af02b7f2a8e835c969"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe298e97a7f517a86bb19925565bff4a"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Bond.html">Bond</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1UniTensor.html#afe298e97a7f517a86bb19925565bff4a">getTotalQnums</a> (const bool physical=false) const</td></tr>
 <tr class="separator:afe298e97a7f517a86bb19925565bff4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a60f413988532b115c5323b6f7dc1be6b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1UniTensor.html#a60f413988532b115c5323b6f7dc1be6b">same_data</a> (const <a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> &amp;rhs) const</td></tr>
@@ -1145,8 +1145,8 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
-<a id="a24534b89eccb629a67d51ee7ae36a112"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a24534b89eccb629a67d51ee7ae36a112">&#9670;&nbsp;</a></span>contract()</h2>
+<a id="abb9e74ecee1a85af02b7f2a8e835c969"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb9e74ecee1a85af02b7f2a8e835c969">&#9670;&nbsp;</a></span>contract()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1158,8 +1158,24 @@ template&lt;class T &gt; </div>
           <td class="memname"><a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> cytnx::UniTensor::contract </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> &amp;&#160;</td>
-          <td class="paramname"><em>inR</em></td><td>)</td>
-          <td> const</td>
+          <td class="paramname"><em>inR</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramname"><em>mv_elem_self</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramname"><em>mv_elem_rhs</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
         </tr>
       </table>
   </td>

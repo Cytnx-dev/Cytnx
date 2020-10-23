@@ -46,7 +46,9 @@ target_sources_local(cytnx
     Abs_.cpp
     Dot.cpp
     Norm.cpp
+    Tridiag.cpp
     Lanczos_ER.cpp
+    Lanczos_Gnd.cpp
     linalg_internal_interface.cpp
 )
 

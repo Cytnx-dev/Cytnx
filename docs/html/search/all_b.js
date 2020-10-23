@@ -2,6 +2,7 @@ var searchData=
 [
   ['labels',['labels',['../classcytnx_1_1UniTensor.html#a38073b2e56a0902146951155841c85bf',1,'cytnx::UniTensor']]],
   ['lanczos_5fer',['Lanczos_ER',['../namespacecytnx_1_1linalg.html#a97bb4cbdb277d6525759c7e5dbd67662',1,'cytnx::linalg']]],
+  ['lanczos_5fgnd',['Lanczos_Gnd',['../namespacecytnx_1_1linalg.html#a1c232c6b00cacf7d8f0ec640721a3075',1,'cytnx::linalg']]],
   ['lapack_5fwrapper_2ehpp',['lapack_wrapper.hpp',['../lapack__wrapper_8hpp.html',1,'']]],
   ['launch',['Launch',['../classcytnx_1_1Network.html#a99e0fa39f35bfbea4bc648c8bfa315d9',1,'cytnx::Network']]],
   ['linalg_2ehpp',['linalg.hpp',['../linalg_8hpp.html',1,'']]],

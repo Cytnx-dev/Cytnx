@@ -2,6 +2,8 @@ var searchData=
 [
   ['at_3c_20std_3a_3acomplex_3c_20double_20_3e_20_3e',['at&lt; std::complex&lt; double &gt; &gt;',['../namespacecytnx.html#a8dff038086c8a268f77d24d300904e58',1,'cytnx']]],
   ['at_3c_20std_3a_3acomplex_3c_20float_20_3e_20_3e',['at&lt; std::complex&lt; float &gt; &gt;',['../namespacecytnx.html#af42194b9f63e2d5e9f503c1d26fbe71d',1,'cytnx']]],
+  ['back_3c_20std_3a_3acomplex_3c_20double_20_3e_20_3e',['back&lt; std::complex&lt; double &gt; &gt;',['../namespacecytnx.html#a7c6b2d6dc745427e5755ec507d5b12bc',1,'cytnx']]],
+  ['back_3c_20std_3a_3acomplex_3c_20float_20_3e_20_3e',['back&lt; std::complex&lt; float &gt; &gt;',['../namespacecytnx.html#a49f839103128f7114160121bc372d754',1,'cytnx']]],
   ['data_3c_20std_3a_3acomplex_3c_20double_20_3e_20_3e',['data&lt; std::complex&lt; double &gt; &gt;',['../namespacecytnx.html#ab7eebbd2964ab2807f7f4fdff088d550',1,'cytnx']]],
   ['data_3c_20std_3a_3acomplex_3c_20float_20_3e_20_3e',['data&lt; std::complex&lt; float &gt; &gt;',['../namespacecytnx.html#a6bf041c55a8678062f192e67e74de2cc',1,'cytnx']]],
   ['same_5fdata',['same_data',['../classcytnx_1_1Tensor.html#a0eca35d876d22d96d1aef9f959a946fe',1,'cytnx::Tensor::same_data()'],['../classcytnx_1_1UniTensor.html#a60f413988532b115c5323b6f7dc1be6b',1,'cytnx::UniTensor::same_data()']]],
@@ -52,7 +54,7 @@ var searchData=
   ['spin',['spin',['../namespacecytnx_1_1physics.html#a9f018f04ccd068e899a8fcfe2e9b82d4',1,'cytnx::physics::spin(const cytnx_double &amp;S, const std::string &amp;Comp, const int &amp;device=Device.cpu)'],['../namespacecytnx_1_1physics.html#af2c0256f7e3502785679b5e6805973e8',1,'cytnx::physics::spin(const cytnx_double &amp;S, const char &amp;Comp, const int &amp;device)']]],
   ['sqrt_5fswap',['sqrt_swap',['../namespacecytnx_1_1qgates.html#a064386782507fdcafc67a92679e83d4f',1,'cytnx::qgates']]],
   ['step',['step',['../classcytnx_1_1Accessor.html#a6b86335651e6d8c9da971e5337545178',1,'cytnx::Accessor']]],
-  ['storage',['Storage',['../classcytnx_1_1Storage.html',1,'cytnx::Storage'],['../classcytnx_1_1Tensor.html#a0fd5918a0f64ebd74fe34cb8b8164c30',1,'cytnx::Tensor::storage()'],['../classcytnx_1_1Storage.html#a281c06bd64e9ea3338083c18c4c32eda',1,'cytnx::Storage::Storage(const unsigned long long &amp;size, const unsigned int &amp;dtype=Type.Double, int device=-1)'],['../classcytnx_1_1Storage.html#a49037d5a58e68e63998817fba38de5e2',1,'cytnx::Storage::Storage()']]],
+  ['storage',['Storage',['../classcytnx_1_1Storage.html',1,'cytnx::Storage'],['../classcytnx_1_1Storage.html#a281c06bd64e9ea3338083c18c4c32eda',1,'cytnx::Storage::Storage(const unsigned long long &amp;size, const unsigned int &amp;dtype=Type.Double, int device=-1)'],['../classcytnx_1_1Storage.html#a49037d5a58e68e63998817fba38de5e2',1,'cytnx::Storage::Storage()'],['../classcytnx_1_1Tensor.html#a0fd5918a0f64ebd74fe34cb8b8164c30',1,'cytnx::Tensor::storage()']]],
   ['storage_2ecpp',['Storage.cpp',['../Storage_8cpp.html',1,'']]],
   ['storage_2ehpp',['Storage.hpp',['../Storage_8hpp.html',1,'']]],
   ['storage_5fbase_2ecpp',['Storage_base.cpp',['../Storage__base_8cpp.html',1,'']]],
