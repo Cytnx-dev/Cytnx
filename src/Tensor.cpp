@@ -51,21 +51,250 @@ namespace cytnx{
         self._impl = this->_insimpl;
         return self;
     }
+
+    //ADD
+    Tensor Tensor::Tproxy::operator+(const cytnx_complex128 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Add(rc);
+    }   
+    Tensor Tensor::Tproxy::operator+(const cytnx_complex64 &rc)  const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Add(rc);
+    }   
+    Tensor Tensor::Tproxy::operator+(const cytnx_double &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Add(rc);
+    }   
+    Tensor Tensor::Tproxy::operator+(const cytnx_float &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Add(rc);
+    }   
+    Tensor Tensor::Tproxy::operator+(const cytnx_uint64 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Add(rc);
+    }   
+    Tensor Tensor::Tproxy::operator+(const cytnx_int64 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Add(rc);
+    } 
+    Tensor Tensor::Tproxy::operator+(const cytnx_uint32 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Add(rc);
+    } 
+    Tensor Tensor::Tproxy::operator+(const cytnx_int32 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Add(rc);
+    } 
+    Tensor Tensor::Tproxy::operator+(const cytnx_uint16 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Add(rc);
+    } 
+    Tensor Tensor::Tproxy::operator+(const cytnx_int16 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Add(rc);
+    } 
+    Tensor Tensor::Tproxy::operator+(const cytnx_bool &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Add(rc);
+    } 
+   
     Tensor Tensor::Tproxy::operator+(const Tproxy &rc) const{
         Tensor out;
         out._impl = _insimpl->get(_accs);
         return cytnx::linalg::Add(out,Tensor(rc));
     }
+
+    //SUB:
+    Tensor Tensor::Tproxy::operator-(const cytnx_complex128 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Sub(rc);
+    }   
+    Tensor Tensor::Tproxy::operator-(const cytnx_complex64 &rc)  const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Sub(rc);
+    }   
+    Tensor Tensor::Tproxy::operator-(const cytnx_double &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Sub(rc);
+    }   
+    Tensor Tensor::Tproxy::operator-(const cytnx_float &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Sub(rc);
+    }   
+    Tensor Tensor::Tproxy::operator-(const cytnx_uint64 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Sub(rc);
+    }   
+    Tensor Tensor::Tproxy::operator-(const cytnx_int64 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Sub(rc);
+    } 
+    Tensor Tensor::Tproxy::operator-(const cytnx_uint32 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Sub(rc);
+    } 
+    Tensor Tensor::Tproxy::operator-(const cytnx_int32 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Sub(rc);
+    } 
+    Tensor Tensor::Tproxy::operator-(const cytnx_uint16 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Sub(rc);
+    } 
+    Tensor Tensor::Tproxy::operator-(const cytnx_int16 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Sub(rc);
+    } 
+    Tensor Tensor::Tproxy::operator-(const cytnx_bool &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Sub(rc);
+    } 
     Tensor Tensor::Tproxy::operator-(const Tproxy &rc) const{
         Tensor out;
         out._impl = _insimpl->get(_accs);
         return cytnx::linalg::Sub(out,Tensor(rc));
     }
+
+    // MUL
+    Tensor Tensor::Tproxy::operator*(const cytnx_complex128 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Mul(rc);
+    }   
+    Tensor Tensor::Tproxy::operator*(const cytnx_complex64 &rc)  const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Mul(rc);
+    }   
+    Tensor Tensor::Tproxy::operator*(const cytnx_double &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Mul(rc);
+    }   
+    Tensor Tensor::Tproxy::operator*(const cytnx_float &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Mul(rc);
+    }   
+    Tensor Tensor::Tproxy::operator*(const cytnx_uint64 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Mul(rc);
+    }   
+    Tensor Tensor::Tproxy::operator*(const cytnx_int64 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Mul(rc);
+    } 
+    Tensor Tensor::Tproxy::operator*(const cytnx_uint32 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Mul(rc);
+    } 
+    Tensor Tensor::Tproxy::operator*(const cytnx_int32 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Mul(rc);
+    } 
+    Tensor Tensor::Tproxy::operator*(const cytnx_uint16 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Mul(rc);
+    } 
+    Tensor Tensor::Tproxy::operator*(const cytnx_int16 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Mul(rc);
+    } 
+    Tensor Tensor::Tproxy::operator*(const cytnx_bool &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Mul(rc);
+    } 
     Tensor Tensor::Tproxy::operator*(const Tproxy &rc) const{
         Tensor out;
         out._impl = _insimpl->get(_accs);
         return cytnx::linalg::Mul(out,Tensor(rc));
     }
+
+    //DIV
+    Tensor Tensor::Tproxy::operator/(const cytnx_complex128 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Div(rc);
+    }   
+    Tensor Tensor::Tproxy::operator/(const cytnx_complex64 &rc)  const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Div(rc);
+    }   
+    Tensor Tensor::Tproxy::operator/(const cytnx_double &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Div(rc);
+    }   
+    Tensor Tensor::Tproxy::operator/(const cytnx_float &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Div(rc);
+    }   
+    Tensor Tensor::Tproxy::operator/(const cytnx_uint64 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Div(rc);
+    }   
+    Tensor Tensor::Tproxy::operator/(const cytnx_int64 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Div(rc);
+    } 
+    Tensor Tensor::Tproxy::operator/(const cytnx_uint32 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Div(rc);
+    } 
+    Tensor Tensor::Tproxy::operator/(const cytnx_int32 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Div(rc);
+    } 
+    Tensor Tensor::Tproxy::operator/(const cytnx_uint16 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Div(rc);
+    } 
+    Tensor Tensor::Tproxy::operator/(const cytnx_int16 &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Div(rc);
+    } 
+    Tensor Tensor::Tproxy::operator/(const cytnx_bool &rc) const{//{return this->_operatorADD(rc);};
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Div(rc);
+    } 
     Tensor Tensor::Tproxy::operator/(const Tproxy &rc) const{
         Tensor out;
         out._impl = _insimpl->get(_accs);

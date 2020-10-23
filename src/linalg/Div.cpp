@@ -602,7 +602,7 @@ namespace cytnx{
     }
     template<>
     Tensor operator/<Tensor::Tproxy>(const Tensor::Tproxy &lc, const Tensor &Rt){
-        return lc.operator/(Rt);
+        return Tensor(lc)/Rt;
     }
 
 

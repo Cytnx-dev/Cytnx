@@ -348,81 +348,88 @@ namespace cytnx{
 
 
                 //alias to resolve conflict with op ovld for rc=Tensor
+                /*
                 template<class T>
                 Tensor _operatorADD(const T &rc) const{
                     Tensor out;
                     out._impl = _insimpl->get(_accs);
                     return out.Add(rc);
-                }
-                Tensor operator+(const cytnx_complex128 &rc) const{return this->_operatorADD(rc);};
-                Tensor operator+(const cytnx_complex64 &rc)  const{return this->_operatorADD(rc);};
-                Tensor operator+(const cytnx_double &rc) const{return this->_operatorADD(rc);};
-                Tensor operator+(const cytnx_float &rc) const{return this->_operatorADD(rc);};
-                Tensor operator+(const cytnx_uint64 &rc) const{return this->_operatorADD(rc);};
-                Tensor operator+(const cytnx_int64 &rc) const{return this->_operatorADD(rc);};
-                Tensor operator+(const cytnx_uint32 &rc) const{return this->_operatorADD(rc);};
-                Tensor operator+(const cytnx_int32 &rc) const{return this->_operatorADD(rc);};
-                Tensor operator+(const cytnx_uint16 &rc) const{return this->_operatorADD(rc);};
-                Tensor operator+(const cytnx_int16 &rc) const{return this->_operatorADD(rc);};
-                Tensor operator+(const cytnx_bool &rc) const{return this->_operatorADD(rc);};
+                }   
+                */
+                Tensor operator+(const cytnx_complex128 &rc) const;//{return this->_operatorADD(rc);};
+                Tensor operator+(const cytnx_complex64 &rc)  const;//{return this->_operatorADD(rc);};
+                Tensor operator+(const cytnx_double &rc) const;//{return this->_operatorADD(rc);};
+                Tensor operator+(const cytnx_float &rc) const;//{return this->_operatorADD(rc);};
+                Tensor operator+(const cytnx_uint64 &rc) const;//{return this->_operatorADD(rc);};
+                Tensor operator+(const cytnx_int64 &rc) const;//{return this->_operatorADD(rc);};
+                Tensor operator+(const cytnx_uint32 &rc) const;//{return this->_operatorADD(rc);};
+                Tensor operator+(const cytnx_int32 &rc) const;//{return this->_operatorADD(rc);};
+                Tensor operator+(const cytnx_uint16 &rc) const;//{return this->_operatorADD(rc);};
+                Tensor operator+(const cytnx_int16 &rc) const;//{return this->_operatorADD(rc);};
+                Tensor operator+(const cytnx_bool &rc) const;//{return this->_operatorADD(rc);};
                 Tensor operator+(const Tproxy &rc) const;
 
+                /*
                 template<class T>
                 Tensor _operatorSUB(const T &rc) const{
                     Tensor out;
                     out._impl = _insimpl->get(_accs);
                     return out.Sub(rc);
                 }
-                Tensor operator-(const cytnx_complex128 &rc) const{return this->_operatorSUB(rc);};
-                Tensor operator-(const cytnx_complex64 &rc)  const{return this->_operatorSUB(rc);};
-                Tensor operator-(const cytnx_double &rc) const{return this->_operatorSUB(rc);};
-                Tensor operator-(const cytnx_float &rc) const{return this->_operatorSUB(rc);};
-                Tensor operator-(const cytnx_uint64 &rc) const{return this->_operatorSUB(rc);};
-                Tensor operator-(const cytnx_int64 &rc) const{return this->_operatorSUB(rc);};
-                Tensor operator-(const cytnx_uint32 &rc) const{return this->_operatorSUB(rc);};
-                Tensor operator-(const cytnx_int32 &rc) const{return this->_operatorSUB(rc);};
-                Tensor operator-(const cytnx_uint16 &rc) const{return this->_operatorSUB(rc);};
-                Tensor operator-(const cytnx_int16 &rc) const{return this->_operatorSUB(rc);};
-                Tensor operator-(const cytnx_bool &rc) const{return this->_operatorSUB(rc);};
+                */
+                Tensor operator-(const cytnx_complex128 &rc) const;//{return this->_operatorSUB(rc);};
+                Tensor operator-(const cytnx_complex64 &rc)  const;//{return this->_operatorSUB(rc);};
+                Tensor operator-(const cytnx_double &rc) const;//{return this->_operatorSUB(rc);};
+                Tensor operator-(const cytnx_float &rc) const;//{return this->_operatorSUB(rc);};
+                Tensor operator-(const cytnx_uint64 &rc) const;//{return this->_operatorSUB(rc);};
+                Tensor operator-(const cytnx_int64 &rc) const;//{return this->_operatorSUB(rc);};
+                Tensor operator-(const cytnx_uint32 &rc) const;//{return this->_operatorSUB(rc);};
+                Tensor operator-(const cytnx_int32 &rc) const;//{return this->_operatorSUB(rc);};
+                Tensor operator-(const cytnx_uint16 &rc) const;//{return this->_operatorSUB(rc);};
+                Tensor operator-(const cytnx_int16 &rc) const;//{return this->_operatorSUB(rc);};
+                Tensor operator-(const cytnx_bool &rc) const;//{return this->_operatorSUB(rc);};
                 Tensor operator-(const Tproxy &rc) const;
 
-
+                /*
                 template<class T>
                 Tensor _operatorMUL(const T &rc) const{
                     Tensor out;
                     out._impl = _insimpl->get(_accs);
                     return out.Mul(rc);
                 }
-                Tensor operator*(const cytnx_complex128 &rc) const{return this->_operatorMUL(rc);};
-                Tensor operator*(const cytnx_complex64 &rc)  const{return this->_operatorMUL(rc);};
-                Tensor operator*(const cytnx_double &rc) const{return this->_operatorMUL(rc);};
-                Tensor operator*(const cytnx_float &rc) const{return this->_operatorMUL(rc);};
-                Tensor operator*(const cytnx_uint64 &rc) const{return this->_operatorMUL(rc);};
-                Tensor operator*(const cytnx_int64 &rc) const{return this->_operatorMUL(rc);};
-                Tensor operator*(const cytnx_uint32 &rc) const{return this->_operatorMUL(rc);};
-                Tensor operator*(const cytnx_int32 &rc) const{return this->_operatorMUL(rc);};
-                Tensor operator*(const cytnx_uint16 &rc) const{return this->_operatorMUL(rc);};
-                Tensor operator*(const cytnx_int16 &rc) const{return this->_operatorMUL(rc);};
-                Tensor operator*(const cytnx_bool &rc) const{return this->_operatorMUL(rc);};
+                */
+                Tensor operator*(const cytnx_complex128 &rc) const;//{return this->_operatorMUL(rc);};
+                Tensor operator*(const cytnx_complex64 &rc)  const;//{return this->_operatorMUL(rc);};
+                Tensor operator*(const cytnx_double &rc) const;//{return this->_operatorMUL(rc);};
+                Tensor operator*(const cytnx_float &rc) const;//{return this->_operatorMUL(rc);};
+                Tensor operator*(const cytnx_uint64 &rc) const;//{return this->_operatorMUL(rc);};
+                Tensor operator*(const cytnx_int64 &rc) const;//{return this->_operatorMUL(rc);};
+                Tensor operator*(const cytnx_uint32 &rc) const;//{return this->_operatorMUL(rc);};
+                Tensor operator*(const cytnx_int32 &rc) const;//{return this->_operatorMUL(rc);};
+                Tensor operator*(const cytnx_uint16 &rc) const;//{return this->_operatorMUL(rc);};
+                Tensor operator*(const cytnx_int16 &rc) const;//{return this->_operatorMUL(rc);};
+                Tensor operator*(const cytnx_bool &rc) const;//{return this->_operatorMUL(rc);};
                 Tensor operator*(const Tproxy &rc) const;
                 
+                /*
                 template<class T>
                 Tensor _operatorDIV(const T &rc) const{
                     Tensor out;
                     out._impl = _insimpl->get(_accs);
                     return out.Div(rc);
                 }
-                Tensor operator/(const cytnx_complex128 &rc) const{return this->_operatorDIV(rc);};
-                Tensor operator/(const cytnx_complex64 &rc)  const{return this->_operatorDIV(rc);};
-                Tensor operator/(const cytnx_double &rc) const{return this->_operatorDIV(rc);};
-                Tensor operator/(const cytnx_float &rc) const{return this->_operatorDIV(rc);};
-                Tensor operator/(const cytnx_uint64 &rc) const{return this->_operatorDIV(rc);};
-                Tensor operator/(const cytnx_int64 &rc) const{return this->_operatorDIV(rc);};
-                Tensor operator/(const cytnx_uint32 &rc) const{return this->_operatorDIV(rc);};
-                Tensor operator/(const cytnx_int32 &rc) const{return this->_operatorDIV(rc);};
-                Tensor operator/(const cytnx_uint16 &rc) const{return this->_operatorDIV(rc);};
-                Tensor operator/(const cytnx_int16 &rc) const{return this->_operatorDIV(rc);};
-                Tensor operator/(const cytnx_bool &rc) const{return this->_operatorDIV(rc);};
+                */
+                Tensor operator/(const cytnx_complex128 &rc) const;//{return this->_operatorDIV(rc);};
+                Tensor operator/(const cytnx_complex64 &rc)  const;//{return this->_operatorDIV(rc);};
+                Tensor operator/(const cytnx_double &rc) const;//{return this->_operatorDIV(rc);};
+                Tensor operator/(const cytnx_float &rc) const;//{return this->_operatorDIV(rc);};
+                Tensor operator/(const cytnx_uint64 &rc) const;//{return this->_operatorDIV(rc);};
+                Tensor operator/(const cytnx_int64 &rc) const;//{return this->_operatorDIV(rc);};
+                Tensor operator/(const cytnx_uint32 &rc) const;//{return this->_operatorDIV(rc);};
+                Tensor operator/(const cytnx_int32 &rc) const;//{return this->_operatorDIV(rc);};
+                Tensor operator/(const cytnx_uint16 &rc) const;//{return this->_operatorDIV(rc);};
+                Tensor operator/(const cytnx_int16 &rc) const;//{return this->_operatorDIV(rc);};
+                Tensor operator/(const cytnx_bool &rc) const;//{return this->_operatorDIV(rc);};
                 Tensor operator/(const Tproxy &rc) const;
 
                 template<class T>
