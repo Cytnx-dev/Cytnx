@@ -4,7 +4,6 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -24,7 +23,7 @@
     <script src="../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="FAQs" href="../FAQ.html" />
+    <link rel="next" title="Performance tune" href="../Perf_tune.html" />
     <link rel="prev" title="4. iDMRG" href="iDMRG.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
@@ -176,10 +175,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../guide/xlinalg.html">7. linalg extension</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../guide/perf_tune.html">8. Performance tune</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../guide/perf_tune/tensordot.html">8.1. tensordot with input cache</a></li>
-</ul>
-</li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../Examples.html">Examples</a><ul class="current">
@@ -196,6 +191,10 @@
 <li class="toctree-l2"><a class="reference internal" href="DMRG.html">3. DMRG</a></li>
 <li class="toctree-l2"><a class="reference internal" href="iDMRG.html">4. iDMRG</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">5. HOTRG</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Perf_tune.html">Performance tune</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../perf_tune/tensordot.html">tensordot with input cache</a></li>
 </ul>
 </li>
 </ul>
@@ -218,7 +217,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../">v0.6.3a</a></li>
+              <a  class="nav-link" href="../">v0.6.4a</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -244,7 +243,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../">v0.6.3a</a></li>
+                  <a  class="nav-link" href="../">v0.6.4a</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -274,8 +273,8 @@
                <a href="iDMRG.html" title="Previous Chapter: 4. iDMRG" class="btn btn-primary" role="botton" accesskey="P">
                    &laquo; 4. iDMRG
                </a>
-               <a href="../FAQ.html" title="Next Chapter: FAQs" class="btn btn-primary" role="botton" accesskey="N">
-                   FAQs &raquo;
+               <a href="../Perf_tune.html" title="Next Chapter: Performance tune" class="btn btn-primary" role="botton" accesskey="N">
+                   Performance tune &raquo;
                </a>
            </div>
        </div>
@@ -425,10 +424,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../guide/xlinalg.html">7. linalg extension</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../guide/perf_tune.html">8. Performance tune</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../guide/perf_tune/tensordot.html">8.1. tensordot with input cache</a></li>
-</ul>
-</li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../Examples.html">Examples</a><ul class="current">
@@ -445,6 +440,10 @@
 <li class="toctree-l2"><a class="reference internal" href="DMRG.html">3. DMRG</a></li>
 <li class="toctree-l2"><a class="reference internal" href="iDMRG.html">4. iDMRG</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">5. HOTRG</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Perf_tune.html">Performance tune</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../perf_tune/tensordot.html">tensordot with input cache</a></li>
 </ul>
 </li>
 </ul>
@@ -465,8 +464,8 @@
   <p class="topless"><a href="iDMRG.html"
                         title="previous chapter"><span class="section-number">4. </span>iDMRG</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../FAQ.html"
-                        title="next chapter">FAQs</a></p>
+  <p class="topless"><a href="../Perf_tune.html"
+                        title="next chapter">Performance tune</a></p>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../search.html" method="get">
       <input type="text" name="q" class="form-control" placeholder="Search..." />
@@ -516,7 +515,7 @@
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.0.4 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>
