@@ -1,6 +1,7 @@
 #include "linalg.hpp"
 #include "Generator.hpp"
 #include "random.hpp"
+#include "Tensor.hpp"
 #include <cfloat>
 #include <vector>
 
