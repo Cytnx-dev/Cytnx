@@ -23,6 +23,7 @@ See The following user guide for install and using of cytnx:
 
 ## Current dev Version:
     v0.6.5
+    1. [Fix] Bug in UniTensor _Load    
 
     v0.6.4
     1. [Enhance] Add option mv_elem for Tensordot, which actually move elements in input tensor. This is beneficial when same tensordot is called multiple times.

@@ -256,7 +256,7 @@ namespace cytnx{
         f.read((char*)&tmpIDDs,sizeof(unsigned int));
         cytnx_error_msg(tmpIDDs!=555,"[ERROR] the object is not a cytnx UniTensor!%s","\n");
         int utentype;
-        f.write((char*)&utentype,sizeof(int)); // uten type, this is used to determine Sparse/Dense upon load
+        f.read((char*)&utentype,sizeof(int)); // uten type, this is used to determine Sparse/Dense upon load
         if(utentype==UTenType.Dense){
             this->_impl = boost::intrusive_ptr<UniTensor_base>(new DenseUniTensor());
         }else if(utentype==UTenType.Sparse){
