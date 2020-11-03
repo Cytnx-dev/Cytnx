@@ -130,7 +130,7 @@ if (USE_CUDA)
     ExternalProject_Add(cutt
       PREFIX cutt_src
       GIT_REPOSITORY https://github.com/kaihsin/cutt.git
-      GIT_TAG c63720412d9d922a5e3eaafb54de6fa92e07a899
+      GIT_TAG 3d31b2bd083b6b134f172afa6b8b2a5db13e3d08
       BINARY_DIR cutt_src/build
       INSTALL_DIR cutt
       CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DNO_ALIGN_ALLOC=${CUTT_NO_ALIGN_ALLOC} -DENABLE_NVTOOLS=${CUTT_ENABLE_NVTOOLS} -DFINE_TUNE=${CUTT_ENABLE_FINE_TUNE}

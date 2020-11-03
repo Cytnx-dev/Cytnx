@@ -50,7 +50,7 @@ endif
 
 NVCC:= $(CUDA_PATH)/bin/nvcc -ccbin $(CC)
 NVFLAGS:= -m64 ${OPTIM} -lineinfo
-SMS ?= 30
+SMS ?= 60
 GENCODE_FLAGS:= -arch=sm_$(SMS)
 
 ifeq ($(OMP_Enable),1)
