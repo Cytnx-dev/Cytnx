@@ -78,9 +78,10 @@ namespace cytnx{
                         while(1){
                             bool is_orth=true;
                             cytnx::random::Make_normal(buffer[0],0.,1.0);
+                            buffer[0]/=buffer[0].Norm().item<cytnx_double>();
                             for(cytnx_uint32 ig=0;ig<converged_ev.size();ig++){
                                 Elast = Vectordot(buffer[0],converged_ev[ig]).item<cytnx_double>(); //reuse variable here. 
-                                if(Elast < 1.0e-14){ // check is this vector is properly orthogonal to previous converged ev. 
+                                if((1-Elast) < 0.005){ // check is this vector is properly orthogonal to previous converged ev. 
                                     is_orth=false;
                                     break;
                                 }
@@ -175,9 +176,10 @@ namespace cytnx{
                         while(1){
                             bool is_orth=true;
                             cytnx::random::Make_normal(buffer[0],0.,1.0);
+                            buffer[0]/=buffer[0].Norm().item<cytnx_float>();
                             for(cytnx_uint32 ig=0;ig<converged_ev.size();ig++){
                                 Elast = Vectordot(buffer[0],converged_ev[ig]).item<cytnx_float>(); //reuse variable here. 
-                                if(Elast < 1.0e-7){ // check is this vector is properly orthogonal to previous converged ev. 
+                                if((1-Elast) < 0.005){ // check is this vector is properly orthogonal to previous converged ev. 
                                     is_orth=false;
                                     break;
                                 }
@@ -270,9 +272,10 @@ namespace cytnx{
                         while(1){
                             bool is_orth=true;
                             cytnx::random::Make_normal(buffer[0],0.,1.0);
+                            buffer[0]/=buffer[0].Norm().item<cytnx_float>();
                             for(cytnx_uint32 ig=0;ig<converged_ev.size();ig++){
                                 Tensor Res = Vectordot(converged_ev[ig],buffer[0],true); //reuse variable here. 
-                                if(Res.Norm().item<cytnx_float>() < 1.0e-7){ // check is this vector is properly orthogonal to previous converged ev. 
+                                if((1-Res.Norm().item<cytnx_float>()) < 0.005){ // check is this vector is properly orthogonal to previous converged ev. 
                                     is_orth=false;
                                     break;
                                 }
@@ -365,9 +368,10 @@ namespace cytnx{
                         while(1){
                             bool is_orth=true;
                             cytnx::random::Make_normal(buffer[0],0.,1.0);
+                            buffer[0]/=buffer[0].Norm().item<cytnx_double>();
                             for(cytnx_uint32 ig=0;ig<converged_ev.size();ig++){
                                 Tensor Res = Vectordot(converged_ev[ig],buffer[0],true); //reuse variable here. 
-                                if(Res.Norm().item<cytnx_double>() < 1.0e-14){ // check is this vector is properly orthogonal to previous converged ev. 
+                                if((1.-Res.Norm().item<cytnx_double>()) < 0.005){ // check is this vector is properly orthogonal to previous converged ev. 
                                     is_orth=false;
                                     break;
                                 }
