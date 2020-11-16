@@ -138,10 +138,37 @@ The first four lines are the python inline execution to get the three attributes
     cytnx device: CPU
     Shape : (4)
     [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
+
+Using C++ API with CMake
+*************************
+For user who what to use cmake/make to integrate cytnx into more complicated project, one can use the following lines to extract the essential to the cmake variables:
+
+.. code-block:: shell
+
+    CYTNX_INC := $(shell python -c "exec(\"import cytnx\nprint(cytnx.__cpp_include__)\")")
+    CYTNX_LDFLAGS := $(shell python -c "exec(\"import cytnx\nprint(cytnx.__cpp_linkflags__)\")")
+    CYTNX_LIB := $(shell python -c "exec(\"import cytnx\nprint(cytnx.__cpp_lib__)\")")/libcytnx.a
+    CYTNX_CXXFLAGS := $(shell python -c "exec(\"import cytnx\nprint(cytnx.__cpp_flags__)\")")
+
+
+
+
+In the case cytnx is installed locally from binary build, not from anaconda, one can use the following lines to extract the linking and compiling varialbes:
+
+.. code-block:: shell
+
+    CYTNX_INC := $(shell python -c "exec(\"import sys\nsys.path.append(\'$(CYTNX_ROOT)\')\nimport cytnx\nprint(cytnx.__cpp_include__)\")")
+    CYTNX_LDFLAGS := $(shell python -c "exec(\"import sys\nsys.path.append(\'$(CYTNX_ROOT)\')\nimport cytnx\nprint(cytnx.__cpp_linkflags__)\")")
+    CYTNX_LIB := $(shell python -c "exec(\"import sys\nsys.path.append(\'$(CYTNX_ROOT)\')\nimport cytnx\nprint(cytnx.__cpp_lib__)\")")/libcytnx.a
+    CYTNX_CXXFLAGS := $(shell python -c "exec(\"import sys\nsys.path.append(\'$(CYTNX_ROOT)\')\nimport cytnx\nprint(cytnx.__cpp_flags__)\")")
+
+.. Note::
+    
+    CYTNX_ROOT is the path where cytnx is installed from binary build. 
     
 
-Build from source
-*********************
+Build Cytnx from source
+*************************
 For advanced user who wish to build cytnx from source, we provides the cmake install. 
 
 
@@ -214,8 +241,25 @@ OS specific installation of minimum dependencies:
 
 
 
-Compiling process
---------------------
+Compiling process [New]
+--------------------------
+Starting from v0.6.4a, cytnx provide a easy step-by-step install tool:
+
+.. code-block:: shell
+    
+    $python auto_install.py
+
+This will prompt user through a series of install options, and generate a shell script **ainstall.sh**. To install, simply execute this script:
+
+.. code-block:: shell
+
+    $sh ainstall.sh
+
+
+
+
+Compiling process [Old]
+--------------------------
 Please see the following steps for the standard cmake compiling process and all the compiling options:
 
 

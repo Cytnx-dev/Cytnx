@@ -4,6 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -50,9 +51,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#conda-install">Conda install</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#using-python-api">Using python API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#using-c-api">Using C++ API</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#build-from-source">Build from source</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#using-c-api-with-cmake">Using C++ API with CMake</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#build-cytnx-from-source">Build Cytnx from source</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#dependencies">Dependencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#compiling-process">Compiling process</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="#compiling-process-new">Compiling process [New]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compiling-process-old">Compiling process [Old]</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -294,9 +297,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#conda-install">Conda install</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#using-python-api">Using python API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#using-c-api">Using C++ API</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#build-from-source">Build from source</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#using-c-api-with-cmake">Using C++ API with CMake</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#build-cytnx-from-source">Build Cytnx from source</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#dependencies">Dependencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#compiling-process">Compiling process</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="#compiling-process-new">Compiling process [New]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compiling-process-old">Compiling process [Old]</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -626,8 +631,29 @@ Shape : (4)
 </pre></div>
 </div>
 </div>
-<div class="section" id="build-from-source">
-<h2>Build from source<a class="headerlink" href="#build-from-source" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="using-c-api-with-cmake">
+<h2>Using C++ API with CMake<a class="headerlink" href="#using-c-api-with-cmake" title="Permalink to this headline">¶</a></h2>
+<p>For user who what to use cmake/make to integrate cytnx into more complicated project, one can use the following lines to extract the essential to the cmake variables:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>CYTNX_INC :<span class="o">=</span> <span class="k">$(</span>shell python -c <span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_include__)\&quot;)&quot;</span><span class="k">)</span>
+CYTNX_LDFLAGS :<span class="o">=</span> <span class="k">$(</span>shell python -c <span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_linkflags__)\&quot;)&quot;</span><span class="k">)</span>
+CYTNX_LIB :<span class="o">=</span> <span class="k">$(</span>shell python -c <span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_lib__)\&quot;)&quot;</span><span class="k">)</span>/libcytnx.a
+CYTNX_CXXFLAGS :<span class="o">=</span> <span class="k">$(</span>shell python -c <span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_flags__)\&quot;)&quot;</span><span class="k">)</span>
+</pre></div>
+</div>
+<p>In the case cytnx is installed locally from binary build, not from anaconda, one can use the following lines to extract the linking and compiling varialbes:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>CYTNX_INC :<span class="o">=</span> <span class="k">$(</span>shell python -c <span class="s2">&quot;exec(\&quot;import sys\nsys.path.append(\&#39;</span><span class="k">$(</span>CYTNX_ROOT<span class="k">)</span><span class="s2">\&#39;)\nimport cytnx\nprint(cytnx.__cpp_include__)\&quot;)&quot;</span><span class="k">)</span>
+CYTNX_LDFLAGS :<span class="o">=</span> <span class="k">$(</span>shell python -c <span class="s2">&quot;exec(\&quot;import sys\nsys.path.append(\&#39;</span><span class="k">$(</span>CYTNX_ROOT<span class="k">)</span><span class="s2">\&#39;)\nimport cytnx\nprint(cytnx.__cpp_linkflags__)\&quot;)&quot;</span><span class="k">)</span>
+CYTNX_LIB :<span class="o">=</span> <span class="k">$(</span>shell python -c <span class="s2">&quot;exec(\&quot;import sys\nsys.path.append(\&#39;</span><span class="k">$(</span>CYTNX_ROOT<span class="k">)</span><span class="s2">\&#39;)\nimport cytnx\nprint(cytnx.__cpp_lib__)\&quot;)&quot;</span><span class="k">)</span>/libcytnx.a
+CYTNX_CXXFLAGS :<span class="o">=</span> <span class="k">$(</span>shell python -c <span class="s2">&quot;exec(\&quot;import sys\nsys.path.append(\&#39;</span><span class="k">$(</span>CYTNX_ROOT<span class="k">)</span><span class="s2">\&#39;)\nimport cytnx\nprint(cytnx.__cpp_flags__)\&quot;)&quot;</span><span class="k">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>CYTNX_ROOT is the path where cytnx is installed from binary build.</p>
+</div>
+</div>
+<div class="section" id="build-cytnx-from-source">
+<h2>Build Cytnx from source<a class="headerlink" href="#build-cytnx-from-source" title="Permalink to this headline">¶</a></h2>
 <p>For advanced user who wish to build cytnx from source, we provides the cmake install.</p>
 <div class="section" id="dependencies">
 <h3>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h3>
@@ -692,8 +718,19 @@ Shape : (4)
 <p>For Windows user, please use <a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">WSL</a>. We recommend using ubuntu distribution, and follow the instruction of Ubuntu to install cytnx and dependencies.</p>
 </div>
 </div>
-<div class="section" id="compiling-process">
-<h3>Compiling process<a class="headerlink" href="#compiling-process" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="compiling-process-new">
+<h3>Compiling process [New]<a class="headerlink" href="#compiling-process-new" title="Permalink to this headline">¶</a></h3>
+<p>Starting from v0.6.4a, cytnx provide a easy step-by-step install tool:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$python</span> auto_install.py
+</pre></div>
+</div>
+<p>This will prompt user through a series of install options, and generate a shell script <strong>ainstall.sh</strong>. To install, simply execute this script:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$sh</span> ainstall.sh
+</pre></div>
+</div>
+</div>
+<div class="section" id="compiling-process-old">
+<h3>Compiling process [Old]<a class="headerlink" href="#compiling-process-old" title="Permalink to this headline">¶</a></h3>
 <p>Please see the following steps for the standard cmake compiling process and all the compiling options:</p>
 <ol class="arabic simple">
 <li><p>create a build directory:</p></li>
@@ -808,7 +845,7 @@ hptt</p></td>
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.0.4 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.1.2 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>
