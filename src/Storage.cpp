@@ -10,6 +10,8 @@ using namespace std;
 
 namespace cytnx{
 
+    Storage_init_interface __SII;
+
     std::ostream& operator<<(std::ostream& os, Storage &in){
         in.print(); 
         return os; 
@@ -106,6 +108,25 @@ namespace cytnx{
         this->_Save(f);
         f.close();
     }
+    void Storage::Tofile(const std::string &fname) const{
+        fstream f;
+        f.open(fname,ios::out|ios::trunc|ios::binary);
+        if(!f.is_open()){
+            cytnx_error_msg(true,"[ERROR] invalid file path for save.%s","\n");
+        }
+        this->_Savebinary(f);   
+        f.close();
+    }
+    void Storage::Tofile(const char* fname) const{
+        fstream f;
+        string ffname = string(fname);
+        f.open(ffname,ios::out|ios::trunc|ios::binary);
+        if(!f.is_open()){
+            cytnx_error_msg(true,"[ERROR] invalid file path for save.%s","\n");
+        }
+        this->_Savebinary(f);
+        f.close();
+    }
     void Storage::_Save(fstream &f) const{
         //header
         //check:
@@ -134,8 +155,70 @@ namespace cytnx{
         }
 
     }
+    void Storage::_Savebinary(fstream &f) const{
+        //header
+        //check:
+        cytnx_error_msg(!f.is_open(),"[ERROR] invalid fstream!.%s","\n");
+ 
+        //data:
+        if(this->device() == Device.cpu){
+            f.write((char*)this->_impl->Mem,Type.typeSize(this->dtype())*this->size());
+        }else{
+            #ifdef UNI_GPU
+                checkCudaErrors(cudaSetDevice(this->device()));
+                void *htmp = malloc(Type.typeSize(this->dtype())*this->size());
+                checkCudaErrors(cudaMemcpy(htmp,this->_impl->Mem,Type.typeSize(this->dtype())*this->size(),cudaMemcpyDeviceToHost));
+                f.write((char*)htmp,Type.typeSize(this->dtype())*this->size());
+                free(htmp);
+                
+            #else
+                cytnx_error_msg(true,"ERROR internal fatal error in Save Storage%s","\n");
+            #endif
+        }
+
+    }
 
 
+    Storage Storage::Fromfile(const char* fname, const unsigned int &dtype, const cytnx_int64 &count){
+        return Storage::Fromfile(string(fname),dtype,count);
+    }
+    Storage Storage::Fromfile(const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count){
+        cytnx_error_msg(dtype==Type.Void,"[ERROR] cannot have Void dtype.%s","\n");
+        cytnx_error_msg(count==0,"[ERROR] count cannot be zero!%s","\n");
+
+        Storage out;
+        cytnx_uint64 Nbytes; 
+        cytnx_uint64 Nelem;
+
+        //check size:
+        ifstream jf;
+        //std::cout << fname << std::endl;
+        jf.open(fname,ios::ate|ios::binary);
+        if(!jf.is_open()){
+            cytnx_error_msg(true,"[ERROR] invalid file path for load.%s","\n");
+        }
+        Nbytes = jf.tellg();
+        jf.close();
+
+        fstream f;
+        //check if type match?
+        cytnx_error_msg(Nbytes%Type.typeSize(dtype),"[ERROR] the total size of file is not an interval of assigned dtype.%s","\n");
+
+        //check count smaller than Nelem:
+        if(count < 0 ) Nelem = Nbytes/Type.typeSize(dtype);   
+        else{
+            cytnx_error_msg(count > Nelem, "[ERROR] count exceed the total # of elements %d in file.\n",Nelem);
+            Nelem = count;
+        }
+
+        f.open(fname,ios::in|ios::binary);
+        if(!f.is_open()){
+            cytnx_error_msg(true,"[ERROR] invalid file path for load.%s","\n");
+        }
+        out._Loadbinary(f,dtype,Nelem);   
+        f.close();
+        return out;
+    }
     Storage Storage::Load(const std::string &fname){
         Storage out;
         fstream f;
@@ -205,7 +288,20 @@ namespace cytnx{
         }
 
     }
+    
+    void Storage::_Loadbinary(fstream &f, const unsigned int &dtype, const cytnx_uint64 &Nelem){
+        // before enter this func, makesure
+        // 1. dtype is not void.
+        // 2. the Nelement is consistent and smaller than the file size, and should not be zero!
 
+        //check:
+        cytnx_error_msg(!f.is_open(),"[ERROR] invalid fstream!.%s","\n");
+         
+        this->_impl = __SII.USIInit[dtype]();
+        this->_impl->Init(Nelem,Device.cpu);
+
+        f.read((char*)this->_impl->Mem,Type.typeSize(dtype)*Nelem);
+    }
 
 }
 

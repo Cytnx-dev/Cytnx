@@ -33,7 +33,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_complex128 a = 1/_Rin[0];
+                cytnx_complex128 a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_complex128)*len);
                 zscal(&N,&a,_out,&ONE);
 
@@ -101,7 +101,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_complex128 a = 1/_Rin[0];
+                cytnx_complex128 a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_complex128)*len);
                 zscal(&N,&a,_out,&ONE);
             }else{
@@ -170,7 +170,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_complex128 a = 1/_Rin[0];
+                cytnx_complex128 a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_complex128)*len);
                 zscal(&N,&a,_out,&ONE);
             }else{
@@ -236,7 +236,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_complex128 a = 1/_Rin[0];
+                cytnx_complex128 a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_complex128)*len);
                 zscal(&N,&a,_out,&ONE);
             }else{
@@ -303,7 +303,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_complex128 a = 1/_Rin[0];
+                cytnx_complex128 a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_complex128)*len);
                 zscal(&N,&a,_out,&ONE);
             }else{
@@ -370,7 +370,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_complex128 a = 1/_Rin[0];
+                cytnx_complex128 a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_complex128)*len);
                 zscal(&N,&a,_out,&ONE);
             }else{
@@ -437,7 +437,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_complex128 a = 1/_Rin[0];
+                cytnx_complex128 a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_complex128)*len);
                 zscal(&N,&a,_out,&ONE);
             }else{
@@ -504,7 +504,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_complex128 a = 1/_Rin[0];
+                cytnx_complex128 a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_complex128)*len);
                 zscal(&N,&a,_out,&ONE);
             }else{
@@ -570,7 +570,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_complex128 a = 1/_Rin[0];
+                cytnx_complex128 a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_complex128)*len);
                 zscal(&N,&a,_out,&ONE);
             }else{
@@ -636,7 +636,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_complex128 a = 1/_Rin[0];
+                cytnx_complex128 a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_complex128)*len);
                 zscal(&N,&a,_out,&ONE);
             }else{
@@ -702,7 +702,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_complex128 a = 1/cytnx_complex128(_Rin[0],0);
+                cytnx_complex128 a = 1./cytnx_complex128(_Rin[0],0);
                 memcpy(_out,_Lin,sizeof(cytnx_complex128)*len);
                 zscal(&N,&a,_out,&ONE);
             }else{
@@ -820,7 +820,7 @@ namespace cytnx{
             }else if(Rin->size()==1){
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_complex64 a = 1/_Rin[0];
+                cytnx_complex64 a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_complex64)*len);
                 cscal(&N,&a,_out,&ONE);
             }else{
@@ -886,7 +886,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_complex64 a = 1/_Rin[0];
+                cytnx_complex64 a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_complex64)*len);
                 cscal(&N,&a,_out,&ONE);
             }else{
@@ -952,7 +952,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_complex64 a = 1/_Rin[0];
+                cytnx_complex64 a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_complex64)*len);
                 cscal(&N,&a,_out,&ONE);
             }else{
@@ -1017,7 +1017,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_complex64 a = 1/_Rin[0];
+                cytnx_complex64 a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_complex64)*len);
                 cscal(&N,&a,_out,&ONE);
             }else{
@@ -1083,7 +1083,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_complex64 a = 1/_Rin[0];
+                cytnx_complex64 a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_complex64)*len);
                 cscal(&N,&a,_out,&ONE);
             }else{
@@ -1149,7 +1149,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_complex64 a = 1/_Rin[0];
+                cytnx_complex64 a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_complex64)*len);
                 cscal(&N,&a,_out,&ONE);
             }else{
@@ -1214,7 +1214,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_complex64 a = 1/_Rin[0];
+                cytnx_complex64 a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_complex64)*len);
                 cscal(&N,&a,_out,&ONE);
             }else{
@@ -1279,7 +1279,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_complex64 a = 1/_Rin[0];
+                cytnx_complex64 a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_complex64)*len);
                 cscal(&N,&a,_out,&ONE);
             }else{
@@ -1344,7 +1344,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_complex64 a = 1/_Rin[0];
+                cytnx_complex64 a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_complex64)*len);
                 cscal(&N,&a,_out,&ONE);
             }else{
@@ -1409,7 +1409,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_complex64 a = 1/cytnx_complex64(_Rin[0],0);
+                cytnx_complex64 a = 1./cytnx_complex64(_Rin[0],0);
                 memcpy(_out,_Lin,sizeof(cytnx_complex64)*len);
                 cscal(&N,&a,_out,&ONE);
             }else{
@@ -1592,7 +1592,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_double a = 1/_Rin[0];
+                cytnx_double a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_double)*len);
                 dscal(&N,&a,_out,&ONE);
             }else{
@@ -1659,7 +1659,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_double a = 1/_Rin[0];
+                cytnx_double a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_double)*len);
                 dscal(&N,&a,_out,&ONE);
             }else{
@@ -1725,7 +1725,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_double a = 1/_Rin[0];
+                cytnx_double a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_double)*len);
                 dscal(&N,&a,_out,&ONE);
             }else{
@@ -1792,7 +1792,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_double a = 1/_Rin[0];
+                cytnx_double a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_double)*len);
                 dscal(&N,&a,_out,&ONE);
             }else{
@@ -1858,7 +1858,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_double a = 1/_Rin[0];
+                cytnx_double a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_double)*len);
                 dscal(&N,&a,_out,&ONE);
             }else{
@@ -1925,7 +1925,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_double a = 1/_Rin[0];
+                cytnx_double a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_double)*len);
                 dscal(&N,&a,_out,&ONE);
             }else{
@@ -1992,7 +1992,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_double a = 1/_Rin[0];
+                cytnx_double a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_double)*len);
                 dscal(&N,&a,_out,&ONE);
             }else{
@@ -2059,7 +2059,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_double a = 1/_Rin[0];
+                cytnx_double a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_double)*len);
                 dscal(&N,&a,_out,&ONE);
             }else{
@@ -2126,7 +2126,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_double a = 1/double(_Rin[0]);
+                cytnx_double a = 1./double(_Rin[0]);
                 memcpy(_out,_Lin,sizeof(cytnx_double)*len);
                 dscal(&N,&a,_out,&ONE);
             }else{
@@ -2367,7 +2367,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_float a = 1/_Rin[0];
+                cytnx_float a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_float)*len);
                 sscal(&N,&a,_out,&ONE);
             }else{
@@ -2433,7 +2433,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_float a = 1/_Rin[0];
+                cytnx_float a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_float)*len);
                 sscal(&N,&a,_out,&ONE);
             }else{
@@ -2499,7 +2499,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_float a = 1/_Rin[0];
+                cytnx_float a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_float)*len);
                 sscal(&N,&a,_out,&ONE);
             }else{
@@ -2564,7 +2564,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_float a = 1/_Rin[0];
+                cytnx_float a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_float)*len);
                 sscal(&N,&a,_out,&ONE);
             }else{
@@ -2630,7 +2630,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_float a = 1/_Rin[0];
+                cytnx_float a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_float)*len);
                 sscal(&N,&a,_out,&ONE);
             }else{
@@ -2696,7 +2696,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_float a = 1/_Rin[0];
+                cytnx_float a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_float)*len);
                 sscal(&N,&a,_out,&ONE);
             }else{
@@ -2762,7 +2762,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_float a = 1/_Rin[0];
+                cytnx_float a = 1./_Rin[0];
                 memcpy(_out,_Lin,sizeof(cytnx_float)*len);
                 sscal(&N,&a,_out,&ONE);
             }else{
@@ -2828,7 +2828,7 @@ namespace cytnx{
                 */
                 blas_int N = len;
                 blas_int ONE = 1;
-                cytnx_float a = 1/float(_Rin[0]);
+                cytnx_float a = 1./float(_Rin[0]);
                 memcpy(_out,_Lin,sizeof(cytnx_float)*len);
                 sscal(&N,&a,_out,&ONE);
             }else{

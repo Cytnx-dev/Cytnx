@@ -450,6 +450,10 @@ PYBIND11_MODULE(cytnx,m){
                         return cytnx::arange(start,end,step,dtype,device);
                   },py::arg("start"),py::arg("end"),py::arg("step") = double(1), py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
 
+    m.def("linspace",[](const cytnx_double &start, const cytnx_double &end, const cytnx_uint64 &Nelem, const bool &endpoint, const unsigned int &dtype, const int &device)->Tensor{
+            return cytnx::linspace(start,end,Nelem,endpoint,dtype,device);
+    },py::arg("start"),py::arg("end"),py::arg("Nelem"), py::arg("endpoint")=true, py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
+
 
     m.def("_from_numpy", [](py::buffer b)-> Tensor{
         py::buffer_info info = b.request();
@@ -525,6 +529,11 @@ PYBIND11_MODULE(cytnx,m){
         .def("set_elem",&LinOp::set_elem<cytnx_int16>,py::arg("i"),py::arg("j"),py::arg("elem"),py::arg("check_exists")=true)
         .def("set_elem",&LinOp::set_elem<cytnx_uint16>,py::arg("i"),py::arg("j"),py::arg("elem"),py::arg("check_exists")=true)
         .def("set_elem",&LinOp::set_elem<cytnx_bool>,py::arg("i"),py::arg("j"),py::arg("elem"),py::arg("check_exists")=true)
+        //.def("__call__",[](cytnx::LinOp &self, const cytnx_uint64 &i, const cytnx_uint64 &j){
+        //        return Tensor(self(i,j));
+        //})
+
+
         .def("matvec", &LinOp::matvec)
         .def("set_device", &LinOp::set_device)
         .def("set_dtype", &LinOp::set_dtype)
@@ -540,6 +549,62 @@ PYBIND11_MODULE(cytnx,m){
 
 
     py::class_<cytnx::Storage>(m,"Storage")
+                 .def("numpy",[](Storage &self)-> py::array {
+
+                    //device on GPU? move to cpu:ref it;
+                    Storage tmpIN;
+                    if(self.device() >= 0){
+                        tmpIN = self.to(Device.cpu);
+                    }else{
+                        tmpIN = self.clone();
+                    }
+
+                    
+                    //calculate stride:
+                    std::vector<ssize_t> stride(1,Type.typeSize(tmpIN.dtype()));
+                    std::vector<ssize_t> shape(1,tmpIN.size());
+                    //ssize_t accu = tmpIN.size();
+                    
+                    py::buffer_info npbuf;
+                    std::string chr_dtype;
+                    if(tmpIN.dtype()==Type.ComplexDouble){ 
+                        chr_dtype = py::format_descriptor<cytnx_complex128>::format();
+                    }else if(tmpIN.dtype() == Type.ComplexFloat){
+                        chr_dtype = py::format_descriptor<cytnx_complex64>::format();
+                    }else if(tmpIN.dtype() == Type.Double){
+                        chr_dtype = py::format_descriptor<cytnx_double>::format();
+                    }else if(tmpIN.dtype() == Type.Float){
+                        chr_dtype = py::format_descriptor<cytnx_float>::format();
+                    }else if(tmpIN.dtype() == Type.Uint64){
+                        chr_dtype = py::format_descriptor<cytnx_uint64>::format();
+                    }else if(tmpIN.dtype() == Type.Int64){
+                        chr_dtype = py::format_descriptor<cytnx_int64>::format();
+                    }else if(tmpIN.dtype() == Type.Uint32){
+                        chr_dtype = py::format_descriptor<cytnx_uint32>::format();
+                    }else if(tmpIN.dtype() == Type.Int32){
+                        chr_dtype = py::format_descriptor<cytnx_int32>::format();
+                    }else if(tmpIN.dtype() == Type.Bool){
+                        chr_dtype = py::format_descriptor<cytnx_bool>::format();
+                    }else{
+                        cytnx_error_msg(true,"[ERROR] Void Type Tensor cannot convert to numpy ndarray%s","\n");
+                    }
+
+
+                    npbuf = py::buffer_info(
+                                tmpIN._impl->Mem,    //ptr
+                                Type.typeSize(tmpIN.dtype()), //size of elem 
+                                chr_dtype, //pss format
+                                1,    //rank 
+                                shape,       // shape
+                                stride      // stride
+                           );
+                    py::array out(npbuf);
+                    // delegate numpy array with it's ptr, and swap a auxiliary ptr for intrusive_ptr to free.
+                    void* pswap = malloc(sizeof(bool));
+                    tmpIN._impl->Mem = pswap;
+                    return out;
+
+                })
                 //construction
                 .def(py::init<>())
                 .def(py::init<const cytnx::Storage&>())
@@ -670,7 +735,10 @@ PYBIND11_MODULE(cytnx,m){
                 .def("append",&cytnx::Storage::append<cytnx::cytnx_uint16   >, py::arg("val"))
                 .def("append",&cytnx::Storage::append<cytnx::cytnx_bool     >, py::arg("val"))
                 .def("Save",[](cytnx::Storage &self, const std::string &fname){self.Save(fname);},py::arg("fname"))
+                .def("Tofile",[](cytnx::Storage &self, const std::string &fname){self.Tofile(fname);},py::arg("fname"))
                 .def_static("Load",[](const std::string &fname){return cytnx::Storage::Load(fname);},py::arg("fname"))
+                .def_static("Fromfile",[](const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count){
+                        return cytnx::Storage::Fromfile(fname,dtype,count);},py::arg("fname"),py::arg("dtype"),py::arg("count")=(cytnx_int64)(-1))
                 .def("real",&cytnx::Storage::real)
                 .def("imag",&cytnx::Storage::imag)
                 ;
@@ -852,9 +920,22 @@ PYBIND11_MODULE(cytnx,m){
                 .def("append",&cytnx::Tensor::append<cytnx::cytnx_uint16   >, py::arg("val"))
                 .def("append",&cytnx::Tensor::append<cytnx::cytnx_bool     >, py::arg("val"))
                 .def("append",[](cytnx::Tensor &self,const cytnx::Tensor &rhs){self.append(rhs);}, py::arg("val"))
+                .def("append",[](cytnx::Tensor &self,const cytnx::Storage &rhs){self.append(rhs);}, py::arg("val"))
 
                 .def("Save",[](cytnx::Tensor &self, const std::string &fname){self.Save(fname);},py::arg("fname"))
                 .def_static("Load",[](const std::string &fname){return cytnx::Tensor::Load(fname);},py::arg("fname"))
+                
+                .def("Tofile",[](cytnx::Tensor &self, const std::string &fname){self.Tofile(fname);},py::arg("fname"))
+                .def_static("Fromfile",[](const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count){return cytnx::Tensor::Load(fname);},py::arg("fname"),py::arg("dtype"),py::arg("count")=(cytnx_int64)(-1))
+                
+                .def_static("from_storage",[](const Storage &sin, const bool &is_clone){
+                                Tensor out; 
+                                if(is_clone)
+                                    cytnx::Tensor::from_storage(sin.clone());
+                                else
+                                    cytnx::Tensor::from_storage(sin);
+                                return out;
+                            },py::arg("sin"),py::arg("is_clone")=false)
 
                 .def("__len__",[](const cytnx::Tensor &self){
                     if(self.dtype()==Type.Void){
@@ -2044,6 +2125,11 @@ PYBIND11_MODULE(cytnx,m){
     m_linalg.def("c_Lanczos_Gnd",[](LinOp *Hop, const double &CvgCrit, const bool &is_V, const Tensor &Tin, const bool &verbose, const cytnx_uint64 &maxiter){
                                     return cytnx::linalg::Lanczos_Gnd(Hop,CvgCrit,is_V,Tin,verbose,maxiter);
                                 });
+
+    // [Submodule algo] 
+    pybind11::module m_algo = m.def_submodule("algo","algorithm related.");
+    m_algo.def("Sort",&cytnx::algo::Sort, py::arg("Tn"));
+    
 
     // [Submodule physics]
     pybind11::module m_physics = m.def_submodule("physics","physics related.");

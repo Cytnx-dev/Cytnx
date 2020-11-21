@@ -11,7 +11,9 @@
 #include "Tensor.hpp"
 #include "Generator.hpp"
 #include "Physics.hpp"
+#include "algo.hpp"
 #include "linalg.hpp"
+#include "cytnx.hpp"
 #include "utils/utils.hpp"
 #include "random.hpp"
 

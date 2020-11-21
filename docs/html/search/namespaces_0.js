@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['algo',['algo',['../namespacecytnx_1_1algo.html',1,'cytnx']]],
   ['cytnx',['cytnx',['../namespacecytnx.html',1,'']]],
   ['linalg',['linalg',['../namespacecytnx_1_1linalg.html',1,'cytnx']]],
   ['physics',['physics',['../namespacecytnx_1_1physics.html',1,'cytnx']]],

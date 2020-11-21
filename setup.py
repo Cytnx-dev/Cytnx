@@ -153,7 +153,7 @@ def get_version():
 
 setup(
     name='cytnx',
-    version="0.6.4",
+    version="0.6.5",
     maintainer='Kai-Hsin Wu, Yen-Hsin Wu',
     maintainer_email="kaihsinwu@gmail.com",
     description='Project Cytnx',

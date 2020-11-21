@@ -12,7 +12,7 @@ var searchData=
   ['physics_2ehpp',['Physics.hpp',['../Physics_8hpp.html',1,'']]],
   ['pow',['Pow',['../classcytnx_1_1Tensor.html#ac5bd2525bacc3713694a063074538e20',1,'cytnx::Tensor::Pow()'],['../classcytnx_1_1UniTensor.html#aa6605e1634684f737bf1cc80d9b0d129',1,'cytnx::UniTensor::Pow()'],['../namespacecytnx_1_1linalg.html#af2e15ace1ea23939174fdea1829430fd',1,'cytnx::linalg::Pow(const UniTensor &amp;Tin, const double &amp;p)'],['../namespacecytnx_1_1linalg.html#a2919ef6c163a54360071c286df3fb92e',1,'cytnx::linalg::Pow(const Tensor &amp;Tin, const double &amp;p)']]],
   ['pow_5f',['Pow_',['../classcytnx_1_1Tensor.html#a977738a47390feeab721a599fc21ec28',1,'cytnx::Tensor::Pow_()'],['../classcytnx_1_1UniTensor.html#a8edcf22c095570948abcc18fa24c2b6f',1,'cytnx::UniTensor::Pow_()'],['../namespacecytnx_1_1linalg.html#a31c366a1a4ea1c78e855cb6a79cb6115',1,'cytnx::linalg::Pow_(UniTensor &amp;Tin, const double &amp;p)'],['../namespacecytnx_1_1linalg.html#a269ef291355dfee4421fa55ad0247aad',1,'cytnx::linalg::Pow_(Tensor &amp;Tin, const double &amp;p)']]],
-  ['print',['print',['../classcytnx_1_1Scalar.html#aad630e2f1c06e3525acea09dd0ad895a',1,'cytnx::Scalar']]],
+  ['print',['print',['../namespacecytnx.html#ade204e242f351a5a19fe33938d150bf7',1,'cytnx']]],
   ['print_5fdiagram',['print_diagram',['../classcytnx_1_1UniTensor.html#a685061555097873eb172381059fda92b',1,'cytnx::UniTensor']]],
   ['print_5finfo',['print_info',['../classcytnx_1_1Storage.html#a0ae2bee5e15c651b05dadf5dbbdb36f5',1,'cytnx::Storage']]],
   ['printnet',['PrintNet',['../classcytnx_1_1Network.html#a2218d13ef5879f5d35d8b799d33703e7',1,'cytnx::Network']]],

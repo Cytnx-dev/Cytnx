@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['algo',['algo',['../namespacecytnx_1_1algo.html',1,'cytnx']]],
   ['calc_5freverse_5fqnums',['calc_reverse_qnums',['../classcytnx_1_1Bond.html#acaa72773e06274394ebab23ded4d9990',1,'cytnx::Bond']]],
   ['capacity',['capacity',['../classcytnx_1_1Storage.html#a62bab0b879eabdd9be7a269fd604d987',1,'cytnx::Storage']]],
   ['cdotc',['cdotc',['../lapack__wrapper_8hpp.html#adeac612df99059537b520006223b420c',1,'lapack_wrapper.hpp']]],
@@ -21,8 +22,8 @@ var searchData=
   ['combinebond_5f',['combineBond_',['../classcytnx_1_1Bond.html#ac21ab26ec469ac56ae78c9e4bbbe7040',1,'cytnx::Bond']]],
   ['combinebonds',['combineBonds',['../classcytnx_1_1Bond.html#a4a1d060cf2d0c44d83356df757a802d1',1,'cytnx::Bond::combineBonds()'],['../classcytnx_1_1UniTensor.html#a0a75eb4843d626eacb86fc42a75d1c13',1,'cytnx::UniTensor::combineBonds()']]],
   ['combinebonds_5f',['combineBonds_',['../classcytnx_1_1Bond.html#a1fd655bfe0845839502b6e385d743078',1,'cytnx::Bond']]],
-  ['complex128',['complex128',['../namespacecytnx.html#a08874470d7cb6bbd3f3bc031403e7e00',1,'cytnx']]],
-  ['complex64',['complex64',['../namespacecytnx.html#aa1c827c6a452e7a7241caf5fa877454a',1,'cytnx']]],
+  ['complex128',['complex128',['../Scalar_8hpp.html#afe5ac5721b4e33e360ab25831368ccd1',1,'complex128():&#160;Scalar.cpp'],['../namespacecytnx.html#a08874470d7cb6bbd3f3bc031403e7e00',1,'cytnx::complex128()']]],
+  ['complex64',['complex64',['../Scalar_8hpp.html#a9b71b8357f57b5e9bd4e5a21daaecd25',1,'complex64():&#160;Scalar.cpp'],['../namespacecytnx.html#aa1c827c6a452e7a7241caf5fa877454a',1,'cytnx::complex64()']]],
   ['complexdoublestorage_2ecpp',['ComplexDoubleStorage.cpp',['../ComplexDoubleStorage_8cpp.html',1,'']]],
   ['complexfloatstorage_2ecpp',['ComplexFloatStorage.cpp',['../ComplexFloatStorage_8cpp.html',1,'']]],
   ['conj',['Conj',['../classcytnx_1_1Tensor.html#a89af177fad9c00c3d09d2c587de2d77a',1,'cytnx::Tensor::Conj()'],['../classcytnx_1_1UniTensor.html#af74a28956115b66b67159c3d2702ebbe',1,'cytnx::UniTensor::Conj()'],['../namespacecytnx_1_1linalg.html#a470d0886432554a35ecaf961451c0806',1,'cytnx::linalg::Conj()']]],

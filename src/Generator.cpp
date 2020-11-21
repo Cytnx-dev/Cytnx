@@ -69,6 +69,32 @@ namespace cytnx{
         cytnx_error_msg(Nelem <= 0, "[ERROR] arange(Nelem) , %s","Nelem must be integer > 0");
         return arange(0,Nelem,1,dtype,device);
     }
+
+    Tensor linspace(const cytnx_double &start, const cytnx_double &end, const cytnx_uint64 &Nelem, const bool &endpoint, const unsigned int &dtype, const int &device){
+        Tensor out;
+        cytnx_error_msg(Nelem == 0,"[ERROR] linspace(start,end,Nelem)%s","Nelem cannot be zero!\n");
+        out.Init({Nelem},dtype,device);
+        cytnx_double step;
+        if(Nelem==1) step = end-start;
+        else {
+            if(endpoint) step = (end-start)/(Nelem-1);
+            else step = (end-start)/(Nelem);
+        }
+
+        if(device == Device.cpu){
+            utils_internal::uii.SetArange_ii[dtype](out._impl->storage()._impl, start, end, step, Nelem);
+        }else{
+            #ifdef UNI_GPU
+                checkCudaErrors(cudaSetDevice(out.device()));
+                utils_internal::uii.cuSetArange_ii[dtype](out._impl->storage()._impl, start, end, step, Nelem);
+            #else
+                cytnx_error_msg(true,"[ERROR] fatal internal, %s"," [arange] the container is on gpu without CUDA support!%s","\n")
+            #endif
+        }
+        return out;
+    }
+
+
     //--------------
     
 

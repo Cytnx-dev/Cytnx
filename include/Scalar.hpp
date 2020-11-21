@@ -3,6 +3,7 @@
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
+#include "lapack_wrapper.hpp"
 #include "intrusive_ptr_base.hpp"
 #include <vector>
 #include <initializer_list>
@@ -11,7 +12,7 @@
 
 namespace cytnx{
 
-
+    ///@endcond;
     ///@cond
     // real implementation
     class Scalar_base{
@@ -35,6 +36,20 @@ namespace cytnx{
             virtual cytnx_int16 to_cytnx_int16() const{cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot cast to anytype!!%s","\n");return 0;};
             virtual cytnx_uint16 to_cytnx_uint16() const{cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot cast to anytype!!%s","\n");return 0;};
             virtual cytnx_bool to_cytnx_bool() const{cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot cast to anytype!!%s","\n");return 0;}
+
+            virtual void iadd(const Scalar_base* c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void iadd(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void iadd(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void iadd(const cytnx_double &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void iadd(const cytnx_float &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void iadd(const cytnx_uint64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void iadd(const cytnx_int64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void iadd(const cytnx_uint32 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void iadd(const cytnx_int32 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void iadd(const cytnx_uint16 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void iadd(const cytnx_int16 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void iadd(const cytnx_bool &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            
             virtual void print(std::ostream& os) const{};
             virtual Scalar_base* copy() const{
                 Scalar_base *tmp = new Scalar_base();
@@ -67,6 +82,21 @@ namespace cytnx{
             cytnx_int16 to_cytnx_int16()           const{cytnx_error_msg(true,"[ERROR] cannot cast complex128 to real%s","\n");return 0;};
             cytnx_uint16 to_cytnx_uint16()         const{cytnx_error_msg(true,"[ERROR] cannot cast complex128 to real%s","\n");return 0;};
             cytnx_bool to_cytnx_bool()             const{cytnx_error_msg(true,"[ERROR] cannot cast complex128 to real%s","\n");return 0;};
+
+            void iadd(const Scalar_base* c){this->_elem += c->to_cytnx_complex128();}
+            void iadd(const cytnx_complex128 &c){this->_elem += c;}
+            void iadd(const cytnx_complex64 &c){this->_elem += c;}
+            void iadd(const cytnx_double &c){this->_elem += c;}
+            void iadd(const cytnx_float  &c){this->_elem += c;}
+            void iadd(const cytnx_uint64 &c){this->_elem += c;}
+            void iadd(const cytnx_int64 &c){this->_elem += c;}
+            void iadd(const cytnx_uint32 &c){this->_elem += c;}
+            void iadd(const cytnx_int32  &c){this->_elem += c;}
+            void iadd(const cytnx_uint16 &c){this->_elem += c;}
+            void iadd(const cytnx_int16  &c){this->_elem += c;}
+            void iadd(const cytnx_bool   &c){this->_elem += c;}
+
+
             Scalar_base* copy() const{
                 ComplexDoubleScalar *tmp = new ComplexDoubleScalar(this->_elem); 
                 return tmp;
@@ -98,6 +128,21 @@ namespace cytnx{
             cytnx_int16 to_cytnx_int16()           const{cytnx_error_msg(true,"[ERROR] cannot cast complex64 to real%s","\n");return 0;};
             cytnx_uint16 to_cytnx_uint16()         const{cytnx_error_msg(true,"[ERROR] cannot cast complex64 to real%s","\n");return 0;};
             cytnx_bool to_cytnx_bool()             const{cytnx_error_msg(true,"[ERROR] cannot cast complex64 to real%s","\n");return 0;};
+
+
+            void iadd(const Scalar_base* c){this->_elem += c->to_cytnx_complex64();}
+            void iadd(const cytnx_complex128 &c){this->_elem += c;}
+            void iadd(const cytnx_complex64 &c){this->_elem += c;}
+            void iadd(const cytnx_double &c){this->_elem += c;}
+            void iadd(const cytnx_float  &c){this->_elem += c;}
+            void iadd(const cytnx_uint64 &c){this->_elem += c;}
+            void iadd(const cytnx_int64 &c){this->_elem += c;}
+            void iadd(const cytnx_uint32 &c){this->_elem += c;}
+            void iadd(const cytnx_int32  &c){this->_elem += c;}
+            void iadd(const cytnx_uint16 &c){this->_elem += c;}
+            void iadd(const cytnx_int16  &c){this->_elem += c;}
+            void iadd(const cytnx_bool   &c){this->_elem += c;}
+
             Scalar_base* copy() const{
                 ComplexFloatScalar *tmp = new ComplexFloatScalar(this->_elem); 
                 return tmp;
@@ -129,6 +174,21 @@ namespace cytnx{
             cytnx_int16 to_cytnx_int16()           const{return this->_elem;};
             cytnx_uint16 to_cytnx_uint16()         const{return this->_elem;};
             cytnx_bool to_cytnx_bool()             const{return this->_elem;};
+
+
+            void iadd(const Scalar_base* c){this->_elem += c->to_cytnx_double();}
+            void iadd(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void iadd(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void iadd(const cytnx_double &c){this->_elem += c;}
+            void iadd(const cytnx_float  &c){this->_elem += c;}
+            void iadd(const cytnx_uint64 &c){this->_elem += c;}
+            void iadd(const cytnx_int64 &c){this->_elem += c;}
+            void iadd(const cytnx_uint32 &c){this->_elem += c;}
+            void iadd(const cytnx_int32  &c){this->_elem += c;}
+            void iadd(const cytnx_uint16 &c){this->_elem += c;}
+            void iadd(const cytnx_int16  &c){this->_elem += c;}
+            void iadd(const cytnx_bool   &c){this->_elem += c;}
+
             Scalar_base* copy() const{
                 DoubleScalar *tmp = new DoubleScalar(this->_elem); 
                 return tmp;
@@ -160,6 +220,21 @@ namespace cytnx{
             cytnx_int16 to_cytnx_int16()           const{return this->_elem;};
             cytnx_uint16 to_cytnx_uint16()         const{return this->_elem;};
             cytnx_bool to_cytnx_bool()             const{return this->_elem;};
+
+
+            void iadd(const Scalar_base* c){this->_elem += c->to_cytnx_float();}
+            void iadd(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void iadd(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void iadd(const cytnx_double &c){this->_elem += c;}
+            void iadd(const cytnx_float  &c){this->_elem += c;}
+            void iadd(const cytnx_uint64 &c){this->_elem += c;}
+            void iadd(const cytnx_int64 &c){this->_elem += c;}
+            void iadd(const cytnx_uint32 &c){this->_elem += c;}
+            void iadd(const cytnx_int32  &c){this->_elem += c;}
+            void iadd(const cytnx_uint16 &c){this->_elem += c;}
+            void iadd(const cytnx_int16  &c){this->_elem += c;}
+            void iadd(const cytnx_bool   &c){this->_elem += c;}
+
             Scalar_base* copy() const{
                 FloatScalar *tmp = new FloatScalar(this->_elem); 
                 return tmp;
@@ -191,6 +266,21 @@ namespace cytnx{
             cytnx_int16 to_cytnx_int16()           const{return this->_elem;};
             cytnx_uint16 to_cytnx_uint16()         const{return this->_elem;};
             cytnx_bool to_cytnx_bool()             const{return this->_elem;};
+
+
+            void iadd(const Scalar_base* c){this->_elem += c->to_cytnx_int64();}
+            void iadd(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void iadd(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void iadd(const cytnx_double &c){this->_elem += c;}
+            void iadd(const cytnx_float  &c){this->_elem += c;}
+            void iadd(const cytnx_uint64 &c){this->_elem += c;}
+            void iadd(const cytnx_int64 &c){this->_elem += c;}
+            void iadd(const cytnx_uint32 &c){this->_elem += c;}
+            void iadd(const cytnx_int32  &c){this->_elem += c;}
+            void iadd(const cytnx_uint16 &c){this->_elem += c;}
+            void iadd(const cytnx_int16  &c){this->_elem += c;}
+            void iadd(const cytnx_bool   &c){this->_elem += c;}
+
             Scalar_base* copy() const{
                 Int64Scalar *tmp = new Int64Scalar(this->_elem); 
                 return tmp;
@@ -221,6 +311,21 @@ namespace cytnx{
             cytnx_int16 to_cytnx_int16()           const{return this->_elem;};
             cytnx_uint16 to_cytnx_uint16()         const{return this->_elem;};
             cytnx_bool to_cytnx_bool()             const{return this->_elem;};
+
+
+            void iadd(const Scalar_base* c){this->_elem += c->to_cytnx_uint64();}
+            void iadd(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void iadd(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void iadd(const cytnx_double &c){this->_elem += c;}
+            void iadd(const cytnx_float  &c){this->_elem += c;}
+            void iadd(const cytnx_uint64 &c){this->_elem += c;}
+            void iadd(const cytnx_int64 &c){this->_elem += c;}
+            void iadd(const cytnx_uint32 &c){this->_elem += c;}
+            void iadd(const cytnx_int32  &c){this->_elem += c;}
+            void iadd(const cytnx_uint16 &c){this->_elem += c;}
+            void iadd(const cytnx_int16  &c){this->_elem += c;}
+            void iadd(const cytnx_bool   &c){this->_elem += c;}
+
             Scalar_base* copy() const{
                 Uint64Scalar *tmp = new Uint64Scalar(this->_elem); 
                 return tmp;
@@ -251,6 +356,21 @@ namespace cytnx{
             cytnx_int16 to_cytnx_int16()           const{return this->_elem;};
             cytnx_uint16 to_cytnx_uint16()         const{return this->_elem;};
             cytnx_bool to_cytnx_bool()             const{return this->_elem;};
+
+
+            void iadd(const Scalar_base* c){this->_elem += c->to_cytnx_int32();}
+            void iadd(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void iadd(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void iadd(const cytnx_double &c){this->_elem += c;}
+            void iadd(const cytnx_float  &c){this->_elem += c;}
+            void iadd(const cytnx_uint64 &c){this->_elem += c;}
+            void iadd(const cytnx_int64 &c){this->_elem += c;}
+            void iadd(const cytnx_uint32 &c){this->_elem += c;}
+            void iadd(const cytnx_int32  &c){this->_elem += c;}
+            void iadd(const cytnx_uint16 &c){this->_elem += c;}
+            void iadd(const cytnx_int16  &c){this->_elem += c;}
+            void iadd(const cytnx_bool   &c){this->_elem += c;}
+
             Scalar_base* copy() const{
                 Int32Scalar *tmp = new Int32Scalar(this->_elem); 
                 return tmp;
@@ -281,6 +401,22 @@ namespace cytnx{
             cytnx_int16 to_cytnx_int16()           const{return this->_elem;};
             cytnx_uint16 to_cytnx_uint16()         const{return this->_elem;};
             cytnx_bool to_cytnx_bool()             const{return this->_elem;};
+
+
+            void iadd(const Scalar_base* c){this->_elem += c->to_cytnx_uint32();}
+            void iadd(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void iadd(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void iadd(const cytnx_double &c){this->_elem += c;}
+            void iadd(const cytnx_float  &c){this->_elem += c;}
+            void iadd(const cytnx_uint64 &c){this->_elem += c;}
+            void iadd(const cytnx_int64 &c){this->_elem += c;}
+            void iadd(const cytnx_uint32 &c){this->_elem += c;}
+            void iadd(const cytnx_int32  &c){this->_elem += c;}
+            void iadd(const cytnx_uint16 &c){this->_elem += c;}
+            void iadd(const cytnx_int16  &c){this->_elem += c;}
+            void iadd(const cytnx_bool   &c){this->_elem += c;}
+
+
             Scalar_base* copy() const{
                 Uint32Scalar *tmp = new Uint32Scalar(this->_elem); 
                 return tmp;
@@ -311,6 +447,20 @@ namespace cytnx{
             cytnx_int16 to_cytnx_int16()           const{return this->_elem;};
             cytnx_uint16 to_cytnx_uint16()         const{return this->_elem;};
             cytnx_bool to_cytnx_bool()             const{return this->_elem;};
+
+            void iadd(const Scalar_base* c){this->_elem += c->to_cytnx_int16();}
+            void iadd(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void iadd(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void iadd(const cytnx_double &c){this->_elem += c;}
+            void iadd(const cytnx_float  &c){this->_elem += c;}
+            void iadd(const cytnx_uint64 &c){this->_elem += c;}
+            void iadd(const cytnx_int64 &c){this->_elem += c;}
+            void iadd(const cytnx_uint32 &c){this->_elem += c;}
+            void iadd(const cytnx_int32  &c){this->_elem += c;}
+            void iadd(const cytnx_uint16 &c){this->_elem += c;}
+            void iadd(const cytnx_int16  &c){this->_elem += c;}
+            void iadd(const cytnx_bool   &c){this->_elem += c;}
+
             Scalar_base* copy() const{
                 Int16Scalar *tmp = new Int16Scalar(this->_elem); 
                 return tmp;
@@ -341,6 +491,22 @@ namespace cytnx{
             cytnx_int16 to_cytnx_int16()           const{return this->_elem;};
             cytnx_uint16 to_cytnx_uint16()         const{return this->_elem;};
             cytnx_bool to_cytnx_bool()             const{return this->_elem;};
+
+
+            void iadd(const Scalar_base* c){this->_elem += c->to_cytnx_uint16();}
+            void iadd(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void iadd(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void iadd(const cytnx_double &c){this->_elem += c;}
+            void iadd(const cytnx_float  &c){this->_elem += c;}
+            void iadd(const cytnx_uint64 &c){this->_elem += c;}
+            void iadd(const cytnx_int64 &c){this->_elem += c;}
+            void iadd(const cytnx_uint32 &c){this->_elem += c;}
+            void iadd(const cytnx_int32  &c){this->_elem += c;}
+            void iadd(const cytnx_uint16 &c){this->_elem += c;}
+            void iadd(const cytnx_int16  &c){this->_elem += c;}
+            void iadd(const cytnx_bool   &c){this->_elem += c;}
+
+
             Scalar_base* copy() const{
                 Uint16Scalar *tmp = new Uint16Scalar(this->_elem); 
                 return tmp;
@@ -371,6 +537,22 @@ namespace cytnx{
             cytnx_int16 to_cytnx_int16()           const{return this->_elem;};
             cytnx_uint16 to_cytnx_uint16()         const{return this->_elem;};
             cytnx_bool to_cytnx_bool()             const{return this->_elem;};
+
+
+            void iadd(const Scalar_base* c){this->_elem += c->to_cytnx_bool();}
+            void iadd(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void iadd(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void iadd(const cytnx_double &c){this->_elem += c;}
+            void iadd(const cytnx_float  &c){this->_elem += c;}
+            void iadd(const cytnx_uint64 &c){this->_elem += c;}
+            void iadd(const cytnx_int64 &c){this->_elem += c;}
+            void iadd(const cytnx_uint32 &c){this->_elem += c;}
+            void iadd(const cytnx_int32  &c){this->_elem += c;}
+            void iadd(const cytnx_uint16 &c){this->_elem += c;}
+            void iadd(const cytnx_int16  &c){this->_elem += c;}
+            void iadd(const cytnx_bool   &c){this->_elem += c;}
+
+
             Scalar_base* copy() const{
                 BoolScalar *tmp = new BoolScalar(this->_elem); 
                 return tmp;
@@ -381,7 +563,18 @@ namespace cytnx{
     }; 
 
     ///@endcond
+    
+    ///@cond
+    typedef Scalar_base* (*pScalar_init)();
+    ///@endcond
 
+    ///@cond
+    class Scalar_init_interface: public Type_class{
+        public:
+            std::vector<pScalar_init> UScIInit;
+            Scalar_init_interface();
+    };
+    extern Scalar_init_interface __ScII;
 
 
     class Scalar{
@@ -479,7 +672,7 @@ namespace cytnx{
                 this->_impl->print(std::cout);
             }
 
-            
+            //casting            
             operator cytnx_double() const{
                 return this->_impl->to_cytnx_double();
             }
@@ -511,6 +704,12 @@ namespace cytnx{
                 if(this->_impl!=nullptr)
                     delete this->_impl;
             };
+
+            //arithmetic:
+            void operator+=(const Scalar &rhs){
+                this->_impl->iadd(rhs._impl);
+            }
+
             
 
     };

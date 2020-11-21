@@ -26,22 +26,22 @@ namespace cytnx{
                         //    kry_mat = cytnx::zeros({krydim,krydim},Tin.dtype(),Tin.device());
             
                         // normalized q1:
-                        buffer[0] = buffer[0]/buffer[0].Norm().item<cytnx_double>(); // normalized q1
+                        buffer[0] /= buffer[0].Norm().item<cytnx_double>(); // normalized q1
 
                         for(cytnx_uint32 ip=1;ip<krydim+1;ip++){
                             buffer[ip] = Hop->matvec(buffer[ip-1]); // Hqi
                             
                             for(cytnx_uint32 ig=0;ig<ip;ig++)
-                                kry_mat[{ip-1,ig}] = Vectordot(buffer[ip],buffer[ig]);
+                                kry_mat.storage().at<cytnx_double>((ip-1)*krydim+ig) = Vectordot(buffer[ip],buffer[ig]).item<cytnx_double>();
                             
                             // explicitly re-orthogonization
                             for(cytnx_uint32 ig=0;ig<ip;ig++){
-                                buffer[ip] -= Vectordot(buffer[ip],buffer[ig])*buffer[ig];
+                                buffer[ip] -= Vectordot(buffer[ip],buffer[ig]).item<cytnx_double>()*buffer[ig];
                                 buffer[ip] /= buffer[ip].Norm().item<cytnx_double>();
                             }
                             // exp. reorth with previous converged ev.
                             for(cytnx_uint32 ig=0;ig<converged_ev.size();ig++){
-                                buffer[ip] -= Vectordot(buffer[ip],converged_ev[ig])*converged_ev[ig];
+                                buffer[ip] -= Vectordot(buffer[ip],converged_ev[ig]).item<cytnx_double>()*converged_ev[ig];
                                 buffer[ip] /= buffer[ip].Norm().item<cytnx_double>();
                             }
 
@@ -49,10 +49,10 @@ namespace cytnx{
                         }//ip 
                         auto tmp = Eigh(kry_mat,true,true);
 
-                        tmp[1] = tmp[1][{ac(0)}];// get only the ground state.
-                        buffer[0] = tmp[1].get({ac(0)})*buffer[0];
+                        tmp[1] = tmp[1](0);// get only the ground state.
+                        buffer[0] = tmp[1].storage().at<cytnx_double>(0)*buffer[0];
                         for( cytnx_int64 ip=1;ip<krydim;ip++)
-                            buffer[0] += buffer[ip]*tmp[1].get({ac(ip)});
+                            buffer[0] += buffer[ip]*tmp[1].storage().at<cytnx_double>(ip);//get({ac(ip)});
                         
 
                         // check converge
@@ -70,7 +70,7 @@ namespace cytnx{
                         cytnx_error_msg(true,"[ERROR][Lanczos] Fail to converge at eigv [%d], try increasing maxiter?%s",ik,"\n");
                     }
                     converged_ev.push_back(buffer[0].clone());
-                    out[0][{ac(ik)}] = Elast;
+                    out[0].storage().at<cytnx_double>(ik) = Elast;
 
 
                     if(ik!=k-1){

@@ -22,10 +22,23 @@ See The following user guide for install and using of cytnx:
 [v0.6.4a](https://github.com/kaihsin/Cytnx/tree/v0.6.4a)
 
 ## Current dev Version:
+    v0.6.6
+    
     v0.6.5
     1. [Fix] Bug in UniTensor _Load    
-    1. [Enahnce] Improve stability in Lanczos_ER  
-
+    2. [Enhance] Improve stability in Lanczos_ER  
+    3. [Enhance] Move _SII to stack.
+    4. [Enhance] Add LinOp operator() for mv_elem
+    5. [Enhance] Add c++ API fast link to cutt
+    6. [Enhance] Add Fromfile/Tofile for load/save binary files @ Tensor/Storage
+    7. [Enhance] Add linspace generator
+    8. [Fix] Bug in Div for fast Blas call bug
+    9. [Enhance] Add Tensor.append(Storage) if Tensor is rank-2 and dimension match.
+    10. [Enhance] Add algo namespace
+    11. [Enhance] Add Sort-@cpu
+    12. [Enhance] add Storage.numpy() for pythonAPI
+    13. [Enhance] add Tensor.from_storage() for python API
+    
     v0.6.4
     1. [Enhance] Add option mv_elem for Tensordot, which actually move elements in input tensor. This is beneficial when same tensordot is called multiple times.
     2. [Enhance] Add option cacheL, cacheR to Contract of unitensor. which mv the elements of input tensors to the matmul handy position. 
@@ -39,42 +52,6 @@ See The following user guide for install and using of cytnx:
     10. [Fix] wrong error message in linalg::Cpr
     11. [Fix] reshape() on a already contiguous Tensor will resulting as the change in original tensor, which should not happened.
 
-    v0.6.3
-    1. [Enhance] Add Device.Ncpus for detecting avaliable omp threads
-    2. [Enhance] Add HPTT support on CPU permute.
-    3. [Internal] Build version centralize
-    4. [Enhance] More info for Device. 
-    6. [Enhance] Add cytnx.__variant_info__ for checking the installed variant.
-
-    v0.6.2
-    1. [Fix] Bug in CUDA Matmul interface passing the wrong object bug.  
-    2. [Enhance] Add Matmul_dg for diagonal matrix mutiply dense matrix. 
-    3. [Enhance] Add Tensordot_dg for tensordot with either Tl or Tr is diagonal matrix
-    4. [Enhance] Contract dense & sparse memory optimized.      
-    5. [example] Add iTEBD_gpu.py example
-    6. [Fix] Bug in CUDA cuVectordot d and f seg fault 
-    7. [Enhance] Add cuReduce for optimized reduction. 
-    8. [Enhance] Optimize performance for Mul_internal_cpu. 
-    9. [Enhance] Optimize performance for Div_internal_cpu. 
-    10. [Fix] Bug in permute of UniTensor/Tensor with duplicate entries does not return error.
-
-    v0.6.1
-    1. [Enhance] add Scalar class (shadow)
-    2. [Enhance] change default allocation from Malloc to Calloc.
-    3. [Enhance] change storage.raw_ptr() to storage.data() and storage.data<>() 
-    4. [Enhance] change storage.cap to STORAGE_DEFT_SZ that can be tune.
-    5. [Enhance] adding Tproxy/Tproxy, Tproxy/Tensor, Tensor/Tproxy operation 
-    6. [Enhance] Add mv_elem type for LinOp, which intrinsically omp the matvec operation.    
-    7. [Fatal  ] Fix bug in Dot for Matrix-Vector multiplication on both GPU and CPU with complex&real float dtypes.
-
-    v0.6.0
-    1. [Enhance] behavior change the behavior of permute to prevent redundant copy in UniTensor and Tensor.
-    2. add Tensor::same_data to check if two Tensor has same storage.
-    3. [Enhance] the behavior of reshape in Tensor to prevent redundant copy.    
-    4. [Enhance] behavior change all linalg to follow the same disipline for permute/reshape/contiguous
-    5. [Enhance] add print() in C++ API    
-    6. [Fix] reshape() does not share memory
-    7. [Fix] BoolStorage print_elem does not show the first element in shape
 
 
 ## API Documentation:

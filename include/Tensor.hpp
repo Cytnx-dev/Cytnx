@@ -530,6 +530,7 @@ namespace cytnx{
             /// @cond 
             void _Save(std::fstream &f) const;
             void _Load(std::fstream &f);
+
             /// @endcond
             /**
             @brief Save current Tensor to file
@@ -541,6 +542,9 @@ namespace cytnx{
             */            
             void Save(const std::string &fname) const;
             void Save(const char* fname) const;
+            void Tofile(const std::string &fname) const;
+            void Tofile(const char* fname) const;
+            
             /**
             @brief Load current Tensor to file
             @param fname file name
@@ -551,7 +555,11 @@ namespace cytnx{
             */            
             static Tensor Load(const std::string &fname);
             static Tensor Load(const char* fname);
+            static Tensor Fromfile(const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count=-1);
+            static Tensor Fromfile(const char* fname, const unsigned int &dtype, const cytnx_int64 &count=-1);
 
+            //static Tensor Frombinary(const std::string &fname);
+            
 
 
             ///@cond
@@ -1240,6 +1248,31 @@ namespace cytnx{
                 memcpy(((char*)this->_impl->_storage.data()) + oldsize*Type.typeSize(this->dtype())/sizeof(char),
                        in._impl->_storage.data(),
                        Type.typeSize(in.dtype())*Nelem);
+
+            }
+            void append(const Storage &srhs){
+                if(!this->is_contiguous())
+                    this->contiguous_();
+
+                // check Tensor in shape:
+                cytnx_error_msg(srhs.size()==0 || this->shape().size()==0,"[ERROR] try to append a null Tensor.%s","\n");
+                cytnx_error_msg((this->shape().size()-1)!=1,"[ERROR] append a storage to Tensor can only accept rank-2 Tensor.%s","\n");
+                cytnx_error_msg(this->shape().back()!=srhs.size(),"[ERROR] Tensor dmension mismatch!%s","\n");
+
+               
+                //check type:
+                Storage in;
+                if(srhs.dtype() != this->dtype()){
+                    in = srhs.astype(this->dtype());        
+                }else{
+                    in = srhs;
+                }     
+                this->_impl->_shape[0]+=1;
+                cytnx_uint64 oldsize = this->_impl->_storage.size();
+                this->_impl->_storage.resize(oldsize+in.size());
+                memcpy(((char*)this->_impl->_storage.data()) + oldsize*Type.typeSize(this->dtype())/sizeof(char),
+                       in._impl->Mem,
+                       Type.typeSize(in.dtype())*in.size());
 
             }
             /*

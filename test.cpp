@@ -108,8 +108,31 @@ int main(int argc, char *argv[]){
     }
     */
 
+ 
     auto rS = cytnx::arange(16).reshape(4,4);
+    auto arS = rS;
+
+    rS = cytnx::arange(10);
+    cout << arS << endl;
+    cout << rS << endl;
+
+    cout << rS / 30 << endl;
+    exit(1);
+
+
     rS += rS.permute(1,0);
+
+    rS.Tofile("tbin");
+    cout << rS << endl;
+    
+    auto rrS = cytnx::Tensor::Fromfile("tbin",Type.Float);
+    cout << rrS << endl;
+
+
+    auto rTs = cytnx::linspace(0,5.,5,false);
+    cout << rTs << endl;
+
+    exit(1);
 
     print(rS);
     print(linalg::Eigh(rS));

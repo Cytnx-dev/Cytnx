@@ -114,6 +114,10 @@ namespace cytnx{
     //@}
 
 
+    Tensor linspace(const cytnx_double &start, const cytnx_double &end, const cytnx_uint64 &Nelem, const bool &endpoint=true, const unsigned int &dtype=Type.Double, const int &device=Device.cpu);
+
+
+
     //Tensor rand(const std::vector<cytnx_uint64> &size);
     //Tensor randn(const std::vector<cytnx_uint64> &size);
     //Tensor normal(const cytnx_double &mean, cytnx_double &std);

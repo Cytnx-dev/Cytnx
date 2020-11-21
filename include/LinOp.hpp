@@ -119,6 +119,34 @@ namespace cytnx{
             }
 
         };
+        Tensor::Tproxy operator()(const cytnx_uint64 &i, const cytnx_uint64 &j){
+            //[Note that this can only call by mv_elem]
+            //if the element is not exists, it will create one.
+            this->_elems_it = this->_elems.find(i);
+            if(this->_elems_it == this->_elems.end()){
+                //not exists:
+                Tensor x({1},this->_dtype);
+                x(0) = 0;                
+                this->_elems[i] = std::pair<std::vector<cytnx_uint64>,Tensor>({j},x);
+                return this->_elems[i].second(0);
+            }else{
+                std::vector<cytnx_uint64> &vi = this->_elems_it->second.first; // pair:
+                Tensor &ie = this->_elems_it->second.second;
+                auto tmp_it = std::find(vi.begin(), vi.end(), j);
+                
+                //if(check_exists){
+                //    cytnx_error_msg(std::find(vi.begin(), vi.end(), j)!=vi.end(),"[ERROR] the element is set%s","\n");
+                //}
+                if(tmp_it==vi.end()){
+                    vi.push_back(j);
+                    ie.append(0);
+                    return ie(vi.size()-1);
+                }else{
+                    return ie(std::distance(vi.begin(), tmp_it));
+                }
+            }
+        }
+
         void set_device(const int &device){
             cytnx_error_msg(device<-1 || device >=Device.Ngpus,"[ERROR] invalid device.%s","\n");
             this->_device = device;

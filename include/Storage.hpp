@@ -750,13 +750,14 @@ namespace cytnx{
             std::vector<pStorage_init> USIInit;
             Storage_init_interface();
     };
+    extern Storage_init_interface __SII;
     ///@endcond;
 
     /// an memeory storage with multi-type/multi-device support 
     class Storage{  
         private:
             //Interface:
-            Storage_init_interface __SII;
+            //Storage_init_interface __SII;
 
         public:
             ///@cond
@@ -804,6 +805,9 @@ namespace cytnx{
             /// @cond
             void _Save(std::fstream &f) const;
             void _Load(std::fstream &f);
+            void _Loadbinary(std::fstream &f, const unsigned int &dtype, const cytnx_uint64 &Nelem);
+            void _Savebinary(std::fstream &f) const;
+
             /// @endcond
 
             /**
@@ -816,6 +820,9 @@ namespace cytnx{
             */            
             void Save(const std::string &fname) const;
             void Save(const char* fname) const;
+            void Tofile(const std::string &fname) const;
+            void Tofile(const char* fname) const;
+
             /**
             @brief Load current Storage from file
             @param fname file name
@@ -826,6 +833,8 @@ namespace cytnx{
             */            
             static Storage Load(const std::string &fname);
             static Storage Load(const char* fname);
+            static Storage Fromfile(const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count=-1);
+            static Storage Fromfile(const char* fname, const unsigned int &dtype, const cytnx_int64 &count=-1);
 
             /**
             @brief cast the type of current Storage

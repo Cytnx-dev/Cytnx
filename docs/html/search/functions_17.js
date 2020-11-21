@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['_7escalar',['~Scalar',['../classcytnx_1_1Scalar.html#a21e17eece833c5a75921da2777c84e6d',1,'cytnx::Scalar']]]
+  ['_7escalar',['~Scalar',['../namespacecytnx.html#a4713af5e9ee629bef6bbc860e3858b1a',1,'cytnx']]]
 ];

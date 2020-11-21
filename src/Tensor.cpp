@@ -559,6 +559,22 @@ namespace cytnx{
     //===================================================================
     //wrapper
 
+    void Tensor::Tofile(const std::string &fname) const{
+        if(!this->is_contiguous()){
+            auto A = this->contiguous();
+            A.storage().Tofile(fname);  
+        }else{
+            this->_impl->_storage.Tofile(fname);
+        }
+    }
+    void Tensor::Tofile(const char* fname) const{
+        if(!this->is_contiguous()){
+            auto A = this->contiguous();
+            A.storage().Tofile(fname);  
+        }else{
+            this->_impl->_storage.Tofile(fname);
+        }
+    }
     void Tensor::Save(const std::string &fname) const{
         fstream f;
         f.open((fname+".cytn"),ios::out|ios::trunc|ios::binary);
@@ -599,6 +615,15 @@ namespace cytnx{
 
     }
 
+
+
+    
+    Tensor Tensor::Fromfile(const std::string &fname, const unsigned int &dtype,const cytnx_int64 &count){
+        return Tensor::from_storage(Storage::Fromfile(fname,dtype,count)); 
+    }
+    Tensor Tensor::Fromfile(const char* fname, const unsigned int &dtype,const cytnx_int64 &count){
+        return Tensor::from_storage(Storage::Fromfile(fname,dtype,count)); 
+    }
     Tensor Tensor::Load(const std::string &fname){
         Tensor out;
         fstream f;
@@ -647,9 +672,8 @@ namespace cytnx{
 
         //pass to storage for save:
         this->_impl->_storage._Load(f);
-
-
     }
+
 
     Tensor Tensor::real(){
         Tensor out; 
