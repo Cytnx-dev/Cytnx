@@ -16,10 +16,10 @@ See The following user guide for install and using of cytnx:
 [![Build Status](https://travis-ci.org/kaihsin/Cytnx_build.svg?branch=master)](https://travis-ci.org/kaihsin/Cytnx_build)
 
 ## News
-    [v0.6.4] 
+    [v0.6.6] 
  
 ## Stable Version:
-[v0.6.4a](https://github.com/kaihsin/Cytnx/tree/v0.6.4a)
+[v0.6.5a](https://github.com/kaihsin/Cytnx/tree/v0.6.5a)
 
 ## Current dev Version:
     v0.6.6
