@@ -108,6 +108,10 @@ int main(int argc, char *argv[]){
     }
     */
 
+
+    auto Scc = Scalar(400);
+    Scc = Scc.astype(Type.Double);
+    print(Scc);
  
     auto rS = cytnx::arange(16).reshape(4,4);
     auto arS = rS;

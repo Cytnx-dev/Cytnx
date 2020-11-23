@@ -12,7 +12,7 @@
 
 namespace cytnx{
 
-    ///@endcond;
+
     ///@cond
     // real implementation
     class Scalar_base{
@@ -49,7 +49,35 @@ namespace cytnx{
             virtual void iadd(const cytnx_uint16 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
             virtual void iadd(const cytnx_int16 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
             virtual void iadd(const cytnx_bool &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
-            
+
+            virtual void isub(const Scalar_base* c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void isub(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void isub(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void isub(const cytnx_double &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void isub(const cytnx_float &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void isub(const cytnx_uint64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void isub(const cytnx_int64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void isub(const cytnx_uint32 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void isub(const cytnx_int32 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void isub(const cytnx_uint16 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void isub(const cytnx_int16 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void isub(const cytnx_bool &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+
+
+            virtual void assign_selftype(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void assign_selftype(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void assign_selftype(const cytnx_double &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void assign_selftype(const cytnx_float &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void assign_selftype(const cytnx_uint64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void assign_selftype(const cytnx_int64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void assign_selftype(const cytnx_uint32 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void assign_selftype(const cytnx_int32 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void assign_selftype(const cytnx_uint16 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void assign_selftype(const cytnx_int16 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void assign_selftype(const cytnx_bool &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+
+            virtual Scalar_base* astype(const unsigned int &dtype){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+
             virtual void print(std::ostream& os) const{};
             virtual Scalar_base* copy() const{
                 Scalar_base *tmp = new Scalar_base();
@@ -59,6 +87,18 @@ namespace cytnx{
 
     };
         
+    ///@cond
+    typedef Scalar_base* (*pScalar_init)();
+    ///@endcond
+
+    ///@cond
+    class Scalar_init_interface: public Type_class{
+        public:
+            std::vector<pScalar_init> UScIInit;
+            Scalar_init_interface();
+    };
+    extern Scalar_init_interface __ScII;
+    ///@endcond
 
     class ComplexDoubleScalar: public Scalar_base{
 
@@ -83,6 +123,18 @@ namespace cytnx{
             cytnx_uint16 to_cytnx_uint16()         const{cytnx_error_msg(true,"[ERROR] cannot cast complex128 to real%s","\n");return 0;};
             cytnx_bool to_cytnx_bool()             const{cytnx_error_msg(true,"[ERROR] cannot cast complex128 to real%s","\n");return 0;};
 
+            void assign_selftype(const cytnx_complex128 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_complex64 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_double &c){this->_elem = c;}
+            void assign_selftype(const cytnx_float  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint64 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int64 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint32 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int32  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint16 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int16  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_bool   &c){this->_elem = c;}
+
             void iadd(const Scalar_base* c){this->_elem += c->to_cytnx_complex128();}
             void iadd(const cytnx_complex128 &c){this->_elem += c;}
             void iadd(const cytnx_complex64 &c){this->_elem += c;}
@@ -96,6 +148,24 @@ namespace cytnx{
             void iadd(const cytnx_int16  &c){this->_elem += c;}
             void iadd(const cytnx_bool   &c){this->_elem += c;}
 
+            void isub(const Scalar_base* c){this->_elem -= c->to_cytnx_complex128();}
+            void isub(const cytnx_complex128 &c){this->_elem -= c;}
+            void isub(const cytnx_complex64 &c){this->_elem -= c;}
+            void isub(const cytnx_double &c){this->_elem -= c;}
+            void isub(const cytnx_float  &c){this->_elem -= c;}
+            void isub(const cytnx_uint64 &c){this->_elem -= c;}
+            void isub(const cytnx_int64 &c){this->_elem -= c;}
+            void isub(const cytnx_uint32 &c){this->_elem -= c;}
+            void isub(const cytnx_int32  &c){this->_elem -= c;}
+            void isub(const cytnx_uint16 &c){this->_elem -= c;}
+            void isub(const cytnx_int16  &c){this->_elem -= c;}
+            void isub(const cytnx_bool   &c){this->_elem -= c;}
+
+            Scalar_base* astype(const unsigned int &dtype){
+                Scalar_base *tmp = __ScII.UScIInit[dtype]();
+                tmp->assign_selftype(this->_elem);
+                return tmp;
+            }
 
             Scalar_base* copy() const{
                 ComplexDoubleScalar *tmp = new ComplexDoubleScalar(this->_elem); 
@@ -129,6 +199,18 @@ namespace cytnx{
             cytnx_uint16 to_cytnx_uint16()         const{cytnx_error_msg(true,"[ERROR] cannot cast complex64 to real%s","\n");return 0;};
             cytnx_bool to_cytnx_bool()             const{cytnx_error_msg(true,"[ERROR] cannot cast complex64 to real%s","\n");return 0;};
 
+            void assign_selftype(const cytnx_complex128 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_complex64 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_double &c){this->_elem = c;}
+            void assign_selftype(const cytnx_float  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint64 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int64 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint32 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int32  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint16 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int16  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_bool   &c){this->_elem = c;}
+
 
             void iadd(const Scalar_base* c){this->_elem += c->to_cytnx_complex64();}
             void iadd(const cytnx_complex128 &c){this->_elem += c;}
@@ -142,6 +224,24 @@ namespace cytnx{
             void iadd(const cytnx_uint16 &c){this->_elem += c;}
             void iadd(const cytnx_int16  &c){this->_elem += c;}
             void iadd(const cytnx_bool   &c){this->_elem += c;}
+
+            void isub(const Scalar_base* c){this->_elem -= c->to_cytnx_complex64();}
+            void isub(const cytnx_complex128 &c){this->_elem -= c;}
+            void isub(const cytnx_complex64 &c){this->_elem -= c;}
+            void isub(const cytnx_double &c){this->_elem -= c;}
+            void isub(const cytnx_float  &c){this->_elem -= c;}
+            void isub(const cytnx_uint64 &c){this->_elem -= c;}
+            void isub(const cytnx_int64 &c){this->_elem -= c;}
+            void isub(const cytnx_uint32 &c){this->_elem -= c;}
+            void isub(const cytnx_int32  &c){this->_elem -= c;}
+            void isub(const cytnx_uint16 &c){this->_elem -= c;}
+            void isub(const cytnx_int16  &c){this->_elem -= c;}
+            void isub(const cytnx_bool   &c){this->_elem -= c;}
+            Scalar_base* astype(const unsigned int &dtype){
+                Scalar_base *tmp = __ScII.UScIInit[dtype]();
+                tmp->assign_selftype(this->_elem);
+                return tmp;
+            }
 
             Scalar_base* copy() const{
                 ComplexFloatScalar *tmp = new ComplexFloatScalar(this->_elem); 
@@ -175,6 +275,18 @@ namespace cytnx{
             cytnx_uint16 to_cytnx_uint16()         const{return this->_elem;};
             cytnx_bool to_cytnx_bool()             const{return this->_elem;};
 
+            void assign_selftype(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot convert complex to real%s","\n");}
+            void assign_selftype(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot convert complex to real%s","\n");}
+            void assign_selftype(const cytnx_double &c){this->_elem = c;}
+            void assign_selftype(const cytnx_float  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint64 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int64 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint32 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int32  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint16 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int16  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_bool   &c){this->_elem = c;}
+
 
             void iadd(const Scalar_base* c){this->_elem += c->to_cytnx_double();}
             void iadd(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
@@ -189,6 +301,25 @@ namespace cytnx{
             void iadd(const cytnx_int16  &c){this->_elem += c;}
             void iadd(const cytnx_bool   &c){this->_elem += c;}
 
+            void isub(const Scalar_base* c){this->_elem -= c->to_cytnx_double();}
+            void isub(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void isub(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void isub(const cytnx_double &c){this->_elem -= c;}
+            void isub(const cytnx_float  &c){this->_elem -= c;}
+            void isub(const cytnx_uint64 &c){this->_elem -= c;}
+            void isub(const cytnx_int64 &c){this->_elem -= c;}
+            void isub(const cytnx_uint32 &c){this->_elem -= c;}
+            void isub(const cytnx_int32  &c){this->_elem -= c;}
+            void isub(const cytnx_uint16 &c){this->_elem -= c;}
+            void isub(const cytnx_int16  &c){this->_elem -= c;}
+            void isub(const cytnx_bool   &c){this->_elem -= c;}
+
+
+            Scalar_base* astype(const unsigned int &dtype){
+                Scalar_base *tmp = __ScII.UScIInit[dtype]();
+                tmp->assign_selftype(this->_elem);
+                return tmp;
+            }
             Scalar_base* copy() const{
                 DoubleScalar *tmp = new DoubleScalar(this->_elem); 
                 return tmp;
@@ -221,6 +352,17 @@ namespace cytnx{
             cytnx_uint16 to_cytnx_uint16()         const{return this->_elem;};
             cytnx_bool to_cytnx_bool()             const{return this->_elem;};
 
+            void assign_selftype(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot convert complex to real%s","\n");}
+            void assign_selftype(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot convert complex to real%s","\n");}
+            void assign_selftype(const cytnx_double &c){this->_elem = c;}
+            void assign_selftype(const cytnx_float  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint64 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int64 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint32 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int32  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint16 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int16  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_bool   &c){this->_elem = c;}
 
             void iadd(const Scalar_base* c){this->_elem += c->to_cytnx_float();}
             void iadd(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
@@ -235,6 +377,24 @@ namespace cytnx{
             void iadd(const cytnx_int16  &c){this->_elem += c;}
             void iadd(const cytnx_bool   &c){this->_elem += c;}
 
+            void isub(const Scalar_base* c){this->_elem -= c->to_cytnx_float();}
+            void isub(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void isub(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void isub(const cytnx_double &c){this->_elem -= c;}
+            void isub(const cytnx_float  &c){this->_elem -= c;}
+            void isub(const cytnx_uint64 &c){this->_elem -= c;}
+            void isub(const cytnx_int64 &c){this->_elem -= c;}
+            void isub(const cytnx_uint32 &c){this->_elem -= c;}
+            void isub(const cytnx_int32  &c){this->_elem -= c;}
+            void isub(const cytnx_uint16 &c){this->_elem -= c;}
+            void isub(const cytnx_int16  &c){this->_elem -= c;}
+            void isub(const cytnx_bool   &c){this->_elem -= c;}
+
+            Scalar_base* astype(const unsigned int &dtype){
+                Scalar_base *tmp = __ScII.UScIInit[dtype]();
+                tmp->assign_selftype(this->_elem);
+                return tmp;
+            }
             Scalar_base* copy() const{
                 FloatScalar *tmp = new FloatScalar(this->_elem); 
                 return tmp;
@@ -267,6 +427,17 @@ namespace cytnx{
             cytnx_uint16 to_cytnx_uint16()         const{return this->_elem;};
             cytnx_bool to_cytnx_bool()             const{return this->_elem;};
 
+            void assign_selftype(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot convert complex to real%s","\n");}
+            void assign_selftype(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot convert complex to real%s","\n");}
+            void assign_selftype(const cytnx_double &c){this->_elem = c;}
+            void assign_selftype(const cytnx_float  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint64 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int64 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint32 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int32  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint16 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int16  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_bool   &c){this->_elem = c;}
 
             void iadd(const Scalar_base* c){this->_elem += c->to_cytnx_int64();}
             void iadd(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
@@ -281,6 +452,24 @@ namespace cytnx{
             void iadd(const cytnx_int16  &c){this->_elem += c;}
             void iadd(const cytnx_bool   &c){this->_elem += c;}
 
+            void isub(const Scalar_base* c){this->_elem -= c->to_cytnx_int64();}
+            void isub(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void isub(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void isub(const cytnx_double &c){this->_elem -= c;}
+            void isub(const cytnx_float  &c){this->_elem -= c;}
+            void isub(const cytnx_uint64 &c){this->_elem -= c;}
+            void isub(const cytnx_int64 &c){this->_elem -= c;}
+            void isub(const cytnx_uint32 &c){this->_elem -= c;}
+            void isub(const cytnx_int32  &c){this->_elem -= c;}
+            void isub(const cytnx_uint16 &c){this->_elem -= c;}
+            void isub(const cytnx_int16  &c){this->_elem -= c;}
+            void isub(const cytnx_bool   &c){this->_elem -= c;}
+
+            Scalar_base* astype(const unsigned int &dtype){
+                Scalar_base *tmp = __ScII.UScIInit[dtype]();
+                tmp->assign_selftype(this->_elem);
+                return tmp;
+            }
             Scalar_base* copy() const{
                 Int64Scalar *tmp = new Int64Scalar(this->_elem); 
                 return tmp;
@@ -312,6 +501,17 @@ namespace cytnx{
             cytnx_uint16 to_cytnx_uint16()         const{return this->_elem;};
             cytnx_bool to_cytnx_bool()             const{return this->_elem;};
 
+            void assign_selftype(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot convert complex to real%s","\n");}
+            void assign_selftype(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot convert complex to real%s","\n");}
+            void assign_selftype(const cytnx_double &c){this->_elem = c;}
+            void assign_selftype(const cytnx_float  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint64 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int64 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint32 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int32  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint16 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int16  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_bool   &c){this->_elem = c;}
 
             void iadd(const Scalar_base* c){this->_elem += c->to_cytnx_uint64();}
             void iadd(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
@@ -326,6 +526,24 @@ namespace cytnx{
             void iadd(const cytnx_int16  &c){this->_elem += c;}
             void iadd(const cytnx_bool   &c){this->_elem += c;}
 
+            void isub(const Scalar_base* c){this->_elem -= c->to_cytnx_uint64();}
+            void isub(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void isub(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void isub(const cytnx_double &c){this->_elem -= c;}
+            void isub(const cytnx_float  &c){this->_elem -= c;}
+            void isub(const cytnx_uint64 &c){this->_elem -= c;}
+            void isub(const cytnx_int64 &c){this->_elem -= c;}
+            void isub(const cytnx_uint32 &c){this->_elem -= c;}
+            void isub(const cytnx_int32  &c){this->_elem -= c;}
+            void isub(const cytnx_uint16 &c){this->_elem -= c;}
+            void isub(const cytnx_int16  &c){this->_elem -= c;}
+            void isub(const cytnx_bool   &c){this->_elem -= c;}
+
+            Scalar_base* astype(const unsigned int &dtype){
+                Scalar_base *tmp = __ScII.UScIInit[dtype]();
+                tmp->assign_selftype(this->_elem);
+                return tmp;
+            }
             Scalar_base* copy() const{
                 Uint64Scalar *tmp = new Uint64Scalar(this->_elem); 
                 return tmp;
@@ -358,6 +576,18 @@ namespace cytnx{
             cytnx_bool to_cytnx_bool()             const{return this->_elem;};
 
 
+            void assign_selftype(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot convert complex to real%s","\n");}
+            void assign_selftype(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot convert complex to real%s","\n");}
+            void assign_selftype(const cytnx_double &c){this->_elem = c;}
+            void assign_selftype(const cytnx_float  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint64 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int64 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint32 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int32  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint16 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int16  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_bool   &c){this->_elem = c;}
+
             void iadd(const Scalar_base* c){this->_elem += c->to_cytnx_int32();}
             void iadd(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
             void iadd(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
@@ -371,6 +601,25 @@ namespace cytnx{
             void iadd(const cytnx_int16  &c){this->_elem += c;}
             void iadd(const cytnx_bool   &c){this->_elem += c;}
 
+            void isub(const Scalar_base* c){this->_elem -= c->to_cytnx_int32();}
+            void isub(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void isub(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void isub(const cytnx_double &c){this->_elem -= c;}
+            void isub(const cytnx_float  &c){this->_elem -= c;}
+            void isub(const cytnx_uint64 &c){this->_elem -= c;}
+            void isub(const cytnx_int64 &c){this->_elem -= c;}
+            void isub(const cytnx_uint32 &c){this->_elem -= c;}
+            void isub(const cytnx_int32  &c){this->_elem -= c;}
+            void isub(const cytnx_uint16 &c){this->_elem -= c;}
+            void isub(const cytnx_int16  &c){this->_elem -= c;}
+            void isub(const cytnx_bool   &c){this->_elem -= c;}
+
+
+            Scalar_base* astype(const unsigned int &dtype){
+                Scalar_base *tmp = __ScII.UScIInit[dtype]();
+                tmp->assign_selftype(this->_elem);
+                return tmp;
+            }
             Scalar_base* copy() const{
                 Int32Scalar *tmp = new Int32Scalar(this->_elem); 
                 return tmp;
@@ -402,6 +651,17 @@ namespace cytnx{
             cytnx_uint16 to_cytnx_uint16()         const{return this->_elem;};
             cytnx_bool to_cytnx_bool()             const{return this->_elem;};
 
+            void assign_selftype(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot convert complex to real%s","\n");}
+            void assign_selftype(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot convert complex to real%s","\n");}
+            void assign_selftype(const cytnx_double &c){this->_elem = c;}
+            void assign_selftype(const cytnx_float  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint64 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int64 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint32 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int32  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint16 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int16  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_bool   &c){this->_elem = c;}
 
             void iadd(const Scalar_base* c){this->_elem += c->to_cytnx_uint32();}
             void iadd(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
@@ -416,7 +676,24 @@ namespace cytnx{
             void iadd(const cytnx_int16  &c){this->_elem += c;}
             void iadd(const cytnx_bool   &c){this->_elem += c;}
 
+            void isub(const Scalar_base* c){this->_elem -= c->to_cytnx_uint32();}
+            void isub(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void isub(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void isub(const cytnx_double &c){this->_elem -= c;}
+            void isub(const cytnx_float  &c){this->_elem -= c;}
+            void isub(const cytnx_uint64 &c){this->_elem -= c;}
+            void isub(const cytnx_int64 &c){this->_elem -= c;}
+            void isub(const cytnx_uint32 &c){this->_elem -= c;}
+            void isub(const cytnx_int32  &c){this->_elem -= c;}
+            void isub(const cytnx_uint16 &c){this->_elem -= c;}
+            void isub(const cytnx_int16  &c){this->_elem -= c;}
+            void isub(const cytnx_bool   &c){this->_elem -= c;}
 
+            Scalar_base* astype(const unsigned int &dtype){
+                Scalar_base *tmp = __ScII.UScIInit[dtype]();
+                tmp->assign_selftype(this->_elem);
+                return tmp;
+            }
             Scalar_base* copy() const{
                 Uint32Scalar *tmp = new Uint32Scalar(this->_elem); 
                 return tmp;
@@ -448,6 +725,19 @@ namespace cytnx{
             cytnx_uint16 to_cytnx_uint16()         const{return this->_elem;};
             cytnx_bool to_cytnx_bool()             const{return this->_elem;};
 
+            void assign_selftype(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot convert complex to real%s","\n");}
+            void assign_selftype(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot convert complex to real%s","\n");}
+            void assign_selftype(const cytnx_double &c){this->_elem = c;}
+            void assign_selftype(const cytnx_float  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint64 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int64 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint32 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int32  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint16 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int16  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_bool   &c){this->_elem = c;}
+
+
             void iadd(const Scalar_base* c){this->_elem += c->to_cytnx_int16();}
             void iadd(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
             void iadd(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
@@ -461,6 +751,25 @@ namespace cytnx{
             void iadd(const cytnx_int16  &c){this->_elem += c;}
             void iadd(const cytnx_bool   &c){this->_elem += c;}
 
+            void isub(const Scalar_base* c){this->_elem -= c->to_cytnx_int16();}
+            void isub(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void isub(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void isub(const cytnx_double &c){this->_elem -= c;}
+            void isub(const cytnx_float  &c){this->_elem -= c;}
+            void isub(const cytnx_uint64 &c){this->_elem -= c;}
+            void isub(const cytnx_int64 &c){this->_elem -= c;}
+            void isub(const cytnx_uint32 &c){this->_elem -= c;}
+            void isub(const cytnx_int32  &c){this->_elem -= c;}
+            void isub(const cytnx_uint16 &c){this->_elem -= c;}
+            void isub(const cytnx_int16  &c){this->_elem -= c;}
+            void isub(const cytnx_bool   &c){this->_elem -= c;}
+
+
+            Scalar_base* astype(const unsigned int &dtype){
+                Scalar_base *tmp = __ScII.UScIInit[dtype]();
+                tmp->assign_selftype(this->_elem);
+                return tmp;
+            }
             Scalar_base* copy() const{
                 Int16Scalar *tmp = new Int16Scalar(this->_elem); 
                 return tmp;
@@ -492,6 +801,17 @@ namespace cytnx{
             cytnx_uint16 to_cytnx_uint16()         const{return this->_elem;};
             cytnx_bool to_cytnx_bool()             const{return this->_elem;};
 
+            void assign_selftype(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot convert complex to real%s","\n");}
+            void assign_selftype(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot convert complex to real%s","\n");}
+            void assign_selftype(const cytnx_double &c){this->_elem = c;}
+            void assign_selftype(const cytnx_float  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint64 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int64 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint32 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int32  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint16 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int16  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_bool   &c){this->_elem = c;}
 
             void iadd(const Scalar_base* c){this->_elem += c->to_cytnx_uint16();}
             void iadd(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
@@ -506,7 +826,24 @@ namespace cytnx{
             void iadd(const cytnx_int16  &c){this->_elem += c;}
             void iadd(const cytnx_bool   &c){this->_elem += c;}
 
+            void isub(const Scalar_base* c){this->_elem += c->to_cytnx_uint16();}
+            void isub(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void isub(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void isub(const cytnx_double &c){this->_elem += c;}
+            void isub(const cytnx_float  &c){this->_elem += c;}
+            void isub(const cytnx_uint64 &c){this->_elem += c;}
+            void isub(const cytnx_int64 &c){this->_elem += c;}
+            void isub(const cytnx_uint32 &c){this->_elem += c;}
+            void isub(const cytnx_int32  &c){this->_elem += c;}
+            void isub(const cytnx_uint16 &c){this->_elem += c;}
+            void isub(const cytnx_int16  &c){this->_elem += c;}
+            void isub(const cytnx_bool   &c){this->_elem += c;}
 
+            Scalar_base* astype(const unsigned int &dtype){
+                Scalar_base *tmp = __ScII.UScIInit[dtype]();
+                tmp->assign_selftype(this->_elem);
+                return tmp;
+            }
             Scalar_base* copy() const{
                 Uint16Scalar *tmp = new Uint16Scalar(this->_elem); 
                 return tmp;
@@ -538,6 +875,17 @@ namespace cytnx{
             cytnx_uint16 to_cytnx_uint16()         const{return this->_elem;};
             cytnx_bool to_cytnx_bool()             const{return this->_elem;};
 
+            void assign_selftype(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot convert complex to real%s","\n");}
+            void assign_selftype(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot convert complex to real%s","\n");}
+            void assign_selftype(const cytnx_double &c){this->_elem = c;}
+            void assign_selftype(const cytnx_float  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint64 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int64 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint32 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int32  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_uint16 &c){this->_elem = c;}
+            void assign_selftype(const cytnx_int16  &c){this->_elem = c;}
+            void assign_selftype(const cytnx_bool   &c){this->_elem = c;}
 
             void iadd(const Scalar_base* c){this->_elem += c->to_cytnx_bool();}
             void iadd(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
@@ -552,7 +900,24 @@ namespace cytnx{
             void iadd(const cytnx_int16  &c){this->_elem += c;}
             void iadd(const cytnx_bool   &c){this->_elem += c;}
 
+            void isub(const Scalar_base* c){this->_elem -= c->to_cytnx_bool();}
+            void isub(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void isub(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void isub(const cytnx_double &c){this->_elem -= c;}
+            void isub(const cytnx_float  &c){this->_elem -= c;}
+            void isub(const cytnx_uint64 &c){this->_elem -= c;}
+            void isub(const cytnx_int64 &c){this->_elem -= c;}
+            void isub(const cytnx_uint32 &c){this->_elem -= c;}
+            void isub(const cytnx_int32  &c){this->_elem -= c;}
+            void isub(const cytnx_uint16 &c){this->_elem -= c;}
+            void isub(const cytnx_int16  &c){this->_elem -= c;}
+            void isub(const cytnx_bool   &c){this->_elem -= c;}
 
+            Scalar_base* astype(const unsigned int &dtype){
+                Scalar_base *tmp = __ScII.UScIInit[dtype]();
+                tmp->assign_selftype(this->_elem);
+                return tmp;
+            }
             Scalar_base* copy() const{
                 BoolScalar *tmp = new BoolScalar(this->_elem); 
                 return tmp;
@@ -564,17 +929,6 @@ namespace cytnx{
 
     ///@endcond
     
-    ///@cond
-    typedef Scalar_base* (*pScalar_init)();
-    ///@endcond
-
-    ///@cond
-    class Scalar_init_interface: public Type_class{
-        public:
-            std::vector<pScalar_init> UScIInit;
-            Scalar_init_interface();
-    };
-    extern Scalar_init_interface __ScII;
 
 
     class Scalar{
@@ -587,6 +941,18 @@ namespace cytnx{
             template<class T>
             Scalar(const T &in): _impl(new Scalar_base()){
                 this->Init_by_number(in);
+            }
+
+            template<class T>
+            Scalar(const T&in, const unsigned int &dtype): _impl(new Scalar_base()){
+                if(this->_impl!=nullptr) delete this->_impl;   
+                this->_impl = __ScII.UScIInit[dtype]();
+                this->_impl->assign_selftype(in);
+            };
+            
+            //[Internal!!]
+            Scalar(Scalar_base* in){
+                this->_impl = in;
             }
 
             //specialization of init: 
@@ -662,6 +1028,13 @@ namespace cytnx{
                 return *this;
             }
 
+            // type conversion:
+            Scalar astype(const unsigned int &dtype){
+                Scalar out(this->_impl->astype(dtype));
+                return out;
+            }
+
+
             int dtype() const{
                 return this->_impl->_dtype;
             }            
@@ -709,7 +1082,9 @@ namespace cytnx{
             void operator+=(const Scalar &rhs){
                 this->_impl->iadd(rhs._impl);
             }
-
+            void operator-=(const Scalar &rhs){
+                this->_impl->isub(rhs._impl);
+            }
             
 
     };
