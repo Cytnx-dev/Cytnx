@@ -65,6 +65,19 @@ namespace cytnx{
             virtual void isub(const cytnx_int16 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
             virtual void isub(const cytnx_bool &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
 
+            virtual void imul(const Scalar_base* c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void imul(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void imul(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void imul(const cytnx_double &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void imul(const cytnx_float &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void imul(const cytnx_uint64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void imul(const cytnx_int64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void imul(const cytnx_uint32 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void imul(const cytnx_int32 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void imul(const cytnx_uint16 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void imul(const cytnx_int16 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void imul(const cytnx_bool &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+
 
             virtual void assign_selftype(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
             virtual void assign_selftype(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
@@ -163,6 +176,19 @@ namespace cytnx{
             void isub(const cytnx_int16  &c){this->_elem -= c;}
             void isub(const cytnx_bool   &c){this->_elem -= c;}
 
+            void imul(const Scalar_base* c){this->_elem *= c->to_cytnx_complex128();}
+            void imul(const cytnx_complex128 &c){this->_elem *= c;}
+            void imul(const cytnx_complex64 &c){this->_elem *= c;}
+            void imul(const cytnx_double &c){this->_elem *= c;}
+            void imul(const cytnx_float  &c){this->_elem *= c;}
+            void imul(const cytnx_uint64 &c){this->_elem *= c;}
+            void imul(const cytnx_int64 &c){this->_elem *= c;}
+            void imul(const cytnx_uint32 &c){this->_elem *= c;}
+            void imul(const cytnx_int32  &c){this->_elem *= c;}
+            void imul(const cytnx_uint16 &c){this->_elem *= c;}
+            void imul(const cytnx_int16  &c){this->_elem *= c;}
+            void imul(const cytnx_bool   &c){this->_elem *= c;}
+
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
                 tmp->assign_selftype(this->_elem);
@@ -239,6 +265,20 @@ namespace cytnx{
             void isub(const cytnx_uint16 &c){this->_elem -= c;}
             void isub(const cytnx_int16  &c){this->_elem -= c;}
             void isub(const cytnx_bool   &c){this->_elem -= c;}
+
+            void imul(const Scalar_base* c){this->_elem *= c->to_cytnx_complex64();}
+            void imul(const cytnx_complex128 &c){this->_elem *= c;}
+            void imul(const cytnx_complex64 &c){this->_elem *= c;}
+            void imul(const cytnx_double &c){this->_elem *= c;}
+            void imul(const cytnx_float  &c){this->_elem *= c;}
+            void imul(const cytnx_uint64 &c){this->_elem *= c;}
+            void imul(const cytnx_int64 &c){this->_elem *= c;}
+            void imul(const cytnx_uint32 &c){this->_elem *= c;}
+            void imul(const cytnx_int32  &c){this->_elem *= c;}
+            void imul(const cytnx_uint16 &c){this->_elem *= c;}
+            void imul(const cytnx_int16  &c){this->_elem *= c;}
+            void imul(const cytnx_bool   &c){this->_elem *= c;}
+
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
                 tmp->assign_selftype(this->_elem);
@@ -316,6 +356,18 @@ namespace cytnx{
             void isub(const cytnx_int16  &c){this->_elem -= c;}
             void isub(const cytnx_bool   &c){this->_elem -= c;}
 
+            void imul(const Scalar_base* c){this->_elem *= c->to_cytnx_double();}
+            void imul(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void imul(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void imul(const cytnx_double &c){this->_elem *= c;}
+            void imul(const cytnx_float  &c){this->_elem *= c;}
+            void imul(const cytnx_uint64 &c){this->_elem *= c;}
+            void imul(const cytnx_int64 &c){this->_elem *= c;}
+            void imul(const cytnx_uint32 &c){this->_elem *= c;}
+            void imul(const cytnx_int32  &c){this->_elem *= c;}
+            void imul(const cytnx_uint16 &c){this->_elem *= c;}
+            void imul(const cytnx_int16  &c){this->_elem *= c;}
+            void imul(const cytnx_bool   &c){this->_elem *= c;}
 
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
@@ -392,6 +444,21 @@ namespace cytnx{
             void isub(const cytnx_int16  &c){this->_elem -= c;}
             void isub(const cytnx_bool   &c){this->_elem -= c;}
 
+            void imul(const Scalar_base* c){this->_elem *= c->to_cytnx_float();}
+            void imul(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void imul(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void imul(const cytnx_double &c){this->_elem *= c;}
+            void imul(const cytnx_float  &c){this->_elem *= c;}
+            void imul(const cytnx_uint64 &c){this->_elem *= c;}
+            void imul(const cytnx_int64 &c){this->_elem *= c;}
+            void imul(const cytnx_uint32 &c){this->_elem *= c;}
+            void imul(const cytnx_int32  &c){this->_elem *= c;}
+            void imul(const cytnx_uint16 &c){this->_elem *= c;}
+            void imul(const cytnx_int16  &c){this->_elem *= c;}
+            void imul(const cytnx_bool   &c){this->_elem *= c;}
+
+
+
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
                 tmp->assign_selftype(this->_elem);
@@ -467,6 +534,20 @@ namespace cytnx{
             void isub(const cytnx_int16  &c){this->_elem -= c;}
             void isub(const cytnx_bool   &c){this->_elem -= c;}
 
+            void imul(const Scalar_base* c){this->_elem *= c->to_cytnx_int64();}
+            void imul(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void imul(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void imul(const cytnx_double &c){this->_elem *= c;}
+            void imul(const cytnx_float  &c){this->_elem *= c;}
+            void imul(const cytnx_uint64 &c){this->_elem *= c;}
+            void imul(const cytnx_int64 &c){this->_elem *= c;}
+            void imul(const cytnx_uint32 &c){this->_elem *= c;}
+            void imul(const cytnx_int32  &c){this->_elem *= c;}
+            void imul(const cytnx_uint16 &c){this->_elem *= c;}
+            void imul(const cytnx_int16  &c){this->_elem *= c;}
+            void imul(const cytnx_bool   &c){this->_elem *= c;}
+
+
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
                 tmp->assign_selftype(this->_elem);
@@ -540,6 +621,20 @@ namespace cytnx{
             void isub(const cytnx_uint16 &c){this->_elem -= c;}
             void isub(const cytnx_int16  &c){this->_elem -= c;}
             void isub(const cytnx_bool   &c){this->_elem -= c;}
+
+            void imul(const Scalar_base* c){this->_elem *= c->to_cytnx_uint64();}
+            void imul(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void imul(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void imul(const cytnx_double &c){this->_elem *= c;}
+            void imul(const cytnx_float  &c){this->_elem *= c;}
+            void imul(const cytnx_uint64 &c){this->_elem *= c;}
+            void imul(const cytnx_int64 &c){this->_elem *= c;}
+            void imul(const cytnx_uint32 &c){this->_elem *= c;}
+            void imul(const cytnx_int32  &c){this->_elem *= c;}
+            void imul(const cytnx_uint16 &c){this->_elem *= c;}
+            void imul(const cytnx_int16  &c){this->_elem *= c;}
+            void imul(const cytnx_bool   &c){this->_elem *= c;}
+
 
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
@@ -616,6 +711,19 @@ namespace cytnx{
             void isub(const cytnx_int16  &c){this->_elem -= c;}
             void isub(const cytnx_bool   &c){this->_elem -= c;}
 
+            void imul(const Scalar_base* c){this->_elem *= c->to_cytnx_int32();}
+            void imul(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void imul(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void imul(const cytnx_double &c){this->_elem *= c;}
+            void imul(const cytnx_float  &c){this->_elem *= c;}
+            void imul(const cytnx_uint64 &c){this->_elem *= c;}
+            void imul(const cytnx_int64 &c){this->_elem *= c;}
+            void imul(const cytnx_uint32 &c){this->_elem *= c;}
+            void imul(const cytnx_int32  &c){this->_elem *= c;}
+            void imul(const cytnx_uint16 &c){this->_elem *= c;}
+            void imul(const cytnx_int16  &c){this->_elem *= c;}
+            void imul(const cytnx_bool   &c){this->_elem *= c;}
+
 
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
@@ -690,6 +798,19 @@ namespace cytnx{
             void isub(const cytnx_uint16 &c){this->_elem -= c;}
             void isub(const cytnx_int16  &c){this->_elem -= c;}
             void isub(const cytnx_bool   &c){this->_elem -= c;}
+
+            void imul(const Scalar_base* c){this->_elem *= c->to_cytnx_uint32();}
+            void imul(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void imul(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void imul(const cytnx_double &c){this->_elem *= c;}
+            void imul(const cytnx_float  &c){this->_elem *= c;}
+            void imul(const cytnx_uint64 &c){this->_elem *= c;}
+            void imul(const cytnx_int64 &c){this->_elem *= c;}
+            void imul(const cytnx_uint32 &c){this->_elem *= c;}
+            void imul(const cytnx_int32  &c){this->_elem *= c;}
+            void imul(const cytnx_uint16 &c){this->_elem *= c;}
+            void imul(const cytnx_int16  &c){this->_elem *= c;}
+            void imul(const cytnx_bool   &c){this->_elem *= c;}
 
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
@@ -766,6 +887,19 @@ namespace cytnx{
             void isub(const cytnx_int16  &c){this->_elem -= c;}
             void isub(const cytnx_bool   &c){this->_elem -= c;}
 
+            void imul(const Scalar_base* c){this->_elem *= c->to_cytnx_int16();}
+            void imul(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void imul(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void imul(const cytnx_double &c){this->_elem *= c;}
+            void imul(const cytnx_float  &c){this->_elem *= c;}
+            void imul(const cytnx_uint64 &c){this->_elem *= c;}
+            void imul(const cytnx_int64 &c){this->_elem *= c;}
+            void imul(const cytnx_uint32 &c){this->_elem *= c;}
+            void imul(const cytnx_int32  &c){this->_elem *= c;}
+            void imul(const cytnx_uint16 &c){this->_elem *= c;}
+            void imul(const cytnx_int16  &c){this->_elem *= c;}
+            void imul(const cytnx_bool   &c){this->_elem *= c;}
+
 
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
@@ -841,6 +975,20 @@ namespace cytnx{
             void isub(const cytnx_int16  &c){this->_elem += c;}
             void isub(const cytnx_bool   &c){this->_elem += c;}
 
+            void imul(const Scalar_base* c){this->_elem *= c->to_cytnx_uint16();}
+            void imul(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void imul(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void imul(const cytnx_double &c){this->_elem *= c;}
+            void imul(const cytnx_float  &c){this->_elem *= c;}
+            void imul(const cytnx_uint64 &c){this->_elem *= c;}
+            void imul(const cytnx_int64 &c){this->_elem *= c;}
+            void imul(const cytnx_uint32 &c){this->_elem *= c;}
+            void imul(const cytnx_int32  &c){this->_elem *= c;}
+            void imul(const cytnx_uint16 &c){this->_elem *= c;}
+            void imul(const cytnx_int16  &c){this->_elem *= c;}
+            void imul(const cytnx_bool   &c){this->_elem *= c;}
+
+
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
                 tmp->assign_selftype(this->_elem);
@@ -914,6 +1062,20 @@ namespace cytnx{
             void isub(const cytnx_uint16 &c){this->_elem -= c;}
             void isub(const cytnx_int16  &c){this->_elem -= c;}
             void isub(const cytnx_bool   &c){this->_elem -= c;}
+
+            void imul(const Scalar_base* c){this->_elem *= c->to_cytnx_bool();}
+            void imul(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void imul(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] cannot operate real and complex values%s","\n");}
+            void imul(const cytnx_double &c){this->_elem *= c;}
+            void imul(const cytnx_float  &c){this->_elem *= c;}
+            void imul(const cytnx_uint64 &c){this->_elem *= c;}
+            void imul(const cytnx_int64 &c){this->_elem *= c;}
+            void imul(const cytnx_uint32 &c){this->_elem *= c;}
+            void imul(const cytnx_int32  &c){this->_elem *= c;}
+            void imul(const cytnx_uint16 &c){this->_elem *= c;}
+            void imul(const cytnx_int16  &c){this->_elem *= c;}
+            void imul(const cytnx_bool   &c){this->_elem *= c;}
+
 
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
@@ -1115,13 +1277,29 @@ namespace cytnx{
             };
 
             //arithmetic:
+            template<class T>
+            void operator+=(const T &rc){
+                this->_impl->iadd(rc);
+            }
             void operator+=(const Scalar &rhs){
                 this->_impl->iadd(rhs._impl);
+            }
+            template<class T>
+            void operator-=(const T &rc){
+                this->_impl->isub(rc);
             }
             void operator-=(const Scalar &rhs){
                 this->_impl->isub(rhs._impl);
             }
-            
+            template<class T>
+            void operator*=(const T &rc){
+                this->_impl->imul(rc);
+            }
+            void operator*=(const Scalar &rhs){
+                this->_impl->imul(rhs._impl);
+            }
+
+
 
     };
 
