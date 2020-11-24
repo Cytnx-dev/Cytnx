@@ -12,7 +12,7 @@ namespace cytnx{
 
     Storage_init_interface __SII;
 
-    std::ostream& operator<<(std::ostream& os, Storage &in){
+    std::ostream& operator<<(std::ostream& os, const Storage &in){
         in.print(); 
         return os; 
     }

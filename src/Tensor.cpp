@@ -176,6 +176,12 @@ namespace cytnx{
         out._impl = _insimpl->get(_accs);
         return cytnx::linalg::Sub(out,Tensor(rc));
     }
+    Tensor Tensor::Tproxy::operator-() const{
+        Tensor out;
+        out._impl = _insimpl->get(_accs);
+        return out.Mul(-1);
+    }
+
 
     // MUL
     Tensor Tensor::Tproxy::operator*(const cytnx_complex128 &rc) const{//{return this->_operatorADD(rc);};

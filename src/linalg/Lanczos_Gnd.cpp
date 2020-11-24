@@ -2,9 +2,11 @@
 #include "Generator.hpp"
 #include "random.hpp"
 #include "Tensor.hpp"
+#include "LinOp.hpp"
+
 #include <cfloat>
 #include <vector>
-
+#include "Tensor.hpp"
 
 namespace cytnx{
     namespace linalg{

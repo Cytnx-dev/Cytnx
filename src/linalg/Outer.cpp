@@ -2,6 +2,7 @@
 #include "linalg_internal_interface.hpp"
 #include "utils/utils.hpp"
 #include "Device.hpp"
+#include "Tensor.hpp"
 #include <iostream>
 namespace cytnx{
 

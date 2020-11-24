@@ -1,4 +1,5 @@
 #include "Scalar.hpp"
+#include "Storage.hpp"
 
 namespace cytnx{
 
@@ -15,6 +16,78 @@ namespace cytnx{
         in._impl->print(os);
         return os;
     }
+
+
+
+
+
+
+    //Scalar proxy:
+    //Sproxy
+    const Scalar::Sproxy& Scalar::Sproxy::operator=(const Scalar::Sproxy &rc){
+        Scalar tmp = rc._insimpl->get_item(rc._loc);
+        this->_insimpl->set_item(this->_loc,tmp);
+        return rc;
+    }
+    const Scalar::Sproxy& Scalar::Sproxy::operator=(const Scalar &rc){
+        this->_insimpl->set_item(this->_loc,rc);
+        return *this;
+    }
+    const Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_complex128 &rc){
+        this->_insimpl->set_item(this->_loc,rc);
+        return *this;
+    }
+    const Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_complex64 &rc){
+        this->_insimpl->set_item(this->_loc,rc);
+        return *this;
+    }
+    const Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_double &rc){
+        this->_insimpl->set_item(this->_loc,rc);
+        return *this;
+    }
+    const Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_float &rc){
+        this->_insimpl->set_item(this->_loc,rc);
+        return *this;
+    }
+    const Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_uint64 &rc){
+        this->_insimpl->set_item(this->_loc,rc);
+        return *this;
+    }
+    const Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_int64 &rc){
+        this->_insimpl->set_item(this->_loc,rc);
+        return *this;
+    }
+    const Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_uint32 &rc){
+        this->_insimpl->set_item(this->_loc,rc);
+        return *this;
+    }
+    const Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_int32 &rc){
+        this->_insimpl->set_item(this->_loc,rc);
+        return *this;
+    }
+    const Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_uint16 &rc){
+        this->_insimpl->set_item(this->_loc,rc);
+        return *this;
+    }
+    const Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_int16 &rc){
+        this->_insimpl->set_item(this->_loc,rc);
+        return *this;
+    }
+    const Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_bool &rc){
+        this->_insimpl->set_item(this->_loc,rc);
+        return *this;
+    }
+    
+    Scalar::Scalar(const Sproxy &prox): _impl(new Scalar_base()){
+        if(this->_impl != nullptr){
+            delete this->_impl;
+        }
+        this->_impl = prox._insimpl->get_item(prox._loc)._impl->copy();
+    }
+
+
+
+
 
     //Storage Init interface.    
     //=============================

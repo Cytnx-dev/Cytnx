@@ -711,4 +711,43 @@ namespace cytnx{
         return Scalar(this->at<cytnx_complex64>(idx));
     }
 
+
+    void ComplexFloatStorage::set_item(const cytnx_uint64 &idx, const Scalar &val){
+        this->at<cytnx_complex64>(idx) = complex64(val);
+    }
+    void ComplexFloatStorage::set_item(const cytnx_uint64 &idx,const cytnx_complex128 &val){
+        this->at<cytnx_complex64>(idx) = val;
+    }
+    void ComplexFloatStorage::set_item(const cytnx_uint64 &idx,const cytnx_complex64  &val){
+        this->at<cytnx_complex64>(idx) = val;
+    }
+    void ComplexFloatStorage::set_item(const cytnx_uint64 &idx,const cytnx_double     &val){
+        this->at<cytnx_complex64>(idx) = val;
+    }
+    void ComplexFloatStorage::set_item(const cytnx_uint64 &idx,const cytnx_float      &val){
+        this->at<cytnx_complex64>(idx) = val;
+    }
+    void ComplexFloatStorage::set_item(const cytnx_uint64 &idx,const cytnx_int64      &val){
+        this->at<cytnx_complex64>(idx) = val;
+    }
+    void ComplexFloatStorage::set_item(const cytnx_uint64 &idx,const cytnx_uint64     &val){
+        this->at<cytnx_complex64>(idx) = val;
+    }
+    void ComplexFloatStorage::set_item(const cytnx_uint64 &idx,const cytnx_int32      &val){
+        this->at<cytnx_complex64>(idx) = val;
+    }
+    void ComplexFloatStorage::set_item(const cytnx_uint64 &idx,const cytnx_uint32     &val){
+        this->at<cytnx_complex64>(idx) = val;
+    }
+    void ComplexFloatStorage::set_item(const cytnx_uint64 &idx,const cytnx_int16      &val){
+        this->at<cytnx_complex64>(idx) = val;
+    }
+    void ComplexFloatStorage::set_item(const cytnx_uint64 &idx,const cytnx_uint16     &val){
+        this->at<cytnx_complex64>(idx) = val;
+    }
+    void ComplexFloatStorage::set_item(const cytnx_uint64 &idx,const cytnx_bool       &val){
+        this->at<cytnx_complex64>(idx) = val;
+    }
+
+
 }//namespace cytnx

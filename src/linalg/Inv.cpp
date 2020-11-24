@@ -1,6 +1,6 @@
 #include "linalg.hpp"
 #include "linalg_internal_interface.hpp"
-
+#include "Tensor.hpp"
 namespace cytnx{
     namespace linalg{
         Tensor Inv(const Tensor &Tin, const double &clip){

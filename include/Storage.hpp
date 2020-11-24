@@ -181,7 +181,8 @@ namespace cytnx{
             virtual void append(const cytnx_bool       &val);
 
             virtual Scalar get_item(const cytnx_uint64 &in) const;
-            /*
+
+            virtual void set_item(const cytnx_uint64 &idx,const Scalar &val);
             virtual void set_item(const cytnx_uint64 &idx,const cytnx_complex128 &val);
             virtual void set_item(const cytnx_uint64 &idx,const cytnx_complex64  &val);
             virtual void set_item(const cytnx_uint64 &idx,const cytnx_double     &val);
@@ -193,7 +194,7 @@ namespace cytnx{
             virtual void set_item(const cytnx_uint64 &idx,const cytnx_int16      &val);
             virtual void set_item(const cytnx_uint64 &idx,const cytnx_uint16     &val);
             virtual void set_item(const cytnx_uint64 &idx,const cytnx_bool       &val);
-            */
+            
 
     };        
     ///@endcond
@@ -244,7 +245,9 @@ namespace cytnx{
             void append(const cytnx_uint16     &val);
             void append(const cytnx_bool       &val);
             Scalar get_item(const cytnx_uint64 &in) const;
-            /*
+
+
+            void set_item(const cytnx_uint64 &idx,const Scalar &val);
             void set_item(const cytnx_uint64 &idx,const cytnx_complex128 &val);
             void set_item(const cytnx_uint64 &idx,const cytnx_complex64  &val);
             void set_item(const cytnx_uint64 &idx,const cytnx_double     &val);
@@ -256,7 +259,7 @@ namespace cytnx{
             void set_item(const cytnx_uint64 &idx,const cytnx_int16      &val);
             void set_item(const cytnx_uint64 &idx,const cytnx_uint16     &val);
             void set_item(const cytnx_uint64 &idx,const cytnx_bool       &val);
-            */
+            
 
     };          
     ///@endcond
@@ -306,6 +309,20 @@ namespace cytnx{
             void append(const cytnx_uint16     &val);
             void append(const cytnx_bool       &val);
             Scalar get_item(const cytnx_uint64 &in) const;
+
+            void set_item(const cytnx_uint64 &idx,const Scalar &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_complex128 &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_complex64  &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_double     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_float      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int64      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint64     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int32      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint32     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int16      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint16     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_bool       &val);
+
     };
     ///@endcond
 
@@ -355,6 +372,21 @@ namespace cytnx{
             void append(const cytnx_uint16     &val);
             void append(const cytnx_bool       &val);
             Scalar get_item(const cytnx_uint64 &in) const;
+
+
+            void set_item(const cytnx_uint64 &idx,const Scalar &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_complex128 &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_complex64  &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_double     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_float      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int64      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint64     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int32      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint32     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int16      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint16     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_bool       &val);
+
     };
     ///@endcond
 
@@ -403,6 +435,21 @@ namespace cytnx{
             void append(const cytnx_uint16     &val);
             void append(const cytnx_bool       &val);
             Scalar get_item(const cytnx_uint64 &in) const;
+
+            void set_item(const cytnx_uint64 &idx,const Scalar &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_complex128 &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_complex64  &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_double     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_float      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int64      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint64     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int32      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint32     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int16      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint16     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_bool       &val);
+
+
     };
     ///@endcond
 
@@ -452,6 +499,22 @@ namespace cytnx{
             void append(const cytnx_uint16     &val);
             void append(const cytnx_bool       &val);
             Scalar get_item(const cytnx_uint64 &in) const;
+
+
+            void set_item(const cytnx_uint64 &idx,const Scalar &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_complex128 &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_complex64  &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_double     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_float      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int64      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint64     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int32      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint32     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int16      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint16     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_bool       &val);
+
+
     };          
     ///@endcond
 
@@ -501,6 +564,22 @@ namespace cytnx{
             void append(const cytnx_uint16     &val);
             void append(const cytnx_bool       &val);
             Scalar get_item(const cytnx_uint64 &in) const;
+
+
+            void set_item(const cytnx_uint64 &idx,const Scalar &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_complex128 &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_complex64  &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_double     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_float      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int64      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint64     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int32      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint32     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int16      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint16     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_bool       &val);
+
+
     };          
     ///@endcond
     ///@cond
@@ -547,6 +626,22 @@ namespace cytnx{
             void append(const cytnx_uint16     &val);
             void append(const cytnx_bool       &val);
             Scalar get_item(const cytnx_uint64 &in) const;
+
+
+            void set_item(const cytnx_uint64 &idx,const Scalar &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_complex128 &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_complex64  &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_double     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_float      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int64      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint64     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int32      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint32     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int16      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint16     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_bool       &val);
+
+
     };          
     ///@endcond
 
@@ -595,6 +690,20 @@ namespace cytnx{
             void append(const cytnx_uint16     &val);
             void append(const cytnx_bool       &val);
             Scalar get_item(const cytnx_uint64 &in) const;
+
+            void set_item(const cytnx_uint64 &idx,const Scalar &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_complex128 &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_complex64  &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_double     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_float      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int64      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint64     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int32      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint32     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int16      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint16     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_bool       &val);
+
     };          
     ///@endcond
 
@@ -642,6 +751,23 @@ namespace cytnx{
             void append(const cytnx_uint16     &val);
             void append(const cytnx_bool       &val);
             Scalar get_item(const cytnx_uint64 &in) const;
+
+
+            void set_item(const cytnx_uint64 &idx,const Scalar &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_complex128 &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_complex64  &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_double     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_float      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int64      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint64     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int32      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint32     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int16      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint16     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_bool       &val);
+
+
+
     };          
     ///@endcond
 
@@ -689,6 +815,24 @@ namespace cytnx{
             void append(const cytnx_uint16     &val);
             void append(const cytnx_bool       &val);
             Scalar get_item(const cytnx_uint64 &in) const;
+
+
+            void set_item(const cytnx_uint64 &idx,const Scalar &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_complex128 &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_complex64  &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_double     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_float      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int64      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint64     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int32      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint32     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int16      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint16     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_bool       &val);
+
+
+
+
     };          
     ///@endcond
 
@@ -736,6 +880,23 @@ namespace cytnx{
             void append(const cytnx_uint16     &val);
             void append(const cytnx_bool       &val);
             Scalar get_item(const cytnx_uint64 &in) const;
+
+
+            void set_item(const cytnx_uint64 &idx,const Scalar &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_complex128 &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_complex64  &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_double     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_float      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int64      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint64     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int32      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint32     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_int16      &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_uint16     &val);
+            void set_item(const cytnx_uint64 &idx,const cytnx_bool       &val);
+
+
+
     };          
     ///@endcond
 
@@ -763,6 +924,8 @@ namespace cytnx{
             ///@cond
             boost::intrusive_ptr<Storage_base> _impl;
             ///@endcond
+
+
 
             /**
             @brief initialize a Storage
@@ -910,13 +1073,31 @@ namespace cytnx{
 
             ///@cond
             template<class T> // this is c++ only
-            T& at(const unsigned int &idx) const{
+            T& at(const cytnx_uint64 &idx) const{
                 return this->_impl->at<T>(idx);
+            }
+
+            const Scalar::Sproxy at(const cytnx_uint64 &idx) const{
+                Scalar::Sproxy out(this->_impl,idx);
+                return out;
+            }
+            Scalar::Sproxy at(const cytnx_uint64 &idx){
+                Scalar::Sproxy out(this->_impl,idx);
+                return out;
             }
 
             template<class T> // this is c++ only
             T& back() const{
                 return this->_impl->back<T>();
+            }
+
+            const Scalar::Sproxy back() const{
+                Scalar::Sproxy out(this->_impl,this->size()-1);
+                return out;
+            }
+            Scalar::Sproxy back(){
+                Scalar::Sproxy out(this->_impl,this->size()-1);
+                return out;
             }
 
 
@@ -1003,12 +1184,12 @@ namespace cytnx{
             @brief print the info of the Storage, including the device, dtype and size.
   
             */
-            void print_info(){
+            void print_info() const{
                 this->_impl->print_info();
             }
             /// @cond 
             // this is a redundant function
-            void print(){
+            void print() const{
                 this->_impl->print();
             }
             /// @endcond
@@ -1181,17 +1362,19 @@ namespace cytnx{
                 return this->_impl->get_item(idx);
             };
 
-            //template<class T>
-            //void set_item(const cytnx_uint64 &idx, const T &elem){
-                
-            //};
+            template<class T>
+            void set_item(const cytnx_uint64 &idx, const T &elem){
+                this->_impl->set_item(idx,elem);    
+            };
 
+
+            //Sproxy operator()(const cytnx_uint64 &idx) 
                         
 
     };
 
     ///@cond
-    std::ostream& operator<<(std::ostream& os, Storage &in);
+    std::ostream& operator<<(std::ostream& os, const Storage &in);
     ///@endcond
 
 }

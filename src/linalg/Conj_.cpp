@@ -1,5 +1,6 @@
 #include "linalg.hpp"
 #include "linalg_internal_interface.hpp"
+#include "Tensor.hpp"
 
 #include <iostream>
 

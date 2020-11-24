@@ -3,7 +3,6 @@
 #include <iostream>
 #include <typeinfo>
 
-#include "Scalar.hpp"
 #include "Accessor.hpp"
 #include "Device.hpp"
 #include "Type.hpp"
@@ -17,13 +16,11 @@
 #include "utils/utils.hpp"
 #include "random.hpp"
 
-
-
 #include "UniTensor.hpp"
 #include "Symmetry.hpp"
 #include "Network.hpp"
 #include "Bond.hpp"
-
+#include "Scalar.hpp"
 #include "LinOp.hpp"
 #include "utils/is.hpp"
 #include "utils/print.hpp"

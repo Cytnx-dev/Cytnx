@@ -2,6 +2,8 @@
 #include "linalg_internal_interface.hpp"
 #include <iostream>
 #include <vector>
+#include "Tensor.hpp"
+
 namespace cytnx{
     namespace linalg{
         Tensor Dot(const Tensor &Tl, const Tensor &Tr){

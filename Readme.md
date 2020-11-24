@@ -23,8 +23,12 @@ See The following user guide for install and using of cytnx:
 
 ## Current dev Version:
     v0.6.6
-    
-        
+    1. [Enhance] add binary op. -Tensor.    
+    2. [Enhance] New introduce Scalar class, generic scalar placeholder. 
+    3. [Enhance][expr] Storage.at(), Storage.back(), Storage.get_item() can now without specialization. The return is Scalar class.
+    4. [Enhance] Storage.get_item, Storage.set_item        
+            
+
     v0.6.5
     1. [Fix] Bug in UniTensor _Load    
     2. [Enhance] Improve stability in Lanczos_ER  

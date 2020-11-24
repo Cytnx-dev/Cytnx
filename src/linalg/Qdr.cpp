@@ -1,8 +1,9 @@
 #include "linalg.hpp"
 #include "linalg_internal_interface.hpp"
-
+#include "Tensor.hpp"
 #include <iostream>
 #include <vector>
+#include "UniTensor.hpp"
 
 using namespace std;
 typedef cytnx::Accessor ac;

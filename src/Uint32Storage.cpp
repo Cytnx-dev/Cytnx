@@ -628,4 +628,44 @@ namespace cytnx{
     Scalar Uint32Storage::get_item(const cytnx_uint64 &idx)const{
         return Scalar(this->at<cytnx_uint32>(idx));
     }
+
+    void Uint32Storage::set_item(const cytnx_uint64 &idx, const Scalar &val){
+        this->at<cytnx_uint32>(idx) = cytnx_uint32(val);
+    }
+    void Uint32Storage::set_item(const cytnx_uint64 &idx,const cytnx_complex128 &val){
+        cytnx_error_msg(true,"[ERROR] cannot set complex to real.%s","\n");
+    }
+    void Uint32Storage::set_item(const cytnx_uint64 &idx,const cytnx_complex64  &val){
+        cytnx_error_msg(true,"[ERROR] cannot set complex to real.%s","\n");
+    }
+    void Uint32Storage::set_item(const cytnx_uint64 &idx,const cytnx_double     &val){
+        this->at<cytnx_uint32>(idx) = val;
+    }
+    void Uint32Storage::set_item(const cytnx_uint64 &idx,const cytnx_float      &val){
+        this->at<cytnx_uint32>(idx) = val;
+    }
+    void Uint32Storage::set_item(const cytnx_uint64 &idx,const cytnx_int64      &val){
+        this->at<cytnx_uint32>(idx) = val;
+    }
+    void Uint32Storage::set_item(const cytnx_uint64 &idx,const cytnx_uint64     &val){
+        this->at<cytnx_uint32>(idx) = val;
+    }
+    void Uint32Storage::set_item(const cytnx_uint64 &idx,const cytnx_int32      &val){
+        this->at<cytnx_uint32>(idx) = val;
+    }
+    void Uint32Storage::set_item(const cytnx_uint64 &idx,const cytnx_uint32     &val){
+        this->at<cytnx_uint32>(idx) = val;
+    }
+    void Uint32Storage::set_item(const cytnx_uint64 &idx,const cytnx_int16      &val){
+        this->at<cytnx_uint32>(idx) = val;
+    }
+    void Uint32Storage::set_item(const cytnx_uint64 &idx,const cytnx_uint16     &val){
+        this->at<cytnx_uint32>(idx) = val;
+    }
+    void Uint32Storage::set_item(const cytnx_uint64 &idx,const cytnx_bool       &val){
+        this->at<cytnx_uint32>(idx) = val;
+    }
+
+
+
 }//cytnx

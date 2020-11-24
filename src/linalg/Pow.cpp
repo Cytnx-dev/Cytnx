@@ -1,6 +1,7 @@
 #include "linalg.hpp"
 #include "linalg_internal_interface.hpp"
-
+#include "Tensor.hpp"
+#include "UniTensor.hpp"
 namespace cytnx{
     namespace linalg{
         Tensor Pow(const Tensor &Tin, const double &p){

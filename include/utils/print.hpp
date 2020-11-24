@@ -8,6 +8,7 @@
 #include "Symmetry.hpp"
 #include "UniTensor.hpp"
 #include "Network.hpp"
+#include "Scalar.hpp"
 #include <iostream>
 
 namespace cytnx{

@@ -14,6 +14,8 @@ namespace cytnx{
 
 
     ///@cond
+    class Storage_base;
+
     // real implementation
     class Scalar_base{
         private:
@@ -933,6 +935,36 @@ namespace cytnx{
 
     class Scalar{
         public:
+
+            ///@cond
+            struct Sproxy{
+                boost::intrusive_ptr<Storage_base> _insimpl;
+                cytnx_uint64 _loc;
+
+                Sproxy(boost::intrusive_ptr<Storage_base> _ptr,const cytnx_uint64 &idx) : _insimpl(_ptr), _loc(idx){}
+    
+                //When used to set elems:
+                const Sproxy& operator=(const Scalar &rc);
+                const Sproxy& operator=(const cytnx_complex128 &rc);
+                const Sproxy& operator=(const cytnx_complex64 &rc);
+                const Sproxy& operator=(const cytnx_double &rc);
+                const Sproxy& operator=(const cytnx_float &rc);
+                const Sproxy& operator=(const cytnx_uint64 &rc);
+                const Sproxy& operator=(const cytnx_int64 &rc);
+                const Sproxy& operator=(const cytnx_uint32 &rc);
+                const Sproxy& operator=(const cytnx_int32 &rc);
+                const Sproxy& operator=(const cytnx_uint16 &rc);
+                const Sproxy& operator=(const cytnx_int16 &rc);
+                const Sproxy& operator=(const cytnx_bool &rc);
+
+                const Sproxy& operator=(const Sproxy &rc);
+
+                //When used to get elements:
+                //operator Scalar() const;
+               
+            }; 
+            ///@endcond
+
             Scalar_base* _impl;
 
             Scalar(): _impl(new Scalar_base()){};
@@ -950,11 +982,15 @@ namespace cytnx{
                 this->_impl->assign_selftype(in);
             };
             
+            // move sproxy when use to get elements here.
+            Scalar(const Sproxy &prox);
+
+
             //[Internal!!]
             Scalar(Scalar_base* in){
                 this->_impl = in;
             }
-
+            
             //specialization of init: 
             ///@cond
             void Init_by_number(const cytnx_complex128 &in){

@@ -1,7 +1,7 @@
 #include "linalg.hpp"
 #include "linalg_internal_interface.hpp"
-
-
+#include "Tensor.hpp"
+#include "UniTensor.hpp"
 namespace cytnx {
     namespace linalg {
         Tensor Mul(const Tensor &Lt, const Tensor &Rt) {

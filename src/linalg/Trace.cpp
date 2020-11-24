@@ -1,6 +1,7 @@
 #include "linalg.hpp"
 #include "utils/utils.hpp"
-
+#include "Tensor.hpp"
+#include "UniTensor.hpp"
 #ifdef UNI_OMP
     #include <omp.h>
 #endif

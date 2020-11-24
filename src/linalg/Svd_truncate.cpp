@@ -1,6 +1,8 @@
 #include "linalg.hpp"
 #include "Accessor.hpp"
 #include <vector>
+#include "Tensor.hpp"
+#include "UniTensor.hpp"
 namespace cytnx{
     namespace linalg{
         typedef Accessor ac;

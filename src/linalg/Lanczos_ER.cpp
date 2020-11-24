@@ -1,6 +1,9 @@
 #include "linalg.hpp"
 #include "Generator.hpp"
 #include "random.hpp"
+#include "Tensor.hpp"
+#include "LinOp.hpp"
+
 #include <cfloat>
 namespace cytnx{
     namespace linalg{

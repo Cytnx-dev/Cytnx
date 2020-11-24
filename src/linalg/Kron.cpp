@@ -3,6 +3,7 @@
 #include "Device.hpp"
 #include <iostream>
 #include "linalg_internal_interface.hpp"
+#include "Tensor.hpp"
 namespace cytnx{
 
     namespace linalg{

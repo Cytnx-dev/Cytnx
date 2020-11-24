@@ -116,11 +116,22 @@ int main(int argc, char *argv[]){
     auto rS = cytnx::arange(16).reshape(4,4);
     auto arS = rS;
 
+    
+
+
     rS = cytnx::arange(10);
     cout << arS << endl;
     cout << rS << endl;
 
     cout << rS / 30 << endl;
+
+    Storage sTo = rS.storage();
+     
+    print(sTo);// << endl;
+    sTo.at(0) = 400;
+    print(sTo);
+
+
     exit(1);
 
 

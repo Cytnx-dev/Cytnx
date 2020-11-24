@@ -748,12 +748,49 @@ namespace cytnx{
         cytnx_error_msg(true,"[ERROR] trying to call Storage.real() from void Storage%s","\n");
     }   
     boost::intrusive_ptr<Storage_base> Storage_base::imag(){
-        cytnx_error_msg(true,"[ERROR] trying to call Storage.real() from void Storage%s","\n");
+        cytnx_error_msg(true,"[ERROR] trying to call Storage.imag() from void Storage%s","\n");
     }   
 
     Scalar Storage_base::get_item(const cytnx_uint64 &idx) const{
-        cytnx_error_msg(true,"[ERROR] trying to call Storage.real() from void Storage%s","\n");
+        cytnx_error_msg(true,"[ERROR] trying to call Storage.get_item() from void Storage%s","\n");
         return Scalar();
+    }
+
+    void Storage_base::set_item(const cytnx_uint64 &idx,const Scalar &val){
+        cytnx_error_msg(true,"[ERROR] trying to call Storage.set_item() from void Storage%s","\n");
+    }
+    void Storage_base::set_item(const cytnx_uint64 &idx,const cytnx_complex128 &val){
+        cytnx_error_msg(true,"[ERROR] trying to call Storage.set_item() from void Storage%s","\n");
+    }
+    void Storage_base::set_item(const cytnx_uint64 &idx,const cytnx_complex64  &val){
+        cytnx_error_msg(true,"[ERROR] trying to call Storage.set_item() from void Storage%s","\n");
+    }
+    void Storage_base::set_item(const cytnx_uint64 &idx,const cytnx_double     &val){
+        cytnx_error_msg(true,"[ERROR] trying to call Storage.set_item() from void Storage%s","\n");
+    }
+    void Storage_base::set_item(const cytnx_uint64 &idx,const cytnx_float      &val){
+        cytnx_error_msg(true,"[ERROR] trying to call Storage.set_item() from void Storage%s","\n");
+    }
+    void Storage_base::set_item(const cytnx_uint64 &idx,const cytnx_int64      &val){
+        cytnx_error_msg(true,"[ERROR] trying to call Storage.set_item() from void Storage%s","\n");
+    }
+    void Storage_base::set_item(const cytnx_uint64 &idx,const cytnx_uint64     &val){
+        cytnx_error_msg(true,"[ERROR] trying to call Storage.set_item() from void Storage%s","\n");
+    }
+    void Storage_base::set_item(const cytnx_uint64 &idx,const cytnx_int32      &val){
+        cytnx_error_msg(true,"[ERROR] trying to call Storage.set_item() from void Storage%s","\n");
+    }
+    void Storage_base::set_item(const cytnx_uint64 &idx,const cytnx_uint32     &val){
+        cytnx_error_msg(true,"[ERROR] trying to call Storage.set_item() from void Storage%s","\n");
+    }
+    void Storage_base::set_item(const cytnx_uint64 &idx,const cytnx_int16      &val){
+        cytnx_error_msg(true,"[ERROR] trying to call Storage.set_item() from void Storage%s","\n");
+    }
+    void Storage_base::set_item(const cytnx_uint64 &idx,const cytnx_uint16     &val){
+        cytnx_error_msg(true,"[ERROR] trying to call Storage.set_item() from void Storage%s","\n");
+    }
+    void Storage_base::set_item(const cytnx_uint64 &idx,const cytnx_bool       &val){
+        cytnx_error_msg(true,"[ERROR] trying to call Storage.set_item() from void Storage%s","\n");
     }
 
 

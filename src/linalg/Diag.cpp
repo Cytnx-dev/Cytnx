@@ -1,7 +1,7 @@
 #include "linalg.hpp"
 #include "linalg_internal_interface.hpp"
 #include "Generator.hpp"
-
+#include "Tensor.hpp"
 
 namespace cytnx{
     namespace linalg{

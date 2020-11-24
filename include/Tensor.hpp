@@ -10,6 +10,7 @@
 #include <fstream>
 #include "utils/vec_range.hpp"
 #include "utils/dynamic_arg_resolver.hpp"
+//#include "linalg.hpp"
 #include "Accessor.hpp"
 #include <vector>
 #include <initializer_list>
@@ -270,6 +271,14 @@ namespace cytnx{
     ///@endcond
 
     class Tensor;
+ 
+    ///@cond
+    // [Note] these are fwd from linalg.hpp
+    template<class T> Tensor operator+(const Tensor &lhs, const T &rc);
+    template<class T> Tensor operator-(const Tensor &lhs, const T &rhs);
+    template<class T> Tensor operator*(const Tensor &lhs, const T &rhs);
+    template<class T> Tensor operator/(const Tensor &lhs, const T &rhs);
+    ///@endcond
 
     /// @brief an tensor (multi-dimensional array) 
     class Tensor{
@@ -389,6 +398,8 @@ namespace cytnx{
                 Tensor operator-(const cytnx_int16 &rc) const;//{return this->_operatorSUB(rc);};
                 Tensor operator-(const cytnx_bool &rc) const;//{return this->_operatorSUB(rc);};
                 Tensor operator-(const Tproxy &rc) const;
+    
+                Tensor operator-() const;
 
                 /*
                 template<class T>
@@ -1200,7 +1211,9 @@ namespace cytnx{
                 return *this % rhs;
            }
 
-
+            Tensor operator-(){
+                return this->Mul(-1.);
+            }
 
             Tensor flatten() const{
                 Tensor out = this->clone();

@@ -1,7 +1,8 @@
 #include "linalg.hpp"
 #include "linalg_internal_interface.hpp"
 #include "Generator.hpp"
-
+#include "Tensor.hpp"
+#include "UniTensor.hpp"
 #include <iostream>
 #include <vector>
 
