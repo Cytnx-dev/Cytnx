@@ -58,4 +58,64 @@ Output>>
     [ 6.00000e+00 6.00000e+00 6.00000e+00 6.00000e+00 ]
 
 
+save & load from/to binary only
+*********************************
+We can also simply dump all the elements as binary file without any additional header information associate to the storage format. This is similar to numpy.tofile/numpy.fromfile.
+
+* In python:
+
+.. code-block:: python
+    :linenos:
+
+    # read
+    A = cytnx.Storage(10);
+    A.fill(10);
+    print(A);
+
+    A.Tofile("S1");
+
+    #load
+    B = cytnx.Storage.Fromfile("S1",cytnx.Type.Double);
+    print(B);
+
+* In C++
+
+.. code-block:: c++
+    :linenos:
+
+    // read
+    auto A = cytnx::Storage(10);
+    A.fill(10);
+    cout << A << endl;
+
+    A.Tofile("S1");
+
+    //load
+    auto B = cytnx::Storage::Fromfile("S1",cytnx::Type.Double);
+        
+    cout << B << endl;
+
+>>> output:
+
+.. code-block:: text
+
+    dtype : Double (Float64)
+    device: cytnx device: CPU
+    size  : 10
+    [ 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 ]
+
+    dtype : Double (Float64)
+    device: cytnx device: CPU
+    size  : 10
+    [ 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 ]
+
+
+.. Note:: 
+
+    You can also choose to load part of the file with additional argument *count* when using **Fromfile**
+
+
+
+
+
 .. toctree::

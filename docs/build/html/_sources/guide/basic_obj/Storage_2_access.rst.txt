@@ -52,6 +52,41 @@ Output >>
     1. The return is the reference of the element, just like c++ *vector*. 
     2. The template type that match the dtype of Storage instance should be specify when calling **at<>()**. If the type mismatch, an error will be prompt. 
 
+* [New][v0.6.6+] The introduce of C++ only Scalar class allow get elements using **at()**  without specialization (C++ only)
+
+.. code-block:: c++
+    :linenos:
+
+    auto A = cytnx::Storage(6);
+    cout << A << endl;
+
+    Scalar elemt = A.at(4);
+    cout << elemt << endl;
+
+    A.at(4) = 4;
+    cout << A << endl;
+
+   
+Output >>
+
+.. code-block:: text
+
+    dtype : Double (Float64)
+    device: cytnx device: CPU
+    size  : 6
+    [ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+
+    Scalar dtype: [Double (Float64)]
+    0
+
+    dtype : Double (Float64)
+    device: cytnx device: CPU
+    size  : 6
+    [ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 4.00000e+00 0.00000e+00 ]
+
+
+
+
 Get raw-pointer (C++ only)
 ***************************
 In some cases where user might want to get the raw-pointer from Storage. It is possible to do so. Cytnx provide two ways you can get a raw-pointer. 
@@ -68,8 +103,8 @@ In some cases where user might want to get the raw-pointer from Storage. It is p
     double *pA = A.data<double>();
 
     
-2. Use **Storage.raw_ptr()**:
-    Using **.raw_ptr()** return a void pointer, please use with caution. 
+2. Use **Storage.data()**:
+    Using **.data()** without specialization return a void pointer, please use with caution. 
 
 * In c++:
 
@@ -77,7 +112,7 @@ In some cases where user might want to get the raw-pointer from Storage. It is p
     :linenos:
 
     auto A = cytnx::Storage(6);
-    void *pA = A.raw_ptr();
+    void *pA = A.data();
 
 
 .. Note::

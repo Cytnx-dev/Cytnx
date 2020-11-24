@@ -36,8 +36,9 @@ Output>>
 
 .. Note::
     
-    Storage by itself only allocate memory (using malloc) without initialize it's elements. 
-
+    [Deprecated] Storage by itself only allocate memory (using malloc) without initialize it's elements. 
+    
+    [v0.6.6+] Storage now has same behavior as vector at initialize, all elements are init by zero.
 
 .. Tip::
 

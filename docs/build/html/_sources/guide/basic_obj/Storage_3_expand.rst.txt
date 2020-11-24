@@ -82,12 +82,14 @@ Output>>
 
 .. Note::
     
-    If the size is increase after resize, the additional elements will NOT be set to zero. Please be careful. 
+    [Deprecated] If the size is increase after resize, the additional elements will NOT be set to zero. Please be careful. 
+
+    [New][v0.6.6+] The resize of storage now follows the same behavior as vector, new elements will be init by zero.
 
 .. Tip::
 
     1. You can use **Storage.size()** to get the current size of Storage.
-    2. Internally, cytnx allocate memory in multiple of 32. This choice is to optimize the bandwidth of CPU/GPU transfer and possibly performance of some kernels. you can use **Storage.capacity()** to check the current real memory size. 
+    2. Internally, cytnx allocate memory in multiple of 2. This choice is to optimize the bandwidth of CPU/GPU transfer and possibly performance of some kernels. you can use **Storage.capacity()** to check the current real memory size. 
 
 
 

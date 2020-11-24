@@ -234,4 +234,41 @@ For example, let's create a Tensor on cpu and transfer to GPU with gpu-id=0.
     2. **Tensor.to()** will return a copy on a target device. If you want to move the current Tensor to device, use **Tensor.to_()** (with underscore). 
 
 
+Tensor from Storage [v0.6.6+]
+*******************************
+    To create Tensor directly from storage, use **Tensor.from_storage()**. 
+
+* In python:
+
+.. code-block:: python
+    :linenos:
+
+    ## A & B share same memory
+    A = cytnx.Storage(10);
+    B = cytnx.Tensor.from_storage(A);
+
+    ## A & C have different memory
+    C = cytnx.Tensor.from_storage(A.clone());
+
+    
+* In C++:
+
+.. code-block:: c++
+    :linenos:
+
+    // A & B share same memory
+    auto A = cytnx::Storage(10);
+    auto B = cytnx::Tensor::from_storage(A);
+
+    // A & C have different memory
+    C = cytnx::Tensor::from_storage(A.clone());
+
+
+.. Note::
+
+    Note that this will create a wrapping around input storage, and the created Tensor and input storage share the same memory. To actually create independent memory, use **storage.clone()**
+
+
+
+
 .. toctree::
