@@ -107,6 +107,31 @@ int main(int argc, char *argv[]){
         auto outSD = cytnx::linalg::Tensordot(rS,rD,{0,2},{2,1},true,true);
     }
     */
+    auto rrA = cytnx::Storage(10);
+    rrA.fill(10);
+    cout << rrA << endl;
+
+    rrA.Tofile("S1");
+
+    //load
+    auto rrB = cytnx::Storage::Fromfile("S1",cytnx::Type.Double);
+        
+    cout << rrB << endl;
+
+
+    auto xxA = cytnx::Storage(6);
+    cout << xxA << endl;
+
+    Scalar elemt = xxA.at(4);
+    cout << elemt << endl;
+
+    xxA.at(4) = 4;
+    cout << xxA << endl;
+
+
+
+
+    exit(1);
 
 
     auto Scc = Scalar(400);
@@ -116,8 +141,8 @@ int main(int argc, char *argv[]){
     auto rS = cytnx::arange(16).reshape(4,4);
     auto arS = rS;
 
-    
-
+    auto SSSc  = Storage(10);
+    print(SSSc); 
 
     rS = cytnx::arange(10);
     cout << arS << endl;

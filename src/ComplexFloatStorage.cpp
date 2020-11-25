@@ -544,7 +544,7 @@ namespace cytnx{
                 this->cap = newsize;
             }
             if(this->device==Device.cpu){
-                void *htmp = malloc(sizeof(cytnx_complex64)*this->cap);
+                void *htmp = calloc(this->cap,sizeof(cytnx_complex64));
                 memcpy(htmp,this->Mem,sizeof(cytnx_complex64)*this->len);
                 free(this->Mem);
                 this->Mem = htmp;
@@ -552,7 +552,7 @@ namespace cytnx{
                 #ifdef UNI_GPU
                     cytnx_error_msg(device>=Device.Ngpus,"%s","[ERROR] invalid device.");
                     cudaSetDevice(device);
-                    void *dtmp = utils_internal::cuMalloc_gpu(sizeof(cytnx_complex64)*this->cap);
+                    void *dtmp = utils_internal::cuCalloc_gpu(this->cap,sizeof(cytnx_complex64));
                     checkCudaErrors(cudaMemcpyPeer(dtmp,device,this->Mem,this->device,sizeof(cytnx_complex64)*this->len));
                     cudaFree(this->Mem);
                     this->Mem = dtmp;
