@@ -125,6 +125,10 @@ int main(int argc, char *argv[]){
     Scalar elemt = xxA.at(4);
     cout << elemt << endl;
 
+    cout << elemt + 100 << endl;
+    cout << elemt + cytnx_complex128(100) << endl;
+
+
     xxA.at(4) = 4;
     cout << xxA << endl;
 

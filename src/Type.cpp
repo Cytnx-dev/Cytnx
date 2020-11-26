@@ -13,7 +13,35 @@
 #endif
 using namespace std;
 
+/*
+Type_class::Type_class(){
+    this->c_typeid2_cy_typeid[type_index(typeid(void))] = this->Void;
+    this->c_typeid2_cy_typeid[type_index(typeid(cytnx_complex128))] = this->ComplexDouble;
+    this->c_typeid2_cy_typeid[type_index(typeid(cytnx_complex64 ))] = this->ComplexFloat ;
+    this->c_typeid2_cy_typeid[type_index(typeid(cytnx_double    ))] = this->Double;
+    this->c_typeid2_cy_typeid[type_index(typeid(cytnx_float     ))] = this->Float ;
+    this->c_typeid2_cy_typeid[type_index(typeid(cytnx_uint64    ))] = this->Uint64;
+    this->c_typeid2_cy_typeid[type_index(typeid(cytnx_int64     ))] = this->Int64 ;
+    this->c_typeid2_cy_typeid[type_index(typeid(cytnx_uint32    ))] = this->Uint32;
+    this->c_typeid2_cy_typeid[type_index(typeid(cytnx_int32     ))] = this->Int32 ;
+    this->c_typeid2_cy_typeid[type_index(typeid(cytnx_uint16    ))] = this->Uint16;
+    this->c_typeid2_cy_typeid[type_index(typeid(cytnx_int16     ))] = this->Int16 ;
+    this->c_typeid2_cy_typeid[type_index(typeid(cytnx_bool      ))] = this->Bool  ;
 
+}
+
+int c_typeindex_to_id(const std::type_index &type_idx){
+    unordered_map<std::type_index,int>::iterator it;
+    it = this->c_typeid2_cy_typeid.find(type_idx);
+    
+    if(it==this->c_typeid2_cy_typeid.end()){
+        cytnx_error_msg(true,"[ERROR] invalid type!%s","\n");
+    }
+
+    return it->second;
+
+}
+*/
 bool cytnx::Type_class::is_float(const unsigned int &type_id){
 
 

@@ -29,6 +29,7 @@ See The following user guide for install and using of cytnx:
     4. [Enhance] Storage.get_item, Storage.set_item        
     5. [Enhance] Scalar, iadd,isub,imul,idiv  
     6. [Important] Storage.resize will match the behavior of vector, new elements are set to zero!
+    7. [Enhance] Scalar +,-,*,/ finished
     
 
     v0.6.5

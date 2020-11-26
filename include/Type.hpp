@@ -6,7 +6,9 @@
 #include <stdint.h>
 #include <climits>
 #include <typeinfo>
-
+#include <unordered_map>
+#include <typeindex>
+#include "cytnx_error.hpp"
 //#ifdef UNI_MKL
 #define MKL_Complex8 std::complex<float>
 #define MKL_Complex16 std::complex<double>
@@ -65,6 +67,8 @@ namespace cytnx{
                 Uint16,
                 Bool
             };
+            //Type_class();
+            //std::unordered_map<std::type_index, int> c_typeid2_cy_typeid;
             std::string getname(const unsigned int &type_id);
             unsigned int c_typename_to_id(const std::string &c_name);
             unsigned int typeSize(const unsigned int &type_id);
@@ -72,6 +76,23 @@ namespace cytnx{
             bool is_complex(const unsigned int &type_id);
             bool is_float(const unsigned int &type_id);
             bool is_int(const unsigned int &type_id);
+            //int c_typeindex_to_id(const std::type_index &type_idx);
+            template<class T>
+            unsigned int cy_typeid(const T &rc){
+                cytnx_error_msg(true,"[ERROR] invalid type%s","\n");
+                return 0;
+            }
+            unsigned int cy_typeid(const cytnx_complex128 &rc){ return this->ComplexDouble;}
+            unsigned int cy_typeid(const cytnx_complex64 &rc){ return this->ComplexFloat;}
+            unsigned int cy_typeid(const cytnx_double &rc){ return this->Double;}
+            unsigned int cy_typeid(const cytnx_float &rc){ return this->Float;}
+            unsigned int cy_typeid(const cytnx_uint64 &rc){ return this->Uint64;}
+            unsigned int cy_typeid(const cytnx_int64 &rc){ return this->Int64;}
+            unsigned int cy_typeid(const cytnx_uint32 &rc){ return this->Uint32;}
+            unsigned int cy_typeid(const cytnx_int32 &rc){ return this->Int32;}
+            unsigned int cy_typeid(const cytnx_uint16 &rc){ return this->Uint16;}
+            unsigned int cy_typeid(const cytnx_int16 &rc){ return this->Int16;}
+            unsigned int cy_typeid(const cytnx_bool &rc){ return this->Bool;}
     };
     /// @endcond
 
