@@ -11,6 +11,7 @@
 #include "Generator.hpp"
 #include "Physics.hpp"
 #include "algo.hpp"
+#include "stat.hpp"
 #include "linalg.hpp"
 #include "cytnx.hpp"
 #include "utils/utils.hpp"

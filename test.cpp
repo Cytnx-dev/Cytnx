@@ -107,6 +107,9 @@ int main(int argc, char *argv[]){
         auto outSD = cytnx::linalg::Tensordot(rS,rD,{0,2},{2,1},true,true);
     }
     */
+    auto hs = stat::Histogram(100,0,10);
+    
+
     auto rrA = cytnx::Storage(10);
     rrA.fill(10);
     cout << rrA << endl;

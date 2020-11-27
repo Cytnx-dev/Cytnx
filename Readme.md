@@ -30,7 +30,7 @@ See The following user guide for install and using of cytnx:
     5. [Enhance] Scalar, iadd,isub,imul,idiv  
     6. [Important] Storage.resize will match the behavior of vector, new elements are set to zero!
     7. [Enhance] Scalar +,-,*,/ finished
-    
+    8. [Enhance] add Histogram class and stat namespace.    
 
     v0.6.5
     1. [Fix] Bug in UniTensor _Load    

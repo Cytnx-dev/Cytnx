@@ -51,5 +51,6 @@ target_sources_local(cytnx
 
 add_subdirectory(linalg)
 add_subdirectory(algo)
+add_subdirectory(stat)
 add_subdirectory(utils)
 add_subdirectory(random)

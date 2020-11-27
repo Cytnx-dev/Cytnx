@@ -132,6 +132,8 @@ OBJS += Mod.o Lanczos_Gnd.o Lanczos_ER.o Det.o Sum.o Hosvd.o Min.o Max.o ExpM.o 
 ## Algo
 OBJS += Sort.o 
 
+## Stat
+OBJS += histogram.o 
 
 ## Random_internal
 OBJS += random_internal_interface.o
@@ -279,6 +281,13 @@ Sort_internal.o :  $(CytnxPATH)/src/algo/algo_internal_cpu/Sort_internal.cpp $(C
 ##########################
 Sort.o : $(CytnxPATH)/src/algo/Sort.cpp $(CytnxPATH)/include/algo.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+
+## stat
+#############################
+histogram.o: $(CytnxPATH)/src/stat/histogram.cpp $(CytnxPATH)/include/stat.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+
+
 
 ## linalg_internal
 ###########################

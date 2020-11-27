@@ -19,6 +19,60 @@ namespace cytnx{
 
 
 
+    //ladd: c + Scalar:
+    Scalar operator+( const cytnx_complex128 &lc, const Scalar &rs){return rs.radd(lc);};
+    Scalar operator+( const cytnx_complex64 &lc, const Scalar &rs){return rs.radd(lc);};
+    Scalar operator+( const cytnx_double &lc, const Scalar &rs){return rs.radd(lc);};
+    Scalar operator+( const cytnx_float  &lc, const Scalar &rs){return rs.radd(lc);};
+    Scalar operator+( const cytnx_uint64 &lc, const Scalar &rs){return rs.radd(lc);};
+    Scalar operator+( const cytnx_int64  &lc, const Scalar &rs){return rs.radd(lc);};
+    Scalar operator+( const cytnx_uint32 &lc, const Scalar &rs){return rs.radd(lc);};
+    Scalar operator+( const cytnx_int32  &lc, const Scalar &rs){return rs.radd(lc);};
+    Scalar operator+( const cytnx_uint16 &lc, const Scalar &rs){return rs.radd(lc);};
+    Scalar operator+( const cytnx_int16  &lc, const Scalar &rs){return rs.radd(lc);};
+    Scalar operator+( const cytnx_bool  &lc, const Scalar &rs){return rs.radd(lc);};
+
+    //lmul c * Scalar;
+    Scalar operator*( const cytnx_complex128 &lc, const Scalar &rs){return rs.rmul(lc);};
+    Scalar operator*( const cytnx_complex64 &lc, const Scalar &rs){return rs.rmul(lc);};
+    Scalar operator*( const cytnx_double &lc, const Scalar &rs){return rs.rmul(lc);};
+    Scalar operator*( const cytnx_float  &lc, const Scalar &rs){return rs.rmul(lc);};
+    Scalar operator*( const cytnx_uint64 &lc, const Scalar &rs){return rs.rmul(lc);};
+    Scalar operator*( const cytnx_int64  &lc, const Scalar &rs){return rs.rmul(lc);};
+    Scalar operator*( const cytnx_uint32 &lc, const Scalar &rs){return rs.rmul(lc);};
+    Scalar operator*( const cytnx_int32  &lc, const Scalar &rs){return rs.rmul(lc);};
+    Scalar operator*( const cytnx_uint16 &lc, const Scalar &rs){return rs.rmul(lc);};
+    Scalar operator*( const cytnx_int16  &lc, const Scalar &rs){return rs.rmul(lc);};
+    Scalar operator*( const cytnx_bool  &lc, const Scalar &rs){return rs.rmul(lc);};
+
+    //lsub c * Scalar;
+    Scalar operator-( const cytnx_complex128 &lc, const Scalar &rs){return Scalar(lc).rsub(rs);};
+    Scalar operator-( const cytnx_complex64 &lc, const Scalar &rs){return Scalar(lc).rsub(rs);};
+    Scalar operator-( const cytnx_double &lc, const Scalar &rs){return Scalar(lc).rsub(rs);};
+    Scalar operator-( const cytnx_float  &lc, const Scalar &rs){return Scalar(lc).rsub(rs);};
+    Scalar operator-( const cytnx_uint64 &lc, const Scalar &rs){return Scalar(lc).rsub(rs);};
+    Scalar operator-( const cytnx_int64  &lc, const Scalar &rs){return Scalar(lc).rsub(rs);};
+    Scalar operator-( const cytnx_uint32 &lc, const Scalar &rs){return Scalar(lc).rsub(rs);};
+    Scalar operator-( const cytnx_int32  &lc, const Scalar &rs){return Scalar(lc).rsub(rs);};
+    Scalar operator-( const cytnx_uint16 &lc, const Scalar &rs){return Scalar(lc).rsub(rs);};
+    Scalar operator-( const cytnx_int16  &lc, const Scalar &rs){return Scalar(lc).rsub(rs);};
+    Scalar operator-( const cytnx_bool  &lc, const Scalar &rs){return Scalar(lc).rsub(rs);};
+
+    //ldiv c / Scalar;
+    Scalar operator/( const cytnx_complex128 &lc, const Scalar &rs){return Scalar(lc).rdiv(rs);};
+    Scalar operator/( const cytnx_complex64 &lc, const Scalar &rs){return Scalar(lc).rdiv(rs);};
+    Scalar operator/( const cytnx_double &lc, const Scalar &rs){return Scalar(lc).rdiv(rs);};
+    Scalar operator/( const cytnx_float  &lc, const Scalar &rs){return Scalar(lc).rdiv(rs);};
+    Scalar operator/( const cytnx_uint64 &lc, const Scalar &rs){return Scalar(lc).rdiv(rs);};
+    Scalar operator/( const cytnx_int64  &lc, const Scalar &rs){return Scalar(lc).rdiv(rs);};
+    Scalar operator/( const cytnx_uint32 &lc, const Scalar &rs){return Scalar(lc).rdiv(rs);};
+    Scalar operator/( const cytnx_int32  &lc, const Scalar &rs){return Scalar(lc).rdiv(rs);};
+    Scalar operator/( const cytnx_uint16 &lc, const Scalar &rs){return Scalar(lc).rdiv(rs);};
+    Scalar operator/( const cytnx_int16  &lc, const Scalar &rs){return Scalar(lc).rdiv(rs);};
+    Scalar operator/( const cytnx_bool  &lc, const Scalar &rs){return Scalar(lc).rdiv(rs);};
+
+
+
 
 
 
