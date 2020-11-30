@@ -31,7 +31,8 @@ See The following user guide for install and using of cytnx:
     6. [Important] Storage.resize will match the behavior of vector, new elements are set to zero!
     7. [Enhance] Scalar +,-,*,/ finished
     8. [Enhance] add Histogram class and stat namespace.    
-
+    9. [Enhance] add fstream option for Tofile
+    
     v0.6.5
     1. [Fix] Bug in UniTensor _Load    
     2. [Enhance] Improve stability in Lanczos_ER  

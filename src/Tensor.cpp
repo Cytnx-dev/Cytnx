@@ -581,6 +581,16 @@ namespace cytnx{
             this->_impl->_storage.Tofile(fname);
         }
     }
+    void Tensor::Tofile(fstream &f) const{
+
+        if(!this->is_contiguous()){
+            auto A = this->contiguous();
+            A.storage().Tofile(f);  
+        }else{
+            this->_impl->_storage.Tofile(f);
+        }
+
+    }
     void Tensor::Save(const std::string &fname) const{
         fstream f;
         f.open((fname+".cytn"),ios::out|ios::trunc|ios::binary);

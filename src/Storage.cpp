@@ -127,6 +127,14 @@ namespace cytnx{
         this->_Savebinary(f);
         f.close();
     }
+    void Storage::Tofile(fstream &f) const{
+        if(!f.is_open()){
+            cytnx_error_msg(true,"[ERROR] invalid file path for save.%s","\n");
+        }
+        this->_Savebinary(f);
+    }
+
+
     void Storage::_Save(fstream &f) const{
         //header
         //check:

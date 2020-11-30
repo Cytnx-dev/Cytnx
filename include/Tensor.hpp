@@ -555,7 +555,7 @@ namespace cytnx{
             void Save(const char* fname) const;
             void Tofile(const std::string &fname) const;
             void Tofile(const char* fname) const;
-            
+            void Tofile(std::fstream &f) const;
             /**
             @brief Load current Tensor to file
             @param fname file name
