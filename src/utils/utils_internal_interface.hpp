@@ -9,6 +9,7 @@
 #include "utils_internal_cpu/Fill_cpu.hpp"
 #include "utils_internal_cpu/SetArange_cpu.hpp"
 #include "utils_internal_cpu/GetElems_cpu.hpp"
+#include "utils_internal_cpu/GetElems_contiguous_cpu.hpp"
 #include "utils_internal_cpu/SetElems_cpu.hpp"
 #include "utils_internal_cpu/Complexmem_cpu.hpp"
 #ifdef UNI_GPU
@@ -39,6 +40,7 @@ namespace cytnx{
         typedef void (*ElemCast_io)(const boost::intrusive_ptr<Storage_base>&,boost::intrusive_ptr<Storage_base>&,const unsigned long long &, const int &);
         typedef void (*SetArange_io)(boost::intrusive_ptr<Storage_base>&,const double&, const double&, const double&, const cytnx_uint64 &);
         typedef void (*GetElems_io)(void*, void*, const std::vector<cytnx_uint64>&, const std::vector<cytnx_uint64>&,const std::vector<std::vector<cytnx_uint64> >&,const cytnx_uint64 &);
+        typedef void (*GetElems_conti_io)(void*, void*, const std::vector<cytnx_uint64>&, const std::vector<cytnx_uint64>&,const std::vector<std::vector<cytnx_uint64> >&,const cytnx_uint64 &, const cytnx_uint64 &);
         typedef void (*SetElems_io)(void*, void*, const std::vector<cytnx_uint64>&, const std::vector<cytnx_uint64>&,const std::vector<std::vector<cytnx_uint64> >&,const cytnx_uint64 &, const bool &);
 
         class utils_internal_interface{
@@ -48,6 +50,7 @@ namespace cytnx{
                 std::vector<std::vector<ElemCast_io> > ElemCast;            
                 std::vector<SetArange_io> SetArange_ii;
                 std::vector<GetElems_io> GetElems_ii;
+                std::vector<GetElems_conti_io> GetElems_conti_ii;
                 std::vector<std::vector<SetElems_io> > SetElems_ii;
 
                 #ifdef UNI_GPU

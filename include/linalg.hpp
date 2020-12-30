@@ -15,6 +15,7 @@ namespace cytnx{
     //class Tensor;    //fwd
     //class UniTensor; //fwd
     //class LinOp;     //fwd
+
     namespace linalg{
         
         // Add:

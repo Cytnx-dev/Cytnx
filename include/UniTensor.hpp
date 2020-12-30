@@ -1093,8 +1093,9 @@ namespace cytnx{
             @param in the name. It should be a string.
 
             */
-            void set_name(const std::string &in){
+            UniTensor& set_name(const std::string &in){
                 this->_impl->set_name(in);
+                return *this;
             }
             /**
             @brief set a new label for bond at the assigned index.
@@ -1106,8 +1107,9 @@ namespace cytnx{
                 ( cannot have duplicate labels )
 
             */
-            void set_label(const cytnx_uint64 &idx, const cytnx_int64 &new_label){
+            UniTensor& set_label(const cytnx_uint64 &idx, const cytnx_int64 &new_label){
                 this->_impl->set_label(idx,new_label);
+                return *this;
             }
 
             /**
@@ -1118,11 +1120,13 @@ namespace cytnx{
                 the new assign labels cannot have duplicate element(s), and should have the same size as the rank of UniTensor.
 
             */
-            void set_labels(const std::vector<cytnx_int64> &new_labels){
+            UniTensor& set_labels(const std::vector<cytnx_int64> &new_labels){
                 this->_impl->set_labels(new_labels);
+                return *this;
             }
-            void set_rowrank(const cytnx_uint64 &new_rowrank){
+            UniTensor& set_rowrank(const cytnx_uint64 &new_rowrank){
                 this->_impl->set_rowrank(new_rowrank);
+                return *this;
             }
 
             template<class T>

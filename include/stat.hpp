@@ -94,7 +94,19 @@ namespace cytnx{
                     return this->x.size();
                 }
 
-        };
+        };//class histogram 
+
+
+        
+
+        //function, statistical:
+        //class Boostrap{
+            
+
+        //};//class bootstrap        
+
+        
+        
 
 
 

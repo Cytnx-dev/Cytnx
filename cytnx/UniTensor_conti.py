@@ -66,3 +66,27 @@ def Pow_(self,p):
 def truncate_(self,bond_idx,dim,by_label=False):
     self.ctruncate_(bond_idx,dim,by_label);
     return self
+
+@add_method(UniTensor)
+def set_name(self,name):
+    self.c_set_name(name);
+    return self
+
+@add_method(UniTensor)
+def set_label(self,idx,new_label):
+    self.c_set_label(idx,new_label);
+    return self
+
+@add_method(UniTensor)
+def set_labels(self,new_labels):
+    self.c_set_labels(new_labels);
+    return self
+
+@add_method(UniTensor)
+def set_rowrank(self,new_rowrank):
+    self.c_set_rowrank(new_rowrank);
+    return self
+
+
+
+

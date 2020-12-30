@@ -4,6 +4,7 @@ target_sources_local(cytnx
     Cast_cpu.hpp
     Fill_cpu.hpp
     GetElems_cpu.hpp
+    GetElems_contiguous_cpu.hpp
     Movemem_cpu.hpp
     Range_cpu.hpp
     SetArange_cpu.hpp
@@ -14,6 +15,7 @@ target_sources_local(cytnx
     Cast_cpu.cpp
     Fill_cpu.cpp
     GetElems_cpu.cpp
+    GetElems_contiguous_cpu.cpp
     Movemem_cpu.cpp
     SetArange_cpu.cpp
     SetElems_cpu.cpp

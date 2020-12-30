@@ -185,6 +185,22 @@ namespace cytnx{
             GetElems_ii[Type.Uint16       ] = GetElems_cpu_u16;
             GetElems_ii[Type.Int16        ] = GetElems_cpu_i16;
             GetElems_ii[Type.Bool         ] = GetElems_cpu_b;
+            
+            //
+            GetElems_conti_ii.resize(N_Type,NULL);
+            GetElems_conti_ii[Type.ComplexDouble] = GetElems_contiguous_cpu_cd;
+            GetElems_conti_ii[Type.ComplexFloat ] = GetElems_contiguous_cpu_cf;
+            GetElems_conti_ii[Type.Double       ] = GetElems_contiguous_cpu_d ;
+            GetElems_conti_ii[Type.Float        ] = GetElems_contiguous_cpu_f ;
+            GetElems_conti_ii[Type.Uint64       ] = GetElems_contiguous_cpu_u64;
+            GetElems_conti_ii[Type.Int64        ] = GetElems_contiguous_cpu_i64;
+            GetElems_conti_ii[Type.Uint32       ] = GetElems_contiguous_cpu_u32;
+            GetElems_conti_ii[Type.Int32        ] = GetElems_contiguous_cpu_i32;
+            GetElems_conti_ii[Type.Uint16       ] = GetElems_contiguous_cpu_u16;
+            GetElems_conti_ii[Type.Int16        ] = GetElems_contiguous_cpu_i16;
+            GetElems_conti_ii[Type.Bool         ] = GetElems_contiguous_cpu_b;
+
+
 
             //
             SetElems_ii = vector< vector<SetElems_io> >(N_Type,vector<SetElems_io>(N_Type,NULL));

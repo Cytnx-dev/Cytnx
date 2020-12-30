@@ -32,6 +32,10 @@ See The following user guide for install and using of cytnx:
     7. [Enhance] Scalar +,-,*,/ finished
     8. [Enhance] add Histogram class and stat namespace.    
     9. [Enhance] add fstream option for Tofile
+    10. [Enhance] return self when UniTensor.set_name
+    11. [Enhance] return self when UniTensor.set_label(s)
+    12. [Enhance] return self when UniTensor.set_rowrank
+    13. [dev-h][internal] add contiguous cpy 
     
     v0.6.5
     1. [Fix] Bug in UniTensor _Load    
