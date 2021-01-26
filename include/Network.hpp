@@ -89,7 +89,8 @@ namespace cytnx{
             virtual void PutUniTensor(const std::string &name, const UniTensor &utensor, const bool &is_clone);
             virtual void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor, const bool &is_clone);
             virtual void PutUniTensors(const std::vector<std::string> &name, const std::vector<UniTensor> &utensors, const bool &is_clone);
-
+            virtual void Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout, const std::vector<bool> &is_clone, const std::vector<std::string> &alias, const std::string &contract_order);
+            
             virtual void Fromfile(const std::string& fname);
             virtual void clear();
             virtual UniTensor Launch(const bool &optimal=false);
@@ -109,6 +110,7 @@ namespace cytnx{
             void PutUniTensor(const std::string &name, const UniTensor &utensor, const bool &is_clone=true);
             void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor, const bool &is_clone=true);
             void PutUniTensors(const std::vector<std::string> &name, const std::vector<UniTensor> &utensors, const bool &is_clone=true);
+            void Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout, const std::vector<bool> &is_clone={}, const std::vector<std::string> &alias={}, const std::string &contract_order="");
             void clear(){
                 this->name2pos.clear();
                 this->CtTree.clear();
@@ -150,6 +152,7 @@ namespace cytnx{
             void PutUniTensor(const std::string &name, const UniTensor &utensor, const bool &is_clone=true){};
             void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor, const bool &is_clone=true){};
             void PutUniTensors(const std::vector<std::string> &name, const std::vector<UniTensor> &utensors, const bool &is_clone=true){};
+            void Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout, const std::vector<bool> &is_clone={}, const std::vector<std::string> &alias={}, const std::string &contract_order=""){};
             void clear(){
                 this->name2pos.clear();
                 this->CtTree.clear();
@@ -255,6 +258,15 @@ namespace cytnx{
             //void Savefile(const std::string &fname);
                 
            
+
+            static Network Contract(const std::vector<UniTensor> &tensors, const std::string &Tout, const std::vector<bool> &is_clone={}, const std::vector<std::string> &alias={}, const std::string &contract_order=""){
+                boost::intrusive_ptr<Network_base> tmp(new RegularNetwork());
+                Network out;
+                out._impl = tmp;
+                out._impl->Contract_plan(tensors,Tout,is_clone,alias,contract_order);
+                return out;
+            }
+            
 
             Network(const std::string &fname, const int &network_type=NtType.Regular){
                 this->Fromfile(fname,network_type);

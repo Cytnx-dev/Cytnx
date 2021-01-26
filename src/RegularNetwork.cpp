@@ -155,6 +155,140 @@ namespace cytnx{
         }
     }
 
+    void RegularNetwork::Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout, const std::vector<bool> &is_clone, const std::vector<std::string> &alias, const std::string &contract_order){
+        if(is_clone.size())
+            cytnx_error_msg(utensors.size()!=is_clone.size(),"[ERROR] is_clone mask should have same size as tensors.%s","\n");
+        cytnx_error_msg(utensors.size()<2,"[ERROR][Network] invalid network. Should have at least 2 tensors defined.%s","\n");
+
+        if(contract_order.length()){
+            //checing if alias is set!
+            cytnx_error_msg(alias.size()==0,"[ERRPR] conraction_order need to be specify using alias name, so alias name have to be assigned!%s","\n");
+        }
+
+        if(alias.size())
+            cytnx_error_msg(utensors.size()!=alias.size(),"[ERROR] alias of UniTensor need to be assigned for all utensors.%s","\n");
+        
+
+
+        bool isORDER_exist = false;
+        //reading 
+        if(contract_order.length()){
+            // ORDER assigned
+            _parse_ORDER_line_(this->ORDER_tokens,contract_order,0);
+            isORDER_exist = true;
+        } 
+        if(Tout.length()){
+            // TOUT assigned
+            _parse_TOUT_line_(this->TOUT_labels,this->TOUT_iBondNum,Tout,0);
+        }
+
+        //assign input tensors into slots:
+        std::string name;
+        for(unsigned int i=0;i<utensors.size();i++){
+
+            if(alias.size()){
+                this->names.push_back(alias[i]);
+                name = alias[i];
+            }else{
+                if(utensors[i].name().length()){
+                    name = utensors[i].name() + "_usr";
+                }else{
+                    name = "uname_T" + to_string(i);
+                }
+                this->names.push_back(name);
+            }
+            
+            //check if name is valid:
+            if(name2pos.find(name)!= name2pos.end()){
+                cytnx_error_msg(true,"[ERROR][Network][Fromfile] tensor name: [%s] has already exist. Cannot have duplicated tensor name in a network.",name.c_str());
+            }
+
+            this->name2pos[name] = names.size() - 1; // register
+            //cout << name << "|" << names.size() - 1 << endl;
+            this->label_arr.push_back(vector<cytnx_int64>());
+            cytnx_uint64 tmp_iBN;
+            // this is an internal function that is defined in this cpp file.
+            this->label_arr.back() = utensors[i].labels();
+            this->iBondNums.push_back(utensors[i].rowrank());
+            //_parse_TN_line_(this->label_arr.back(),tmp_iBN,content,lnum);
+            //this->iBondNums.push_back(tmp_iBN);
+
+        }// traversal input tensor list 
+
+        this->tensors.resize(this->names.size());
+        this->CtTree.base_nodes.resize(this->names.size());
+        
+        //checking if all TN are set in ORDER.
+        // only alias assigned will activate order
+        if(isORDER_exist){
+            std::vector<string> TN_names; // this should be integer!
+            _extract_TNs_from_ORDER_(TN_names,this->ORDER_tokens);
+            cytnx_error_msg(TN_names.size()!=utensors.size(),"[ERROR][Network][Contract--planning] order assigned but the [%d] tensors appears in ORDER does not match the # input tensors [%d]\n",TN_names.size(),utensors.size());
+            for(int i=0;i<this->names.size();i++){
+                auto it = std::find(TN_names.begin(),TN_names.end(),this->names[i]);
+                cytnx_error_msg(it == std::end(TN_names),"[ERROR][Network][Contract--planning] TN: <%s> defined but is not used in ORDER line\n",this->names[i].c_str());
+                TN_names.erase(it);                
+            }
+            if(TN_names.size()!=0){
+                cout << "[ERROR] Following TNs appeared in ORDER line, but is not defined." << endl;
+                for(int i=0;i<TN_names.size();i++){
+                    cout << "        " << TN_names[i] << endl;
+                }
+                cytnx_error_msg(true,"%s","\n");
+            }
+            
+        }//check all RN.
+
+        //checking label matching:
+        map<cytnx_int64,cytnx_int64> lblcnt;
+        for(int i=0;i<this->names.size();i++){
+            for(int j=0;j<this->label_arr[i].size();j++){
+                if(lblcnt.find(this->label_arr[i][j]) == lblcnt.end())
+                    lblcnt[this->label_arr[i][j]]=1;
+                else
+                    lblcnt[this->label_arr[i][j]]+=1;
+            }
+        }
+        vector<cytnx_int64> expected_TOUT;
+        for(map<cytnx_int64,cytnx_int64>::iterator it=lblcnt.begin(); it!=lblcnt.end(); ++it){
+            if(it->second==1)
+                expected_TOUT.push_back(it->first);
+        }
+        bool err = false;   
+        if(expected_TOUT.size()!=TOUT_labels.size()){
+            err = true;
+        }
+        vector<cytnx_int64> itrsct = vec_intersect(expected_TOUT,this->TOUT_labels);
+        if(itrsct.size()!=expected_TOUT.size()){
+            err = true;
+        }
+     
+
+        if(err){
+            cout << "[ERROR][Network][Contract--planning] The TOUT contains labels that does not match with the delcartion from TNs.\n";
+            cout << "  > The reduced labels [rank:" << expected_TOUT.size() << "] should be:";
+            for(int i=0;i<expected_TOUT.size();i++)
+                cout << expected_TOUT[i] << " ";
+            cout << endl;
+            cout << "  > The TOUT [rank" << TOUT_labels.size() << "] specified is:";
+            for(int i=0;i<TOUT_labels.size();i++)
+                cout << TOUT_labels[i] << " ";
+            cout << endl;
+            cytnx_error_msg(true,"%s","\n");
+        }
+
+        //put tensor:
+        for(int i=0;i<utensors.size();i++){
+            if(is_clone.size())
+                if(is_clone[i]) this->tensors[i] = utensors[i].clone();
+                else this->tensors[i] = utensors[i];
+            else
+                this->tensors[i] = utensors[i].clone();
+
+        }
+
+    }
+
 
     void RegularNetwork::Fromfile(const std::string &fname){
         const cytnx_uint64 MAXLINES = 1024;

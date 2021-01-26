@@ -6,6 +6,9 @@
 using namespace std;
 
 namespace cytnx{
+    void Network_base::Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout, const std::vector<bool> &is_clone, const std::vector<std::string> &alias, const std::string &contract_order){
+        cytnx_error_msg(true,"[ERROR][Network][Contract_plan] call from uninitialize network.%s","\n");
+    }
     void Network_base::Fromfile(const std::string &fname){
         cytnx_error_msg(true,"[ERROR][Network][Fromfile] call from uninitialize network.%s","\n");
     }

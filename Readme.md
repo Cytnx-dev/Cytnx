@@ -39,6 +39,7 @@ See The following user guide for install and using of cytnx:
     14. [Warning] Slice of GPU Tensor is now off-line for further inspection. 
     15. [Fix] bug causing crash when print non-contiguous Uint64 Tensor    
     16. [Fatal!][Fix] fix bug of wrong answer in Tensor set-element with slice for non-contiguous Tensor. 
+    17. [Enhance] Network on the fly construction.
 
 
     v0.6.5

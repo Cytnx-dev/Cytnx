@@ -92,6 +92,8 @@ class MyOp2: public LinOp{
 
 int main(int argc, char *argv[]){
 
+
+    exit(1);
     vector<int> arv = {0,1,2,3,4};
         
     //print(cytnx::vec_map(arv,{0,3,1,4,2}));
