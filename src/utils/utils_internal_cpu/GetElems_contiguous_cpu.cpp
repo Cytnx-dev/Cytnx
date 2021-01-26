@@ -55,6 +55,7 @@ namespace cytnx{
                 cytnx_double* elem_ptr_     = static_cast<cytnx_double*>(in);
                 cytnx_double* new_elem_ptr_ = static_cast<cytnx_double*>(out); 
 
+                
                 #ifdef UNI_OMP 
                 #pragma omp parallel for schedule(dynamic)
                 #endif
@@ -67,6 +68,7 @@ namespace cytnx{
                         else Loc += cytnx_uint64(tmpn/new_offj[r])*offj[r];
                         tmpn %= new_offj[r];
                     }
+                    //std::cout << n << " " << Loc << std::endl;
                     memcpy(new_elem_ptr_+n*Nelem_grp, elem_ptr_+Loc*Nelem_grp, sizeof(cytnx_double)*Nelem_grp);
                     //new_elem_ptr_[n] = elem_ptr_[Loc];
                 }

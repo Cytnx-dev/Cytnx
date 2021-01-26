@@ -125,10 +125,10 @@ namespace cytnx{
             
             
             
-
+            void GetElem_byShape_v2(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<std::vector<cytnx_uint64> > &locators,const cytnx_uint64 &Nunit);
             void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators);
             void SetElem_byShape(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators, const bool &is_scalar);
-
+            void SetElem_byShape_v2(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &shape, const std::vector<std::vector<cytnx_uint64> > &locators,const cytnx_uint64 &Nunit, const bool &is_scalar);
             // these is the one that do the work, and customize with Storage_base
             //virtual void Init(const std::vector<unsigned int> &init_shape);
             virtual void Init(const unsigned long long &len_in, const int &device=-1);

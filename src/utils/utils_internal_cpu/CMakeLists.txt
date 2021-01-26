@@ -9,6 +9,7 @@ target_sources_local(cytnx
     Range_cpu.hpp
     SetArange_cpu.hpp
     SetElems_cpu.hpp
+    SetElems_contiguous_cpu.hpp
     SetZeros_cpu.hpp
     Complexmem_cpu.hpp
     Alloc_cpu.cpp
@@ -19,6 +20,7 @@ target_sources_local(cytnx
     Movemem_cpu.cpp
     SetArange_cpu.cpp
     SetElems_cpu.cpp
+    SetElems_contiguous_cpu.cpp
     SetZeros_cpu.cpp
     Range_cpu.cpp
     Complexmem_cpu.cpp

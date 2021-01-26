@@ -23,6 +23,8 @@ namespace cytnx{
             cytnx_int64 loc{};
             std::vector<cytnx_int64> idx_list;
 
+            
+
             // if type is singl, _min/_max/_step     are not used
             // if type is all  , _min/_max/_step/loc are not used
             // if type is range, loc              are not used.

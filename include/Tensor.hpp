@@ -151,8 +151,8 @@ namespace cytnx{
                 return this->_storage.at<T>(RealRank);
             }
             
-                        
             boost::intrusive_ptr<Tensor_impl> get(const std::vector<cytnx::Accessor> &accessors);
+            boost::intrusive_ptr<Tensor_impl> get_deprecated(const std::vector<cytnx::Accessor> &accessors);
             void set(const std::vector<cytnx::Accessor> &accessors, const boost::intrusive_ptr<Tensor_impl> &rhs);
 
             template<class T>
@@ -1032,7 +1032,14 @@ namespace cytnx{
                 return out;
             }
             
-            
+            /*
+            Tensor get_v2(const std::vector<cytnx::Accessor> &accessors) const{
+                Tensor out;     
+                out._impl = this->_impl->get_v2(accessors);
+                return out;
+            }
+            */
+
             /**
             @brief set elements with the input Tensor using Accessor (C++ API) / slices (python API)
             @param accessors the list(vector) of accessors.

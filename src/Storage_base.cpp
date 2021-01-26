@@ -3,6 +3,7 @@
 #endif
 #include "Storage.hpp"
 #include "utils/utils_internal_interface.hpp"
+#include "utils/vec_print.hpp"
 
 using namespace std;
 
@@ -194,6 +195,60 @@ namespace cytnx{
         this->print_info();
         this->print_elems();
     }
+
+    // shadow new:
+    // [0] shape: shape of current TN
+    // [x] direct feed-in accessor? accessor->.next() to get next index? no 
+    // we dont need mapper's information! 
+    // if len(locators) < shape.size(), it means last shape.size()-len(locators) axes are grouped. 
+    
+    void Storage_base::GetElem_byShape_v2(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<std::vector<cytnx_uint64> > &locators,const cytnx_uint64 &Nunit){
+        #ifdef UNI_DEBUG
+            cytnx_error_msg(out->dtype != this->dtype, "%s","[ERROR][DEBUG] %s","internal, the output dtype does not match current storage dtype.\n"); 
+        #endif
+        cytnx_uint64 TotalElem = 1;
+        for(cytnx_uint32 i=0;i<locators.size();i++){
+            if(locators[i].size())
+                TotalElem*=locators[i].size();
+            else //axis get all!
+                TotalElem*=shape[i];
+        }
+
+        //cytnx_error_msg(out->size() != TotalElem, "%s", "[ERROR] internal, the out Storage size does not match the no. of elems calculated from Accessors.%s","\n");
+        std::vector<cytnx_uint64> c_offj(locators.size());
+        std::vector<cytnx_uint64> new_offj(locators.size());
+        
+        cytnx_uint64 caccu=1,new_accu=1;
+        for(cytnx_int32 i=locators.size()-1;i>=0;i--){
+            c_offj[i] = caccu;
+            caccu*=shape[i];
+
+            new_offj[i] = new_accu;
+            if(locators[i].size())
+                new_accu*=locators[i].size();
+            else
+                new_accu*=shape[i];
+        }
+        //std::cout << c_offj << std::endl;
+        //std::cout << new_offj << std::endl;
+        //std::cout << TotalElem << std::endl;
+        if(this->device == Device.cpu){
+            utils_internal::uii.GetElems_conti_ii[this->dtype](out->Mem,this->Mem,c_offj,new_offj,locators,TotalElem,Nunit);
+        }else{
+            #ifdef UNI_GPU
+                checkCudaErrors(cudaSetDevice(this->device));
+                cytnx_error_msg(true,"[Developing][GPU Getelem v2][Note, currently slice on GPU is disabled for further inspection]%s","\n");
+                //utils_internal::uii.cuGetElems_contiguous_ii[this->dtype](out->Mem,this->Mem,c_offj,new_offj,locators,TotalElem,Nunit);
+            #else
+                cytnx_error_msg(true,"[ERROR][GetElem_byShape] fatal internal%s","the Storage is set on gpu without CUDA support\n");
+            #endif
+
+        }
+  
+
+    }
+    
+
     void Storage_base::GetElem_byShape(boost::intrusive_ptr<Storage_base> &out, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators){
         #ifdef UNI_DEBUG
                 cytnx_error_msg(shape.size() != len.size(),"%s","[ERROR][DEBUG] internal Storage, shape.size() != len.size()");
@@ -254,6 +309,7 @@ namespace cytnx{
                 if(!is_scalar)
                 cytnx_error_msg(in->size() != TotalElem, "%s", "[ERROR] internal, the out Storage size does not match the no. of elems calculated from Accessors.%s","\n");
                 
+                //[warning] this version only work for scalar currently!.
 
                 std::vector<cytnx_uint64> c_offj(shape.size());
                 std::vector<cytnx_uint64> new_offj(shape.size());
@@ -262,7 +318,7 @@ namespace cytnx{
                 cytnx_uint64 accu=1;
                 for(cytnx_int32 i=shape.size()-1;i>=0;i--){
                     c_offj[i] = accu;
-                    accu*=shape[mapper[i]];
+                    accu*=shape[i];
                 }
                 accu = 1;
                 for(cytnx_int32 i=len.size()-1;i>=0;i--){
@@ -277,7 +333,7 @@ namespace cytnx{
                     if(utils_internal::uii.SetElems_ii[in->dtype][this->dtype] == NULL){
                         cytnx_error_msg(true, "[ERROR] %s","cannot assign complex element to real container.\n");
                     }
-                    utils_internal::uii.SetElems_ii[in->dtype][this->dtype](in->Mem,this->Mem,offj,new_offj,locators,TotalElem,is_scalar);
+                    utils_internal::uii.SetElems_ii[in->dtype][this->dtype](in->Mem,this->Mem,c_offj,new_offj,locators,TotalElem,is_scalar);
                 }else{
                     #ifdef UNI_GPU
                         if(utils_internal::uii.cuSetElems_ii[in->dtype][this->dtype] == NULL){
@@ -291,7 +347,70 @@ namespace cytnx{
 
                 } 
     }
+    
+    void Storage_base::SetElem_byShape_v2(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &shape, const std::vector<std::vector<cytnx_uint64> > &locators,const cytnx_uint64 &Nunit, const bool &is_scalar){
+        // plan: we assume in is contiguous for now!
+        // 
+        #ifdef UNI_DEBUG
+                cytnx_error_msg(shape.size() != len.size(),"%s","[ERROR][DEBUG] internal Storage, shape.size() != len.size()");
+        #endif
 
+                //std::cout <<"=====" << len.size() << " " << locators.size() << std::endl;
+                //create new instance:
+                cytnx_uint64 TotalElem = 1;
+                for(cytnx_uint32 i=0;i<locators.size();i++){
+                    if(locators[i].size())
+                        TotalElem*=locators[i].size();
+                    else //axis get all!
+                        TotalElem*=shape[i];
+                }
+
+                if(!is_scalar)
+                    cytnx_error_msg(in->size() != TotalElem, "%s", "[ERROR] internal, the out Storage size does not match the no. of elems calculated from Accessors.%s","\n");
+                
+
+                //[warning] this version only work for scalar currently!.
+
+                std::vector<cytnx_uint64> c_offj(locators.size());
+                std::vector<cytnx_uint64> new_offj(locators.size());
+                
+                cytnx_uint64 caccu=1,new_accu=1;
+                for(cytnx_int32 i=locators.size()-1;i>=0;i--){
+                    c_offj[i] = caccu;
+                    caccu*=shape[i];
+
+                    new_offj[i] = new_accu;
+                    if(locators[i].size())
+                        new_accu*=locators[i].size();
+                    else
+                        new_accu*=shape[i];
+                }
+                
+
+
+                if(this->device == Device.cpu){
+                    if(utils_internal::uii.SetElems_conti_ii[in->dtype][this->dtype] == NULL){
+                        cytnx_error_msg(true, "[ERROR] %s","cannot assign complex element to real container.\n");
+                    }
+                    utils_internal::uii.SetElems_conti_ii[in->dtype][this->dtype](in->Mem,this->Mem,c_offj,new_offj,locators,TotalElem,Nunit,is_scalar);
+                }else{
+                    #ifdef UNI_GPU
+                        //if(utils_internal::uii.cuSetElems_ii[in->dtype][this->dtype] == NULL){
+                        //    cytnx_error_msg(true, "%s","[ERROR] %s","cannot assign complex element to real container.\n");
+                        //}
+                        //checkCudaErrors(cudaSetDevice(this->device));
+                        //utils_internal::uii.cuSetElems_conti_ii[in->dtype][this->dtype](in->Mem,this->Mem,offj,new_offj,locators,TotalElem,Nunit,is_scalar);
+                        cytnx_error_msg(true,"[Developing][SetElem is not down for further inspection]%s","\n");
+                    #else
+                        cytnx_error_msg(true,"[ERROR][SetElem_byShape] fatal internal%s","the Storage is set on gpu without CUDA support\n");
+                    #endif
+
+                } 
+    }
+    
+    
+    
+ 
 
     //generators:
     void Storage_base::fill(const cytnx_complex128 &val){

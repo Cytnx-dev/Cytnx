@@ -428,9 +428,121 @@ namespace cytnx{
         this->_contiguous= iconti;
     }            
 
+   
+    //shadow new:
+    //
     
-
     boost::intrusive_ptr<Tensor_impl> Tensor_impl::get(const std::vector<cytnx::Accessor> &accessors){
+        cytnx_error_msg(accessors.size() > this->_shape.size(), "%s", "The input indexes rank is out of range! (>Tensor's rank).");
+        
+        std::vector<cytnx::Accessor> acc = accessors;
+        for(int i=0;i<this->_shape.size()-accessors.size();i++){
+            acc.push_back(Accessor::all());    
+        }
+
+        /*
+        cout << "acc type bef" << endl;
+        for(int i=0;i<acc.size();i++){
+            cout << acc[i].type() << " ";
+        }
+        */
+        acc = vec_map(acc,this->_invmapper); //contiguous.
+        /*
+        cout << "acc type aft" << endl;
+        for(int i=0;i<acc.size();i++){
+            cout << acc[i].type() << " ";
+        }
+        */
+        
+        //[1] curr_shape:
+        auto curr_shape = vec_map(this->_shape,this->_invmapper);
+        //cout << "curr_shape" << endl;
+        //cout << curr_shape << endl;
+        
+        
+
+        //[2] from back to front, check until last all:
+        cytnx_uint64 Nunit = 1;
+        int tmpidx = 0;
+        while(tmpidx<curr_shape.size()){
+            
+            if(acc.back().type()==Accessor::All){ 
+                Nunit*=curr_shape[curr_shape.size()-1-tmpidx];
+                tmpidx++;
+                acc.pop_back();
+            }else{
+                break;
+            }
+        }
+        //cout << "tmpidx" << tmpidx << endl;
+        //cout << "Nunit" << Nunit << endl;
+        //cout << acc.size() << endl;
+        
+
+        //acc-> locators
+    
+        std::vector<cytnx_uint64> get_shape(acc.size());
+        std::vector<std::vector<cytnx_uint64> > locators(acc.size());
+        for(cytnx_uint32 i=0;i<acc.size();i++){
+            acc[i].get_len_pos(curr_shape[i],get_shape[i],locators[i]);
+        }
+        //cout << "get_shape" << endl;
+        //cout << get_shape << endl;
+        
+
+        //create Tensor:
+        for(cytnx_uint64 i=0;i<tmpidx;i++){
+            get_shape.push_back(curr_shape[acc.size()+i]);
+        } 
+        boost::intrusive_ptr<Tensor_impl> out( new Tensor_impl());
+        out->Init(get_shape,this->dtype(),this->device());
+       
+        if(locators.size()==0){
+            locators.resize(1);
+            locators[0].push_back(0);
+        }
+ 
+        //call storage
+        this->storage()._impl->GetElem_byShape_v2(out->storage()._impl,curr_shape,locators,Nunit);
+
+        //permute back:
+        std::vector<cytnx_int64> new_mapper(this->_mapper.begin(),this->_mapper.end());
+        std::vector<cytnx_int64> new_shape;
+        std::vector<cytnx_int32> remove_id;
+        for(unsigned int i=0;i<out->_shape.size();i++){
+            if(out->shape()[i]==1) remove_id.push_back(this->_mapper[this->_invmapper[i]]);
+            else new_shape.push_back(out->shape()[i]);
+        }
+
+        //cout << "mapper" << endl;
+        //cout << new_mapper << endl;
+        //cout << "inv_mapper" << endl;
+        //cout << this->_invmapper << endl;
+
+        //cout << "remove_id" << endl;
+        //cout << remove_id << endl;
+        //cout << "out shape raw" << endl;
+        //cout << out->shape() << endl;
+
+        out->reshape_(new_shape); // remove size-1 axis
+        
+         
+        std::vector<cytnx_uint64> perm;
+        for(unsigned int i=0;i<new_mapper.size();i++){
+            perm.push_back(new_mapper[i]);
+            for(unsigned int j=0;j<remove_id.size();j++){
+                if(new_mapper[i]>remove_id[j]) perm.back()-=1;
+                else if(new_mapper[i]==remove_id[j]){ perm.pop_back(); break; }
+            }
+        }
+        //cout << "perm" << endl;
+        //cout << perm << endl;
+        out->permute_(perm);
+
+        return out;
+    }
+        
+    boost::intrusive_ptr<Tensor_impl> Tensor_impl::get_deprecated(const std::vector<cytnx::Accessor> &accessors){
         cytnx_error_msg(accessors.size() > this->_shape.size(), "%s", "The input indexes rank is out of range! (>Tensor's rank).");
 
         std::vector<cytnx::Accessor> acc = accessors;
@@ -441,7 +553,7 @@ namespace cytnx{
         vector<cytnx_uint64> get_shape(acc.size());
 
         //vector<cytnx_uint64> new_shape;
-        std::vector<std::vector<cytnx_uint64> > locators(acc.size());
+        std::vector<std::vector<cytnx_uint64> > locators(this->_shape.size());
         for(cytnx_uint32 i=0;i<acc.size();i++){
             acc[i].get_len_pos(this->_shape[i],get_shape[i],locators[i]); 
             //std::cout << this->_shape[i] << " " << get_shape[i] << "|";
@@ -469,72 +581,128 @@ namespace cytnx{
     void Tensor_impl::set(const std::vector<cytnx::Accessor> &accessors, const boost::intrusive_ptr<Tensor_impl> &rhs){
         cytnx_error_msg(accessors.size() > this->_shape.size(), "%s", "The input indexes rank is out of range! (>Tensor's rank).");
 
+
         vector<cytnx::Accessor> acc = accessors;
         for(int i=0;i<this->_shape.size()-accessors.size();i++){
             acc.push_back(Accessor::all());    
         }
 
-        vector<cytnx_uint64> get_shape(acc.size());
-        //vector<cytnx_uint64> new_shape;
+        //vector<cytnx_uint64> get_shape(acc.size());
+        acc = vec_map(acc,this->_invmapper); //contiguous.
+        
+        //[1] curr_shape:
+        auto curr_shape = vec_map(this->_shape,this->_invmapper);
+       
+        //[2] from back to front, check until last all:
+        cytnx_uint64 Nunit = 1;
+        int tmpidx = 0;
+        while(tmpidx<curr_shape.size()){
+            
+            if(acc.back().type()==Accessor::All){ 
+                Nunit*=curr_shape[curr_shape.size()-1-tmpidx];
+                tmpidx++;
+                acc.pop_back();
+            }else{
+                break;
+            }
+        }
+        
 
+        std::vector<cytnx_uint64> get_shape(acc.size());
         std::vector<std::vector<cytnx_uint64> > locators(acc.size());
         for(cytnx_uint32 i=0;i<acc.size();i++){
-            acc[i].get_len_pos(this->_shape[i],get_shape[i],locators[i]); 
-            //std::cout << this->_shape[i] << " " << get_shape[i] << "|";
-            //for(int j=0;j<locators[i].size();j++) std::cout << locators[i][j] << " ";
-            //std::cout << std::endl;
-        }   
+            acc[i].get_len_pos(curr_shape[i],get_shape[i],locators[i]);
+        }
 
-        //remove single dim
-        vector<cytnx_uint64> new_shape;
-        for(cytnx_uint32 i=0;i<acc.size();i++)
-            if(get_shape[i]!=1) new_shape.push_back(get_shape[i]);
+        //permute input to currect pos 
+        std::vector<cytnx_int64> new_mapper(this->_mapper.begin(),this->_mapper.end());
+        std::vector<cytnx_uint64> new_shape;
+        std::vector<cytnx_int32> remove_id;
+        for(unsigned int i=0;i<get_shape.size();i++){
+            if(get_shape[i]==1) remove_id.push_back(this->_mapper[this->_invmapper[i]]);
+            else new_shape.push_back(get_shape[i]);
+        }
 
-        if(new_shape.size()==0) new_shape.push_back(1);
-        
+        std::vector<cytnx_uint64> perm;
+        for(unsigned int i=0;i<new_mapper.size();i++){
+            perm.push_back(new_mapper[i]);
+            for(unsigned int j=0;j<remove_id.size();j++){
+                if(new_mapper[i]>remove_id[j]) perm.back()-=1;
+                else if(new_mapper[i]==remove_id[j]){ perm.pop_back(); break; }
+            }
+        }
+
+        std::vector<cytnx_uint64> iperm(perm.size());
+        for(unsigned int i=0;i<iperm.size();i++)
+            iperm[perm[i]] = i;
+
+       
+        //fast solution:
+        boost::intrusive_ptr<Tensor_impl> tmp = rhs->permute(iperm)->contiguous();
+
+
         // check size:
-        cytnx_error_msg(new_shape != rhs->shape(), "[ERROR][Tensor.set_elems]%s","inconsistent shape");
+        cytnx_error_msg(new_shape != tmp->shape(), "[ERROR][Tensor.set_elems]%s","inconsistent shape");
 
 
         //boost::intrusive_ptr<Tensor_impl> out( new Tensor_impl());
         //out->Init(get_shape,this->dtype(),this->device());
 
-        this->storage()._impl->SetElem_byShape(rhs->storage()._impl,this->shape(),this->_mapper,get_shape,locators,false);
+        //this->storage()._impl->SetElem_byShape(rhs->storage()._impl,this->shape(),this->_mapper,get_shape,locators,false);
+        this->storage()._impl->SetElem_byShape_v2(tmp->storage()._impl,curr_shape,locators,Nunit,false);
     }
 
     template<class T>
     void Tensor_impl::set(const std::vector<cytnx::Accessor> &accessors, const T &rc){
         cytnx_error_msg(accessors.size() > this->_shape.size(), "%s", "The input indexes rank is out of range! (>Tensor's rank).");
 
-        vector<cytnx::Accessor> acc = accessors;
+
+       std::vector<cytnx::Accessor> acc = accessors;
         for(int i=0;i<this->_shape.size()-accessors.size();i++){
             acc.push_back(Accessor::all());    
         }
 
-        vector<cytnx_uint64> get_shape(acc.size());
-        //vector<cytnx_uint64> new_shape;
+        acc = vec_map(acc,this->_invmapper); //contiguous.
+        
+        //[1] curr_shape:
+        auto curr_shape = vec_map(this->_shape,this->_invmapper);
+       
+        //[2] from back to front, check until last all:
+        cytnx_uint64 Nunit = 1;
+        int tmpidx = 0;
+        while(tmpidx<curr_shape.size()){
+            
+            if(acc.back().type()==Accessor::All){ 
+                Nunit*=curr_shape[curr_shape.size()-1-tmpidx];
+                tmpidx++;
+                acc.pop_back();
+            }else{
+                break;
+            }
+        }
+        //cout << "tmpidx" << tmpidx << endl;
+        //cout << "Nunit" << Nunit << endl;
+        //cout << acc.size() << endl;
+        
 
+        //acc-> locators
+    
+        std::vector<cytnx_uint64> get_shape(acc.size());
         std::vector<std::vector<cytnx_uint64> > locators(acc.size());
         for(cytnx_uint32 i=0;i<acc.size();i++){
-            acc[i].get_len_pos(this->_shape[i],get_shape[i],locators[i]); 
-            //std::cout << this->_shape[i] << " " << get_shape[i] << "|";
-            //for(int j=0;j<locators[i].size();j++) std::cout << locators[i][j] << " ";
-            //std::cout << std::endl;
-        }   
-
-        //remove single dim
-        vector<cytnx_uint64> new_shape;
-        for(cytnx_uint32 i=0;i<acc.size();i++)
-            if(get_shape[i]!=1) new_shape.push_back(get_shape[i]);
-
-        if(new_shape.size()==0) new_shape.push_back(1);
+            acc[i].get_len_pos(curr_shape[i],get_shape[i],locators[i]);
+        }
+        //cout << "get_shape" << endl;
+        //cout << get_shape << endl;
         
-        //boost::intrusive_ptr<Tensor_impl> out( new Tensor_impl());
-        //out->Init(get_shape,this->dtype(),this->device());
 
+
+ 
+        //call storage
         Storage tmp(1,Type.c_typename_to_id(typeid(T).name()),this->device());
         tmp.at<T>(0) = rc;
-        this->storage()._impl->SetElem_byShape(tmp._impl,this->shape(),this->_mapper,get_shape,locators,true);
+        this->storage()._impl->SetElem_byShape_v2(tmp._impl,curr_shape,locators,Nunit,true);
+        
     }
     template void Tensor_impl::set<cytnx_complex128>(const std::vector<cytnx::Accessor> &, const cytnx_complex128&);
     template void Tensor_impl::set<cytnx_complex64>(const std::vector<cytnx::Accessor> &, const cytnx_complex64&);

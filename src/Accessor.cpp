@@ -37,6 +37,8 @@ namespace cytnx{
 
     // all constr. ( use string to dispatch )            
     Accessor::Accessor(const std::string &str){
+        //this->_axis_len = 0;
+
         //std::cout << str << "|" << std::endl;
         if((str=="all") || (str==":"))
             this->_type = Accessor::All;

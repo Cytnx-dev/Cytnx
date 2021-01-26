@@ -2,7 +2,7 @@
 #include <complex>
 #include <cstdarg>
 #include <functional>
-
+ 
 #include "hptt.h"
 //#include "cutt.h"
 using namespace std;
@@ -91,6 +91,64 @@ class MyOp2: public LinOp{
 
 
 int main(int argc, char *argv[]){
+
+    vector<int> arv = {0,1,2,3,4};
+        
+    //print(cytnx::vec_map(arv,{0,3,1,4,2}));
+    //exit(1);
+    
+    /*
+    auto tna1 = cytnx::arange(720).reshape(2,3,4,5,6);
+    auto tna2 = tna1.permute(0,3,1,4,2);
+    //tna2.contiguous_();
+    //auto tna3 = tna1.get_v2({ac::all(),ac(1),ac::tilend(1),ac("::2"),ac::all()});
+    //auto tn3  = tna1.get({ac::all(),ac(1),ac::tilend(1),ac("::2"),ac::all()});
+
+    auto tnx2 = tna2.get_v2({ac::all(),ac(1),ac::tilend(1),ac("::2"),ac::all()});
+    auto tn2 = tna2.get({ac::all(),ac(1),ac::tilend(1),ac("::2"),ac::all()});
+
+
+    
+    print(tnx2.shape());
+    print(tn2.shape());
+    print(tnx2.is_contiguous());
+    print(tn2.is_contiguous());
+    print(tn2 == tnx2);
+
+    print(tn2);
+    print(tnx2);
+
+    //print(tna1);
+    exit(1);
+    */
+    auto txo = cytnx::arange(120).reshape(2,3,4,5);
+    txo = txo.astype(Type.Uint64);
+    auto txop = txo.permute(0,3,1,2);
+    
+    print(txo);
+    
+
+    auto txos = txop.get({ac(":"),ac("::2"),ac(1),ac(":2")});
+    
+    //Tensor txos = txop(":","::2",1,":2");
+
+    print(txos.shape());
+    print(txos.is_contiguous());
+
+    print(txos);
+    
+    print("=-======");
+    print(txop);
+    //txop(":","::2",1,":2") = 999;
+    //print(txop);
+    
+    auto tttt = cytnx::arange(12).reshape(2,3,2) + 1000;
+    tttt.permute_(2,1,0);
+    print(tttt);    
+    txop(":","::2",1,":2") = tttt;
+    print(txop);
+
+    exit(1);
     /*
     vector<int> testV = {0,2,1};
     reverse_perm(testV.begin(),testV.end(),testV.size());

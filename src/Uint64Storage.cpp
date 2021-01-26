@@ -246,7 +246,7 @@ namespace cytnx{
             cytnx_uint64 s;
             auto* elem_ptr_ = static_cast<cytnx_uint64*>(this->Mem);
 
-            if(mapper.empty()){
+            if(mapper.size()==0){
 
                 cytnx_uint64 cnt=0;
                 while(true){
@@ -297,16 +297,16 @@ namespace cytnx{
 
                 cytnx_uint64 accu=1;
                 cytnx_uint64 RealMemPos;
-                for(cytnx_size_t i=0;i<shape.size();i++){
+                for(cytnx_uint32 i=0;i<shape.size();i++){
                     c_shape[i] = shape[mapper[i]];
                 }
-                for(cytnx_size_t i=c_shape.size()-1;i>=0;i--){
+                for(cytnx_int64 i=c_shape.size()-1;i>=0;i--){
                     c_offj[i] = accu;
                     accu*=c_shape[i];
                 }
 
                 while(true){
-                    for(cytnx_size_t i=0;i<shape.size();i++){
+                    for(cytnx_int32 i=0;i<shape.size();i++){
                         if(i<shape.size()-stk.size()){
                             sprintf(buffer,"%s"," ");os << string(buffer);
                         }else{
@@ -315,7 +315,7 @@ namespace cytnx{
                             stk.pop_back();
                         }
                     }
-                    for(cytnx_size_t i=0;i<shape.back();i++){
+                    for(cytnx_uint64 i=0;i<shape.back();i++){
                         stk2.back() = i;
 
                         ///Calculate the Memory reflection:

@@ -35,8 +35,12 @@ See The following user guide for install and using of cytnx:
     10. [Enhance] return self when UniTensor.set_name
     11. [Enhance] return self when UniTensor.set_label(s)
     12. [Enhance] return self when UniTensor.set_rowrank
-    13. [dev-h][internal] add contiguous cpy 
-    
+    13. [Fatal!][Fix] fix bug of wrong answer in Tensor slice for non-contiguous Tensor, with faster internal kernel
+    14. [Warning] Slice of GPU Tensor is now off-line for further inspection. 
+    15. [Fix] bug causing crash when print non-contiguous Uint64 Tensor    
+    16. [Fatal!][Fix] fix bug of wrong answer in Tensor set-element with slice for non-contiguous Tensor. 
+
+
     v0.6.5
     1. [Fix] Bug in UniTensor _Load    
     2. [Enhance] Improve stability in Lanczos_ER  

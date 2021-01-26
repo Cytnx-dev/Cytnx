@@ -332,6 +332,135 @@ namespace cytnx{
             SetElems_ii[Type.Bool][Type.Bool         ] = SetElems_cpu_btb;
 
 
+            SetElems_conti_ii = vector< vector<SetElems_conti_io> >(N_Type,vector<SetElems_conti_io>(N_Type,NULL));
+            SetElems_conti_ii[Type.ComplexDouble][Type.ComplexDouble] = SetElems_conti_cpu_cdtcd;
+            SetElems_conti_ii[Type.ComplexDouble][Type.ComplexFloat ] = SetElems_conti_cpu_cdtcf;
+            //SetElems_conti_ii[Type.ComplexDouble][Type.Double       ] = SetElems_conti_cpu_invalid;
+            //SetElems_conti_ii[Type.ComplexDouble][Type.Float        ] = SetElems_conti_cpu_invalid;
+            //SetElems_conti_ii[Type.ComplexDouble][Type.Int64        ] = SetElems_conti_cpu_invalid;
+            //SetElems_conti_ii[Type.ComplexDouble][Type.Uint64       ] = SetElems_conti_cpu_invalid;
+            //SetElems_conti_ii[Type.ComplexDouble][Type.Int32        ] = SetElems_conti_cpu_invalid;
+            //SetElems_conti_ii[Type.ComplexDouble][Type.Uint32       ] = SetElems_conti_cpu_invalid;
+
+            SetElems_conti_ii[Type.ComplexFloat][Type.ComplexDouble] = SetElems_conti_cpu_cftcd;
+            SetElems_conti_ii[Type.ComplexFloat][Type.ComplexFloat ] = SetElems_conti_cpu_cftcf;
+            //SetElems_conti_ii[Type.ComplexFloat][Type.Double       ] = SetElems_conti_cpu_invalid;
+            //SetElems_conti_ii[Type.ComplexFloat][Type.Float        ] = SetElems_conti_cpu_invalid;
+            //SetElems_conti_ii[Type.ComplexFloat][Type.Int64        ] = SetElems_conti_cpu_invalid;
+            //SetElems_conti_ii[Type.ComplexFloat][Type.Uint64       ] = SetElems_conti_cpu_invalid;
+            //SetElems_conti_ii[Type.ComplexFloat][Type.Int32        ] = SetElems_conti_cpu_invalid;
+            //SetElems_conti_ii[Type.ComplexFloat][Type.Uint32       ] = SetElems_conti_cpu_invalid;
+
+            SetElems_conti_ii[Type.Double][Type.ComplexDouble] = SetElems_conti_cpu_dtcd;
+            SetElems_conti_ii[Type.Double][Type.ComplexFloat ] = SetElems_conti_cpu_dtcf;
+            SetElems_conti_ii[Type.Double][Type.Double       ] = SetElems_conti_cpu_dtd;
+            SetElems_conti_ii[Type.Double][Type.Float        ] = SetElems_conti_cpu_dtf;
+            SetElems_conti_ii[Type.Double][Type.Int64        ] = SetElems_conti_cpu_dti64;
+            SetElems_conti_ii[Type.Double][Type.Uint64       ] = SetElems_conti_cpu_dtu64;
+            SetElems_conti_ii[Type.Double][Type.Int32        ] = SetElems_conti_cpu_dti32;
+            SetElems_conti_ii[Type.Double][Type.Uint32       ] = SetElems_conti_cpu_dtu32;
+            SetElems_conti_ii[Type.Double][Type.Int16        ] = SetElems_conti_cpu_dti16;
+            SetElems_conti_ii[Type.Double][Type.Uint16       ] = SetElems_conti_cpu_dtu16;
+            SetElems_conti_ii[Type.Double][Type.Bool         ] = SetElems_conti_cpu_dtb;
+
+            SetElems_conti_ii[Type.Float][Type.ComplexDouble] = SetElems_conti_cpu_ftcd;
+            SetElems_conti_ii[Type.Float][Type.ComplexFloat ] = SetElems_conti_cpu_ftcf;
+            SetElems_conti_ii[Type.Float][Type.Double       ] = SetElems_conti_cpu_ftd;
+            SetElems_conti_ii[Type.Float][Type.Float        ] = SetElems_conti_cpu_ftf;
+            SetElems_conti_ii[Type.Float][Type.Int64        ] = SetElems_conti_cpu_fti64;
+            SetElems_conti_ii[Type.Float][Type.Uint64       ] = SetElems_conti_cpu_ftu64;
+            SetElems_conti_ii[Type.Float][Type.Int32        ] = SetElems_conti_cpu_fti32;
+            SetElems_conti_ii[Type.Float][Type.Uint32       ] = SetElems_conti_cpu_ftu32;
+            SetElems_conti_ii[Type.Float][Type.Int16        ] = SetElems_conti_cpu_fti16;
+            SetElems_conti_ii[Type.Float][Type.Uint16       ] = SetElems_conti_cpu_ftu16;
+            SetElems_conti_ii[Type.Float][Type.Bool         ] = SetElems_conti_cpu_ftb;
+
+            SetElems_conti_ii[Type.Int64][Type.ComplexDouble] = SetElems_conti_cpu_i64tcd;
+            SetElems_conti_ii[Type.Int64][Type.ComplexFloat ] = SetElems_conti_cpu_i64tcf;
+            SetElems_conti_ii[Type.Int64][Type.Double       ] = SetElems_conti_cpu_i64td;
+            SetElems_conti_ii[Type.Int64][Type.Float        ] = SetElems_conti_cpu_i64tf;
+            SetElems_conti_ii[Type.Int64][Type.Int64        ] = SetElems_conti_cpu_i64ti64;
+            SetElems_conti_ii[Type.Int64][Type.Uint64       ] = SetElems_conti_cpu_i64tu64;
+            SetElems_conti_ii[Type.Int64][Type.Int32        ] = SetElems_conti_cpu_i64ti32;
+            SetElems_conti_ii[Type.Int64][Type.Uint32       ] = SetElems_conti_cpu_i64tu32;
+            SetElems_conti_ii[Type.Int64][Type.Int16        ] = SetElems_conti_cpu_i64ti16;
+            SetElems_conti_ii[Type.Int64][Type.Uint16       ] = SetElems_conti_cpu_i64tu16;
+            SetElems_conti_ii[Type.Int64][Type.Bool         ] = SetElems_conti_cpu_i64tb;
+
+
+            SetElems_conti_ii[Type.Uint64][Type.ComplexDouble] = SetElems_conti_cpu_u64tcd;
+            SetElems_conti_ii[Type.Uint64][Type.ComplexFloat ] = SetElems_conti_cpu_u64tcf;
+            SetElems_conti_ii[Type.Uint64][Type.Double       ] = SetElems_conti_cpu_u64td;
+            SetElems_conti_ii[Type.Uint64][Type.Float        ] = SetElems_conti_cpu_u64tf;
+            SetElems_conti_ii[Type.Uint64][Type.Int64        ] = SetElems_conti_cpu_u64ti64;
+            SetElems_conti_ii[Type.Uint64][Type.Uint64       ] = SetElems_conti_cpu_u64tu64;
+            SetElems_conti_ii[Type.Uint64][Type.Int32        ] = SetElems_conti_cpu_u64ti32;
+            SetElems_conti_ii[Type.Uint64][Type.Uint32       ] = SetElems_conti_cpu_u64tu32;
+            SetElems_conti_ii[Type.Uint64][Type.Int16        ] = SetElems_conti_cpu_u64ti16;
+            SetElems_conti_ii[Type.Uint64][Type.Uint16       ] = SetElems_conti_cpu_u64tu16;
+            SetElems_conti_ii[Type.Uint64][Type.Bool         ] = SetElems_conti_cpu_u64tb;
+
+            SetElems_conti_ii[Type.Int32][Type.ComplexDouble] = SetElems_conti_cpu_i32tcd;
+            SetElems_conti_ii[Type.Int32][Type.ComplexFloat ] = SetElems_conti_cpu_i32tcf;
+            SetElems_conti_ii[Type.Int32][Type.Double       ] = SetElems_conti_cpu_i32td;
+            SetElems_conti_ii[Type.Int32][Type.Float        ] = SetElems_conti_cpu_i32tf;
+            SetElems_conti_ii[Type.Int32][Type.Int64        ] = SetElems_conti_cpu_i32ti64;
+            SetElems_conti_ii[Type.Int32][Type.Uint64       ] = SetElems_conti_cpu_i32tu64;
+            SetElems_conti_ii[Type.Int32][Type.Int32        ] = SetElems_conti_cpu_i32ti32;
+            SetElems_conti_ii[Type.Int32][Type.Uint32       ] = SetElems_conti_cpu_i32tu32;
+            SetElems_conti_ii[Type.Int32][Type.Int16        ] = SetElems_conti_cpu_i32ti16;
+            SetElems_conti_ii[Type.Int32][Type.Uint16       ] = SetElems_conti_cpu_i32tu16;
+            SetElems_conti_ii[Type.Int32][Type.Bool         ] = SetElems_conti_cpu_i32tb;
+
+            SetElems_conti_ii[Type.Uint32][Type.ComplexDouble] = SetElems_conti_cpu_u32tcd;
+            SetElems_conti_ii[Type.Uint32][Type.ComplexFloat ] = SetElems_conti_cpu_u32tcf;
+            SetElems_conti_ii[Type.Uint32][Type.Double       ] = SetElems_conti_cpu_u32td;
+            SetElems_conti_ii[Type.Uint32][Type.Float        ] = SetElems_conti_cpu_u32tf;
+            SetElems_conti_ii[Type.Uint32][Type.Int64        ] = SetElems_conti_cpu_u32ti64;
+            SetElems_conti_ii[Type.Uint32][Type.Uint64       ] = SetElems_conti_cpu_u32tu64;
+            SetElems_conti_ii[Type.Uint32][Type.Int32        ] = SetElems_conti_cpu_u32ti32;
+            SetElems_conti_ii[Type.Uint32][Type.Uint32       ] = SetElems_conti_cpu_u32tu32;
+            SetElems_conti_ii[Type.Uint32][Type.Int16        ] = SetElems_conti_cpu_u32ti16;
+            SetElems_conti_ii[Type.Uint32][Type.Uint16       ] = SetElems_conti_cpu_u32tu16;
+            SetElems_conti_ii[Type.Uint32][Type.Bool         ] = SetElems_conti_cpu_u32tb;
+
+            SetElems_conti_ii[Type.Uint16][Type.ComplexDouble] = SetElems_conti_cpu_u16tcd;
+            SetElems_conti_ii[Type.Uint16][Type.ComplexFloat ] = SetElems_conti_cpu_u16tcf;
+            SetElems_conti_ii[Type.Uint16][Type.Double       ] = SetElems_conti_cpu_u16td;
+            SetElems_conti_ii[Type.Uint16][Type.Float        ] = SetElems_conti_cpu_u16tf;
+            SetElems_conti_ii[Type.Uint16][Type.Int64        ] = SetElems_conti_cpu_u16ti64;
+            SetElems_conti_ii[Type.Uint16][Type.Uint64       ] = SetElems_conti_cpu_u16tu64;
+            SetElems_conti_ii[Type.Uint16][Type.Int32        ] = SetElems_conti_cpu_u16ti32;
+            SetElems_conti_ii[Type.Uint16][Type.Uint32       ] = SetElems_conti_cpu_u16tu32;
+            SetElems_conti_ii[Type.Uint16][Type.Int16        ] = SetElems_conti_cpu_u16ti16;
+            SetElems_conti_ii[Type.Uint16][Type.Uint16       ] = SetElems_conti_cpu_u16tu16;
+            SetElems_conti_ii[Type.Uint16][Type.Bool         ] = SetElems_conti_cpu_u16tb;
+
+            SetElems_conti_ii[Type.Int16][Type.ComplexDouble] = SetElems_conti_cpu_i16tcd;
+            SetElems_conti_ii[Type.Int16][Type.ComplexFloat ] = SetElems_conti_cpu_i16tcf;
+            SetElems_conti_ii[Type.Int16][Type.Double       ] = SetElems_conti_cpu_i16td;
+            SetElems_conti_ii[Type.Int16][Type.Float        ] = SetElems_conti_cpu_i16tf;
+            SetElems_conti_ii[Type.Int16][Type.Int64        ] = SetElems_conti_cpu_i16ti64;
+            SetElems_conti_ii[Type.Int16][Type.Uint64       ] = SetElems_conti_cpu_i16tu64;
+            SetElems_conti_ii[Type.Int16][Type.Int32        ] = SetElems_conti_cpu_i16ti32;
+            SetElems_conti_ii[Type.Int16][Type.Uint32       ] = SetElems_conti_cpu_i16tu32;
+            SetElems_conti_ii[Type.Int16][Type.Int16        ] = SetElems_conti_cpu_i16ti16;
+            SetElems_conti_ii[Type.Int16][Type.Uint16       ] = SetElems_conti_cpu_i16tu16;
+            SetElems_conti_ii[Type.Int16][Type.Bool         ] = SetElems_conti_cpu_i16tb;
+
+            SetElems_conti_ii[Type.Bool][Type.ComplexDouble] = SetElems_conti_cpu_btcd;
+            SetElems_conti_ii[Type.Bool][Type.ComplexFloat ] = SetElems_conti_cpu_btcf;
+            SetElems_conti_ii[Type.Bool][Type.Double       ] = SetElems_conti_cpu_btd;
+            SetElems_conti_ii[Type.Bool][Type.Float        ] = SetElems_conti_cpu_btf;
+            SetElems_conti_ii[Type.Bool][Type.Int64        ] = SetElems_conti_cpu_bti64;
+            SetElems_conti_ii[Type.Bool][Type.Uint64       ] = SetElems_conti_cpu_btu64;
+            SetElems_conti_ii[Type.Bool][Type.Int32        ] = SetElems_conti_cpu_bti32;
+            SetElems_conti_ii[Type.Bool][Type.Uint32       ] = SetElems_conti_cpu_btu32;
+            SetElems_conti_ii[Type.Bool][Type.Int16        ] = SetElems_conti_cpu_bti16;
+            SetElems_conti_ii[Type.Bool][Type.Uint16       ] = SetElems_conti_cpu_btu16;
+            SetElems_conti_ii[Type.Bool][Type.Bool         ] = SetElems_conti_cpu_btb;
+
+
             #ifdef UNI_GPU
                 cuElemCast = vector<vector<ElemCast_io> >(N_Type,vector<ElemCast_io>(N_Type,NULL));
 
