@@ -15,6 +15,8 @@
 #include <vector>
 #include <initializer_list>
 #include <string>
+#include "Scalar.hpp"
+
 namespace cytnx{
 
 
@@ -449,6 +451,13 @@ namespace cytnx{
                     out._impl = _insimpl->get(_accs);
                     return out.item<T>(); 
                 }
+               
+                Scalar::Sproxy item() const{
+                    Tensor out;
+                    out._impl = _insimpl;
+                    return out.item();
+                }
+ 
                 // when used to get elems:
                 operator Tensor () const{
                     Tensor out;
@@ -1001,6 +1010,17 @@ namespace cytnx{
                 cytnx_error_msg(this->_impl->storage().size()!=1,"[ERROR][Tensor.item<T>]%s","item can only be called from a Tensor with only one element\n");
                 return this->_impl->storage().at<T>(0);
             }
+
+            const Scalar::Sproxy item() const{
+                Scalar::Sproxy out(this->storage()._impl,0);
+                return out;
+            }
+
+            Scalar::Sproxy item(){
+                Scalar::Sproxy out(this->storage()._impl,0);
+                return out;
+            }
+
             ///@endcond
 
             /**

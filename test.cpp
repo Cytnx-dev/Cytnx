@@ -10,6 +10,14 @@ using namespace cytnx;
 
 typedef cytnx::Accessor ac;
 
+
+Scalar generic_func(const Tensor &input, const std::vector<Scalar> &args){
+    auto out = input+args[0];
+    out=args[1]+out;
+    return out(0,0).item();
+}
+
+
 class test{
     public:
     double A;
@@ -92,6 +100,18 @@ class MyOp2: public LinOp{
 
 int main(int argc, char *argv[]){
 
+
+
+    std::vector<Scalar> tvScal;
+    Tensor xAAA = arange(40).reshape(4,10);
+
+    tvScal.push_back(Scalar(1.0));
+    tvScal.push_back(Scalar(int(4)));
+    tvScal.push_back(Scalar(cytnx_complex128(0,9)));
+    
+    //print(tvScal);
+
+    cout << generic_func(xAAA,tvScal);
 
     exit(1);
     vector<int> arv = {0,1,2,3,4};

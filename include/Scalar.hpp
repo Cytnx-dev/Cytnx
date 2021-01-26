@@ -15,6 +15,7 @@ namespace cytnx{
 
     ///@cond
     class Storage_base;
+    class Tensor_base;
 
     // real implementation
     class Scalar_base{
@@ -104,6 +105,8 @@ namespace cytnx{
             virtual void assign_selftype(const cytnx_bool &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
 
             virtual Scalar_base* astype(const unsigned int &dtype){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+
+            virtual void* get_raw_address() const{cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");};
 
             virtual void print(std::ostream& os) const{};
             virtual Scalar_base* copy() const{
@@ -213,7 +216,8 @@ namespace cytnx{
             void idiv(const cytnx_uint16 &c){this->_elem /= c;}
             void idiv(const cytnx_int16  &c){this->_elem /= c;}
             void idiv(const cytnx_bool   &c){this->_elem /= c;}
-
+            
+            void* get_raw_address() const{return (void*)(&this->_elem);}
 
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
@@ -226,7 +230,7 @@ namespace cytnx{
                 return tmp;
             };
             void print(std::ostream& os) const{
-                os << this->_elem << std::endl;
+                os << "< " << this->_elem << " >";
             };
     }; 
 
@@ -318,7 +322,7 @@ namespace cytnx{
             void idiv(const cytnx_int16  &c){this->_elem /= c;}
             void idiv(const cytnx_bool   &c){this->_elem /= c;}
 
-
+            void* get_raw_address() const{return (void*)(&this->_elem);}
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
                 tmp->assign_selftype(this->_elem);
@@ -330,7 +334,7 @@ namespace cytnx{
                 return tmp;
             };
             void print(std::ostream& os) const{
-                os << this->_elem << std::endl;
+                os << "< " << this->_elem << " >";
             };
     }; 
 
@@ -423,7 +427,7 @@ namespace cytnx{
             void idiv(const cytnx_bool   &c){this->_elem /= c;}
 
 
-
+            void* get_raw_address() const{return (void*)(&this->_elem);}
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
                 tmp->assign_selftype(this->_elem);
@@ -434,7 +438,7 @@ namespace cytnx{
                 return tmp;
             };
             void print(std::ostream& os) const{
-                os << this->_elem << std::endl;
+                os << "< " << this->_elem << " >";
             };
     }; 
 
@@ -525,7 +529,7 @@ namespace cytnx{
             void idiv(const cytnx_int16  &c){this->_elem /= c;}
             void idiv(const cytnx_bool   &c){this->_elem /= c;}
 
-
+            void* get_raw_address() const{return (void*)(&this->_elem);}
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
                 tmp->assign_selftype(this->_elem);
@@ -536,7 +540,7 @@ namespace cytnx{
                 return tmp;
             };
             void print(std::ostream& os) const{
-                os << this->_elem << std::endl;
+                os << "< " << this->_elem << " >";
             };
     }; 
 
@@ -628,6 +632,8 @@ namespace cytnx{
             void idiv(const cytnx_int16  &c){this->_elem /= c;}
             void idiv(const cytnx_bool   &c){this->_elem /= c;}
 
+
+            void* get_raw_address() const{return (void*)(&this->_elem);}
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
                 tmp->assign_selftype(this->_elem);
@@ -638,7 +644,7 @@ namespace cytnx{
                 return tmp;
             };
             void print(std::ostream& os) const{
-                os << this->_elem << std::endl;
+                os << "< " << this->_elem << " >";
             };
     }; 
     class Uint64Scalar: public Scalar_base{
@@ -728,6 +734,8 @@ namespace cytnx{
             void idiv(const cytnx_int16  &c){this->_elem /= c;}
             void idiv(const cytnx_bool   &c){this->_elem /= c;}
 
+
+            void* get_raw_address() const{return (void*)(&this->_elem);}
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
                 tmp->assign_selftype(this->_elem);
@@ -738,7 +746,7 @@ namespace cytnx{
                 return tmp;
             };
             void print(std::ostream& os) const{
-                os << this->_elem << std::endl;
+                os << "< " << this->_elem << " >";
             };
     }; 
     class Int32Scalar: public Scalar_base{
@@ -828,7 +836,8 @@ namespace cytnx{
             void idiv(const cytnx_uint16 &c){this->_elem /= c;}
             void idiv(const cytnx_int16  &c){this->_elem /= c;}
             void idiv(const cytnx_bool   &c){this->_elem /= c;}
-
+            
+            void* get_raw_address() const{return (void*)(&this->_elem);}
 
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
@@ -840,7 +849,7 @@ namespace cytnx{
                 return tmp;
             };
             void print(std::ostream& os) const{
-                os << this->_elem << std::endl;
+                os << "< " << this->_elem << " >";
             };
     }; 
     class Uint32Scalar: public Scalar_base{
@@ -930,6 +939,9 @@ namespace cytnx{
             void idiv(const cytnx_int16  &c){this->_elem /= c;}
             void idiv(const cytnx_bool   &c){this->_elem /= c;}
 
+
+
+            void* get_raw_address() const{return (void*)(&this->_elem);}
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
                 tmp->assign_selftype(this->_elem);
@@ -940,7 +952,7 @@ namespace cytnx{
                 return tmp;
             };
             void print(std::ostream& os) const{
-                os << this->_elem << std::endl;
+                os << "< " << this->_elem << " >";
             };
     }; 
     class Int16Scalar: public Scalar_base{
@@ -1031,7 +1043,7 @@ namespace cytnx{
             void idiv(const cytnx_int16  &c){this->_elem /= c;}
             void idiv(const cytnx_bool   &c){this->_elem /= c;}
 
-
+            void* get_raw_address() const{return (void*)(&this->_elem);}
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
                 tmp->assign_selftype(this->_elem);
@@ -1042,7 +1054,7 @@ namespace cytnx{
                 return tmp;
             };
             void print(std::ostream& os) const{
-                os << this->_elem << std::endl;
+                os << "< " << this->_elem << " >";
             };
     };
     class Uint16Scalar: public Scalar_base{
@@ -1133,6 +1145,7 @@ namespace cytnx{
             void idiv(const cytnx_int16  &c){this->_elem /= c;}
             void idiv(const cytnx_bool   &c){this->_elem /= c;}
 
+            void* get_raw_address() const{return (void*)(&this->_elem);}
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
                 tmp->assign_selftype(this->_elem);
@@ -1143,7 +1156,7 @@ namespace cytnx{
                 return tmp;
             };
             void print(std::ostream& os) const{
-                os << this->_elem << std::endl;
+                os << "< " << this->_elem << " >";
             };
     }; 
     class BoolScalar: public Scalar_base{
@@ -1234,6 +1247,8 @@ namespace cytnx{
             void idiv(const cytnx_int16  &c){this->_elem /= c;}
             void idiv(const cytnx_bool   &c){this->_elem /= c;}
 
+
+            void* get_raw_address() const{return (void*)(&this->_elem);}
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
                 tmp->assign_selftype(this->_elem);
@@ -1244,7 +1259,7 @@ namespace cytnx{
                 return tmp;
             };
             void print(std::ostream& os) const{
-                os << this->_elem << std::endl;
+                os << "< " << this->_elem << " >";
             };
     }; 
 
@@ -1282,6 +1297,7 @@ namespace cytnx{
                 //operator Scalar() const;
                
             }; 
+
             ///@endcond
 
             Scalar_base* _impl;
@@ -1360,7 +1376,7 @@ namespace cytnx{
             
 
             // copy constructor [Scalar]:
-            Scalar(const Scalar &rhs){
+            Scalar(const Scalar &rhs): _impl(new Scalar_base()){
                 if(this->_impl!=nullptr)
                     delete this->_impl;
                 
@@ -1396,8 +1412,8 @@ namespace cytnx{
 
             // print()
             void print() const{
-                std::cout << std::string("Scalar dtype: [") << Type.getname(this->_impl->_dtype) << std::string("]") << std::endl;
                 this->_impl->print(std::cout);
+                std::cout << std::string(" Scalar dtype: [") << Type.getname(this->_impl->_dtype) << std::string("]") << std::endl;
             }
 
             //casting            

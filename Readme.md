@@ -40,7 +40,8 @@ See The following user guide for install and using of cytnx:
     15. [Fix] bug causing crash when print non-contiguous Uint64 Tensor    
     16. [Fatal!][Fix] fix bug of wrong answer in Tensor set-element with slice for non-contiguous Tensor. 
     17. [Enhance] Network on the fly construction.
-
+    18. [Enhance] Scalar: Add on TN. TN.item()
+    
 
     v0.6.5
     1. [Fix] Bug in UniTensor _Load    

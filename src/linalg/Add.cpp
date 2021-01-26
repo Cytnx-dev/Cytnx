@@ -309,27 +309,32 @@ namespace cytnx{
  
         template<>
         Tensor Add<Scalar>(const Scalar &lc, const Tensor &Rt){
-            Storage Cnst(1,lc.dtype());
-            /*    
-            Cnst = lc;
+            Storage Cnst; // create a shallow container without allocate. Using base!
+                
+            Cnst._impl->Mem = lc._impl->get_raw_address();
+            Cnst._impl->len = 1;  
+
+ 
             Tensor out;
             out._impl = Rt._impl->_clone_meta_only(); 
-            out._impl->storage() = Storage(Rt._impl->storage().size(),Type.Bool < Rt.dtype()?Type.Bool:Rt.dtype(),Rt.device());
-            //Tensor out(Rt.shape(),Type.Bool < Rt.dtype()?Type.Bool:Rt.dtype(),Rt.device());
+            out._impl->storage() = Storage(Rt._impl->storage().size(),lc.dtype()<Rt.dtype()?lc.dtype():Rt.dtype(),Rt.device());
 
             if(Rt.device()==Device.cpu){
-                linalg_internal::lii.Ari_ii[Type.Bool][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},0);
+                linalg_internal::lii.Ari_ii[lc.dtype()][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},0);
             }else{
                 #ifdef UNI_GPU
                     checkCudaErrors(cudaSetDevice(Rt.device()));
-                    linalg_internal::lii.cuAri_ii[Type.Bool][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},0);
+                    linalg_internal::lii.cuAri_ii[lc.dtype()][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},0);
                 #else
                     cytnx_error_msg(true,"[Add] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
                 #endif 
             }        
 
+            //swap back to prevent also free by recycle mech. 
+            Cnst._impl->Mem = nullptr; 
+
             return out;
-            */
+            
         }
         
         //-----------------------------------------------------------------------------------
@@ -375,6 +380,10 @@ namespace cytnx{
         }
         template<>
         Tensor Add<cytnx_bool>(const Tensor &Lt, const cytnx_bool &rc){
+            return Add(rc,Lt);
+        }
+        template<>
+        Tensor Add<Scalar>(const Tensor &Lt, const Scalar &rc){
             return Add(rc,Lt);
         }
 
@@ -435,10 +444,13 @@ namespace cytnx{
         return linalg::Add(lc,Rt);
     }
     template<>
+    Tensor operator+<Scalar>(const Scalar &lc, const Tensor &Rt){
+        return linalg::Add(lc,Rt);
+    }
+    template<>
     Tensor operator+<Tensor::Tproxy>(const Tensor::Tproxy &lc, const Tensor &Rt){
         return Tensor(lc)+Rt;
     }
-
 
     template<>
     Tensor operator+<cytnx_complex128>(const Tensor &Lt, const cytnx_complex128 &rc){
@@ -484,7 +496,10 @@ namespace cytnx{
     Tensor operator+<cytnx_bool>(const Tensor &Lt, const cytnx_bool &rc){
        return linalg::Add(Lt,rc);
     }
-
+    template<>
+    Tensor operator+<Scalar>(const Tensor &Lt, const Scalar &rc){
+       return linalg::Add(Lt,rc);
+    }
  
 
 
