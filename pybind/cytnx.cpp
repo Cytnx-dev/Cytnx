@@ -1402,6 +1402,7 @@ PYBIND11_MODULE(cytnx,m){
                  },py::call_guard<py::scoped_ostream_redirect,
                      py::scoped_estream_redirect>())
                 .def("PrintNet",&Network::PrintNet)
+                .def_static("Contract",[](const std::vector<UniTensor> &utensors, const std::string &Tout, const std::vector<bool> &is_clone={}, const std::vector<std::string> &alias={}, const std::string &contract_order=""){return Network::Contract(utensors,Tout,is_clone,alias,contract_order);},py::arg("utensors"),py::arg("Tout"),py::arg("is_clone")=std::vector<bool>(),py::arg("alias")=std::vector<std::string>(),py::arg("contract_order")=std::string(""))
                 ;
 
 
