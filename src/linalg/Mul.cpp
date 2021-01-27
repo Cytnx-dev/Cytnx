@@ -348,6 +348,40 @@ namespace cytnx {
             return out;
         }
 
+
+        template<>
+        Tensor Mul<Scalar>(const Scalar &lc, const Tensor &Rt){
+            Storage Cnst; // create a shallow container without allocate. Using base!
+
+            Cnst._impl->Mem = lc._impl->get_raw_address();
+            Cnst._impl->len = 1;
+
+
+            Tensor out;
+            out._impl = Rt._impl->_clone_meta_only();
+            out._impl->storage() = Storage(Rt._impl->storage().size(),lc.dtype()<Rt.dtype()?lc.dtype():Rt.dtype(),Rt.device());
+
+            if(Rt.device()==Device.cpu){
+                linalg_internal::lii.Ari_ii[lc.dtype()][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},1);
+            }else{
+                #ifdef UNI_GPU
+                    checkCudaErrors(cudaSetDevice(Rt.device()));
+                    linalg_internal::lii.cuAri_ii[lc.dtype()][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},1);
+                #else
+                    cytnx_error_msg(true,"[Mul] fatal error, the tensor is on GPU without CUDA support.%s","\n");
+                #endif
+            }
+
+            //swap back to prevent also free by recycle mech. 
+            Cnst._impl->Mem = nullptr;
+
+            return out;
+
+        }
+
+
+
+
         //-----------------------------------------------------------------------------------
         template<>
         Tensor Mul<cytnx_complex128>(const Tensor &Lc, const cytnx_complex128 &rc) {
@@ -404,7 +438,10 @@ namespace cytnx {
             return Mul(rc, Lc);
         }
 
-
+        template<>
+        Tensor Mul<Scalar>(const Tensor &Lc, const Scalar &rc) {
+            return Mul(rc, Lc);
+        }
 
 
     }//linalg
@@ -455,6 +492,11 @@ template<>
 Tensor operator*<cytnx_bool>(const cytnx_bool &lc, const Tensor &Rt){
   return cytnx::linalg::Mul(lc,Rt);
 }
+template<>
+Tensor operator*<Scalar>(const Scalar &lc, const Tensor &Rt){
+  return cytnx::linalg::Mul(lc,Rt);
+}
+
 
 template<>
 Tensor operator*<cytnx_complex128>(const Tensor &Lt, const cytnx_complex128 &rc){
@@ -501,6 +543,10 @@ Tensor operator*<cytnx_bool>(const Tensor &Lt, const cytnx_bool &rc){
   return cytnx::linalg::Mul(Lt,rc);
 }
 template<>
+Tensor operator*<Scalar>(const Tensor &Lt, const Scalar &rc){
+  return cytnx::linalg::Mul(Lt,rc);
+}
+template<>
 Tensor operator*<Tensor::Tproxy>(const Tensor::Tproxy &lc, const Tensor &Rt){
     return Tensor(lc)*Rt;
 }
@@ -516,7 +562,7 @@ template<> Tensor operator*<cytnx_uint32>(const Tensor &, const cytnx_uint32&);
 template<> Tensor operator*<cytnx_uint16>(const Tensor &, const cytnx_uint16&);
 template<> Tensor operator*<cytnx_int16>(const Tensor &, const cytnx_int16&);
 template<> Tensor operator*<cytnx_bool>(const Tensor &, const cytnx_bool&);
-
+template<> Tensor operator*<Scalar>(const Tensor &, const Scalar&);
 
 template<> Tensor operator*<cytnx_complex128>( const cytnx_complex128&,const Tensor &);
 template<> Tensor operator*<cytnx_complex64>( const cytnx_complex64&,const Tensor &);
@@ -529,7 +575,7 @@ template<> Tensor operator*<cytnx_uint32>( const cytnx_uint32&,const Tensor &);
 template<> Tensor operator*<cytnx_uint16>( const cytnx_uint16&,const Tensor &);
 template<> Tensor operator*<cytnx_int16>( const cytnx_int16&,const Tensor &);
 template<> Tensor operator*<cytnx_bool>( const cytnx_bool&,const Tensor &);
-
+template<> Tensor operator*<Scalar>( const Scalar&,const Tensor &);
 
 
 

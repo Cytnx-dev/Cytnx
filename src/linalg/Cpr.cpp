@@ -274,6 +274,32 @@ namespace cytnx{
         }
 
 
+        template<>
+        Tensor Cpr<Scalar>(const Scalar &lc, const Tensor &Rt){
+            Storage Cnst;
+            //Cnst.at<cytnx_bool>(0) = lc;
+
+            Cnst._impl->Mem = lc._impl->get_raw_address();
+            Cnst._impl->len= 1;
+
+            Tensor out(Rt.shape(),Type.Bool,Rt.device());
+
+            if(Rt.device()==Device.cpu){
+                cytnx::linalg_internal::lii.Ari_ii[lc.dtype()][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},4);
+            }else{
+                #ifdef UNI_GPU
+                    checkCudaErrors(cudaSetDevice(Rt.device()));
+                    cytnx::linalg_internal::lii.cuAri_ii[lc.dtype()][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},4);
+                #else
+                    cytnx_error_msg(true,"[Cpr] fatal error, the tensor is on GPU without CUDA support.%s","\n");
+                #endif
+            }
+            Cnst._impl->Mem = nullptr;
+
+            return out;
+        }
+
+
 
         //-----------------------------------------------------------------------------------
         template<>
@@ -320,7 +346,10 @@ namespace cytnx{
         Tensor Cpr<cytnx_bool>(const Tensor &Lc, const cytnx_bool &rc){
             return Cpr(rc,Lc);
         }
-
+        template<>
+        Tensor Cpr<Scalar>(const Tensor &Lc, const Scalar &rc){
+            return Cpr(rc,Lc);
+        }
     }// linalg
 
 
@@ -373,7 +402,10 @@ namespace cytnx{
     Tensor operator==<cytnx_bool>(const cytnx_bool &lc, const Tensor &Rt){
         return cytnx::linalg::Cpr(lc,Rt);
     }
-
+    template<>
+    Tensor operator==<Scalar>(const Scalar &lc, const Tensor &Rt){
+        return cytnx::linalg::Cpr(lc,Rt);
+    }
 
 
     template<>
@@ -420,7 +452,13 @@ namespace cytnx{
     Tensor operator==<cytnx_bool>(const Tensor &Lt, const cytnx_bool &rc){
        return cytnx::linalg::Cpr(Lt,rc);
     }
-    
+    template<>
+    Tensor operator==<Scalar>(const Tensor &Lt, const Scalar &rc){
+       return cytnx::linalg::Cpr(Lt,rc);
+    }
+
+
+
 }// cytnx
 
 

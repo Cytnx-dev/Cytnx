@@ -16,13 +16,13 @@ See The following user guide for install and using of cytnx:
 [![Build Status](https://travis-ci.org/kaihsin/Cytnx_build.svg?branch=master)](https://travis-ci.org/kaihsin/Cytnx_build)
 
 ## News
-    [v0.6.6] 
+    [v0.7] 
  
 ## Stable Version:
 [v0.6.5a](https://github.com/kaihsin/Cytnx/tree/v0.6.5a)
 
 ## Current dev Version:
-    v0.6.6
+    v0.7
     1. [Enhance] add binary op. -Tensor.    
     2. [Enhance] New introduce Scalar class, generic scalar placeholder. 
     3. [Enhance][expr] Storage.at(), Storage.back(), Storage.get_item() can now without specialization. The return is Scalar class.
@@ -41,7 +41,10 @@ See The following user guide for install and using of cytnx:
     16. [Fatal!][Fix] fix bug of wrong answer in Tensor set-element with slice for non-contiguous Tensor. 
     17. [Enhance] Network on the fly construction.
     18. [Enhance] Scalar: Add on TN. TN.item()
-    
+    19. [Fix] bug in Mod interanlly calling Cpr fixed.    
+    20. [Enhance] All operation related to TN <-> Scalar
+    21. [Enhance] Reduce RTTR overhead. 
+ 
 
     v0.6.5
     1. [Fix] Bug in UniTensor _Load    

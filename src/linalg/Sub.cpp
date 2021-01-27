@@ -349,6 +349,37 @@ namespace cytnx {
             return out;
         }
 
+        template<>
+        Tensor Sub<Scalar>(const Scalar &lc, const Tensor &Rt){
+            Storage Cnst; // create a shallow container without allocate. Using base!
+
+            Cnst._impl->Mem = lc._impl->get_raw_address();
+            Cnst._impl->len = 1;
+
+
+            Tensor out;
+            out._impl = Rt._impl->_clone_meta_only();
+            out._impl->storage() = Storage(Rt._impl->storage().size(),lc.dtype()<Rt.dtype()?lc.dtype():Rt.dtype(),Rt.device());
+
+            if(Rt.device()==Device.cpu){
+                linalg_internal::lii.Ari_ii[lc.dtype()][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},2);            }else{
+                #ifdef UNI_GPU
+                    checkCudaErrors(cudaSetDevice(Rt.device()));
+                    linalg_internal::lii.cuAri_ii[lc.dtype()][Rt.dtype()](out._impl->storage()._impl,Cnst._impl,Rt._impl->storage()._impl,Rt._impl->storage()._impl->size(),{},{},{},2);
+                #else
+                    cytnx_error_msg(true,"[Sub] fatal error, the tensor is on GPU without CUDA support.%s","\n");
+                #endif
+            }
+
+            //swap back to prevent also free by recycle mech. 
+            Cnst._impl->Mem = nullptr;
+
+            return out;
+
+        }
+
+
+
         //-----------------------------------------------------------------------------------
         template<>
         Tensor Sub<cytnx_complex128>(const Tensor &Lt, const cytnx_complex128 &rc) {
@@ -636,6 +667,40 @@ namespace cytnx {
 
             return out;
         }
+
+
+        template<>
+        Tensor Sub<Scalar>(const Tensor &Lt, const Scalar &rc){
+            Storage Cnst; // create a shallow container without allocate. Using base!
+
+            Cnst._impl->Mem = rc._impl->get_raw_address();
+            Cnst._impl->len = 1;
+
+
+            Tensor out;
+            out._impl = Lt._impl->_clone_meta_only();
+            out._impl->storage() = Storage(Lt._impl->storage().size(),Lt.dtype()<rc.dtype()?Lt.dtype():rc.dtype(),Lt.device());
+
+            if(Lt.device()==Device.cpu){
+                linalg_internal::lii.Ari_ii[Lt.dtype()][rc.dtype()](out._impl->storage()._impl,
+                                                                    Lt._impl->storage()._impl, Cnst._impl,
+                                                                    Lt._impl->storage()._impl->size(),{},{},{},
+                                                                    2);            
+            }else{
+                #ifdef UNI_GPU
+                    checkCudaErrors(cudaSetDevice(Rt.device()));
+                    linalg_internal::lii.cuAri_ii[Lt.dtype()][rc.dtype()](out._impl->storage()._impl,Lt._impl->storage()._impl,Cnst._impl,Lt._impl->storage()._impl->size(),{},{},{},2);
+                #else
+                    cytnx_error_msg(true,"[Sub] fatal error, the tensor is on GPU without CUDA support.%s","\n");
+                #endif
+            }
+
+            //swap back to prevent also free by recycle mech. 
+            Cnst._impl->Mem = nullptr;
+
+            return out;
+
+        }
         
 
     } //linalg
@@ -697,6 +762,11 @@ namespace cytnx {
     Tensor operator-<Tensor::Tproxy>(const Tensor::Tproxy &lc, const Tensor &Rt){
         return Tensor(lc)-Rt;
     }
+    template<>
+    Tensor operator-<Scalar>(const Scalar &lc, const Tensor &Rt){
+        return cytnx::linalg::Sub(lc,Rt);
+    }
+
 
 
     template<>
@@ -743,6 +813,11 @@ namespace cytnx {
     Tensor operator-<cytnx_bool>(const Tensor &Lt, const cytnx_bool &rc){
        return cytnx::linalg::Sub(Lt,rc);
     }
+    template<>
+    Tensor operator-<Scalar>(const Tensor &Lt, const Scalar &rc){
+       return cytnx::linalg::Sub(Lt,rc);
+    }
+
 
 }//cytnx
 

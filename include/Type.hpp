@@ -3,6 +3,7 @@
 
 #include <string>
 #include <complex>
+#include <vector>
 #include <stdint.h>
 #include <climits>
 #include <typeinfo>
@@ -47,6 +48,15 @@ namespace cytnx{
         };
     };
 
+    struct Type_struct{
+        std::string name;
+        bool is_unsigned;
+        bool is_complex;
+        bool is_float;
+        bool is_int;
+        unsigned int typeSize;
+    };
+
     const int N_Type=12;
     const int N_fType=5;
 
@@ -67,8 +77,9 @@ namespace cytnx{
                 Uint16,
                 Bool
             };
-            //Type_class();
-            //std::unordered_map<std::type_index, int> c_typeid2_cy_typeid;
+            std::vector<Type_struct> Typeinfos;
+
+            Type_class();
             std::string getname(const unsigned int &type_id);
             unsigned int c_typename_to_id(const std::string &c_name);
             unsigned int typeSize(const unsigned int &type_id);

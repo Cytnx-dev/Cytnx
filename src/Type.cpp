@@ -42,184 +42,65 @@ int c_typeindex_to_id(const std::type_index &type_idx){
 
 }
 */
+
+cytnx::Type_class::Type_class(){
+    Typeinfos.resize(N_Type);
+    //{name,unsigned,complex,float,int,typesize}
+    Typeinfos[this->Void]          = (Type_struct){std::string("Void")
+                                                   ,true,false,false,false,0};
+    Typeinfos[this->ComplexDouble] = (Type_struct){std::string("Complex Double (Complex Float64)")
+                                                   ,false,true,true,false,sizeof(cytnx_complex128)};
+    Typeinfos[this->ComplexFloat ] = (Type_struct){std::string("Complex Float (Complex Float32)")
+                                                   ,false,true,true,false,sizeof(cytnx_complex64)};
+    Typeinfos[this->Double       ] = (Type_struct){std::string("Double (Float64)")
+                                                   ,false,false,true,false,sizeof(cytnx_double)};
+    Typeinfos[this->Float        ] = (Type_struct){std::string("Float (Float32)")
+                                                   ,false,false,true,false,sizeof(cytnx_float)};
+    Typeinfos[this->Int64        ] = (Type_struct){std::string("Int64")
+                                                   ,false,false,false,true,sizeof(cytnx_int64)};
+    Typeinfos[this->Uint64       ] = (Type_struct){std::string("Uint64")
+                                                   ,true ,false,false,true,sizeof(cytnx_uint64)};
+    Typeinfos[this->Int32        ] = (Type_struct){std::string("Int32")
+                                                   ,false,false,false,true,sizeof(cytnx_int32)};
+    Typeinfos[this->Uint32       ] = (Type_struct){std::string("Uint32")
+                                                   ,true ,false,false,true,sizeof(cytnx_uint32)};
+    Typeinfos[this->Int16        ] = (Type_struct){std::string("Int16")
+                                                   ,false,false,false,true,sizeof(cytnx_int16)};
+    Typeinfos[this->Uint16       ] = (Type_struct){std::string("Uint16")
+                                                   ,true ,false,false,true,sizeof(cytnx_uint16)};
+    Typeinfos[this->Bool         ] = (Type_struct){std::string("Bool")
+                                                   ,true ,false,false,false,sizeof(cytnx_bool)};
+}
+
 bool cytnx::Type_class::is_float(const unsigned int &type_id){
-
-
-    switch (type_id){
-        case Type_class::Void:
-            return false;
-        case Type_class::ComplexDouble:
-            return true;
-        case Type_class::ComplexFloat:
-            return true;
-        case Type_class::Double:
-            return true;
-        case Type_class::Float:
-            return true;
-        case Type_class::Int64:
-            return false;
-        case Type_class::Uint64:
-            return false;
-        case Type_class::Int32:
-            return false;
-        case Type_class::Uint32:
-            return false;
-        case Type_class::Int16:
-            return false;
-        case Type_class::Uint16:
-            return false;
-        case Type_class::Bool:
-            return false;
-        default:
-            cytnx_error_msg(1,"%s","[ERROR] invalid type");
-            return false;
-    }
-
+    cytnx_error_msg(type_id >= N_Type,"[ERROR] invalid type_id%s","\n");
+    return Typeinfos[type_id].is_float;
 }
 
 bool cytnx::Type_class::is_int(const unsigned int &type_id){
-
-
-    switch (type_id){
-        case Type_class::Void:
-            return false;
-        case Type_class::ComplexDouble:
-            return false;
-        case Type_class::ComplexFloat:
-            return false;
-        case Type_class::Double:
-            return false;
-        case Type_class::Float:
-            return false;
-        case Type_class::Int64:
-            return true;
-        case Type_class::Uint64:
-            return true;
-        case Type_class::Int32:
-            return true;
-        case Type_class::Uint32:
-            return true;
-        case Type_class::Int16:
-            return true;
-        case Type_class::Uint16:
-            return true;
-        case Type_class::Bool:
-            return false;
-        default:
-            cytnx_error_msg(1,"%s","[ERROR] invalid type");
-            return false;
-    }
-
+    cytnx_error_msg(type_id >= N_Type,"[ERROR] invalid type_id%s","\n");
+    return Typeinfos[type_id].is_int;
 }
-
-
 
 
 bool cytnx::Type_class::is_complex(const unsigned int &type_id){
-
-
-    switch (type_id){
-        case Type_class::Void:
-            return false;
-        case Type_class::ComplexDouble:
-            return true;
-        case Type_class::ComplexFloat:
-            return true;
-        case Type_class::Double:
-            return false;
-        case Type_class::Float:
-            return false;
-        case Type_class::Int64:
-            return false;
-        case Type_class::Uint64:
-            return true;
-        case Type_class::Int32:
-            return false;
-        case Type_class::Uint32:
-            return true;
-        case Type_class::Int16:
-            return false;
-        case Type_class::Uint16:
-            return false;
-        case Type_class::Bool:
-            return false;
-        default:
-            cytnx_error_msg(1,"%s","[ERROR] invalid type");
-            return false;
-    }
-
+    cytnx_error_msg(type_id >= N_Type,"[ERROR] invalid type_id%s","\n");
+    return Typeinfos[type_id].is_complex;
 }
 
 bool cytnx::Type_class::is_unsigned(const unsigned int &type_id){
-
-
-    switch (type_id){
-        case Type_class::Void:
-            return true;
-        case Type_class::ComplexDouble:
-            return false;
-        case Type_class::ComplexFloat:
-            return false;
-        case Type_class::Double:
-            return false;
-        case Type_class::Float:
-            return false;
-        case Type_class::Int64:
-            return false;
-        case Type_class::Uint64:
-            return true;
-        case Type_class::Int32:
-            return false;
-        case Type_class::Uint32:
-            return true;
-        case Type_class::Int16:
-            return false;
-        case Type_class::Uint16:
-            return true;
-        case Type_class::Bool:
-            return true;
-        default:
-            cytnx_error_msg(1,"%s","[ERROR] invalid type");
-            return false;
-    }
-
+    cytnx_error_msg(type_id >= N_Type,"[ERROR] invalid type_id%s","\n");
+    return Typeinfos[type_id].is_unsigned;
 }
 
 std::string cytnx::Type_class::getname(const unsigned int &type_id){
-
-
-    switch (type_id){
-        case Type_class::Void:
-            return string("Void");
-        case Type_class::ComplexDouble:
-            return string("Complex Double (Complex Float64)");
-        case Type_class::ComplexFloat:
-            return string("Complex Float (Complex Float32)");
-        case Type_class::Double:
-            return string("Double (Float64)");
-        case Type_class::Float:
-            return string("Float32");
-        case Type_class::Int64:
-            return string("Int64");
-        case Type_class::Uint64:
-            return string("Uint64");
-        case Type_class::Int32:
-            return string("Int32");
-        case Type_class::Uint32:
-            return string("Uint32");
-        case Type_class::Int16:
-            return string("Int16");
-        case Type_class::Uint16:
-            return string("Uint16");
-        case Type_class::Bool:
-            return string("Bool");
-        default:
-            cytnx_error_msg(1,"%s","[ERROR] invalid type");
-            return string("");
-    }
-
+    cytnx_error_msg(type_id >= N_Type,"[ERROR] invalid type_id%s","\n");
+    return Typeinfos[type_id].name;
 }
-
+unsigned int cytnx::Type_class::typeSize(const unsigned int &type_id){
+    cytnx_error_msg(type_id >= N_Type,"[ERROR] invalid type_id%s","\n");
+    return Typeinfos[type_id].typeSize;
+}
 unsigned int cytnx::Type_class::c_typename_to_id(const std::string &c_name){
 
     if(c_name == typeid(cytnx_complex128).name()){
@@ -251,40 +132,6 @@ unsigned int cytnx::Type_class::c_typename_to_id(const std::string &c_name){
 
 }
 
-unsigned int cytnx::Type_class::typeSize(const unsigned int &type_id){
-
-
-    switch (type_id){
-        case Type_class::Void:
-            return 0;
-        case Type_class::ComplexDouble:
-            return sizeof(cytnx_complex128);
-        case Type_class::ComplexFloat:
-            return sizeof(cytnx_complex64);
-        case Type_class::Double:
-            return sizeof(cytnx_double);
-        case Type_class::Float:
-            return sizeof(cytnx_float);
-        case Type_class::Int64:
-            return sizeof(cytnx_int64);
-        case Type_class::Uint64:
-            return sizeof(cytnx_uint64);
-        case Type_class::Int32:
-            return sizeof(cytnx_int32);
-        case Type_class::Uint32:
-            return sizeof(cytnx_uint32);
-        case Type_class::Int16:
-            return sizeof(cytnx_int16);
-        case Type_class::Uint16:
-            return sizeof(cytnx_uint16);
-        case Type_class::Bool:
-            return sizeof(cytnx_bool);
-        default:
-            cytnx_error_msg(1,"%s","[ERROR] invalid type");
-            return 0;
-    }
-
-}
         
 namespace cytnx{
     Type_class Type;
