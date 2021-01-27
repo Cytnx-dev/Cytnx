@@ -154,7 +154,7 @@ Application scenarios
 **********************
 With the Scalar type, there are much more possibilities in c++. In the following, let's consider some examples
 
-* 1. Consider the scenario where we want to have a list (vector) with each elements to be different data types. Indeed, in C++ we can use *tuple*. However, that requires the number of elements and data types to be known and fixed a priori. If, say, we want to return a vector with known number of elements, and known data types. Using Scalar we can do:
+* 1. Consider the scenario where we want to have a list (vector) with each elements to be different data types. Indeed, in C++ we can use *tuple*. However, that requires the number of elements and data types to be known and fixed a priori. If, say, we want to return a vector with unknown number of elements, and unknown data types. Using Scalar we can do:
 
 .. code-block:: c++
     :linenos:
