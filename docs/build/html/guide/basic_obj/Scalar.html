@@ -147,8 +147,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">4. Scalar</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#define-declare-a-scalar">4.1. Define/Declare a scalar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#change-data-type">4.2. Change data type</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#convert-btwn-standard-type-and-scalar">4.3. Convert btwn standard type and Scalar</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#application-scenario">4.4. Application scenario</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="#application-scenarios">4.3. Application scenarios</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -409,8 +408,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">4. Scalar</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#define-declare-a-scalar">4.1. Define/Declare a scalar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#change-data-type">4.2. Change data type</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#convert-btwn-standard-type-and-scalar">4.3. Convert btwn standard type and Scalar</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#application-scenario">4.4. Application scenario</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="#application-scenarios">4.3. Application scenarios</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -516,19 +514,242 @@
             
   <div class="section" id="scalar">
 <h1><span class="section-number">4. </span>Scalar<a class="headerlink" href="#scalar" title="Permalink to this headline">¶</a></h1>
-<p>[v0.7+] Scalar is the generic data type to hold all types in C++.</p>
+<p>[v0.7+][C++ only]</p>
+<p>Scalar is the generic data type to hold all types in C++.</p>
 <p>In python, the variable’s type is dynamic, i.e. they can be changed at any time. Compare to C++, where the data type of a variable are static, and once declared, they cannot be changed. In Cytnx, as a library across C++/python, we provide a generic type Scalar which allow the variable to take the convenience and advantage of the dynamic type as python.</p>
 <div class="section" id="define-declare-a-scalar">
 <h2><span class="section-number">4.1. </span>Define/Declare a scalar<a class="headerlink" href="#define-declare-a-scalar" title="Permalink to this headline">¶</a></h2>
+<p>To define a scalar is pretty simple. One can convert directly from a supported standard C++ Type.</p>
+<p>Currently, following standard C++ data types are supported by cytnx Scalar:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 37%" />
+<col style="width: 32%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>cytnx type</p></th>
+<th class="head"><p>c++ type</p></th>
+<th class="head"><p>Type object</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>cytnx_double</p></td>
+<td><p>double</p></td>
+<td><p>Type.Double</p></td>
+</tr>
+<tr class="row-odd"><td><p>cytnx_float</p></td>
+<td><p>float</p></td>
+<td><p>Type.Float</p></td>
+</tr>
+<tr class="row-even"><td><p>cytnx_uint64</p></td>
+<td><p>uint64_t</p></td>
+<td><p>Type.Uint64</p></td>
+</tr>
+<tr class="row-odd"><td><p>cytnx_uint32</p></td>
+<td><p>uint32_t</p></td>
+<td><p>Type.Uint32</p></td>
+</tr>
+<tr class="row-even"><td><p>cytnx_uint16</p></td>
+<td><p>uint16_t</p></td>
+<td><p>Type.Uint16</p></td>
+</tr>
+<tr class="row-odd"><td><p>cytnx_int64</p></td>
+<td><p>int64_t</p></td>
+<td><p>Type.Int64</p></td>
+</tr>
+<tr class="row-even"><td><p>cytnx_int32</p></td>
+<td><p>int32_t</p></td>
+<td><p>Type.Int32</p></td>
+</tr>
+<tr class="row-odd"><td><p>cytnx_int16</p></td>
+<td><p>int16_t</p></td>
+<td><p>Type.Int16</p></td>
+</tr>
+<tr class="row-even"><td><p>cytnx_complex128</p></td>
+<td><p>std::complex&lt;double&gt;</p></td>
+<td><p>Type.ComplexDouble</p></td>
+</tr>
+<tr class="row-odd"><td><p>cytnx_complex64</p></td>
+<td><p>std::complex&lt;float&gt;</p></td>
+<td><p>Type.ComplexFloat</p></td>
+</tr>
+<tr class="row-even"><td><p>cytnx_bool</p></td>
+<td><p>bool</p></td>
+<td><p>Type.Bool</p></td>
+</tr>
+</tbody>
+</table>
+<p>Consider the example where we want to create a Scalar with <em>double</em> type. The conversion between C++ standard type to Scalar is very flexible, depending on the application scenario:</p>
+<ul class="simple">
+<li><ol class="arabic simple">
+<li><p>Convert from a c++ variable</p></li>
+</ol>
+</li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">double</span> <span class="n">cA</span> <span class="o">=</span> <span class="mf">1.33</span><span class="p">;</span>
+<span class="n">Scalar</span> <span class="nf">A</span><span class="p">(</span><span class="n">cA</span><span class="p">);</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">A</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt; 1.33 &gt;  Scalar dtype: [Double (Float64)]
+</pre></div>
+</div>
+<ul class="simple">
+<li><ol class="arabic simple" start="2">
+<li><p>Create directly:</p></li>
+</ol>
+</li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">Scalar</span> <span class="nf">A</span><span class="p">(</span><span class="kt">double</span><span class="p">(</span><span class="mf">1.33</span><span class="p">));</span>
+
+<span class="n">Scalar</span> <span class="n">A2</span> <span class="o">=</span> <span class="kt">double</span><span class="p">(</span><span class="mf">1.33</span><span class="p">);</span>
+
+<span class="n">Scalar</span> <span class="nf">A3</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">);</span>
+
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">A</span> <span class="o">&lt;&lt;</span> <span class="n">A2</span> <span class="o">&lt;&lt;</span> <span class="n">A3</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt; 1.33 &gt;  Scalar dtype: [Double (Float64)]
+&lt; 1.33 &gt;  Scalar dtype: [Double (Float64)]
+&lt; 10 &gt;  Scalar dtype: [Double (Float64)]
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ol class="arabic simple">
+<li><p>We can also just assign a c++ type to Scalar as <strong>A2</strong>.</p></li>
+<li><p>The variable using c++ template to detect the type, in case of variable <strong>A3</strong>, <em>10</em> by defalt in c++ is an integer type. In such case if we want the scalar to be <em>double</em>, then one can pass addtional dtype to further specify the type explicitly.</p></li>
+</ol>
+</div>
+<ul>
+<li><ol class="arabic simple" start="3">
+<li><p>Convert to a c++ data type:</p></li>
+</ol>
+<blockquote>
+<div><p>Converting to a c++ data type is very straight. Simply doing exactly the same way as type casting in C++:</p>
+</div></blockquote>
+</li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">Scalar</span> <span class="n">A</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">A</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+<span class="k">auto</span> <span class="n">fA</span> <span class="o">=</span> <span class="kt">float</span><span class="p">(</span><span class="n">A</span><span class="p">);</span> <span class="c1">// convert to float</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="k">typeid</span><span class="p">(</span><span class="n">fA</span><span class="p">).</span><span class="n">name</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">fA</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+<span class="c1">// convert to complex double</span>
+<span class="k">auto</span> <span class="n">cdA</span> <span class="o">=</span> <span class="n">complex128</span><span class="p">(</span><span class="n">A</span><span class="p">);</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">cdA</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+<span class="c1">// convert to complex float</span>
+<span class="k">auto</span> <span class="n">cfA</span> <span class="o">=</span> <span class="n">complex64</span><span class="p">(</span><span class="n">A</span><span class="p">);</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">cfA</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt; 10 &gt;  Scalar dtype: [Int32]
+
+f10
+(10,0)
+(10,0)
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The case of complex type is a bit different, one use <strong>complex128()</strong> and <strong>complex64()</strong> to convert to a standard c++ type <strong>complex&lt;double&gt;</strong> and <strong>complex&lt;float&gt;</strong> respectively.</p>
+</div>
 </div>
 <div class="section" id="change-data-type">
 <h2><span class="section-number">4.2. </span>Change data type<a class="headerlink" href="#change-data-type" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>To change the data type of Scalar, use <strong>.astype()</strong>.</p>
+</div></blockquote>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">Scalar</span> <span class="nf">A</span><span class="p">(</span><span class="mf">1.33</span><span class="p">);</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">A</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+<span class="n">A</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="n">astype</span><span class="p">(</span><span class="n">Type</span><span class="p">.</span><span class="n">Float</span><span class="p">);</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">A</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt; 1.33 &gt;  Scalar dtype: [Double (Float64)]
+
+&lt; 1.33 &gt;  Scalar dtype: [Float (Float32)]
+</pre></div>
 </div>
-<div class="section" id="convert-btwn-standard-type-and-scalar">
-<h2><span class="section-number">4.3. </span>Convert btwn standard type and Scalar<a class="headerlink" href="#convert-btwn-standard-type-and-scalar" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="application-scenario">
-<h2><span class="section-number">4.4. </span>Application scenario<a class="headerlink" href="#application-scenario" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="application-scenarios">
+<h2><span class="section-number">4.3. </span>Application scenarios<a class="headerlink" href="#application-scenarios" title="Permalink to this headline">¶</a></h2>
+<p>With the Scalar type, there are much more possibilities in c++. In the following, let’s consider some examples</p>
+<ul class="simple">
+<li><ol class="arabic simple">
+<li><p>Consider the scenario where we want to have a list (vector) with each elements to be different data types. Indeed, in C++ we can use <em>tuple</em>. However, that requires the number of elements and data types to be known and fixed a priori. If, say, we want to return a vector with known number of elements, and known data types. Using Scalar we can do:</p></li>
+</ol>
+</li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Scalar</span><span class="o">&gt;</span> <span class="n">out</span><span class="p">;</span>
+
+<span class="n">out</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">Scalar</span><span class="p">(</span><span class="mf">1.33</span><span class="p">));</span> <span class="c1">//double</span>
+<span class="n">out</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">Scalar</span><span class="p">(</span><span class="mi">10</span><span class="p">));</span>   <span class="c1">//int</span>
+<span class="n">out</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">Scalar</span><span class="p">(</span><span class="n">cytnx_complex128</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)));</span> <span class="c1">//complex double</span>
+
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">out</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">out</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt; 1.33 &gt;  Scalar dtype: [Double (Float64)]
+&lt; 10 &gt;  Scalar dtype: [Int32]
+&lt; (3,4) &gt;  Scalar dtype: [Complex Double (Complex Float64)]
+</pre></div>
+</div>
+<ul class="simple">
+<li><ol class="arabic simple" start="2">
+<li><p>Consider we want to create a function that can take arbitrary types of arguments (which is very simple in python, but cannot be achieve in c++), with Scalar, we can do:</p></li>
+</ol>
+</li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">Scalar</span> <span class="nf">generic_func</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Scalar</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">args</span><span class="p">){</span>
+    <span class="c1">// do something here with args</span>
+
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>In such way, user can dynamically decide what and which types of variables to pass into the function.</p>
 <div class="toctree-wrapper compound">
 </div>
 </div>
