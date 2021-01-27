@@ -49,6 +49,7 @@ Continue reading:
     guide/behavior.rst
     guide/basic_obj/Tensor.rst
     guide/basic_obj/Storage.rst
+    guide/basic_obj/Scalar.rst
     guide/linalg.rst
     guide/itersol.rst
     guide/cyx.rst
