@@ -19,7 +19,7 @@ See The following user guide for install and using of cytnx:
     [v0.7] 
  
 ## Stable Version:
-[v0.6.5a](https://github.com/kaihsin/Cytnx/tree/v0.6.5a)
+[v0.7a](https://github.com/kaihsin/Cytnx/tree/v0.7a)
 
 ## Current dev Version:
     v0.7
