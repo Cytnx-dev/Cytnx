@@ -5,5 +5,6 @@ var searchData=
   ['linalg',['linalg',['../namespacecytnx_1_1linalg.html',1,'cytnx']]],
   ['physics',['physics',['../namespacecytnx_1_1physics.html',1,'cytnx']]],
   ['qgates',['qgates',['../namespacecytnx_1_1qgates.html',1,'cytnx']]],
-  ['random',['random',['../namespacecytnx_1_1random.html',1,'cytnx']]]
+  ['random',['random',['../namespacecytnx_1_1random.html',1,'cytnx']]],
+  ['stat',['stat',['../namespacecytnx_1_1stat.html',1,'cytnx']]]
 ];

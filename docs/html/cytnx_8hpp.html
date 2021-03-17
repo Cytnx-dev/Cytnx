@@ -29,7 +29,7 @@
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.6.5</span>
+   &#160;<span id="projectnumber">v0.7</span>
    </div>
   </td>
  </tr>
@@ -76,7 +76,6 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &lt;iostream&gt;</code><br />
 <code>#include &lt;typeinfo&gt;</code><br />
-<code>#include &quot;<a class="el" href="Scalar_8hpp_source.html">Scalar.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Accessor_8hpp_source.html">Accessor.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Device_8hpp_source.html">Device.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Type_8hpp_source.html">Type.hpp</a>&quot;</code><br />
@@ -85,6 +84,7 @@ $(function() {
 <code>#include &quot;<a class="el" href="Generator_8hpp_source.html">Generator.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Physics_8hpp_source.html">Physics.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="algo_8hpp_source.html">algo.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="stat_8hpp_source.html">stat.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="linalg_8hpp_source.html">linalg.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="cytnx_8hpp_source.html">cytnx.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="utils_8hpp_source.html">utils/utils.hpp</a>&quot;</code><br />
@@ -93,6 +93,7 @@ $(function() {
 <code>#include &quot;<a class="el" href="Symmetry_8hpp_source.html">Symmetry.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Network_8hpp_source.html">Network.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Bond_8hpp_source.html">Bond.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Scalar_8hpp_source.html">Scalar.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="LinOp_8hpp_source.html">LinOp.hpp</a>&quot;</code><br />
 <code>#include &quot;utils/is.hpp&quot;</code><br />
 <code>#include &quot;utils/print.hpp&quot;</code><br />
@@ -101,26 +102,26 @@ Include dependency graph for cytnx.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="cytnx_8hpp__incl.png" border="0" usemap="#include_2cytnx_8hpp" alt=""/></div>
 <map name="include_2cytnx_8hpp" id="include_2cytnx_8hpp">
-<area shape="rect" id="node4" href="Scalar_8hpp.html" title="Scalar.hpp" alt="" coords="2639,380,2723,407"/>
-<area shape="rect" id="node5" href="Type_8hpp.html" title="Type.hpp" alt="" coords="4059,529,4135,556"/>
-<area shape="rect" id="node18" href="Accessor_8hpp.html" title="Accessor.hpp" alt="" coords="1194,380,1297,407"/>
-<area shape="rect" id="node19" href="Device_8hpp.html" title="Device.hpp" alt="" coords="423,380,511,407"/>
-<area shape="rect" id="node20" href="Storage_8hpp.html" title="Storage.hpp" alt="" coords="3026,305,3118,332"/>
-<area shape="rect" id="node22" href="Tensor_8hpp.html" title="Tensor.hpp" alt="" coords="2299,231,2386,257"/>
-<area shape="rect" id="node25" href="Generator_8hpp.html" title="Generator.hpp" alt="" coords="1177,156,1281,183"/>
-<area shape="rect" id="node26" href="Physics_8hpp.html" title="Physics.hpp" alt="" coords="1497,81,1591,108"/>
-<area shape="rect" id="node27" href="UniTensor_8hpp.html" title="UniTensor.hpp" alt="" coords="2532,156,2639,183"/>
-<area shape="rect" id="node28" href="utils_8hpp.html" title="utils/utils.hpp" alt="" coords="1103,231,1201,257"/>
-<area shape="rect" id="node33" href="Symmetry_8hpp.html" title="Symmetry.hpp" alt="" coords="3599,380,3705,407"/>
-<area shape="rect" id="node34" href="Bond_8hpp.html" title="Bond.hpp" alt="" coords="3345,305,3423,332"/>
-<area shape="rect" id="node36" href="algo_8hpp.html" title="algo.hpp" alt="" coords="4007,156,4078,183"/>
-<area shape="rect" id="node39" href="linalg_8hpp.html" title="linalg.hpp" alt="" coords="3064,81,3141,108"/>
-<area shape="rect" id="node40" href="LinOp_8hpp.html" title="LinOp.hpp" alt="" coords="3315,156,3397,183"/>
-<area shape="rect" id="node42" href="random_8hpp.html" title="random.hpp" alt="" coords="1413,156,1504,183"/>
-<area shape="rect" id="node43" href="Network_8hpp.html" title="Network.hpp" alt="" coords="2537,81,2633,108"/>
-<area shape="rect" id="node10" href="cytnx__error_8hpp.html" title="cytnx_error.hpp" alt="" coords="2532,455,2644,481"/>
-<area shape="rect" id="node14" href="lapack__wrapper_8hpp.html" title="lapack_wrapper.hpp" alt="" coords="4551,455,4689,481"/>
-<area shape="rect" id="node15" href="intrusive__ptr__base_8hpp.html" title="intrusive_ptr_base.hpp" alt="" coords="3349,455,3502,481"/>
+<area shape="rect" id="node4" href="Accessor_8hpp.html" title="Accessor.hpp" alt="" coords="1406,380,1509,407"/>
+<area shape="rect" id="node5" href="Type_8hpp.html" title="Type.hpp" alt="" coords="3511,455,3587,481"/>
+<area shape="rect" id="node18" href="Device_8hpp.html" title="Device.hpp" alt="" coords="685,380,773,407"/>
+<area shape="rect" id="node19" href="Storage_8hpp.html" title="Storage.hpp" alt="" coords="2406,305,2498,332"/>
+<area shape="rect" id="node22" href="Scalar_8hpp.html" title="Scalar.hpp" alt="" coords="1838,380,1922,407"/>
+<area shape="rect" id="node23" href="Tensor_8hpp.html" title="Tensor.hpp" alt="" coords="1939,231,2026,257"/>
+<area shape="rect" id="node26" href="Generator_8hpp.html" title="Generator.hpp" alt="" coords="421,156,525,183"/>
+<area shape="rect" id="node27" href="Physics_8hpp.html" title="Physics.hpp" alt="" coords="971,81,1066,108"/>
+<area shape="rect" id="node28" href="UniTensor_8hpp.html" title="UniTensor.hpp" alt="" coords="2239,156,2345,183"/>
+<area shape="rect" id="node29" href="utils_8hpp.html" title="utils/utils.hpp" alt="" coords="549,455,648,481"/>
+<area shape="rect" id="node31" href="Symmetry_8hpp.html" title="Symmetry.hpp" alt="" coords="3000,380,3107,407"/>
+<area shape="rect" id="node32" href="Bond_8hpp.html" title="Bond.hpp" alt="" coords="2928,305,3005,332"/>
+<area shape="rect" id="node34" href="algo_8hpp.html" title="algo.hpp" alt="" coords="4041,156,4111,183"/>
+<area shape="rect" id="node37" href="stat_8hpp.html" title="stat.hpp" alt="" coords="2763,156,2832,183"/>
+<area shape="rect" id="node38" href="linalg_8hpp.html" title="linalg.hpp" alt="" coords="3239,81,3316,108"/>
+<area shape="rect" id="node39" href="LinOp_8hpp.html" title="LinOp.hpp" alt="" coords="3237,156,3318,183"/>
+<area shape="rect" id="node41" href="random_8hpp.html" title="random.hpp" alt="" coords="1949,156,2040,183"/>
+<area shape="rect" id="node42" href="Network_8hpp.html" title="Network.hpp" alt="" coords="2472,81,2568,108"/>
+<area shape="rect" id="node13" href="cytnx__error_8hpp.html" title="cytnx_error.hpp" alt="" coords="2495,529,2607,556"/>
+<area shape="rect" id="node21" href="intrusive__ptr__base_8hpp.html" title="intrusive_ptr_base.hpp" alt="" coords="2446,455,2599,481"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">

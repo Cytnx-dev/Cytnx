@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['utentype',['UTenType',['../namespacecytnx.html#a224ad816267928be693a2396f5483e06',1,'cytnx']]]
+  ['symtype',['SymType',['../namespacecytnx.html#ae8b2b1a6be5f66828af0c051065bb642',1,'cytnx']]]
 ];

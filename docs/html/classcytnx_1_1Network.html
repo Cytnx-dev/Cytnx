@@ -29,7 +29,7 @@
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.6.5</span>
+   &#160;<span id="projectnumber">v0.7</span>
    </div>
   </td>
  </tr>
@@ -72,6 +72,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classcytnx_1_1Network-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">cytnx::Network Class Reference</div>  </div>
@@ -106,6 +107,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a2218d13ef5879f5d35d8b799d33703e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:affde6272cbdcd1bd101e61f37674be24"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Network.html#affde6272cbdcd1bd101e61f37674be24">Savefile</a> (const std::string &amp;fname)</td></tr>
 <tr class="separator:affde6272cbdcd1bd101e61f37674be24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a153b8bf42b4fad28ad677b30292771cb"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcytnx_1_1Network.html">Network</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Network.html#a153b8bf42b4fad28ad677b30292771cb">Contract</a> (const std::vector&lt; <a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> &gt; &amp;tensors, const std::string &amp;Tout, const std::vector&lt; bool &gt; &amp;is_clone={}, const std::vector&lt; std::string &gt; &amp;alias={}, const std::string &amp;contract_order=&quot;&quot;)</td></tr>
+<tr class="separator:a153b8bf42b4fad28ad677b30292771cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a0fc550caee8609366ccc37ef86011af9"></a>
@@ -189,6 +195,60 @@ Public Member Functions</h2></td></tr>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a153b8bf42b4fad28ad677b30292771cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a153b8bf42b4fad28ad677b30292771cb">&#9670;&nbsp;</a></span>Contract()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classcytnx_1_1Network.html">Network</a> cytnx::Network::Contract </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>tensors</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>Tout</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; bool &gt; &amp;&#160;</td>
+          <td class="paramname"><em>is_clone</em> = <code>{}</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; std::string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>alias</em> = <code>{}</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>contract_order</em> = <code>&quot;&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -318,7 +378,7 @@ ORDER : (A,B),(C,D)
 =================
 
 </pre> <h3>python API</h3>
-<div class="fragment"><div class="line"><span class="keyword">import</span> cytnx</div><div class="line"></div><div class="line"></div><div class="line">N = <a class="code" href="classcytnx_1_1Network.html">cytnx.Network</a>(<span class="stringliteral">&quot;example.net&quot;</span>)</div><div class="line"><a class="code" href="namespacecytnx.html#ade204e242f351a5a19fe33938d150bf7">print</a>(N)</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<div class="fragment"><div class="line"><span class="keyword">import</span> cytnx</div><div class="line"></div><div class="line"></div><div class="line">N = <a class="code" href="classcytnx_1_1Network.html">cytnx.Network</a>(<span class="stringliteral">&quot;example.net&quot;</span>)</div><div class="line">print(N)</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">==== Network ====
 [x] A : 0 ; 1 2 
 [x] B : 0 ; 3 4 

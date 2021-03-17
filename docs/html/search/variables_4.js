@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['type',['Type',['../namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2',1,'cytnx']]]
+  ['nttype',['NtType',['../namespacecytnx.html#a674af1a91c4f4e75d65fecbed4d72ee0',1,'cytnx']]]
 ];

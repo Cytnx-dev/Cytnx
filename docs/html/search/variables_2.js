@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['nttype',['NtType',['../namespacecytnx.html#a674af1a91c4f4e75d65fecbed4d72ee0',1,'cytnx']]]
+  ['device',['Device',['../namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a',1,'cytnx']]]
 ];

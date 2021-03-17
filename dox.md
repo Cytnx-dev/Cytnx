@@ -1,7 +1,7 @@
 # Cytnx
 
 ## Stable Version:
-    [v0.6.5](https://github.com/kaihsin/Cytnx/tree/v0.6.5a)
+    [v0.7](https://github.com/kaihsin/Cytnx/tree/v0.7a)
  
 
 

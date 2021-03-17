@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['device',['Device',['../namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a',1,'cytnx']]]
+  ['bins',['bins',['../classcytnx_1_1stat_1_1Histogram.html#a58cd558514b65100b1e53f464b24c8b9',1,'cytnx::stat::Histogram']]]
 ];

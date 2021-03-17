@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['network',['Network',['../classcytnx_1_1Network.html',1,'cytnx']]]
+  ['doublescalar',['DoubleScalar',['../classcytnx_1_1DoubleScalar.html',1,'cytnx']]]
 ];
