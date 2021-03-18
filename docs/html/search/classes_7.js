@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['linop',['LinOp',['../classcytnx_1_1LinOp.html',1,'cytnx']]]
+  ['unitensor',['UniTensor',['../classcytnx_1_1UniTensor.html',1,'cytnx']]]
 ];

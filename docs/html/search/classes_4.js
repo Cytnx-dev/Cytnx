@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['floatscalar',['FloatScalar',['../classcytnx_1_1FloatScalar.html',1,'cytnx']]]
+  ['network',['Network',['../classcytnx_1_1Network.html',1,'cytnx']]]
 ];

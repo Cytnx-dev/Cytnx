@@ -117,7 +117,6 @@ namespace cytnx{
 
     };
         
-    ///@cond
     typedef Scalar_base* (*pScalar_init)();
     ///@endcond
 
@@ -130,6 +129,7 @@ namespace cytnx{
     extern Scalar_init_interface __ScII;
     ///@endcond
 
+    ///@cond
     class ComplexDoubleScalar: public Scalar_base{
 
         public:

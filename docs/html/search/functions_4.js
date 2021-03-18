@@ -25,7 +25,6 @@ var searchData=
   ['dnrm2',['dnrm2',['../lapack__wrapper_8hpp.html#a59f6bbbaf7969967ff2613787fdf5402',1,'lapack_wrapper.hpp']]],
   ['dnrm2_5f',['dnrm2_',['../lapack__wrapper_8hpp.html#a292630bc6dca709f74ed83e06487671d',1,'lapack_wrapper.hpp']]],
   ['dot',['Dot',['../namespacecytnx_1_1linalg.html#a215dbfd2aa7ef898450de7afff726bca',1,'cytnx::linalg']]],
-  ['doublescalar',['DoubleScalar',['../classcytnx_1_1DoubleScalar.html#ad0ccaa2a06e53ebc8c915bebe1e26f85',1,'cytnx::DoubleScalar::DoubleScalar()'],['../classcytnx_1_1DoubleScalar.html#ad1a2ce91f0ea6edb34640da0d0c272e1',1,'cytnx::DoubleScalar::DoubleScalar(const cytnx_double &amp;in)']]],
   ['dscal',['dscal',['../lapack__wrapper_8hpp.html#aca522edb604c31fdfcd196dbbd99e781',1,'lapack_wrapper.hpp']]],
   ['dscal_5f',['dscal_',['../lapack__wrapper_8hpp.html#ae9590a07486a65e6a4f7fcdde798ac9e',1,'lapack_wrapper.hpp']]],
   ['dtype',['dtype',['../classcytnx_1_1LinOp.html#a64aa0529d6f0d5fd4bb06b900a469a08',1,'cytnx::LinOp::dtype()'],['../classcytnx_1_1Scalar.html#a5fe1f997894663a4ac16d144df70fd0c',1,'cytnx::Scalar::dtype()'],['../classcytnx_1_1Storage.html#a643824801e81ab86aca055f1dd1f34d7',1,'cytnx::Storage::dtype()'],['../classcytnx_1_1Tensor.html#a4472af6f8e825a13440e832bf82fb627',1,'cytnx::Tensor::dtype()'],['../classcytnx_1_1UniTensor.html#aa3a370844d981cb86c3d784ecbb573c1',1,'cytnx::UniTensor::dtype()']]],

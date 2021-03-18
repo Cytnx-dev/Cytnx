@@ -10,6 +10,5 @@ var searchData=
   ['bond_2ehpp',['Bond.hpp',['../Bond_8hpp.html',1,'']]],
   ['bonds',['bonds',['../classcytnx_1_1UniTensor.html#abc8348e0f56e2479dbe45273c3055b1b',1,'cytnx::UniTensor::bonds() const'],['../classcytnx_1_1UniTensor.html#aa5d60a640bf9e17f05a18fa3016c46d0',1,'cytnx::UniTensor::bonds()']]],
   ['bondtype',['bondType',['../namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480ef',1,'cytnx']]],
-  ['boolscalar',['BoolScalar',['../classcytnx_1_1BoolScalar.html',1,'cytnx::BoolScalar'],['../classcytnx_1_1BoolScalar.html#a95ca45b19b9793b93a9d9e0eed059827',1,'cytnx::BoolScalar::BoolScalar()'],['../classcytnx_1_1BoolScalar.html#a4e3d669bea14c9f90cbecbbdccc73b7f',1,'cytnx::BoolScalar::BoolScalar(const cytnx_bool &amp;in)']]],
   ['boolstorage_2ecpp',['BoolStorage.cpp',['../BoolStorage_8cpp.html',1,'']]]
 ];

@@ -28,7 +28,6 @@ var searchData=
   ['dnrm2',['dnrm2',['../lapack__wrapper_8hpp.html#a59f6bbbaf7969967ff2613787fdf5402',1,'lapack_wrapper.hpp']]],
   ['dnrm2_5f',['dnrm2_',['../lapack__wrapper_8hpp.html#a292630bc6dca709f74ed83e06487671d',1,'lapack_wrapper.hpp']]],
   ['dot',['Dot',['../namespacecytnx_1_1linalg.html#a215dbfd2aa7ef898450de7afff726bca',1,'cytnx::linalg']]],
-  ['doublescalar',['DoubleScalar',['../classcytnx_1_1DoubleScalar.html',1,'cytnx::DoubleScalar'],['../classcytnx_1_1DoubleScalar.html#ad0ccaa2a06e53ebc8c915bebe1e26f85',1,'cytnx::DoubleScalar::DoubleScalar()'],['../classcytnx_1_1DoubleScalar.html#ad1a2ce91f0ea6edb34640da0d0c272e1',1,'cytnx::DoubleScalar::DoubleScalar(const cytnx_double &amp;in)']]],
   ['doublestorage_2ecpp',['DoubleStorage.cpp',['../DoubleStorage_8cpp.html',1,'']]],
   ['dox_2emd',['dox.md',['../dox_8md.html',1,'']]],
   ['dscal',['dscal',['../lapack__wrapper_8hpp.html#aca522edb604c31fdfcd196dbbd99e781',1,'lapack_wrapper.hpp']]],
