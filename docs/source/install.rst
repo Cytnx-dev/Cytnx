@@ -212,6 +212,32 @@ In addition, you might want to install the following optional dependencies if yo
 
     For python API, we recommend install of python using anaconda or miniconda
 
+Using anaconda/conda for deps
+------------------------------
+We recommend using conda to handle all the dependency:
+
+1. Install anaconda, setting the virtual enviroments
+
+2. Install the following dependencies:
+
+.. code-block:: shell
+
+    $conda install numpy boost cmake pybind11 mkl mkl-inclde intel-openmp setuptools python-graphviz graphviz 
+
+
+3. Make sure your system compiler has minimum -std=c++11 support.
+
+4. in addition, if you want to have gpu support (compile with -DUSE_CUDA=on), then additional packages need to install:
+
+.. code-block:: shell
+
+    $conda install cudatoolkit
+ 
+Using system for deps
+-------------------------
+
+**If you are using system packages not conda, the following libs/packages should be installed**
+**We recommend using anaconda/conda for deps (see above)**
 
 OS specific installation of minimum dependencies:
 
@@ -241,8 +267,8 @@ OS specific installation of minimum dependencies:
 
 
 
-Compiling process [New]
---------------------------
+Compiling process [Auto set-up]
+-----------------------------------
 Starting from v0.6.4a, cytnx provide a easy step-by-step install tool:
 
 .. code-block:: shell
@@ -258,8 +284,8 @@ This will prompt user through a series of install options, and generate a shell 
 
 
 
-Compiling process [Old]
---------------------------
+Compiling process [manually set-up]
+-------------------------------------
 Please see the following steps for the standard cmake compiling process and all the compiling options:
 
 

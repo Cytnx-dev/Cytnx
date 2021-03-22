@@ -54,8 +54,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#using-c-api-with-cmake">Using C++ API with CMake</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#build-cytnx-from-source">Build Cytnx from source</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#dependencies">Dependencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#compiling-process-new">Compiling process [New]</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#compiling-process-old">Compiling process [Old]</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="#using-anaconda-conda-for-deps">Using anaconda/conda for deps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-system-for-deps">Using system for deps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compiling-process-auto-set-up">Compiling process [Auto set-up]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compiling-process-manually-set-up">Compiling process [manually set-up]</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -147,8 +149,7 @@
 <li class="toctree-l2"><a class="reference internal" href="guide/basic_obj/Scalar.html">4. Scalar</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="guide/basic_obj/Scalar.html#define-declare-a-scalar">4.1. Define/Declare a scalar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="guide/basic_obj/Scalar.html#change-data-type">4.2. Change data type</a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide/basic_obj/Scalar.html#convert-btwn-standard-type-and-scalar">4.3. Convert btwn standard type and Scalar</a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide/basic_obj/Scalar.html#application-scenario">4.4. Application scenario</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="guide/basic_obj/Scalar.html#application-scenarios">4.3. Application scenarios</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -311,8 +312,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#using-c-api-with-cmake">Using C++ API with CMake</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#build-cytnx-from-source">Build Cytnx from source</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#dependencies">Dependencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#compiling-process-new">Compiling process [New]</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#compiling-process-old">Compiling process [Old]</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="#using-anaconda-conda-for-deps">Using anaconda/conda for deps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-system-for-deps">Using system for deps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compiling-process-auto-set-up">Compiling process [Auto set-up]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compiling-process-manually-set-up">Compiling process [manually set-up]</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -404,8 +407,7 @@
 <li class="toctree-l2"><a class="reference internal" href="guide/basic_obj/Scalar.html">4. Scalar</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="guide/basic_obj/Scalar.html#define-declare-a-scalar">4.1. Define/Declare a scalar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="guide/basic_obj/Scalar.html#change-data-type">4.2. Change data type</a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide/basic_obj/Scalar.html#convert-btwn-standard-type-and-scalar">4.3. Convert btwn standard type and Scalar</a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide/basic_obj/Scalar.html#application-scenario">4.4. Application scenario</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="guide/basic_obj/Scalar.html#application-scenarios">4.3. Application scenarios</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -713,6 +715,29 @@ CYTNX_CXXFLAGS :<span class="o">=</span> <span class="k">$(</span>shell python -
 <p>If you are using MacOS, please install intel mkl (free) instead.</p>
 <p>For python API, we recommend install of python using anaconda or miniconda</p>
 </div>
+</div>
+<div class="section" id="using-anaconda-conda-for-deps">
+<h3>Using anaconda/conda for deps<a class="headerlink" href="#using-anaconda-conda-for-deps" title="Permalink to this headline">¶</a></h3>
+<p>We recommend using conda to handle all the dependency:</p>
+<ol class="arabic simple">
+<li><p>Install anaconda, setting the virtual enviroments</p></li>
+<li><p>Install the following dependencies:</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span> install numpy boost cmake pybind11 mkl mkl-inclde intel-openmp setuptools python-graphviz graphviz
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Make sure your system compiler has minimum -std=c++11 support.</p></li>
+<li><p>in addition, if you want to have gpu support (compile with -DUSE_CUDA=on), then additional packages need to install:</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span> install cudatoolkit
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-system-for-deps">
+<h3>Using system for deps<a class="headerlink" href="#using-system-for-deps" title="Permalink to this headline">¶</a></h3>
+<p><strong>If you are using system packages not conda, the following libs/packages should be installed</strong>
+<strong>We recommend using anaconda/conda for deps (see above)</strong></p>
 <p>OS specific installation of minimum dependencies:</p>
 <ul class="simple">
 <li><p>Ubuntu:</p></li>
@@ -740,8 +765,8 @@ CYTNX_CXXFLAGS :<span class="o">=</span> <span class="k">$(</span>shell python -
 <p>For Windows user, please use <a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">WSL</a>. We recommend using ubuntu distribution, and follow the instruction of Ubuntu to install cytnx and dependencies.</p>
 </div>
 </div>
-<div class="section" id="compiling-process-new">
-<h3>Compiling process [New]<a class="headerlink" href="#compiling-process-new" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="compiling-process-auto-set-up">
+<h3>Compiling process [Auto set-up]<a class="headerlink" href="#compiling-process-auto-set-up" title="Permalink to this headline">¶</a></h3>
 <p>Starting from v0.6.4a, cytnx provide a easy step-by-step install tool:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$python</span> auto_install.py
 </pre></div>
@@ -751,8 +776,8 @@ CYTNX_CXXFLAGS :<span class="o">=</span> <span class="k">$(</span>shell python -
 </pre></div>
 </div>
 </div>
-<div class="section" id="compiling-process-old">
-<h3>Compiling process [Old]<a class="headerlink" href="#compiling-process-old" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="compiling-process-manually-set-up">
+<h3>Compiling process [manually set-up]<a class="headerlink" href="#compiling-process-manually-set-up" title="Permalink to this headline">¶</a></h3>
 <p>Please see the following steps for the standard cmake compiling process and all the compiling options:</p>
 <ol class="arabic simple">
 <li><p>create a build directory:</p></li>
