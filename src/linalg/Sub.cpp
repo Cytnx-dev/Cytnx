@@ -688,7 +688,7 @@ namespace cytnx {
                                                                     2);            
             }else{
                 #ifdef UNI_GPU
-                    checkCudaErrors(cudaSetDevice(Rt.device()));
+                    checkCudaErrors(cudaSetDevice(Lt.device()));
                     linalg_internal::lii.cuAri_ii[Lt.dtype()][rc.dtype()](out._impl->storage()._impl,Lt._impl->storage()._impl,Cnst._impl,Lt._impl->storage()._impl->size(),{},{},{},2);
                 #else
                     cytnx_error_msg(true,"[Sub] fatal error, the tensor is on GPU without CUDA support.%s","\n");

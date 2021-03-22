@@ -10,6 +10,11 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Mo
 message(STATUS ${CMAKE_MODULE_PATH})
 include(GNUInstallDirs)
 
+#set(CMAKE_CXX_STANDARD 11)
+#set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#set(CMAKE_CXX_EXTENSIONS OFF)
+
+
 ######################################################################
 ### DISABLING IN-SOURCE BUILD
 ### (DO NOT MODIFY)
@@ -130,7 +135,7 @@ if (USE_CUDA)
     ExternalProject_Add(cutt
       PREFIX cutt_src
       GIT_REPOSITORY https://github.com/kaihsin/cutt.git
-      GIT_TAG 3d31b2bd083b6b134f172afa6b8b2a5db13e3d08
+      GIT_TAG 27ed59a42f2610923084c4687327d00f4c2d1d2d
       BINARY_DIR cutt_src/build
       INSTALL_DIR cutt
       CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DNO_ALIGN_ALLOC=${CUTT_NO_ALIGN_ALLOC} -DENABLE_NVTOOLS=${CUTT_ENABLE_NVTOOLS} -DFINE_TUNE=${CUTT_ENABLE_FINE_TUNE}
@@ -174,6 +179,7 @@ if(USE_CUDA)
         include_directories(${install_dir}/include)
         message(STATUS "cutt install dir: ${install_dir}")
         add_dependencies(cytnx cutt)
+        set_property(TARGET cytnx PROPERTY CUDA_ARCHITECTURES 52 53 60 61 62 70 72 75 80 86)
         target_compile_definitions(cytnx PRIVATE UNI_CUTT)
         target_link_libraries(cytnx PRIVATE ${install_dir}/lib/libcutt.a)
     endif()

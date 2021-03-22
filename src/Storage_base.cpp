@@ -295,6 +295,7 @@ namespace cytnx{
                 } 
     }
 
+    // This is deprecated !!
     void Storage_base::SetElem_byShape(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len, const std::vector<std::vector<cytnx_uint64> > &locators, const bool &is_scalar){
         #ifdef UNI_DEBUG
                 cytnx_error_msg(shape.size() != len.size(),"%s","[ERROR][DEBUG] internal Storage, shape.size() != len.size()");
