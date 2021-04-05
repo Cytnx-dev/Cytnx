@@ -1316,57 +1316,161 @@ namespace cytnx{
                 return this->_impl->same_data(rhs._impl);
             }
                         
-            //Arithmetic:
-            template<class T>
-            UniTensor& operator+=(const T &rc);
-            template<class T>
-            UniTensor& operator-=(const T &rc);
-            template<class T>
-            UniTensor& operator*=(const T &rc);
-            template<class T>
-            UniTensor& operator/=(const T &rc);
 
             template<class T>
-            UniTensor Add(const T &rhs){
+            UniTensor Add(const T &rhs) const{
+                cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor L.%s","\n");
                 return *this + rhs;
             }
+            UniTensor Add(const UniTensor &Rt) const{
+                cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor L.%s","\n");
+                cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor R.%s","\n");
+                DenseUniTensor* tmp = ((DenseUniTensor*)(this->_impl.get()))->clone_meta();
+                tmp->_block = this->get_block_()+Rt.get_block_();
+                UniTensor out;
+                out._impl=boost::intrusive_ptr<UniTensor_base>(tmp);
+                return out;
+
+            };
             template<class T>
             UniTensor& Add_(const T &rhs){
-                return *this += rhs;
+                cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor L.%s","\n");
+                this->get_block_().Add_(rhs);
+                return *this;
             }
+            UniTensor& Add_(const UniTensor &Rt){
+                cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor L.%s","\n");
+                cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor R.%s","\n");
+                this->get_block_().Add_(Rt.get_block_());
+                return *this;
 
+            }
             template<class T>
-            UniTensor Sub(const T &rhs){
+            UniTensor Sub(const T &rhs) const{
+                cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor L.%s","\n");
                 return *this - rhs;
             }
+            UniTensor Sub(const UniTensor &Rt) const{
+                cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor L.%s","\n");
+                cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor R.%s","\n");
+                DenseUniTensor* tmp = ((DenseUniTensor*)(this->_impl.get()))->clone_meta();
+                tmp->_block = this->get_block_()-Rt.get_block_();
+                UniTensor out;
+                out._impl=boost::intrusive_ptr<UniTensor_base>(tmp);
+                return out;
+
+            };
             template<class T>
             UniTensor& Sub_(const T &rhs){
-                return *this -= rhs;
+                cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor L.%s","\n");
+                this->get_block_().Sub_(rhs);
+                return *this;
+            }
+            UniTensor& Sub_(const UniTensor &Rt){
+                cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor L.%s","\n");
+                cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor R.%s","\n");
+                this->get_block_().Sub_(Rt.get_block_());
+                return *this;
+
             }
 
             template<class T>
-            UniTensor Mul(const T &rhs){
+            UniTensor Mul(const T &rhs) const{
+                cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor L.%s","\n");
                 return *this * rhs;
             }
+            UniTensor Mul(const UniTensor &Rt) const{
+                cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor L.%s","\n");
+                cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor R.%s","\n");
+                DenseUniTensor* tmp = ((DenseUniTensor*)(this->_impl.get()))->clone_meta();
+                tmp->_block = this->get_block_()*Rt.get_block_();
+                UniTensor out;
+                out._impl=boost::intrusive_ptr<UniTensor_base>(tmp);
+                return out;
+
+            };
             template<class T>
             UniTensor& Mul_(const T &rhs){
-                return *this *= rhs;
+                cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor L.%s","\n");
+                this->get_block_().Mul_(rhs);
+                return *this;
+            }
+            UniTensor& Mul_(const UniTensor &Rt){
+                cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor L.%s","\n");
+                cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor R.%s","\n");
+                this->get_block_().Mul_(Rt.get_block_());
+                return *this;
+
             }
 
             template<class T>
-            UniTensor Div(const T &rhs){
+            UniTensor Div(const T &rhs) const{
+                cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor L.%s","\n");
                 return *this / rhs;
             }
+            UniTensor Div(const UniTensor &Rt) const{
+                cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor L.%s","\n");
+                cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor R.%s","\n");
+                DenseUniTensor* tmp = ((DenseUniTensor*)(this->_impl.get()))->clone_meta();
+                tmp->_block = this->get_block_()/Rt.get_block_();
+                UniTensor out;
+                out._impl=boost::intrusive_ptr<UniTensor_base>(tmp);
+                return out;
+
+            };
             template<class T>
             UniTensor& Div_(const T &rhs){
-                return *this /= rhs;
+                cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor L.%s","\n");
+                this->get_block_().Div_(rhs);
+                return *this;
+            }
+            UniTensor& Div_(const UniTensor &Rt){
+                cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor L.%s","\n");
+                cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor R.%s","\n");
+                this->get_block_().Div_(Rt.get_block_());
+                return *this;
+
             }
 
+            //Arithmetic:
             template<class T>
-            UniTensor Mod(const T &rhs){
+            UniTensor& operator+=(const T &rc){
+                this->Add_(rc);
+                return *this;
+            }
+            template<class T>
+            UniTensor& operator-=(const T &rc){
+                this->Sub_(rc);
+                return *this;
+            }
+            template<class T>
+            UniTensor& operator*=(const T &rc){
+                this->Mul_(rc);
+                return *this;
+            }
+            template<class T>
+            UniTensor& operator/=(const T &rc){
+                this->Div_(rc);
+                return *this;
+            }
+            /*
+            template<class T>
+            UniTensor Mod(const T &rhs) const{
+                cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor L.%s","\n");
                 return *this % rhs;
             }
 
+            UniTensor Mod(const UniTensor &Rt) const{
+                cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor L.%s","\n");
+                cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform Arithmetic on Tagged UniTensor R.%s","\n");
+                DenseUniTensor* tmp = ((DenseUniTensor*)(this->_impl.get()))->clone_meta();
+                tmp->_block = this->get_block_().Mod(Rt.get_block_());
+                UniTensor out;
+                out._impl=boost::intrusive_ptr<UniTensor_base>(tmp);
+                return out;
+
+            };
+            */
             UniTensor Conj(){
                 UniTensor out;
                 out._impl = this->_impl->Conj();
@@ -1418,6 +1522,10 @@ namespace cytnx{
         
             UniTensor Pow(const double &p) const;
             UniTensor& Pow_(const double &p);
+
+
+
+
 
             bool elem_exists( const std::vector<cytnx_uint64> &locator) const{
                 return this->_impl->elem_exists(locator);
