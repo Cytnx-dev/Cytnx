@@ -745,6 +745,58 @@ namespace cytnx{
     }
 
 
+    // Arithmetic:
+    void DenseUniTensor::Add_(const boost::intrusive_ptr<UniTensor_base> &rhs){
+        cytnx_error_msg(rhs->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor R.%s","\n");
+        cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor L.%s","\n");
+        this->_block += rhs->get_block_();
+    }
+    void DenseUniTensor::Add_(const Scalar &rhs){
+        cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor L.%s","\n");
+        this->_block += rhs;
+    }
+
+
+    void DenseUniTensor::Sub_(const boost::intrusive_ptr<UniTensor_base> &rhs){
+        cytnx_error_msg(rhs->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor R.%s","\n");
+        cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor L.%s","\n");
+        this->_block -= rhs->get_block_();
+    }
+    void DenseUniTensor::Sub_(const Scalar &rhs){
+        cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor L.%s","\n");
+        this->_block -= rhs;
+    }
+    void DenseUniTensor::lSub_(const Scalar &lhs){
+        cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor R.%s","\n");
+        this->_block = lhs - this->_block;
+    }
+
+
+    void DenseUniTensor::Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs){
+        cytnx_error_msg(rhs->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor R.%s","\n");
+        cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor L.%s","\n");
+        this->_block *= rhs->get_block_();
+    }
+    void DenseUniTensor::Mul_(const Scalar &rhs){
+        cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor L.%s","\n");
+        this->_block *= rhs;
+    }
+
+    void DenseUniTensor::Div_(const boost::intrusive_ptr<UniTensor_base> &rhs){
+        cytnx_error_msg(rhs->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor R.%s","\n");
+        cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor L.%s","\n");
+        this->_block /= rhs->get_block_();
+    }
+    void DenseUniTensor::Div_(const Scalar &rhs){
+        cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor L.%s","\n");
+        this->_block /= rhs;
+    }
+    void DenseUniTensor::lDiv_(const Scalar &lhs){
+        cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor R.%s","\n");
+        this->_block = lhs / this->_block;
+    }
+
+
 
 
 }

@@ -100,6 +100,57 @@ class MyOp2: public LinOp{
 
 int main(int argc, char *argv[]){
 
+    Scalar sccA = 3.44;
+    cout << sccA << endl;
+    
+    auto ta = UniTensor(arange(24).reshape(2,3,4),1);
+    auto tb = UniTensor(arange(24).reshape(2,3,4),1);
+    auto tc = UniTensor(arange(24).reshape(2,3,4),1);
+    auto td = UniTensor(arange(24).reshape(2,3,4),1);
+
+    ta.set_labels({0,1,2});
+    tb.set_labels({0,3,4});
+    tc.set_labels({5,1,6});
+    td.set_labels({5,7,8});
+
+    
+    ta._impl->Add_(6);
+    
+
+    UniTensor oot = Network::Contract({ta,tb,tc,td},//input tensors
+                                      "2,3,4;6,7,8",    //output tensor label ordering and rowrank
+                                      {},               //is clone mask. default all clone if empty
+                                      {"A","B","C","D"},//input tensor alias (only needed if manually assign order
+                                      "(A,B),(C,D)")    //contraction order [optional]
+                                      .Launch();
+    oot.print_diagram();
+    exit(1);
+
+
+    vector<Scalar> out;
+
+    out.push_back(Scalar(1.33)); //double
+    out.push_back(Scalar(10));   //int
+    out.push_back(Scalar(cytnx_complex128(3,4))); //complex double
+
+    cout << out[0] << out[1] << out[2] << endl;
+    exit(1);
+
+    double cA = 1.33;
+    Scalar sxA(cA);
+    cout << sxA << endl;
+    sxA = sxA.astype(Type.Float);
+    cout << sxA << endl;
+
+    Scalar AA(double(1.33));
+    Scalar AA2 = double(1.33);
+    Scalar AA3(10,Type.Double);
+    
+    cout << AA << AA2 << AA3 << endl;
+
+    auto dA = double(AA3);
+    cout << dA << endl;
+    exit(1);
 
 
     std::vector<Scalar> tvScal;

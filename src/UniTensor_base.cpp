@@ -335,6 +335,42 @@ namespace cytnx{
         UniTensor Contract(const UniTensor &inL, const UniTensor &inR, const bool &cacheL, const bool &cacheR){
             return inL.contract(inR,cacheL,cacheR);
         }
-        
+    
+    //arithmetic
+    void UniTensor_base::Add_(const boost::intrusive_ptr<UniTensor_base> &rhs){
+        cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+    }
+    void UniTensor_base::Add_(const Scalar &rhs){
+        cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+    }
+
+    void UniTensor_base::Sub_(const boost::intrusive_ptr<UniTensor_base> &rhs){
+        cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+    }
+    void UniTensor_base::Sub_(const Scalar &rhs){
+        cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+    }
+    void UniTensor_base::lSub_(const Scalar &lhs){
+        cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+    }
+
+
+    void UniTensor_base::Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs){
+        cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+    }
+    void UniTensor_base::Mul_(const Scalar &rhs){
+        cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+    }
+
+    void UniTensor_base::Div_(const boost::intrusive_ptr<UniTensor_base> &rhs){
+        cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+    }
+    void UniTensor_base::Div_(const Scalar &rhs){
+        cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+    }
+    void UniTensor_base::lDiv_(const Scalar &lhs){
+        cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+    }
+
 }
 

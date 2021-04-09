@@ -590,29 +590,32 @@ namespace cytnx{
         //============================================
 
         UniTensor Mul(const UniTensor &Lt, const UniTensor &Rt){
-            cytnx_error_msg(true,"[Developing!]%s","\n");
-            return UniTensor();
+            cytnx_error_msg(Lt.is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor L.%s","\n");
+            cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor R.%s","\n");
+
+            UniTensor out = Lt.clone();
+            out.set_labels(vec_range<cytnx_int64>(Lt.rank()));
+            out.set_name("");
+
+            out.Mul_(Rt);
+
+            return out;
+
         }
 
         //-----------------------------------------------------------------------------------
 
         template<class T>
         UniTensor Mul(const T &lc, const UniTensor &Rt){
+            cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor.%s","\n");
+
             UniTensor out = Rt.clone();
-            if(Rt.is_blockform()){
-                //developing
-                //cytnx_error_msg(true,"[Developing][Mul][SparseUniTensor]%s","\n");
-                        
-                SparseUniTensor *out_raw = (SparseUniTensor*)out._impl.get();
-                for(int i=0;i<out_raw->_blocks.size();i++){
-                    out_raw->_blocks[i] = cytnx::linalg::Mul(lc,out_raw->_blocks[i]);
-                }                
+            out.set_labels(vec_range<cytnx_int64>(Rt.rank()));
+            out.set_name("");
 
-
-            }else{
-                out.get_block_() = cytnx::linalg::Mul(lc , out.get_block_());
-            }
+            out.Mul_(lc);
             return out;
+
         }
 
         template UniTensor Mul<cytnx_complex128>(const cytnx_complex128 &lc, const UniTensor &Rt);
@@ -626,7 +629,7 @@ namespace cytnx{
         template UniTensor Mul<cytnx_int16>(const cytnx_int16 &lc, const UniTensor &Rt);
         template UniTensor Mul<cytnx_uint16>(const cytnx_uint16 &lc, const UniTensor &Rt);
         template UniTensor Mul<cytnx_bool>(const cytnx_bool &lc, const UniTensor &Rt);
-
+        template UniTensor Mul<Scalar>(const Scalar &lc, const UniTensor &Rt);
         //-----------------------------------------------------------------------------------
         template<>
         UniTensor Mul<cytnx_complex128>(const UniTensor &Lt, const cytnx_complex128 &rc){
@@ -672,6 +675,10 @@ namespace cytnx{
         UniTensor Mul<cytnx_bool>(const UniTensor &Lt, const cytnx_bool &rc){
             return Mul(rc,Lt);
         }
+        template<>
+        UniTensor Mul<Scalar>(const UniTensor &Lt, const Scalar &rc){
+            return Mul(rc,Lt);
+        }
     }//linalg
 
     //-------------------------------------------
@@ -695,6 +702,7 @@ namespace cytnx{
     template UniTensor operator*<cytnx_int16>(const cytnx_int16 &lc, const UniTensor &Rt);
     template UniTensor operator*<cytnx_uint16>(const cytnx_uint16 &lc, const UniTensor &Rt);
     template UniTensor operator*<cytnx_bool>(const cytnx_bool &lc, const UniTensor &Rt);
+    template UniTensor operator*<Scalar>(const Scalar &lc, const UniTensor &Rt);
 
     template<>
     UniTensor operator*<cytnx_complex128>(const UniTensor &Lt, const cytnx_complex128 &rc){
@@ -740,7 +748,10 @@ namespace cytnx{
     UniTensor operator*<cytnx_bool>(const UniTensor &Lt, const cytnx_bool &rc){
        return linalg::Mul(Lt,rc);
     }
-
+    template<>
+    UniTensor operator*<Scalar>(const UniTensor &Lt, const Scalar &rc){
+       return linalg::Mul(Lt,rc);
+    }
 
 }//extension
 

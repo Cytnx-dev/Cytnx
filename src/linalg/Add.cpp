@@ -513,22 +513,29 @@ namespace cytnx{
         //============================================
 
         cytnx::UniTensor Add(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt){
-            cytnx_error_msg(true,"[Developing!]%s","\n");
-            return cytnx::UniTensor();
+            cytnx_error_msg(Lt.is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor L.%s","\n");
+            cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor R.%s","\n");
+            
+            UniTensor out = Lt.clone();
+            out.set_labels(vec_range<cytnx_int64>(Lt.rank()));
+            out.set_name("");
+
+            out.Add_(Rt);
+
+            return out;
         }
 
         //-----------------------------------------------------------------------------------
 
         template<class T>
         cytnx::UniTensor Add(const T &lc, const cytnx::UniTensor &Rt){
-            cytnx::UniTensor out = Rt.clone();
-            if(Rt.is_blockform()){
-                //developing
-                cytnx_error_msg(true,"[ERROR][Add][SparseUniTensor] add contant to SparseUniTensor will break the block structure (break symmetry)!%s","\n");
+            cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor.%s","\n");
 
-            }else{
-                out.get_block_() = cytnx::linalg::Add(lc , out.get_block_());
-            }
+            UniTensor out = Rt.clone();
+            out.set_labels(vec_range<cytnx_int64>(Rt.rank()));
+            out.set_name("");
+
+            out.Add_(lc);
             return out;
         }
 
@@ -543,6 +550,7 @@ namespace cytnx{
         template cytnx::UniTensor Add<cytnx_int16>(const cytnx_int16 &lc, const cytnx::UniTensor &Rt);
         template cytnx::UniTensor Add<cytnx_uint16>(const cytnx_uint16 &lc, const cytnx::UniTensor &Rt);
         template cytnx::UniTensor Add<cytnx_bool>(const cytnx_bool &lc, const cytnx::UniTensor &Rt);
+        template cytnx::UniTensor Add<Scalar>(const Scalar &lc, const cytnx::UniTensor &Rt);
 
         //-----------------------------------------------------------------------------------
         template<>
@@ -589,6 +597,11 @@ namespace cytnx{
         cytnx::UniTensor Add<cytnx_bool>(const cytnx::UniTensor &Lt, const cytnx_bool &rc){
             return Add(rc,Lt);
         }
+        
+        template<>
+        cytnx::UniTensor Add<Scalar>(const cytnx::UniTensor &Lt, const Scalar &rc){
+            return Add(rc,Lt);
+        }
 
 
     }//linalg
@@ -614,6 +627,7 @@ namespace cytnx{
     template cytnx::UniTensor operator+<cytnx_int16>(const cytnx_int16 &lc, const cytnx::UniTensor &Rt);
     template cytnx::UniTensor operator+<cytnx_uint16>(const cytnx_uint16 &lc, const cytnx::UniTensor &Rt);
     template cytnx::UniTensor operator+<cytnx_bool>(const cytnx_bool &lc, const cytnx::UniTensor &Rt);
+    template cytnx::UniTensor operator+<Scalar>(const Scalar &lc, const cytnx::UniTensor &Rt);
 
     template<>
     cytnx::UniTensor operator+<cytnx_complex128>(const cytnx::UniTensor &Lt, const cytnx_complex128 &rc){
@@ -657,6 +671,11 @@ namespace cytnx{
     }
     template<>
     cytnx::UniTensor operator+<cytnx_bool>(const cytnx::UniTensor &Lt, const cytnx_bool &rc){
+       return cytnx::linalg::Add(Lt,rc);
+    }
+
+    template<>
+    cytnx::UniTensor operator+<Scalar>(const cytnx::UniTensor &Lt, const Scalar &rc){
        return cytnx::linalg::Add(Lt,rc);
     }
 

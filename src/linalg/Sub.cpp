@@ -827,19 +827,30 @@ namespace cytnx{
         // cytnx: cytnx::UniTensor
         //===============
         cytnx::UniTensor Sub(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt){
-            cytnx_error_msg(true,"[Sub][Developing]%s","\n");
-            return cytnx::UniTensor();
+            cytnx_error_msg(Lt.is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor L.%s","\n");
+            cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor R.%s","\n");
+
+            UniTensor out = Lt.clone();
+            out.set_labels(vec_range<cytnx_int64>(Lt.rank()));
+            out.set_name("");
+
+            out.Sub_(Rt);
+
+            return out;
+
         }
         
         template<class T>
         cytnx::UniTensor Sub(const T &lc, const cytnx::UniTensor &Rt){
-            cytnx::UniTensor out = Rt.clone();
-            if(out.is_blockform()){
-                cytnx_error_msg(true,"[ERROR][Sub][SparseUniTensor] subtract contant to SparseUniTensor will break the block structure (break symmetry)!%s","\n");
-            }else{
-                out.get_block_() = cytnx::linalg::Sub(lc , out.get_block_());
-            }
+            cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor.%s","\n");
+
+            UniTensor out = Rt.clone();
+            out.set_labels(vec_range<cytnx_int64>(Rt.rank()));
+            out.set_name("");
+
+            out._impl->lSub_(lc);
             return out;
+
         }
 
         template cytnx::UniTensor Sub<cytnx_complex128>(const cytnx_complex128 &lc, const cytnx::UniTensor &Rt);
@@ -853,15 +864,17 @@ namespace cytnx{
         template cytnx::UniTensor Sub<cytnx_int16>(const cytnx_int16 &lc, const cytnx::UniTensor &Rt);
         template cytnx::UniTensor Sub<cytnx_uint16>(const cytnx_uint16 &lc, const cytnx::UniTensor &Rt);
         template cytnx::UniTensor Sub<cytnx_bool>(const cytnx_bool &lc, const cytnx::UniTensor &Rt);
+        template cytnx::UniTensor Sub<Scalar>(const Scalar &lc, const cytnx::UniTensor &Rt);
 
         template<class T>
         cytnx::UniTensor Sub(const cytnx::UniTensor &Lt, const T &rc){
-            cytnx::UniTensor out = Lt.clone();
-            if(out.is_blockform()){
-                cytnx_error_msg(true,"[ERROR][Sub][SparseUniTensor] subtract contant to SparseUniTensor will break the block structure (break symmetry)!%s","\n");
-            }else{
-                out.get_block_() = cytnx::linalg::Sub(out.get_block_() , rc);
-            }
+            cytnx_error_msg(Lt.is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor.%s","\n");
+
+            UniTensor out = Lt.clone();
+            out.set_labels(vec_range<cytnx_int64>(Lt.rank()));
+            out.set_name("");
+
+            out.Sub_(rc);
             return out;
         }
 
@@ -876,6 +889,8 @@ namespace cytnx{
         template cytnx::UniTensor Sub<cytnx_int16>(const cytnx::UniTensor &Lt,const cytnx_int16 &rc);
         template cytnx::UniTensor Sub<cytnx_uint16>(const cytnx::UniTensor &Lt,const cytnx_uint16 &rc);
         template cytnx::UniTensor Sub<cytnx_bool>(const cytnx::UniTensor &Lt,const cytnx_bool &rc);
+        template cytnx::UniTensor Sub<Scalar>(const cytnx::UniTensor &Lt,const Scalar &rc);
+
     }//linalg
 
 
@@ -902,7 +917,7 @@ namespace cytnx{
     template cytnx::UniTensor operator-<cytnx_int16>(const cytnx_int16 &lc, const cytnx::UniTensor &Rt);
     template cytnx::UniTensor operator-<cytnx_uint16>(const cytnx_uint16 &lc, const cytnx::UniTensor &Rt);
     template cytnx::UniTensor operator-<cytnx_bool>(const cytnx_bool &lc, const cytnx::UniTensor &Rt);
-
+    template cytnx::UniTensor operator-<Scalar>(const Scalar &lc, const cytnx::UniTensor &Rt);
     template<class T>
     cytnx::UniTensor operator-(const cytnx::UniTensor &Lt, const T &rc){
         return cytnx::linalg::Sub(Lt,rc);
@@ -919,6 +934,6 @@ namespace cytnx{
     template cytnx::UniTensor operator-<cytnx_int16>(const cytnx::UniTensor &Lt,const cytnx_int16 &rc);
     template cytnx::UniTensor operator-<cytnx_uint16>(const cytnx::UniTensor &Lt,const cytnx_uint16 &rc);
     template cytnx::UniTensor operator-<cytnx_bool>(const cytnx::UniTensor &Lt,const cytnx_bool &rc);
-
+    template cytnx::UniTensor operator-<Scalar>(const cytnx::UniTensor &Lt,const Scalar &rc);
 
 }

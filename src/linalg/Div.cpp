@@ -733,23 +733,30 @@ namespace cytnx{
         // cytnx::UniTensor
         //===============
         cytnx::UniTensor Div(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt){
-            cytnx_error_msg(true,"[Div][Developing]%s","\n");
-            return cytnx::UniTensor();
+            cytnx_error_msg(Lt.is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor L.%s","\n");
+            cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor R.%s","\n");
+
+            UniTensor out = Lt.clone();
+            out.set_labels(vec_range<cytnx_int64>(Lt.rank()));
+            out.set_name("");
+
+            out.Div_(Rt);
+
+            return out;
+
         }
 
         template<class T>
         cytnx::UniTensor Div(const T &lc, const cytnx::UniTensor &Rt){
-            cytnx::UniTensor out = Rt.clone();
-            if(out.is_blockform()){
-                //cytnx_error_msg(true,"[Developing][Div][Sparsecytnx::UniTensor]%s","\n");
-                SparseUniTensor *out_raw =(SparseUniTensor*) out._impl.get();
-                for(int i=0;i<out_raw->_blocks.size();i++){
-                    out_raw->_blocks[i] = cytnx::linalg::Div(lc,out_raw->_blocks[i]);
-                }                
-            }else{
-                out.get_block_() = cytnx::linalg::Div(lc , out.get_block_());
-            }
+            cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor.%s","\n");
+
+            UniTensor out = Rt.clone();
+            out.set_labels(vec_range<cytnx_int64>(Rt.rank()));
+            out.set_name("");
+
+            out._impl->lDiv_(lc);
             return out;
+
         }
 
         template cytnx::UniTensor Div<cytnx_complex128>(const cytnx_complex128 &lc, const cytnx::UniTensor &Rt);
@@ -763,20 +770,20 @@ namespace cytnx{
         template cytnx::UniTensor Div<cytnx_int16>(const cytnx_int16 &lc, const cytnx::UniTensor &Rt);
         template cytnx::UniTensor Div<cytnx_uint16>(const cytnx_uint16 &lc, const cytnx::UniTensor &Rt);
         template cytnx::UniTensor Div<cytnx_bool>(const cytnx_bool &lc, const cytnx::UniTensor &Rt);
-
+        template cytnx::UniTensor Div<Scalar>(const Scalar &lc, const cytnx::UniTensor &Rt);
+        
         template<class T>
         cytnx::UniTensor Div(const cytnx::UniTensor &Lt, const T &rc){
-            cytnx::UniTensor out = Lt.clone();
-            if(out.is_blockform()){
-                //cytnx_error_msg(true,"[Developing][Div][Sparsecytnx::UniTensor]%s","\n");
-                SparseUniTensor *out_raw = (SparseUniTensor*)out._impl.get();
-                for(int i=0;i<out_raw->_blocks.size();i++){
-                    out_raw->_blocks[i] = cytnx::linalg::Div(out_raw->_blocks[i],rc);
-                }                
-            }else{
-                out.get_block_() = cytnx::linalg::Div(out.get_block_() , rc);
-            }
+            cytnx_error_msg(Lt.is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor.%s","\n");
+
+            UniTensor out = Lt.clone();
+            out.set_labels(vec_range<cytnx_int64>(Lt.rank()));
+            out.set_name("");
+
+            out.Div_(rc);
             return out;
+
+
         }
 
         template cytnx::UniTensor Div<cytnx_complex128>(const cytnx::UniTensor &Lt,const cytnx_complex128 &rc);
@@ -790,6 +797,8 @@ namespace cytnx{
         template cytnx::UniTensor Div<cytnx_int16>(const cytnx::UniTensor &Lt,const cytnx_int16 &rc);
         template cytnx::UniTensor Div<cytnx_uint16>(const cytnx::UniTensor &Lt,const cytnx_uint16 &rc);
         template cytnx::UniTensor Div<cytnx_bool>(const cytnx::UniTensor &Lt,const cytnx_bool &rc);    
+        template cytnx::UniTensor Div<Scalar>(const cytnx::UniTensor &Lt,const Scalar &rc);    
+
     }//linalg
     
     //=================
@@ -815,7 +824,7 @@ namespace cytnx{
     template cytnx::UniTensor operator/<cytnx_int16>(const cytnx_int16 &lc, const cytnx::UniTensor &Rt);
     template cytnx::UniTensor operator/<cytnx_uint16>(const cytnx_uint16 &lc, const cytnx::UniTensor &Rt);
     template cytnx::UniTensor operator/<cytnx_bool>(const cytnx_bool &lc, const cytnx::UniTensor &Rt);
-
+    template cytnx::UniTensor operator/<Scalar>(const Scalar &lc, const cytnx::UniTensor &Rt);
     template<class T>
     cytnx::UniTensor operator/(const cytnx::UniTensor &Lt, const T &rc){
         return cytnx::linalg::Div(Lt,rc);
@@ -832,6 +841,6 @@ namespace cytnx{
     template cytnx::UniTensor operator/<cytnx_int16>(const cytnx::UniTensor &Lt,const cytnx_int16 &rc);
     template cytnx::UniTensor operator/<cytnx_uint16>(const cytnx::UniTensor &Lt,const cytnx_uint16 &rc);
     template cytnx::UniTensor operator/<cytnx_bool>(const cytnx::UniTensor &Lt,const cytnx_bool &rc);
-
+    template cytnx::UniTensor operator/<Scalar>(const cytnx::UniTensor &Lt,const Scalar &rc);
 
 }//cytnx

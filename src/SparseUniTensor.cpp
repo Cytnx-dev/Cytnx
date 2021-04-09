@@ -1151,6 +1151,42 @@ namespace cytnx{
         cytnx_error_msg(true,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
     }
 
+    // arithmetic 
+    void SparseUniTensor::Add_(const boost::intrusive_ptr<UniTensor_base> &rhs){
+        cytnx_error_msg(true,"[ERROR] cannot perform arithmetic on all tagged tensor, @spase unitensor%s","\n");
+    }
+    void SparseUniTensor::Add_(const Scalar &rhs){
+        cytnx_error_msg(true,"[ERROR] cannot perform arithmetic on all tagged tensor, @spase unitensor%s","\n");
+    }
+
+    void SparseUniTensor::Sub_(const boost::intrusive_ptr<UniTensor_base> &rhs){
+        cytnx_error_msg(true,"[ERROR] cannot perform arithmetic on all tagged tensor, @spase unitensor%s","\n");
+    }
+    void SparseUniTensor::Sub_(const Scalar &rhs){
+        cytnx_error_msg(true,"[ERROR] cannot perform arithmetic on all tagged tensor, @spase unitensor%s","\n");
+    }
+    void SparseUniTensor::lSub_(const Scalar &lhs){
+        cytnx_error_msg(true,"[ERROR] cannot perform arithmetic on all tagged tensor, @spase unitensor%s","\n");
+    }
+
+    void SparseUniTensor::Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs){
+        cytnx_error_msg(true,"[ERROR] cannot perform arithmetic on all tagged tensor, @spase unitensor%s","\n");
+    }
+    void SparseUniTensor::Mul_(const Scalar &rhs){
+        cytnx_error_msg(true,"[ERROR] cannot perform arithmetic on all tagged tensor, @spase unitensor%s","\n");
+    }
+
+    void SparseUniTensor::Div_(const boost::intrusive_ptr<UniTensor_base> &rhs){
+        cytnx_error_msg(true,"[ERROR] cannot perform arithmetic on all tagged tensor, @spase unitensor%s","\n");
+    }
+    void SparseUniTensor::Div_(const Scalar &rhs){
+        cytnx_error_msg(true,"[ERROR] cannot perform arithmetic on all tagged tensor, @spase unitensor%s","\n");
+    }
+
+    void SparseUniTensor::lDiv_(const Scalar &lhs){
+        cytnx_error_msg(true,"[ERROR] cannot perform arithmetic on all tagged tensor, @spase unitensor%s","\n");
+    }
+
 
 
 }//namespace cytnx
