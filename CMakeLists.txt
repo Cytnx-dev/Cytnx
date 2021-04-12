@@ -2,13 +2,12 @@
 ######################################################################
 ### CMAKE VERSION
 ######################################################################
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.12)
 
 include(cmake/target_sources_local.cmake)
 include(ExternalProject)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 message(STATUS ${CMAKE_MODULE_PATH})
-include(GNUInstallDirs)
 
 #set(CMAKE_CXX_STANDARD 11)
 #set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -21,27 +20,12 @@ include(GNUInstallDirs)
 ######################################################################
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
-if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
-  message(FATAL_ERROR
-    "
-     In-source builds not allowed.\n
-     Please\n
-       1) make a build directory by:
-            mkdir -p path/to/my/build/directory\n
-       2) run CMake in that build directory:
-            cd path/to/my/build/directory
-            cmake path/to/my/src/directory
 
-     You have to first remove the file \"CMakeCache.txt\" by:
-         rm CMakeCache.txt
-    "
-  )
-endif()
 # Generate pif code
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 if (NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE "Release")
+  set(CMAKE_BUILD_TYPE "DEBUG")
 endif()
 
 string(TOLOWER "${CMAKE_BUILD_TYPE}" cmake_build_type_tolower)
@@ -71,7 +55,7 @@ set(CYTNX_VARIANT_INFO "")
 ### COMMAND LINE OPTIONS
 ######################################################################
 
-option(USE_ICPC "Build Cytnx with Intel Compilers" OFF)
+
 option(USE_CUDA "Build using Nvidia CUDA for GPU library" OFF)
 option(BUILD_PYTHON "Build Python wrapper" ON)
 option(USE_MKL "Build using MKL" OFF)
@@ -79,29 +63,7 @@ option(USE_OMP "Build Cytnx with OpenMP" ON)
 option(BUILD_DOC "Build API docuemntation" OFF)
 option(USE_HPTT "Build Cytnx with HPTT" OFF)
 
-if (USE_ICPC)
-  message(STATUS, "Build Cytnx with Intel Compilers")
-  message(STATUS, "Finding Intel Compilers....")
-  find_program(CMAKE_C_COMPILER NAMES icc)
-  find_program(CMAKE_CXX_COMPILER NAMES icpc)
-  find_program(CMAKE_AR NAMES xiar)
-  find_program(CMAKE_LINKER NAMES xild)
 
-  if (NOT (CMAKE_C_COMPILER AND
-           CMAKE_CXX_COMPILER AND
-           CMAKE_AR AND
-           CMAKE_LINKER ))
-    message("Cannot find Intel compilers.")
-    message("You may need to run `. /opt/intel/bin/compilervars.sh intel64/ia32'")
-    message("Falling back to system compilers.")
-    find_program(CMAKE_C_COMPILER NAMES cc)
-    find_program(CMAKE_CXX_COMPILER NAMES cpp)
-    find_program(CMAKE_AR NAMES ar)
-    find_program(CMAKE_LINKER NAMES ld)
-  else()
-    target_compile_definitions(cytnx UNI_ICPC)
-  endif ()
-endif ()
 
 if (USE_MKL)
   option(MKL_SDL "Link to a single MKL dynamic libary." ON)
@@ -147,6 +109,7 @@ endif()
 ### PROJECT
 ######################################################################
 project(CYTNX VERSION ${CYTNX_VERSION} LANGUAGES CXX C )
+set(CMAKE_CXX_STANDARD 11)
 
 add_library(cytnx STATIC)
 set_property(TARGET cytnx PROPERTY C_VISIBILITY_PRESET hidden)
@@ -163,10 +126,13 @@ target_include_directories(cytnx SYSTEM
 				${Boost_INCLUDE_DIRS}
 )
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -Wno-c++11-narrowing -w")
+
+
 target_compile_features(cytnx PUBLIC cxx_std_11)
 #set_property(TARGET cytnx PROPERTY CXX_STANDARD 11)
 
 add_subdirectory(src)
+include(GNUInstallDirs)
 
 
 
