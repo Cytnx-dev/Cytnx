@@ -4,22 +4,21 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
     <title>2. iTEBD &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../_static/sphinxbootstrap4.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <script src="../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -176,7 +175,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/UniTensor.html">7.2. UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_1_create.html">7.2.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_2_manip.html">7.2.2. Manipulate UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_1_create.html#change-labels">7.2.2. Change Labels</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_2_manip.html">7.2.3. Manipulate UniTensor</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Network.html">7.3. Network</a><ul class="simple">
@@ -232,7 +232,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../">v0.7.1a</a></li>
+              <a  class="nav-link" href="../%23.html">v0.7.1a</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -258,7 +258,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../">v0.7.1a</a></li>
+                  <a  class="nav-link" href="../%23.html">v0.7.1a</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -439,7 +439,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/UniTensor.html">7.2. UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_1_create.html">7.2.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_2_manip.html">7.2.2. Manipulate UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_1_create.html#change-labels">7.2.2. Change Labels</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_2_manip.html">7.2.3. Manipulate UniTensor</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Network.html">7.3. Network</a><ul class="simple">
@@ -531,23 +532,23 @@ The infinite size ground state can be represent by MPS as variational ansatz, wh
 <ul class="simple">
 <li><p>In python</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cytnx</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cytnx</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">chi</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">A</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">([</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">),</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
@@ -569,36 +570,36 @@ The infinite size ground state can be represent by MPS as variational ansatz, wh
 <ul class="simple">
 <li><p>In c++</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;cytnx.hpp&quot;</span><span class="cp"></span>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;cytnx.hpp&quot;</span><span class="cp"></span>
 <span class="k">using</span> <span class="k">namespace</span> <span class="n">cytnx</span><span class="p">;</span>
 
 <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">chi</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
-<span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">({</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">),</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">)},{</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">},</span><span class="mi">1</span><span class="p">);</span>
-<span class="k">auto</span> <span class="n">B</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">A</span><span class="p">.</span><span class="n">bonds</span><span class="p">(),{</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">},</span><span class="mi">1</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">({</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">),</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">)},{</span><span class="mi">-1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">-2</span><span class="p">},</span><span class="mi">1</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">B</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">A</span><span class="p">.</span><span class="n">bonds</span><span class="p">(),{</span><span class="mi">-3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">-4</span><span class="p">},</span><span class="mi">1</span><span class="p">);</span>
 <span class="n">random</span><span class="o">::</span><span class="n">Make_normal</span><span class="p">(</span><span class="n">B</span><span class="p">.</span><span class="n">get_block_</span><span class="p">(),</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.2</span><span class="p">);</span>
 <span class="n">random</span><span class="o">::</span><span class="n">Make_normal</span><span class="p">(</span><span class="n">A</span><span class="p">.</span><span class="n">get_block_</span><span class="p">(),</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.2</span><span class="p">);</span>
 <span class="n">A</span><span class="p">.</span><span class="n">print_diagram</span><span class="p">();</span>
 <span class="n">B</span><span class="p">.</span><span class="n">print_diagram</span><span class="p">();</span>
 
-<span class="k">auto</span> <span class="n">la</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">({</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">),</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">)},{</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">},</span><span class="mi">1</span><span class="p">,</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span><span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">,</span><span class="nb">true</span><span class="p">);</span>
-<span class="k">auto</span> <span class="n">lb</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">({</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">),</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">)},{</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">},</span><span class="mi">1</span><span class="p">,</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span><span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">,</span><span class="nb">true</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">la</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">({</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">),</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">)},{</span><span class="mi">-2</span><span class="p">,</span><span class="mi">-3</span><span class="p">},</span><span class="mi">1</span><span class="p">,</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span><span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">,</span><span class="nb">true</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">lb</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">({</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">),</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">)},{</span><span class="mi">-4</span><span class="p">,</span><span class="mi">-5</span><span class="p">},</span><span class="mi">1</span><span class="p">,</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span><span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">,</span><span class="nb">true</span><span class="p">);</span>
 <span class="n">la</span><span class="p">.</span><span class="n">put_block</span><span class="p">(</span><span class="n">ones</span><span class="p">(</span><span class="n">chi</span><span class="p">));</span>
 <span class="n">lb</span><span class="p">.</span><span class="n">put_block</span><span class="p">(</span><span class="n">ones</span><span class="p">(</span><span class="n">chi</span><span class="p">));</span>
 
@@ -679,30 +680,30 @@ First, acting <img class="math" src="../_images/math/2363059a61e3ed5453b95a6de83
 <ul class="simple">
 <li><p>In python</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">J</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">J</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
 <span class="n">Hx</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.3</span>
 <span class="n">dt</span> <span class="o">=</span> <span class="mf">0.1</span>
 
@@ -731,32 +732,32 @@ First, acting <img class="math" src="../_images/math/2363059a61e3ed5453b95a6de83
 <ul class="simple">
 <li><p>In c++</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">double</span> <span class="n">J</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">;</span>
-<span class="kt">double</span> <span class="n">Hx</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">double</span> <span class="n">J</span> <span class="o">=</span> <span class="mf">-1.0</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">Hx</span> <span class="o">=</span> <span class="mf">-0.3</span><span class="p">;</span>
 <span class="kt">double</span> <span class="n">dt</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">;</span>
 
 <span class="c1">// Create single site operator</span>
@@ -863,7 +864,7 @@ on device   : cytnx device: CPU
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

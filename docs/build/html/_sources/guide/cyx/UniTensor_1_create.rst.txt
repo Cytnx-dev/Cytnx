@@ -1,10 +1,32 @@
 Create UniTensor
------------------
+------------------
 As mentioned in the intro, a UniTensor = Block(s) + Bond(s) + Label(s). For which Block(s) are the place holder for data, while Bond(s) and Label(s) are the meta data that describe the properties of the UniTensor. 
 
+Generally, there are two types of UniTensor: **un-tagged** and **tagged** UniTensor, depending on whether the bond has *direction*. In a more advanced application, the underlying UniTensor may have block diagonalize or other more complicated structure when certain Symmetries are invoved, in that case, the UniTensor can further categorized into **densed** and **sparse (block form)**, which we summarized by the table in the following. 
 
-Convert from Tensor 
-*********************
+
++-----------+-----------------+---------------------------------+
+|           |      Dense      |   Sparse (block-diagonalized)   |
++-----------+-----------------+---------------------------------+
+| tagged    |     **O**       |        [developing]             |
++-----------+-----------------+---------------------------------+
+| untagged  |     **O**       |        [developing]             |
++-----------+-----------------+---------------------------------+
+
+* Currently the sparse (block-diagonalized) UniTensor with symmetry is under developing. 
+
+    
+   
+In the following, we will introduce how to construct a UniTensor. 
+
+.. image:: image/UT.png
+    :width: 300
+    :align: center
+
+
+
+Construct from Tensor 
+************************
 
 Before going into more complicated UniTensor structure, first of all let's start with the most simple example, for which we convert a Tensor into a UniTensor. In the following, let's use a simple rank-3 tensor as example. The tensor notation (diagram) looks like:
 
@@ -110,8 +132,8 @@ Output >>
     Similar to **cytnx.Tensor**, one can use **.to()** to move a UniTensor between devices! 
 
 
-Construct from Scratch
-*************************    
+From scratch
+**************  
 
 
 
