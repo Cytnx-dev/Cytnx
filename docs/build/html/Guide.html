@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -54,8 +54,10 @@
 <li class="toctree-l2"><a class="reference internal" href="install.html#using-c-api-with-cmake">Using C++ API with CMake</a></li>
 <li class="toctree-l2"><a class="reference internal" href="install.html#build-cytnx-from-source">Build Cytnx from source</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="install.html#dependencies">Dependencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="install.html#compiling-process-new">Compiling process [New]</a></li>
-<li class="toctree-l3"><a class="reference internal" href="install.html#compiling-process-old">Compiling process [Old]</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="install.html#using-anaconda-conda-for-deps">Using anaconda/conda for deps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#using-system-for-deps">Using system for deps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#compiling-process-auto-set-up">Compiling process [Auto set-up]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#compiling-process-manually-set-up">Compiling process [manually set-up]</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -230,7 +232,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="%23.html">v0.7a</a></li>
+              <a  class="nav-link" href="./">v0.7.1a</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -256,7 +258,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="%23.html">v0.7a</a></li>
+                  <a  class="nav-link" href="./">v0.7.1a</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -310,8 +312,10 @@
 <li class="toctree-l2"><a class="reference internal" href="install.html#using-c-api-with-cmake">Using C++ API with CMake</a></li>
 <li class="toctree-l2"><a class="reference internal" href="install.html#build-cytnx-from-source">Build Cytnx from source</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="install.html#dependencies">Dependencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="install.html#compiling-process-new">Compiling process [New]</a></li>
-<li class="toctree-l3"><a class="reference internal" href="install.html#compiling-process-old">Compiling process [Old]</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="install.html#using-anaconda-conda-for-deps">Using anaconda/conda for deps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#using-system-for-deps">Using system for deps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#compiling-process-auto-set-up">Compiling process [Auto set-up]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#compiling-process-manually-set-up">Compiling process [manually set-up]</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -519,7 +523,7 @@
 <ul class="simple">
 <li><p>In C++, using include header</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;cytnx.hpp&quot;</span><span class="c1">;</span><span class="cp"></span>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;cytnx.hpp&quot;;</span><span class="cp"></span>
 </pre></div>
 </td></tr></table></div>
 <div class="admonition note">
@@ -533,7 +537,7 @@
 </td></tr></table></div>
 <p>This is equivalent in C++ as:</p>
 <div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;cytnx.hpp&quot;</span><span class="c1">;</span><span class="cp"></span>
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;cytnx.hpp&quot;;</span><span class="cp"></span>
 <span class="k">namespace</span> <span class="n">cy</span><span class="o">=</span><span class="n">cytnx</span><span class="p">;</span>
 </pre></div>
 </td></tr></table></div>
@@ -681,7 +685,7 @@
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.2.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>
