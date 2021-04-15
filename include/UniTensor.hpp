@@ -1408,7 +1408,51 @@ namespace cytnx{
             UniTensor& Div_(const Scalar &rhs){
                 this->_impl->Div_(rhs);
                 return *this;
-            }  
+            } 
+
+            UniTensor Add(const UniTensor &rhs)  const;
+            UniTensor Add(const Scalar &rhs)  const;
+            UniTensor Mul(const UniTensor &rhs)  const;
+            UniTensor Mul(const Scalar &rhs)  const;
+            UniTensor Div(const UniTensor &rhs)  const;
+            UniTensor Div(const Scalar &rhs)  const;
+            UniTensor Sub(const UniTensor &rhs)  const;
+            UniTensor Sub(const Scalar &rhs)  const;
+
+
+            UniTensor &operator+=(const UniTensor &rhs){
+                this->Add_(rhs);
+                return *this;
+            }
+            UniTensor &operator-=(const UniTensor &rhs){
+                this->Sub_(rhs);
+                return *this;
+            }
+            UniTensor &operator/=(const UniTensor &rhs){
+                this->Div_(rhs);
+                return *this;
+            }
+            UniTensor &operator*=(const UniTensor &rhs){
+                this->Mul_(rhs);
+                return *this;
+            }
+            UniTensor &operator+=(const Scalar &rhs){
+                this->Add_(rhs);
+                return *this;
+            }
+            UniTensor &operator-=(const Scalar &rhs){
+                this->Sub_(rhs);
+                return *this;
+            }
+            UniTensor &operator/=(const Scalar &rhs){
+                this->Div_(rhs);
+                return *this;
+            }
+            UniTensor &operator*=(const Scalar &rhs){
+                this->Mul_(rhs);
+                return *this;
+            }
+
 
 
             UniTensor Conj(){

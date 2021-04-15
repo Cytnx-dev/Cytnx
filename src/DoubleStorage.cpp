@@ -255,7 +255,7 @@ namespace cytnx{
             cytnx_double* elem_ptr_ = static_cast<cytnx_double*>(this->Mem);
 
             if(mapper.size()==0){
-
+                //cout << shape.size() << endl;
                 cytnx_uint64 cnt=0;
                 while(1){
                     for(cytnx_int32 i=0;i<shape.size();i++){

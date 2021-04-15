@@ -324,6 +324,7 @@ namespace cytnx{
         this->_mapper = vec_range(shape.size());
         this->_invmapper = this->_mapper;
         this->_contiguous = true;
+        //cout << shape << endl;
 
     }
     void Tensor_impl::Init(const Storage &in){
@@ -496,7 +497,8 @@ namespace cytnx{
         } 
         boost::intrusive_ptr<Tensor_impl> out( new Tensor_impl());
         out->Init(get_shape,this->dtype(),this->device());
-       
+        //cout << get_shape << endl; 
+
         if(locators.size()==0){
             locators.resize(1);
             locators[0].push_back(0);
@@ -524,20 +526,26 @@ namespace cytnx{
         //cout << "out shape raw" << endl;
         //cout << out->shape() << endl;
 
-        out->reshape_(new_shape); // remove size-1 axis
-        
-         
-        std::vector<cytnx_uint64> perm;
-        for(unsigned int i=0;i<new_mapper.size();i++){
-            perm.push_back(new_mapper[i]);
-            for(unsigned int j=0;j<remove_id.size();j++){
-                if(new_mapper[i]>remove_id[j]) perm.back()-=1;
-                else if(new_mapper[i]==remove_id[j]){ perm.pop_back(); break; }
-            }
-        }
+
         //cout << "perm" << endl;
         //cout << perm << endl;
-        out->permute_(perm);
+        if(new_shape.size()){ //exclude the case where only single element exists!
+                        
+            out->reshape_(new_shape); // remove size-1 axis
+             
+            std::vector<cytnx_uint64> perm;
+            for(unsigned int i=0;i<new_mapper.size();i++){
+                perm.push_back(new_mapper[i]);
+                for(unsigned int j=0;j<remove_id.size();j++){
+                    if(new_mapper[i]>remove_id[j]) perm.back()-=1;
+                    else if(new_mapper[i]==remove_id[j]){ perm.pop_back(); break; }
+                }
+            }
+            out->permute_(perm);
+        }
+            
+         
+
 
         return out;
     }

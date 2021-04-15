@@ -34,13 +34,14 @@ namespace cytnx{
 
             //tensor shape
             std::vector<cytnx_uint64> _shape;
-
+            
             // pseudo-perm info
             std::vector<cytnx_uint64> _mapper;
             std::vector<cytnx_uint64> _invmapper;
             bool _contiguous;
 
         public:
+
             friend class Tensor;
             boost::intrusive_ptr<Tensor_impl> _clone_meta_only() const{
                 boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());

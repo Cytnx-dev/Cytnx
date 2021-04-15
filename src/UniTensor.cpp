@@ -15,6 +15,34 @@ namespace cytnx{
         cytnx::linalg::Pow_(*this,p);
         return *this;
     }
+    UniTensor UniTensor::Add(const UniTensor &rhs) const{
+        return cytnx::linalg::Add(*this,rhs);
+    }
+    UniTensor UniTensor::Add(const Scalar &rhs) const{
+        return cytnx::linalg::Add(*this,rhs);
+    }
+
+    UniTensor UniTensor::Sub(const UniTensor &rhs) const{
+        return cytnx::linalg::Sub(*this,rhs);
+    }
+    UniTensor UniTensor::Sub(const Scalar &rhs) const{
+        return cytnx::linalg::Sub(*this,rhs);
+    }
+
+    UniTensor UniTensor::Div(const UniTensor &rhs) const{
+        return cytnx::linalg::Div(*this,rhs);
+    }
+    UniTensor UniTensor::Div(const Scalar &rhs) const{
+        return cytnx::linalg::Div(*this,rhs);
+    }
+
+    UniTensor UniTensor::Mul(const UniTensor &rhs) const{
+        return cytnx::linalg::Mul(*this,rhs);
+    }
+    UniTensor UniTensor::Mul(const Scalar &rhs) const{
+        return cytnx::linalg::Mul(*this,rhs);
+    }
+
 
     void UniTensor::_Save(std::fstream &f) const{
         cytnx_error_msg(!f.is_open(),"[ERROR][UniTensor] invalid fstream!.%s","\n");

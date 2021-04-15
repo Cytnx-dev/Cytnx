@@ -100,6 +100,14 @@ class MyOp2: public LinOp{
 
 int main(int argc, char *argv[]){
 
+
+    auto Tnnn = cytnx::arange(16).reshape(4,4);
+    auto oout = cytnx::linalg::Svd_truncate(Tnnn,1);
+    print(oout);
+
+
+
+    exit(1);
     Scalar sccA = 3.44;
     cout << sccA << endl;
     

@@ -1313,7 +1313,7 @@ PYBIND11_MODULE(cytnx,m){
                 .def("c__imatmul__",[](cytnx::Tensor &self, const cytnx::Tensor &rhs){self = cytnx::linalg::Dot(self,rhs); return self;})
 
                 //linalg >>
-                .def("Svd",&cytnx::Tensor::Svd, py::arg("is_U"), py::arg("is_vT"))
+                .def("Svd",&cytnx::Tensor::Svd, py::arg("is_U")=true, py::arg("is_vT")=true)
                 .def("Eigh",&cytnx::Tensor::Eigh, py::arg("is_V")=true,py::arg("row_v")=false)
                 .def("cInvM_",&cytnx::Tensor::InvM_)
                 .def("InvM",&cytnx::Tensor::InvM)
