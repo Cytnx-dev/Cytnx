@@ -16,12 +16,18 @@ See The following user guide for install and using of cytnx:
 [![Build Status](https://travis-ci.org/kaihsin/Cytnx_build.svg?branch=master)](https://travis-ci.org/kaihsin/Cytnx_build)
 
 ## News
-    [v0.7] 
+    [v0.7.1] 
  
 ## Stable Version:
-[v0.7a](https://github.com/kaihsin/Cytnx/tree/v0.7a)
+[v0.7.1a](https://github.com/kaihsin/Cytnx/tree/v0.7.1a)
 
 ## Current dev Version:
+    v0.7.1
+    1. [Enhance] Finish UniTensor arithmetic. 
+    2. [Fix] bug when using Tensor.get() accessing only single element 
+    3. [Enhance] Add default argument is_U = True and is_vT = True for Svd_truncate() python API 
+
+
     v0.7
     1. [Enhance] add binary op. -Tensor.    
     2. [Enhance] New introduce Scalar class, generic scalar placeholder. 
