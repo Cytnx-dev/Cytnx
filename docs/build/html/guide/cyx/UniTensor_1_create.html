@@ -23,7 +23,7 @@
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="7.2.3. Manipulate UniTensor" href="UniTensor_2_manip.html" />
+    <link rel="next" title="7.2.5. Manipulate UniTensor" href="UniTensor_2_manip.html" />
     <link rel="prev" title="7.2. UniTensor" href="UniTensor.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
@@ -175,8 +175,10 @@
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="UniTensor.html">7.2. UniTensor</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">7.2.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#change-labels">7.2.2. Change Labels</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_2_manip.html">7.2.3. Manipulate UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#change-labels">7.2.2. Change labels</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#accessing-the-block-s">7.2.3. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tagged-unitensor-directional-bonds">7.2.4. Tagged UniTensor (directional bonds)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_2_manip.html">7.2.5. Manipulate UniTensor</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Network.html">7.3. Network</a><ul class="simple">
@@ -292,8 +294,8 @@
                <a href="UniTensor.html" title="Previous Chapter: 7.2. UniTensor" class="btn btn-primary" role="botton" accesskey="P">
                    &laquo; 7.2. UniTensor
                </a>
-               <a href="UniTensor_2_manip.html" title="Next Chapter: 7.2.3. Manipulate UniTensor" class="btn btn-primary" role="botton" accesskey="N">
-                   7.2.3. Manipu... &raquo;
+               <a href="UniTensor_2_manip.html" title="Next Chapter: 7.2.5. Manipulate UniTensor" class="btn btn-primary" role="botton" accesskey="N">
+                   7.2.5. Manipu... &raquo;
                </a>
            </div>
        </div>
@@ -443,8 +445,10 @@
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="UniTensor.html">7.2. UniTensor</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">7.2.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#change-labels">7.2.2. Change Labels</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_2_manip.html">7.2.3. Manipulate UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#change-labels">7.2.2. Change labels</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#accessing-the-block-s">7.2.3. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tagged-unitensor-directional-bonds">7.2.4. Tagged UniTensor (directional bonds)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_2_manip.html">7.2.5. Manipulate UniTensor</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Network.html">7.3. Network</a><ul class="simple">
@@ -499,7 +503,7 @@
                         title="previous chapter"><span class="section-number">7.2. </span>UniTensor</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="UniTensor_2_manip.html"
-                        title="next chapter"><span class="section-number">7.2.3. </span>Manipulate UniTensor</a></p>
+                        title="next chapter"><span class="section-number">7.2.5. </span>Manipulate UniTensor</a></p>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../../search.html" method="get">
       <input type="text" name="q" class="form-control" placeholder="Search..." />
@@ -524,17 +528,17 @@
   <div class="section" id="create-unitensor">
 <h1><span class="section-number">7.2.1. </span>Create UniTensor<a class="headerlink" href="#create-unitensor" title="Permalink to this headline">¶</a></h1>
 <p>As mentioned in the intro, a UniTensor = Block(s) + Bond(s) + Label(s). For which Block(s) are the place holder for data, while Bond(s) and Label(s) are the meta data that describe the properties of the UniTensor.</p>
-<p>Generally, there are two types of UniTensor: <strong>un-tagged</strong> and <strong>tagged</strong> UniTensor, depending on whether the bond has <em>direction</em>. In a more advanced application, the underlying UniTensor may have block diagonalize or other more complicated structure when certain Symmetries are invoved, in that case, the UniTensor can further categorized into <strong>densed</strong> and <strong>sparse (block form)</strong>, which we summarized by the table in the following.</p>
+<p>Generally, there are two types of UniTensor: <strong>un-tagged</strong> and <strong>tagged</strong> UniTensor, depending on whether the bond has <em>direction</em>. In a more advanced application, the underlying UniTensor may have block diagonalize or other more complicated structure when Symmetries are invoved, in that case, the UniTensor can further categorized into <strong>non-symmetry</strong> and <strong>with symmetry (block form)</strong>, which we summarized by the table in the following.</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 18%" />
-<col style="width: 28%" />
-<col style="width: 54%" />
+<col style="width: 17%" />
+<col style="width: 27%" />
+<col style="width: 56%" />
 </colgroup>
 <tbody>
 <tr class="row-odd"><td></td>
-<td><p>Dense</p></td>
-<td><p>Sparse (block-diagonalized)</p></td>
+<td><p>non-sym</p></td>
+<td><p>with Symmetry(block-diagonalize)</p></td>
 </tr>
 <tr class="row-even"><td><p>tagged</p></td>
 <td><p><strong>O</strong></p></td>
@@ -547,13 +551,14 @@
 </tbody>
 </table>
 <ul class="simple">
-<li><p>Currently the sparse (block-diagonalized) UniTensor with symmetry is under developing.</p></li>
+<li><p>Currently the UniTensor with symmetry is under developing.</p></li>
 </ul>
 <p>In the following, we will introduce how to construct a UniTensor.</p>
 <a class="reference internal image-reference" href="../../_images/UT.png"><img alt="../../_images/UT.png" class="align-center" src="../../_images/UT.png" style="width: 300px;" /></a>
 <div class="section" id="construct-from-tensor">
 <h2><span class="section-number">7.2.1.1. </span>Construct from Tensor<a class="headerlink" href="#construct-from-tensor" title="Permalink to this headline">¶</a></h2>
-<p>Before going into more complicated UniTensor structure, first of all let’s start with the most simple example, for which we convert a Tensor into a UniTensor. In the following, let’s use a simple rank-3 tensor as example. The tensor notation (diagram) looks like:</p>
+<p>Before going into more complicated UniTensor structure, first of all let’s start with the most simple example, for which we convert a Tensor into a UniTensor, and use this to introduce the first type of UniTensor we encounter: <strong>untagged</strong> UniTensor.</p>
+<p>In the following, let’s use a simple rank-3 tensor as example to give you a glance on some basic properties of UniTensor. The tensor notation (diagram) looks like:</p>
 <a class="reference internal image-reference" href="../../_images/untag.png"><img alt="../../_images/untag.png" class="align-center" src="../../_images/untag.png" style="width: 200px;" /></a>
 <div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
 <span class="normal">2</span>
@@ -570,7 +575,8 @@
 <span class="n">uT</span> <span class="o">=</span> <span class="n">cy</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">T</span><span class="p">,</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </td></tr></table></div>
-<p>Here, we simply convert a Tensor <strong>T</strong> into a UniTensor <strong>uT</strong> simply by wrapping it with constructor <em>cy.UniTensor()</em>. An additional argument <em>rowrank</em> is also provided, which we will get back to it in a moment but now, let’s use <strong>print_diagram()</strong> to visualize the UniTensor in a more straightforward way as a diagram:</p>
+<p>Here, we simply convert a Tensor <strong>T</strong> into a UniTensor <strong>uT</strong> simply by wrapping it with constructor <em>cy.UniTensor()</em>. Formally, we should think of this as we constructing a UniTensor <strong>uT</strong> with <strong>T</strong> being <strong>uT</strong>’s <em>block</em> (data).</p>
+<p>An additional argument <em>rowrank</em> is also provided, which we will get back to it in a moment but now, let’s use <strong>print_diagram()</strong> to visualize the UniTensor in a more straightforward way as a diagram:</p>
 <div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">uT</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
 </pre></div>
 </td></tr></table></div>
@@ -591,7 +597,7 @@ on device   : cytnx device: CPU
 </div>
 <p>There are a lot of information provided in this output which we will explain in details:</p>
 <ol class="arabic">
-<li><p><strong>Bonds:</strong> They are attach to the left side and/or right side of the center square (which the left/right side is associate to the <em>rowrank</em> property, we will get back to this later). The number of bonds indicates the rank of the UniTensor, which also indicates in the second line <em>tensor Rank</em>.</p>
+<li><p><strong>Bonds:</strong> They are attach to the left side and/or right side of the center square (which the left/right side is associate to the <em>rowrank</em> property, we will get back to this later. right now, let’s just assume it take arbitrary integer 0 &lt; rowrank &lt; rank). The number of bonds indicates the rank of the UniTensor, which also indicates in the second line <em>tensor Rank</em>.</p>
 <blockquote>
 <div><dl class="simple">
 <dt><strong>Ex:</strong></dt><dd><p>Here, we have three bonds, indicates it’s a rank-3 UniTensor.</p>
@@ -611,11 +617,17 @@ on device   : cytnx device: CPU
 </dl>
 </div></blockquote>
 </li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The order of the bonds are arranged from left to right and up to down. for this example, the bond with label=0 is the first bond (index=0); the bond with label=1 is the seoncd bond (index=1); the bond with label=2 is the 3rd bond (index=2).</p>
+</div>
+<ol class="arabic simple" start="3">
 <li><p><strong>tensor name:</strong> The name (alias) of the UniTensor. User can give UniTensor a name using <strong>UniTensor.set_name()</strong></p></li>
 </ol>
 <div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
 <span class="normal">2</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">uT</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;tensor uT&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">uT</span><span class="o">.</span><span class="n">name</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">uT</span><span class="p">)</span>
 </pre></div>
 </td></tr></table></div>
 <p>Output &gt;&gt;</p>
@@ -640,8 +652,12 @@ Shape : (2,3,4)
 <p>You can use <strong>UniTensor.name()</strong> to get the name property of the UniTensor.</p>
 </div>
 <ol class="arabic simple" start="4">
-<li><p><strong>on device:</strong> This indicates the data of current UniTensor is on which device (cpu or gpu)</p></li>
+<li><p><strong>on device:</strong> This indicates the data of current UniTensor is on which device (cpu or gpu).</p></li>
 </ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The dtype and device of a UniTensor depends on the underlying <em>block</em> (data) of the UniTensor.</p>
+</div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>Similar to <strong>cytnx.Tensor</strong>, one can use <strong>.to()</strong> to move a UniTensor between devices!</p>
@@ -649,10 +665,28 @@ Shape : (2,3,4)
 </div>
 <div class="section" id="from-scratch">
 <h2><span class="section-number">7.2.1.2. </span>From scratch<a class="headerlink" href="#from-scratch" title="Permalink to this headline">¶</a></h2>
+<p>Next, let’s introduce the complete API for construct a UniTensor:</p>
+<dl class="py function">
+<dt id="UniTensor">
+<code class="sig-name descname"><span class="pre">UniTensor</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bonds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rowrank</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_diag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UniTensor" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bonds</strong> (<em>List</em><em>[</em><em>cytnx.Bond</em><em>]</em>) – The list of bonds</p></li>
+<li><p><strong>labels</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – The list of labels associate to each bond</p></li>
+<li><p><strong>rowrank</strong> (<em>int</em>) – the rowrank when flatten into matrix.</p></li>
+<li><p><strong>dtype</strong> (<em>cytnx.Type</em>) – the dtype of the block(s).</p></li>
+<li><p><strong>device</strong> (<em>cytnx.Device</em>) – the device where the block(s) are hold.</p></li>
+<li><p><strong>is_diag</strong> (<em>bool</em>) – whether the UniTensor is diagonal.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 </div>
 <div class="section" id="change-labels">
-<h1><span class="section-number">7.2.2. </span>Change Labels<a class="headerlink" href="#change-labels" title="Permalink to this headline">¶</a></h1>
+<h1><span class="section-number">7.2.2. </span>Change labels<a class="headerlink" href="#change-labels" title="Permalink to this headline">¶</a></h1>
 <p>To change the labels associate to bond(s), we can use <strong>UniTensor.set_label(index, new_label)</strong> or <strong>UniTensor.set_labels(new_labels)</strong>. Note that the label should be integer, and cannot have duplicate labels <em>within</em> a same UniTensor:</p>
 <div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
 <span class="normal">2</span>
@@ -696,6 +730,12 @@ on device   : cytnx device: CPU
             -------------
 </pre></div>
 </div>
+</div>
+<div class="section" id="accessing-the-block-s">
+<h1><span class="section-number">7.2.3. </span>Accessing the block(s)<a class="headerlink" href="#accessing-the-block-s" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="tagged-unitensor-directional-bonds">
+<h1><span class="section-number">7.2.4. </span>Tagged UniTensor (directional bonds)<a class="headerlink" href="#tagged-unitensor-directional-bonds" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
 </div>

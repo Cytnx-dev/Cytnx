@@ -15,6 +15,7 @@ A UniTensor consist of three imporant parts:
 3. labels, which gives each rank/bond unique ID. 
 
 
+
 In the most simple example where we don't consider any symmetry in our system, UniTensor can be think of adding these bonds and labels meta data around **cytnx.Tensor**. 
 A UniTensor can be constructed using **Bond** object, or in the simple case directly converted from a **Cytnx.Tensor**. 
 
@@ -23,5 +24,7 @@ Let's take a look at this:
 .. toctree::
     :maxdepth: 1
 
-    UniTensor_1_create.rst
-    UniTensor_2_manip.rst
+    UniTensor_create.rst
+    UniTensor_getblk.rst
+    UniTensor_tag.rst
+    UniTensor_manip.rst

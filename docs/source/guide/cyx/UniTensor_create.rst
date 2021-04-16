@@ -2,6 +2,13 @@ Create UniTensor
 ------------------
 As mentioned in the intro, a UniTensor = Block(s) + Bond(s) + Label(s). For which Block(s) are the place holder for data, while Bond(s) and Label(s) are the meta data that describe the properties of the UniTensor. 
 
+.. image:: image/utcomp.png
+    :width: 600
+    :align: center
+
+
+
+
 Generally, there are two types of UniTensor: **un-tagged** and **tagged** UniTensor, depending on whether the bond has *direction*. In a more advanced application, the underlying UniTensor may have block diagonalize or other more complicated structure when Symmetries are invoved, in that case, the UniTensor can further categorized into **non-symmetry** and **with symmetry (block form)**, which we summarized by the table in the following. 
 
 
@@ -18,10 +25,6 @@ Generally, there are two types of UniTensor: **un-tagged** and **tagged** UniTen
     
    
 In the following, we will introduce how to construct a UniTensor. 
-
-.. image:: image/UT.png
-    :width: 300
-    :align: center
 
 
 
@@ -159,10 +162,73 @@ Next, let's introduce the complete API for construct a UniTensor:
     :param cytnx.Device device: the device where the block(s) are hold. 
     :param bool is_diag: whether the UniTensor is diagonal. 
 
+The first argument **bonds** is a list of bond object, which is similar to the *shape* of **cytnx.Tensor** where the elements in *shape* indicates the dimension of the rank. Here, each rank is represent by a **cytnx.Bond** object. In general, **cytnx.Bond** contains three things:
+
+1. The dimension of the bond. 
+2. The direction of the bond (it can be bondType.REG--undirectional, bondType.Ket--inward, bondType.Bra--outward) 
+3. The symmetry and the associate quantum numbers. 
+
+For more details, see **Bond** section. Here, for simplicity, we will use only the dimension property of a Bond. 
+
+Now let's construct the rank-3 UniTensor with the same shape as the above example, and assign those three bonds with labels (100,101,102) and also set name to be "uT2"
+
+.. image:: image/ut2.png
+    :width: 300
+    :align: center
+
+
+.. code-block:: python
+    :linenos:
+
+    import cytnx as cy
+    from cytnx import Bond as bd
+
+    uT2 = cy.UniTensor([bd(2),bd(3),bd(4)],labels=[100,101,102],rowrank=1).set_name("uT2 scratch")
+    uT2.print_diagram()
+    print(uT2)
+
+Output >>
+
+.. code-block:: text
+    
+    -----------------------
+    tensor Name : uT2 scratch
+    tensor Rank : 3
+    block_form  : false
+    is_diag     : False
+    on device   : cytnx device: CPU
+                -------------      
+               /             \     
+       100 ____| 2         3 |____ 101
+               |             |     
+               |           4 |____ 102
+               \             /     
+                -------------  
+
+    Tensor name: uT2 scratch
+    braket_form : False
+    is_diag    : False
+
+    Total elem: 24
+    type  : Double (Float64)
+    cytnx device: CPU
+    Shape : (2,3,4)
+    [[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+      [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+      [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+     [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+      [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+      [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+
+
+.. note:: 
+
+    The UniTensor will have all the elements in the block initialize to zero. 
+
 
 
 Change labels
-----------------------
+************** 
 To change the labels associate to bond(s), we can use **UniTensor.set_label(index, new_label)** or **UniTensor.set_labels(new_labels)**. Note that the label should be integer, and cannot have duplicate labels *within* a same UniTensor:
 
 .. code-block:: python 
@@ -205,23 +271,6 @@ Output >>
                |           4 |____ -999
                \             /     
                 -------------   
-
-
-
-
-Accessing the block(s)
-------------------------
-
-
-
-
-
-
-Tagged UniTensor (directional bonds)
---------------------------------------
-
-
-
 
 
 
