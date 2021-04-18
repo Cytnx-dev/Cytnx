@@ -173,15 +173,18 @@
 <li class="toctree-l4"><a class="reference internal" href="TNotation.html#direction-of-bond">7.1.2. Direction of bond</a></li>
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">7.2. Bond</a><ul class="simple">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">7.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#create-a-bond">7.2.1. Create a Bond</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bond-with-direction">7.2.2. Bond with direction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bond-with-symmetry">7.2.3. Bond with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multiple-symmetry">7.2.4. Multiple Symmetry</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="UniTensor.html">7.3. UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">7.3.1. Create UniTensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">7.3.2. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html#change-labels">7.3.3. Change labels</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html#tagged-unitensor-directional-bonds">7.3.4. Tagged UniTensor (directional bonds)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">7.3.5. Manipulate UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">7.3.3. tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Network.html">7.4. Network</a><ul class="simple">
@@ -441,15 +444,18 @@
 <li class="toctree-l4"><a class="reference internal" href="TNotation.html#direction-of-bond">7.1.2. Direction of bond</a></li>
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">7.2. Bond</a><ul class="simple">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">7.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#create-a-bond">7.2.1. Create a Bond</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bond-with-direction">7.2.2. Bond with direction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bond-with-symmetry">7.2.3. Bond with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multiple-symmetry">7.2.4. Multiple Symmetry</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="UniTensor.html">7.3. UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">7.3.1. Create UniTensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">7.3.2. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html#change-labels">7.3.3. Change labels</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html#tagged-unitensor-directional-bonds">7.3.4. Tagged UniTensor (directional bonds)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">7.3.5. Manipulate UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">7.3.3. tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Network.html">7.4. Network</a><ul class="simple">
@@ -526,7 +532,21 @@
   <div class="section" id="bond">
 <h1><span class="section-number">7.2. </span>Bond<a class="headerlink" href="#bond" title="Permalink to this headline">¶</a></h1>
 <p>A <strong>Bond</strong> is an object that represent the legs of a tensor. It carries informations such as direction, dimension and quantum numbers (if with Symmetry).</p>
+<p>There are in general two types of Bonds: <strong>directional</strong> and <strong>undirectional</strong> depending on whether the bond has direction (pointing inward to or outward from the tensor body) or not. The inward Bond is also defined as <strong>Ket</strong> type, and the outward Bond is defined as <strong>Bra</strong> type, which represent the <em>Braket</em> notation in the quantum mechanic:</p>
+<a class="reference internal image-reference" href="../../_images/bond.png"><img alt="../../_images/bond.png" class="align-center" src="../../_images/bond.png" style="width: 400px;" /></a>
+<div class="section" id="create-a-bond">
+<h2><span class="section-number">7.2.1. </span>Create a Bond<a class="headerlink" href="#create-a-bond" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="bond-with-direction">
+<h2><span class="section-number">7.2.2. </span>Bond with direction<a class="headerlink" href="#bond-with-direction" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="bond-with-symmetry">
+<h2><span class="section-number">7.2.3. </span>Bond with Symmetry<a class="headerlink" href="#bond-with-symmetry" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="multiple-symmetry">
+<h2><span class="section-number">7.2.4. </span>Multiple Symmetry<a class="headerlink" href="#multiple-symmetry" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
+</div>
 </div>
 </div>
 
