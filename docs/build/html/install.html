@@ -173,16 +173,21 @@
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/TNotation.html#direction-of-bond">7.1.2. Direction of bond</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="guide/cyx/UniTensor.html">7.2. UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_1_create.html">7.2.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_1_create.html#change-labels">7.2.2. Change Labels</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_2_manip.html">7.2.3. Manipulate UniTensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide/cyx/Bond.html">7.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#create-a-bond">7.2.1. Create a Bond</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#bond-with-direction">7.2.2. Bond with direction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#bond-with-symmetry">7.2.3. Bond with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#multiple-symmetry">7.2.4. Multiple Symmetry</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="guide/cyx/Network.html">7.3. Network</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="guide/cyx/UniTensor.html">7.3. UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_create.html">7.3.1. Create UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_getblk.html">7.3.2. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_tag.html">7.3.3. tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="guide/cyx/Bond.html">7.4. Bond</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="guide/cyx/Network.html">7.4. Network</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -432,16 +437,21 @@
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/TNotation.html#direction-of-bond">7.1.2. Direction of bond</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="guide/cyx/UniTensor.html">7.2. UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_1_create.html">7.2.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_1_create.html#change-labels">7.2.2. Change Labels</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_2_manip.html">7.2.3. Manipulate UniTensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide/cyx/Bond.html">7.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#create-a-bond">7.2.1. Create a Bond</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#bond-with-direction">7.2.2. Bond with direction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#bond-with-symmetry">7.2.3. Bond with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#multiple-symmetry">7.2.4. Multiple Symmetry</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="guide/cyx/Network.html">7.3. Network</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="guide/cyx/UniTensor.html">7.3. UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_create.html">7.3.1. Create UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_getblk.html">7.3.2. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_tag.html">7.3.3. tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="guide/cyx/Bond.html">7.4. Bond</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="guide/cyx/Network.html">7.4. Network</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -527,14 +537,14 @@ Note that both python API and C++ API will be installed together.</p>
 </li>
 <li><p>create a virtual enviroment:</p></li>
 </ol>
-<div class="highlight-shell notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nv">$conda</span> create --name cytnx <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7
+<div class="highlight-shell notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nv">$conda</span> create --channel conda-forge --name cytnx <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7
 </pre></div>
 </td></tr></table></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
 <li><p>See <a class="reference external" href="https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#">This page</a> for how to use virtual enviroment in conda.</p></li>
-<li><p>Use can select the python version you want. we recommend using &gt;=3.7</p></li>
+<li><p>User can select the python version you want. we recommend using &gt;=3.7</p></li>
 </ul>
 </div>
 <ol class="arabic" start="3">

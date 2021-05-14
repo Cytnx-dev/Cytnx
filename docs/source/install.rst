@@ -17,13 +17,13 @@ Following we show how to install cytnx from conda.
 .. code-block:: shell
     :linenos:
 
-    $conda create --name cytnx python=3.7
+    $conda create --channel conda-forge --name cytnx python=3.7
 
 
 .. note:: 
 
     * See :virtualenv:`This page <>` for how to use virtual enviroment in conda. 
-    * Use can select the python version you want. we recommend using >=3.7
+    * User can select the python version you want. we recommend using >=3.7
 
 3. activate enviroment and conda install cytnx:
     
