@@ -338,7 +338,7 @@ namespace cytnx{
                 } 
             }
             void set_rowrank(const cytnx_uint64 &new_rowrank){
-                cytnx_error_msg(new_rowrank >= this->_labels.size(),"[ERROR] rowrank cannot exceed the rank of UniTensor.%s","\n");
+                cytnx_error_msg(new_rowrank > this->_labels.size(),"[ERROR] rowrank cannot exceed the rank of UniTensor.%s","\n");
                 this->_rowrank = new_rowrank;
             }
 

@@ -32,7 +32,7 @@ See The following user guide for install and using of cytnx:
     2. [Enhance][C++] Add Tensor initialize assignment op from initializer_list
     3. [Enhance][C++] Add Storage initialize assignment op from vector & initializer list  
     4. [Fix] bug for set partial elements on Tensor with slicing issue. 
-    
+    5. [Fix][DenseUniTensor] set_rowrank cannot set full rank issue #24 
 
 
     v0.7.1
