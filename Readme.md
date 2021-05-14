@@ -16,10 +16,10 @@ See The following user guide for install and using of cytnx:
 [![Build Status](https://travis-ci.org/kaihsin/Cytnx_build.svg?branch=master)](https://travis-ci.org/kaihsin/Cytnx_build)
 
 ## News
-    [v0.7.1] 
+    [v0.7.2] 
  
 ## Stable Version:
-[v0.7.1a](https://github.com/kaihsin/Cytnx/tree/v0.7.1a)
+[v0.7.2a](https://github.com/kaihsin/Cytnx/tree/v0.7.2a)
 
 ## Known issues:
     v0.7.2
@@ -27,6 +27,9 @@ See The following user guide for install and using of cytnx:
 
 
 ## Current dev Version:
+    v0.7.3
+
+
     v0.7.2 
     1. [Enhance] Add Tensor.set with Scalar
     2. [Enhance][C++] Add Tensor initialize assignment op from initializer_list
