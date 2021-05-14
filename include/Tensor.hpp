@@ -589,6 +589,15 @@ namespace cytnx{
             Tensor(const Tensor &rhs){
                 _impl = rhs._impl;
             }
+
+            template<class Tp>
+            Tensor(const std::initializer_list<Tp> &rhs){
+                Storage stmp = std::vector<Tp>(rhs);
+                boost::intrusive_ptr<Tensor_impl> tmp(new Tensor_impl());
+                tmp->Init(stmp);
+                this->_impl = tmp;
+            }
+
             Tensor& operator=(const Tensor &rhs){
                 _impl = rhs._impl;
                 return *this;

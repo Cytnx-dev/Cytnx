@@ -366,8 +366,8 @@ namespace cytnx{
                         TotalElem*=shape[i];
                 }
 
-                if(!is_scalar)
-                    cytnx_error_msg(in->size() != TotalElem, "%s", "[ERROR] internal, the out Storage size does not match the no. of elems calculated from Accessors.%s","\n");
+                //if(!is_scalar)
+                //    cytnx_error_msg(in->size() != TotalElem, "%s", "[ERROR] internal, the out Storage size does not match the no. of elems calculated from Accessors.%s","\n");
                 
 
                 //[warning] this version only work for scalar currently!.
@@ -401,7 +401,7 @@ namespace cytnx{
                         //}
                         //checkCudaErrors(cudaSetDevice(this->device));
                         //utils_internal::uii.cuSetElems_conti_ii[in->dtype][this->dtype](in->Mem,this->Mem,offj,new_offj,locators,TotalElem,Nunit,is_scalar);
-                        cytnx_error_msg(true,"[Developing][SetElem is not down for further inspection]%s","\n");
+                        cytnx_error_msg(true,"[Developing][SetElem on gpu is now down for further inspection]%s","\n");
                     #else
                         cytnx_error_msg(true,"[ERROR][SetElem_byShape] fatal internal%s","the Storage is set on gpu without CUDA support\n");
                     #endif

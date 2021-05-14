@@ -529,6 +529,7 @@ namespace cytnx{
 
         //cout << "perm" << endl;
         //cout << perm << endl;
+        //cout << new_shape << endl;
         if(new_shape.size()){ //exclude the case where only single element exists!
                         
             out->reshape_(new_shape); // remove size-1 axis
@@ -621,6 +622,12 @@ namespace cytnx{
         for(cytnx_uint32 i=0;i<acc.size();i++){
             acc[i].get_len_pos(curr_shape[i],get_shape[i],locators[i]);
         }
+  
+        for(cytnx_uint64 i=0;i<tmpidx;i++){
+            get_shape.push_back(curr_shape[acc.size()+i]);
+        }
+
+        //std::cout << get_shape << endl;
 
         //permute input to currect pos 
         std::vector<cytnx_int64> new_mapper(this->_mapper.begin(),this->_mapper.end());
@@ -630,6 +637,8 @@ namespace cytnx{
             if(get_shape[i]==1) remove_id.push_back(this->_mapper[this->_invmapper[i]]);
             else new_shape.push_back(get_shape[i]);
         }
+
+        //cout << new_shape << endl;
 
         std::vector<cytnx_uint64> perm;
         for(unsigned int i=0;i<new_mapper.size();i++){
@@ -650,6 +659,7 @@ namespace cytnx{
 
 
         // check size:
+        //cout << new_shape << tmp->shape() << endl;
         cytnx_error_msg(new_shape != tmp->shape(), "[ERROR][Tensor.set_elems]%s","inconsistent shape");
 
 
@@ -657,6 +667,7 @@ namespace cytnx{
         //out->Init(get_shape,this->dtype(),this->device());
 
         //this->storage()._impl->SetElem_byShape(rhs->storage()._impl,this->shape(),this->_mapper,get_shape,locators,false);
+        //std::cout << locators << endl;
         this->storage()._impl->SetElem_byShape_v2(tmp->storage()._impl,curr_shape,locators,Nunit,false);
     }
 
@@ -708,7 +719,7 @@ namespace cytnx{
  
         //call storage
         Storage tmp(1,Type.c_typename_to_id(typeid(T).name()),this->device());
-        tmp.at<T>(0) = rc;
+        tmp.set_item(0,rc);
         this->storage()._impl->SetElem_byShape_v2(tmp._impl,curr_shape,locators,Nunit,true);
         
     }
@@ -723,7 +734,7 @@ namespace cytnx{
     template void Tensor_impl::set<cytnx_int16>(const std::vector<cytnx::Accessor> &, const cytnx_int16&);
     template void Tensor_impl::set<cytnx_uint16>(const std::vector<cytnx::Accessor> &, const cytnx_uint16&);
     template void Tensor_impl::set<cytnx_bool>(const std::vector<cytnx::Accessor> &, const cytnx_bool&);
-
+    template void Tensor_impl::set<Scalar>(const std::vector<cytnx::Accessor> &, const Scalar&);
 
 
 

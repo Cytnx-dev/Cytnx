@@ -100,6 +100,22 @@ class MyOp2: public LinOp{
 
 int main(int argc, char *argv[]){
 
+    //Tensor sa = {1,1,1,2,3,4,3,5,2,4,2,5,5,4,3};
+    //Storage sa = va;
+    
+    Tensor sa = arange(2*3*4*5).reshape(2,3,4,5);
+    
+    cout << sa << endl;
+    
+    Tensor sb = zeros(3*5).reshape(5,3).permute(1,0) + 10;
+    
+       
+ 
+    sa(0,":",0,":") = sb;
+
+    cout << sa ;
+
+    exit(1);
 
     auto Tnnn = cytnx::arange(16).reshape(4,4);
     auto oout = cytnx::linalg::Svd_truncate(Tnnn,1);

@@ -104,9 +104,9 @@ namespace cytnx{
             virtual void assign_selftype(const cytnx_int16 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
             virtual void assign_selftype(const cytnx_bool &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
 
-            virtual Scalar_base* astype(const unsigned int &dtype){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual Scalar_base* astype(const unsigned int &dtype){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n"); return nullptr;}
 
-            virtual void* get_raw_address() const{cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");};
+            virtual void* get_raw_address() const{cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n"); return nullptr;}
 
             virtual void print(std::ostream& os) const{};
             virtual Scalar_base* copy() const{

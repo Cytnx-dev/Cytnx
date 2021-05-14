@@ -21,7 +21,20 @@ See The following user guide for install and using of cytnx:
 ## Stable Version:
 [v0.7.1a](https://github.com/kaihsin/Cytnx/tree/v0.7.1a)
 
+## Known issues:
+    v0.7.2
+    1. [Pending][GPU] Get/Set elements on GPU is still down. 
+
+
 ## Current dev Version:
+    v0.7.2 
+    1. [Enhance] Add Tensor.set with Scalar
+    2. [Enhance][C++] Add Tensor initialize assignment op from initializer_list
+    3. [Enhance][C++] Add Storage initialize assignment op from vector & initializer list  
+    4. [Fix] bug for set partial elements on Tensor with slicing issue. 
+    
+
+
     v0.7.1
     1. [Enhance] Finish UniTensor arithmetic. 
     2. [Fix] bug when using Tensor.get() accessing only single element 

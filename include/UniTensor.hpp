@@ -209,8 +209,10 @@ namespace cytnx{
 
             // this will only work on non-symm tensor (DenseUniTensor)
             virtual boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors);
+
             // this will only work on non-symm tensor (DenseUniTensor)
-            virtual void set(const std::vector<Accessor> &accessors, const Tensor &rhs);
+            virtual void set(const std::vector<Accessor> &accessors, const Tensor &rhs); 
+
             virtual void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank=0);
             virtual boost::intrusive_ptr<UniTensor_base> reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank=0);
             virtual boost::intrusive_ptr<UniTensor_base> to_dense();
@@ -434,6 +436,7 @@ namespace cytnx{
             void set(const std::vector<Accessor> &accessors, const Tensor &rhs){
                 this->_block.set(accessors,rhs);
             }
+
             void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank=0);
             boost::intrusive_ptr<UniTensor_base> reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank=0);
             boost::intrusive_ptr<UniTensor_base> to_dense();
@@ -1329,7 +1332,6 @@ namespace cytnx{
             void set(const std::vector<Accessor> &accessors, const Tensor &rhs){
                 this->_impl->set(accessors, rhs);
             }
-
             UniTensor reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank=0){
                 UniTensor out;
                 out._impl = this->_impl->reshape(new_shape,rowrank);

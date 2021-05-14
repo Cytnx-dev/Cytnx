@@ -959,10 +959,24 @@ namespace cytnx{
             Storage(const Storage &rhs){
                 this->_impl = rhs._impl;
             }
+            
+            template<class Tp>
+            Storage(const std::vector<Tp> &rhs){
+                this->_from_vector(rhs,-1);
+            }
+            template<class Tp>
+            Storage(const std::initializer_list<Tp> &rhs){
+                this->_from_vector(std::vector<Tp>(rhs),-1);
+            }
+
+
             Storage& operator=(const Storage &rhs){
                 this->_impl = rhs._impl;
                 return *this;
             }
+
+            
+            
             ///@endcond
 
             /// @cond
@@ -1251,6 +1265,8 @@ namespace cytnx{
                 out._from_vector(vin,device);
                 return out;
             }
+
+
 
             /// @cond
             
