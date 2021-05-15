@@ -27,7 +27,7 @@ See The following user guide for install and using of cytnx:
 
 ## Current dev Version:
     v0.7.3
-
+    1. [Fix] bug for Get slice does not reduce when dim=1. 
 
     v0.7.2 
     1. [Enhance] Add Tensor.set with Scalar

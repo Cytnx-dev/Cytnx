@@ -18,7 +18,7 @@ namespace cytnx{
                 out.Init(Lt.shape(),Lt.dtype() < Rt.dtype()?Lt.dtype():Rt.dtype(),Lt.device());
                 icnst = true;
             }else{
-                cytnx_error_msg(Lt.shape() != Rt.shape(),"[Add] error, the two tensor does not have the same shape.%s","\n");
+                cytnx_error_msg(Lt.shape() != Rt.shape(),"[Add] error, the two tensor does not have the same shape. Lt rank: [%d] Rt rank: [%d] %s",Lt.shape().size(), Rt.shape().size(),"\n");
                 out.Init(Lt.shape(),Lt.dtype() < Rt.dtype()?Lt.dtype():Rt.dtype(),Lt.device());
             }
  

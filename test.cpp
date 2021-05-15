@@ -103,16 +103,13 @@ int main(int argc, char *argv[]){
     //Tensor sa = {1,1,1,2,3,4,3,5,2,4,2,5,5,4,3};
     //Storage sa = va;
     
-    Tensor sa = arange(2*3*4*5).reshape(2,3,4,5);
-    
-    cout << sa << endl;
-    
-    Tensor sb = zeros(3*5).reshape(5,3).permute(1,0) + 10;
-    
-       
+    Tensor sa = zeros({2,2,2,2});
+    Tensor sb = sa + 1;
+    sa(0,0) = sb(0,1,1,1);
  
-    sa(0,":",0,":") = sb;
-
+    
+           
+ 
     cout << sa ;
 
     exit(1);
