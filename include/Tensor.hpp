@@ -590,6 +590,7 @@ namespace cytnx{
                 _impl = rhs._impl;
             }
 
+            /*
             template<class Tp>
             Tensor(const std::initializer_list<Tp> &rhs){
                 Storage stmp = std::vector<Tp>(rhs);
@@ -597,6 +598,7 @@ namespace cytnx{
                 tmp->Init(stmp);
                 this->_impl = tmp;
             }
+            */
 
             Tensor& operator=(const Tensor &rhs){
                 _impl = rhs._impl;

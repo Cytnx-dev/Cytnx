@@ -29,8 +29,12 @@ See The following user guide for install and using of cytnx:
     v0.7.3
     1. [Fix] bug for Get slice does not reduce when dim=1. 
     2. [Enhance] checking the memory alloc failing for EL.  
-    
-
+    3. [Change] remove Tensor init assignment op from initializer_list, for conflict with UniTensor init.    
+    4. [Enhance] print information for Symmetric UniTensor.
+    5. [Enhance] linalg::ExpM/ExpH support for symmetric UniTensor.
+    6. [Enhance] add UniTensor.get_blocks_qnums() for corresponding qnums for current blocks. 
+    7. [Enhance][Safety] add UniTensor.get_blocks_(silent=false) with "silent" option by default pop-up a warning when UniTensor is non-contiguous.   
+ 
 
     v0.7.2 
     1. [Enhance] Add Tensor.set with Scalar

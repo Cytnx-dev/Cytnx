@@ -198,8 +198,9 @@ namespace cytnx{
             @param new_bondType the new tag-type, it can be BD_BRA,BD_KET or BD_REG
 
             */
-            void set_type(const bondType &new_bondType){
+            Bond& set_type(const bondType &new_bondType){
                 this->_impl->set_type(new_bondType);
+                return *this;
             }
 
             /**

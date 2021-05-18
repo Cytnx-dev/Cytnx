@@ -70,8 +70,20 @@ namespace cytnx{
             
             
             if(Tin.is_blockform()){
-                cytnx_error_msg(true,"[Developing]%s","\n");
                 
+                UniTensor out;
+                if(Tin.is_contiguous())
+                    out = Tin.clone();
+                else
+                    out = Tin.contiguous();
+
+                std::vector<Tensor> &tmp = out.get_blocks_();
+
+                for(int i=0;i<tmp.size();i++){
+                    tmp[i] = cytnx::linalg::ExpH(tmp[i],a,b);
+                }
+
+                return out;
 
 
             }else{

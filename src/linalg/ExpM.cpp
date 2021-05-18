@@ -61,9 +61,21 @@ namespace cytnx{
         UniTensor ExpM(const UniTensor &Tin, const cytnx_double &a, const cytnx_double &b){
             
             if(Tin.is_blockform()){
-                cytnx_error_msg(true,"[Developing]%s","\n");
+                //cytnx_error_msg(Tin.is_contiguous()==false, "[ERROR][ExpM] currently ExpM on symmetric UniTensor have to operate on contiguous(). Call contiguous_() or contiguous() first,%s","\n");
                 
+                UniTensor out; 
+                if(Tin.is_contiguous())
+                    out = Tin.clone();
+                else
+                    out = Tin.contiguous();
 
+                std::vector<Tensor> &tmp = out.get_blocks_(); 
+
+                for(int i=0;i<tmp.size();i++){
+                    tmp[i] = cytnx::linalg::ExpM(tmp[i],a,b);
+                }
+                
+                return out;
 
             }else{
                 

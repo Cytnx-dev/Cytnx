@@ -199,8 +199,8 @@ namespace cytnx{
             virtual bool same_data(const boost::intrusive_ptr<UniTensor_base> &rhs) const;
 
             virtual std::vector<Tensor> get_blocks() const;
-            virtual const std::vector<Tensor>& get_blocks_() const;
-            virtual std::vector<Tensor>& get_blocks_();
+            virtual const std::vector<Tensor>& get_blocks_(const bool &) const;
+            virtual std::vector<Tensor>& get_blocks_(const bool &);
 
             virtual void put_block(const Tensor &in, const cytnx_uint64 &idx=0);
             virtual void put_block_(Tensor &in, const cytnx_uint64 &idx=0);
@@ -220,6 +220,7 @@ namespace cytnx{
             virtual void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back=false, const bool &by_label=true);
             virtual boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &mv_elem_self=false, const bool &mv_elem_rhs=false);
             virtual std::vector<Bond> getTotalQnums(const bool &physical=false);          
+            virtual std::vector<std::vector<cytnx_int64> > get_blocks_qnums() const;
             virtual void Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false);
             virtual boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false);
 
@@ -391,11 +392,11 @@ namespace cytnx{
                 cytnx_error_msg(true,"[ERROR][DenseUniTensor] cannot use get_blocks(), use get_block() instead!%s","\n");
                 return out; // this will not share memory!!
             }
-            const std::vector<Tensor>& get_blocks_() const {
+            const std::vector<Tensor>& get_blocks_(const bool &silent=false) const {
                 cytnx_error_msg(true,"[ERROR][DenseUniTensor] cannot use get_blocks_(), use get_block_() instead!%s","\n");
                 return this->_interface_block; // this will not share memory!!
             }
-            std::vector<Tensor>& get_blocks_(){
+            std::vector<Tensor>& get_blocks_(const bool &silent=false){
                 cytnx_error_msg(true,"[ERROR][DenseUniTensor] cannot use get_blocks_(), use get_block_() instead!%s","\n");
                 return this->_interface_block; // this will not share memory!!
             }
@@ -447,7 +448,14 @@ namespace cytnx{
             std::vector<Bond> getTotalQnums(const bool &physical=false){
                 cytnx_error_msg(true,"[ERROR][DenseUniTensor] %s","getTotalQnums can only operate on UniTensor with symmetry.\n");
                 return std::vector<Bond>();
-            }        
+            }       
+
+         
+            std::vector<std::vector<cytnx_int64> > get_blocks_qnums() const{
+                cytnx_error_msg(true,"[ERROR][DenseUniTensor] %s","get_blocks_qnums can only operate on UniTensor with symmetry.\n");
+                return std::vector<std::vector<cytnx_int64> >();
+            }
+
             bool same_data(const boost::intrusive_ptr<UniTensor_base> &rhs) const{
                 if(rhs->uten_type()!=UTenType.Dense) return false;
                 
@@ -855,32 +863,36 @@ namespace cytnx{
                 }
             };
 
-            const std::vector<Tensor>& get_blocks_() const {
+            const std::vector<Tensor>& get_blocks_(const bool &silent=false) const {
                 //cout << "[call this]" << endl;
                 if(this->_contiguous){
                     return this->_blocks;
                 }else{
                     //cytnx_error_msg(true,"[Developing]%s","\n");
-                    cytnx_error_msg(true,"[ERROR][SparseUniTensor] cannot call get_blocks_() with a non-contiguous UniTensor. \ntry: \n1) get_blocks()\n2) call contiguous/contiguous_() first, then get_blocks_()%s","\n");
+                    if(!silent)
+                        cytnx_warning_msg(true,"[WARNING][SparseUniTensor] call get_blocks_() with a non-contiguous UniTensor should be used with caution. \ntry: \n1) get_blocks()\n2) call contiguous/contiguous_() first, then get_blocks_() to get concise results%s","\n");
+
                     return this->_blocks;
                 }
             };
-            std::vector<Tensor>& get_blocks_(){
+            std::vector<Tensor>& get_blocks_(const bool &silent=false){
                 //cout << "[call this]" << endl;
                 if(this->_contiguous){
                     return this->_blocks;
                 }else{
-                    cytnx_error_msg(true,"[ERROR][SparseUniTensor] cannot call get_blocks_() with a non-contiguous UniTensor. \ntry: \n1) get_blocks()\n2) call contiguous/contiguous_() first, then get_blocks_()%s","\n");
+                    if(!silent)
+                        cytnx_warning_msg(true,"[WARNING][SparseUniTensor] call get_blocks_() with a non-contiguous UniTensor should be used with caution. \ntry: \n1) get_blocks()\n2) call contiguous/contiguous_() first, then get_blocks_() to get concise results%s","\n");
+
                     return this->_blocks;
                 }
             };
 
             bool same_data(const boost::intrusive_ptr<UniTensor_base> &rhs) const{
                 if(rhs->uten_type()!=UTenType.Sparse) return false;
-                if(rhs->get_blocks_().size() != this->get_blocks_().size()) return false;
+                if(rhs->get_blocks_(1).size() != this->get_blocks_(1).size()) return false;
 
-                for(int i=0;i<rhs->get_blocks_().size();i++)                
-                    if(this->get_blocks_()[i].same_data(rhs->get_blocks_()[i])==false) return false;
+                for(int i=0;i<rhs->get_blocks_(1).size();i++)                
+                    if(this->get_blocks_(1)[i].same_data(rhs->get_blocks_(1)[i])==false) return false;
 
                 return true;
 
@@ -957,6 +969,9 @@ namespace cytnx{
             };
             boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &mv_elem_self=false, const bool &mv_elem_rhs=false);
             std::vector<Bond> getTotalQnums(const bool &physical=false);
+            std::vector<std::vector<cytnx_int64> > get_blocks_qnums() const{
+                return this->_blockqnums;
+            }
             ~SparseUniTensor(){};
 
 
@@ -1119,6 +1134,9 @@ namespace cytnx{
           
             */
             UniTensor(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false): _impl(new UniTensor_base()){
+                #ifdef UNI_DEBUG 
+                    cytnx_warning_msg(true,"[DEBUG] message: entry for UniTensor(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false)%s","\n");
+                #endif
                 this->Init(bonds,in_labels,rowrank,dtype,device,is_diag);
             }
             void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false){
@@ -1133,7 +1151,9 @@ namespace cytnx{
 
                 // dynamical dispatch:
                 if(is_sym){
-                    std::cout << "sym!!" << std::endl;
+                    #ifdef UNI_DEBUG
+                        cytnx_warning_msg(true,"[DEBUG] message: entry dispatch: UniTensor: symmetric%s","\n"); 
+                    #endif
                     //cytnx_warning_msg(true,"[warning, still developing, some functions will display \"[Developing]\"][SparseUniTensor]%s","\n");
                     boost::intrusive_ptr<UniTensor_base> out(new SparseUniTensor());
                     this->_impl = out;
@@ -1300,12 +1320,12 @@ namespace cytnx{
             }
             // this return a shared view of blocks for non-symm tensor.
             // for symmetry tensor, it call contiguous first and return a shared view of blocks. [dev]
-            const std::vector<Tensor>& get_blocks_() const {
-                return this->_impl->get_blocks_();
+            const std::vector<Tensor>& get_blocks_(const bool &silent=false) const {
+                return this->_impl->get_blocks_(silent);
             }
             // for symmetry tensor, it call contiguous first and return a shared view of blocks. [dev]
-            std::vector<Tensor>& get_blocks_(){
-                return this->_impl->get_blocks_();
+            std::vector<Tensor>& get_blocks_(const bool &silent=false){
+                return this->_impl->get_blocks_(silent);
             }
 
             // the put block will have shared view with the internal block, i.e. non-clone. 
@@ -1359,7 +1379,9 @@ namespace cytnx{
             std::vector<Bond> getTotalQnums(const bool physical=false) const{
                 return this->_impl->getTotalQnums(physical);
             }
-
+            std::vector<std::vector<cytnx_int64> > get_blocks_qnums() const{
+                return this->_impl->get_blocks_qnums();
+            }
             
             bool same_data(const UniTensor &rhs) const{
 

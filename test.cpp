@@ -100,6 +100,28 @@ class MyOp2: public LinOp{
 
 int main(int argc, char *argv[]){
 
+    auto bdi = Bond(2, BD_KET,{{1},{-1}});
+    auto bdo = bdi.clone().set_type(BD_BRA);
+    auto Hop = UniTensor({bdi,bdi,bdo,bdo},{},2);
+
+
+    //Setting blocks:
+    Hop.get_blocks_()[0] += 0.25;
+    Hop.get_blocks_()[2] += 0.25;
+    Hop.get_blocks_()[1] = Tensor::from_storage(Storage({-1.,1.,1.,-1.})).reshape(2,2)*0.25;
+
+
+
+
+    print(Hop);
+    Hop.print_diagram();
+
+    Hop = linalg::ExpH(Hop);
+    print(Hop); 
+
+
+    exit(1); 
+
     //Tensor sa = {1,1,1,2,3,4,3,5,2,4,2,5,5,4,3};
     //Storage sa = va;
     

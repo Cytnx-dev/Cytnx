@@ -128,11 +128,11 @@ namespace cytnx{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
             return std::vector<Tensor>();
         }
-        const std::vector<Tensor>& UniTensor_base::get_blocks_() const{
+        const std::vector<Tensor>& UniTensor_base::get_blocks_(const bool &silent=false) const{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
             return std::vector<Tensor>();
         }
-        std::vector<Tensor>& UniTensor_base::get_blocks_(){
+        std::vector<Tensor>& UniTensor_base::get_blocks_(const bool &silent=false){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
             std::vector<Tensor> t;
             return t;
@@ -193,7 +193,10 @@ namespace cytnx{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
             return std::vector<Bond>();
         }
-
+        std::vector<std::vector<cytnx_int64> > UniTensor_base::get_blocks_qnums() const{
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+            return std::vector<std::vector<cytnx_int64> >();
+        }
         boost::intrusive_ptr<UniTensor_base> UniTensor_base::Conj(){
 
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
@@ -314,17 +317,31 @@ namespace cytnx{
         std::ostream& operator<<(std::ostream& os, const UniTensor &in){
             char* buffer = (char*)malloc(sizeof(char)*256);
             sprintf(buffer,"Tensor name: %s\n",in.name().c_str()); os << std::string(buffer);
-            if(!in.is_tag()) 
+            if(in.is_tag()) 
                 sprintf(buffer,"braket_form : %s\n", in.is_braket_form()?"True":"False"); os << std::string(buffer);
             
             if(in.is_blockform()){
-                std::vector<Tensor> tmp = in.get_blocks();
-                for(cytnx_uint64 i=0;i<tmp.size();i++)
-                    os << tmp[i] << std::endl;
+                if(in.is_contiguous()){
+                    std::vector<Tensor> tmp = in.get_blocks_(true);
+                    for(cytnx_uint64 i=0;i<tmp.size();i++)
+                        os << tmp[i] << std::endl;
+                }else{
+                    cytnx_warning_msg(true,"[WARNING][Symmetric] cout/print UniTensor on a non-contiguous UniTensor. the blocks appears here could be different than the current shape of UniTensor.%s","\n");
+                    auto tmp_qnums = in.get_blocks_qnums();
+                    std::vector<Tensor> tmp = in.get_blocks_(true);
+                    os << "=============\n";
+                    for(cytnx_uint64 i=0;i<tmp.size();i++){
+                        os << "Qnum:" << tmp_qnums[i] << std::endl;
+                        os << tmp[i] << std::endl;  
+                        os << "=============\n";
+                    }
+                    os << "-------- end of print ---------\n";
+
+                }
                 
             }else{
                 sprintf(buffer,"is_diag    : %s\n",in.is_diag()?"True":"False"); os << std::string(buffer);
-                Tensor tmp = in.get_block();
+                Tensor tmp = in.get_block_();
                 os << tmp << std::endl;     
             }         
             free(buffer);

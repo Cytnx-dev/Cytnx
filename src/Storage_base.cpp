@@ -352,9 +352,6 @@ namespace cytnx{
     void Storage_base::SetElem_byShape_v2(boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &shape, const std::vector<std::vector<cytnx_uint64> > &locators,const cytnx_uint64 &Nunit, const bool &is_scalar){
         // plan: we assume in is contiguous for now!
         // 
-        #ifdef UNI_DEBUG
-                cytnx_error_msg(shape.size() != len.size(),"%s","[ERROR][DEBUG] internal Storage, shape.size() != len.size()");
-        #endif
 
                 //std::cout <<"=====" << len.size() << " " << locators.size() << std::endl;
                 //create new instance:
