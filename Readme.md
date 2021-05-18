@@ -34,7 +34,9 @@ See The following user guide for install and using of cytnx:
     5. [Enhance] linalg::ExpM/ExpH support for symmetric UniTensor.
     6. [Enhance] add UniTensor.get_blocks_qnums() for corresponding qnums for current blocks. 
     7. [Enhance][Safety] add UniTensor.get_blocks_(silent=false) with "silent" option by default pop-up a warning when UniTensor is non-contiguous.   
- 
+    8. [Enhance] add operator* and operator*= for combineBond. 
+
+
 
     v0.7.2 
     1. [Enhance] Add Tensor.set with Scalar

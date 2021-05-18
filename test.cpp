@@ -103,22 +103,29 @@ int main(int argc, char *argv[]){
     auto bdi = Bond(2, BD_KET,{{1},{-1}});
     auto bdo = bdi.clone().set_type(BD_BRA);
     auto Hop = UniTensor({bdi,bdi,bdo,bdo},{},2);
-
+    
 
     //Setting blocks:
     Hop.get_blocks_()[0] += 0.25;
     Hop.get_blocks_()[2] += 0.25;
     Hop.get_blocks_()[1] = Tensor::from_storage(Storage({-1.,1.,1.,-1.})).reshape(2,2)*0.25;
 
-
-
-
     print(Hop);
     Hop.print_diagram();
 
-    Hop = linalg::ExpH(Hop);
-    print(Hop); 
+    //Evolution op:
+    auto Uop = linalg::ExpH(Hop);
+    print(Uop); 
 
+    
+    //MPS:
+    auto Ga = UniTensor({bdi,bdo,bdo*bdo},{},1);
+    auto Gb = UniTensor({bdi*bdi,bdo,bdo},{},2);
+
+    Ga.print_diagram();
+    Gb.print_diagram();
+
+    
 
     exit(1); 
 

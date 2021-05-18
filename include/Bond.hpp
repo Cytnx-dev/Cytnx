@@ -265,7 +265,7 @@ namespace cytnx{
             #### output>
             \verbinclude example/Bond/combineBond.py.out
             */
-            Bond combineBond(const Bond &bd_in){
+            Bond combineBond(const Bond &bd_in) const{
                 Bond out;
                 out._impl = this->_impl->combineBond(bd_in._impl);
                 return out;
@@ -362,7 +362,16 @@ namespace cytnx{
 
             bool operator==(const Bond &rhs) const;
             bool operator!=(const Bond &rhs) const;
-   
+      
+            Bond operator*(const Bond &rhs) const{
+                return this->combineBond(rhs);
+            }
+        
+            Bond& operator*=(const Bond &rhs){
+                this->combineBond_(rhs);
+                return *this;
+            }
+ 
 
  
     };
