@@ -61,8 +61,13 @@ namespace cytnx{
             cytnx_error_msg(tmp.size()!=in_labels.size(),"[ERROR] labels cannot contain duplicated elements.%s","\n");
             this->_labels = in_labels;
         }
-        cytnx_error_msg(is_diag,"[ERROR][SparseUniTensor] Cannot set is_diag=true when the UniTensor is with symmetry.%s","\n");
 
+
+        //cytnx_error_msg(is_diag,"[ERROR][SparseUniTensor] Cannot set is_diag=true when the UniTensor is with symmetry.%s","\n");
+        this->_is_diag = is_diag;
+
+            
+            
         //copy bonds, otherwise it will share objects:
         this->_bonds = vec_clone(bonds);
         this->_is_braket_form = this->_update_braket();
@@ -101,6 +106,8 @@ namespace cytnx{
                         
             rowdim = tot_bonds[0].getDegeneracy(this->_blockqnums[i],this->_inner2outer_row[i]);
             coldim = tot_bonds[1].getDegeneracy(this->_blockqnums[i],this->_inner2outer_col[i]);    
+
+
             for(cytnx_uint64 j=0;j<this->_inner2outer_row[i].size();j++){
                 this->_outer2inner_row[this->_inner2outer_row[i][j]] = pair<cytnx_uint64,cytnx_uint64>(i,j);
             }
@@ -109,7 +116,14 @@ namespace cytnx{
                 this->_outer2inner_col[this->_inner2outer_col[i][j]] = pair<cytnx_uint64,cytnx_uint64>(i,j);
             }
 
-            this->_blocks[i] = zeros({rowdim,coldim},dtype,device);
+
+            if(is_diag){
+                // checking if each block are square matrix!:
+                cytnx_error_msg(rowdim != coldim, "[ERROR][SparseUniTensor] is_diag =True can only apply to UniTensor with each block to be a square matrix!\n block[%d] row.dim:[%d] col.dim:[%d]\n",i,rowdim,coldim);
+                this->_blocks[i] = zeros({rowdim},dtype,device);
+            }else{
+                this->_blocks[i] = zeros({rowdim,coldim},dtype,device);
+            }
         }
 
 
@@ -295,8 +309,8 @@ namespace cytnx{
         sprintf(buffer,"tensor Rank : %d\n",this->_labels.size());      std::cout << std::string(buffer);
         sprintf(buffer,"block_form  : true%s","\n");                    std::cout << std::string(buffer);
         sprintf(buffer,"valid bocks : %d\n",this->_blocks.size());      std::cout << std::string(buffer);
+        sprintf(buffer,"is diag   : %s\n",this->is_diag()?"True":"False"); std::cout << std::string(buffer);
         sprintf(buffer,"on device   : %s\n",this->device_str().c_str());std::cout << std::string(buffer);
-
         cytnx_uint64 Nin = this->_rowrank;
         cytnx_uint64 Nout = this->_labels.size() - this->_rowrank;
         cytnx_uint64 vl;

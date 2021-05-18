@@ -319,7 +319,8 @@ namespace cytnx{
             sprintf(buffer,"Tensor name: %s\n",in.name().c_str()); os << std::string(buffer);
             if(in.is_tag()) 
                 sprintf(buffer,"braket_form : %s\n", in.is_braket_form()?"True":"False"); os << std::string(buffer);
-            
+            sprintf(buffer,"is_diag    : %s\n",in.is_diag()?"True":"False"); os << std::string(buffer);
+
             if(in.is_blockform()){
                 if(in.is_contiguous()){
                     std::vector<Tensor> tmp = in.get_blocks_(true);
@@ -340,7 +341,6 @@ namespace cytnx{
                 }
                 
             }else{
-                sprintf(buffer,"is_diag    : %s\n",in.is_diag()?"True":"False"); os << std::string(buffer);
                 Tensor tmp = in.get_block_();
                 os << tmp << std::endl;     
             }         

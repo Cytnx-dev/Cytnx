@@ -126,6 +126,9 @@ int main(int argc, char *argv[]){
     Gb.print_diagram();
 
     
+    auto La = UniTensor({bdi*bdi,bdo*bdo},{},1,Type.Double,Device.cpu,true);
+    
+    La.print_diagram();
 
     exit(1); 
 

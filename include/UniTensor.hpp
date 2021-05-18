@@ -663,6 +663,7 @@ namespace cytnx{
                 tmp->_mapper = this->_mapper;
                 tmp->_inv_mapper = this->_inv_mapper;
                 tmp->_contiguous = this->_contiguous;
+                tmp->_is_diag = this->_is_diag;
 
                 //inner meta    
                 if(inner){            
