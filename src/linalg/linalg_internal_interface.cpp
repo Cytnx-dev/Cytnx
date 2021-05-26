@@ -5,7 +5,6 @@ using namespace std;
 namespace cytnx{
     namespace linalg_internal{
 
-
         linalg_internal_interface lii;
 
         linalg_internal_interface::linalg_internal_interface(){
@@ -559,6 +558,13 @@ namespace cytnx{
             Outer_ii[Type.Uint32][Type.Int16        ] = Outer_internal_u32ti16;
             Outer_ii[Type.Uint32][Type.Bool         ] = Outer_internal_u32tb;
 
+            //================
+
+            Lstsq_ii = std::vector<Lstsqfunc_oii>(5);
+            Lstsq_ii[Type.ComplexDouble] = Lstsq_internal_cd;
+            Lstsq_ii[Type.ComplexFloat ] = Lstsq_internal_cf;
+            Lstsq_ii[Type.Double       ] = Lstsq_internal_d;
+            Lstsq_ii[Type.Float        ] = Lstsq_internal_f;
 
             #ifdef UNI_GPU
                 cuAri_ii = vector<vector<Arithmeticfunc_oii> >(N_Type,vector<Arithmeticfunc_oii>(N_Type));

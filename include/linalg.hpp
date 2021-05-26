@@ -790,6 +790,24 @@ namespace cytnx{
             To use, define a linear operator with LinOp class either by assign a custom function or create a class that inherit LinOp (see LinOp for further details)            
         */
         std::vector<Tensor> Lanczos_Gnd(LinOp *Hop, const double &CvgCrit=1.0e-14, const bool &is_V=true, const Tensor &Tin=Tensor(), const bool &verbose=false, const unsigned int &Maxiter=100000);
+
+        //Lstsq:
+        //===========================================
+        /**
+        @brief Return the least-squares solution to a linear matrix equation.
+        @param “Coefficient” matrix, must be two-dimensional.
+        @param Ordinate or “dependent variable” values. If b must be two-dimensional, the least-squares solution is calculated for each of the K columns of b.
+        @param Cut-off ratio for small singular values of a. For the purposes of rank determination, singular values are treated as zero if they are smaller than rcond times the largest singular value of A.
+        @return [std::vector<Tensors>]
+            1. the first tensor is least-squares solution. The solutions are in the K columns of x.
+            2. the second tensor is the sums of squared residuals: Squared Euclidean 2-norm for each column in b - a @ x. If the rank of a is < N or M <= N, this is an zeros(0) Tensor.
+            3. the third tensor is the rank of matrix a.
+            4. the forth tensor is singular values of a.
+        #description:
+            Computes the vector x that approximatively solves the equation A @ x = b. The equation may be under-, well-, or over-determined independent columns. If a is square and of full rank, then x (but for round-off error) is the “exact” solution of the equation. Else, x minimizes the Euclidean 2-norm || b - a x ||.
+        */
+        std::vector<Tensor> Lstsq(const Tensor &A, const Tensor &b, const float &rcond=-1);
+
     }// namespace linalg
     
 
