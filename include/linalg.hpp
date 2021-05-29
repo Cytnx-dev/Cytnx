@@ -797,12 +797,14 @@ namespace cytnx{
         @brief Return the least-squares solution to a linear matrix equation.
         @param “Coefficient” matrix, must be two-dimensional.
         @param Ordinate or “dependent variable” values. If b must be two-dimensional, the least-squares solution is calculated for each of the K columns of b.
-        @param Cut-off ratio for small singular values of a. For the purposes of rank determination, singular values are treated as zero if they are smaller than rcond times the largest singular value of A.
+        @param Cut-off ratio for small singular values of a. For the purposes of rank determination, singular values are treated as zero if they are smaller than rcond times the largest singular value of A, If it is negative, the machine precision is used.
         @return [std::vector<Tensors>]
+
             1. the first tensor is least-squares solution. The solutions are in the K columns of x.
             2. the second tensor is the sums of squared residuals: Squared Euclidean 2-norm for each column in b - a @ x. If the rank of a is < N or M <= N, this is an zeros(0) Tensor.
             3. the third tensor is the rank of matrix a.
             4. the forth tensor is singular values of a.
+            
         #description:
             Computes the vector x that approximatively solves the equation A @ x = b. The equation may be under-, well-, or over-determined independent columns. If a is square and of full rank, then x (but for round-off error) is the “exact” solution of the equation. Else, x minimizes the Euclidean 2-norm || b - a x ||.
         */
