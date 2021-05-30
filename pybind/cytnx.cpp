@@ -2129,9 +2129,9 @@ PYBIND11_MODULE(cytnx,m){
                                     return cytnx::linalg::Lanczos_Gnd(Hop,CvgCrit,is_V,Tin,verbose,maxiter);
                                 });
 
-    m_linalg.def("c_Lstsq",[](const Tensor &A, const Tensor &b, const float &rcond){
+    m_linalg.def("Lstsq",[](const Tensor &A, const Tensor &b, const float &rcond){
                                     return cytnx::linalg::Lstsq(A, b, rcond);
-                                });                    
+                                });               
 
     // [Submodule algo] 
     pybind11::module m_algo = m.def_submodule("algo","algorithm related.");
