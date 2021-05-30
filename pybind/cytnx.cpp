@@ -2130,7 +2130,7 @@ PYBIND11_MODULE(cytnx,m){
                                 });
 
     m_linalg.def("c_Lstsq",[](const Tensor &A, const Tensor &b, const float &rcond){
-                                    return cytnx::linalg::Lstsq(A, B, rcond);
+                                    return cytnx::linalg::Lstsq(A, b, rcond);
                                 });                    
 
     // [Submodule algo] 

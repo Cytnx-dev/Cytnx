@@ -43,29 +43,28 @@ namespace cytnx{
             std::vector<Tensor> out;
             cytnx_int64* rank = (cytnx_int64*)malloc(sizeof(cytnx_int64));
 
-            Tensor s; s.Init({m<n?m:n}, Ain.dtype()<=2?Ain.dtype()+2:Ain.dtype(), Ain.device());
-            s.storage().set_zeros();
+            Tensor s; s.Init({m<n?m:n}, Ain.dtype()<=2?Ain.dtype()+2:Ain.dtype(), Ain.device()); s.storage().set_zeros();
+            Tensor r; r.Init({1}, Type.Int64, Ain.device()); r.storage().set_zeros();
 
             if (A.device() == Device.cpu && b.device() == Device.cpu) {
 
                 cytnx::linalg_internal::lii.Lstsq_ii[Ain.dtype()](Ain._impl->storage()._impl,
                                                                   bin._impl->storage()._impl,
                                                                   s._impl->storage()._impl,
-                                                                  m,n,nrhs, rcond, rank);
+                                                                  r._impl->storage()._impl,
+                                                                  m, n, nrhs, rcond);
 
                 Tensor sol = bin(Accessor::range(0,n,1),":");
                 sol.reshape_({n,nrhs});
                 out.push_back(sol);
 
                 Tensor res = zeros({1});
-                if(m>n && rank[0]>=n){
+                if(m>n && r.item<cytnx_int64>()>=n){
                     Tensor res_ = bin(Accessor::range(n,m,1),":");
                     Tensor ones_ = ones({m-n,1}).reshape({1,m-n});
                     res = linalg::Tensordot(ones_, res_.Pow(2), {1}, {0}, 0, 0);
                 }
                 out.push_back(res);
-
-                Tensor r = zeros({1}, Type.Int64, Ain.device()); r(0)=rank[0];
                 out.push_back(r);
                 out.push_back(s);
                 return out;

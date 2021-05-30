@@ -73,9 +73,8 @@ namespace cytnx{
         typedef void (*MaxMinfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &, const char &);
         typedef void (*Invinplacefunc_oii)(boost::intrusive_ptr<Storage_base> &ten, const cytnx_uint64 &Nelem, const double &clip);
 
-        typedef void (*Lstsqfunc_oii)(boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &b, boost::intrusive_ptr<Storage_base> &s,
-                                      const cytnx_int64 &M,const cytnx_int64 &N,const cytnx_int64 &nrhs,
-                                      const cytnx_float &rcond, cytnx_int64* rank);
+        typedef void (*Lstsqfunc_oii)(boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &b, boost::intrusive_ptr<Storage_base> &s, boost::intrusive_ptr<Storage_base> &r,
+                                      const cytnx_int64 &M,const cytnx_int64 &N,const cytnx_int64 &nrhs, const cytnx_float &rcond);
 
         class linalg_internal_interface{
             public:
