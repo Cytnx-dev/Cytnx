@@ -36,7 +36,7 @@ See The following user guide for install and using of cytnx:
     7. [Enhance][Safety] add UniTensor.get_blocks_(silent=false) with "silent" option by default pop-up a warning when UniTensor is non-contiguous.   
     8. [Enhance] add operator* and operator*= for combineBond. 
     9. [Enhance] add support for Symmetric UniTensor with is_diag=true.
-
+    10. [Fix] remove the dtype & device option for arange(Nelem). Use .astype() .to() instead. 
 
     v0.7.2 
     1. [Enhance] Add Tensor.set with Scalar

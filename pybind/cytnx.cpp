@@ -442,9 +442,9 @@ PYBIND11_MODULE(cytnx,m){
     m.def("eye",&cytnx::identity
                   ,py::arg("Dim"),py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
 
-    m.def("arange",[](const cytnx_uint64 &Nelem, const unsigned int &dtype, const int &device)->Tensor{
+    m.def("arange",[](const cytnx_uint64 &Nelem)->Tensor{
                         return cytnx::arange(Nelem,dtype,device);
-                  },py::arg("size"),py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
+                  },py::arg("size"));
 
     m.def("arange",[](const cytnx_double &start, const cytnx_double &end, const cytnx_double &step, const unsigned int &dtype, const int &device)->Tensor{
                         return cytnx::arange(start,end,step,dtype,device);

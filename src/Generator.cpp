@@ -65,9 +65,9 @@ namespace cytnx{
 
         return out;    
     }
-    Tensor arange(const cytnx_int64 &Nelem, const unsigned int &dtype, const int &device){
+    Tensor arange(const cytnx_int64 &Nelem){
         cytnx_error_msg(Nelem <= 0, "[ERROR] arange(Nelem) , %s","Nelem must be integer > 0");
-        return arange(0,Nelem,1,dtype,device);
+        return arange(0,Nelem,1);
     }
 
     Tensor linspace(const cytnx_double &start, const cytnx_double &end, const cytnx_uint64 &Nelem, const bool &endpoint, const unsigned int &dtype, const int &device){
