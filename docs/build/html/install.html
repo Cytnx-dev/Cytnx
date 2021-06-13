@@ -537,7 +537,7 @@ Note that both python API and C++ API will be installed together.</p>
 </li>
 <li><p>create a virtual enviroment:</p></li>
 </ol>
-<div class="highlight-shell notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nv">$conda</span> create --channel conda-forge --name cytnx <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7
+<div class="highlight-shell notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nv">$conda</span> create --channel conda-forge --name cytnx <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7 <span class="nv">_openmp_mutex</span><span class="o">=</span>*<span class="o">=</span>*_llvm
 </pre></div>
 </td></tr></table></div>
 <div class="admonition note">

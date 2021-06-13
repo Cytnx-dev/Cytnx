@@ -24,7 +24,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="8. linalg extension" href="../xlinalg.html" />
-    <link rel="prev" title="7.3.5. Manipulate UniTensor" href="UniTensor_manip.html" /> 
+    <link rel="prev" title="7.3.4. Manipulate UniTensor" href="UniTensor_manip.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -173,15 +173,18 @@
 <li class="toctree-l4"><a class="reference internal" href="TNotation.html#direction-of-bond">7.1.2. Direction of bond</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Bond.html">7.2. Bond</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="Bond.html">7.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#create-a-bond">7.2.1. Create a Bond</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#bond-with-direction">7.2.2. Bond with direction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#bond-with-symmetry">7.2.3. Bond with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#multiple-symmetry">7.2.4. Multiple Symmetry</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="UniTensor.html">7.3. UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">7.3.1. Create UniTensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">7.3.2. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html#change-labels">7.3.3. Change labels</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html#tagged-unitensor-directional-bonds">7.3.4. Tagged UniTensor (directional bonds)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">7.3.5. Manipulate UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">7.3.3. tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">7.4. Network</a><ul class="simple">
@@ -289,8 +292,8 @@
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-               <a href="UniTensor_manip.html" title="Previous Chapter: 7.3.5. Manipulate UniTensor" class="btn btn-primary" role="botton" accesskey="P">
-                   &laquo; 7.3.5. Manipu...
+               <a href="UniTensor_manip.html" title="Previous Chapter: 7.3.4. Manipulate UniTensor" class="btn btn-primary" role="botton" accesskey="P">
+                   &laquo; 7.3.4. Manipu...
                </a>
                <a href="../xlinalg.html" title="Next Chapter: 8. linalg extension" class="btn btn-primary" role="botton" accesskey="N">
                    8. linalg extension &raquo;
@@ -441,15 +444,18 @@
 <li class="toctree-l4"><a class="reference internal" href="TNotation.html#direction-of-bond">7.1.2. Direction of bond</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Bond.html">7.2. Bond</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="Bond.html">7.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#create-a-bond">7.2.1. Create a Bond</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#bond-with-direction">7.2.2. Bond with direction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#bond-with-symmetry">7.2.3. Bond with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#multiple-symmetry">7.2.4. Multiple Symmetry</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="UniTensor.html">7.3. UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">7.3.1. Create UniTensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">7.3.2. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html#change-labels">7.3.3. Change labels</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html#tagged-unitensor-directional-bonds">7.3.4. Tagged UniTensor (directional bonds)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">7.3.5. Manipulate UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">7.3.3. tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">7.4. Network</a><ul class="simple">
@@ -498,7 +504,7 @@
           
   <h4>Previous topic</h4>
   <p class="topless"><a href="UniTensor_manip.html"
-                        title="previous chapter"><span class="section-number">7.3.5. </span>Manipulate UniTensor</a></p>
+                        title="previous chapter"><span class="section-number">7.3.4. </span>Manipulate UniTensor</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="../xlinalg.html"
                         title="next chapter"><span class="section-number">8. </span>linalg extension</a></p>

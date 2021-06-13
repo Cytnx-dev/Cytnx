@@ -17,7 +17,7 @@ Following we show how to install cytnx from conda.
 .. code-block:: shell
     :linenos:
 
-    $conda create --channel conda-forge --name cytnx python=3.7
+    $conda create --channel conda-forge --name cytnx python=3.7 _openmp_mutex=*=*_llvm
 
 
 .. note:: 
