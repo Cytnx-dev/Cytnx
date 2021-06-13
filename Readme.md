@@ -116,26 +116,6 @@ See The following user guide for install and using of cytnx:
 
 
 
-## conda install [![Build Status](https://travis-ci.org/kaihsin/Cytnx_build.svg?branch=master)](https://travis-ci.org/kaihsin/Cytnx_build)
-
-
-    [Note] For Windows user, please using WSL.
-
-* Without CUDA            
-
-    python 3.6/3.7/3.8: [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx/badges/latest_release_date.svg)](https://anaconda.org/kaihsinwu/cytnx) [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx/badges/platforms.svg)](https://anaconda.org/kaihsinwu/cytnx)
-
-        conda install -c kaihsinwu cytnx
-
-* with CUDA
-
-    python 3.6/3.7/3.8: [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx_cuda/badges/latest_release_date.svg)](https://anaconda.org/kaihsinwu/cytnx_cuda)
-
-        conda install -c kaihsinwu cytnx_cuda
-    
-
-
-
 ## Objects:
     * Storage   [binded]
     * Tensor    [binded]
