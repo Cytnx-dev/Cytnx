@@ -443,7 +443,7 @@ PYBIND11_MODULE(cytnx,m){
                   ,py::arg("Dim"),py::arg("dtype")=(unsigned int)(cytnx::Type.Double), py::arg("device")=(int)(cytnx::Device.cpu));
 
     m.def("arange",[](const cytnx_uint64 &Nelem)->Tensor{
-                        return cytnx::arange(Nelem,dtype,device);
+                        return cytnx::arange(Nelem);
                   },py::arg("size"));
 
     m.def("arange",[](const cytnx_double &start, const cytnx_double &end, const cytnx_double &step, const unsigned int &dtype, const int &device)->Tensor{
