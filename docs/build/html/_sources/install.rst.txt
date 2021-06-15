@@ -172,21 +172,61 @@ Build Cytnx from source
 For advanced user who wish to build cytnx from source, we provides the cmake install. 
 
 
+Using anaconda/conda for deps
+------------------------------
+We recommend using conda to handle all the dependencies and compiling tools:
+
+* For Linux/MacOS:
+
+1. Install anaconda, setting the virtual enviroments
+
+.. code-block:: shell
+
+    $conda config --add channels conda-forge
+    $conda create --name cytnx python=3.8 _openmp_mutex=*=*_llvm
+    $conda activate cytnx
+    
+2. Install the following dependencies:
+
+.. code-block:: shell
+
+    $conda install cmake make boost libboost git compilers numpy mkl mkl-include mkl-service pybind11
+
+
+.. Note:: 
+
+    This installation includes the compilers provided by conda-forge, so the installation of compiler on system side is not required. 
+
+
+4. in addition, if you want to have gpu support (compile with -DUSE_CUDA=on), then additional packages need to install:
+
+.. code-block:: shell
+
+    $conda install cudatoolkit cudatoolkit-dev 
+
+
+
+* For Windows:
+
+.. note:: 
+
+    For Windows user, please use :wsl:`WSL <>`. We recommend using ubuntu distribution, and follow the instruction of Linux to install cytnx and dependencies. 
+
+
 Dependencies
 ----------------
 Cytnx required the following minimum dependencies:
     
 * cmake >=3.14
 * Boost v1.53+ [check_deleted, atomicadd, intrusive_ptr]
-* openblas (lapacke)
-* gcc v4.8.5+ (recommand v6+ or equivalent clang on Mac with C++11 support) (required -std=c++11)
-
+* openblas
+* gcc v6+ (recommand latest or equivalent clang on Mac/Linux with C++11 support) (required -std=c++11)
 
 In addition, you might want to install the following optional dependencies if you want cytnx to compile with features like openmp, mkl and/or CUDA support. 
 
 [Openmp]
 
-* openmp 
+* openmp
 
 [MKL]
 
@@ -203,6 +243,7 @@ In addition, you might want to install the following optional dependencies if yo
 * pybind11 
 * python-graphviz 
 * graphviz
+* numpy 
 
 .. note::
 
@@ -212,61 +253,7 @@ In addition, you might want to install the following optional dependencies if yo
 
     For python API, we recommend install of python using anaconda or miniconda
 
-Using anaconda/conda for deps
-------------------------------
-We recommend using conda to handle all the dependency:
-
-1. Install anaconda, setting the virtual enviroments
-
-2. Install the following dependencies:
-
-.. code-block:: shell
-
-    $conda install numpy boost cmake pybind11 mkl mkl-inclde intel-openmp setuptools python-graphviz graphviz 
-
-
-3. Make sure your system compiler has minimum -std=c++11 support.
-
-4. in addition, if you want to have gpu support (compile with -DUSE_CUDA=on), then additional packages need to install:
-
-.. code-block:: shell
-
-    $conda install cudatoolkit
  
-Using system for deps
--------------------------
-
-**If you are using system packages not conda, the following libs/packages should be installed**
-**We recommend using anaconda/conda for deps (see above)**
-
-OS specific installation of minimum dependencies:
-
-* Ubuntu:
-
-.. code-block:: shell 
-
-    $sudo apt-get install libboost-all-dev libopenblas-dev liblapack-dev liblapacke-dev cmake make curl g++ libomp-dev 
-
-* MacOS:
-
-1. install boost:    
-
-.. code-block:: shell
-
-    $brew install boost 
-
-
-2. download and install intel mkl via :mkl-mac:`intel mkl <>`
-    
-
-* Windows:
-
-.. note:: 
-
-    For Windows user, please use :wsl:`WSL <>`. We recommend using ubuntu distribution, and follow the instruction of Ubuntu to install cytnx and dependencies. 
-
-
-
 Compiling process [Auto set-up]
 -----------------------------------
 Starting from v0.6.4a, cytnx provide a easy step-by-step install tool:
