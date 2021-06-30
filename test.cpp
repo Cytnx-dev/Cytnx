@@ -20,25 +20,13 @@ Scalar generic_func(const Tensor &input, const std::vector<Scalar> &args){
 
 class test{
     public:
-    double A;
-
-    template<class T>
-    operator T () const{
-        return T(this->A);
-    };
+        
+        Tensor tff(const Tensor &T){
+            auto A = T.reshape(2,3,4);
+            return A;
+        }
 
 };
-        template <class BidirectionalIterator>
-        void reverse_perm(BidirectionalIterator first, BidirectionalIterator last,int N)
-        {
-          while ((first!=last)&&(first!=--last)) {
-            *first = (N-1) - *first;
-            *last = (N-1) - *last;
-            std::iter_swap (first,last);
-            ++first;
-          }
-          if(N%2) *first = (N-1) - *first;
-        }
 
 
 //-------------------------------------------
@@ -99,6 +87,12 @@ class MyOp2: public LinOp{
 
 
 int main(int argc, char *argv[]){
+
+    auto Arrr = Tensor({2,3,4});
+    auto Tnt = test();
+    Tnt.tff(Arrr);    
+    return 0;
+
 
     auto bdi = Bond(2, BD_KET,{{1},{-1}});
     auto bdo = bdi.clone().set_type(BD_BRA);
@@ -596,9 +590,6 @@ int main(int argc, char *argv[]){
 
     return 0;
 
-    auto tclass = test();
-    
-    tclass.A = 400;
 
     //cout << typeid(tclass.A).name();
     //cout << typeid(float(tclass)).name() << endl; 
