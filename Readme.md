@@ -37,6 +37,9 @@ See The following user guide for install and using of cytnx:
     8. [Enhance] add operator* and operator*= for combineBond. 
     9. [Enhance] add support for Symmetric UniTensor with is_diag=true.
     10. [Fix] remove the dtype & device option for arange(Nelem). Use .astype() .to() instead. 
+    11. [Fix] reshape() without postfix const causing error when reshape with const Tensor. 
+    12. [Enhance][Experiment] add Lstsq for least square calculation. [PR] 
+    13. [Fix][C++] minor issue related to laterial argument passing by variables cannot properly resolved on C++ 
 
     v0.7.2 
     1. [Enhance] Add Tensor.set with Scalar
