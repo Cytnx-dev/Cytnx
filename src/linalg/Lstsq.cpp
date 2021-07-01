@@ -9,6 +9,8 @@ namespace cytnx{
         std::vector<Tensor> Lstsq(const Tensor &A,const Tensor &b, const float &rcond) {
             cytnx_error_msg(A.shape().size() != 2 || b.shape().size() != 2, "[Lsq] error, Lstsq can only operate on rank-2 Tensor.%s", "\n");
 
+            cytnx_error_msg(A.device() != b.device(), "[Lsq] error, A and b should be on the same device!%s","\n");
+
             cytnx_int64 m = A.shape()[0];
             cytnx_int64 n = A.shape()[1];
             cytnx_int64 nrhs = b.shape()[1];
@@ -16,23 +18,19 @@ namespace cytnx{
             Tensor Ain; Tensor bin;
             if(A.is_contiguous()) Ain = A.clone();
             else Ain = A.contiguous();
+
             if(b.is_contiguous()) bin = b.clone();
             else bin = b.contiguous();
 
             int type_ = A.dtype()<b.dtype()?A.dtype():b.dtype();
-            if(type_ > Type.Float || type_ == Type.Double){
-                Ain = Ain.astype(Type.Double);
-                bin = bin.astype(Type.Double);
-            }else if(type_ == Type.Float){
-                Ain = Ain.astype(Type.Float);
-                bin = bin.astype(Type.Float);
-            }else if(type_ == Type.ComplexFloat){
-                Ain = Ain.astype(Type.ComplexFloat);
-                bin = bin.astype(Type.ComplexFloat);
-            }else if(type_ == Type.ComplexDouble){
-                Ain = Ain.astype(Type.ComplexDouble);
-                bin = bin.astype(Type.ComplexDouble);
+
+            if(type_ > Type.Float){
+                type_ = Type.Double; // if the strongest type is < int, then convert to double
             }
+
+            Ain = Ain.astype(type_);
+            bin = bin.astype(type_);
+
 
             if(m<n) {
                 Storage bstor = bin.storage();
@@ -41,12 +39,11 @@ namespace cytnx{
             }
 
             std::vector<Tensor> out;
-            cytnx_int64* rank = (cytnx_int64*)malloc(sizeof(cytnx_int64));
 
-            Tensor s; s.Init({m<n?m:n}, Ain.dtype()<=2?Ain.dtype()+2:Ain.dtype(), Ain.device()); s.storage().set_zeros();
-            Tensor r; r.Init({1}, Type.Int64, Ain.device()); r.storage().set_zeros();
+            Tensor s = zeros({m<n?m:n}, Ain.dtype()<=2?Ain.dtype()+2:Ain.dtype(), Ain.device()); 
+            Tensor r = zeros({1}, Type.Int64, Ain.device());
 
-            if (A.device() == Device.cpu && b.device() == Device.cpu) {
+            if (A.device() == Device.cpu) {
 
                 cytnx::linalg_internal::lii.Lstsq_ii[Ain.dtype()](Ain._impl->storage()._impl,
                                                                   bin._impl->storage()._impl,
@@ -58,11 +55,11 @@ namespace cytnx{
                 sol.reshape_({n,nrhs});
                 out.push_back(sol);
 
-                Tensor res = zeros({1});
+                Tensor res = zeros({1},bin.dtype(),bin.device());
                 if(m>n && r.item<cytnx_int64>()>=n){
-                    Tensor res_ = bin(Accessor::range(n,m,1),":");
-                    Tensor ones_ = ones({m-n,1}).reshape({1,m-n});
-                    res = linalg::Tensordot(ones_, res_.Pow(2), {1}, {0}, 0, 0);
+                    Tensor res_ = bin(Accessor::range(n,m,1),":"); res_.Pow_(2);
+                    Tensor ones_ = ones({1,m-n});
+                    res = linalg::Dot(ones_, res_);
                 }
                 out.push_back(res);
                 out.push_back(r);

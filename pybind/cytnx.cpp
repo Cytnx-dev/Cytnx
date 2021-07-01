@@ -2131,7 +2131,7 @@ PYBIND11_MODULE(cytnx,m){
 
     m_linalg.def("Lstsq",[](const Tensor &A, const Tensor &b, const float &rcond){
                                     return cytnx::linalg::Lstsq(A, b, rcond);
-                                });               
+                                },py::arg("A"),py::arg("b"),py::arg("rcond")=float(-1));               
 
     // [Submodule algo] 
     pybind11::module m_algo = m.def_submodule("algo","algorithm related.");

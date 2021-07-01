@@ -6,6 +6,8 @@
 namespace cytnx{
 
     // elements resolver
+    void _resolve_int64(std::vector<cytnx_int64> &cool);
+
     template<class T>
     void _resolve_int64(std::vector<cytnx_int64> &cool, const T& a){
         cool.push_back(a);
@@ -19,7 +21,7 @@ namespace cytnx{
 
     template<class ... Ts>
     std::vector<cytnx_int64> dynamic_arg_int64_resolver(const cytnx_int64&a, const Ts&... args){
-        //std::cout << a << std::endl;;
+        //std::cout << a << std::endl;
         std::vector<cytnx_int64> idxs;
         _resolve_int64(idxs,a,args...);
         //cout << idxs << endl;
@@ -27,6 +29,8 @@ namespace cytnx{
     }
 
     //-----------------
+    void _resolve_uint64(std::vector<cytnx_uint64> &cool);
+
     template<class T>
     void _resolve_uint64(std::vector<cytnx_uint64> &cool, const T& a){
         cool.push_back(a);

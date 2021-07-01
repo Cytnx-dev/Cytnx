@@ -17,6 +17,7 @@ target_sources_local(cytnx
     complex_arithmetic.cpp
     is.cpp
     str_utils.cpp
+    dynamic_arg_resolver.cpp
     utils.cpp
     utils_internal_interface.cpp
     vec_clone.cpp
