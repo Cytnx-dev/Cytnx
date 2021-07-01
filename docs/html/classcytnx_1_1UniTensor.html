@@ -175,10 +175,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af1d00cb218c6cec9a78214a75ed22ac2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a661bc7073dc51b16a4b9802bbcc3cba2"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1UniTensor.html#a661bc7073dc51b16a4b9802bbcc3cba2">get_blocks</a> () const</td></tr>
 <tr class="separator:a661bc7073dc51b16a4b9802bbcc3cba2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afdda64ed1e4a12367153f2d5d302c414"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1UniTensor.html#afdda64ed1e4a12367153f2d5d302c414">get_blocks_</a> () const</td></tr>
-<tr class="separator:afdda64ed1e4a12367153f2d5d302c414"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d09bed486df0e81a70e81b2489b9177"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1UniTensor.html#a0d09bed486df0e81a70e81b2489b9177">get_blocks_</a> ()</td></tr>
-<tr class="separator:a0d09bed486df0e81a70e81b2489b9177"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0071a9bc25f10e953f6a8835d1eb754f"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1UniTensor.html#a0071a9bc25f10e953f6a8835d1eb754f">get_blocks_</a> (const bool &amp;silent=false) const</td></tr>
+<tr class="separator:a0071a9bc25f10e953f6a8835d1eb754f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b746237996b26d1778d1ced200e7b53"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1UniTensor.html#a2b746237996b26d1778d1ced200e7b53">get_blocks_</a> (const bool &amp;silent=false)</td></tr>
+<tr class="separator:a2b746237996b26d1778d1ced200e7b53"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abcd3008bf05771f0623ce1ef80b1085a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1UniTensor.html#abcd3008bf05771f0623ce1ef80b1085a">put_block</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;in, const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;idx=0)</td></tr>
 <tr class="separator:abcd3008bf05771f0623ce1ef80b1085a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9bf19662043d456a89a8e51215c67beb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1UniTensor.html#a9bf19662043d456a89a8e51215c67beb">put_block</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;in, const std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &amp;qnum)</td></tr>
@@ -205,6 +205,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:abb9e74ecee1a85af02b7f2a8e835c969"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe298e97a7f517a86bb19925565bff4a"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Bond.html">Bond</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1UniTensor.html#afe298e97a7f517a86bb19925565bff4a">getTotalQnums</a> (const bool physical=false) const</td></tr>
 <tr class="separator:afe298e97a7f517a86bb19925565bff4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc6e042f9ea3d4e82011fa3114f3124b"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1UniTensor.html#adc6e042f9ea3d4e82011fa3114f3124b">get_blocks_qnums</a> () const</td></tr>
+<tr class="separator:adc6e042f9ea3d4e82011fa3114f3124b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a60f413988532b115c5323b6f7dc1be6b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1UniTensor.html#a60f413988532b115c5323b6f7dc1be6b">same_data</a> (const <a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> &amp;rhs) const</td></tr>
 <tr class="separator:a60f413988532b115c5323b6f7dc1be6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9fa36c7d332b25a93888db92b34e8160"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1UniTensor.html#a9fa36c7d332b25a93888db92b34e8160">Add_</a> (const <a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> &amp;rhs)</td></tr>
@@ -1633,8 +1635,8 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
-<a id="afdda64ed1e4a12367153f2d5d302c414"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afdda64ed1e4a12367153f2d5d302c414">&#9670;&nbsp;</a></span>get_blocks_() <span class="overload">[1/2]</span></h2>
+<a id="a0071a9bc25f10e953f6a8835d1eb754f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0071a9bc25f10e953f6a8835d1eb754f">&#9670;&nbsp;</a></span>get_blocks_() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1645,7 +1647,8 @@ template&lt;class T &gt; </div>
         <tr>
           <td class="memname">const std::vector&lt;<a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&gt;&amp; cytnx::UniTensor::get_blocks_ </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramname"><em>silent</em> = <code>false</code></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -1658,8 +1661,8 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
-<a id="a0d09bed486df0e81a70e81b2489b9177"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0d09bed486df0e81a70e81b2489b9177">&#9670;&nbsp;</a></span>get_blocks_() <span class="overload">[2/2]</span></h2>
+<a id="a2b746237996b26d1778d1ced200e7b53"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b746237996b26d1778d1ced200e7b53">&#9670;&nbsp;</a></span>get_blocks_() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1670,8 +1673,34 @@ template&lt;class T &gt; </div>
         <tr>
           <td class="memname">std::vector&lt;<a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&gt;&amp; cytnx::UniTensor::get_blocks_ </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramname"><em>silent</em> = <code>false</code></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adc6e042f9ea3d4e82011fa3114f3124b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc6e042f9ea3d4e82011fa3114f3124b">&#9670;&nbsp;</a></span>get_blocks_qnums()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::vector&lt;<a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a>&gt; &gt; cytnx::UniTensor::get_blocks_qnums </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
   </td>

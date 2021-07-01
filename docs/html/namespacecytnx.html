@@ -481,9 +481,9 @@ Functions</h2></td></tr>
 <tr class="memdesc:a8e80968b20c01c839ea854c398c88ac1"><td class="mdescLeft">&#160;</td><td class="mdescRight">create an <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> with all the elements are initialized with one.  <a href="#a8e80968b20c01c839ea854c398c88ac1">More...</a><br /></td></tr>
 <tr class="separator:a8e80968b20c01c839ea854c398c88ac1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader"></div></td></tr>
-<tr class="memitem:a733f9931141463bc8b7c61931ccf52c3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a733f9931141463bc8b7c61931ccf52c3">arange</a> (const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;Nelem, const unsigned int &amp;dtype=Type.Double, const int &amp;device=Device.cpu)</td></tr>
-<tr class="memdesc:a733f9931141463bc8b7c61931ccf52c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">create an rank-1 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> with incremental unsigned integer elements start with [0,Nelem)  <a href="#a733f9931141463bc8b7c61931ccf52c3">More...</a><br /></td></tr>
-<tr class="separator:a733f9931141463bc8b7c61931ccf52c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a685cf4e94754373ae4f12622b168fb98"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a685cf4e94754373ae4f12622b168fb98">arange</a> (const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;Nelem)</td></tr>
+<tr class="memdesc:a685cf4e94754373ae4f12622b168fb98"><td class="mdescLeft">&#160;</td><td class="mdescRight">create an rank-1 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> with incremental unsigned integer elements start with [0,Nelem)  <a href="#a685cf4e94754373ae4f12622b168fb98">More...</a><br /></td></tr>
+<tr class="separator:a685cf4e94754373ae4f12622b168fb98"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add9038b2dc354c3123dc56d5912430e0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#add9038b2dc354c3123dc56d5912430e0">arange</a> (const <a class="el" href="namespacecytnx.html#a17b847d265f6551b952fd9847198a464">cytnx_double</a> &amp;start, const <a class="el" href="namespacecytnx.html#a17b847d265f6551b952fd9847198a464">cytnx_double</a> &amp;end, const <a class="el" href="namespacecytnx.html#a17b847d265f6551b952fd9847198a464">cytnx_double</a> &amp;step=1, const unsigned int &amp;dtype=Type.Double, const int &amp;device=Device.cpu)</td></tr>
 <tr class="memdesc:add9038b2dc354c3123dc56d5912430e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">create an rank-1 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> with elements defined in range [start,end) with assigned step-size  <a href="#add9038b2dc354c3123dc56d5912430e0">More...</a><br /></td></tr>
 <tr class="separator:add9038b2dc354c3123dc56d5912430e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -893,8 +893,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a733f9931141463bc8b7c61931ccf52c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a733f9931141463bc8b7c61931ccf52c3">&#9670;&nbsp;</a></span>arange() <span class="overload">[1/2]</span></h2>
+<a id="a685cf4e94754373ae4f12622b168fb98"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a685cf4e94754373ae4f12622b168fb98">&#9670;&nbsp;</a></span>arange() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -903,24 +903,8 @@ Variables</h2></td></tr>
           <td class="memname"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> cytnx::arange </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;&#160;</td>
-          <td class="paramname"><em>Nelem</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"><em>Nelem</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">const unsigned int &amp;&#160;</td>
-          <td class="paramname"><em>dtype</em> = <code>Type.Double</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int &amp;&#160;</td>
-          <td class="paramname"><em>device</em> = <code>Device.cpu</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -928,9 +912,7 @@ Variables</h2></td></tr>
 <p>create an rank-1 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> with incremental unsigned integer elements start with [0,Nelem) </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">Nelem</td><td>the number of incremental elements to create. </td></tr>
-    <tr><td class="paramname">dtype</td><td>the dtype of the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>. It can be any type defined in <a class="el" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">cytnx::Type </a> </td></tr>
-    <tr><td class="paramname">device</td><td>the device that the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> is put on. It can be any device defined in <a class="el" href="namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a">cytnx::Device </a></td></tr>
+    <tr><td class="paramname">Nelem</td><td>the number of incremental elements to create.</td></tr>
   </table>
   </dd>
 </dl>

@@ -7,7 +7,7 @@ var searchData=
   ['rdiv',['rdiv',['../classcytnx_1_1Scalar.html#aaa4e2404d4dba02f088a679dcd55eac8',1,'cytnx::Scalar::rdiv(const T &amp;rc) const'],['../classcytnx_1_1Scalar.html#ae108fe64019ba439fe580bb0cefad267',1,'cytnx::Scalar::rdiv(const Scalar &amp;rhs) const']]],
   ['real',['real',['../classcytnx_1_1Storage.html#a1c28604bf7751c817c44dc3286d6520f',1,'cytnx::Storage::real()'],['../classcytnx_1_1Tensor.html#ac863dbd316a4771a95810a2e9b922c4e',1,'cytnx::Tensor::real()']]],
   ['regularnetwork_2ecpp',['RegularNetwork.cpp',['../RegularNetwork_8cpp.html',1,'']]],
-  ['reshape',['reshape',['../classcytnx_1_1Tensor.html#a182f8f7b3ae3d0db8ed55d2adf8c6b45',1,'cytnx::Tensor::reshape()'],['../classcytnx_1_1UniTensor.html#a18226194a82791cfa6f661293b25d101',1,'cytnx::UniTensor::reshape()']]],
+  ['reshape',['reshape',['../classcytnx_1_1Tensor.html#a57aea99887adf41da14fd7578ef9bf13',1,'cytnx::Tensor::reshape()'],['../classcytnx_1_1UniTensor.html#a18226194a82791cfa6f661293b25d101',1,'cytnx::UniTensor::reshape()']]],
   ['reshape_5f',['reshape_',['../classcytnx_1_1Tensor.html#a3723449528b9a20dd46c32c9e042b8f0',1,'cytnx::Tensor::reshape_()'],['../classcytnx_1_1UniTensor.html#a4fe900047caaf4627340fb486091fc9c',1,'cytnx::UniTensor::reshape_()']]],
   ['resize',['resize',['../classcytnx_1_1Storage.html#a2ff5a21f81e9b90a5e78e1ba1698351b',1,'cytnx::Storage']]],
   ['reverse_5frule',['reverse_rule',['../classcytnx_1_1Symmetry.html#ae23e87f8e3e9d70666714726887926b0',1,'cytnx::Symmetry']]],

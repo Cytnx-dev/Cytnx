@@ -354,6 +354,7 @@ See The following user guide for install and using of cytnx:
     Yu-Hsueh Chen (NTU, Taiwan): example, and testing
     Po-Kwan Wu (OSU): Icon optimization    
     Wen-Han Kao (UMN, USA) : testing of conda install 
+    Ke Hsu (NTU, Taiwan): Lstsq 
 
 ## References
 

@@ -323,6 +323,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a1c232c6b00cacf7d8f0ec640721a3075"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a1c232c6b00cacf7d8f0ec640721a3075">Lanczos_Gnd</a> (<a class="el" href="classcytnx_1_1LinOp.html">LinOp</a> *Hop, const double &amp;CvgCrit=1.0e-14, const bool &amp;is_V=true, const Tensor &amp;Tin=Tensor(), const bool &amp;verbose=false, const unsigned int &amp;Maxiter=100000)</td></tr>
 <tr class="memdesc:a1c232c6b00cacf7d8f0ec640721a3075"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform Lanczos for hermitian/symmetric matrices or linear function to get ground state and lowest eigen value  <a href="#a1c232c6b00cacf7d8f0ec640721a3075">More...</a><br /></td></tr>
 <tr class="separator:a1c232c6b00cacf7d8f0ec640721a3075"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad268ffbb8dcfebbb5ca11f67083e17b0"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#ad268ffbb8dcfebbb5ca11f67083e17b0">Lstsq</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;A, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;b, const float &amp;rcond=-1)</td></tr>
+<tr class="memdesc:ad268ffbb8dcfebbb5ca11f67083e17b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the least-squares solution to a linear matrix equation.  <a href="#ad268ffbb8dcfebbb5ca11f67083e17b0">More...</a><br /></td></tr>
+<tr class="separator:ad268ffbb8dcfebbb5ca11f67083e17b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>linear algebra related functions. </p>
@@ -1743,6 +1746,57 @@ template&lt;class T &gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>[eigvals (<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>), eigvecs (<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>)(option)]</dd></dl>
 <p>#description: This function calculate the eigen value problem using naive Lanczos to get ground state and lowest eigen value.</p>
 <p>#[Note] To use, define a linear operator with <a class="el" href="classcytnx_1_1LinOp.html">LinOp</a> class either by assign a custom function or create a class that inherit <a class="el" href="classcytnx_1_1LinOp.html">LinOp</a> (see <a class="el" href="classcytnx_1_1LinOp.html">LinOp</a> for further details) </p>
+
+</div>
+</div>
+<a id="ad268ffbb8dcfebbb5ca11f67083e17b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad268ffbb8dcfebbb5ca11f67083e17b0">&#9670;&nbsp;</a></span>Lstsq()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&gt; cytnx::linalg::Lstsq </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>A</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float &amp;&#160;</td>
+          <td class="paramname"><em>rcond</em> = <code>-1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the least-squares solution to a linear matrix equation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">A</td><td>“Coefficient” matrix, must be two-dimensional. </td></tr>
+    <tr><td class="paramname">b</td><td>Ordinate or “dependent variable” values, must be two-dimensional, the least-squares solution is calculated for each of the K columns of b. </td></tr>
+    <tr><td class="paramname">rcond</td><td>Cut-off ratio for small singular values of a. For the purposes of rank determination, singular values are treated as zero if they are smaller than rcond times the largest singular value of A, If it is negative, the machine precision is used. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>[std::vector&lt;Tensors&gt;] <pre class="fragment">1. the first tensor is least-squares solutions in the K columns.
+2. the second tensor is the sums of squared residuals: Squared Euclidean 2-norm for each column in b - a @ x. If the rank of a is &lt; N or M &lt;= N, this is a zero Tensor.
+3. the third tensor is the rank of matrix A.
+4. the forth tensor is singular values of A.
+</pre></dd></dl>
+<p>#description: Computes the vector x that approximatively solves the equation A @ x = b. The equation may be under-, well-, or over-determined independent columns. If a is square and of full rank, then x (but for round-off error) is the “exact” solution of the equation. Else, x minimizes the Euclidean 2-norm || b - a x ||.</p>
+<p>[Ke] </p>
 
 </div>
 </div>

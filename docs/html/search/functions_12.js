@@ -37,7 +37,7 @@ var searchData=
   ['set_5flabels',['set_labels',['../classcytnx_1_1UniTensor.html#a0ceadf380a2b3030e3826cc4398774c2',1,'cytnx::UniTensor']]],
   ['set_5fname',['set_name',['../classcytnx_1_1UniTensor.html#a20c4e22461ad245ebaa2f0313ecd01db',1,'cytnx::UniTensor']]],
   ['set_5frowrank',['set_rowrank',['../classcytnx_1_1UniTensor.html#a3fdc9ff1a64a7f0ba046c43ae0b9b20b',1,'cytnx::UniTensor']]],
-  ['set_5ftype',['set_type',['../classcytnx_1_1Bond.html#ae6957c3902bf12fd27ab881db3fe5243',1,'cytnx::Bond']]],
+  ['set_5ftype',['set_type',['../classcytnx_1_1Bond.html#a304dff7d0c613edf9d2eb78c2904c3aa',1,'cytnx::Bond']]],
   ['set_5fzeros',['set_zeros',['../classcytnx_1_1Storage.html#a7e854529c99108b0acc3e5e2b185244b',1,'cytnx::Storage']]],
   ['sgemm',['sgemm',['../lapack__wrapper_8hpp.html#a524c6cf13cb9e42cef87b7e60be6fb83',1,'lapack_wrapper.hpp']]],
   ['sgemm_5f',['sgemm_',['../lapack__wrapper_8hpp.html#a7c1d55acf18a2d67d1f8f9038ac2e4d4',1,'lapack_wrapper.hpp']]],
