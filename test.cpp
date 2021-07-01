@@ -88,6 +88,13 @@ class MyOp2: public LinOp{
 
 int main(int argc, char *argv[]){
 
+    auto S00 = Storage(30);
+    cytnx_int64 ia = 5;
+    cytnx_int64 ib = 6;
+    Tensor T00 = Tensor::from_storage(S00).reshape(ia,ib);
+
+    return 0;
+
     auto Arrr = Tensor({2,3,4});
     auto Tnt = test();
     Tnt.tff(Arrr);    

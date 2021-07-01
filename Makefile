@@ -108,14 +108,14 @@ OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o UniTensor_bas
 
 ## Utils
 OBJS += utils_internal_interface.o
-OBJS += utils.o Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o vec_print.o vec2d_col_sort.o vec_range.o complex_arithmetic.o is.o vec_intersect.o vec_concatenate.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_contiguous_cpu.o GetElems_cpu.o SetElems_contiguous_cpu.o SetElems_cpu.o cartesian.o str_utils.o Complexmem_cpu.o
+OBJS += utils.o Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o vec_print.o vec2d_col_sort.o vec_range.o complex_arithmetic.o is.o vec_intersect.o vec_concatenate.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_contiguous_cpu.o GetElems_cpu.o SetElems_contiguous_cpu.o SetElems_cpu.o cartesian.o str_utils.o Complexmem_cpu.o dynamic_arg_resolver.o
 ifeq ($(GPU_Enable),1)
   OBJS += cucomplex_arithmetic.o cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o cuFill_gpu.o cuSetArange_gpu.o cuGetElems_gpu.o  cuSetElems_gpu.o cuComplexmem_gpu.o cuReduce_gpu.o
 endif
 
 ## Linalg_internal
 OBJS += linalg_internal_interface.o
-OBJS += Mod_internal.o Det_internal.o Sum_internal.o MaxMin_internal.o QR_internal.o Abs_internal.o Pow_internal.o Eig_internal.o Matvec_internal.o Norm_internal.o Kron_internal.o Cpr_internal.o Add_internal.o Sub_internal.o Mul_internal.o Div_internal.o Arithmetic_internal.o Svd_internal.o Inv_inplace_internal.o InvM_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_dg_internal.o Matmul_internal.o Diag_internal.o Outer_internal.o Vectordot_internal.o Tridiag_internal.o 
+OBJS += Lstsq_internal.o Mod_internal.o Det_internal.o Sum_internal.o MaxMin_internal.o QR_internal.o Abs_internal.o Pow_internal.o Eig_internal.o Matvec_internal.o Norm_internal.o Kron_internal.o Cpr_internal.o Add_internal.o Sub_internal.o Mul_internal.o Div_internal.o Arithmetic_internal.o Svd_internal.o Inv_inplace_internal.o InvM_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_dg_internal.o Matmul_internal.o Diag_internal.o Outer_internal.o Vectordot_internal.o Tridiag_internal.o 
 ifeq ($(GPU_Enable),1)
   OBJS += cuMod_internal.o cuPow_internal.o cuVectordot_internal.o cuMatvec_internal.o cuNorm_internal.o cuCpr_internal.o cuAdd_internal.o cuSub_internal.o cuMul_internal.o cuDiv_internal.o cuArithmetic_internal.o cuSvd_internal.o cuInv_inplace_internal.o cuInvM_inplace_internal.o cuConj_inplace_internal.o cuExp_internal.o  cuEigh_internal.o cuMatmul_dg_internal.o cuMatmul_internal.o cuDiag_internal.o cuOuter_internal.o
 endif
@@ -127,7 +127,7 @@ OBJS += Sort_internal.o
 
 
 ## Linalg
-OBJS += Mod.o Lanczos_Gnd.o Lanczos_ER.o Det.o Sum.o Hosvd.o Min.o Max.o ExpM.o Qdr.o Qr.o Abs_.o Abs.o Pow_.o Pow.o Trace.o Eig.o Dot.o Norm.o ExpH.o Kron.o Add.o Div.o Sub.o Mul.o Cpr.o Svd.o Svd_truncate.o Inv.o Inv_.o InvM.o InvM_.o Conj.o Conj_.o Exp.o Exp_.o Expf.o Expf_.o Eigh.o Diag.o Matmul_dg.o Matmul.o Tensordot_dg.o Tensordot.o Outer.o Vectordot.o Tridiag.o 
+OBJS += Lstsq.o Mod.o Lanczos_Gnd.o Lanczos_ER.o Det.o Sum.o Hosvd.o Min.o Max.o ExpM.o Qdr.o Qr.o Abs_.o Abs.o Pow_.o Pow.o Trace.o Eig.o Dot.o Norm.o ExpH.o Kron.o Add.o Div.o Sub.o Mul.o Cpr.o Svd.o Svd_truncate.o Inv.o Inv_.o InvM.o InvM_.o Conj.o Conj_.o Exp.o Exp_.o Expf.o Expf_.o Eigh.o Diag.o Matmul_dg.o Matmul.o Tensordot_dg.o Tensordot.o Outer.o Vectordot.o Tridiag.o 
 
 ## Algo
 OBJS += Sort.o 
@@ -376,6 +376,9 @@ Sum_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Sum_internal.cpp $
 Det_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Det_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Det_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 
+Lstsq_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Lstsq_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Lstsq_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+
 
 ifeq ($(GPU_Enable),1)
 
@@ -518,7 +521,6 @@ SetElems_contiguous_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/SetElems_co
 Fill_cpu.o: $(CytnxPATH)/src/utils/utils_internal_cpu/Fill_cpu.cpp $(CytnxPATH)/src/utils/utils_internal_cpu/Fill_cpu.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
-
 complex_arithmetic.o: $(CytnxPATH)/src/utils/complex_arithmetic.cpp $(CytnxPATH)/src/utils/complex_arithmetic.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
@@ -549,7 +551,8 @@ vec2d_col_sort.o: $(CytnxPATH)/src/utils/vec2d_col_sort.cpp $(CytnxPATH)/include
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 str_utils.o: $(CytnxPATH)/src/utils/str_utils.cpp $(CytnxPATH)/include/utils/str_utils.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
-
+dynamic_arg_resolver.o: $(CytnxPATH)/src/utils/dynamic_arg_resolver.cpp $(CytnxPATH)/include/utils/dynamic_arg_resolver.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 ifeq ($(GPU_Enable),1)
 cucomplex_arithmetic.o: $(CytnxPATH)/src/utils/cucomplex_arithmetic.cu $(CytnxPATH)/src/utils/cucomplex_arithmetic.hpp
@@ -672,6 +675,9 @@ Hosvd.o: $(CytnxPATH)/src/linalg/Hosvd.cpp $(CytnxPATH)/include/linalg.hpp
 Lanczos_ER.o: $(CytnxPATH)/src/linalg/Lanczos_ER.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Lanczos_Gnd.o: $(CytnxPATH)/src/linalg/Lanczos_Gnd.cpp $(CytnxPATH)/include/linalg.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+
+Lstsq.o: $(CytnxPATH)/src/linalg/Lstsq.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 

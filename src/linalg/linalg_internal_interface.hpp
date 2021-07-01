@@ -28,6 +28,7 @@
 #include "linalg/linalg_internal_cpu/MaxMin_internal.hpp"
 #include "linalg/linalg_internal_cpu/Sum_internal.hpp"
 #include "linalg/linalg_internal_cpu/Det_internal.hpp"
+#include "linalg/linalg_internal_cpu/Lstsq_internal.hpp"
 #ifdef UNI_GPU
     #include "linalg/linalg_internal_gpu/cuArithmetic_internal.hpp"
     #include "linalg/linalg_internal_gpu/cuSvd_internal.hpp"
@@ -72,6 +73,9 @@ namespace cytnx{
         typedef void (*MaxMinfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &, const char &);
         typedef void (*Invinplacefunc_oii)(boost::intrusive_ptr<Storage_base> &ten, const cytnx_uint64 &Nelem, const double &clip);
 
+        typedef void (*Lstsqfunc_oii)(boost::intrusive_ptr<Storage_base> &in, boost::intrusive_ptr<Storage_base> &b, boost::intrusive_ptr<Storage_base> &s, boost::intrusive_ptr<Storage_base> &r,
+                                      const cytnx_int64 &M,const cytnx_int64 &N,const cytnx_int64 &nrhs, const cytnx_float &rcond);
+
         class linalg_internal_interface{
             public:
                 std::vector<std::vector<Arithmeticfunc_oii> > Ari_ii;
@@ -97,6 +101,8 @@ namespace cytnx{
                 std::vector<MaxMinfunc_oii> MM_ii;
                 std::vector<MaxMinfunc_oii> Sum_ii;
                 std::vector<Detfunc_oii> Det_ii;
+
+                std::vector<Lstsqfunc_oii> Lstsq_ii;
 
                 #ifdef UNI_GPU
                 std::vector<std::vector<Arithmeticfunc_oii> > cuAri_ii;
