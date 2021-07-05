@@ -5,61 +5,41 @@ import cytnx
 
 """
 Reference: https://www.tensors.net
-Author: Yu-Hsueh Chen, Kai-Hsin Wu 
+Author: Yu-Hsueh Chen, Kai-Hsin Wu, Hsu Ke j9263178
 """
 
-def Projector(psi, L, M1, M2, R):
-    ''' psi is Tensor, while L,M1,M2,R are UniTensor.
-    Return: h|psi> (Tensor)'''
-    psi_p = cytnx.UniTensor(psi,0) ## share memory, no copy
-    psi_p.reshape_(L.shape()[1],M1.shape()[2],M2.shape()[2],R.shape()[1])
-    anet = cytnx.Network("projector.net")
-    anet.PutUniTensor("M2",M2)
-    anet.PutUniTensors(["psi","L","M1","R"],[psi_p,L,M1,R],False);
-    #anet.PutUniTensors(["psi","L","M1","R"],[psi_p,L,M1,R]);
-    H_psi = anet.Launch(optimal=True).get_block_() # get_block_ without copy
-    H_psi.flatten_() # only change meta, without copy.
-    psi.flatten_() ## this just in case psi is something shared. 
-    return H_psi
+class Hxx(cytnx.LinOp):
 
+    def __init__(self, anet, shapes, psidim):
+        cytnx.LinOp.__init__(self,"mv", psidim, cytnx.Type.Double, cytnx.Device.cpu)
+        self.anet = anet
+        self.shapes = shapes
 
-def eig_Lanczos(psivec, linFunct, functArgs, maxit=2, krydim=4):
+    def matvec(self, v):
+        v_ = v.clone() # if don't clone, vectordot Tr in Lanczos_ER will not be rank-1 
+        psi_u = cytnx.UniTensor(v_, 0) ## share memory, no copy
+        psi_u.reshape_(*self.shapes)
+        self.anet.PutUniTensor("psi",psi_u,False);
+        out = self.anet.Launch(optimal=True).get_block_() # get_block_ without copy
+        out.flatten_() # only change meta, without copy.
+        return out
+
+def optimize_psi(psivec, functArgs, maxit=2, krydim=4):
     """ Lanczos method for finding smallest algebraic eigenvector of linear \
     operator defined as a function"""
     #print(eig_Lanczos)
+    #create network!
+    L,M1,M2,R = functArgs
+    pshape = [L.shape()[1],M1.shape()[2],M2.shape()[2],R.shape()[1]]
 
-    psi_columns = cytnx.zeros([len(psivec), krydim + 1])
-    krylov_matrix = cytnx.zeros([krydim, krydim])
-    for ik in range(maxit):
-        norm = max(psivec.Norm().item(), 1e-16)
-        psi_columns[:, 0] = psivec / norm
-        for ip in range(1, krydim + 1):
+    anet = cytnx.Network("projector.net")
+    anet.PutUniTensor("M2",M2)
+    anet.PutUniTensors(["L","M1","R"],[L,M1,R],False)
 
+    H = Hxx(anet, pshape, len(psivec))
+    energy, psivec = cytnx.linalg.Lanczos_ER(H, maxiter = 4, CvgCrit = 9999999999, Tin = psivec, max_krydim = krydim)
 
-            psi_columns[:, ip] = linFunct(psi_columns[:, ip - 1], *functArgs)
-            for ig in range(ip):
-                krylov_matrix[ip - 1, ig] = cytnx.linalg.Dot(psi_columns[:, ip], psi_columns[:, ig])
-                krylov_matrix[ig, ip - 1] = krylov_matrix[ip - 1, ig]
-
-            for ig in range(ip):
-                # print(cytnx.linalg.Dot(psi_columns[:, ig], psi_columns[:, ip]))
-                vp = psi_columns[:, ip];
-                vg = psi_columns[:, ig]
-                vp = vp - cytnx.linalg.Dot(vg, vp).item()*vg;
-
-                # print('psi_columns[:,ip].reshape(-1).Norm().item() = ', psi_columns[:,ip].reshape(-1).Norm().item())
-                norm =  max(vp.Norm().item(), 1e-16)
-                psi_columns[:, ip] = vp / norm ## only access set() once!! 
-
-        [energy, psi_columns_basis] = cytnx.linalg.Eigh(krylov_matrix)
-        psivec = cytnx.linalg.Matmul(psi_columns[:, :krydim],psi_columns_basis[:, 0].reshape(krydim,1)).flatten()
-
-    norm = psivec.Norm().item()
-    psivec = psivec / norm
-    gs_energy = energy[0].item()
-    return psivec, gs_energy
-
-
+    return psivec, energy[0].item()
 
 ##### Set bond dimensions and simulation options
 chi = 32;
@@ -76,6 +56,7 @@ sx = cytnx.physics.spin(0.5,'x')
 sy = cytnx.physics.spin(0.5,'y')
 sp = sx+1j*sy
 sm = sx-1j*sy
+
 eye = cytnx.eye(d)
 M = cytnx.zeros([4, 4, d, d])
 M[0,0] = M[3,3] = eye
@@ -126,6 +107,7 @@ for p in range(Nsites - 1):
     anet = cytnx.Network("L_AMAH.net")
     anet.PutUniTensors(["L","A","A_Conj","M"],[LR[p],A[p],A[p].Conj(),M],is_clone=False);
     LR[p+1] = anet.Launch(optimal=True);
+
             
 _,A[-1] = cytnx.linalg.Svd(A[-1],is_U=True,is_vT=False) ## last one.
 
@@ -163,15 +145,21 @@ for k in range(1, numsweeps+2):
     #           \             /     
     #            -------------      
 
+
+
     for p in range(Nsites-2,-1,-1): 
         #print(p)
+
         dim_l = A[p].shape()[0];
         dim_r = A[p+1].shape()[2];
 
+
         psi = cytnx.Contract(A[p],A[p+1]) ## contract
+
         lbl = psi.labels() ## memorize label
         psi_T = psi.get_block_(); psi_T.flatten_() ## flatten to 1d
-        psi_T, Entemp = eig_Lanczos(psi_T, Projector, (LR[p],M,M,LR[p+2]), maxit, krydim);
+
+        psi_T, Entemp = optimize_psi(psi_T, (LR[p],M,M,LR[p+2]), maxit, krydim)
         psi_T.reshape_(dim_l,d,d,dim_r) ## convert psi back to 4-leg form 
         psi = cytnx.UniTensor(psi_T,2);    
         psi.set_labels(lbl);
@@ -180,8 +168,18 @@ for k in range(1, numsweeps+2):
         new_dim = min(dim_l*d,dim_r*d,chi)
 
         s,A[p],A[p+1] = cytnx.linalg.Svd_truncate(psi,new_dim)
-        s = s/s.get_block_().Norm().item()
+
+        # s = s.Div(s.get_block_().Norm().item()) 
+        # s.Div_(s.get_block_().Norm().item()) // a bug : cannot use
+        slabel = s.labels()
+        s = s/s.get_block_().Norm().item() 
+        s.set_labels(slabel)
+
+
         A[p] = cytnx.Contract(A[p],s) ## absorb s into next neighbor
+
+        # A[p].print_diagram()
+        # A[p+1].print_diagram()
 
         # update LR from right to left:
         anet = cytnx.Network("R_AMAH.net")
@@ -223,11 +221,11 @@ for k in range(1, numsweeps+2):
     for p in range(Nsites-1):
         dim_l = A[p].shape()[0]
         dim_r = A[p+1].shape()[2]
-        
+
         psi = cytnx.Contract(A[p],A[p+1]) ## contract
         lbl = psi.labels() ## memorize label
         psi_T = psi.get_block_(); psi_T.flatten_() ## flatten to 1d
-        psi_T, Entemp = eig_Lanczos(psi_T, Projector, (LR[p],M,M,LR[p+2]), maxit, krydim);
+        psi_T, Entemp = optimize_psi(psi_T, (LR[p],M,M,LR[p+2]), maxit, krydim)
         psi_T.reshape_(dim_l,d,d,dim_r)## convert psi back to 4-leg form 
         psi = cytnx.UniTensor(psi_T,2); psi.set_labels(lbl);
         Ekeep.append(Entemp);
@@ -235,7 +233,12 @@ for k in range(1, numsweeps+2):
         new_dim = min(dim_l*d,dim_r*d,chi)
 
         s,A[p],A[p+1] = cytnx.linalg.Svd_truncate(psi,new_dim)
-        s = s/s.get_block_().Norm().item()
+
+        # s = s/s.get_block_().Norm().item()
+        slabel = s.labels()
+        s = s/s.get_block_().Norm().item() 
+        s.set_labels(slabel)
+
         A[p+1] = cytnx.Contract(s,A[p+1]) ## absorb s into next neighbor.
 
         anet = cytnx.Network("L_AMAH.net")
@@ -246,27 +249,29 @@ for k in range(1, numsweeps+2):
 
     A[-1].set_rowrank(2)
     _,A[-1] = cytnx.linalg.Svd(A[-1],is_U=True,is_vT=False) ## last one.
+    print('done : %d'% k)
 
 
 
 
 #### Compare with exact results (computed from free fermions)
 from numpy import linalg as LA
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 H = np.diag(np.ones(Nsites-1),k=1) + np.diag(np.ones(Nsites-1),k=-1)
 D = LA.eigvalsh(H)
 EnExact = 2*sum(D[D < 0])
+print("Exact : ")
+print(EnExact)
 
 ##### Plot results
-plt.figure(1)
-plt.yscale('log')
-plt.plot(range(len(Ekeep)), np.array(Ekeep) - EnExact, 'b', label="chi = %d"%(chi), marker = 'o')
-plt.legend()
-plt.title('DMRG for XX model')
-plt.xlabel('Update Step')
-plt.ylabel('Ground Energy Error')
-plt.show()
-
+# plt.figure(1)
+# plt.yscale('log')
+# plt.plot(range(len(Ekeep)), np.array(Ekeep) - EnExact, 'b', label="chi = %d"%(chi), marker = 'o')
+# plt.legend()
+# plt.title('DMRG for XX model')
+# plt.xlabel('Update Step')
+# plt.ylabel('Ground Energy Error')
+# plt.show()
 
 
 
