@@ -42,7 +42,8 @@ See The following user guide for install and using of cytnx:
     13. [Fix][C++] minor issue related to laterial argument passing by variables cannot properly resolved on C++ 
     14. [Enhance] Diag now support rank-1 Tensor as input for constructing a diagonal tensor with input as diagonal elements.
     15. [Enhance] Add c++ example for DMRG (Ke)
-    
+    16. [Fix] Bug fixed in DMRG code and updated to the latest features. 
+        
 
     v0.7.2 
     1. [Enhance] Add Tensor.set with Scalar
@@ -360,7 +361,7 @@ See The following user guide for install and using of cytnx:
     Yu-Hsueh Chen (NTU, Taiwan): example, and testing
     Po-Kwan Wu (OSU): Icon optimization    
     Wen-Han Kao (UMN, USA) : testing of conda install 
-    Ke Hsu (NTU, Taiwan): Lstsq 
+    Ke Hsu (NTU, Taiwan): Lstsq, linalg funcitons and examples  
 
 ## References
 
