@@ -241,7 +241,7 @@ namespace cytnx{
 
 
             //=====================
-            Diag_ii = vector<Expfunc_oii>(N_Type);
+            Diag_ii = vector<Diagfunc_oii>(N_Type);
 
             Diag_ii[Type.ComplexDouble] = Diag_internal_cd;
             Diag_ii[Type.ComplexFloat ] = Diag_internal_cf;
@@ -754,7 +754,7 @@ namespace cytnx{
                 cuExp_ii[Type.Float        ] = cuExp_internal_f;
 
                 //=====================
-                cuDiag_ii = vector<Expfunc_oii>(N_Type);
+                cuDiag_ii = vector<Diagfunc_oii>(N_Type);
 
                 cuDiag_ii[Type.ComplexDouble] = cuDiag_internal_cd;
                 cuDiag_ii[Type.ComplexFloat ] = cuDiag_internal_cf;
