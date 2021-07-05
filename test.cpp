@@ -89,15 +89,6 @@ class MyOp2: public LinOp{
 int main(int argc, char *argv[]){
 
 
-    std::complex j = (0, 1);
-    auto Sx = physics::spin(0.5,'x');
-    auto Sy = physics::spin(0.5,'y');
-    auto Sp = Sx + jSy;
-    auto Sm = Sx - jSy;
-    std::cout<<Sp<<std::endl;
-    std::cout<<Sm<<std::endl;
-
-    return 0;
 
 
 
