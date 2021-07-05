@@ -88,10 +88,28 @@ class MyOp2: public LinOp{
 
 int main(int argc, char *argv[]){
 
+
+    std::complex j = (0, 1);
+    auto Sx = physics::spin(0.5,'x');
+    auto Sy = physics::spin(0.5,'y');
+    auto Sp = Sx + jSy;
+    auto Sm = Sx - jSy;
+    std::cout<<Sp<<std::endl;
+    std::cout<<Sm<<std::endl;
+
+    return 0;
+
+
+
     auto S00 = Storage(30);
     cytnx_int64 ia = 5;
     cytnx_int64 ib = 6;
     Tensor T00 = Tensor::from_storage(S00).reshape(ia,ib);
+
+    T00 = T00.reshape(5,3,2);
+
+    T00 = T00.reshape(30);
+
 
     return 0;
 
