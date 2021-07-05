@@ -60,7 +60,7 @@ namespace cytnx{
         typedef void (*InvMinplacefunc_oii)(boost::intrusive_ptr<Storage_base> &, const cytnx_int64&);
         typedef void (*Conjinplacefunc_oii)(boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
         typedef void (*Expfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
-        typedef void (*Diagfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
+        typedef void (*Diagfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &, const cytnx_bool &);
         typedef void (*Matmulfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &,const boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &, const cytnx_int64 &, const cytnx_int64&);
         typedef void (*Matmul_dgfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &,const boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &, const cytnx_int64 &, const cytnx_int64&, const int &);
         typedef void (*Matvecfunc_oii)(boost::intrusive_ptr<Storage_base> &, const boost::intrusive_ptr<Storage_base> &,const boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &, const cytnx_int64 &);
