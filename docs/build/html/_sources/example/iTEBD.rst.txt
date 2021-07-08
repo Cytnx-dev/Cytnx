@@ -54,7 +54,7 @@ Let's first create this two-site  MPS wave function (here, we set virtual bond d
     #include "cytnx.hpp"
     using namespace cytnx;
 
-    unsigned int chi = 20;
+    unsigned int chi = 10;
     auto A = UniTensor({Bond(chi),Bond(2),Bond(chi)},{-1,0,-2},1);
     auto B = UniTensor(A.bonds(),{-3,1,-4},1);
     random::Make_normal(B.get_block_(),0,0.2);

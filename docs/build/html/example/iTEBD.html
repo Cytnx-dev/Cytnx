@@ -4,21 +4,23 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
     <title>2. iTEBD &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../_static/sphinxbootstrap4.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
     <script src="../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -52,9 +54,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../install.html#using-c-api">Using C++ API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#using-c-api-with-cmake">Using C++ API with CMake</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#build-cytnx-from-source">Build Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../install.html#using-anaconda-conda-for-deps">Using anaconda/conda for deps</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-system-for-deps">Using system for deps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../install.html#compiling-process-auto-set-up">Compiling process [Auto set-up]</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../install.html#compiling-process-manually-set-up">Compiling process [manually set-up]</a><ul class="simple">
 </ul>
@@ -65,7 +66,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Guide.html">User Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../guide/behavior.html">1. Objects behavior</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../guide/behavior.html#eveything-is-reference">1.1. Eveything is reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/behavior.html#everything-is-reference">1.1. Everything is reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/behavior.html#clone">1.2. clone</a><ul class="simple">
 </ul>
 </li>
@@ -201,6 +202,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ED.html">1. Exact Diagonalization</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ED.html#bit-representation-of-basis-states">1.1. Bit representation of basis states</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ED.html#implementation">1.2. Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ED.html#results">1.3. Results</a></li>
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">2. iTEBD</a><ul>
@@ -208,7 +210,12 @@
 <li class="toctree-l3"><a class="reference internal" href="#update-procedure">2.2. Update procedure</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="DMRG.html">3. DMRG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DMRG.html">3. DMRG</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="DMRG.html#model-and-its-matrix-product-operator">3.1. Model and its Matrix product operator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DMRG.html#implementation">3.2. Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DMRG.html#results">3.3. Results</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="iDMRG.html">4. iDMRG</a></li>
 <li class="toctree-l2"><a class="reference internal" href="HOTRG.html">5. HOTRG</a></li>
 </ul>
@@ -237,7 +244,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../%23.html">v0.7.1a</a></li>
+              <a  class="nav-link" href="../">v0.7.1a</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -263,7 +270,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../%23.html">v0.7.1a</a></li>
+                  <a  class="nav-link" href="../">v0.7.1a</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -321,9 +328,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../install.html#using-c-api">Using C++ API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#using-c-api-with-cmake">Using C++ API with CMake</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#build-cytnx-from-source">Build Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../install.html#using-anaconda-conda-for-deps">Using anaconda/conda for deps</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-system-for-deps">Using system for deps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../install.html#compiling-process-auto-set-up">Compiling process [Auto set-up]</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../install.html#compiling-process-manually-set-up">Compiling process [manually set-up]</a><ul class="simple">
 </ul>
@@ -334,7 +340,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Guide.html">User Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../guide/behavior.html">1. Objects behavior</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../guide/behavior.html#eveything-is-reference">1.1. Eveything is reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/behavior.html#everything-is-reference">1.1. Everything is reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/behavior.html#clone">1.2. clone</a><ul class="simple">
 </ul>
 </li>
@@ -470,6 +476,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ED.html">1. Exact Diagonalization</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ED.html#bit-representation-of-basis-states">1.1. Bit representation of basis states</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ED.html#implementation">1.2. Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ED.html#results">1.3. Results</a></li>
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">2. iTEBD</a><ul>
@@ -477,7 +484,12 @@
 <li class="toctree-l3"><a class="reference internal" href="#update-procedure">2.2. Update procedure</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="DMRG.html">3. DMRG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DMRG.html">3. DMRG</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="DMRG.html#model-and-its-matrix-product-operator">3.1. Model and its Matrix product operator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DMRG.html#implementation">3.2. Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DMRG.html#results">3.3. Results</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="iDMRG.html">4. iDMRG</a></li>
 <li class="toctree-l2"><a class="reference internal" href="HOTRG.html">5. HOTRG</a></li>
 </ul>
@@ -527,7 +539,7 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="itebd">
+  <section id="itebd">
 <h1><span class="section-number">2. </span>iTEBD<a class="headerlink" href="#itebd" title="Permalink to this headline">¶</a></h1>
 <p>Time evolution block decimation is one of the most simple and sucessful Tensor network method <a class="bibtex reference internal" href="#itebd-vidal" id="id1">[Vid07]</a>. The core concept of this algorithm is to use the imaginary time evolution to find the best variational ansatz, usually in terms of Matrix product state (MPS).</p>
 <p>Here, we use a 1D transverse field Ising model (TFIM) as a simple example to show how to implement iTEBD algorithm in Cytnx and get the infinite system size (variational) ground state.</p>
@@ -598,9 +610,9 @@ The infinite size ground state can be represent by MPS as variational ansatz, wh
 <span class="normal">16</span>
 <span class="normal">17</span>
 <span class="normal">18</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;cytnx.hpp&quot;</span><span class="cp"></span>
-<span class="k">using</span> <span class="k">namespace</span> <span class="n">cytnx</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="nn">cytnx</span><span class="p">;</span>
 
-<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">chi</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">chi</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
 <span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">({</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">),</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">)},{</span><span class="mi">-1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">-2</span><span class="p">},</span><span class="mi">1</span><span class="p">);</span>
 <span class="k">auto</span> <span class="n">B</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">A</span><span class="p">.</span><span class="n">bonds</span><span class="p">(),{</span><span class="mi">-3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">-4</span><span class="p">},</span><span class="mi">1</span><span class="p">);</span>
 <span class="n">random</span><span class="o">::</span><span class="n">Make_normal</span><span class="p">(</span><span class="n">B</span><span class="p">.</span><span class="n">get_block_</span><span class="p">(),</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.2</span><span class="p">);</span>
@@ -675,7 +687,7 @@ We then initialize the elements to be all one for this weight matrices.</p>
 <p class="admonition-title">Note</p>
 <p>In general, there are other ways you can set-up a trial initial MPS wavefunction, as long as not all the elements are zero.</p>
 </div>
-<div class="section" id="imaginary-time-evolution">
+<section id="imaginary-time-evolution">
 <h2><span class="section-number">2.1. </span>Imaginary time evolution<a class="headerlink" href="#imaginary-time-evolution" title="Permalink to this headline">¶</a></h2>
 <p>To optimize the MPS for the ground state wave function, in TEBD, we perform imaginary time evolution with Hamiltonian <img class="math" src="../_images/math/cb5de54f699cf4b3c7c1a3e87313d11d536c0d88.png" alt="H"/> with evolution operator <img class="math" src="../_images/math/fcedc25030b70c3797d0cea5c3d331d0bcaa32f9.png" alt="e^{\tau H}"/>.
 The manybody Hamiltonian is then decomposed into local two-sites evolution operator (or sometimes also called gate in quantum computation language) via
@@ -846,22 +858,22 @@ on device   : cytnx device: CPU
 <p class="admonition-title">Tip</p>
 <p>Here, <strong>physics.pauli</strong> returns complex type <strong>cytnx.Tensor</strong>. Since we know pauli-z and pauli-x should be real, we use <em>.real()</em> to get the real part.</p>
 </div>
-</div>
-<div class="section" id="update-procedure">
+</section>
+<section id="update-procedure">
 <h2><span class="section-number">2.2. </span>Update procedure<a class="headerlink" href="#update-procedure" title="Permalink to this headline">¶</a></h2>
 <p>Now we have prepared the initial trial wavefunction in terms of MPS with two sites unit cell and the time evolution operator, we are ready to use the aformentioned scheme to find the (variational) ground state MPS.</p>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <p>The complete example code can be found in Github repo under example/iTEBD folder.</p>
 </div>
-<p id="bibtex-bibliography-example/iTEBD-0"><dl class="citation">
+<p id="bibtex-bibliography-example/iTEBD-0"><dl class="bibtex citation">
 <dt class="bibtex label" id="itebd-vidal"><span class="brackets">Vid07</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id2">2</a>)</span></dt>
 <dd><p>G. Vidal. Classical simulation of infinite-size quantum lattice systems in one spatial dimension. <em>Phys. Rev. Lett.</em>, 98:070201, Feb 2007. URL: <a class="reference external" href="https://link.aps.org/doi/10.1103/PhysRevLett.98.070201">https://link.aps.org/doi/10.1103/PhysRevLett.98.070201</a>, <a class="reference external" href="https://doi.org/10.1103/PhysRevLett.98.070201">doi:10.1103/PhysRevLett.98.070201</a>.</p>
 </dd>
 </dl>
 </p>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -874,7 +886,7 @@ on device   : cytnx device: CPU
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

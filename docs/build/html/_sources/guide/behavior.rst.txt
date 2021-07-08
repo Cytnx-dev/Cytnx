@@ -1,7 +1,7 @@
 Objects behavior 
 ------------------
 
-Eveything is reference
+Everything is reference
 ************************
 To provide a direct translate between C++ API and python, as well as reduce the redundant memory allocation, all the objects (except Accessor and LinOp) in Cytnx especially in C++ side, are **references** just like in python. 
 

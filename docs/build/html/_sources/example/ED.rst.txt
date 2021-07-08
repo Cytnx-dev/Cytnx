@@ -213,7 +213,8 @@ Output>>
      [-5.41017e-02 -2.44076e-01 5.13405e-02 ]
      [-6.98374e-01 9.23730e-02 6.99610e-01 ]]
 
-Results:
+Results
+************************************
 
     Here, we show the result using the aformentioned implementation. We define a common parameter :math:`s` such that :math:`J = -s` and :math:`Hx=(1-s)`, and we plot the second gap :math:`\Delta E_{20}` that shows the avoid level crossing:
 

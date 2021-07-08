@@ -4,21 +4,23 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
     <title>1. Exact Diagonalization &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../_static/sphinxbootstrap4.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
     <script src="../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -52,9 +54,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../install.html#using-c-api">Using C++ API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#using-c-api-with-cmake">Using C++ API with CMake</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#build-cytnx-from-source">Build Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../install.html#using-anaconda-conda-for-deps">Using anaconda/conda for deps</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-system-for-deps">Using system for deps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../install.html#compiling-process-auto-set-up">Compiling process [Auto set-up]</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../install.html#compiling-process-manually-set-up">Compiling process [manually set-up]</a><ul class="simple">
 </ul>
@@ -65,7 +66,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Guide.html">User Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../guide/behavior.html">1. Objects behavior</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../guide/behavior.html#eveything-is-reference">1.1. Eveything is reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/behavior.html#everything-is-reference">1.1. Everything is reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/behavior.html#clone">1.2. clone</a><ul class="simple">
 </ul>
 </li>
@@ -201,6 +202,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">1. Exact Diagonalization</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#bit-representation-of-basis-states">1.1. Bit representation of basis states</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#implementation">1.2. Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#results">1.3. Results</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="iTEBD.html">2. iTEBD</a><ul>
@@ -208,7 +210,12 @@
 <li class="toctree-l3"><a class="reference internal" href="iTEBD.html#update-procedure">2.2. Update procedure</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="DMRG.html">3. DMRG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DMRG.html">3. DMRG</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="DMRG.html#model-and-its-matrix-product-operator">3.1. Model and its Matrix product operator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DMRG.html#implementation">3.2. Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DMRG.html#results">3.3. Results</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="iDMRG.html">4. iDMRG</a></li>
 <li class="toctree-l2"><a class="reference internal" href="HOTRG.html">5. HOTRG</a></li>
 </ul>
@@ -237,7 +244,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../%23.html">v0.7.1a</a></li>
+              <a  class="nav-link" href="../">v0.7.1a</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -263,7 +270,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../%23.html">v0.7.1a</a></li>
+                  <a  class="nav-link" href="../">v0.7.1a</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -321,9 +328,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../install.html#using-c-api">Using C++ API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#using-c-api-with-cmake">Using C++ API with CMake</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#build-cytnx-from-source">Build Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../install.html#using-anaconda-conda-for-deps">Using anaconda/conda for deps</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-system-for-deps">Using system for deps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../install.html#compiling-process-auto-set-up">Compiling process [Auto set-up]</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../install.html#compiling-process-manually-set-up">Compiling process [manually set-up]</a><ul class="simple">
 </ul>
@@ -334,7 +340,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Guide.html">User Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../guide/behavior.html">1. Objects behavior</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../guide/behavior.html#eveything-is-reference">1.1. Eveything is reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/behavior.html#everything-is-reference">1.1. Everything is reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/behavior.html#clone">1.2. clone</a><ul class="simple">
 </ul>
 </li>
@@ -470,6 +476,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">1. Exact Diagonalization</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#bit-representation-of-basis-states">1.1. Bit representation of basis states</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#implementation">1.2. Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#results">1.3. Results</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="iTEBD.html">2. iTEBD</a><ul>
@@ -477,7 +484,12 @@
 <li class="toctree-l3"><a class="reference internal" href="iTEBD.html#update-procedure">2.2. Update procedure</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="DMRG.html">3. DMRG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DMRG.html">3. DMRG</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="DMRG.html#model-and-its-matrix-product-operator">3.1. Model and its Matrix product operator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DMRG.html#implementation">3.2. Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DMRG.html#results">3.3. Results</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="iDMRG.html">4. iDMRG</a></li>
 <li class="toctree-l2"><a class="reference internal" href="HOTRG.html">5. HOTRG</a></li>
 </ul>
@@ -527,7 +539,7 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="exact-diagonalization">
+  <section id="exact-diagonalization">
 <h1><span class="section-number">1. </span>Exact Diagonalization<a class="headerlink" href="#exact-diagonalization" title="Permalink to this headline">¶</a></h1>
 <p>Consider the example of a 1D transverse field Ising model with Hamiltonain defines as</p>
 <div class="math">
@@ -537,7 +549,7 @@
 <p>Here, we are interesting to observe this avoid level crossing where the gap closes with increasing system size. For this, we want to get the low-level energy spectrums.</p>
 <p>Generally, the native way to calculate the energy specturm of this Hamiltonian is through the product of local pauli-matrices. However, the size of this many-body Hamiltonian growth exponentially with size of chain <img class="math" src="../_images/math/19eef1966f7c545af3ac8c0fa486974d873e3c65.png" alt="L"/> as <img class="math" src="../_images/math/1ac025bcd85e9ce8b501ce17ba7877971fbdf625.png" alt="2^{L}"/>. It is not pratical to store this large Hamiltonain.</p>
 <p>Notice that this many-body Hamiltonain is very sparse, with lots of elements equal to zero. Thus it is very useful to use LinOp to represent this Hamiltonain, and call <strong>Lanczos_ER</strong> to get the low-level energies.</p>
-<div class="section" id="bit-representation-of-basis-states">
+<section id="bit-representation-of-basis-states">
 <h2><span class="section-number">1.1. </span>Bit representation of basis states<a class="headerlink" href="#bit-representation-of-basis-states" title="Permalink to this headline">¶</a></h2>
 <p>First thing we want to do is to represent the basis states using bit-representation.
 Here, let’s choose the <img class="math" src="../_images/math/8d051150f8669295ecdbe92367941012175a824d.png" alt="z"/> -basis.
@@ -556,8 +568,8 @@ H_x\sigma_0^{x} | \uparrow\uparrow\uparrow \cdots \uparrow\downarrow &gt; = H_x 
 </div><p>The first example, <img class="math" src="../_images/math/79875dec455d1476b856c590eb791b9ac3782d3a.png" alt="J\sigma_0^{z}\sigma_1^{z}"/> map from basis with ID=1 to ID=1 with coefficient <img class="math" src="../_images/math/49a62c5fa55d184e16e67b79eabfb5244dd1d524.png" alt="-J"/>, which is a diagonal elements in the many body Hamiltonian.
 The second example which <img class="math" src="../_images/math/d7109c8614516be709ab98d3095bf08aedaa20b8.png" alt="H_x\sigma_0^{x}"/> operate on state with ID=1 resulting as a state with ID=0 and corresponding coefficient <img class="math" src="../_images/math/43570e4cdde42ee9772f213df372ef4432d99766.png" alt="H_x"/>, which is a off-diagonal elements in the many-body Hamiltonian.</p>
 <p>With aformentioned rule, we are now ready to implement the TFIM Hamiltonian using <strong>LinOp</strong> class.</p>
-</div>
-<div class="section" id="implementation">
+</section>
+<section id="implementation">
 <h2><span class="section-number">1.2. </span>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
 <li><p>Let’s inherit the <strong>LinOp</strong> class, and implement the aformentioned mapping in the overload of <strong>matvec</strong>:</p></li>
@@ -670,7 +682,7 @@ The second example which <img class="math" src="../_images/math/d7109c8614516be7
 <span class="normal">41</span>
 <span class="normal">42</span>
 <span class="normal">43</span>
-<span class="normal">44</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">namespace</span> <span class="n">cy</span><span class="o">=</span><span class="n">cytnx</span><span class="p">;</span>
+<span class="normal">44</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">namespace</span> <span class="nn">cy</span><span class="o">=</span><span class="nn">cytnx</span><span class="p">;</span>
 <span class="k">class</span> <span class="nc">Hising</span><span class="o">:</span> <span class="k">public</span> <span class="n">cy</span><span class="o">::</span><span class="n">LinOp</span><span class="p">{</span>
 
     <span class="k">public</span><span class="o">:</span>
@@ -786,7 +798,9 @@ Shape : (16,3)
  [-6.98374e-01 9.23730e-02 6.99610e-01 ]]
 </pre></div>
 </div>
-<p>Results:</p>
+</section>
+<section id="results">
+<h2><span class="section-number">1.3. </span>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>Here, we show the result using the aformentioned implementation. We define a common parameter <img class="math" src="../_images/math/106b04b320e75010b1d8029e59244f234f75e6f9.png" alt="s"/> such that <img class="math" src="../_images/math/d23dbd90f7227d83bd4dabffcb08c32c89ac68d9.png" alt="J = -s"/> and <img class="math" src="../_images/math/35388e84827a23bf848167ee4367c039facbfb85.png" alt="Hx=(1-s)"/>, and we plot the second gap <img class="math" src="../_images/math/f66c698a635334c35de53f6d6b347d5f08403e63.png" alt="\Delta E_{20}"/> that shows the avoid level crossing:</p>
 </div></blockquote>
@@ -796,8 +810,8 @@ Shape : (16,3)
 <p class="admonition-title">Hint</p>
 <p>The complete example code can be found in Github repo under example/ED folder.</p>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -810,7 +824,7 @@ Shape : (16,3)
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

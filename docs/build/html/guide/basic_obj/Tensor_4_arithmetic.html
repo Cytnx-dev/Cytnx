@@ -4,21 +4,23 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
     <title>2.4. Tensor arithmetic &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/sphinxbootstrap4.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -52,9 +54,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../../install.html#using-c-api">Using C++ API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../install.html#using-c-api-with-cmake">Using C++ API with CMake</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../install.html#build-cytnx-from-source">Build Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../install.html#using-anaconda-conda-for-deps">Using anaconda/conda for deps</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-system-for-deps">Using system for deps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../install.html#compiling-process-auto-set-up">Compiling process [Auto set-up]</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../install.html#compiling-process-manually-set-up">Compiling process [manually set-up]</a><ul class="simple">
 </ul>
@@ -65,7 +66,7 @@
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../Guide.html">User Guide</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../behavior.html">1. Objects behavior</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../behavior.html#eveything-is-reference">1.1. Eveything is reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../behavior.html#everything-is-reference">1.1. Everything is reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../behavior.html#clone">1.2. clone</a><ul class="simple">
 </ul>
 </li>
@@ -201,6 +202,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../example/ED.html">1. Exact Diagonalization</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../example/ED.html#bit-representation-of-basis-states">1.1. Bit representation of basis states</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../example/ED.html#implementation">1.2. Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/ED.html#results">1.3. Results</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../example/iTEBD.html">2. iTEBD</a><ul>
@@ -208,7 +210,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../example/iTEBD.html#update-procedure">2.2. Update procedure</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../example/DMRG.html">3. DMRG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../example/DMRG.html">3. DMRG</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#model-and-its-matrix-product-operator">3.1. Model and its Matrix product operator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#implementation">3.2. Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#results">3.3. Results</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../example/iDMRG.html">4. iDMRG</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../example/HOTRG.html">5. HOTRG</a></li>
 </ul>
@@ -237,7 +244,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../../%23.html">v0.7.1a</a></li>
+              <a  class="nav-link" href="../../">v0.7.1a</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -263,7 +270,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../../%23.html">v0.7.1a</a></li>
+                  <a  class="nav-link" href="../../">v0.7.1a</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -323,9 +330,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../../install.html#using-c-api">Using C++ API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../install.html#using-c-api-with-cmake">Using C++ API with CMake</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../install.html#build-cytnx-from-source">Build Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../install.html#using-anaconda-conda-for-deps">Using anaconda/conda for deps</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-system-for-deps">Using system for deps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../install.html#compiling-process-auto-set-up">Compiling process [Auto set-up]</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../install.html#compiling-process-manually-set-up">Compiling process [manually set-up]</a><ul class="simple">
 </ul>
@@ -336,7 +342,7 @@
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../Guide.html">User Guide</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../behavior.html">1. Objects behavior</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../behavior.html#eveything-is-reference">1.1. Eveything is reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../behavior.html#everything-is-reference">1.1. Everything is reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../behavior.html#clone">1.2. clone</a><ul class="simple">
 </ul>
 </li>
@@ -472,6 +478,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../example/ED.html">1. Exact Diagonalization</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../example/ED.html#bit-representation-of-basis-states">1.1. Bit representation of basis states</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../example/ED.html#implementation">1.2. Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/ED.html#results">1.3. Results</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../example/iTEBD.html">2. iTEBD</a><ul>
@@ -479,7 +486,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../example/iTEBD.html#update-procedure">2.2. Update procedure</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../example/DMRG.html">3. DMRG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../example/DMRG.html">3. DMRG</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#model-and-its-matrix-product-operator">3.1. Model and its Matrix product operator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#implementation">3.2. Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#results">3.3. Results</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../example/iDMRG.html">4. iDMRG</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../example/HOTRG.html">5. HOTRG</a></li>
 </ul>
@@ -529,10 +541,10 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="tensor-arithmetic">
+  <section id="tensor-arithmetic">
 <h1><span class="section-number">2.4. </span>Tensor arithmetic<a class="headerlink" href="#tensor-arithmetic" title="Permalink to this headline">¶</a></h1>
 <p>In cytnx, Tensor can performs arithmetic operation such as <strong>+, -, x, /, +=, -=, *=, /=</strong> with another Tensor or scalalr, just like the standard way you do in python.</p>
-<div class="section" id="type-promotion">
+<section id="type-promotion">
 <h2><span class="section-number">2.4.1. </span>Type promotion<a class="headerlink" href="#type-promotion" title="Permalink to this headline">¶</a></h2>
 <p>Arithmetic operation in Cytnx follows the similar pattern of type promotion as standard C++/python.
 When Tensor performs arithmetic operation with another Tensor or scalar, the output Tensor will have the dtype as the one that has stronger type.</p>
@@ -552,8 +564,8 @@ When Tensor performs arithmetic operation with another Tensor or scalar, the out
 <li><p>Type.Bool</p></li>
 </ul>
 </div></blockquote>
-</div>
-<div class="section" id="tensor-scalar-arithmetic">
+</section>
+<section id="tensor-scalar-arithmetic">
 <h2><span class="section-number">2.4.2. </span>Tensor-scalar arithmetic<a class="headerlink" href="#tensor-scalar-arithmetic" title="Permalink to this headline">¶</a></h2>
 <p>Tensor can also performs arithmetic operation with scalar.
 For example:</p>
@@ -625,8 +637,8 @@ Shape : (3,4)
  [1.00000e+00-7.00000e+00j 1.00000e+00-7.00000e+00j 1.00000e+00-7.00000e+00j 1.00000e+00-7.00000e+00j ]]
 </pre></div>
 </div>
-</div>
-<div class="section" id="tensor-tensor-arithmetic">
+</section>
+<section id="tensor-tensor-arithmetic">
 <h2><span class="section-number">2.4.3. </span>Tensor-Tensor arithmetic<a class="headerlink" href="#tensor-tensor-arithmetic" title="Permalink to this headline">¶</a></h2>
 <p>Tensor can performs arithmetic operation with another Tensor with the same shape.
 For example:</p>
@@ -698,8 +710,8 @@ Shape : (3,4)
  [3.20000e+01 3.60000e+01 4.00000e+01 4.40000e+01 ]]
 </pre></div>
 </div>
-</div>
-<div class="section" id="equivalent-apis-c-only">
+</section>
+<section id="equivalent-apis-c-only">
 <h2><span class="section-number">2.4.4. </span>Equivalent APIs (C++ only)<a class="headerlink" href="#equivalent-apis-c-only" title="Permalink to this headline">¶</a></h2>
 <p>Cytnx also provides some equivelant APIs for users who are familiar and coming from pytorch and other library communities.
 For example, suppose we want to do + operation, there are two other ways: Use <strong>Tensor.Add()/Tensor.Add_()</strong> and <strong>linalg.Add()</strong></p>
@@ -741,8 +753,8 @@ For example, suppose we want to do + operation, there are two other ways: Use <s
 </div>
 <div class="toctree-wrapper compound">
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -755,7 +767,7 @@ For example, suppose we want to do + operation, there are two other ways: Use <s
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

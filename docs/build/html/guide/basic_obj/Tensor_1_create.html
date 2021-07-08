@@ -4,21 +4,23 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
     <title>2.1. Create a Tensor &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/sphinxbootstrap4.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -52,9 +54,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../../install.html#using-c-api">Using C++ API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../install.html#using-c-api-with-cmake">Using C++ API with CMake</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../install.html#build-cytnx-from-source">Build Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../install.html#using-anaconda-conda-for-deps">Using anaconda/conda for deps</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-system-for-deps">Using system for deps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../install.html#compiling-process-auto-set-up">Compiling process [Auto set-up]</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../install.html#compiling-process-manually-set-up">Compiling process [manually set-up]</a><ul class="simple">
 </ul>
@@ -65,7 +66,7 @@
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../Guide.html">User Guide</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../behavior.html">1. Objects behavior</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../behavior.html#eveything-is-reference">1.1. Eveything is reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../behavior.html#everything-is-reference">1.1. Everything is reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../behavior.html#clone">1.2. clone</a><ul class="simple">
 </ul>
 </li>
@@ -201,6 +202,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../example/ED.html">1. Exact Diagonalization</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../example/ED.html#bit-representation-of-basis-states">1.1. Bit representation of basis states</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../example/ED.html#implementation">1.2. Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/ED.html#results">1.3. Results</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../example/iTEBD.html">2. iTEBD</a><ul>
@@ -208,7 +210,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../example/iTEBD.html#update-procedure">2.2. Update procedure</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../example/DMRG.html">3. DMRG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../example/DMRG.html">3. DMRG</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#model-and-its-matrix-product-operator">3.1. Model and its Matrix product operator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#implementation">3.2. Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#results">3.3. Results</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../example/iDMRG.html">4. iDMRG</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../example/HOTRG.html">5. HOTRG</a></li>
 </ul>
@@ -237,7 +244,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../../%23.html">v0.7.1a</a></li>
+              <a  class="nav-link" href="../../">v0.7.1a</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -263,7 +270,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../../%23.html">v0.7.1a</a></li>
+                  <a  class="nav-link" href="../../">v0.7.1a</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -323,9 +330,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../../install.html#using-c-api">Using C++ API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../install.html#using-c-api-with-cmake">Using C++ API with CMake</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../install.html#build-cytnx-from-source">Build Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../install.html#using-anaconda-conda-for-deps">Using anaconda/conda for deps</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-system-for-deps">Using system for deps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../install.html#compiling-process-auto-set-up">Compiling process [Auto set-up]</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../install.html#compiling-process-manually-set-up">Compiling process [manually set-up]</a><ul class="simple">
 </ul>
@@ -336,7 +342,7 @@
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../Guide.html">User Guide</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../behavior.html">1. Objects behavior</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../behavior.html#eveything-is-reference">1.1. Eveything is reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../behavior.html#everything-is-reference">1.1. Everything is reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../behavior.html#clone">1.2. clone</a><ul class="simple">
 </ul>
 </li>
@@ -472,6 +478,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../example/ED.html">1. Exact Diagonalization</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../example/ED.html#bit-representation-of-basis-states">1.1. Bit representation of basis states</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../example/ED.html#implementation">1.2. Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/ED.html#results">1.3. Results</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../example/iTEBD.html">2. iTEBD</a><ul>
@@ -479,7 +486,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../example/iTEBD.html#update-procedure">2.2. Update procedure</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../example/DMRG.html">3. DMRG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../example/DMRG.html">3. DMRG</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#model-and-its-matrix-product-operator">3.1. Model and its Matrix product operator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#implementation">3.2. Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#results">3.3. Results</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../example/iDMRG.html">4. iDMRG</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../example/HOTRG.html">5. HOTRG</a></li>
 </ul>
@@ -529,7 +541,7 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="create-a-tensor">
+  <section id="create-a-tensor">
 <h1><span class="section-number">2.1. </span>Create a Tensor<a class="headerlink" href="#create-a-tensor" title="Permalink to this headline">¶</a></h1>
 <p>Just like <a class="reference external" href="https://numpy.org/doc/1.18/reference/generated/numpy.array.html">numpy.array</a> / <a class="reference external" href="https://pytorch.org/docs/stable/tensors.html">torch.tensor</a>, Tensor is generally created using generator such as <strong>zero()</strong>, <strong>arange()</strong>, <strong>ones()</strong>.</p>
 <p>For example, suppose we want to define a rank-3 tensor with shape (3,4,5), and initialize all elements with zero:</p>
@@ -578,7 +590,7 @@
 <dd class="field-odd"><p>In C++, you could make use of <em>auto</em> to simplify your code!</p>
 </dd>
 </dl>
-<div class="section" id="tensor-with-different-dtype-and-device">
+<section id="tensor-with-different-dtype-and-device">
 <h2><span class="section-number">2.1.1. </span>Tensor with different dtype and device<a class="headerlink" href="#tensor-with-different-dtype-and-device" title="Permalink to this headline">¶</a></h2>
 <p>By default, the Tensor will be created with <em>double</em> type (or <em>float</em> in python) on CPU if there is no additional arguments provided upon creating the Tensor.</p>
 <p>You can create a Tensor with different data type, and/or on different devices simply by specify the <strong>dtype</strong> and the <strong>device</strong> arguments upon initialization. For example, the following codes create a Tensor with 64bit integer on cuda-enabled GPU.</p>
@@ -690,8 +702,8 @@
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="type-conversion">
+</section>
+<section id="type-conversion">
 <h2><span class="section-number">2.1.2. </span>Type conversion<a class="headerlink" href="#type-conversion" title="Permalink to this headline">¶</a></h2>
 <p>It is possible to convert a Tensor to a different data type. To convert the data type, simply use <strong>Tensor.astype()</strong>.</p>
 <p>For example, consider a Tensor <em>A</em> with <strong>dtype=Type.Int64</strong>, and we want to convert it to <strong>Type.Double</strong></p>
@@ -731,8 +743,8 @@ Double (Float64)
 <li><p>Complex data type cannot directly convert to real data type. Use Tensor.real()/Tensor.imag() if you want to get the real/imag part.</p></li>
 </ol>
 </div>
-</div>
-<div class="section" id="transfer-btwn-devices">
+</section>
+<section id="transfer-btwn-devices">
 <h2><span class="section-number">2.1.3. </span>Transfer btwn devices<a class="headerlink" href="#transfer-btwn-devices" title="Permalink to this headline">¶</a></h2>
 <p>To move a Tensor between different devices is very easy. We can use <strong>Tensor.to()</strong> to move the Tensor to a different device.</p>
 <p>For example, let’s create a Tensor on cpu and transfer to GPU with gpu-id=0.</p>
@@ -802,8 +814,8 @@ Shape : (2,2)
 <li><p><strong>Tensor.to()</strong> will return a copy on a target device. If you want to move the current Tensor to device, use <strong>Tensor.to_()</strong> (with underscore).</p></li>
 </ol>
 </div>
-</div>
-<div class="section" id="tensor-from-storage-v0-6-6">
+</section>
+<section id="tensor-from-storage-v0-6-6">
 <h2><span class="section-number">2.1.4. </span>Tensor from Storage [v0.6.6+]<a class="headerlink" href="#tensor-from-storage-v0-6-6" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>To create Tensor directly from storage, use <strong>Tensor.from_storage()</strong>.</p>
@@ -846,8 +858,8 @@ Shape : (2,2)
 </div>
 <div class="toctree-wrapper compound">
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -860,7 +872,7 @@ Shape : (2,2)
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

@@ -1,59 +1,78 @@
 DMRG
 ------------
-**Author : j9263178**
+**Author : j9263178, Kai-Hsin Wu**
 
-The density matrix renormalization group (DMRG), is an adaptive algorithm for optimizing a matrix product state (MPS) to get a approximately dominant eigenvector of a large matrix, 
-it turns out to be a powerful tool in physics and chemistry applications to find the ground states of a many-body quantum systems Hamitonian.
+The density matrix renormalization group (DMRG) is one of the powerful algorithm for study quantum systems. 
+The algorithm is especially useful in study 1D systems, while the extension to study 2D systems are also possible. The original formulation :cite:`whitedmrg` of DMRG is based on the desity matrix, and had been later-on being re-formulated with the concept of matrix product state (MPS) :cite:`SCHOLLWOCK201196`. 
 
-In this example we show how the algorithm is implemented using Cytnx, for more rigorous understanding about how MPS, MPO and DMRG works, check out `This paper <https://arxiv.org/abs/1008.3477>`_.
+In the following, we are going use the MPS language for explaination. There are two important objects Matrix product state (MPS) and Matrix product operator (MPO) which we will explain them in a moment. 
 
-Model and its Matrix product operator
+Using 1D spin-1/2 XY model as an example system, we are going to introduce how to use Cytnx to implement the DMRG algorithm, and benchmark our results with the exact analytic solution avaliable via bethe ansatz. 
+
+The model-- XY chain
 ****************************************
 
-Let's consider the XX model, result from the Heisenberg model with anisotropy J_x = J_y = 1, J_z = 0
+Before introduce the algorithm, let's start with the system that we are going to study. Consider the XY model where the Hamiltonian defines as:
 
 .. math::
 
-    H = \sum^N_{j=0} \vec{S}^x_j \cdot  \vec{S}^x_{j+1} + \vec{S}^y_j \cdot  \vec{S}^y_{j+1}
+    H = \sum^N_{j=0} S^x_j \cdot  S^x_{j+1} + S^y_j \cdot S^y_{j+1}
 
-define the raising and lowering operator
-
-.. math::
-    
-    S^{\pm} = S^x \pm i S^y
-
-we have
+where :math:`S^{x}_j` and :math:`S^{y}_j` are the spin-1/2 operators at site **j**. One can also written the model in terms of the raising/lowering operator :math:`S^{\pm}` as
 
 .. math::
     
-    H = \sum^N_{j=1} \frac{1}{2} \Big( S^+_jS^-_{j+1} + S^+_{j+1}S^-_{j} \Big)
+    H = \sum^N_{j=1} \frac{1}{2} \left( S^+_jS^-_{j+1} + S^+_{j+1}S^-_{j} \right)
 
-The matrix for constructing a matrix product state is 
 
+Basic components
+*************************
+
+1. Matrix product state (MPS):
+ 
+   Our major goal in this example is, of course, to get the ground state. The state :math:`|\Psi>` is represent in terms of the MPS, which is variational wave function written in an effieient way to represent a many-body wave function. The tensor notation are shown in following figure (a)
+
+
+2. Matrix product operator (MPO):
+ 
+   The concept of MPO is actually quite simple, for which it is just the way we decompose our many-body Hamiltonian into local operators *M* (on each site) In our XY model, we define the MPO (on each site *j*) as: 
+ 
 .. math::
     
-    M = \begin{bmatrix}
-    I & S^- & S^+ & 0 \\ 
-    0 &  0 &  0 & S^+\\ 
-    0 &  0&   0& S^- \\ 
+    M_j = \begin{bmatrix}
+    I & S^-_j & S^+_j & 0 \\ 
+    0 &  0 &  0 & S^+_j\\ 
+    0 &  0&   0& S^-_j \\ 
     0 & 0 & 0 & I 
     \end{bmatrix}
 
-with the left and right boundary
+with the left and right boundary:
 
-\begin{bmatrix}
-1\\ 
-0\\ 
-0\\ 
-0
-\end{bmatrix} \text{and} \begin{bmatrix}
-0\\ 
-0\\ 
-0\\ 
-1
-\end{bmatrix}
+.. math::
 
-One can easily verify that succesive N product of M with the left and right boundary gives the desire Hamitonian of the model.
+    L = \begin{bmatrix}
+    1\\ 
+    0\\ 
+    0\\ 
+    0
+    \end{bmatrix} 
+
+.. math::
+
+    R = \begin{bmatrix}
+    0\\ 
+    0\\ 
+    0\\ 
+    1
+    \end{bmatrix}
+
+
+
+which is shown in the following figure (b). One can easily verify that succesive product of number of **M** operators  along with the left and right boundaries gives the desire Hamitonian of the model.
+
+.. image:: image/MPSMPO.png
+    :width: 400
+    :align: center
 
 
 Implementation
@@ -505,3 +524,7 @@ For the 20 sites system, the result is:
 .. image:: image/dmrg_res.png
     :width: 450
     :align: center
+
+.. bibliography:: ref.dmrg.bib
+    :cited:
+
