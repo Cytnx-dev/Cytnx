@@ -1,6 +1,6 @@
 DMRG
 ------------
-**Author : j9263178, Kai-Hsin Wu**
+**By : Hsu Ke, Kai-Hsin Wu**
 
 The density matrix renormalization group (DMRG) is one of the powerful algorithm for study quantum systems. 
 The algorithm is especially useful in study 1D systems, while the extension to study 2D systems are also possible. The original formulation :cite:`whitedmrg` of DMRG is based on the desity matrix, and had been later-on being re-formulated with the concept of matrix product state (MPS) :cite:`SCHOLLWOCK201196`. 
