@@ -27,7 +27,7 @@ namespace cytnx{
                         cytnx::linalg_internal::lii.cuDiag_ii[out.dtype()](out._impl->storage()._impl,Tin._impl->storage()._impl,Tin.shape()[0],0);
                     }else{
                         cytnx::linalg_internal::lii.cuDiag_ii[out.dtype()](out._impl->storage()._impl,Tin._impl->storage()._impl,Tin.shape()[0],1);
-                    {
+                    }
                 #else
                     cytnx_error_msg(true,"[Diag] fatal error, the tensor is on GPU without CUDA support.%s","\n"); 
                 #endif

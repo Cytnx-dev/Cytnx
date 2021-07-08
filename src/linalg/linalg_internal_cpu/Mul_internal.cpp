@@ -24,6 +24,8 @@ namespace cytnx{
                     //for(unsigned long long i=0;i<len;i++){
                     //    _out[i] = _Lin[0] * _Rin[i];
                     //}
+                    //std::cout << "entroy internal" << std::endl;
+                    //std::cout << *_Lin << std::endl;
                     memcpy(_out,_Rin,sizeof(cytnx_complex128)*len);
                     zscal(&N,_Lin,_out,&ONE);
 

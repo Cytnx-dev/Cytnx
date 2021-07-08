@@ -256,6 +256,7 @@ namespace cytnx{
         }
         bool err = false;   
         if(expected_TOUT.size()!=TOUT_labels.size()){
+            std::cout << expected_TOUT.size() << std::endl;
             err = true;
         }
         vector<cytnx_int64> itrsct = vec_intersect(expected_TOUT,this->TOUT_labels);

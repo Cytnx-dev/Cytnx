@@ -352,7 +352,7 @@
     {
       dscal_(n, a, x, incx);
     }
-    inline void zscal(const blas_int *n, const std::complex<double> *a, std::complex<double> *x, const blas_int *incx)
+    inline void zscal(const blas_int *n, const std::complex<double> *a, std::complex<double> *x, const *blas_int incx)
     {
       zscal_(n, a, x, incx);
     }

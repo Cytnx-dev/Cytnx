@@ -92,7 +92,7 @@ namespace cytnx{
                 if(is_diag)
                     cytnx_error_msg(in_tensor.shape().size()!=1,"[ERROR][Init_by_tensor] setting is_diag=True should have input Tensor to be rank-1 with diagonal elements.%s","\n");
 
-                if(in_tensor.storage().size() == 1){
+                if(in_tensor.storage().size() == 1 && in_tensor.rank()==1){
                     //scalalr:
                     cytnx_error_msg(rowrank != 0, "[ERROR][Init_by_Tensor] detect the input Tensor is a scalar with only one element. the rowrank should be =0%s","\n");
                     this->_bonds.clear();

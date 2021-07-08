@@ -43,7 +43,7 @@ See The following user guide for install and using of cytnx:
     14. [Enhance] Diag now support rank-1 Tensor as input for constructing a diagonal tensor with input as diagonal elements.
     15. [Enhance] Add c++ example for DMRG (Ke)
     16. [Fix] Bug fixed in DMRG code and updated to the latest features. 
-        
+    17. [Fix] Bug in UniTensor do svd with rowrank=1 and the first rank has dimension=1.        
 
     v0.7.2 
     1. [Enhance] Add Tensor.set with Scalar
