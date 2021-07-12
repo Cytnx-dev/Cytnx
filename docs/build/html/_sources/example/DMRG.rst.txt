@@ -75,33 +75,22 @@ which is shown in the following figure (b). One can easily verify that succesive
     :align: center
 
 
-Implementation
-************************************
+Preparing the MPO
+********************
 
-For simplicity, we only present python code here, c++ code can be found in the Cytnx/example/DMRG/.
-First, Let's set some parameters for the initialization and simulation.
+Now, let's first prepare the MPO, **M**. Here, the **d** is the physical bond dimension. For spin-half it is **d=2**. **s** is the spin, for spin-half **s=0.5**. Here, since we have translational invariant, so all **M_j** for each site *j* will be the same. Thus, we only need to define a single **M** operator.  
+
+**L0** and **R0** are the left and right boundary as mentioned previously. 
+
 
 * In python:
 
 .. code-block:: python
     :linenos:
-
-    chi = 32;
-    Nsites = 20;
-    numsweeps = 4 # number of DMRG sweeps
-    maxit = 2 # iterations of Lanczos method
-    krydim = 4 # dimension of Krylov subspace
-
-
-Now, we initialize our MPO as follows
-
-* In python:
-
-.. code-block:: python
-    :linenos:
-
+    
     d = 2 #physical dimension
     s = 0.5 #spin-half
+
     sx = cytnx.physics.spin(0.5,'x')
     sy = cytnx.physics.spin(0.5,'y')
     sp = sx+1j*sy
@@ -118,18 +107,88 @@ Now, we initialize our MPO as follows
     R0 = cytnx.UniTensor(cytnx.zeros([4,1,1]),0) #Right boundary
     L0.get_block_()[0,0,0] = 1.; R0.get_block_()[3,0,0] = 1.
 
-.. Hint::
-    
-    Instead of just Tensor, UniTensors are created so that we can apply Contract and Network functions on them later to save our labor. At the last line, get_block_() is used to get the Tensor itself stored in the UniTensor so that we can assess the element by [:, :, :].
+.. Note:: 
+
+    Here, we first provide the Matrix *data* via **Tensor**, and convert then to UniTensor, which gives enhanced functionality (such as labels for each bond). 
 
 
-Having the MPO defined, we also need the matrix product state (MPS):
+At this moment, let's print out to show what **M**, **L0** and **R0** looks like:
+
+.. code-block:: python 
+    :linenos:
+
+    M.print_diagram()
+    L0.print_diagram()
+    R0.print_diagram()
+
+
+Output >> 
+
+.. code-block:: text
+
+    -----------------------
+    tensor Name : 
+    tensor Rank : 4
+    block_form  : false
+    is_diag     : False
+    on device   : cytnx device: CPU
+                -------------      
+               /             \     
+               |           4 |____ 0  
+               |             |     
+               |           4 |____ 1  
+               |             |     
+               |           2 |____ 2  
+               |             |     
+               |           2 |____ 3  
+               \             /     
+                -------------      
+    -----------------------
+    tensor Name : 
+    tensor Rank : 3
+    block_form  : false
+    is_diag     : False
+    on device   : cytnx device: CPU
+                -------------      
+               /             \     
+               |           4 |____ 0  
+               |             |     
+               |           1 |____ 1  
+               |             |     
+               |           1 |____ 2  
+               \             /     
+                -------------      
+    -----------------------
+    tensor Name : 
+    tensor Rank : 3
+    block_form  : false
+    is_diag     : False
+    on device   : cytnx device: CPU
+                -------------      
+               /             \     
+               |           4 |____ 0  
+               |             |     
+               |           1 |____ 1  
+               |             |     
+               |           1 |____ 2  
+               \             /     
+                -------------     
+
+
+Preparing the MPS and enviroments
+***********************************
+
+Next, we are going to prepare our variational ansatz (MPS). Here, **chi** is the *virtual bond* dimension, and **Nsites** is the number of sites. 
 
 * In python:
 
 .. code-block:: python
     :linenos:
-
+        
+    # MPS, chi is virtual bond dimension
+    chi = 32
+    Nsites = 20
+    
     A = [None for i in range(Nsites)]
     A[0] = cytnx.UniTensor(cytnx.random.normal([1, d, min(chi, d)], 0., 1.),2)
     for k in range(1,Nsites):
@@ -137,6 +196,7 @@ Having the MPO defined, we also need the matrix product state (MPS):
         dim3 = min(min(chi, A[k-1].shape()[2] * d), d ** (Nsites - k - 1));
         A[k] = cytnx.UniTensor(cytnx.random.normal([dim1, dim2, dim3],0.,1.),2)
         A[k].set_labels([2*k,2*k+1,2*k+2])
+
 
 The result MPS would look like a tensor train, stored in the list A:
 
@@ -151,29 +211,8 @@ The dim3 of each tensor may look a little bit tricky, but we are simply comparin
     The alternative way to assign dim3 is min(chi, d ** (k+1), d ** (Nsites - k - 1))
 
 
-Now we are ready for the main algorithm, the setup step is to make the whole MPS into right othogonal form:
-
-* In python:
-
-.. code-block:: python
-    :linenos:
-    
-    LR = [None for i in range(Nsites+1)] 
-    LR[0]  = L0
-    LR[-1] = R0
-
-    for p in range(Nsites - 1):
-
-        s, A[p] ,vt = cytnx.linalg.Svd(A[p])
-        A[p+1] = cytnx.Contract(cytnx.Contract(s,vt),A[p+1])
-
-        anet = cytnx.Network("L_AMAH.net")
-        anet.PutUniTensors(["L","A","A_Conj","M"],[LR[p],A[p],A[p].Conj(),M],is_clone=False);
-        LR[p+1] = anet.Launch(optimal=True);
-
-    _,A[-1] = cytnx.linalg.Svd(A[-1],is_U=True,is_vT=False) ## last one.
-
-From left to right, we decompose each tensor into its U, s and vT, then "throw" the s and vT part into next tensor:
+The MPS created at this moment are not physically sound. The one more thing we need to do is to make these MPS state into so called *canonical form*, for which we achieve this by iteratively performing svd and get it's left (or right, depending on how you do it.) unitary matrix. 
+Here, we do it from left to right, and we decompose each tensor into its U, s and vT, then "throw" the s and vT part into next tensor:
 
 .. image:: image/dmrg2.png
     :width: 400
@@ -185,8 +224,10 @@ The othogonal form of the MPS looks like:
     :width: 400
     :align: center
 
-the other thing we do is to obtain our "boundaries" and store them in LR (so that we can use them in the upcoming two-sites update step) the Network
-that do this job is specified in the "L_AMAH.net" file:
+
+Further more, as a naive implementation, here, at the same time we also store all the *left and right enviroments* **LR**, assocate to each site just for convenience. These include contracting 4 tensors **L**, **M**, **A** and :math:`A^\dagger`. 
+
+Here, the contraction can be easily performed using **cytnx.Network** with the contraction graph defined by the *network file* (L_AMAH.net) as following:
 
 * L_AMAH.net:
 
@@ -205,35 +246,76 @@ we load it, put tensors in, then call "Launch", all the four tensors got contrac
     :width: 400
     :align: center
 
+The full implementation looks like:
+
+
+* In python:
+
+.. code-block:: python
+    :linenos:
+    
+    LR = [None for i in range(Nsites+1)] 
+    LR[0]  = L0
+    LR[-1] = R0
+
+    for p in range(Nsites - 1):
+
+        ## canonical form: 
+        s, A[p] ,vt = cytnx.linalg.Svd(A[p])
+        A[p+1] = cytnx.Contract(cytnx.Contract(s,vt),A[p+1])
+
+        ## calculate enviroments:
+        anet = cytnx.Network("L_AMAH.net")
+        anet.PutUniTensors(["L","A","A_Conj","M"],[LR[p],A[p],A[p].Conj(),M],is_clone=False);
+        LR[p+1] = anet.Launch(optimal=True);
+
+    _,A[-1] = cytnx.linalg.Svd(A[-1],is_U=True,is_vT=False) ## last one.
+
+
 .. Hint::
 
     At the line 14, we perform SVD on the last tensor but only save the U part, this is the case since the shape of the original tensor is (A[Nsites-2].shape[2], 1, 1), 
     what we get from SVD is 1*1 matrix (or a number) for both s and Vt, moreover, these two numbers are just identity, so U is all we need.
 
-Now we are ready for the "sweep" step:
+
+
+Optimization of MPS (update sweep)
+************************************
+
+Now we are ready for describing the main DMRG algorithm that optimize our MPS, the way we are going to do this, is so called "sweeping" update. 
 
 * In python:
 
 .. code-block:: python
     :linenos:
 
+    numsweeps = 4 # number of DMRG sweeps
+    maxit = 2 # iterations of Lanczos method
+    krydim = 4 # dimension of Krylov subspace
+
     for p in range(Nsites-2,-1,-1): 
+
+
+        ## trial state from last iteraction:
 
         dim_l = A[p].shape()[0];
         dim_r = A[p+1].shape()[2];
 
-        psi = cytnx.Contract(A[p],A[p+1]) ## contract
+        psi = cytnx.Contract(A[p],A[p+1]) # contract
 
         lbl = psi.labels() ## memorize label
         psi_T = psi.get_block_();
         psi_T.flatten_() ## flatten to 1d
 
+        ## perform Lanczos to get the optimized state
         psi_T, Entemp = optimize_psi(psi_T, (LR[p],M,M,LR[p+2]), maxit, krydim)
         psi_T.reshape_(dim_l,d,d,dim_r) ## convert psi back to 4-leg form 
         psi = cytnx.UniTensor(psi_T,2);    
         psi.set_labels(lbl);
         Ekeep.append(Entemp);
         
+        ## truncate the two-site state into MPS form
+        ## with capped intermediate virtual bond dimension
         new_dim = min(dim_l*d, dim_r*d,chi)
         s,A[p],A[p+1] = cytnx.linalg.Svd_truncate(psi,new_dim)
 
@@ -259,9 +341,14 @@ There are lots of things happening here, let's break it up a bit, from right to 
     :width: 400
     :align: center
 
-We call this result psi, which means an eigenvector to be optimized.
-The "optimized" means to use it as a initial (trial) state for the Lanczos algorithm, and replaced it by the output of it, which will be approximately the lowerest eigenstate of the Hamitonian.
-But what's the Hamitonian here? It is obtained by the following projector.net network:
+
+Generally, the idea is pretty simple, for each local two sites, one contract the left and right enviroments :math:`L_{j}` and :math:`R_{j+3}` with local MPOs :math:`M_{j}` and :math:`M_{j+1}`. We call this the local operator :math:`H_{loc}`. 
+
+The lowest eigen vector of this operator will be our optimized *local* state, which we call this psi. Of course, one can performs eigH directly with this :math:`H_{loc}` to get the local optimized state. However, the computational and memory cost are very high, and it's not pratical to do so. 
+
+Instead, we use iterative solver (Lanczos method) to get our ground state, and use the **A[p]** and **A[p+1]** as our initial trial state for performing Lanczos with our local operator :math:`H_{loc}`.
+ 
+The :math:`H_{loc}` is obtained by the following projector.net network:
 
 
 * projector.net:
@@ -277,13 +364,13 @@ But what's the Hamitonian here? It is obtained by the following projector.net ne
     TOUT: ;0,1,2,3
 
     
-the whole thing looks like this:
+which in tensor notation looks like this:
 
 .. image:: image/dmrg6.png
     :width: 400
     :align: center
 
-The opertion of acting Hamitonian on a state turns out to be a linear operation, we can natually implement a LinOp class
+The opertion of acting Hamitonian is a linear operation, which we implement a LinOp class 
 
 * In python:
 
@@ -306,8 +393,11 @@ The opertion of acting Hamitonian on a state turns out to be a linear operation,
         out.flatten_() ## only change meta, without copy.
         return out
 
-which stores a network in itself and do the contraction job for the input vector(state).
-We then pass this linear operation to the Lanczos algorithm to use as the operation of optimization. So we have the optimize_psi function:
+which the class itself contain this projector network and do the contraction job for the input vector(state).
+We then pass this linear operation to the Lanczos algorithm to use as the operation of optimization. 
+
+
+So now the optimize_psi function looks like:
 
 * In python:
 
@@ -354,14 +444,13 @@ We do the SVD for the ground state we just obtained, then let the left hand side
     :align: center
 
 
-What we are doing is simply restore the othogonality of the whole MPS, it worthy to note that in the intermediate the whole MPS are put into the Schimit decomposition form:
-
+What we are doing is simply restore the othogonality of the whole MPS, 
 
 .. image:: image/dmrg8.png
     :width: 400
     :align: center
 
-remember that the right hand side vTs are obtained after we do the optimization, those are immediately used to get the transfer matrice, with the network
+remember that the right hand side vTs are obtained after we do the optimization, those are immediately used to calculate the right enviroment, with the network
 
 * R_AMAH.net:
 
@@ -380,7 +469,7 @@ graphically it looks like:
     :width: 470
     :align: center
 
-So our Hamitonian is also updated, by the vT from the optimized two-side states, this is acutally the key mechanism for DMRG to work.
+So our enviroments are also updated by the vT from the optimized two-side states.
 
 .. Hint::
     
@@ -495,7 +584,7 @@ We can now sweep to the right again, the code is pretty much the same as we went
 Results
 ************************************
 
-Fortunately, the exact result for our model can be easily calculated, so that we can examine our algorithm, as follows
+Here, we plot the energy as a function of iteration. We see that after iterations, the energy successfully converge to a value that is consistent with the exact solution. 
 
 * In python:
 

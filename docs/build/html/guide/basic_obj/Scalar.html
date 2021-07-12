@@ -4,23 +4,21 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
     <title>4. Scalar &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/sphinxbootstrap4.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -211,9 +209,12 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../example/DMRG.html">3. DMRG</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#model-and-its-matrix-product-operator">3.1. Model and its Matrix product operator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#implementation">3.2. Implementation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#results">3.3. Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#the-model-xy-chain">3.1. The model– XY chain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#basic-components">3.2. Basic components</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#preparing-the-mpo">3.3. Preparing the MPO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#preparing-the-mps-and-enviroments">3.4. Preparing the MPS and enviroments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#optimization-of-mps-update-sweep">3.5. Optimization of MPS (update sweep)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#results">3.6. Results</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../example/iDMRG.html">4. iDMRG</a></li>
@@ -244,7 +245,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../../">v0.7.1a</a></li>
+              <a  class="nav-link" href="../../%23.html">v0.7.1a</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -270,7 +271,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../../">v0.7.1a</a></li>
+                  <a  class="nav-link" href="../../%23.html">v0.7.1a</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -485,9 +486,12 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../example/DMRG.html">3. DMRG</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#model-and-its-matrix-product-operator">3.1. Model and its Matrix product operator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#implementation">3.2. Implementation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#results">3.3. Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#the-model-xy-chain">3.1. The model– XY chain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#basic-components">3.2. Basic components</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#preparing-the-mpo">3.3. Preparing the MPO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#preparing-the-mps-and-enviroments">3.4. Preparing the MPS and enviroments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#optimization-of-mps-update-sweep">3.5. Optimization of MPS (update sweep)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#results">3.6. Results</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../example/iDMRG.html">4. iDMRG</a></li>
@@ -539,12 +543,12 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <section id="scalar">
+  <div class="section" id="scalar">
 <h1><span class="section-number">4. </span>Scalar<a class="headerlink" href="#scalar" title="Permalink to this headline">¶</a></h1>
 <p>[v0.7+][C++ only]</p>
 <p>Scalar is the generic data type to hold all types in C++.</p>
 <p>In python, the variable’s type is dynamic, i.e. they can be changed at any time. Compare to C++, where the data type of a variable are static, and once declared, they cannot be changed. In Cytnx, as a library across C++/python, we provide a generic type Scalar which allow the variable to take the convenience and advantage of the dynamic type as python.</p>
-<section id="define-declare-a-scalar">
+<div class="section" id="define-declare-a-scalar">
 <h2><span class="section-number">4.1. </span>Define/Declare a scalar<a class="headerlink" href="#define-declare-a-scalar" title="Permalink to this headline">¶</a></h2>
 <p>To define a scalar is pretty simple. One can convert directly from a supported standard C++ Type.</p>
 <p>Currently, following standard C++ data types are supported by cytnx Scalar:</p>
@@ -707,8 +711,8 @@ f10
 <p class="admonition-title">Note</p>
 <p>The case of complex type is a bit different, one use <strong>complex128()</strong> and <strong>complex64()</strong> to convert to a standard c++ type <strong>complex&lt;double&gt;</strong> and <strong>complex&lt;float&gt;</strong> respectively.</p>
 </div>
-</section>
-<section id="change-data-type">
+</div>
+<div class="section" id="change-data-type">
 <h2><span class="section-number">4.2. </span>Change data type<a class="headerlink" href="#change-data-type" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>To change the data type of Scalar, use <strong>.astype()</strong>.</p>
@@ -730,8 +734,8 @@ f10
 &lt; 1.33 &gt;  Scalar dtype: [Float (Float32)]
 </pre></div>
 </div>
-</section>
-<section id="application-scenarios">
+</div>
+<div class="section" id="application-scenarios">
 <h2><span class="section-number">4.3. </span>Application scenarios<a class="headerlink" href="#application-scenarios" title="Permalink to this headline">¶</a></h2>
 <p>With the Scalar type, there are much more possibilities in c++. In the following, let’s consider some examples</p>
 <ul class="simple">
@@ -779,8 +783,8 @@ f10
 <p>In such way, user can dynamically decide what and which types of variables to pass into the function.</p>
 <div class="toctree-wrapper compound">
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
           </div>
@@ -793,7 +797,7 @@ f10
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

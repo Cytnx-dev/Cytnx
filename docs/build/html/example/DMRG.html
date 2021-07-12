@@ -4,23 +4,21 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
     <title>3. DMRG &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../_static/sphinxbootstrap4.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <script src="../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -213,8 +211,10 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">3. DMRG</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#the-model-xy-chain">3.1. The model– XY chain</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#basic-components">3.2. Basic components</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#implementation">3.3. Implementation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#results">3.4. Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#preparing-the-mpo">3.3. Preparing the MPO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#preparing-the-mps-and-enviroments">3.4. Preparing the MPS and enviroments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#optimization-of-mps-update-sweep">3.5. Optimization of MPS (update sweep)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#results">3.6. Results</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="iDMRG.html">4. iDMRG</a></li>
@@ -245,7 +245,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../">v0.7.1a</a></li>
+              <a  class="nav-link" href="../%23.html">v0.7.1a</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -271,7 +271,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../">v0.7.1a</a></li>
+                  <a  class="nav-link" href="../%23.html">v0.7.1a</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -488,8 +488,10 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">3. DMRG</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#the-model-xy-chain">3.1. The model– XY chain</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#basic-components">3.2. Basic components</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#implementation">3.3. Implementation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#results">3.4. Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#preparing-the-mpo">3.3. Preparing the MPO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#preparing-the-mps-and-enviroments">3.4. Preparing the MPS and enviroments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#optimization-of-mps-update-sweep">3.5. Optimization of MPS (update sweep)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#results">3.6. Results</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="iDMRG.html">4. iDMRG</a></li>
@@ -541,14 +543,14 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <section id="dmrg">
+  <div class="section" id="dmrg">
 <h1><span class="section-number">3. </span>DMRG<a class="headerlink" href="#dmrg" title="Permalink to this headline">¶</a></h1>
 <p><strong>By : Hsu Ke, Kai-Hsin Wu</strong></p>
 <p>The density matrix renormalization group (DMRG) is one of the powerful algorithm for study quantum systems.
 The algorithm is especially useful in study 1D systems, while the extension to study 2D systems are also possible. The original formulation <a class="bibtex reference internal" href="#whitedmrg" id="id1">[Whi92]</a> of DMRG is based on the desity matrix, and had been later-on being re-formulated with the concept of matrix product state (MPS) <a class="bibtex reference internal" href="#schollwock201196" id="id2">[Sch11]</a>.</p>
 <p>In the following, we are going use the MPS language for explaination. There are two important objects Matrix product state (MPS) and Matrix product operator (MPO) which we will explain them in a moment.</p>
 <p>Using 1D spin-1/2 XY model as an example system, we are going to introduce how to use Cytnx to implement the DMRG algorithm, and benchmark our results with the exact analytic solution avaliable via bethe ansatz.</p>
-<section id="the-model-xy-chain">
+<div class="section" id="the-model-xy-chain">
 <h2><span class="section-number">3.1. </span>The model– XY chain<a class="headerlink" href="#the-model-xy-chain" title="Permalink to this headline">¶</a></h2>
 <p>Before introduce the algorithm, let’s start with the system that we are going to study. Consider the XY model where the Hamiltonian defines as:</p>
 <div class="math">
@@ -556,8 +558,8 @@ The algorithm is especially useful in study 1D systems, while the extension to s
 </div><p>where <img class="math" src="../_images/math/3c8385a86d10416ceff39c86c0706df0020a2df1.png" alt="S^{x}_j"/> and <img class="math" src="../_images/math/771d1b7f08267d17e23e2789ab4c67beac3d5b92.png" alt="S^{y}_j"/> are the spin-1/2 operators at site <strong>j</strong>. One can also written the model in terms of the raising/lowering operator <img class="math" src="../_images/math/d99dd3cacd7b9e920e757967f6d2a9cfc809e5cb.png" alt="S^{\pm}"/> as</p>
 <div class="math">
 <p><img src="../_images/math/7b1dfded2afc553920672da12ac7e9457671bb1d.png" alt="H = \sum^N_{j=1} \frac{1}{2} \left( S^+_jS^-_{j+1} + S^+_{j+1}S^-_{j} \right)"/></p>
-</div></section>
-<section id="basic-components">
+</div></div>
+<div class="section" id="basic-components">
 <h2><span class="section-number">3.2. </span>Basic components<a class="headerlink" href="#basic-components" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic">
 <li><p>Matrix product state (MPS):</p>
@@ -591,26 +593,11 @@ I &amp; S^-_j &amp; S^+_j &amp; 0 \\
 \end{bmatrix}"/></p>
 </div><p>which is shown in the following figure (b). One can easily verify that succesive product of number of <strong>M</strong> operators  along with the left and right boundaries gives the desire Hamitonian of the model.</p>
 <a class="reference internal image-reference" href="../_images/MPSMPO.png"><img alt="../_images/MPSMPO.png" class="align-center" src="../_images/MPSMPO.png" style="width: 400px;" /></a>
-</section>
-<section id="implementation">
-<h2><span class="section-number">3.3. </span>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
-<p>For simplicity, we only present python code here, c++ code can be found in the Cytnx/example/DMRG/.
-First, Let’s set some parameters for the initialization and simulation.</p>
-<ul class="simple">
-<li><p>In python:</p></li>
-</ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">chi</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
-<span class="n">Nsites</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
-<span class="n">numsweeps</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1"># number of DMRG sweeps</span>
-<span class="n">maxit</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1"># iterations of Lanczos method</span>
-<span class="n">krydim</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1"># dimension of Krylov subspace</span>
-</pre></div>
-</td></tr></table></div>
-<p>Now, we initialize our MPO as follows</p>
+</div>
+<div class="section" id="preparing-the-mpo">
+<h2><span class="section-number">3.3. </span>Preparing the MPO<a class="headerlink" href="#preparing-the-mpo" title="Permalink to this headline">¶</a></h2>
+<p>Now, let’s first prepare the MPO, <strong>M</strong>. Here, the <strong>d</strong> is the physical bond dimension. For spin-half it is <strong>d=2</strong>. <strong>s</strong> is the spin, for spin-half <strong>s=0.5</strong>. Here, since we have translational invariant, so all <strong>M_j</strong> for each site <em>j</em> will be the same. Thus, we only need to define a single <strong>M</strong> operator.</p>
+<p><strong>L0</strong> and <strong>R0</strong> are the left and right boundary as mentioned previously.</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
@@ -630,8 +617,10 @@ First, Let’s set some parameters for the initialization and simulation.</p>
 <span class="normal">14</span>
 <span class="normal">15</span>
 <span class="normal">16</span>
-<span class="normal">17</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1">#physical dimension</span>
+<span class="normal">17</span>
+<span class="normal">18</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1">#physical dimension</span>
 <span class="n">s</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1">#spin-half</span>
+
 <span class="n">sx</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">physics</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
 <span class="n">sy</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">physics</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
 <span class="n">sp</span> <span class="o">=</span> <span class="n">sx</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">sy</span>
@@ -649,21 +638,90 @@ First, Let’s set some parameters for the initialization and simulation.</p>
 <span class="n">L0</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">;</span> <span class="n">R0</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()[</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
 </pre></div>
 </td></tr></table></div>
-<div class="admonition hint">
-<p class="admonition-title">Hint</p>
-<p>Instead of just Tensor, UniTensors are created so that we can apply Contract and Network functions on them later to save our labor. At the last line, get_block_() is used to get the Tensor itself stored in the UniTensor so that we can assess the element by [:, :, :].</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Here, we first provide the Matrix <em>data</em> via <strong>Tensor</strong>, and convert then to UniTensor, which gives enhanced functionality (such as labels for each bond).</p>
 </div>
-<p>Having the MPO defined, we also need the matrix product state (MPS):</p>
+<p>At this moment, let’s print out to show what <strong>M</strong>, <strong>L0</strong> and <strong>R0</strong> looks like:</p>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">M</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="n">L0</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="n">R0</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output &gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-----------------------
+tensor Name :
+tensor Rank : 4
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+            -------------
+           /             \
+           |           4 |____ 0
+           |             |
+           |           4 |____ 1
+           |             |
+           |           2 |____ 2
+           |             |
+           |           2 |____ 3
+           \             /
+            -------------
+-----------------------
+tensor Name :
+tensor Rank : 3
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+            -------------
+           /             \
+           |           4 |____ 0
+           |             |
+           |           1 |____ 1
+           |             |
+           |           1 |____ 2
+           \             /
+            -------------
+-----------------------
+tensor Name :
+tensor Rank : 3
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+            -------------
+           /             \
+           |           4 |____ 0
+           |             |
+           |           1 |____ 1
+           |             |
+           |           1 |____ 2
+           \             /
+            -------------
+</pre></div>
+</div>
+</div>
+<div class="section" id="preparing-the-mps-and-enviroments">
+<h2><span class="section-number">3.4. </span>Preparing the MPS and enviroments<a class="headerlink" href="#preparing-the-mps-and-enviroments" title="Permalink to this headline">¶</a></h2>
+<p>Next, we are going to prepare our variational ansatz (MPS). Here, <strong>chi</strong> is the <em>virtual bond</em> dimension, and <strong>Nsites</strong> is the number of sites.</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span>
-<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span><span class="p">)]</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># MPS, chi is virtual bond dimension</span>
+<span class="n">chi</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">Nsites</span> <span class="o">=</span> <span class="mi">20</span>
+
+<span class="n">A</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span><span class="p">)]</span>
 <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">chi</span><span class="p">,</span> <span class="n">d</span><span class="p">)],</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">Nsites</span><span class="p">):</span>
     <span class="n">dim1</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">];</span> <span class="n">dim2</span> <span class="o">=</span> <span class="n">d</span><span class="p">;</span>
@@ -679,45 +737,13 @@ First, Let’s set some parameters for the initialization and simulation.</p>
 <p class="admonition-title">Hint</p>
 <p>The alternative way to assign dim3 is min(chi, d ** (k+1), d ** (Nsites - k - 1))</p>
 </div>
-<p>Now we are ready for the main algorithm, the setup step is to make the whole MPS into right othogonal form:</p>
-<ul class="simple">
-<li><p>In python:</p></li>
-</ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">LR</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
-<span class="n">LR</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="o">=</span> <span class="n">L0</span>
-<span class="n">LR</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">R0</span>
-
-<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-
-    <span class="n">s</span><span class="p">,</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="p">,</span><span class="n">vt</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">])</span>
-    <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">vt</span><span class="p">),</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
-
-    <span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;L_AMAH.net&quot;</span><span class="p">)</span>
-    <span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;L&quot;</span><span class="p">,</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;A_Conj&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">],[</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">Conj</span><span class="p">(),</span><span class="n">M</span><span class="p">],</span><span class="n">is_clone</span><span class="o">=</span><span class="kc">False</span><span class="p">);</span>
-    <span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
-
-<span class="n">_</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">is_U</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">is_vT</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1">## last one.</span>
-</pre></div>
-</td></tr></table></div>
-<p>From left to right, we decompose each tensor into its U, s and vT, then “throw” the s and vT part into next tensor:</p>
+<p>The MPS created at this moment are not physically sound. The one more thing we need to do is to make these MPS state into so called <em>canonical form</em>, for which we achieve this by iteratively performing svd and get it’s left (or right, depending on how you do it.) unitary matrix.
+Here, we do it from left to right, and we decompose each tensor into its U, s and vT, then “throw” the s and vT part into next tensor:</p>
 <a class="reference internal image-reference" href="../_images/dmrg2.png"><img alt="../_images/dmrg2.png" class="align-center" src="../_images/dmrg2.png" style="width: 400px;" /></a>
 <p>The othogonal form of the MPS looks like:</p>
 <a class="reference internal image-reference" href="../_images/dmrg3.png"><img alt="../_images/dmrg3.png" class="align-center" src="../_images/dmrg3.png" style="width: 400px;" /></a>
-<p>the other thing we do is to obtain our “boundaries” and store them in LR (so that we can use them in the upcoming two-sites update step) the Network
-that do this job is specified in the “L_AMAH.net” file:</p>
+<p>Further more, as a naive implementation, here, at the same time we also store all the <em>left and right enviroments</em> <strong>LR</strong>, assocate to each site just for convenience. These include contracting 4 tensors <strong>L</strong>, <strong>M</strong>, <strong>A</strong> and <img class="math" src="../_images/math/cc862d167da8b1cf077ef9fc1b83f2f95e602b59.png" alt="A^\dagger"/>.</p>
+<p>Here, the contraction can be easily performed using <strong>cytnx.Network</strong> with the contraction graph defined by the <em>network file</em> (L_AMAH.net) as following:</p>
 <ul class="simple">
 <li><p>L_AMAH.net:</p></li>
 </ul>
@@ -734,12 +760,52 @@ that do this job is specified in the “L_AMAH.net” file:</p>
 </td></tr></table></div>
 <p>we load it, put tensors in, then call “Launch”, all the four tensors got contracted properly and optimally, in the for loop, the whole process looks like following:</p>
 <a class="reference internal image-reference" href="../_images/dmrg4.png"><img alt="../_images/dmrg4.png" class="align-center" src="../_images/dmrg4.png" style="width: 400px;" /></a>
+<p>The full implementation looks like:</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">LR</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+<span class="n">LR</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="o">=</span> <span class="n">L0</span>
+<span class="n">LR</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">R0</span>
+
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+
+    <span class="c1">## canonical form:</span>
+    <span class="n">s</span><span class="p">,</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="p">,</span><span class="n">vt</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">])</span>
+    <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">vt</span><span class="p">),</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1">## calculate enviroments:</span>
+    <span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;L_AMAH.net&quot;</span><span class="p">)</span>
+    <span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;L&quot;</span><span class="p">,</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;A_Conj&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">],[</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">Conj</span><span class="p">(),</span><span class="n">M</span><span class="p">],</span><span class="n">is_clone</span><span class="o">=</span><span class="kc">False</span><span class="p">);</span>
+    <span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
+
+<span class="n">_</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">is_U</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">is_vT</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1">## last one.</span>
+</pre></div>
+</td></tr></table></div>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <p>At the line 14, we perform SVD on the last tensor but only save the U part, this is the case since the shape of the original tensor is (A[Nsites-2].shape[2], 1, 1),
 what we get from SVD is 1*1 matrix (or a number) for both s and Vt, moreover, these two numbers are just identity, so U is all we need.</p>
 </div>
-<p>Now we are ready for the “sweep” step:</p>
+</div>
+<div class="section" id="optimization-of-mps-update-sweep">
+<h2><span class="section-number">3.5. </span>Optimization of MPS (update sweep)<a class="headerlink" href="#optimization-of-mps-update-sweep" title="Permalink to this headline">¶</a></h2>
+<p>Now we are ready for describing the main DMRG algorithm that optimize our MPS, the way we are going to do this, is so called “sweeping” update.</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
@@ -777,23 +843,43 @@ what we get from SVD is 1*1 matrix (or a number) for both s and Vt, moreover, th
 <span class="normal">32</span>
 <span class="normal">33</span>
 <span class="normal">34</span>
-<span class="normal">35</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">numsweeps</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1"># number of DMRG sweeps</span>
+<span class="n">maxit</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1"># iterations of Lanczos method</span>
+<span class="n">krydim</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1"># dimension of Krylov subspace</span>
+
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+
+
+    <span class="c1">## trial state from last iteraction:</span>
 
     <span class="n">dim_l</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">];</span>
     <span class="n">dim_r</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">];</span>
 
-    <span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="c1">## contract</span>
+    <span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="c1"># contract</span>
 
     <span class="n">lbl</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">labels</span><span class="p">()</span> <span class="c1">## memorize label</span>
     <span class="n">psi_T</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">get_block_</span><span class="p">();</span>
     <span class="n">psi_T</span><span class="o">.</span><span class="n">flatten_</span><span class="p">()</span> <span class="c1">## flatten to 1d</span>
 
+    <span class="c1">## perform Lanczos to get the optimized state</span>
     <span class="n">psi_T</span><span class="p">,</span> <span class="n">Entemp</span> <span class="o">=</span> <span class="n">optimize_psi</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span> <span class="p">(</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">M</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">2</span><span class="p">]),</span> <span class="n">maxit</span><span class="p">,</span> <span class="n">krydim</span><span class="p">)</span>
     <span class="n">psi_T</span><span class="o">.</span><span class="n">reshape_</span><span class="p">(</span><span class="n">dim_l</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">dim_r</span><span class="p">)</span> <span class="c1">## convert psi back to 4-leg form</span>
     <span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
     <span class="n">psi</span><span class="o">.</span><span class="n">set_labels</span><span class="p">(</span><span class="n">lbl</span><span class="p">);</span>
     <span class="n">Ekeep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Entemp</span><span class="p">);</span>
 
+    <span class="c1">## truncate the two-site state into MPS form</span>
+    <span class="c1">## with capped intermediate virtual bond dimension</span>
     <span class="n">new_dim</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dim_l</span><span class="o">*</span><span class="n">d</span><span class="p">,</span> <span class="n">dim_r</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">chi</span><span class="p">)</span>
     <span class="n">s</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="n">new_dim</span><span class="p">)</span>
 
@@ -816,9 +902,10 @@ what we get from SVD is 1*1 matrix (or a number) for both s and Vt, moreover, th
 </td></tr></table></div>
 <p>There are lots of things happening here, let’s break it up a bit, from right to left, the first thing we do is constract two tensors A[p] and A[p+1]:</p>
 <a class="reference internal image-reference" href="../_images/dmrg5.png"><img alt="../_images/dmrg5.png" class="align-center" src="../_images/dmrg5.png" style="width: 400px;" /></a>
-<p>We call this result psi, which means an eigenvector to be optimized.
-The “optimized” means to use it as a initial (trial) state for the Lanczos algorithm, and replaced it by the output of it, which will be approximately the lowerest eigenstate of the Hamitonian.
-But what’s the Hamitonian here? It is obtained by the following projector.net network:</p>
+<p>Generally, the idea is pretty simple, for each local two sites, one contract the left and right enviroments <img class="math" src="../_images/math/9efe96869a83b4904186f93f55d5ff60dd3eaa13.png" alt="L_{j}"/> and <img class="math" src="../_images/math/40cd4b2150382129c9f2e4d08e98cce3bb9e422a.png" alt="R_{j+3}"/> with local MPOs <img class="math" src="../_images/math/b64784f2041f84bed50ea2c36df554f3e157e315.png" alt="M_{j}"/> and <img class="math" src="../_images/math/2bbb316fd7dc56d8377b4436350f9e1ff8b38e39.png" alt="M_{j+1}"/>. We call this the local operator <img class="math" src="../_images/math/120523ac0206fabc001fee2f814bc463ffd2f174.png" alt="H_{loc}"/>.</p>
+<p>The lowest eigen vector of this operator will be our optimized <em>local</em> state, which we call this psi. Of course, one can performs eigH directly with this <img class="math" src="../_images/math/120523ac0206fabc001fee2f814bc463ffd2f174.png" alt="H_{loc}"/> to get the local optimized state. However, the computational and memory cost are very high, and it’s not pratical to do so.</p>
+<p>Instead, we use iterative solver (Lanczos method) to get our ground state, and use the <strong>A[p]</strong> and <strong>A[p+1]</strong> as our initial trial state for performing Lanczos with our local operator <img class="math" src="../_images/math/120523ac0206fabc001fee2f814bc463ffd2f174.png" alt="H_{loc}"/>.</p>
+<p>The <img class="math" src="../_images/math/120523ac0206fabc001fee2f814bc463ffd2f174.png" alt="H_{loc}"/> is obtained by the following projector.net network:</p>
 <ul class="simple">
 <li><p>projector.net:</p></li>
 </ul>
@@ -835,9 +922,9 @@ But what’s the Hamitonian here? It is obtained by the following projector.net 
 <span class="n">TOUT</span><span class="p">:</span> <span class="p">;</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span>
 </pre></div>
 </td></tr></table></div>
-<p>the whole thing looks like this:</p>
+<p>which in tensor notation looks like this:</p>
 <a class="reference internal image-reference" href="../_images/dmrg6.png"><img alt="../_images/dmrg6.png" class="align-center" src="../_images/dmrg6.png" style="width: 400px;" /></a>
-<p>The opertion of acting Hamitonian on a state turns out to be a linear operation, we can natually implement a LinOp class</p>
+<p>The opertion of acting Hamitonian is a linear operation, which we implement a LinOp class</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
@@ -872,8 +959,9 @@ But what’s the Hamitonian here? It is obtained by the following projector.net 
     <span class="k">return</span> <span class="n">out</span>
 </pre></div>
 </td></tr></table></div>
-<p>which stores a network in itself and do the contraction job for the input vector(state).
-We then pass this linear operation to the Lanczos algorithm to use as the operation of optimization. So we have the optimize_psi function:</p>
+<p>which the class itself contain this projector network and do the contraction job for the input vector(state).
+We then pass this linear operation to the Lanczos algorithm to use as the operation of optimization.</p>
+<p>So now the optimize_psi function looks like:</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
@@ -929,9 +1017,9 @@ we have the next few steps:</p>
 </td></tr></table></div>
 <p>We do the SVD for the ground state we just obtained, then let the left hand side site keep the U and s, while the other site became Vt :</p>
 <a class="reference internal image-reference" href="../_images/dmrg7.png"><img alt="../_images/dmrg7.png" class="align-center" src="../_images/dmrg7.png" style="width: 400px;" /></a>
-<p>What we are doing is simply restore the othogonality of the whole MPS, it worthy to note that in the intermediate the whole MPS are put into the Schimit decomposition form:</p>
+<p>What we are doing is simply restore the othogonality of the whole MPS,</p>
 <a class="reference internal image-reference" href="../_images/dmrg8.png"><img alt="../_images/dmrg8.png" class="align-center" src="../_images/dmrg8.png" style="width: 400px;" /></a>
-<p>remember that the right hand side vTs are obtained after we do the optimization, those are immediately used to get the transfer matrice, with the network</p>
+<p>remember that the right hand side vTs are obtained after we do the optimization, those are immediately used to calculate the right enviroment, with the network</p>
 <ul class="simple">
 <li><p>R_AMAH.net:</p></li>
 </ul>
@@ -948,7 +1036,7 @@ we have the next few steps:</p>
 </td></tr></table></div>
 <p>graphically it looks like:</p>
 <a class="reference internal image-reference" href="../_images/dmrg8-2.png"><img alt="../_images/dmrg8-2.png" class="align-center" src="../_images/dmrg8-2.png" style="width: 470px;" /></a>
-<p>So our Hamitonian is also updated, by the vT from the optimized two-side states, this is acutally the key mechanism for DMRG to work.</p>
+<p>So our enviroments are also updated by the vT from the optimized two-side states.</p>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <p>The Svd_truncate is used to limit the tensor size, followed by a normalization on singular values, which is the physical requirement for the state of the whole system to be in the Schimit form.</p>
@@ -1137,10 +1225,10 @@ set_rowrank(1) is to preserve the shape of A[0], if the the rowrank is 2, tensor
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done : </span><span class="si">%d</span><span class="s1">&#39;</span><span class="o">%</span> <span class="n">k</span><span class="p">)</span>
 </pre></div>
 </td></tr></table></div>
-</section>
-<section id="results">
-<h2><span class="section-number">3.4. </span>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
-<p>Fortunately, the exact result for our model can be easily calculated, so that we can examine our algorithm, as follows</p>
+</div>
+<div class="section" id="results">
+<h2><span class="section-number">3.6. </span>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<p>Here, we plot the energy as a function of iteration. We see that after iterations, the energy successfully converge to a value that is consistent with the exact solution.</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
@@ -1179,7 +1267,7 @@ set_rowrank(1) is to preserve the shape of A[0], if the the rowrank is 2, tensor
 </td></tr></table></div>
 <p>For the 20 sites system, the result is:</p>
 <a class="reference internal image-reference" href="../_images/dmrg_res.png"><img alt="../_images/dmrg_res.png" class="align-center" src="../_images/dmrg_res.png" style="width: 450px;" /></a>
-<p id="bibtex-bibliography-example/DMRG-0"><dl class="bibtex citation">
+<p id="bibtex-bibliography-example/DMRG-0"><dl class="citation">
 <dt class="bibtex label" id="schollwock201196"><span class="brackets"><a class="fn-backref" href="#id2">Sch11</a></span></dt>
 <dd><p>Ulrich Schollwöck. The density-matrix renormalization group in the age of matrix product states. <em>Annals of Physics</em>, 326(1):96–192, 2011. January 2011 Special Issue. URL: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0003491610001752">https://www.sciencedirect.com/science/article/pii/S0003491610001752</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1016/j.aop.2010.09.012">doi:https://doi.org/10.1016/j.aop.2010.09.012</a>.</p>
 </dd>
@@ -1188,8 +1276,8 @@ set_rowrank(1) is to preserve the shape of A[0], if the the rowrank is 2, tensor
 </dd>
 </dl>
 </p>
-</section>
-</section>
+</div>
+</div>
 
 
           </div>
@@ -1202,7 +1290,7 @@ set_rowrank(1) is to preserve the shape of A[0], if the the rowrank is 2, tensor
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

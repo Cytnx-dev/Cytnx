@@ -4,23 +4,21 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
     <title>6.2. Lanczos solver &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/sphinxbootstrap4.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -211,9 +209,12 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../example/DMRG.html">3. DMRG</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#model-and-its-matrix-product-operator">3.1. Model and its Matrix product operator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#implementation">3.2. Implementation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#results">3.3. Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#the-model-xy-chain">3.1. The model– XY chain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#basic-components">3.2. Basic components</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#preparing-the-mpo">3.3. Preparing the MPO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#preparing-the-mps-and-enviroments">3.4. Preparing the MPS and enviroments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#optimization-of-mps-update-sweep">3.5. Optimization of MPS (update sweep)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#results">3.6. Results</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../example/iDMRG.html">4. iDMRG</a></li>
@@ -244,7 +245,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../../">v0.7.1a</a></li>
+              <a  class="nav-link" href="../../%23.html">v0.7.1a</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -270,7 +271,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../../">v0.7.1a</a></li>
+                  <a  class="nav-link" href="../../%23.html">v0.7.1a</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -487,9 +488,12 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../example/DMRG.html">3. DMRG</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#model-and-its-matrix-product-operator">3.1. Model and its Matrix product operator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#implementation">3.2. Implementation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#results">3.3. Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#the-model-xy-chain">3.1. The model– XY chain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#basic-components">3.2. Basic components</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#preparing-the-mpo">3.3. Preparing the MPO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#preparing-the-mps-and-enviroments">3.4. Preparing the MPS and enviroments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#optimization-of-mps-update-sweep">3.5. Optimization of MPS (update sweep)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../example/DMRG.html#results">3.6. Results</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../example/iDMRG.html">4. iDMRG</a></li>
@@ -541,7 +545,7 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <section id="lanczos-solver">
+  <div class="section" id="lanczos-solver">
 <h1><span class="section-number">6.2. </span>Lanczos solver<a class="headerlink" href="#lanczos-solver" title="Permalink to this headline">¶</a></h1>
 <p>Currently (v0.5.5a) Cytnx provide the Lanczos iterative solver that solve the eigen value problem of the custom operator defined using <strong>LinOp</strong> class.</p>
 <p>To use, you can pass either the <strong>LinOp</strong> itself or any of it’s interitance object to <strong>linalg.Lanczos_ER</strong></p>
@@ -550,7 +554,7 @@
 </ul>
 <dl class="py function">
 <dt id="Lanczos_ER">
-<code class="sig-name descname">Lanczos_ER</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Hop</span></em>, <em class="sig-param"><span class="n">k</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">is_V</span><span class="o">=</span><span class="default_value">true</span></em>, <em class="sig-param"><span class="n">maxiter</span><span class="o">=</span><span class="default_value">10000</span></em>, <em class="sig-param"><span class="n">CvgCrit</span><span class="o">=</span><span class="default_value">1e-14</span></em>, <em class="sig-param"><span class="n">is_row</span><span class="o">=</span><span class="default_value">false</span></em>, <em class="sig-param"><span class="n">Tin</span><span class="o">=</span><span class="default_value">Tensor()</span></em>, <em class="sig-param"><span class="n">max_krydim</span><span class="o">=</span><span class="default_value">4</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Lanczos_ER" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">Lanczos_ER</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Hop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_V</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CvgCrit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-14</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_row</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">false</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Tensor()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_krydim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Lanczos_ER" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform Lanczos for hermitian/symmetric matrices or linear function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -635,7 +639,7 @@
 <span class="normal">17</span>
 <span class="normal">18</span>
 <span class="normal">19</span>
-<span class="normal">20</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="k">namespace</span> <span class="nn">cytnx</span><span class="p">;</span>
+<span class="normal">20</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">cytnx</span><span class="p">;</span>
 <span class="k">class</span> <span class="nc">MyOp</span><span class="o">:</span> <span class="k">public</span> <span class="n">LinOp</span><span class="p">{</span>
 
     <span class="n">MyOp</span><span class="p">()</span><span class="o">:</span> <span class="n">LinOp</span><span class="p">(</span><span class="s">&quot;mv&quot;</span><span class="p">,</span><span class="mi">4</span><span class="p">){}</span>
@@ -684,7 +688,7 @@ Shape : (4)
 <p class="admonition-title">See also</p>
 <p>Examples/Exact diagonalization for example of exact diagonalization calculation in 1D transverse field ising model.</p>
 </div>
-</section>
+</div>
 
 
           </div>
@@ -697,7 +701,7 @@ Shape : (4)
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

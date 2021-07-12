@@ -4,23 +4,21 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
     <title>Install Cytnx &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/sphinxbootstrap4.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <script src="_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -211,9 +209,12 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="example/DMRG.html">3. DMRG</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="example/DMRG.html#model-and-its-matrix-product-operator">3.1. Model and its Matrix product operator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="example/DMRG.html#implementation">3.2. Implementation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="example/DMRG.html#results">3.3. Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example/DMRG.html#the-model-xy-chain">3.1. The model– XY chain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example/DMRG.html#basic-components">3.2. Basic components</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example/DMRG.html#preparing-the-mpo">3.3. Preparing the MPO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example/DMRG.html#preparing-the-mps-and-enviroments">3.4. Preparing the MPS and enviroments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example/DMRG.html#optimization-of-mps-update-sweep">3.5. Optimization of MPS (update sweep)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example/DMRG.html#results">3.6. Results</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="example/iDMRG.html">4. iDMRG</a></li>
@@ -244,7 +245,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="./">v0.7.1a</a></li>
+              <a  class="nav-link" href="%23.html">v0.7.1a</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -270,7 +271,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="./">v0.7.1a</a></li>
+                  <a  class="nav-link" href="%23.html">v0.7.1a</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -480,9 +481,12 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="example/DMRG.html">3. DMRG</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="example/DMRG.html#model-and-its-matrix-product-operator">3.1. Model and its Matrix product operator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="example/DMRG.html#implementation">3.2. Implementation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="example/DMRG.html#results">3.3. Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example/DMRG.html#the-model-xy-chain">3.1. The model– XY chain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example/DMRG.html#basic-components">3.2. Basic components</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example/DMRG.html#preparing-the-mpo">3.3. Preparing the MPO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example/DMRG.html#preparing-the-mps-and-enviroments">3.4. Preparing the MPS and enviroments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example/DMRG.html#optimization-of-mps-update-sweep">3.5. Optimization of MPS (update sweep)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example/DMRG.html#results">3.6. Results</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="example/iDMRG.html">4. iDMRG</a></li>
@@ -534,11 +538,11 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <section id="install-cytnx">
+  <div class="section" id="install-cytnx">
 <h1>Install Cytnx<a class="headerlink" href="#install-cytnx" title="Permalink to this headline">¶</a></h1>
 <p>To install cytnx, we recommend user to use anaconda/miniconda to install. However, advanced user can also build from soruce if nessasary.
 Note that both python API and C++ API will be installed together.</p>
-<section id="conda-install">
+<div class="section" id="conda-install">
 <h2>Conda install<a class="headerlink" href="#conda-install" title="Permalink to this headline">¶</a></h2>
 <p>Following we show how to install cytnx from conda.</p>
 <ol class="arabic">
@@ -580,8 +584,8 @@ Note that both python API and C++ API will be installed together.</p>
 <p>$conda install -c kaihsinwu cytnx_cuda</p>
 </div>
 <p>Once it is installed, we are all set, and ready to start using cytnx.</p>
-</section>
-<section id="using-python-api">
+</div>
+<div class="section" id="using-python-api">
 <h2>Using python API<a class="headerlink" href="#using-python-api" title="Permalink to this headline">¶</a></h2>
 <p>After install cytnx, using python API is very straight forward, simply import cytnx via:</p>
 <div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
@@ -603,8 +607,8 @@ Shape : (4)
 [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
 </pre></div>
 </div>
-</section>
-<section id="using-c-api">
+</div>
+<div class="section" id="using-c-api">
 <h2>Using C++ API<a class="headerlink" href="#using-c-api" title="Permalink to this headline">¶</a></h2>
 <p>The most important feature is that Cytnx installation also provides C++ API.
 Since there are fundamental differents between C++ and python where C++ require compiling and linking of the code, while python as an interprete language does not require both steps.</p>
@@ -640,7 +644,7 @@ Since there are fundamental differents between C++ and python where C++ require 
 <span class="normal">8</span>
 <span class="normal">9</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;cytnx.hpp&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
-<span class="k">using</span> <span class="k">namespace</span> <span class="nn">std</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
     <span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
@@ -677,8 +681,8 @@ Shape : (4)
 [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
 </pre></div>
 </div>
-</section>
-<section id="using-c-api-with-cmake">
+</div>
+<div class="section" id="using-c-api-with-cmake">
 <h2>Using C++ API with CMake<a class="headerlink" href="#using-c-api-with-cmake" title="Permalink to this headline">¶</a></h2>
 <p>For user who what to use cmake/make to integrate cytnx into more complicated project, one can use the following lines to extract the essential to the cmake variables:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>CYTNX_INC :<span class="o">=</span> <span class="k">$(</span>shell python -c <span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_include__)\&quot;)&quot;</span><span class="k">)</span>
@@ -698,11 +702,11 @@ CYTNX_CXXFLAGS :<span class="o">=</span> <span class="k">$(</span>shell python -
 <p class="admonition-title">Note</p>
 <p>CYTNX_ROOT is the path where cytnx is installed from binary build.</p>
 </div>
-</section>
-<section id="build-cytnx-from-source">
+</div>
+<div class="section" id="build-cytnx-from-source">
 <h2>Build Cytnx from source<a class="headerlink" href="#build-cytnx-from-source" title="Permalink to this headline">¶</a></h2>
 <p>For advanced user who wish to build cytnx from source, we provides the cmake install.</p>
-<section id="using-anaconda-conda-for-deps">
+<div class="section" id="using-anaconda-conda-for-deps">
 <h3>Using anaconda/conda for deps<a class="headerlink" href="#using-anaconda-conda-for-deps" title="Permalink to this headline">¶</a></h3>
 <p>We recommend using conda to handle all the dependencies and compiling tools:</p>
 <ul class="simple">
@@ -739,8 +743,8 @@ CYTNX_CXXFLAGS :<span class="o">=</span> <span class="k">$(</span>shell python -
 <p class="admonition-title">Note</p>
 <p>For Windows user, please use <a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">WSL</a>. We recommend using ubuntu distribution, and follow the instruction of Linux to install cytnx and dependencies.</p>
 </div>
-</section>
-<section id="dependencies">
+</div>
+<div class="section" id="dependencies">
 <h3>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h3>
 <p>Cytnx required the following minimum dependencies:</p>
 <ul class="simple">
@@ -777,8 +781,8 @@ CYTNX_CXXFLAGS :<span class="o">=</span> <span class="k">$(</span>shell python -
 <p>If you are using MacOS, please install intel mkl (free) instead.</p>
 <p>For python API, we recommend install of python using anaconda or miniconda</p>
 </div>
-</section>
-<section id="compiling-process-auto-set-up">
+</div>
+<div class="section" id="compiling-process-auto-set-up">
 <h3>Compiling process [Auto set-up]<a class="headerlink" href="#compiling-process-auto-set-up" title="Permalink to this headline">¶</a></h3>
 <p>Starting from v0.6.4a, cytnx provide a easy step-by-step install tool:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$python</span> auto_install.py
@@ -788,8 +792,8 @@ CYTNX_CXXFLAGS :<span class="o">=</span> <span class="k">$(</span>shell python -
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$sh</span> ainstall.sh
 </pre></div>
 </div>
-</section>
-<section id="compiling-process-manually-set-up">
+</div>
+<div class="section" id="compiling-process-manually-set-up">
 <h3>Compiling process [manually set-up]<a class="headerlink" href="#compiling-process-manually-set-up" title="Permalink to this headline">¶</a></h3>
 <p>Please see the following steps for the standard cmake compiling process and all the compiling options:</p>
 <ol class="arabic simple">
@@ -890,9 +894,9 @@ hptt</p></td>
 </ol>
 <div class="toctree-wrapper compound">
 </div>
-</section>
-</section>
-</section>
+</div>
+</div>
+</div>
 
 
           </div>
@@ -905,7 +909,7 @@ hptt</p></td>
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>
