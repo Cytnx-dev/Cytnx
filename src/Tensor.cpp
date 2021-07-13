@@ -679,6 +679,8 @@ namespace cytnx{
   
     }
 
+    
+
     template<class T>
     void Tensor_impl::set(const std::vector<cytnx::Accessor> &accessors, const T &rc){
         cytnx_error_msg(accessors.size() > this->_shape.size(), "%s", "The input indexes rank is out of range! (>Tensor's rank).");
@@ -722,11 +724,10 @@ namespace cytnx{
         //cout << "get_shape" << endl;
         //cout << get_shape << endl;
         
-
-
- 
         //call storage
-        Storage tmp(1,Type.c_typename_to_id(typeid(T).name()),this->device());
+        Scalar c = rc;
+
+        Storage tmp(1,c.dtype(),this->device());
         tmp.set_item(0,rc);
         this->storage()._impl->SetElem_byShape_v2(tmp._impl,curr_shape,locators,Nunit,true);
         
@@ -743,8 +744,10 @@ namespace cytnx{
     template void Tensor_impl::set<cytnx_uint16>(const std::vector<cytnx::Accessor> &, const cytnx_uint16&);
     template void Tensor_impl::set<cytnx_bool>(const std::vector<cytnx::Accessor> &, const cytnx_bool&);
     template void Tensor_impl::set<Scalar>(const std::vector<cytnx::Accessor> &, const Scalar&);
-
-
+    
+    void Tensor_impl::set(const std::vector<cytnx::Accessor> &accessors, const Scalar::Sproxy&rc){
+        this->set(accessors,Scalar(rc));
+    }
 
 
 

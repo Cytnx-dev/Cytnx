@@ -71,7 +71,7 @@ class MyOp2: public LinOp{
 int main(int argc, char *argv[]){
 
 
-    auto dty = Type.ComplexFloat;
+    auto dty = Type.Float;
     auto vec = arange(10).astype(dty);
     vec/=vec.Norm().item();
 
@@ -79,7 +79,7 @@ int main(int argc, char *argv[]){
     auto Hopo = MyOp2(vec.shape()[0],dty);
     print(Hopo.matvec(vec));
 
-    print(linalg::Lanczos_ER(&Hopo));
+    print(linalg::Lanczos_Gnd(&Hopo));
 
     return 0;
 

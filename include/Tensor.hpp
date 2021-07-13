@@ -161,6 +161,8 @@ namespace cytnx{
             template<class T>
             void set(const std::vector<cytnx::Accessor> &accessors, const T& rc);
             
+            void set(const std::vector<cytnx::Accessor> &accessors, const Scalar::Sproxy& rc);
+
             template<class Tx>
             void fill(const Tx& val){
                 this->storage().fill(val);

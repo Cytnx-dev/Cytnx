@@ -49,6 +49,8 @@ See The following user guide for install and using of cytnx:
     20. [Enhance] add specialization for Tensor iarithmetic with Sproxy.
     21. [Fix] #31 cftcf Mul internal memcpy with wrong unit size. 
     22. [Fix] #31 type accessing now partially via Scalar, so no conflict will occur when ovld matvec() gives mismatched input and output type. 
+    23. [Fix] Tensor / Storage set element with Sproxy or Scalar is now available. 
+    24. [Fix] Lanczos_Gnd on f type accessing now partially via Scalar, so no conflict will occur when ovld matvec() gives mismatched input and output type.
 
     v0.7.2 
     1. [Enhance] Add Tensor.set with Scalar

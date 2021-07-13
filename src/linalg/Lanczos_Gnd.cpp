@@ -44,7 +44,7 @@ namespace cytnx{
             //cout << (new_psi);
             //exit(1);
             
-            Bs(0) = new_psi.Norm().item<double>();
+            Bs(0) = new_psi.Norm();
             psi_0 = psi_1;
             new_psi /= Bs(0);
             
@@ -129,7 +129,8 @@ namespace cytnx{
             //[require] Tin should be provided!
 
 
-            Tensor psi_1 = Tin.clone()/Tin.Norm();
+            Tensor psi_1 = Tin.clone();
+            psi_1 /= psi_1.Norm();
             
             Tensor psi_0;// = cytnx::zeros({psi_1.shape()[0]},psi_1.dtype(),Tin.device());
             Tensor new_psi;
@@ -148,14 +149,15 @@ namespace cytnx{
 
             // i=0 
             //-------------------------------------------------
-            new_psi = Hop->matvec(psi_1);
-            As(0) = linalg::Vectordot(new_psi,psi_1).item<float>();
+            new_psi = Hop->matvec(psi_1).astype(Type.Float);
+            //cout << Scalar(linalg::Vectordot(new_psi,psi_1).item()) << endl;
+            As(0) = linalg::Vectordot(new_psi,psi_1).item();
             //cout << (new_psi);
             new_psi -= As(0)*psi_1;
             //cout << (new_psi);
             //exit(1);
             
-            Bs(0) = new_psi.Norm().item<float>();
+            Bs(0) = new_psi.Norm();
             psi_0 = psi_1;
             new_psi /= Bs(0);
             
@@ -171,7 +173,7 @@ namespace cytnx{
             //iteration LZ:
             for(unsigned int i=1;i<Maxiter;i++){
 
-                new_psi = Hop->matvec(psi_1) - Bs(i-1)*psi_0;
+                new_psi = Hop->matvec(psi_1).astype(Type.Float) - Bs(i-1)*psi_0;
                 As.append(linalg::Vectordot(new_psi,psi_1).item<float>());
                 new_psi -= As(i)*psi_1;
                 
@@ -179,7 +181,7 @@ namespace cytnx{
                 tmpEsVs = linalg::Tridiag(As,Bs,true,true);
                 
 
-                Bs.append(new_psi.Norm().item<float>());
+                Bs.append(float(Scalar(new_psi.Norm().item())));
                 psi_0 = psi_1;
                 new_psi /= Bs(i);
 
@@ -210,7 +212,8 @@ namespace cytnx{
                 tmpEsVs.pop_back();
 
                 //restarted again, and evaluate the vectors on the fly:
-                psi_1 = Tin.clone()/Tin.Norm();
+                psi_1 = Tin.clone();
+                psi_1/=Tin.Norm().item();
                 eV = kryVg(0)*psi_1;
                 new_psi = Hop->matvec(psi_1) - As(0)*psi_1;
                 
@@ -219,7 +222,7 @@ namespace cytnx{
 
                 for(unsigned int n=1;n<tmpEsVs[0].shape()[0];n++){
                     eV += kryVg(n)*psi_1;
-                    new_psi = Hop->matvec(psi_1) - Bs(n-1)*psi_0;
+                    new_psi = Hop->matvec(psi_1).astype(Type.Float) - Bs(n-1)*psi_0;
                     new_psi -= As(n)*psi_1;
 
                     psi_0 = psi_1;
@@ -255,11 +258,11 @@ namespace cytnx{
                 // check Tin should be rank-1:
                 Tensor v0;
                 if(Tin.dtype()==Type.Void){
-                    v0 = cytnx::random::normal({Hop->nx()},Hop->dtype(),Hop->device()); // randomly initialize.
+                    v0 = cytnx::random::normal({Hop->nx()},0,1,Hop->device()).astype(Hop->dtype()); // randomly initialize.
                 }else{
                     cytnx_error_msg(Tin.shape().size()!=1,"[ERROR][Lanczos] Tin should be rank-1%s","\n");
                     cytnx_error_msg(Tin.shape()[0]!=Hop->nx(),"[ERROR][Lanczos] Tin should have dimension consistent with Hop: [%d] %s",Hop->nx(),"\n");
-                    v0 = Tin;
+                    v0 = Tin.astype(Hop->dtype());
                 }
                 
                 std::vector<Tensor> out;
