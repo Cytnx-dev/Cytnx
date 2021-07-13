@@ -44,7 +44,8 @@ See The following user guide for install and using of cytnx:
     15. [Enhance] Add c++ example for DMRG (Ke)
     16. [Fix] Bug fixed in DMRG code and updated to the latest features. 
     17. [Fix] Bug in UniTensor do svd with rowrank=1 and the first rank has dimension=1.        
-
+    18. [Enhance] add Scalar: abs, opeartor<, operator>, operator<=, operator>=
+    
     v0.7.2 
     1. [Enhance] Add Tensor.set with Scalar
     2. [Enhance][C++] Add Tensor initialize assignment op from initializer_list

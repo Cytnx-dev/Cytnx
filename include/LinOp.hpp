@@ -4,6 +4,7 @@
 #include "Type.hpp"
 #include "cytnx_error.hpp"
 #include "Tensor.hpp"
+#include "Scalar.hpp"
 #include <vector>
 #include <fstream>
 #include <functional>
@@ -12,10 +13,12 @@
 #include <algorithm>
 #include "intrusive_ptr_base.hpp"
 #include "utils/vec_clone.hpp"
+
 namespace cytnx{
     
     class LinOp{
         private:
+
             // function pointer:
             std::function<Tensor(const Tensor&)> _mvfunc;
         
@@ -37,6 +40,7 @@ namespace cytnx{
 
 
         public:
+
         /// @cond
         // we need driver of void f(nx,vin,vout)
         /// @endcond
@@ -71,6 +75,7 @@ namespace cytnx{
 
         */
         LinOp(const std::string &type, const cytnx_uint64 &nx, const int &dtype=Type.Double, const int &device=Device.cpu, std::function<Tensor(const Tensor&)> custom_f = nullptr){
+
             if(type=="mv"){
                 this->_mvfunc=custom_f;
 
@@ -99,6 +104,7 @@ namespace cytnx{
                 cytnx_error_msg(true,"[ERROR] cannot specify func with type=mv_elem%s. use set_elem instead.","\n");
             }
         };
+
         template<class T>
         void set_elem(const cytnx_uint64 &i, const cytnx_uint64 &j, const T &elem, const bool check_exists=true){
             this->_elems_it = this->_elems.find(i);

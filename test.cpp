@@ -88,6 +88,13 @@ class MyOp2: public LinOp{
 
 int main(int argc, char *argv[]){
 
+
+    Scalar scA = int(5);
+    Scalar scB = 4.77;
+
+    cout << (scA < scB) << endl;    
+    return 0;
+
     auto Trt = arange(30).reshape(1,30);
     
     auto uTrt = UniTensor(Trt,1);

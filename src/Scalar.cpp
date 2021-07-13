@@ -71,8 +71,60 @@ namespace cytnx{
     Scalar operator/( const cytnx_int16  &lc, const Scalar &rs){return Scalar(lc).rdiv(rs);};
     Scalar operator/( const cytnx_bool  &lc, const Scalar &rs){return Scalar(lc).rdiv(rs);};
 
+    //lless c < Scalar;
+    Scalar operator<( const cytnx_complex128 &lc, const Scalar &rs){return Scalar(lc).less(rs);};
+    Scalar operator<( const cytnx_complex64 &lc, const Scalar &rs){return Scalar(lc).less(rs);};
+    Scalar operator<( const cytnx_double &lc, const Scalar &rs){return Scalar(lc).less(rs);};
+    Scalar operator<( const cytnx_float  &lc, const Scalar &rs){return Scalar(lc).less(rs);};
+    Scalar operator<( const cytnx_uint64 &lc, const Scalar &rs){return Scalar(lc).less(rs);};
+    Scalar operator<( const cytnx_int64  &lc, const Scalar &rs){return Scalar(lc).less(rs);};
+    Scalar operator<( const cytnx_uint32 &lc, const Scalar &rs){return Scalar(lc).less(rs);};
+    Scalar operator<( const cytnx_int32  &lc, const Scalar &rs){return Scalar(lc).less(rs);};
+    Scalar operator<( const cytnx_uint16 &lc, const Scalar &rs){return Scalar(lc).less(rs);};
+    Scalar operator<( const cytnx_int16  &lc, const Scalar &rs){return Scalar(lc).less(rs);};
+    Scalar operator<( const cytnx_bool  &lc, const Scalar &rs){return Scalar(lc).less(rs);};
+
+    //lless c > Scalar;
+    Scalar operator>( const cytnx_complex128 &lc, const Scalar &rs){return Scalar(lc).greater(rs);};
+    Scalar operator>( const cytnx_complex64 &lc, const Scalar &rs){return Scalar(lc).greater(rs);};
+    Scalar operator>( const cytnx_double &lc, const Scalar &rs){return Scalar(lc).greater(rs);};
+    Scalar operator>( const cytnx_float  &lc, const Scalar &rs){return Scalar(lc).greater(rs);};
+    Scalar operator>( const cytnx_uint64 &lc, const Scalar &rs){return Scalar(lc).greater(rs);};
+    Scalar operator>( const cytnx_int64  &lc, const Scalar &rs){return Scalar(lc).greater(rs);};
+    Scalar operator>( const cytnx_uint32 &lc, const Scalar &rs){return Scalar(lc).greater(rs);};
+    Scalar operator>( const cytnx_int32  &lc, const Scalar &rs){return Scalar(lc).greater(rs);};
+    Scalar operator>( const cytnx_uint16 &lc, const Scalar &rs){return Scalar(lc).greater(rs);};
+    Scalar operator>( const cytnx_int16  &lc, const Scalar &rs){return Scalar(lc).greater(rs);};
+    Scalar operator>( const cytnx_bool  &lc, const Scalar &rs){return Scalar(lc).greater(rs);};
+
+    //lless c <= Scalar;
+    Scalar operator<=( const cytnx_complex128 &lc, const Scalar &rs){return Scalar(lc).leq(rs);};
+    Scalar operator<=( const cytnx_complex64 &lc, const Scalar &rs){return Scalar(lc).leq(rs);};
+    Scalar operator<=( const cytnx_double &lc, const Scalar &rs){return Scalar(lc).leq(rs);};
+    Scalar operator<=( const cytnx_float  &lc, const Scalar &rs){return Scalar(lc).leq(rs);};
+    Scalar operator<=( const cytnx_uint64 &lc, const Scalar &rs){return Scalar(lc).leq(rs);};
+    Scalar operator<=( const cytnx_int64  &lc, const Scalar &rs){return Scalar(lc).leq(rs);};
+    Scalar operator<=( const cytnx_uint32 &lc, const Scalar &rs){return Scalar(lc).leq(rs);};
+    Scalar operator<=( const cytnx_int32  &lc, const Scalar &rs){return Scalar(lc).leq(rs);};
+    Scalar operator<=( const cytnx_uint16 &lc, const Scalar &rs){return Scalar(lc).leq(rs);};
+    Scalar operator<=( const cytnx_int16  &lc, const Scalar &rs){return Scalar(lc).leq(rs);};
+    Scalar operator<=( const cytnx_bool  &lc, const Scalar &rs){return Scalar(lc).leq(rs);};
+
+    //lless c >= Scalar;
+    Scalar operator>=( const cytnx_complex128 &lc, const Scalar &rs){return Scalar(lc).geq(rs);};
+    Scalar operator>=( const cytnx_complex64 &lc, const Scalar &rs){return Scalar(lc).geq(rs);};
+    Scalar operator>=( const cytnx_double &lc, const Scalar &rs){return Scalar(lc).geq(rs);};
+    Scalar operator>=( const cytnx_float  &lc, const Scalar &rs){return Scalar(lc).geq(rs);};
+    Scalar operator>=( const cytnx_uint64 &lc, const Scalar &rs){return Scalar(lc).geq(rs);};
+    Scalar operator>=( const cytnx_int64  &lc, const Scalar &rs){return Scalar(lc).geq(rs);};
+    Scalar operator>=( const cytnx_uint32 &lc, const Scalar &rs){return Scalar(lc).geq(rs);};
+    Scalar operator>=( const cytnx_int32  &lc, const Scalar &rs){return Scalar(lc).geq(rs);};
+    Scalar operator>=( const cytnx_uint16 &lc, const Scalar &rs){return Scalar(lc).geq(rs);};
+    Scalar operator>=( const cytnx_int16  &lc, const Scalar &rs){return Scalar(lc).geq(rs);};
+    Scalar operator>=( const cytnx_bool  &lc, const Scalar &rs){return Scalar(lc).geq(rs);};
 
 
+    Scalar abs(const Scalar &c){return c.abs();};
 
 
 
