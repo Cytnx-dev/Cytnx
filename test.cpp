@@ -40,36 +40,18 @@ Tensor myfunc(const Tensor &Tin){
 
 }
 
-class MyOp: public LinOp{
-    public:
-        
-        void pre_construct(){
-            int cnt = 0;
-            for(int i=0;i<this->nx();i++)
-                for(int j=0;j<this->nx();j++){
-                    //cout << i << j << endl;
-                    this->set_elem(i,j,cnt); cnt++;
-                }
-        }
-
-        MyOp(int dtype):
-            LinOp("mv_elem",3,dtype,Device.cpu){ //invoke base class constructor!
-
-        }
-
-};
-
 class MyOp2: public LinOp{
     public:
         
         Tensor H;
-        MyOp2(int dtype,const Tensor &Hin):
-            LinOp("mv",4,dtype,Device.cpu){ //invoke base class constructor!
-            H = Hin.clone();
+        MyOp2(int size):
+            LinOp("mv",size,Type.ComplexDouble,Device.cpu){ //invoke base class constructor!
+            
         }
 
         Tensor matvec(const Tensor &in){
-            return linalg::Dot(this->H,in);
+            auto H = arange(100).reshape(10,10);
+            return linalg::Dot(H,in);
         }
 
 };
@@ -87,6 +69,17 @@ class MyOp2: public LinOp{
 
 
 int main(int argc, char *argv[]){
+
+
+    auto vec = arange(10).astype(Type.ComplexDouble);
+
+    vec/=vec.Norm().item();
+    auto Hopo = MyOp2(vec.shape()[0]);
+    print(Hopo.matvec(vec));
+
+    linalg::Lanczos_ER(&Hopo);
+
+    return 0;
 
 
     Scalar scA = int(5);
@@ -398,12 +391,6 @@ int main(int argc, char *argv[]){
 
     print(rS);
     print(linalg::Eigh(rS));
-    auto Opi = MyOp2(rS.dtype(),rS);
-    
-    print(linalg::Lanczos_ER(&Opi,1,true,100000,1.0e-14,false,Tensor(),3));
-    
-
-    print(linalg::Lanczos_Gnd(&Opi,1.0e-14,true,ones(4),true,100000));
 
     //return 0;
     cout << "==========" << endl;
@@ -549,8 +536,6 @@ int main(int argc, char *argv[]){
 
     return 0;
 
-    auto XOP = MyOp(Type.Double);
-    XOP.pre_construct();
 
     //XOP._print();
     
@@ -558,7 +543,6 @@ int main(int argc, char *argv[]){
     auto v1 = ones(3);
     
     cout << v1 << endl;
-    cout << XOP.matvec(v1) << endl;
 
     cout << v1 << endl;
     auto M = arange(9).reshape(3,3);
@@ -732,9 +716,6 @@ int main(int argc, char *argv[]){
     //cout << TNs(3);
     //cout << linalg::Svd(TNs) << endl;
     exit(1);
-
-    //LinOp *cu = new MyOp("mv",5,Type.Double,Device.cpu);
-    //cout << cu->matvec(t);
 
     //free(cu);
 

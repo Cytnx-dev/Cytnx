@@ -52,6 +52,8 @@ namespace cytnx{
         return self;
     }
 
+
+
     //ADD
     Tensor Tensor::Tproxy::operator+(const cytnx_complex128 &rc) const{//{return this->_operatorADD(rc);};
         Tensor out;
@@ -956,7 +958,9 @@ namespace cytnx{
         this->_impl->storage() = cytnx::linalg::Add(*this,rc)._impl->storage();
         return *this;
     }
-
+    template<> Tensor& Tensor::operator+=<Scalar::Sproxy>(const Scalar::Sproxy &rc){
+        return this->operator+=(Scalar(rc));
+    }
     // -= 
     template<> Tensor& Tensor::operator-=<Tensor>(const Tensor &rc){
         this->_impl->storage() = cytnx::linalg::Sub(*this,rc)._impl->storage();
@@ -1014,7 +1018,9 @@ namespace cytnx{
         this->_impl->storage() = cytnx::linalg::Sub(*this,rc)._impl->storage();
         return *this;
     }
-
+    template<> Tensor& Tensor::operator-=<Scalar::Sproxy>(const Scalar::Sproxy &rc){
+        return this->operator-=(Scalar(rc));
+    }
     // *= 
     template<> Tensor& Tensor::operator*=<Tensor>(const Tensor &rc){
         this->_impl->storage() = cytnx::linalg::Mul(*this,rc)._impl->storage();
@@ -1072,7 +1078,9 @@ namespace cytnx{
         this->_impl->storage() = cytnx::linalg::Mul(*this,rc)._impl->storage();
         return *this;
     }
-
+    template<> Tensor& Tensor::operator*=<Scalar::Sproxy>(const Scalar::Sproxy &rc){
+        return this->operator*=(Scalar(rc));
+    }
 
     // /= 
     template<> Tensor& Tensor::operator/=<Tensor>(const Tensor &rc){
@@ -1132,7 +1140,9 @@ namespace cytnx{
         this->_impl->storage() = cytnx::linalg::Div(*this,rc)._impl->storage();
         return *this;
     }
-
+    template<> Tensor& Tensor::operator/=<Scalar::Sproxy>(const Scalar::Sproxy &rc){
+        return this->operator/=(Scalar(rc));
+    }
 
     std::vector<Tensor> Tensor::Svd(const bool&is_U, const bool&is_vT) const{
         return linalg::Svd(*this, is_U, is_vT);

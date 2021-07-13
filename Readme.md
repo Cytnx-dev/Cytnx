@@ -45,6 +45,8 @@ See The following user guide for install and using of cytnx:
     16. [Fix] Bug fixed in DMRG code and updated to the latest features. 
     17. [Fix] Bug in UniTensor do svd with rowrank=1 and the first rank has dimension=1.        
     18. [Enhance] add Scalar: abs, opeartor<, operator>, operator<=, operator>=
+    19. [Fix] #31 cd, cf internal swiching error for Lanczos_ER.
+    20. [Enhance] add specialization for Tensor iarithmetic with Sproxy.
     
     v0.7.2 
     1. [Enhance] Add Tensor.set with Scalar

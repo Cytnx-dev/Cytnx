@@ -1179,6 +1179,7 @@ namespace cytnx{
            template<class T>           
            Tensor& operator/=(const T &rc);
 
+
            //Tensor &operator+=(const Tproxy &rc);
            //Tensor &operator-=(const Tproxy &rc);
            //Tensor &operator*=(const Tproxy &rc);

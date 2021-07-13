@@ -416,7 +416,7 @@ namespace cytnx{
                 for(cytnx_int32 ik=0;ik<k;ik++){
                     cytnx_uint64 krydim = max_krydim; // initialize
                     Tensor kry_mat = cytnx::zeros({krydim,krydim},Type.ComplexDouble,Hop->device());
-
+                    //std::cout << "cool" << std::endl;
                     double Elast = DBL_MAX; // this is temporary, so let's put it on CPU.    
 
                     bool cvg = false;
@@ -532,13 +532,16 @@ namespace cytnx{
                     cytnx_error_msg(Tin.shape()[0]!=Hop->nx(),"[ERROR][Lanczos] Tin should have dimension consistent with Hop: [%d] %s",Hop->nx(),"\n");
                     buffer[0] = Tin;
                 }
+
+                //std::cout << "[entry] LER" << std::endl;
                 
                 std::vector<Tensor> out;
                 if(is_V) out.resize(2);
                 else out.resize(1);
                 
-                out[0] = zeros({k},Type.is_complex(Hop->dtype())?Hop->dtype()-2:Hop->dtype(),Hop->device());
-                
+                out[0] = zeros({k},Type.is_complex(Hop->dtype())?Hop->dtype()+2:Hop->dtype(),Hop->device());
+                //std::cout << "[entry] LER 2" << std::endl;
+
                 if(Hop->dtype()==Type.ComplexDouble){
                     _Lanczos_ER_cd(out,Hop, buffer,k,is_V,max_krydim,maxiter,CvgCrit,verbose);
                 }else if(Hop->dtype()==Type.Double){
