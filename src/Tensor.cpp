@@ -1234,6 +1234,21 @@ namespace cytnx{
         return cytnx::linalg::Div(lhs,Tensor(rhs));
     }
 
+    //===========================
+    //Tensor am Sproxy
+    Tensor operator+(const Tensor &lhs, const Scalar::Sproxy &rhs){
+        return cytnx::linalg::Add(lhs,Scalar(rhs));
+    }
+    Tensor operator-(const Tensor &lhs, const Scalar::Sproxy &rhs){
+        return cytnx::linalg::Sub(lhs,Scalar(rhs));
+    }
+    Tensor operator*(const Tensor &lhs, const Scalar::Sproxy &rhs){
+        return cytnx::linalg::Mul(lhs,Scalar(rhs));
+    }
+    Tensor operator/(const Tensor &lhs, const Scalar::Sproxy &rhs){
+        return cytnx::linalg::Div(lhs,Scalar(rhs));
+    }
+
 
 }//namespace cytnx
 

@@ -44,8 +44,8 @@ class MyOp2: public LinOp{
     public:
         
         Tensor H;
-        MyOp2(int size):
-            LinOp("mv",size,Type.ComplexDouble,Device.cpu){ //invoke base class constructor!
+        MyOp2(int size, int dtype):
+            LinOp("mv",size,dtype,Device.cpu){ //invoke base class constructor!
             
         }
 
@@ -71,15 +71,19 @@ class MyOp2: public LinOp{
 int main(int argc, char *argv[]){
 
 
-    auto vec = arange(10).astype(Type.ComplexDouble);
-
+    auto dty = Type.ComplexFloat;
+    auto vec = arange(10).astype(dty);
     vec/=vec.Norm().item();
-    auto Hopo = MyOp2(vec.shape()[0]);
+
+
+    auto Hopo = MyOp2(vec.shape()[0],dty);
     print(Hopo.matvec(vec));
 
-    linalg::Lanczos_ER(&Hopo);
+    print(linalg::Lanczos_ER(&Hopo));
 
     return 0;
+
+
 
 
     Scalar scA = int(5);

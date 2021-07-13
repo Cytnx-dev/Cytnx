@@ -134,10 +134,10 @@ namespace cytnx{
                         //    kry_mat = cytnx::zeros({krydim,krydim},Tin.dtype(),Tin.device());
             
                         // normalized q1:
-                        buffer[0] /= buffer[0].Norm().item<cytnx_double>(); // normalized q1
+                        buffer[0] /= buffer[0].Norm().item(); // normalized q1
 
                         for(cytnx_uint32 ip=1;ip<krydim+1;ip++){
-                            buffer[ip] = Hop->matvec(buffer[ip-1]); // Hqi
+                            buffer[ip] = Hop->matvec(buffer[ip-1]).astype(Type.Double); // Hqi
                             
                             for(cytnx_uint32 ig=0;ig<ip;ig++)
                                 kry_mat.storage().at<cytnx_double>((ip-1)*krydim+ig) = Vectordot(buffer[ip],buffer[ig]).item<cytnx_double>();
@@ -145,12 +145,12 @@ namespace cytnx{
                             // explicitly re-orthogonization
                             for(cytnx_uint32 ig=0;ig<ip;ig++){
                                 buffer[ip] -= Vectordot(buffer[ip],buffer[ig]).item<cytnx_double>()*buffer[ig];
-                                buffer[ip] /= buffer[ip].Norm().item<cytnx_double>();
+                                buffer[ip] /= buffer[ip].Norm().item();
                             }
                             // exp. reorth with previous converged ev.
                             for(cytnx_uint32 ig=0;ig<converged_ev.size();ig++){
                                 buffer[ip] -= Vectordot(buffer[ip],converged_ev[ig]).item<cytnx_double>()*converged_ev[ig];
-                                buffer[ip] /= buffer[ip].Norm().item<cytnx_double>();
+                                buffer[ip] /= buffer[ip].Norm().item();
                             }
 
                             
@@ -186,7 +186,7 @@ namespace cytnx{
                         while(1){
                             bool is_orth=true;
                             cytnx::random::Make_normal(buffer[0],0.,1.0);
-                            buffer[0]/=buffer[0].Norm().item<cytnx_double>();
+                            buffer[0]/=buffer[0].Norm().item();
                             for(cytnx_uint32 ig=0;ig<converged_ev.size();ig++){
                                 Elast = Vectordot(buffer[0],converged_ev[ig]).item<cytnx_double>(); //reuse variable here. 
                                 if((1-Elast) < 0.005){ // check is this vector is properly orthogonal to previous converged ev. 
@@ -194,7 +194,7 @@ namespace cytnx{
                                     break;
                                 }
                                 buffer[0] -= Elast*converged_ev[ig];
-                                buffer[0] /= buffer[0].Norm().item<cytnx_double>();
+                                buffer[0] /= buffer[0].Norm().item();
                             }
                             if(is_orth)
                                 break;
@@ -236,10 +236,10 @@ namespace cytnx{
                         //    kry_mat = cytnx::zeros({krydim,krydim},Tin.dtype(),Tin.device());
             
                         // normalized q1:
-                        buffer[0] = buffer[0]/buffer[0].Norm().item<cytnx_float>(); // normalized q1
+                        buffer[0] = buffer[0]/buffer[0].Norm().item(); // normalized q1
 
                         for(cytnx_uint32 ip=1;ip<krydim+1;ip++){
-                            buffer[ip] = Hop->matvec(buffer[ip-1]); // Hqi
+                            buffer[ip] = Hop->matvec(buffer[ip-1]).astype(Type.Float); // Hqi
                             
                             for(cytnx_uint32 ig=0;ig<ip;ig++)
                                 kry_mat[{ip-1,ig}] = Vectordot(buffer[ip],buffer[ig]);
@@ -247,12 +247,12 @@ namespace cytnx{
                             // explicitly re-orthogonization
                             for(cytnx_uint32 ig=0;ig<ip;ig++){
                                 buffer[ip] -= Vectordot(buffer[ip],buffer[ig])*buffer[ig];
-                                buffer[ip] /= buffer[ip].Norm().item<cytnx_float>();
+                                buffer[ip] /= buffer[ip].Norm().item();
                             }
                             // exp. reorth with previous converged ev.
                             for(cytnx_uint32 ig=0;ig<converged_ev.size();ig++){
                                 buffer[ip] -= Vectordot(buffer[ip],converged_ev[ig])*converged_ev[ig];
-                                buffer[ip] /= buffer[ip].Norm().item<cytnx_float>();
+                                buffer[ip] /= buffer[ip].Norm().item();
                             }
 
                             
@@ -284,7 +284,7 @@ namespace cytnx{
                         while(1){
                             bool is_orth=true;
                             cytnx::random::Make_normal(buffer[0],0.,1.0);
-                            buffer[0]/=buffer[0].Norm().item<cytnx_float>();
+                            buffer[0]/=buffer[0].Norm().item();
                             for(cytnx_uint32 ig=0;ig<converged_ev.size();ig++){
                                 Elast = Vectordot(buffer[0],converged_ev[ig]).item<cytnx_float>(); //reuse variable here. 
                                 if((1-Elast) < 0.005){ // check is this vector is properly orthogonal to previous converged ev. 
@@ -292,7 +292,7 @@ namespace cytnx{
                                     break;
                                 }
                                 buffer[0] -= Elast*converged_ev[ig];
-                                buffer[0] /= buffer[0].Norm().item<cytnx_float>();
+                                buffer[0] /= buffer[0].Norm().item();
                             }
                             if(is_orth)
                                 break;
@@ -332,10 +332,10 @@ namespace cytnx{
                         //    kry_mat = cytnx::zeros({krydim,krydim},Tin.dtype(),Tin.device());
             
                         // normalized q1:
-                        buffer[0] = buffer[0]/buffer[0].Norm().item<cytnx_float>(); // normalized q1
+                        buffer[0] = buffer[0]/buffer[0].Norm().item(); // normalized q1
 
                         for(cytnx_uint32 ip=1;ip<krydim+1;ip++){
-                            buffer[ip] = Hop->matvec(buffer[ip-1]); // Hqi
+                            buffer[ip] = Hop->matvec(buffer[ip-1]).astype(Type.ComplexFloat); // Hqi
                             
                             for(cytnx_uint32 ig=0;ig<ip;ig++)
                                 kry_mat[{ip-1,ig}] = Vectordot(buffer[ip],buffer[ig],true);
@@ -343,12 +343,12 @@ namespace cytnx{
                             // explicitly re-orthogonization
                             for(cytnx_uint32 ig=0;ig<ip;ig++){
                                 buffer[ip] -= Vectordot(buffer[ig],buffer[ip],true)*buffer[ig];
-                                buffer[ip] /= buffer[ip].Norm().item<cytnx_float>();
+                                buffer[ip] /= buffer[ip].Norm().item();
                             }
                             // exp. reorth with previous converged ev.
                             for(cytnx_uint32 ig=0;ig<converged_ev.size();ig++){
                                 buffer[ip] -= Vectordot(converged_ev[ig],buffer[ip],true)*converged_ev[ig];
-                                buffer[ip] /= buffer[ip].Norm().item<cytnx_float>();
+                                buffer[ip] /= buffer[ip].Norm().item();
                             }
 
                             
@@ -380,15 +380,15 @@ namespace cytnx{
                         while(1){
                             bool is_orth=true;
                             cytnx::random::Make_normal(buffer[0],0.,1.0);
-                            buffer[0]/=buffer[0].Norm().item<cytnx_float>();
+                            buffer[0]/=buffer[0].Norm().item();
                             for(cytnx_uint32 ig=0;ig<converged_ev.size();ig++){
                                 Tensor Res = Vectordot(converged_ev[ig],buffer[0],true); //reuse variable here. 
-                                if((1-Res.Norm().item<cytnx_float>()) < 0.005){ // check is this vector is properly orthogonal to previous converged ev. 
+                                if((1-Res.Norm().item()) < 0.005){ // check is this vector is properly orthogonal to previous converged ev. 
                                     is_orth=false;
                                     break;
                                 }
                                 buffer[0] -= Res.item<cytnx_complex64>()*converged_ev[ig];
-                                buffer[0] /= buffer[0].Norm().item<cytnx_float>();
+                                buffer[0] /= buffer[0].Norm().item();
                             }
                             if(is_orth)
                                 break;
@@ -428,10 +428,10 @@ namespace cytnx{
                         //    kry_mat = cytnx::zeros({krydim,krydim},Tin.dtype(),Tin.device());
             
                         // normalized q1:
-                        buffer[0] = buffer[0]/buffer[0].Norm().item<cytnx_double>(); // normalized q1
+                        buffer[0] = buffer[0]/buffer[0].Norm().item(); // normalized q1
 
                         for(cytnx_uint32 ip=1;ip<krydim+1;ip++){
-                            buffer[ip] = Hop->matvec(buffer[ip-1]); // Hqi
+                            buffer[ip] = Hop->matvec(buffer[ip-1]).astype(Type.ComplexDouble); // Hqi
                             
                             for(cytnx_uint32 ig=0;ig<ip;ig++)
                                 kry_mat[{ip-1,ig}] = Vectordot(buffer[ip],buffer[ig],true);
@@ -439,12 +439,12 @@ namespace cytnx{
                             // explicitly re-orthogonization
                             for(cytnx_uint32 ig=0;ig<ip;ig++){
                                 buffer[ip] -= Vectordot(buffer[ig],buffer[ip],true)*buffer[ig];
-                                buffer[ip] /= buffer[ip].Norm().item<cytnx_double>();
+                                buffer[ip] /= buffer[ip].Norm().item();
                             }
                             // exp. reorth with previous converged ev.
                             for(cytnx_uint32 ig=0;ig<converged_ev.size();ig++){
                                 buffer[ip] -= Vectordot(converged_ev[ig],buffer[ip],true)*converged_ev[ig];
-                                buffer[ip] /= buffer[ip].Norm().item<cytnx_double>();
+                                buffer[ip] /= buffer[ip].Norm().item();
                             }
 
                             
@@ -476,15 +476,15 @@ namespace cytnx{
                         while(1){
                             bool is_orth=true;
                             cytnx::random::Make_normal(buffer[0],0.,1.0);
-                            buffer[0]/=buffer[0].Norm().item<cytnx_double>();
+                            buffer[0]/=buffer[0].Norm().item();
                             for(cytnx_uint32 ig=0;ig<converged_ev.size();ig++){
                                 Tensor Res = Vectordot(converged_ev[ig],buffer[0],true); //reuse variable here. 
-                                if((1.-Res.Norm().item<cytnx_double>()) < 0.005){ // check is this vector is properly orthogonal to previous converged ev. 
+                                if((1.-Res.Norm().item()) < 0.005){ // check is this vector is properly orthogonal to previous converged ev. 
                                     is_orth=false;
                                     break;
                                 }
                                 buffer[0] -= Res.item<cytnx_complex128>()*converged_ev[ig];
-                                buffer[0] /= buffer[0].Norm().item<cytnx_double>();
+                                buffer[0] /= buffer[0].Norm().item();
                             }
                             if(is_orth)
                                 break;
@@ -530,7 +530,7 @@ namespace cytnx{
                 }else{
                     cytnx_error_msg(Tin.shape().size()!=1,"[ERROR][Lanczos] Tin should be rank-1%s","\n");
                     cytnx_error_msg(Tin.shape()[0]!=Hop->nx(),"[ERROR][Lanczos] Tin should have dimension consistent with Hop: [%d] %s",Hop->nx(),"\n");
-                    buffer[0] = Tin;
+                    buffer[0] = Tin.astype(Hop->dtype());
                 }
 
                 //std::cout << "[entry] LER" << std::endl;

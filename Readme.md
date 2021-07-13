@@ -47,7 +47,9 @@ See The following user guide for install and using of cytnx:
     18. [Enhance] add Scalar: abs, opeartor<, operator>, operator<=, operator>=
     19. [Fix] #31 cd, cf internal swiching error for Lanczos_ER.
     20. [Enhance] add specialization for Tensor iarithmetic with Sproxy.
-    
+    21. [Fix] #31 cftcf Mul internal memcpy with wrong unit size. 
+    22. [Fix] #31 type accessing now partially via Scalar, so no conflict will occur when ovld matvec() gives mismatched input and output type. 
+
     v0.7.2 
     1. [Enhance] Add Tensor.set with Scalar
     2. [Enhance][C++] Add Tensor initialize assignment op from initializer_list

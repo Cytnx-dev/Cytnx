@@ -765,7 +765,7 @@ namespace cytnx{
                         _out[i] = _Lin[0] * _Rin[i];
                     }
                     */
-                    memcpy(_out,_Rin,sizeof(cytnx_complex128)*len);
+                    memcpy(_out,_Rin,sizeof(cytnx_complex64)*len);
                     cscal(&N,_Lin,_out,&ONE);
             }else if(Rin->size()==1){
                 #ifdef UNI_OMP
@@ -784,7 +784,7 @@ namespace cytnx{
                         _out[i] = _Lin[i] * _Rin[i];
                     }
                     */
-                    memcpy(_out,_Lin,sizeof(cytnx_complex128)*len);
+                    memcpy(_out,_Lin,sizeof(cytnx_complex64)*len);
                     cscal(&N,_Rin,_out,&ONE);
                 }else{
 

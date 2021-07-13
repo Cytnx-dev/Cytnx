@@ -1389,7 +1389,11 @@ namespace cytnx{
     Tensor operator-(const Tensor &lhs, const Tensor::Tproxy &rhs);
     Tensor operator*(const Tensor &lhs, const Tensor::Tproxy &rhs);
     Tensor operator/(const Tensor &lhs, const Tensor::Tproxy &rhs);
-
+    
+    Tensor operator+(const Tensor &lhs, const Scalar::Sproxy &rhs);
+    Tensor operator-(const Tensor &lhs, const Scalar::Sproxy &rhs);
+    Tensor operator*(const Tensor &lhs, const Scalar::Sproxy &rhs);
+    Tensor operator/(const Tensor &lhs, const Scalar::Sproxy &rhs);
 
     std::ostream& operator<<(std::ostream& os, const Tensor &in);
     std::ostream& operator<<(std::ostream& os, const Tensor::Tproxy &in);
