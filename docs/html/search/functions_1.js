@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['abs',['Abs',['../classcytnx_1_1Tensor.html#a312a8b7b963199a98e59d9f6a97c32e6',1,'cytnx::Tensor::Abs()'],['../namespacecytnx_1_1linalg.html#a3ded6435c7b47eb348d03783bfe72611',1,'cytnx::linalg::Abs()']]],
+  ['abs',['abs',['../classcytnx_1_1Scalar.html#aa6fa17b2e927f96decb4358405f755d6',1,'cytnx::Scalar::abs()'],['../classcytnx_1_1Tensor.html#a312a8b7b963199a98e59d9f6a97c32e6',1,'cytnx::Tensor::Abs()'],['../namespacecytnx_1_1linalg.html#a3ded6435c7b47eb348d03783bfe72611',1,'cytnx::linalg::Abs()'],['../namespacecytnx.html#a62c2a328de7efd4452227616e4be8f38',1,'cytnx::abs()']]],
   ['abs_5f',['Abs_',['../classcytnx_1_1Tensor.html#aa8e04d45e4c5b8e6f334e2be38433e07',1,'cytnx::Tensor::Abs_()'],['../namespacecytnx_1_1linalg.html#a30687e6240a889c04637b33ef90c2525',1,'cytnx::linalg::Abs_()']]],
   ['accessor',['Accessor',['../classcytnx_1_1Accessor.html#a9f6fa9087f09756e020355a05196d384',1,'cytnx::Accessor::Accessor(const cytnx_int64 &amp;loc)'],['../classcytnx_1_1Accessor.html#a78c4b2a0565d79fb0852c785b937872c',1,'cytnx::Accessor::Accessor(const std::initializer_list&lt; T &gt; &amp;list)'],['../classcytnx_1_1Accessor.html#ae83236323b25e5e3696f79ff5d764662',1,'cytnx::Accessor::Accessor(const std::vector&lt; T &gt; &amp;list)']]],
   ['accumulate',['accumulate',['../classcytnx_1_1stat_1_1Histogram.html#a9f985038f182b0db2c4debe789376cb0',1,'cytnx::stat::Histogram']]],

@@ -1,10 +1,10 @@
 <map id="include/stat.hpp" name="include/stat.hpp">
-<area shape="rect" id="node2" href="$Type_8hpp.html" title="Type.hpp" alt="" coords="852,304,928,331"/>
-<area shape="rect" id="node11" href="$cytnx__error_8hpp.html" title="cytnx_error.hpp" alt="" coords="330,386,442,413"/>
-<area shape="rect" id="node18" href="$Storage_8hpp.html" title="Storage.hpp" alt="" coords="633,155,725,181"/>
-<area shape="rect" id="node29" href="$Tensor_8hpp.html" title="Tensor.hpp" alt="" coords="1352,80,1439,107"/>
-<area shape="rect" id="node21" href="$Device_8hpp.html" title="Device.hpp" alt="" coords="1693,304,1781,331"/>
-<area shape="rect" id="node22" href="$intrusive__ptr__base_8hpp.html" title="intrusive_ptr_base.hpp" alt="" coords="999,304,1152,331"/>
-<area shape="rect" id="node28" href="$Scalar_8hpp.html" title="Scalar.hpp" alt="" coords="1033,229,1117,256"/>
-<area shape="rect" id="node32" href="$Accessor_8hpp.html" title="Accessor.hpp" alt="" coords="1604,229,1707,256"/>
+<area shape="rect" id="node2" href="$Type_8hpp.html" title="Type.hpp" alt="" coords="768,304,844,331"/>
+<area shape="rect" id="node11" href="$cytnx__error_8hpp.html" title="cytnx_error.hpp" alt="" coords="259,386,371,413"/>
+<area shape="rect" id="node18" href="$Storage_8hpp.html" title="Storage.hpp" alt="" coords="837,155,929,181"/>
+<area shape="rect" id="node30" href="$Tensor_8hpp.html" title="Tensor.hpp" alt="" coords="1368,80,1455,107"/>
+<area shape="rect" id="node21" href="$Device_8hpp.html" title="Device.hpp" alt="" coords="1805,229,1893,256"/>
+<area shape="rect" id="node22" href="$intrusive__ptr__base_8hpp.html" title="intrusive_ptr_base.hpp" alt="" coords="913,304,1067,331"/>
+<area shape="rect" id="node28" href="$Scalar_8hpp.html" title="Scalar.hpp" alt="" coords="1160,229,1244,256"/>
+<area shape="rect" id="node33" href="$Accessor_8hpp.html" title="Accessor.hpp" alt="" coords="1465,229,1568,256"/>
 </map>

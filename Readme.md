@@ -15,17 +15,21 @@ See The following user guide for install and using of cytnx:
 [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx/badges/version.svg)](https://anaconda.org/kaihsinwu/cytnx) [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx/badges/platforms.svg)](https://anaconda.org/kaihsinwu/cytnx)
 
 ## News
-    [v0.7.2] 
+    [v0.7.3] 
  
 ## Stable Version:
-[v0.7.2](https://github.com/kaihsin/Cytnx/tree/v0.7.2)
+[v0.7.3](https://github.com/kaihsin/Cytnx/tree/v0.7.3)
 
 ## Known issues:
-    v0.7.2
+    v0.7.3
     1. [Pending][GPU] Get/Set elements on GPU is still down. 
+    
 
 
 ## Current dev Version:
+    v0.7.4
+
+
     v0.7.3
     1. [Fix] bug for Get slice does not reduce when dim=1. 
     2. [Enhance] checking the memory alloc failing for EL.  
@@ -90,33 +94,6 @@ See The following user guide for install and using of cytnx:
     21. [Enhance] Reduce RTTR overhead. 
  
 
-    v0.6.5
-    1. [Fix] Bug in UniTensor _Load    
-    2. [Enhance] Improve stability in Lanczos_ER  
-    3. [Enhance] Move _SII to stack.
-    4. [Enhance] Add LinOp operator() for mv_elem
-    5. [Enhance] Add c++ API fast link to cutt
-    6. [Enhance] Add Fromfile/Tofile for load/save binary files @ Tensor/Storage
-    7. [Enhance] Add linspace generator
-    8. [Fix] Bug in Div for fast Blas call bug
-    9. [Enhance] Add Tensor.append(Storage) if Tensor is rank-2 and dimension match.
-    10. [Enhance] Add algo namespace
-    11. [Enhance] Add Sort-@cpu
-    12. [Enhance] add Storage.numpy() for pythonAPI
-    13. [Enhance] add Tensor.from_storage() for python API
-    
-    v0.6.4
-    1. [Enhance] Add option mv_elem for Tensordot, which actually move elements in input tensor. This is beneficial when same tensordot is called multiple times.
-    2. [Enhance] Add option cacheL, cacheR to Contract of unitensor. which mv the elements of input tensors to the matmul handy position. 
-    3. [Enhance] optimize Network contraction policy to reduce contiguous permute, with is_clone argument when PutUniTensor.
-    4. [Enhance] Add Lanczos_Gnd for fast get ground state and it's eigen value (currently only real float). 
-    5. [Enhance] Add Tridiag python API, and option is_row
-    6. [Enhance] C++ API storage add .back<>() function. 
-    7. [Enhance] C++ API storage fix from_vector() for bool type. 
-    8. [Enhance] Change Network Launch optimal=True behavior. if user order is given, optimal will not have effect.   
-    9. [Enhance] Add example/iDMRG/dmrg_optim.py for better performace with Lanczos_Gnd and Network cache.
-    10. [Fix] wrong error message in linalg::Cpr
-    11. [Fix] reshape() on a already contiguous Tensor will resulting as the change in original tensor, which should not happened.
 
 
 

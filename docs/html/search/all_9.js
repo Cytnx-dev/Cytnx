@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['iabs',['iabs',['../classcytnx_1_1Scalar.html#a9d8c8619abd7182d606a16f4c1dd6504',1,'cytnx::Scalar']]],
   ['identity',['identity',['../namespacecytnx.html#af8aa7e619c030f80c54e4d26b576484b',1,'cytnx']]],
   ['imag',['imag',['../classcytnx_1_1Storage.html#ad7557a7109f2764fe97049a348971b39',1,'cytnx::Storage::imag()'],['../classcytnx_1_1Tensor.html#accd77970630990baca3a18638b23fe95',1,'cytnx::Tensor::imag()']]],
   ['init',['Init',['../classcytnx_1_1Bond.html#a707a803fa98fb6a87b5f3c3b3000509f',1,'cytnx::Bond::Init()'],['../classcytnx_1_1Storage.html#a6cf79f362c4ae68ab7623f0ebac9355e',1,'cytnx::Storage::Init()'],['../classcytnx_1_1Tensor.html#afdb4470e0dc934964d80aa9c761cca48',1,'cytnx::Tensor::Init()'],['../classcytnx_1_1UniTensor.html#ae7305785d6a3cc7386a39ecdac06ca97',1,'cytnx::UniTensor::Init(const Tensor &amp;in_tensor, const cytnx_uint64 &amp;rowrank, const bool &amp;is_diag=false)'],['../classcytnx_1_1UniTensor.html#a3f7abcd64ae44d74656b48b980e1146e',1,'cytnx::UniTensor::Init(const std::vector&lt; Bond &gt; &amp;bonds, const std::vector&lt; cytnx_int64 &gt; &amp;in_labels={}, const cytnx_int64 &amp;rowrank=-1, const unsigned int &amp;dtype=Type.Double, const int &amp;device=Device.cpu, const bool &amp;is_diag=false)']]],

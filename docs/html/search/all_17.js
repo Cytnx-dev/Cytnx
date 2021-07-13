@@ -14,6 +14,6 @@ var searchData=
   ['zgemv',['zgemv',['../lapack__wrapper_8hpp.html#a5d0e10248570e3955e289d2dcef7d906',1,'lapack_wrapper.hpp']]],
   ['zgemv_5f',['zgemv_',['../lapack__wrapper_8hpp.html#a222487ba301216d60af208f0917533ac',1,'lapack_wrapper.hpp']]],
   ['zn',['Zn',['../classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359',1,'cytnx::Symmetry']]],
-  ['zscal',['zscal',['../lapack__wrapper_8hpp.html#a13050bbc730a2e635e4f4de8cd324a80',1,'lapack_wrapper.hpp']]],
+  ['zscal',['zscal',['../lapack__wrapper_8hpp.html#a4babe9c599c1960a97b30339ade18abc',1,'lapack_wrapper.hpp']]],
   ['zscal_5f',['zscal_',['../lapack__wrapper_8hpp.html#acbbc1b5929d2ee44eda004717aead5e3',1,'lapack_wrapper.hpp']]]
 ];

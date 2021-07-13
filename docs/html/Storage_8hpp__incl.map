@@ -1,7 +1,7 @@
 <map id="include/Storage.hpp" name="include/Storage.hpp">
-<area shape="rect" id="node11" href="$Type_8hpp.html" title="Type.hpp" alt="" coords="831,155,907,181"/>
-<area shape="rect" id="node17" href="$cytnx__error_8hpp.html" title="cytnx_error.hpp" alt="" coords="270,237,382,263"/>
-<area shape="rect" id="node20" href="$Device_8hpp.html" title="Device.hpp" alt="" coords="718,155,806,181"/>
-<area shape="rect" id="node21" href="$intrusive__ptr__base_8hpp.html" title="intrusive_ptr_base.hpp" alt="" coords="1439,155,1592,181"/>
-<area shape="rect" id="node27" href="$Scalar_8hpp.html" title="Scalar.hpp" alt="" coords="563,80,647,107"/>
+<area shape="rect" id="node11" href="$Type_8hpp.html" title="Type.hpp" alt="" coords="973,155,1049,181"/>
+<area shape="rect" id="node17" href="$cytnx__error_8hpp.html" title="cytnx_error.hpp" alt="" coords="250,237,362,263"/>
+<area shape="rect" id="node20" href="$Device_8hpp.html" title="Device.hpp" alt="" coords="810,155,898,181"/>
+<area shape="rect" id="node21" href="$intrusive__ptr__base_8hpp.html" title="intrusive_ptr_base.hpp" alt="" coords="1612,155,1765,181"/>
+<area shape="rect" id="node27" href="$Scalar_8hpp.html" title="Scalar.hpp" alt="" coords="680,80,764,107"/>
 </map>

@@ -68,7 +68,7 @@ var searchData=
   ['sqrt_5fswap',['sqrt_swap',['../namespacecytnx_1_1qgates.html#a064386782507fdcafc67a92679e83d4f',1,'cytnx::qgates']]],
   ['stat_2ehpp',['stat.hpp',['../stat_8hpp.html',1,'']]],
   ['step',['step',['../classcytnx_1_1Accessor.html#a6b86335651e6d8c9da971e5337545178',1,'cytnx::Accessor']]],
-  ['storage',['Storage',['../classcytnx_1_1Storage.html',1,'cytnx::Storage'],['../classcytnx_1_1Tensor.html#a0fd5918a0f64ebd74fe34cb8b8164c30',1,'cytnx::Tensor::storage()'],['../classcytnx_1_1Storage.html#a281c06bd64e9ea3338083c18c4c32eda',1,'cytnx::Storage::Storage(const unsigned long long &amp;size, const unsigned int &amp;dtype=Type.Double, int device=-1)'],['../classcytnx_1_1Storage.html#a49037d5a58e68e63998817fba38de5e2',1,'cytnx::Storage::Storage()']]],
+  ['storage',['Storage',['../classcytnx_1_1Storage.html',1,'cytnx::Storage'],['../classcytnx_1_1Storage.html#a281c06bd64e9ea3338083c18c4c32eda',1,'cytnx::Storage::Storage(const unsigned long long &amp;size, const unsigned int &amp;dtype=Type.Double, int device=-1)'],['../classcytnx_1_1Storage.html#a49037d5a58e68e63998817fba38de5e2',1,'cytnx::Storage::Storage()'],['../classcytnx_1_1Tensor.html#a0fd5918a0f64ebd74fe34cb8b8164c30',1,'cytnx::Tensor::storage()']]],
   ['storage_2ecpp',['Storage.cpp',['../Storage_8cpp.html',1,'']]],
   ['storage_2ehpp',['Storage.hpp',['../Storage_8hpp.html',1,'']]],
   ['storage_5fbase_2ecpp',['Storage_base.cpp',['../Storage__base_8cpp.html',1,'']]],

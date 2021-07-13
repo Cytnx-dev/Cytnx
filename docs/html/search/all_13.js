@@ -1,8 +1,12 @@
 var searchData=
 [
+  ['operator_2a_3d_3cscalar_3a_3asproxy_20_3e',['operator*=&lt;Scalar::Sproxy &gt;',['../namespacecytnx.html#a54ba9e5274a28bb2160f2cc9bc414fea',1,'cytnx']]],
   ['operator_2a_3d_3ctensor_3a_3atproxy_20_3e',['operator*=&lt;Tensor::Tproxy &gt;',['../namespacecytnx.html#ad527e12cfcb2cee68faf6602afb3f0ab',1,'cytnx']]],
+  ['operator_2b_3d_3cscalar_3a_3asproxy_20_3e',['operator+=&lt;Scalar::Sproxy &gt;',['../namespacecytnx.html#a96baaf630f3a0e8706093541ab6107b0',1,'cytnx']]],
   ['operator_2b_3d_3ctensor_3a_3atproxy_20_3e',['operator+=&lt;Tensor::Tproxy &gt;',['../namespacecytnx.html#af3b6a087b080e714820da4fb60bd863c',1,'cytnx']]],
+  ['operator_2d_3d_3cscalar_3a_3asproxy_20_3e',['operator-=&lt;Scalar::Sproxy &gt;',['../namespacecytnx.html#a6780e0a3d53e5f044fe1789034e75201',1,'cytnx']]],
   ['operator_2d_3d_3ctensor_3a_3atproxy_20_3e',['operator-=&lt;Tensor::Tproxy &gt;',['../namespacecytnx.html#a26cbfc7799a0c4c83bb489d3a26b26ac',1,'cytnx']]],
+  ['operator_2f_3d_3cscalar_3a_3asproxy_20_3e',['operator/=&lt;Scalar::Sproxy &gt;',['../namespacecytnx.html#ad9c98ee74f40556028589fcd53373990',1,'cytnx']]],
   ['operator_2f_3d_3ctensor_3a_3atproxy_20_3e',['operator/=&lt;Tensor::Tproxy &gt;',['../namespacecytnx.html#abe24bbb6c8a7a61152a0f826914cfc55',1,'cytnx']]],
   ['tag',['tag',['../classcytnx_1_1UniTensor.html#a6277ec38895990021ec885f98791b47c',1,'cytnx::UniTensor']]],
   ['tensor',['Tensor',['../classcytnx_1_1Tensor.html',1,'cytnx::Tensor'],['../classcytnx_1_1Tensor.html#afdcff16b2096d10b524161be52ba767e',1,'cytnx::Tensor::Tensor()']]],
