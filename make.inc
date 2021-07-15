@@ -1,6 +1,6 @@
 
 ## set default compiler:
-GCC=g++
+GCC=clang++
 OPTIM= -g -O3
 
 
@@ -15,7 +15,7 @@ GPU_Enable=0
 CUDA_PATH=/usr/local/cuda
 
 ## compile with Openmp support:
-OMP_Enable=1
+OMP_Enable=0
 
 ## compile with MKL library:
 MKL_Enable=1

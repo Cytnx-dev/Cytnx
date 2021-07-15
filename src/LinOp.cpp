@@ -53,8 +53,8 @@ namespace cytnx{
             for(auto it = this->_elems.begin(); it!=this->_elems.end(); it++){
                 Tensor e_i = it->second.second;
                 auto &v_i = it->second.first;
-                for(cytnx_uint64 j=0;j<v_j.size();j++){
-                    out(it->first) += e_i(j)*Tin(v_i(j));
+                for(cytnx_uint64 j=0;j<v_i.size();j++){
+                    out(it->first) += e_i(j)*Tin(v_i[j]);
                 } 
             }
             
