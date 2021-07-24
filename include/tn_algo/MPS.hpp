@@ -41,9 +41,39 @@ namespace cytnx{
                 
         };
 
+        // finite size:
         class RegularMPS: public MPS_impl{
             public:
                 
+                cytnx_int64 S_loc;
+                cytnx_int64 phys_dim;
+                cytnx_int64 virt_dim;
+
+
+                // only for this:
+                RegularMPS(): S_loc(0), phys_dim(-1), virt_dim(-1){};
+
+
+                // specialization:
+                std::ostream& Print(std::ostream &os);
+                cytnx_uint64 size(){return this->_TNs.size();};    
+                void Init(const cytnx_uint64 &N, const cytnx_uint64 &phys_dim, const cytnx_uint64 &virt_dim);
+
+
+
+        };
+
+        // infinite size:
+        class iMPS: public MPS_impl{
+            public:
+                
+                cytnx_int64 phys_dim;
+                cytnx_int64 virt_dim;
+
+
+                // only for this:
+                iMPS(): phys_dim(-1), virt_dim(-1){};
+
 
                 // specialization:
                 std::ostream& Print(std::ostream &os);
@@ -63,11 +93,18 @@ namespace cytnx{
 
                 ///@cond
                 boost::intrusive_ptr<MPS_impl> _impl;
-                MPS(): _impl(new RegularMPS()){
+                MPS(): _impl(new MPS_impl()){
                     // currently default init is RegularMPS;:
                 };
 
-                MPS(const cytnx_uint64 &N, const cytnx_uint64 &phys_dim, const cytnx_uint64 &virt_dim): _impl(new RegularMPS()){
+                MPS(const cytnx_uint64 &N, const cytnx_uint64 &phys_dim, const cytnx_uint64 &virt_dim, const cytnx_int64 &mps_type=0): _impl(new MPS_impl()){
+                    if(mps_type==0){
+                        this->_impl =boost::intrusive_ptr<MPS_impl>(new RegularMPS());
+                    }else if(mps_type==1){
+                        this->_impl =boost::intrusive_ptr<MPS_impl>(new iMPS());
+                    }else{
+                        cytnx_error_msg(true,"[ERROR] invalid MPS type.%s","\n");
+                    }
                     this->Init(N,phys_dim, virt_dim);
                 };
 

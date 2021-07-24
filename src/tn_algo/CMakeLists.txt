@@ -2,6 +2,7 @@ target_sources_local(cytnx
   PRIVATE
     MPS.cpp
     RegularMPS.cpp
+    iMPS.cpp
     MPS_base.cpp
 
     MPO.cpp

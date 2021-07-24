@@ -106,7 +106,7 @@ OBJS += LinOp.o Storage.o Tensor.o Accessor.o Generator.o Physics.o
 OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o UniTensor_base.o DenseUniTensor.o SparseUniTensor.o UniTensor.o Bond.o Symmetry.o contraction_tree.o search_tree.o
 
 ## TN 
-OBJS += MPO.o RegularMPO.o MPO_base.o MPS.o RegularMPS.o MPS_base.o
+OBJS += MPO.o RegularMPO.o MPO_base.o MPS.o RegularMPS.o iMPS.o MPS_base.o
 
 
 
@@ -297,6 +297,8 @@ histogram.o: $(CytnxPATH)/src/stat/histogram.cpp $(CytnxPATH)/include/stat.hpp
 MPS.o: $(CytnxPATH)/src/tn_algo/MPS.cpp $(CytnxPATH)/include/tn_algo/MPS.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 RegularMPS.o: $(CytnxPATH)/src/tn_algo/RegularMPS.cpp $(CytnxPATH)/include/tn_algo/MPS.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+iMPS.o: $(CytnxPATH)/src/tn_algo/iMPS.cpp $(CytnxPATH)/include/tn_algo/MPS.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 MPS_base.o: $(CytnxPATH)/src/tn_algo/MPS_base.cpp $(CytnxPATH)/include/tn_algo/MPS.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<

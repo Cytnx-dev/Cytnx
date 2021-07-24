@@ -30,7 +30,8 @@ See The following user guide for install and using of cytnx:
     v0.7.4
     1. [Enhance] Lanczos_ER Lanczos_Gnd not convergence with maxiter will now gives warning instead of error. 
     2. [Enhance] Arithmetic of UniTensor(&)constant now preserve the label of input UniTensor. 
-    3. [New] Add MPS class.
+    3. [New] Add MPS class with two variant: iMPS, RegularMPS. 
+
 
     v0.7.3
     1. [Fix] bug for Get slice does not reduce when dim=1. 
