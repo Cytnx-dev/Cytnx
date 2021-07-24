@@ -8,6 +8,10 @@ namespace cytnx{
             return os;
         }
 
+        void MPS_impl::Init(const cytnx_uint64 &N , const cytnx_uint64 &phys_dim, const cytnx_uint64 &virt_dim){
+            cytnx_error_msg(true,"[ERROR] MPS_Base should not be called. Please initialize the MPS first.%s","\n");
+        }
+
     }
 
 }

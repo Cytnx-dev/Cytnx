@@ -12,6 +12,13 @@ namespace cytnx{
             return os;
         }
 
+
+        void RegularMPS::Init(const cytnx_uint64 &N, const cytnx_uint64 &phys_dim, const cytnx_uint64 &virt_dim){
+            this->_TNs.resize(N);
+            
+        }
+
+
     }
 
 }

@@ -27,5 +27,5 @@
 #include "utils/print.hpp"
 
 #include "tn_algo/MPS.hpp"
-
+#include "tn_algo/MPO.hpp"
 #endif
