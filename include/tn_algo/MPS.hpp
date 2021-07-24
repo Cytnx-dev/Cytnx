@@ -34,7 +34,11 @@ namespace cytnx{
                     return out;                   
                 }
 
-
+                
+                std::vector<UniTensor>& get_data(){
+                    return this->_TNs;
+                }
+                
                 virtual std::ostream& Print(std::ostream &os);
                 virtual cytnx_uint64 size(){return 0;}; 
                 virtual void Init(const cytnx_uint64 &N, const cytnx_uint64 &phys_dim, const cytnx_uint64 &virt_dim);
@@ -98,14 +102,7 @@ namespace cytnx{
                 };
 
                 MPS(const cytnx_uint64 &N, const cytnx_uint64 &phys_dim, const cytnx_uint64 &virt_dim, const cytnx_int64 &mps_type=0): _impl(new MPS_impl()){
-                    if(mps_type==0){
-                        this->_impl =boost::intrusive_ptr<MPS_impl>(new RegularMPS());
-                    }else if(mps_type==1){
-                        this->_impl =boost::intrusive_ptr<MPS_impl>(new iMPS());
-                    }else{
-                        cytnx_error_msg(true,"[ERROR] invalid MPS type.%s","\n");
-                    }
-                    this->Init(N,phys_dim, virt_dim);
+                    this->Init(N,phys_dim, virt_dim,mps_type);
                 };
 
                 MPS(const MPS &rhs){
@@ -121,7 +118,14 @@ namespace cytnx{
                
                 // Initialization API:
                 //-----------------------
-                MPS& Init(const cytnx_uint64 &N, const cytnx_uint64 &phys_dim, const cytnx_uint64 &virt_dim){
+                MPS& Init(const cytnx_uint64 &N, const cytnx_uint64 &phys_dim, const cytnx_uint64 &virt_dim, const cytnx_int64 &mps_type=0){
+                    if(mps_type==0){
+                        this->_impl =boost::intrusive_ptr<MPS_impl>(new RegularMPS());
+                    }else if(mps_type==1){
+                        this->_impl =boost::intrusive_ptr<MPS_impl>(new iMPS());
+                    }else{
+                        cytnx_error_msg(true,"[ERROR] invalid MPS type.%s","\n");
+                    }
                     this->_impl->Init(N, phys_dim, virt_dim);
                     return *this;
                 }
@@ -130,6 +134,10 @@ namespace cytnx{
                 cytnx_uint64 size(){
                     return this->_impl->size();
                 }                
+
+                std::vector<UniTensor> &data(){return this->_impl->get_data();};
+
+                
 
 
         };

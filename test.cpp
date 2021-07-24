@@ -73,8 +73,12 @@ int main(int argc, char *argv[]){
     auto mps = cytnx::tn_algo::MPS();
     auto mpo = cytnx::tn_algo::MPO();
 
-    cout << mps ;
+    mps.Init(4,2,6,1);
+
+    cout << mps.data() ;
     cout << mpo ;   
+    auto xyx = arange(10);
+    cout << xyx;
     return 0;
 
     auto dty = Type.Float;
