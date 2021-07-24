@@ -43,7 +43,7 @@ def optimize_psi(psivec, functArgs, maxit=2, krydim=4):
 
 ##### Set bond dimensions and simulation options
 chi = 32;
-Nsites = 20;
+Nsites = 4;
 numsweeps = 4 # number of DMRG sweeps
 maxit = 2 # iterations of Lanczos method
 krydim = 4 # dimension of Krylov subspace

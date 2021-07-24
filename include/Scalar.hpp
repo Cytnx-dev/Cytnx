@@ -10,6 +10,7 @@
 #include <string>
 #include <iostream>
 #include <cmath>
+#include <type_traits>
 namespace cytnx{
 
 
@@ -2081,6 +2082,8 @@ namespace cytnx{
 
     
     //ladd: c + Scalar:
+
+
     Scalar operator+( const cytnx_complex128 &lc, const Scalar &rs);//{return rs.radd(lc);};
     Scalar operator+( const cytnx_complex64 &lc, const Scalar &rs);//{return rs.radd(lc);};
     Scalar operator+( const cytnx_double &lc, const Scalar &rs);//{return rs.radd(lc);};

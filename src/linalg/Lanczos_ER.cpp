@@ -175,7 +175,7 @@ namespace cytnx{
  
                     }//for iter
                     if(cvg==false){
-                        cytnx_error_msg(true,"[ERROR][Lanczos] Fail to converge at eigv [%d], try increasing maxiter?%s",ik,"\n");
+                        cytnx_warning_msg(true,"[WARNING][Lanczos] Fail to converge at eigv [%d], try increasing maxiter?\n Note:: ignore if this is intended.%s",ik,"\n");
                     }
                     converged_ev.push_back(buffer[0].clone());
                     out[0].storage().at<cytnx_double>(ik) = Elast;
@@ -273,7 +273,7 @@ namespace cytnx{
  
                     }//for iter
                     if(cvg==false){
-                        cytnx_error_msg(true,"[ERROR][Lanczos] Fail to converge at eigv [%d], try increasing maxiter?%s",ik,"\n");
+                        cytnx_warning_msg(true,"[WARNING][Lanczos] Fail to converge at eigv [%d], try increasing maxiter?\n Note:: ignore if this is intended.%s",ik,"\n");
                     }
                     converged_ev.push_back(buffer[0].clone());
                     out[0][{ac(ik)}] = Elast;
@@ -369,7 +369,7 @@ namespace cytnx{
  
                     }//for iter
                     if(cvg==false){
-                        cytnx_error_msg(true,"[ERROR][Lanczos] Fail to converge at eigv [%d], try increasing maxiter?%s",ik,"\n");
+                        cytnx_warning_msg(true,"[WARNING][Lanczos] Fail to converge at eigv [%d], try increasing maxiter?\n Note:: ignore if this is intended.%s",ik,"\n");
                     }
                     converged_ev.push_back(buffer[0].clone());
                     out[0][{ac(ik)}] = Elast;
@@ -465,7 +465,7 @@ namespace cytnx{
  
                     }//for iter
                     if(cvg==false){
-                        cytnx_error_msg(true,"[ERROR][Lanczos] Fail to converge at eigv [%d], try increasing maxiter?%s",ik,"\n");
+                        cytnx_warning_msg(true,"[WARNING][Lanczos] Fail to converge at eigv [%d], try increasing maxiter?\n Note:: ignore if this is intended.%s",ik,"\n");
                     }
                     converged_ev.push_back(buffer[0].clone());
                     out[0][{ac(ik)}] = Elast;

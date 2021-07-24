@@ -26,4 +26,6 @@
 #include "utils/is.hpp"
 #include "utils/print.hpp"
 
+#include "tn_algo/MPS.hpp"
+
 #endif

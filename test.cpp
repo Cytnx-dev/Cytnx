@@ -70,6 +70,11 @@ class MyOp2: public LinOp{
 
 int main(int argc, char *argv[]){
 
+    auto mps = cytnx::tn_algo::MPS();
+
+    cout << mps ;
+        
+    return 0;
 
     auto dty = Type.Float;
     auto vec = arange(10).astype(dty);

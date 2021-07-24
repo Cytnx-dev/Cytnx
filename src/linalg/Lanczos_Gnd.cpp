@@ -87,7 +87,7 @@ namespace cytnx{
             }//iteration
                 
             if(cvg_fin==false){
-                cytnx_error_msg(true,"[ERROR] iteration not converge after Maxiter!.%s","\n");
+                cytnx_warning_msg(true,"[WARNING] iteration not converge after Maxiter!.\n :: Note :: ignore if this is intended","\n");
             }
 
             
@@ -200,7 +200,7 @@ namespace cytnx{
             }//iteration
                 
             if(cvg_fin==false){
-                cytnx_error_msg(true,"[ERROR] iteration not converge after Maxiter!.%s","\n");
+                cytnx_warning_msg(true,"[WARNING] iteration not converge after Maxiter!.\n :: Note :: ignore if this is intended","\n");
             }
 
             

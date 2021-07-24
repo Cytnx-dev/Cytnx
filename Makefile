@@ -40,10 +40,10 @@ else
 endif
 
 ifeq ($(MKL_Enable),1)
-  CCFLAGS += -std=c++11 ${OPTIM} -Wformat=0 -m64 -fPIC -DUNI_MKL -w -Wno-c++11-narrowing -DMKL_ILP64 #-DUNI_DEBUG
+  CCFLAGS += -std=c++11 ${OPTIM} -Wformat=0 -m64 -fPIC -DUNI_MKL -w -DMKL_ILP64 -Wno-c++11-narrowing #-DUNI_DEBUG -Wno-c++11-narrowing
   LDFLAGS += $(DOCKER_MKL) -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -ldl -lm 
 else
-  CCFLAGS += -std=c++11 ${OPTIM} -Wformat=0 -fPIC -w -Wno-c++11-narrowing -g #-DUNI_DEBUG
+  CCFLAGS += -std=c++11 ${OPTIM} -Wformat=0 -fPIC -w -g #-DUNI_DEBUG -Wno-c++11-narrowing
   LDFLAGS += -llapacke -lblas -lstdc++  
 endif
 
@@ -104,6 +104,10 @@ OBJS = Scalar.o Storage_base.o BoolStorage.o Uint16Storage.o Int16Storage.o Uint
 
 OBJS += LinOp.o Storage.o Tensor.o Accessor.o Generator.o Physics.o
 OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o UniTensor_base.o DenseUniTensor.o SparseUniTensor.o UniTensor.o Bond.o Symmetry.o contraction_tree.o search_tree.o
+
+## TN 
+OBJS += MPS.o RegularMPS.o MPS_base.o
+
 
 
 ## Utils
@@ -287,6 +291,15 @@ Sort.o : $(CytnxPATH)/src/algo/Sort.cpp $(CytnxPATH)/include/algo.hpp
 histogram.o: $(CytnxPATH)/src/stat/histogram.cpp $(CytnxPATH)/include/stat.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
+
+## TN
+#############################
+MPS.o: $(CytnxPATH)/src/tn_algo/MPS.cpp $(CytnxPATH)/include/tn_algo/MPS.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+RegularMPS.o: $(CytnxPATH)/src/tn_algo/RegularMPS.cpp $(CytnxPATH)/include/tn_algo/MPS.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+MPS_base.o: $(CytnxPATH)/src/tn_algo/MPS_base.cpp $(CytnxPATH)/include/tn_algo/MPS.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 
 ## linalg_internal

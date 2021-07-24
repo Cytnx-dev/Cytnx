@@ -1,6 +1,6 @@
 
 ## set default compiler:
-GCC=clang++
+GCC=g++
 OPTIM= -g -O3
 
 
