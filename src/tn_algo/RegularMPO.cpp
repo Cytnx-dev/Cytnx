@@ -12,6 +12,12 @@ namespace cytnx{
             return os;
         }
 
+        UniTensor RegularMPO::get_op(const cytnx_uint64 &site_idx){
+            cytnx_error_msg(site_idx >= this->_TNs.size(),"[RegularMPO][ERROR] index out of bound%s","\n");
+            return this->_TNs[site_idx];
+        }
+
+
     }
 
 }

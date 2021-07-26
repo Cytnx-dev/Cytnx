@@ -70,15 +70,40 @@ class MyOp2: public LinOp{
 
 int main(int argc, char *argv[]){
 
-    auto mps = cytnx::tn_algo::MPS();
+    //auto mps = cytnx::tn_algo::MPS();
     auto mpo = cytnx::tn_algo::MPO();
 
-    mps.Init(4,2,6,1);
+    //mps.Init(4,2,6,1);
 
-    cout << mps.data() ;
-    cout << mpo ;   
-    auto xyx = arange(10);
-    cout << xyx;
+    //cout << mps.data();
+    cout << mpo;   
+
+    //construct MPO:
+    double h = 0.4;
+    auto sz = cytnx::physics::pauli("z").real();
+    auto sx = cytnx::physics::pauli("x").real();
+    auto II  = cytnx::eye(2);
+
+    auto tM = cytnx::zeros({3,3,2,2});
+    tM(0,0) = II;
+    tM(-1,-1) = II;
+    tM(0,2) = -h*sx;
+    tM(1,2) = sz;
+    auto uM = UniTensor(tM,0);
+        
+    mpo.assign(7,uM);
+    
+
+    auto Ddata = mpo.get_all();
+
+    // data checking no redundant memory!    
+    cout << is(Ddata[0],Ddata[1]) << endl;
+
+    //auto xyx = arange(10);
+    //cout << xyx;
+
+
+
     return 0;
 
     auto dty = Type.Float;

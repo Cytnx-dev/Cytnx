@@ -8,5 +8,8 @@ target_sources_local(cytnx
     MPO.cpp
     RegularMPO.cpp
     MPO_base.cpp
+
+    DMRG.cpp
+
 )
 

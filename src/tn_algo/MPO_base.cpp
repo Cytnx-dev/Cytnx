@@ -8,6 +8,11 @@ namespace cytnx{
             return os;
         }
 
+        UniTensor MPO_impl::get_op(const cytnx_uint64 &site_idx){
+            cytnx_error_msg(true,"[ERROR] MPO_Base should not be called. Please initialize the MPO first.%s","\n");
+            return UniTensor();
+        }
+
     }
 
 }

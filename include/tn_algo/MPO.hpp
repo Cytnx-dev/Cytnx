@@ -38,7 +38,7 @@ namespace cytnx{
 
                 virtual std::ostream& Print(std::ostream &os);
                 virtual cytnx_uint64 size(){return 0;}; 
-                
+                virtual UniTensor get_op(const cytnx_uint64 &site_idx);                
         };
 
 
@@ -46,7 +46,7 @@ namespace cytnx{
             public:
                 std::ostream& Print(std::ostream &os);
                 cytnx_uint64 size(){return this->_TNs.size();};    
-    
+                UniTensor get_op(const cytnx_uint64 &site_idx);                
         };
 
 
@@ -76,12 +76,33 @@ namespace cytnx{
                     return this->_impl->size();
                 }                
 
+                void append(const UniTensor &rc){
+                    this->_impl->_TNs.push_back(rc);
+                }
+                
+                void assign(const cytnx_uint64 &N, const UniTensor &rc){
+                    this->_impl->_TNs.assign(N,rc);
+                }
+
+                std::vector<UniTensor> & get_all(){
+                    return this->_impl->_TNs;
+                } 
+    
+                const std::vector<UniTensor> & get_all() const{
+                    return this->_impl->_TNs;
+                }
+
+                // expose to user:
+                virtual UniTensor get_op(const cytnx_uint64 &site_idx){
+                    return this->_impl->get_op(site_idx);
+                };
+
 
         };
 
         std::ostream& operator<<(std::ostream& os, const MPO &in);
 
-        
+         
 
 
 

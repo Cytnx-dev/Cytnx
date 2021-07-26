@@ -106,7 +106,7 @@ OBJS += LinOp.o Storage.o Tensor.o Accessor.o Generator.o Physics.o
 OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o UniTensor_base.o DenseUniTensor.o SparseUniTensor.o UniTensor.o Bond.o Symmetry.o contraction_tree.o search_tree.o
 
 ## TN 
-OBJS += MPO.o RegularMPO.o MPO_base.o MPS.o RegularMPS.o iMPS.o MPS_base.o
+OBJS += DMRG.o MPO.o RegularMPO.o MPO_base.o MPS.o RegularMPS.o iMPS.o MPS_base.o
 
 
 
@@ -307,6 +307,9 @@ MPO.o: $(CytnxPATH)/src/tn_algo/MPO.cpp $(CytnxPATH)/include/tn_algo/MPO.hpp
 RegularMPO.o: $(CytnxPATH)/src/tn_algo/RegularMPO.cpp $(CytnxPATH)/include/tn_algo/MPO.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 MPO_base.o: $(CytnxPATH)/src/tn_algo/MPO_base.cpp $(CytnxPATH)/include/tn_algo/MPO.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+
+DMRG.o: $(CytnxPATH)/src/tn_algo/DMRG.cpp $(CytnxPATH)/include/tn_algo/DMRG.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 ## linalg_internal
