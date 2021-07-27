@@ -43,7 +43,7 @@ namespace cytnx{
                 friend class MPO;
 
                 void initialize();
-                void sweep();
+                Scalar sweep(const bool &verbose,const cytnx_int64 &maxit, const cytnx_int64 &krydim);
                                 
 
         };
@@ -58,7 +58,7 @@ namespace cytnx{
 
                 ///@cond
                 boost::intrusive_ptr<DMRG_impl> _impl;
-                DMRG(MPO mpo, MPS mps, const cytnx_uint64 &maxit=2, const cytnx_uint64 &krydim=4, std::vector<MPS> ortho_mps={}, const double &weight=30): _impl(new DMRG_impl()){
+                DMRG(MPO mpo, MPS mps, std::vector<MPS> ortho_mps={}, const double &weight=30): _impl(new DMRG_impl()){
                     // currently default init is DMRG_impl;
                 
                     // mpo and mps:
@@ -69,9 +69,6 @@ namespace cytnx{
                     this->_impl->ortho_mps = ortho_mps;
                     this->_impl->weight = weight;
 
-                    // iterative solver param:
-                    this->_impl->maxit = maxit;
-                    this->_impl->krydim = krydim; 
 
                 };
 
@@ -91,11 +88,12 @@ namespace cytnx{
                     return *this;
                 }                
 
-                DMRG& sweep(){
-                    this->_impl->sweep();
-                    return *this;
+                // return the current energy
+                Scalar sweep(const bool &verbose=false, const cytnx_int64 &maxit=4000, const cytnx_int64 &krydim=4){
+                    return this->_impl->sweep(verbose,maxit,krydim);
                 }
 
+                
 
         };
 

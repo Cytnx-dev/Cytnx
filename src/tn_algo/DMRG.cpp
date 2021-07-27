@@ -4,6 +4,9 @@
 #include "LinOp.hpp"
 #include "linalg.hpp"
 #include <tuple>
+#include <iomanip>
+#include <iostream>
+#include "utils/vec_print.hpp"
 using namespace std;
 
 namespace cytnx{
@@ -27,7 +30,7 @@ namespace cytnx{
                         UniTensor &R  = functArgs[3];
 
                         std::vector<cytnx_int64> pshape = {L.shape()[1],M1.shape()[2],M2.shape()[2],R.shape()[1]};
-
+                        //vec_print(std::cout,pshape);
                         this->anet.FromString({"psi: ;-1,-2,-3,-4",
                                                "L: ;-5,-1,0",
                                                "R: ;-7,-4,3",
@@ -65,13 +68,12 @@ namespace cytnx{
 
         };
 
-        std::vector<Tensor> optimize_psi(Tensor psivec, std::vector<UniTensor> functArgs, const cytnx_uint64 &maxit=2, const cytnx_uint64 &krydim=4, std::vector<Tensor> ortho_mps = {}, const double &weight=30){
+        std::vector<Tensor> optimize_psi(Tensor psivec, std::vector<UniTensor> functArgs, const cytnx_uint64 &maxit=4000, const cytnx_uint64 &krydim=4, std::vector<Tensor> ortho_mps = {}, const double &weight=30){
 
             
             auto H = Hxx(psivec.shape()[0],functArgs,ortho_mps,weight,psivec.dtype(),psivec.device());
 
-            auto out = linalg::Lanczos_ER(&H,1,true,maxit,1.0e-14,false,Tensor(),krydim);
-
+            auto out = linalg::Lanczos_Gnd(&H,1.0e-14,true,Tensor(),false, maxit);
             return out;
 
         }
@@ -139,17 +141,19 @@ namespace cytnx{
                 auto &hLR = hLRs[ip];
                 
                 hLR[0] = hL0; hLR.back() = hR0;
-
+                
+                //anet = cytnx.Network("hL_AMAH.net")
+                auto anet = Network();
+                anet.FromString({"hL: ;-1,-2",
+                                 "Av: -1,-4;1",
+                                 "Ap: -2,-4;2",
+                                 "TOUT: ;1,2"
+                                });
                 for(cytnx_int64 p=0;p<this->mps.size()-1;p++){
-                    //anet = cytnx.Network("hL_AMAH.net")
                     //anet.PutUniTensors(["hL","Av","Ap"],[hLR[p],self.mps.A[p],omps.A[p].Conj()],is_clone=False);
 
-                    // hard coded network:
-                    auto Lenv = hLR[p].relabel({-1,-2});
-                    auto Av = this->mps.data()[p].relabel({-1,-4,1});
-                    auto Ap = this->mps.data()[p].Conj(); Ap.set_labels({-2,-4,2});
-                    
-                    hLR[p+1] = Network::Contract({Lenv,Av,Ap},";1,2").Launch(true);
+                    anet.PutUniTensors({"hL","Av","Ap"},{hLR[p],this->mps.data()[p],omps.data()[p].Conj()},false);
+                    hLR[p+1] = anet.Launch(true);
                 }
                 
 
@@ -161,7 +165,9 @@ namespace cytnx{
 
 
 
-        void DMRG_impl::sweep(){
+        Scalar DMRG_impl::sweep(const bool &verbose, const cytnx_int64 &maxit, const cytnx_int64 &krydim){
+
+            Scalar Entemp;
             
             // a. Optimize from right-to-left:
             /*
@@ -192,7 +198,8 @@ namespace cytnx{
             */
             
             for(cytnx_int64 p=this->mps.size()-2;p>-1;p--){ //in range(self.mps.Nsites()-2,-1,-1): 
-
+                if(verbose) std::cout << "  [<<] upd loc:" << p << "| " << std::flush;
+                
                 cytnx_int64 dim_l  = this->mps.data()[p].shape()[0];
                 cytnx_int64 dim_r = this->mps.data()[p+1].shape()[2];
 
@@ -204,7 +211,7 @@ namespace cytnx{
 
                 cytnx_uint64 new_dim = min(min(dim_l*this->mps.phys_dim(),dim_r*this->mps.phys_dim()),this->mps.virt_dim());
                 
-
+                //cout << "bkpt1\n";
                 // calculate local ortho_mps:
                 //omps = []
                 std::vector<Tensor> omps;
@@ -226,9 +233,9 @@ namespace cytnx{
                 }
 
                                                
-                auto out = optimize_psi(psi_T, {this->LR[p],this->mpo.get_op(p),this->mpo.get_op(p+1),this->LR[p+2]}, this->maxit, this->krydim, omps,this->weight);
-                psi_T = out[0];
-                auto Entemp = out[1].item();
+                auto out = optimize_psi(psi_T, {this->LR[p],this->mpo.get_op(p),this->mpo.get_op(p+1),this->LR[p+2]}, maxit, krydim, omps,this->weight);
+                psi_T = out[1];
+                Entemp = out[0].item();
 
                 psi_T.reshape_(dim_l, this->mps.phys_dim(), this->mps.phys_dim(), dim_r); //convert psi back to 4-leg form 
                 psi = UniTensor(psi_T,2);    
@@ -253,33 +260,155 @@ namespace cytnx{
                 // A[p+1].print_diagram()
 
                 // update LR from right to left:
-                /*
-                anet = cytnx.Network("R_AMAH.net")
-                anet.PutUniTensors(["R","B","M","B_Conj"],[self.LR[p+2],self.mps.A[p+1],self.mpo.get_op(p+1),self.mps.A[p+1].Conj()],is_clone=False)
-                self.LR[p+1] = anet.Launch(optimal=True)
+                //anet = cytnx.Network("R_AMAH.net")
+                anet.FromString({"R: ;-2,-1,-3",
+                                 "B: 1;-4,-1",
+                                 "M: ;0,-2,-4,-5",
+                                 "B_Conj: 2;-5,-3",
+                                 "TOUT: ;0,1,2"
+                                });
 
+                anet.PutUniTensors({"R","B","M","B_Conj"},{this->LR[p+2],this->mps.data()[p+1],this->mpo.get_op(p+1),this->mps.data()[p+1].Conj()},false);
+                this->LR[p+1] = anet.Launch(true);
 
-                # update hLR from right to left for excited states:
-                for ip in range(len(self.ortho_mps)):
-                    omps = self.ortho_mps[ip]
-                    anet = cytnx.Network("hR_AMAH.net")
-                    anet.PutUniTensors(["hR","Bv","Bp"],[self.hLRs[ip][p+2],self.mps.A[p+1],omps.A[p+1].Conj()],is_clone=False)
-                    self.hLRs[ip][p+1] = anet.Launch(optimal=True)
                 
-                #print('Sweep[r->l]: %d/%d, Loc:%d,Energy: %f'%(k,numsweeps,p,Ekeep[-1]))
-                */
-            }
-            /*
-            self.mps.A[0].set_rowrank(1)
-            _,self.mps.A[0] = cytnx.linalg.Svd(self.mps.A[0],is_U=False, is_vT=True)
-            self.mps.S_loc = -1
-            */
-            
+                // update hLR from right to left for excited states:
+                //anet = cytnx.Network("hR_AMAH.net")
+                anet.FromString({"hR: ;-1,-2",
+                                 "Bv: 1;-4,-1",
+                                 "Bp: 2,-4;-2",
+                                 "TOUT: ;1,2"
+                                });
 
+                for(cytnx_int64 ip=0; ip<this->ortho_mps.size(); ip++){
+                    auto omps = this->ortho_mps[ip];
+                    anet.PutUniTensors({"hR","Bv","Bp"},{this->hLRs[ip][p+2],this->mps.data()[p+1],omps.data()[p+1].Conj()},false);
+                    this->hLRs[ip][p+1] = anet.Launch(true);
+                }
+                //print('Sweep[r->l]: %d/%d, Loc:%d,Energy: %f'%(k,numsweeps,p,Ekeep[-1]))
+                if(verbose) std::cout << "Energy: " << std::setprecision(13) << Entemp << std::endl;
+
+            }//r->l
+            
+            this->mps.data()[0].set_rowrank(1);
+            auto tout = linalg::Svd(this->mps.data()[0],false, true);
+            this->mps.data()[0] = tout[1];
+            this->mps.S_loc() = -1;
+            
+            // a.2 Optimize from left-to-right:
+            /* 
+                psi:                   Projector:
+              
+                --A[p]--A[p+1]--s--              --         --
+                   |       |                     |    | |    |
+                                                LR[p]-M-M-LR[p+1]
+                                                 |    | |    |
+                                                 --         --
+              b.2 Transfer matrix from left to right :
+               LR[0]:       LR[1]:                   
+             
+                   ---          ---A[0]---                 
+                   |            |    |     
+                   L0-         LR[0]-M----    ......
+                   |            |    |
+                   ---          ---A*[0]--
+             
+              c.2 For Left to Right, we want A's to be in shape
+                         -------------      
+                        /             \     
+               virt ____| chi     2   |____ phys
+                        |             |     
+                        |        chi  |____ virt        
+                        \             /     
+                         -------------      
+            */
+            for(cytnx_int64 p=0; p< this->mps.size()-1;p++){
+                if(verbose) std::cout << "  [>>] upd loc:" << p << "| ";
+                cytnx_int64 dim_l = this->mps.data()[p].shape()[0];
+                cytnx_int64 dim_r = this->mps.data()[p+1].shape()[2];
+
+                auto psi =  Contract(this->mps.data()[p],this->mps.data()[p+1]); // contract
+                auto lbl = psi.labels(); // memorize label
+                auto psi_T = psi.get_block_(); psi_T.flatten_();// flatten to 1d
+
+                cytnx_int64 new_dim = min(min(dim_l*this->mps.phys_dim(),dim_r*this->mps.phys_dim()),this->mps.virt_dim());
+
+                // calculate local ortho_mps:
+                std::vector<Tensor> omps;
+                //anet = cytnx.Network("hL_AA_hR.net");
+                auto anet = Network();
+                anet.FromString({"hL: ;-1,1"       ,
+                                 "psi: ;1,2,3,4"   ,
+                                 "hR: ;-2,4"       ,
+                                 "TOUT: ;-1,2,3,-2",
+                                });
+
+                for(cytnx_int64 ip=0;ip< this->ortho_mps.size();ip++){
+                    auto opsi = Contract(this->ortho_mps[ip].data()[p],this->ortho_mps[ip].data()[p+1]);
+                    opsi.set_rowrank(0);
+                    anet.PutUniTensors({"hL","psi","hR"},{this->hLRs[ip][p],opsi,this->hLRs[ip][p+2]},false);
+                    omps.push_back(anet.Launch(true).get_block_()); 
+                    omps.back().flatten_();
+                }
+
+                auto out = optimize_psi(psi_T, {this->LR[p],this->mpo.get_op(p),this->mpo.get_op(p+1),this->LR[p+2]}, maxit, krydim, omps, this->weight);
+                psi_T = out[1];
+                Entemp = out[0].item();
+                psi_T.reshape_(dim_l,this->mps.phys_dim(),this->mps.phys_dim(),dim_r);// convert psi back to 4-leg form 
+                psi = UniTensor(psi_T,2); 
+                psi.set_labels(lbl);
+                //self.Ekeep.append(Entemp);
+                
+                auto outU = linalg::Svd_truncate(psi,new_dim);
+                auto s = outU[0];
+                this->mps.data()[p] = outU[1];
+                this->mps.data()[p+1] = outU[2];
+                //s,self.mps.A[p],self.mps.A[p+1] = cytnx.linalg.Svd_truncate(psi,new_dim)
+
+                auto slabel = s.labels();
+                s = s/s.get_block_().Norm().item();
+                s.set_labels(slabel);
+
+                this->mps.data()[p+1] = Contract(s,this->mps.data()[p+1]); // absorb s into next neighbor.
+                this->mps.S_loc() = p+1;
+
+                //anet = cytnx.Network("L_AMAH.net");
+                anet.FromString({"L: ;-2,-1,-3"  ,
+                                "A: -1,-4;1"    ,
+                                "M: ;-2,0,-4,-5",
+                                "A_Conj: -3,-5;2",
+                                "TOUT: ;0,1,2"
+                                });
+
+                anet.PutUniTensors({"L","A","A_Conj","M"},{this->LR[p],this->mps.data()[p],this->mps.data()[p].Conj(),this->mpo.get_op(p)},false);
+                this->LR[p+1] = anet.Launch(true);
+                
+                // update hLR when calculate excited state:
+                //anet = cytnx.Network("hL_AMAH.net");
+                anet.FromString({"hL: ;-1,-2",
+                                "Av: -1,-4;1",
+                                "Ap: -2,-4;2",
+                                "TOUT: ;1,2"
+                               });
+                for(cytnx_int64 ip=0;ip<this->ortho_mps.size();ip++){
+                    auto omps = this->ortho_mps[ip];
+                    anet.PutUniTensors({"hL","Av","Ap"},{this->hLRs[ip][p],this->mps.data()[p],omps.data()[p].Conj()},false);
+                    this->hLRs[ip][p+1] = anet.Launch(true);
+                }
+                //print('Sweep[l->r]: %d of %d, Loc: %d,Energy: %f' % (k, numsweeps, p, Ekeep[-1]))
+                if(verbose) std::cout << "Energy: " << std::setprecision(13) << Entemp << std::endl;
+            }
+
+            this->mps.data().back().set_rowrank(2);
+            tout = linalg::Svd(this->mps.data().back(),true,false); // last one.
+            this->mps.data().back() = tout[1];
+            this->mps.S_loc() = this->mps.data().size(); 
+
+            return Entemp;
 
         }//DMRG_impl::sweep
 
-
+        
 
 
     }//tn_algo

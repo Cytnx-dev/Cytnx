@@ -13,7 +13,7 @@ namespace cytnx{
 
     std::ostream& operator<<(std::ostream& os, const Scalar &in){
         in._impl->print(os);
-        os << std::string("  Scalar dtype: [") << Type.getname(in._impl->_dtype) << std::string("]") << std::endl;
+        os << std::string(" dtype: [") << Type.getname(in._impl->_dtype) << std::string("]");
         return os;
     }
 

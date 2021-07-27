@@ -66,20 +66,33 @@ class MyOp2: public LinOp{
 } while(0)
 
 
+Scalar run_DMRG(tn_algo::MPO &mpo, tn_algo::MPS &mps, int Nsweeps, std::vector<tn_algo::MPS> ortho_mps={}, double weight=40){
+
+    auto model = tn_algo::DMRG(mpo,mps,ortho_mps,weight);
+
+    model.initialize();
+    Scalar E;
+    for(int xi=0;xi<Nsweeps; xi++){
+        E = model.sweep();
+        cout << "sweep " << xi << "/" << Nsweeps << " | Enr: " << E << endl;
+    }
+    return E;
+}
+
 
 
 int main(int argc, char *argv[]){
 
-    auto mps = cytnx::tn_algo::MPS();
-    auto mpo = cytnx::tn_algo::MPO();
 
-    mps.Init(6,2,6,0);
 
-    //cout << mps.data();
-    cout << mpo;   
+    int Nsites = 10;
+    int chi = 16;
+    double weight = 40;
+    double h = 4;
+    int Nsweeps = 10;
+
 
     //construct MPO:
-    double h = 0.4;
     auto sz = cytnx::physics::pauli("z").real();
     auto sx = cytnx::physics::pauli("x").real();
     auto II  = cytnx::eye(2);
@@ -88,40 +101,27 @@ int main(int argc, char *argv[]){
     tM(0,0) = II;
     tM(-1,-1) = II;
     tM(0,2) = -h*sx;
+    tM(0,1) = -sz;
     tM(1,2) = sz;
     auto uM = UniTensor(tM,0);
-    auto uM2 = uM.relabel({9,8,2,-1});
 
-    uM.print_diagram();
-    uM2.print_diagram();
-
-    cout << is(uM,uM2);
-    cout << uM.same_data(uM2);
-
-    mpo.assign(6,uM);
-
-    auto model = tn_algo::DMRG(mpo,mps);
-
-    model.initialize();
+    auto mpo = tn_algo::MPO();
+    mpo.assign(Nsites,uM);
 
 
-    auto nnt = Network();
-    nnt.FromString({"L: ;-2,-1,-3"   ,
-                    "A: -1,-4;1"     ,
-                    "M: ;-2,0,-4,-5" ,
-                    "A_Conj: -3,-5;2",
-                    "TOUT: ;0,1,2"
-                   });
-    
-    print(nnt);
-    
-    auto Ddata = mpo.get_all();
+    // starting DMRG:
+    auto mps0 = tn_algo::MPS(Nsites,2,chi);
+    Scalar E0 = run_DMRG(mpo,mps0,Nsweeps);
 
-    // data checking no redundant memory!    
-    cout << is(Ddata[0],Ddata[1]) << endl;
+    auto mps1 = tn_algo::MPS(Nsites,2,chi);
+    Scalar E1 = run_DMRG(mpo,mps1,Nsweeps,{mps0},weight=60);
 
-    //auto xyx = arange(10);
-    //cout << xyx;
+    auto mps2 = tn_algo::MPS(Nsites,2,chi);
+    Scalar E2 = run_DMRG(mpo,mps2,Nsweeps,{mps0,mps1},weight=60);
+
+    cout << E0 << endl;
+    cout << E1 << endl;
+    cout << E2 << endl;
 
 
 
