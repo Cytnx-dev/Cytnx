@@ -34,7 +34,7 @@ See The following user guide for install and using of cytnx:
     4. [New][experiment] Add MPO class. 
     5. [Enhance] Add UniTensor.relabel
     6. [Enhance] Add Network.FromString 
-        
+    7. [New][experiment] DMRG API         
 
     v0.7.3
     1. [Fix] bug for Get slice does not reduce when dim=1. 
