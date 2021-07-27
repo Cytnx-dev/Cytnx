@@ -33,7 +33,8 @@ See The following user guide for install and using of cytnx:
     3. [New][experiment] Add MPS class with two variant: iMPS, RegularMPS. 
     4. [New][experiment] Add MPO class. 
     5. [Enhance] Add UniTensor.relabel
-    
+    6. [Enhance] Add Network.FromString 
+        
 
     v0.7.3
     1. [Fix] bug for Get slice does not reduce when dim=1. 

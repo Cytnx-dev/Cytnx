@@ -291,71 +291,52 @@ namespace cytnx{
     }
 
 
-    void RegularNetwork::Fromfile(const std::string &fname){
-        const cytnx_uint64 MAXLINES = 1024;
+    void RegularNetwork::FromString(const std::vector<std::string> &contents){
 
-        // empty all
         this->clear();
-    
-        // open file 
-        std::ifstream infile;
-        infile.open (fname.c_str());
-        if(!(infile.is_open())) {
-            cytnx_error_msg(true,"[Network] Error in opening file \'",fname.c_str(),"\'.\n");
-        }
-        filename = fname;
-    
+
         string line;
-        cytnx_uint64 lnum = 0;
         vector<string> tmpvs;
         bool isORDER_exist = false;
 
-        //read each line:  
-        while(lnum < MAXLINES) {
-            lnum++;
-            getline(infile, line); 
-            line = str_strip(line,"\n"); // remove \n on each end.
-            line = str_strip(line); // remove space on each end
-            if(infile.eof())
-                break;
-
-            // check :
-            //cout << "line:" << lnum << "|" << line <<"|"<< endl;
+        for(int i=0;i<contents.size();i++){
+            line = contents[i];
+            line = str_strip(line,"\n");
+            line = str_strip(line);
             if(line.length()==0) continue;  // blank line
-            if(line.at(0)=='#') continue; // comment whole line.       
-
+            if(line.at(0)=='#') continue; // comment whole line.    
+            
             // remove any comment at eol :
             line = str_split(line,true,"#")[0]; // remove comment on end.
 
             // A valid line should contain ':':
             cytnx_error_msg(line.find_first_of(":") == string::npos,
-                            "[ERROR][Network][Fromfile] invalid line in network file at line: %d. should contain \':\'",lnum);
+                            "[ERROR][Network][Fromfile] invalid network description at line: %d. should contain \':\'",i);
 
             tmpvs = str_split(line,false,":"); //note that checking empty string!
-            cytnx_error_msg(tmpvs.size()!=2,"[ERROR][Network] invalid line in network file at line: %d. \n",lnum); 
+            cytnx_error_msg(tmpvs.size()!=2,"[ERROR][Network] invalid line in network file at line: %d. \n",i);
 
-            
+
             string name = str_strip(tmpvs[0]);
-            string content = str_strip(tmpvs[1]);    
-                
-            //check if name contain invalid keyword or not assigned.
-            cytnx_error_msg(name.length()==0,"[ERROR][Network][Fromfile] invalid tensor name at line: %d\n",lnum);
-            cytnx_error_msg(name.find_first_of(" ;,") != string::npos,"[ERROR] invalid Tensor name at line %d\n",lnum);
+            string content = str_strip(tmpvs[1]);
 
+            //check if name contain invalid keyword or not assigned.
+            cytnx_error_msg(name.length()==0,"[ERROR][Network][Fromfile] invalid tensor name at line: %d\n",i);
+            cytnx_error_msg(name.find_first_of(" ;,") != string::npos,"[ERROR] invalid Tensor name at line %d\n",i);
 
             //dispatch:
             if(name == "ORDER"){
                 if(content.length()){
                     //cut the line into tokens, 
                     //and leave it to process by CtTree after read all lines.
-                    _parse_ORDER_line_(this->ORDER_tokens,content,lnum);  
+                    _parse_ORDER_line_(this->ORDER_tokens,content,i);
                     isORDER_exist = true;
                 }
             }else if(name == "TOUT"){
                 //if content has length, then pass to process. 
                 if(content.length()){
                     // this is an internal function that is defined in this cpp file.
-                    _parse_TOUT_line_(this->TOUT_labels,this->TOUT_iBondNum,content,lnum);
+                    _parse_TOUT_line_(this->TOUT_labels,this->TOUT_iBondNum,content,i);
                 }
             }else{
                 this->names.push_back(name);
@@ -366,28 +347,26 @@ namespace cytnx{
                 cytnx_error_msg(name.find_first_of("\t;\n: ")!=string::npos,"[ERROR][Network][Fromfile] invalid tensor name. cannot contain [' '] or [';'] or [':'] or ['\\t'] .%s","\n");
 
                 //check exists content:
-                cytnx_error_msg(content.length()==0,"[ERROR][Network][Fromfile] invalid tensor labelsat line %d. cannot have empty labels for input tensor. \n",lnum);
+                cytnx_error_msg(content.length()==0,"[ERROR][Network][Fromfile] invalid tensor labelsat line %d. cannot have empty labels for input tensor. \n",i);
 
                 this->name2pos[name] = names.size() - 1; // register
                 //cout << name << "|" << names.size() - 1 << endl;
                 this->label_arr.push_back(vector<cytnx_int64>());
                 cytnx_uint64 tmp_iBN;
                 // this is an internal function that is defined in this cpp file.
-                _parse_TN_line_(this->label_arr.back(),tmp_iBN,content,lnum);
+                _parse_TN_line_(this->label_arr.back(),tmp_iBN,content,i);
                 this->iBondNums.push_back(tmp_iBN);
-            }   
+            }
 
-        }// end readlines
-        infile.close();
+        }//
 
-
-        cytnx_error_msg(lnum>=MAXLINES,"[ERROR][Network][Fromfile] network file exceed the maxinum allowed lines, MAXLINES=1024%s","\n");
+        //cytnx_error_msg(lnum>=MAXLINES,"[ERROR][Network][Fromfile] network file exceed the maxinum allowed lines, MAXLINES=1024%s","\n");
 
         cytnx_error_msg(this->names.size()<2,"[ERROR][Network][Fromfile] invalid network file. Should have at least 2 tensors defined.%s","\n");
 
         this->tensors.resize(this->names.size());
         this->CtTree.base_nodes.resize(this->names.size());
-        
+
         //checking if all TN are set in ORDER.
         if(isORDER_exist){
             std::vector<string> TN_names;
@@ -395,7 +374,7 @@ namespace cytnx{
             for(int i=0;i<this->names.size();i++){
                 auto it = std::find(TN_names.begin(),TN_names.end(),this->names[i]);
                 cytnx_error_msg(it == std::end(TN_names),"[ERROR][Network][Fromfile] TN: <%s> defined but is not used in ORDER line\n",this->names[i].c_str());
-                TN_names.erase(it);                
+                TN_names.erase(it);
             }
             if(TN_names.size()!=0){
                 cout << "[ERROR] Following TNs appeared in ORDER line, but is not defined." << endl;
@@ -421,7 +400,7 @@ namespace cytnx{
             if(it->second==1)
                 expected_TOUT.push_back(it->first);
         }
-        bool err = false;   
+        bool err = false;
         if(expected_TOUT.size()!=TOUT_labels.size()){
             err = true;
         }
@@ -429,7 +408,6 @@ namespace cytnx{
         if(itrsct.size()!=expected_TOUT.size()){
             err = true;
         }
-     
 
         if(err){
             cout << "[ERROR][Network][Fromfile] The TOUT contains labels that does not match with the delcartion from TNs.\n";
@@ -443,6 +421,46 @@ namespace cytnx{
             cout << endl;
             cytnx_error_msg(true,"%s","\n");
         }
+
+        
+    }
+
+    void RegularNetwork::Fromfile(const std::string &fname){
+        const cytnx_uint64 MAXLINES = 1024;
+
+        // empty all
+        //this->clear();
+    
+        // open file 
+        std::ifstream infile;
+        infile.open (fname.c_str());
+        if(!(infile.is_open())) {
+            cytnx_error_msg(true,"[Network] Error in opening file \'",fname.c_str(),"\'.\n");
+        }
+        filename = fname;
+    
+        string line;
+        cytnx_uint64 lnum = 0;
+        
+        vector<string> contents;
+
+
+        //read each line:  
+        while(lnum < MAXLINES) {
+            lnum++;
+            getline(infile, line);
+            contents.push_back(line); 
+            if(infile.eof())
+                break;
+
+        }// end readlines
+
+        bool iseof = infile.eof();
+        infile.close();
+
+        cytnx_error_msg(!iseof,"[ERROR][Network][Fromfile] network file exceed the maxinum allowed lines, MAXLINES=1024%s","\n");
+
+        this->FromString(contents);
 
     }
 

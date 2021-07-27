@@ -12,6 +12,9 @@ namespace cytnx{
     void Network_base::Fromfile(const std::string &fname){
         cytnx_error_msg(true,"[ERROR][Network][Fromfile] call from uninitialize network.%s","\n");
     }
+    void Network_base::FromString(const std::vector<std::string> &fname){
+        cytnx_error_msg(true,"[ERROR][Network][FromString] call from uninitialize network.%s","\n");
+    }
     void Network_base::Savefile(const std::string &fname){
         cytnx_error_msg(true,"[ERROR][Network][Savefile] call from uninitialize network.%s","\n");
     }

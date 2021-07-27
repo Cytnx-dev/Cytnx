@@ -92,6 +92,7 @@ namespace cytnx{
             virtual void Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout, const std::vector<bool> &is_clone, const std::vector<std::string> &alias, const std::string &contract_order);
             
             virtual void Fromfile(const std::string& fname);
+            virtual void FromString(const std::vector<std::string> &content);
             virtual void clear();
             virtual UniTensor Launch(const bool &optimal=false);
             virtual void PrintNet(std::ostream &os);
@@ -107,6 +108,7 @@ namespace cytnx{
         public:
             RegularNetwork(){this->nwrktype_id = NtType.Regular;};
             void Fromfile(const std::string &fname);
+            void FromString(const std::vector<std::string> &contents);
             void PutUniTensor(const std::string &name, const UniTensor &utensor, const bool &is_clone=true);
             void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor, const bool &is_clone=true);
             void PutUniTensors(const std::vector<std::string> &name, const std::vector<UniTensor> &utensors, const bool &is_clone=true);
@@ -149,6 +151,7 @@ namespace cytnx{
         public:
             FermionNetwork(){this->nwrktype_id=NtType.Fermion;};
             void Fromfile(const std::string &fname){};
+            void FromString(const std::vector<std::string> &contents){};
             void PutUniTensor(const std::string &name, const UniTensor &utensor, const bool &is_clone=true){};
             void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor, const bool &is_clone=true){};
             void PutUniTensors(const std::vector<std::string> &name, const std::vector<UniTensor> &utensors, const bool &is_clone=true){};
@@ -254,7 +257,32 @@ namespace cytnx{
                 }
                 this->_impl->Fromfile(fname);
             }
+            
+            /**
+            @brief Construct Network from a list of strings, where each string is the same as each line in network file 
+            @param contents The network file descriptions
+            @param network_type The type of network. 
+                   This can be [NtType.Regular] or [NtType.Fermion.].
+                   Currently, only Regular Network is support!
+            
+                
+            ##note:
+                1. contents cannot have more than 1024 lines/strings. 
 
+            ##detail:
+                Format of each string follows the same policy as Fromfile.
+
+            
+            */ 
+            void FromString(const std::vector<std::string> &contents, const int &network_type=NtType.Regular){
+                if(network_type==NtType.Regular){
+                    boost::intrusive_ptr<Network_base> tmp(new RegularNetwork());
+                    this->_impl = tmp;
+                }else{
+                    cytnx_error_msg(true,"[Developing] currently only support regular type network.%s","\n");
+                }
+                this->_impl->FromString(contents);
+            }
             //void Savefile(const std::string &fname);
                 
            
@@ -266,6 +294,7 @@ namespace cytnx{
                 out._impl->Contract_plan(tensors,Tout,is_clone,alias,contract_order);
                 return out;
             }
+            
             
 
             Network(const std::string &fname, const int &network_type=NtType.Regular){

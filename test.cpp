@@ -105,6 +105,15 @@ int main(int argc, char *argv[]){
     model.initialize();
 
 
+    auto nnt = Network();
+    nnt.FromString({"L: ;-2,-1,-3"   ,
+                    "A: -1,-4;1"     ,
+                    "M: ;-2,0,-4,-5" ,
+                    "A_Conj: -3,-5;2",
+                    "TOUT: ;0,1,2"
+                   });
+    
+    print(nnt);
     
     auto Ddata = mpo.get_all();
 
