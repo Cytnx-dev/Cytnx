@@ -11,7 +11,15 @@ namespace cytnx{
         void MPS_impl::Init(const cytnx_uint64 &N , const cytnx_uint64 &phys_dim, const cytnx_uint64 &virt_dim){
             cytnx_error_msg(true,"[ERROR] MPS_Base should not be called. Please initialize the MPS first.%s","\n");
         }
-
+        void MPS_impl::Into_Lortho(){
+            cytnx_error_msg(true,"[ERROR] MPS_Base should not be called. Please initialize the MPS first.%s","\n");
+        }
+        void MPS_impl::S_mvleft(){
+            cytnx_error_msg(true,"[ERROR] MPS_Base should not be called. Please initialize the MPS first.%s","\n");
+        }
+        void MPS_impl::S_mvright(){
+            cytnx_error_msg(true,"[ERROR] MPS_Base should not be called. Please initialize the MPS first.%s","\n");
+        }
     }
 
 }

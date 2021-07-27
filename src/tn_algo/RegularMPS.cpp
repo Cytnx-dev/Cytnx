@@ -2,9 +2,11 @@
 #include "random.hpp"
 #include <cmath>
 #include <algorithm>
+#include "linalg.hpp"
 using namespace std;
 namespace cytnx{
     namespace tn_algo{
+
         std::ostream& RegularMPS::Print(std::ostream &os){
             os << "MPS type : " << "[Regular]" << endl;
             os << "Size : " << this->_TNs.size() << endl;
@@ -42,9 +44,70 @@ namespace cytnx{
         }
 
 
-    }
+        void RegularMPS::Into_Lortho(){
+            if(this->S_loc == -1){
+                this->S_loc = 0;
+            }else if(this->S_loc == this->_TNs.size()){
+                return;
+            }
 
-}
+            for(cytnx_int64 p=0; p<this->size() -1 - this->S_loc;p++){
+                auto out = linalg::Svd(this->_TNs[p]);
+                auto s = out[0];
+                this->_TNs[p] = out[1];
+                auto vt = out[2];
+                this->_TNs[p+1] = Contract(Contract(s,vt),this->_TNs[p+1]);
+            }
+            auto out = linalg::Svd(this->_TNs.back(),true,false);
+            this->_TNs.back() = out[1];
+            this->S_loc = this->_TNs.size();
+        }
+
+
+        void RegularMPS::S_mvright(){
+            if(this->S_loc == this->_TNs.size()){
+                return;
+            }else if(this->S_loc == -1){
+                this->S_loc +=1;
+                return;
+            }else{
+                this->_TNs[this->S_loc].set_rowrank(2);
+                auto out = linalg::Svd(this->_TNs[this->S_loc]);
+                auto s = out[0];
+                this->_TNs[this->S_loc] = out[1];
+                auto vt = out[2];
+                // boundary:
+                if(this->S_loc != this->_TNs.size()-1){
+                    this->_TNs[this->S_loc+1] = Contract(Contract(s,vt),this->_TNs[this->S_loc+1]);
+                }
+                this->S_loc += 1;
+            }
+        }
+
+        void RegularMPS::S_mvleft(){
+            if(this->S_loc == -1){
+                return;
+            }else if(this->S_loc == this->_TNs.size()){
+                this->S_loc -=1;
+                return;
+            }else{
+                this->_TNs[this->S_loc].set_rowrank(1);
+                auto out = linalg::Svd(this->_TNs[this->S_loc]);
+                auto s = out[0];
+                auto u = out[1];
+                this->_TNs[this->S_loc] = out[2];
+
+                //boundary:
+                if(this->S_loc != 0){
+                    this->_TNs[this->S_loc-1] = Contract(this->_TNs[this->S_loc-1],Contract(u,s));
+                }
+                this->S_loc -= 1;
+            }
+        }
+
+    }//tn_algo
+
+}// cytnx
 
 
 

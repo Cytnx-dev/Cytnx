@@ -43,6 +43,10 @@ namespace cytnx{
                 virtual cytnx_uint64 size(){return 0;}; 
                 virtual void Init(const cytnx_uint64 &N, const cytnx_uint64 &phys_dim, const cytnx_uint64 &virt_dim);
                 
+                // for finite MPS:
+                virtual void Into_Lortho();
+                virtual void S_mvleft();
+                virtual void S_mvright();                
         };
 
         // finite size:
@@ -62,8 +66,10 @@ namespace cytnx{
                 std::ostream& Print(std::ostream &os);
                 cytnx_uint64 size(){return this->_TNs.size();};    
                 void Init(const cytnx_uint64 &N, const cytnx_uint64 &phys_dim, const cytnx_uint64 &virt_dim);
-
-
+                
+                void Into_Lortho();
+                void S_mvleft();
+                void S_mvright();                
 
         };
 
@@ -84,8 +90,15 @@ namespace cytnx{
                 cytnx_uint64 size(){return this->_TNs.size();};    
                 void Init(const cytnx_uint64 &N, const cytnx_uint64 &phys_dim, const cytnx_uint64 &virt_dim);
 
-
-
+                void Into_Lortho(){
+                    cytnx_error_msg(true,"[ERROR][MPS][type=iMPS] cannot call Into_Lortho%s","\n");
+                }
+                void S_mvleft(){
+                    cytnx_error_msg(true,"[ERROR][MPS][type=iMPS] cannot call S_mvleft%s","\n");
+                }
+                void S_mvright(){               
+                    cytnx_error_msg(true,"[ERROR][MPS][type=iMPS] cannot call S_mvright%s","\n");
+                }
         };
 
 
@@ -137,7 +150,18 @@ namespace cytnx{
 
                 std::vector<UniTensor> &data(){return this->_impl->get_data();};
 
-                
+                MPS& Into_Lortho(){
+                    this->_impl->Into_Lortho();
+                    return *this;
+                }               
+                MPS& S_mvleft(){
+                    this->_impl->S_mvleft();
+                    return *this;
+                } 
+                MPS& S_mvright(){
+                    this->_impl->S_mvright();
+                    return *this;
+                } 
 
 
         };
