@@ -905,6 +905,10 @@ namespace cytnx{
     cytnx::UniTensor operator-(const T &lc, const cytnx::UniTensor &Rt){
         return cytnx::linalg::Sub(lc,Rt);
     }
+    template<>
+    cytnx::UniTensor operator-<Scalar::Sproxy>(const Scalar::Sproxy &lc, const cytnx::UniTensor &Rt){
+        return cytnx::linalg::Sub(Scalar(lc),Rt);
+    }
 
     template cytnx::UniTensor operator-<cytnx_complex128>(const cytnx_complex128 &lc, const cytnx::UniTensor &Rt);
     template cytnx::UniTensor operator-<cytnx_complex64>(const cytnx_complex64 &lc, const cytnx::UniTensor &Rt);
@@ -918,11 +922,15 @@ namespace cytnx{
     template cytnx::UniTensor operator-<cytnx_uint16>(const cytnx_uint16 &lc, const cytnx::UniTensor &Rt);
     template cytnx::UniTensor operator-<cytnx_bool>(const cytnx_bool &lc, const cytnx::UniTensor &Rt);
     template cytnx::UniTensor operator-<Scalar>(const Scalar &lc, const cytnx::UniTensor &Rt);
+
     template<class T>
     cytnx::UniTensor operator-(const cytnx::UniTensor &Lt, const T &rc){
         return cytnx::linalg::Sub(Lt,rc);
     }
-
+    template<>
+    cytnx::UniTensor operator-<Scalar::Sproxy>(const cytnx::UniTensor &Lt, const Scalar::Sproxy &rc){
+        return cytnx::linalg::Sub(Lt,Scalar(rc));
+    }
     template cytnx::UniTensor operator-<cytnx_complex128>(const cytnx::UniTensor &Lt,const cytnx_complex128 &rc);
     template cytnx::UniTensor operator-<cytnx_complex64>(const cytnx::UniTensor &Lt,const cytnx_complex64 &rc);
     template cytnx::UniTensor operator-<cytnx_double>(const cytnx::UniTensor &Lt,const cytnx_double &rc);

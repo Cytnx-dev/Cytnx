@@ -74,7 +74,7 @@ namespace cytnx{
 
                 psi_1 = new_psi;
 
-                Ediff = abs(E - tmpEsVs[0].storage().at<double>(0));
+                Ediff = std::abs(E - tmpEsVs[0].storage().at<double>(0));
                 if(verbose) printf("iter[%d] Enr: %11.14f, diff from last iter: %11.14f\n",i,E,Ediff);
 
                 //chkf = true;
@@ -187,7 +187,7 @@ namespace cytnx{
 
                 psi_1 = new_psi;
 
-                Ediff = abs(E - tmpEsVs[0].storage().at<float>(0));
+                Ediff = std::abs(E - tmpEsVs[0].storage().at<float>(0));
                 if(verbose) printf("iter[%d] Enr: %11.14f, diff from last iter: %11.14f\n",i,E,Ediff);
 
                 //chkf = true;

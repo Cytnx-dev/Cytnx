@@ -1666,10 +1666,40 @@ namespace cytnx{
             Scalar(): _impl(new Scalar_base()){};
 
             // init!!        
-            template<class T>
-            Scalar(const T &in): _impl(new Scalar_base()){
+            Scalar(const cytnx_complex128 &in): _impl(new Scalar_base()){
                 this->Init_by_number(in);
             }
+            Scalar(const cytnx_complex64 &in): _impl(new Scalar_base()){
+                this->Init_by_number(in);
+            }
+            Scalar(const cytnx_double &in): _impl(new Scalar_base()){
+                this->Init_by_number(in);
+            }
+            Scalar(const cytnx_float &in): _impl(new Scalar_base()){
+                this->Init_by_number(in);
+            }
+            Scalar(const cytnx_uint64 &in): _impl(new Scalar_base()){
+                this->Init_by_number(in);
+            }
+            Scalar(const cytnx_int64 &in): _impl(new Scalar_base()){
+                this->Init_by_number(in);
+            }
+            Scalar(const cytnx_uint32 &in): _impl(new Scalar_base()){
+                this->Init_by_number(in);
+            }
+            Scalar(const cytnx_int32 &in): _impl(new Scalar_base()){
+                this->Init_by_number(in);
+            }
+            Scalar(const cytnx_uint16 &in): _impl(new Scalar_base()){
+                this->Init_by_number(in);
+            }
+            Scalar(const cytnx_int16 &in): _impl(new Scalar_base()){
+                this->Init_by_number(in);
+            }
+            Scalar(const cytnx_bool &in): _impl(new Scalar_base()){
+                this->Init_by_number(in);
+            }
+
 
             template<class T>
             Scalar(const T&in, const unsigned int &dtype): _impl(new Scalar_base()){
@@ -1754,8 +1784,48 @@ namespace cytnx{
             };
                 
             // copy assignment [Number]:
-            template<class T>
-            Scalar& operator=(const T &rhs){
+            
+            Scalar& operator=(const cytnx_complex128 &rhs){
+                this->Init_by_number(rhs);
+                return *this;
+            }
+            Scalar& operator=(const cytnx_complex64 &rhs){
+                this->Init_by_number(rhs);
+                return *this;
+            }
+            Scalar& operator=(const cytnx_double &rhs){
+                this->Init_by_number(rhs);
+                return *this;
+            }
+            Scalar& operator=(const cytnx_float &rhs){
+                this->Init_by_number(rhs);
+                return *this;
+            }
+            Scalar& operator=(const cytnx_uint64 &rhs){
+                this->Init_by_number(rhs);
+                return *this;
+            }
+            Scalar& operator=(const cytnx_int64 &rhs){
+                this->Init_by_number(rhs);
+                return *this;
+            }
+            Scalar& operator=(const cytnx_uint32 &rhs){
+                this->Init_by_number(rhs);
+                return *this;
+            }
+            Scalar& operator=(const cytnx_int32 &rhs){
+                this->Init_by_number(rhs);
+                return *this;
+            }
+            Scalar& operator=(const cytnx_uint16 &rhs){
+                this->Init_by_number(rhs);
+                return *this;
+            }
+            Scalar& operator=(const cytnx_int16 &rhs){
+                this->Init_by_number(rhs);
+                return *this;
+            }
+            Scalar& operator=(const cytnx_bool &rhs){
                 this->Init_by_number(rhs);
                 return *this;
             }
@@ -1778,31 +1848,31 @@ namespace cytnx{
             }
 
             //casting            
-            operator cytnx_double() const{
+            explicit operator cytnx_double() const{
                 return this->_impl->to_cytnx_double();
             }
-            operator cytnx_float() const{
+            explicit operator cytnx_float() const{
                 return this->_impl->to_cytnx_float();
             }
-            operator cytnx_uint64() const{
+            explicit operator cytnx_uint64() const{
                 return this->_impl->to_cytnx_uint64();
             }
-            operator cytnx_int64() const{
+            explicit operator cytnx_int64() const{
                 return this->_impl->to_cytnx_int64();
             }
-            operator cytnx_uint32() const{
+            explicit operator cytnx_uint32() const{
                 return this->_impl->to_cytnx_uint32();
             }
-            operator cytnx_int32() const{
+            explicit operator cytnx_int32() const{
                 return this->_impl->to_cytnx_int32();
             }
-            operator cytnx_uint16() const{
+            explicit operator cytnx_uint16() const{
                 return this->_impl->to_cytnx_uint16();
             }
-            operator cytnx_int16() const{
+            explicit operator cytnx_int16() const{
                 return this->_impl->to_cytnx_int16();
             }
-            operator cytnx_bool() const{
+            explicit operator cytnx_bool() const{
                 return this->_impl->to_cytnx_bool();
             }
             ~Scalar(){
@@ -2038,7 +2108,7 @@ namespace cytnx{
             }
 
 
-
+            /*
             //operator:
             template<class T>
             Scalar operator+(const T &rc){
@@ -2077,118 +2147,39 @@ namespace cytnx{
             bool operator>=(const T &rc){
                 return this->geq(rc);
             }
-
+            */
     };
 
     
     //ladd: c + Scalar:
 
 
-    Scalar operator+( const cytnx_complex128 &lc, const Scalar &rs);//{return rs.radd(lc);};
-    Scalar operator+( const cytnx_complex64 &lc, const Scalar &rs);//{return rs.radd(lc);};
-    Scalar operator+( const cytnx_double &lc, const Scalar &rs);//{return rs.radd(lc);};
-    Scalar operator+( const cytnx_float  &lc, const Scalar &rs);//{return rs.radd(lc);};
-    Scalar operator+( const cytnx_uint64 &lc, const Scalar &rs);//{return rs.radd(lc);};
-    Scalar operator+( const cytnx_int64  &lc, const Scalar &rs);//{return rs.radd(lc);};
-    Scalar operator+( const cytnx_uint32 &lc, const Scalar &rs);//{return rs.radd(lc);};
-    Scalar operator+( const cytnx_int32  &lc, const Scalar &rs);//{return rs.radd(lc);};
-    Scalar operator+( const cytnx_uint16 &lc, const Scalar &rs);//{return rs.radd(lc);};
-    Scalar operator+( const cytnx_int16  &lc, const Scalar &rs);//{return rs.radd(lc);};
-    Scalar operator+( const cytnx_bool  &lc, const Scalar &rs);//{return rs.radd(lc);};
+    Scalar operator+( const Scalar &lc, const Scalar &rs);//{return rs.radd(lc);};
+
 
     //lmul c * Scalar;
-    Scalar operator*( const cytnx_complex128 &lc, const Scalar &rs);//{return rs.rmul(lc);};
-    Scalar operator*( const cytnx_complex64 &lc, const Scalar &rs);//{return rs.rmul(lc);};
-    Scalar operator*( const cytnx_double &lc, const Scalar &rs);//{return rs.rmul(lc);};
-    Scalar operator*( const cytnx_float  &lc, const Scalar &rs);//{return rs.rmul(lc);};
-    Scalar operator*( const cytnx_uint64 &lc, const Scalar &rs);//{return rs.rmul(lc);};
-    Scalar operator*( const cytnx_int64  &lc, const Scalar &rs);//{return rs.rmul(lc);};
-    Scalar operator*( const cytnx_uint32 &lc, const Scalar &rs);//{return rs.rmul(lc);};
-    Scalar operator*( const cytnx_int32  &lc, const Scalar &rs);//{return rs.rmul(lc);};
-    Scalar operator*( const cytnx_uint16 &lc, const Scalar &rs);//{return rs.rmul(lc);};
-    Scalar operator*( const cytnx_int16  &lc, const Scalar &rs);//{return rs.rmul(lc);};
-    Scalar operator*( const cytnx_bool  &lc, const Scalar &rs);//{return rs.rmul(lc);};
+    Scalar operator*( const Scalar &lc, const Scalar &rs);//{return rs.rmul(lc);};
 
     //lsub c * Scalar;
-    Scalar operator-( const cytnx_complex128 &lc, const Scalar &rs);//{return Scalar(lc).rsub(rs);};
-    Scalar operator-( const cytnx_complex64 &lc, const Scalar &rs);//{return Scalar(lc).rsub(rs);};
-    Scalar operator-( const cytnx_double &lc, const Scalar &rs);//{return Scalar(lc).rsub(rs);};
-    Scalar operator-( const cytnx_float  &lc, const Scalar &rs);//{return Scalar(lc).rsub(rs);};
-    Scalar operator-( const cytnx_uint64 &lc, const Scalar &rs);//{return Scalar(lc).rsub(rs);};
-    Scalar operator-( const cytnx_int64  &lc, const Scalar &rs);//{return Scalar(lc).rsub(rs);};
-    Scalar operator-( const cytnx_uint32 &lc, const Scalar &rs);//{return Scalar(lc).rsub(rs);};
-    Scalar operator-( const cytnx_int32  &lc, const Scalar &rs);//{return Scalar(lc).rsub(rs);};
-    Scalar operator-( const cytnx_uint16 &lc, const Scalar &rs);//{return Scalar(lc).rsub(rs);};
-    Scalar operator-( const cytnx_int16  &lc, const Scalar &rs);//{return Scalar(lc).rsub(rs);};
-    Scalar operator-( const cytnx_bool  &lc, const Scalar &rs);//{return Scalar(lc).rsub(rs);};
+    Scalar operator-( const Scalar &lc, const Scalar &rs);//{return Scalar(lc).rsub(rs);};
 
     //ldiv c / Scalar;
-    Scalar operator/( const cytnx_complex128 &lc, const Scalar &rs);//{return Scalar(lc).rdiv(rs);};
-    Scalar operator/( const cytnx_complex64 &lc, const Scalar &rs);//{return Scalar(lc).rdiv(rs);};
-    Scalar operator/( const cytnx_double &lc, const Scalar &rs);//{return Scalar(lc).rdiv(rs);};
-    Scalar operator/( const cytnx_float  &lc, const Scalar &rs);//{return Scalar(lc).rdiv(rs);};
-    Scalar operator/( const cytnx_uint64 &lc, const Scalar &rs);//{return Scalar(lc).rdiv(rs);};
-    Scalar operator/( const cytnx_int64  &lc, const Scalar &rs);//{return Scalar(lc).rdiv(rs);};
-    Scalar operator/( const cytnx_uint32 &lc, const Scalar &rs);//{return Scalar(lc).rdiv(rs);};
-    Scalar operator/( const cytnx_int32  &lc, const Scalar &rs);//{return Scalar(lc).rdiv(rs);};
-    Scalar operator/( const cytnx_uint16 &lc, const Scalar &rs);//{return Scalar(lc).rdiv(rs);};
-    Scalar operator/( const cytnx_int16  &lc, const Scalar &rs);//{return Scalar(lc).rdiv(rs);};
-    Scalar operator/( const cytnx_bool  &lc, const Scalar &rs);//{return Scalar(lc).rdiv(rs);};
+    Scalar operator/( const Scalar &lc, const Scalar &rs);//{return Scalar(lc).rdiv(rs);};
     
 
     // lless c < Scalar;
-    Scalar operator<( const cytnx_complex128 &lc, const Scalar &rs);
-    Scalar operator<( const cytnx_complex64 &lc, const Scalar &rs);
-    Scalar operator<( const cytnx_double &lc, const Scalar &rs);
-    Scalar operator<( const cytnx_float  &lc, const Scalar &rs);
-    Scalar operator<( const cytnx_uint64 &lc, const Scalar &rs);
-    Scalar operator<( const cytnx_int64  &lc, const Scalar &rs);
-    Scalar operator<( const cytnx_uint32 &lc, const Scalar &rs);
-    Scalar operator<( const cytnx_int32  &lc, const Scalar &rs);
-    Scalar operator<( const cytnx_uint16 &lc, const Scalar &rs);
-    Scalar operator<( const cytnx_int16  &lc, const Scalar &rs);
-    Scalar operator<( const cytnx_bool  &lc, const Scalar &rs);
+    bool operator<( const Scalar &lc, const Scalar &rs);
+    
     
     // lgreater c > Scalar;
-    Scalar operator>( const cytnx_complex128 &lc, const Scalar &rs);
-    Scalar operator>( const cytnx_complex64 &lc, const Scalar &rs);
-    Scalar operator>( const cytnx_double &lc, const Scalar &rs);
-    Scalar operator>( const cytnx_float  &lc, const Scalar &rs);
-    Scalar operator>( const cytnx_uint64 &lc, const Scalar &rs);
-    Scalar operator>( const cytnx_int64  &lc, const Scalar &rs);
-    Scalar operator>( const cytnx_uint32 &lc, const Scalar &rs);
-    Scalar operator>( const cytnx_int32  &lc, const Scalar &rs);
-    Scalar operator>( const cytnx_uint16 &lc, const Scalar &rs);
-    Scalar operator>( const cytnx_int16  &lc, const Scalar &rs);
-    Scalar operator>( const cytnx_bool  &lc, const Scalar &rs);
+    bool operator>( const Scalar &lc, const Scalar &rs);
+
 
     // lless c <= Scalar;
-    Scalar operator<=( const cytnx_complex128 &lc, const Scalar &rs);
-    Scalar operator<=( const cytnx_complex64 &lc, const Scalar &rs);
-    Scalar operator<=( const cytnx_double &lc, const Scalar &rs);
-    Scalar operator<=( const cytnx_float  &lc, const Scalar &rs);
-    Scalar operator<=( const cytnx_uint64 &lc, const Scalar &rs);
-    Scalar operator<=( const cytnx_int64  &lc, const Scalar &rs);
-    Scalar operator<=( const cytnx_uint32 &lc, const Scalar &rs);
-    Scalar operator<=( const cytnx_int32  &lc, const Scalar &rs);
-    Scalar operator<=( const cytnx_uint16 &lc, const Scalar &rs);
-    Scalar operator<=( const cytnx_int16  &lc, const Scalar &rs);
-    Scalar operator<=( const cytnx_bool  &lc, const Scalar &rs);
+    bool operator<=( const Scalar &lc, const Scalar &rs);
     
     // lgreater c >= Scalar;
-    Scalar operator>=( const cytnx_complex128 &lc, const Scalar &rs);
-    Scalar operator>=( const cytnx_complex64 &lc, const Scalar &rs);
-    Scalar operator>=( const cytnx_double &lc, const Scalar &rs);
-    Scalar operator>=( const cytnx_float  &lc, const Scalar &rs);
-    Scalar operator>=( const cytnx_uint64 &lc, const Scalar &rs);
-    Scalar operator>=( const cytnx_int64  &lc, const Scalar &rs);
-    Scalar operator>=( const cytnx_uint32 &lc, const Scalar &rs);
-    Scalar operator>=( const cytnx_int32  &lc, const Scalar &rs);
-    Scalar operator>=( const cytnx_uint16 &lc, const Scalar &rs);
-    Scalar operator>=( const cytnx_int16  &lc, const Scalar &rs);
-    Scalar operator>=( const cytnx_bool  &lc, const Scalar &rs);
-
-
+    bool operator>=( const Scalar &lc, const Scalar &rs);
 
     //abs:
     

@@ -615,6 +615,10 @@ namespace cytnx{
     cytnx::UniTensor operator+(const T &lc, const cytnx::UniTensor &Rt){
         return cytnx::linalg::Add(lc,Rt);
     }
+    template<>
+    cytnx::UniTensor operator+<Scalar::Sproxy>(const Scalar::Sproxy &lc, const cytnx::UniTensor &Rt){
+        return cytnx::linalg::Add(Scalar(lc),Rt);
+    }
 
     template cytnx::UniTensor operator+<cytnx_complex128>(const cytnx_complex128 &lc, const cytnx::UniTensor &Rt);
     template cytnx::UniTensor operator+<cytnx_complex64>(const cytnx_complex64 &lc, const cytnx::UniTensor &Rt);
@@ -677,6 +681,10 @@ namespace cytnx{
     template<>
     cytnx::UniTensor operator+<Scalar>(const cytnx::UniTensor &Lt, const Scalar &rc){
        return cytnx::linalg::Add(Lt,rc);
+    }
+    template<>
+    cytnx::UniTensor operator+<Scalar::Sproxy>(const cytnx::UniTensor &Lt, const Scalar::Sproxy &rc){
+       return cytnx::linalg::Add(Lt,Scalar(rc));
     }
 
 }//extension

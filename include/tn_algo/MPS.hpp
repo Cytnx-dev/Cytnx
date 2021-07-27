@@ -26,6 +26,10 @@ namespace cytnx{
             public:
                 friend class MPS;
                 
+                cytnx_int64 phys_dim;
+                cytnx_int64 virt_dim;
+                cytnx_int64 S_loc;
+
                 // place holder for the tensors:
                 std::vector<UniTensor> _TNs;
                 boost::intrusive_ptr<MPS_impl> clone() const{
@@ -53,13 +57,14 @@ namespace cytnx{
         class RegularMPS: public MPS_impl{
             public:
                 
-                cytnx_int64 S_loc;
-                cytnx_int64 phys_dim;
-                cytnx_int64 virt_dim;
 
 
                 // only for this:
-                RegularMPS(): S_loc(0), phys_dim(-1), virt_dim(-1){};
+                RegularMPS(){
+                    this->S_loc = 0;
+                    this->phys_dim = -1;
+                    this->virt_dim = -1;
+                };
 
 
                 // specialization:
@@ -77,12 +82,10 @@ namespace cytnx{
         class iMPS: public MPS_impl{
             public:
                 
-                cytnx_int64 phys_dim;
-                cytnx_int64 virt_dim;
 
 
                 // only for this:
-                iMPS(): phys_dim(-1), virt_dim(-1){};
+                iMPS(){this->phys_dim = -1; this->virt_dim = -1;};
 
 
                 // specialization:
@@ -163,6 +166,19 @@ namespace cytnx{
                     return *this;
                 } 
 
+
+                cytnx_int64& phys_dim(){
+                    return this->_impl->phys_dim;
+                }
+    
+                cytnx_int64& virt_dim(){
+                    return this->_impl->virt_dim;
+                }
+
+                cytnx_int64& S_loc(){
+                    return this->_impl->S_loc;
+                }
+                
 
         };
 
