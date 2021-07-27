@@ -70,10 +70,10 @@ class MyOp2: public LinOp{
 
 int main(int argc, char *argv[]){
 
-    //auto mps = cytnx::tn_algo::MPS();
+    auto mps = cytnx::tn_algo::MPS();
     auto mpo = cytnx::tn_algo::MPO();
 
-    //mps.Init(4,2,6,1);
+    mps.Init(6,2,6,0);
 
     //cout << mps.data();
     cout << mpo;   
@@ -98,9 +98,14 @@ int main(int argc, char *argv[]){
     cout << is(uM,uM2);
     cout << uM.same_data(uM2);
 
-    mpo.assign(7,uM);
-    
+    mpo.assign(6,uM);
 
+    auto model = tn_algo::DMRG(mpo,mps);
+
+    model.initialize();
+
+
+    
     auto Ddata = mpo.get_all();
 
     // data checking no redundant memory!    

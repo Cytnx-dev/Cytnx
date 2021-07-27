@@ -37,12 +37,14 @@ namespace cytnx{
 
                 //environ:
                 std::vector<UniTensor> LR;
-                std::vector<UniTensor> hLR; //excited states 
+                std::vector<std::vector<UniTensor> >hLRs; //excited states 
 
                 friend class MPS;
                 friend class MPO;
 
                 void initialize();
+                void sweep();
+                                
 
         };
 
@@ -56,8 +58,21 @@ namespace cytnx{
 
                 ///@cond
                 boost::intrusive_ptr<DMRG_impl> _impl;
-                DMRG(): _impl(new DMRG_impl()){
-                    // currently default init is DMRG_impl; 
+                DMRG(MPO mpo, MPS mps, const cytnx_uint64 &maxit=2, const cytnx_uint64 &krydim=4, std::vector<MPS> ortho_mps={}, const double &weight=30): _impl(new DMRG_impl()){
+                    // currently default init is DMRG_impl;
+                
+                    // mpo and mps:
+                    this->_impl->mpo = mpo;
+                    this->_impl->mps = mps;
+
+                    // for getting excited states:
+                    this->_impl->ortho_mps = ortho_mps;
+                    this->_impl->weight = weight;
+
+                    // iterative solver param:
+                    this->_impl->maxit = maxit;
+                    this->_impl->krydim = krydim; 
+
                 };
 
                 DMRG(const DMRG &rhs){
@@ -71,7 +86,15 @@ namespace cytnx{
                 }
 
 
-                
+                DMRG& initialize(){
+                    this->_impl->initialize();
+                    return *this;
+                }                
+
+                DMRG& sweep(){
+                    this->_impl->sweep();
+                    return *this;
+                }
 
 
         };
