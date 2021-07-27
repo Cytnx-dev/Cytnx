@@ -90,7 +90,14 @@ int main(int argc, char *argv[]){
     tM(0,2) = -h*sx;
     tM(1,2) = sz;
     auto uM = UniTensor(tM,0);
-        
+    auto uM2 = uM.relabel({9,8,2,-1});
+
+    uM.print_diagram();
+    uM2.print_diagram();
+
+    cout << is(uM,uM2);
+    cout << uM.same_data(uM2);
+
     mpo.assign(7,uM);
     
 

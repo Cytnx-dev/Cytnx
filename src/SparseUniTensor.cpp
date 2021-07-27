@@ -301,6 +301,15 @@ namespace cytnx{
 
     }
 
+    boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabel(const std::vector<cytnx_int64> &new_labels){
+        SparseUniTensor* tmp = this->clone_meta(true,true);
+        tmp->_blocks = this->_blocks;
+        tmp->set_labels(new_labels);
+        boost::intrusive_ptr<UniTensor_base> out(tmp);
+        return out;
+
+    }
+
     void SparseUniTensor::print_diagram(const bool &bond_info){
         char *buffer = (char*)malloc(256*sizeof(char));
 

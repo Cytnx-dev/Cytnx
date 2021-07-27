@@ -1469,7 +1469,7 @@ PYBIND11_MODULE(cytnx,m){
                 .def("c_set_label",&UniTensor::set_label,py::arg("idx"),py::arg("new_label"))
                 .def("c_set_labels",&UniTensor::set_labels,py::arg("new_labels"))
                 .def("c_set_rowrank",&UniTensor::set_rowrank, py::arg("new_rowrank"))
-
+                .def("relabel",&UniTensor::relabel, py::arg("new_labels"))
                 .def("rowrank",&UniTensor::rowrank)
                 .def("rank",&UniTensor::rank)
 

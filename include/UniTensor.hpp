@@ -109,7 +109,6 @@ namespace cytnx{
             void set_labels(const std::vector<cytnx_int64> &new_labels);
 
 
-
             template<class T>
             T& at(const std::vector<cytnx_uint64> &locator){
                 //std::cout << "at " << this->is_blockform()  << std::endl;
@@ -223,7 +222,7 @@ namespace cytnx{
             virtual std::vector<std::vector<cytnx_int64> > get_blocks_qnums() const;
             virtual void Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false);
             virtual boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false);
-
+            virtual boost::intrusive_ptr<UniTensor_base> relabel(const std::vector<cytnx_int64> &new_labels);
             
             // arithmetic 
             virtual void Add_(const boost::intrusive_ptr<UniTensor_base> &rhs);
@@ -356,6 +355,8 @@ namespace cytnx{
             std::string     device_str() const{ return Device.getname(this->_block.device());}
             boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank=-1,const bool &by_label=false);
             void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1, const bool &by_label=false);
+            boost::intrusive_ptr<UniTensor_base> relabel(const std::vector<cytnx_int64> &new_labels);
+
             boost::intrusive_ptr<UniTensor_base> contiguous_(){this->_block.contiguous_(); return boost::intrusive_ptr<UniTensor_base>(this);}
             boost::intrusive_ptr<UniTensor_base> contiguous(){
                 // if contiguous then return self! 
@@ -737,7 +738,7 @@ namespace cytnx{
                 this->_rowrank = new_rowrank;
                 this->_is_braket_form = this->_update_braket();
             }
-
+            boost::intrusive_ptr<UniTensor_base> relabel(const std::vector<cytnx_int64> &new_labels);
             unsigned int  dtype() const{
                 #ifdef UNI_DEBUG
                 cytnx_error_msg(this->_blocks.size()==0,"[ERROR][internal] empty blocks for blockform.%s","\n");
@@ -1249,6 +1250,12 @@ namespace cytnx{
                 out._impl = this->_impl->clone();
                 return out;
             }
+            UniTensor relabel(const std::vector<cytnx_int64> &new_labels) const{
+                UniTensor out;
+                out._impl = this->_impl->relabel(new_labels);
+                return out;
+            }
+
             UniTensor permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank=-1,const bool &by_label=false){UniTensor out; out._impl = this->_impl->permute(mapper,rowrank,by_label); return out;}
             void permute_(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank=-1,const bool &by_label=false){
                 this->_impl->permute_(mapper,rowrank,by_label);
