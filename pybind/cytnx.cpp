@@ -1381,6 +1381,7 @@ PYBIND11_MODULE(cytnx,m){
                     return self._impl->filename;
                 })
                 .def("Fromfile",&Network::Fromfile,py::arg("fname"),py::arg("network_type")=(int)NtType.Regular)
+                .def("FromString",&Network::FromString, py::arg("contents"),py::arg("network_type")=(int)NtType.Regular)
                 .def("Savefile",&Network::Savefile,py::arg("fname"))
                 .def("PutUniTensor",[](Network &self,const std::string &name, const UniTensor &utensor, const bool &is_clone){
                                                 self.PutUniTensor(name,utensor,is_clone);
