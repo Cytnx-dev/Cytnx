@@ -84,7 +84,11 @@ Scalar run_DMRG(tn_algo::MPO &mpo, tn_algo::MPS &mps, int Nsweeps, std::vector<t
 int main(int argc, char *argv[]){
 
 
+    auto mpri = tn_algo::MPS::Load("tmps.cymps");
+    print(mpri);
+    print(mpri.data()[0]);
 
+    return 0;
     int Nsites = 10;
     int chi = 16;
     double weight = 40;
@@ -111,8 +115,15 @@ int main(int argc, char *argv[]){
 
     // starting DMRG:
     auto mps0 = tn_algo::MPS(Nsites,2,chi);
+    print(mps0);
+    print(mps0.mps_type());
+    print(mps0.mps_type_str());
     Scalar E0 = run_DMRG(mpo,mps0,Nsweeps);
 
+    mps0.Save("tmps");
+
+
+    return 0;
     auto mps1 = tn_algo::MPS(Nsites,2,chi);
     Scalar E1 = run_DMRG(mpo,mps1,Nsweeps,{mps0},weight=60);
 

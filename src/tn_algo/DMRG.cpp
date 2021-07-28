@@ -209,7 +209,7 @@ namespace cytnx{
                 auto lbl = psi.labels(); // memorize label
                 auto psi_T = psi.get_block_(); psi_T.flatten_(); // flatten to 1d
 
-                cytnx_uint64 new_dim = min(min(dim_l*this->mps.phys_dim(),dim_r*this->mps.phys_dim()),this->mps.virt_dim());
+                cytnx_uint64 new_dim = min(min(dim_l*this->mps.phys_dim(p),dim_r*this->mps.phys_dim(p+1)),this->mps.virt_dim());
                 
                 //cout << "bkpt1\n";
                 // calculate local ortho_mps:
@@ -237,7 +237,7 @@ namespace cytnx{
                 psi_T = out[1];
                 Entemp = out[0].item();
 
-                psi_T.reshape_(dim_l, this->mps.phys_dim(), this->mps.phys_dim(), dim_r); //convert psi back to 4-leg form 
+                psi_T.reshape_(dim_l, this->mps.phys_dim(p), this->mps.phys_dim(p+1), dim_r); //convert psi back to 4-leg form 
                 psi = UniTensor(psi_T,2);    
                 psi.set_labels(lbl);
                 //self.Ekeep.append(Entemp);
@@ -331,7 +331,7 @@ namespace cytnx{
                 auto lbl = psi.labels(); // memorize label
                 auto psi_T = psi.get_block_(); psi_T.flatten_();// flatten to 1d
 
-                cytnx_int64 new_dim = min(min(dim_l*this->mps.phys_dim(),dim_r*this->mps.phys_dim()),this->mps.virt_dim());
+                cytnx_int64 new_dim = min(min(dim_l*this->mps.phys_dim(p),dim_r*this->mps.phys_dim(p+1)),this->mps.virt_dim());
 
                 // calculate local ortho_mps:
                 std::vector<Tensor> omps;
@@ -354,7 +354,7 @@ namespace cytnx{
                 auto out = optimize_psi(psi_T, {this->LR[p],this->mpo.get_op(p),this->mpo.get_op(p+1),this->LR[p+2]}, maxit, krydim, omps, this->weight);
                 psi_T = out[1];
                 Entemp = out[0].item();
-                psi_T.reshape_(dim_l,this->mps.phys_dim(),this->mps.phys_dim(),dim_r);// convert psi back to 4-leg form 
+                psi_T.reshape_(dim_l,this->mps.phys_dim(p),this->mps.phys_dim(p+1),dim_r);// convert psi back to 4-leg form 
                 psi = UniTensor(psi_T,2); 
                 psi.set_labels(lbl);
                 //self.Ekeep.append(Entemp);

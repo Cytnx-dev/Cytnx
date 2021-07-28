@@ -11,36 +11,58 @@ namespace cytnx{
             os << "MPS type : " << "[Regular]" << endl;
             os << "Size : " << this->_TNs.size() << endl;
             os << "Sloc : " << this->S_loc << endl;
-            os << "physBD dim : " << this->phys_dim << endl;
+            os << "physBD dim :\n";
+
+            // print Sloc indicator:
+            if(this->S_loc==-1){
+                os << ".[";
+            }else{
+                os << " [";
+            }
+            for(int i=0;i<this->_TNs.size();i++){
+                os << " ";  
+                if(this->S_loc==i) os << "'" << this->_TNs[i].shape()[1] << "'";
+                else  os << this->_TNs[i].shape()[1];
+            }
+            if(this->S_loc==this->_TNs.size()){
+                os << " ].\n";
+            }else{
+                os << "] \n";
+            }
+
             os << "virtBD dim : " << this->virt_dim << endl;
             os << endl;
             return os;
         }
 
 
-        void RegularMPS::Init(const cytnx_uint64 &N, const cytnx_uint64 &phys_dim, const cytnx_uint64 &virt_dim){
+        void RegularMPS::Init(const cytnx_uint64 &N, const std::vector<cytnx_uint64> &vphys_dim, const cytnx_uint64 &virt_dim, const cytnx_int64 &dtype){
             //checking:
             cytnx_error_msg(N==0,"[ERROR][RegularMPS] number of site N cannot be ZERO.%s","\n");
+            cytnx_error_msg(N!=vphys_dim.size(),"[ERROR] RegularMPS vphys_dim.size() should be equal to N.%s","\n"); 
+            cytnx_error_msg(dtype!=Type.Double,"[ERROR][RegularMPS] currently only Double dtype is support.%s","\n");
 
-            this->phys_dim = phys_dim;
             this->virt_dim = virt_dim;            
 
-            const cytnx_uint64& d = phys_dim; 
             const cytnx_uint64& chi = virt_dim;
             
             this->_TNs.resize(N);
-            this->_TNs[0] = UniTensor(cytnx::random::normal({1, d, min(chi, d)}, 0., 1.),2);
+            this->_TNs[0] = UniTensor(cytnx::random::normal({1, vphys_dim[0], min(chi, vphys_dim[0])}, 0., 1.),2);
             cytnx_uint64 dim1,dim2,dim3;
 
+            cytnx_uint64 DR = 1;
+            for(cytnx_int64 k=1;k<N;k++){
+                DR*= vphys_dim[k];
+            }
+
             for(cytnx_int64 k=1; k<N; k++){
-                dim1 = this->_TNs[k-1].shape()[2]; dim2 = d;
-                dim3 = std::min(std::min(d, cytnx_uint64(this->_TNs[k-1].shape()[2] * d)), cytnx_uint64(pow(d,N - k - 1)));
+                dim1 = this->_TNs[k-1].shape()[2]; dim2 = vphys_dim[k];
+                DR/=vphys_dim[k];
+                dim3 = std::min(std::min(chi, cytnx_uint64(dim1 * dim2)),DR);
                 this->_TNs[k] = UniTensor(random::normal({dim1, dim2, dim3},0.,1.),2);
                 this->_TNs[k].set_labels({2*k,2*k+1,2*k+2});
             }
             this->S_loc = -1;
-
-            
         }
 
 
@@ -104,6 +126,34 @@ namespace cytnx{
                 this->S_loc -= 1;
             }
         }
+
+
+        void RegularMPS::_save_dispatch(fstream &f){
+
+            cytnx_uint64 N = this->_TNs.size();
+            f.write((char*)&N,sizeof(cytnx_uint64));
+
+            // save UniTensor one by one:
+            for(cytnx_uint64 i=0;i<N;i++){
+                this->_TNs[i]._Save(f);
+            }            
+
+        }
+        void RegularMPS::_load_dispatch(fstream &f){
+            cytnx_uint64 N;
+
+            
+            f.read((char*)&N,sizeof(cytnx_uint64));
+            this->_TNs.resize(N);
+                
+            // Load UniTensor one by one:
+            for(cytnx_uint64 i=0;i<N;i++){
+                this->_TNs[i]._Load(f);
+            }
+
+
+        }
+
 
     }//tn_algo
 

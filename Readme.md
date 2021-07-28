@@ -35,6 +35,7 @@ See The following user guide for install and using of cytnx:
     5. [Enhance] Add UniTensor.relabel
     6. [Enhance] Add Network.FromString 
     7. [New][experiment] DMRG API         
+    8. [New][experiment] Add MPS Save/Load, and can now have different phys_dim for each site.
 
     v0.7.3
     1. [Fix] bug for Get slice does not reduce when dim=1. 
