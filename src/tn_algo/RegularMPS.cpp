@@ -64,11 +64,11 @@ namespace cytnx{
 
             for(cytnx_int64 k=1; k<N; k++){
                 dim1 = this->_TNs[k-1].shape()[2]; dim2 = vphys_dim[k];
-                if(k<=k_ov){
+                if(k<k_ov){
                     dim3 = std::min(chi, cytnx_uint64(dim1 * dim2));
                 }else{
-                    DR/=vphys_dim[k];
                     dim3 = std::min(std::min(chi, cytnx_uint64(dim1 * dim2)),DR);
+                    DR/=vphys_dim[k];
                 }
                 this->_TNs[k] = UniTensor(random::normal({dim1, dim2, dim3},0.,1.),2);
                 this->_TNs[k].set_labels({2*k,2*k+1,2*k+2});
