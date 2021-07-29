@@ -84,56 +84,26 @@ Scalar run_DMRG(tn_algo::MPO &mpo, tn_algo::MPS &mps, int Nsweeps, std::vector<t
 int main(int argc, char *argv[]){
 
 
-    auto mpri = tn_algo::MPS::Load("tmps.cymps");
-    print(mpri);
-    print(mpri.data()[0]);
 
-    return 0;
-    int Nsites = 10;
-    int chi = 16;
-    double weight = 40;
-    double h = 4;
-    int Nsweeps = 10;
+    int Nn = 16; // # of stars:
+    int chi = 4;
+    vector<cytnx_uint64> phys_dims;
 
-
-    //construct MPO:
-    auto sz = cytnx::physics::pauli("z").real();
-    auto sx = cytnx::physics::pauli("x").real();
-    auto II  = cytnx::eye(2);
-
-    auto tM = cytnx::zeros({3,3,2,2});
-    tM(0,0) = II;
-    tM(-1,-1) = II;
-    tM(0,2) = -h*sx;
-    tM(0,1) = -sz;
-    tM(1,2) = sz;
-    auto uM = UniTensor(tM,0);
-
-    auto mpo = tn_algo::MPO();
-    mpo.assign(Nsites,uM);
+    for(int i=0;i< Nn;i++){
+        phys_dims.push_back(16);
+        phys_dims.push_back(2);
+    }
 
 
-    // starting DMRG:
-    auto mps0 = tn_algo::MPS(Nsites,2,chi);
+    auto mps0 = tn_algo::MPS(Nn*2,phys_dims,chi);
     print(mps0);
-    print(mps0.mps_type());
-    print(mps0.mps_type_str());
-    Scalar E0 = run_DMRG(mpo,mps0,Nsweeps);
-
-    mps0.Save("tmps");
 
 
     return 0;
-    auto mps1 = tn_algo::MPS(Nsites,2,chi);
-    Scalar E1 = run_DMRG(mpo,mps1,Nsweeps,{mps0},weight=60);
 
-    auto mps2 = tn_algo::MPS(Nsites,2,chi);
-    Scalar E2 = run_DMRG(mpo,mps2,Nsweeps,{mps0,mps1},weight=60);
 
-    cout << E0 << endl;
-    cout << E1 << endl;
-    cout << E2 << endl;
 
+    return 0;
 
 
     return 0;
