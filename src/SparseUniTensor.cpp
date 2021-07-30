@@ -1209,15 +1209,15 @@ namespace cytnx{
             boost::intrusive_ptr<UniTensor_base> t_this = this->permute(mapperL,non_comm_idx1.size(),false)->contiguous();
             boost::intrusive_ptr<UniTensor_base> t_rhs = rhs->permute(mapperR,comm_labels.size(),false)->contiguous();
 
-            t_this->print_diagram();    
-            t_rhs->print_diagram();
+            //t_this->print_diagram();    
+            //t_rhs->print_diagram();
           
-            std::cout << t_this->is_contiguous();
-            std::cout << t_rhs->is_contiguous();
+            //std::cout << t_this->is_contiguous();
+            //std::cout << t_rhs->is_contiguous();
              
-            std::cout << t_this->get_blocks_(true);
+            //std::cout << t_this->get_blocks_(true);
  
-            /*
+            
             if((t_this->is_diag() == t_rhs->is_diag()) && t_this->is_diag()){
                 //diag x diag:
                 cytnx_error_msg(true,"[developing]%s","\n");
@@ -1257,31 +1257,40 @@ namespace cytnx{
                     //std::cout << rhs->get_block_().shape() << std::endl;
  
                     tmp->Init(out_bonds, out_labels, non_comm_idx1.size());
-                    std::cout << non_comm_idx1.size() << " " << out_rowrank << std::endl; 
-                    std::vector<Tensor> &Lblk = t_this->get_blocks_(false);
-                    std::vector<Tensor> &Rblk = t_rhs->get_blocks_(false);
+                    //std::cout << non_comm_idx1.size() << " " << out_rowrank << std::endl;
+                    //tmp->print_diagram();
+                    //std::cout << tmp->get_blocks_qnums();  
+                    //std::vector<Tensor> &Lblk = t_this->get_blocks_(false);
+                    //std::vector<Tensor> &Rblk = t_rhs->get_blocks_(false);
                     
-                    cytnx_error_msg(Lblk.size() != Rblk.size(),"[ERROR] internal fatal, this.blocks.size() != rhs.blocks.size()%s","\n");
+                    cytnx_error_msg(t_this->get_blocks_(true).size() != t_rhs->get_blocks_(true).size(),"[ERROR] internal fatal, this.blocks.size() != rhs.blocks.size()%s","\n");
                     
                     //std::cout << Lblk << std::endl;
                     //std::cout << Rblk << std::endl;
                     std::cout << tmp->_blocks.size() << std::endl;
-                    std::cout << Rblk.size() << std::endl; 
-                    for(int i=0; i<tmp->_blocks.size();i++){
-                        tmp->_blocks[i] = linalg::Matmul(Lblk[i],Rblk[i]);
+                    //std::cout << Rblk.size() << std::endl;
+                    //std::cout << Lblk.size() << std::endl;
+
+                    // note, output can have more blocks than the L / R ! 
+                    // => get the contract part QNs:
+                    auto comm_qnums = t_rhs->get_blocks_qnums();                    
+
+                    for(int i=0; i< comm_qnums.size(); i++){
+                        tmp->get_block_(comm_qnums[i],true) = linalg::Matmul(t_this->get_block_(comm_qnums[i],true), t_rhs->get_block_(comm_qnums[i],true));
                     }
                     
                 }
                 tmp->_is_diag = false;
             }
             tmp->_is_braket_form = tmp->_update_braket();
-            */  
+              
         }// check if no common index
         
 
         std::cout << "[OK]" << std::endl;
 
-        boost::intrusive_ptr<UniTensor_base> out(tmp);
+        //boost::intrusive_ptr<UniTensor_base> out(tmp);
+        boost::intrusive_ptr<UniTensor_base> out(new UniTensor_base());
         return out;
 
 

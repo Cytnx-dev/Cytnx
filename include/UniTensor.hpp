@@ -189,12 +189,12 @@ namespace cytnx{
             virtual void print_diagram(const bool &bond_info=false);
 
             virtual Tensor get_block(const cytnx_uint64 &idx=0) const; // return a copy of block
-            virtual Tensor get_block(const std::vector<cytnx_int64> &qnum) const; //return a copy of block
+            virtual Tensor get_block(const std::vector<cytnx_int64> &qnum, const bool &force) const; //return a copy of block
 
             virtual const Tensor& get_block_(const cytnx_uint64 &idx=0) const; // return a share view of block, this only work for non-symm tensor.
-            virtual const Tensor& get_block_(const std::vector<cytnx_int64> &qnum) const; //return a copy of block
+            virtual const Tensor& get_block_(const std::vector<cytnx_int64> &qnum, const bool &force) const; //return a copy of block
             virtual Tensor& get_block_(const cytnx_uint64 &idx=0); // return a share view of block, this only work for non-symm tensor.
-            virtual Tensor& get_block_(const std::vector<cytnx_int64> &qnum); //return a copy of block
+            virtual Tensor& get_block_(const std::vector<cytnx_int64> &qnum, const bool &force); //return a copy of block
             virtual bool same_data(const boost::intrusive_ptr<UniTensor_base> &rhs) const;
 
             virtual std::vector<Tensor> get_blocks() const;
@@ -203,8 +203,8 @@ namespace cytnx{
 
             virtual void put_block(const Tensor &in, const cytnx_uint64 &idx=0);
             virtual void put_block_(Tensor &in, const cytnx_uint64 &idx=0);
-            virtual void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum);
-            virtual void put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum);
+            virtual void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum, const bool &force);
+            virtual void put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum, const bool &force);
 
             // this will only work on non-symm tensor (DenseUniTensor)
             virtual boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors);
@@ -373,10 +373,10 @@ namespace cytnx{
             void print_diagram(const bool &bond_info=false);         
             Tensor get_block(const cytnx_uint64 &idx=0) const{ return this->_block.clone(); }
 
-            Tensor get_block(const std::vector<cytnx_int64> &qnum) const{cytnx_error_msg(true,"[ERROR][DenseUniTensor] try to get_block() using qnum on a non-symmetry UniTensor%s","\n"); return Tensor();}
+            Tensor get_block(const std::vector<cytnx_int64> &qnum, const bool &force) const{cytnx_error_msg(true,"[ERROR][DenseUniTensor] try to get_block() using qnum on a non-symmetry UniTensor%s","\n"); return Tensor();}
             // return a share view of block, this only work for non-symm tensor.
-            const Tensor& get_block_(const std::vector<cytnx_int64> &qnum) const{cytnx_error_msg(true,"[ERROR][DenseUniTensor] try to get_block_() using qnum on a non-symmetry UniTensor%s","\n"); return this->_block;}
-            Tensor& get_block_(const std::vector<cytnx_int64> &qnum){cytnx_error_msg(true,"[ERROR][DenseUniTensor] try to get_block_() using qnum on a non-symmetry UniTensor%s","\n"); return this->_block;}
+            const Tensor& get_block_(const std::vector<cytnx_int64> &qnum, const bool &force) const{cytnx_error_msg(true,"[ERROR][DenseUniTensor] try to get_block_() using qnum on a non-symmetry UniTensor%s","\n"); return this->_block;}
+            Tensor& get_block_(const std::vector<cytnx_int64> &qnum, const bool &force){cytnx_error_msg(true,"[ERROR][DenseUniTensor] try to get_block_() using qnum on a non-symmetry UniTensor%s","\n"); return this->_block;}
 
             // return a share view of block, this only work for non-symm tensor.
             Tensor& get_block_(const cytnx_uint64 &idx=0){
@@ -422,10 +422,10 @@ namespace cytnx{
                 }
             }
 
-            void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum){
+            void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum, const bool &force){
                 cytnx_error_msg(true,"[ERROR][DenseUniTensor] try to put_block using qnum on a non-symmetry UniTensor%s","\n");
             }
-            void put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum){
+            void put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum, const bool &force){
                 cytnx_error_msg(true,"[ERROR][DenseUniTensor] try to put_block using qnum on a non-symmetry UniTensor%s","\n");
             }
             // this will only work on non-symm tensor (DenseUniTensor)
@@ -789,8 +789,9 @@ namespace cytnx{
                 }
             };
 
-            Tensor get_block(const std::vector<cytnx_int64> &qnum) const{
-                cytnx_error_msg(!this->is_braket_form(),"[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch the row/col space.\n permute to the correct physical space first, then get block.%s","\n");
+            Tensor get_block(const std::vector<cytnx_int64> &qnum, const bool &force) const{
+                if(!force)
+                    cytnx_error_msg(!this->is_braket_form(),"[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch the row/col space.\n permute to the correct physical space first, then get block.%s","\n");
                 //std::cout << "get_block" <<std::endl;
                 if(this->_contiguous){
                     //std::cout << "contiguous" << std::endl;
@@ -827,8 +828,10 @@ namespace cytnx{
                 return this->_blocks[idx];
             }
 
-            Tensor& get_block_(const std::vector<cytnx_int64> &qnum){
-                cytnx_error_msg(!this->is_braket_form(),"[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch the row/col space.\n permute to the correct physical space first, then get block.%s","\n");
+            Tensor& get_block_(const std::vector<cytnx_int64> &qnum, const bool &force){
+                if(!force)
+                    cytnx_error_msg(!this->is_braket_form(),"[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch the row/col space.\n permute to the correct physical space first, then get block.%s","\n");
+
                 cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseUniTensor] cannot use get_block_() on non-contiguous UniTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call get_blocks_()\n  2) Try get_block()/get_blocks()%s","\n");
                 
                 //get dtype from qnum:
@@ -840,8 +843,10 @@ namespace cytnx{
                 return this->get_block_(idx);
                 //cytnx_error_msg(true,"[Developing]%s","\n");
             }
-            const Tensor& get_block_(const std::vector<cytnx_int64> &qnum) const{
-                cytnx_error_msg(!this->is_braket_form(),"[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch the row/col space.\n permute to the correct physical space first, then get block.%s","\n");
+            const Tensor& get_block_(const std::vector<cytnx_int64> &qnum, const bool &force) const{
+                if(!force)
+                    cytnx_error_msg(!this->is_braket_form(),"[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch the row/col space.\n permute to the correct physical space first, then get block.%s","\n");
+
                 cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseUniTensor] cannot use get_block_() on non-contiguous UniTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call get_blocks_()\n  2) Try get_block()/get_blocks()%s","\n");
                 
                 //get dtype from qnum:
@@ -918,8 +923,9 @@ namespace cytnx{
                     cytnx_error_msg(true,"[Developing] put block to a non-contiguous SparseUniTensor is currently not support. Call contiguous()/contiguous_() first.%s","\n");
                 }
             };
-            void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum){
-                cytnx_error_msg(!this->is_braket_form(),"[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch the row/col space.\n permute to the correct physical space first, then get block.%s","\n");
+            void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum, const bool &force){
+                if(!force)
+                    cytnx_error_msg(!this->is_braket_form(),"[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch the row/col space.\n permute to the correct physical space first, then get block.%s","\n");
                  
                 //get dtype from qnum:
                 cytnx_int64 idx=-1;
@@ -930,9 +936,9 @@ namespace cytnx{
                 this->put_block(in,idx);
 
             };
-            void put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum){
-                cytnx_error_msg(!this->is_braket_form(),"[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch the row/col space.\n permute to the correct physical space first, then get block.%s","\n");
-                cytnx_error_msg(this->is_contiguous()==false,"[ERROR][SparseUniTensor] cannot use put_block_() on non-contiguous UniTensor with symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call get_blocks_()\n  2) Try get_block()/get_blocks()%s","\n");
+            void put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum, const bool &force){
+                if(!force)
+                    cytnx_error_msg(!this->is_braket_form(),"[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch the row/col space.\n permute to the correct physical space first, then get block.%s","\n");
                 
                 //get dtype from qnum:
                 cytnx_int64 idx=-1;
@@ -1284,12 +1290,12 @@ namespace cytnx{
             };
             //================================
             // return a clone of block
-            Tensor get_block(const std::vector<cytnx_int64> &qnum) const{
-                return this->_impl->get_block(qnum);
+            Tensor get_block(const std::vector<cytnx_int64> &qnum, const bool &force=false) const{
+                return this->_impl->get_block(qnum,force);
             }
-            Tensor get_block(const std::initializer_list<cytnx_int64> &qnum) const{
+            Tensor get_block(const std::initializer_list<cytnx_int64> &qnum, const bool &force=false) const{
                 std::vector<cytnx_int64> tmp = qnum;
-                return get_block(tmp);
+                return get_block(tmp,force);
             }
             //================================
             // this only work for non-symm tensor. return a shared view of block
@@ -1303,22 +1309,22 @@ namespace cytnx{
             }
             //================================
             // this only work for non-symm tensor. return a shared view of block
-            Tensor& get_block_(const std::vector<cytnx_int64> &qnum){
-                return this->_impl->get_block_(qnum);
+            Tensor& get_block_(const std::vector<cytnx_int64> &qnum, const bool &force=false){
+                return this->_impl->get_block_(qnum,force);
             }
-            Tensor& get_block_(const std::initializer_list<cytnx_int64> &qnum){
+            Tensor& get_block_(const std::initializer_list<cytnx_int64> &qnum,const bool &force=false){
                 std::vector<cytnx_int64> tmp = qnum;
-                return get_block_(tmp);
+                return get_block_(tmp,force);
             }
             //================================
 
             // this only work for non-symm tensor. return a shared view of block
-            const Tensor& get_block_(const std::vector<cytnx_int64> &qnum) const{
-                return this->_impl->get_block_(qnum);
+            const Tensor& get_block_(const std::vector<cytnx_int64> &qnum, const bool &force=false) const{
+                return this->_impl->get_block_(qnum,force);
             }
-            const Tensor& get_block_(const std::initializer_list<cytnx_int64> &qnum) const{
+            const Tensor& get_block_(const std::initializer_list<cytnx_int64> &qnum, const bool &force=false) const{
                 std::vector<cytnx_int64> tmp = qnum;
-                return this->_impl->get_block_(tmp);
+                return this->_impl->get_block_(tmp,force);
             }
             //================================
             // this return a shared view of blocks for non-symm tensor.
@@ -1341,16 +1347,16 @@ namespace cytnx{
                 this->_impl->put_block(in,idx);
             }
             // the put block will have shared view with the internal block, i.e. non-clone. 
-            void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum){
-                this->_impl->put_block(in,qnum);
+            void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum, const bool &force){
+                this->_impl->put_block(in,qnum, force);
             }
             // the put block will have shared view with the internal block, i.e. non-clone. 
             void put_block_(Tensor &in,const cytnx_uint64 &idx=0){
                 this->_impl->put_block_(in,idx);
             }
             // the put block will have shared view with the internal block, i.e. non-clone. 
-            void put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum){
-                this->_impl->put_block_(in,qnum);
+            void put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum, const bool &force){
+                this->_impl->put_block_(in,qnum,force);
             }
             UniTensor get(const std::vector<Accessor> &accessors) const{
                 UniTensor out;
