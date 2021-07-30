@@ -6,6 +6,7 @@
 #include "Generator.hpp"
 #include <vector>
 #include "utils/vec_print.hpp"
+#include "utils/vec_concatenate.hpp"
 using namespace std;
 namespace cytnx{
     typedef Accessor ac;
@@ -237,11 +238,12 @@ namespace cytnx{
         //check rowrank.
         if(rowrank>=0){
             cytnx_error_msg((rowrank>=out_raw->_bonds.size()) || (rowrank<=0),"[ERROR] rowrank should >=1 and <= UniTensor.rank-1 for SparseUniTensor (UniTensor in blockform)(UniTensor with symmetries).%s","\n");
-            out_raw->_rowrank = rowrank; //only update the outer meta.
-        }
+            out_raw->set_rowrank(rowrank);
+        }else{
 
-        //update braket form status.
-        out_raw->_is_braket_form = out_raw->_update_braket();
+            //update braket form status.
+            out_raw->_is_braket_form = out_raw->_update_braket();
+        }
 
         boost::intrusive_ptr<UniTensor_base> out(out_raw);
         return out;
@@ -293,7 +295,8 @@ namespace cytnx{
         //check rowrank.
         if(rowrank>=0){
             cytnx_error_msg((rowrank>=this->_bonds.size()) || (rowrank<=0),"[ERROR] rowrank should >=1 and <= UniTensor.rank-1 for SparseUniTensor (UniTensor in blockform)(UniTensor with symmetries).%s","\n");
-            this->_rowrank = rowrank; //only update the outer meta.
+            //this->_rowrank = rowrank; //only update the outer meta.
+            this->set_rowrank(rowrank);
         }
 
         //update braket form status.
@@ -1148,15 +1151,138 @@ namespace cytnx{
         std::vector<cytnx_uint64> comm_idx1,comm_idx2;
         vec_intersect_(comm_labels,this->labels(),rhs->labels(),comm_idx1,comm_idx2);
 
+        //output instance:
+        SparseUniTensor *tmp = new SparseUniTensor();
+        std::vector<cytnx_int64> out_labels;
+        std::vector<Bond> out_bonds;
+        cytnx_int64 out_rowrank; 
         
+
         if(comm_idx1.size() == 0){
             // no common labels:
             
 
         }else{
-            
-        }
+        
+            // check qnums & type:
+            for(int i=0;i<comm_labels.size();i++){
+                //std::cout << this->_bonds[comm_idx1[i]];
+                //std::cout << rhs->_bonds[comm_idx2[i]];
+                
+                cytnx_error_msg(this->_bonds[comm_idx1[i]].qnums() != rhs->_bonds[comm_idx2[i]].qnums(),"[ERROR] contract bond @ label %d have qnum mismatch.\n",comm_labels[i]);
 
+                cytnx_error_msg(this->_bonds[comm_idx1[i]].type()+rhs->_bonds[comm_idx2[i]].type(), "[ERROR] BRA can only contract with KET. invalid @ label: %d\n",comm_labels[i]);  
+            }
+            std::cout << "end checking" << std::endl;
+
+            // proc meta, labels:    
+            std::vector<cytnx_uint64> non_comm_idx1 = vec_erase(utils_internal::range_cpu(this->rank()),comm_idx1);
+            std::vector<cytnx_uint64> non_comm_idx2 = vec_erase(utils_internal::range_cpu(rhs->rank()),comm_idx2);
+
+            vec_concatenate_(out_labels,vec_clone(this->_labels,non_comm_idx1),vec_clone(rhs->_labels,non_comm_idx2));
+
+
+            // these two cannot omp parallel, due to intrusive_ptr
+            for(cytnx_uint64 i=0; i<non_comm_idx1.size();i++)
+                out_bonds.push_back(this->_bonds[non_comm_idx1[i]]);
+            for(cytnx_uint64 i=0; i<non_comm_idx2.size();i++)
+                out_bonds.push_back(rhs->_bonds[non_comm_idx2[i]]);
+
+            out_rowrank = this->rowrank() + rhs->rowrank();
+
+            for(cytnx_uint64 i=0; i<comm_idx1.size();i++)
+                if(comm_idx1[i] < this->_rowrank) out_rowrank--;
+            for(cytnx_uint64 i=0;i<comm_idx2.size();i++)
+                if(comm_idx2[i] < rhs->_rowrank) out_rowrank--;
+
+            //permute input:
+            std::vector<cytnx_uint64> _mapperL, _mapperR;
+            vec_concatenate_(_mapperL, non_comm_idx1, comm_idx1);
+            vec_concatenate_(_mapperR, comm_idx2, non_comm_idx2);
+            
+            std::vector<cytnx_int64> mapperL(_mapperL.begin(),_mapperL.end());
+            std::vector<cytnx_int64> mapperR(_mapperR.begin(),_mapperR.end());
+            std::cout << "end calc permute meta" << std::endl;
+            std::cout << mapperL << std::endl;
+            std::cout << mapperR << std::endl;
+
+            boost::intrusive_ptr<UniTensor_base> t_this = this->permute(mapperL,non_comm_idx1.size(),false)->contiguous();
+            boost::intrusive_ptr<UniTensor_base> t_rhs = rhs->permute(mapperR,comm_labels.size(),false)->contiguous();
+
+            t_this->print_diagram();    
+            t_rhs->print_diagram();
+          
+            std::cout << t_this->is_contiguous();
+            std::cout << t_rhs->is_contiguous();
+             
+            std::cout << t_this->get_blocks_(true);
+ 
+            /*
+            if((t_this->is_diag() == t_rhs->is_diag()) && t_this->is_diag()){
+                //diag x diag:
+                cytnx_error_msg(true,"[developing]%s","\n");
+                
+                //check block status:
+                //cytnx_error_msg(t_this->get_blocks().size() != t_rhs->get_blocks().size(),"[ERROR] internal fatal, this.blocks.size() != rhs.blocks.size()%s","\n");
+                //if(tmp->_rowrank!=0){
+                //    
+                //    for(int i=0;i<t_this->get_blocks().size();i++){
+                //        
+                //    tmp->_block = t_this->_block * rhs->get_block_();
+                //}else{
+                //    //tmp->_block = linalg::Vectordot(this->_block,rhs->get_block_());
+                //    cytnx_error_msg(true,"[trace of UniTensor] is dev.?%s","\n");
+                //}
+                //tmp->_is_diag = true;
+                
+            }else{
+                if(this->is_diag()!=rhs->is_diag()){
+                    // diag x dense:
+                    //Tensor tmpL,tmpR;
+                    cytnx_error_msg(true,"[develope]%s","\n");
+
+                    //if(this->is_diag()) tmpL = linalg::Diag(this->_block);
+                    //else tmpL = this->_block; 
+                    //if(rhs->is_diag()) tmpR = linalg::Diag(rhs->get_block_());
+                    //else tmpR =  rhs->get_block_(); // share view!!
+                    //tmp->_block = linalg::Tensordot_dg(this->_block,rhs->get_block_(),comm_idx1,comm_idx2,this->is_diag());
+
+                }else{
+                    // dense x dense:
+                    //Tensor tmpL,tmpR;
+                    //tmpL = this->_block; 
+                    //tmpR =  rhs->get_block_(); // share view!!
+                    //std::cout << "dkd" << std::endl;
+                    //std::cout << this->_block.shape() << std::endl;
+                    //std::cout << rhs->get_block_().shape() << std::endl;
+ 
+                    tmp->Init(out_bonds, out_labels, non_comm_idx1.size());
+                    std::cout << non_comm_idx1.size() << " " << out_rowrank << std::endl; 
+                    std::vector<Tensor> &Lblk = t_this->get_blocks_(false);
+                    std::vector<Tensor> &Rblk = t_rhs->get_blocks_(false);
+                    
+                    cytnx_error_msg(Lblk.size() != Rblk.size(),"[ERROR] internal fatal, this.blocks.size() != rhs.blocks.size()%s","\n");
+                    
+                    //std::cout << Lblk << std::endl;
+                    //std::cout << Rblk << std::endl;
+                    std::cout << tmp->_blocks.size() << std::endl;
+                    std::cout << Rblk.size() << std::endl; 
+                    for(int i=0; i<tmp->_blocks.size();i++){
+                        tmp->_blocks[i] = linalg::Matmul(Lblk[i],Rblk[i]);
+                    }
+                    
+                }
+                tmp->_is_diag = false;
+            }
+            tmp->_is_braket_form = tmp->_update_braket();
+            */  
+        }// check if no common index
+        
+
+        std::cout << "[OK]" << std::endl;
+
+        boost::intrusive_ptr<UniTensor_base> out(tmp);
+        return out;
 
 
 
