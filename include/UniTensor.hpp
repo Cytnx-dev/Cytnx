@@ -169,7 +169,7 @@ namespace cytnx{
             
 
 
-            virtual void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1,const unsigned int &dtype=Type.Double,const int &device = Device.cpu,const bool &is_diag=false);
+            virtual void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1,const unsigned int &dtype=Type.Double,const int &device = Device.cpu,const bool &is_diag=false, const bool &no_alloc=false);
             virtual void Init_by_Tensor(const Tensor& in, const cytnx_uint64 &rowrank, const bool &is_diag=false);
             virtual std::vector<cytnx_uint64> shape() const;
             virtual bool      is_blockform() const ;
@@ -312,7 +312,7 @@ namespace cytnx{
             DenseUniTensor(){this->uten_type_id = UTenType.Dense;};
             friend class UniTensor; // allow wrapper to access the private elems
             // virtual functions
-            void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
+            void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false, const bool &no_alloc=false);
             // this only work for non-symm tensor
             void Init_by_Tensor(const Tensor& in_tensor, const cytnx_uint64 &rowrank, const bool &is_diag=false);
             std::vector<cytnx_uint64> shape() const{ 
@@ -695,7 +695,7 @@ namespace cytnx{
             };
 
             // virtual functions
-            void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false);
+            void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false, const bool &no_alloc=false);
             void Init_by_Tensor(const Tensor& in_tensor, const cytnx_uint64 &rowrank, const bool &is_diag=false){
                 cytnx_error_msg(true,"[ERROR][SparseUniTensor] cannot use Init_by_tensor() on a SparseUniTensor.%s","\n");
             }
@@ -1169,7 +1169,7 @@ namespace cytnx{
                     boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
                     this->_impl = out;
                 }
-                this->_impl->Init(bonds, in_labels, rowrank, dtype, device, is_diag);
+                this->_impl->Init(bonds, in_labels, rowrank, dtype, device, is_diag, false);
             }
             //@}            
 

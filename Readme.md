@@ -38,6 +38,8 @@ See The following user guide for install and using of cytnx:
     8. [New][experiment] Add MPS Save/Load, and can now have different phys_dim for each site.
     9. [Fix] SparseUniTensor.permute does not properly update contiguous status when rowrank argument is given.
     10. [Enhance] get_block(_)/put_block(_) by qnums now have a new argument "force" to get blocks from non-braket_form UniTensor.
+    11. [New] Add SparseUniTensor contract 
+    12. [New] Add SparseUniTensor linalg::Svd support. 
 
     v0.7.3
     1. [Fix] bug for Get slice does not reduce when dim=1. 

@@ -102,25 +102,47 @@ int main(int argc, char *argv[]){
     
     Ut.get_block_({-2})(0) = 1;
 
-    Ut.print_diagram();
-    print(Ut);
+    //Ut.print_diagram();
+    //print(Ut);
 
 
+    auto outv = linalg::Svd(Ut);
+
+    outv[0].print_diagram(true);
+    outv[1].print_diagram(true);
+    outv[2].print_diagram(true);
+
+    return 0;
+
+
+
+    Ut = Ut.permute({1,0,2,3});
+
+    cout << Ut.is_contiguous() << endl;
+
+    cout << Ut.is_braket_form() << endl;
+
+    return 0;
+
+
+     
+   
+    auto Ut2 = Ut.clone();
+    Ut2.set_labels({2,3,4,5});
 
     Ut = Ut.permute({1,3,0,2},3,false);
-    cout << Ut.is_contiguous() << endl;
-    
-    auto tmpU = Ut.contiguous();
+    //cout << Ut.is_contiguous() << endl;
 
-    print(tmpU);
 
-    /*    
-    auto Ut2 = Ut.clone();
-    Ut2.set_labels({3,4,5,6});
+    Ut2 = Ut2.permute({3,0,2,1},2,false);
+   
+    //Ut.print_diagram(); 
         
-    Ut2.print_diagram();
-    */
-    //Contract(Ut,Ut2);
+    //Ut2.print_diagram();
+    
+    cout << Contract(Ut,Ut2);
+
+    
 
 
     return 0; 

@@ -9,7 +9,7 @@
 typedef cytnx::Accessor ac;
 namespace cytnx{
 
-    void DenseUniTensor::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank, const unsigned int &dtype,const int &device, const bool &is_diag){
+    void DenseUniTensor::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank, const unsigned int &dtype,const int &device, const bool &is_diag, const bool &no_alloc){
 
                 //check for all bonds
                 this->_is_tag =false;
@@ -71,17 +71,19 @@ namespace cytnx{
                 //non symmetry, initialize memory.
                 if(this->_bonds.size()==0){
                     //scalar:
-                    this->_block = zeros({1},dtype,device);
+                    if(!no_alloc)
+                        this->_block = zeros({1},dtype,device);
                 }else{
                     if(is_diag){
-                        this->_block = zeros({_bonds[0].dim()},dtype,device);
+                        if(!no_alloc)
+                            this->_block = zeros({_bonds[0].dim()},dtype,device);
                         this->_is_diag = is_diag;
                     }else{
                         std::vector<cytnx_uint64> _shape(bonds.size());
                         for(unsigned int i=0;i<_shape.size();i++)
                             _shape[i] = bonds[i].dim();
-
-                        this->_block = zeros(_shape,dtype,device);
+                        if(!no_alloc)
+                            this->_block = zeros(_shape,dtype,device);
                     }
                 }          
     }

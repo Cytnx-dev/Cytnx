@@ -10,7 +10,7 @@
 using namespace std;
 namespace cytnx{
     typedef Accessor ac;
-    void SparseUniTensor::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank, const unsigned int &dtype,const int &device, const bool &is_diag){
+    void SparseUniTensor::Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank, const unsigned int &dtype,const int &device, const bool &is_diag, const bool &no_alloc){
         //the entering is already check all the bonds have symmetry.
         // need to check:
         // 1. the # of symmetry and their type across all bonds
@@ -121,9 +121,11 @@ namespace cytnx{
             if(is_diag){
                 // checking if each block are square matrix!:
                 cytnx_error_msg(rowdim != coldim, "[ERROR][SparseUniTensor] is_diag =True can only apply to UniTensor with each block to be a square matrix!\n block[%d] row.dim:[%d] col.dim:[%d]\n",i,rowdim,coldim);
-                this->_blocks[i] = zeros({rowdim},dtype,device);
+                if(!no_alloc)
+                    this->_blocks[i] = zeros({rowdim},dtype,device);
             }else{
-                this->_blocks[i] = zeros({rowdim,coldim},dtype,device);
+                if(!no_alloc)
+                    this->_blocks[i] = zeros({rowdim,coldim},dtype,device);
             }
         }
 
@@ -316,10 +318,11 @@ namespace cytnx{
     void SparseUniTensor::print_diagram(const bool &bond_info){
         char *buffer = (char*)malloc(256*sizeof(char));
 
-        sprintf(buffer,"-----------------------%s","\n");
+        sprintf(buffer,"-----------------------%s","\n");               std::cout << std::string(buffer);
         sprintf(buffer,"tensor Name : %s\n",this->_name.c_str());       std::cout << std::string(buffer);
         sprintf(buffer,"tensor Rank : %d\n",this->_labels.size());      std::cout << std::string(buffer);
         sprintf(buffer,"block_form  : true%s","\n");                    std::cout << std::string(buffer);
+        sprintf(buffer,"contiguous  : %s\n",this->is_contiguous()?"True":"False");    std::cout << std::string(buffer);
         sprintf(buffer,"valid bocks : %d\n",this->_blocks.size());      std::cout << std::string(buffer);
         sprintf(buffer,"is diag   : %s\n",this->is_diag()?"True":"False"); std::cout << std::string(buffer);
         sprintf(buffer,"on device   : %s\n",this->device_str().c_str());std::cout << std::string(buffer);
@@ -371,7 +374,7 @@ namespace cytnx{
         }
         sprintf(buffer,"           |             |     %s","\n"); std::cout << std::string(buffer);
         sprintf(buffer,"           ---------------     %s","\n"); std::cout << std::string(buffer);
-
+        sprintf(buffer,"%s","\n"); std::cout << std::string(buffer);
 
         if(bond_info){
             for(cytnx_uint64 i=0; i< this->_bonds.size();i++){
@@ -1141,7 +1144,7 @@ namespace cytnx{
     }
 
     boost::intrusive_ptr<UniTensor_base> SparseUniTensor::contract(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &mv_elem_self, const bool &mv_elem_rhs){
-        cytnx_error_msg(true,"[ERROR][Developing.]%s","\n");
+        //cytnx_error_msg(true,"[ERROR][Developing.]%s","\n");
         
         //checking type
         cytnx_error_msg(!rhs->is_blockform() ,"[ERROR] cannot contract symmetry UniTensor with non-symmetry UniTensor%s","\n");
@@ -1173,7 +1176,7 @@ namespace cytnx{
 
                 cytnx_error_msg(this->_bonds[comm_idx1[i]].type()+rhs->_bonds[comm_idx2[i]].type(), "[ERROR] BRA can only contract with KET. invalid @ label: %d\n",comm_labels[i]);  
             }
-            std::cout << "end checking" << std::endl;
+            //std::cout << "end checking" << std::endl;
 
             // proc meta, labels:    
             std::vector<cytnx_uint64> non_comm_idx1 = vec_erase(utils_internal::range_cpu(this->rank()),comm_idx1);
@@ -1202,9 +1205,9 @@ namespace cytnx{
             
             std::vector<cytnx_int64> mapperL(_mapperL.begin(),_mapperL.end());
             std::vector<cytnx_int64> mapperR(_mapperR.begin(),_mapperR.end());
-            std::cout << "end calc permute meta" << std::endl;
-            std::cout << mapperL << std::endl;
-            std::cout << mapperR << std::endl;
+            //std::cout << "end calc permute meta" << std::endl;
+            //std::cout << mapperL << std::endl;
+            //std::cout << mapperR << std::endl;
 
             boost::intrusive_ptr<UniTensor_base> t_this = this->permute(mapperL,non_comm_idx1.size(),false)->contiguous();
             boost::intrusive_ptr<UniTensor_base> t_rhs = rhs->permute(mapperR,comm_labels.size(),false)->contiguous();
@@ -1267,7 +1270,7 @@ namespace cytnx{
                     
                     //std::cout << Lblk << std::endl;
                     //std::cout << Rblk << std::endl;
-                    std::cout << tmp->_blocks.size() << std::endl;
+                    //std::cout << tmp->_blocks.size() << std::endl;
                     //std::cout << Rblk.size() << std::endl;
                     //std::cout << Lblk.size() << std::endl;
 
@@ -1287,10 +1290,10 @@ namespace cytnx{
         }// check if no common index
         
 
-        std::cout << "[OK]" << std::endl;
+        //std::cout << "[OK]" << std::endl;
 
-        //boost::intrusive_ptr<UniTensor_base> out(tmp);
-        boost::intrusive_ptr<UniTensor_base> out(new UniTensor_base());
+        boost::intrusive_ptr<UniTensor_base> out(tmp);
+        //boost::intrusive_ptr<UniTensor_base> out(new UniTensor_base());
         return out;
 
 
