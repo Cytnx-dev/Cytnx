@@ -41,6 +41,7 @@ See The following user guide for install and using of cytnx:
     11. [New] Add SparseUniTensor contract 
     12. [New] Add SparseUniTensor linalg::Svd support. 
     13. [Enhance] SparseUniTensor print info, add "contiguous" status.
+    14. [Enhance] Add print_info for Symmetry descriptor
 
 
     v0.7.3

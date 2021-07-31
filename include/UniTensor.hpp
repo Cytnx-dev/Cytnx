@@ -223,6 +223,8 @@ namespace cytnx{
             virtual void Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false);
             virtual boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false);
             virtual boost::intrusive_ptr<UniTensor_base> relabel(const std::vector<cytnx_int64> &new_labels);
+
+            virtual std::vector<Symmetry> syms() const;
             
             // arithmetic 
             virtual void Add_(const boost::intrusive_ptr<UniTensor_base> &rhs);
@@ -356,6 +358,11 @@ namespace cytnx{
             boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank=-1,const bool &by_label=false);
             void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1, const bool &by_label=false);
             boost::intrusive_ptr<UniTensor_base> relabel(const std::vector<cytnx_int64> &new_labels);
+
+            std::vector<Symmetry> syms() const{
+                cytnx_error_msg(true,"[ERROR][DenseUniTensor] dense unitensor does not have symmetry.%s","\n");
+                return std::vector<Symmetry>();
+            }
 
             boost::intrusive_ptr<UniTensor_base> contiguous_(){this->_block.contiguous_(); return boost::intrusive_ptr<UniTensor_base>(this);}
             boost::intrusive_ptr<UniTensor_base> contiguous(){
@@ -778,6 +785,9 @@ namespace cytnx{
                 
             }
             void print_diagram(const bool &bond_info=false);
+
+
+            std::vector<Symmetry> syms() const;
 
             Tensor get_block(const cytnx_uint64 &idx=0) const{
                 cytnx_error_msg(idx>=this->_blocks.size(),"[ERROR][SparseUniTensor] index out of range%s","\n");
@@ -1236,6 +1246,9 @@ namespace cytnx{
             bool     is_contiguous() const{ return this->_impl->is_contiguous();}
             bool is_diag() const{ return this->_impl->is_diag(); }
             bool is_tag() const { return this->_impl->is_tag();}
+            std::vector<Symmetry> syms() const{
+                return this->_impl->syms();
+            }
             const bool&     is_braket_form() const{
                 return this->_impl->is_braket_form();
             }

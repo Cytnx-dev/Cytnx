@@ -69,6 +69,10 @@ namespace cytnx{
         cytnx_error_msg(1,"%s","[ERROR][Internal] should not call Symmerty base!");
     }
 
+    void cytnx::Symmetry_base::print_info() const{
+        cytnx_error_msg(1,"%s","[ERROR][Internal] should not call Symmerty base!");
+    }
+
     ///=========================
     bool cytnx::U1Symmetry::check_qnum(const cytnx_int64 &qnum){
         return true;
@@ -93,6 +97,15 @@ namespace cytnx{
     }
     void cytnx::U1Symmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in){
         out = in*-1;
+    }
+
+    void cytnx::U1Symmetry::print_info() const{
+        cout << "--------------------\n"; 
+        cout << "[Symmetry]" << endl;
+        cout << "type : Abelian, U1" << endl;
+        cout << "combine rule : Q1 + Q2" << endl;
+        cout << "reverse rule : Q*(-1) " << endl;
+        cout << "--------------------\n"; 
     }
 
     ///========================
@@ -146,7 +159,16 @@ namespace cytnx{
         out = in*-1;
     }
 
+    void cytnx::ZnSymmetry::print_info() const{
+        cout << "--------------------\n"; 
+        cout << "[Symmetry]" << endl;
+        cout << "type : Abelian, Z("<< this->n <<")"<< endl;
+        cout << "combine rule : (Q1 + Q2)\%" << this->n << endl;
+        cout << "reverse rule : Q*(-1) " << endl;
+        cout << "--------------------\n"; 
+    }
 
+    //==================================================
 
     void cytnx::Symmetry::Save(const std::string &fname) const{
         fstream f;
@@ -192,6 +214,8 @@ namespace cytnx{
         return out;
     }
 
+
+
     //==================
     void cytnx::Symmetry::_Save(fstream &f) const{
         cytnx_error_msg(!f.is_open(),"[ERROR][Symmetry] invalid fstream%s","\n");
@@ -213,6 +237,11 @@ namespace cytnx{
         this->Init(stype_in,n_in);
     }
 
+
+    ostream& operator<<(ostream & os, const Symmetry &in){
+        in.print_info();
+        return os;
+    }
 
 //++++++++++++++++++++++++
     SymmetryType_class SymType;

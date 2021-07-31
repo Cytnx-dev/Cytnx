@@ -7,6 +7,8 @@
 #include "intrusive_ptr_base.hpp"
 #include <string>
 #include <cstdio>
+#include <iostream>
+#include <ostream>
 #include "utils/vec_clone.hpp"
 namespace cytnx{
     ///@cond
@@ -54,6 +56,7 @@ namespace cytnx{
             virtual void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR);
             virtual void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR);
             virtual void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
+            virtual void print_info() const;
             //virtual std::vector<cytnx_int64>& combine_rule(const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR);
             
     };
@@ -78,6 +81,7 @@ namespace cytnx{
             void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR);
             void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR);
             void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
+            void print_info() const;
     };
     ///@endcond
 
@@ -100,6 +104,7 @@ namespace cytnx{
             void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL, const std::vector<cytnx_int64> &inR);
             void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR);
             void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
+            void print_info() const;
     };
     ///@endcond
 
@@ -338,10 +343,18 @@ namespace cytnx{
             void _Load(std::fstream &f);
             /// @endcond
 
+            void print_info() const{
+                this->_impl->print_info();
+            }
+
             bool operator==(const Symmetry &rhs) const;
             bool operator!=(const Symmetry &rhs) const;
+
+
     };
 
+
+    std::ostream & operator<<(std::ostream &os, const Symmetry &in);
 
 }
 #endif

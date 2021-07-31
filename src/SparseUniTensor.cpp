@@ -315,6 +315,11 @@ namespace cytnx{
 
     }
 
+    std::vector<Symmetry> SparseUniTensor::syms() const{
+        return this->_bonds[0].syms();
+    }
+
+
     void SparseUniTensor::print_diagram(const bool &bond_info){
         char *buffer = (char*)malloc(256*sizeof(char));
 
@@ -1163,7 +1168,20 @@ namespace cytnx{
 
         if(comm_idx1.size() == 0){
             // no common labels:
+            cytnx_error_msg(true,"developing%s","\n");           
+            out_labels.insert(out_labels.end(), this->_labels.begin()
+                                              , this->_labels.begin()+this->rowrank());
+            out_labels.insert(out_labels.end(), rhs->_labels.begin()
+                                              , rhs->_labels.begin() + rhs->rowrank());
+            out_labels.insert(out_labels.end(), this->_labels.begin()+this->rowrank() 
+                                              , this->_labels.end());
+            out_labels.insert(out_labels.end(), rhs->_labels.begin() + rhs->rowrank()
+                                              , rhs->_labels.end());
+
+
             
+
+ 
 
         }else{
         

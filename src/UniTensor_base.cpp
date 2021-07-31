@@ -62,6 +62,10 @@ namespace cytnx{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
             return 0;
         }
+        std::vector<Symmetry> UniTensor_base::syms() const{
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+            return std::vector<Symmetry>();
+        }
        int          UniTensor_base::device() const{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
             return -1;
