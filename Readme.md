@@ -40,6 +40,8 @@ See The following user guide for install and using of cytnx:
     10. [Enhance] get_block(_)/put_block(_) by qnums now have a new argument "force" to get blocks from non-braket_form UniTensor.
     11. [New] Add SparseUniTensor contract 
     12. [New] Add SparseUniTensor linalg::Svd support. 
+    13. [Enhance] SparseUniTensor print info, add "contiguous" status.
+
 
     v0.7.3
     1. [Fix] bug for Get slice does not reduce when dim=1. 
