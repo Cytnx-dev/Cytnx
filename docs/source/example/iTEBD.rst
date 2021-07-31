@@ -1,5 +1,7 @@
 iTEBD
 ------------
+**By : Hsu Ke, Kai-Hsin Wu**
+
 Time evolution block decimation is one of the most simple and sucessful Tensor network method :cite:`itebd-vidal`. The core concept of this algorithm is to use the imaginary time evolution to find the best variational ansatz, usually in terms of Matrix product state (MPS). 
 
 
@@ -186,7 +188,6 @@ Here, let's construct this imaginary time evolution operator with parameter :mat
     U = UniTensor(eH,2)
     U.print_diagram()
 
-
 * In c++
 
 .. code-block:: c++
@@ -278,13 +279,352 @@ Output>>
 Update procedure
 ******************
 Now we have prepared the initial trial wavefunction in terms of MPS with two sites unit cell and the time evolution operator, we are ready to use the aformentioned scheme to find the (variational) ground state MPS. 
+At the beginning of each iteration, we evaluate the energy expectation value $\langle \psi | H | \psi  \rangle / \langle \psi | \psi  \rangle\$, and check the convergence, the network is straightforward:
 
 
+.. image:: image/itebd_contract.png
+    :width: 300
+    :align: center
 
-.. Hint::
+
+.. image:: image/itebd_energy.png
+    :width: 450
+    :align: center
+
+* In python 
+
+.. code-block:: python 
+    :linenos:
+
+    A.set_labels([-1,0,-2])
+    B.set_labels([-3,1,-4])
+    la.set_labels([-2,-3])
+    lb.set_labels([-4,-5])
+
+    ## contract all
+    X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
+    #X.print_diagram()
+    lb.set_label(idx=1,new_label=-1)
+    X = cytnx.Contract(lb,X)
+
+    Xt = X.clone()
+
+    ## calculate norm and energy for this step
+    # Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element
+    XNorm = cytnx.Contract(X,Xt).item()
+    XH = cytnx.Contract(X,H)
+    XH.set_labels([-4,-5,0,1])
+    XHX = cytnx.Contract(Xt,XH).item() ## rank-0
+    E = XHX/XNorm
+
+    ## check if converged.
+    if(np.abs(E-Elast) < CvgCrit):
+        print("[Converged!]")
+        break
+    print("Step: %d Enr: %5.8f"%(i,Elast))
+    Elast = E
+
+* In c++
+
+.. code-block:: c++ 
+    :linenos:
+
+    A.set_labels({-1,0,-2}); 
+    B.set_labels({-3,1,-4}); 
+    la.set_labels({-2,-3}); 
+    lb.set_labels({-4,-5}); 
+
+
+    // contract all
+    UniTensor X = cyx::Contract(cyx::Contract(A,la),cyx::Contract(B,lb));
+    lb.set_label(1,-1); 
+    X = cyx::Contract(lb,X);
+
+    UniTensor Xt = X.clone();
     
-    The complete example code can be found in Github repo under example/iTEBD folder.
+    //> calculate norm and energy for this step
+    // Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element
+    double XNorm = cyx::Contract(X,Xt).item<double>();
+    UniTensor XH = cyx::Contract(X,H);
 
+    XH.set_labels({-4,-5,0,1});
+    double XHX = cyx::Contract(Xt,XH).item<double>(); 
+    double E = XHX/XNorm;
+
+    //> check if converged.
+    if(abs(E-Elast) < CvgCrit){
+        cout << "[Converged!]" << endl;
+        break;
+    }
+    cout << "Step: " << i << "Enr: " << Elast << endl;
+    Elast = E;
+
+in the next step we perform the two-sites imaginary time evolution, using the operator (or "gate") eH we defined above:
+
+.. image:: image/itebd_envolve.png
+    :width: 700
+    :align: center
+
+we also performed SVD for the XeH here, this put the MPS into mixed canonical form, we thus have a Schimit decomposition of the whole state, and the singular values being the Schimit coefficients.
+
+* In python 
+
+.. code-block:: python 
+    :linenos:
+
+    XeH = cytnx.Contract(X,eH)
+    XeH.permute_([-4,2,3,-5],by_label=True)
+
+    XeH.set_rowrank(2)
+    la,A,B = cytnx.linalg.Svd_truncate(XeH,chi)
+    Norm = cytnx.linalg.Norm(la.get_block_()).item()
+    la *= 1./Norm
+
+* In c++
+
+.. code-block:: c++ 
+    :linenos:
+
+    //> Time evolution the MPS
+    UniTensor XeH = cyx::Contract(X,eH);
+    XeH.permute_({-4,2,3,-5},-1,true);
+
+    XeH.set_Rowrank(2);
+    vector<UniTensor> out = cyx::xlinalg::Svd_truncate(XeH,chi);
+    la = out[0]; A = out[1]; B = out[2];
+    double Norm = cytnx::linalg::Norm(la.get_block_()).item<double>();
+    la *= 1./Norm; //normalize
+
+Note that we directly store the SVD results into A, B and la, this can be seen by comparing to our original MPS configuration:
+
+.. image:: image/itebd_what.png
+    :width: 500
+    :align: center
+
+from this interpretation we are thus motivated to use the gauge freedom to introduce $\lambda_B^{-1} \lambda_B$ on both ends,
+abosorb two $\lambda_B^{-1}$ we then recover the original configuration.
+
+.. image:: image/itebd_recover.png
+    :width: 500
+    :align: center
+
+Now we have the envolved $\Gamma_A$, $\Gamma_B$ and $\lambda_A$, use the translation symmetry, we shift the whole chain to left by just exchange the $Gamma$ and $\lambda$ pair and arrived at the new MPS for next iteration:
+
+.. image:: image/itebd_translation.png
+    :width: 300
+    :align: center
+
+
+
+* In python 
+
+.. code-block:: python 
+    :linenos:
+
+    # again, but A' and B' are updated 
+    A.set_labels([-1,0,-2]); A.set_rowrank(1);
+    B.set_labels([-3,1,-4]); B.set_rowrank(1);
+
+    lb_inv = 1./lb
+
+    lb_inv.set_labels([7, -1]) # -1 to contract with A, 7 is arbitary here.
+    A = cytnx.Contract(lb_inv,A)
+
+    lb_inv.set_labels([-4, 8]) # -4 to contract with B, 8 is arbitary here.
+    B = cytnx.Contract(B,lb_inv)
+
+    # translation symmetry, exchange A and B site
+    A,B = B,A
+    la,lb = lb,la
+
+* In c++
+
+.. code-block:: c++ 
+    :linenos:
+
+    A.set_labels({-1,0,-2}); A.set_Rowrank(1);
+    B.set_labels({-3,1,-4}); B.set_Rowrank(1);
+    
+    UniTensor lb_inv = 1./lb;
+
+    lb_inv.set_labels({7, -1}); // -1 to contract with A, 7 is arbitary here.
+    A = cyx.Contract(lb_inv,A);
+
+    lb_inv.set_labels({-4, 8}) // -4 to contract with B, 8 is arbitary here.
+    B = cyx.Contract(B,lb_inv);
+
+    A = cyx::Contract(lb_inv,A);
+    B = cyx::Contract(B,lb_inv);
+
+
+    //> translation symm, exchange A and B site
+    UniTensor tmp = A;
+    A = B; B = tmp;
+
+    tmp = la;
+    la = lb; lb = tmp;
+
+Let's put everything together in a loop for iteration:
+
+* In python 
+
+.. code-block:: python 
+    :linenos:
+
+    for i in range(10000):
+
+        A.set_labels([-1,0,-2])
+        B.set_labels([-3,1,-4])
+        la.set_labels([-2,-3])
+        lb.set_labels([-4,-5])
+
+        ## contract all
+        X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
+        #X.print_diagram()
+        lb.set_label(idx=1,new_label=-1)
+        X = cytnx.Contract(lb,X)
+
+        ## X =
+        #           (0)  (1)
+        #            |    |     
+        #  (-4) --lb-A-la-B-lb-- (-5) 
+        #
+        #X.print_diagram()
+
+        Xt = X.clone()
+
+        ## calculate norm and energy for this step
+        # Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element
+        XNorm = cytnx.Contract(X,Xt).item()
+        XH = cytnx.Contract(X,H)
+        XH.set_labels([-4,-5,0,1])
+        XHX = cytnx.Contract(Xt,XH).item() ## rank-0
+        E = XHX/XNorm
+
+        ## check if converged.
+        if(np.abs(E-Elast) < CvgCrit):
+            print("[Converged!]")
+            break
+        print("Step: %d Enr: %5.8f"%(i,Elast))
+        Elast = E
+
+        ## Time evolution the MPS
+        XeH = cytnx.Contract(X,eH)
+        XeH.permute_([-4,2,3,-5],by_label=True)
+        #XeH.print_diagram()
+        
+        ## Do Svd + truncate
+        ## 
+        #        (2)   (3)                   (2)                                    (3)
+        #         |     |          =>         |         +   (-6)--s--(-7)  +         |
+        #  (-4) --= XeH =-- (-5)        (-4)--U--(-6)                          (-7)--Vt--(-5)
+        #
+
+        XeH.set_rowrank(2)
+        la,A,B = cytnx.linalg.Svd_truncate(XeH,chi)
+        Norm = cytnx.linalg.Norm(la.get_block_()).item()
+        la *= 1./Norm
+        #A.print_diagram()
+        #la.print_diagram()
+        #B.print_diagram()
+            
+
+        # de-contract the lb tensor , so it returns to 
+        #             
+        #            |     |     
+        #       --lb-A'-la-B'-lb-- 
+        #
+        # again, but A' and B' are updated 
+        A.set_labels([-1,0,-2]); A.set_rowrank(1);
+        B.set_labels([-3,1,-4]); B.set_rowrank(1);
+
+        #A.print_diagram()
+        #B.print_diagram()
+
+        lb_inv = 1./lb
+        A = cytnx.Contract(lb_inv,A)
+        B = cytnx.Contract(B,lb_inv)
+
+        #A.print_diagram()
+        #B.print_diagram()
+
+        # translation symmetry, exchange A and B site
+        A,B = B,A
+        la,lb = lb,la
+
+
+* In c++
+
+.. code-block:: c++ 
+    :linenos:
+    
+    //> Evov:
+    double Elast = 0;
+    
+    for(unsigned int i=0;i<10000;i++){
+        A.set_labels({-1,0,-2}); 
+        B.set_labels({-3,1,-4}); 
+        la.set_labels({-2,-3}); 
+        lb.set_labels({-4,-5}); 
+
+
+        // contract all
+        UniTensor X = cyx::Contract(cyx::Contract(A,la),cyx::Contract(B,lb));
+        lb.set_label(1,-1); 
+        X = cyx::Contract(lb,X);
+
+        UniTensor Xt = X.clone();
+        
+        //> calculate norm and energy for this step
+        // Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element
+        double XNorm = cyx::Contract(X,Xt).item<double>();
+        UniTensor XH = cyx::Contract(X,H);
+
+        XH.set_labels({-4,-5,0,1});
+        double XHX = cyx::Contract(Xt,XH).item<double>(); 
+        double E = XHX/XNorm;
+
+        //> check if converged.
+        if(abs(E-Elast) < CvgCrit){
+            cout << "[Converged!]" << endl;
+            break;
+        }
+        cout << "Step: " << i << "Enr: " << Elast << endl;
+        Elast = E;
+
+        //> Time evolution the MPS
+        UniTensor XeH = cyx::Contract(X,eH);
+        XeH.permute_({-4,2,3,-5},-1,true);
+
+        //> Do Svd + truncate
+        XeH.set_Rowrank(2);
+        vector<UniTensor> out = cyx::xlinalg::Svd_truncate(XeH,chi);
+        la = out[0]; A = out[1]; B = out[2];
+        double Norm = cytnx::linalg::Norm(la.get_block_()).item<double>();
+        la *= 1./Norm; //normalize
+        
+
+        // de-contract the lb tensor , so it returns to 
+        //             
+        //            |     |     
+        //       --lb-A'-la-B'-lb-- 
+        //
+        // again, but A' and B' are updated 
+        A.set_labels({-1,0,-2}); A.set_Rowrank(1);
+        B.set_labels({-3,1,-4}); B.set_Rowrank(1);
+        
+        UniTensor lb_inv = 1./lb;
+        A = cyx::Contract(lb_inv,A);
+        B = cyx::Contract(B,lb_inv);
+
+    
+        //> translation symm, exchange A and B site
+        UniTensor tmp = A;
+        A = B; B = tmp;
+
+        tmp = la;
+        la = lb; lb = tmp;
+    }
 
 .. bibliography:: ref.itebd.bib
     :cited:
