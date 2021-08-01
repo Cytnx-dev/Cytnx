@@ -6,6 +6,8 @@ from .Tensor_conti import *
 from .linalg_conti import *
 from .UniTensor_conti import *
 from .Network_conti import *
+from .MPS_conti import *
+
 if(os.path.exists(os.path.join(os.path.dirname(__file__),"include"))):
     # this only set if using anaconda install. 
     __cpp_include__=os.path.join(os.path.dirname(__file__),"include")
