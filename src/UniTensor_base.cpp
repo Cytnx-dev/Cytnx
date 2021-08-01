@@ -324,31 +324,31 @@ namespace cytnx{
 
         //-----------------------------------------
         std::ostream& operator<<(std::ostream& os, const UniTensor &in){
+
+            os << "-------- start of print ---------\n";
             char* buffer = (char*)malloc(sizeof(char)*256);
             sprintf(buffer,"Tensor name: %s\n",in.name().c_str()); os << std::string(buffer);
             if(in.is_tag()) 
                 sprintf(buffer,"braket_form : %s\n", in.is_braket_form()?"True":"False"); os << std::string(buffer);
             sprintf(buffer,"is_diag    : %s\n",in.is_diag()?"True":"False"); os << std::string(buffer);
+            sprintf(buffer,"contiguous : %s\n",in.is_contiguous()?"True":"False"); os << std::string(buffer);
 
             if(in.is_blockform()){
-                if(in.is_contiguous()){
-                    std::vector<Tensor> tmp = in.get_blocks_(true);
-                    for(cytnx_uint64 i=0;i<tmp.size();i++)
-                        os << tmp[i] << std::endl;
-                }else{
-                    cytnx_warning_msg(true,"[WARNING][Symmetric] cout/print UniTensor on a non-contiguous UniTensor. the blocks appears here could be different than the current shape of UniTensor.%s","\n");
-                    auto tmp_qnums = in.get_blocks_qnums();
-                    std::vector<Tensor> tmp = in.get_blocks_(true);
-                    os << "=============\n";
-                    for(cytnx_uint64 i=0;i<tmp.size();i++){
-                        os << "Qnum:" << tmp_qnums[i] << std::endl;
-                        os << tmp[i] << std::endl;  
-                        os << "=============\n";
-                    }
-                    os << "-------- end of print ---------\n";
+                auto tmp_qnums = in.get_blocks_qnums();
+                std::vector<Tensor> tmp = in.get_blocks_(true);
+                sprintf(buffer,"BLOCKS:: %s","\n"); os << std::string(buffer);
+                os << "=============\n";
 
+                if(!in.is_contiguous()){
+                    cytnx_warning_msg(true,"[WARNING][Symmetric] cout/print UniTensor on a non-contiguous UniTensor. the blocks appears here could be different than the current shape of UniTensor.%s","\n");
                 }
-                
+                for(cytnx_uint64 i=0;i<tmp.size();i++){
+                    os << "Qnum:" << tmp_qnums[i] << std::endl;
+                    os << tmp[i] << std::endl;  
+                    os << "=============\n";
+                }
+                os << "-------- end of print ---------\n";
+
             }else{
                 Tensor tmp = in.get_block_();
                 os << tmp << std::endl;     

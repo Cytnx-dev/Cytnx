@@ -7,6 +7,7 @@
 #include <vector>
 #include "utils/vec_print.hpp"
 #include "utils/vec_concatenate.hpp"
+#include <map>
 using namespace std;
 namespace cytnx{
     typedef Accessor ac;
@@ -417,76 +418,80 @@ namespace cytnx{
             
             //calculate new inner meta, and copy the element from it.   
             for(unsigned int b=0;b<this->_blocks.size();b++){
-                 
-                // build accumulate index with current memory shape.
-                vector<cytnx_uint64> oldshape = vec_map(this->shape(),this->_inv_mapper);
-                //cout << oldshape << endl;
-                //for(int t=0;t<oldshape.size();t++) cout << oldshape[t] << " "; cout << endl;//[DEBUG]
+                if(this->_is_diag){
+                    tmp->_blocks[b] = this->_blocks[b];
 
-                vector<cytnx_uint64> acc_in_old(this->_inner_rowrank),acc_out_old(oldshape.size()-this->_inner_rowrank);
-                acc_out_old[acc_out_old.size()-1] = 1;
-                acc_in_old[ acc_in_old.size()-1 ] = 1;
-                for(unsigned int s=0;s<acc_out_old.size()-1;s++){
-                    acc_out_old[acc_out_old.size()-2-s] = oldshape.back()*acc_out_old[acc_out_old.size()-1-s]; 
+                }else{
+                    // build accumulate index with current memory shape.
+                    vector<cytnx_uint64> oldshape = vec_map(this->shape(),this->_inv_mapper);
+                    //cout << oldshape << endl;
+                    //for(int t=0;t<oldshape.size();t++) cout << oldshape[t] << " "; cout << endl;//[DEBUG]
+
+                    vector<cytnx_uint64> acc_in_old(this->_inner_rowrank),acc_out_old(oldshape.size()-this->_inner_rowrank);
+                    acc_out_old[acc_out_old.size()-1] = 1;
+                    acc_in_old[ acc_in_old.size()-1 ] = 1;
+                    for(unsigned int s=0;s<acc_out_old.size()-1;s++){
+                        acc_out_old[acc_out_old.size()-2-s] = oldshape.back()*acc_out_old[acc_out_old.size()-1-s]; 
+                        oldshape.pop_back();
+                    }
                     oldshape.pop_back();
-                }
-                oldshape.pop_back();
-                for(unsigned int s=0;s<acc_in_old.size()-1;s++){
-                    acc_in_old[acc_in_old.size()-2-s] = oldshape.back()*acc_in_old[acc_in_old.size()-1-s]; 
-                    oldshape.pop_back();
-                }
-                
+                    for(unsigned int s=0;s<acc_in_old.size()-1;s++){
+                        acc_in_old[acc_in_old.size()-2-s] = oldshape.back()*acc_in_old[acc_in_old.size()-1-s]; 
+                        oldshape.pop_back();
+                    }
+                    
 
-                //for(int t=0;t<acc_in_old.size();t++) cout << acc_in_old[t] << " "; cout << endl;//[DEBUG]
-                //for(int t=0;t<acc_out_old.size();t++) cout << acc_out_old[t] << " "; cout << endl;//[DEBUG]
-                //exit(1);
+                    //for(int t=0;t<acc_in_old.size();t++) cout << acc_in_old[t] << " "; cout << endl;//[DEBUG]
+                    //for(int t=0;t<acc_out_old.size();t++) cout << acc_out_old[t] << " "; cout << endl;//[DEBUG]
+                    //exit(1);
 
-                for(unsigned int i=0;i<this->_blocks[b].shape()[0];i++){
-                    for(unsigned int j=0;j<this->_blocks[b].shape()[1];j++){
-                        //decompress 
-                        vector<cytnx_uint64> tfidx = vec_concatenate(c2cartesian(this->_inner2outer_row[b][i],acc_in_old), 
-                                                                     c2cartesian(this->_inner2outer_col[b][j],acc_out_old));
-                       
-                        //cout << "old idxs:" ;
-                        //for(int t=0;t<tfidx.size();t++) cout << tfidx[t] << " "; cout << endl;//[DEBUG]
+                    for(unsigned int i=0;i<this->_blocks[b].shape()[0];i++){
+                        for(unsigned int j=0;j<this->_blocks[b].shape()[1];j++){
+                            //decompress 
+                            vector<cytnx_uint64> tfidx = vec_concatenate(c2cartesian(this->_inner2outer_row[b][i],acc_in_old), 
+                                                                         c2cartesian(this->_inner2outer_col[b][j],acc_out_old));
+                           
+                            //cout << "old idxs:" ;
+                            //for(int t=0;t<tfidx.size();t++) cout << tfidx[t] << " "; cout << endl;//[DEBUG]
 
-                        tfidx = vec_map(tfidx,this->_mapper); // convert to new index
+                            tfidx = vec_map(tfidx,this->_mapper); // convert to new index
 
-                        //cout << "new idxs:" ;
-                        //for(int t=0;t<tfidx.size();t++) cout << tfidx[t] << " "; cout << endl;//[DEBUG]
+                            //cout << "new idxs:" ;
+                            //for(int t=0;t<tfidx.size();t++) cout << tfidx[t] << " "; cout << endl;//[DEBUG]
 
-                        //cout << "new shape:" ;
-                        //for(int t=0;t<tmp->_bonds.size();t++) cout << tmp->_bonds[t].dim() << " "; cout << endl;//[DEBUG]
+                            //cout << "new shape:" ;
+                            //for(int t=0;t<tmp->_bonds.size();t++) cout << tmp->_bonds[t].dim() << " "; cout << endl;//[DEBUG]
 
 
-                        
-                        //caluclate new row col index:
-                        cytnx_uint64 new_row = 0, new_col=0;
-                        cytnx_uint64 buff=1;
-                        for(unsigned int k=0;k<tmp->labels().size()-tmp->rowrank();k++){
-                            new_col += buff*tfidx.back();
-                            tfidx.pop_back();
-                            buff*=tmp->_bonds[tmp->_bonds.size()-1-k].dim();
-                        }
-                        buff = 1;
-                        for(unsigned int k=0;k<tmp->_rowrank;k++){
-                            new_row += buff*tfidx.back();
-                            tfidx.pop_back();
-                            buff*=tmp->_bonds[tmp->_rowrank-1-k].dim();
-                        }
-                        /* 
-                        cout << new_col << " " << new_row << endl;
-                        cout << "checkblock";
-                        cout << tmp->_outer2inner_row[new_row].first << " " << tmp->_outer2inner_col[new_col].first << endl;
-                        cout << "newblock" << endl;
-                        cout << tmp->_blocks[tmp->_outer2inner_row[new_row].first]<< endl;
-                        cout << "oldblock" << endl;
-                        cout << this->_blocks[b] << endl;
-                        */
-                        tmp->_blocks[tmp->_outer2inner_row[new_row].first].set({ac(tmp->_outer2inner_row[new_row].second),ac(tmp->_outer2inner_col[new_col].second)},this->_blocks[b].get({ac(i),ac(j)}));
+                            
+                            //caluclate new row col index:
+                            cytnx_uint64 new_row = 0, new_col=0;
+                            cytnx_uint64 buff=1;
+                            for(unsigned int k=0;k<tmp->labels().size()-tmp->rowrank();k++){
+                                new_col += buff*tfidx.back();
+                                tfidx.pop_back();
+                                buff*=tmp->_bonds[tmp->_bonds.size()-1-k].dim();
+                            }
+                            buff = 1;
+                            for(unsigned int k=0;k<tmp->_rowrank;k++){
+                                new_row += buff*tfidx.back();
+                                tfidx.pop_back();
+                                buff*=tmp->_bonds[tmp->_rowrank-1-k].dim();
+                            }
+                            /* 
+                            cout << new_col << " " << new_row << endl;
+                            cout << "checkblock";
+                            cout << tmp->_outer2inner_row[new_row].first << " " << tmp->_outer2inner_col[new_col].first << endl;
+                            cout << "newblock" << endl;
+                            cout << tmp->_blocks[tmp->_outer2inner_row[new_row].first]<< endl;
+                            cout << "oldblock" << endl;
+                            cout << this->_blocks[b] << endl;
+                            */
+                            tmp->_blocks[tmp->_outer2inner_row[new_row].first].set({ac(tmp->_outer2inner_row[new_row].second),ac(tmp->_outer2inner_col[new_col].second)},this->_blocks[b].get({ac(i),ac(j)}));
 
-                    }// row in block
-                }// col in block
+                        }// row in block
+                    }// col in block
+                }//is-diag
             }// each old block         
  
  
@@ -1152,7 +1157,11 @@ namespace cytnx{
         //cytnx_error_msg(true,"[ERROR][Developing.]%s","\n");
         
         //checking type
-        cytnx_error_msg(!rhs->is_blockform() ,"[ERROR] cannot contract symmetry UniTensor with non-symmetry UniTensor%s","\n");
+        cytnx_error_msg(rhs->uten_type() != UTenType.Sparse, "[ERROR] cannot contract symmetry UniTensor with non-symmetry UniTensor%s","\n");
+
+        //checking symmetry:
+        cytnx_error_msg(this->syms() != rhs->syms(), "[ERROR] two UniTensor have different symmetry type cannot contract.%s","\n");
+
 
         //get common labels:    
         std::vector<cytnx_int64> comm_labels;
@@ -1168,7 +1177,10 @@ namespace cytnx{
 
         if(comm_idx1.size() == 0){
             // no common labels:
-            cytnx_error_msg(true,"developing%s","\n");           
+            
+            cytnx_error_msg(true,"developing%s","\n");    
+
+            // output labels:       
             out_labels.insert(out_labels.end(), this->_labels.begin()
                                               , this->_labels.begin()+this->rowrank());
             out_labels.insert(out_labels.end(), rhs->_labels.begin()
@@ -1178,13 +1190,145 @@ namespace cytnx{
             out_labels.insert(out_labels.end(), rhs->_labels.begin() + rhs->rowrank()
                                               , rhs->_labels.end());
 
-
+            // output bonds:
+            out_bonds.insert(out_bonds.end(), this->_bonds.begin()
+                                              , this->_bonds.begin()+this->rowrank());
+            out_bonds.insert(out_bonds.end(), rhs->_bonds.begin()
+                                              , rhs->_bonds.begin() + rhs->rowrank());
+            out_bonds.insert(out_bonds.end(), this->_bonds.begin()+this->rowrank() 
+                                              , this->_bonds.end());
+            out_bonds.insert(out_bonds.end(), rhs->_bonds.begin() + rhs->rowrank()
+                                              , rhs->_bonds.end());
             
 
+            out_rowrank = this->rowrank() + rhs->rowrank();
+
+
+            //cout << "[IN]" << endl;
+
+            boost::intrusive_ptr<UniTensor_base> t_this = this->contiguous();
+            boost::intrusive_ptr<UniTensor_base> t_rhs = rhs->contiguous();
  
 
+
+            std::vector< std::vector<Tensor> > out_blocks;
+            std::map< std::vector<cytnx_int64>, cytnx_uint64 > qns2idx;
+            std::map< std::vector<cytnx_int64>, cytnx_uint64 >::iterator it;
+
+            auto Lqns = t_this->get_blocks_qnums();            
+            auto Rqns = t_rhs->get_blocks_qnums();
+            auto Syms = t_this->syms();
+
+            cout << "L=-==================\n";
+            cout << Lqns;
+            cout << t_this->get_blocks_(true);
+            cout << "R=-==================\n";
+            cout << Rqns;
+            cout << t_rhs->get_blocks_(true);
+
+            if((t_this->is_diag() == t_rhs->is_diag()) && t_this->is_diag()){
+                //diag x diag:
+                cytnx_error_msg(true,"[developing]%s","\n");
+
+            }else{
+
+                if(this->is_diag()!=rhs->is_diag()){
+                    // diag x dense:
+                    cytnx_error_msg(true,"[develope]%s","\n");
+
+
+                }else{
+
+                    for(int l=0;l<Lqns.size();l++){
+                        for(int r=0;r<Rqns.size();r++){
+                            //std::cout << l << r << endl;
+                            std::vector<cytnx_int64> new_qns;
+                            
+                            //calculate fusion:
+                            for(int s=0;s<Syms.size();s++){
+                                new_qns.push_back(Syms[s].combine_rule(Lqns[l][s],Rqns[r][s]));
+                            }
+                            
+                            //kron the sub-blocks and store in the out_blocks:
+                            auto BLK = linalg::Kron(t_this->get_blocks_(true)[l], t_rhs->get_blocks_(true)[r]);
+
+                            it = qns2idx.find(new_qns);
+                            if(it == qns2idx.end()){
+                                //not exists:
+                                std::vector<Tensor> tmp;    
+                                tmp.push_back(BLK);
+                                out_blocks.push_back(tmp);
+                                qns2idx[new_qns] = out_blocks.size()-1;
+                            }else{
+                                out_blocks[it->second].push_back(BLK);
+                            }
+
+
+                        }//r
+                    }//l
+
+                    //cout << "[OK] kron!" << endl;
+                    //cout << out_blocks << endl;
+
+                    //traverse out_blocks and fuse it into a dense matrix:
+                    for(int i=0;i<out_blocks.size();i++){
+                        //cout << i << endl;
+                        if(out_blocks[i].size()>1){
+                            //merge them!:
+                            cytnx_uint64 Row=0;
+                            cytnx_uint64 Col=0;
+                            for(int j=0;j<out_blocks[i].size();j++){
+                                Row += out_blocks[i][j].shape()[0];
+                                Col += out_blocks[i][j].shape()[1];
+                            }
+
+                            Tensor M = zeros({Row,Col},t_this->dtype(),t_this->device());
+                            //cout << "create M susc" << endl; 
+                            cytnx_uint64 endR=0; Row=0;
+                            cytnx_uint64 endC=0; Col=0;
+                            //cout << out_blocks[i] << endl;
+                            for(int j=0;j<out_blocks[i].size();j++){
+                                //cout << j << endl; 
+                                //offs:
+                                endR += out_blocks[i][j].shape()[0];
+                                endC += out_blocks[i][j].shape()[1];
+                                
+                                M( ac::range(Row,endR), ac::range(Col,endC) ) = out_blocks[i][j];
+
+                                Row = endR;
+                                Col = endC;                        
+
+                            }
+                            out_blocks[i].clear();
+                            out_blocks[i].push_back(M);
+                        }
+                    }
+                    
+
+                    //now create instance:
+                    tmp->Init(out_bonds, out_labels, out_rowrank);
+                    tmp->print_diagram();
+                    cout << tmp->get_blocks_qnums();
+                    cout << tmp->get_blocks_();
+                    //traversal each qnums, get the block and set it:
+                    for(it = qns2idx.begin(); it != qns2idx.end(); it++){
+                        Tensor &T = tmp->get_block_(it->first,true);
+                        cout << T.shape() << endl;
+                        cout << out_blocks[it->second][0].shape() << endl;
+                        cytnx_error_msg(T.shape() != out_blocks[it->second][0].shape(),"[ERROR][FATAL][SparseUniTensor][contract][No comm idx] blk size does not match!%s","\n");
+                        
+                        T = out_blocks[it->second][0];
+                        
+                    }
+
+
+                }// check diag x dense
+ 
+            }// check diag x diag
+
         }else{
-        
+            // has common labels:       
+ 
             // check qnums & type:
             for(int i=0;i<comm_labels.size();i++){
                 //std::cout << this->_bonds[comm_idx1[i]];
@@ -1241,32 +1385,40 @@ namespace cytnx{
             
             if((t_this->is_diag() == t_rhs->is_diag()) && t_this->is_diag()){
                 //diag x diag:
-                cytnx_error_msg(true,"[developing]%s","\n");
-                
-                //check block status:
-                //cytnx_error_msg(t_this->get_blocks().size() != t_rhs->get_blocks().size(),"[ERROR] internal fatal, this.blocks.size() != rhs.blocks.size()%s","\n");
-                //if(tmp->_rowrank!=0){
-                //    
-                //    for(int i=0;i<t_this->get_blocks().size();i++){
-                //        
-                //    tmp->_block = t_this->_block * rhs->get_block_();
-                //}else{
-                //    //tmp->_block = linalg::Vectordot(this->_block,rhs->get_block_());
-                //    cytnx_error_msg(true,"[trace of UniTensor] is dev.?%s","\n");
-                //}
-                //tmp->_is_diag = true;
+                //cytnx_error_msg(true,"[developing]%s","\n");
+
+                tmp->Init(out_bonds, out_labels, non_comm_idx1.size(),Type.Double,Device.cpu,true); // type and dev does not matter here, cauz we are going to overwrite them later
+
+                cytnx_error_msg(t_this->get_blocks_(true).size() != t_rhs->get_blocks_(true).size(),"[ERROR] internal fatal, this.blocks.size() != rhs.blocks.size()%s","\n");
+
+                auto comm_qnums = t_rhs->get_blocks_qnums();
+                for(int i=0; i< comm_qnums.size(); i++){
+                    tmp->get_block_(comm_qnums[i],true) = t_this->get_block_(comm_qnums[i],true)*t_rhs->get_block_(comm_qnums[i],true);
+                }
+
+                for(int i=0; i< comm_qnums.size(); i++){
+                    Tensor &T = tmp->get_block_(comm_qnums[i],true);
+                    Tensor otmp = t_this->get_block_(comm_qnums[i],true)*t_rhs->get_block_(comm_qnums[i],true);
+                    cytnx_error_msg(otmp.shape() != T.shape(),"[ERROR][internal] invalid shape when assign contract blks @ %d\n",i);
+                    T = otmp;
+                }
+
                 
             }else{
                 if(this->is_diag()!=rhs->is_diag()){
                     // diag x dense:
                     //Tensor tmpL,tmpR;
-                    cytnx_error_msg(true,"[develope]%s","\n");
+                    //cytnx_error_msg(true,"[develope]%s","\n");
+                    tmp->Init(out_bonds, out_labels, non_comm_idx1.size());
+                    cytnx_error_msg(t_this->get_blocks_(true).size() != t_rhs->get_blocks_(true).size(),"[ERROR] internal fatal, this.blocks.size() != rhs.blocks.size()%s","\n");
+                    auto comm_qnums = t_rhs->get_blocks_qnums();                    
 
-                    //if(this->is_diag()) tmpL = linalg::Diag(this->_block);
-                    //else tmpL = this->_block; 
-                    //if(rhs->is_diag()) tmpR = linalg::Diag(rhs->get_block_());
-                    //else tmpR =  rhs->get_block_(); // share view!!
-                    //tmp->_block = linalg::Tensordot_dg(this->_block,rhs->get_block_(),comm_idx1,comm_idx2,this->is_diag());
+                    for(int i=0; i< comm_qnums.size(); i++){
+                        Tensor &T = tmp->get_block_(comm_qnums[i],true);
+                        Tensor otmp = linalg::Matmul_dg(t_this->get_block_(comm_qnums[i],true), t_rhs->get_block_(comm_qnums[i],true));
+                        cytnx_error_msg(otmp.shape() != T.shape(),"[ERROR][internal] invalid shape when assign contract blks @ %d\n",i);
+                        T = otmp;
+                    }
 
                 }else{
                     // dense x dense:
@@ -1297,7 +1449,10 @@ namespace cytnx{
                     auto comm_qnums = t_rhs->get_blocks_qnums();                    
 
                     for(int i=0; i< comm_qnums.size(); i++){
-                        tmp->get_block_(comm_qnums[i],true) = linalg::Matmul(t_this->get_block_(comm_qnums[i],true), t_rhs->get_block_(comm_qnums[i],true));
+                        Tensor &T = tmp->get_block_(comm_qnums[i],true);
+                        Tensor otmp = linalg::Matmul(t_this->get_block_(comm_qnums[i],true), t_rhs->get_block_(comm_qnums[i],true));
+                        cytnx_error_msg(otmp.shape() != T.shape(),"[ERROR][internal] invalid shape when assign contract blks @ %d\n",i);
+                        T = otmp;
                     }
                     
                 }

@@ -86,6 +86,9 @@ Scalar run_DMRG(tn_algo::MPO &mpo, tn_algo::MPS &mps, int Nsweeps, std::vector<t
 int main(int argc, char *argv[]){
 
 
+    
+
+
     auto bdi = Bond(2,bondType::BD_KET,{{1},{-1}});
     auto bdo = bdi.clone().set_type(bondType::BD_BRA);
     
@@ -94,7 +97,12 @@ int main(int argc, char *argv[]){
     print(bdo);
 
     auto Ut = UniTensor({bdi,bdi,bdo,bdo},{},2);
+    auto UtxUt = UniTensor({bdi,bdi,bdi,bdi,bdo,bdo,bdo,bdo},{},4);
 
+    print(Ut.syms());
+    auto T = Symmetry::Zn(4); 
+    print(T);
+    
     Ut.get_block_({2})(0) = 1;
     auto T0 = Ut.get_block_({0});
     T0(0,0) = T0(1,1) = -1;
@@ -102,16 +110,65 @@ int main(int argc, char *argv[]){
     
     Ut.get_block_({-2})(0) = 1;
 
+   
+
+
+    Ut.permute_({2,0,3,1}); 
+
+
+    cout << "Svd" << endl;
+    auto outv = linalg::Svd(Ut);
+
+    
+
+    auto S = outv[0];
+
+    S.print_diagram();
+    outv[1].print_diagram();
+    outv[2].print_diagram();
+
+
+
+    auto Us = Contract(S,outv[1]);
+
+    auto UsV = Contract(Us,outv[2]);
+
+    Us.print_diagram();
+    UsV.print_diagram();
+    Ut.print_diagram();
+
+
+    print(Ut);
+    print(UsV);
+
+    cout << "[OK]" << endl;
+    
+
     //Ut.print_diagram();
     //print(Ut);
+    return 0;
+    /*
+    print(Ut.get_blocks_().size());
+    print(Ut.get_blocks_qnums());
+    for(int i=0;i<Ut.get_blocks_().size();i++){
+        print(Ut.get_blocks_()[i].shape());
+    }
+    
+    print(UtxUt.get_blocks_().size());
+    print(UtxUt.get_blocks_qnums());    
+    print(UtxUt.get_blocks_());
+    for(int i=0;i<UtxUt.get_blocks_().size();i++){
+        print(UtxUt.get_blocks_()[i].shape());
+    }
+    */
 
-
+    /*
     auto outv = linalg::Svd(Ut);
 
     outv[0].print_diagram(true);
     outv[1].print_diagram(true);
     outv[2].print_diagram(true);
-
+    */
     return 0;
 
 
@@ -127,20 +184,6 @@ int main(int argc, char *argv[]){
 
      
    
-    auto Ut2 = Ut.clone();
-    Ut2.set_labels({2,3,4,5});
-
-    Ut = Ut.permute({1,3,0,2},3,false);
-    //cout << Ut.is_contiguous() << endl;
-
-
-    Ut2 = Ut2.permute({3,0,2,1},2,false);
-   
-    //Ut.print_diagram(); 
-        
-    //Ut2.print_diagram();
-    
-    cout << Contract(Ut,Ut2);
 
     
 

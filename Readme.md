@@ -43,6 +43,9 @@ See The following user guide for install and using of cytnx:
     13. [Enhance] SparseUniTensor print info, add "contiguous" status.
     14. [Enhance] Add print_info for Symmetry descriptor
     15. [Enhance] Add UniTensor.syms() 
+    16. [Fix] Tensor.set when one of accessor is Singl will cause error. 
+    17. [Enhance] SparseUniTensor diag x diag, diag x dense are finished. 
+    18. [Fix] SparseUniTensor when diag permutation issue.  
 
     v0.7.3
     1. [Fix] bug for Get slice does not reduce when dim=1. 

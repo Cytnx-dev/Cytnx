@@ -253,9 +253,10 @@ namespace cytnx{
                     return this->_impl->S_loc;
                 }
                 
-
+                ///@cond
                 void _Save(std::fstream &f) const;
                 void _Load(std::fstream &f);
+                ///@endcond
 
                 void Save(const std::string &fname) const;
                 void Save(const char* fname) const;

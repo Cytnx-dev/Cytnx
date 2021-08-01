@@ -592,7 +592,7 @@ namespace cytnx{
     }
     
     void Tensor_impl::set(const std::vector<cytnx::Accessor> &accessors, const boost::intrusive_ptr<Tensor_impl> &rhs){
-
+        //cout << "calling set" << endl;
         cytnx_error_msg(accessors.size() > this->_shape.size(), "%s", "The input indexes rank is out of range! (>Tensor's rank).");
 
 
@@ -630,9 +630,9 @@ namespace cytnx{
 
 
         /// checking if its scalar assign!
-        if(rhs->shape().size()==1 && rhs->storage().size()==1){
+        if(rhs->storage().size()==1){
             this->storage()._impl->SetElem_byShape_v2(rhs->storage()._impl,curr_shape,locators,Nunit,true);
-
+            //std::cout << "Scalar" << endl;
 
         }else{
 
@@ -647,7 +647,7 @@ namespace cytnx{
             std::vector<cytnx_uint64> new_shape;
             std::vector<cytnx_int32> remove_id;
             for(unsigned int i=0;i<get_shape.size();i++){
-                if(get_shape[i]==1) remove_id.push_back(this->_mapper[this->_invmapper[i]]);
+                if(acc[i].type()==Accessor::Singl) remove_id.push_back(this->_mapper[this->_invmapper[i]]);
                 else new_shape.push_back(get_shape[i]);
             }
             
@@ -657,10 +657,12 @@ namespace cytnx{
             std::vector<cytnx_uint64> perm;
             for(unsigned int i=0;i<new_mapper.size();i++){
                 perm.push_back(new_mapper[i]);
+                
                 for(unsigned int j=0;j<remove_id.size();j++){
                     if(new_mapper[i]>remove_id[j]) perm.back()-=1;
                     else if(new_mapper[i]==remove_id[j]){ perm.pop_back(); break; }
                 }
+                
             }
 
             std::vector<cytnx_uint64> iperm(perm.size());
@@ -669,6 +671,7 @@ namespace cytnx{
 
            
             boost::intrusive_ptr<Tensor_impl> tmp;
+            //std::cout << iperm << std::endl;
             tmp = rhs->permute(iperm)->contiguous();
             cytnx_error_msg(new_shape != tmp->shape(), "[ERROR][Tensor.set_elems]%s","inconsistent shape");
             this->storage()._impl->SetElem_byShape_v2(tmp->storage()._impl,curr_shape,locators,Nunit,false);
