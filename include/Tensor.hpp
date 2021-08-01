@@ -457,7 +457,7 @@ namespace cytnx{
                
                 Scalar::Sproxy item() const{
                     Tensor out;
-                    out._impl = _insimpl;
+                    out._impl = _insimpl->get(_accs);
                     return out.item();
                 }
  

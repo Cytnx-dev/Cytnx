@@ -23,6 +23,9 @@ namespace cytnx{
         */
         Tensor Sort(const Tensor &Tin);
 
+        Tensor Concatenate(Tensor T1, Tensor T2);
+
+
     }//algo
 }//cytnx
 

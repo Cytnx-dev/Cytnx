@@ -46,6 +46,11 @@ See The following user guide for install and using of cytnx:
     16. [Fix] Tensor.set when one of accessor is Singl will cause error. 
     17. [Enhance] SparseUniTensor diag x diag, diag x dense are finished. 
     18. [Fix] SparseUniTensor when diag permutation issue.  
+    19. [Fix] Sort does not return out Tensor.
+    20. [Fix] Tproxy.item() does not get correct element. 
+    21. [Fix] Bug for Svd on SparseUniTensor vT is being set by U
+    22. [New][experiment] Svd_truncate for SparseUniTensor
+
 
     v0.7.3
     1. [Fix] bug for Get slice does not reduce when dim=1. 

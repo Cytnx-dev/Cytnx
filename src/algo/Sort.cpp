@@ -23,6 +23,7 @@ namespace cytnx {
                     //return std::vector<Tensor>();
                 #endif
             }
+            return out;
 
         }
     }//algo

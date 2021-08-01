@@ -3,6 +3,8 @@ target_sources_local(cytnx
     algo_internal_interface.hpp
     algo_internal_interface.cpp
     Sort.cpp
+    Concatenate.cpp
+
 )
 
 add_subdirectory(algo_internal_cpu)

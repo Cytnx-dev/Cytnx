@@ -86,13 +86,44 @@ Scalar run_DMRG(tn_algo::MPO &mpo, tn_algo::MPS &mps, int Nsweeps, std::vector<t
 int main(int argc, char *argv[]){
 
 
-    
+
+    auto tn1 = zeros(4);
+    auto tn3 = zeros(7);
+
+    cout << algo::Concatenate(tn1,tn3);
+
+
+
+    auto bdii = Bond(5,bondType::BD_KET,{{1},{1},{-1},{-1},{-1}});
+    auto bdoo = Bond(5,bondType::BD_BRA,{{-1},{-1},{-1},{1},{1}});
+
+    auto tit = UniTensor({bdii,bdii,bdoo,bdoo},{},2);
+
+    for(int i=0; i < tit.get_blocks_().size(); i++){
+        random::Make_normal(tit.get_block_(i),0,1);
+    }
+
+    tit.print_diagram();
+
+    print(tit);
+
+    auto outt = linalg::Svd_truncate(tit,10);
+
+
+    auto outo = linalg::Svd(tit);
+
+    //print(outt);
+
+
+    print(outt[0]);
+    print(outo[0]);
+
+    return 0;
 
 
     auto bdi = Bond(2,bondType::BD_KET,{{1},{-1}});
     auto bdo = bdi.clone().set_type(bondType::BD_BRA);
     
-
     print(bdi);
     print(bdo);
 

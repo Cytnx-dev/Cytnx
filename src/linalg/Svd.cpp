@@ -214,7 +214,7 @@ namespace cytnx{
                     //check:
                     cytnx_error_msg(tmpv->get_blocks_().size() != vTls.size(),"[ERROR] internal error vT.%s","\n");
 
-                    tmpv->_blocks = Uls;
+                    tmpv->_blocks = vTls;
                     UniTensor vT; vT._impl = boost::intrusive_ptr<UniTensor_base>(tmpv);
                     outCyT.push_back(vT);
                     
@@ -230,6 +230,7 @@ namespace cytnx{
 
 
             }else{
+               // DenseUniTensor:                
 
                Tensor tmp;
                if(Tin.is_contiguous()) tmp = Tin.get_block_();

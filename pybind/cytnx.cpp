@@ -1424,6 +1424,12 @@ PYBIND11_MODULE(cytnx,m){
                 .def("__eq__",&Symmetry::operator==)
                 .def("Save",[](Symmetry &self, const std::string &fname){self.Save(fname);},py::arg("fname"))
                 .def_static("Load",[](const std::string &fname){return Symmetry::Load(fname);},py::arg("fname"))
+                .def("__repr__",[](Symmetry &self){
+                        std::cout << self << std::endl;
+                        return std::string("");
+                    },py::call_guard<py::scoped_ostream_redirect,
+                py::scoped_estream_redirect>())
+
                 //.def("combine_rule",&Symmetry::combine_rule,py::arg("qnums_1"),py::arg("qnums_2"))
                 //.def("combine_rule_",&Symmetry::combine_rule_,py::arg("qnums_l"),py::arg("qnums_r"))
                 //.def("check_qnum", &Symmetry::check_qnum,py::arg("qnum"))
@@ -1473,7 +1479,7 @@ PYBIND11_MODULE(cytnx,m){
                 .def("relabel",&UniTensor::relabel, py::arg("new_labels"))
                 .def("rowrank",&UniTensor::rowrank)
                 .def("rank",&UniTensor::rank)
-
+                .def("syms",&UniTensor::syms)
                 .def("dtype",&UniTensor::dtype)
                 .def("dtype_str",&UniTensor::dtype_str)
                 .def("device",&UniTensor::device)
@@ -2181,6 +2187,41 @@ PYBIND11_MODULE(cytnx,m){
     m_random.def("uniform", [](const std::vector<cytnx_uint64>& Nelem,const double &low, const double &high, const int&device, const unsigned int &seed){
                                    return cytnx::random::uniform(Nelem,low,high,device,seed);
                                   },py::arg("Nelem"),py::arg("low"),py::arg("high"),py::arg("device")=-1,py::arg("seed")=std::random_device()());
+
+
+
+    //====================
+    // [Submodule tn_algo]
+    pybind11::module m_tnalgo = m.def_submodule("tn_algo","tensor network algorithm related");
+
+    py::class_<tn_algo::MPS>(m_tnalgo,"MPS")
+                .def(py::init<>())
+                .def(py::init<const cytnx_uint64&, const cytnx_uint64&, const cytnx_uint64 &, const cytnx_int64&, const cytnx_int64&>(),py::arg("N"),py::arg("phys_dim"),py::arg("virt_dim"),py::arg("dtype")=cytnx_int64(Type.Double),py::arg("mps_type")=0)
+                .def(py::init<const cytnx_uint64&, const std::vector<cytnx_uint64>&, const cytnx_uint64 &, const cytnx_int64&, const cytnx_int64&>(),py::arg("N"),py::arg("vphys_dim"),py::arg("virt_dim"),py::arg("dtype")=cytnx_int64(Type.Double),py::arg("mps_type")=0)
+
+                .def("size", &tn_algo::MPS::size)
+                .def("mps_type", &tn_algo::MPS::mps_type)
+                .def("mps_type_str", &tn_algo::MPS::mps_type_str)
+                .def("clone", &tn_algo::MPS::clone)
+                .def("data", &tn_algo::MPS::data)
+                .def("phys_dim",&tn_algo::MPS::phys_dim,py::arg("idx"))
+                .def("virt_dim",&tn_algo::MPS::virt_dim)
+                .def("S_loc",&tn_algo::MPS::S_loc)
+                .def("c_Into_Lortho", &tn_algo::MPS::Into_Lortho)
+                .def("c_S_mvleft", &tn_algo::MPS::S_mvleft)
+                .def("c_S_mvright", &tn_algo::MPS::S_mvright)
+                .def("Save",[](cytnx::Storage &self, const std::string &fname){self.Save(fname);},py::arg("fname"))
+                .def_static("Load",[](const std::string &fname){return cytnx::tn_algo::MPS::Load(fname);},py::arg("fname"))
+                .def("__repr__",[](cytnx::tn_algo::MPS &self)->std::string{
+                        std::cout << self << std::endl;
+                        return std::string("");
+                     },py::call_guard<py::scoped_ostream_redirect,
+                         py::scoped_estream_redirect>())
+
+
+                ;
+
+
 
 }
 

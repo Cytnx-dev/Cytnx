@@ -120,6 +120,8 @@ namespace cytnx{
             virtual bool greater(const cytnx_int16 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
             virtual bool greater(const cytnx_bool &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
 
+            virtual bool eq(const Scalar_base* c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n"); return 0;}
+
             
 
             virtual void iabs(){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
@@ -279,7 +281,8 @@ namespace cytnx{
             bool greater(const cytnx_uint16 &c){cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s","\n"); return 0;}
             bool greater(const cytnx_int16  &c){cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s","\n"); return 0;}
             bool greater(const cytnx_bool   &c){cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s","\n"); return 0;}
-            
+
+            bool eq(const Scalar_base* c){return this->_elem == c->to_cytnx_complex128();}
             
             void* get_raw_address() const{return (void*)(&this->_elem);}
 
@@ -413,7 +416,7 @@ namespace cytnx{
             bool greater(const cytnx_int16  &c){cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s","\n"); return 0;}
             bool greater(const cytnx_bool   &c){cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s","\n"); return 0;}
 
-            
+            bool eq(const Scalar_base* c){return this->_elem == c->to_cytnx_complex64();}
 
             void iabs(){this->_elem=std::abs(this->_elem);}
 
@@ -549,6 +552,8 @@ namespace cytnx{
             bool greater(const cytnx_int16  &c){return this->_elem > c;}
             bool greater(const cytnx_bool   &c){return this->_elem > c;}
 
+            bool eq(const Scalar_base* c){return this->_elem == c->to_cytnx_double();}
+
             void* get_raw_address() const{return (void*)(&this->_elem);}
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
@@ -679,7 +684,7 @@ namespace cytnx{
             bool greater(const cytnx_int16  &c){return this->_elem > c;}
             bool greater(const cytnx_bool   &c){return this->_elem > c;}
 
-            
+            bool eq(const Scalar_base* c){return this->_elem == c->to_cytnx_float();}
 
             void iabs(){this->_elem=std::abs(this->_elem);}
 
@@ -814,6 +819,8 @@ namespace cytnx{
             bool greater(const cytnx_uint16 &c){return this->_elem > c;}
             bool greater(const cytnx_int16  &c){return this->_elem > c;}
             bool greater(const cytnx_bool   &c){return this->_elem > c;}
+
+            bool eq(const Scalar_base* c){return this->_elem == c->to_cytnx_int64();}
             
     
             void* get_raw_address() const{return (void*)(&this->_elem);}
@@ -945,6 +952,8 @@ namespace cytnx{
             bool greater(const cytnx_uint16 &c){return this->_elem > c;}
             bool greater(const cytnx_int16  &c){return this->_elem > c;}
             bool greater(const cytnx_bool   &c){return this->_elem > c;}
+
+            bool eq(const Scalar_base* c){return this->_elem == c->to_cytnx_uint64();}
             
 
             void* get_raw_address() const{return (void*)(&this->_elem);}
@@ -1078,6 +1087,8 @@ namespace cytnx{
             bool greater(const cytnx_uint16 &c){return this->_elem > c;}
             bool greater(const cytnx_int16  &c){return this->_elem > c;}
             bool greater(const cytnx_bool   &c){return this->_elem > c;}
+
+            bool eq(const Scalar_base* c){return this->_elem == c->to_cytnx_int32();}
             
             void* get_raw_address() const{return (void*)(&this->_elem);}
 
@@ -1210,7 +1221,7 @@ namespace cytnx{
             bool greater(const cytnx_int16  &c){return this->_elem > c;}
             bool greater(const cytnx_bool   &c){return this->_elem > c;}
             
-
+            bool eq(const Scalar_base* c){return this->_elem == c->to_cytnx_uint32();}
 
 
             void* get_raw_address() const{return (void*)(&this->_elem);}
@@ -1343,7 +1354,8 @@ namespace cytnx{
             bool greater(const cytnx_uint16 &c){return this->_elem > c;}
             bool greater(const cytnx_int16  &c){return this->_elem > c;}
             bool greater(const cytnx_bool   &c){return this->_elem > c;}
-            
+
+            bool eq(const Scalar_base* c){return this->_elem == c->to_cytnx_int16();}
 
             void* get_raw_address() const{return (void*)(&this->_elem);}
             Scalar_base* astype(const unsigned int &dtype){
@@ -1476,7 +1488,7 @@ namespace cytnx{
             bool greater(const cytnx_int16  &c){return this->_elem > c;}
             bool greater(const cytnx_bool   &c){return this->_elem > c;}
 
-            
+            bool eq(const Scalar_base* c){return this->_elem == c->to_cytnx_uint16();}
 
             void* get_raw_address() const{return (void*)(&this->_elem);}
             Scalar_base* astype(const unsigned int &dtype){
@@ -1608,6 +1620,9 @@ namespace cytnx{
             bool greater(const cytnx_uint16 &c){return this->_elem > c;}
             bool greater(const cytnx_int16  &c){return this->_elem > c;}
             bool greater(const cytnx_bool   &c){return this->_elem > c;}
+
+
+            bool eq(const Scalar_base* c){return this->_elem == c->to_cytnx_bool();}
             
             void* get_raw_address() const{return (void*)(&this->_elem);}
             Scalar_base* astype(const unsigned int &dtype){
@@ -2180,6 +2195,9 @@ namespace cytnx{
     
     // lgreater c >= Scalar;
     bool operator>=( const Scalar &lc, const Scalar &rs);
+
+    // eq c == Scalar;
+    bool operator==( const Scalar &lc, const Scalar &rs);
 
     //abs:
     
