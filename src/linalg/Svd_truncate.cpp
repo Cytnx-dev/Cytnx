@@ -173,10 +173,12 @@ namespace cytnx{
 
                         if(is_U){
                             Uls[blk] = Uls[blk].get({ac::all(),ac::range(0,degs[blk])});
+                            if(Uls[blk].shape().size()==1) Uls[blk].reshape_(Uls[blk].shape()[0],1);
                             o_Uls.push_back(Uls[blk]);
                         }
                         if(is_vT){
                             vTls[blk] = vTls[blk].get({ac::range(0,degs[blk]),ac::all()});  
+                            if(vTls[blk].shape().size()==1) vTls[blk].reshape_(1,vTls[blk].shape()[0]);
                             o_vTls.push_back(vTls[blk]);
                         }
                     }

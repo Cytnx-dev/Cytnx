@@ -242,11 +242,11 @@ namespace cytnx{
         if(rowrank>=0){
             cytnx_error_msg((rowrank>=out_raw->_bonds.size()) || (rowrank<=0),"[ERROR] rowrank should >=1 and <= UniTensor.rank-1 for SparseUniTensor (UniTensor in blockform)(UniTensor with symmetries).%s","\n");
             out_raw->set_rowrank(rowrank);
-        }else{
-
-            //update braket form status.
-            out_raw->_is_braket_form = out_raw->_update_braket();
         }
+
+        //update braket form status.
+        out_raw->_is_braket_form = out_raw->_update_braket();
+       
 
         boost::intrusive_ptr<UniTensor_base> out(out_raw);
         return out;
@@ -293,6 +293,7 @@ namespace cytnx{
             if(new_fwdmap[i]!=new_idxmap[i]){iconti = false; break;}
             if(new_fwdmap[i] != i){iconti=false; break;}
         }
+        if(this->_inner_rowrank != this->_rowrank) iconti=false;
         this->_contiguous= iconti;
 
         //check rowrank.
@@ -1374,12 +1375,14 @@ namespace cytnx{
             boost::intrusive_ptr<UniTensor_base> t_this = this->permute(mapperL,non_comm_idx1.size(),false)->contiguous();
             boost::intrusive_ptr<UniTensor_base> t_rhs = rhs->permute(mapperR,comm_labels.size(),false)->contiguous();
 
+            //std::cout << "[INTERNAL]" << std::endl;
             //t_this->print_diagram();    
             //t_rhs->print_diagram();
           
             //std::cout << t_this->is_contiguous();
             //std::cout << t_rhs->is_contiguous();
              
+            //std::cout << "END [INTERNAL]" << std::endl;
             //std::cout << t_this->get_blocks_(true);
  
             

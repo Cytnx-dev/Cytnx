@@ -50,7 +50,12 @@ See The following user guide for install and using of cytnx:
     20. [Fix] Tproxy.item() does not get correct element. 
     21. [Fix] Bug for Svd on SparseUniTensor vT is being set by U
     22. [New][experiment] Svd_truncate for SparseUniTensor
-
+    23. [New] add Bond.redirect(), Bond.retype()
+    24. [Fix] SparseUniTensor.permute() does not properly update braket_form
+    25. [Fix] SparseUniTensor.set_rowrank should track _inner_rowrank not _rowrank bug. 
+    26. [Enhance] Add UniTensor.change_label() 
+    27. [Fix] Svd_truncate when one of the block has only dim=1 should fill-in the dangling dimension. 
+    28. [New][experiment] iTEBD with U1 symmetry example for Heisenberg chain
 
     v0.7.3
     1. [Fix] bug for Get slice does not reduce when dim=1. 

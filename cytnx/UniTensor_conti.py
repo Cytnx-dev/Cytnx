@@ -78,6 +78,11 @@ def set_label(self,idx,new_label):
     return self
 
 @add_method(UniTensor)
+def change_label(self,old_lbl,new_label):
+    self.c_change_label(old_lbl,new_label);
+    return self
+
+@add_method(UniTensor)
 def set_labels(self,new_labels):
     self.c_set_labels(new_labels);
     return self

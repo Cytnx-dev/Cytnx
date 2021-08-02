@@ -69,7 +69,7 @@ namespace cytnx{
         UniTensor ExpH(const UniTensor &Tin, const cytnx_double &a, const cytnx_double &b){
             
             
-            if(Tin.is_blockform()){
+            if(Tin.uten_type()==UTenType.Sparse){
                 
                 UniTensor out;
                 if(Tin.is_contiguous())

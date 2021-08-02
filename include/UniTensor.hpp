@@ -106,6 +106,28 @@ namespace cytnx{
                 cytnx_error_msg(is_dup,"[ERROR] alreay has a label that is the same as the input label%s","\n");
                 this->_labels[idx] = new_label;                
             }
+            void change_label(const cytnx_int64 &old_lbl, const cytnx_int64 &new_label){
+                cytnx_int64 oidx = -1;
+                cytnx_int64 dupidx = -1;
+                
+                for(cytnx_uint64 i=0;i<this->_labels.size();i++){
+                    if(old_lbl == this->_labels[i]){oidx = i;}
+                    else{
+                        if(new_label == this->_labels[i]){
+                            dupidx = i;
+                        }
+                    }
+
+                }
+                
+                cytnx_error_msg(dupidx>=0, "[ERROR] new_label %d already exists in label @ %d\n",new_label,dupidx);                    
+
+                cytnx_error_msg(oidx < 0, "[ERROR] old_lbl %d does not exists in current UniTensor \n", old_lbl);
+
+                this->_labels[oidx] = new_label;
+
+            } 
+
             void set_labels(const std::vector<cytnx_int64> &new_labels);
 
 
@@ -740,8 +762,9 @@ namespace cytnx{
             void set_rowrank(const cytnx_uint64 &new_rowrank){
                 cytnx_error_msg((new_rowrank < 1) || (new_rowrank>= this->rank()),"[ERROR][SparseUniTensor] rowrank should be [>=1] and [<UniTensor.rank].%s","\n");
                 cytnx_error_msg(new_rowrank >= this->_labels.size(),"[ERROR] rowrank cannot exceed the rank of UniTensor.%s","\n");
-                if(this->_rowrank!= new_rowrank)
+                if(this->_inner_rowrank!= new_rowrank)
                     this->_contiguous = false;
+
                 this->_rowrank = new_rowrank;
                 this->_is_braket_form = this->_update_braket();
             }
@@ -1206,6 +1229,23 @@ namespace cytnx{
                 this->_impl->set_label(idx,new_label);
                 return *this;
             }
+
+            /**
+            @brief change a new label for bond with original label.
+            @param old_lbl the original label of the bond that to be replaced. 
+            @param new_label the new label that is assign to replace the original label.
+
+            [Note]
+                the new assign label cannot be the same as the label of any other bonds in the UniTensor.
+                ( cannot have duplicate labels )
+
+            */
+            UniTensor& change_label(const cytnx_int64 &old_lbl, const cytnx_int64 &new_label){
+                this->_impl->change_label(old_lbl,new_label);
+                return *this;
+            }
+
+
 
             /**
             @brief set new labels for all the bonds.

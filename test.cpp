@@ -97,6 +97,10 @@ int main(int argc, char *argv[]){
     auto bdii = Bond(5,bondType::BD_KET,{{1},{1},{-1},{-1},{-1}});
     auto bdoo = Bond(5,bondType::BD_BRA,{{-1},{-1},{-1},{1},{1}});
 
+    print(bdii);
+    print(bdii.redirect());
+
+    return 0;
     auto tit = UniTensor({bdii,bdii,bdoo,bdoo},{},2);
 
     for(int i=0; i < tit.get_blocks_().size(); i++){

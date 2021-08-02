@@ -204,6 +204,32 @@ namespace cytnx{
             }
 
             /**
+            @brief create a new instance of Bond with type changed to the new tag-type:
+            @param  new_bondType the new tag-type, it can be BD_BRA,BD_KET or BD_REG
+                
+            [Note] 
+                This is equivalent to Bond.clone().set_type()
+
+            */
+            Bond retype(const bondType &new_bondType){
+                auto out = this->clone();
+                out.set_type(new_bondType);
+                return out;
+            }
+
+            /**
+            @brief create a new instance of Bond with type changed in btwn BRA / KET:
+
+            */
+            Bond redirect() const{
+                auto out = this->clone();
+                out.set_type(bondType(int(out.type())*-1));
+                return out;
+            }
+
+            
+
+            /**
             @brief change the tag-type to the default value BD_REG
 
             */
