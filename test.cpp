@@ -87,6 +87,11 @@ int main(int argc, char *argv[]){
 
 
 
+       
+
+    auto ac1 = Accessor::qns({{1},{-1}});
+    print(ac1);
+
     auto tn1 = zeros(4);
     auto tn3 = zeros(7);
 
@@ -97,10 +102,14 @@ int main(int argc, char *argv[]){
     auto bdii = Bond(5,bondType::BD_KET,{{1},{1},{-1},{-1},{-1}});
     auto bdoo = Bond(5,bondType::BD_BRA,{{-1},{-1},{-1},{1},{1}});
 
-    print(bdii);
-    print(bdii.redirect());
+    auto tTrace = UniTensor({bdii,bdii.redirect()},{},1);
+    auto tTrace2 = tTrace.Dagger();
+
+    Contract(tTrace,tTrace2);
+
 
     return 0;
+
     auto tit = UniTensor({bdii,bdii,bdoo,bdoo},{},2);
 
     for(int i=0; i < tit.get_blocks_().size(); i++){
@@ -110,6 +119,9 @@ int main(int argc, char *argv[]){
     tit.print_diagram();
 
     print(tit);
+
+   
+
 
     auto outt = linalg::Svd_truncate(tit,10);
 

@@ -81,7 +81,7 @@ namespace cytnx{
 
         cytnx::UniTensor ExpH(const cytnx::UniTensor &Tin, const double &a=1, const double &b=0);
         cytnx::UniTensor ExpM(const cytnx::UniTensor &Tin, const double &a=1, const double &b=0);
-        cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false);
+        cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const cytnx_int64 &a=0, const cytnx_int64 &b=1, const bool &by_label=false);
         std::vector<cytnx::UniTensor> Qr(const cytnx::UniTensor &Tin, const bool &is_tau=false);
         std::vector<cytnx::UniTensor> Qdr(const cytnx::UniTensor &Tin, const bool &is_tau=false);
 

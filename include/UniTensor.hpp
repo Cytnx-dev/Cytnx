@@ -1038,13 +1038,9 @@ namespace cytnx{
                     this->_blocks[i].Conj_();
                 }
             };
-            boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false) const{
-                cytnx_error_msg(true,"[Developing]%s","\n");
-                return nullptr;
-            };
+            boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false);
             void Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false){
-                cytnx_error_msg(true,"[Developing]%s","\n");
-                //return nullptr;
+                cytnx_error_msg(true,"[ERROR] Currently SparseUniTensor does not support inplace Trace!, call Trace() instead!%s","\n"); 
             }
 
             void Transpose_();
@@ -1570,13 +1566,13 @@ namespace cytnx{
                 return *this;
             }
 
-            UniTensor Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false) const{
+            UniTensor Trace(const cytnx_int64 &a=0, const cytnx_int64 &b=1, const bool &by_label=false) const{
                 UniTensor out;
                 out._impl = this->_impl->Trace(a,b,by_label);
                 return out;
             }
 
-            UniTensor& Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false){
+            UniTensor& Trace_(const cytnx_int64 &a=0, const cytnx_int64 &b=1, const bool &by_label=false){
                 this->_impl->Trace_(a,b,by_label);
                 return *this;
             }

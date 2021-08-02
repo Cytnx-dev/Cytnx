@@ -3,6 +3,7 @@
 #include<iostream>
 #include<algorithm>
 #include<utility>
+#include "utils/vec_print.hpp"
 using namespace std;
 namespace cytnx{
 
@@ -254,6 +255,16 @@ namespace cytnx{
                 os << in._min << ":" << ":" << in._step;
         }else if(in.type()==Accessor::Step){
             os << "::" << in._step;
+        }else if(in.type()==Accessor::Qns){
+            os << "Qnum select: " << in.qns_list.size() << " qnums:" << endl;
+            for(int i=0;i<in.qns_list.size();i++){
+               os << " {";
+               for(int j=0;j<in.qns_list[i].size();j++){
+                    if(j==0) os << in.qns_list[i][j];
+                    else os << "," << in.qns_list[i][j];
+               }
+               os << "}";
+            }
         }else{
             cytnx_error_msg(true,"[ERROR][cout] Accessor is Void!%s","\n");
         }

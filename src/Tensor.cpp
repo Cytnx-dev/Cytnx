@@ -487,6 +487,7 @@ namespace cytnx{
         std::vector<cytnx_uint64> get_shape(acc.size());
         std::vector<std::vector<cytnx_uint64> > locators(acc.size());
         for(cytnx_uint32 i=0;i<acc.size();i++){
+            cytnx_error_msg(acc[i].type() == Accessor::Qns,"[ERROR] Tensor cannot accept accessor with qnum list.%s","\n");
             acc[i].get_len_pos(curr_shape[i],get_shape[i],locators[i]);
         }
         //cout << "get_shape" << endl;
@@ -625,6 +626,7 @@ namespace cytnx{
         std::vector<cytnx_uint64> get_shape(acc.size());
         std::vector<std::vector<cytnx_uint64> > locators(acc.size());
         for(cytnx_uint32 i=0;i<acc.size();i++){
+            cytnx_error_msg(acc[i].type() == Accessor::Qns,"[ERROR] Tensor cannot accept accessor with qnum list.%s","\n");
             acc[i].get_len_pos(curr_shape[i],get_shape[i],locators[i]);
         }
 
@@ -722,6 +724,7 @@ namespace cytnx{
         std::vector<cytnx_uint64> get_shape(acc.size());
         std::vector<std::vector<cytnx_uint64> > locators(acc.size());
         for(cytnx_uint32 i=0;i<acc.size();i++){
+            cytnx_error_msg(acc[i].type() == Accessor::Qns,"[ERROR] Tensor cannot accept accessor with qnum list.%s","\n");
             acc[i].get_len_pos(curr_shape[i],get_shape[i],locators[i]);
         }
         //cout << "get_shape" << endl;

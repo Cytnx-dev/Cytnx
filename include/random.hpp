@@ -5,6 +5,7 @@
 #include "cytnx_error.hpp"
 #include "Tensor.hpp"
 #include "Storage.hpp"
+#include "UniTensor.hpp"
 #include <vector>
 #include <initializer_list>
 #include <random>
@@ -12,6 +13,7 @@
 
 namespace cytnx{
     namespace random{
+
         // [Storage]
         // =============================================================================================================
         // =============================================================================================================
@@ -80,6 +82,44 @@ namespace cytnx{
 
         */
         void Make_uniform(Tensor &Tin, const double &low=0, const double &high=1, const unsigned int &seed=std::random_device()());
+
+
+
+        // [UniTensor]
+        // =============================================================================================================
+        // =============================================================================================================
+        // Make_normal:
+        //-------------------------------------------------
+        /** 
+        @brief Randomize the memory of a UniTensor with normal distributon
+        @param Tin a \link cytnx::UniTensor UniTensor \endlink
+        @param mean the mean of a normal distribution
+        @param std the standard deviation (sigma) of a normal distribution. 
+        @param seed the seed for the random generator. [Default] Using device entropy.
+
+            [Note] The UniTensor sould be real floating type or complex type.  
+
+        */
+        void Make_normal(UniTensor  &Tin, const double &mean, const double &std, const unsigned int &seed=std::random_device()());
+
+        // Make_uniform:
+        //--------------------------------------------------
+        /** 
+        @brief Randomize the memory of a UniTensor with uniform distributon
+        @param Tin a \link cytnx::Tensor UniTensor \endlink
+        @param low the lower-bound of the uniform distribution
+        @param high the higher-bound of the uniform distribution
+        @param seed the seed for the random generator. [Default] Using device entropy.
+
+            [Note] 
+                
+                1. The UniTensor sould be real floating type or complex type.  
+                2. In cpu, it generate random number in domain [low,high); but in gpu(cuda), it generate random number in domain (low,high]; (cuRandv10)
+
+        */
+        void Make_uniform(UniTensor &Tin, const double &low=0, const double &high=1, const unsigned int &seed=std::random_device()());
+
+
 
 
 

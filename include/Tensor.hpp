@@ -1379,7 +1379,7 @@ namespace cytnx{
             Tensor Norm() const;
             Tensor Pow(const cytnx_double &p) const;
             Tensor& Pow_(const cytnx_double &p);
-            Tensor Trace(const cytnx_uint64 &a, const cytnx_uint64 &b) const;
+            Tensor Trace(const cytnx_uint64 &a=0, const cytnx_uint64 &b=1) const;
             Tensor Abs() const;
             Tensor& Abs_();
             Tensor Max() const;

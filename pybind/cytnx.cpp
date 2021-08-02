@@ -2012,8 +2012,8 @@ PYBIND11_MODULE(cytnx,m){
                 .def("cPow_",&UniTensor::Pow_)
                 .def("cConj_",&UniTensor::Conj_)
                 .def("Conj",&UniTensor::Conj)
-                .def("cTrace_",&UniTensor::Trace_,py::arg("a"),py::arg("b"),py::arg("by_label")=false)
-                .def("Trace",&UniTensor::Trace,py::arg("a"),py::arg("b"),py::arg("by_label")=false)
+                .def("cTrace_",&UniTensor::Trace_,py::arg("a")=0,py::arg("b")=1,py::arg("by_label")=false)
+                .def("Trace",&UniTensor::Trace,py::arg("a")=0,py::arg("b")=1,py::arg("by_label")=false)
                 .def("cTranspose_",&UniTensor::Transpose_)
                 .def("Transpose",&UniTensor::Transpose)
                 .def("cDagger_",&UniTensor::Dagger_)
@@ -2095,12 +2095,9 @@ PYBIND11_MODULE(cytnx,m){
     m_linalg.def("Norm",&cytnx::linalg::Norm, py::arg("T1"));
     m_linalg.def("Dot",&cytnx::linalg::Dot, py::arg("T1"),py::arg("T2"));
     
-    m_linalg.def("Trace",[](const cytnx::Tensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b){
-                                return cytnx::linalg::Trace(Tin,a,b);
-                            }, py::arg("Tn"),py::arg("axisA")=0,py::arg("axisB")=1);
     m_linalg.def("Trace",[](const cytnx::UniTensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label){
                                 return cytnx::linalg::Trace(Tin,a,b,by_label);
-                            }, py::arg("Tn"),py::arg("axisA"),py::arg("axisB"),py::arg("by_label")=false);
+                            }, py::arg("Tn"),py::arg("axisA")=0,py::arg("axisB")=1,py::arg("by_label")=false);
 
     m_linalg.def("Pow",[](const UniTensor &Tin, const double &p){
                                 return cytnx::linalg::Pow(Tin,p);
@@ -2168,6 +2165,10 @@ PYBIND11_MODULE(cytnx,m){
                                             cytnx::random::Make_normal(Sin,mean,std,seed);
                                   },py::arg("Sin"),py::arg("mean"),py::arg("std"),py::arg("seed")=std::random_device()());
     
+    m_random.def("Make_normal", [](cytnx::UniTensor &Tin, const double &mean, const double &std, const long long &seed){
+                                            cytnx::random::Make_normal(Tin,mean,std,seed);
+                                  },py::arg("Sin"),py::arg("mean"),py::arg("std"),py::arg("seed")=std::random_device()());
+    
     m_random.def("Make_uniform", [](cytnx::Tensor &Tin, const double &low, const double &high, const long long &seed){
                                             cytnx::random::Make_uniform(Tin,low,high,seed);
                                   },py::arg("Tin"),py::arg("low")=double(0),py::arg("high")=double(1.0),py::arg("seed")=std::random_device()());
@@ -2176,7 +2177,9 @@ PYBIND11_MODULE(cytnx,m){
                                             cytnx::random::Make_uniform(Sin,low,high,seed);
                                   },py::arg("Sin"),py::arg("low")=double(0),py::arg("high")=double(1.0),py::arg("seed")=std::random_device()());
 
-
+    m_random.def("Make_uniform", [](cytnx::UniTensor &Tin, const double &low, const double &high, const long long &seed){
+                                            cytnx::random::Make_uniform(Tin,low,high,seed);
+                                  },py::arg("Tin"),py::arg("low")=double(0),py::arg("high")=double(1.0),py::arg("seed")=std::random_device()());
     
     m_random.def("normal", [](const cytnx_uint64& Nelem,const double &mean, const double &std, const int&device, const unsigned int &seed){
                                    return cytnx::random::normal(Nelem,mean,std,device,seed);

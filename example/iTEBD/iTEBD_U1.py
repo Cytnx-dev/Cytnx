@@ -1,6 +1,6 @@
 import cytnx
 import numpy as np
-
+import math
 
 ##
 # Author: Kai-Hsin Wu
@@ -47,9 +47,9 @@ A = cytnx.UniTensor([bdi,bdi,bd_mid.redirect()],rowrank=1,labels=[-1,0,-2]);
 B = cytnx.UniTensor([bd_mid,bdi,bdo],rowrank=1,labels=[-3,1,-4]);          
 
 for b in range(len(B.get_blocks_())):
-    cytnx.random.Make_normal(B.get_block_(b),0,0.2,99); 
+    cytnx.random.Make_normal(B.get_block_(b),0,0.2); 
 for a in range(len(A.get_blocks_())):
-    cytnx.random.Make_normal(A.get_block_(a),0,0.2,99); 
+    cytnx.random.Make_normal(A.get_block_(a),0,0.2); 
 
 A.print_diagram()
 B.print_diagram()
@@ -80,7 +80,7 @@ for i in range(10000):
 
     ## contract all
     X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
-    lb.set_label(idx=1,new_label=-1)
+    lb.set_label(1,new_label=-1)
     X = cytnx.Contract(lb,X)
 
     ## X =
@@ -94,25 +94,14 @@ for i in range(10000):
     ## calculate local energy:
     ## <psi|psi>
     Xt = X.Dagger()
-    Xt.set_label(-5,-6,by_label=True); # here, we leave the last two indices, and using trace on each block: 
-    XNr = cytnx.Contract(X,Xt)
-    XNr.contiguous_()
-    XNorm = 0;
-    for b in XNr.get_blocks_():
-        XNorm += cytnx.linalg.Trace(b,0,1).item()
+    XNorm = cytnx.Contract(X,Xt).item()
 
     ## <psi|H|psi>
     XH = cytnx.Contract(X,H)
     XH.set_labels([-4,-5,0,1])
-    XHXr = cytnx.Contract(Xt,XH) ## rank-2
-    XHXr.contiguous_()
-    XHX = 0;
-    for b in XHXr.get_blocks_():
-        XHX += cytnx.linalg.Trace(b,0,1).item()
+    XHX = cytnx.Contract(Xt,XH).item()
     
     E = XHX/XNorm
-
-
 
     ## check if converged.
     if(np.abs(E-Elast) < CvgCrit):
@@ -142,12 +131,12 @@ for i in range(10000):
 
     Norm = 0;
     for a in range(len(la.get_blocks_())):
-        Norm += cytnx.linalg.Norm(la.get_block_(a)).item()
+        Norm += cytnx.linalg.Norm(la.get_block_(a)).item()**2
 
+    Norm = math.sqrt(Norm)
     for a in range(len(la.get_blocks_())):
         T = la.get_block_(a) 
         T /= Norm
-
          
     # de-contract the lb tensor , so it returns to 
     #             

@@ -1162,6 +1162,61 @@ namespace cytnx{
 
     }
 
+    boost::intrusive_ptr<UniTensor_base> SparseUniTensor::Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label){
+        cytnx_error_msg(this->_bonds.size()!=2,"[ERROR] SparseUniTensor currently only support Trace on SparseUniTensor with rank-2!%s","\n");
+        //std::cout << "entry" << std::endl;
+        //[NOTE] Currently ONLY WORK FOR RANK-2 !! 
+ 
+        // 1) from label to indx. 
+        cytnx_uint64 ida, idb;
+
+        if(by_label){
+            ida = vec_where(this->_labels,a);
+            idb = vec_where(this->_labels,b);
+        }else{
+            cytnx_error_msg(a < 0 || b < 0,"[ERROR] invalid index a, b%s","\n");
+            cytnx_error_msg(a >= this->rank() || b>= this->rank(),"[ERROR] index out of bound%s","\n");
+            ida=a;idb=b;
+        }
+
+        // check if indices are the same:
+        cytnx_error_msg(ida == idb, "[ERROR][SparseUniTensor::Trace_] index a and index b should not be the same.%s","\n");
+        
+        // check bra-ket if tagged 
+        if(this->is_braket_form()){
+
+            //check if it is the same species:
+            if(this->_bonds[ida].type() == this->_bonds[idb].type()){
+                cytnx_error_msg(true,"[ERROR][SparseUniTensor::Trace_] BD_BRA can only contract with BD_KET.%s","\n");
+            }
+
+        }
+            
+        // check dimension:
+        cytnx_error_msg(this->_bonds[ida].dim()!= this->_bonds[idb].dim(),"[ERROR][SparseUniTensor::Trace_] The dimension of two bond for trace does not match!%s","\n");
+
+
+        // check qnums:
+        cytnx_error_msg(this->_bonds[ida].qnums() != this->_bonds[idb].qnums(), "[ERROR][SparseUniTensor::Trace_] The qnums of two bond for trace does not match!%s","\n");
+
+
+        //trace the block:
+        Tensor t;
+        if(this->_is_diag){
+            // we need linalg.Sum
+        }else{
+            for(cytnx_int64 i=0;i<this->_blocks.size();i++){
+                if(t.dtype()==Type.Void) t = linalg::Trace(this->_blocks[i]);
+                else t += linalg::Trace(this->_blocks[i]);
+            }
+        }
+
+        boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
+        out->Init_by_Tensor(t,0);
+        return out;
+    }
+
+
     boost::intrusive_ptr<UniTensor_base> SparseUniTensor::contract(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &mv_elem_self, const bool &mv_elem_rhs){
         //cytnx_error_msg(true,"[ERROR][Developing.]%s","\n");
         
@@ -1179,6 +1234,8 @@ namespace cytnx{
 
         //output instance:
         SparseUniTensor *tmp = new SparseUniTensor();
+
+        bool is_scalar_out = false;
         std::vector<cytnx_int64> out_labels;
         std::vector<Bond> out_bonds;
         cytnx_int64 out_rowrank; 
@@ -1349,12 +1406,43 @@ namespace cytnx{
             }
             //std::cout << "end checking" << std::endl;
 
+
             // proc meta, labels:    
             std::vector<cytnx_uint64> non_comm_idx1 = vec_erase(utils_internal::range_cpu(this->rank()),comm_idx1);
             std::vector<cytnx_uint64> non_comm_idx2 = vec_erase(utils_internal::range_cpu(rhs->rank()),comm_idx2);
 
-            vec_concatenate_(out_labels,vec_clone(this->_labels,non_comm_idx1),vec_clone(rhs->_labels,non_comm_idx2));
 
+            //checking exception where no non-comm indices on both side:
+            is_scalar_out = false;
+            if((non_comm_idx1.size() == 0) && (non_comm_idx2.size() == 0)){
+                // no-common indices
+                is_scalar_out = true;
+                
+                //find the largest bond:
+                auto s1 = this->shape();
+
+                auto it1 = std::max_element(s1.begin(),s1.end());                
+                auto idx1 = std::distance(s1.begin(),it1);
+                auto idx2 = std::distance(rhs->labels().begin(),std::find(rhs->labels().begin(),rhs->labels().end(),this->_labels[idx1]));
+
+                auto minlbl = min(*std::min_element(this->labels().begin(),this->labels().end()), *std::min_element(rhs->labels().begin(),rhs->labels().end()));
+
+                auto new_tlabel = this->labels(); new_tlabel[idx1] = minlbl-1;
+                auto new_rlabel = rhs->labels();  new_rlabel[idx2] = minlbl-2;
+
+
+                //recalculate:
+                comm_labels.clear(); comm_idx1.clear(); comm_idx2.clear();
+                vec_intersect_(comm_labels,new_tlabel,new_rlabel,comm_idx1,comm_idx2);
+               
+                
+                non_comm_idx1 = vec_erase(utils_internal::range_cpu(this->rank()),comm_idx1);
+                non_comm_idx2 = vec_erase(utils_internal::range_cpu(rhs->rank()),comm_idx2);
+                vec_concatenate_(out_labels,vec_clone(new_tlabel,non_comm_idx1),vec_clone(new_rlabel,non_comm_idx2));
+
+            }else{         
+                vec_concatenate_(out_labels,vec_clone(this->_labels,non_comm_idx1),vec_clone(rhs->_labels,non_comm_idx2));
+            }
 
             // these two cannot omp parallel, due to intrusive_ptr
             for(cytnx_uint64 i=0; i<non_comm_idx1.size();i++)
@@ -1471,15 +1559,20 @@ namespace cytnx{
             }
             tmp->_is_braket_form = tmp->_update_braket();
               
+            
+
         }// check if no common index
         
 
         //std::cout << "[OK]" << std::endl;
 
-        boost::intrusive_ptr<UniTensor_base> out(tmp);
-        //boost::intrusive_ptr<UniTensor_base> out(new UniTensor_base());
-        return out;
+        if(is_scalar_out) return tmp->Trace(0,1);
+        else{
+            boost::intrusive_ptr<UniTensor_base> out(tmp);
 
+            //boost::intrusive_ptr<UniTensor_base> out(new UniTensor_base());
+            return out;
+        }
 
 
     }

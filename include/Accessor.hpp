@@ -23,12 +23,14 @@ namespace cytnx{
             cytnx_int64 loc{};
             std::vector<cytnx_int64> idx_list;
 
+            std::vector<std::vector<cytnx_int64> > qns_list;
             
 
             // if type is singl, _min/_max/_step     are not used
             // if type is all  , _min/_max/_step/loc are not used
             // if type is range, loc              are not used.
             // if type is tilend, loc/_max are not used. 
+            // if type is Qns, only qns_list are used.
 
             enum : cytnx_int64{
                 none,
@@ -38,7 +40,8 @@ namespace cytnx{
                 Tilend,
                 Step,
                 Tn,
-                list
+                list,
+                Qns
             };
 
             Accessor(): _type(Accessor::none){};
@@ -167,6 +170,15 @@ namespace cytnx{
                 out._step = step; 
                 return out;
             };
+
+            static Accessor qns(const std::vector< std::vector<cytnx_int64> > &qns){
+                cytnx_error_msg(qns.size()==0,"[ERROR] cannot have empty qnums.%s","\n");
+                Accessor out;
+            
+                out._type = Accessor::Qns;
+                out.qns_list = qns;  
+                return out;
+            }
 
             ///@cond
             // get the real len from dim

@@ -57,6 +57,13 @@ See The following user guide for install and using of cytnx:
     27. [Fix] Svd_truncate when one of the block has only dim=1 should fill-in the dangling dimension. 
     28. [New][experiment] iTEBD with U1 symmetry example for Heisenberg chain
     29. [Change] v0.7.4 [26.] replace change_label() with relabel. Now only have set_label(s) and relabel(s) with *_label() have by_label option.  
+    30. [Enhance] Add Accessor option Qns, qns()
+    31. [Change] Trace now by default trace axis =0 and axis=1 if no argument specify. 
+    32. [Fix] Compare of two Bonds will now also check qnums.
+    33. [New][experiment] SparseUniTensor.Trace() now support rank-2 symmetric UniTensor -> scalar
+    34. [New][experiment] Contract of SparseUniTensor with two SUT with same labels -> scalar is now avaliable
+
+
 
     v0.7.3
     1. [Fix] bug for Get slice does not reduce when dim=1. 
