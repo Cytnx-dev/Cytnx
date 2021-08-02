@@ -217,7 +217,11 @@
 <li class="toctree-l3"><a class="reference internal" href="DMRG.html#results">3.6. Results</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="iDMRG.html">4. iDMRG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iDMRG.html">4. iDMRG</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="iDMRG.html#initialization">4.1. Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="iDMRG.html#update-procedure">4.2. Update procedure</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="HOTRG.html">5. HOTRG</a></li>
 </ul>
 </li>
@@ -245,7 +249,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../%23.html">v0.7.1a</a></li>
+              <a  class="nav-link" href="../%23.html">v0.7.3a</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -271,7 +275,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../%23.html">v0.7.1a</a></li>
+                  <a  class="nav-link" href="../%23.html">v0.7.3a</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -494,7 +498,11 @@
 <li class="toctree-l3"><a class="reference internal" href="DMRG.html#results">3.6. Results</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="iDMRG.html">4. iDMRG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iDMRG.html">4. iDMRG</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="iDMRG.html#initialization">4.1. Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="iDMRG.html#update-procedure">4.2. Update procedure</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="HOTRG.html">5. HOTRG</a></li>
 </ul>
 </li>
@@ -545,6 +553,7 @@
             
   <div class="section" id="itebd">
 <h1><span class="section-number">2. </span>iTEBD<a class="headerlink" href="#itebd" title="Permalink to this headline">¶</a></h1>
+<p><strong>By : Hsu Ke, Kai-Hsin Wu</strong></p>
 <p>Time evolution block decimation is one of the most simple and sucessful Tensor network method <a class="bibtex reference internal" href="#itebd-vidal" id="id1">[Vid07]</a>. The core concept of this algorithm is to use the imaginary time evolution to find the best variational ansatz, usually in terms of Matrix product state (MPS).</p>
 <p>Here, we use a 1D transverse field Ising model (TFIM) as a simple example to show how to implement iTEBD algorithm in Cytnx and get the infinite system size (variational) ground state.</p>
 <p>Consider the Hamiltonain of TFIM:</p>
@@ -865,11 +874,563 @@ on device   : cytnx device: CPU
 </div>
 <div class="section" id="update-procedure">
 <h2><span class="section-number">2.2. </span>Update procedure<a class="headerlink" href="#update-procedure" title="Permalink to this headline">¶</a></h2>
-<p>Now we have prepared the initial trial wavefunction in terms of MPS with two sites unit cell and the time evolution operator, we are ready to use the aformentioned scheme to find the (variational) ground state MPS.</p>
-<div class="admonition hint">
-<p class="admonition-title">Hint</p>
-<p>The complete example code can be found in Github repo under example/iTEBD folder.</p>
-</div>
+<p>Now we have prepared the initial trial wavefunction in terms of MPS with two sites unit cell and the time evolution operator, we are ready to use the aformentioned scheme to find the (variational) ground state MPS.
+At the beginning of each iteration, we evaluate the energy expectation value $langle psi | H | psi  rangle / langle psi | psi  rangle$, and check the convergence, the network is straightforward:</p>
+<a class="reference internal image-reference" href="../_images/itebd_contract.png"><img alt="../_images/itebd_contract.png" class="align-center" src="../_images/itebd_contract.png" style="width: 300px;" /></a>
+<a class="reference internal image-reference" href="../_images/itebd_energy.png"><img alt="../_images/itebd_energy.png" class="align-center" src="../_images/itebd_energy.png" style="width: 450px;" /></a>
+<ul class="simple">
+<li><p>In python</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">A</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">B</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span>
+<span class="n">la</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">lb</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span>
+
+<span class="c1">## contract all</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">la</span><span class="p">),</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">lb</span><span class="p">))</span>
+<span class="c1">#X.print_diagram()</span>
+<span class="n">lb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">new_label</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">lb</span><span class="p">,</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">Xt</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+
+<span class="c1">## calculate norm and energy for this step</span>
+<span class="c1"># Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element</span>
+<span class="n">XNorm</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Xt</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="n">XH</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">H</span><span class="p">)</span>
+<span class="n">XH</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">XHX</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">Xt</span><span class="p">,</span><span class="n">XH</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="c1">## rank-0</span>
+<span class="n">E</span> <span class="o">=</span> <span class="n">XHX</span><span class="o">/</span><span class="n">XNorm</span>
+
+<span class="c1">## check if converged.</span>
+<span class="k">if</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">E</span><span class="o">-</span><span class="n">Elast</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">CvgCrit</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[Converged!]&quot;</span><span class="p">)</span>
+    <span class="k">break</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Step: </span><span class="si">%d</span><span class="s2"> Enr: </span><span class="si">%5.8f</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">Elast</span><span class="p">))</span>
+<span class="n">Elast</span> <span class="o">=</span> <span class="n">E</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>In c++</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">A</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">-2</span><span class="p">});</span>
+<span class="n">B</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">-4</span><span class="p">});</span>
+<span class="n">la</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-2</span><span class="p">,</span><span class="mi">-3</span><span class="p">});</span>
+<span class="n">lb</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-4</span><span class="p">,</span><span class="mi">-5</span><span class="p">});</span>
+
+
+<span class="c1">// contract all</span>
+<span class="n">UniTensor</span> <span class="n">X</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">la</span><span class="p">),</span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">lb</span><span class="p">));</span>
+<span class="n">lb</span><span class="p">.</span><span class="n">set_label</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">-1</span><span class="p">);</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">lb</span><span class="p">,</span><span class="n">X</span><span class="p">);</span>
+
+<span class="n">UniTensor</span> <span class="n">Xt</span> <span class="o">=</span> <span class="n">X</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+
+<span class="c1">//&gt; calculate norm and energy for this step</span>
+<span class="c1">// Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element</span>
+<span class="kt">double</span> <span class="n">XNorm</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Xt</span><span class="p">).</span><span class="n">item</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="n">UniTensor</span> <span class="n">XH</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">H</span><span class="p">);</span>
+
+<span class="n">XH</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-4</span><span class="p">,</span><span class="mi">-5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">});</span>
+<span class="kt">double</span> <span class="n">XHX</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">Xt</span><span class="p">,</span><span class="n">XH</span><span class="p">).</span><span class="n">item</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="kt">double</span> <span class="n">E</span> <span class="o">=</span> <span class="n">XHX</span><span class="o">/</span><span class="n">XNorm</span><span class="p">;</span>
+
+<span class="c1">//&gt; check if converged.</span>
+<span class="k">if</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">E</span><span class="o">-</span><span class="n">Elast</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">CvgCrit</span><span class="p">){</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;[Converged!]&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="k">break</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Step: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Enr: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">Elast</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="n">Elast</span> <span class="o">=</span> <span class="n">E</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>in the next step we perform the two-sites imaginary time evolution, using the operator (or “gate”) eH we defined above:</p>
+<a class="reference internal image-reference" href="../_images/itebd_envolve.png"><img alt="../_images/itebd_envolve.png" class="align-center" src="../_images/itebd_envolve.png" style="width: 700px;" /></a>
+<p>we also performed SVD for the XeH here, this put the MPS into mixed canonical form, we thus have a Schimit decomposition of the whole state, and the singular values being the Schimit coefficients.</p>
+<ul class="simple">
+<li><p>In python</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">XeH</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">eH</span><span class="p">)</span>
+<span class="n">XeH</span><span class="o">.</span><span class="n">permute_</span><span class="p">([</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">],</span><span class="n">by_label</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">XeH</span><span class="o">.</span><span class="n">set_rowrank</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">la</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">XeH</span><span class="p">,</span><span class="n">chi</span><span class="p">)</span>
+<span class="n">Norm</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Norm</span><span class="p">(</span><span class="n">la</span><span class="o">.</span><span class="n">get_block_</span><span class="p">())</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="n">la</span> <span class="o">*=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">Norm</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>In c++</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span>
+<span class="normal">9</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">//&gt; Time evolution the MPS</span>
+<span class="n">UniTensor</span> <span class="n">XeH</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">eH</span><span class="p">);</span>
+<span class="n">XeH</span><span class="p">.</span><span class="n">permute_</span><span class="p">({</span><span class="mi">-4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">-5</span><span class="p">},</span><span class="mi">-1</span><span class="p">,</span><span class="nb">true</span><span class="p">);</span>
+
+<span class="n">XeH</span><span class="p">.</span><span class="n">set_Rowrank</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">UniTensor</span><span class="o">&gt;</span> <span class="n">out</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">xlinalg</span><span class="o">::</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">XeH</span><span class="p">,</span><span class="n">chi</span><span class="p">);</span>
+<span class="n">la</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="n">A</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span> <span class="n">B</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+<span class="kt">double</span> <span class="n">Norm</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">linalg</span><span class="o">::</span><span class="n">Norm</span><span class="p">(</span><span class="n">la</span><span class="p">.</span><span class="n">get_block_</span><span class="p">()).</span><span class="n">item</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="n">la</span> <span class="o">*=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">Norm</span><span class="p">;</span> <span class="c1">//normalize</span>
+</pre></div>
+</td></tr></table></div>
+<p>Note that we directly store the SVD results into A, B and la, this can be seen by comparing to our original MPS configuration:</p>
+<a class="reference internal image-reference" href="../_images/itebd_what.png"><img alt="../_images/itebd_what.png" class="align-center" src="../_images/itebd_what.png" style="width: 500px;" /></a>
+<p>from this interpretation we are thus motivated to use the gauge freedom to introduce $lambda_B^{-1} lambda_B$ on both ends,
+abosorb two $lambda_B^{-1}$ we then recover the original configuration.</p>
+<a class="reference internal image-reference" href="../_images/itebd_recover.png"><img alt="../_images/itebd_recover.png" class="align-center" src="../_images/itebd_recover.png" style="width: 500px;" /></a>
+<p>Now we have the envolved $Gamma_A$, $Gamma_B$ and $lambda_A$, use the translation symmetry, we shift the whole chain to left by just exchange the $Gamma$ and $lambda$ pair and arrived at the new MPS for next iteration:</p>
+<a class="reference internal image-reference" href="../_images/itebd_translation.png"><img alt="../_images/itebd_translation.png" class="align-center" src="../_images/itebd_translation.png" style="width: 300px;" /></a>
+<ul class="simple">
+<li><p>In python</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># again, but A&#39; and B&#39; are updated</span>
+<span class="n">A</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">]);</span> <span class="n">A</span><span class="o">.</span><span class="n">set_rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">B</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">]);</span> <span class="n">B</span><span class="o">.</span><span class="n">set_rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="n">lb_inv</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">lb</span>
+
+<span class="n">lb_inv</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="mi">7</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="c1"># -1 to contract with A, 7 is arbitary here.</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">lb_inv</span><span class="p">,</span><span class="n">A</span><span class="p">)</span>
+
+<span class="n">lb_inv</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span> <span class="c1"># -4 to contract with B, 8 is arbitary here.</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">lb_inv</span><span class="p">)</span>
+
+<span class="c1"># translation symmetry, exchange A and B site</span>
+<span class="n">A</span><span class="p">,</span><span class="n">B</span> <span class="o">=</span> <span class="n">B</span><span class="p">,</span><span class="n">A</span>
+<span class="n">la</span><span class="p">,</span><span class="n">lb</span> <span class="o">=</span> <span class="n">lb</span><span class="p">,</span><span class="n">la</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>In c++</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">A</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">-2</span><span class="p">});</span> <span class="n">A</span><span class="p">.</span><span class="n">set_Rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">B</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">-4</span><span class="p">});</span> <span class="n">B</span><span class="p">.</span><span class="n">set_Rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="n">UniTensor</span> <span class="n">lb_inv</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">lb</span><span class="p">;</span>
+
+<span class="n">lb_inv</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">7</span><span class="p">,</span> <span class="mi">-1</span><span class="p">});</span> <span class="c1">// -1 to contract with A, 7 is arbitary here.</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">cyx</span><span class="p">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">lb_inv</span><span class="p">,</span><span class="n">A</span><span class="p">);</span>
+
+<span class="n">lb_inv</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-4</span><span class="p">,</span> <span class="mi">8</span><span class="p">})</span> <span class="c1">// -4 to contract with B, 8 is arbitary here.</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">cyx</span><span class="p">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">lb_inv</span><span class="p">);</span>
+
+<span class="n">A</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">lb_inv</span><span class="p">,</span><span class="n">A</span><span class="p">);</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">lb_inv</span><span class="p">);</span>
+
+
+<span class="c1">//&gt; translation symm, exchange A and B site</span>
+<span class="n">UniTensor</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">A</span><span class="p">;</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">B</span><span class="p">;</span> <span class="n">B</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">;</span>
+
+<span class="n">tmp</span> <span class="o">=</span> <span class="n">la</span><span class="p">;</span>
+<span class="n">la</span> <span class="o">=</span> <span class="n">lb</span><span class="p">;</span> <span class="n">lb</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Let’s put everything together in a loop for iteration:</p>
+<ul class="simple">
+<li><p>In python</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">):</span>
+
+    <span class="n">A</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">B</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span>
+    <span class="n">la</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span>
+    <span class="n">lb</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span>
+
+    <span class="c1">## contract all</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">la</span><span class="p">),</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">lb</span><span class="p">))</span>
+    <span class="c1">#X.print_diagram()</span>
+    <span class="n">lb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">idx</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">new_label</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">lb</span><span class="p">,</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="c1">## X =</span>
+    <span class="c1">#           (0)  (1)</span>
+    <span class="c1">#            |    |</span>
+    <span class="c1">#  (-4) --lb-A-la-B-lb-- (-5)</span>
+    <span class="c1">#</span>
+    <span class="c1">#X.print_diagram()</span>
+
+    <span class="n">Xt</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+
+    <span class="c1">## calculate norm and energy for this step</span>
+    <span class="c1"># Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element</span>
+    <span class="n">XNorm</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Xt</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+    <span class="n">XH</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">H</span><span class="p">)</span>
+    <span class="n">XH</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">XHX</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">Xt</span><span class="p">,</span><span class="n">XH</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="c1">## rank-0</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="n">XHX</span><span class="o">/</span><span class="n">XNorm</span>
+
+    <span class="c1">## check if converged.</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">E</span><span class="o">-</span><span class="n">Elast</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">CvgCrit</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[Converged!]&quot;</span><span class="p">)</span>
+        <span class="k">break</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Step: </span><span class="si">%d</span><span class="s2"> Enr: </span><span class="si">%5.8f</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">Elast</span><span class="p">))</span>
+    <span class="n">Elast</span> <span class="o">=</span> <span class="n">E</span>
+
+    <span class="c1">## Time evolution the MPS</span>
+    <span class="n">XeH</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">eH</span><span class="p">)</span>
+    <span class="n">XeH</span><span class="o">.</span><span class="n">permute_</span><span class="p">([</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">],</span><span class="n">by_label</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1">#XeH.print_diagram()</span>
+
+    <span class="c1">## Do Svd + truncate</span>
+    <span class="c1">##</span>
+    <span class="c1">#        (2)   (3)                   (2)                                    (3)</span>
+    <span class="c1">#         |     |          =&gt;         |         +   (-6)--s--(-7)  +         |</span>
+    <span class="c1">#  (-4) --= XeH =-- (-5)        (-4)--U--(-6)                          (-7)--Vt--(-5)</span>
+    <span class="c1">#</span>
+
+    <span class="n">XeH</span><span class="o">.</span><span class="n">set_rowrank</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">la</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">XeH</span><span class="p">,</span><span class="n">chi</span><span class="p">)</span>
+    <span class="n">Norm</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Norm</span><span class="p">(</span><span class="n">la</span><span class="o">.</span><span class="n">get_block_</span><span class="p">())</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+    <span class="n">la</span> <span class="o">*=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">Norm</span>
+    <span class="c1">#A.print_diagram()</span>
+    <span class="c1">#la.print_diagram()</span>
+    <span class="c1">#B.print_diagram()</span>
+
+
+    <span class="c1"># de-contract the lb tensor , so it returns to</span>
+    <span class="c1">#</span>
+    <span class="c1">#            |     |</span>
+    <span class="c1">#       --lb-A&#39;-la-B&#39;-lb--</span>
+    <span class="c1">#</span>
+    <span class="c1"># again, but A&#39; and B&#39; are updated</span>
+    <span class="n">A</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">]);</span> <span class="n">A</span><span class="o">.</span><span class="n">set_rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">B</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">]);</span> <span class="n">B</span><span class="o">.</span><span class="n">set_rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
+    <span class="c1">#A.print_diagram()</span>
+    <span class="c1">#B.print_diagram()</span>
+
+    <span class="n">lb_inv</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">lb</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">lb_inv</span><span class="p">,</span><span class="n">A</span><span class="p">)</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">lb_inv</span><span class="p">)</span>
+
+    <span class="c1">#A.print_diagram()</span>
+    <span class="c1">#B.print_diagram()</span>
+
+    <span class="c1"># translation symmetry, exchange A and B site</span>
+    <span class="n">A</span><span class="p">,</span><span class="n">B</span> <span class="o">=</span> <span class="n">B</span><span class="p">,</span><span class="n">A</span>
+    <span class="n">la</span><span class="p">,</span><span class="n">lb</span> <span class="o">=</span> <span class="n">lb</span><span class="p">,</span><span class="n">la</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>In c++</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">//&gt; Evov:</span>
+<span class="kt">double</span> <span class="n">Elast</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="k">for</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">10000</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+    <span class="n">A</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">-2</span><span class="p">});</span>
+    <span class="n">B</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">-4</span><span class="p">});</span>
+    <span class="n">la</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-2</span><span class="p">,</span><span class="mi">-3</span><span class="p">});</span>
+    <span class="n">lb</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-4</span><span class="p">,</span><span class="mi">-5</span><span class="p">});</span>
+
+
+    <span class="c1">// contract all</span>
+    <span class="n">UniTensor</span> <span class="n">X</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">la</span><span class="p">),</span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">lb</span><span class="p">));</span>
+    <span class="n">lb</span><span class="p">.</span><span class="n">set_label</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">-1</span><span class="p">);</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">lb</span><span class="p">,</span><span class="n">X</span><span class="p">);</span>
+
+    <span class="n">UniTensor</span> <span class="n">Xt</span> <span class="o">=</span> <span class="n">X</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+
+    <span class="c1">//&gt; calculate norm and energy for this step</span>
+    <span class="c1">// Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element</span>
+    <span class="kt">double</span> <span class="n">XNorm</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Xt</span><span class="p">).</span><span class="n">item</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
+    <span class="n">UniTensor</span> <span class="n">XH</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">H</span><span class="p">);</span>
+
+    <span class="n">XH</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-4</span><span class="p">,</span><span class="mi">-5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">});</span>
+    <span class="kt">double</span> <span class="n">XHX</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">Xt</span><span class="p">,</span><span class="n">XH</span><span class="p">).</span><span class="n">item</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
+    <span class="kt">double</span> <span class="n">E</span> <span class="o">=</span> <span class="n">XHX</span><span class="o">/</span><span class="n">XNorm</span><span class="p">;</span>
+
+    <span class="c1">//&gt; check if converged.</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">E</span><span class="o">-</span><span class="n">Elast</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">CvgCrit</span><span class="p">){</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;[Converged!]&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Step: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Enr: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">Elast</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">Elast</span> <span class="o">=</span> <span class="n">E</span><span class="p">;</span>
+
+    <span class="c1">//&gt; Time evolution the MPS</span>
+    <span class="n">UniTensor</span> <span class="n">XeH</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">eH</span><span class="p">);</span>
+    <span class="n">XeH</span><span class="p">.</span><span class="n">permute_</span><span class="p">({</span><span class="mi">-4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">-5</span><span class="p">},</span><span class="mi">-1</span><span class="p">,</span><span class="nb">true</span><span class="p">);</span>
+
+    <span class="c1">//&gt; Do Svd + truncate</span>
+    <span class="n">XeH</span><span class="p">.</span><span class="n">set_Rowrank</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">UniTensor</span><span class="o">&gt;</span> <span class="n">out</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">xlinalg</span><span class="o">::</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">XeH</span><span class="p">,</span><span class="n">chi</span><span class="p">);</span>
+    <span class="n">la</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="n">A</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span> <span class="n">B</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+    <span class="kt">double</span> <span class="n">Norm</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">linalg</span><span class="o">::</span><span class="n">Norm</span><span class="p">(</span><span class="n">la</span><span class="p">.</span><span class="n">get_block_</span><span class="p">()).</span><span class="n">item</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
+    <span class="n">la</span> <span class="o">*=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">Norm</span><span class="p">;</span> <span class="c1">//normalize</span>
+
+
+    <span class="c1">// de-contract the lb tensor , so it returns to</span>
+    <span class="c1">//</span>
+    <span class="c1">//            |     |</span>
+    <span class="c1">//       --lb-A&#39;-la-B&#39;-lb--</span>
+    <span class="c1">//</span>
+    <span class="c1">// again, but A&#39; and B&#39; are updated</span>
+    <span class="n">A</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">-2</span><span class="p">});</span> <span class="n">A</span><span class="p">.</span><span class="n">set_Rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">B</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">-4</span><span class="p">});</span> <span class="n">B</span><span class="p">.</span><span class="n">set_Rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
+    <span class="n">UniTensor</span> <span class="n">lb_inv</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">lb</span><span class="p">;</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">lb_inv</span><span class="p">,</span><span class="n">A</span><span class="p">);</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">lb_inv</span><span class="p">);</span>
+
+
+    <span class="c1">//&gt; translation symm, exchange A and B site</span>
+    <span class="n">UniTensor</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">A</span><span class="p">;</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">B</span><span class="p">;</span> <span class="n">B</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">;</span>
+
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">la</span><span class="p">;</span>
+    <span class="n">la</span> <span class="o">=</span> <span class="n">lb</span><span class="p">;</span> <span class="n">lb</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
 <p id="bibtex-bibliography-example/iTEBD-0"><dl class="citation">
 <dt class="bibtex label" id="itebd-vidal"><span class="brackets">Vid07</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id2">2</a>)</span></dt>
 <dd><p>G. Vidal. Classical simulation of infinite-size quantum lattice systems in one spatial dimension. <em>Phys. Rev. Lett.</em>, 98:070201, Feb 2007. URL: <a class="reference external" href="https://link.aps.org/doi/10.1103/PhysRevLett.98.070201">https://link.aps.org/doi/10.1103/PhysRevLett.98.070201</a>, <a class="reference external" href="https://doi.org/10.1103/PhysRevLett.98.070201">doi:10.1103/PhysRevLett.98.070201</a>.</p>

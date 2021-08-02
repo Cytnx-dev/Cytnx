@@ -304,7 +304,7 @@ At the beginning of each iteration, we evaluate the energy expectation value $\l
     ## contract all
     X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
     #X.print_diagram()
-    lb.set_label(idx=1,new_label=-1)
+    lb.set_label(1,new_label=-1)
     X = cytnx.Contract(lb,X)
 
     Xt = X.clone()
