@@ -1,7 +1,6 @@
 import cytnx
 import numpy as np
-import scipy as sp
-from scipy import linalg
+
 
 ##
 # Author: Kai-Hsin Wu
@@ -95,7 +94,7 @@ for i in range(10000):
     ## calculate local energy:
     ## <psi|psi>
     Xt = X.Dagger()
-    Xt.change_label(-5,-6); # here, we leave the last two indices, and using trace on each block: 
+    Xt.set_label(-5,-6,by_label=True); # here, we leave the last two indices, and using trace on each block: 
     XNr = cytnx.Contract(X,Xt)
     XNr.contiguous_()
     XNorm = 0;

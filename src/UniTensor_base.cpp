@@ -178,7 +178,11 @@ namespace cytnx{
                 cytnx_error_msg(tmp.size() != new_labels.size(), "[ERROR][set_labels][UniTensor] %s\n","the input labels cannot contain duplicated element(s).");
                 this->_labels = new_labels;
         }
-        boost::intrusive_ptr<UniTensor_base> UniTensor_base::relabel(const std::vector<cytnx_int64> &new_labels){
+        boost::intrusive_ptr<UniTensor_base> UniTensor_base::relabels(const std::vector<cytnx_int64> &new_labels){
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+            return nullptr;
+        }
+        boost::intrusive_ptr<UniTensor_base> UniTensor_base::relabel(const cytnx_int64 &inx, const cytnx_int64 &new_label,const bool &by_label){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
             return nullptr;
         }

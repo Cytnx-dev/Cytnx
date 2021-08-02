@@ -53,9 +53,10 @@ See The following user guide for install and using of cytnx:
     23. [New] add Bond.redirect(), Bond.retype()
     24. [Fix] SparseUniTensor.permute() does not properly update braket_form
     25. [Fix] SparseUniTensor.set_rowrank should track _inner_rowrank not _rowrank bug. 
-    26. [Enhance] Add UniTensor.change_label() 
+    26. [Enhance] Add UniTensor.change_label() <- [Removed!!] use relabel(s)()  
     27. [Fix] Svd_truncate when one of the block has only dim=1 should fill-in the dangling dimension. 
     28. [New][experiment] iTEBD with U1 symmetry example for Heisenberg chain
+    29. [Change] v0.7.4 [26.] replace change_label() with relabel. Now only have set_label(s) and relabel(s) with *_label() have by_label option.  
 
     v0.7.3
     1. [Fix] bug for Get slice does not reduce when dim=1. 

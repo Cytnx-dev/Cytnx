@@ -308,13 +308,21 @@ namespace cytnx{
 
     }
 
-    boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabel(const std::vector<cytnx_int64> &new_labels){
+    boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabels(const std::vector<cytnx_int64> &new_labels){
         SparseUniTensor* tmp = this->clone_meta(true,true);
         tmp->_blocks = this->_blocks;
         tmp->set_labels(new_labels);
         boost::intrusive_ptr<UniTensor_base> out(tmp);
         return out;
 
+    }
+
+    boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabel(const cytnx_int64 &inx, const cytnx_int64 &new_label,const bool &by_label){
+        SparseUniTensor* tmp = this->clone_meta(true,true);
+        tmp->_blocks = this->_blocks;
+        tmp->set_label(inx,new_label,by_label);
+        boost::intrusive_ptr<UniTensor_base> out(tmp);
+        return out;
     }
 
     std::vector<Symmetry> SparseUniTensor::syms() const{

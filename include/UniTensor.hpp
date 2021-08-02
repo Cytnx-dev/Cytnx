@@ -95,7 +95,16 @@ namespace cytnx{
             const std::string& name() const { return this->_name;}
             cytnx_uint64  rank() const {return this->_labels.size();}
             void set_name(const std::string &in){ this->_name = in;}
-            void set_label(const cytnx_uint64 &idx, const cytnx_int64 &new_label){
+            void set_label(const cytnx_int64 &inx, const cytnx_int64 &new_label, const bool &by_label=false){
+                cytnx_int64 idx;
+                if(by_label){
+                    auto res = std::find(this->_labels.begin(),this->_labels.end(),inx);
+                    cytnx_error_msg(res==this->_labels.end(),"[ERROR] label %d not exists.\n",inx);
+                    idx = std::distance(this->_labels.begin(), res);
+                }else{
+                    idx = inx;
+                }
+
                 cytnx_error_msg(idx>=this->_labels.size(),"[ERROR] index exceed the rank of UniTensor%s","\n");
                 //check in:
                 bool is_dup =false;
@@ -105,30 +114,11 @@ namespace cytnx{
                 }
                 cytnx_error_msg(is_dup,"[ERROR] alreay has a label that is the same as the input label%s","\n");
                 this->_labels[idx] = new_label;                
+
             }
-            void change_label(const cytnx_int64 &old_lbl, const cytnx_int64 &new_label){
-                cytnx_int64 oidx = -1;
-                cytnx_int64 dupidx = -1;
-                
-                for(cytnx_uint64 i=0;i<this->_labels.size();i++){
-                    if(old_lbl == this->_labels[i]){oidx = i;}
-                    else{
-                        if(new_label == this->_labels[i]){
-                            dupidx = i;
-                        }
-                    }
-
-                }
-                
-                cytnx_error_msg(dupidx>=0, "[ERROR] new_label %d already exists in label @ %d\n",new_label,dupidx);                    
-
-                cytnx_error_msg(oidx < 0, "[ERROR] old_lbl %d does not exists in current UniTensor \n", old_lbl);
-
-                this->_labels[oidx] = new_label;
-
-            } 
-
             void set_labels(const std::vector<cytnx_int64> &new_labels);
+
+            
 
 
             template<class T>
@@ -244,7 +234,9 @@ namespace cytnx{
             virtual std::vector<std::vector<cytnx_int64> > get_blocks_qnums() const;
             virtual void Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false);
             virtual boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label=false);
-            virtual boost::intrusive_ptr<UniTensor_base> relabel(const std::vector<cytnx_int64> &new_labels);
+            virtual boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<cytnx_int64> &new_labels);
+            virtual boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx, const cytnx_int64 &new_label, const bool &by_label=false);
+
 
             virtual std::vector<Symmetry> syms() const;
             
@@ -379,8 +371,9 @@ namespace cytnx{
             std::string     device_str() const{ return Device.getname(this->_block.device());}
             boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank=-1,const bool &by_label=false);
             void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1, const bool &by_label=false);
-            boost::intrusive_ptr<UniTensor_base> relabel(const std::vector<cytnx_int64> &new_labels);
-
+            boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<cytnx_int64> &new_labels);
+            boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx, const cytnx_int64 &new_label, const bool &by_label=false);
+            
             std::vector<Symmetry> syms() const{
                 cytnx_error_msg(true,"[ERROR][DenseUniTensor] dense unitensor does not have symmetry.%s","\n");
                 return std::vector<Symmetry>();
@@ -768,7 +761,9 @@ namespace cytnx{
                 this->_rowrank = new_rowrank;
                 this->_is_braket_form = this->_update_braket();
             }
-            boost::intrusive_ptr<UniTensor_base> relabel(const std::vector<cytnx_int64> &new_labels);
+            boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<cytnx_int64> &new_labels);
+            boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx, const cytnx_int64 &new_label, const bool &by_label=false);
+
             unsigned int  dtype() const{
                 #ifdef UNI_DEBUG
                 cytnx_error_msg(this->_blocks.size()==0,"[ERROR][internal] empty blocks for blockform.%s","\n");
@@ -1225,8 +1220,8 @@ namespace cytnx{
                 ( cannot have duplicate labels )
 
             */
-            UniTensor& set_label(const cytnx_uint64 &idx, const cytnx_int64 &new_label){
-                this->_impl->set_label(idx,new_label);
+            UniTensor& set_label(const cytnx_int64 &idx, const cytnx_int64 &new_label, const bool &by_label=false){
+                this->_impl->set_label(idx,new_label,by_label);
                 return *this;
             }
 
@@ -1240,11 +1235,12 @@ namespace cytnx{
                 ( cannot have duplicate labels )
 
             */
+            /*
             UniTensor& change_label(const cytnx_int64 &old_lbl, const cytnx_int64 &new_label){
                 this->_impl->change_label(old_lbl,new_label);
                 return *this;
             }
-
+            */
 
 
             /**
@@ -1309,11 +1305,17 @@ namespace cytnx{
                 out._impl = this->_impl->clone();
                 return out;
             }
-            UniTensor relabel(const std::vector<cytnx_int64> &new_labels) const{
+            UniTensor relabels(const std::vector<cytnx_int64> &new_labels) const{
                 UniTensor out;
-                out._impl = this->_impl->relabel(new_labels);
+                out._impl = this->_impl->relabels(new_labels);
                 return out;
             }
+            UniTensor relabel(const cytnx_int64 &inx, const cytnx_int64 &new_label, const bool &by_label=false) const{
+                UniTensor out;
+                out._impl = this->_impl->relabel(inx,new_label,by_label);
+                return out;
+            }
+
 
             UniTensor permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank=-1,const bool &by_label=false){UniTensor out; out._impl = this->_impl->permute(mapper,rowrank,by_label); return out;}
             void permute_(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank=-1,const bool &by_label=false){

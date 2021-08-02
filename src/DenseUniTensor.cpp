@@ -126,16 +126,25 @@ namespace cytnx{
                         this->_rowrank = rowrank;
                     }
                 }
-            }
+    }
 
     
-    boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabel(const std::vector<cytnx_int64> &new_labels){
+    boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabels(const std::vector<cytnx_int64> &new_labels){
         DenseUniTensor *out_raw = this->clone_meta();
         out_raw->_block = this->_block;
         out_raw->set_labels(new_labels);
         boost::intrusive_ptr<UniTensor_base> out(out_raw);
         return out;
     }
+
+    boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabel(const cytnx_int64 &inx, const cytnx_int64 &new_label,const bool &by_label){
+        DenseUniTensor *out_raw = this->clone_meta();
+        out_raw->_block = this->_block;
+        out_raw->set_label(inx,new_label,by_label);
+        boost::intrusive_ptr<UniTensor_base> out(out_raw);
+        return out;
+    }
+
 
     boost::intrusive_ptr<UniTensor_base> DenseUniTensor::permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank, const bool &by_label){
         //boost::intrusive_ptr<UniTensor_base> out = this->clone();
