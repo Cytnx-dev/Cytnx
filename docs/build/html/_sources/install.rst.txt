@@ -14,16 +14,29 @@ Following we show how to install cytnx from conda.
 
 2. create a virtual enviroment:
 
+* For linux/WSL:
+
 .. code-block:: shell
     :linenos:
 
     $conda create --channel conda-forge --name cytnx python=3.7 _openmp_mutex=*=*_llvm
 
 
+
+* For MacOS:
+
+.. code-block:: shell
+    :linenos:
+
+    $conda create --channel conda-forge --name cytnx python=3.7 llvm-openmp
+
+
+
 .. note:: 
 
     * See :virtualenv:`This page <>` for how to use virtual enviroment in conda. 
     * User can select the python version you want. we recommend using >=3.7
+    
 
 3. activate enviroment and conda install cytnx:
     
@@ -180,12 +193,19 @@ We recommend using conda to handle all the dependencies and compiling tools:
 
 1. Install anaconda, setting the virtual enviroments
 
+
 .. code-block:: shell
 
     $conda config --add channels conda-forge
     $conda create --name cytnx python=3.8 _openmp_mutex=*=*_llvm
     $conda activate cytnx
     
+
+.. Note::
+
+    For MacOS, replace **_openmp_mutex=*=*_llvm** with **llvm-openmp**
+
+
 2. Install the following dependencies:
 
 .. code-block:: shell
