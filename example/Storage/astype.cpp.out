@@ -1,6 +1,6 @@
 Double (Float64)
 Double (Float64)
 1
-Float32
+Float (Float32)
 0
 cytnx device: CUDA/GPU-id:0

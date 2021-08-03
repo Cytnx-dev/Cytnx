@@ -107,10 +107,10 @@ namespace cytnx{
             this->LR.resize(this->mps.size()+1);
             this->LR[0]  = L0;
             this->LR.back() = R0;
-
+            this->mps.Into_Lortho();
             
             for(int p=0;p<this->mps.size() - 1;p++){
-                this->mps.S_mvright();
+                //this->mps.S_mvright();
                 //anet = cytnx.Network("L_AMAH.net")
                 //anet.PutUniTensors(["L","A","A_Conj","M"],[self.LR[p],self.mps.A[p],self.mps.A[p].Conj(),self.mpo.get_op(p)],is_clone=False);
                 
@@ -122,7 +122,7 @@ namespace cytnx{
                 this->LR[p+1] = Network::Contract({Lenv,tA,tAc,M},";0,1,2").Launch(true);
 
             }
-            this->mps.S_mvright();
+            //this->mps.S_mvright();
 
 
             //prepare if calculate excited states:

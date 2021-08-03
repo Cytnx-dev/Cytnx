@@ -30,6 +30,9 @@ namespace cytnx{
             if(Sub_diag.dtype() > cType) s_diag = Sub_diag.astype(cType);
             else s_diag = Sub_diag;
 
+            //std::cout << s_diag.shape() << std::endl;
+            //std::cout << in_diag << std::endl;
+            //std::cout << s_diag << std::endl;
             Tensor vT,S;
             S.Init({Diag.shape()[0]},cType<=2?cType+2:cType,Diag.device()); // if type is complex, S should be real
             if(is_V){

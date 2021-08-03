@@ -24,9 +24,11 @@ Shape : (4,4)
 
 
 
+-------- start of print ---------
 Tensor name: 
-braket_form : False
+Tensor name: 
 is_diag    : False
+contiguous : True
 
 Total elem: 16
 type  : Double (Float64)
@@ -53,9 +55,11 @@ Shape : (4,4)
 
 
 
+-------- start of print ---------
 Tensor name: 
-braket_form : False
+Tensor name: 
 is_diag    : False
+contiguous : True
 
 Total elem: 16
 type  : Double (Float64)
@@ -83,9 +87,11 @@ Shape : (4,4)
 
 
 
+-------- start of print ---------
 Tensor name: 
-braket_form : False
+Tensor name: 
 is_diag    : False
+contiguous : True
 
 Total elem: 16
 type  : Double (Float64)
@@ -112,9 +118,11 @@ Shape : (4,4)
 
 
 
+-------- start of print ---------
 Tensor name: 
-braket_form : False
+Tensor name: 
 is_diag    : False
+contiguous : True
 
 Total elem: 16
 type  : Double (Float64)

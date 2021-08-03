@@ -78,6 +78,9 @@ namespace cytnx{
 
 
         void RegularMPS::Into_Lortho(){
+            if(this->S_loc == this->_TNs.size()) 
+                return;
+
             if(this->S_loc == -1){
                 this->S_loc = 0;
             }else if(this->S_loc == this->_TNs.size()){

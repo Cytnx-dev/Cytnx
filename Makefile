@@ -159,7 +159,7 @@ endif
 TESTPATH=tests
 
 
-all: test 
+all: test
 
 
 #test: test.o $(ALLOBJS)
@@ -169,6 +169,7 @@ all: test
 test: test.o libcytnx.so
 	$(CC) -L. -o $@ $< -fopenmp $(LDFLAGS) -lcytnx 
 	#export LD_LIBRARY_PATH=.
+
 
 libcytnx.so: $(ALLOBJS)
 	$(CC) -shared -o $@ $^ $(LDFLAGS)
@@ -708,6 +709,7 @@ Lstsq.o: $(CytnxPATH)/src/linalg/Lstsq.cpp $(CytnxPATH)/include/linalg.hpp
 
 test.o: test.cpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+
 
 #ed_ising.o: ed_ising.cpp
 #	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<

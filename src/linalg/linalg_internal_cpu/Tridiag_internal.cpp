@@ -27,6 +27,7 @@ namespace cytnx{
             }
 
             info = LAPACKE_dstev(LAPACK_COL_MAJOR, job, L,(cytnx_double*)S->Mem, Dsv, (cytnx_double*)U->Mem, ldz);
+            //std::cout << L << std::endl;
             cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dstev': Lapack INFO = ", info);
 
             //house keeping

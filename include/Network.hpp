@@ -272,6 +272,16 @@ namespace cytnx{
             ##detail:
                 Format of each string follows the same policy as Fromfile.
 
+
+            ##example code for load the network file:
+            ### c++ API:
+            \include example/Network/FromString.cpp
+            #### output>
+            \verbinclude example/Network/FromString.cpp.out
+            ### python API 
+            \include example/Network/FromString.py               
+            #### output>
+            \verbinclude example/Network/FromString.py.out
             
             */ 
             void FromString(const std::vector<std::string> &contents, const int &network_type=NtType.Regular){
