@@ -279,7 +279,7 @@ Output>>
 Update procedure
 ******************
 Now we have prepared the initial trial wavefunction in terms of MPS with two sites unit cell and the time evolution operator, we are ready to use the aformentioned scheme to find the (variational) ground state MPS. 
-At the beginning of each iteration, we evaluate the energy expectation value $\langle \psi | H | \psi  \rangle / \langle \psi | \psi  \rangle\$, and check the convergence, the network is straightforward:
+At the beginning of each iteration, we evaluate the energy expectation value :math:`\langle \psi | H | \psi  \rangle / \langle \psi | \psi  \rangle`, and check the convergence, the network is straightforward:
 
 
 .. image:: image/itebd_contract.png
@@ -344,12 +344,12 @@ At the beginning of each iteration, we evaluate the energy expectation value $\l
     
     //> calculate norm and energy for this step
     // Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element
-    double XNorm = cyx::Contract(X,Xt).item<double>();
+    Scalar XNorm = cyx::Contract(X,Xt).item();
     UniTensor XH = cyx::Contract(X,H);
 
     XH.set_labels({-4,-5,0,1});
-    double XHX = cyx::Contract(Xt,XH).item<double>(); 
-    double E = XHX/XNorm;
+    Scalar XHX = cyx::Contract(Xt,XH).item(); 
+    double E = double(XHX/XNorm);
 
     //> check if converged.
     if(abs(E-Elast) < CvgCrit){
@@ -365,7 +365,7 @@ in the next step we perform the two-sites imaginary time evolution, using the op
     :width: 700
     :align: center
 
-we also performed SVD for the XeH here, this put the MPS into mixed canonical form, we thus have a Schimit decomposition of the whole state, and the singular values being the Schimit coefficients.
+we also performed SVD for the XeH here, this put the MPS into mixed canonical form and have a Schimit decomposition of the whole state where the singular values are simply the Schimit coefficients. The **Svd_truncate** is called such that the intermediate bonds with label (-6) and (-7) are properly truncate to the maximum virtual bond dimension **chi**. 
 
 * In python 
 
@@ -392,8 +392,9 @@ we also performed SVD for the XeH here, this put the MPS into mixed canonical fo
     XeH.set_Rowrank(2);
     vector<UniTensor> out = cyx::xlinalg::Svd_truncate(XeH,chi);
     la = out[0]; A = out[1]; B = out[2];
-    double Norm = cytnx::linalg::Norm(la.get_block_()).item<double>();
+    Scalar Norm = cytnx::linalg::Norm(la.get_block_()).item();
     la *= 1./Norm; //normalize
+
 
 Note that we directly store the SVD results into A, B and la, this can be seen by comparing to our original MPS configuration:
 
@@ -401,14 +402,13 @@ Note that we directly store the SVD results into A, B and la, this can be seen b
     :width: 500
     :align: center
 
-from this interpretation we are thus motivated to use the gauge freedom to introduce $\lambda_B^{-1} \lambda_B$ on both ends,
-abosorb two $\lambda_B^{-1}$ we then recover the original configuration.
+to recover to orignial form, we put :math:`\lambda_B^{-1} \lambda_B` on both ends, which abosorb two :math:`\lambda_B^{-1}`:
 
 .. image:: image/itebd_recover.png
     :width: 500
     :align: center
 
-Now we have the envolved $\Gamma_A$, $\Gamma_B$ and $\lambda_A$, use the translation symmetry, we shift the whole chain to left by just exchange the $Gamma$ and $\lambda$ pair and arrived at the new MPS for next iteration:
+Now we have the envolved :math:`\Gamma_A`, :math:`\Gamma_B` and :math:`\lambda_A`. Using the translation symmetry, we shift the whole chain to left by just exchange the :math:`Gamma` and :math:`\lambda` pair and arrived at the new MPS for next iteration to update B-A sites using :math:`U_b`. 
 
 .. image:: image/itebd_translation.png
     :width: 300

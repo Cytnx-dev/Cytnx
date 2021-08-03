@@ -555,12 +555,12 @@
 <h1><span class="section-number">4. </span>iDMRG<a class="headerlink" href="#idmrg" title="Permalink to this headline">¶</a></h1>
 <p><strong>By : Hsu Ke, Kai-Hsin Wu</strong></p>
 <p>In the previous example we demostrated how the finite size DMRG is implemented,
-Here we present the infinite system size DMRG (iDMRG) scheme,
-which grows the lattice by one or more sites each iteration,
-at the fixed point, a translationally invariant wavefunction is produced.
-In another algorithm of infinite size simulation, iTEBD, a properly converged state requires careful scaling of the time-step to zero,
+Here we present the infinite system size DMRG (iDMRG) scheme which consider the system with <em>infinite boundary condition</em><a class="bibtex reference internal" href="#ibdry" id="id1">[PVM12]</a>,
+where the bondaries (enviroments) are grows the lattice by one or more sites each iteration,
+at the fixed point, a translationally invariant wavefunction is produced.</p>
+<p>In another algorithm of infinite size simulation, iTEBD, a properly converged state requires careful scaling of the time-step to zero,
 a DMRG approach where an efficient local eigensolver is used to find a variationally optimal state ought to be much more robust and efficient.
-There are also disadavatages for iDMRG, we recommend the interested reader to refer to the paper of iDMRG or benchmarks made in the paper of a more powerful algorithm VUMPS.</p>
+There are also disadavatages for iDMRG, we recommend the interested reader to refer to the paper of iDMRG or benchmarks made in the relevant papers.</p>
 <p>Here, we use a 1D transverse field Ising model (TFIM) as a simple example to show how to implement iDMRG algorithm in Cytnx and get the infinite system size (variational) ground state.</p>
 <div class="math">
 <p><img src="../_images/math/3a80d325383b0e507f20ffe9fccf30dd2b64a1ea.png" alt="H = J\sum_{ij} \sigma^{z}_i\sigma^{z}_j - H_x\sum_i \sigma^{x}_i"/></p>
@@ -837,7 +837,7 @@ for the n=2 iteration as follows, which looks like a inserted two new sites betw
 <p>But where does that trial form come from? To gain more insight about it, we can instead consider the iTEBD approach here,
 which is done by perform an evolution “gate” on the two sites:</p>
 <a class="reference internal image-reference" href="../_images/idmrg_gate.png"><img alt="../_images/idmrg_gate.png" class="align-center" src="../_images/idmrg_gate.png" style="width: 350px;" /></a>
-<p>Suppose we didn’t even know what $s_n$ looks like here, it’s just a $s_n$,
+<p>Suppose we didn’t even know what <img class="math" src="../_images/math/af809d42ebe58463b1b00677b3405f11505c0b92.png" alt="s_n"/> looks like here, it’s just a <img class="math" src="../_images/math/af809d42ebe58463b1b00677b3405f11505c0b92.png" alt="s_n"/>,
 then we can simply follows the procedures mentioned in the iTEBD example, we have the following Vidal’s form for unit cell of two sites at n-th step:</p>
 <a class="reference internal image-reference" href="../_images/idmrg_vidal.png"><img alt="../_images/idmrg_vidal.png" class="align-center" src="../_images/idmrg_vidal.png" style="width: 550px;" /></a>
 <p>this immediately suggests the above trial form if we try to rotate the center to the left and right and use translation symmetry.</p>
@@ -958,7 +958,12 @@ then we can simply follows the procedures mentioned in the iTEBD example, we hav
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ground state E&quot;</span><span class="p">,</span><span class="n">E</span><span class="p">)</span>
 </pre></div>
 </td></tr></table></div>
-<p id="bibtex-bibliography-example/iDMRG-0"></p>
+<p id="bibtex-bibliography-example/iDMRG-0"><dl class="citation">
+<dt class="bibtex label" id="ibdry"><span class="brackets"><a class="fn-backref" href="#id1">PVM12</a></span></dt>
+<dd><p>Ho N. Phien, Guifré Vidal, and Ian P. McCulloch. Infinite boundary conditions for matrix product state calculations. <em>Phys. Rev. B</em>, 86:245107, Dec 2012. URL: <a class="reference external" href="https://link.aps.org/doi/10.1103/PhysRevB.86.245107">https://link.aps.org/doi/10.1103/PhysRevB.86.245107</a>, <a class="reference external" href="https://doi.org/10.1103/PhysRevB.86.245107">doi:10.1103/PhysRevB.86.245107</a>.</p>
+</dd>
+</dl>
+</p>
 </div>
 </div>
 

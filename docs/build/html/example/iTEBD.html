@@ -875,7 +875,7 @@ on device   : cytnx device: CPU
 <div class="section" id="update-procedure">
 <h2><span class="section-number">2.2. </span>Update procedure<a class="headerlink" href="#update-procedure" title="Permalink to this headline">¶</a></h2>
 <p>Now we have prepared the initial trial wavefunction in terms of MPS with two sites unit cell and the time evolution operator, we are ready to use the aformentioned scheme to find the (variational) ground state MPS.
-At the beginning of each iteration, we evaluate the energy expectation value $langle psi | H | psi  rangle / langle psi | psi  rangle$, and check the convergence, the network is straightforward:</p>
+At the beginning of each iteration, we evaluate the energy expectation value <img class="math" src="../_images/math/fb5cd6f89cf1e8d51b3e7ad23dab31ff16203855.png" alt="\langle \psi | H | \psi  \rangle / \langle \psi | \psi  \rangle"/>, and check the convergence, the network is straightforward:</p>
 <a class="reference internal image-reference" href="../_images/itebd_contract.png"><img alt="../_images/itebd_contract.png" class="align-center" src="../_images/itebd_contract.png" style="width: 300px;" /></a>
 <a class="reference internal image-reference" href="../_images/itebd_energy.png"><img alt="../_images/itebd_energy.png" class="align-center" src="../_images/itebd_energy.png" style="width: 450px;" /></a>
 <ul class="simple">
@@ -982,12 +982,12 @@ At the beginning of each iteration, we evaluate the energy expectation value $la
 
 <span class="c1">//&gt; calculate norm and energy for this step</span>
 <span class="c1">// Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element</span>
-<span class="kt">double</span> <span class="n">XNorm</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Xt</span><span class="p">).</span><span class="n">item</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="n">Scalar</span> <span class="n">XNorm</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Xt</span><span class="p">).</span><span class="n">item</span><span class="p">();</span>
 <span class="n">UniTensor</span> <span class="n">XH</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">H</span><span class="p">);</span>
 
 <span class="n">XH</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-4</span><span class="p">,</span><span class="mi">-5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">});</span>
-<span class="kt">double</span> <span class="n">XHX</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">Xt</span><span class="p">,</span><span class="n">XH</span><span class="p">).</span><span class="n">item</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
-<span class="kt">double</span> <span class="n">E</span> <span class="o">=</span> <span class="n">XHX</span><span class="o">/</span><span class="n">XNorm</span><span class="p">;</span>
+<span class="n">Scalar</span> <span class="n">XHX</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">Xt</span><span class="p">,</span><span class="n">XH</span><span class="p">).</span><span class="n">item</span><span class="p">();</span>
+<span class="kt">double</span> <span class="n">E</span> <span class="o">=</span> <span class="kt">double</span><span class="p">(</span><span class="n">XHX</span><span class="o">/</span><span class="n">XNorm</span><span class="p">);</span>
 
 <span class="c1">//&gt; check if converged.</span>
 <span class="k">if</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">E</span><span class="o">-</span><span class="n">Elast</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">CvgCrit</span><span class="p">){</span>
@@ -1000,7 +1000,7 @@ At the beginning of each iteration, we evaluate the energy expectation value $la
 </td></tr></table></div>
 <p>in the next step we perform the two-sites imaginary time evolution, using the operator (or “gate”) eH we defined above:</p>
 <a class="reference internal image-reference" href="../_images/itebd_envolve.png"><img alt="../_images/itebd_envolve.png" class="align-center" src="../_images/itebd_envolve.png" style="width: 700px;" /></a>
-<p>we also performed SVD for the XeH here, this put the MPS into mixed canonical form, we thus have a Schimit decomposition of the whole state, and the singular values being the Schimit coefficients.</p>
+<p>we also performed SVD for the XeH here, this put the MPS into mixed canonical form and have a Schimit decomposition of the whole state where the singular values are simply the Schimit coefficients. The <strong>Svd_truncate</strong> is called such that the intermediate bonds with label (-6) and (-7) are properly truncate to the maximum virtual bond dimension <strong>chi</strong>.</p>
 <ul class="simple">
 <li><p>In python</p></li>
 </ul>
@@ -1037,16 +1037,15 @@ At the beginning of each iteration, we evaluate the energy expectation value $la
 <span class="n">XeH</span><span class="p">.</span><span class="n">set_Rowrank</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
 <span class="n">vector</span><span class="o">&lt;</span><span class="n">UniTensor</span><span class="o">&gt;</span> <span class="n">out</span> <span class="o">=</span> <span class="n">cyx</span><span class="o">::</span><span class="n">xlinalg</span><span class="o">::</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">XeH</span><span class="p">,</span><span class="n">chi</span><span class="p">);</span>
 <span class="n">la</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="n">A</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span> <span class="n">B</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
-<span class="kt">double</span> <span class="n">Norm</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">linalg</span><span class="o">::</span><span class="n">Norm</span><span class="p">(</span><span class="n">la</span><span class="p">.</span><span class="n">get_block_</span><span class="p">()).</span><span class="n">item</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="n">Scalar</span> <span class="n">Norm</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">linalg</span><span class="o">::</span><span class="n">Norm</span><span class="p">(</span><span class="n">la</span><span class="p">.</span><span class="n">get_block_</span><span class="p">()).</span><span class="n">item</span><span class="p">();</span>
 <span class="n">la</span> <span class="o">*=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">Norm</span><span class="p">;</span> <span class="c1">//normalize</span>
 </pre></div>
 </td></tr></table></div>
 <p>Note that we directly store the SVD results into A, B and la, this can be seen by comparing to our original MPS configuration:</p>
 <a class="reference internal image-reference" href="../_images/itebd_what.png"><img alt="../_images/itebd_what.png" class="align-center" src="../_images/itebd_what.png" style="width: 500px;" /></a>
-<p>from this interpretation we are thus motivated to use the gauge freedom to introduce $lambda_B^{-1} lambda_B$ on both ends,
-abosorb two $lambda_B^{-1}$ we then recover the original configuration.</p>
+<p>to recover to orignial form, we put <img class="math" src="../_images/math/e037fe79141465fea7892aa8693a3ac11cb80717.png" alt="\lambda_B^{-1} \lambda_B"/> on both ends, which abosorb two <img class="math" src="../_images/math/c479d1466ae3f23441a08bd538256d7dc7eb968c.png" alt="\lambda_B^{-1}"/>:</p>
 <a class="reference internal image-reference" href="../_images/itebd_recover.png"><img alt="../_images/itebd_recover.png" class="align-center" src="../_images/itebd_recover.png" style="width: 500px;" /></a>
-<p>Now we have the envolved $Gamma_A$, $Gamma_B$ and $lambda_A$, use the translation symmetry, we shift the whole chain to left by just exchange the $Gamma$ and $lambda$ pair and arrived at the new MPS for next iteration:</p>
+<p>Now we have the envolved <img class="math" src="../_images/math/17ca72775d1128f2596ed085770dff83acf1994d.png" alt="\Gamma_A"/>, <img class="math" src="../_images/math/bd37fd9ad58efa5555782b2dbfcdd4361959155c.png" alt="\Gamma_B"/> and <img class="math" src="../_images/math/ae4a4ff6a04edd704c3af024c35da4d525293ff1.png" alt="\lambda_A"/>. Using the translation symmetry, we shift the whole chain to left by just exchange the <img class="math" src="../_images/math/b126c525ce2189cb014e59a6cc20c4829c3dac2d.png" alt="Gamma"/> and <img class="math" src="../_images/math/cefc603e5658facb747581f9567192993f21c7ab.png" alt="\lambda"/> pair and arrived at the new MPS for next iteration to update B-A sites using <img class="math" src="../_images/math/d1585c1af4e036c3f5a0e577a2a8fdc54953a8c7.png" alt="U_b"/>.</p>
 <a class="reference internal image-reference" href="../_images/itebd_translation.png"><img alt="../_images/itebd_translation.png" class="align-center" src="../_images/itebd_translation.png" style="width: 300px;" /></a>
 <ul class="simple">
 <li><p>In python</p></li>

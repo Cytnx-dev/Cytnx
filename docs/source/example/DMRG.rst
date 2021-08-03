@@ -212,7 +212,7 @@ The dim3 of each tensor may look a little bit tricky, but we are simply comparin
 
 
 The MPS created at this moment are not physically sound. The one more thing we need to do is to make these MPS state into so called *canonical form*, for which we achieve this by iteratively performing svd and get it's left (or right, depending on how you do it.) unitary matrix. 
-Here, we do it from left to right, and we decompose each tensor into its U, s and vT, then "throw" the s and vT part into next tensor:
+Here, we do it from left to right, and we decompose each tensor into its U, s and vT, then "throw" the s and vT part into next tensor, until the mps becomes its *left normal form*:
 
 .. image:: image/dmrg2.png
     :width: 400
@@ -335,7 +335,7 @@ Now we are ready for describing the main DMRG algorithm that optimize our MPS, t
     A[0].set_rowrank(1)
     _,A[0] = cytnx.linalg.Svd(A[0],is_U=False, is_vT=True)
 
-There are lots of things happening here, let's break it up a bit, from right to left, the first thing we do is constract two tensors A[p] and A[p+1]:
+There are lots of things happening here, let's break it up a bit, from right to left, the first thing we do is to contract two tensors A[p] and A[p+1]:
 
 .. image:: image/dmrg5.png
     :width: 400
@@ -344,7 +344,7 @@ There are lots of things happening here, let's break it up a bit, from right to 
 
 Generally, the idea is pretty simple, for each local two sites, one contract the left and right enviroments :math:`L_{j}` and :math:`R_{j+3}` with local MPOs :math:`M_{j}` and :math:`M_{j+1}`. We call this the local operator :math:`H_{loc}`. 
 
-The lowest eigen vector of this operator will be our optimized *local* state, which we call this psi. Of course, one can performs eigH directly with this :math:`H_{loc}` to get the local optimized state. However, the computational and memory cost are very high, and it's not pratical to do so. 
+The lowest eigen vector of this operator will be our optimized *local* state, which we call this **psi**. Of course, one can performs eigH directly with this :math:`H_{loc}` to get the local optimized state. However, the computational and memory cost are very high, and it's not pratical to do so espectially when virtual bond dimension is large. 
 
 Instead, we use iterative solver (Lanczos method) to get our ground state, and use the **A[p]** and **A[p+1]** as our initial trial state for performing Lanczos with our local operator :math:`H_{loc}`.
  
@@ -370,7 +370,8 @@ which in tensor notation looks like this:
     :width: 400
     :align: center
 
-The opertion of acting Hamitonian is a linear operation, which we implement a LinOp class 
+
+To ultilize the Lanczos function, the opertion of acting Hamitonian (which involves contraction using a network) is implemented using LinOp class (See Iterative Solver section for furtuer details). 
 
 * In python:
 
@@ -393,8 +394,9 @@ The opertion of acting Hamitonian is a linear operation, which we implement a Li
         out.flatten_() ## only change meta, without copy.
         return out
 
-which the class itself contain this projector network and do the contraction job for the input vector(state).
-We then pass this linear operation to the Lanczos algorithm to use as the operation of optimization. 
+.. Hint::
+    the class itself contain this projector network and do the contraction job for the input vector(state).
+    We then pass this linear operation to the Lanczos algorithm to use as the operation of optimization. 
 
 
 So now the optimize_psi function looks like:
@@ -419,8 +421,9 @@ So now the optimize_psi function looks like:
         return psivec, energy[0].item()
 
 Where we constructed the network (put tensors in) then pass it to our linear operation H.
-So we get our energy and ground state for a two-sites system, after some re-labeling (this is important for the UniTensor to be contracted properly) and reshape, 
-we have the next few steps:
+
+Now, we get our energy and ground state for a two-sites system, after some re-labeling (in order to contract UniTensor) and reshape, 
+we have to make our psi into the canonical form, for which we do the SVD for the ground state we just obtained, then let the left hand side site keep the U and s, while the other site became Vt. The intermediate bond are truncated such that the maximum virtual bond dimension is limited to **chi**. 
 
 * In python:
   
@@ -436,21 +439,17 @@ we have the next few steps:
 
     A[p] = cytnx.Contract(A[p],s) ## absorb s into next neighbor
 
-We do the SVD for the ground state we just obtained, then let the left hand side site keep the U and s, while the other site became Vt :
-
 
 .. image:: image/dmrg7.png
     :width: 400
     :align: center
 
 
-What we are doing is simply restore the othogonality of the whole MPS, 
-
 .. image:: image/dmrg8.png
     :width: 400
     :align: center
 
-remember that the right hand side vTs are obtained after we do the optimization, those are immediately used to calculate the right enviroment, with the network
+remember that the right hand side vTs are obtained after we do the optimization, those are immediately used to calculate the updated right enviroment using the network
 
 * R_AMAH.net:
 
@@ -487,9 +486,12 @@ The for loop is finished, now we arrived at the left end of the system, with the
     _,A[0] = cytnx.linalg.Svd(A[0],is_U=False, is_vT=True)
 
 looks like the same as we did for the right-end site in the beginning, this time we saves the vT, the purpose of the 
-set_rowrank(1) is to preserve the shape of A[0], if the the rowrank is 2, tensor U will be the one to have three legs, but not our desired vT.
+set_rowrank(1) is only for the convenience of calling Svd/Svd_truncate in the next sweeping procedure from left to right. 
 
-We can now sweep to the right again, the code is pretty much the same as we went through, with few modifications. So we are done! With the other loop to control the number of times we sweep, we get the full DMRG sweep code:
+
+We can now sweep from left to the right. The code is pretty much the same as we went through, with only a few modifications. 
+
+So we are done! With the other loop to control the number of times we sweep, we get the full DMRG sweep code:
 
 * In python:
 

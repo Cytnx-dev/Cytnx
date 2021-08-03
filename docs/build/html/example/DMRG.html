@@ -746,7 +746,7 @@ on device   : cytnx device: CPU
 <p>The alternative way to assign dim3 is min(chi, d ** (k+1), d ** (Nsites - k - 1))</p>
 </div>
 <p>The MPS created at this moment are not physically sound. The one more thing we need to do is to make these MPS state into so called <em>canonical form</em>, for which we achieve this by iteratively performing svd and get it’s left (or right, depending on how you do it.) unitary matrix.
-Here, we do it from left to right, and we decompose each tensor into its U, s and vT, then “throw” the s and vT part into next tensor:</p>
+Here, we do it from left to right, and we decompose each tensor into its U, s and vT, then “throw” the s and vT part into next tensor, until the mps becomes its <em>left normal form</em>:</p>
 <a class="reference internal image-reference" href="../_images/dmrg2.png"><img alt="../_images/dmrg2.png" class="align-center" src="../_images/dmrg2.png" style="width: 400px;" /></a>
 <p>The othogonal form of the MPS looks like:</p>
 <a class="reference internal image-reference" href="../_images/dmrg3.png"><img alt="../_images/dmrg3.png" class="align-center" src="../_images/dmrg3.png" style="width: 400px;" /></a>
@@ -908,10 +908,10 @@ what we get from SVD is 1*1 matrix (or a number) for both s and Vt, moreover, th
 <span class="n">_</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">is_U</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_vT</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </td></tr></table></div>
-<p>There are lots of things happening here, let’s break it up a bit, from right to left, the first thing we do is constract two tensors A[p] and A[p+1]:</p>
+<p>There are lots of things happening here, let’s break it up a bit, from right to left, the first thing we do is to contract two tensors A[p] and A[p+1]:</p>
 <a class="reference internal image-reference" href="../_images/dmrg5.png"><img alt="../_images/dmrg5.png" class="align-center" src="../_images/dmrg5.png" style="width: 400px;" /></a>
 <p>Generally, the idea is pretty simple, for each local two sites, one contract the left and right enviroments <img class="math" src="../_images/math/9efe96869a83b4904186f93f55d5ff60dd3eaa13.png" alt="L_{j}"/> and <img class="math" src="../_images/math/40cd4b2150382129c9f2e4d08e98cce3bb9e422a.png" alt="R_{j+3}"/> with local MPOs <img class="math" src="../_images/math/b64784f2041f84bed50ea2c36df554f3e157e315.png" alt="M_{j}"/> and <img class="math" src="../_images/math/2bbb316fd7dc56d8377b4436350f9e1ff8b38e39.png" alt="M_{j+1}"/>. We call this the local operator <img class="math" src="../_images/math/120523ac0206fabc001fee2f814bc463ffd2f174.png" alt="H_{loc}"/>.</p>
-<p>The lowest eigen vector of this operator will be our optimized <em>local</em> state, which we call this psi. Of course, one can performs eigH directly with this <img class="math" src="../_images/math/120523ac0206fabc001fee2f814bc463ffd2f174.png" alt="H_{loc}"/> to get the local optimized state. However, the computational and memory cost are very high, and it’s not pratical to do so.</p>
+<p>The lowest eigen vector of this operator will be our optimized <em>local</em> state, which we call this <strong>psi</strong>. Of course, one can performs eigH directly with this <img class="math" src="../_images/math/120523ac0206fabc001fee2f814bc463ffd2f174.png" alt="H_{loc}"/> to get the local optimized state. However, the computational and memory cost are very high, and it’s not pratical to do so espectially when virtual bond dimension is large.</p>
 <p>Instead, we use iterative solver (Lanczos method) to get our ground state, and use the <strong>A[p]</strong> and <strong>A[p+1]</strong> as our initial trial state for performing Lanczos with our local operator <img class="math" src="../_images/math/120523ac0206fabc001fee2f814bc463ffd2f174.png" alt="H_{loc}"/>.</p>
 <p>The <img class="math" src="../_images/math/120523ac0206fabc001fee2f814bc463ffd2f174.png" alt="H_{loc}"/> is obtained by the following projector.net network:</p>
 <ul class="simple">
@@ -932,7 +932,7 @@ what we get from SVD is 1*1 matrix (or a number) for both s and Vt, moreover, th
 </td></tr></table></div>
 <p>which in tensor notation looks like this:</p>
 <a class="reference internal image-reference" href="../_images/dmrg6.png"><img alt="../_images/dmrg6.png" class="align-center" src="../_images/dmrg6.png" style="width: 400px;" /></a>
-<p>The opertion of acting Hamitonian is a linear operation, which we implement a LinOp class</p>
+<p>To ultilize the Lanczos function, the opertion of acting Hamitonian (which involves contraction using a network) is implemented using LinOp class (See Iterative Solver section for furtuer details).</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
@@ -967,8 +967,11 @@ what we get from SVD is 1*1 matrix (or a number) for both s and Vt, moreover, th
     <span class="k">return</span> <span class="n">out</span>
 </pre></div>
 </td></tr></table></div>
-<p>which the class itself contain this projector network and do the contraction job for the input vector(state).
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>the class itself contain this projector network and do the contraction job for the input vector(state).
 We then pass this linear operation to the Lanczos algorithm to use as the operation of optimization.</p>
+</div>
 <p>So now the optimize_psi function looks like:</p>
 <ul class="simple">
 <li><p>In python:</p></li>
@@ -1000,9 +1003,9 @@ We then pass this linear operation to the Lanczos algorithm to use as the operat
     <span class="k">return</span> <span class="n">psivec</span><span class="p">,</span> <span class="n">energy</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
 </pre></div>
 </td></tr></table></div>
-<p>Where we constructed the network (put tensors in) then pass it to our linear operation H.
-So we get our energy and ground state for a two-sites system, after some re-labeling (this is important for the UniTensor to be contracted properly) and reshape,
-we have the next few steps:</p>
+<p>Where we constructed the network (put tensors in) then pass it to our linear operation H.</p>
+<p>Now, we get our energy and ground state for a two-sites system, after some re-labeling (in order to contract UniTensor) and reshape,
+we have to make our psi into the canonical form, for which we do the SVD for the ground state we just obtained, then let the left hand side site keep the U and s, while the other site became Vt. The intermediate bond are truncated such that the maximum virtual bond dimension is limited to <strong>chi</strong>.</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
@@ -1023,11 +1026,9 @@ we have the next few steps:</p>
 <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">s</span><span class="p">)</span> <span class="c1">## absorb s into next neighbor</span>
 </pre></div>
 </td></tr></table></div>
-<p>We do the SVD for the ground state we just obtained, then let the left hand side site keep the U and s, while the other site became Vt :</p>
 <a class="reference internal image-reference" href="../_images/dmrg7.png"><img alt="../_images/dmrg7.png" class="align-center" src="../_images/dmrg7.png" style="width: 400px;" /></a>
-<p>What we are doing is simply restore the othogonality of the whole MPS,</p>
 <a class="reference internal image-reference" href="../_images/dmrg8.png"><img alt="../_images/dmrg8.png" class="align-center" src="../_images/dmrg8.png" style="width: 400px;" /></a>
-<p>remember that the right hand side vTs are obtained after we do the optimization, those are immediately used to calculate the right enviroment, with the network</p>
+<p>remember that the right hand side vTs are obtained after we do the optimization, those are immediately used to calculate the updated right enviroment using the network</p>
 <ul class="simple">
 <li><p>R_AMAH.net:</p></li>
 </ul>
@@ -1059,8 +1060,9 @@ we have the next few steps:</p>
 </pre></div>
 </td></tr></table></div>
 <p>looks like the same as we did for the right-end site in the beginning, this time we saves the vT, the purpose of the
-set_rowrank(1) is to preserve the shape of A[0], if the the rowrank is 2, tensor U will be the one to have three legs, but not our desired vT.</p>
-<p>We can now sweep to the right again, the code is pretty much the same as we went through, with few modifications. So we are done! With the other loop to control the number of times we sweep, we get the full DMRG sweep code:</p>
+set_rowrank(1) is only for the convenience of calling Svd/Svd_truncate in the next sweeping procedure from left to right.</p>
+<p>We can now sweep from left to the right. The code is pretty much the same as we went through, with only a few modifications.</p>
+<p>So we are done! With the other loop to control the number of times we sweep, we get the full DMRG sweep code:</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>

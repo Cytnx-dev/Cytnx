@@ -3,12 +3,13 @@ iDMRG
 **By : Hsu Ke, Kai-Hsin Wu**
 
 In the previous example we demostrated how the finite size DMRG is implemented, 
-Here we present the infinite system size DMRG (iDMRG) scheme,
-which grows the lattice by one or more sites each iteration,
+Here we present the infinite system size DMRG (iDMRG) scheme which consider the system with *infinite boundary condition*:cite:`ibdry`,
+where the bondaries (enviroments) are grows the lattice by one or more sites each iteration,
 at the fixed point, a translationally invariant wavefunction is produced.
+
 In another algorithm of infinite size simulation, iTEBD, a properly converged state requires careful scaling of the time-step to zero,
 a DMRG approach where an efficient local eigensolver is used to find a variationally optimal state ought to be much more robust and efficient.
-There are also disadavatages for iDMRG, we recommend the interested reader to refer to the paper of iDMRG or benchmarks made in the paper of a more powerful algorithm VUMPS.
+There are also disadavatages for iDMRG, we recommend the interested reader to refer to the paper of iDMRG or benchmarks made in the relevant papers. 
 
 Here, we use a 1D transverse field Ising model (TFIM) as a simple example to show how to implement iDMRG algorithm in Cytnx and get the infinite system size (variational) ground state. 
 
@@ -243,7 +244,7 @@ which is done by perform an evolution "gate" on the two sites:
     :width: 350
     :align: center
 
-Suppose we didn't even know what $s_n$ looks like here, it's just a $s_n$,
+Suppose we didn't even know what :math:`s_n` looks like here, it's just a :math:`s_n`,
 then we can simply follows the procedures mentioned in the iTEBD example, we have the following Vidal's form for unit cell of two sites at n-th step:
 
 .. image:: image/idmrg_vidal.png
