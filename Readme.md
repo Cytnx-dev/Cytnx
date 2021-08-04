@@ -63,7 +63,10 @@ See The following user guide for install and using of cytnx:
     33. [New][experiment] SparseUniTensor.Trace() now support rank-2 symmetric UniTensor -> scalar
     34. [New][experiment] Contract of SparseUniTensor with two SUT with same labels -> scalar is now avaliable
     35. [Fix] DMRG initialize does not properly normalize the init state.  
-
+    36. [New] Scalar.conj(), Scalar.real(), Scalar.imag(), Scalar.maxval(dtype), Scalar.minval(dtype)
+    37. [Enhance] Lanczos internal now written with single general function.
+    38. [Enhance] Storage.append() now accept Scalar
+ 
 
     v0.7.3
     1. [Fix] bug for Get slice does not reduce when dim=1. 

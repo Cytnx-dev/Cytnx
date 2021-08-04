@@ -448,6 +448,9 @@ namespace cytnx{
         cytnx_error_msg(1,"%s","[ERROR] call set_zeros directly on Void Storage.");
     }
 
+    void Storage_base::append(const Scalar &val){
+        cytnx_error_msg(1,"%s","[ERROR] call append directly on Void Storage.");
+    }
     void Storage_base::append(const cytnx_complex128 &val){
         cytnx_error_msg(1,"%s","[ERROR] call append directly on Void Storage.");
     }

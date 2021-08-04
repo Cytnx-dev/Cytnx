@@ -12,7 +12,113 @@ namespace cytnx{
     namespace linalg{
         typedef Accessor ac;
         using namespace std;
-       
+
+        void _Lanczos_Gnd_general(std::vector<Tensor> &out, LinOp *Hop, const Tensor &Tin, const bool &is_V, const double &CvgCrit, const unsigned int &Maxiter, const bool &verbose){
+            out.clear();
+            //[require] Tin should be provided!
+
+            Tensor psi_1 = Tin.clone()/Tin.Norm();
+            
+            Tensor psi_0;// = cytnx::zeros({psi_1.shape()[0]},psi_1.dtype(),Tin.device());
+            Tensor new_psi;
+            bool cvg_fin=false;
+
+
+            //declare variables:
+            Tensor As = zeros({1}, Hop->dtype(), Tin.device());
+            Tensor Bs = As.clone();
+
+            Scalar E=Hop->dtype();
+
+            //temporary:
+            std::vector<Tensor> tmpEsVs;
+
+
+            // i=0 
+            //-------------------------------------------------
+            new_psi = Hop->matvec(psi_1);
+            As(0) = linalg::Vectordot(new_psi,psi_1).item();
+            //cout << (new_psi);
+            new_psi -= As(0)*psi_1;
+            //cout << (new_psi);
+            //exit(1);
+
+            Bs(0) = new_psi.Norm();
+            psi_0 = psi_1;
+            new_psi /= Bs(0);
+
+
+            psi_1 = new_psi;
+
+            E = As(0).item();
+            Scalar Ediff;
+
+            ///---------------------------
+
+            //iteration LZ:
+            for(unsigned int i=1;i<Maxiter;i++){
+
+                new_psi = Hop->matvec(psi_1) - Bs(i-1)*psi_0;
+                As.append(linalg::Vectordot(new_psi,psi_1).item());
+                new_psi -= As(i)*psi_1;
+
+                //diagonalize:
+                tmpEsVs = linalg::Tridiag(As,Bs,true,true);
+
+
+                Bs.append(new_psi.Norm().item());
+                psi_0 = psi_1;
+                new_psi /= Bs(i);
+
+                psi_1 = new_psi;
+
+                Ediff = abs(E - tmpEsVs[0].storage().at(0));
+                if(verbose) printf("iter[%d] Enr: %11.14f, diff from last iter: %11.14f\n",i,double(E),double(Ediff));
+
+                //chkf = true;
+                if(Ediff < CvgCrit){
+                    cvg_fin=true;
+                    break;
+                }
+                E = tmpEsVs[0].storage().at(0);
+
+            }//iteration
+
+
+            if(cvg_fin==false){
+                cytnx_warning_msg(true,"[WARNING] iteration not converge after Maxiter!.\n :: Note :: ignore if this is intended","\n");
+            }
+
+            out.push_back(tmpEsVs[0](0));
+
+            if(is_V){
+                Tensor eV;
+                Tensor kryVg = tmpEsVs[1](0);
+                tmpEsVs.pop_back();
+
+                //restarted again, and evaluate the vectors on the fly:
+                psi_1 = Tin.clone()/Tin.Norm();
+                eV = kryVg(0)*psi_1;
+                new_psi = Hop->matvec(psi_1) - As(0)*psi_1;
+
+                psi_0 = psi_1;
+                psi_1 = new_psi/Bs(0);
+
+                for(unsigned int n=1; n<tmpEsVs[0].shape()[0];n++){
+                    eV += kryVg(n)*psi_1;
+                    new_psi = Hop->matvec(psi_1) - Bs(n-1)*psi_0;
+                    new_psi -= As(n)*psi_1;
+
+                    psi_0 = psi_1;
+                    psi_1 = new_psi/Bs(n);
+
+                }
+
+                out.push_back(eV);
+            }
+
+        }
+        /*       
         void _Lanczos_Gnd_d(std::vector<Tensor> &out, LinOp *Hop, const Tensor &Tin, const bool &is_V, const double &CvgCrit, const unsigned int &Maxiter, const bool &verbose){
             out.clear();
             //[require] Tin should be provided!
@@ -140,7 +246,7 @@ namespace cytnx{
             Tensor As = zeros({1},Tin.dtype(),Tin.device());
             Tensor Bs = As.clone();
              
-            float E=DBL_MAX;
+            float E=std::numeric_limits<float>::max();
             
            
             //temporary:
@@ -241,7 +347,7 @@ namespace cytnx{
         void _Lanczos_Gnd_cd(std::vector<Tensor> &out, LinOp *Hop, const Tensor &Tin, const bool &is_V, const double &CvgCrit, const unsigned int &Maxiter, const bool &verbose){
             cytnx_error_msg(true,"[Developing]%s","\n");
         }
-
+        */
 
         // Lanczos       
         std::vector<Tensor> Lanczos_Gnd(LinOp *Hop, const double &CvgCrit, const bool &is_V, const Tensor &Tin, const bool &verbose, const unsigned int &Maxiter){
@@ -266,7 +372,20 @@ namespace cytnx{
                 }
                 
                 std::vector<Tensor> out;
-                 
+                
+                double _cvgcrit = CvgCrit;
+                
+                if(Hop->dtype()==Type.Float || Hop->dtype()==Type.ComplexFloat){
+                    if(_cvgcrit < 1.0e-7){
+                        _cvgcrit = 1.0e-7;
+                        cytnx_warning_msg(_cvgcrit<1.0e-7,"[WARNING][CvgCrit] for float precision type, CvgCrit cannot exceed it's own type precision limit 1e-7, and it's auto capped to 1.0e-7.%s","\n");
+                    }
+                }
+
+
+                _Lanczos_Gnd_general(out,Hop,v0,is_V,_cvgcrit,Maxiter,verbose);
+
+                /* 
                 if(Hop->dtype()==Type.ComplexDouble){
                     _Lanczos_Gnd_cd(out,Hop,v0,is_V,CvgCrit,Maxiter,verbose);
                 }else if(Hop->dtype()==Type.Double){
@@ -284,7 +403,7 @@ namespace cytnx{
                     else
                         _Lanczos_Gnd_f(out,Hop,v0,is_V,CvgCrit,Maxiter,verbose);
                 }
-
+                */
                 
                 return out;                
  

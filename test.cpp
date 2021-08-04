@@ -85,9 +85,13 @@ Scalar run_DMRG(tn_algo::MPO &mpo, tn_algo::MPS &mps, int Nsweeps, std::vector<t
 
 int main(int argc, char *argv[]){
 
+    auto L0 = UniTensor(zeros({4,1,1}),0); //#Left boundary
+    auto R0 = UniTensor(zeros({4,1,1}),0); //#Right boundary
+    L0.get_block_()(0,0,0) = 1.; R0.get_block_()(3,0,0) = 1.;
 
 
-       
+
+    return 0;       
 
     auto ac1 = Accessor::qns({{1},{-1}});
     print(ac1);

@@ -168,6 +168,8 @@ namespace cytnx{
             virtual void set_zeros();
             virtual void resize(const cytnx_uint64 &newsize);
             
+
+            virtual void append(const Scalar &val);
             virtual void append(const cytnx_complex128 &val);
             virtual void append(const cytnx_complex64  &val);
             virtual void append(const cytnx_double     &val);
@@ -233,6 +235,7 @@ namespace cytnx{
             void set_zeros();
             void resize(const cytnx_uint64 &newsize);
 
+            void append(const Scalar &val);
             void append(const cytnx_complex128 &val);
             void append(const cytnx_complex64  &val);
             void append(const cytnx_double     &val);
@@ -297,6 +300,7 @@ namespace cytnx{
             void set_zeros();
             void resize(const cytnx_uint64 &newsize);
 
+            void append(const Scalar &val);
             void append(const cytnx_complex128 &val);
             void append(const cytnx_complex64  &val);
             void append(const cytnx_double     &val);
@@ -359,7 +363,7 @@ namespace cytnx{
             void set_zeros();
             void resize(const cytnx_uint64 &newsize);
 
-
+            void append(const Scalar &val);
             void append(const cytnx_complex128 &val);
             void append(const cytnx_complex64  &val);
             void append(const cytnx_double     &val);
@@ -423,6 +427,8 @@ namespace cytnx{
             void set_zeros();
             void resize(const cytnx_uint64 &newsize);
 
+
+            void append(const Scalar &val);
             void append(const cytnx_complex128 &val);
             void append(const cytnx_complex64  &val);
             void append(const cytnx_double     &val);
@@ -487,6 +493,8 @@ namespace cytnx{
             void set_zeros();
             void resize(const cytnx_uint64 &newsize);
 
+
+            void append(const Scalar &val);
             void append(const cytnx_complex128 &val);
             void append(const cytnx_complex64  &val);
             void append(const cytnx_double     &val);
@@ -552,6 +560,8 @@ namespace cytnx{
             void set_zeros();
             void resize(const cytnx_uint64 &newsize);
 
+
+            void append(const Scalar &val);
             void append(const cytnx_complex128 &val);
             void append(const cytnx_complex64  &val);
             void append(const cytnx_double     &val);
@@ -614,6 +624,7 @@ namespace cytnx{
             void fill(const cytnx_bool       &val);
             void set_zeros();
             void resize(const cytnx_uint64 &newsize);
+            void append(const Scalar &val);
             void append(const cytnx_complex128 &val);
             void append(const cytnx_complex64  &val);
             void append(const cytnx_double     &val);
@@ -678,6 +689,7 @@ namespace cytnx{
             void fill(const cytnx_bool       &val);
             void set_zeros();
             void resize(const cytnx_uint64 &newsize);
+            void append(const Scalar &val);
             void append(const cytnx_complex128 &val);
             void append(const cytnx_complex64  &val);
             void append(const cytnx_double     &val);
@@ -739,6 +751,8 @@ namespace cytnx{
             void fill(const cytnx_bool       &val);
             void set_zeros();
             void resize(const cytnx_uint64 &newsize);
+
+            void append(const Scalar &val);
             void append(const cytnx_complex128 &val);
             void append(const cytnx_complex64  &val);
             void append(const cytnx_double     &val);
@@ -803,6 +817,7 @@ namespace cytnx{
             void fill(const cytnx_bool       &val);
             void set_zeros();
             void resize(const cytnx_uint64 &newsize);
+            void append(const Scalar &val);
             void append(const cytnx_complex128 &val);
             void append(const cytnx_complex64  &val);
             void append(const cytnx_double     &val);
@@ -868,6 +883,7 @@ namespace cytnx{
             void fill(const cytnx_bool       &val);
             void set_zeros();
             void resize(const cytnx_uint64 &newsize);
+            void append(const Scalar &val);
             void append(const cytnx_complex128 &val);
             void append(const cytnx_complex64  &val);
             void append(const cytnx_double     &val);
@@ -1385,8 +1401,7 @@ namespace cytnx{
             };
 
 
-            //Sproxy operator()(const cytnx_uint64 &idx) 
-                        
+            Scalar::Sproxy operator()(const cytnx_uint64 &idx); 
 
     };
 

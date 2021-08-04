@@ -536,8 +536,16 @@ namespace cytnx{
         this->len = newsize;
             
     }
-
-        void Int64Storage::append(const cytnx_complex128 &val){
+    
+    void Int64Storage::append(const Scalar  &val){
+        if(this->len+1 > this->cap){
+            this->resize(this->len+1);
+        }else{
+            this->len+=1;
+        }
+        this->at<cytnx_int64>(this->len-1) = cytnx_int64(val);
+    }
+    void Int64Storage::append(const cytnx_complex128 &val){
         cytnx_error_msg(true,"[ERROR]%s"," cannot append complex value into real container");
     }
     void Int64Storage::append(const cytnx_complex64  &val){

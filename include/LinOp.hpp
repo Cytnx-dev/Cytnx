@@ -5,6 +5,7 @@
 #include "cytnx_error.hpp"
 #include "Tensor.hpp"
 #include "Scalar.hpp"
+#include "UniTensor.hpp"
 #include <vector>
 #include <fstream>
 #include <functional>
@@ -178,7 +179,12 @@ namespace cytnx{
         // need user to check the output to be Tensor
         /// @endcond
         virtual Tensor matvec(const Tensor &Tin); 
-    
+
+        /// @cond
+        // this expose to interface:
+        //virtual UniTensor matvec(const UniTensor &Tin);
+        //virtual std::vector<UniTensor> matvec(const std::vector<UniTensor> &Tin);
+        /// @endcond    
         
        
     };

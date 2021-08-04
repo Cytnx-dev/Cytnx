@@ -538,11 +538,19 @@ namespace cytnx{
             
     }
 
-        void Int32Storage::append(const cytnx_complex128 &val){
+    void Int32Storage::append(const cytnx_complex128 &val){
         cytnx_error_msg(true,"[ERROR]%s"," cannot append complex value into real container");
     }
     void Int32Storage::append(const cytnx_complex64  &val){
         cytnx_error_msg(true,"[ERROR]%s"," cannot append complex value into real container");
+    }
+    void Int32Storage::append(const Scalar  &val){
+        if(this->len+1 > this->cap){
+            this->resize(this->len+1);
+        }else{
+            this->len+=1;
+        }
+        this->at<cytnx_int32>(this->len-1) = cytnx_int32(val);
     }
     void Int32Storage::append(const cytnx_double  &val){
         if(this->len+1 > this->cap){

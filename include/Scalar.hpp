@@ -11,6 +11,7 @@
 #include <iostream>
 #include <cmath>
 #include <type_traits>
+#include <limits>
 namespace cytnx{
 
 
@@ -122,7 +123,13 @@ namespace cytnx{
 
             virtual bool eq(const Scalar_base* c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n"); return 0;}
 
-            
+
+            virtual void set_maxval(){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");};
+            virtual void set_minval(){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");};
+
+            virtual void conj_(){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}            
+            virtual Scalar_base* get_real(){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n"); return nullptr;}
+            virtual Scalar_base* get_imag(){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n"); return nullptr;}
 
             virtual void iabs(){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
 
@@ -284,6 +291,21 @@ namespace cytnx{
 
             bool eq(const Scalar_base* c){return this->_elem == c->to_cytnx_complex128();}
             
+            void set_maxval(){cytnx_error_msg(true, "[ERROR] maxval not supported for complex type%s","\n");}
+            void set_minval(){cytnx_error_msg(true, "[ERROR] minval not supported for complex type%s","\n");}
+            
+            void conj_(){this->_elem = std::conj(this->_elem);}          
+            Scalar_base* get_real(){
+                Scalar_base *tmp = __ScII.UScIInit[Type.Double]();
+                tmp->assign_selftype(this->_elem.real());
+                return tmp;
+            }
+            Scalar_base* get_imag(){
+                Scalar_base *tmp = __ScII.UScIInit[Type.Double]();
+                tmp->assign_selftype(this->_elem.imag());
+                return tmp;
+            }
+
             void* get_raw_address() const{return (void*)(&this->_elem);}
 
             Scalar_base* astype(const unsigned int &dtype){
@@ -417,6 +439,21 @@ namespace cytnx{
             bool greater(const cytnx_bool   &c){cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s","\n"); return 0;}
 
             bool eq(const Scalar_base* c){return this->_elem == c->to_cytnx_complex64();}
+            
+            void set_maxval(){cytnx_error_msg(true, "[ERROR] maxval not supported for complex type%s","\n");}
+            void set_minval(){cytnx_error_msg(true, "[ERROR] minval not supported for complex type%s","\n");}
+
+            void conj_(){this->_elem = std::conj(this->_elem);}          
+            Scalar_base* get_real(){
+                Scalar_base *tmp = __ScII.UScIInit[Type.Float]();
+                tmp->assign_selftype(this->_elem.real());
+                return tmp;
+            }
+            Scalar_base* get_imag(){
+                Scalar_base *tmp = __ScII.UScIInit[Type.Float]();
+                tmp->assign_selftype(this->_elem.imag());
+                return tmp;
+            }
 
             void iabs(){this->_elem=std::abs(this->_elem);}
 
@@ -554,6 +591,14 @@ namespace cytnx{
 
             bool eq(const Scalar_base* c){return this->_elem == c->to_cytnx_double();}
 
+            void set_maxval(){this->_elem = std::numeric_limits<double>::max();}
+            void set_minval(){this->_elem = std::numeric_limits<double>::min();}
+
+            void conj_(){return;}          
+            Scalar_base* get_real(){return this->copy();}
+            Scalar_base* get_imag(){cytnx_error_msg(true, "[ERROR] real type Scalar does not have imag part!%s","\n"); return nullptr;}
+
+
             void* get_raw_address() const{return (void*)(&this->_elem);}
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
@@ -685,6 +730,13 @@ namespace cytnx{
             bool greater(const cytnx_bool   &c){return this->_elem > c;}
 
             bool eq(const Scalar_base* c){return this->_elem == c->to_cytnx_float();}
+
+            void conj_(){return;}          
+            Scalar_base* get_real(){return this->copy();}
+            Scalar_base* get_imag(){cytnx_error_msg(true, "[ERROR] real type Scalar does not have imag part!%s","\n"); return nullptr;}
+
+            void set_maxval(){this->_elem = std::numeric_limits<float>::max();}
+            void set_minval(){this->_elem = std::numeric_limits<float>::min();}
 
             void iabs(){this->_elem=std::abs(this->_elem);}
 
@@ -821,7 +873,13 @@ namespace cytnx{
             bool greater(const cytnx_bool   &c){return this->_elem > c;}
 
             bool eq(const Scalar_base* c){return this->_elem == c->to_cytnx_int64();}
-            
+
+            void conj_(){return;}          
+            Scalar_base* get_real(){return this->copy();}
+            Scalar_base* get_imag(){cytnx_error_msg(true, "[ERROR] real type Scalar does not have imag part!%s","\n"); return nullptr;}
+
+            void set_maxval(){this->_elem = std::numeric_limits<cytnx_int64>::max();}
+            void set_minval(){this->_elem = std::numeric_limits<cytnx_int64>::min();}
     
             void* get_raw_address() const{return (void*)(&this->_elem);}
             Scalar_base* astype(const unsigned int &dtype){
@@ -954,6 +1012,13 @@ namespace cytnx{
             bool greater(const cytnx_bool   &c){return this->_elem > c;}
 
             bool eq(const Scalar_base* c){return this->_elem == c->to_cytnx_uint64();}
+
+            void conj_(){return;}          
+            Scalar_base* get_real(){return this->copy();}
+            Scalar_base* get_imag(){cytnx_error_msg(true, "[ERROR] real type Scalar does not have imag part!%s","\n"); return nullptr;}
+
+            void set_maxval(){this->_elem = std::numeric_limits<cytnx_uint64>::max();}
+            void set_minval(){this->_elem = std::numeric_limits<cytnx_uint64>::min();}
             
 
             void* get_raw_address() const{return (void*)(&this->_elem);}
@@ -1089,6 +1154,13 @@ namespace cytnx{
             bool greater(const cytnx_bool   &c){return this->_elem > c;}
 
             bool eq(const Scalar_base* c){return this->_elem == c->to_cytnx_int32();}
+
+            void conj_(){return;}          
+            Scalar_base* get_real(){return this->copy();}
+            Scalar_base* get_imag(){cytnx_error_msg(true, "[ERROR] real type Scalar does not have imag part!%s","\n"); return nullptr;}
+
+            void set_maxval(){this->_elem = std::numeric_limits<cytnx_int32>::max();}
+            void set_minval(){this->_elem = std::numeric_limits<cytnx_int32>::min();}
             
             void* get_raw_address() const{return (void*)(&this->_elem);}
 
@@ -1222,6 +1294,13 @@ namespace cytnx{
             bool greater(const cytnx_bool   &c){return this->_elem > c;}
             
             bool eq(const Scalar_base* c){return this->_elem == c->to_cytnx_uint32();}
+
+            void conj_(){return;}          
+            Scalar_base* get_real(){return this->copy();}
+            Scalar_base* get_imag(){cytnx_error_msg(true, "[ERROR] real type Scalar does not have imag part!%s","\n"); return nullptr;}
+
+            void set_maxval(){this->_elem = std::numeric_limits<cytnx_uint32>::max();}
+            void set_minval(){this->_elem = std::numeric_limits<cytnx_uint32>::min();}
 
 
             void* get_raw_address() const{return (void*)(&this->_elem);}
@@ -1357,6 +1436,13 @@ namespace cytnx{
 
             bool eq(const Scalar_base* c){return this->_elem == c->to_cytnx_int16();}
 
+            void conj_(){return;}          
+            Scalar_base* get_real(){return this->copy();}
+            Scalar_base* get_imag(){cytnx_error_msg(true, "[ERROR] real type Scalar does not have imag part!%s","\n"); return nullptr;}
+
+            void set_maxval(){this->_elem = std::numeric_limits<cytnx_int16>::max();}
+            void set_minval(){this->_elem = std::numeric_limits<cytnx_int16>::min();}
+
             void* get_raw_address() const{return (void*)(&this->_elem);}
             Scalar_base* astype(const unsigned int &dtype){
                 Scalar_base *tmp = __ScII.UScIInit[dtype]();
@@ -1489,6 +1575,13 @@ namespace cytnx{
             bool greater(const cytnx_bool   &c){return this->_elem > c;}
 
             bool eq(const Scalar_base* c){return this->_elem == c->to_cytnx_uint16();}
+
+            void conj_(){return;}          
+            Scalar_base* get_real(){return this->copy();}
+            Scalar_base* get_imag(){cytnx_error_msg(true, "[ERROR] real type Scalar does not have imag part!%s","\n"); return nullptr;}
+
+            void set_maxval(){this->_elem = std::numeric_limits<cytnx_uint16>::max();}
+            void set_minval(){this->_elem = std::numeric_limits<cytnx_uint16>::min();}
 
             void* get_raw_address() const{return (void*)(&this->_elem);}
             Scalar_base* astype(const unsigned int &dtype){
@@ -1623,6 +1716,14 @@ namespace cytnx{
 
 
             bool eq(const Scalar_base* c){return this->_elem == c->to_cytnx_bool();}
+
+            void conj_(){return;}          
+            Scalar_base* get_real(){return this->copy();}
+            Scalar_base* get_imag(){cytnx_error_msg(true, "[ERROR] real type Scalar does not have imag part!%s","\n"); return nullptr;}
+            
+            void set_maxval(){this->_elem = true;}
+            void set_minval(){this->_elem = false;}
+
             
             void* get_raw_address() const{return (void*)(&this->_elem);}
             Scalar_base* astype(const unsigned int &dtype){
@@ -1669,6 +1770,7 @@ namespace cytnx{
 
                 const Sproxy& operator=(const Sproxy &rc);
 
+
                 //When used to get elements:
                 //operator Scalar() const;
                
@@ -1714,6 +1816,19 @@ namespace cytnx{
             Scalar(const cytnx_bool &in): _impl(new Scalar_base()){
                 this->Init_by_number(in);
             }
+
+
+            static Scalar maxval(const unsigned int &dtype){
+                Scalar out(0,dtype);
+                out._impl->set_maxval();
+                return out;
+            }
+            static Scalar minval(const unsigned int &dtype){
+                Scalar out(0,dtype);
+                out._impl->set_minval();
+                return out;
+            }
+            
 
 
             template<class T>
@@ -1850,6 +1965,18 @@ namespace cytnx{
                 Scalar out(this->_impl->astype(dtype));
                 return out;
             }
+
+            Scalar conj() const{
+                Scalar out = *this;
+                out._impl->conj_();
+                return out;
+            }
+
+            Scalar imag() const{ return Scalar(this->_impl->get_imag());}
+            Scalar real() const{ return Scalar(this->_impl->get_real());} 
+            //Scalar& set_imag(const Scalar &in){   return *this;}
+            //Scalar& set_real(const Scalar &in){   return *this;}
+
 
 
             int dtype() const{
@@ -2122,6 +2249,8 @@ namespace cytnx{
                 return out;
             }
 
+
+            
 
             /*
             //operator:

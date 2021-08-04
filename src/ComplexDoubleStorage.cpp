@@ -560,6 +560,16 @@ namespace cytnx{
             
     }
 
+    void ComplexDoubleStorage::append(const Scalar &val){
+        //cytnx_complex128 tmp(val.real(),val.imag());
+        if(this->len+1 > this->cap){
+            this->resize(this->len+1); 
+        }else{
+            this->len+=1;
+        }
+        this->at<cytnx_complex128>(this->len-1) = complex128(val);
+    }
+
     void ComplexDoubleStorage::append(const cytnx_complex128 &val){
         //cytnx_complex128 tmp(val.real(),val.imag());
         if(this->len+1 > this->cap){

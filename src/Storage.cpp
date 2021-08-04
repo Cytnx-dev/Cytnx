@@ -311,6 +311,12 @@ namespace cytnx{
         f.read((char*)this->_impl->Mem,Type.typeSize(dtype)*Nelem);
     }
 
+
+    Scalar::Sproxy Storage::operator()(const cytnx_uint64 &idx){
+        Scalar::Sproxy out(this->_impl,idx);
+        return out;
+    }
+
 }
 
 
