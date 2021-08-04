@@ -28,7 +28,7 @@ namespace cytnx{
             Tensor As = zeros({1}, Hop->dtype(), Tin.device());
             Tensor Bs = As.clone();
 
-            Scalar E=Hop->dtype();
+            Scalar E = Scalar::maxval(Hop->dtype());
 
             //temporary:
             std::vector<Tensor> tmpEsVs;
