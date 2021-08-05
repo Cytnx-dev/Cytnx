@@ -189,21 +189,32 @@ Using anaconda/conda for deps
 ------------------------------
 We recommend using conda to handle all the dependencies and compiling tools:
 
-* For Linux/MacOS:
 
 1. Install anaconda, setting the virtual enviroments
 
+* For Linux:
 
 .. code-block:: shell
 
     $conda config --add channels conda-forge
     $conda create --name cytnx python=3.8 _openmp_mutex=*=*_llvm
     $conda activate cytnx
+    $conda upgrade --all 
     
 
-.. Note::
+* For MacOS:
 
-    For MacOS, replace **_openmp_mutex=*=*_llvm** with **llvm-openmp**
+.. code-block:: shell
+
+    $conda config --add channels conda-forge
+    $conda create --name cytnx python=3.8 llvm-openmp
+    $conda activate cytnx
+    $conda upgrade --all 
+
+.. Note::
+    
+    1. The python=3.8 indicates the python version you want to use. Generally, cytnx is tested with 3.7/3.8/3.9. You can replace this with the version you want to use. 
+    2. the last line is to update all the libraries such that they are all dependent on conda-forge channel. 
 
 
 2. Install the following dependencies:
@@ -215,7 +226,7 @@ We recommend using conda to handle all the dependencies and compiling tools:
 
 .. Note:: 
 
-    This installation includes the compilers provided by conda-forge, so the installation of compiler on system side is not required. 
+    This installation includes the compilers/linalg libraries provided by conda-forge, so the installation of compiler on system side is not required. 
 
 
 4. in addition, if you want to have gpu support (compile with -DUSE_CUDA=on), then additional packages need to install:

@@ -726,20 +726,33 @@ CYTNX_CXXFLAGS :<span class="o">=</span> <span class="k">$(</span>shell python -
 <div class="section" id="using-anaconda-conda-for-deps">
 <h3>Using anaconda/conda for deps<a class="headerlink" href="#using-anaconda-conda-for-deps" title="Permalink to this headline">¶</a></h3>
 <p>We recommend using conda to handle all the dependencies and compiling tools:</p>
-<ul class="simple">
-<li><p>For Linux/MacOS:</p></li>
-</ul>
 <ol class="arabic simple">
 <li><p>Install anaconda, setting the virtual enviroments</p></li>
 </ol>
+<ul class="simple">
+<li><p>For Linux:</p></li>
+</ul>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span> config --add channels conda-forge
 <span class="nv">$conda</span> create --name cytnx <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8 <span class="nv">_openmp_mutex</span><span class="o">=</span>*<span class="o">=</span>*_llvm
 <span class="nv">$conda</span> activate cytnx
+<span class="nv">$conda</span> upgrade --all
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>For MacOS:</p></li>
+</ul>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span> config --add channels conda-forge
+<span class="nv">$conda</span> create --name cytnx <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8 llvm-openmp
+<span class="nv">$conda</span> activate cytnx
+<span class="nv">$conda</span> upgrade --all
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>For MacOS, replace <strong>_openmp_mutex=*=*_llvm</strong> with <strong>llvm-openmp</strong></p>
+<ol class="arabic simple">
+<li><p>The python=3.8 indicates the python version you want to use. Generally, cytnx is tested with 3.7/3.8/3.9. You can replace this with the version you want to use.</p></li>
+<li><p>the last line is to update all the libraries such that they are all dependent on conda-forge channel.</p></li>
+</ol>
 </div>
 <ol class="arabic simple" start="2">
 <li><p>Install the following dependencies:</p></li>
@@ -749,7 +762,7 @@ CYTNX_CXXFLAGS :<span class="o">=</span> <span class="k">$(</span>shell python -
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This installation includes the compilers provided by conda-forge, so the installation of compiler on system side is not required.</p>
+<p>This installation includes the compilers/linalg libraries provided by conda-forge, so the installation of compiler on system side is not required.</p>
 </div>
 <ol class="arabic simple" start="4">
 <li><p>in addition, if you want to have gpu support (compile with -DUSE_CUDA=on), then additional packages need to install:</p></li>
