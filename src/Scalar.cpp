@@ -59,6 +59,7 @@ namespace cytnx{
 
     Scalar abs(const Scalar &c){return c.abs();};
 
+    Scalar sqrt(const Scalar &c){return c.sqrt();};
 
 
     //Scalar proxy:
@@ -115,6 +116,13 @@ namespace cytnx{
     const Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_bool &rc){
         this->_insimpl->set_item(this->_loc,rc);
         return *this;
+    }
+
+    Scalar Scalar::Sproxy::real(){
+        return Scalar(*this).real();
+    }
+    Scalar Scalar::Sproxy::imag(){
+        return Scalar(*this).imag();
     }
     
     Scalar::Scalar(const Sproxy &prox): _impl(new Scalar_base()){

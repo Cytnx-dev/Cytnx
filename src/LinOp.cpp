@@ -70,14 +70,19 @@ namespace cytnx{
             //cytnx_error_msg(true,"Developing%s","\n");
             //return Tensor();
         }else{
-            if(this->_mvfunc == nullptr){
-                cytnx_error_msg(true,"[ERROR][LinOp] LinOp required assign the Linear mapping function before using it.%s","\n");
-            }
-            return _mvfunc(Tin);
+            cytnx_error_msg(true,"[ERROR][LinOp] LinOp with 'mv' type required overload matvec before using it.%s","\n");
+            return Tensor(); 
         }
     }
 
-
+    UniTensor LinOp::matvec(const UniTensor &Tin){
+        if(this->_type== "mv_elem"){
+            cytnx_error_msg(true,"[ERROR][LinOp] LinOp with 'mv_elem' type can only accept Tensor as matvec input!.%s","\n");
+        }else{
+            cytnx_error_msg(true,"[ERROR][LinOp] LinOp with 'mv' type required overload matvec before using it.%s","\n");
+        }
+        return UniTensor(); 
+    }
     
     
 }

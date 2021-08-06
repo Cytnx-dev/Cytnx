@@ -143,6 +143,141 @@ namespace cytnx{
             Ari_ii[Type.Bool][Type.Int16        ] = Arithmetic_internal_bti16;
             Ari_ii[Type.Bool][Type.Bool         ] = Arithmetic_internal_btb;
 
+            iAri_ii = vector<vector<Arithmeticfunc_oii> >(N_Type,vector<Arithmeticfunc_oii>(N_Type,NULL));
+
+            iAri_ii[Type.ComplexDouble][Type.ComplexDouble] = iArithmetic_internal_cdtcd;
+            iAri_ii[Type.ComplexDouble][Type.ComplexFloat ] = iArithmetic_internal_cdtcf;
+            iAri_ii[Type.ComplexDouble][Type.Double       ] = iArithmetic_internal_cdtd;
+            iAri_ii[Type.ComplexDouble][Type.Float        ] = iArithmetic_internal_cdtf;
+            iAri_ii[Type.ComplexDouble][Type.Int64        ] = iArithmetic_internal_cdti64;
+            iAri_ii[Type.ComplexDouble][Type.Uint64       ] = iArithmetic_internal_cdtu64;
+            iAri_ii[Type.ComplexDouble][Type.Int32        ] = iArithmetic_internal_cdti32;
+            iAri_ii[Type.ComplexDouble][Type.Uint32       ] = iArithmetic_internal_cdtu32;
+            iAri_ii[Type.ComplexDouble][Type.Uint16       ] = iArithmetic_internal_cdtu16;
+            iAri_ii[Type.ComplexDouble][Type.Int16        ] = iArithmetic_internal_cdti16;
+            iAri_ii[Type.ComplexDouble][Type.Bool         ] = iArithmetic_internal_cdtb;
+            
+            iAri_ii[Type.ComplexFloat][Type.ComplexDouble] = iArithmetic_internal_cftcd;
+            iAri_ii[Type.ComplexFloat][Type.ComplexFloat ] = iArithmetic_internal_cftcf;
+            iAri_ii[Type.ComplexFloat][Type.Double       ] = iArithmetic_internal_cftd;
+            iAri_ii[Type.ComplexFloat][Type.Float        ] = iArithmetic_internal_cftf;
+            iAri_ii[Type.ComplexFloat][Type.Int64        ] = iArithmetic_internal_cfti64;
+            iAri_ii[Type.ComplexFloat][Type.Uint64       ] = iArithmetic_internal_cftu64;
+            iAri_ii[Type.ComplexFloat][Type.Int32        ] = iArithmetic_internal_cfti32;
+            iAri_ii[Type.ComplexFloat][Type.Uint32       ] = iArithmetic_internal_cftu32;
+            iAri_ii[Type.ComplexFloat][Type.Uint16       ] = iArithmetic_internal_cftu16;
+            iAri_ii[Type.ComplexFloat][Type.Int16        ] = iArithmetic_internal_cfti16;
+            iAri_ii[Type.ComplexFloat][Type.Bool         ] = iArithmetic_internal_cftb;
+            
+            iAri_ii[Type.Double][Type.ComplexDouble] = iArithmetic_internal_dtcd;
+            iAri_ii[Type.Double][Type.ComplexFloat ] = iArithmetic_internal_dtcf;
+            iAri_ii[Type.Double][Type.Double       ] = iArithmetic_internal_dtd;
+            iAri_ii[Type.Double][Type.Float        ] = iArithmetic_internal_dtf;
+            iAri_ii[Type.Double][Type.Int64        ] = iArithmetic_internal_dti64;
+            iAri_ii[Type.Double][Type.Uint64       ] = iArithmetic_internal_dtu64;
+            iAri_ii[Type.Double][Type.Int32        ] = iArithmetic_internal_dti32;
+            iAri_ii[Type.Double][Type.Uint32       ] = iArithmetic_internal_dtu32;
+            iAri_ii[Type.Double][Type.Uint16       ] = iArithmetic_internal_dtu16;
+            iAri_ii[Type.Double][Type.Int16        ] = iArithmetic_internal_dti16;
+            iAri_ii[Type.Double][Type.Bool         ] = iArithmetic_internal_dtb;
+
+            iAri_ii[Type.Float][Type.ComplexDouble] = iArithmetic_internal_ftcd;
+            iAri_ii[Type.Float][Type.ComplexFloat ] = iArithmetic_internal_ftcf;
+            iAri_ii[Type.Float][Type.Double       ] = iArithmetic_internal_ftd;
+            iAri_ii[Type.Float][Type.Float        ] = iArithmetic_internal_ftf;
+            iAri_ii[Type.Float][Type.Int64        ] = iArithmetic_internal_fti64;
+            iAri_ii[Type.Float][Type.Uint64       ] = iArithmetic_internal_ftu64;
+            iAri_ii[Type.Float][Type.Int32        ] = iArithmetic_internal_fti32;
+            iAri_ii[Type.Float][Type.Uint32       ] = iArithmetic_internal_ftu32;
+            iAri_ii[Type.Float][Type.Uint16       ] = iArithmetic_internal_ftu16;
+            iAri_ii[Type.Float][Type.Int16        ] = iArithmetic_internal_fti16;
+            iAri_ii[Type.Float][Type.Bool         ] = iArithmetic_internal_ftb;
+            
+            iAri_ii[Type.Int64][Type.ComplexDouble] = iArithmetic_internal_i64tcd;
+            iAri_ii[Type.Int64][Type.ComplexFloat ] = iArithmetic_internal_i64tcf;
+            iAri_ii[Type.Int64][Type.Double       ] = iArithmetic_internal_i64td;
+            iAri_ii[Type.Int64][Type.Float        ] = iArithmetic_internal_i64tf;
+            iAri_ii[Type.Int64][Type.Int64        ] = iArithmetic_internal_i64ti64;
+            iAri_ii[Type.Int64][Type.Uint64       ] = iArithmetic_internal_i64tu64;
+            iAri_ii[Type.Int64][Type.Int32        ] = iArithmetic_internal_i64ti32;
+            iAri_ii[Type.Int64][Type.Uint32       ] = iArithmetic_internal_i64tu32;
+            iAri_ii[Type.Int64][Type.Uint16       ] = iArithmetic_internal_i64tu16;
+            iAri_ii[Type.Int64][Type.Int16        ] = iArithmetic_internal_i64ti16;
+            iAri_ii[Type.Int64][Type.Bool         ] = iArithmetic_internal_i64tb;
+
+            iAri_ii[Type.Uint64][Type.ComplexDouble] = iArithmetic_internal_u64tcd;
+            iAri_ii[Type.Uint64][Type.ComplexFloat ] = iArithmetic_internal_u64tcf;
+            iAri_ii[Type.Uint64][Type.Double       ] = iArithmetic_internal_u64td;
+            iAri_ii[Type.Uint64][Type.Float        ] = iArithmetic_internal_u64tf;
+            iAri_ii[Type.Uint64][Type.Int64        ] = iArithmetic_internal_u64ti64;
+            iAri_ii[Type.Uint64][Type.Uint64       ] = iArithmetic_internal_u64tu64;
+            iAri_ii[Type.Uint64][Type.Int32        ] = iArithmetic_internal_u64ti32;
+            iAri_ii[Type.Uint64][Type.Uint32       ] = iArithmetic_internal_u64tu32;
+            iAri_ii[Type.Uint64][Type.Uint16       ] = iArithmetic_internal_u64tu16;
+            iAri_ii[Type.Uint64][Type.Int16        ] = iArithmetic_internal_u64ti16;
+            iAri_ii[Type.Uint64][Type.Bool         ] = iArithmetic_internal_u64tb;
+
+            
+            iAri_ii[Type.Int32][Type.ComplexDouble] = iArithmetic_internal_i32tcd;
+            iAri_ii[Type.Int32][Type.ComplexFloat ] = iArithmetic_internal_i32tcf;
+            iAri_ii[Type.Int32][Type.Double       ] = iArithmetic_internal_i32td;
+            iAri_ii[Type.Int32][Type.Float        ] = iArithmetic_internal_i32tf;
+            iAri_ii[Type.Int32][Type.Int64        ] = iArithmetic_internal_i32ti64;
+            iAri_ii[Type.Int32][Type.Uint64       ] = iArithmetic_internal_i32tu64;
+            iAri_ii[Type.Int32][Type.Int32        ] = iArithmetic_internal_i32ti32;
+            iAri_ii[Type.Int32][Type.Uint32       ] = iArithmetic_internal_i32tu32;
+            iAri_ii[Type.Int32][Type.Uint16       ] = iArithmetic_internal_i32tu16;
+            iAri_ii[Type.Int32][Type.Int16        ] = iArithmetic_internal_i32ti16;
+            iAri_ii[Type.Int32][Type.Bool         ] = iArithmetic_internal_i32tb;
+ 
+            iAri_ii[Type.Uint32][Type.ComplexDouble] = iArithmetic_internal_u32tcd;
+            iAri_ii[Type.Uint32][Type.ComplexFloat ] = iArithmetic_internal_u32tcf;
+            iAri_ii[Type.Uint32][Type.Double       ] = iArithmetic_internal_u32td;
+            iAri_ii[Type.Uint32][Type.Float        ] = iArithmetic_internal_u32tf;
+            iAri_ii[Type.Uint32][Type.Int64        ] = iArithmetic_internal_u32ti64;
+            iAri_ii[Type.Uint32][Type.Uint64       ] = iArithmetic_internal_u32tu64;
+            iAri_ii[Type.Uint32][Type.Int32        ] = iArithmetic_internal_u32ti32;
+            iAri_ii[Type.Uint32][Type.Uint32       ] = iArithmetic_internal_u32tu32;
+            iAri_ii[Type.Uint32][Type.Uint16       ] = iArithmetic_internal_u32tu16;
+            iAri_ii[Type.Uint32][Type.Int16        ] = iArithmetic_internal_u32ti16;
+            iAri_ii[Type.Uint32][Type.Bool         ] = iArithmetic_internal_u32tb;
+
+            iAri_ii[Type.Int16][Type.ComplexDouble] = iArithmetic_internal_i16tcd;
+            iAri_ii[Type.Int16][Type.ComplexFloat ] = iArithmetic_internal_i16tcf;
+            iAri_ii[Type.Int16][Type.Double       ] = iArithmetic_internal_i16td;
+            iAri_ii[Type.Int16][Type.Float        ] = iArithmetic_internal_i16tf;
+            iAri_ii[Type.Int16][Type.Int64        ] = iArithmetic_internal_i16ti64;
+            iAri_ii[Type.Int16][Type.Uint64       ] = iArithmetic_internal_i16tu64;
+            iAri_ii[Type.Int16][Type.Int32        ] = iArithmetic_internal_i16ti32;
+            iAri_ii[Type.Int16][Type.Uint32       ] = iArithmetic_internal_i16tu32;
+            iAri_ii[Type.Int16][Type.Uint16       ] = iArithmetic_internal_i16tu16;
+            iAri_ii[Type.Int16][Type.Int16        ] = iArithmetic_internal_i16ti16;
+            iAri_ii[Type.Int16][Type.Bool         ] = iArithmetic_internal_i16tb;
+ 
+            iAri_ii[Type.Uint16][Type.ComplexDouble] = iArithmetic_internal_u16tcd;
+            iAri_ii[Type.Uint16][Type.ComplexFloat ] = iArithmetic_internal_u16tcf;
+            iAri_ii[Type.Uint16][Type.Double       ] = iArithmetic_internal_u16td;
+            iAri_ii[Type.Uint16][Type.Float        ] = iArithmetic_internal_u16tf;
+            iAri_ii[Type.Uint16][Type.Int64        ] = iArithmetic_internal_u16ti64;
+            iAri_ii[Type.Uint16][Type.Uint64       ] = iArithmetic_internal_u16tu64;
+            iAri_ii[Type.Uint16][Type.Int32        ] = iArithmetic_internal_u16ti32;
+            iAri_ii[Type.Uint16][Type.Uint32       ] = iArithmetic_internal_u16tu32;
+            iAri_ii[Type.Uint16][Type.Uint16       ] = iArithmetic_internal_u16tu16;
+            iAri_ii[Type.Uint16][Type.Int16        ] = iArithmetic_internal_u16ti16;
+            iAri_ii[Type.Uint16][Type.Bool         ] = iArithmetic_internal_u16tb;
+
+            iAri_ii[Type.Bool][Type.ComplexDouble] = iArithmetic_internal_btcd;
+            iAri_ii[Type.Bool][Type.ComplexFloat ] = iArithmetic_internal_btcf;
+            iAri_ii[Type.Bool][Type.Double       ] = iArithmetic_internal_btd;
+            iAri_ii[Type.Bool][Type.Float        ] = iArithmetic_internal_btf;
+            iAri_ii[Type.Bool][Type.Int64        ] = iArithmetic_internal_bti64;
+            iAri_ii[Type.Bool][Type.Uint64       ] = iArithmetic_internal_btu64;
+            iAri_ii[Type.Bool][Type.Int32        ] = iArithmetic_internal_bti32;
+            iAri_ii[Type.Bool][Type.Uint32       ] = iArithmetic_internal_btu32;
+            iAri_ii[Type.Bool][Type.Uint16       ] = iArithmetic_internal_btu16;
+            iAri_ii[Type.Bool][Type.Int16        ] = iArithmetic_internal_bti16;
+            iAri_ii[Type.Bool][Type.Bool         ] = iArithmetic_internal_btb;
+
 
             //=====================
             QR_ii = vector<Qrfunc_oii>(5);

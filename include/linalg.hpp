@@ -154,6 +154,7 @@ namespace cytnx{
         template<class T>
         Tensor Add(const Tensor &Lt, const T &rc);
 
+        void iAdd(Tensor &Lt, const Tensor &Rt);
 
 
         // Sub:
@@ -167,6 +168,7 @@ namespace cytnx{
         template<class T>
         Tensor Sub(const Tensor &Lt, const T &rc);
 
+        void iSub(Tensor &Lt, const Tensor &Rt);
 
         // Mul:
         //==================================================
@@ -179,7 +181,7 @@ namespace cytnx{
         template<class T>
         Tensor Mul(const Tensor &Lt, const T &rc);
 
-        
+        void iMul(Tensor &Lt, const Tensor &Rt);
 
         // Div:
         //==================================================
@@ -191,6 +193,8 @@ namespace cytnx{
         Tensor Div(const T &lc, const Tensor &Rt);    
         template<class T>
         Tensor Div(const Tensor &Lt, const T &rc);
+
+        void iDiv(Tensor &Lt, const Tensor &Rt);
 
         // Mod:
         //==================================================
@@ -790,6 +794,32 @@ namespace cytnx{
             To use, define a linear operator with LinOp class either by assign a custom function or create a class that inherit LinOp (see LinOp for further details)            
         */
         std::vector<Tensor> Lanczos_Gnd(LinOp *Hop, const double &CvgCrit=1.0e-14, const bool &is_V=true, const Tensor &Tin=Tensor(), const bool &verbose=false, const unsigned int &Maxiter=100000);
+
+        //Lanczos:
+        //===============================================
+        /**
+        @brief perform Lanczos for hermitian/symmetric matrices or linear function to get ground state and lowest eigen value
+        @param Hop the Linear Operator defined by LinOp class or it's inheritance (see LinOp).
+        @param CvgCrit the convergence criterion of the energy.
+        @param is_V if set to true, the eigen vectors will be returned.
+        @param Tin the initial vector, this should be a UniTensor.
+        @param verbose print out iteration info.
+        @param maxiter the maximum interation steps for each k.
+        @return 
+            [eigvals (UniTensor::Dense), eigvecs (UniTensor)(option)] 
+
+        #description:
+            This function calculate the eigen value problem using naive Lanczos to get ground state and lowest eigen value. 
+         
+   
+        #[Note]
+            To use, define a linear operator with LinOp class either by assign a custom function or create a class that inherit LinOp (see LinOp for further details)            
+        */
+        std::vector<UniTensor> Lanczos_Gnd_Ut(LinOp *Hop, const UniTensor &Tin, const double &CvgCrit=1.0e-14, const bool &is_V=true, const bool &verbose=false, const unsigned int &Maxiter=100000);
+
+
+
+        
 
         //Lstsq:
         //===========================================

@@ -2,11 +2,14 @@ target_sources_local(cytnx
   PRIVATE
     Norm_internal.hpp
     Add_internal.hpp
+    iAdd_internal.hpp
     Arithmetic_internal.hpp
+    iArithmetic_internal.hpp
     Conj_inplace_internal.hpp
     Cpr_internal.hpp
     Diag_internal.hpp
     Div_internal.hpp
+    iDiv_internal.hpp
     Eigh_internal.hpp
     Eig_internal.hpp
     Exp_internal.hpp
@@ -17,10 +20,12 @@ target_sources_local(cytnx
     Matmul_dg_internal.hpp
     Matvec_internal.hpp
     Mul_internal.hpp
+    iMul_internal.hpp
     Mod_internal.hpp
     Outer_internal.hpp
     Kron_internal.hpp
     Sub_internal.hpp
+    iSub_internal.hpp
     Svd_internal.hpp
     Tridiag_internal.hpp
     Vectordot_internal.hpp
@@ -32,11 +37,14 @@ target_sources_local(cytnx
     Lstsq_internal.hpp
 
     Add_internal.cpp
+    iAdd_internal.cpp
     Arithmetic_internal.cpp
+    iArithmetic_internal.cpp
     Conj_inplace_internal.cpp
     Cpr_internal.cpp
     Diag_internal.cpp
     Div_internal.cpp
+    iDiv_internal.cpp
     Eigh_internal.cpp
     Eig_internal.cpp
     Exp_internal.cpp
@@ -46,11 +54,13 @@ target_sources_local(cytnx
     Matmul_dg_internal.cpp
     Matvec_internal.cpp
     Mul_internal.cpp
+    iMul_internal.cpp
     Mod_internal.cpp
     Outer_internal.cpp
     Kron_internal.cpp
     Tridiag_internal.cpp
     Sub_internal.cpp
+    iSub_internal.cpp
     Svd_internal.cpp
     Vectordot_internal.cpp
     Norm_internal.cpp

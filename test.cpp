@@ -44,14 +44,23 @@ class MyOp2: public LinOp{
     public:
         
         Tensor H;
-        MyOp2(int size, int dtype):
-            LinOp("mv",size,dtype,Device.cpu){ //invoke base class constructor!
-            
+        MyOp2():
+            LinOp("mv",0,Type.Double,Device.cpu){ //invoke base class constructor!
+            auto T = arange(100).reshape(10,10);
+            T = T + T.permute(1,0);
+            print(linalg::Eigh(T));            
         }
 
-        Tensor matvec(const Tensor &in){
-            auto H = arange(100).reshape(10,10);
-            return linalg::Dot(H,in);
+        UniTensor matvec(const UniTensor &in){
+        
+            auto T = arange(100).reshape(10,10);
+            T = T + T.permute(1,0);
+            auto H = UniTensor(T,1);
+            
+            auto out = Contract(H,in);
+            out.set_labels(in.labels());
+            
+            return out;
         }
 
 };
@@ -85,9 +94,72 @@ Scalar run_DMRG(tn_algo::MPO &mpo, tn_algo::MPS &mps, int Nsweeps, std::vector<t
 
 int main(int argc, char *argv[]){
 
+
+
+    auto X0 = arange(32).reshape(2,2,2,2,2);
+    
+    auto X1 = X0.permute(0,3,2,1,4);
+    auto X2 = X0.permute(2,0,1,4,3);
+
+    auto X1c = X1.contiguous();
+    auto X2c = X2.contiguous();
+
+    cout << X1c + X2c << endl;
+    cout << X1c.is_contiguous() << X2c.is_contiguous() << endl;
+
+    X1c+=X2c;
+
+
+    X1 += X2;
+
+    cout << X1 << endl;
+    cout << X2 << endl;
+    auto idd = vec_range(5);
+    cout << X1._impl->invmapper() << endl;
+    cout << X1._impl->mapper() << endl;
+
+    cout << X2._impl->invmapper() << endl;
+    cout << X2._impl->mapper() << endl;
+    cout << vec_map(idd,X2._impl->invmapper()) << endl;
+
+    return 0;
+
+    print(X1._impl->mapper());
+    print(X1._impl->invmapper());
+
+    print(X2._impl->mapper());
+    print(X2._impl->invmapper());
+
+
+    std::vector<cytnx_uint32> _invL2R(7);
+
+    for(int i=0;i < X1._impl->mapper().size();i++){
+        _invL2R[i] = X2._impl->mapper()[X1._impl->invmapper()[i]];
+    }
+    print(_invL2R);
+
+
+    return 0;
+
+
+
+    return 0;
+
+    auto Tc = zeros({4,1,1});
+    Tc.Conj_();
+
     auto L0 = UniTensor(zeros({4,1,1}),0); //#Left boundary
     auto R0 = UniTensor(zeros({4,1,1}),0); //#Right boundary
     L0.get_block_()(0,0,0) = 1.; R0.get_block_()(3,0,0) = 1.;
+
+
+
+    MyOp2 OP;
+    auto v = UniTensor(random::normal({10},0,1,-1,99),1);
+
+    //auto out = OP.matvec(v);
+
+    print(linalg::Lanczos_Gnd_Ut(&OP,v));
 
 
 
@@ -272,11 +344,6 @@ int main(int argc, char *argv[]){
     auto vec = arange(10).astype(dty);
     vec/=vec.Norm().item();
 
-
-    auto Hopo = MyOp2(vec.shape()[0],dty);
-    print(Hopo.matvec(vec));
-
-    print(linalg::Lanczos_Gnd(&Hopo));
 
     return 0;
 

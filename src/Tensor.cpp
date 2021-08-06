@@ -15,7 +15,7 @@ namespace cytnx{
         Tensor self;
         self._impl = _insimpl->get(_accs);
         //self += Tensor(rc);
-        self._impl->storage() = cytnx::linalg::Add(self,Tensor(rc))._impl->storage();
+        cytnx::linalg::iAdd(self,Tensor(rc));
 
         _insimpl->set(_accs,self._impl);
         self._impl = this->_insimpl;
@@ -25,7 +25,7 @@ namespace cytnx{
         Tensor self;
         self._impl = _insimpl->get(_accs);
         //self += Tensor(rc);
-        self._impl->storage() = cytnx::linalg::Sub(self,Tensor(rc))._impl->storage();
+        cytnx::linalg::iSub(self,Tensor(rc));
 
         _insimpl->set(_accs,self._impl);
         self._impl = this->_insimpl;
@@ -35,7 +35,7 @@ namespace cytnx{
         Tensor self;
         self._impl = _insimpl->get(_accs);
         //self += Tensor(rc);
-        self._impl->storage() = cytnx::linalg::Div(self,Tensor(rc))._impl->storage();
+        cytnx::linalg::iDiv(self,Tensor(rc));
 
         _insimpl->set(_accs,self._impl);
         self._impl = this->_insimpl;
@@ -45,7 +45,7 @@ namespace cytnx{
         Tensor self;
         self._impl = _insimpl->get(_accs);
         //self += Tensor(rc);
-        self._impl->storage() = cytnx::linalg::Mul(self,Tensor(rc))._impl->storage();
+        cytnx::linalg::iMul(self,Tensor(rc));
 
         _insimpl->set(_accs,self._impl);
         self._impl = this->_insimpl;
@@ -912,11 +912,11 @@ namespace cytnx{
 
     // += 
     template<> Tensor& Tensor::operator+=<Tensor>(const Tensor &rc){
-        this->_impl->storage() = cytnx::linalg::Add(*this,rc)._impl->storage();
+        cytnx::linalg::iAdd(*this,rc);
         return *this;
     }
     template<> Tensor& Tensor::operator+=<Tensor::Tproxy>(const Tensor::Tproxy &rc){
-        this->_impl->storage() = cytnx::linalg::Add(*this,Tensor(rc))._impl->storage();
+        cytnx::linalg::iAdd(*this,Tensor(rc));
         return *this;
     }
     template<> Tensor& Tensor::operator+=<cytnx_complex128>(const cytnx_complex128 &rc){
@@ -972,11 +972,11 @@ namespace cytnx{
     }
     // -= 
     template<> Tensor& Tensor::operator-=<Tensor>(const Tensor &rc){
-        this->_impl->storage() = cytnx::linalg::Sub(*this,rc)._impl->storage();
+        cytnx::linalg::iSub(*this,rc);
         return *this;
     }
     template<> Tensor& Tensor::operator-=<Tensor::Tproxy>(const Tensor::Tproxy &rc){
-        this->_impl->storage() = cytnx::linalg::Sub(*this,Tensor(rc))._impl->storage();
+        cytnx::linalg::iSub(*this,Tensor(rc));
         return *this;
     }
     template<> Tensor& Tensor::operator-=<cytnx_complex128>(const cytnx_complex128 &rc){
@@ -1032,11 +1032,11 @@ namespace cytnx{
     }
     // *= 
     template<> Tensor& Tensor::operator*=<Tensor>(const Tensor &rc){
-        this->_impl->storage() = cytnx::linalg::Mul(*this,rc)._impl->storage();
+        cytnx::linalg::iMul(*this,rc);
         return *this;
     }
     template<> Tensor& Tensor::operator*=<Tensor::Tproxy>(const Tensor::Tproxy &rc){
-        this->_impl->storage() = cytnx::linalg::Mul(*this,Tensor(rc))._impl->storage();
+        cytnx::linalg::iMul(*this,Tensor(rc));
         return *this;
     }
     template<> Tensor& Tensor::operator*=<cytnx_complex128>(const cytnx_complex128 &rc){
@@ -1093,11 +1093,11 @@ namespace cytnx{
 
     // /= 
     template<> Tensor& Tensor::operator/=<Tensor>(const Tensor &rc){
-        this->_impl->storage() = cytnx::linalg::Div(*this,rc)._impl->storage();
+        cytnx::linalg::iDiv(*this,rc);
         return *this;
     }
     template<> Tensor& Tensor::operator/=<Tensor::Tproxy>(const Tensor::Tproxy &rc){
-        this->_impl->storage() = cytnx::linalg::Div(*this,Tensor(rc))._impl->storage();
+        cytnx::linalg::iDiv(*this,Tensor(rc));
         return *this;
     }
     template<> Tensor& Tensor::operator/=<cytnx_complex128>(const cytnx_complex128 &rc){

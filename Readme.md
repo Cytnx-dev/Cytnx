@@ -21,9 +21,12 @@ See The following user guide for install and using of cytnx:
 [v0.7.3](https://github.com/kaihsin/Cytnx/tree/v0.7.3)
 
 ## Known issues:
+    v0.7.4
+    1. [Pending][GPU] iArithmentic need GPU impl. 
+
     v0.7.3
     1. [Pending][GPU] Get/Set elements on GPU is still down. 
-    
+     
 
 
 ## Current dev Version:
@@ -66,7 +69,12 @@ See The following user guide for install and using of cytnx:
     36. [New] Scalar.conj(), Scalar.real(), Scalar.imag(), Scalar.maxval(dtype), Scalar.minval(dtype)
     37. [Enhance] Lanczos internal now written with single general function.
     38. [Enhance] Storage.append() now accept Scalar
- 
+    39. [Enhance][Fix] Fix inplace Arithmetic between Tensor +=(-=,*=,/=) Tensor with both non-contiguous leads to inconsistent memory alignment. 
+    40. [Enhance] from 39. add iAdd(), iDiv(), iMul(), iSub(), this can be called by user but is not recommended. 
+    41. [Enhance] Modify DMRG kernel for generic UniTensor as state. 
+    42. [New][experiment] Add Lanczos_Gnd_Ut() which accept Tin as UniTensor
+    43. [New][experiment] LinOp now add an matvec option for UniTensor => UniTensor, which can be used together with Lanczos_Gnd_Ut
+    44. [Change] Remove LinOp with custom function support, inheritance is forced. 
 
     v0.7.3
     1. [Fix] bug for Get slice does not reduce when dim=1. 

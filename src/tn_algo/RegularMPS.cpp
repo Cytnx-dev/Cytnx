@@ -47,13 +47,13 @@ namespace cytnx{
             const cytnx_uint64& chi = virt_dim;
             
             this->_TNs.resize(N);
-            this->_TNs[0] = UniTensor(cytnx::random::normal({1, vphys_dim[0], min(chi, vphys_dim[0])}, 0., 1.),2);
+            this->_TNs[0] = UniTensor(cytnx::random::normal({1, vphys_dim[0], min(chi, vphys_dim[0])}, 0., 1.,-1,99),2);
             cytnx_uint64 dim1,dim2,dim3;
 
             cytnx_uint64 DR = 1;
             cytnx_int64 k_ov=0;
             for(cytnx_int64 k=N-1;k>0;k--){
-                if(std::numeric_limits<cytnx_uint64>::max()/vphys_dim[k] >= DR){
+                if(std::numeric_limits<cytnx_uint64>::max()/vphys_dim[k] <= DR){
                     k_ov = k;
                     break;
                 }else{
@@ -61,7 +61,9 @@ namespace cytnx{
                 }
             }
 
-
+            if(k_ov==0)
+                DR/=vphys_dim[0];
+            
             for(cytnx_int64 k=1; k<N; k++){
                 dim1 = this->_TNs[k-1].shape()[2]; dim2 = vphys_dim[k];
                 if(k<k_ov){
@@ -70,7 +72,7 @@ namespace cytnx{
                     dim3 = std::min(std::min(chi, cytnx_uint64(dim1 * dim2)),DR);
                     DR/=vphys_dim[k];
                 }
-                this->_TNs[k] = UniTensor(random::normal({dim1, dim2, dim3},0.,1.),2);
+                this->_TNs[k] = UniTensor(random::normal({dim1, dim2, dim3},0.,1.,-1,99),2);
                 this->_TNs[k].set_labels({2*k,2*k+1,2*k+2});
             }
             this->S_loc = -1;

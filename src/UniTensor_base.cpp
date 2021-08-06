@@ -38,7 +38,10 @@ namespace cytnx{
         void UniTensor_base::set_rowrank(const cytnx_uint64 &new_rowrank){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
-        
+        boost::intrusive_ptr<UniTensor_base> UniTensor_base::astype(const unsigned int &dtype) const{
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+            return nullptr;
+        }
         bool      UniTensor_base::is_blockform() const{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
             return false;

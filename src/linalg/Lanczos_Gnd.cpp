@@ -7,6 +7,7 @@
 #include <cfloat>
 #include <vector>
 #include "Tensor.hpp"
+#include <iomanip>
 
 namespace cytnx{
     namespace linalg{
@@ -37,13 +38,17 @@ namespace cytnx{
             // i=0 
             //-------------------------------------------------
             new_psi = Hop->matvec(psi_1);
-            As(0) = linalg::Vectordot(new_psi,psi_1).item();
+
+
+
+            As(0) = linalg::Vectordot(new_psi,psi_1,true).item();
             //cout << (new_psi);
             new_psi -= As(0)*psi_1;
             //cout << (new_psi);
             //exit(1);
 
             Bs(0) = new_psi.Norm();
+
             psi_0 = psi_1;
             new_psi /= Bs(0);
 
@@ -53,14 +58,19 @@ namespace cytnx{
             E = As(0).item();
             Scalar Ediff;
 
+
             ///---------------------------
 
             //iteration LZ:
             for(unsigned int i=1;i<Maxiter;i++){
+                //cout << "iter:" << i << "print Hv" << endl;
+                new_psi = Hop->matvec(psi_1);  //- Bs(i-1)*psi_0;
+                //cout << new_psi << endl;
 
-                new_psi = Hop->matvec(psi_1) - Bs(i-1)*psi_0;
-                As.append(linalg::Vectordot(new_psi,psi_1).item());
+                As.append(linalg::Vectordot(new_psi,psi_1,true).item());
+
                 new_psi -= As(i)*psi_1;
+                new_psi -= Bs(i-1)*psi_0;
 
                 //diagonalize:
                 tmpEsVs = linalg::Tridiag(As,Bs,true,true);
@@ -82,8 +92,10 @@ namespace cytnx{
                 }
                 E = tmpEsVs[0].storage().at(0);
 
+
             }//iteration
 
+            //cout << As << endl;
 
             if(cvg_fin==false){
                 cytnx_warning_msg(true,"[WARNING] iteration not converge after Maxiter!.\n :: Note :: ignore if this is intended","\n");
@@ -358,7 +370,7 @@ namespace cytnx{
                 // check criteria and maxiter:
                 cytnx_error_msg(CvgCrit<=0,"[ERROR][Lanczos] converge criteria must >0%s","\n");
                 cytnx_error_msg(Maxiter<2,"[ERROR][Lanczos] Maxiter must >1%s","\n");
-                
+                //cout << Tin << endl; 
                 
               
                 // check Tin should be rank-1:

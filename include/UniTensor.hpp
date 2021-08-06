@@ -199,7 +199,10 @@ namespace cytnx{
             virtual boost::intrusive_ptr<UniTensor_base> contiguous_();
             virtual boost::intrusive_ptr<UniTensor_base> contiguous();            
             virtual void print_diagram(const bool &bond_info=false);
-
+       
+            virtual boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const;
+ 
+            virtual cytnx_uint64 Nblocks() const{return 0;};
             virtual Tensor get_block(const cytnx_uint64 &idx=0) const; // return a copy of block
             virtual Tensor get_block(const std::vector<cytnx_int64> &qnum, const bool &force) const; //return a copy of block
 
@@ -373,7 +376,14 @@ namespace cytnx{
             void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1, const bool &by_label=false);
             boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<cytnx_int64> &new_labels);
             boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx, const cytnx_int64 &new_label, const bool &by_label=false);
-            
+           
+            boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const{
+                DenseUniTensor* tmp = this->clone_meta();
+                tmp->_block = this->_block.astype(dtype);
+                boost::intrusive_ptr<UniTensor_base> out(tmp);
+                return tmp;
+            }
+ 
             std::vector<Symmetry> syms() const{
                 cytnx_error_msg(true,"[ERROR][DenseUniTensor] dense unitensor does not have symmetry.%s","\n");
                 return std::vector<Symmetry>();
@@ -409,7 +419,7 @@ namespace cytnx{
                 return this->_block;
             }
 
-
+            cytnx_uint64 Nblocks() const{return 1;};
             std::vector<Tensor> get_blocks() const {
                 std::vector<Tensor> out;
                 cytnx_error_msg(true,"[ERROR][DenseUniTensor] cannot use get_blocks(), use get_block() instead!%s","\n");
@@ -749,6 +759,7 @@ namespace cytnx{
                 boost::intrusive_ptr<UniTensor_base> out(tmp);
                 return out;
             };
+
             bool     is_contiguous() const{
                 return this->_contiguous;
             };
@@ -788,6 +799,17 @@ namespace cytnx{
                 #endif
                 return this->_blocks[0].device_str();
             };
+
+            boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const{
+                SparseUniTensor* tmp = this->clone_meta(true,true);
+                tmp->_blocks.resize(this->_blocks.size());
+                for(cytnx_int64 blk=0;blk<this->_blocks.size();blk++){
+                    tmp->_blocks[blk] = this->_blocks[blk].astype(dtype);
+                }
+                boost::intrusive_ptr<UniTensor_base> out(tmp);
+                return out;
+            };
+
             void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1,const bool &by_label=false);
             boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank=-1, const bool &by_label=false);
             boost::intrusive_ptr<UniTensor_base> contiguous();
@@ -816,7 +838,7 @@ namespace cytnx{
                     return Tensor();
                 }
             };
-
+            cytnx_uint64 Nblocks() const{ return this->_blocks.size();};
             Tensor get_block(const std::vector<cytnx_int64> &qnum, const bool &force) const{
                 if(!force)
                     cytnx_error_msg(!this->is_braket_form(),"[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch the row/col space.\n permute to the correct physical space first, then get block.%s","\n");
@@ -1266,6 +1288,15 @@ namespace cytnx{
 
             }
 
+            Scalar::Sproxy item() const{
+                cytnx_error_msg(this->is_blockform(),"[ERROR] cannot use item on UniTensor with Symmetry.\n suggestion: use get_block()/get_blocks() first.%s","\n");
+                
+                DenseUniTensor* tmp = static_cast<DenseUniTensor*>(this->_impl.get());
+                return tmp->_block.item();
+
+            }
+
+            cytnx_uint64 Nblocks() const{return this->_impl->Nblocks();}
             cytnx_uint64 rank() const {return this->_impl->rank();}
             cytnx_uint64 rowrank() const{return this->_impl->rowrank();}
             unsigned int  dtype() const{ return this->_impl->dtype(); }
@@ -1312,6 +1343,15 @@ namespace cytnx{
                 return out;
             }
 
+            UniTensor astype(const unsigned int &dtype) const{
+                UniTensor out;
+                if(this->dtype()==dtype){
+                    out._impl = this->_impl;
+                }else{
+                    out._impl = this->_impl->astype(dtype);
+                }
+                return out;
+            }
 
             UniTensor permute(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank=-1,const bool &by_label=false){UniTensor out; out._impl = this->_impl->permute(mapper,rowrank,by_label); return out;}
             void permute_(const std::vector<cytnx_int64> &mapper,const cytnx_int64 &rowrank=-1,const bool &by_label=false){

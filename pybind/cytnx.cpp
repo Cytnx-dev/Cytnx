@@ -39,7 +39,14 @@ class PyLinOp: public LinOp{
                 Tin      /* Argument(s) */
             );
         }
-
+        UniTensor matvec(const UniTensor& Tin) override {
+            PYBIND11_OVERLOAD(
+                UniTensor, /* Return type */
+                LinOp,      /* Parent class */
+                matvec,          /* Name of function in C++ (must match Python name) */
+                Tin      /* Argument(s) */
+            );
+        }
 };
 
 
@@ -516,8 +523,7 @@ PYBIND11_MODULE(cytnx,m){
  
 
     py::class_<LinOp,PyLinOp>(m,"LinOp")
-        .def(py::init<const std::string &, const cytnx_uint64 &, const int &, const int &, std::function<Tensor(const Tensor&)> >(),py::arg("type"),py::arg("nx"),py::arg("dtype")=(int)Type.Double,py::arg("device")=(int)Device.cpu,py::arg("custom_f")=nullptr)
-        .def("set_func",&LinOp::set_func,py::arg("custom_f"),py::arg("dtype"),py::arg("device"))
+        .def(py::init<const std::string &, const cytnx_uint64 &, const int &, const int &>(),py::arg("type"),py::arg("nx"),py::arg("dtype")=(int)Type.Double,py::arg("device")=(int)Device.cpu)
         .def("set_elem",&LinOp::set_elem<cytnx_complex128>,py::arg("i"),py::arg("j"),py::arg("elem"),py::arg("check_exists")=true)
         .def("set_elem",&LinOp::set_elem<cytnx_complex64>,py::arg("i"),py::arg("j"),py::arg("elem"),py::arg("check_exists")=true)
         .def("set_elem",&LinOp::set_elem<cytnx_double>,py::arg("i"),py::arg("j"),py::arg("elem"),py::arg("check_exists")=true)
@@ -533,8 +539,12 @@ PYBIND11_MODULE(cytnx,m){
         //        return Tensor(self(i,j));
         //})
 
-
-        .def("matvec", &LinOp::matvec)
+        .def("matvec", [](LinOp &self, const Tensor &Tin)->Tensor{
+                            return self.matvec(Tin);
+                        },py::arg("Tin"))
+        .def("matvec", [](LinOp &self, const UniTensor &Tin)->UniTensor{
+                            return self.matvec(Tin);
+                        },py::arg("Tin"))
         .def("set_device", &LinOp::set_device)
         .def("set_dtype", &LinOp::set_dtype)
         .def("device", &LinOp::device)
@@ -2135,6 +2145,12 @@ PYBIND11_MODULE(cytnx,m){
     m_linalg.def("c_Lanczos_Gnd",[](LinOp *Hop, const double &CvgCrit, const bool &is_V, const Tensor &Tin, const bool &verbose, const cytnx_uint64 &maxiter){
                                     return cytnx::linalg::Lanczos_Gnd(Hop,CvgCrit,is_V,Tin,verbose,maxiter);
                                 });
+
+    
+    m_linalg.def("c_Lanczos_Gnd_Ut",[](LinOp *Hop, const UniTensor &Tin, const double &CvgCrit, const bool &is_V, const bool &verbose, const cytnx_uint64 &maxiter){
+                                    return cytnx::linalg::Lanczos_Gnd_Ut(Hop,Tin, CvgCrit,is_V,verbose,maxiter);
+                                });
+
 
     m_linalg.def("Lstsq",[](const Tensor &A, const Tensor &b, const float &rcond){
                                     return cytnx::linalg::Lstsq(A, b, rcond);

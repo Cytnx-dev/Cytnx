@@ -44,7 +44,7 @@ namespace cytnx{
 
                 void initialize();
                 Scalar sweep(const bool &verbose,const cytnx_int64 &maxit, const cytnx_int64 &krydim);
-                                
+                Scalar sweepv2(const bool &verbose,const cytnx_int64 &maxit, const cytnx_int64 &krydim);
 
         };
 
@@ -93,7 +93,10 @@ namespace cytnx{
                     return this->_impl->sweep(verbose,maxit,krydim);
                 }
 
-                
+                // return the current energy
+                Scalar sweepv2(const bool &verbose=false, const cytnx_int64 &maxit=4000, const cytnx_int64 &krydim=4){
+                    return this->_impl->sweepv2(verbose,maxit,krydim);
+                }
 
         };
 

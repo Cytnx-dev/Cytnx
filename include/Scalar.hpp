@@ -95,31 +95,31 @@ namespace cytnx{
             virtual void idiv(const cytnx_bool &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
 
             
-            virtual bool less(const Scalar_base* c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
-            virtual bool less(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
-            virtual bool less(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
-            virtual bool less(const cytnx_double &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
-            virtual bool less(const cytnx_float &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
-            virtual bool less(const cytnx_uint64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
-            virtual bool less(const cytnx_int64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
-            virtual bool less(const cytnx_uint32 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
-            virtual bool less(const cytnx_int32 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
-            virtual bool less(const cytnx_uint16 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
-            virtual bool less(const cytnx_int16 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
-            virtual bool less(const cytnx_bool &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual bool less(const Scalar_base* c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");return 0;}
+            virtual bool less(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");return 0;}
+            virtual bool less(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");return 0;}
+            virtual bool less(const cytnx_double &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");return 0;}
+            virtual bool less(const cytnx_float &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");return 0;}
+            virtual bool less(const cytnx_uint64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");return 0;}
+            virtual bool less(const cytnx_int64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");return 0;}
+            virtual bool less(const cytnx_uint32 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");return 0;}
+            virtual bool less(const cytnx_int32 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");return 0;}
+            virtual bool less(const cytnx_uint16 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");return 0;}
+            virtual bool less(const cytnx_int16 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");return 0;}
+            virtual bool less(const cytnx_bool &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");return 0;}
 
-            virtual bool greater(const Scalar_base* c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
-            virtual bool greater(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
-            virtual bool greater(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
-            virtual bool greater(const cytnx_double &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
-            virtual bool greater(const cytnx_float &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
-            virtual bool greater(const cytnx_uint64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
-            virtual bool greater(const cytnx_int64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
-            virtual bool greater(const cytnx_uint32 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
-            virtual bool greater(const cytnx_int32 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
-            virtual bool greater(const cytnx_uint16 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
-            virtual bool greater(const cytnx_int16 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
-            virtual bool greater(const cytnx_bool &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual bool greater(const Scalar_base* c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");return 0;}
+            virtual bool greater(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");return 0;}
+            virtual bool greater(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");return 0;}
+            virtual bool greater(const cytnx_double &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");return 0;}
+            virtual bool greater(const cytnx_float &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");return 0;}
+            virtual bool greater(const cytnx_uint64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");return 0;}
+            virtual bool greater(const cytnx_int64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");return 0;}
+            virtual bool greater(const cytnx_uint32 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");return 0;}
+            virtual bool greater(const cytnx_int32 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");return 0;}
+            virtual bool greater(const cytnx_uint16 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");return 0;}
+            virtual bool greater(const cytnx_int16 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");return 0;}
+            virtual bool greater(const cytnx_bool &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");return 0;}
 
             virtual bool eq(const Scalar_base* c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n"); return 0;}
 
@@ -132,6 +132,7 @@ namespace cytnx{
             virtual Scalar_base* get_imag(){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n"); return nullptr;}
 
             virtual void iabs(){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
+            virtual void isqrt(){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
 
             virtual void assign_selftype(const cytnx_complex128 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
             virtual void assign_selftype(const cytnx_complex64 &c){cytnx_error_msg(true,"[ERROR] Void Type Scalar cannot have operation!!%s","\n");}
@@ -261,7 +262,7 @@ namespace cytnx{
             void idiv(const cytnx_bool   &c){this->_elem /= c;}
 
             void iabs(){this->_elem=std::abs(cytnx_complex128(this->_elem));}
-
+            void isqrt(){this->_elem=std::sqrt(this->_elem);}
             
             bool less(const Scalar_base* c){cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s","\n"); return 0;}
             bool less(const cytnx_complex128 &c){cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s","\n"); return 0;}
@@ -456,6 +457,7 @@ namespace cytnx{
             }
 
             void iabs(){this->_elem=std::abs(this->_elem);}
+            void isqrt(){this->_elem=std::sqrt(this->_elem);}
 
             void* get_raw_address() const{return (void*)(&this->_elem);}
             Scalar_base* astype(const unsigned int &dtype){
@@ -562,7 +564,8 @@ namespace cytnx{
             void idiv(const cytnx_bool   &c){this->_elem /= c;}
 
             void iabs(){this->_elem=std::abs(this->_elem);}
-            
+            void isqrt(){this->_elem=std::sqrt(this->_elem);}
+
             bool less(const Scalar_base* c){return this->_elem < c->to_cytnx_double();}
             bool less(const cytnx_complex128 &c){cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s","\n"); return 0;}
             bool less(const cytnx_complex64 &c){cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s","\n"); return 0;}
@@ -730,6 +733,7 @@ namespace cytnx{
             bool greater(const cytnx_bool   &c){return this->_elem > c;}
 
             bool eq(const Scalar_base* c){return this->_elem == c->to_cytnx_float();}
+            void isqrt(){this->_elem=std::sqrt(this->_elem);}
 
             void conj_(){return;}          
             Scalar_base* get_real(){return this->copy();}
@@ -844,7 +848,7 @@ namespace cytnx{
             void idiv(const cytnx_bool   &c){this->_elem /= c;}
 
             void iabs(){this->_elem=std::abs(this->_elem);}
-
+            void isqrt(){this->_elem=std::sqrt(this->_elem);}
             
             bool less(const Scalar_base* c){return this->_elem < c->to_cytnx_int64();}
             bool less(const cytnx_complex128 &c){cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s","\n"); return 0;}
@@ -983,7 +987,7 @@ namespace cytnx{
             void idiv(const cytnx_bool   &c){this->_elem /= c;}
 
             void iabs(){this->_elem=std::abs(cytnx_double(this->_elem));}
-
+            void isqrt(){this->_elem=std::sqrt(this->_elem);}
             
             bool less(const Scalar_base* c){return this->_elem < c->to_cytnx_uint64();}
             bool less(const cytnx_complex128 &c){cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s","\n"); return 0;}
@@ -1124,7 +1128,7 @@ namespace cytnx{
             void idiv(const cytnx_bool   &c){this->_elem /= c;}
 
             void iabs(){this->_elem=std::abs(this->_elem);}
-
+            void isqrt(){this->_elem=std::sqrt(this->_elem);}
             
             bool less(const Scalar_base* c){return this->_elem < c->to_cytnx_int32();}
             bool less(const cytnx_complex128 &c){cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s","\n"); return 0;}
@@ -1265,7 +1269,7 @@ namespace cytnx{
             void idiv(const cytnx_bool   &c){this->_elem /= c;}
 
             void iabs(){this->_elem=std::abs(cytnx_double(this->_elem));}
-
+            void isqrt(){this->_elem=std::sqrt(this->_elem);}
             
             bool less(const Scalar_base* c){return this->_elem < c->to_cytnx_uint32();}
             bool less(const cytnx_complex128 &c){cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s","\n"); return 0;}
@@ -1406,7 +1410,7 @@ namespace cytnx{
             void idiv(const cytnx_bool   &c){this->_elem /= c;}
 
             void iabs(){this->_elem=std::abs(this->_elem);}
-
+            void isqrt(){this->_elem=std::sqrt(this->_elem);}
             
             bool less(const Scalar_base* c){return this->_elem < c->to_cytnx_int16();}
             bool less(const cytnx_complex128 &c){cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s","\n"); return 0;}
@@ -1546,7 +1550,7 @@ namespace cytnx{
             void idiv(const cytnx_bool   &c){this->_elem /= c;}
 
             void iabs(){this->_elem=std::abs(this->_elem);}
-
+            void isqrt(){this->_elem=std::sqrt(this->_elem);}
             
             bool less(const Scalar_base* c){return this->_elem < c->to_cytnx_uint16();}
             bool less(const cytnx_complex128 &c){cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s","\n"); return 0;}
@@ -1686,7 +1690,7 @@ namespace cytnx{
             void idiv(const cytnx_bool   &c){this->_elem /= c;}
 
             void iabs(){this->_elem=std::abs(this->_elem);}
-
+            void isqrt(){this->_elem=std::sqrt(this->_elem);}
             
             bool less(const Scalar_base* c){return this->_elem < c->to_cytnx_bool();}
             bool less(const cytnx_complex128 &c){cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s","\n"); return 0;}
@@ -1770,7 +1774,8 @@ namespace cytnx{
 
                 const Sproxy& operator=(const Sproxy &rc);
 
-
+                Scalar real();
+                Scalar imag();
                 //When used to get elements:
                 //operator Scalar() const;
                
@@ -2057,9 +2062,19 @@ namespace cytnx{
                 this->_impl->iabs();
             }
 
+            void isqrt(){
+                this->_impl->isqrt();
+            }
+
             Scalar abs() const{
                 Scalar out = *this;
                 out._impl->iabs();
+                return out.real();
+            }
+
+            Scalar sqrt() const{
+                Scalar out = *this;
+                out._impl->isqrt();
                 return out;
             }
 
@@ -2331,6 +2346,8 @@ namespace cytnx{
     //abs:
     
     Scalar abs(const Scalar &c);
+    Scalar sqrt(const Scalar &c);
+
 
 
     // complex conversion:

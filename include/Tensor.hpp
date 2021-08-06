@@ -468,6 +468,13 @@ namespace cytnx{
                     return out;
                 }
 
+
+                Storage storage() const{
+                    Tensor out;
+                    out._impl = _insimpl->get(_accs);
+                    return out.storage();
+                }
+
             };// proxy class of Tensor. 
 
             /// @endcond

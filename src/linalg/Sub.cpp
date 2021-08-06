@@ -12,10 +12,14 @@ namespace cytnx {
             Tensor out;
             bool icnst=false;
             if(Lt.shape().size()==1 && Lt.shape()[0]==1){
-                out.Init(Rt.shape(),Lt.dtype() < Rt.dtype()?Lt.dtype():Rt.dtype(),Lt.device());
+                out._impl = Rt._impl->_clone_meta_only();
+                out._impl->storage() = Storage(Rt.storage().size(),Lt.dtype() < Rt.dtype()?Lt.dtype():Rt.dtype(),Rt.device());
+                //out.Init(Rt.shape(),Lt.dtype() < Rt.dtype()?Lt.dtype():Rt.dtype(),Lt.device());
                 icnst = true;
             }else if(Rt.shape().size()==1 && Rt.shape()[0]==1){
-                out.Init(Lt.shape(),Lt.dtype() < Rt.dtype()?Lt.dtype():Rt.dtype(),Lt.device());
+                out._impl = Lt._impl->_clone_meta_only();
+                out._impl->storage() = Storage(Lt.storage().size(),Lt.dtype() < Rt.dtype()?Lt.dtype():Rt.dtype(),Lt.device());
+                //out.Init(Lt.shape(),Lt.dtype() < Rt.dtype()?Lt.dtype():Rt.dtype(),Lt.device());
                 icnst = true;
             }else{
                 cytnx_error_msg(Lt.shape() != Rt.shape(),"[Sub] error, the two tensor does not have the same shape.%s","\n");
@@ -766,7 +770,10 @@ namespace cytnx {
     Tensor operator-<Scalar>(const Scalar &lc, const Tensor &Rt){
         return cytnx::linalg::Sub(lc,Rt);
     }
-
+    template<>
+    Tensor operator-<Scalar::Sproxy>(const Scalar::Sproxy &lc, const Tensor &Rt){
+        return cytnx::linalg::Sub(Scalar(lc),Rt);
+    }
 
 
     template<>
@@ -842,7 +849,7 @@ namespace cytnx{
         
         template<class T>
         cytnx::UniTensor Sub(const T &lc, const cytnx::UniTensor &Rt){
-            cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor.%s","\n");
+            //cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor.%s","\n");
 
             UniTensor out = Rt.clone();
             //out.set_labels(vec_range<cytnx_int64>(Rt.rank()));
@@ -868,7 +875,7 @@ namespace cytnx{
 
         template<class T>
         cytnx::UniTensor Sub(const cytnx::UniTensor &Lt, const T &rc){
-            cytnx_error_msg(Lt.is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor.%s","\n");
+            //cytnx_error_msg(Lt.is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor.%s","\n");
 
             UniTensor out = Lt.clone();
             //out.set_labels(vec_range<cytnx_int64>(Lt.rank()));
