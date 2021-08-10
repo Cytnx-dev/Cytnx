@@ -1998,10 +1998,31 @@ PYBIND11_MODULE(cytnx,m){
                         return std::string("");
                      },py::call_guard<py::scoped_ostream_redirect,
                          py::scoped_estream_redirect>())
+                .def("norm",&tn_algo::MPS::norm)
 
 
                 ;
 
+
+    py::class_<tn_algo::MPO>(m_tnalgo,"MPO")
+                .def(py::init<>())
+                .def("size",&tn_algo::MPO::size)
+                .def("append",&tn_algo::MPO::append,py::arg("Tn"))
+                .def("assign",&tn_algo::MPO::assign,py::arg("N"),py::arg("Tn"))
+                .def("get_all",[](tn_algo::MPO &self){
+                                return self.get_all();
+                                })
+                .def("get_op",&tn_algo::MPO::get_op,py::arg("idx"))
+                ;
+
+    py::class_<tn_algo::DMRG>(m_tnalgo,"DMRG")
+                .def(py::init<tn_algo::MPO, tn_algo::MPS, std::vector<tn_algo::MPS>, const double&>(),py::arg("mpo"),py::arg("mps"),py::arg("ortho_mps")=std::vector<tn_algo::MPS>(),py::arg("weight")=30)
+                .def("initialize",&tn_algo::DMRG::initialize)
+                .def("sweep", &tn_algo::DMRG::sweep, py::arg("verbose")=false, py::arg("maxit")=4000, py::arg("krydim")=4)
+                .def("sweepv2", &tn_algo::DMRG::sweepv2, py::arg("verbose")=false, py::arg("maxit")=4000, py::arg("krydim")=4)
+                ;
+                
+    
 
 
 }
