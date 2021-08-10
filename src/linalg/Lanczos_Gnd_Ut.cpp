@@ -86,7 +86,7 @@ namespace cytnx{
             unsafe_Sub_(new_psi,As(0).item(),psi_1);
 
 
-            Bs(0) = sqrt(Contract(new_psi,new_psi.Dagger()).item().real());
+            Bs(0) = new_psi.Norm().item(); //sqrt(Contract(new_psi,new_psi.Dagger()).item().real());
             //Bs(0) = new_psi.get_block_().Norm();
 
             psi_0 = psi_1;
@@ -123,9 +123,12 @@ namespace cytnx{
                 //diagonalize:
                 tmpEsVs = linalg::Tridiag(As,Bs,true,true);
 
-
-                Bs.append(sqrt(Contract(new_psi,new_psi.Dagger()).item().real()));
-                //Bs.append(new_psi.get_block_().Norm().item());
+                auto tmpB = new_psi.Norm().item(); //sqrt(Contract(new_psi,new_psi.Dagger()).item().real());
+                Bs.append(tmpB);
+                if(tmpB == 0){
+                    cvg_fin=true;
+                    break;
+                }
 
                 psi_0 = psi_1;
 
@@ -152,7 +155,7 @@ namespace cytnx{
             if(cvg_fin==false){
                 cytnx_warning_msg(true,"[WARNING] iteration not converge after Maxiter!.\n :: Note :: ignore if this is intended","\n");
             }
-
+            //cout << "OK" << endl;
             out.push_back(UniTensor(tmpEsVs[0](0),0));
 
             if(is_V){
@@ -175,7 +178,6 @@ namespace cytnx{
 
                 psi_0 = psi_1;
                 psi_1 = new_psi/Bs(0).item();
-
                 for(unsigned int n=1; n<tmpEsVs[0].shape()[0];n++){
                     //eV += kryVg(n)*psi_1;
                     unsafe_Add_(eV,kryVg.at(n),psi_1);

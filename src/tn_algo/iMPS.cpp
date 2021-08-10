@@ -77,7 +77,11 @@ namespace cytnx{
 
         }
 
+        Scalar iMPS::norm() const{
+            cytnx_error_msg(true,"[Developing]%s","\n");
+            return Scalar(0);
 
+        }
 
 
     }

@@ -698,7 +698,9 @@ namespace cytnx{
                 
                 //cout << "OK" << endl;
                 if((root->right!=nullptr) && (root->left!=nullptr)){
-                    
+                    //cout << "L,R::\n";
+                    //root->left->utensor.print_diagram(1);
+                    //root->right->utensor.print_diagram(1);
                     root->utensor = Contract(root->left->utensor,root->right->utensor);
                     //cout << "Contract:" << root->left->utensor.name() << " " << root->right->utensor.name() << endl;
                     //root->left->utensor.print_diagram(); root->right->utensor.print_diagram(); root->utensor.print_diagram();

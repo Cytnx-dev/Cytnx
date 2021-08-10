@@ -222,6 +222,11 @@ namespace cytnx{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
 
+        Tensor UniTensor_base::Norm() const{
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+            return Tensor();
+        }
+
         boost::intrusive_ptr<UniTensor_base> UniTensor_base::Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
             return nullptr;
@@ -250,7 +255,9 @@ namespace cytnx{
         void UniTensor_base::tag(){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
-
+        Scalar::Sproxy UniTensor_base::at_for_sparse(const std::vector<cytnx_uint64> &locator){
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+        }
         cytnx_complex128& UniTensor_base::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux){
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
@@ -279,6 +286,10 @@ namespace cytnx{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
         cytnx_int16& UniTensor_base::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux){
+            cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
+        }
+
+        const Scalar::Sproxy UniTensor_base::at_for_sparse(const std::vector<cytnx_uint64> &locator)const{
             cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
         }
         const cytnx_complex128& UniTensor_base::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux) const{

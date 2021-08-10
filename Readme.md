@@ -75,6 +75,14 @@ See The following user guide for install and using of cytnx:
     42. [New][experiment] Add Lanczos_Gnd_Ut() which accept Tin as UniTensor
     43. [New][experiment] LinOp now add an matvec option for UniTensor => UniTensor, which can be used together with Lanczos_Gnd_Ut
     44. [Change] Remove LinOp with custom function support, inheritance is forced. 
+    45. [Enhance] add Tensor.at() without template. 
+    46. [Change][Enhance] Remove UniTensor.get_elem/set_elem, unify them with at(). 
+    47. [Fix] Trace for SparseUniTensor with is_diag=True. 
+    48. [New][experiment] MPS.Norm()
+    49. [Fix] Lanczos_Gnd_Ut when input dimension is only 2 now check if the beta=0. 
+    50. [New] Add DMRG U1 example.     
+    51. [Change] Behavior change for Svd_truncate. SparseUniTensor the keepdim can exceed the current dimension of UniTensor, in such case it is equivalent to Svd.
+    52. [New] Add UniTensor.Norm() 
 
     v0.7.3
     1. [Fix] bug for Get slice does not reduce when dim=1. 

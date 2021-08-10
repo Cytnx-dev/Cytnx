@@ -21,6 +21,11 @@ namespace cytnx{
         MPSType_class MPSType;
         //===================================================
 
+        Scalar MPS_impl::norm() const{
+            cytnx_error_msg(true,"[ERROR] MPS_Base should not be called. Please initialize the MPS first.%s","\n");
+            return Scalar(0);
+        }
+
         boost::intrusive_ptr<MPS_impl> MPS_impl::clone() const{
             cytnx_error_msg(true,"[ERROR] MPS_Base should not be called. Please initialize the MPS first.%s","\n");
             return boost::intrusive_ptr<MPS_impl>(new MPS_impl());

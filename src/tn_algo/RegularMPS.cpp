@@ -34,6 +34,22 @@ namespace cytnx{
             os << endl;
             return os;
         }
+        
+        Scalar RegularMPS::norm() const{
+            UniTensor L;
+            for(auto Ai:this->_TNs){
+                if( L.uten_type() == UTenType.Void){
+                    auto tA = Ai.relabels({0,1,2});
+                    L = Contract(tA,tA.Dagger().relabel(0,-2));
+                }else{
+                    L.set_labels({2,-2});
+                    auto tA = Ai.relabels({2,3,4});
+                    L = Contract(tA,L);
+                    L = Contract(L,tA.Dagger().relabels({-4,-2,3}));
+                }
+            }
+            return L.Trace().item();
+        }
 
 
         void RegularMPS::Init(const cytnx_uint64 &N, const std::vector<cytnx_uint64> &vphys_dim, const cytnx_uint64 &virt_dim, const cytnx_int64 &dtype){

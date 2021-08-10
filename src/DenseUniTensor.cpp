@@ -650,6 +650,10 @@ namespace cytnx{
 
     }
     
+    Tensor DenseUniTensor::Norm() const{
+        return linalg::Norm(this->_block);
+    }
+
     void DenseUniTensor::Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label){
 
         // 1) from label to indx. 

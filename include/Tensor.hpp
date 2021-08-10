@@ -153,6 +153,50 @@ namespace cytnx{
                 }
                 return this->_storage.at<T>(RealRank);
             }
+
+            const Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) const{
+                cytnx_error_msg(locator.size() != this->_shape.size(), "%s", "The input index does not match Tensor's rank.");
+
+                cytnx_uint64 RealRank,mtplyr;
+                std::vector<cytnx_uint64> c_shape(this->_shape.size());
+                std::vector<cytnx_uint64> c_loc(this->_shape.size());
+
+                RealRank=0;
+                mtplyr = 1;
+
+                for(cytnx_int64 i=this->_shape.size()-1; i>=0; i--){
+                    if(locator[i]>=this->_shape[i]){
+                        cytnx_error_msg(true, "%s", "Attempting to access out-of-bound index in Tensor.");
+                    }
+                    c_shape[i] = this->_shape[this->_invmapper[i]];
+                    c_loc[i] = locator[this->_invmapper[i]];
+                    RealRank += mtplyr*c_loc[i];
+                    mtplyr *= c_shape[i];
+                }
+                return this->_storage.at(RealRank);
+            }
+
+            Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator){
+                cytnx_error_msg(locator.size() != this->_shape.size(), "%s", "The input index does not match Tensor's rank.");
+
+                cytnx_uint64 RealRank,mtplyr;
+                std::vector<cytnx_uint64> c_shape(this->_shape.size());
+                std::vector<cytnx_uint64> c_loc(this->_shape.size());
+
+                RealRank=0;
+                mtplyr = 1;
+
+                for(cytnx_int64 i=this->_shape.size()-1; i>=0; i--){
+                    if(locator[i]>=this->_shape[i]){
+                        cytnx_error_msg(true, "%s", "Attempting to access out-of-bound index in Tensor.");
+                    }
+                    c_shape[i] = this->_shape[this->_invmapper[i]];
+                    c_loc[i] = locator[this->_invmapper[i]];
+                    RealRank += mtplyr*c_loc[i];
+                    mtplyr *= c_shape[i];
+                }
+                return this->_storage.at(RealRank);
+            }
             
             boost::intrusive_ptr<Tensor_impl> get(const std::vector<cytnx::Accessor> &accessors);
             boost::intrusive_ptr<Tensor_impl> get_deprecated(const std::vector<cytnx::Accessor> &accessors);
@@ -997,6 +1041,14 @@ namespace cytnx{
             T& at(const cytnx_uint64 &e1, const Ts&...elems){   
                 std::vector<cytnx_uint64> argv = dynamic_arg_uint64_resolver(e1,elems...);
                 return this->at<T>(argv);
+            }
+
+            const Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) const{
+                return this->_impl->at(locator);
+            }
+
+            Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator){
+                return this->_impl->at(locator);
             }
             /// @endcond
 

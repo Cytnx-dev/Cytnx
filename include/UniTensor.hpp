@@ -121,29 +121,8 @@ namespace cytnx{
             
 
 
-            template<class T>
-            T& at(const std::vector<cytnx_uint64> &locator){
-                //std::cout << "at " << this->is_blockform()  << std::endl;
-                if(this->is_blockform()){
-                    cytnx_error_msg(true,"[ERROR][SparseUniTensor] UniTensor with Symmetry cannot get element with at(). Use get_elem()/set_elem() instead.%s","\n");
-                }else{
-                    return this->get_block_().at<T>(locator);
-                }
 
-            }
-            
-            template<class T>
-            const T& at(const std::vector<cytnx_uint64> &locator) const{
-                //std::cout << "at " << this->is_blockform()  << std::endl;
-                if(this->is_blockform()){
-                    cytnx_error_msg(true,"[ERROR][SparseUniTensor] UniTensor with Symmetry cannot get element with at(). Use get_elem()/set_elem() instead.%s","\n");
-                }else{
-                    return this->get_block_().at<T>(locator);
-                }
-
-            }
-
-
+            /*
             template<class T>
             T get_elem(const std::vector<cytnx_uint64> &locator) const{
                 if(this->is_blockform()){
@@ -159,7 +138,7 @@ namespace cytnx{
             }
             template<class T>
             void set_elem(const std::vector<cytnx_uint64> &locator, const T &input){
-                if(this->is_blockform()){
+                if(this->uten_type()==UTenType.Sparse){
                     if(this->elem_exists(locator)){
                         T aux;
                         this->at_for_sparse(locator,aux) = input;
@@ -170,6 +149,7 @@ namespace cytnx{
                     this->at<T>(locator) = input;
                 }
             }
+            */
 
             int uten_type(){
                 return this->uten_type_id;
@@ -259,7 +239,7 @@ namespace cytnx{
             virtual void lDiv_(const Scalar &lhs);
 
         
-
+            virtual Tensor Norm() const;
 
 
             
@@ -279,6 +259,9 @@ namespace cytnx{
             virtual bool elem_exists(const std::vector<cytnx_uint64> &locator) const;
 
             // this a workaround, as virtual function cannot template.
+            virtual Scalar::Sproxy at_for_sparse(const std::vector<cytnx_uint64> &locator);
+            virtual const Scalar::Sproxy at_for_sparse(const std::vector<cytnx_uint64> &locator) const;
+            
             virtual cytnx_complex128& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux);
             virtual cytnx_complex64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux);
             virtual cytnx_double& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux);
@@ -550,6 +533,13 @@ namespace cytnx{
                 out->Trace_(a,b,by_label);
                 return out;
             }
+
+            Tensor Norm() const;
+
+            const Scalar::Sproxy at_for_sparse(const std::vector<cytnx_uint64> &locator) const {
+                cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s","\n");
+                //return cytnx_complex128(0,0);
+            }
             const cytnx_complex128& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux) const {
                 cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s","\n");
                 //return cytnx_complex128(0,0);
@@ -593,6 +583,10 @@ namespace cytnx{
                 //return 0;
             }
 
+            Scalar::Sproxy at_for_sparse(const std::vector<cytnx_uint64> &locator){
+                cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s","\n");
+                //return cytnx_complex128(0,0);
+            }
             cytnx_complex128& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux){
                 cytnx_error_msg(true,"[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s","\n");
                 //return cytnx_complex128(0,0);
@@ -1082,12 +1076,14 @@ namespace cytnx{
                 this->Transpose_();    
             }
 
+            Tensor Norm() const;
+
             void tag(){
                 // no-use!
             }
 
             void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim, const bool &by_label=false);
-
+            const Scalar::Sproxy at_for_sparse(const std::vector<cytnx_uint64> &locator) const;
             const cytnx_complex128& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux) const;
             const cytnx_complex64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux) const;
             const cytnx_double& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux) const;
@@ -1098,7 +1094,9 @@ namespace cytnx{
             const cytnx_int32& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int32 &aux) const;
             const cytnx_uint16& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux) const;
             const cytnx_int16& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux) const;
-            
+
+
+            Scalar::Sproxy at_for_sparse(const std::vector<cytnx_uint64> &locator);
             cytnx_complex128& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux);
             cytnx_complex64& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux);
             cytnx_double& at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux);
@@ -1371,9 +1369,62 @@ namespace cytnx{
             
             template<class T>
             T& at(const std::vector<cytnx_uint64> &locator){
-                return this->_impl->at<T>(locator);
+                //std::cout << "at " << this->is_blockform()  << std::endl;
+                if(this->uten_type()==UTenType.Sparse){
+                    if(this->_impl->elem_exists(locator)){
+                        T aux;
+                        return this->_impl->at_for_sparse(locator,aux);
+                    }else{
+                        cytnx_error_msg(true,"[ERROR][SparseUniTensor] invalid location. break qnum block.%s","\n");
+                    }
+                }else{
+                    return this->get_block_().at<T>(locator);
+                }
+
+            }
+            
+            template<class T>
+            const T& at(const std::vector<cytnx_uint64> &locator) const{
+                //std::cout << "at " << this->is_blockform()  << std::endl;
+                if(this->uten_type()==UTenType.Sparse){
+                    if(this->_impl->elem_exists(locator)){
+                        T aux; // [workaround] use aux to dispatch.
+                        return this->_impl->at_for_sparse(locator,aux);
+                    }else{
+                        cytnx_error_msg(true,"[ERROR][SparseUniTensor] invalid location. break qnum block.%s","\n");
+                    }
+                }else{
+                    return this->get_block_().at<T>(locator);
+                }
+
             }
 
+            const Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) const{
+                if(this->uten_type()==UTenType.Sparse){
+                    if(this->_impl->elem_exists(locator)){
+                        return this->_impl->at_for_sparse(locator);
+                    }else{
+                        cytnx_error_msg(true,"[ERROR][SparseUniTensor] invalid location. break qnum block.%s","\n");
+                    }
+                }else{
+                    return this->get_block_().at(locator);
+                }
+            }
+            
+            Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator){
+                if(this->uten_type()==UTenType.Sparse){
+                    if(this->_impl->elem_exists(locator)){
+                        return this->_impl->at_for_sparse(locator);
+                    }else{
+                        cytnx_error_msg(true,"[ERROR][SparseUniTensor] invalid location. break qnum block.%s","\n");
+                    }
+                }else{
+                    return this->get_block_().at(locator);
+                }
+            }
+
+
+            
 
             // return a clone of block
             Tensor get_block(const cytnx_uint64 &idx=0) const{
@@ -1548,6 +1599,9 @@ namespace cytnx{
             UniTensor Sub(const UniTensor &rhs)  const;
             UniTensor Sub(const Scalar &rhs)  const;
 
+            Tensor Norm() const{
+                return this->_impl->Norm();
+            };
 
             UniTensor &operator+=(const UniTensor &rhs){
                 this->Add_(rhs);
@@ -1644,16 +1698,19 @@ namespace cytnx{
                 return this->_impl->elem_exists(locator);
             }
 
+            // [C++: Deprecated soon, use at]
             template<class T>
             T get_elem(const std::vector<cytnx_uint64> &locator) const{
-                return this->_impl->get_elem<T>(locator);
+                return this->at<T>(locator);
             }
-            
-            template<class T, class T2>
+           
+            // [C++: Deprecated soon, use at]
+            template<class T2>
             void set_elem(const std::vector<cytnx_uint64> &locator, const T2&rc){   
                 //cytnx_error_msg(true,"[ERROR] invalid type%s","\n");
-                this->_impl->set_elem<T>(locator,rc);
+                this->at(locator) = rc;
             }
+            
 
 
             void Save(const std::string &fname) const;            

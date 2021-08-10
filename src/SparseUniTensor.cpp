@@ -550,6 +550,64 @@ namespace cytnx{
 
     }
 
+    Scalar::Sproxy SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator){
+        //1. check if out of range:
+        cytnx_error_msg(locator.size()!=this->_bonds.size(),"[ERROR] len(locator) does not match the rank of tensor.%s","\n");
+        for(int i=0;i<this->_bonds.size();i++){
+            cytnx_error_msg(locator[i]>=this->_bonds[i].dim(),"[ERROR][SparseUniTensor][at] locator @index: %d out of range.\n",i);
+        }
+        
+        //2. calculate the location in real memory using meta datas.
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_rowrank, this->_inv_mapper);
+        cytnx_uint64 &i = ij[0];
+        cytnx_uint64 &j = ij[1];
+
+        //3. check if the item is there:
+        // if they ref to different block, then the element is invalid (zero)
+        auto it1 = this->_outer2inner_row.find(i);
+        auto it2 = this->_outer2inner_col.find(j);
+        if((it1==this->_outer2inner_row.end())||(it2==this->_outer2inner_col.end())){
+            cytnx_error_msg(true,"[ERROR] trying to access element that doesn't belong to any block.%s","\n");
+        }
+        if(it1->second.first != it2->second.first){
+            
+            cytnx_error_msg(true,"[ERROR] trying to access element that doesn't belong to any block.%s","\n");
+        }
+
+        cytnx_uint64 block_index = it1->second.first;
+        return this->_blocks[block_index].at({it1->second.second,it2->second.second});
+        
+    }
+    const Scalar::Sproxy SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator) const{
+        //1. check if out of range:
+        cytnx_error_msg(locator.size()!=this->_bonds.size(),"[ERROR] len(locator) does not match the rank of tensor.%s","\n");
+        for(int i=0;i<this->_bonds.size();i++){
+            cytnx_error_msg(locator[i]>=this->_bonds[i].dim(),"[ERROR][SparseUniTensor][at] locator @index: %d out of range.\n",i);
+        }
+        
+        //2. calculate the location in real memory using meta datas.
+        std::vector<cytnx_uint64> ij = _locator_to_inner_ij(locator,this->shape(), this->_inner_rowrank, this->_inv_mapper);
+        cytnx_uint64 &i = ij[0];
+        cytnx_uint64 &j = ij[1];
+
+        //3. check if the item is there:
+        // if they ref to different block, then the element is invalid (zero)
+        auto it1 = this->_outer2inner_row.find(i);
+        auto it2 = this->_outer2inner_col.find(j);
+        if((it1==this->_outer2inner_row.end())||(it2==this->_outer2inner_col.end())){
+            cytnx_error_msg(true,"[ERROR] trying to access element that doesn't belong to any block.%s","\n");
+        }
+        if(it1->second.first != it2->second.first){
+            
+            cytnx_error_msg(true,"[ERROR] trying to access element that doesn't belong to any block.%s","\n");
+        }
+
+        cytnx_uint64 block_index = it1->second.first;
+        return this->_blocks[block_index].at({it1->second.second,it2->second.second});
+        
+    }
+
+
     cytnx_complex128& SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux){
         //1. check if out of range:
         cytnx_error_msg(locator.size()!=this->_bonds.size(),"[ERROR] len(locator) does not match the rank of tensor.%s","\n");
@@ -1162,6 +1220,28 @@ namespace cytnx{
 
     }
 
+    Tensor SparseUniTensor::Norm() const{
+
+        Scalar t;
+        if(this->_blocks.size()){
+            t =  linalg::Norm(this->_blocks[0]).item();
+            t *= t;
+            for(int blk=1;blk<this->_blocks.size();blk++){
+                Scalar tmp = linalg::Norm(this->_blocks[blk]).item();
+                t += tmp*tmp;
+            }
+
+        }else{
+            t = Scalar(0,Type.Double);
+        }
+
+        t = sqrt(t);
+        Tensor R({1},t.dtype());
+
+        R(0) = t;
+        return R;
+    }
+
     boost::intrusive_ptr<UniTensor_base> SparseUniTensor::Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label){
         cytnx_error_msg(this->_bonds.size()!=2,"[ERROR] SparseUniTensor currently only support Trace on SparseUniTensor with rank-2!%s","\n");
         //std::cout << "entry" << std::endl;
@@ -1204,6 +1284,10 @@ namespace cytnx{
         Tensor t;
         if(this->_is_diag){
             // we need linalg.Sum
+            for(cytnx_int64 i=0;i<this->_blocks.size();i++){
+                if(t.dtype()==Type.Void) t = linalg::Pow(linalg::Norm(this->_blocks[i]),2);
+                else t += linalg::Pow(linalg::Norm(this->_blocks[i]),2);
+            }
         }else{
             for(cytnx_int64 i=0;i<this->_blocks.size();i++){
                 if(t.dtype()==Type.Void) t = linalg::Trace(this->_blocks[i]);
@@ -1245,7 +1329,7 @@ namespace cytnx{
             // no common labels:
             
             cytnx_error_msg(true,"developing%s","\n");    
-
+            /*
             // output labels:       
             out_labels.insert(out_labels.end(), this->_labels.begin()
                                               , this->_labels.begin()+this->rowrank());
@@ -1391,6 +1475,7 @@ namespace cytnx{
                 }// check diag x dense
  
             }// check diag x diag
+            */
 
         }else{
             // has common labels:       
@@ -1509,8 +1594,12 @@ namespace cytnx{
                     //Tensor tmpL,tmpR;
                     //cytnx_error_msg(true,"[develope]%s","\n");
                     tmp->Init(out_bonds, out_labels, non_comm_idx1.size());
-                    cytnx_error_msg(t_this->get_blocks_(true).size() != t_rhs->get_blocks_(true).size(),"[ERROR] internal fatal, this.blocks.size() != rhs.blocks.size()%s","\n");
-                    auto comm_qnums = t_rhs->get_blocks_qnums();                    
+                    //cytnx_error_msg(t_this->get_blocks_(true).size() != t_rhs->get_blocks_(true).size(),"[ERROR] internal fatal, this.blocks.size() != rhs.blocks.size()%s","\n");
+                    //auto comm_qnums = t_rhs->get_blocks_qnums();     
+                    //cout << t_rhs->get_blocks_qnums() << endl;
+                    //cout << t_this->get_blocks_qnums() << endl;               
+                    auto comm_qnums = vec2d_intersect(t_rhs->get_blocks_qnums(),t_this->get_blocks_qnums()); 
+                    //cout << comm_qnums << endl;
 
                     for(int i=0; i< comm_qnums.size(); i++){
                         Tensor &T = tmp->get_block_(comm_qnums[i],true);
@@ -1535,7 +1624,7 @@ namespace cytnx{
                     //std::vector<Tensor> &Lblk = t_this->get_blocks_(false);
                     //std::vector<Tensor> &Rblk = t_rhs->get_blocks_(false);
                     
-                    cytnx_error_msg(t_this->get_blocks_(true).size() != t_rhs->get_blocks_(true).size(),"[ERROR] internal fatal, this.blocks.size() != rhs.blocks.size()%s","\n");
+                    //cytnx_error_msg(t_this->get_blocks_(true).size() != t_rhs->get_blocks_(true).size(),"[ERROR] internal fatal, this.blocks.size() != rhs.blocks.size()%s","\n");
                     
                     //std::cout << Lblk << std::endl;
                     //std::cout << Rblk << std::endl;
@@ -1545,7 +1634,10 @@ namespace cytnx{
 
                     // note, output can have more blocks than the L / R ! 
                     // => get the contract part QNs:
-                    auto comm_qnums = t_rhs->get_blocks_qnums();                    
+                    //cout << t_rhs->get_blocks_qnums() << endl;
+                    //cout << t_this->get_blocks_qnums() << endl;               
+                    auto comm_qnums = vec2d_intersect(t_rhs->get_blocks_qnums(),t_this->get_blocks_qnums()); 
+                    //cout << comm_qnums << endl;
 
                     for(int i=0; i< comm_qnums.size(); i++){
                         Tensor &T = tmp->get_block_(comm_qnums[i],true);
@@ -1565,6 +1657,7 @@ namespace cytnx{
         
 
         //std::cout << "[OK]" << std::endl;
+
 
         if(is_scalar_out) return tmp->Trace(0,1);
         else{

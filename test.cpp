@@ -95,6 +95,47 @@ Scalar run_DMRG(tn_algo::MPO &mpo, tn_algo::MPS &mps, int Nsweeps, std::vector<t
 int main(int argc, char *argv[]){
 
 
+    // testing Sparse:
+    auto bdi = Bond(4,BD_KET,{{0},{-2},{+2},{0}});
+    auto bdo = bdi.redirect();
+    auto phys_bdi = Bond(2,BD_KET,{{1},{-1}});
+    auto phys_bdo = phys_bdi.redirect();
+
+
+
+    auto U1 = UniTensor({bdi,bdo,phys_bdi,phys_bdo},{},2);
+
+    U1.print_diagram();
+    print(U1);
+        
+    // I
+    U1.at({0,0,0,0}) = 1;
+    U1.at({0,0,1,1}) = 1;
+    U1.at({3,3,0,0}) = 1;
+    U1.at({3,3,1,1}) = 1;
+
+    // S-
+    U1.at({0,1,1,0}) = 1;
+
+    // S+ 
+    U1.at({0,2,0,1}) = 1;
+
+    // S+
+    U1.at({1,3,0,1}) = 1;
+
+    // S- 
+    U1.at({2,3,1,0}) = 1;
+
+    print(U1);
+
+
+
+    auto A0 = UniTensor({Bond(1,BD_KET,{{0}}),phys_bdi,phys_bdi,Bond(1,BD_BRA,{{0}})},{},2);
+    A0.get_block_(0).item() = 1;
+
+
+    return 0;
+
 
     auto X0 = arange(32).reshape(2,2,2,2,2);
     
@@ -175,221 +216,13 @@ int main(int argc, char *argv[]){
 
 
 
-    auto bdii = Bond(5,bondType::BD_KET,{{1},{1},{-1},{-1},{-1}});
-    auto bdoo = Bond(5,bondType::BD_BRA,{{-1},{-1},{-1},{1},{1}});
-
-    auto tTrace = UniTensor({bdii,bdii.redirect()},{},1);
-    auto tTrace2 = tTrace.Dagger();
-
-    Contract(tTrace,tTrace2);
-
-
-    return 0;
-
-    auto tit = UniTensor({bdii,bdii,bdoo,bdoo},{},2);
-
-    for(int i=0; i < tit.get_blocks_().size(); i++){
-        random::Make_normal(tit.get_block_(i),0,1);
-    }
-
-    tit.print_diagram();
-
-    print(tit);
-
-   
-
-
-    auto outt = linalg::Svd_truncate(tit,10);
-
-
-    auto outo = linalg::Svd(tit);
-
-    //print(outt);
-
-
-    print(outt[0]);
-    print(outo[0]);
-
-    return 0;
-
-
-    auto bdi = Bond(2,bondType::BD_KET,{{1},{-1}});
-    auto bdo = bdi.clone().set_type(bondType::BD_BRA);
-    
-    print(bdi);
-    print(bdo);
-
-    auto Ut = UniTensor({bdi,bdi,bdo,bdo},{},2);
-    auto UtxUt = UniTensor({bdi,bdi,bdi,bdi,bdo,bdo,bdo,bdo},{},4);
-
-    print(Ut.syms());
-    auto T = Symmetry::Zn(4); 
-    print(T);
-    
-    Ut.get_block_({2})(0) = 1;
-    auto T0 = Ut.get_block_({0});
-    T0(0,0) = T0(1,1) = -1;
-    T0(0,1) = T0(1,0) =  1;
-    
-    Ut.get_block_({-2})(0) = 1;
-
-   
-
-
-    Ut.permute_({2,0,3,1}); 
-
-
-    cout << "Svd" << endl;
-    auto outv = linalg::Svd(Ut);
-
-    
-
-    auto S = outv[0];
-
-    S.print_diagram();
-    outv[1].print_diagram();
-    outv[2].print_diagram();
-
-
-
-    auto Us = Contract(S,outv[1]);
-
-    auto UsV = Contract(Us,outv[2]);
-
-    Us.print_diagram();
-    UsV.print_diagram();
-    Ut.print_diagram();
-
-
-    print(Ut);
-    print(UsV);
-
-    cout << "[OK]" << endl;
-    
-
-    //Ut.print_diagram();
-    //print(Ut);
-    return 0;
-    /*
-    print(Ut.get_blocks_().size());
-    print(Ut.get_blocks_qnums());
-    for(int i=0;i<Ut.get_blocks_().size();i++){
-        print(Ut.get_blocks_()[i].shape());
-    }
-    
-    print(UtxUt.get_blocks_().size());
-    print(UtxUt.get_blocks_qnums());    
-    print(UtxUt.get_blocks_());
-    for(int i=0;i<UtxUt.get_blocks_().size();i++){
-        print(UtxUt.get_blocks_()[i].shape());
-    }
-    */
-
-    /*
-    auto outv = linalg::Svd(Ut);
-
-    outv[0].print_diagram(true);
-    outv[1].print_diagram(true);
-    outv[2].print_diagram(true);
-    */
-    return 0;
-
-
-
-    Ut = Ut.permute({1,0,2,3});
-
-    cout << Ut.is_contiguous() << endl;
-
-    cout << Ut.is_braket_form() << endl;
-
-    return 0;
-
-
-     
-   
-
-    
-
-
-    return 0; 
-
-
-    int Nn = 8; // # of stars:
-    int chi = 8;
-    vector<cytnx_uint64> phys_dims;
-
-    for(int i=0;i< Nn;i++){
-        phys_dims.push_back(16);
-        phys_dims.push_back(4);
-    }
-
-
-    auto mps0 = tn_algo::MPS(Nn*2,phys_dims,chi);
-    print(mps0);
-
-    for(int i=0;i<mps0.size();i++){
-        print(mps0.data()[i].shape());
-    }
 
     return 0;
 
 
 
-    return 0;
 
 
-    return 0;
-
-    auto dty = Type.Float;
-    auto vec = arange(10).astype(dty);
-    vec/=vec.Norm().item();
-
-
-    return 0;
-
-
-
-
-    Scalar scA = int(5);
-    Scalar scB = 4.77;
-
-    cout << (scA < scB) << endl;    
-    return 0;
-
-    auto Trt = arange(30).reshape(1,30);
-    
-    auto uTrt = UniTensor(Trt,1);
-
-    std::cout << linalg::Svd(uTrt);
-
-    return 0;
-
-    std::complex<double> j = {0,1};
-    cout << j << endl;
-    auto Sx = physics::spin(0.5,'x');
-    auto Sy = physics::spin(0.5,'y');
-    auto Sp = Sx + j*Sy;
-    auto Sm = Sx - j*Sy;
-    cout << Sp <<endl;
-    return 0;
-
-
-    auto S00 = Storage(30);
-    cytnx_int64 ia = 5;
-    cytnx_int64 ib = 6;
-    Tensor T00 = Tensor::from_storage(S00).reshape(ia,ib);
-
-    T00 = T00.reshape(5,3,2);
-
-    T00 = T00.reshape(30);
-
-
-    return 0;
-
-    auto Arrr = Tensor({2,3,4});
-    auto Tnt = test();
-    Tnt.tff(Arrr);    
-    return 0;
 
 
  

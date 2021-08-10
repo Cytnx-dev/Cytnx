@@ -59,7 +59,7 @@ namespace cytnx{
                     return this->_TNs;
                 }
                 
-
+                virtual Scalar norm() const;
                 virtual boost::intrusive_ptr<MPS_impl> clone() const;
                 virtual std::ostream& Print(std::ostream &os);
                 virtual cytnx_uint64 size(){return 0;}; 
@@ -98,7 +98,8 @@ namespace cytnx{
                 void Into_Lortho();
                 void S_mvleft();
                 void S_mvright();                
-                
+               
+                Scalar norm() const; 
                 boost::intrusive_ptr<MPS_impl> clone() const{
                     boost::intrusive_ptr<MPS_impl> out(new RegularMPS());
                     out->S_loc = this->S_loc;
@@ -145,6 +146,7 @@ namespace cytnx{
                     out->_TNs = vec_clone(this->_TNs); 
                     return out;                   
                 }
+                Scalar norm() const;
                 void _save_dispatch(std::fstream &f);
                 void _load_dispatch(std::fstream &f);
 
@@ -240,6 +242,9 @@ namespace cytnx{
                     return *this;
                 } 
 
+                Scalar norm() const{
+                    return this->_impl->norm();
+                }
 
                 cytnx_int64 phys_dim(const cytnx_int64 &idx){
                     return this->_impl->_TNs[idx].shape()[1];

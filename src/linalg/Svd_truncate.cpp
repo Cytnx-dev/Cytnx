@@ -40,6 +40,8 @@ namespace cytnx{
             // using rowrank to split the bond to form a matrix.
             cytnx_error_msg((Tin.rowrank() < 1 || Tin.rank()==1),"[Svd][ERROR] Svd for DenseUniTensor should have rank>1 and rowrank>0%s","\n");
 
+            cytnx_uint64 keep_dim = keepdim; 
+
             if(Tin.uten_type()==UTenType.Sparse){
                 //cytnx_error_msg(true,"[Svd][Developing] Svd for SparseUniTensor is developing.%s","\n");
 
@@ -111,85 +113,111 @@ namespace cytnx{
 
 
                 }
-                cytnx_error_msg(keepdim>Sall.shape()[0],"[ERROR][Svd_truncate] keepdim should <= dimension of total singular values%s","\n");
-
-                //sorting:
-                Sall = algo::Sort(Sall); //small to large:
-                //cout << Sall;
-                //cout << Sall.shape()[0]-keepdim << endl;
-                //cout << Sall(15);
-                Scalar Smin = Sall(Sall.shape()[0]-keepdim).item();
-
-
-                std::vector<cytnx_int64> ambig_deg(comm_qnums.size());
-                std::vector<cytnx_int64> degs(comm_qnums.size());
-                // calculate new bond qnums and do truncate:
-                for(int blk=0; blk < comm_qnums.size();blk++){
-                    //std::cout << "QN block: " << blk << std::endl;
-                    int idd = 0;
+                //cytnx_error_msg(keepdim>Sall.shape()[0],"[ERROR][Svd_truncate] keepdim should <= dimension of total singular values%s","\n");
+                std::vector<Tensor> o_sls, o_Uls, o_vTls;
+                if(keepdim < Sall.shape()[0]){ //keep_dim = Sall.shape()[0]; 
                     
-                    cytnx_int64 &deg=degs[blk];
-                    for(cytnx_int64 i=0;i<sls[blk].shape()[0];i++){
-                        if(sls[blk](i).item() == Smin){ambig_deg[blk]++;}
-                        if(sls[blk](i).item() >= Smin){deg++;}
-                        else break;
+                    //sorting:
+                    Sall = algo::Sort(Sall); //small to large:
+                    //cout << Sall;
+                    //cout << Sall.shape()[0]-keepdim << endl;
+                    //cout << Sall(15);
+                    Scalar Smin = Sall(Sall.shape()[0]-keep_dim).item();
+
+
+                    std::vector<cytnx_int64> ambig_deg(comm_qnums.size());
+                    std::vector<cytnx_int64> degs(comm_qnums.size());
+                    // calculate new bond qnums and do truncate:
+                    for(int blk=0; blk < comm_qnums.size();blk++){
+                        //std::cout << "QN block: " << blk << std::endl;
+                        int idd = 0;
+                        
+                        cytnx_int64 &deg=degs[blk];
+                        for(cytnx_int64 i=0;i<sls[blk].shape()[0];i++){
+                            if(sls[blk](i).item() == Smin){ambig_deg[blk]++;}
+                            if(sls[blk](i).item() >= Smin){deg++;}
+                            else break;
+
+                        }
+                        total_comm_dim += deg;
 
                     }
-                    total_comm_dim += deg;
 
-                }
+                    //cout << degs << endl;
+                    //cout << total_comm_dim << endl;
 
-                //cout << degs << endl;
-                //cout << total_comm_dim << endl;
+                    //checking 
 
-                //checking 
+                    //remove ambig_deg to fit keepdim:
+                    cytnx_int64 exceed = total_comm_dim - keep_dim;
+                    for(int blk=0; blk < comm_qnums.size();blk++){
+                        if(exceed > 0){
+                            if(ambig_deg[blk]){
+                                if(ambig_deg[blk] > exceed){
+                                    degs[blk] -= exceed;
+                                    exceed =0;
+                                }else{
+                                    exceed -= ambig_deg[blk];
+                                    degs[blk] -= ambig_deg[blk];
+                                }
+                            }
+                        }
 
-                //remove ambig_deg to fit keepdim:
-                cytnx_int64 exceed = total_comm_dim - keepdim;
-                std::vector<Tensor> o_sls, o_Uls, o_vTls;
-                for(int blk=0; blk < comm_qnums.size();blk++){
-                    if(exceed > 0){
-                        if(ambig_deg[blk]){
-                            if(ambig_deg[blk] > exceed){
-                                degs[blk] -= exceed;
-                                exceed =0;
-                            }else{
-                                exceed -= ambig_deg[blk];
-                                degs[blk] -= ambig_deg[blk];
+                        //truncate 
+                        if(degs[blk]){
+                            std::vector< std::vector<cytnx_int64> > this_qnums(degs[blk],comm_qnums[blk]);
+                            tmp_qns.insert(tmp_qns.end(),this_qnums.begin(),this_qnums.end());
+
+                            //cout << "blk" << blk << "deg:" << degs[blk] << endl;
+
+                            //truncate:
+                            sls[blk] = sls[blk].get({ac::range(0,degs[blk])});
+                            o_sls.push_back(sls[blk]);
+
+                            if(is_U){
+                                Uls[blk] = Uls[blk].get({ac::all(),ac::range(0,degs[blk])});
+                                if(Uls[blk].shape().size()==1) Uls[blk].reshape_(Uls[blk].shape()[0],1);
+                                o_Uls.push_back(Uls[blk]);
+                            }
+                            if(is_vT){
+                                vTls[blk] = vTls[blk].get({ac::range(0,degs[blk]),ac::all()});  
+                                if(vTls[blk].shape().size()==1) vTls[blk].reshape_(1,vTls[blk].shape()[0]);
+                                o_vTls.push_back(vTls[blk]);
                             }
                         }
                     }
 
-                    //truncate 
-                    if(degs[blk]){
-                        std::vector< std::vector<cytnx_int64> > this_qnums(degs[blk],comm_qnums[blk]);
+                }else{ 
+                    keep_dim = Sall.shape()[0];
+                    for(int blk=0; blk < comm_qnums.size();blk++){
+
+                        cytnx_uint64 deg = sls[blk].shape()[0];
+                        total_comm_dim+=deg;
+
+                        std::vector< std::vector<cytnx_int64> > this_qnums(deg,comm_qnums[blk]);
+
                         tmp_qns.insert(tmp_qns.end(),this_qnums.begin(),this_qnums.end());
 
-                        //cout << "blk" << blk << "deg:" << degs[blk] << endl;
-
-                        //truncate:
-                        sls[blk] = sls[blk].get({ac::range(0,degs[blk])});
                         o_sls.push_back(sls[blk]);
 
                         if(is_U){
-                            Uls[blk] = Uls[blk].get({ac::all(),ac::range(0,degs[blk])});
-                            if(Uls[blk].shape().size()==1) Uls[blk].reshape_(Uls[blk].shape()[0],1);
                             o_Uls.push_back(Uls[blk]);
                         }
                         if(is_vT){
-                            vTls[blk] = vTls[blk].get({ac::range(0,degs[blk]),ac::all()});  
-                            if(vTls[blk].shape().size()==1) vTls[blk].reshape_(1,vTls[blk].shape()[0]);
                             o_vTls.push_back(vTls[blk]);
                         }
                     }
-                }
+
+                
 
 
+               }// if keepdim >= max dim
+                
                 //std::cout << tmp_qns.size() << std::endl;
                 //std::cout << total_comm_dim << std::endl;
 
                 //construct common bond:
-                Bond comm_bdi(keepdim,bondType::BD_KET,tmp_qns);
+                Bond comm_bdi(keep_dim,bondType::BD_KET,tmp_qns);
                 Bond comm_bdo = comm_bdi.clone().set_type(bondType::BD_BRA);
 
                 Ubds.push_back(comm_bdo);
@@ -289,6 +317,8 @@ namespace cytnx{
 
                //s
                cytnx_error_msg(keepdim>outT[t].shape()[0],"[ERROR][Svd_truncate] keepdim should <= dimension of singular tensor%s","\n");
+                
+
 
                cytnx::UniTensor &Cy_S = outCyT[t];  
                cytnx::Bond newBond(keepdim);
