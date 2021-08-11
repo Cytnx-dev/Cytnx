@@ -1980,6 +1980,7 @@ PYBIND11_MODULE(cytnx,m){
                 .def(py::init<const cytnx_uint64&, const cytnx_uint64&, const cytnx_uint64 &, const cytnx_int64&, const cytnx_int64&>(),py::arg("N"),py::arg("phys_dim"),py::arg("virt_dim"),py::arg("dtype")=cytnx_int64(Type.Double),py::arg("mps_type")=0)
                 .def(py::init<const cytnx_uint64&, const std::vector<cytnx_uint64>&, const cytnx_uint64 &, const cytnx_int64&, const cytnx_int64&>(),py::arg("N"),py::arg("vphys_dim"),py::arg("virt_dim"),py::arg("dtype")=cytnx_int64(Type.Double),py::arg("mps_type")=0)
 
+                .def("Init_Msector",&tn_algo::MPS::Init_Msector,py::arg("N"),py::arg("vphys_dim"),py::arg("virt_dim"),py::arg("select"),py::arg("dtype")=cytnx_int64(Type.Double),py::arg("mps_type")=0)
                 .def("size", &tn_algo::MPS::size)
                 .def("mps_type", &tn_algo::MPS::mps_type)
                 .def("mps_type_str", &tn_algo::MPS::mps_type_str)

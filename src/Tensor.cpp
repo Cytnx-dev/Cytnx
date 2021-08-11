@@ -671,7 +671,7 @@ namespace cytnx{
             for(unsigned int i=0;i<iperm.size();i++)
                 iperm[perm[i]] = i;
 
-           
+            //std::cout << new_shape << endl;
             boost::intrusive_ptr<Tensor_impl> tmp;
             //std::cout << iperm << std::endl;
             tmp = rhs->permute(iperm)->contiguous();

@@ -1,8 +1,10 @@
 #include "tn_algo/MPS.hpp"
+#include "Generator.hpp"
 #include "random.hpp"
 #include <cmath>
 #include <algorithm>
 #include "linalg.hpp"
+#include "utils/vec_print.hpp"
 using namespace std;
 namespace cytnx{
     namespace tn_algo{
@@ -63,12 +65,12 @@ namespace cytnx{
             const cytnx_uint64& chi = virt_dim;
             
             this->_TNs.resize(N);
-            this->_TNs[0] = UniTensor(cytnx::random::normal({1, vphys_dim[0], min(chi, vphys_dim[0])}, 0., 1.,-1,99),2);
+            this->_TNs[0] = UniTensor(cytnx::random::normal({1, vphys_dim[0], min(chi, vphys_dim[0])}, 0., 1.),2);
             cytnx_uint64 dim1,dim2,dim3;
 
             cytnx_uint64 DR = 1;
-            cytnx_int64 k_ov=0;
-            for(cytnx_int64 k=N-1;k>0;k--){
+            cytnx_int64 k_ov=-1;
+            for(cytnx_int64 k=N-1;k>=0;k--){
                 if(std::numeric_limits<cytnx_uint64>::max()/vphys_dim[k] <= DR){
                     k_ov = k;
                     break;
@@ -77,21 +79,76 @@ namespace cytnx{
                 }
             }
 
-            if(k_ov==0)
-                DR/=vphys_dim[0];
+            if(k_ov==-1){
+                DR/=vphys_dim[0]; k_ov = 0;
+            }
+
+            for(cytnx_int64 k=1; k<N; k++){
+                dim1 = this->_TNs[k-1].shape()[2]; dim2 = vphys_dim[k];
+                if(k<k_ov){
+                    dim3 = std::min(chi, cytnx_uint64(dim1 * dim2));
+                }else{
+                    DR/=vphys_dim[k];
+                    dim3 = std::min(std::min(chi, cytnx_uint64(dim1 * dim2)),DR);
+                }
+                this->_TNs[k] = UniTensor(random::normal({dim1, dim2, dim3},0.,1.,-1),2);
+                this->_TNs[k].set_labels({2*k,2*k+1,2*k+2});
+            }
+            this->S_loc = -1;
+            this->Into_Lortho();
+        }
+
+        void RegularMPS::Init_Msector(const cytnx_uint64 &N, const std::vector<cytnx_uint64> &vphys_dim, const cytnx_uint64 &virt_dim, const std::vector<cytnx_int64> &select, const cytnx_int64 &dtype){
+            //checking:
+            cytnx_error_msg(N==0,"[ERROR][RegularMPS] number of site N cannot be ZERO.%s","\n");
+            cytnx_error_msg(N!=vphys_dim.size(),"[ERROR] RegularMPS vphys_dim.size() should be equal to N.%s","\n"); 
+            cytnx_error_msg(dtype!=Type.Double,"[ERROR][RegularMPS] currently only Double dtype is support.%s","\n");
+            cytnx_error_msg(select.size()!=vphys_dim.size(), "[ERROR][RegularMPS] select.size() should equal to N.%s","\n");
+
+            this->virt_dim = virt_dim;            
+
+            const cytnx_uint64& chi = virt_dim;
+            
+            this->_TNs.resize(N);
+            //this->_TNs[0] = UniTensor(cytnx::random::normal({1, vphys_dim[0], min(chi, vphys_dim[0])}, 0., 1.,-1),2);
+            this->_TNs[0] = UniTensor(cytnx::zeros({1, vphys_dim[0], min(chi, vphys_dim[0])}),2);
+            this->_TNs[0].get_block_()(":",select[0],":") = random::normal({1,this->_TNs[0].shape()[2]},0.,1.);
+
+            cytnx_uint64 dim1,dim2,dim3;
+
+            cytnx_uint64 DR = 1;
+            cytnx_int64 k_ov=-1;
+            for(cytnx_int64 k=N-1;k>=0;k--){
+                //cout << k << endl;
+                if(std::numeric_limits<cytnx_uint64>::max()/vphys_dim[k] <= DR){
+                    k_ov = k;
+                    break;
+                }else{
+                    DR*= vphys_dim[k];
+                }
+            }
+
+            if(k_ov==-1){
+                DR/=vphys_dim[0]; k_ov = 0;
+            }
             
             for(cytnx_int64 k=1; k<N; k++){
                 dim1 = this->_TNs[k-1].shape()[2]; dim2 = vphys_dim[k];
                 if(k<k_ov){
                     dim3 = std::min(chi, cytnx_uint64(dim1 * dim2));
                 }else{
-                    dim3 = std::min(std::min(chi, cytnx_uint64(dim1 * dim2)),DR);
                     DR/=vphys_dim[k];
+                    dim3 = std::min(std::min(chi, cytnx_uint64(dim1 * dim2)),DR);
                 }
-                this->_TNs[k] = UniTensor(random::normal({dim1, dim2, dim3},0.,1.,-1,99),2);
+                //cout << dim1 << dim2 << dim3 << endl;
+                this->_TNs[k] = UniTensor(zeros({dim1, dim2, dim3}),2);
+                this->_TNs[k].get_block_()(":",select[k]) = random::normal({dim1,dim3},0.,1.);
+                    
+                //this->_TNs[k] = UniTensor(random::normal({dim1, dim2, dim3},0.,1.,-1,99),2);
                 this->_TNs[k].set_labels({2*k,2*k+1,2*k+2});
             }
             this->S_loc = -1;
+            this->Into_Lortho();
         }
 
 

@@ -76,7 +76,14 @@ namespace cytnx{
                 tmpEsVs = linalg::Tridiag(As,Bs,true,true);
 
 
-                Bs.append(new_psi.Norm().item());
+                auto tmp = new_psi.Norm().item();
+                Bs.append(tmp);
+                if(tmp == 0){
+                    cvg_fin=true;
+                    break;
+                }
+                
+
                 psi_0 = psi_1;
                 new_psi /= Bs(i);
 
