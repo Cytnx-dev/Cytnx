@@ -97,10 +97,12 @@ In the case where you have only one element in a Tensor, we can use **item()** t
 
     auto A = cytnx::arange(24).reshape(2,3,4);
     auto B = A(0,0,1);
-    double C = B.item<double>();
+    Scalar C = B.item(); 
+    double Ct = B.item<double>();
 
     cout << B << endl;
     cout << C << endl;
+    cout << Ct << endl;
 
 Output>> 
 
@@ -117,8 +119,8 @@ Output>>
 
 .. Note::
     
-    In C++, using **item<>()** to get the element require explicitly specify the type that match the dtype of the Tensor. If the type specify does not match, an error will be prompt. 
-
+    1. In C++, using **item<>()** to get the element require explicitly specify the type that match the dtype of the Tensor. If the type specify does not match, an error will be prompt. 
+    2. Starting from v0.7+, user can use item() in C++ without explificly specify type with template. 
 
 
 Set elememts

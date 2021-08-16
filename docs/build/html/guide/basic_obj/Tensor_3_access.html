@@ -661,12 +661,16 @@ Shape : (2,4)
 <span class="normal">3</span>
 <span class="normal">4</span>
 <span class="normal">5</span>
-<span class="normal">6</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">24</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">24</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
 <span class="k">auto</span> <span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
-<span class="kt">double</span> <span class="n">C</span> <span class="o">=</span> <span class="n">B</span><span class="p">.</span><span class="n">item</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="n">Scalar</span> <span class="n">C</span> <span class="o">=</span> <span class="n">B</span><span class="p">.</span><span class="n">item</span><span class="p">();</span>
+<span class="kt">double</span> <span class="n">Ct</span> <span class="o">=</span> <span class="n">B</span><span class="p">.</span><span class="n">item</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
 
 <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">B</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
 <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">C</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">Ct</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
 </pre></div>
 </td></tr></table></div>
 <p>Output&gt;&gt;</p>
@@ -682,7 +686,10 @@ Shape : (1)
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>In C++, using <strong>item&lt;&gt;()</strong> to get the element require explicitly specify the type that match the dtype of the Tensor. If the type specify does not match, an error will be prompt.</p>
+<ol class="arabic simple">
+<li><p>In C++, using <strong>item&lt;&gt;()</strong> to get the element require explicitly specify the type that match the dtype of the Tensor. If the type specify does not match, an error will be prompt.</p></li>
+<li><p>Starting from v0.7+, user can use item() in C++ without explificly specify type with template.</p></li>
+</ol>
 </div>
 </div>
 <div class="section" id="set-elememts">
