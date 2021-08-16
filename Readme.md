@@ -84,8 +84,8 @@ See The following user guide for install and using of cytnx:
     51. [Change] Behavior change for Svd_truncate. SparseUniTensor the keepdim can exceed the current dimension of UniTensor, in such case it is equivalent to Svd.
     52. [New] Add UniTensor.Norm() 
     53. [New][experiment] add MPS.Init_Msector(), which initialize the state with specify total magnetization. 
-    54. [Enhance] Add additional feature Svd_truncate with truncation_err (err) and return_err option. 
-
+    54. [Enhance] Add additional feature Svd_truncate with truncation_err (err) and return_err option for Ten
+    54. [Enhance] Add additional feature Svd_truncate with truncation_err (err) and return_err option for DUTen
 
     v0.7.3
     1. [Fix] bug for Get slice does not reduce when dim=1. 

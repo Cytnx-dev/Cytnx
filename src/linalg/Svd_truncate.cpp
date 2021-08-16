@@ -323,11 +323,10 @@ namespace cytnx{
             }else{
                 // DenseUniTensor:
                
-               Tensor tmp;
-               if(Tin.is_contiguous()) tmp = Tin.get_block_();
-               else{ tmp = Tin.get_block(); tmp.contiguous_();}
+               Tensor tmp = Tin.get_block_().contiguous();
+               //if(Tin.is_contiguous()) tmp = Tin.get_block_();
+               //else{ tmp = Tin.get_block(); tmp.contiguous_();}
                
-
                vector<cytnx_uint64> tmps = tmp.shape();
                vector<cytnx_int64> oldshape(tmps.begin(),tmps.end()); tmps.clear();
                vector<cytnx_int64> oldlabel = Tin.labels();
@@ -335,29 +334,27 @@ namespace cytnx{
                // collapse as Matrix:
                cytnx_int64 rowdim = 1;
                for(cytnx_uint64 i=0;i<Tin.rowrank();i++) rowdim*= tmp.shape()[i];
-               tmp.reshape_({rowdim,-1});
+               tmp = tmp.reshape({rowdim,-1});
 
-               vector<Tensor> outT = cytnx::linalg::Svd(tmp,is_U,is_vT);
-               if(Tin.is_contiguous()) tmp.reshape_(oldshape);                       
-              
+               vector<Tensor> outT = cytnx::linalg::Svd_truncate(tmp,keepdim,err,is_U,is_vT,return_err);
+
+               //if(Tin.is_contiguous()) tmp.reshape_(oldshape);                       
+               
 
                int t=0;
                vector<cytnx::UniTensor> outCyT(outT.size());
 
                //s
-               cytnx_error_msg(keepdim>outT[t].shape()[0],"[ERROR][Svd_truncate] keepdim should <= dimension of singular tensor%s","\n");
+               //cytnx_error_msg(keepdim>outT[t].shape()[0],"[ERROR][Svd_truncate] keepdim should <= dimension of singular tensor%s","\n");
                 
-
-
                cytnx::UniTensor &Cy_S = outCyT[t];  
-               cytnx::Bond newBond(keepdim);
+               cytnx::Bond newBond(Cy_S.shape()[0]);
                cytnx_int64 newlbl = -1;
                for(int i=0;i<oldlabel.size();i++){
                    if(oldlabel[i]<=newlbl) newlbl = oldlabel[i]-1;
                }
                Cy_S.Init({newBond,newBond},{newlbl,newlbl-1},1,Type.Double,Device.cpu,true); //it is just reference so no hurt to alias ^^
-               Tensor tmps2 = outT[t].get({ac::range(0,keepdim)});
-               Cy_S.put_block_(tmps2);
+               Cy_S.put_block_(outT[t]);
                t++; 
 
                if(is_U){
@@ -366,11 +363,8 @@ namespace cytnx{
                    vector<cytnx_int64> shapeU = vec_clone(oldshape,Tin.rowrank());
                    shapeU.push_back(-1);
 
-                   // trim mem
-                   outT[t] = outT[t].get({ac::all(),ac::range(0,keepdim)});
                    outT[t].reshape_(shapeU);
-
-                    
+ 
                    Cy_U.Init(outT[t],Tin.rowrank()); 
                    vector<cytnx_int64> labelU = vec_clone(oldlabel,Tin.rowrank());
                    labelU.push_back(Cy_S.labels()[0]);
@@ -380,12 +374,11 @@ namespace cytnx{
 
                if(is_vT){
                    cytnx::UniTensor &Cy_vT = outCyT[t]; 
+
                    //shape
                    vector<cytnx_int64> shapevT(Tin.rank()-Tin.rowrank()+1);
                    shapevT[0] = -1; memcpy(&shapevT[1],&oldshape[Tin.rowrank()],sizeof(cytnx_int64)*(shapevT.size()-1));
 
-                   // trim mem
-                   outT[t] = outT[t].get({ac::range(0,keepdim),ac::all()});
                    outT[t].reshape_(shapevT);
 
                    
@@ -422,6 +415,9 @@ namespace cytnx{
                    }
 
                }// if tag
+
+               if(return_err)
+                    outCyT.back().Init(outT.back(),0);
 
                return outCyT;
 
