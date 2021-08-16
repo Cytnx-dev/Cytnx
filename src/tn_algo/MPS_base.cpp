@@ -42,6 +42,11 @@ namespace cytnx{
         void MPS_impl::Init_Msector(const cytnx_uint64 &N , const std::vector<cytnx_uint64> &vphys_dim, const cytnx_uint64 &virt_dim, const std::vector<cytnx_int64> &select, const cytnx_int64 &dtype){
             cytnx_error_msg(true,"[ERROR] MPS_Base should not be called. Please initialize the MPS first.%s","\n");
         }
+        /*
+        void MPS_impl::Init_prodstate(const std::vector<cytnx_uint64> &phys_dim, const cytnx_uint64 &virt_dim, const std::vector<std::vector<cytnx_int64> >&state_qnums, const cytnx_int64 &dtype){
+            cytnx_error_msg(true,"[ERROR] MPS_Base should not be called. Please initialize the MPS first.%s","\n");
+        }
+        */
         void MPS_impl::Into_Lortho(){
             cytnx_error_msg(true,"[ERROR] MPS_Base should not be called. Please initialize the MPS first.%s","\n");
         }

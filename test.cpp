@@ -94,6 +94,14 @@ Scalar run_DMRG(tn_algo::MPO &mpo, tn_algo::MPS &mps, int Nsweeps, std::vector<t
 
 int main(int argc, char *argv[]){
 
+    auto mps0 = tn_algo::MPS();
+
+    std::vector<cytnx_uint64> tmp;
+    for(int i=0;i<8;i++){ tmp.push_back(16); tmp.push_back(4);}
+    mps0.Init(8*2,tmp,200);
+    for(auto i : mps0.data()) i.print_diagram();
+    
+    return 0;
 
     // testing Sparse:
     auto bdi = Bond(4,BD_KET,{{0},{-2},{+2},{0}});

@@ -66,6 +66,9 @@ namespace cytnx{
                 virtual void Init(const cytnx_uint64 &N, const std::vector<cytnx_uint64> &phys_dim, const cytnx_uint64 &virt_dim, const cytnx_int64 &dtype);
                 virtual void Init_Msector(const cytnx_uint64 &N, const std::vector<cytnx_uint64> &phys_dim, const cytnx_uint64 &virt_dim, const std::vector<cytnx_int64> &select, const cytnx_int64 &dtype);
                 // for finite MPS:
+                
+                //virtual void Init_prodstate(const std::vector<cytnx_uint64> &phys_dim, const cytnx_uint64 &virt_dim, const std::vector<std::vector<cytnx_int64> > &state_qnums, const cytnx_int64 &dtype);
+
                 virtual void Into_Lortho();
                 virtual void S_mvleft();
                 virtual void S_mvright();                
@@ -95,6 +98,9 @@ namespace cytnx{
                 cytnx_uint64 size(){return this->_TNs.size();};    
                 void Init(const cytnx_uint64 &N, const std::vector<cytnx_uint64> &phys_dim, const cytnx_uint64 &virt_dim, const cytnx_int64 &dtype);
                 void Init_Msector(const cytnx_uint64 &N, const std::vector<cytnx_uint64> &phys_dim, const cytnx_uint64 &virt_dim, const std::vector<cytnx_int64> &select, const cytnx_int64 &dtype);
+
+                //void Init_prodstate(const std::vector<cytnx_uint64> &phys_dim, const cytnx_uint64 &virt_dim, const std::vector<std::vector<cytnx_int64> >&state_qnums, const cytnx_int64 &dtype);
+
                 void Into_Lortho();
                 void S_mvleft();
                 void S_mvright();                
@@ -132,7 +138,9 @@ namespace cytnx{
                 void Init_Msector(const cytnx_uint64 &N, const std::vector<cytnx_uint64> &phys_dim, const cytnx_uint64 &virt_dim, const std::vector<cytnx_int64> &select, const cytnx_int64 &dtype){
                     cytnx_error_msg(true,"[ERROR][MPS][type=iMPS] cannot call Init_Msector%s","\n");
                 }
-                
+                //void Init_prodstate(const std::vector<cytnx_uint64> &phys_dim, const cytnx_uint64 &virt_dim, const std::vector<std::vector<cytnx_int64> > &state_qnums, const cytnx_int64 &dtype){
+                //    cytnx_error_msg(true,"[ERROR][MPS][type=iMPS] cannot call prodstate%s","\n");
+                //}
                 void Into_Lortho(){
                     cytnx_error_msg(true,"[ERROR][MPS][type=iMPS] cannot call Into_Lortho%s","\n");
                 }
@@ -226,6 +234,20 @@ namespace cytnx{
                     this->_impl->Init_Msector(N, vphys_dim, virt_dim, select, dtype);
                     return *this;
                 }
+                /*
+                MPS& Init_prodstate(const std::vector<cytnx_uint64> &vphys_dim, const cytnx_uint64 &virt_dim, const std::vector<std::vector<cytnx_int64> >&state_qnums, const cytnx_int64 &dtype=Type.Double, const cytnx_int64 &mps_type=0){
+                    // only the select phys index will have non-zero element.
+                    if(mps_type==0){
+                        this->_impl =boost::intrusive_ptr<MPS_impl>(new RegularMPS());
+                    }else if(mps_type==1){
+                        this->_impl =boost::intrusive_ptr<MPS_impl>(new iMPS());
+                    }else{
+                        cytnx_error_msg(true,"[ERROR] invalid MPS type.%s","\n");
+                    }
+                    this->_impl->Init_prodstate(vphys_dim, virt_dim, state_qnums, dtype);
+                    return *this;
+                }
+                */
 
                 cytnx_uint64 size(){
                     return this->_impl->size();

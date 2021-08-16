@@ -8,23 +8,52 @@
 namespace cytnx{
     namespace linalg{
         typedef Accessor ac;
-        std::vector<Tensor> Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U, const bool &is_vT){
+        std::vector<Tensor> Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, const bool &is_U, const bool &is_vT, const bool &return_err){
             
             std::vector<Tensor> tmps = Svd(Tin,is_U,is_vT);
                
             cytnx_uint64 id=0;
-            cytnx_error_msg(tmps[0].shape()[0] < keepdim,"[ERROR] keepdim should be <= the valid # of singular value, %d!\n",tmps[0].shape()[0]);
-
-            tmps[id] = tmps[id].get({ac::range(0,keepdim)});
+            cytnx_uint64 Kdim = keepdim;
             
-            if(is_U){
-                id++;
-                tmps[id] = tmps[id].get({ac::all(),ac::range(0,keepdim)});
+            Storage ts = tmps[0].storage();
+
+            if( ts.size() < keepdim ){
+                Kdim = ts.size();
             }
-            if(is_vT){
-                id++;
-                tmps[id] = tmps[id].get({ac::range(0,keepdim),ac::all()});
+
+            cytnx_uint64 truc_dim = Kdim;
+            for(cytnx_int64 i=Kdim-1;i<0;i--){
+                if(ts.at(i) < err){
+                    truc_dim--;
+                }else{
+                    break;
+                }                
             }
+
+            if(truc_dim==0){
+                truc_dim=1;
+            }
+            //cytnx_error_msg(tmps[0].shape()[0] < keepdim,"[ERROR] keepdim should be <= the valid # of singular value, %d!\n",tmps[0].shape()[0]);
+            Tensor terr({1},Type.Double);
+            
+            if(truc_dim != ts.size()){
+                terr = tmps[id](truc_dim);
+                tmps[id] = tmps[id].get({ac::range(0,truc_dim)});
+                
+                if(is_U){
+                    id++;
+                    tmps[id] = tmps[id].get({ac::all(),ac::range(0,truc_dim)});
+                }
+                if(is_vT){
+                    id++;
+                    tmps[id] = tmps[id].get({ac::range(0,truc_dim),ac::all()});
+                }
+
+                
+            }
+            if(return_err)
+                tmps.push_back(terr);
+
             return tmps;
         }            
     }
@@ -35,7 +64,7 @@ namespace cytnx{
     namespace linalg{
         using namespace std;
         typedef Accessor ac;
-        std::vector<cytnx::UniTensor> Svd_truncate(const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U, const bool &is_vT){
+        std::vector<cytnx::UniTensor> Svd_truncate(const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const double &err, const bool &is_U, const bool &is_vT, const bool &return_err){
 
             // using rowrank to split the bond to form a matrix.
             cytnx_error_msg((Tin.rowrank() < 1 || Tin.rank()==1),"[Svd][ERROR] Svd for DenseUniTensor should have rank>1 and rowrank>0%s","\n");

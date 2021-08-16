@@ -1804,12 +1804,12 @@ PYBIND11_MODULE(cytnx,m){
                             return cytnx::linalg::Svd(Tin,is_U,is_vT);
                           },py::arg("Tin"),py::arg("is_U")=true,py::arg("is_vT")=true);
 
-    m_linalg.def("Svd_truncate",[](const Tensor &Tin, const cytnx_uint64 &keepdim,const bool &is_U, const bool &is_vT){
-                                        return cytnx::linalg::Svd_truncate(Tin,keepdim,is_U,is_vT);
-                                   },py::arg("Tin"),py::arg("keepdim"),py::arg("is_U")=true,py::arg("is_vT")=true);
-    m_linalg.def("Svd_truncate",[](const UniTensor &Tin, const cytnx_uint64 &keepdim,const bool &is_U, const bool &is_vT){
-                                        return cytnx::linalg::Svd_truncate(Tin,keepdim,is_U,is_vT);
-                                   },py::arg("Tin"),py::arg("keepdim"),py::arg("is_U")=true,py::arg("is_vT")=true);
+    m_linalg.def("Svd_truncate",[](const Tensor &Tin, const cytnx_uint64 &keepdim, const cytnx_double &err, const bool &is_U, const bool &is_vT, const bool &return_err){
+                                        return cytnx::linalg::Svd_truncate(Tin,keepdim,err,is_U,is_vT,return_err);
+                                   },py::arg("Tin"),py::arg("keepdim"),py::arg("err")=double(0),py::arg("is_U")=true,py::arg("is_vT")=true,py::arg("return_err")=false);
+    m_linalg.def("Svd_truncate",[](const UniTensor &Tin, const cytnx_uint64 &keepdim, const cytnx_double &err, const bool &is_U, const bool &is_vT, const bool &return_err){
+                                        return cytnx::linalg::Svd_truncate(Tin,keepdim,err,is_U,is_vT,return_err);
+                                   },py::arg("Tin"),py::arg("keepdim"),py::arg("err")=0,py::arg("is_U")=true,py::arg("is_vT")=true,py::arg("return_err")=false);
 
     m_linalg.def("Eigh",&cytnx::linalg::Eigh,py::arg("Tin"),py::arg("is_V")=true,py::arg("row_v")=false);
     m_linalg.def("Eig",&cytnx::linalg::Eig,py::arg("Tin"),py::arg("is_V")=true,py::arg("row_v")=false);

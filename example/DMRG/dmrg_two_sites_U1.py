@@ -51,8 +51,8 @@ def optimize_psi(psivec, functArgs, maxit=2, krydim=4):
     return psivec, energy.item()
 
 ##### Set bond dimensions and simulation options
-chi = 100;
-Nsites = 32;
+chi = 48;
+Nsites = 16;
 numsweeps = 4 # number of DMRG sweeps
 maxit = 2 # iterations of Lanczos method
 krydim = 4 # dimension of Krylov subspace
@@ -121,11 +121,11 @@ else:
     cq = -1;
 qcntr+=cq
 
-A[0] = cytnx.UniTensor([VbdL,bd_phys.redirect(),cytnx.Bond(bd_phys.dim(),cytnx.BD_BRA,[[qcntr]]*bd_phys.dim())],rowrank=2)
+A[0] = cytnx.UniTensor([VbdL,bd_phys.redirect(),cytnx.Bond(1,cytnx.BD_BRA,[[qcntr]])],rowrank=2)
+A[0].get_block_()[0] = 1
 for k in range(1,Nsites):
     B1 = A[k-1].bonds()[2].redirect(); B2 = A[k-1].bonds()[1];
 
-    dim3 = min(min(chi, B1.dim() * d), d**(Nsites - k - 1))
     if qcntr <= q:
         cq = 1
     else:
@@ -133,11 +133,14 @@ for k in range(1,Nsites):
 
     qcntr+=cq
 
-    B3 = cytnx.Bond(dim3,cytnx.BD_BRA,[[qcntr]]*dim3)
+    B3 = cytnx.Bond(1,cytnx.BD_BRA,[[qcntr]])
 
     A[k] = cytnx.UniTensor([B1,B2,B3],rowrank=2)
     A[k].set_labels([2*k,2*k+1,2*k+2])
-    cytnx.random.Make_normal(A[k],0,1);
+
+    A[k].get_block_()[0] = 1
+
+    print(A[k])
 
 
 # Put in the left normalization form and calculate transfer matrices LR
@@ -163,16 +166,10 @@ anet.FromString(["L: -2;-1,-3",\
                  "A_Conj: 2;-3,-5",\
                  "TOUT: 0;1,2"])
 
-for p in range(Nsites - 1):
-    s, A[p] ,vt = cytnx.linalg.Svd(A[p])
-        
-    A[p+1] = cytnx.Contract(cytnx.Contract(s,vt),A[p+1])
-    A[p+1].set_rowrank(2)    
- 
+for p in range(Nsites - 1): 
     anet.PutUniTensors(["L","A","A_Conj","M"],[LR[p],A[p],A[p].Dagger(),M],is_clone=False);
     LR[p+1] = anet.Launch(optimal=True);
             
-_,A[-1] = cytnx.linalg.Svd(A[-1],is_U=True,is_vT=False) ## last one.
 
 
 ##checking:
@@ -191,8 +188,6 @@ def calMPS(As):
 
     return L.Trace().get_block_().item()
 
-#print(calMPS(A))
-#exit(1)
 
 ## DMRG sweep
 ## Now we are ready for sweeping procedure!

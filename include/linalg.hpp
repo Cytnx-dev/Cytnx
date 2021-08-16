@@ -76,7 +76,7 @@ namespace cytnx{
 
 
         std::vector<cytnx::UniTensor> Svd(const cytnx::UniTensor &Tin, const bool &is_U=true, const bool &is_vT=true);
-        std::vector<cytnx::UniTensor> Svd_truncate(const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U=true, const bool &is_vT=true);
+        std::vector<cytnx::UniTensor> Svd_truncate(const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const double &err=0, const bool &is_U=true, const bool &is_vT=true, const bool &return_err=false);
         std::vector<cytnx::UniTensor> Hosvd(const cytnx::UniTensor &Tin, const std::vector<cytnx_uint64> &mode, const bool &is_core=true, const bool &is_Ls=false,const std::vector<cytnx_int64> &trucate_dim=std::vector<cytnx_int64>());
 
         cytnx::UniTensor ExpH(const cytnx::UniTensor &Tin, const double &a=1, const double &b=0);
@@ -268,7 +268,7 @@ namespace cytnx{
 
         // Svd_truncate:
         //==================================================
-        std::vector<Tensor> Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,const bool &is_U=true, const bool &is_vT=true);
+        std::vector<Tensor> Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err=0, const bool &is_U=true, const bool &is_vT=true, const bool &return_err=false);
 
 
         // Hosvd:
