@@ -159,9 +159,7 @@ endif
 TESTPATH=tests
 
 
-all: test
-
-#dmrg_tfim dmrg_tfim2
+all: test dmrg_tfim
 
 
 #test: test.o $(ALLOBJS)
@@ -172,9 +170,9 @@ test: test.o libcytnx.so
 	$(CC) -L. -o $@ $< -fopenmp $(LDFLAGS) -lcytnx 
 	#export LD_LIBRARY_PATH=.
 
-#dmrg_tfim: dmrg_tfim.o libcytnx.so
-#	$(CC) -L. -o $@ $< -fopenmp $(LDFLAGS) -lcytnx 
-#	#export LD_LIBRARY_PATH=.
+dmrg_tfim: dmrg_tfim.o libcytnx.so
+	$(CC) -L. -o $@ $< -fopenmp $(LDFLAGS) -lcytnx 
+	#export LD_LIBRARY_PATH=.
 
 #dmrg_tfim2: dmrg_tfim2.o libcytnx.so
 #	$(CC) -L. -o $@ $< -fopenmp $(LDFLAGS) -lcytnx 
@@ -737,8 +735,8 @@ Lstsq.o: $(CytnxPATH)/src/linalg/Lstsq.cpp $(CytnxPATH)/include/linalg.hpp
 
 test.o: test.cpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-#dmrg_tfim.o: dmrg_tfim.cpp
-#	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+dmrg_tfim.o: dmrg_tfim.cpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 #dmrg_tfim2.o: dmrg_tfim2.cpp
 #	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 #ed_ising.o: ed_ising.cpp

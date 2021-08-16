@@ -94,6 +94,16 @@ Scalar run_DMRG(tn_algo::MPO &mpo, tn_algo::MPS &mps, int Nsweeps, std::vector<t
 
 int main(int argc, char *argv[]){
 
+    auto A = arange(1000).reshape(10,10,10);
+    auto B = UniTensor(A,1);
+    
+    auto out = linalg::Svd_truncate(B,5);
+
+    print(out);
+
+
+    return 0;
+    
     auto mps0 = tn_algo::MPS();
 
     std::vector<cytnx_uint64> tmp;

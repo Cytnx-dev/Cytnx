@@ -85,7 +85,9 @@ See The following user guide for install and using of cytnx:
     52. [New] Add UniTensor.Norm() 
     53. [New][experiment] add MPS.Init_Msector(), which initialize the state with specify total magnetization. 
     54. [Enhance] Add additional feature Svd_truncate with truncation_err (err) and return_err option for Ten
-    54. [Enhance] Add additional feature Svd_truncate with truncation_err (err) and return_err option for DUTen
+    55. [Enhance] Add additional feature Svd_truncate with truncation_err (err) and return_err option for DUTen
+    56. [Enhance] Add python dmrg example for using tn_algo  
+
 
     v0.7.3
     1. [Fix] bug for Get slice does not reduce when dim=1. 

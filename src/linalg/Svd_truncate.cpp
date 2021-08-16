@@ -348,7 +348,7 @@ namespace cytnx{
                //cytnx_error_msg(keepdim>outT[t].shape()[0],"[ERROR][Svd_truncate] keepdim should <= dimension of singular tensor%s","\n");
                 
                cytnx::UniTensor &Cy_S = outCyT[t];  
-               cytnx::Bond newBond(Cy_S.shape()[0]);
+               cytnx::Bond newBond(outT[0].shape()[0]);
                cytnx_int64 newlbl = -1;
                for(int i=0;i<oldlabel.size();i++){
                    if(oldlabel[i]<=newlbl) newlbl = oldlabel[i]-1;
