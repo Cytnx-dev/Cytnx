@@ -29,7 +29,7 @@
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.7.3</span>
+   &#160;<span id="projectnumber">v0.7.4</span>
    </div>
   </td>
  </tr>
@@ -86,6 +86,8 @@ $(function() {
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
 <code>#include &lt;cmath&gt;</code><br />
+<code>#include &lt;type_traits&gt;</code><br />
+<code>#include &lt;limits&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for Scalar.hpp:</div>
 <div class="dyncontent">
@@ -93,7 +95,7 @@ Include dependency graph for Scalar.hpp:</div>
 <map name="include_2Scalar_8hpp" id="include_2Scalar_8hpp">
 <area shape="rect" id="node2" href="Type_8hpp.html" title="Type.hpp" alt="" coords="448,80,524,107"/>
 <area shape="rect" id="node11" href="cytnx__error_8hpp.html" title="cytnx_error.hpp" alt="" coords="766,162,878,189"/>
-<area shape="rect" id="node18" href="intrusive__ptr__base_8hpp.html" title="intrusive_ptr_base.hpp" alt="" coords="977,80,1131,107"/>
+<area shape="rect" id="node18" href="intrusive__ptr__base_8hpp.html" title="intrusive_ptr_base.hpp" alt="" coords="953,80,1107,107"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -101,48 +103,48 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="Scalar_8hpp__dep__incl.png" border="0" usemap="#include_2Scalar_8hppdep" alt=""/></div>
 <map name="include_2Scalar_8hppdep" id="include_2Scalar_8hppdep">
-<area shape="rect" id="node2" href="Storage_8hpp.html" title="include/Storage.hpp" alt="" coords="1979,80,2116,107"/>
-<area shape="rect" id="node3" href="Tensor_8hpp.html" title="include/Tensor.hpp" alt="" coords="2856,155,2988,181"/>
-<area shape="rect" id="node4" href="algo_8hpp.html" title="include/algo.hpp" alt="" coords="2524,229,2640,256"/>
-<area shape="rect" id="node5" href="cytnx_8hpp.html" title="include/cytnx.hpp" alt="" coords="2450,468,2574,495"/>
-<area shape="rect" id="node6" href="UniTensor_8hpp.html" title="include/UniTensor.hpp" alt="" coords="3405,229,3557,256"/>
-<area shape="rect" id="node16" href="linalg_8hpp.html" title="include/linalg.hpp" alt="" coords="3252,311,3374,338"/>
-<area shape="rect" id="node27" href="LinOp_8hpp.html" title="include/LinOp.hpp" alt="" coords="2716,229,2843,256"/>
-<area shape="rect" id="node38" href="Scalar_8cpp.html" title="src/Scalar.cpp" alt="" coords="3169,155,3276,181"/>
-<area shape="rect" id="node15" href="Physics_8cpp.html" title="src/Physics.cpp" alt="" coords="2776,393,2892,420"/>
-<area shape="rect" id="node18" href="Generator_8cpp.html" title="src/Generator.cpp" alt="" coords="2626,393,2752,420"/>
-<area shape="rect" id="node26" href="stat_8hpp.html" title="include/stat.hpp" alt="" coords="2334,229,2449,256"/>
-<area shape="rect" id="node29" href="random_8hpp.html" title="include/random.hpp" alt="" coords="2175,229,2310,256"/>
-<area shape="rect" id="node30" href="BoolStorage_8cpp.html" title="src/BoolStorage.cpp" alt="" coords="111,155,251,181"/>
-<area shape="rect" id="node31" href="ComplexDoubleStorage_8cpp.html" title="src/ComplexDoubleStorage.cpp" alt="" coords="275,155,482,181"/>
-<area shape="rect" id="node32" href="ComplexFloatStorage_8cpp.html" title="src/ComplexFloatStorage.cpp" alt="" coords="506,155,701,181"/>
-<area shape="rect" id="node33" href="DoubleStorage_8cpp.html" title="src/DoubleStorage.cpp" alt="" coords="725,155,880,181"/>
-<area shape="rect" id="node34" href="FloatStorage_8cpp.html" title="src/FloatStorage.cpp" alt="" coords="904,155,1047,181"/>
-<area shape="rect" id="node35" href="Int16Storage_8cpp.html" title="src/Int16Storage.cpp" alt="" coords="1071,155,1214,181"/>
-<area shape="rect" id="node36" href="Int32Storage_8cpp.html" title="src/Int32Storage.cpp" alt="" coords="1238,155,1380,181"/>
-<area shape="rect" id="node37" href="Int64Storage_8cpp.html" title="src/Int64Storage.cpp" alt="" coords="1404,155,1547,181"/>
-<area shape="rect" id="node39" href="Storage_8cpp.html" title="src/Storage.cpp" alt="" coords="1572,155,1686,181"/>
-<area shape="rect" id="node40" href="Storage__base_8cpp.html" title="src/Storage_base.cpp" alt="" coords="1710,155,1860,181"/>
-<area shape="rect" id="node41" href="Uint16Storage_8cpp.html" title="src/Uint16Storage.cpp" alt="" coords="1884,155,2036,181"/>
-<area shape="rect" id="node42" href="Uint32Storage_8cpp.html" title="src/Uint32Storage.cpp" alt="" coords="2060,155,2212,181"/>
-<area shape="rect" id="node43" href="Uint64Storage_8cpp.html" title="src/Uint64Storage.cpp" alt="" coords="2236,155,2388,181"/>
-<area shape="rect" id="node14" href="Physics_8hpp.html" title="include/Physics.hpp" alt="" coords="2988,311,3126,338"/>
-<area shape="rect" id="node20" href="Tensor_8cpp.html" title="src/Tensor.cpp" alt="" coords="3162,393,3272,420"/>
-<area shape="rect" id="node22" href="UniTensor__base_8cpp.html" title="src/UniTensor_base.cpp" alt="" coords="3846,393,4010,420"/>
-<area shape="rect" id="node25" href="Generator_8hpp.html" title="include/Generator.hpp" alt="" coords="2814,311,2964,338"/>
-<area shape="rect" id="node28" href="LinOp_8cpp.html" title="src/LinOp.cpp" alt="" coords="2636,311,2739,338"/>
-<area shape="rect" id="node7" href="contraction__tree_8hpp.html" title="include/contraction\l_tree.hpp" alt="" coords="4040,304,4170,345"/>
-<area shape="rect" id="node8" href="Network_8hpp.html" title="include/Network.hpp" alt="" coords="4034,393,4176,420"/>
-<area shape="rect" id="node17" href="DenseUniTensor_8cpp.html" title="src/DenseUniTensor.cpp" alt="" coords="3398,393,3564,420"/>
-<area shape="rect" id="node19" href="SparseUniTensor_8cpp.html" title="src/SparseUniTensor.cpp" alt="" coords="2968,393,3138,420"/>
-<area shape="rect" id="node21" href="UniTensor_8cpp.html" title="src/UniTensor.cpp" alt="" coords="3640,393,3770,420"/>
-<area shape="rect" id="node23" href="search__tree_8hpp.html" title="include/search_tree.hpp" alt="" coords="4400,311,4560,338"/>
-<area shape="rect" id="node13" href="contraction__tree_8cpp.html" title="src/contraction_tree.cpp" alt="" coords="4224,393,4386,420"/>
-<area shape="rect" id="node9" href="FermionNetwork_8cpp.html" title="src/FermionNetwork.cpp" alt="" coords="4022,468,4188,495"/>
-<area shape="rect" id="node10" href="Network_8cpp.html" title="src/Network.cpp" alt="" coords="3342,468,3460,495"/>
-<area shape="rect" id="node11" href="Network__base_8cpp.html" title="src/Network_base.cpp" alt="" coords="3684,468,3838,495"/>
-<area shape="rect" id="node12" href="RegularNetwork_8cpp.html" title="src/RegularNetwork.cpp" alt="" coords="4358,468,4521,495"/>
-<area shape="rect" id="node24" href="search__tree_8cpp.html" title="src/search_tree.cpp" alt="" coords="4411,393,4548,420"/>
+<area shape="rect" id="node2" href="Storage_8hpp.html" title="include/Storage.hpp" alt="" coords="1545,80,1682,107"/>
+<area shape="rect" id="node3" href="Tensor_8hpp.html" title="include/Tensor.hpp" alt="" coords="2699,155,2831,181"/>
+<area shape="rect" id="node4" href="algo_8hpp.html" title="include/algo.hpp" alt="" coords="843,229,959,256"/>
+<area shape="rect" id="node5" href="cytnx_8hpp.html" title="include/cytnx.hpp" alt="" coords="1466,468,1590,495"/>
+<area shape="rect" id="node6" href="UniTensor_8hpp.html" title="include/UniTensor.hpp" alt="" coords="2569,229,2721,256"/>
+<area shape="rect" id="node16" href="linalg_8hpp.html" title="include/linalg.hpp" alt="" coords="2811,393,2933,420"/>
+<area shape="rect" id="node23" href="LinOp_8hpp.html" title="include/LinOp.hpp" alt="" coords="2683,311,2810,338"/>
+<area shape="rect" id="node38" href="Scalar_8cpp.html" title="src/Scalar.cpp" alt="" coords="2957,155,3064,181"/>
+<area shape="rect" id="node15" href="Physics_8cpp.html" title="src/Physics.cpp" alt="" coords="1638,468,1754,495"/>
+<area shape="rect" id="node18" href="Generator_8cpp.html" title="src/Generator.cpp" alt="" coords="1778,468,1905,495"/>
+<area shape="rect" id="node25" href="random_8hpp.html" title="include/random.hpp" alt="" coords="1617,311,1751,338"/>
+<area shape="rect" id="node29" href="stat_8hpp.html" title="include/stat.hpp" alt="" coords="1319,229,1433,256"/>
+<area shape="rect" id="node30" href="BoolStorage_8cpp.html" title="src/BoolStorage.cpp" alt="" coords="1086,155,1226,181"/>
+<area shape="rect" id="node31" href="ComplexDoubleStorage_8cpp.html" title="src/ComplexDoubleStorage.cpp" alt="" coords="1250,155,1457,181"/>
+<area shape="rect" id="node32" href="ComplexFloatStorage_8cpp.html" title="src/ComplexFloatStorage.cpp" alt="" coords="1583,155,1777,181"/>
+<area shape="rect" id="node33" href="DoubleStorage_8cpp.html" title="src/DoubleStorage.cpp" alt="" coords="1801,155,1956,181"/>
+<area shape="rect" id="node34" href="FloatStorage_8cpp.html" title="src/FloatStorage.cpp" alt="" coords="1981,155,2123,181"/>
+<area shape="rect" id="node35" href="Int16Storage_8cpp.html" title="src/Int16Storage.cpp" alt="" coords="2147,155,2290,181"/>
+<area shape="rect" id="node36" href="Int32Storage_8cpp.html" title="src/Int32Storage.cpp" alt="" coords="2314,155,2457,181"/>
+<area shape="rect" id="node37" href="Int64Storage_8cpp.html" title="src/Int64Storage.cpp" alt="" coords="2481,155,2623,181"/>
+<area shape="rect" id="node39" href="Storage_8cpp.html" title="src/Storage.cpp" alt="" coords="93,155,208,181"/>
+<area shape="rect" id="node40" href="Storage__base_8cpp.html" title="src/Storage_base.cpp" alt="" coords="232,155,381,181"/>
+<area shape="rect" id="node41" href="Uint16Storage_8cpp.html" title="src/Uint16Storage.cpp" alt="" coords="405,155,557,181"/>
+<area shape="rect" id="node42" href="Uint32Storage_8cpp.html" title="src/Uint32Storage.cpp" alt="" coords="581,155,733,181"/>
+<area shape="rect" id="node43" href="Uint64Storage_8cpp.html" title="src/Uint64Storage.cpp" alt="" coords="757,155,909,181"/>
+<area shape="rect" id="node14" href="Physics_8hpp.html" title="include/Physics.hpp" alt="" coords="1776,311,1915,338"/>
+<area shape="rect" id="node20" href="Tensor_8cpp.html" title="src/Tensor.cpp" alt="" coords="3355,468,3464,495"/>
+<area shape="rect" id="node22" href="UniTensor__base_8cpp.html" title="src/UniTensor_base.cpp" alt="" coords="3166,468,3330,495"/>
+<area shape="rect" id="node24" href="LinOp_8cpp.html" title="src/LinOp.cpp" alt="" coords="2683,393,2786,420"/>
+<area shape="rect" id="node28" href="Generator_8hpp.html" title="include/Generator.hpp" alt="" coords="1819,393,1968,420"/>
+<area shape="rect" id="node7" href="contraction__tree_8hpp.html" title="include/contraction\l_tree.hpp" alt="" coords="2376,304,2507,345"/>
+<area shape="rect" id="node8" href="Network_8hpp.html" title="include/Network.hpp" alt="" coords="2392,393,2533,420"/>
+<area shape="rect" id="node17" href="DenseUniTensor_8cpp.html" title="src/DenseUniTensor.cpp" alt="" coords="2306,468,2473,495"/>
+<area shape="rect" id="node19" href="SparseUniTensor_8cpp.html" title="src/SparseUniTensor.cpp" alt="" coords="2497,468,2668,495"/>
+<area shape="rect" id="node21" href="UniTensor_8cpp.html" title="src/UniTensor.cpp" alt="" coords="3013,468,3142,495"/>
+<area shape="rect" id="node26" href="search__tree_8hpp.html" title="include/search_tree.hpp" alt="" coords="2088,311,2248,338"/>
+<area shape="rect" id="node13" href="contraction__tree_8cpp.html" title="src/contraction_tree.cpp" alt="" coords="2205,393,2368,420"/>
+<area shape="rect" id="node9" href="FermionNetwork_8cpp.html" title="src/FermionNetwork.cpp" alt="" coords="2116,468,2281,495"/>
+<area shape="rect" id="node10" href="Network_8cpp.html" title="src/Network.cpp" alt="" coords="2693,468,2811,495"/>
+<area shape="rect" id="node11" href="Network__base_8cpp.html" title="src/Network_base.cpp" alt="" coords="2835,468,2989,495"/>
+<area shape="rect" id="node12" href="RegularNetwork_8cpp.html" title="src/RegularNetwork.cpp" alt="" coords="1929,468,2092,495"/>
+<area shape="rect" id="node27" href="search__tree_8cpp.html" title="src/search_tree.cpp" alt="" coords="1993,393,2130,420"/>
 </map>
 </div>
 </div>
@@ -160,184 +162,28 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a9551ec1f971f26148ca974ea1e13bfb7"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a9551ec1f971f26148ca974ea1e13bfb7">cytnx::operator+</a> (const cytnx_complex128 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a9551ec1f971f26148ca974ea1e13bfb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed4a001a8161cbe2d5bc0780dc2e8475"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#aed4a001a8161cbe2d5bc0780dc2e8475">cytnx::operator+</a> (const cytnx_complex64 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:aed4a001a8161cbe2d5bc0780dc2e8475"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e5b6bd8acb0cc83853b385cc92ea65a"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a9e5b6bd8acb0cc83853b385cc92ea65a">cytnx::operator+</a> (const cytnx_double &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a9e5b6bd8acb0cc83853b385cc92ea65a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28a350d131490025f267b29f1eb01d8d"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a28a350d131490025f267b29f1eb01d8d">cytnx::operator+</a> (const cytnx_float &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a28a350d131490025f267b29f1eb01d8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef9a828ec0e9da4d279a662fe832902b"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#aef9a828ec0e9da4d279a662fe832902b">cytnx::operator+</a> (const cytnx_uint64 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:aef9a828ec0e9da4d279a662fe832902b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abeb0eb3d2c313902b33ff99352b7e2a9"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#abeb0eb3d2c313902b33ff99352b7e2a9">cytnx::operator+</a> (const cytnx_int64 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:abeb0eb3d2c313902b33ff99352b7e2a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06dfc1ef7c99042aedaf75a106904295"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a06dfc1ef7c99042aedaf75a106904295">cytnx::operator+</a> (const cytnx_uint32 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a06dfc1ef7c99042aedaf75a106904295"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a636f0f6b15ec4208adb1183a564fe9b3"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a636f0f6b15ec4208adb1183a564fe9b3">cytnx::operator+</a> (const cytnx_int32 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a636f0f6b15ec4208adb1183a564fe9b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad963cbfaf0ddcf3764aeb0490d40a98c"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#ad963cbfaf0ddcf3764aeb0490d40a98c">cytnx::operator+</a> (const cytnx_uint16 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:ad963cbfaf0ddcf3764aeb0490d40a98c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a727104082a7fde8333076183f5563370"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a727104082a7fde8333076183f5563370">cytnx::operator+</a> (const cytnx_int16 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a727104082a7fde8333076183f5563370"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a162686e8910328c4d70cdd47df066115"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a162686e8910328c4d70cdd47df066115">cytnx::operator+</a> (const cytnx_bool &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a162686e8910328c4d70cdd47df066115"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5fcaf430a3358b2ec6ef09601b5f33e0"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a5fcaf430a3358b2ec6ef09601b5f33e0">cytnx::operator*</a> (const cytnx_complex128 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a5fcaf430a3358b2ec6ef09601b5f33e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1abe3839a502984563ab9d829fa9f189"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a1abe3839a502984563ab9d829fa9f189">cytnx::operator*</a> (const cytnx_complex64 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a1abe3839a502984563ab9d829fa9f189"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e122495a4db77041185adb033076b7e"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a0e122495a4db77041185adb033076b7e">cytnx::operator*</a> (const cytnx_double &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a0e122495a4db77041185adb033076b7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab457f33f4329d4123dd416c13999bd5a"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#ab457f33f4329d4123dd416c13999bd5a">cytnx::operator*</a> (const cytnx_float &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:ab457f33f4329d4123dd416c13999bd5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a558b14383a47ddbe212bb040875b39a8"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a558b14383a47ddbe212bb040875b39a8">cytnx::operator*</a> (const cytnx_uint64 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a558b14383a47ddbe212bb040875b39a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a005f2e7fe72d5c8c6d73878f28884364"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a005f2e7fe72d5c8c6d73878f28884364">cytnx::operator*</a> (const cytnx_int64 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a005f2e7fe72d5c8c6d73878f28884364"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22baf7af628907321aa7fc38da1dfeff"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a22baf7af628907321aa7fc38da1dfeff">cytnx::operator*</a> (const cytnx_uint32 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a22baf7af628907321aa7fc38da1dfeff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a033c6da1936c4dfde1fe0814176d145b"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a033c6da1936c4dfde1fe0814176d145b">cytnx::operator*</a> (const cytnx_int32 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a033c6da1936c4dfde1fe0814176d145b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a6873a809a504ca564464009602c711"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a0a6873a809a504ca564464009602c711">cytnx::operator*</a> (const cytnx_uint16 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a0a6873a809a504ca564464009602c711"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3c2bd4f7919c6180f9e88e571b90926"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#aa3c2bd4f7919c6180f9e88e571b90926">cytnx::operator*</a> (const cytnx_int16 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:aa3c2bd4f7919c6180f9e88e571b90926"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a94d4fdd07c622e10dc17f7c020dac9"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a5a94d4fdd07c622e10dc17f7c020dac9">cytnx::operator*</a> (const cytnx_bool &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a5a94d4fdd07c622e10dc17f7c020dac9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac9490323632fa8375ba9cf08b1d2d956"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#ac9490323632fa8375ba9cf08b1d2d956">cytnx::operator-</a> (const cytnx_complex128 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:ac9490323632fa8375ba9cf08b1d2d956"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd823e7806625d1dc3024353717c236d"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#acd823e7806625d1dc3024353717c236d">cytnx::operator-</a> (const cytnx_complex64 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:acd823e7806625d1dc3024353717c236d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86515fcba793d9098ae38f5b36469650"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a86515fcba793d9098ae38f5b36469650">cytnx::operator-</a> (const cytnx_double &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a86515fcba793d9098ae38f5b36469650"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb8d4e50bcf127ff1fa650a1c7f15b3b"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#acb8d4e50bcf127ff1fa650a1c7f15b3b">cytnx::operator-</a> (const cytnx_float &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:acb8d4e50bcf127ff1fa650a1c7f15b3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7ee26f9c61ef433a9cb391c3273959bf"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a7ee26f9c61ef433a9cb391c3273959bf">cytnx::operator-</a> (const cytnx_uint64 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a7ee26f9c61ef433a9cb391c3273959bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1ede487b1a87ad522cffe35d2566c6a"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#af1ede487b1a87ad522cffe35d2566c6a">cytnx::operator-</a> (const cytnx_int64 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:af1ede487b1a87ad522cffe35d2566c6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac02a1fc32ad9003ada2306d31242ebf4"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#ac02a1fc32ad9003ada2306d31242ebf4">cytnx::operator-</a> (const cytnx_uint32 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:ac02a1fc32ad9003ada2306d31242ebf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af70a29018b9b8c4c5cb4e4517550e1a6"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#af70a29018b9b8c4c5cb4e4517550e1a6">cytnx::operator-</a> (const cytnx_int32 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:af70a29018b9b8c4c5cb4e4517550e1a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af70b0c066eda9592957b68c645f67c87"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#af70b0c066eda9592957b68c645f67c87">cytnx::operator-</a> (const cytnx_uint16 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:af70b0c066eda9592957b68c645f67c87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a40e24e18f30f6ee5ceabda68a0be4205"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a40e24e18f30f6ee5ceabda68a0be4205">cytnx::operator-</a> (const cytnx_int16 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a40e24e18f30f6ee5ceabda68a0be4205"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa4891e068afd2b2106bbad0524ec648f"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#aa4891e068afd2b2106bbad0524ec648f">cytnx::operator-</a> (const cytnx_bool &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:aa4891e068afd2b2106bbad0524ec648f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71bf16aa682ac72ecfc07c76fdb8985d"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a71bf16aa682ac72ecfc07c76fdb8985d">cytnx::operator/</a> (const cytnx_complex128 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a71bf16aa682ac72ecfc07c76fdb8985d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7aa43380a935fb82bd422037d637de7"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#aa7aa43380a935fb82bd422037d637de7">cytnx::operator/</a> (const cytnx_complex64 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:aa7aa43380a935fb82bd422037d637de7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30778d112573d29ab7eafb1d0a158bd1"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a30778d112573d29ab7eafb1d0a158bd1">cytnx::operator/</a> (const cytnx_double &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a30778d112573d29ab7eafb1d0a158bd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a172394cdd978e39c930b1acac5574b89"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a172394cdd978e39c930b1acac5574b89">cytnx::operator/</a> (const cytnx_float &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a172394cdd978e39c930b1acac5574b89"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a58a055ab63abb4b744602509e7357cd8"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a58a055ab63abb4b744602509e7357cd8">cytnx::operator/</a> (const cytnx_uint64 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a58a055ab63abb4b744602509e7357cd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6320ea81fc39e3897df104d4462365d8"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a6320ea81fc39e3897df104d4462365d8">cytnx::operator/</a> (const cytnx_int64 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a6320ea81fc39e3897df104d4462365d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5747df307a17ab53639f6ed0a2e402c"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#ac5747df307a17ab53639f6ed0a2e402c">cytnx::operator/</a> (const cytnx_uint32 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:ac5747df307a17ab53639f6ed0a2e402c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc43d91ee2690a67a0846b00c87a7394"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#afc43d91ee2690a67a0846b00c87a7394">cytnx::operator/</a> (const cytnx_int32 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:afc43d91ee2690a67a0846b00c87a7394"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1cafaa264aa08088b7788fd3fe22aff"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#ae1cafaa264aa08088b7788fd3fe22aff">cytnx::operator/</a> (const cytnx_uint16 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:ae1cafaa264aa08088b7788fd3fe22aff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43aa64e1d2ba66eccc519d66d1ba80cc"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a43aa64e1d2ba66eccc519d66d1ba80cc">cytnx::operator/</a> (const cytnx_int16 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a43aa64e1d2ba66eccc519d66d1ba80cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7171852881b4288b33fa71ed942c5776"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a7171852881b4288b33fa71ed942c5776">cytnx::operator/</a> (const cytnx_bool &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a7171852881b4288b33fa71ed942c5776"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a87f283d37c058fec64713ea04015b4fc"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a87f283d37c058fec64713ea04015b4fc">cytnx::operator&lt;</a> (const cytnx_complex128 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a87f283d37c058fec64713ea04015b4fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0e0cabbf140867929aefa2bd7d82279"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#aa0e0cabbf140867929aefa2bd7d82279">cytnx::operator&lt;</a> (const cytnx_complex64 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:aa0e0cabbf140867929aefa2bd7d82279"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96e56bfe53928bfab3167be603025f60"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a96e56bfe53928bfab3167be603025f60">cytnx::operator&lt;</a> (const cytnx_double &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a96e56bfe53928bfab3167be603025f60"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a76ce2da012f123136926b53e114cf5"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a0a76ce2da012f123136926b53e114cf5">cytnx::operator&lt;</a> (const cytnx_float &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a0a76ce2da012f123136926b53e114cf5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0503a34a82c6946c38533db149cb04a3"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a0503a34a82c6946c38533db149cb04a3">cytnx::operator&lt;</a> (const cytnx_uint64 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a0503a34a82c6946c38533db149cb04a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa66680b201e5d2811f83097107917f1a"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#aa66680b201e5d2811f83097107917f1a">cytnx::operator&lt;</a> (const cytnx_int64 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:aa66680b201e5d2811f83097107917f1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1c6bb32a430613479297a9654581bce"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#af1c6bb32a430613479297a9654581bce">cytnx::operator&lt;</a> (const cytnx_uint32 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:af1c6bb32a430613479297a9654581bce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a243c397d35479315ab4fa667b0f6d774"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a243c397d35479315ab4fa667b0f6d774">cytnx::operator&lt;</a> (const cytnx_int32 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a243c397d35479315ab4fa667b0f6d774"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbb965a193c563e5648e2f0a9129906a"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#abbb965a193c563e5648e2f0a9129906a">cytnx::operator&lt;</a> (const cytnx_uint16 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:abbb965a193c563e5648e2f0a9129906a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa62869ac31d546534736f81db24af274"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#aa62869ac31d546534736f81db24af274">cytnx::operator&lt;</a> (const cytnx_int16 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:aa62869ac31d546534736f81db24af274"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d853a5c20b9c21d4afcf1c6037ba233"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a4d853a5c20b9c21d4afcf1c6037ba233">cytnx::operator&lt;</a> (const cytnx_bool &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a4d853a5c20b9c21d4afcf1c6037ba233"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f9fa6e3b236ffbd288b1f9393d153db"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a6f9fa6e3b236ffbd288b1f9393d153db">cytnx::operator&gt;</a> (const cytnx_complex128 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a6f9fa6e3b236ffbd288b1f9393d153db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c6e22262108a21256cc456d257752b4"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a3c6e22262108a21256cc456d257752b4">cytnx::operator&gt;</a> (const cytnx_complex64 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a3c6e22262108a21256cc456d257752b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af7777d837ed78542a043473467345069"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#af7777d837ed78542a043473467345069">cytnx::operator&gt;</a> (const cytnx_double &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:af7777d837ed78542a043473467345069"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96c07af3b928d957df447f44e4ed9743"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a96c07af3b928d957df447f44e4ed9743">cytnx::operator&gt;</a> (const cytnx_float &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a96c07af3b928d957df447f44e4ed9743"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5957fc0d8c495bd2d1d797ffe85bd7bd"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a5957fc0d8c495bd2d1d797ffe85bd7bd">cytnx::operator&gt;</a> (const cytnx_uint64 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a5957fc0d8c495bd2d1d797ffe85bd7bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5085faaf4159e963efb88c4aff189bdd"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a5085faaf4159e963efb88c4aff189bdd">cytnx::operator&gt;</a> (const cytnx_int64 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a5085faaf4159e963efb88c4aff189bdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a2af6627aea2048ce83fc769a02cf94"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a7a2af6627aea2048ce83fc769a02cf94">cytnx::operator&gt;</a> (const cytnx_uint32 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a7a2af6627aea2048ce83fc769a02cf94"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a01874a045b1b1aef1648c42dc8371911"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a01874a045b1b1aef1648c42dc8371911">cytnx::operator&gt;</a> (const cytnx_int32 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a01874a045b1b1aef1648c42dc8371911"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3bb8b536096ebbd0d0a4a0dd7fbf3fa"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#ac3bb8b536096ebbd0d0a4a0dd7fbf3fa">cytnx::operator&gt;</a> (const cytnx_uint16 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:ac3bb8b536096ebbd0d0a4a0dd7fbf3fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d4c1eaf820ec6b354d486c9a601d968"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a9d4c1eaf820ec6b354d486c9a601d968">cytnx::operator&gt;</a> (const cytnx_int16 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a9d4c1eaf820ec6b354d486c9a601d968"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a2ac641c509a7a3e6f305a2562bb43f"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a8a2ac641c509a7a3e6f305a2562bb43f">cytnx::operator&gt;</a> (const cytnx_bool &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a8a2ac641c509a7a3e6f305a2562bb43f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a694a790fda58b0157f3be3a098df5a03"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a694a790fda58b0157f3be3a098df5a03">cytnx::operator&lt;=</a> (const cytnx_complex128 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a694a790fda58b0157f3be3a098df5a03"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06ea87ff45ae359fa27bccf49408fd96"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a06ea87ff45ae359fa27bccf49408fd96">cytnx::operator&lt;=</a> (const cytnx_complex64 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a06ea87ff45ae359fa27bccf49408fd96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a76cba182e39a46082fa6299cae749280"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a76cba182e39a46082fa6299cae749280">cytnx::operator&lt;=</a> (const cytnx_double &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a76cba182e39a46082fa6299cae749280"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab8ae0ff2c6e97ced2f49263af1ef9d5b"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#ab8ae0ff2c6e97ced2f49263af1ef9d5b">cytnx::operator&lt;=</a> (const cytnx_float &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:ab8ae0ff2c6e97ced2f49263af1ef9d5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93ceb3e6b45465fde09df8cf251c9b24"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a93ceb3e6b45465fde09df8cf251c9b24">cytnx::operator&lt;=</a> (const cytnx_uint64 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a93ceb3e6b45465fde09df8cf251c9b24"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae5459d6bc76c16e10e821ff4f967207f"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#ae5459d6bc76c16e10e821ff4f967207f">cytnx::operator&lt;=</a> (const cytnx_int64 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:ae5459d6bc76c16e10e821ff4f967207f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7894fd92d4dc7a283208cb562b9116a"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#ae7894fd92d4dc7a283208cb562b9116a">cytnx::operator&lt;=</a> (const cytnx_uint32 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:ae7894fd92d4dc7a283208cb562b9116a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69b1e44c5c3664f631e9c886fa7b2388"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a69b1e44c5c3664f631e9c886fa7b2388">cytnx::operator&lt;=</a> (const cytnx_int32 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a69b1e44c5c3664f631e9c886fa7b2388"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60269bba62d42efab796278d2d39f1a4"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a60269bba62d42efab796278d2d39f1a4">cytnx::operator&lt;=</a> (const cytnx_uint16 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a60269bba62d42efab796278d2d39f1a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a901ba90e4584280875f6447897a8d47e"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a901ba90e4584280875f6447897a8d47e">cytnx::operator&lt;=</a> (const cytnx_int16 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a901ba90e4584280875f6447897a8d47e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0bbb81d84e07cfb483903d3964fe4c16"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a0bbb81d84e07cfb483903d3964fe4c16">cytnx::operator&lt;=</a> (const cytnx_bool &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a0bbb81d84e07cfb483903d3964fe4c16"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf810d5c996182bd60feda99ccb7cfdd"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#adf810d5c996182bd60feda99ccb7cfdd">cytnx::operator&gt;=</a> (const cytnx_complex128 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:adf810d5c996182bd60feda99ccb7cfdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6655fd31b296b09ca2a3732bd75de9e"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#ad6655fd31b296b09ca2a3732bd75de9e">cytnx::operator&gt;=</a> (const cytnx_complex64 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:ad6655fd31b296b09ca2a3732bd75de9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abee356de74b6f242fa42938a0c791427"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#abee356de74b6f242fa42938a0c791427">cytnx::operator&gt;=</a> (const cytnx_double &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:abee356de74b6f242fa42938a0c791427"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7421861dd0ed97ac7c11170e114dc46"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#aa7421861dd0ed97ac7c11170e114dc46">cytnx::operator&gt;=</a> (const cytnx_float &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:aa7421861dd0ed97ac7c11170e114dc46"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1049c40b4df6852fba7c2a9585cdf1ad"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a1049c40b4df6852fba7c2a9585cdf1ad">cytnx::operator&gt;=</a> (const cytnx_uint64 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a1049c40b4df6852fba7c2a9585cdf1ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac83d763c5b3c878a0d5982b9915c818e"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#ac83d763c5b3c878a0d5982b9915c818e">cytnx::operator&gt;=</a> (const cytnx_int64 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:ac83d763c5b3c878a0d5982b9915c818e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0901ec7a34732e2ac641d14fc09eb740"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a0901ec7a34732e2ac641d14fc09eb740">cytnx::operator&gt;=</a> (const cytnx_uint32 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a0901ec7a34732e2ac641d14fc09eb740"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac83bc016917b4bfbbea736ca19209269"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#ac83bc016917b4bfbbea736ca19209269">cytnx::operator&gt;=</a> (const cytnx_int32 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:ac83bc016917b4bfbbea736ca19209269"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6631f3326859a868aa1c270a3f0912e8"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a6631f3326859a868aa1c270a3f0912e8">cytnx::operator&gt;=</a> (const cytnx_uint16 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a6631f3326859a868aa1c270a3f0912e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e59b7a1e87fe0658101dde84323a7a8"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a5e59b7a1e87fe0658101dde84323a7a8">cytnx::operator&gt;=</a> (const cytnx_int16 &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a5e59b7a1e87fe0658101dde84323a7a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41956d411d41dead2b536aa260aadf7b"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a41956d411d41dead2b536aa260aadf7b">cytnx::operator&gt;=</a> (const cytnx_bool &amp;lc, const Scalar &amp;rs)</td></tr>
-<tr class="separator:a41956d411d41dead2b536aa260aadf7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3e1596914f6983513861ad4cbdf9375"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#ab3e1596914f6983513861ad4cbdf9375">cytnx::operator+</a> (const Scalar &amp;lc, const Scalar &amp;rs)</td></tr>
+<tr class="separator:ab3e1596914f6983513861ad4cbdf9375"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32fd545c2269420805699131bd9e7d82"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a32fd545c2269420805699131bd9e7d82">cytnx::operator*</a> (const Scalar &amp;lc, const Scalar &amp;rs)</td></tr>
+<tr class="separator:a32fd545c2269420805699131bd9e7d82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a270d4e987bdfcdfc90871ab735e35c46"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a270d4e987bdfcdfc90871ab735e35c46">cytnx::operator-</a> (const Scalar &amp;lc, const Scalar &amp;rs)</td></tr>
+<tr class="separator:a270d4e987bdfcdfc90871ab735e35c46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d9c5d30b5831c4468056ee0d726b4d5"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a0d9c5d30b5831c4468056ee0d726b4d5">cytnx::operator/</a> (const Scalar &amp;lc, const Scalar &amp;rs)</td></tr>
+<tr class="separator:a0d9c5d30b5831c4468056ee0d726b4d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb17e2be3db0a7224fee92b5b543c088"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#afb17e2be3db0a7224fee92b5b543c088">cytnx::operator&lt;</a> (const Scalar &amp;lc, const Scalar &amp;rs)</td></tr>
+<tr class="separator:afb17e2be3db0a7224fee92b5b543c088"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6e0c219f4b50c2844d62f63fac1affc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#ad6e0c219f4b50c2844d62f63fac1affc">cytnx::operator&gt;</a> (const Scalar &amp;lc, const Scalar &amp;rs)</td></tr>
+<tr class="separator:ad6e0c219f4b50c2844d62f63fac1affc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16317e70d05cc2706e7b84837faa018d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a16317e70d05cc2706e7b84837faa018d">cytnx::operator&lt;=</a> (const Scalar &amp;lc, const Scalar &amp;rs)</td></tr>
+<tr class="separator:a16317e70d05cc2706e7b84837faa018d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae78daf24cc5955bcfda5a25b5a690487"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#ae78daf24cc5955bcfda5a25b5a690487">cytnx::operator&gt;=</a> (const Scalar &amp;lc, const Scalar &amp;rs)</td></tr>
+<tr class="separator:ae78daf24cc5955bcfda5a25b5a690487"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfc9a1fc4e97169e485b9356928cb46e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#abfc9a1fc4e97169e485b9356928cb46e">cytnx::operator==</a> (const Scalar &amp;lc, const Scalar &amp;rs)</td></tr>
+<tr class="separator:abfc9a1fc4e97169e485b9356928cb46e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a62c2a328de7efd4452227616e4be8f38"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a62c2a328de7efd4452227616e4be8f38">cytnx::abs</a> (const Scalar &amp;c)</td></tr>
 <tr class="separator:a62c2a328de7efd4452227616e4be8f38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1e694c13734841c105386c34d635aca"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#ad1e694c13734841c105386c34d635aca">cytnx::sqrt</a> (const Scalar &amp;c)</td></tr>
+<tr class="separator:ad1e694c13734841c105386c34d635aca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a08874470d7cb6bbd3f3bc031403e7e00"><td class="memItemLeft" align="right" valign="top">cytnx_complex128&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a08874470d7cb6bbd3f3bc031403e7e00">cytnx::complex128</a> (const Scalar &amp;in)</td></tr>
 <tr class="separator:a08874470d7cb6bbd3f3bc031403e7e00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa1c827c6a452e7a7241caf5fa877454a"><td class="memItemLeft" align="right" valign="top">cytnx_complex64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#aa1c827c6a452e7a7241caf5fa877454a">cytnx::complex64</a> (const Scalar &amp;in)</td></tr>

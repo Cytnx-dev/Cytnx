@@ -29,7 +29,7 @@
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.7.3</span>
+   &#160;<span id="projectnumber">v0.7.4</span>
    </div>
   </td>
  </tr>
@@ -89,6 +89,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a00bc1bf6b9291a0416d5c0fb5beaa284"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Network.html#a00bc1bf6b9291a0416d5c0fb5beaa284">Fromfile</a> (const std::string &amp;fname, const int &amp;network_type=NtType.Regular)</td></tr>
 <tr class="memdesc:a00bc1bf6b9291a0416d5c0fb5beaa284"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct <a class="el" href="classcytnx_1_1Network.html">Network</a> from network file.  <a href="#a00bc1bf6b9291a0416d5c0fb5beaa284">More...</a><br /></td></tr>
 <tr class="separator:a00bc1bf6b9291a0416d5c0fb5beaa284"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa863a755e95a85411a15af58d1ac4057"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Network.html#aa863a755e95a85411a15af58d1ac4057">FromString</a> (const std::vector&lt; std::string &gt; &amp;contents, const int &amp;network_type=NtType.Regular)</td></tr>
+<tr class="memdesc:aa863a755e95a85411a15af58d1ac4057"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct <a class="el" href="classcytnx_1_1Network.html">Network</a> from a list of strings, where each string is the same as each line in network file.  <a href="#aa863a755e95a85411a15af58d1ac4057">More...</a><br /></td></tr>
+<tr class="separator:aa863a755e95a85411a15af58d1ac4057"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0fc550caee8609366ccc37ef86011af9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Network.html#a0fc550caee8609366ccc37ef86011af9">Network</a> (const std::string &amp;fname, const int &amp;network_type=NtType.Regular)</td></tr>
 <tr class="separator:a0fc550caee8609366ccc37ef86011af9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa954e3826549dc2aa5ce1540f9fd1e7b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Network.html#aa954e3826549dc2aa5ce1540f9fd1e7b">PutUniTensor</a> (const std::string &amp;name, const <a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> &amp;utensor, const bool &amp;is_clone=true)</td></tr>
@@ -379,6 +382,80 @@ ORDER : (A,B),(C,D)
 
 </pre> <h3>python API</h3>
 <div class="fragment"><div class="line"><span class="keyword">import</span> cytnx</div><div class="line"></div><div class="line"></div><div class="line">N = <a class="code" href="classcytnx_1_1Network.html">cytnx.Network</a>(<span class="stringliteral">&quot;example.net&quot;</span>)</div><div class="line">print(N)</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment">==== Network ====
+[x] A : 0 ; 1 2 
+[x] B : 0 ; 3 4 
+[x] C : 5 ; 1 6 
+[x] D : 5 ; 7 8 
+TOUT : 2 3 4 ; 6 7 8 
+ORDER : (A,B),(C,D)
+=================
+
+</pre> 
+</div>
+</div>
+<a id="aa863a755e95a85411a15af58d1ac4057"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa863a755e95a85411a15af58d1ac4057">&#9670;&nbsp;</a></span>FromString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cytnx::Network::FromString </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; std::string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>contents</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int &amp;&#160;</td>
+          <td class="paramname"><em>network_type</em> = <code>NtType.Regular</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct <a class="el" href="classcytnx_1_1Network.html">Network</a> from a list of strings, where each string is the same as each line in network file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">contents</td><td>The network file descriptions </td></tr>
+    <tr><td class="paramname">network_type</td><td>The type of network. This can be [NtType.Regular] or [NtType.Fermion.]. Currently, only Regular <a class="el" href="classcytnx_1_1Network.html">Network</a> is support!</td></tr>
+  </table>
+  </dd>
+</dl>
+<h2>note:</h2>
+<ol type="1">
+<li>contents cannot have more than 1024 lines/strings.</li>
+</ol>
+<h2>detail:</h2>
+<p>Format of each string follows the same policy as Fromfile.</p>
+<h2>example code for load the network file:</h2>
+<h3>c++ API:</h3>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacestd.html">std</a>;</div><div class="line"></div><div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>* argv[]){</div><div class="line">    <a class="code" href="classcytnx_1_1Network.html">Network</a> N;</div><div class="line">    N.<a class="code" href="classcytnx_1_1Network.html#aa863a755e95a85411a15af58d1ac4057">FromString</a>({<span class="stringliteral">&quot;A: 0;1,2&quot;</span>,</div><div class="line">                  <span class="stringliteral">&quot;B: 0;3,4&quot;</span>,</div><div class="line">                  <span class="stringliteral">&quot;C: 5;1,6&quot;</span>,</div><div class="line">                  <span class="stringliteral">&quot;D: 5;7,8&quot;</span>,</div><div class="line">                  <span class="stringliteral">&quot;TOUT: 2,3,4;6,7,8&quot;</span>,</div><div class="line">                  <span class="stringliteral">&quot;ORDER: (A,B),(C,D)&quot;</span></div><div class="line">                 });</div><div class="line">    cout &lt;&lt; N &lt;&lt; endl;   </div><div class="line">}</div></div><!-- fragment --> <h4>output&gt;</h4>
+<pre class="fragment">==== Network ====
+[x] A : 0 ; 1 2 
+[x] B : 0 ; 3 4 
+[x] C : 5 ; 1 6 
+[x] D : 5 ; 7 8 
+TOUT : 2 3 4 ; 6 7 8 
+ORDER : (A,B),(C,D)
+=================
+
+</pre> <h3>python API</h3>
+<div class="fragment"><div class="line"><span class="keyword">import</span> cytnx</div><div class="line"></div><div class="line">N = <a class="code" href="classcytnx_1_1Network.html">cytnx.Network</a>()</div><div class="line">N.FromString([<span class="stringliteral">&quot;A: 0;1,2&quot;</span>,\</div><div class="line">              <span class="stringliteral">&quot;B: 0;3,4&quot;</span>,\</div><div class="line">              <span class="stringliteral">&quot;C: 5;1,6&quot;</span>,\</div><div class="line">              <span class="stringliteral">&quot;D: 5;7,8&quot;</span>,\</div><div class="line">              <span class="stringliteral">&quot;TOUT: 2,3,4;6,7,8&quot;</span>,\</div><div class="line">              <span class="stringliteral">&quot;ORDER: (A,B),(C,D)&quot;</span>\</div><div class="line">             ])</div><div class="line"></div><div class="line">print(N);</div></div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">==== Network ====
 [x] A : 0 ; 1 2 
 [x] B : 0 ; 3 4 

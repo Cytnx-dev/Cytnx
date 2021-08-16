@@ -29,7 +29,7 @@
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.7.3</span>
+   &#160;<span id="projectnumber">v0.7.4</span>
    </div>
   </td>
  </tr>
@@ -91,6 +91,12 @@ Functions</h2></td></tr>
 <tr class="memitem:ab073a742e768ed9a01a121503fec5f7e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1random.html#ab073a742e768ed9a01a121503fec5f7e">Make_uniform</a> (<a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin, const double &amp;low=0, const double &amp;high=1, const unsigned int &amp;seed=std::random_device()())</td></tr>
 <tr class="memdesc:ab073a742e768ed9a01a121503fec5f7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Randomize the memory of a <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> with uniform distributon.  <a href="#ab073a742e768ed9a01a121503fec5f7e">More...</a><br /></td></tr>
 <tr class="separator:ab073a742e768ed9a01a121503fec5f7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae495fadd5d27fdeefb259fc4dcd73200"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1random.html#ae495fadd5d27fdeefb259fc4dcd73200">Make_normal</a> (<a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> &amp;Tin, const double &amp;mean, const double &amp;std, const unsigned int &amp;seed=std::random_device()())</td></tr>
+<tr class="memdesc:ae495fadd5d27fdeefb259fc4dcd73200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Randomize the memory of a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">UniTensor</a> with normal distributon.  <a href="#ae495fadd5d27fdeefb259fc4dcd73200">More...</a><br /></td></tr>
+<tr class="separator:ae495fadd5d27fdeefb259fc4dcd73200"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44bb86bc832a5616d0a3538772790e74"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1random.html#a44bb86bc832a5616d0a3538772790e74">Make_uniform</a> (<a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> &amp;Tin, const double &amp;low=0, const double &amp;high=1, const unsigned int &amp;seed=std::random_device()())</td></tr>
+<tr class="memdesc:a44bb86bc832a5616d0a3538772790e74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Randomize the memory of a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">UniTensor</a> with uniform distributon.  <a href="#a44bb86bc832a5616d0a3538772790e74">More...</a><br /></td></tr>
+<tr class="separator:a44bb86bc832a5616d0a3538772790e74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader"></div></td></tr>
 <tr class="memitem:a11ab0d554038b6339bf33a67c4977b70"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1random.html#a11ab0d554038b6339bf33a67c4977b70">normal</a> (const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;Nelem, const double &amp;mean, const double &amp;std, const int &amp;device=Device.cpu, const unsigned int &amp;seed=std::random_device()())</td></tr>
 <tr class="memdesc:a11ab0d554038b6339bf33a67c4977b70"><td class="mdescLeft">&#160;</td><td class="mdescRight">create an <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> with all the elements are initialized with normal distribution  <a href="#a11ab0d554038b6339bf33a67c4977b70">More...</a><br /></td></tr>
@@ -108,7 +114,7 @@ Functions</h2></td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ac456ace342f35864d3a927b3ce9fccbd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac456ace342f35864d3a927b3ce9fccbd">&#9670;&nbsp;</a></span>Make_normal() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac456ace342f35864d3a927b3ce9fccbd">&#9670;&nbsp;</a></span>Make_normal() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -159,7 +165,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a7e59e61df6bd451559628f6d2f1b54d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e59e61df6bd451559628f6d2f1b54d8">&#9670;&nbsp;</a></span>Make_normal() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e59e61df6bd451559628f6d2f1b54d8">&#9670;&nbsp;</a></span>Make_normal() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -209,8 +215,59 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ae495fadd5d27fdeefb259fc4dcd73200"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae495fadd5d27fdeefb259fc4dcd73200">&#9670;&nbsp;</a></span>Make_normal() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cytnx::random::Make_normal </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>Tin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double &amp;&#160;</td>
+          <td class="paramname"><em>mean</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double &amp;&#160;</td>
+          <td class="paramname"><em>std</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const unsigned int &amp;&#160;</td>
+          <td class="paramname"><em>seed</em> = <code>std::random_device()()</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Randomize the memory of a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">UniTensor</a> with normal distributon. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Tin</td><td>a <a class="el" href="classcytnx_1_1UniTensor.html">UniTensor </a> </td></tr>
+    <tr><td class="paramname">mean</td><td>the mean of a normal distribution </td></tr>
+    <tr><td class="paramname">std</td><td>the standard deviation (sigma) of a normal distribution. </td></tr>
+    <tr><td class="paramname">seed</td><td>the seed for the random generator. [Default] Using device entropy. <pre class="fragment">[Note] The UniTensor sould be real floating type or complex type.  </pre> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a3e0802a4f83adb8b3c8837b53b9f5d94"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3e0802a4f83adb8b3c8837b53b9f5d94">&#9670;&nbsp;</a></span>Make_uniform() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e0802a4f83adb8b3c8837b53b9f5d94">&#9670;&nbsp;</a></span>Make_uniform() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -264,7 +321,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="ab073a742e768ed9a01a121503fec5f7e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab073a742e768ed9a01a121503fec5f7e">&#9670;&nbsp;</a></span>Make_uniform() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ab073a742e768ed9a01a121503fec5f7e">&#9670;&nbsp;</a></span>Make_uniform() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -310,6 +367,60 @@ Functions</h2></td></tr>
     <tr><td class="paramname">seed</td><td>the seed for the random generator. [Default] Using device entropy. <pre class="fragment">[Note] 
 
     1. The Tensor sould be real floating type or complex type.  
+    2. In cpu, it generate random number in domain [low,high); but in gpu(cuda), it generate random number in domain (low,high]; (cuRandv10)</pre> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a44bb86bc832a5616d0a3538772790e74"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44bb86bc832a5616d0a3538772790e74">&#9670;&nbsp;</a></span>Make_uniform() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cytnx::random::Make_uniform </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>Tin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double &amp;&#160;</td>
+          <td class="paramname"><em>low</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double &amp;&#160;</td>
+          <td class="paramname"><em>high</em> = <code>1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const unsigned int &amp;&#160;</td>
+          <td class="paramname"><em>seed</em> = <code>std::random_device()()</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Randomize the memory of a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">UniTensor</a> with uniform distributon. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Tin</td><td>a <a class="el" href="classcytnx_1_1Tensor.html">UniTensor </a> </td></tr>
+    <tr><td class="paramname">low</td><td>the lower-bound of the uniform distribution </td></tr>
+    <tr><td class="paramname">high</td><td>the higher-bound of the uniform distribution </td></tr>
+    <tr><td class="paramname">seed</td><td>the seed for the random generator. [Default] Using device entropy. <pre class="fragment">[Note] 
+
+    1. The UniTensor sould be real floating type or complex type.  
     2. In cpu, it generate random number in domain [low,high); but in gpu(cuda), it generate random number in domain (low,high]; (cuRandv10)</pre> </td></tr>
   </table>
   </dd>

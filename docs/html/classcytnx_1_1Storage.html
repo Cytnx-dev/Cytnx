@@ -29,7 +29,7 @@
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.7.3</span>
+   &#160;<span id="projectnumber">v0.7.4</span>
    </div>
   </td>
  </tr>
@@ -167,6 +167,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5324da7126e905091f1e6dfa355888aa"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:a5324da7126e905091f1e6dfa355888aa"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Storage.html#a5324da7126e905091f1e6dfa355888aa">set_item</a> (const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;idx, const T &amp;elem)</td></tr>
 <tr class="separator:a5324da7126e905091f1e6dfa355888aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfabe912f8d0b33eba8ca210c7fca910"><td class="memItemLeft" align="right" valign="top">Scalar::Sproxy&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Storage.html#abfabe912f8d0b33eba8ca210c7fca910">operator()</a> (const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;idx)</td></tr>
+<tr class="separator:abfabe912f8d0b33eba8ca210c7fca910"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -334,7 +336,7 @@ template&lt;class T &gt; </div>
 <pre class="fragment">Double (Float64)
 Double (Float64)
 1
-Float32
+Float (Float32)
 0
 cytnx device: CUDA/GPU-id:0
 </pre> <h3>python API:</h3>
@@ -342,7 +344,7 @@ cytnx device: CUDA/GPU-id:0
 <pre class="fragment">Double (Float64)
 Double (Float64)
 True
-Float32
+Float (Float32)
 False
 cytnx device: CUDA/GPU-id:0
 </pre> 
@@ -755,7 +757,7 @@ device: cytnx device: CPU
 size  : 10
 [ 0.00000e+00+2.00000e+00j 1.00000e+00+3.00000e+00j 2.00000e+00+4.00000e+00j 3.00000e+00+5.00000e+00j 4.00000e+00+6.00000e+00j 5.00000e+00+7.00000e+00j 6.00000e+00+8.00000e+00j 7.00000e+00+9.00000e+00j 8.00000e+00+1.00000e+01j 9.00000e+00+1.10000e+01j  ]
 
-dtype : Float32
+dtype : Float (Float32)
 device: cytnx device: CPU
 size  : 10
 [ 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]
@@ -780,7 +782,7 @@ size  : 10
 [ 0.00000e+00+1.00000e+00j 1.00000e+00+2.00000e+00j 2.00000e+00+3.00000e+00j 3.00000e+00+4.00000e+00j 4.00000e+00+5.00000e+00j 5.00000e+00+6.00000e+00j 6.00000e+00+7.00000e+00j 7.00000e+00+8.00000e+00j 8.00000e+00+9.00000e+00j 9.00000e+00+1.00000e+01j  ]
 
 
-dtype : Float32
+dtype : Float (Float32)
 device: cytnx device: CPU
 size  : 10
 [ 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 ]
@@ -958,6 +960,24 @@ size  : 10
 
 </div>
 </div>
+<a id="abfabe912f8d0b33eba8ca210c7fca910"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abfabe912f8d0b33eba8ca210c7fca910">&#9670;&nbsp;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Scalar::Sproxy cytnx::Storage::operator() </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;&#160;</td>
+          <td class="paramname"><em>idx</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ad304e00cf3d472ea0355af6b40c4529d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad304e00cf3d472ea0355af6b40c4529d">&#9670;&nbsp;</a></span>operator==()</h2>
 
@@ -1070,7 +1090,7 @@ device: cytnx device: CPU
 size  : 10
 [ 0.00000e+00+2.00000e+00j 1.00000e+00+3.00000e+00j 2.00000e+00+4.00000e+00j 3.00000e+00+5.00000e+00j 4.00000e+00+6.00000e+00j 5.00000e+00+7.00000e+00j 6.00000e+00+8.00000e+00j 7.00000e+00+9.00000e+00j 8.00000e+00+1.00000e+01j 9.00000e+00+1.10000e+01j  ]
 
-dtype : Float32
+dtype : Float (Float32)
 device: cytnx device: CPU
 size  : 10
 [ 0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
@@ -1095,7 +1115,7 @@ size  : 10
 [ 0.00000e+00+1.00000e+00j 1.00000e+00+2.00000e+00j 2.00000e+00+3.00000e+00j 3.00000e+00+4.00000e+00j 4.00000e+00+5.00000e+00j 5.00000e+00+6.00000e+00j 6.00000e+00+7.00000e+00j 7.00000e+00+8.00000e+00j 8.00000e+00+9.00000e+00j 9.00000e+00+1.00000e+01j  ]
 
 
-dtype : Float32
+dtype : Float (Float32)
 device: cytnx device: CPU
 size  : 10
 [ 0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]

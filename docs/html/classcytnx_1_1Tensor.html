@@ -29,7 +29,7 @@
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.7.3</span>
+   &#160;<span id="projectnumber">v0.7.4</span>
    </div>
   </td>
  </tr>
@@ -263,8 +263,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac5bd2525bacc3713694a063074538e20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a977738a47390feeab721a599fc21ec28"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#a977738a47390feeab721a599fc21ec28">Pow_</a> (const <a class="el" href="namespacecytnx.html#a17b847d265f6551b952fd9847198a464">cytnx_double</a> &amp;p)</td></tr>
 <tr class="separator:a977738a47390feeab721a599fc21ec28"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa595f269f86406f408db8d515e008fcb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#aa595f269f86406f408db8d515e008fcb">Trace</a> (const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;a, const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;b) const</td></tr>
-<tr class="separator:aa595f269f86406f408db8d515e008fcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d2f499d0c79e4c46909d2341c374723"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#a8d2f499d0c79e4c46909d2341c374723">Trace</a> (const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;a=0, const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;b=1) const</td></tr>
+<tr class="separator:a8d2f499d0c79e4c46909d2341c374723"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a312a8b7b963199a98e59d9f6a97c32e6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#a312a8b7b963199a98e59d9f6a97c32e6">Abs</a> () const</td></tr>
 <tr class="separator:a312a8b7b963199a98e59d9f6a97c32e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8e04d45e4c5b8e6f334e2be38433e07"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#aa8e04d45e4c5b8e6f334e2be38433e07">Abs_</a> ()</td></tr>
@@ -965,22 +965,7 @@ template&lt;class T &gt; </div>
 <h2>Example:</h2>
 <h3>c++ API:</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacecytnx.html">cytnx</a>;</div><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacestd.html">std</a>;</div><div class="line"><span class="keywordtype">int</span> main(){ </div><div class="line"></div><div class="line">    <a class="code" href="classcytnx_1_1Tensor.html">Tensor</a> A = <a class="code" href="namespacecytnx.html#a685cf4e94754373ae4f12622b168fb98">arange</a>(30,<a class="code" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">Type</a>.Float).<a class="code" href="classcytnx_1_1Tensor.html#a57aea99887adf41da14fd7578ef9bf13">reshape</a>(2,3,5);</div><div class="line">    cout &lt;&lt; A &lt;&lt; endl;</div><div class="line"></div><div class="line">    <span class="comment">// note that type resolver should be consist with the dtype </span></div><div class="line">    cout &lt;&lt; A.<a class="code" href="classcytnx_1_1Tensor.html#a697b114d1df390ca558ea9211c2d683b">at</a>&lt;<a class="code" href="namespacecytnx.html#a456fea0ea7baaa151496b24424829253">cytnx_float</a>&gt;(0,0,2) &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">// the return is a ref., can be modify directly.</span></div><div class="line">    A.<a class="code" href="classcytnx_1_1Tensor.html#a697b114d1df390ca558ea9211c2d683b">at</a>&lt;<a class="code" href="namespacecytnx.html#a456fea0ea7baaa151496b24424829253">cytnx_float</a>&gt;(0,0,2) = 999;</div><div class="line"></div><div class="line">    </div><div class="line">    cout &lt;&lt; A.<a class="code" href="classcytnx_1_1Tensor.html#a697b114d1df390ca558ea9211c2d683b">at</a>&lt;<a class="code" href="namespacecytnx.html#a456fea0ea7baaa151496b24424829253">cytnx_float</a>&gt;(0,0,2) &lt;&lt; endl;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">// [Note] there are two way to give argument:</span></div><div class="line">    <span class="comment">// Method 1: more like &#39;c++&#39; way:</span></div><div class="line">    <span class="comment">//           (alternatively, you can also simply give a std::vector)</span></div><div class="line">    A.<a class="code" href="classcytnx_1_1Tensor.html#a697b114d1df390ca558ea9211c2d683b">at</a>&lt;<a class="code" href="namespacecytnx.html#a456fea0ea7baaa151496b24424829253">cytnx_float</a>&gt;({0,0,2}); <span class="comment">// note the braket{}</span></div><div class="line"></div><div class="line">    <span class="comment">// Method 2: more like &#39;python&#39; way:</span></div><div class="line">    A.<a class="code" href="classcytnx_1_1Tensor.html#a697b114d1df390ca558ea9211c2d683b">at</a>&lt;<a class="code" href="namespacecytnx.html#a456fea0ea7baaa151496b24424829253">cytnx_float</a>&gt;(0,0,2); </div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    <span class="keywordflow">return</span> 0;</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h4>output&gt;</h4>
-<pre class="fragment">
-Total elem: 30
-type  : Float32
-cytnx device: CPU
-Shape : (2,3,5)
-[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 ]
-  [5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
-  [1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 ]]
- [[1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]
-  [2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 ]
-  [2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 ]]]
-
-
-2
-999
-</pre> 
+<pre class="fragment"></pre> 
 </div>
 </div>
 <a id="adb8ebce939c2639ac197f37aef8731ff"></a>
@@ -3755,12 +3740,8 @@ True
 Total elem: 60
 type  : Double (Float64)
 cytnx device: CPU
-Shape : (5,12)
-[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]
- [1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]
- [2.40000e+01 2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 3.50000e+01 ]
- [3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 4.00000e+01 4.10000e+01 4.20000e+01 4.30000e+01 4.40000e+01 4.50000e+01 4.60000e+01 4.70000e+01 ]
- [4.80000e+01 4.90000e+01 5.00000e+01 5.10000e+01 5.20000e+01 5.30000e+01 5.40000e+01 5.50000e+01 5.60000e+01 5.70000e+01 5.80000e+01 5.90000e+01 ]]
+Shape : (60)
+[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 4.00000e+01 4.10000e+01 4.20000e+01 4.30000e+01 4.40000e+01 4.50000e+01 4.60000e+01 4.70000e+01 4.80000e+01 4.90000e+01 5.00000e+01 5.10000e+01 5.20000e+01 5.30000e+01 5.40000e+01 5.50000e+01 5.60000e+01 5.70000e+01 5.80000e+01 5.90000e+01 ]
 
 
 
@@ -3781,12 +3762,8 @@ Shape : (5,12)
 Total elem: 60
 type  : Double (Float64)
 cytnx device: CPU
-Shape : (5,12)
-[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]
- [1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]
- [2.40000e+01 2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 3.50000e+01 ]
- [3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 4.00000e+01 4.10000e+01 4.20000e+01 4.30000e+01 4.40000e+01 4.50000e+01 4.60000e+01 4.70000e+01 ]
- [4.80000e+01 4.90000e+01 5.00000e+01 5.10000e+01 5.20000e+01 5.30000e+01 5.40000e+01 5.50000e+01 5.60000e+01 5.70000e+01 5.80000e+01 5.90000e+01 ]]
+Shape : (60)
+[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 4.00000e+01 4.10000e+01 4.20000e+01 4.30000e+01 4.40000e+01 4.50000e+01 4.60000e+01 4.70000e+01 4.80000e+01 4.90000e+01 5.00000e+01 5.10000e+01 5.20000e+01 5.30000e+01 5.40000e+01 5.50000e+01 5.60000e+01 5.70000e+01 5.80000e+01 5.90000e+01 ]
 
 
 
@@ -4728,8 +4705,8 @@ cytnx device: CPU
 
 </div>
 </div>
-<a id="aa595f269f86406f408db8d515e008fcb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa595f269f86406f408db8d515e008fcb">&#9670;&nbsp;</a></span>Trace()</h2>
+<a id="a8d2f499d0c79e4c46909d2341c374723"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d2f499d0c79e4c46909d2341c374723">&#9670;&nbsp;</a></span>Trace()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4738,13 +4715,13 @@ cytnx device: CPU
           <td class="memname"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> cytnx::Tensor::Trace </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;&#160;</td>
-          <td class="paramname"><em>a</em>, </td>
+          <td class="paramname"><em>a</em> = <code>0</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;&#160;</td>
-          <td class="paramname"><em>b</em>&#160;</td>
+          <td class="paramname"><em>b</em> = <code>1</code>&#160;</td>
         </tr>
         <tr>
           <td></td>

@@ -29,7 +29,7 @@
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.7.3</span>
+   &#160;<span id="projectnumber">v0.7.4</span>
    </div>
   </td>
  </tr>
@@ -109,6 +109,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a304dff7d0c613edf9d2eb78c2904c3aa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Bond.html">Bond</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Bond.html#a304dff7d0c613edf9d2eb78c2904c3aa">set_type</a> (const <a class="el" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480ef">bondType</a> &amp;new_bondType)</td></tr>
 <tr class="memdesc:a304dff7d0c613edf9d2eb78c2904c3aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">change the tag-type of the instance <a class="el" href="classcytnx_1_1Bond.html" title="the object contains auxiliary properties for each Tensor rank (bond) ">Bond</a>  <a href="#a304dff7d0c613edf9d2eb78c2904c3aa">More...</a><br /></td></tr>
 <tr class="separator:a304dff7d0c613edf9d2eb78c2904c3aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31c8ff7b0817c37e67a80a225f5bd758"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Bond.html">Bond</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Bond.html#a31c8ff7b0817c37e67a80a225f5bd758">retype</a> (const <a class="el" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480ef">bondType</a> &amp;new_bondType)</td></tr>
+<tr class="memdesc:a31c8ff7b0817c37e67a80a225f5bd758"><td class="mdescLeft">&#160;</td><td class="mdescRight">create a new instance of <a class="el" href="classcytnx_1_1Bond.html" title="the object contains auxiliary properties for each Tensor rank (bond) ">Bond</a> with type changed to the new tag-type:  <a href="#a31c8ff7b0817c37e67a80a225f5bd758">More...</a><br /></td></tr>
+<tr class="separator:a31c8ff7b0817c37e67a80a225f5bd758"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f47360919864f12affe9fda49b03994"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Bond.html">Bond</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Bond.html#a6f47360919864f12affe9fda49b03994">redirect</a> () const</td></tr>
+<tr class="memdesc:a6f47360919864f12affe9fda49b03994"><td class="mdescLeft">&#160;</td><td class="mdescRight">create a new instance of <a class="el" href="classcytnx_1_1Bond.html" title="the object contains auxiliary properties for each Tensor rank (bond) ">Bond</a> with type changed in btwn BRA / KET:  <a href="#a6f47360919864f12affe9fda49b03994">More...</a><br /></td></tr>
+<tr class="separator:a6f47360919864f12affe9fda49b03994"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6272e30153df85944fc98bf5419dc1c8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Bond.html#a6272e30153df85944fc98bf5419dc1c8">clear_type</a> ()</td></tr>
 <tr class="memdesc:a6272e30153df85944fc98bf5419dc1c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">change the tag-type to the default value BD_REG  <a href="#a6272e30153df85944fc98bf5419dc1c8">More...</a><br /></td></tr>
 <tr class="separator:a6272e30153df85944fc98bf5419dc1c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1183,6 +1189,68 @@ Dim = 4 |type: &lt;BRA
 
 <p>return copy of the current quantum number set(s) </p>
 <dl class="section return"><dt>Returns</dt><dd>[2d vector] with shape: (dim, # of <a class="el" href="classcytnx_1_1Symmetry.html" title="the symmetry object ">Symmetry</a>) </dd></dl>
+
+</div>
+</div>
+<a id="a6f47360919864f12affe9fda49b03994"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f47360919864f12affe9fda49b03994">&#9670;&nbsp;</a></span>redirect()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx_1_1Bond.html">Bond</a> cytnx::Bond::redirect </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>create a new instance of <a class="el" href="classcytnx_1_1Bond.html" title="the object contains auxiliary properties for each Tensor rank (bond) ">Bond</a> with type changed in btwn BRA / KET: </p>
+
+</div>
+</div>
+<a id="a31c8ff7b0817c37e67a80a225f5bd758"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31c8ff7b0817c37e67a80a225f5bd758">&#9670;&nbsp;</a></span>retype()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx_1_1Bond.html">Bond</a> cytnx::Bond::retype </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480ef">bondType</a> &amp;&#160;</td>
+          <td class="paramname"><em>new_bondType</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>create a new instance of <a class="el" href="classcytnx_1_1Bond.html" title="the object contains auxiliary properties for each Tensor rank (bond) ">Bond</a> with type changed to the new tag-type: </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">new_bondType</td><td>the new tag-type, it can be BD_BRA,BD_KET or BD_REG</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>[Note] This is equivalent to <a class="el" href="classcytnx_1_1Bond.html#a8c4d6443ffe7c3f3ecd8c474fd9a18eb" title="return a copy of the instance Bond ">Bond.clone()</a>.<a class="el" href="classcytnx_1_1Bond.html#a304dff7d0c613edf9d2eb78c2904c3aa" title="change the tag-type of the instance Bond ">set_type()</a> </p>
 
 </div>
 </div>

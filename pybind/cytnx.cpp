@@ -1999,7 +1999,7 @@ PYBIND11_MODULE(cytnx,m){
                         return std::string("");
                      },py::call_guard<py::scoped_ostream_redirect,
                          py::scoped_estream_redirect>())
-                .def("norm",&tn_algo::MPS::norm)
+                .def("norm",[](tn_algo::MPS &self){return double(self.norm());})
 
 
                 ;
@@ -2019,8 +2019,14 @@ PYBIND11_MODULE(cytnx,m){
     py::class_<tn_algo::DMRG>(m_tnalgo,"DMRG")
                 .def(py::init<tn_algo::MPO, tn_algo::MPS, std::vector<tn_algo::MPS>, const double&>(),py::arg("mpo"),py::arg("mps"),py::arg("ortho_mps")=std::vector<tn_algo::MPS>(),py::arg("weight")=30)
                 .def("initialize",&tn_algo::DMRG::initialize)
-                .def("sweep", &tn_algo::DMRG::sweep, py::arg("verbose")=false, py::arg("maxit")=4000, py::arg("krydim")=4)
-                .def("sweepv2", &tn_algo::DMRG::sweepv2, py::arg("verbose")=false, py::arg("maxit")=4000, py::arg("krydim")=4)
+                .def("sweep", [](tn_algo::DMRG &self, const bool &verbose=false, const cytnx_int64 &maxit=4000, const cytnx_int64 &krydim=4){  
+                                auto E = self.sweep(verbose,maxit,krydim);
+                                return double(E);
+                                  }, py::arg("verbose")=false, py::arg("maxit")=4000, py::arg("krydim")=4)
+                .def("sweepv2",[](tn_algo::DMRG &self, const bool &verbose=false, const cytnx_int64 &maxit=4000, const cytnx_int64 &krydim=4){
+                                auto E = self.sweepv2(verbose,maxit,krydim);
+                                return double(E);
+               }, py::arg("verbose")=false, py::arg("maxit")=4000, py::arg("krydim")=4)
                 ;
                 
     
