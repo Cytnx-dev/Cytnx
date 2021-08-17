@@ -15,10 +15,10 @@ See The following user guide for install and using of cytnx:
 [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx/badges/version.svg)](https://anaconda.org/kaihsinwu/cytnx) [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx/badges/platforms.svg)](https://anaconda.org/kaihsinwu/cytnx)
 
 ## News
-    [v0.7.4a] 
+    [v0.7.4] 
  
 ## Stable Version:
-[v0.7.4a](https://github.com/kaihsin/Cytnx/tree/v0.7.4a)
+[v0.7.4](https://github.com/kaihsin/Cytnx/tree/v0.7.4)
 
 ## Known issues:
     v0.7.4
