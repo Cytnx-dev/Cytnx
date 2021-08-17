@@ -15,10 +15,10 @@ See The following user guide for install and using of cytnx:
 [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx/badges/version.svg)](https://anaconda.org/kaihsinwu/cytnx) [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx/badges/platforms.svg)](https://anaconda.org/kaihsinwu/cytnx)
 
 ## News
-    [v0.7.3] 
+    [v0.7.4a] 
  
 ## Stable Version:
-[v0.7.3](https://github.com/kaihsin/Cytnx/tree/v0.7.3)
+[v0.7.4a](https://github.com/kaihsin/Cytnx/tree/v0.7.4a)
 
 ## Known issues:
     v0.7.4
@@ -30,6 +30,8 @@ See The following user guide for install and using of cytnx:
 
 
 ## Current dev Version:
+    v0.7.5
+
     v0.7.4
     1. [Enhance] Lanczos_ER Lanczos_Gnd not convergence with maxiter will now gives warning instead of error. 
     2. [Enhance] Arithmetic of UniTensor(&)constant now preserve the label of input UniTensor. 
