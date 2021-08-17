@@ -18,7 +18,7 @@
 
 namespace cytnx{
     namespace tn_algo{
-
+        ///@cond    
         class MPO_impl: public intrusive_ptr_base<MPO_impl>{
             private:
                 
@@ -48,7 +48,7 @@ namespace cytnx{
                 cytnx_uint64 size(){return this->_TNs.size();};    
                 UniTensor get_op(const cytnx_uint64 &site_idx);                
         };
-
+        ///@endcond
 
         // API
         class MPO{

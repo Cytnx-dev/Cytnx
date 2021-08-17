@@ -18,7 +18,7 @@
 
 namespace cytnx{
     namespace tn_algo{
-
+        ///@cond
         class DMRG_impl: public intrusive_ptr_base<DMRG_impl>{
             private:
                 
@@ -47,7 +47,7 @@ namespace cytnx{
                 Scalar sweepv2(const bool &verbose,const cytnx_int64 &maxit, const cytnx_int64 &krydim);
 
         };
-
+        ///@endcond
 
 
         // API

@@ -8,6 +8,7 @@ var searchData=
   ['permute',['permute',['../classcytnx_1_1Tensor.html#adbdc402a8c4d6d738523a888bcf9c0c2',1,'cytnx::Tensor::permute()'],['../classcytnx_1_1UniTensor.html#a21b20022105038b58f97a3770fdef97b',1,'cytnx::UniTensor::permute()']]],
   ['permute_5f',['permute_',['../classcytnx_1_1Tensor.html#a4239ec84bd34f634a822eeff416f4d63',1,'cytnx::Tensor::permute_()'],['../classcytnx_1_1UniTensor.html#af9d72a33b623bf197ede54cb8b9fc866',1,'cytnx::UniTensor::permute_()']]],
   ['phase_5fshift',['phase_shift',['../namespacecytnx_1_1qgates.html#a86725371dd70a2a50ff67c76a4d0b99a',1,'cytnx::qgates']]],
+  ['phys_5fdim',['phys_dim',['../classcytnx_1_1tn__algo_1_1MPS.html#a5768151428d84352784b1157a2ee1d2f',1,'cytnx::tn_algo::MPS']]],
   ['physics_2ecpp',['Physics.cpp',['../Physics_8cpp.html',1,'']]],
   ['physics_2ehpp',['Physics.hpp',['../Physics_8hpp.html',1,'']]],
   ['pow',['Pow',['../classcytnx_1_1Tensor.html#ac5bd2525bacc3713694a063074538e20',1,'cytnx::Tensor::Pow()'],['../classcytnx_1_1UniTensor.html#aa6605e1634684f737bf1cc80d9b0d129',1,'cytnx::UniTensor::Pow()'],['../namespacecytnx_1_1linalg.html#af2e15ace1ea23939174fdea1829430fd',1,'cytnx::linalg::Pow(const UniTensor &amp;Tin, const double &amp;p)'],['../namespacecytnx_1_1linalg.html#a2919ef6c163a54360071c286df3fb92e',1,'cytnx::linalg::Pow(const Tensor &amp;Tin, const double &amp;p)']]],

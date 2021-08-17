@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['scalar',['Scalar',['../classcytnx_1_1Scalar.html',1,'cytnx']]],
-  ['storage',['Storage',['../classcytnx_1_1Storage.html',1,'cytnx']]],
-  ['symmetry',['Symmetry',['../classcytnx_1_1Symmetry.html',1,'cytnx']]]
+  ['mpo',['MPO',['../classcytnx_1_1tn__algo_1_1MPO.html',1,'cytnx::tn_algo']]],
+  ['mps',['MPS',['../classcytnx_1_1tn__algo_1_1MPS.html',1,'cytnx::tn_algo']]]
 ];

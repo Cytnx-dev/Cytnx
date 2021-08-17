@@ -31,8 +31,6 @@ namespace cytnx{
                 std::string getname(const int &mps_type);
         };
         extern MPSType_class MPSType;
-        /// @endcond
-
 
 
 
@@ -162,6 +160,7 @@ namespace cytnx{
                 void _load_dispatch(std::fstream &f);
 
         };
+        ///@endcond
 
 
         // API

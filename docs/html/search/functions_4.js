@@ -4,6 +4,7 @@ var searchData=
   ['dagger_5f',['Dagger_',['../classcytnx_1_1UniTensor.html#a4577bb19c3a62f7e330a99a9210e59b8',1,'cytnx::UniTensor']]],
   ['dasum',['dasum',['../lapack__wrapper_8hpp.html#a66a5555a84f5d880d69359f2d15edbe0',1,'lapack_wrapper.hpp']]],
   ['dasum_5f',['dasum_',['../lapack__wrapper_8hpp.html#abb30c4dff856ad084391f86c42f904bc',1,'lapack_wrapper.hpp']]],
+  ['data',['data',['../classcytnx_1_1tn__algo_1_1MPS.html#ae08776d73e43d7e7b99ee5fbe032adb8',1,'cytnx::tn_algo::MPS']]],
   ['daxpy',['daxpy',['../lapack__wrapper_8hpp.html#a2f9794afde0f0d00c7a5c91334c2f74f',1,'lapack_wrapper.hpp']]],
   ['daxpy_5f',['daxpy_',['../lapack__wrapper_8hpp.html#a35cad2a4e2262b1d7351ab8b6bef8902',1,'lapack_wrapper.hpp']]],
   ['dcopy',['dcopy',['../lapack__wrapper_8hpp.html#a986be351acf8912433fa346baf45ea7b',1,'lapack_wrapper.hpp']]],

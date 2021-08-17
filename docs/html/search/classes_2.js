@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['histogram',['Histogram',['../classcytnx_1_1stat_1_1Histogram.html',1,'cytnx::stat']]]
+  ['dmrg',['DMRG',['../classcytnx_1_1tn__algo_1_1DMRG.html',1,'cytnx::tn_algo']]]
 ];
