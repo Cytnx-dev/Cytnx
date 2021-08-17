@@ -30,7 +30,7 @@ html_theme_path = [sphinxbootstrap4theme.get_path()]
 project = 'Cytnx'
 copyright = '2019-, Kai-Hsin Wu'
 author = 'Kai-Hsin Wu'
-_version = 'v0.7.4a'
+_version = 'v0.7.4'
 #version = 'v0.5.5a'
 
 # -- General configuration ---------------------------------------------------
