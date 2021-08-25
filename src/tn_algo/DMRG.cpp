@@ -86,7 +86,7 @@ namespace cytnx{
                         UniTensor &M2 = functArgs[2];
                         UniTensor &R  = functArgs[3];
 
-                        std::vector<cytnx_int64> pshape = {L.shape()[1],M1.shape()[2],M2.shape()[2],R.shape()[1]};
+                        std::vector<cytnx_int64> pshape = {static_cast<cytnx_int64> (L.shape()[1]),static_cast<cytnx_int64> (M1.shape()[2]),static_cast<cytnx_int64> (M2.shape()[2]),static_cast<cytnx_int64> (R.shape()[1])};
                         //vec_print(std::cout,pshape);
                         this->anet.FromString({"psi: ;-1,-2,-3,-4",
                                                "L: ;-5,-1,0",
