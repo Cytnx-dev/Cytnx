@@ -40,7 +40,7 @@ namespace cytnx{
 
             std::vector<Tensor> out;
 
-            Tensor s = zeros({m<n?m:n}, Ain.dtype()<=2?Ain.dtype()+2:Ain.dtype(), Ain.device()); 
+            Tensor s = zeros({static_cast<cytnx_uint64>(m<n?m:n)}, Ain.dtype()<=2?Ain.dtype()+2:Ain.dtype(), Ain.device());
             Tensor r = zeros({1}, Type.Int64, Ain.device());
 
             if (A.device() == Device.cpu) {
@@ -58,7 +58,7 @@ namespace cytnx{
                 Tensor res = zeros({1},bin.dtype(),bin.device());
                 if(m>n && r.item<cytnx_int64>()>=n){
                     Tensor res_ = bin(Accessor::range(n,m,1),":"); res_.Pow_(2);
-                    Tensor ones_ = ones({1,m-n});
+                    Tensor ones_ = ones({1,static_cast<cytnx_uint64>(m-n)});
                     res = linalg::Dot(ones_, res_);
                 }
                 out.push_back(res);
