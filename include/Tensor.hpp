@@ -12,6 +12,7 @@
 #include "utils/dynamic_arg_resolver.hpp"
 //#include "linalg.hpp"
 #include "Accessor.hpp"
+#include <utility>
 #include <vector>
 #include <initializer_list>
 #include <string>
@@ -340,7 +341,7 @@ namespace cytnx{
             {
                 boost::intrusive_ptr<Tensor_impl> _insimpl;
                 std::vector<cytnx::Accessor> _accs;
-                Tproxy(boost::intrusive_ptr<Tensor_impl> _ptr,const std::vector<cytnx::Accessor> &accs) : _insimpl(_ptr), _accs(accs){}
+                Tproxy(boost::intrusive_ptr<Tensor_impl> _ptr,const std::vector<cytnx::Accessor> &accs) : _insimpl(std::move(_ptr)), _accs(accs){}
 
                 // when used to set elems:
                 const Tensor& operator=(const Tensor &rhs){
