@@ -5,7 +5,7 @@ OPTIM= -g -O3
 
 
 ## compile using intel icpc compiler
-ICPC_Enable=0
+ICPC_Enable=1
 ICPC=icpc
 
 # set compile modes:

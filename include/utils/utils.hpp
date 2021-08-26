@@ -2,6 +2,7 @@
 #define __utils_H_
 
 #include "cartesian.hpp"
+#include "vec_cast.hpp"
 #include "vec_clone.hpp"
 #include "vec_unique.hpp"
 #include "vec_map.hpp"

@@ -11,9 +11,9 @@ namespace cytnx{
 
             cytnx_error_msg(A.device() != b.device(), "[Lsq] error, A and b should be on the same device!%s","\n");
 
-            cytnx_int64 m = A.shape()[0];
-            cytnx_int64 n = A.shape()[1];
-            cytnx_int64 nrhs = b.shape()[1];
+            cytnx_uint64 m = A.shape()[0];
+            cytnx_uint64 n = A.shape()[1];
+            cytnx_uint64 nrhs = b.shape()[1];
 
             Tensor Ain; Tensor bin;
             if(A.is_contiguous()) Ain = A.clone();
@@ -35,13 +35,13 @@ namespace cytnx{
             if(m<n) {
                 Storage bstor = bin.storage();
                 bstor.resize(n*nrhs);
-                bin = Tensor::from_storage(bstor).reshape({n,nrhs});
+                bin = Tensor::from_storage(bstor).reshape(n,nrhs);
             }
 
             std::vector<Tensor> out;
 
-            Tensor s = zeros({m<n?m:n}, Ain.dtype()<=2?Ain.dtype()+2:Ain.dtype(), Ain.device()); 
-            Tensor r = zeros({1}, Type.Int64, Ain.device());
+            Tensor s = zeros(m<n?m:n, Ain.dtype()<=2?Ain.dtype()+2:Ain.dtype(), Ain.device()); 
+            Tensor r = zeros(1, Type.Int64, Ain.device());
 
             if (A.device() == Device.cpu) {
 
@@ -52,7 +52,7 @@ namespace cytnx{
                                                                   m, n, nrhs, rcond);
 
                 Tensor sol = bin(Accessor::range(0,n,1),":");
-                sol.reshape_({n,nrhs});
+                sol.reshape_(n,nrhs);
                 out.push_back(sol);
 
                 Tensor res = zeros({1},bin.dtype(),bin.device());

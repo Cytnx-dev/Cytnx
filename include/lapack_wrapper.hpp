@@ -51,11 +51,16 @@
 
     void   daxpy_(const blas_int *n, const double *alpha, const double *x, 
                   const blas_int *incx, double *y, const blas_int *incy);
+    void   saxpy_(const blas_int *n, const float *alpha, const float *x, 
+                  const blas_int *incx, float *y, const blas_int *incy);
     void   zaxpy_(const blas_int *n, const std::complex<double> *alpha, const std::complex<double> *x, 
                   const blas_int *incx, std::complex<double> *y, const blas_int *incy);
-
+    void   caxpy_(const blas_int *n, const std::complex<float> *alpha, const std::complex<float> *x, 
+                  const blas_int *incx, std::complex<float> *y, const blas_int *incy);
     void   dscal_(const blas_int *n, const double *a, double *x, const blas_int *incx);
+    void   sscal_(const blas_int *n, const float *a, float *x, const blas_int *incx);
     void   zscal_(const blas_int *n, const std::complex<double> *a, std::complex<double> *x, const blas_int *incx);
+    void   cscal_(const blas_int *n, const std::complex<float> *a, std::complex<float> *x, const blas_int *incx);
     void   zdscal_(const blas_int *n, const double *a, std::complex<double> *x, const blas_int *incx);
 
 
@@ -321,10 +326,18 @@
     {
       daxpy_(n, alpha, x, incx, y, incy);
     }
+    inline void saxpy(const blas_int *n, const float *alpha, const float *x, const blas_int *incx, float *y, const blas_int *incy)
+    {
+      saxpy_(n, alpha, x, incx, y, incy);
+    }
 
     inline void zaxpy(const blas_int *n, const std::complex<double> *alpha, const std::complex<double> *x, const blas_int *incx, std::complex<double> *y, const blas_int *incy)
     {
       zaxpy_(n, alpha, x, incx, y, incy);
+    }
+    inline void caxpy(const blas_int *n, const std::complex<float> *alpha, const std::complex<float> *x, const blas_int *incx, std::complex<float> *y, const blas_int *incy)
+    {
+      caxpy_(n, alpha, x, incx, y, incy);
     }
 
     inline double dnrm2(const blas_int *n, const double *x, const blas_int *incx)
@@ -352,11 +365,18 @@
     {
       dscal_(n, a, x, incx);
     }
-    inline void zscal(const blas_int *n, const std::complex<double> *a, std::complex<double> *x, const *blas_int incx)
+    inline void sscal(const blas_int *n, const float *a, float *x, const blas_int *incx)
+    {
+      sscal_(n, a, x, incx);
+    }
+    inline void zscal(const blas_int *n, const std::complex<double> *a, std::complex<double> *x, const blas_int *incx)
     {
       zscal_(n, a, x, incx);
     }
-
+    inline void cscal(const blas_int *n, const std::complex<float> *a, std::complex<float> *x, const blas_int *incx)
+    {
+      cscal_(n, a, x, incx);
+    }
     inline void zdscal(const blas_int *n, const double *a, std::complex<double> *x, const blas_int *incx)
     {
       zdscal_(n, a, x, incx);

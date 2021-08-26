@@ -2,7 +2,7 @@
 ######################################################################
 ### CMAKE VERSION
 ######################################################################
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.12)
 
 include(cmake/target_sources_local.cmake)
 include(ExternalProject)
@@ -98,8 +98,7 @@ if (USE_ICPC)
     find_program(CMAKE_CXX_COMPILER NAMES cpp)
     find_program(CMAKE_AR NAMES ar)
     find_program(CMAKE_LINKER NAMES ld)
-  else()
-    target_compile_definitions(cytnx UNI_ICPC)
+    set(USE_ICPC OFF)
   endif ()
 endif ()
 
@@ -168,6 +167,10 @@ target_compile_features(cytnx PUBLIC cxx_std_11)
 
 add_subdirectory(src)
 
+
+if(USE_ICPC)
+    target_compile_definitions(cytnx PRIVATE UNI_ICPC)
+endif()
 
 
 #####################################################################
@@ -479,6 +482,7 @@ FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-std=c++11\n" "")
 #foreach(vars ${ALL_CXXDEF})
 #    FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-D${vars}\n" "")
 #endforeach(vars)
+
 
 
 if(BUILD_PYTHON)

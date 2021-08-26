@@ -31,6 +31,11 @@ See The following user guide for install and using of cytnx:
 
 ## Current dev Version:
     v0.7.5
+    1. [Fix] ICPC cannot compile issue
+    2. [Fix] openblas wrapper of zscal has wrong format, cscal,sscal not wrapped (using mkl is not affected)
+    3. [Enhance] auto_install.py
+    4. [Enhance] add vec_cast utility.
+
 
     v0.7.4
     1. [Enhance] Lanczos_ER Lanczos_Gnd not convergence with maxiter will now gives warning instead of error. 

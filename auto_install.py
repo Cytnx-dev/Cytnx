@@ -31,10 +31,15 @@ def bool2str(bl):
 
 
 
+
+
+
+
 ## list all the major options:
+USE_ICPC=False
+
 USE_MKL=False
 USE_OMP=False
-
 
 USE_CUDA=False
 USE_CUTT=False
@@ -53,35 +58,53 @@ BUILD_PYTHON=True
 
 PREFIX=None
 
-
-tmp = input("[1] install destination (default /usr/local/cytnx):")
+step_idx = 1
+## get install dest 
+#======================================
+tmp = input("[%d] install destination (default /usr/local/cytnx):"%(step_idx))
 tmp = tmp.strip()
 if len(tmp)!=0:
-    PREFIX=tmp
+    PREFIX=os.path.expanduser(tmp)
 
 print("  >>CMAKE_INSTALL_PREFIX=%s"%(PREFIX))
 print("--------------")
 
+
+step_idx = 2
+## use icpc ? 
+#======================================
+tmp = input("[%d] build use intel icpc compiler (default OFF)? (Y/N)"%(step_idx))
+tmp = tmp.strip()
+if(len(tmp.strip())!=0):
+    USE_ICPC=resolve_yn(tmp)
+
+print("  >>USE_ICPC:",USE_ICPC)
+print("--------------")
+
+
+step_idx = 3
 ## checking linalg, and openmp.
-tmp = input("[2] use mkl as linalg library (default OFF)? (Y/N):")
+#======================================
+tmp = input("[%d] use mkl as linalg library (default OFF)? (Y/N):"%(step_idx))
 if(len(tmp.strip())!=0):
     USE_MKL=resolve_yn(tmp)
 
 print("  >>USE_MKL: ",USE_MKL)
 print("--------------")
 if(USE_MKL):
-    print("    -->[2a] force USE_OMP=True")
+    print("    -->[%da] force USE_OMP=True"%(step_idx))
     print("--------------")
 else:
-    tmp = input("[2a] use openmp accelerate (default OFF)? (Y/N):")
+    tmp = input("[%da] use openmp accelerate (default OFF)? (Y/N):"%(step_idx))
     if(len(tmp.strip())!=0):
         USE_OMP=resolve_yn(tmp)
     print("  >>USE_OMP:",USE_OMP)
     print("--------------")
 
-
+step_idx = 4
 ## checking HPTT:
-tmp = input("[3] use hptt library to accelrate tensor transpose (default OFF)? (Y/N):")
+#======================================
+tmp = input("[%d] use hptt library to accelrate tensor transpose (default OFF)? (Y/N):"%(step_idx))
 if(len(tmp.strip())!=0):
     USE_HPTT=resolve_yn(tmp)
 
@@ -89,13 +112,13 @@ print("  >>USE_HPTT: ",USE_HPTT)
 print("--------------")
 if USE_HPTT:
     ## additional options:
-    tmp = input("[3a] hptt option(1): fine tune for the native hardware (default OFF)? (Y/N):")
+    tmp = input("[%da] hptt option(1): fine tune for the native hardware (default OFF)? (Y/N):"%(step_idx))
     if(len(tmp.strip())!=0):
         HPTT_option_finetune=resolve_yn(tmp)
     print("  >>HPTT_ENABLE_FINE_TUNE:",HPTT_option_finetune)
     print("--------------")
     
-    tmp = input("[3b] hptt option(2): variant options (1: AVX 2: IBM 3: ARM, default OFF)? (1,2,3 or enter for default):")
+    tmp = input("[%db] hptt option(2): variant options (1: AVX 2: IBM 3: ARM, default OFF)? (1,2,3 or enter for default):"%(step_idx))
     if(len(tmp.strip())!=0):
         hptttype=resolve_num(tmp,{1,2,3})
         if(hptttype==1):
@@ -111,8 +134,11 @@ if USE_HPTT:
             print("  *No additional options for hptt*")
         print("--------------")
 
+
+step_idx = 5
 ## checking CUDA:
-tmp = input("[4] with GPU (CUDA) support (default OFF)? (Y/N):")
+#======================================
+tmp = input("[%d] with GPU (CUDA) support (default OFF)? (Y/N):"%(step_idx))
 if(len(tmp.strip())!=0):
     USE_CUDA=resolve_yn(tmp)
 
@@ -120,7 +146,7 @@ print("  >>USE_CUDA: ",USE_CUDA)
 print("--------------")
 if USE_CUDA:
     ## additional options:
-    tmp = input("[4a] cuda option(1): use cutt library to accelerate tensor transpose (default OFF)? (Y/N):")
+    tmp = input("[%da] cuda option(1): use cutt library to accelerate tensor transpose (default OFF)? (Y/N):"%(step_idx))
     if(len(tmp.strip())!=0):
         USE_CUTT=resolve_yn(tmp)
     print("  >>USE_CUTT:",USE_CUTT)
@@ -128,15 +154,16 @@ if USE_CUDA:
     
     if USE_CUTT:
         ## add-additional options:
-        tmp = input("[4a-1] cutt option(1): fine tune for the native hardware (default OFF)? (Y/N):")
+        tmp = input("[%da-1] cutt option(1): fine tune for the native hardware (default OFF)? (Y/N):"%(step_idx))
         if(len(tmp.strip())!=0):
             CUTT_option_finetune=resolve_yn(tmp)
         print("  >>CUTT_ENABLE_FINE_TUNE:",CUTT_option_finetune)
         print("--------------")
         
-        
+step_idx = 6
 ## checking PYTHON:
-tmp = input("[5] Build python API (default ON)? (Y/N):")
+#======================================
+tmp = input("[%d] Build python API (default ON)? (Y/N):"%(step_idx))
 if(len(tmp.strip())!=0):
     BUILD_PYTHON=resolve_yn(tmp)
 
@@ -149,6 +176,7 @@ print("*************************")
 print("  Review install option  ")
 print("")
 
+print(" USE_ICPC: ", USE_ICPC)
 print(" USE_MKL: ",USE_MKL)
 print(" USE_OMP: ",USE_OMP)
 
@@ -181,6 +209,10 @@ f.write("cd build\n")
 f.write("cmake")
 if not PREFIX is None:
     f.write(" -DCMAKE_INSTALL_PREFIX=%s"%(PREFIX))
+
+if(USE_ICPC):
+    f.write(" -DUSE_ICPC=on")
+
 if(USE_MKL):
     f.write(" -DUSE_MKL=on")
 else:

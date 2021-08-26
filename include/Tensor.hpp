@@ -288,6 +288,7 @@ namespace cytnx{
             }
 
 
+
             boost::intrusive_ptr<Tensor_impl> reshape(const std::vector<cytnx_int64> &new_shape){
                 boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
                 if(this->is_contiguous()){
@@ -301,7 +302,7 @@ namespace cytnx{
                 out->reshape_(new_shape);
                 return out;
             }
-
+            
 
             
             boost::intrusive_ptr<Tensor_impl> astype(const int& new_type){
@@ -931,7 +932,7 @@ namespace cytnx{
             void reshape_(const std::vector<cytnx_uint64> &new_shape){
                 std::vector<cytnx_int64> shape(new_shape.begin(),new_shape.end());
                 this->_impl->reshape_(shape);
-            }           
+            } 
             void reshape_(const std::initializer_list<cytnx_int64> &new_shape){
                 std::vector<cytnx_int64> shape = new_shape;
                 this->_impl->reshape_(shape);
@@ -966,6 +967,7 @@ namespace cytnx{
                 out._impl = this->_impl->reshape(new_shape);
                 return out;
             }
+
             /// @cond
             template<class ... Ts>
             Tensor reshape(const cytnx_int64 &e1, const Ts&...elems) const{
