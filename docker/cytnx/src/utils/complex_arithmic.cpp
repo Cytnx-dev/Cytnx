@@ -2,9 +2,7 @@
 #include "utils/complex_arithmic.hpp"
 namespace cytnx{
 
-#ifdef UNI_ICPC
 
-#else
     cytnx_complex128 operator+(const cytnx_complex128 &ln, const cytnx_complex64 &rn)
     {
         return cytnx_complex128(ln.real() + rn.real(), ln.imag() + rn.imag());
@@ -836,7 +834,7 @@ namespace cytnx{
     {
         return cytnx_complex64(rn,0) == ln;
     }
-#endif
+
 
 }//namespace cytnx
 
