@@ -4,21 +4,23 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
     <title>3.1. Create a Storage &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/sphinxbootstrap4.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -173,10 +175,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../cyx/Bond.html">7.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#create-a-bond">7.2.1. Create a Bond</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#bond-with-direction">7.2.2. Bond with direction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#bond-with-symmetry">7.2.3. Bond with Symmetry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#multiple-symmetry">7.2.4. Multiple Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#symmetry-object">7.2.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#create-the-bonds">7.2.2. Create the Bonds</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../cyx/UniTensor.html">7.3. UniTensor</a><ul>
@@ -186,7 +186,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../cyx/Network.html">7.4. Network</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="../cyx/Network.html">7.4. Network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#network-from-net-file">7.4.1. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#put-unitensors-and-launch">7.4.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#network-from-string">7.4.3. Network from string</a></li>
 </ul>
 </li>
 </ul>
@@ -249,7 +252,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../../%23.html">v0.7.4</a></li>
+              <a  class="nav-link" href="../../">v0.7.4</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -275,7 +278,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../../%23.html">v0.7.4</a></li>
+                  <a  class="nav-link" href="../../">v0.7.4</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -456,10 +459,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../cyx/Bond.html">7.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#create-a-bond">7.2.1. Create a Bond</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#bond-with-direction">7.2.2. Bond with direction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#bond-with-symmetry">7.2.3. Bond with Symmetry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#multiple-symmetry">7.2.4. Multiple Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#symmetry-object">7.2.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#create-the-bonds">7.2.2. Create the Bonds</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../cyx/UniTensor.html">7.3. UniTensor</a><ul>
@@ -469,7 +470,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../cyx/Network.html">7.4. Network</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="../cyx/Network.html">7.4. Network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#network-from-net-file">7.4.1. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#put-unitensors-and-launch">7.4.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#network-from-string">7.4.3. Network from string</a></li>
 </ul>
 </li>
 </ul>
@@ -553,7 +557,7 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="create-a-storage">
+  <section id="create-a-storage">
 <h1><span class="section-number">3.1. </span>Create a Storage<a class="headerlink" href="#create-a-storage" title="Permalink to this headline">¶</a></h1>
 <p>The storage can be created in a similar way as in Tensor. Note that Storage does not have the concept of <em>shape</em>, and basically just like <strong>vector</strong> in C++.</p>
 <p>To create a Storage, with dtype=Type.Double on cpu,</p>
@@ -600,7 +604,7 @@ size  : 10
 <li><p>For complex type Storage, you can use <strong>.real()</strong> and <strong>.imag()</strong> to get the real part/imaginary part of the data.</p></li>
 </ol>
 </div>
-<div class="section" id="type-conversion">
+<section id="type-conversion">
 <h2><span class="section-number">3.1.1. </span>Type conversion<a class="headerlink" href="#type-conversion" title="Permalink to this headline">¶</a></h2>
 <p>Conversion between different data type is possible for Storage. Just like Tensor, call <strong>Storage.astype()</strong> to convert in between different data types.</p>
 <p>The available data types are the same as Tensor.</p>
@@ -653,8 +657,8 @@ size  : 10
 [ 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j  ]
 </pre></div>
 </div>
-</div>
-<div class="section" id="transfer-btwn-devices">
+</section>
+<section id="transfer-btwn-devices">
 <h2><span class="section-number">3.1.2. </span>Transfer btwn devices<a class="headerlink" href="#transfer-btwn-devices" title="Permalink to this headline">¶</a></h2>
 <p>We can also moving the storage between different devices. Just like Tensor, we can use <strong>Storage.to()</strong>.</p>
 <ul class="simple">
@@ -710,8 +714,8 @@ cytnx device: CUDA/GPU-id:0
 <li><p><strong>.to()</strong> return a copy on target device. Use <strong>.to_()</strong> instead to move the current instance to a target device.</p></li>
 </ol>
 </div>
-</div>
-<div class="section" id="get-storage-of-tensor">
+</section>
+<section id="get-storage-of-tensor">
 <h2><span class="section-number">3.1.3. </span>Get Storage of Tensor<a class="headerlink" href="#get-storage-of-tensor" title="Permalink to this headline">¶</a></h2>
 <p>Internally, data of Tensor is stored in Storage. We can get the storage of Tensor using <strong>Tensor.storage()</strong>.</p>
 <ul class="simple">
@@ -826,8 +830,8 @@ size  : 8
 </div>
 <div class="toctree-wrapper compound">
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -840,7 +844,7 @@ size  : 8
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

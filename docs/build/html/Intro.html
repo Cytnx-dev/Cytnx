@@ -4,21 +4,23 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
     <title>Introdoction &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/sphinxbootstrap4.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <script src="_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -173,10 +175,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide/cyx/Bond.html">7.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#create-a-bond">7.2.1. Create a Bond</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#bond-with-direction">7.2.2. Bond with direction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#bond-with-symmetry">7.2.3. Bond with Symmetry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#multiple-symmetry">7.2.4. Multiple Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#symmetry-object">7.2.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#create-the-bonds">7.2.2. Create the Bonds</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide/cyx/UniTensor.html">7.3. UniTensor</a><ul>
@@ -186,7 +186,10 @@
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="guide/cyx/Network.html">7.4. Network</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="guide/cyx/Network.html">7.4. Network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Network.html#network-from-net-file">7.4.1. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Network.html#put-unitensors-and-launch">7.4.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Network.html#network-from-string">7.4.3. Network from string</a></li>
 </ul>
 </li>
 </ul>
@@ -249,7 +252,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="%23.html">v0.7.4</a></li>
+              <a  class="nav-link" href="./">v0.7.4</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -275,7 +278,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="%23.html">v0.7.4</a></li>
+                  <a  class="nav-link" href="./">v0.7.4</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -449,10 +452,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide/cyx/Bond.html">7.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#create-a-bond">7.2.1. Create a Bond</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#bond-with-direction">7.2.2. Bond with direction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#bond-with-symmetry">7.2.3. Bond with Symmetry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#multiple-symmetry">7.2.4. Multiple Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#symmetry-object">7.2.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#create-the-bonds">7.2.2. Create the Bonds</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide/cyx/UniTensor.html">7.3. UniTensor</a><ul>
@@ -462,7 +463,10 @@
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="guide/cyx/Network.html">7.4. Network</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="guide/cyx/Network.html">7.4. Network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Network.html#network-from-net-file">7.4.1. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Network.html#put-unitensors-and-launch">7.4.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Network.html#network-from-string">7.4.3. Network from string</a></li>
 </ul>
 </li>
 </ul>
@@ -546,7 +550,7 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="introdoction">
+  <section id="introdoction">
 <h1>Introdoction<a class="headerlink" href="#introdoction" title="Permalink to this headline">¶</a></h1>
 <blockquote>
 <div><p>Cytnx is a library design for Quantum/classical Physics simulation.</p>
@@ -556,7 +560,7 @@
 <p>From the physics side, cytnx provides powerful tools such as UniTensor, Network, Bond, Symmetry etc. These objects are built on top of Tensor objects, spcifically aiming for reduce the developing work of Tensor network algorithm by simplify the user interfaces.</p>
 <p>In this user guide, both python and C++ APIs will be discussed, provided side-by-side for users to better understand how to use Cytnx, and understand the conversion in between Python API and C++ API.</p>
 </div></blockquote>
-<div class="section" id="features">
+<section id="features">
 <h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>C++ and python are co-exists, there is no one first.</p></li>
@@ -566,8 +570,8 @@ This means one can do a fast prototype in python, and directly convert to C++ wi
 <li><p>Easy to use user-interface similar to numpy/scipy/pytorch.</p></li>
 <li><p>Enhance tools specifically designs for Quantum/classical Physics simulation.</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -580,7 +584,7 @@ This means one can do a fast prototype in python, and directly convert to C++ wi
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

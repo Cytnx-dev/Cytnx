@@ -4,21 +4,23 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
     <title>4. iDMRG &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../_static/sphinxbootstrap4.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
     <script src="../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -173,10 +175,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Bond.html">7.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#create-a-bond">7.2.1. Create a Bond</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#bond-with-direction">7.2.2. Bond with direction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#bond-with-symmetry">7.2.3. Bond with Symmetry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#multiple-symmetry">7.2.4. Multiple Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#symmetry-object">7.2.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#create-the-bonds">7.2.2. Create the Bonds</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/UniTensor.html">7.3. UniTensor</a><ul>
@@ -186,7 +186,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Network.html">7.4. Network</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Network.html">7.4. Network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#network-from-net-file">7.4.1. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#put-unitensors-and-launch">7.4.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#network-from-string">7.4.3. Network from string</a></li>
 </ul>
 </li>
 </ul>
@@ -249,7 +252,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../%23.html">v0.7.4</a></li>
+              <a  class="nav-link" href="../">v0.7.4</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -275,7 +278,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../%23.html">v0.7.4</a></li>
+                  <a  class="nav-link" href="../">v0.7.4</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -454,10 +457,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Bond.html">7.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#create-a-bond">7.2.1. Create a Bond</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#bond-with-direction">7.2.2. Bond with direction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#bond-with-symmetry">7.2.3. Bond with Symmetry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#multiple-symmetry">7.2.4. Multiple Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#symmetry-object">7.2.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#create-the-bonds">7.2.2. Create the Bonds</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/UniTensor.html">7.3. UniTensor</a><ul>
@@ -467,7 +468,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Network.html">7.4. Network</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Network.html">7.4. Network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#network-from-net-file">7.4.1. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#put-unitensors-and-launch">7.4.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#network-from-string">7.4.3. Network from string</a></li>
 </ul>
 </li>
 </ul>
@@ -551,7 +555,7 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="idmrg">
+  <section id="idmrg">
 <h1><span class="section-number">4. </span>iDMRG<a class="headerlink" href="#idmrg" title="Permalink to this headline">¶</a></h1>
 <p><strong>By : Hsu Ke, Kai-Hsin Wu</strong></p>
 <p>In the previous example we demostrated how the finite size DMRG is implemented,
@@ -577,7 +581,7 @@ I &amp; S^z_j&amp; H_x S^x_j \\
 <p><img src="../_images/math/6c209b9731df3337001268a4a200037c439e7468.png" alt="L = \begin{bmatrix} 1\\ 0\\ 0 \end{bmatrix}
 
 R = \begin{bmatrix} 0\\ 0\\ 1 \end{bmatrix}"/></p>
-</div><div class="section" id="initialization">
+</div><section id="initialization">
 <h2><span class="section-number">4.1. </span>Initialization<a class="headerlink" href="#initialization" title="Permalink to this headline">¶</a></h2>
 <p>The initailzation of MPO is much the same as we did in the previous DMRG example:</p>
 <ul class="simple">
@@ -622,8 +626,8 @@ R = \begin{bmatrix} 0\\ 0\\ 1 \end{bmatrix}"/></p>
 <span class="n">R</span> <span class="o">=</span> <span class="n">R0</span>
 </pre></div>
 </td></tr></table></div>
-</div>
-<div class="section" id="update-procedure">
+</section>
+<section id="update-procedure">
 <h2><span class="section-number">4.2. </span>Update procedure<a class="headerlink" href="#update-procedure" title="Permalink to this headline">¶</a></h2>
 <p>The first step of iDMRG is to obtain a initial two-site state, which is done by solving the eigenvalue problem of two-site hamitonian:</p>
 <a class="reference internal image-reference" href="../_images/idmrg_n0.png"><img alt="../_images/idmrg_n0.png" class="align-center" src="../_images/idmrg_n0.png" style="width: 600px;" /></a>
@@ -958,14 +962,14 @@ then we can simply follows the procedures mentioned in the iTEBD example, we hav
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ground state E&quot;</span><span class="p">,</span><span class="n">E</span><span class="p">)</span>
 </pre></div>
 </td></tr></table></div>
-<p id="bibtex-bibliography-example/iDMRG-0"><dl class="citation">
+<p id="bibtex-bibliography-example/iDMRG-0"><dl class="bibtex citation">
 <dt class="bibtex label" id="ibdry"><span class="brackets"><a class="fn-backref" href="#id1">PVM12</a></span></dt>
 <dd><p>Ho N. Phien, Guifré Vidal, and Ian P. McCulloch. Infinite boundary conditions for matrix product state calculations. <em>Phys. Rev. B</em>, 86:245107, Dec 2012. URL: <a class="reference external" href="https://link.aps.org/doi/10.1103/PhysRevB.86.245107">https://link.aps.org/doi/10.1103/PhysRevB.86.245107</a>, <a class="reference external" href="https://doi.org/10.1103/PhysRevB.86.245107">doi:10.1103/PhysRevB.86.245107</a>.</p>
 </dd>
 </dl>
 </p>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -978,7 +982,7 @@ then we can simply follows the procedures mentioned in the iTEBD example, we hav
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

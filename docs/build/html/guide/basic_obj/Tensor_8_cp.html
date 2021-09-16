@@ -4,21 +4,23 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
     <title>2.8. When will data be copied? &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/sphinxbootstrap4.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -173,10 +175,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../cyx/Bond.html">7.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#create-a-bond">7.2.1. Create a Bond</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#bond-with-direction">7.2.2. Bond with direction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#bond-with-symmetry">7.2.3. Bond with Symmetry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#multiple-symmetry">7.2.4. Multiple Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#symmetry-object">7.2.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#create-the-bonds">7.2.2. Create the Bonds</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../cyx/UniTensor.html">7.3. UniTensor</a><ul>
@@ -186,7 +186,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../cyx/Network.html">7.4. Network</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="../cyx/Network.html">7.4. Network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#network-from-net-file">7.4.1. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#put-unitensors-and-launch">7.4.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#network-from-string">7.4.3. Network from string</a></li>
 </ul>
 </li>
 </ul>
@@ -249,7 +252,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../../%23.html">v0.7.4</a></li>
+              <a  class="nav-link" href="../../">v0.7.4</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -275,7 +278,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../../%23.html">v0.7.4</a></li>
+                  <a  class="nav-link" href="../../">v0.7.4</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -456,10 +459,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../cyx/Bond.html">7.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#create-a-bond">7.2.1. Create a Bond</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#bond-with-direction">7.2.2. Bond with direction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#bond-with-symmetry">7.2.3. Bond with Symmetry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#multiple-symmetry">7.2.4. Multiple Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#symmetry-object">7.2.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#create-the-bonds">7.2.2. Create the Bonds</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../cyx/UniTensor.html">7.3. UniTensor</a><ul>
@@ -469,7 +470,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../cyx/Network.html">7.4. Network</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="../cyx/Network.html">7.4. Network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#network-from-net-file">7.4.1. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#put-unitensors-and-launch">7.4.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#network-from-string">7.4.3. Network from string</a></li>
 </ul>
 </li>
 </ul>
@@ -553,7 +557,7 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="when-will-data-be-copied">
+  <section id="when-will-data-be-copied">
 <h1><span class="section-number">2.8. </span>When will data be copied?<a class="headerlink" href="#when-will-data-be-copied" title="Permalink to this headline">¶</a></h1>
 <p>There are two operations of <strong>cytnx.Tensor</strong> that are very important: <strong>permute</strong> and <strong>reshape</strong>. These two operations are stratigically designed to avoid the redundant copy as much as possible. <strong>cytnx.Tensor</strong> follows the same discipline as <strong>numpy.array</strong> and <strong>torch.Tensor</strong> on these two operations.</p>
 <p>The following figure shows the strucutre of a Tensor object:</p>
@@ -565,7 +569,7 @@
 <li><p>a <strong>Storage</strong> that contains the data (elements) that store in the memory.</p></li>
 </ol>
 </div></blockquote>
-<div class="section" id="reference-copy-of-object">
+<section id="reference-copy-of-object">
 <h2><span class="section-number">2.8.1. </span>Reference &amp; Copy of object<a class="headerlink" href="#reference-copy-of-object" title="Permalink to this headline">¶</a></h2>
 <p>If you are familiar with python, then one of the most important feature in python is the <em>referencing</em> of objects. All the cytnx objects follow the same behavior:</p>
 <ul class="simple">
@@ -630,8 +634,8 @@
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>False
 </pre></div>
 </div>
-</div>
-<div class="section" id="permute">
+</section>
+<section id="permute">
 <h2><span class="section-number">2.8.2. </span>Permute<a class="headerlink" href="#permute" title="Permalink to this headline">¶</a></h2>
 <p>Now let’s take a look at what happened if we perform <strong>permute()</strong> on a Tensor:</p>
 <ul class="simple">
@@ -777,8 +781,8 @@ Shape : (2,4,3)
 </pre></div>
 </div>
 <p>As you can see, <strong>permute()</strong> never create duplicate memeory storage.</p>
-</div>
-<div class="section" id="contiguous">
+</section>
+<section id="contiguous">
 <h2><span class="section-number">2.8.3. </span>Contiguous<a class="headerlink" href="#contiguous" title="Permalink to this headline">¶</a></h2>
 <p>Now, let’s talk about <strong>contiguous</strong>. In the above example, we see that <strong>permute()</strong> create a new Tensor object with different <em>meta</em> but share the same memory storage. The <strong>B</strong> Tensor, which after the permutation its memory layout is no-longer the same as it’s shape. The Tensor in this status is called <strong>non-contiguous</strong>. We can use <strong>is_contiguous()</strong> to check if a Tensor is in this status.</p>
 <ul class="simple">
@@ -875,8 +879,8 @@ False
 <p class="admonition-title">Note</p>
 <p>calling <strong>contiguous()</strong> on a Tensor that is already in contiguous status will return itself, and no new object is created!</p>
 </div>
-</div>
-<div class="section" id="reshape">
+</section>
+<section id="reshape">
 <h2><span class="section-number">2.8.4. </span>Reshape<a class="headerlink" href="#reshape" title="Permalink to this headline">¶</a></h2>
 <p>Reshape is an operation that combine/split axes of a Tensor while keep the same total number of elements. <strong>Tensor.reshape()</strong> always create a new object, but whether the internal storage is shared or not follows the rule:</p>
 <ol class="arabic simple">
@@ -885,8 +889,8 @@ False
 </ol>
 <div class="toctree-wrapper compound">
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -899,7 +903,7 @@ False
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

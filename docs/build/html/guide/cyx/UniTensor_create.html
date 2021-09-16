@@ -4,21 +4,23 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
     <title>7.3.1. Create UniTensor &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/sphinxbootstrap4.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -173,10 +175,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Bond.html">7.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#create-a-bond">7.2.1. Create a Bond</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#bond-with-direction">7.2.2. Bond with direction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#bond-with-symmetry">7.2.3. Bond with Symmetry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#multiple-symmetry">7.2.4. Multiple Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#symmetry-object">7.2.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#create-the-bonds">7.2.2. Create the Bonds</a></li>
 </ul>
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="UniTensor.html">7.3. UniTensor</a><ul class="current">
@@ -186,7 +186,10 @@
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Network.html">7.4. Network</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="Network.html">7.4. Network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-net-file">7.4.1. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#put-unitensors-and-launch">7.4.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-string">7.4.3. Network from string</a></li>
 </ul>
 </li>
 </ul>
@@ -249,7 +252,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../../%23.html">v0.7.4</a></li>
+              <a  class="nav-link" href="../../">v0.7.4</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -275,7 +278,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../../%23.html">v0.7.4</a></li>
+                  <a  class="nav-link" href="../../">v0.7.4</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -458,10 +461,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Bond.html">7.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#create-a-bond">7.2.1. Create a Bond</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#bond-with-direction">7.2.2. Bond with direction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#bond-with-symmetry">7.2.3. Bond with Symmetry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#multiple-symmetry">7.2.4. Multiple Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#symmetry-object">7.2.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#create-the-bonds">7.2.2. Create the Bonds</a></li>
 </ul>
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="UniTensor.html">7.3. UniTensor</a><ul class="current">
@@ -471,7 +472,10 @@
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Network.html">7.4. Network</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="Network.html">7.4. Network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-net-file">7.4.1. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#put-unitensors-and-launch">7.4.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-string">7.4.3. Network from string</a></li>
 </ul>
 </li>
 </ul>
@@ -555,7 +559,7 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="create-unitensor">
+  <section id="create-unitensor">
 <h1><span class="section-number">7.3.1. </span>Create UniTensor<a class="headerlink" href="#create-unitensor" title="Permalink to this headline">¶</a></h1>
 <p>As mentioned in the intro, a UniTensor = Block(s) + Bond(s) + Label(s). For which Block(s) are the place holder for data, while Bond(s) and Label(s) are the meta data that describe the properties of the UniTensor.</p>
 <a class="reference internal image-reference" href="../../_images/utcomp.png"><img alt="../../_images/utcomp.png" class="align-center" src="../../_images/utcomp.png" style="width: 600px;" /></a>
@@ -585,7 +589,7 @@
 <li><p>Currently the UniTensor with symmetry is under developing.</p></li>
 </ul>
 <p>In the following, we will introduce how to construct a UniTensor.</p>
-<div class="section" id="construct-from-tensor">
+<section id="construct-from-tensor">
 <h2><span class="section-number">7.3.1.1. </span>Construct from Tensor<a class="headerlink" href="#construct-from-tensor" title="Permalink to this headline">¶</a></h2>
 <p>Before going into more complicated UniTensor structure, first of all let’s start with the most simple example, for which we convert a Tensor into a UniTensor, and use this to introduce the first type of UniTensor we encounter: <strong>untagged</strong> UniTensor.</p>
 <p>In the following, let’s use a simple rank-3 tensor as example to give you a glance on some basic properties of UniTensor. The tensor notation (diagram) looks like:</p>
@@ -692,13 +696,13 @@ Shape : (2,3,4)
 <p class="admonition-title">Tip</p>
 <p>Similar to <strong>cytnx.Tensor</strong>, one can use <strong>.to()</strong> to move a UniTensor between devices!</p>
 </div>
-</div>
-<div class="section" id="from-scratch">
+</section>
+<section id="from-scratch">
 <h2><span class="section-number">7.3.1.2. </span>From scratch<a class="headerlink" href="#from-scratch" title="Permalink to this headline">¶</a></h2>
 <p>Next, let’s introduce the complete API for construct a UniTensor:</p>
 <dl class="py function">
 <dt id="UniTensor">
-<code class="sig-name descname"><span class="pre">UniTensor</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bonds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rowrank</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_diag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UniTensor" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">UniTensor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bonds</span></em>, <em class="sig-param"><span class="n">labels</span></em>, <em class="sig-param"><span class="n">rowrank</span></em>, <em class="sig-param"><span class="n">dtype</span></em>, <em class="sig-param"><span class="n">device</span></em>, <em class="sig-param"><span class="n">is_diag</span></em><span class="sig-paren">)</span><a class="headerlink" href="#UniTensor" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -770,8 +774,8 @@ Shape : (2,3,4)
 <p class="admonition-title">Note</p>
 <p>The UniTensor will have all the elements in the block initialize to zero.</p>
 </div>
-</div>
-<div class="section" id="change-labels">
+</section>
+<section id="change-labels">
 <h2><span class="section-number">7.3.1.3. </span>Change labels<a class="headerlink" href="#change-labels" title="Permalink to this headline">¶</a></h2>
 <p>To change the labels associate to bond(s), we can use <strong>UniTensor.set_label(index, new_label)</strong> or <strong>UniTensor.set_labels(new_labels)</strong>. Note that the label should be integer, and cannot have duplicate labels <em>within</em> a same UniTensor:</p>
 <div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
@@ -818,8 +822,8 @@ on device   : cytnx device: CPU
 </div>
 <div class="toctree-wrapper compound">
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -832,7 +836,7 @@ on device   : cytnx device: CPU
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

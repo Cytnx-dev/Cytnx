@@ -66,7 +66,7 @@ Output >>
 Create the Bonds
 ********************
 
-Follow the API introduced above, here we show a example creating two U1 bonds:
+Follow the API introduced above, here we show a example creating two U1 bonds, with quantum number :math:`0,-4,-2,3`
 
 * In python:
 
