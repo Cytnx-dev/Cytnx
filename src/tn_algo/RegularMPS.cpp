@@ -154,61 +154,27 @@ namespace cytnx{
             this->S_loc = -1;
             this->Into_Lortho();
         }
-        /*
-        void Init_prodstate(const std::vector<cytnx_uint64> &vphys_dim, const cytnx_uint64 &virt_dim, const std::vector<std::vector<cytnx_int64> > &state_qnums, const cytnx_int64 &dtype){
-
+       /* 
+        void Init_prodstate(const std::vector<cytnx_uint64> &phys_dim, const std::vector<cytnx_uint64> cstate, const cytnx_int64 &dtype){
 
             //checking:
             cytnx_error_msg(dtype!=Type.Double,"[ERROR][RegularMPS] currently only Double dtype is support.%s","\n");
-            cytnx_error_msg(states.size()!=vphys_dim.size(), "[ERROR][RegularMPS] states.size() should equal to N.%s","\n");
+            cytnx_error_msg(cstates.size()!vphys_dim.size(), "[ERROR][RegularMPS] len(cstates) should equal to len(phys_dim).%s","\n");
 
-            this->virt_dim = virt_dim;            
+            this->virt_dim = 1;            
 
-            const cytnx_uint64& chi = virt_dim;
             
-            this->_TNs.resize(vphys_dim.size());
+            //this->_TNs.resize(phys_dim.size());
 
-            auto VbdL = Bond(1,BD_KET,{{0}});
-            A[0] = cytnx.UniTensor([,bd_phys.redirect(),cytnx.Bond(1,cytnx.BD_BRA,[[qcntr]])],rowrank=2)
-            A[0].get_block_()[0] = 1
-
-
-
-            cytnx_uint64 dim1,dim2,dim3;
-
-            cytnx_uint64 DR = 1;
-            cytnx_int64 k_ov=-1;
-            for(cytnx_int64 k=N-1;k>=0;k--){
-                //cout << k << endl;
-                if(std::numeric_limits<cytnx_uint64>::max()/vphys_dim[k] <= DR){
-                    k_ov = k;
-                    break;
-                }else{
-                    DR*= vphys_dim[k];
-                }
+            for(cytnx_int64 k=0;k<cstates.size();k++){
+                cytnx_error_msg(cstate[k]>=phys_dim[k],"[ERROR][RegularMPS][prodstate] site %d index %d is larger than the physical dimension %d",k,cstate[k],phys_dim[k]);
+                auto tmp = zeros(phys_dim[k],dtype);
+                tmp[cstate[k]] = 1;
+                this->_TNs.append(cytnx.UniTensor(tmp,1));
+                
             }
 
-            if(k_ov==-1){
-                DR/=vphys_dim[0]; k_ov = 0;
-            }
-            
-            for(cytnx_int64 k=1; k<N; k++){
-                dim1 = this->_TNs[k-1].shape()[2]; dim2 = vphys_dim[k];
-                if(k<k_ov){
-                    dim3 = std::min(chi, cytnx_uint64(dim1 * dim2));
-                }else{
-                    DR/=vphys_dim[k];
-                    dim3 = std::min(std::min(chi, cytnx_uint64(dim1 * dim2)),DR);
-                }
-                //cout << dim1 << dim2 << dim3 << endl;
-                this->_TNs[k] = UniTensor(zeros({dim1, dim2, dim3}),2);
-                this->_TNs[k].get_block_()(":",select[k]) = random::normal({dim1,dim3},0.,1.);
-                    
-                //this->_TNs[k] = UniTensor(random::normal({dim1, dim2, dim3},0.,1.,-1,99),2);
-                this->_TNs[k].set_labels({2*k,2*k+1,2*k+2});
-            }
             this->S_loc = -1;
-            this->Into_Lortho();
 
 
 

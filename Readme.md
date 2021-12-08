@@ -35,6 +35,8 @@ See The following user guide for install and using of cytnx:
     2. [Fix] openblas wrapper of zscal has wrong format, cscal,sscal not wrapped (using mkl is not affected)
     3. [Enhance] auto_install.py
     4. [Enhance] add vec_cast utility.
+    5. [Fix] Svd_truncate with err does not properly truncate the values.
+    6. [Fix] MatVec dgemv reversed argument.
 
 
     v0.7.4

@@ -1457,6 +1457,11 @@ PYBIND11_MODULE(cytnx,m){
                 .def_static("Load",[](const std::string &fname){return UniTensor::Load(fname);},py::arg("fname"))
                 //.def("permute",&UniTensor::permute,py::arg("mapper"),py::arg("rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
                 //.def("permute_",&UniTensor::permute_,py::arg("mapper"),py::arg("rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
+                .def("astype_different_type",[](cytnx::UniTensor &self, const cytnx_uint64 &new_type){
+                                    cytnx_error_msg(self.dtype()==new_type,"[ERROR][pybind][astype_diffferent_type] same type for astype() should be handle in python side.%s","\n");
+                                    return self.astype(new_type);
+                                },py::arg("new_type"))
+
 
                 .def("permute_",[](UniTensor &self, const std::vector<cytnx::cytnx_int64> &c_args, py::kwargs kwargs){
                     cytnx_int64 rowrank = -1;
@@ -1868,6 +1873,11 @@ PYBIND11_MODULE(cytnx,m){
                                 return cytnx::linalg::Trace(Tin,a,b,by_label);
                             }, py::arg("Tn"),py::arg("axisA")=0,py::arg("axisB")=1,py::arg("by_label")=false);
 
+    m_linalg.def("Trace",[](const cytnx::Tensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b){
+                                return cytnx::linalg::Trace(Tin,a,b);
+                            }, py::arg("Tn"),py::arg("axisA")=0,py::arg("axisB")=1);
+
+
     m_linalg.def("Pow",[](const UniTensor &Tin, const double &p){
                                 return cytnx::linalg::Pow(Tin,p);
                           }, py::arg("Tn"),py::arg("p"));
@@ -1928,6 +1938,43 @@ PYBIND11_MODULE(cytnx,m){
     m_physics.def("pauli",[](const std::string &Comp, const int &device)->Tensor{
                                 return cytnx::physics::pauli(Comp,device);
                             } ,py::arg("Comp"),py::arg("device")=(int)cytnx::Device.cpu);
+
+    // [Submodule qgates]
+    pybind11::module m_qgates = m.def_submodule("qgates","quantum gates.");
+    m_qgates.def("pauli_z",[](const int &device)->UniTensor{
+                                return cytnx::qgates::pauli_z(device);
+                            },py::arg("device")=(int)cytnx::Device.cpu);
+    m_qgates.def("pauli_y",[](const int &device)->UniTensor{
+                                return cytnx::qgates::pauli_y(device);
+                            },py::arg("device")=(int)cytnx::Device.cpu);
+    m_qgates.def("pauli_x",[](const int &device)->UniTensor{
+                                return cytnx::qgates::pauli_x(device);
+                            },py::arg("device")=(int)cytnx::Device.cpu);
+    m_qgates.def("hadamard",[](const int &device)->UniTensor{
+                                return cytnx::qgates::hadamard(device);
+                            },py::arg("device")=(int)cytnx::Device.cpu);
+
+    m_qgates.def("swap",[](const int &device)->UniTensor{
+                                return cytnx::qgates::swap(device);
+                            },py::arg("device")=(int)cytnx::Device.cpu);
+
+    m_qgates.def("sqrt_swap",[](const int &device)->UniTensor{
+                                return cytnx::qgates::sqrt_swap(device);
+                            },py::arg("device")=(int)cytnx::Device.cpu);
+
+    m_qgates.def("phase_shift",[](const cytnx_double &phase, const int &device)->UniTensor{
+                                return cytnx::qgates::phase_shift(phase,device);
+                            },py::arg("phase"),py::arg("device")=(int)cytnx::Device.cpu);
+
+    m_qgates.def("toffoli",[](const int &device)->UniTensor{
+                                return cytnx::qgates::toffoli(device);
+                            },py::arg("device")=(int)cytnx::Device.cpu);
+
+
+    m_qgates.def("cntl_gate_2q",[](const UniTensor &gate_1q)->UniTensor{
+                                return cytnx::qgates::cntl_gate_2q(gate_1q);
+                            },py::arg("gate_1q"));
+
 
     // [Submodule random]
     pybind11::module m_random = m.def_submodule("random","random related.");

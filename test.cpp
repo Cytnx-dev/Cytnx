@@ -94,6 +94,33 @@ Scalar run_DMRG(tn_algo::MPO &mpo, tn_algo::MPS &mps, int Nsweeps, std::vector<t
 
 int main(int argc, char *argv[]){
 
+
+    auto Xf = arange(12).reshape(3,4);
+
+    auto Xout = linalg::Svd_truncate(Xf,999,0.6);
+    print(Xout);
+    
+
+
+    exit(1);
+
+    auto va = zeros(2);
+    auto vb = zeros(2);
+
+    va(1)=1;
+    vb(1)=0.5;
+
+
+    va.reshape_(1,2);
+
+    print(va);
+    print(vb);
+
+    auto ott = linalg::Dot(va,vb);
+    print(ott);
+    exit(1); 
+
+
     auto A = arange(1000).reshape(10,10,10);
     auto B = UniTensor(A,1);
     

@@ -22,7 +22,7 @@ namespace cytnx{
             }
 
             cytnx_uint64 truc_dim = Kdim;
-            for(cytnx_int64 i=Kdim-1;i<0;i--){
+            for(cytnx_int64 i=Kdim-1;i>=0;i--){
                 if(ts.at(i) < err){
                     truc_dim--;
                 }else{
@@ -33,6 +33,7 @@ namespace cytnx{
             if(truc_dim==0){
                 truc_dim=1;
             }
+            ///std::cout << truc_dim << std::endl;
             //cytnx_error_msg(tmps[0].shape()[0] < keepdim,"[ERROR] keepdim should be <= the valid # of singular value, %d!\n",tmps[0].shape()[0]);
             Tensor terr({1},Type.Double);
             

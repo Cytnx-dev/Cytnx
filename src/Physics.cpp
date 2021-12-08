@@ -120,6 +120,30 @@ namespace cytnx{
             return UniTensor(tmp,2);
         }
 
+        UniTensor toffoli(const int &device){
+            Tensor tmp = zeros({8,8},Type.Double,device);
+            tmp[{0,0}] = tmp[{1,1}] = tmp[{2,2}] = tmp[{3,3}] = tmp[{4,4}] = tmp[{5,5}] = 1;
+            tmp[{6,7}] = tmp[{7,6}] = 1;
+            tmp.reshape_({2,2,2,2,2,2});
+            return UniTensor(tmp,3);
+        }
+
+        UniTensor cntl_gate_2q(const UniTensor &gate_1q){
+            Tensor tmp = zeros({4,4},gate_1q.dtype(),gate_1q.device());
+            tmp[{0,0}] = tmp[{1,1}] = 1;
+
+            auto gt = gate_1q.get_block_();
+            
+            tmp[{2,2}] = gt[{0,0}];
+            tmp[{2,3}] = gt[{0,1}];
+            tmp[{3,2}] = gt[{1,0}];
+            tmp[{3,3}] = gt[{1,1}];
+
+            tmp.reshape_({2,2,2,2});
+            return UniTensor(tmp,2);
+
+
+        }
 
     }// qgates
 

@@ -60,6 +60,10 @@ namespace cytnx{
         UniTensor phase_shift(const cytnx_double &phase, const int &device=Device.cpu);
         UniTensor swap(const int &device=Device.cpu);
         UniTensor sqrt_swap(const int &device=Device.cpu);
+        UniTensor toffoli(const int &device=Device.cpu);
+
+        UniTensor cntl_gate_2q(const UniTensor &gate_1q);
+
     }
 }
 /// @endcond
