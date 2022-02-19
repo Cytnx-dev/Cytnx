@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
-    <title>7.3.2. Accessing the block(s) &#8212; Cytnx  documentation</title>
+    <title>7.3.3. Accessing the block(s) &#8212; Cytnx  documentation</title>
 
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -25,8 +25,8 @@
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="7.3.3. tagged UniTensor" href="UniTensor_tag.html" />
-    <link rel="prev" title="7.3.1. Create UniTensor" href="UniTensor_create.html" /> 
+    <link rel="next" title="7.3.4. Manipulate UniTensor" href="UniTensor_manip.html" />
+    <link rel="prev" title="7.3.2. Tagged UniTensor" href="UniTensor_tag.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -182,8 +182,8 @@
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="UniTensor.html">7.3. UniTensor</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">7.3.1. Create UniTensor</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">7.3.2. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">7.3.3. tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">7.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">7.3.3. Accessing the block(s)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
@@ -306,15 +306,15 @@
                          accesskey="U"
                          class="active"
                        ><span class="section-number">7.3. </span>UniTensor</a></li>
-            <li class="breadcrumb-item active"><span class="section-number">7.3.2. </span>Accessing the block(s)</li>
+            <li class="breadcrumb-item active"><span class="section-number">7.3.3. </span>Accessing the block(s)</li>
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-               <a href="UniTensor_create.html" title="Previous Chapter: 7.3.1. Create UniTensor" class="btn btn-primary" role="botton" accesskey="P">
-                   &laquo; 7.3.1. Create...
+               <a href="UniTensor_tag.html" title="Previous Chapter: 7.3.2. Tagged UniTensor" class="btn btn-primary" role="botton" accesskey="P">
+                   &laquo; 7.3.2. Tagged...
                </a>
-               <a href="UniTensor_tag.html" title="Next Chapter: 7.3.3. tagged UniTensor" class="btn btn-primary" role="botton" accesskey="N">
-                   7.3.3. tagged... &raquo;
+               <a href="UniTensor_manip.html" title="Next Chapter: 7.3.4. Manipulate UniTensor" class="btn btn-primary" role="botton" accesskey="N">
+                   7.3.4. Manipu... &raquo;
                </a>
            </div>
        </div>
@@ -469,8 +469,8 @@
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="UniTensor.html">7.3. UniTensor</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">7.3.1. Create UniTensor</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">7.3.2. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">7.3.3. tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">7.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">7.3.3. Accessing the block(s)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
@@ -535,11 +535,11 @@
             
           
   <h4>Previous topic</h4>
-  <p class="topless"><a href="UniTensor_create.html"
-                        title="previous chapter"><span class="section-number">7.3.1. </span>Create UniTensor</a></p>
-  <h4>Next topic</h4>
   <p class="topless"><a href="UniTensor_tag.html"
-                        title="next chapter"><span class="section-number">7.3.3. </span>tagged UniTensor</a></p>
+                        title="previous chapter"><span class="section-number">7.3.2. </span>Tagged UniTensor</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="UniTensor_manip.html"
+                        title="next chapter"><span class="section-number">7.3.4. </span>Manipulate UniTensor</a></p>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../../search.html" method="get">
       <input type="text" name="q" class="form-control" placeholder="Search..." />
@@ -562,9 +562,201 @@
           <div class="body">
             
   <section id="accessing-the-block-s">
-<h1><span class="section-number">7.3.2. </span>Accessing the block(s)<a class="headerlink" href="#accessing-the-block-s" title="Permalink to this headline">¶</a></h1>
+<h1><span class="section-number">7.3.3. </span>Accessing the block(s)<a class="headerlink" href="#accessing-the-block-s" title="Permalink to this headline">¶</a></h1>
+<p>In this section we introduce some basic ways to access and manipulate the blocks in UniTensors.</p>
+<section id="unitensor-without-symmetries">
+<h2><span class="section-number">7.3.3.1. </span>UniTensor without symmetries<a class="headerlink" href="#unitensor-without-symmetries" title="Permalink to this headline">¶</a></h2>
+<p>For the UniTensor without symmetries, we expect the UniTensor is just an Tensor with bonds labeled by ids,
+in this case, the <strong>.get_block()</strong>  or <strong>.get_block()_</strong> will return the Tensor object of the UniTensor for us to manipulate.</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># Create an UniTensor from Tensor</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">get_block</span><span class="p">())</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output &gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 9
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,3)
+[[1.00000e+00 1.00000e+00 1.00000e+00 ]
+[1.00000e+00 1.00000e+00 1.00000e+00 ]
+[1.00000e+00 1.00000e+00 1.00000e+00 ]]
+</pre></div>
+</div>
+</section>
+<section id="unitensor-with-symmetries">
+<h2><span class="section-number">7.3.3.2. </span>UniTensor with symmetries<a class="headerlink" href="#unitensor-with-symmetries" title="Permalink to this headline">¶</a></h2>
+<p>As an example for symmetry UniTensor, we consider the two-sites local Hamitonian <strong>H</strong> appeared in iTEBD algorithm when U(1) symmetry is exploited.
+We create the U(1) symmetric <strong>H</strong> and use <strong>.get_blocks_qnums()</strong> to check the infomation of its blocks (associate qunatum number labels).</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">bdi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,[[</span><span class="mi">1</span><span class="p">],[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+<span class="n">bdo</span> <span class="o">=</span> <span class="n">bdi</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">set_type</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">)</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bdi</span><span class="p">,</span><span class="n">bdi</span><span class="p">,</span><span class="n">bdo</span><span class="p">,</span><span class="n">bdo</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">H</span><span class="o">.</span><span class="n">get_blocks_qnums</span><span class="p">())</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output &gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Vector Print:
+Total Elements:3
+[Vector Print:
+Total Elements:1
+[-2]
+, Vector Print:
+Total Elements:1
+[0]
+, Vector Print:
+Total Elements:1
+[2]
+]
+</pre></div>
+</div>
+<p>In this case we have <strong>3 blocks</strong>, labeled by <strong>3 set of quantum numbers [-2], [0], [2]</strong> (which are also represented as vectors), since only U(1)
+symmetry are used, each label contains only 1 quantum number.</p>
+<p>We can further use <strong>.get_blocks_()</strong> or <strong>.get_blocks()</strong> to get all the blocks in a vector/list of an symmetric UniTensor</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">H</span><span class="o">.</span><span class="n">get_blocks_</span><span class="p">())</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output &gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 1
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (1,1)
+[[0.00000e+00 ]]
+
+
+
+Total elem: 4
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (2,2)
+[[0.00000e+00 0.00000e+00 ]
+[0.00000e+00 0.00000e+00 ]]
+
+
+
+Total elem: 1
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (1,1)
+[[0.00000e+00 ]]
+
+
+[, , ]
+</pre></div>
+</div>
+<p>To get a block with desired quantum numbers, we use <strong>.get_block_()</strong> or <strong>.get_block()</strong>, with the argument to be the quantum number label.
+Note again that the blocks are nothing but the normal <strong>Tensor</strong> object, so we can manipulate it as we did to the Tensors,
+here we demostrate the usage of <strong>.get_block_()</strong>, since the return should be the reference, we can directly assign/modify the content of these blocks.</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">## assign:</span>
+<span class="c1"># Q = 2  # Q = 0:    # Q = -2:</span>
+<span class="c1"># [1/4]    [[ -1/4, 1/2]     [1/4]</span>
+<span class="c1">#         [  1/2, -1/4]]</span>
+
+<span class="n">H</span><span class="o">.</span><span class="n">get_block_</span><span class="p">([</span><span class="mi">2</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">4</span><span class="p">;</span>
+<span class="n">T0</span> <span class="o">=</span> <span class="n">H</span><span class="o">.</span><span class="n">get_block_</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">T0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">T0</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">4</span><span class="p">;</span>
+<span class="n">T0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">T0</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
+<span class="n">H</span><span class="o">.</span><span class="n">get_block_</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">4</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Alternatively, the above can also be done by the <strong>.put_block_()</strong> or <strong>.put_block()</strong>, with the argument to be a tensor and a quantum number label to indicate
+which block to put in (replaced by the input tensor).</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">## assign:</span>
+<span class="c1"># Q = 2  # Q = 0:    # Q = -2:</span>
+<span class="c1"># [1/4]    [[ -1/4, 1/2]     [1/4]</span>
+<span class="c1">#         [  1/2, -1/4]]</span>
+
+<span class="n">Ta</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">Ta</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">4</span>
+<span class="n">Tb</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">Tb</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">Tb</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">4</span>
+<span class="n">Tb</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Tb</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2</span>
+<span class="n">Tc</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">Tc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">4</span>
+
+<span class="n">H</span><span class="o">.</span><span class="n">put_block_</span><span class="p">(</span><span class="n">Ta</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">H</span><span class="o">.</span><span class="n">put_block_</span><span class="p">(</span><span class="n">Tb</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">H</span><span class="o">.</span><span class="n">put_block_</span><span class="p">(</span><span class="n">Tc</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">H</span><span class="o">.</span><span class="n">get_blocks</span><span class="p">())</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output &gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 1
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (1,1)
+[[2.50000e-01 ]]
+
+
+
+Total elem: 4
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (2,2)
+[[-2.50000e-01 5.00000e-01 ]
+[5.00000e-01 -2.50000e-01 ]]
+
+
+
+Total elem: 1
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (1,1)
+[[2.50000e-01 ]]
+
+
+[, , ]
+</pre></div>
+</div>
 <div class="toctree-wrapper compound">
 </div>
+</section>
 </section>
 
 

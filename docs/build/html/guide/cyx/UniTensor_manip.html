@@ -26,7 +26,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="7.4. Network" href="Network.html" />
-    <link rel="prev" title="7.3.3. tagged UniTensor" href="UniTensor_tag.html" /> 
+    <link rel="prev" title="7.3.3. Accessing the block(s)" href="UniTensor_getblk.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -182,8 +182,8 @@
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="UniTensor.html">7.3. UniTensor</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">7.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">7.3.2. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">7.3.3. tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">7.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">7.3.3. Accessing the block(s)</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
@@ -310,8 +310,8 @@
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-               <a href="UniTensor_tag.html" title="Previous Chapter: 7.3.3. tagged UniTensor" class="btn btn-primary" role="botton" accesskey="P">
-                   &laquo; 7.3.3. tagged...
+               <a href="UniTensor_getblk.html" title="Previous Chapter: 7.3.3. Accessing the block(s)" class="btn btn-primary" role="botton" accesskey="P">
+                   &laquo; 7.3.3. Access...
                </a>
                <a href="Network.html" title="Next Chapter: 7.4. Network" class="btn btn-primary" role="botton" accesskey="N">
                    7.4. Network &raquo;
@@ -469,8 +469,8 @@
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="UniTensor.html">7.3. UniTensor</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">7.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">7.3.2. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">7.3.3. tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">7.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">7.3.3. Accessing the block(s)</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
@@ -535,8 +535,8 @@
             
           
   <h4>Previous topic</h4>
-  <p class="topless"><a href="UniTensor_tag.html"
-                        title="previous chapter"><span class="section-number">7.3.3. </span>tagged UniTensor</a></p>
+  <p class="topless"><a href="UniTensor_getblk.html"
+                        title="previous chapter"><span class="section-number">7.3.3. </span>Accessing the block(s)</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="Network.html"
                         title="next chapter"><span class="section-number">7.4. </span>Network</a></p>
@@ -563,8 +563,257 @@
             
   <section id="manipulate-unitensor">
 <h1><span class="section-number">7.3.4. </span>Manipulate UniTensor<a class="headerlink" href="#manipulate-unitensor" title="Permalink to this headline">¶</a></h1>
+<p>Having introduced the detail of initialization and structure of three types (un-tagged, tagged and tagged with symmetry) of UniTensor,
+in this section we present several general and useful hints on dealing with UniTensors.</p>
+<section id="permutation-reshape-arithmetic">
+<h2><span class="section-number">7.3.4.1. </span>Permutation, Reshape, Arithmetic …<a class="headerlink" href="#permutation-reshape-arithmetic" title="Permalink to this headline">¶</a></h2>
+<p>Basic operations like permutation, reshape and arithmetic for un-tagged type UniTensor can be done exacly the same as Tensors,
+refer to the section 2.2. Manipulate Tensor and 2.4. Tensor arithmetic.</p>
+<p>For the manipulations on elements, we just remember to first access to the blocks (which are just tensors objects) and then access the elements as
+we have learned in 2.3. Access elements.</p>
+</section>
+<section id="unitensor-contraction">
+<h2><span class="section-number">7.3.4.2. </span>UniTensor contraction<a class="headerlink" href="#unitensor-contraction" title="Permalink to this headline">¶</a></h2>
+<p>For the contraction of two UniTensor, we have the function <strong>cytnx.Contract()</strong> to do the job, what it does is simply contract
+the common labels of two UniTensors. Here is a example:</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="n">rowrank</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">A</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+
+<span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="n">rowrank</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">B</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+
+<span class="n">C</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+
+<span class="n">A</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="n">B</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="n">C</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output &gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-----------------------
+tensor Name :
+tensor Rank : 3
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+         -------------
+        /             \
+  1 ____| 3         3 |____ 2
+        |             |
+        |           3 |____ 3
+        \             /
+         -------------
+-----------------------
+tensor Name :
+tensor Rank : 4
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+         -------------
+        /             \
+  2 ____| 3         3 |____ 4
+        |             |
+  3 ____| 3         3 |____ 5
+        \             /
+         -------------
+-----------------------
+tensor Name :
+tensor Rank : 3
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+         -------------
+        /             \
+  1 ____| 3         3 |____ 4
+        |             |
+        |           3 |____ 5
+        \             /
+         -------------
+</pre></div>
+</div>
+<p>Here we see that legs from two UniTensors with same labels <strong>2</strong> and <strong>3</strong> are contracted.</p>
+<p>Often we have to change the labels of UniTensors in order to do the desired contraction, to reduce the inconvinence of maintaining
+labels, we provide <strong>.relabels()</strong> to relabel the UniTensors, this in fact return us a copy of UniTensor to do the contraction job,
+while the labels of the original UniTensor itself are preserved. Here is the example:</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="n">rowrank</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">A</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">At</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">relabels</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span>
+
+<span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="n">rowrank</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">B</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">])</span>
+<span class="n">Bt</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">relabels</span><span class="p">([</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span>
+
+<span class="n">C</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">At</span><span class="p">,</span> <span class="n">Bt</span><span class="p">)</span>
+
+<span class="n">A</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="n">B</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="n">C</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output &gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-----------------------
+tensor Name :
+tensor Rank : 3
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+         -------------
+        /             \
+  1 ____| 3         3 |____ 2
+        |             |
+        |           3 |____ 3
+        \             /
+         -------------
+-----------------------
+tensor Name :
+tensor Rank : 3
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+         -------------
+        /             \
+  3 ____| 3         3 |____ 4
+        |             |
+        |           3 |____ 5
+        \             /
+         -------------
+-----------------------
+tensor Name :
+tensor Rank : 4
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+         -------------
+        /             \
+  1 ____| 3         3 |____ 2
+        |             |
+        |           3 |____ 4
+        |             |
+        |           3 |____ 5
+        \             /
+         -------------
+</pre></div>
+</div>
+<p>Note that in this example, two UniTensors <strong>A</strong> and <strong>B</strong> have no labels in common, but we somehow want to contract them while
+preserving their labels, that’s the reason why we use <strong>.relabels</strong> here.</p>
+<p>For the contraction task on multiple Unitensors, refer to 7.4. Network.</p>
+</section>
+<section id="rowrank">
+<h2><span class="section-number">7.3.4.3. </span>Rowrank<a class="headerlink" href="#rowrank" title="Permalink to this headline">¶</a></h2>
+<p>Another property that we may want to maintain in UniTensor is its rowrank, it simply tells us
+how the legs of the a UniTensor is splited into two halves, namely one part belongs to the rowspace
+and the other the column space. Most of the linear algebra algorithms takes the matrix as the input, we thus use the rowrank
+to specify how to cast the input UniTensor into a matrix. In Cytnx this specification will sometimes reduce the amounts of
+work (in the code) to do linalg operations on UniTensor, here is a example about performing <strong>SVD decomposition</strong> on a UniTensor.</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">T</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">]),</span> <span class="n">rowrank</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">s</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">vt</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+
+<span class="n">T</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="n">s</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="n">u</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="n">vt</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output &gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-----------------------
+tensor Name :
+tensor Rank : 5
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+         -------------
+        /             \
+  0 ____| 5         5 |____ 3
+        |             |
+  1 ____| 5         5 |____ 4
+        |             |
+  2 ____| 5           |
+        \             /
+         -------------
+-----------------------
+tensor Name :
+tensor Rank : 2
+block_form  : false
+is_diag     : True
+on device   : cytnx device: CPU
+         -------------
+        /             \
+ -1 ____| 25       25 |____ -2
+        \             /
+         -------------
+-----------------------
+tensor Name :
+tensor Rank : 4
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+         -------------
+        /             \
+  0 ____| 5        25 |____ -1
+        |             |
+  1 ____| 5           |
+        |             |
+  2 ____| 5           |
+        \             /
+         -------------
+-----------------------
+tensor Name :
+tensor Rank : 3
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+         -------------
+        /             \
+ -2 ____| 25        5 |____ 3
+        |             |
+        |           5 |____ 4
+        \             /
+         -------------
+</pre></div>
+</div>
 <div class="toctree-wrapper compound">
 </div>
+<p>Here we note that when doing SVD, the first three legs of <strong>T</strong> are actually automatically reshape into one leg according to <strong>rowrank=3</strong>,
+after the task, the <strong>u</strong> again automatically be reshaped back to three legs in the rowspace, so when we try to contract back <strong>u-s-vt</strong> we expect to
+get the original <strong>T</strong> with same shape.</p>
+</section>
 </section>
 
 

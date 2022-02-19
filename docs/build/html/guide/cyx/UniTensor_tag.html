@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
-    <title>7.3.3. tagged UniTensor &#8212; Cytnx  documentation</title>
+    <title>7.3.2. Tagged UniTensor &#8212; Cytnx  documentation</title>
 
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -25,8 +25,8 @@
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="7.3.4. Manipulate UniTensor" href="UniTensor_manip.html" />
-    <link rel="prev" title="7.3.2. Accessing the block(s)" href="UniTensor_getblk.html" /> 
+    <link rel="next" title="7.3.3. Accessing the block(s)" href="UniTensor_getblk.html" />
+    <link rel="prev" title="7.3.1. Create UniTensor" href="UniTensor_create.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -182,8 +182,8 @@
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="UniTensor.html">7.3. UniTensor</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">7.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">7.3.2. Accessing the block(s)</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">7.3.3. tagged UniTensor</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">7.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">7.3.3. Accessing the block(s)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
@@ -306,15 +306,15 @@
                          accesskey="U"
                          class="active"
                        ><span class="section-number">7.3. </span>UniTensor</a></li>
-            <li class="breadcrumb-item active"><span class="section-number">7.3.3. </span>tagged UniTensor</li>
+            <li class="breadcrumb-item active"><span class="section-number">7.3.2. </span>Tagged UniTensor</li>
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-               <a href="UniTensor_getblk.html" title="Previous Chapter: 7.3.2. Accessing the block(s)" class="btn btn-primary" role="botton" accesskey="P">
-                   &laquo; 7.3.2. Access...
+               <a href="UniTensor_create.html" title="Previous Chapter: 7.3.1. Create UniTensor" class="btn btn-primary" role="botton" accesskey="P">
+                   &laquo; 7.3.1. Create...
                </a>
-               <a href="UniTensor_manip.html" title="Next Chapter: 7.3.4. Manipulate UniTensor" class="btn btn-primary" role="botton" accesskey="N">
-                   7.3.4. Manipu... &raquo;
+               <a href="UniTensor_getblk.html" title="Next Chapter: 7.3.3. Accessing the block(s)" class="btn btn-primary" role="botton" accesskey="N">
+                   7.3.3. Access... &raquo;
                </a>
            </div>
        </div>
@@ -469,8 +469,8 @@
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="UniTensor.html">7.3. UniTensor</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">7.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">7.3.2. Accessing the block(s)</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">7.3.3. tagged UniTensor</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">7.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">7.3.3. Accessing the block(s)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
@@ -535,11 +535,11 @@
             
           
   <h4>Previous topic</h4>
-  <p class="topless"><a href="UniTensor_getblk.html"
-                        title="previous chapter"><span class="section-number">7.3.2. </span>Accessing the block(s)</a></p>
+  <p class="topless"><a href="UniTensor_create.html"
+                        title="previous chapter"><span class="section-number">7.3.1. </span>Create UniTensor</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="UniTensor_manip.html"
-                        title="next chapter"><span class="section-number">7.3.4. </span>Manipulate UniTensor</a></p>
+  <p class="topless"><a href="UniTensor_getblk.html"
+                        title="next chapter"><span class="section-number">7.3.3. </span>Accessing the block(s)</a></p>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../../search.html" method="get">
       <input type="text" name="q" class="form-control" placeholder="Search..." />
@@ -562,9 +562,164 @@
           <div class="body">
             
   <section id="tagged-unitensor">
-<h1><span class="section-number">7.3.3. </span>tagged UniTensor<a class="headerlink" href="#tagged-unitensor" title="Permalink to this headline">¶</a></h1>
+<h1><span class="section-number">7.3.2. </span>Tagged UniTensor<a class="headerlink" href="#tagged-unitensor" title="Permalink to this headline">¶</a></h1>
+<p>In this section we introduce the <strong>tagged UniTensor</strong>, which is the UniTensor with its bonds being <em>directional</em>,
+in this case, depending on wheather the bonds have symmetriy (quantum number),
+the resulting UniTensor can be further categorized into <strong>non-symmetry</strong> and with <strong>symmetry</strong> (block form).</p>
+<section id="non-symmetry-tagged-unitensor">
+<h2><span class="section-number">7.3.2.1. </span>Non-symmetry Tagged UniTensor<a class="headerlink" href="#non-symmetry-tagged-unitensor" title="Permalink to this headline">¶</a></h2>
+<p>To create the non-symmetry Tagged UniTensor, we initialize it with <strong>non-symmetry and direcitonal bonds</strong>, although no symmetry can be exploit in these bonds,
+The direction information still add some physical properties to the UniTensor.
+Let’s create UniTensors <strong>Ta</strong>, <strong>Tb</strong> and <strong>Tc</strong> in this way and investigate their properties:</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">bond_a</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">)</span>
+<span class="n">bond_b</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">)</span>
+<span class="n">Ta</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bond_a</span><span class="p">,</span> <span class="n">bond_a</span><span class="p">,</span> <span class="n">bond_b</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">rowrank</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">Ta</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;Ta&quot;</span><span class="p">)</span>
+<span class="n">Ta</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="n">Tb</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bond_a</span><span class="p">,</span> <span class="n">bond_b</span><span class="p">,</span> <span class="n">bond_b</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="n">rowrank</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">Tb</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;Tb&quot;</span><span class="p">)</span>
+<span class="n">Tb</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="n">Tc</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bond_b</span><span class="p">,</span> <span class="n">bond_b</span><span class="p">,</span> <span class="n">bond_b</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="n">rowrank</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">Tc</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;Tc&quot;</span><span class="p">)</span>
+<span class="n">Tc</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output &gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-----------------------
+tensor Name : Ta
+tensor Rank : 3
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+braket_form : True
+        row               col
+        ---------------
+        |             |
+  0  --&gt;| 3         3 |--&gt;  2
+        |             |
+  1  --&gt;| 3           |
+        |             |
+        ---------------
+-----------------------
+tensor Name : Tb
+tensor Rank : 3
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+braket_form : True
+        row               col
+        ---------------
+        |             |
+  2  --&gt;| 3         3 |--&gt;  3
+        |             |
+        |           3 |--&gt;  4
+        |             |
+        ---------------
+-----------------------
+tensor Name : Tc
+tensor Rank : 3
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+braket_form : False
+        row               col
+        ---------------
+        |             |
+  2 *&lt;--| 3         3 |--&gt;  3
+        |             |
+        |           3 |--&gt;  4
+        |             |
+        ---------------
+</pre></div>
+</div>
+<p>We note that in this example, UniTensors <strong>Ta</strong> and  <strong>Tb</strong>  are created to be in the <strong>bracket form (braket_form : True)</strong>,
+the condition for a UniTensor to be in bracket form is that, all the bonds in the rowspace are Kets (inward) and all the bonds in the colspace are Bras(outward),
+which can be checked easily from the diagram.</p>
+<p>Now we would like to emphasize that the direction informations add constrain on contracting two UniTensors,
+as we mentioned in the 7.1 Tensor notation section, <strong>two bonds with conflict direction cannot contract with each other</strong>.</p>
+<p>To demostrate this, we can just try:</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">Ta</span><span class="p">,</span> <span class="n">Tb</span><span class="p">)</span>
+<span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">Ta</span><span class="p">,</span> <span class="n">Tc</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>We will find that the first one works well, while the second one throws a RuntimeError complaining “BRA-KET mismatch”:</p>
+<p>Output &gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>RuntimeError:
+# Cytnx error occur at virtual boost::intrusive_ptr&lt;cytnx::UniTensor_base&gt; cytnx::DenseUniTensor::contract(const boost::intrusive_ptr&lt;cytnx::UniTensor_base&gt;&amp;, const bool&amp;, const bool&amp;)
+# error: [ERROR][DenseUniTensor][contract] cannot contract common label: &lt;2&gt; @ self bond#2 &amp; rhs bond#0, BRA-KET mismatch!
+</pre></div>
+</div>
+</section>
+<section id="symmetry-tagged-unitensor">
+<h2><span class="section-number">7.3.2.2. </span>Symmetry Tagged UniTensor<a class="headerlink" href="#symmetry-tagged-unitensor" title="Permalink to this headline">¶</a></h2>
+<p>Tensor with symmetries has several advantages in physical simulations, due to the constrain from the symmetries, we have less free parameter in the tensors
+, both the memory needed and the cost of several tensor operations and algorithms can be substantially reduced.</p>
+<p>To bring the symmetries into our UniTensor, we simply initialize it using bonds with <strong>direction and the symmetry (quantum numbers)</strong> properties.
+We can follow the 7.2. Bond section to create bonds <strong>bond_c</strong>, <strong>bond_d</strong> and <strong>bond_e</strong> with symmreties, and use them to initialize our UniTensor <strong>Td</strong>:</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">bond_c</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span> <span class="p">[[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+<span class="n">bond_d</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span> <span class="p">[[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+<span class="n">bond_e</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span> <span class="p">[[</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]])</span>
+<span class="n">Td</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bond_c</span><span class="p">,</span> <span class="n">bond_d</span><span class="p">,</span> <span class="n">bond_e</span><span class="p">],</span> <span class="n">rowrank</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">Td</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;Td&quot;</span><span class="p">)</span>
+<span class="n">Td</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+<p>Output &gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-----------------------
+tensor Name : Td
+tensor Rank : 3
+block_form  : true
+contiguous  : True
+valid bocks : 3
+is diag   : False
+on device   : cytnx device: CPU
+braket_form : True
+        row               col
+        ---------------
+        |             |
+  0  --&gt;| 2         3 |--&gt;  2
+        |             |
+  1  --&gt;| 2           |
+        |             |
+        ---------------
+</pre></div>
+</div>
+<p>We note that in this UniTensor, the <strong>block_form</strong> is <strong>True</strong>, and the <strong>valid blocks</strong> is <strong>3</strong>.</p>
+<p>When the quantum numbers are given in the bonds, what Cytnx did when initilizing the UniTensor is combine all the bonds in the rowspace into one bond, and all the bonds in the colspace into the other bond,
+results in a sparse tensor with 2 bonds, or, a block diagonalized matrix, each block in the matrix is labeled by a set of quantum numbers associate with the symmetries specified.</p>
+<p>In our example above, two bonds in the rowspace are first combined together according to the U(1) combine rule, making it a single bond with quantum numbers 2,0 (with 2-fold degeneracy!) and -2,
+now consider the only bond in the colspace and its quantum numbers, we expect that there will be 3 valid blocks labeled 2,0 and -2.</p>
+<p>These blocks are what users can directly access in the symmetry tagged UniTensor, refer to the next section 7.3.3. Accessing the block(s).</p>
+<a class="reference internal image-reference" href="../../_images/ut_bd.png"><img alt="../../_images/ut_bd.png" class="align-center" src="../../_images/ut_bd.png" style="width: 600px;" /></a>
+<a class="reference internal image-reference" href="../../_images/ut_blocks.png"><img alt="../../_images/ut_blocks.png" class="align-center" src="../../_images/ut_blocks.png" style="width: 600px;" /></a>
 <div class="toctree-wrapper compound">
 </div>
+</section>
 </section>
 
 

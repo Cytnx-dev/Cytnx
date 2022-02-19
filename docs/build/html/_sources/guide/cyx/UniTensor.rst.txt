@@ -25,6 +25,6 @@ Let's take a look at this:
     :maxdepth: 1
 
     UniTensor_create.rst
-    UniTensor_getblk.rst
     UniTensor_tag.rst
+    UniTensor_getblk.rst
     UniTensor_manip.rst
