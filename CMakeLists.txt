@@ -2,7 +2,7 @@
 ######################################################################
 ### CMAKE VERSION
 ######################################################################
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.13)
 
 include(cmake/target_sources_local.cmake)
 include(ExternalProject)
@@ -42,7 +42,7 @@ endif()
 #include(version.cmake)
 set(CYTNX_VERSION_MAJOR 0)
 set(CYTNX_VERSION_MINOR 7)
-set(CYTNX_VERSION_PATCH 4)
+set(CYTNX_VERSION_PATCH 5)
 set(CYTNX_VERSION COUNT 0)
 set(CYTNX_VERSION
   ${CYTNX_VERSION_MAJOR}.${CYTNX_VERSION_MINOR}.${CYTNX_VERSION_PATCH}
