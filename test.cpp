@@ -95,12 +95,19 @@ Scalar run_DMRG(tn_algo::MPO &mpo, tn_algo::MPS &mps, int Nsweeps, std::vector<t
 int main(int argc, char *argv[]){
 
 
-    auto Xf = arange(12).reshape(3,4);
+    auto Xf = arange(60).reshape(3,4,5);
+    auto xffx = arange(12).reshape(4,3);
 
-    auto Xout = linalg::Svd_truncate(Xf,999,0.6);
-    print(Xout);
+
+   // auto Xout = linalg::Svd_truncate(Xf,999,0.6);
+    //print(Xout);
     
 
+    Xf.permute_(2,0,1);
+    cout << Xf.at({0,1,0});
+
+
+    xffx(0,0);
 
     exit(1);
 

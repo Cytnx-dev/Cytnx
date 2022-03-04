@@ -7,8 +7,8 @@ FLAG=""
 ## [Note] uncomments the following lines and 
 ##        Set the desntination path for installation in Ins_dest
 #----------------------------------------------
-#Ins_dest="/CYTNX075"
-#FLAG+="-DCMAKE_INSTALL_PREFIX=${Ins_dest} "
+Ins_dest="/home/kaihsinwu/CYTNX075"
+FLAG+="-DCMAKE_INSTALL_PREFIX=${Ins_dest} "
 #-----------------------------------------------
 
 
@@ -35,7 +35,7 @@ FLAG=""
 #        Please follow the guide from official mkl/oneMKL "post-installation" part 
 #        to source the proper setvars.sh and/or vars.sh  
 #----------------------
-#FLAG+="-DUSE_MKL=on "
+FLAG+="-DUSE_MKL=on "
 #----------------------
 
 
@@ -44,7 +44,7 @@ FLAG=""
 #============================================================================
 # set to "=on" for building python API, required python and pybind11 installed. 
 #--------------------------------
-FLAG+="-DBUILD_PYTHON=off "
+#FLAG+="-DBUILD_PYTHON=off "
 #--------------------------------
 
 
