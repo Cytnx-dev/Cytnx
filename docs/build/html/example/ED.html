@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -12,15 +12,14 @@
     
     <title>1. Exact Diagonalization &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
     <link rel="stylesheet" href="../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../_static/sphinxbootstrap4.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <script src="../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -182,8 +181,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/UniTensor.html">7.3. UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_create.html">7.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">7.3.2. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_tag.html">7.3.3. tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_tag.html">7.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">7.3.3. Accessing the block(s)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
@@ -231,6 +230,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Perf_tune.html">Performance tune</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../perf_tune/tensordot.html">Tensordot with input cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../perf_tune/tensorelem.html">Access single element of Tensor in C++</a></li>
 </ul>
 </li>
 </ul>
@@ -253,7 +253,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../">v0.7.4</a></li>
+              <a  class="nav-link" href="../%23.html">v0.7.4</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -279,7 +279,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../">v0.7.4</a></li>
+                  <a  class="nav-link" href="../%23.html">v0.7.4</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -465,8 +465,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/UniTensor.html">7.3. UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_create.html">7.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">7.3.2. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_tag.html">7.3.3. tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_tag.html">7.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">7.3.3. Accessing the block(s)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
@@ -514,6 +514,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Perf_tune.html">Performance tune</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../perf_tune/tensordot.html">Tensordot with input cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../perf_tune/tensorelem.html">Access single element of Tensor in C++</a></li>
 </ul>
 </li>
 </ul>
@@ -595,157 +596,86 @@ The second example which <img class="math" src="../_images/math/d7109c8614516be7
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cytnx</span> <span class="k">as</span> <span class="nn">cy</span>
-
-<span class="k">class</span> <span class="nc">Hising</span><span class="p">(</span><span class="n">cy</span><span class="o">.</span><span class="n">LinOp</span><span class="p">):</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">J</span><span class="p">,</span><span class="n">Hx</span><span class="p">):</span>
-        <span class="n">cy</span><span class="o">.</span><span class="n">LinOp</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;mv&quot;</span><span class="p">,</span><span class="mi">2</span><span class="o">**</span><span class="n">L</span><span class="p">,</span><span class="n">cy</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">Double</span><span class="p">,</span><span class="n">cy</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">cpu</span><span class="p">)</span>
-        <span class="c1">## custom members:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">J</span>  <span class="o">=</span> <span class="n">J</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">Hx</span> <span class="o">=</span> <span class="n">Hx</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">L</span>  <span class="o">=</span> <span class="n">L</span>
-
-    <span class="k">def</span> <span class="nf">SzSz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">ipt_id</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">ipt_id</span><span class="p">,(</span><span class="mf">1.</span> <span class="o">-</span> <span class="mf">2.</span><span class="o">*</span><span class="p">(((</span><span class="n">ipt_id</span><span class="o">&gt;&gt;</span><span class="n">i</span><span class="p">)</span><span class="o">&amp;</span><span class="mh">0x1</span><span class="p">)</span><span class="o">^</span><span class="p">((</span><span class="n">ipt_id</span><span class="o">&gt;&gt;</span><span class="n">j</span><span class="p">)</span><span class="o">&amp;</span><span class="mh">0x1</span><span class="p">)))</span>
-
-    <span class="k">def</span> <span class="nf">Sx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">ipt_id</span><span class="p">):</span>
-        <span class="n">out_id</span> <span class="o">=</span> <span class="n">ipt_id</span><span class="o">^</span><span class="p">((</span><span class="mh">0x1</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">i</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">out_id</span><span class="p">,</span><span class="mf">1.0</span>
-
-    <span class="c1">## let&#39;s overload this with custom operation:</span>
-    <span class="k">def</span> <span class="nf">matvec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">v</span><span class="p">):</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="n">cy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="o">.</span><span class="n">dtype</span><span class="p">(),</span><span class="n">v</span><span class="o">.</span><span class="n">device</span><span class="p">());</span>
-        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">]):</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">):</span>
-                <span class="n">oid</span><span class="p">,</span><span class="n">amp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">SzSz</span><span class="p">(</span><span class="n">i</span><span class="p">,(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span><span class="n">a</span><span class="p">)</span>
-                <span class="n">out</span><span class="p">[</span><span class="n">oid</span><span class="p">]</span> <span class="o">+=</span> <span class="n">amp</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">J</span><span class="o">*</span><span class="n">v</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
-
-                <span class="n">oid</span><span class="p">,</span><span class="n">amp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Sx</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">a</span><span class="p">)</span>
-                <span class="n">out</span><span class="p">[</span><span class="n">oid</span><span class="p">]</span> <span class="o">+=</span> <span class="n">amp</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">Hx</span><span class="p">)</span><span class="o">*</span><span class="n">v</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">out</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">cytnx</span> <span class="k">as</span> <span class="nn">cy</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="k">class</span> <span class="nc">Hising</span><span class="p">(</span><span class="n">cy</span><span class="o">.</span><span class="n">LinOp</span><span class="p">):</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">J</span><span class="p">,</span><span class="n">Hx</span><span class="p">):</span>
+<span class="linenos"> 6</span>        <span class="n">cy</span><span class="o">.</span><span class="n">LinOp</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;mv&quot;</span><span class="p">,</span><span class="mi">2</span><span class="o">**</span><span class="n">L</span><span class="p">,</span><span class="n">cy</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">Double</span><span class="p">,</span><span class="n">cy</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">cpu</span><span class="p">)</span>
+<span class="linenos"> 7</span>        <span class="c1">## custom members:</span>
+<span class="linenos"> 8</span>        <span class="bp">self</span><span class="o">.</span><span class="n">J</span>  <span class="o">=</span> <span class="n">J</span>
+<span class="linenos"> 9</span>        <span class="bp">self</span><span class="o">.</span><span class="n">Hx</span> <span class="o">=</span> <span class="n">Hx</span>
+<span class="linenos">10</span>        <span class="bp">self</span><span class="o">.</span><span class="n">L</span>  <span class="o">=</span> <span class="n">L</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span>    <span class="k">def</span> <span class="nf">SzSz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">ipt_id</span><span class="p">):</span>
+<span class="linenos">13</span>        <span class="k">return</span> <span class="n">ipt_id</span><span class="p">,(</span><span class="mf">1.</span> <span class="o">-</span> <span class="mf">2.</span><span class="o">*</span><span class="p">(((</span><span class="n">ipt_id</span><span class="o">&gt;&gt;</span><span class="n">i</span><span class="p">)</span><span class="o">&amp;</span><span class="mh">0x1</span><span class="p">)</span><span class="o">^</span><span class="p">((</span><span class="n">ipt_id</span><span class="o">&gt;&gt;</span><span class="n">j</span><span class="p">)</span><span class="o">&amp;</span><span class="mh">0x1</span><span class="p">)))</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span>    <span class="k">def</span> <span class="nf">Sx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">ipt_id</span><span class="p">):</span>
+<span class="linenos">16</span>        <span class="n">out_id</span> <span class="o">=</span> <span class="n">ipt_id</span><span class="o">^</span><span class="p">((</span><span class="mh">0x1</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">i</span><span class="p">)</span>
+<span class="linenos">17</span>        <span class="k">return</span> <span class="n">out_id</span><span class="p">,</span><span class="mf">1.0</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span>    <span class="c1">## let&#39;s overload this with custom operation:</span>
+<span class="linenos">20</span>    <span class="k">def</span> <span class="nf">matvec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">v</span><span class="p">):</span>
+<span class="linenos">21</span>        <span class="n">out</span> <span class="o">=</span> <span class="n">cy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="o">.</span><span class="n">dtype</span><span class="p">(),</span><span class="n">v</span><span class="o">.</span><span class="n">device</span><span class="p">());</span>
+<span class="linenos">22</span>        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">]):</span>
+<span class="linenos">23</span>            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">):</span>
+<span class="linenos">24</span>                <span class="n">oid</span><span class="p">,</span><span class="n">amp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">SzSz</span><span class="p">(</span><span class="n">i</span><span class="p">,(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span><span class="n">a</span><span class="p">)</span>
+<span class="linenos">25</span>                <span class="n">out</span><span class="p">[</span><span class="n">oid</span><span class="p">]</span> <span class="o">+=</span> <span class="n">amp</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">J</span><span class="o">*</span><span class="n">v</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span>                <span class="n">oid</span><span class="p">,</span><span class="n">amp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Sx</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">a</span><span class="p">)</span>
+<span class="linenos">28</span>                <span class="n">out</span><span class="p">[</span><span class="n">oid</span><span class="p">]</span> <span class="o">+=</span> <span class="n">amp</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">Hx</span><span class="p">)</span><span class="o">*</span><span class="n">v</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+<span class="linenos">29</span>        <span class="k">return</span> <span class="n">out</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">namespace</span> <span class="nn">cy</span><span class="o">=</span><span class="nn">cytnx</span><span class="p">;</span>
-<span class="k">class</span> <span class="nc">Hising</span><span class="o">:</span> <span class="k">public</span> <span class="n">cy</span><span class="o">::</span><span class="n">LinOp</span><span class="p">{</span>
-
-    <span class="k">public</span><span class="o">:</span>
-        <span class="n">cytnx_double</span> <span class="n">J</span><span class="p">,</span><span class="n">Hx</span><span class="p">;</span>
-        <span class="n">cytnx_uint32</span> <span class="n">L</span><span class="p">;</span>
-
-    <span class="n">Hising</span><span class="p">(</span><span class="n">cytnx_uint32</span> <span class="n">L</span><span class="p">,</span> <span class="n">cytnx_double</span> <span class="n">J</span><span class="p">,</span> <span class="n">cytnx_double</span> <span class="n">Hx</span><span class="p">)</span><span class="o">:</span>
-        <span class="n">cy</span><span class="o">::</span><span class="n">LinOp</span><span class="p">(</span><span class="s">&quot;mv&quot;</span><span class="p">,</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">L</span><span class="p">),</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span><span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">)</span> <span class="c1">//rememeber to invoke base class constructor</span>
-    <span class="p">{</span>
-        <span class="c1">//custom members</span>
-        <span class="k">this</span><span class="o">-&gt;</span><span class="n">J</span>  <span class="o">=</span> <span class="n">J</span><span class="p">;</span>
-        <span class="k">this</span><span class="o">-&gt;</span><span class="n">Hx</span> <span class="o">=</span> <span class="n">Hx</span><span class="p">;</span>
-        <span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span>  <span class="o">=</span> <span class="n">L</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="kt">double</span> <span class="n">SzSz</span><span class="p">(</span><span class="k">const</span> <span class="n">cytnx_uint32</span> <span class="o">&amp;</span><span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="n">cytnx_uint32</span> <span class="o">&amp;</span><span class="n">j</span><span class="p">,</span> <span class="k">const</span> <span class="n">cytnx_uint32</span> <span class="o">&amp;</span><span class="n">ipt_id</span><span class="p">,</span> <span class="n">cytnx_uint32</span> <span class="o">&amp;</span><span class="n">out_id</span><span class="p">){</span>
-        <span class="n">out_id</span> <span class="o">=</span> <span class="n">ipt_id</span><span class="p">;</span>
-        <span class="k">return</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="mf">2.</span><span class="o">*</span><span class="p">(((</span><span class="n">ipt_id</span><span class="o">&gt;&gt;</span><span class="n">i</span><span class="p">)</span><span class="o">&amp;</span><span class="mh">0x1</span><span class="p">)</span><span class="o">^</span><span class="p">((</span><span class="n">ipt_id</span><span class="o">&gt;&gt;</span><span class="n">j</span><span class="p">)</span><span class="o">&amp;</span><span class="mh">0x1</span><span class="p">)));</span>
-    <span class="p">}</span>
-
-    <span class="kt">double</span> <span class="n">Sx</span><span class="p">(</span><span class="k">const</span> <span class="n">cytnx_uint32</span> <span class="o">&amp;</span><span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="n">cytnx_uint32</span> <span class="o">&amp;</span><span class="n">ipt_id</span><span class="p">,</span> <span class="n">cytnx_uint32</span> <span class="o">&amp;</span><span class="n">out_id</span><span class="p">){</span>
-        <span class="n">out_id</span> <span class="o">=</span> <span class="n">ipt_id</span><span class="o">^</span><span class="p">((</span><span class="mh">0x1</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">i</span><span class="p">);</span>
-        <span class="k">return</span> <span class="mf">1.0</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="c1">// let&#39;s overload this with custom operation:</span>
-    <span class="n">Tensor</span> <span class="n">matvec</span><span class="p">(</span><span class="k">const</span> <span class="n">Tensor</span> <span class="o">&amp;</span><span class="n">v</span><span class="p">)</span> <span class="k">override</span><span class="p">{</span>
-        <span class="k">auto</span> <span class="n">out</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">.</span><span class="n">dtype</span><span class="p">(),</span><span class="n">v</span><span class="p">.</span><span class="n">device</span><span class="p">());</span>
-        <span class="n">cytnx_uint32</span> <span class="n">oid</span><span class="p">;</span>
-        <span class="kt">double</span> <span class="n">amp</span><span class="p">;</span>
-
-        <span class="k">for</span><span class="p">(</span><span class="n">cytnx_uint32</span> <span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">a</span><span class="o">&lt;</span><span class="n">v</span><span class="p">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">];</span><span class="n">a</span><span class="o">++</span><span class="p">){</span>
-            <span class="k">for</span><span class="p">(</span><span class="n">cytnx_uint32</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
-                <span class="n">amp</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">SzSz</span><span class="p">(</span><span class="n">i</span><span class="p">,(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">oid</span><span class="p">);</span>
-                <span class="n">out</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span> <span class="o">+=</span> <span class="n">amp</span><span class="o">*</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">J</span><span class="o">*</span><span class="n">v</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
-
-                <span class="n">amp</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">Sx</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">oid</span><span class="p">);</span>
-                <span class="n">out</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span> <span class="o">+=</span> <span class="n">amp</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">Hx</span><span class="p">)</span><span class="o">*</span><span class="n">v</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">namespace</span><span class="w"> </span><span class="nn">cy</span><span class="o">=</span><span class="nn">cytnx</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 2</span><span class="k">class</span> <span class="nc">Hising</span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">cy</span><span class="o">::</span><span class="n">LinOp</span><span class="p">{</span><span class="w"></span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="linenos"> 5</span><span class="w">        </span><span class="n">cytnx_double</span><span class="w"> </span><span class="n">J</span><span class="p">,</span><span class="n">Hx</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 6</span><span class="w">        </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">L</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="w">    </span><span class="n">Hising</span><span class="p">(</span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">L</span><span class="p">,</span><span class="w"> </span><span class="n">cytnx_double</span><span class="w"> </span><span class="n">J</span><span class="p">,</span><span class="w"> </span><span class="n">cytnx_double</span><span class="w"> </span><span class="n">Hx</span><span class="p">)</span><span class="o">:</span><span class="w"></span>
+<span class="linenos"> 9</span><span class="w">        </span><span class="n">cy</span><span class="o">::</span><span class="n">LinOp</span><span class="p">(</span><span class="s">&quot;mv&quot;</span><span class="p">,</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">L</span><span class="p">),</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span><span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">)</span><span class="w"> </span><span class="c1">//rememeber to invoke base class constructor</span>
+<span class="linenos">10</span><span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="linenos">11</span><span class="w">        </span><span class="c1">//custom members</span>
+<span class="linenos">12</span><span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">J</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">J</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">13</span><span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">Hx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Hx</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">14</span><span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">L</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">15</span><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">SzSz</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ipt_id</span><span class="p">,</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">out_id</span><span class="p">){</span><span class="w"></span>
+<span class="linenos">18</span><span class="w">        </span><span class="n">out_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ipt_id</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">19</span><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="mf">1.</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">2.</span><span class="o">*</span><span class="p">(((</span><span class="n">ipt_id</span><span class="o">&gt;&gt;</span><span class="n">i</span><span class="p">)</span><span class="o">&amp;</span><span class="mh">0x1</span><span class="p">)</span><span class="o">^</span><span class="p">((</span><span class="n">ipt_id</span><span class="o">&gt;&gt;</span><span class="n">j</span><span class="p">)</span><span class="o">&amp;</span><span class="mh">0x1</span><span class="p">)));</span><span class="w"></span>
+<span class="linenos">20</span><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">21</span>
+<span class="linenos">22</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">Sx</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ipt_id</span><span class="p">,</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">out_id</span><span class="p">){</span><span class="w"></span>
+<span class="linenos">23</span><span class="w">        </span><span class="n">out_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ipt_id</span><span class="o">^</span><span class="p">((</span><span class="mh">0x1</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">i</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">24</span><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mf">1.0</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">25</span><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">26</span>
+<span class="linenos">27</span><span class="w">    </span><span class="c1">// let&#39;s overload this with custom operation:</span>
+<span class="linenos">28</span><span class="w">    </span><span class="n">Tensor</span><span class="w"> </span><span class="n">matvec</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Tensor</span><span class="w"> </span><span class="o">&amp;</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">{</span><span class="w"></span>
+<span class="linenos">29</span><span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zeros</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">.</span><span class="n">dtype</span><span class="p">(),</span><span class="n">v</span><span class="p">.</span><span class="n">device</span><span class="p">());</span><span class="w"></span>
+<span class="linenos">30</span><span class="w">        </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">oid</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">31</span><span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">amp</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">32</span>
+<span class="linenos">33</span><span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">a</span><span class="o">&lt;</span><span class="n">v</span><span class="p">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">];</span><span class="n">a</span><span class="o">++</span><span class="p">){</span><span class="w"></span>
+<span class="linenos">34</span><span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">){</span><span class="w"></span>
+<span class="linenos">35</span><span class="w">                </span><span class="n">amp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">SzSz</span><span class="p">(</span><span class="n">i</span><span class="p">,(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">oid</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">36</span><span class="w">                </span><span class="n">out</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">amp</span><span class="o">*</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">J</span><span class="o">*</span><span class="n">v</span><span class="p">(</span><span class="n">a</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">37</span>
+<span class="linenos">38</span><span class="w">                </span><span class="n">amp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">Sx</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">oid</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">39</span><span class="w">                </span><span class="n">out</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">amp</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">Hx</span><span class="p">)</span><span class="o">*</span><span class="n">v</span><span class="p">(</span><span class="n">a</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">40</span><span class="w">            </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">41</span><span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">42</span><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">out</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">43</span><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">44</span><span class="p">};</span><span class="w"></span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>Note that here, we defone two member functions <strong>SzSz()</strong> and  <strong>Sx()</strong> that operate on site <img class="math" src="../_images/math/5183ea9096ac86aff6e13dd3d4389ae47617b059.png" alt="i,j"/> with basis ID <img class="math" src="../_images/math/2a6e197a3ae23b617ffd3a2148dbb2ca9914228c.png" alt="ipt_id"/> and return the output basis ID and corresponding coefficients.</p>
 <p>Inside the overload <strong>matvec</strong>, we then traversal all the basis states coefficients in input vector <strong>v</strong>, and using <strong>SzSz()</strong> and <strong>Sx()</strong> to calculate the mapping to the output vector <strong>out</strong>.</p>
 <p>The class constructor takes three arguments: <strong>L</strong>, the size of ising chain; <strong>J</strong>, the ZZ coupling and <strong>Hx</strong>, the transverse field.</p>
@@ -759,33 +689,24 @@ The second example which <img class="math" src="../_images/math/d7109c8614516be7
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="n">J</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-<span class="n">Hx</span> <span class="o">=</span> <span class="mf">0.3</span>
-<span class="n">H</span> <span class="o">=</span> <span class="n">Hising</span><span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">J</span><span class="p">,</span><span class="n">Hx</span><span class="p">)</span>
-<span class="n">v</span> <span class="o">=</span> <span class="n">cy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">cy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Lanczos_ER</span><span class="p">(</span><span class="n">H</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">L</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="linenos">2</span><span class="n">J</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="linenos">3</span><span class="n">Hx</span> <span class="o">=</span> <span class="mf">0.3</span>
+<span class="linenos">4</span><span class="n">H</span> <span class="o">=</span> <span class="n">Hising</span><span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">J</span><span class="p">,</span><span class="n">Hx</span><span class="p">)</span>
+<span class="linenos">5</span><span class="n">v</span> <span class="o">=</span> <span class="n">cy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+<span class="linenos">6</span><span class="nb">print</span><span class="p">(</span><span class="n">cy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Lanczos_ER</span><span class="p">(</span><span class="n">H</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <ul class="simple">
 <li><p>In c++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">cytnx_uint32</span> <span class="n">L</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
-<span class="kt">double</span> <span class="n">J</span> <span class="o">=</span> <span class="mi">-1</span><span class="p">;</span>
-<span class="kt">double</span> <span class="n">Hx</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">;</span>
-<span class="k">auto</span> <span class="n">H</span> <span class="o">=</span> <span class="n">Hising</span><span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">J</span><span class="p">,</span><span class="n">Hx</span><span class="p">);</span>
-<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">cy</span><span class="o">::</span><span class="n">linalg</span><span class="o">::</span><span class="n">Lanczos_ER</span><span class="p">(</span><span class="o">&amp;</span><span class="n">H</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">L</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">2</span><span class="kt">double</span><span class="w"> </span><span class="n">J</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">3</span><span class="kt">double</span><span class="w"> </span><span class="n">Hx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.3</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">4</span><span class="k">auto</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Hising</span><span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">J</span><span class="p">,</span><span class="n">Hx</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">5</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">cy</span><span class="o">::</span><span class="n">linalg</span><span class="o">::</span><span class="n">Lanczos_ER</span><span class="p">(</span><span class="o">&amp;</span><span class="n">H</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>Output&gt;&gt;</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 3
 type  : Double (Float64)
@@ -842,7 +763,7 @@ Shape : (16,3)
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 4.2.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

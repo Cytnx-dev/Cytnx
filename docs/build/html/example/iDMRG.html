@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -12,15 +12,14 @@
     
     <title>4. iDMRG &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
     <link rel="stylesheet" href="../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../_static/sphinxbootstrap4.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <script src="../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -182,8 +181,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/UniTensor.html">7.3. UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_create.html">7.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">7.3.2. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_tag.html">7.3.3. tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_tag.html">7.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">7.3.3. Accessing the block(s)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
@@ -231,6 +230,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Perf_tune.html">Performance tune</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../perf_tune/tensordot.html">Tensordot with input cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../perf_tune/tensorelem.html">Access single element of Tensor in C++</a></li>
 </ul>
 </li>
 </ul>
@@ -253,7 +253,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../">v0.7.4</a></li>
+              <a  class="nav-link" href="../%23.html">v0.7.4</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -279,7 +279,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../">v0.7.4</a></li>
+                  <a  class="nav-link" href="../%23.html">v0.7.4</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -465,8 +465,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/UniTensor.html">7.3. UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_create.html">7.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">7.3.2. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_tag.html">7.3.3. tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_tag.html">7.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">7.3.3. Accessing the block(s)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
@@ -514,6 +514,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Perf_tune.html">Performance tune</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../perf_tune/tensordot.html">Tensordot with input cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../perf_tune/tensorelem.html">Access single element of Tensor in C++</a></li>
 </ul>
 </li>
 </ul>
@@ -561,7 +562,7 @@
 <h1><span class="section-number">4. </span>iDMRG<a class="headerlink" href="#idmrg" title="Permalink to this headline">¶</a></h1>
 <p><strong>By : Hsu Ke, Kai-Hsin Wu</strong></p>
 <p>In the previous example we demostrated how the finite size DMRG is implemented,
-Here we present the infinite system size DMRG (iDMRG) scheme which consider the system with <em>infinite boundary condition</em><a class="bibtex reference internal" href="#ibdry" id="id1">[PVM12]</a>,
+Here we present the infinite system size DMRG (iDMRG) scheme which consider the system with <em>infinite boundary condition</em><span id="id1">[<a class="reference internal" href="#id3" title="Ho N. Phien, Guifré Vidal, and Ian P. McCulloch. Infinite boundary conditions for matrix product state calculations. Phys. Rev. B, 86:245107, Dec 2012. URL: https://link.aps.org/doi/10.1103/PhysRevB.86.245107, doi:10.1103/PhysRevB.86.245107.">PVM12</a>]</span>,
 where the bondaries (enviroments) are grows the lattice by one or more sites each iteration,
 at the fixed point, a translationally invariant wavefunction is produced.</p>
 <p>In another algorithm of infinite size simulation, iTEBD, a properly converged state requires careful scaling of the time-step to zero,
@@ -589,45 +590,27 @@ R = \begin{bmatrix} 0\\ 0\\ 1 \end{bmatrix}"/></p>
 <ul class="simple">
 <li><p>In python</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">J</span>  <span class="o">=</span> <span class="mf">1.0</span>
-<span class="n">Hx</span> <span class="o">=</span> <span class="mf">1.0</span>
-
-<span class="n">d</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="n">sx</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">physics</span><span class="o">.</span><span class="n">pauli</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">real</span><span class="p">()</span>
-<span class="n">sz</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">physics</span><span class="o">.</span><span class="n">pauli</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">real</span><span class="p">()</span>
-<span class="n">eye</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-<span class="n">M</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">])</span>
-<span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">eye</span>
-<span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">sz</span>
-<span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">Hx</span><span class="o">*</span><span class="n">sx</span>
-<span class="n">M</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
-
-<span class="n">L0</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#Left boundary</span>
-<span class="n">R0</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#Right boundary</span>
-<span class="n">L0</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">;</span> <span class="n">R0</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
-
-<span class="n">L</span> <span class="o">=</span> <span class="n">L0</span>
-<span class="n">R</span> <span class="o">=</span> <span class="n">R0</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">J</span>  <span class="o">=</span> <span class="mf">1.0</span>
+<span class="linenos"> 2</span><span class="n">Hx</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="n">d</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="linenos"> 5</span><span class="n">sx</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">physics</span><span class="o">.</span><span class="n">pauli</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">real</span><span class="p">()</span>
+<span class="linenos"> 6</span><span class="n">sz</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">physics</span><span class="o">.</span><span class="n">pauli</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">real</span><span class="p">()</span>
+<span class="linenos"> 7</span><span class="n">eye</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="linenos"> 8</span><span class="n">M</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">])</span>
+<span class="linenos"> 9</span><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">eye</span>
+<span class="linenos">10</span><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">sz</span>
+<span class="linenos">11</span><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">Hx</span><span class="o">*</span><span class="n">sx</span>
+<span class="linenos">12</span><span class="n">M</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="n">L0</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#Left boundary</span>
+<span class="linenos">15</span><span class="n">R0</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#Right boundary</span>
+<span class="linenos">16</span><span class="n">L0</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">;</span> <span class="n">R0</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="n">L</span> <span class="o">=</span> <span class="n">L0</span>
+<span class="linenos">19</span><span class="n">R</span> <span class="o">=</span> <span class="n">R0</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 </section>
 <section id="update-procedure">
 <h2><span class="section-number">4.2. </span>Update procedure<a class="headerlink" href="#update-procedure" title="Permalink to this headline">¶</a></h2>
@@ -637,92 +620,54 @@ R = \begin{bmatrix} 0\\ 0\\ 1 \end{bmatrix}"/></p>
 <ul class="simple">
 <li><p>In python</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Projector</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="p">):</span>
-
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">M1</span><span class="p">,</span><span class="n">M2</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">psi_dim</span><span class="p">,</span><span class="n">psi_dtype</span><span class="p">,</span><span class="n">psi_device</span><span class="p">):</span>
-        <span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;mv&quot;</span><span class="p">,</span><span class="n">psi_dim</span><span class="p">,</span><span class="n">psi_dtype</span><span class="p">,</span><span class="n">psi_device</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;projector.net&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">&quot;M2&quot;</span><span class="p">,</span><span class="n">M2</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;L&quot;</span><span class="p">,</span><span class="s2">&quot;M1&quot;</span><span class="p">,</span><span class="s2">&quot;R&quot;</span><span class="p">],[</span><span class="n">L</span><span class="p">,</span><span class="n">M1</span><span class="p">,</span><span class="n">R</span><span class="p">],</span><span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">psi_shape</span> <span class="o">=</span> <span class="p">[</span><span class="n">L</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">],</span><span class="n">M1</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">],</span><span class="n">M2</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">],</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">]]</span>
-
-    <span class="k">def</span> <span class="nf">matvec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">psi</span><span class="p">):</span>
-
-        <span class="n">psi_p</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">psi</span><span class="o">.</span><span class="n">clone</span><span class="p">(),</span><span class="mi">0</span><span class="p">)</span>  <span class="c1">## clone here</span>
-        <span class="n">psi_p</span><span class="o">.</span><span class="n">reshape_</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_shape</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">&quot;psi&quot;</span><span class="p">,</span><span class="n">psi_p</span><span class="p">,</span><span class="kc">False</span><span class="p">)</span> <span class="c1">## no- redundant clone here</span>
-        <span class="n">H_psi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span> <span class="c1"># get_block_ without copy</span>
-
-        <span class="n">H_psi</span><span class="o">.</span><span class="n">flatten_</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">H_psi</span>
-
-<span class="k">def</span> <span class="nf">eig_Lanczos</span><span class="p">(</span><span class="n">psivec</span><span class="p">,</span> <span class="n">functArgs</span><span class="p">,</span> <span class="n">Cvgcrit</span><span class="o">=</span><span class="mf">1.0e-15</span><span class="p">,</span><span class="n">maxit</span><span class="o">=</span><span class="mi">100000</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Lanczos method for finding smallest algebraic eigenvector of linear \</span>
-<span class="sd">    operator defined as a function&quot;&quot;&quot;</span>
-    <span class="c1">#print(eig_Lanczos)</span>
-
-    <span class="n">Hop</span> <span class="o">=</span> <span class="n">Projector</span><span class="p">(</span><span class="o">*</span><span class="n">functArgs</span><span class="p">,</span><span class="n">psivec</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span><span class="n">psivec</span><span class="o">.</span><span class="n">dtype</span><span class="p">(),</span><span class="n">psivec</span><span class="o">.</span><span class="n">device</span><span class="p">())</span>
-    <span class="n">gs_energy</span> <span class="p">,</span><span class="n">psivec</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Lanczos_Gnd</span><span class="p">(</span><span class="n">Hop</span><span class="p">,</span><span class="n">Cvgcrit</span><span class="p">,</span><span class="n">Tin</span><span class="o">=</span><span class="n">psivec</span><span class="p">,</span><span class="n">maxiter</span><span class="o">=</span><span class="n">maxit</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">psivec</span><span class="p">,</span> <span class="n">gs_energy</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">class</span> <span class="nc">Projector</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="p">):</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">M1</span><span class="p">,</span><span class="n">M2</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">psi_dim</span><span class="p">,</span><span class="n">psi_dtype</span><span class="p">,</span><span class="n">psi_device</span><span class="p">):</span>
+<span class="linenos"> 5</span>        <span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;mv&quot;</span><span class="p">,</span><span class="n">psi_dim</span><span class="p">,</span><span class="n">psi_dtype</span><span class="p">,</span><span class="n">psi_device</span><span class="p">)</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>        <span class="bp">self</span><span class="o">.</span><span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;projector.net&quot;</span><span class="p">)</span>
+<span class="linenos"> 8</span>        <span class="bp">self</span><span class="o">.</span><span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">&quot;M2&quot;</span><span class="p">,</span><span class="n">M2</span><span class="p">)</span>
+<span class="linenos"> 9</span>        <span class="bp">self</span><span class="o">.</span><span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;L&quot;</span><span class="p">,</span><span class="s2">&quot;M1&quot;</span><span class="p">,</span><span class="s2">&quot;R&quot;</span><span class="p">],[</span><span class="n">L</span><span class="p">,</span><span class="n">M1</span><span class="p">,</span><span class="n">R</span><span class="p">],</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos">10</span>        <span class="bp">self</span><span class="o">.</span><span class="n">psi_shape</span> <span class="o">=</span> <span class="p">[</span><span class="n">L</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">],</span><span class="n">M1</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">],</span><span class="n">M2</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">],</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">]]</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span>    <span class="k">def</span> <span class="nf">matvec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">psi</span><span class="p">):</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span>        <span class="n">psi_p</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">psi</span><span class="o">.</span><span class="n">clone</span><span class="p">(),</span><span class="mi">0</span><span class="p">)</span>  <span class="c1">## clone here</span>
+<span class="linenos">15</span>        <span class="n">psi_p</span><span class="o">.</span><span class="n">reshape_</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_shape</span><span class="p">)</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span>        <span class="bp">self</span><span class="o">.</span><span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">&quot;psi&quot;</span><span class="p">,</span><span class="n">psi_p</span><span class="p">,</span><span class="kc">False</span><span class="p">)</span> <span class="c1">## no- redundant clone here</span>
+<span class="linenos">18</span>        <span class="n">H_psi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span> <span class="c1"># get_block_ without copy</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span>        <span class="n">H_psi</span><span class="o">.</span><span class="n">flatten_</span><span class="p">()</span>
+<span class="linenos">21</span>        <span class="k">return</span> <span class="n">H_psi</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span><span class="k">def</span> <span class="nf">eig_Lanczos</span><span class="p">(</span><span class="n">psivec</span><span class="p">,</span> <span class="n">functArgs</span><span class="p">,</span> <span class="n">Cvgcrit</span><span class="o">=</span><span class="mf">1.0e-15</span><span class="p">,</span><span class="n">maxit</span><span class="o">=</span><span class="mi">100000</span><span class="p">):</span>
+<span class="linenos">24</span>    <span class="sd">&quot;&quot;&quot; Lanczos method for finding smallest algebraic eigenvector of linear \</span>
+<span class="linenos">25</span><span class="sd">    operator defined as a function&quot;&quot;&quot;</span>
+<span class="linenos">26</span>    <span class="c1">#print(eig_Lanczos)</span>
+<span class="linenos">27</span>
+<span class="linenos">28</span>    <span class="n">Hop</span> <span class="o">=</span> <span class="n">Projector</span><span class="p">(</span><span class="o">*</span><span class="n">functArgs</span><span class="p">,</span><span class="n">psivec</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span><span class="n">psivec</span><span class="o">.</span><span class="n">dtype</span><span class="p">(),</span><span class="n">psivec</span><span class="o">.</span><span class="n">device</span><span class="p">())</span>
+<span class="linenos">29</span>    <span class="n">gs_energy</span> <span class="p">,</span><span class="n">psivec</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Lanczos_Gnd</span><span class="p">(</span><span class="n">Hop</span><span class="p">,</span><span class="n">Cvgcrit</span><span class="p">,</span><span class="n">Tin</span><span class="o">=</span><span class="n">psivec</span><span class="p">,</span><span class="n">maxiter</span><span class="o">=</span><span class="n">maxit</span><span class="p">)</span>
+<span class="linenos">30</span>
+<span class="linenos">31</span>    <span class="k">return</span> <span class="n">psivec</span><span class="p">,</span> <span class="n">gs_energy</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>Now do the optimization and SVD task:</p>
 <ul class="simple">
 <li><p>In python</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span>
-<span class="normal">7</span>
-<span class="normal">8</span>
-<span class="normal">9</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">shp</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">shape</span><span class="p">()</span>
-<span class="n">psi_T</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">get_block_</span><span class="p">();</span> <span class="n">psi_T</span><span class="o">.</span><span class="n">flatten_</span><span class="p">()</span> <span class="c1">## flatten to 1d</span>
-<span class="n">psi_T</span><span class="p">,</span> <span class="n">Entemp</span> <span class="o">=</span> <span class="n">eig_Lanczos</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span> <span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">R</span><span class="p">),</span> <span class="n">maxit</span><span class="o">=</span><span class="n">maxit</span><span class="p">);</span>
-<span class="n">psi_T</span><span class="o">.</span><span class="n">reshape_</span><span class="p">(</span><span class="o">*</span><span class="n">shp</span><span class="p">)</span>
-<span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
-
-<span class="n">s0</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="nb">min</span><span class="p">(</span><span class="n">chi</span><span class="p">,</span><span class="n">d</span><span class="p">))</span> <span class="c1">## Svd</span>
-<span class="n">s0</span><span class="o">/=</span><span class="n">s0</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span><span class="o">.</span><span class="n">Norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="c1">## normalize</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos">2</span><span class="n">shp</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">shape</span><span class="p">()</span>
+<span class="linenos">3</span><span class="n">psi_T</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">get_block_</span><span class="p">();</span> <span class="n">psi_T</span><span class="o">.</span><span class="n">flatten_</span><span class="p">()</span> <span class="c1">## flatten to 1d</span>
+<span class="linenos">4</span><span class="n">psi_T</span><span class="p">,</span> <span class="n">Entemp</span> <span class="o">=</span> <span class="n">eig_Lanczos</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span> <span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">R</span><span class="p">),</span> <span class="n">maxit</span><span class="o">=</span><span class="n">maxit</span><span class="p">);</span>
+<span class="linenos">5</span><span class="n">psi_T</span><span class="o">.</span><span class="n">reshape_</span><span class="p">(</span><span class="o">*</span><span class="n">shp</span><span class="p">)</span>
+<span class="linenos">6</span><span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos">7</span>
+<span class="linenos">8</span><span class="n">s0</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="nb">min</span><span class="p">(</span><span class="n">chi</span><span class="p">,</span><span class="n">d</span><span class="p">))</span> <span class="c1">## Svd</span>
+<span class="linenos">9</span><span class="n">s0</span><span class="o">/=</span><span class="n">s0</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span><span class="o">.</span><span class="n">Norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="c1">## normalize</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>we are using a unit cell of two sites, however the unit cell can be any size, including a single site.</p>
@@ -732,109 +677,71 @@ R = \begin{bmatrix} 0\\ 0\\ 1 \end{bmatrix}"/></p>
 <ul class="simple">
 <li><p>In python</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;L_AMAH.net&quot;</span><span class="p">)</span>
-<span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;L&quot;</span><span class="p">,</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;A_Conj&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">],[</span><span class="n">L</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">A</span><span class="o">.</span><span class="n">Conj</span><span class="p">(),</span><span class="n">M</span><span class="p">],</span><span class="n">is_clone</span><span class="o">=</span><span class="kc">False</span><span class="p">);</span>
-<span class="n">L</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;R_AMAH.net&quot;</span><span class="p">)</span>
-<span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;R&quot;</span><span class="p">,</span><span class="s2">&quot;B&quot;</span><span class="p">,</span><span class="s2">&quot;B_Conj&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">],[</span><span class="n">R</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">B</span><span class="o">.</span><span class="n">Conj</span><span class="p">(),</span><span class="n">M</span><span class="p">],</span><span class="n">is_clone</span><span class="o">=</span><span class="kc">False</span><span class="p">);</span>
-<span class="n">R</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;L_AMAH.net&quot;</span><span class="p">)</span>
+<span class="linenos">2</span><span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;L&quot;</span><span class="p">,</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;A_Conj&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">],[</span><span class="n">L</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">A</span><span class="o">.</span><span class="n">Conj</span><span class="p">(),</span><span class="n">M</span><span class="p">],</span><span class="n">is_clone</span><span class="o">=</span><span class="kc">False</span><span class="p">);</span>
+<span class="linenos">3</span><span class="n">L</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">4</span><span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;R_AMAH.net&quot;</span><span class="p">)</span>
+<span class="linenos">5</span><span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;R&quot;</span><span class="p">,</span><span class="s2">&quot;B&quot;</span><span class="p">,</span><span class="s2">&quot;B_Conj&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">],[</span><span class="n">R</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">B</span><span class="o">.</span><span class="n">Conj</span><span class="p">(),</span><span class="n">M</span><span class="p">],</span><span class="n">is_clone</span><span class="o">=</span><span class="kc">False</span><span class="p">);</span>
+<span class="linenos">6</span><span class="n">R</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>we then solve the eigenvalue problem again and do SVD for the new effective hamitonian, note that we initialized a new random trial state here.</p>
 <a class="reference internal image-reference" href="../_images/idmrg_n1.png"><img alt="../_images/idmrg_n1.png" class="align-center" src="../_images/idmrg_n1.png" style="width: 600px;" /></a>
 <ul class="simple">
 <li><p>In python</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span>
-<span class="normal">7</span>
-<span class="normal">8</span>
-<span class="normal">9</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">## Construct n = 1</span>
-<span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">([</span><span class="n">d</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">d</span><span class="p">],</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">shp</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">shape</span><span class="p">()</span>
-<span class="n">psi_T</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">get_block_</span><span class="p">();</span> <span class="n">psi_T</span><span class="o">.</span><span class="n">flatten_</span><span class="p">()</span> <span class="c1">## flatten to 1d</span>
-<span class="n">psi_T</span><span class="p">,</span> <span class="n">Entemp</span> <span class="o">=</span> <span class="n">eig_Lanczos</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span> <span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">R</span><span class="p">),</span> <span class="n">maxit</span><span class="o">=</span><span class="n">maxit</span><span class="p">);</span>
-<span class="n">psi_T</span><span class="o">.</span><span class="n">reshape_</span><span class="p">(</span><span class="o">*</span><span class="n">shp</span><span class="p">)</span>
-<span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">s1</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="nb">min</span><span class="p">(</span><span class="n">chi</span><span class="p">,</span><span class="n">d</span><span class="o">*</span><span class="n">d</span><span class="p">))</span>
-<span class="n">s1</span><span class="o">/=</span><span class="n">s1</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span><span class="o">.</span><span class="n">Norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1">## Construct n = 1</span>
+<span class="linenos">2</span><span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">([</span><span class="n">d</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">d</span><span class="p">],</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos">3</span><span class="n">shp</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">shape</span><span class="p">()</span>
+<span class="linenos">4</span><span class="n">psi_T</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">get_block_</span><span class="p">();</span> <span class="n">psi_T</span><span class="o">.</span><span class="n">flatten_</span><span class="p">()</span> <span class="c1">## flatten to 1d</span>
+<span class="linenos">5</span><span class="n">psi_T</span><span class="p">,</span> <span class="n">Entemp</span> <span class="o">=</span> <span class="n">eig_Lanczos</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span> <span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">R</span><span class="p">),</span> <span class="n">maxit</span><span class="o">=</span><span class="n">maxit</span><span class="p">);</span>
+<span class="linenos">6</span><span class="n">psi_T</span><span class="o">.</span><span class="n">reshape_</span><span class="p">(</span><span class="o">*</span><span class="n">shp</span><span class="p">)</span>
+<span class="linenos">7</span><span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos">8</span><span class="n">s1</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="nb">min</span><span class="p">(</span><span class="n">chi</span><span class="p">,</span><span class="n">d</span><span class="o">*</span><span class="n">d</span><span class="p">))</span>
+<span class="linenos">9</span><span class="n">s1</span><span class="o">/=</span><span class="n">s1</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span><span class="o">.</span><span class="n">Norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>followed by another environment update:</p>
 <ul class="simple">
 <li><p>In python</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span>
-<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># absorb A[1], B[1] to left &amp; right enviroment.</span>
-<span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;L_AMAH.net&quot;</span><span class="p">)</span>
-<span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;L&quot;</span><span class="p">,</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;A_Conj&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">],[</span><span class="n">L</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">A</span><span class="o">.</span><span class="n">Conj</span><span class="p">(),</span><span class="n">M</span><span class="p">],</span><span class="n">is_clone</span><span class="o">=</span><span class="kc">False</span><span class="p">);</span>
-<span class="n">L</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;R_AMAH.net&quot;</span><span class="p">)</span>
-<span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;R&quot;</span><span class="p">,</span><span class="s2">&quot;B&quot;</span><span class="p">,</span><span class="s2">&quot;B_Conj&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">],[</span><span class="n">R</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">B</span><span class="o">.</span><span class="n">Conj</span><span class="p">(),</span><span class="n">M</span><span class="p">],</span><span class="n">is_clone</span><span class="o">=</span><span class="kc">False</span><span class="p">);</span>
-<span class="n">R</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1"># absorb A[1], B[1] to left &amp; right enviroment.</span>
+<span class="linenos">2</span><span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;L_AMAH.net&quot;</span><span class="p">)</span>
+<span class="linenos">3</span><span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;L&quot;</span><span class="p">,</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;A_Conj&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">],[</span><span class="n">L</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">A</span><span class="o">.</span><span class="n">Conj</span><span class="p">(),</span><span class="n">M</span><span class="p">],</span><span class="n">is_clone</span><span class="o">=</span><span class="kc">False</span><span class="p">);</span>
+<span class="linenos">4</span><span class="n">L</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">5</span><span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;R_AMAH.net&quot;</span><span class="p">)</span>
+<span class="linenos">6</span><span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;R&quot;</span><span class="p">,</span><span class="s2">&quot;B&quot;</span><span class="p">,</span><span class="s2">&quot;B_Conj&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">],[</span><span class="n">R</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">B</span><span class="o">.</span><span class="n">Conj</span><span class="p">(),</span><span class="n">M</span><span class="p">],</span><span class="n">is_clone</span><span class="o">=</span><span class="kc">False</span><span class="p">);</span>
+<span class="linenos">7</span><span class="n">R</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>The next few steps involve “rotate” the center of our state to the left and right:</p>
 <a class="reference internal image-reference" href="../_images/idmrg_rotate.png"><img alt="../_images/idmrg_rotate.png" class="align-center" src="../_images/idmrg_rotate.png" style="width: 500px;" /></a>
 <p>which is done by the straightforward contraction and re-SVD:</p>
 <ul class="simple">
 <li><p>In python</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">## rotate left</span>
-<span class="n">A</span><span class="o">.</span><span class="n">set_rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">sR</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">s1</span><span class="p">))</span>
-
-<span class="c1">## rotate right</span>
-<span class="n">B</span><span class="o">.</span><span class="n">set_rowrank</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">sL</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span><span class="n">B</span><span class="p">))</span>
-
-<span class="c1">## now, we change it just to be consistent with the notation in the paper</span>
-<span class="c1">#</span>
-<span class="c1">#  before:</span>
-<span class="c1">#    env-- B&#39;--sL    sR--A&#39; --env</span>
-<span class="c1">#          |             |</span>
-<span class="c1">#</span>
-<span class="c1">#  after change name:</span>
-<span class="c1">#</span>
-<span class="c1">#    env-- A--sL     sR--B  --env</span>
-<span class="c1">#          |             |</span>
-<span class="c1">#</span>
-<span class="n">A</span><span class="p">,</span><span class="n">B</span> <span class="o">=</span> <span class="n">B</span><span class="p">,</span><span class="n">A</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">## rotate left</span>
+<span class="linenos"> 2</span><span class="n">A</span><span class="o">.</span><span class="n">set_rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos"> 3</span><span class="n">sR</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">s1</span><span class="p">))</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="c1">## rotate right</span>
+<span class="linenos"> 6</span><span class="n">B</span><span class="o">.</span><span class="n">set_rowrank</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos"> 7</span><span class="n">sL</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span><span class="n">B</span><span class="p">))</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="c1">## now, we change it just to be consistent with the notation in the paper</span>
+<span class="linenos">10</span><span class="c1">#</span>
+<span class="linenos">11</span><span class="c1">#  before:</span>
+<span class="linenos">12</span><span class="c1">#    env-- B&#39;--sL    sR--A&#39; --env</span>
+<span class="linenos">13</span><span class="c1">#          |             |</span>
+<span class="linenos">14</span><span class="c1">#</span>
+<span class="linenos">15</span><span class="c1">#  after change name:</span>
+<span class="linenos">16</span><span class="c1">#</span>
+<span class="linenos">17</span><span class="c1">#    env-- A--sL     sR--B  --env</span>
+<span class="linenos">18</span><span class="c1">#          |             |</span>
+<span class="linenos">19</span><span class="c1">#</span>
+<span class="linenos">20</span><span class="n">A</span><span class="p">,</span><span class="n">B</span> <span class="o">=</span> <span class="n">B</span><span class="p">,</span><span class="n">A</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>Note that we have discarded U for the rotate left case and Vt for the right, and now in this scheme we construct our trial state
 for the n=2 iteration as follows, which looks like a inserted two new sites between our environment:</p>
 <a class="reference internal image-reference" href="../_images/idmrg_trial.png"><img alt="../_images/idmrg_trial.png" class="align-center" src="../_images/idmrg_trial.png" style="width: 500px;" /></a>
@@ -851,121 +758,77 @@ then we can simply follows the procedures mentioned in the iTEBD example, we hav
 <ul class="simple">
 <li><p>In python</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">sR</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">sL</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">s0</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">s0</span>
-<span class="n">s0</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">s2</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">sL</span><span class="p">,</span><span class="n">s0</span><span class="p">),</span><span class="n">sR</span><span class="p">)</span>
-
-<span class="n">s2</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">11</span><span class="p">])</span>
-<span class="n">A</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">B</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">11</span><span class="p">)</span>
-<span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">s2</span><span class="p">),</span><span class="n">B</span><span class="p">)</span>
-
-<span class="c1">## optimize wave function:</span>
-<span class="c1">#  again use Lanczos to get the (local) ground state.</span>
-
-<span class="n">shp</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">shape</span><span class="p">()</span>
-<span class="n">psi_T</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">get_block_</span><span class="p">();</span> <span class="n">psi_T</span><span class="o">.</span><span class="n">flatten_</span><span class="p">()</span> <span class="c1">## flatten to 1d</span>
-<span class="n">psi_T</span><span class="p">,</span> <span class="n">Entemp</span> <span class="o">=</span> <span class="n">eig_Lanczos</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span> <span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">R</span><span class="p">),</span> <span class="n">maxit</span><span class="o">=</span><span class="n">maxit</span><span class="p">);</span>
-<span class="n">psi_T</span><span class="o">.</span><span class="n">reshape_</span><span class="p">(</span><span class="o">*</span><span class="n">shp</span><span class="p">)</span>
-<span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">s2</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="nb">min</span><span class="p">(</span><span class="n">chi</span><span class="p">,</span><span class="n">psi</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">psi</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">]))</span>
-<span class="n">s2</span><span class="o">/=</span><span class="n">s2</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span><span class="o">.</span><span class="n">Norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">sR</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos"> 2</span><span class="n">sL</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="linenos"> 3</span><span class="n">s0</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">s0</span>
+<span class="linenos"> 4</span><span class="n">s0</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="linenos"> 5</span><span class="n">s2</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">sL</span><span class="p">,</span><span class="n">s0</span><span class="p">),</span><span class="n">sR</span><span class="p">)</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="n">s2</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">11</span><span class="p">])</span>
+<span class="linenos"> 8</span><span class="n">A</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">)</span>
+<span class="linenos"> 9</span><span class="n">B</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">11</span><span class="p">)</span>
+<span class="linenos">10</span><span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">s2</span><span class="p">),</span><span class="n">B</span><span class="p">)</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span><span class="c1">## optimize wave function:</span>
+<span class="linenos">13</span><span class="c1">#  again use Lanczos to get the (local) ground state.</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="n">shp</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">shape</span><span class="p">()</span>
+<span class="linenos">16</span><span class="n">psi_T</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">get_block_</span><span class="p">();</span> <span class="n">psi_T</span><span class="o">.</span><span class="n">flatten_</span><span class="p">()</span> <span class="c1">## flatten to 1d</span>
+<span class="linenos">17</span><span class="n">psi_T</span><span class="p">,</span> <span class="n">Entemp</span> <span class="o">=</span> <span class="n">eig_Lanczos</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span> <span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">R</span><span class="p">),</span> <span class="n">maxit</span><span class="o">=</span><span class="n">maxit</span><span class="p">);</span>
+<span class="linenos">18</span><span class="n">psi_T</span><span class="o">.</span><span class="n">reshape_</span><span class="p">(</span><span class="o">*</span><span class="n">shp</span><span class="p">)</span>
+<span class="linenos">19</span><span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos">20</span><span class="n">s2</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="nb">min</span><span class="p">(</span><span class="n">chi</span><span class="p">,</span><span class="n">psi</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">psi</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">]))</span>
+<span class="linenos">21</span><span class="n">s2</span><span class="o">/=</span><span class="n">s2</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span><span class="o">.</span><span class="n">Norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>then we check the convergence by comparing the singular values to the one we obtained in the previous iteration:</p>
 <ul class="simple">
 <li><p>In python</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span>
-<span class="normal">7</span>
-<span class="normal">8</span>
-<span class="normal">9</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">if</span><span class="p">(</span><span class="n">s2</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">s1</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">]):</span>
-    <span class="n">ss</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;step:</span><span class="si">%d</span><span class="s2">, increasing bond dim!! dim: </span><span class="si">%d</span><span class="s2">/</span><span class="si">%d</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">s1</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span><span class="n">chi</span><span class="p">))</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">ss</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">s2</span><span class="o">.</span><span class="n">get_block_</span><span class="p">(),</span><span class="n">s1</span><span class="o">.</span><span class="n">get_block_</span><span class="p">())</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;step:</span><span class="si">%d</span><span class="s2">, diff:</span><span class="si">%11.11f</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="o">-</span><span class="n">ss</span><span class="p">))</span>
-<span class="k">if</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">ss</span><span class="o">&lt;</span><span class="mf">1.0e-10</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[converge!!]&quot;</span><span class="p">)</span>
-    <span class="k">break</span><span class="p">;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">if</span><span class="p">(</span><span class="n">s2</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">s1</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">]):</span>
+<span class="linenos">2</span>    <span class="n">ss</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">3</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;step:</span><span class="si">%d</span><span class="s2">, increasing bond dim!! dim: </span><span class="si">%d</span><span class="s2">/</span><span class="si">%d</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">s1</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span><span class="n">chi</span><span class="p">))</span>
+<span class="linenos">4</span><span class="k">else</span><span class="p">:</span>
+<span class="linenos">5</span>    <span class="n">ss</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">s2</span><span class="o">.</span><span class="n">get_block_</span><span class="p">(),</span><span class="n">s1</span><span class="o">.</span><span class="n">get_block_</span><span class="p">())</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+<span class="linenos">6</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;step:</span><span class="si">%d</span><span class="s2">, diff:</span><span class="si">%11.11f</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="o">-</span><span class="n">ss</span><span class="p">))</span>
+<span class="linenos">7</span><span class="k">if</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">ss</span><span class="o">&lt;</span><span class="mf">1.0e-10</span><span class="p">):</span>
+<span class="linenos">8</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[converge!!]&quot;</span><span class="p">)</span>
+<span class="linenos">9</span>    <span class="k">break</span><span class="p">;</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>also rememeber to update the environment using the SVD result.</p>
 <ul class="simple">
 <li><p>In python</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;L_AMAH.net&quot;</span><span class="p">)</span>
-<span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;L&quot;</span><span class="p">,</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;A_Conj&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">],[</span><span class="n">L</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">A</span><span class="o">.</span><span class="n">Conj</span><span class="p">(),</span><span class="n">M</span><span class="p">],</span><span class="n">is_clone</span><span class="o">=</span><span class="kc">False</span><span class="p">);</span>
-<span class="n">L</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;R_AMAH.net&quot;</span><span class="p">)</span>
-<span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;R&quot;</span><span class="p">,</span><span class="s2">&quot;B&quot;</span><span class="p">,</span><span class="s2">&quot;B_Conj&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">],[</span><span class="n">R</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">B</span><span class="o">.</span><span class="n">Conj</span><span class="p">(),</span><span class="n">M</span><span class="p">],</span><span class="n">is_clone</span><span class="o">=</span><span class="kc">False</span><span class="p">);</span>
-<span class="n">R</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="n">s0</span> <span class="o">=</span> <span class="n">s1</span>
-<span class="n">s1</span> <span class="o">=</span> <span class="n">s2</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;L_AMAH.net&quot;</span><span class="p">)</span>
+<span class="linenos"> 2</span><span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;L&quot;</span><span class="p">,</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;A_Conj&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">],[</span><span class="n">L</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">A</span><span class="o">.</span><span class="n">Conj</span><span class="p">(),</span><span class="n">M</span><span class="p">],</span><span class="n">is_clone</span><span class="o">=</span><span class="kc">False</span><span class="p">);</span>
+<span class="linenos"> 3</span><span class="n">L</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;R_AMAH.net&quot;</span><span class="p">)</span>
+<span class="linenos"> 6</span><span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;R&quot;</span><span class="p">,</span><span class="s2">&quot;B&quot;</span><span class="p">,</span><span class="s2">&quot;B_Conj&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">],[</span><span class="n">R</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">B</span><span class="o">.</span><span class="n">Conj</span><span class="p">(),</span><span class="n">M</span><span class="p">],</span><span class="n">is_clone</span><span class="o">=</span><span class="kc">False</span><span class="p">);</span>
+<span class="linenos"> 7</span><span class="n">R</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="n">s0</span> <span class="o">=</span> <span class="n">s1</span>
+<span class="linenos">10</span><span class="n">s1</span> <span class="o">=</span> <span class="n">s2</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>After reaching the fixed point, let’s consider a local measurement of energy for the final state:</p>
 <a class="reference internal image-reference" href="../_images/idmrg_measure.png"><img alt="../_images/idmrg_measure.png" class="align-center" src="../_images/idmrg_measure.png" style="width: 350px;" /></a>
 <ul class="simple">
 <li><p>In python</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span>
-<span class="normal">7</span>
-<span class="normal">8</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">H</span> <span class="o">=</span> <span class="n">J</span><span class="o">*</span><span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Kron</span><span class="p">(</span><span class="n">sz</span><span class="p">,</span><span class="n">sz</span><span class="p">)</span> <span class="o">+</span> <span class="n">Hx</span><span class="o">*</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Kron</span><span class="p">(</span><span class="n">sx</span><span class="p">,</span><span class="n">eye</span><span class="p">)</span> <span class="o">+</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Kron</span><span class="p">(</span><span class="n">eye</span><span class="p">,</span><span class="n">sx</span><span class="p">))</span>
-<span class="n">H</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">H</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
-
-<span class="c1"># use the converged state to get the local energy:</span>
-<span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;Measure.net&quot;</span><span class="p">)</span>
-<span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;psi&quot;</span><span class="p">,</span><span class="s2">&quot;psi_conj&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">],[</span><span class="n">psi</span><span class="p">,</span><span class="n">psi</span><span class="p">,</span><span class="n">H</span><span class="p">])</span>
-<span class="n">E</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ground state E&quot;</span><span class="p">,</span><span class="n">E</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">H</span> <span class="o">=</span> <span class="n">J</span><span class="o">*</span><span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Kron</span><span class="p">(</span><span class="n">sz</span><span class="p">,</span><span class="n">sz</span><span class="p">)</span> <span class="o">+</span> <span class="n">Hx</span><span class="o">*</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Kron</span><span class="p">(</span><span class="n">sx</span><span class="p">,</span><span class="n">eye</span><span class="p">)</span> <span class="o">+</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Kron</span><span class="p">(</span><span class="n">eye</span><span class="p">,</span><span class="n">sx</span><span class="p">))</span>
+<span class="linenos">2</span><span class="n">H</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">H</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos">3</span>
+<span class="linenos">4</span><span class="c1"># use the converged state to get the local energy:</span>
+<span class="linenos">5</span><span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;Measure.net&quot;</span><span class="p">)</span>
+<span class="linenos">6</span><span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;psi&quot;</span><span class="p">,</span><span class="s2">&quot;psi_conj&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">],[</span><span class="n">psi</span><span class="p">,</span><span class="n">psi</span><span class="p">,</span><span class="n">H</span><span class="p">])</span>
+<span class="linenos">7</span><span class="n">E</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="linenos">8</span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ground state E&quot;</span><span class="p">,</span><span class="n">E</span><span class="p">)</span>
 </pre></div>
-</td></tr></table></div>
-<p id="bibtex-bibliography-example/iDMRG-0"><dl class="bibtex citation">
-<dt class="bibtex label" id="ibdry"><span class="brackets"><a class="fn-backref" href="#id1">PVM12</a></span></dt>
+</div>
+<p id="id2"><dl class="citation">
+<dt class="label" id="id3"><span class="brackets"><a class="fn-backref" href="#id1">PVM12</a></span></dt>
 <dd><p>Ho N. Phien, Guifré Vidal, and Ian P. McCulloch. Infinite boundary conditions for matrix product state calculations. <em>Phys. Rev. B</em>, 86:245107, Dec 2012. URL: <a class="reference external" href="https://link.aps.org/doi/10.1103/PhysRevB.86.245107">https://link.aps.org/doi/10.1103/PhysRevB.86.245107</a>, <a class="reference external" href="https://doi.org/10.1103/PhysRevB.86.245107">doi:10.1103/PhysRevB.86.245107</a>.</p>
 </dd>
 </dl>
@@ -984,7 +847,7 @@ then we can simply follows the procedures mentioned in the iTEBD example, we hav
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 4.2.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

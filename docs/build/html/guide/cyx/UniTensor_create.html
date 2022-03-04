@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -12,20 +12,19 @@
     
     <title>7.3.1. Create UniTensor &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css" />
     <link rel="stylesheet" href="../../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/sphinxbootstrap4.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="7.3.2. Accessing the block(s)" href="UniTensor_getblk.html" />
+    <link rel="next" title="7.3.2. Tagged UniTensor" href="UniTensor_tag.html" />
     <link rel="prev" title="7.3. UniTensor" href="UniTensor.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
@@ -182,8 +181,8 @@
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="UniTensor.html">7.3. UniTensor</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">7.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">7.3.2. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">7.3.3. tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">7.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">7.3.3. Accessing the block(s)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
@@ -231,6 +230,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../Perf_tune.html">Performance tune</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../perf_tune/tensordot.html">Tensordot with input cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../perf_tune/tensorelem.html">Access single element of Tensor in C++</a></li>
 </ul>
 </li>
 </ul>
@@ -253,7 +253,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../../">v0.7.4</a></li>
+              <a  class="nav-link" href="../../%23.html">v0.7.4</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -279,7 +279,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../../">v0.7.4</a></li>
+                  <a  class="nav-link" href="../../%23.html">v0.7.4</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -313,8 +313,8 @@
                <a href="UniTensor.html" title="Previous Chapter: 7.3. UniTensor" class="btn btn-primary" role="botton" accesskey="P">
                    &laquo; 7.3. UniTensor
                </a>
-               <a href="UniTensor_getblk.html" title="Next Chapter: 7.3.2. Accessing the block(s)" class="btn btn-primary" role="botton" accesskey="N">
-                   7.3.2. Access... &raquo;
+               <a href="UniTensor_tag.html" title="Next Chapter: 7.3.2. Tagged UniTensor" class="btn btn-primary" role="botton" accesskey="N">
+                   7.3.2. Tagged... &raquo;
                </a>
            </div>
        </div>
@@ -469,8 +469,8 @@
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="UniTensor.html">7.3. UniTensor</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">7.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">7.3.2. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">7.3.3. tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">7.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">7.3.3. Accessing the block(s)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
@@ -518,6 +518,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../Perf_tune.html">Performance tune</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../perf_tune/tensordot.html">Tensordot with input cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../perf_tune/tensorelem.html">Access single element of Tensor in C++</a></li>
 </ul>
 </li>
 </ul>
@@ -538,8 +539,8 @@
   <p class="topless"><a href="UniTensor.html"
                         title="previous chapter"><span class="section-number">7.3. </span>UniTensor</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="UniTensor_getblk.html"
-                        title="next chapter"><span class="section-number">7.3.2. </span>Accessing the block(s)</a></p>
+  <p class="topless"><a href="UniTensor_tag.html"
+                        title="next chapter"><span class="section-number">7.3.2. </span>Tagged UniTensor</a></p>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../../search.html" method="get">
       <input type="text" name="q" class="form-control" placeholder="Search..." />
@@ -596,26 +597,20 @@
 <p>Before going into more complicated UniTensor structure, first of all let’s start with the most simple example, for which we convert a Tensor into a UniTensor, and use this to introduce the first type of UniTensor we encounter: <strong>untagged</strong> UniTensor.</p>
 <p>In the following, let’s use a simple rank-3 tensor as example to give you a glance on some basic properties of UniTensor. The tensor notation (diagram) looks like:</p>
 <a class="reference internal image-reference" href="../../_images/untag.png"><img alt="../../_images/untag.png" class="align-center" src="../../_images/untag.png" style="width: 200px;" /></a>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span>
-<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cytnx</span> <span class="k">as</span> <span class="nn">cy</span>
-
-<span class="c1"># create a rank-3 tensor with shape [2,3,4]</span>
-<span class="n">T</span> <span class="o">=</span> <span class="n">cy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="mi">3</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
-
-<span class="c1"># convert to UniTensor:</span>
-<span class="n">uT</span> <span class="o">=</span> <span class="n">cy</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">T</span><span class="p">,</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">import</span> <span class="nn">cytnx</span> <span class="k">as</span> <span class="nn">cy</span>
+<span class="linenos">2</span>
+<span class="linenos">3</span><span class="c1"># create a rank-3 tensor with shape [2,3,4]</span>
+<span class="linenos">4</span><span class="n">T</span> <span class="o">=</span> <span class="n">cy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="mi">3</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="linenos">5</span>
+<span class="linenos">6</span><span class="c1"># convert to UniTensor:</span>
+<span class="linenos">7</span><span class="n">uT</span> <span class="o">=</span> <span class="n">cy</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">T</span><span class="p">,</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>Here, we simply convert a Tensor <strong>T</strong> into a UniTensor <strong>uT</strong> simply by wrapping it with constructor <em>cy.UniTensor()</em>. Formally, we should think of this as we constructing a UniTensor <strong>uT</strong> with <strong>T</strong> being <strong>uT</strong>’s <em>block</em> (data).</p>
 <p>An additional argument <em>rowrank</em> is also provided, which we will get back to it in a moment but now, let’s use <strong>print_diagram()</strong> to visualize the UniTensor in a more straightforward way as a diagram:</p>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">uT</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">uT</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>Output &gt;&gt;</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>tensor Name :
 tensor Rank : 3
@@ -661,11 +656,10 @@ on device   : cytnx device: CPU
 <ol class="arabic simple" start="3">
 <li><p><strong>tensor name:</strong> The name (alias) of the UniTensor. User can give UniTensor a name using <strong>UniTensor.set_name()</strong></p></li>
 </ol>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">uT</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;tensor uT&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">uT</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">uT</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;tensor uT&quot;</span><span class="p">)</span>
+<span class="linenos">2</span><span class="nb">print</span><span class="p">(</span><span class="n">uT</span><span class="p">)</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>Output &gt;&gt;</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span class="hll">Tensor name: tensor uT
 </span>braket_form : False
@@ -703,8 +697,8 @@ Shape : (2,3,4)
 <h2><span class="section-number">7.3.1.2. </span>From scratch<a class="headerlink" href="#from-scratch" title="Permalink to this headline">¶</a></h2>
 <p>Next, let’s introduce the complete API for construct a UniTensor:</p>
 <dl class="py function">
-<dt id="UniTensor">
-<code class="sig-name descname">UniTensor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bonds</span></em>, <em class="sig-param"><span class="n">labels</span></em>, <em class="sig-param"><span class="n">rowrank</span></em>, <em class="sig-param"><span class="n">dtype</span></em>, <em class="sig-param"><span class="n">device</span></em>, <em class="sig-param"><span class="n">is_diag</span></em><span class="sig-paren">)</span><a class="headerlink" href="#UniTensor" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="UniTensor">
+<span class="sig-name descname"><span class="pre">UniTensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bonds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rowrank</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_diag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UniTensor" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -728,19 +722,14 @@ Shape : (2,3,4)
 <p>For more details, see <strong>Bond</strong> section. Here, for simplicity, we will use only the dimension property of a Bond.</p>
 <p>Now let’s construct the rank-3 UniTensor with the same shape as the above example, and assign those three bonds with labels (100,101,102) and also set name to be “uT2”</p>
 <a class="reference internal image-reference" href="../../_images/ut2.png"><img alt="../../_images/ut2.png" class="align-center" src="../../_images/ut2.png" style="width: 300px;" /></a>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cytnx</span> <span class="k">as</span> <span class="nn">cy</span>
-<span class="kn">from</span> <span class="nn">cytnx</span> <span class="kn">import</span> <span class="n">Bond</span> <span class="k">as</span> <span class="n">bd</span>
-
-<span class="n">uT2</span> <span class="o">=</span> <span class="n">cy</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bd</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">bd</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">bd</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span><span class="mi">101</span><span class="p">,</span><span class="mi">102</span><span class="p">],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;uT2 scratch&quot;</span><span class="p">)</span>
-<span class="n">uT2</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">uT2</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">import</span> <span class="nn">cytnx</span> <span class="k">as</span> <span class="nn">cy</span>
+<span class="linenos">2</span><span class="kn">from</span> <span class="nn">cytnx</span> <span class="kn">import</span> <span class="n">Bond</span> <span class="k">as</span> <span class="n">bd</span>
+<span class="linenos">3</span>
+<span class="linenos">4</span><span class="n">uT2</span> <span class="o">=</span> <span class="n">cy</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bd</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">bd</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">bd</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span><span class="mi">101</span><span class="p">,</span><span class="mi">102</span><span class="p">],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;uT2 scratch&quot;</span><span class="p">)</span>
+<span class="linenos">5</span><span class="n">uT2</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="linenos">6</span><span class="nb">print</span><span class="p">(</span><span class="n">uT2</span><span class="p">)</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>Output &gt;&gt;</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-----------------------
 tensor Name : uT2 scratch
@@ -780,19 +769,14 @@ Shape : (2,3,4)
 <section id="change-labels">
 <h2><span class="section-number">7.3.1.3. </span>Change labels<a class="headerlink" href="#change-labels" title="Permalink to this headline">¶</a></h2>
 <p>To change the labels associate to bond(s), we can use <strong>UniTensor.set_label(index, new_label)</strong> or <strong>UniTensor.set_labels(new_labels)</strong>. Note that the label should be integer, and cannot have duplicate labels <em>within</em> a same UniTensor:</p>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">uT</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">9</span><span class="p">)</span>
-<span class="n">uT</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
-
-
-<span class="n">uT</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">999</span><span class="p">])</span>
-<span class="n">uT</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">uT</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">9</span><span class="p">)</span>
+<span class="linenos">2</span><span class="n">uT</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="linenos">3</span>
+<span class="linenos">4</span>
+<span class="linenos">5</span><span class="n">uT</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">999</span><span class="p">])</span>
+<span class="linenos">6</span><span class="n">uT</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>Output &gt;&gt;</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>tensor Name : tensor uT
 tensor Rank : 3
@@ -838,7 +822,7 @@ on device   : cytnx device: CPU
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 4.2.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

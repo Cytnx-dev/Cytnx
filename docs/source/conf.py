@@ -39,6 +39,11 @@ _version = 'v0.7.4'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinxcontrib.bibtex']#,'sphinx.ext.autosectionlabel']
+bibtex_bibfiles = ["example/ref.dmrg.bib",\
+                   "example/ref.hotrg.bib",\
+                   "example/ref.itebd.bib",\
+                   "example/ref.idmrg.bib",\
+                  ]
 extensions.append('sphinx.ext.extlinks')
 extensions.append('sphinx.ext.imgmath')
 #extensions.append('ablog')

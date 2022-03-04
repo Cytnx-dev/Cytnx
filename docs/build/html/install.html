@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -12,15 +12,14 @@
     
     <title>Install &amp; Usage of Cytnx &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css" />
     <link rel="stylesheet" href="_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/sphinxbootstrap4.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <script src="_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -182,8 +181,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide/cyx/UniTensor.html">7.3. UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_create.html">7.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_getblk.html">7.3.2. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_tag.html">7.3.3. tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_tag.html">7.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_getblk.html">7.3.3. Accessing the block(s)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
@@ -231,6 +230,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Perf_tune.html">Performance tune</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="perf_tune/tensordot.html">Tensordot with input cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="perf_tune/tensorelem.html">Access single element of Tensor in C++</a></li>
 </ul>
 </li>
 </ul>
@@ -253,7 +253,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="./">v0.7.4</a></li>
+              <a  class="nav-link" href="%23.html">v0.7.4</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -279,7 +279,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="./">v0.7.4</a></li>
+                  <a  class="nav-link" href="%23.html">v0.7.4</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -460,8 +460,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide/cyx/UniTensor.html">7.3. UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_create.html">7.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_getblk.html">7.3.2. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_tag.html">7.3.3. tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_tag.html">7.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_getblk.html">7.3.3. Accessing the block(s)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
@@ -509,6 +509,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Perf_tune.html">Performance tune</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="perf_tune/tensordot.html">Tensordot with input cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="perf_tune/tensorelem.html">Access single element of Tensor in C++</a></li>
 </ul>
 </li>
 </ul>
@@ -566,9 +567,9 @@ Note that both python API and C++ API will be installed together regardless of w
 <ul class="simple">
 <li><p>For linux/WSL:</p></li>
 </ul>
-<div class="highlight-shell notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nv">$conda</span> create --channel conda-forge --name cytnx <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7 <span class="nv">_openmp_mutex</span><span class="o">=</span>*<span class="o">=</span>*_llvm
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nv">$conda</span> create --channel conda-forge --name cytnx <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7 <span class="nv">_openmp_mutex</span><span class="o">=</span>*<span class="o">=</span>*_llvm
 </pre></div>
-</td></tr></table></div>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ol class="arabic simple">
@@ -579,9 +580,9 @@ Note that both python API and C++ API will be installed together regardless of w
 <ul class="simple">
 <li><p>For MacOS:</p></li>
 </ul>
-<div class="highlight-shell notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nv">$conda</span> create --channel conda-forge --name cytnx <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7 llvm-openmp
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nv">$conda</span> create --channel conda-forge --name cytnx <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7 llvm-openmp
 </pre></div>
-</td></tr></table></div>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
@@ -612,15 +613,12 @@ Note that both python API and C++ API will be installed together regardless of w
 <section id="using-python-api-after-conda-install">
 <h3>Using python API after Conda install<a class="headerlink" href="#using-python-api-after-conda-install" title="Permalink to this headline">¶</a></h3>
 <p>After install cytnx, using python API is very straight forward, simply import cytnx via:</p>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cytnx</span>
-
-<span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">import</span> <span class="nn">cytnx</span>
+<span class="linenos">2</span>
+<span class="linenos">3</span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="linenos">4</span><span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <ul class="simple">
 <li><p>Output:</p></li>
 </ul>
@@ -637,17 +635,13 @@ Shape : (4)
 <p>The most important feature is that Cytnx installation also provides C++ API.
 Since there are fundamental differents between C++ and python where C++ require compiling and linking of the code, while python as an interprete language does not require both steps.</p>
 <p>Cytnx provides a simple way for user to easily compiling their C++ code. In cytnx package, we provides three pre-set variables:</p>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cytnx</span>
-<span class="n">cytnx</span><span class="o">.</span><span class="n">__cpp_include__</span>
-<span class="n">cytnx</span><span class="o">.</span><span class="n">__cpp_lib__</span>
-<span class="n">cytnx</span><span class="o">.</span><span class="n">__cpp_linkflags__</span>
-<span class="n">cytnx</span><span class="o">.</span><span class="n">__cpp_flags__</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">import</span> <span class="nn">cytnx</span>
+<span class="linenos">2</span><span class="n">cytnx</span><span class="o">.</span><span class="n">__cpp_include__</span>
+<span class="linenos">3</span><span class="n">cytnx</span><span class="o">.</span><span class="n">__cpp_lib__</span>
+<span class="linenos">4</span><span class="n">cytnx</span><span class="o">.</span><span class="n">__cpp_linkflags__</span>
+<span class="linenos">5</span><span class="n">cytnx</span><span class="o">.</span><span class="n">__cpp_flags__</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <ul class="simple">
 <li><p>The first one <strong>cytnx.__cpp_include__</strong> gives you the cytnx header files directory path.</p></li>
 <li><p>The second one <strong>cytnx.__cpp_lib__</strong> gives you the cytnx library file directory path.</p></li>
@@ -658,39 +652,26 @@ Since there are fundamental differents between C++ and python where C++ require 
 <ul class="simple">
 <li><p>test.cpp</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span>
-<span class="normal">7</span>
-<span class="normal">8</span>
-<span class="normal">9</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;cytnx.hpp&quot;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
-<span class="k">using</span> <span class="k">namespace</span> <span class="nn">std</span><span class="p">;</span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
-    <span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
-    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">A</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cytnx.hpp&quot;</span><span class="cp"></span>
+<span class="linenos">2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="linenos">3</span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">std</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">4</span>
+<span class="linenos">5</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(){</span><span class="w"></span>
+<span class="linenos">6</span><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">7</span><span class="w">    </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">8</span><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">9</span><span class="p">}</span><span class="w"></span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>Now, to compile and linking the above <strong>test.cpp</strong> to produce an executable <strong>test</strong>, we can simply use the following bash script:</p>
-<div class="highlight-shell notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">CYTNX_INC</span><span class="o">=</span><span class="k">$(</span>python -c <span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_include__)\&quot;)&quot;</span><span class="k">)</span>
-<span class="nb">export</span> <span class="nv">CYTNX_LIB</span><span class="o">=</span><span class="k">$(</span>python -c <span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_lib__)\&quot;)&quot;</span><span class="k">)</span>/libcytnx.a
-<span class="nb">export</span> <span class="nv">CYTNX_LINK</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>python -c <span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_linkflags__)\&quot;)&quot;</span><span class="k">)</span><span class="s2">&quot;</span>
-<span class="nb">export</span> <span class="nv">CYTNX_CXXFLAGS</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>python -c <span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_flags__)\&quot;)&quot;</span><span class="k">)</span><span class="s2">&quot;</span>
-
-g++ -I<span class="si">${</span><span class="nv">CYTNX_INC</span><span class="si">}</span> <span class="si">${</span><span class="nv">CYTNX_CXXFLAGS</span><span class="si">}</span> test.cpp <span class="si">${</span><span class="nv">CYTNX_LIB</span><span class="si">}</span> <span class="si">${</span><span class="nv">CYTNX_LINK</span><span class="si">}</span> -o <span class="nb">test</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nb">export</span> <span class="nv">CYTNX_INC</span><span class="o">=</span><span class="k">$(</span>python -c <span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_include__)\&quot;)&quot;</span><span class="k">)</span>
+<span class="linenos">2</span><span class="nb">export</span> <span class="nv">CYTNX_LIB</span><span class="o">=</span><span class="k">$(</span>python -c <span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_lib__)\&quot;)&quot;</span><span class="k">)</span>/libcytnx.a
+<span class="linenos">3</span><span class="nb">export</span> <span class="nv">CYTNX_LINK</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>python -c <span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_linkflags__)\&quot;)&quot;</span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="linenos">4</span><span class="nb">export</span> <span class="nv">CYTNX_CXXFLAGS</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>python -c <span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_flags__)\&quot;)&quot;</span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="linenos">5</span>
+<span class="linenos">6</span>g++ -I<span class="si">${</span><span class="nv">CYTNX_INC</span><span class="si">}</span> <span class="si">${</span><span class="nv">CYTNX_CXXFLAGS</span><span class="si">}</span> test.cpp <span class="si">${</span><span class="nv">CYTNX_LIB</span><span class="si">}</span> <span class="si">${</span><span class="nv">CYTNX_LINK</span><span class="si">}</span> -o <span class="nb">test</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>The first four lines are the python inline execution to get the three attributes and store them into <strong>CYTNX_INC</strong>, <strong>CYTNX_LIB</strong>, <strong>CYTNX_LINK</strong> and <strong>CYTNX_CXXFLAGS</strong> variables. The last line is the standard simple compiling of the C++ code <strong>test.cpp</strong>. After execute these steps, we can then run this program with the executable <strong>test</strong>.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>./test
 </pre></div>
@@ -937,19 +918,14 @@ hptt</p></td>
 <p>To use python API after self-build, one need to add the path where you install cytnx before import it.
 The simplest way (and the most flexible way) to do that is to add it into sys.path right at the beginning of your code.</p>
 <p>In the following, we will use <strong>CYTNX_ROOT</strong> (capital letters) to represent the path where you install the cytnx. You should replace it with the path where cytnx is installed.</p>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">CYTNX_ROOT</span><span class="p">)</span>
-<span class="kn">import</span> <span class="nn">cytnx</span>
-
-<span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="linenos">2</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">CYTNX_ROOT</span><span class="p">)</span>
+<span class="linenos">3</span><span class="kn">import</span> <span class="nn">cytnx</span>
+<span class="linenos">4</span>
+<span class="linenos">5</span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="linenos">6</span><span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <ul class="simple">
 <li><p>Output:</p></li>
 </ul>
@@ -991,7 +967,7 @@ CYTNX_CXXFLAGS :<span class="o">=</span> <span class="k">$(</span>shell python -
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 4.2.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

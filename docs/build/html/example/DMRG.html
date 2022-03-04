@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -12,15 +12,14 @@
     
     <title>3. DMRG &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
     <link rel="stylesheet" href="../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../_static/sphinxbootstrap4.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <script src="../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -182,8 +181,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/UniTensor.html">7.3. UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_create.html">7.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">7.3.2. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_tag.html">7.3.3. tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_tag.html">7.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">7.3.3. Accessing the block(s)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
@@ -231,6 +230,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Perf_tune.html">Performance tune</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../perf_tune/tensordot.html">Tensordot with input cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../perf_tune/tensorelem.html">Access single element of Tensor in C++</a></li>
 </ul>
 </li>
 </ul>
@@ -253,7 +253,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../">v0.7.4</a></li>
+              <a  class="nav-link" href="../%23.html">v0.7.4</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -279,7 +279,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../">v0.7.4</a></li>
+                  <a  class="nav-link" href="../%23.html">v0.7.4</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -465,8 +465,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/UniTensor.html">7.3. UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_create.html">7.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">7.3.2. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_tag.html">7.3.3. tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_tag.html">7.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">7.3.3. Accessing the block(s)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_manip.html">7.3.4. Manipulate UniTensor</a></li>
 </ul>
 </li>
@@ -514,6 +514,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Perf_tune.html">Performance tune</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../perf_tune/tensordot.html">Tensordot with input cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../perf_tune/tensorelem.html">Access single element of Tensor in C++</a></li>
 </ul>
 </li>
 </ul>
@@ -561,7 +562,7 @@
 <h1><span class="section-number">3. </span>DMRG<a class="headerlink" href="#dmrg" title="Permalink to this headline">¶</a></h1>
 <p><strong>By : Hsu Ke, Kai-Hsin Wu</strong></p>
 <p>The density matrix renormalization group (DMRG) is one of the powerful algorithm for study quantum systems.
-The algorithm is especially useful in study 1D systems, while the extension to study 2D systems are also possible. The original formulation <a class="bibtex reference internal" href="#whitedmrg" id="id1">[Whi92]</a> of DMRG is based on the desity matrix, and had been later-on being re-formulated with the concept of matrix product state (MPS) <a class="bibtex reference internal" href="#schollwock201196" id="id2">[Sch11]</a>.</p>
+The algorithm is especially useful in study 1D systems, while the extension to study 2D systems are also possible. The original formulation <span id="id1">[<a class="reference internal" href="#id5" title="Steven R. White. Density matrix formulation for quantum renormalization groups. Phys. Rev. Lett., 69:2863–2866, Nov 1992. URL: https://link.aps.org/doi/10.1103/PhysRevLett.69.2863, doi:10.1103/PhysRevLett.69.2863.">Whi92</a>]</span> of DMRG is based on the desity matrix, and had been later-on being re-formulated with the concept of matrix product state (MPS) <span id="id2">[<a class="reference internal" href="#id4" title="Ulrich Schollwöck. The density-matrix renormalization group in the age of matrix product states. Annals of Physics, 326(1):96-192, 2011. January 2011 Special Issue. URL: https://www.sciencedirect.com/science/article/pii/S0003491610001752, doi:https://doi.org/10.1016/j.aop.2010.09.012.">Sch11</a>]</span>.</p>
 <p>In the following, we are going use the MPS language for explaination. There are two important objects Matrix product state (MPS) and Matrix product operator (MPO) which we will explain them in a moment.</p>
 <p>Using 1D spin-1/2 XY model as an example system, we are going to introduce how to use Cytnx to implement the DMRG algorithm, and benchmark our results with the exact analytic solution avaliable via bethe ansatz.</p>
 <section id="the-model-xy-chain">
@@ -615,55 +616,36 @@ I &amp; S^-_j &amp; S^+_j &amp; 0 \\
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1">#physical dimension</span>
-<span class="n">s</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1">#spin-half</span>
-
-<span class="n">sx</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">physics</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-<span class="n">sy</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">physics</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
-<span class="n">sp</span> <span class="o">=</span> <span class="n">sx</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">sy</span>
-<span class="n">sm</span> <span class="o">=</span> <span class="n">sx</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">sy</span>
-
-<span class="n">eye</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-<span class="n">M</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">])</span>
-<span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">eye</span>
-<span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mf">0.5</span><span class="o">*</span><span class="n">sp</span><span class="o">.</span><span class="n">real</span><span class="p">()</span>
-<span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mf">0.5</span><span class="o">*</span><span class="n">sm</span><span class="o">.</span><span class="n">real</span><span class="p">()</span>
-<span class="n">M</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
-
-<span class="n">L0</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#Left boundary</span>
-<span class="n">R0</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#Right boundary</span>
-<span class="n">L0</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">;</span> <span class="n">R0</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()[</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">d</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1">#physical dimension</span>
+<span class="linenos"> 2</span><span class="n">s</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1">#spin-half</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="n">sx</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">physics</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="linenos"> 5</span><span class="n">sy</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">physics</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+<span class="linenos"> 6</span><span class="n">sp</span> <span class="o">=</span> <span class="n">sx</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">sy</span>
+<span class="linenos"> 7</span><span class="n">sm</span> <span class="o">=</span> <span class="n">sx</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">sy</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="n">eye</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="linenos">10</span><span class="n">M</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">])</span>
+<span class="linenos">11</span><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">eye</span>
+<span class="linenos">12</span><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mf">0.5</span><span class="o">*</span><span class="n">sp</span><span class="o">.</span><span class="n">real</span><span class="p">()</span>
+<span class="linenos">13</span><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mf">0.5</span><span class="o">*</span><span class="n">sm</span><span class="o">.</span><span class="n">real</span><span class="p">()</span>
+<span class="linenos">14</span><span class="n">M</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="n">L0</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#Left boundary</span>
+<span class="linenos">17</span><span class="n">R0</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#Right boundary</span>
+<span class="linenos">18</span><span class="n">L0</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">;</span> <span class="n">R0</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()[</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Here, we first provide the Matrix <em>data</em> via <strong>Tensor</strong>, and convert then to UniTensor, which gives enhanced functionality (such as labels for each bond).</p>
 </div>
 <p>At this moment, let’s print out to show what <strong>M</strong>, <strong>L0</strong> and <strong>R0</strong> looks like:</p>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">M</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
-<span class="n">L0</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
-<span class="n">R0</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">M</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="linenos">2</span><span class="n">L0</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="linenos">3</span><span class="n">R0</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>Output &gt;&gt;</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-----------------------
 tensor Name :
@@ -721,29 +703,19 @@ on device   : cytnx device: CPU
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># MPS, chi is virtual bond dimension</span>
-<span class="n">chi</span> <span class="o">=</span> <span class="mi">32</span>
-<span class="n">Nsites</span> <span class="o">=</span> <span class="mi">20</span>
-
-<span class="n">A</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span><span class="p">)]</span>
-<span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">chi</span><span class="p">,</span> <span class="n">d</span><span class="p">)],</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">Nsites</span><span class="p">):</span>
-    <span class="n">dim1</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">];</span> <span class="n">dim2</span> <span class="o">=</span> <span class="n">d</span><span class="p">;</span>
-    <span class="n">dim3</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">chi</span><span class="p">,</span> <span class="n">A</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">d</span><span class="p">),</span> <span class="n">d</span> <span class="o">**</span> <span class="p">(</span><span class="n">Nsites</span> <span class="o">-</span> <span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
-    <span class="n">A</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">([</span><span class="n">dim1</span><span class="p">,</span> <span class="n">dim2</span><span class="p">,</span> <span class="n">dim3</span><span class="p">],</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">A</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="o">+</span><span class="mi">2</span><span class="p">])</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># MPS, chi is virtual bond dimension</span>
+<span class="linenos"> 2</span><span class="n">chi</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="linenos"> 3</span><span class="n">Nsites</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="n">A</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span><span class="p">)]</span>
+<span class="linenos"> 6</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">chi</span><span class="p">,</span> <span class="n">d</span><span class="p">)],</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos"> 7</span><span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">Nsites</span><span class="p">):</span>
+<span class="linenos"> 8</span>    <span class="n">dim1</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">];</span> <span class="n">dim2</span> <span class="o">=</span> <span class="n">d</span><span class="p">;</span>
+<span class="linenos"> 9</span>    <span class="n">dim3</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">chi</span><span class="p">,</span> <span class="n">A</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">d</span><span class="p">),</span> <span class="n">d</span> <span class="o">**</span> <span class="p">(</span><span class="n">Nsites</span> <span class="o">-</span> <span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
+<span class="linenos">10</span>    <span class="n">A</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">([</span><span class="n">dim1</span><span class="p">,</span> <span class="n">dim2</span><span class="p">,</span> <span class="n">dim3</span><span class="p">],</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos">11</span>    <span class="n">A</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="o">+</span><span class="mi">2</span><span class="p">])</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>The result MPS would look like a tensor train, stored in the list A:</p>
 <a class="reference internal image-reference" href="../_images/dmrg1.png"><img alt="../_images/dmrg1.png" class="align-center" src="../_images/dmrg1.png" style="width: 400px;" /></a>
 <p>The dim3 of each tensor may look a little bit tricky, but we are simply comparing the “maximum dimension needed to span the information for the left part” and that of the right part, while we also want the disired dim3 not larger than our bond dimension.</p>
@@ -761,56 +733,37 @@ Here, we do it from left to right, and we decompose each tensor into its U, s an
 <ul class="simple">
 <li><p>L_AMAH.net:</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">L</span><span class="p">:</span> <span class="p">;</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span>
-<span class="n">A</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">;</span><span class="mi">1</span>
-<span class="n">M</span><span class="p">:</span> <span class="p">;</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span>
-<span class="n">A_Conj</span><span class="p">:</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">;</span><span class="mi">2</span>
-<span class="n">TOUT</span><span class="p">:</span> <span class="p">;</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">L</span><span class="p">:</span> <span class="p">;</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span>
+<span class="linenos">2</span><span class="n">A</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">;</span><span class="mi">1</span>
+<span class="linenos">3</span><span class="n">M</span><span class="p">:</span> <span class="p">;</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span>
+<span class="linenos">4</span><span class="n">A_Conj</span><span class="p">:</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">;</span><span class="mi">2</span>
+<span class="linenos">5</span><span class="n">TOUT</span><span class="p">:</span> <span class="p">;</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>we load it, put tensors in, then call “Launch”, all the four tensors got contracted properly and optimally, in the for loop, the whole process looks like following:</p>
 <a class="reference internal image-reference" href="../_images/dmrg4.png"><img alt="../_images/dmrg4.png" class="align-center" src="../_images/dmrg4.png" style="width: 400px;" /></a>
 <p>The full implementation looks like:</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">LR</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
-<span class="n">LR</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="o">=</span> <span class="n">L0</span>
-<span class="n">LR</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">R0</span>
-
-<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-
-    <span class="c1">## canonical form:</span>
-    <span class="n">s</span><span class="p">,</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="p">,</span><span class="n">vt</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">])</span>
-    <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">vt</span><span class="p">),</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
-
-    <span class="c1">## calculate enviroments:</span>
-    <span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;L_AMAH.net&quot;</span><span class="p">)</span>
-    <span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;L&quot;</span><span class="p">,</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;A_Conj&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">],[</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">Conj</span><span class="p">(),</span><span class="n">M</span><span class="p">],</span><span class="n">is_clone</span><span class="o">=</span><span class="kc">False</span><span class="p">);</span>
-    <span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
-
-<span class="n">_</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">is_U</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">is_vT</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1">## last one.</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">LR</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+<span class="linenos"> 2</span><span class="n">LR</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="o">=</span> <span class="n">L0</span>
+<span class="linenos"> 3</span><span class="n">LR</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">R0</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>    <span class="c1">## canonical form:</span>
+<span class="linenos"> 8</span>    <span class="n">s</span><span class="p">,</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="p">,</span><span class="n">vt</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">])</span>
+<span class="linenos"> 9</span>    <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">vt</span><span class="p">),</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span>    <span class="c1">## calculate enviroments:</span>
+<span class="linenos">12</span>    <span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;L_AMAH.net&quot;</span><span class="p">)</span>
+<span class="linenos">13</span>    <span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;L&quot;</span><span class="p">,</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;A_Conj&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">],[</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">Conj</span><span class="p">(),</span><span class="n">M</span><span class="p">],</span><span class="n">is_clone</span><span class="o">=</span><span class="kc">False</span><span class="p">);</span>
+<span class="linenos">14</span>    <span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="n">_</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">is_U</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">is_vT</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1">## last one.</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <p>At the line 14, we perform SVD on the last tensor but only save the U part, this is the case since the shape of the original tensor is (A[Nsites-2].shape[2], 1, 1),
@@ -823,97 +776,53 @@ what we get from SVD is 1*1 matrix (or a number) for both s and Vt, moreover, th
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">numsweeps</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1"># number of DMRG sweeps</span>
-<span class="n">maxit</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1"># iterations of Lanczos method</span>
-<span class="n">krydim</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1"># dimension of Krylov subspace</span>
-
-<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-
-
-    <span class="c1">## trial state from last iteraction:</span>
-
-    <span class="n">dim_l</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">];</span>
-    <span class="n">dim_r</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">];</span>
-
-    <span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="c1"># contract</span>
-
-    <span class="n">lbl</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">labels</span><span class="p">()</span> <span class="c1">## memorize label</span>
-    <span class="n">psi_T</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">get_block_</span><span class="p">();</span>
-    <span class="n">psi_T</span><span class="o">.</span><span class="n">flatten_</span><span class="p">()</span> <span class="c1">## flatten to 1d</span>
-
-    <span class="c1">## perform Lanczos to get the optimized state</span>
-    <span class="n">psi_T</span><span class="p">,</span> <span class="n">Entemp</span> <span class="o">=</span> <span class="n">optimize_psi</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span> <span class="p">(</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">M</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">2</span><span class="p">]),</span> <span class="n">maxit</span><span class="p">,</span> <span class="n">krydim</span><span class="p">)</span>
-    <span class="n">psi_T</span><span class="o">.</span><span class="n">reshape_</span><span class="p">(</span><span class="n">dim_l</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">dim_r</span><span class="p">)</span> <span class="c1">## convert psi back to 4-leg form</span>
-    <span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
-    <span class="n">psi</span><span class="o">.</span><span class="n">set_labels</span><span class="p">(</span><span class="n">lbl</span><span class="p">);</span>
-    <span class="n">Ekeep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Entemp</span><span class="p">);</span>
-
-    <span class="c1">## truncate the two-site state into MPS form</span>
-    <span class="c1">## with capped intermediate virtual bond dimension</span>
-    <span class="n">new_dim</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dim_l</span><span class="o">*</span><span class="n">d</span><span class="p">,</span> <span class="n">dim_r</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">chi</span><span class="p">)</span>
-    <span class="n">s</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="n">new_dim</span><span class="p">)</span>
-
-    <span class="n">slabel</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">labels</span><span class="p">()</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">/</span><span class="n">s</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span><span class="o">.</span><span class="n">Norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-    <span class="n">s</span><span class="o">.</span><span class="n">set_labels</span><span class="p">(</span><span class="n">slabel</span><span class="p">)</span>
-
-    <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">s</span><span class="p">)</span> <span class="c1">## absorb s into next neighbor</span>
-
-    <span class="c1"># update LR from right to left:</span>
-    <span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;R_AMAH.net&quot;</span><span class="p">)</span>
-    <span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;R&quot;</span><span class="p">,</span><span class="s2">&quot;B&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">,</span><span class="s2">&quot;B_Conj&quot;</span><span class="p">],[</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">2</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span><span class="n">M</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">Conj</span><span class="p">()],</span><span class="n">is_clone</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Sweep[r-&gt;l]: </span><span class="si">%d</span><span class="s1">/</span><span class="si">%d</span><span class="s1">, Loc:</span><span class="si">%d</span><span class="s1">,Energy: </span><span class="si">%f</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">numsweeps</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">Ekeep</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
-
-<span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">_</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">is_U</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_vT</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">numsweeps</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1"># number of DMRG sweeps</span>
+<span class="linenos"> 2</span><span class="n">maxit</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1"># iterations of Lanczos method</span>
+<span class="linenos"> 3</span><span class="n">krydim</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1"># dimension of Krylov subspace</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span>    <span class="c1">## trial state from last iteraction:</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span>    <span class="n">dim_l</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">];</span>
+<span class="linenos">11</span>    <span class="n">dim_r</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">];</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span>    <span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="c1"># contract</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span>    <span class="n">lbl</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">labels</span><span class="p">()</span> <span class="c1">## memorize label</span>
+<span class="linenos">16</span>    <span class="n">psi_T</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">get_block_</span><span class="p">();</span>
+<span class="linenos">17</span>    <span class="n">psi_T</span><span class="o">.</span><span class="n">flatten_</span><span class="p">()</span> <span class="c1">## flatten to 1d</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span>    <span class="c1">## perform Lanczos to get the optimized state</span>
+<span class="linenos">20</span>    <span class="n">psi_T</span><span class="p">,</span> <span class="n">Entemp</span> <span class="o">=</span> <span class="n">optimize_psi</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span> <span class="p">(</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">M</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">2</span><span class="p">]),</span> <span class="n">maxit</span><span class="p">,</span> <span class="n">krydim</span><span class="p">)</span>
+<span class="linenos">21</span>    <span class="n">psi_T</span><span class="o">.</span><span class="n">reshape_</span><span class="p">(</span><span class="n">dim_l</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">dim_r</span><span class="p">)</span> <span class="c1">## convert psi back to 4-leg form</span>
+<span class="linenos">22</span>    <span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+<span class="linenos">23</span>    <span class="n">psi</span><span class="o">.</span><span class="n">set_labels</span><span class="p">(</span><span class="n">lbl</span><span class="p">);</span>
+<span class="linenos">24</span>    <span class="n">Ekeep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Entemp</span><span class="p">);</span>
+<span class="linenos">25</span>
+<span class="linenos">26</span>    <span class="c1">## truncate the two-site state into MPS form</span>
+<span class="linenos">27</span>    <span class="c1">## with capped intermediate virtual bond dimension</span>
+<span class="linenos">28</span>    <span class="n">new_dim</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dim_l</span><span class="o">*</span><span class="n">d</span><span class="p">,</span> <span class="n">dim_r</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">chi</span><span class="p">)</span>
+<span class="linenos">29</span>    <span class="n">s</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="n">new_dim</span><span class="p">)</span>
+<span class="linenos">30</span>
+<span class="linenos">31</span>    <span class="n">slabel</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">labels</span><span class="p">()</span>
+<span class="linenos">32</span>    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">/</span><span class="n">s</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span><span class="o">.</span><span class="n">Norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="linenos">33</span>    <span class="n">s</span><span class="o">.</span><span class="n">set_labels</span><span class="p">(</span><span class="n">slabel</span><span class="p">)</span>
+<span class="linenos">34</span>
+<span class="linenos">35</span>    <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">s</span><span class="p">)</span> <span class="c1">## absorb s into next neighbor</span>
+<span class="linenos">36</span>
+<span class="linenos">37</span>    <span class="c1"># update LR from right to left:</span>
+<span class="linenos">38</span>    <span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;R_AMAH.net&quot;</span><span class="p">)</span>
+<span class="linenos">39</span>    <span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;R&quot;</span><span class="p">,</span><span class="s2">&quot;B&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">,</span><span class="s2">&quot;B_Conj&quot;</span><span class="p">],[</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">2</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span><span class="n">M</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">Conj</span><span class="p">()],</span><span class="n">is_clone</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos">40</span>    <span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">41</span>
+<span class="linenos">42</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Sweep[r-&gt;l]: </span><span class="si">%d</span><span class="s1">/</span><span class="si">%d</span><span class="s1">, Loc:</span><span class="si">%d</span><span class="s1">,Energy: </span><span class="si">%f</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">numsweeps</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">Ekeep</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+<span class="linenos">43</span>
+<span class="linenos">44</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">45</span><span class="n">_</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">is_U</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_vT</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>There are lots of things happening here, let’s break it up a bit, from right to left, the first thing we do is to contract two tensors A[p] and A[p+1]:</p>
 <a class="reference internal image-reference" href="../_images/dmrg5.png"><img alt="../_images/dmrg5.png" class="align-center" src="../_images/dmrg5.png" style="width: 400px;" /></a>
 <p>Generally, the idea is pretty simple, for each local two sites, one contract the left and right enviroments <img class="math" src="../_images/math/9efe96869a83b4904186f93f55d5ff60dd3eaa13.png" alt="L_{j}"/> and <img class="math" src="../_images/math/40cd4b2150382129c9f2e4d08e98cce3bb9e422a.png" alt="R_{j+3}"/> with local MPOs <img class="math" src="../_images/math/b64784f2041f84bed50ea2c36df554f3e157e315.png" alt="M_{j}"/> and <img class="math" src="../_images/math/2bbb316fd7dc56d8377b4436350f9e1ff8b38e39.png" alt="M_{j+1}"/>. We call this the local operator <img class="math" src="../_images/math/120523ac0206fabc001fee2f814bc463ffd2f174.png" alt="H_{loc}"/>.</p>
@@ -923,56 +832,37 @@ what we get from SVD is 1*1 matrix (or a number) for both s and Vt, moreover, th
 <ul class="simple">
 <li><p>projector.net:</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">psi</span><span class="p">:</span> <span class="p">;</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span>
-<span class="n">L</span><span class="p">:</span> <span class="p">;</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span>
-<span class="n">R</span><span class="p">:</span> <span class="p">;</span><span class="o">-</span><span class="mi">7</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span>
-<span class="n">M1</span><span class="p">:</span> <span class="p">;</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span>
-<span class="n">M2</span><span class="p">:</span> <span class="p">;</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span><span class="o">-</span><span class="mi">7</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span>
-<span class="n">TOUT</span><span class="p">:</span> <span class="p">;</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">psi</span><span class="p">:</span> <span class="p">;</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span>
+<span class="linenos">2</span><span class="n">L</span><span class="p">:</span> <span class="p">;</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span>
+<span class="linenos">3</span><span class="n">R</span><span class="p">:</span> <span class="p">;</span><span class="o">-</span><span class="mi">7</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span>
+<span class="linenos">4</span><span class="n">M1</span><span class="p">:</span> <span class="p">;</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span>
+<span class="linenos">5</span><span class="n">M2</span><span class="p">:</span> <span class="p">;</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span><span class="o">-</span><span class="mi">7</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span>
+<span class="linenos">6</span><span class="n">TOUT</span><span class="p">:</span> <span class="p">;</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>which in tensor notation looks like this:</p>
 <a class="reference internal image-reference" href="../_images/dmrg6.png"><img alt="../_images/dmrg6.png" class="align-center" src="../_images/dmrg6.png" style="width: 400px;" /></a>
 <p>To ultilize the Lanczos function, the opertion of acting Hamitonian (which involves contraction using a network) is implemented using LinOp class (See Iterative Solver section for furtuer details).</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Hxx</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="p">):</span>
-
-<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">anet</span><span class="p">,</span> <span class="n">shapes</span><span class="p">,</span> <span class="n">psidim</span><span class="p">):</span>
-    <span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;mv&quot;</span><span class="p">,</span> <span class="n">psidim</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">Double</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">cpu</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">anet</span> <span class="o">=</span> <span class="n">anet</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">shapes</span> <span class="o">=</span> <span class="n">shapes</span>
-
-<span class="k">def</span> <span class="nf">matvec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
-    <span class="n">v_</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
-    <span class="n">psi_u</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">v_</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">## share memory, no copy</span>
-    <span class="n">psi_u</span><span class="o">.</span><span class="n">reshape_</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">shapes</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">&quot;psi&quot;</span><span class="p">,</span><span class="n">psi_u</span><span class="p">,</span><span class="kc">False</span><span class="p">);</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span> <span class="c1"># get_block_ without copy</span>
-    <span class="n">out</span><span class="o">.</span><span class="n">flatten_</span><span class="p">()</span> <span class="c1">## only change meta, without copy.</span>
-    <span class="k">return</span> <span class="n">out</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">class</span> <span class="nc">Hxx</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="p">):</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">anet</span><span class="p">,</span> <span class="n">shapes</span><span class="p">,</span> <span class="n">psidim</span><span class="p">):</span>
+<span class="linenos"> 4</span>    <span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;mv&quot;</span><span class="p">,</span> <span class="n">psidim</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">Double</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">cpu</span><span class="p">)</span>
+<span class="linenos"> 5</span>    <span class="bp">self</span><span class="o">.</span><span class="n">anet</span> <span class="o">=</span> <span class="n">anet</span>
+<span class="linenos"> 6</span>    <span class="bp">self</span><span class="o">.</span><span class="n">shapes</span> <span class="o">=</span> <span class="n">shapes</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="k">def</span> <span class="nf">matvec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="linenos"> 9</span>    <span class="n">v_</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+<span class="linenos">10</span>    <span class="n">psi_u</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">v_</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">## share memory, no copy</span>
+<span class="linenos">11</span>    <span class="n">psi_u</span><span class="o">.</span><span class="n">reshape_</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">shapes</span><span class="p">)</span>
+<span class="linenos">12</span>    <span class="bp">self</span><span class="o">.</span><span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">&quot;psi&quot;</span><span class="p">,</span><span class="n">psi_u</span><span class="p">,</span><span class="kc">False</span><span class="p">);</span>
+<span class="linenos">13</span>    <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span> <span class="c1"># get_block_ without copy</span>
+<span class="linenos">14</span>    <span class="n">out</span><span class="o">.</span><span class="n">flatten_</span><span class="p">()</span> <span class="c1">## only change meta, without copy.</span>
+<span class="linenos">15</span>    <span class="k">return</span> <span class="n">out</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <p>the class itself contain this projector network and do the contraction job for the input vector(state).
@@ -982,73 +872,50 @@ We then pass this linear operation to the Lanczos algorithm to use as the operat
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">optimize_psi</span><span class="p">(</span><span class="n">psivec</span><span class="p">,</span> <span class="n">functArgs</span><span class="p">,</span> <span class="n">maxit</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">krydim</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
-
-    <span class="n">L</span><span class="p">,</span><span class="n">M1</span><span class="p">,</span><span class="n">M2</span><span class="p">,</span><span class="n">R</span> <span class="o">=</span> <span class="n">functArgs</span>
-    <span class="n">pshape</span> <span class="o">=</span> <span class="p">[</span><span class="n">L</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">],</span><span class="n">M1</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">],</span><span class="n">M2</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">],</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">]]</span>
-
-    <span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;projector.net&quot;</span><span class="p">)</span>
-    <span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">&quot;M2&quot;</span><span class="p">,</span><span class="n">M2</span><span class="p">)</span>
-    <span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;L&quot;</span><span class="p">,</span><span class="s2">&quot;M1&quot;</span><span class="p">,</span><span class="s2">&quot;R&quot;</span><span class="p">],[</span><span class="n">L</span><span class="p">,</span><span class="n">M1</span><span class="p">,</span><span class="n">R</span><span class="p">],</span><span class="kc">False</span><span class="p">)</span>
-
-    <span class="n">H</span> <span class="o">=</span> <span class="n">Hxx</span><span class="p">(</span><span class="n">anet</span><span class="p">,</span> <span class="n">pshape</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">psivec</span><span class="p">))</span>
-    <span class="n">energy</span><span class="p">,</span> <span class="n">psivec</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Lanczos_ER</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">maxiter</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">CvgCrit</span> <span class="o">=</span> <span class="mi">9999999999</span><span class="p">,</span> <span class="n">Tin</span> <span class="o">=</span> <span class="n">psivec</span><span class="p">,</span> <span class="n">max_krydim</span> <span class="o">=</span> <span class="n">krydim</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">psivec</span><span class="p">,</span> <span class="n">energy</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">def</span> <span class="nf">optimize_psi</span><span class="p">(</span><span class="n">psivec</span><span class="p">,</span> <span class="n">functArgs</span><span class="p">,</span> <span class="n">maxit</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">krydim</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span>    <span class="n">L</span><span class="p">,</span><span class="n">M1</span><span class="p">,</span><span class="n">M2</span><span class="p">,</span><span class="n">R</span> <span class="o">=</span> <span class="n">functArgs</span>
+<span class="linenos"> 4</span>    <span class="n">pshape</span> <span class="o">=</span> <span class="p">[</span><span class="n">L</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">],</span><span class="n">M1</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">],</span><span class="n">M2</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">],</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">]]</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span>    <span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;projector.net&quot;</span><span class="p">)</span>
+<span class="linenos"> 7</span>    <span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">&quot;M2&quot;</span><span class="p">,</span><span class="n">M2</span><span class="p">)</span>
+<span class="linenos"> 8</span>    <span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;L&quot;</span><span class="p">,</span><span class="s2">&quot;M1&quot;</span><span class="p">,</span><span class="s2">&quot;R&quot;</span><span class="p">],[</span><span class="n">L</span><span class="p">,</span><span class="n">M1</span><span class="p">,</span><span class="n">R</span><span class="p">],</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span>    <span class="n">H</span> <span class="o">=</span> <span class="n">Hxx</span><span class="p">(</span><span class="n">anet</span><span class="p">,</span> <span class="n">pshape</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">psivec</span><span class="p">))</span>
+<span class="linenos">11</span>    <span class="n">energy</span><span class="p">,</span> <span class="n">psivec</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Lanczos_ER</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">maxiter</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">CvgCrit</span> <span class="o">=</span> <span class="mi">9999999999</span><span class="p">,</span> <span class="n">Tin</span> <span class="o">=</span> <span class="n">psivec</span><span class="p">,</span> <span class="n">max_krydim</span> <span class="o">=</span> <span class="n">krydim</span><span class="p">)</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span>    <span class="k">return</span> <span class="n">psivec</span><span class="p">,</span> <span class="n">energy</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>Where we constructed the network (put tensors in) then pass it to our linear operation H.</p>
 <p>Now, we get our energy and ground state for a two-sites system, after some re-labeling (in order to contract UniTensor) and reshape,
 we have to make our psi into the canonical form, for which we do the SVD for the ground state we just obtained, then let the left hand side site keep the U and s, while the other site became Vt. The intermediate bond are truncated such that the maximum virtual bond dimension is limited to <strong>chi</strong>.</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span>
-<span class="normal">7</span>
-<span class="normal">8</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">new_dim</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dim_l</span><span class="o">*</span><span class="n">d</span><span class="p">,</span> <span class="n">dim_r</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">chi</span><span class="p">)</span>
-<span class="n">s</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span> <span class="n">new_dim</span><span class="p">)</span>
-
-<span class="n">slabel</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">labels</span><span class="p">()</span>
-<span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">/</span><span class="n">s</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span><span class="o">.</span><span class="n">Norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-<span class="n">s</span><span class="o">.</span><span class="n">set_labels</span><span class="p">(</span><span class="n">slabel</span><span class="p">)</span>
-
-<span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">s</span><span class="p">)</span> <span class="c1">## absorb s into next neighbor</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">new_dim</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dim_l</span><span class="o">*</span><span class="n">d</span><span class="p">,</span> <span class="n">dim_r</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">chi</span><span class="p">)</span>
+<span class="linenos">2</span><span class="n">s</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span> <span class="n">new_dim</span><span class="p">)</span>
+<span class="linenos">3</span>
+<span class="linenos">4</span><span class="n">slabel</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">labels</span><span class="p">()</span>
+<span class="linenos">5</span><span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">/</span><span class="n">s</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span><span class="o">.</span><span class="n">Norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="linenos">6</span><span class="n">s</span><span class="o">.</span><span class="n">set_labels</span><span class="p">(</span><span class="n">slabel</span><span class="p">)</span>
+<span class="linenos">7</span>
+<span class="linenos">8</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">s</span><span class="p">)</span> <span class="c1">## absorb s into next neighbor</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <a class="reference internal image-reference" href="../_images/dmrg7.png"><img alt="../_images/dmrg7.png" class="align-center" src="../_images/dmrg7.png" style="width: 400px;" /></a>
 <a class="reference internal image-reference" href="../_images/dmrg8.png"><img alt="../_images/dmrg8.png" class="align-center" src="../_images/dmrg8.png" style="width: 400px;" /></a>
 <p>remember that the right hand side vTs are obtained after we do the optimization, those are immediately used to calculate the updated right enviroment using the network</p>
 <ul class="simple">
 <li><p>R_AMAH.net:</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">R</span><span class="p">:</span> <span class="p">;</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span>
-<span class="n">B</span><span class="p">:</span> <span class="mi">1</span><span class="p">;</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span>
-<span class="n">M</span><span class="p">:</span> <span class="p">;</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span>
-<span class="n">B_Conj</span><span class="p">:</span> <span class="mi">2</span><span class="p">;</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span>
-<span class="n">TOUT</span><span class="p">:</span> <span class="p">;</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">R</span><span class="p">:</span> <span class="p">;</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span>
+<span class="linenos">2</span><span class="n">B</span><span class="p">:</span> <span class="mi">1</span><span class="p">;</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span>
+<span class="linenos">3</span><span class="n">M</span><span class="p">:</span> <span class="p">;</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span>
+<span class="linenos">4</span><span class="n">B_Conj</span><span class="p">:</span> <span class="mi">2</span><span class="p">;</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span>
+<span class="linenos">5</span><span class="n">TOUT</span><span class="p">:</span> <span class="p">;</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>graphically it looks like:</p>
 <a class="reference internal image-reference" href="../_images/dmrg8-2.png"><img alt="../_images/dmrg8-2.png" class="align-center" src="../_images/dmrg8-2.png" style="width: 470px;" /></a>
 <p>So our enviroments are also updated by the vT from the optimized two-side states.</p>
@@ -1060,11 +927,10 @@ we have to make our psi into the canonical form, for which we do the SVD for the
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">_</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">is_U</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_vT</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">2</span><span class="n">_</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">is_U</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_vT</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>looks like the same as we did for the right-end site in the beginning, this time we saves the vT, the purpose of the
 set_rowrank(1) is only for the convenience of calling Svd/Svd_truncate in the next sweeping procedure from left to right.</p>
 <p>We can now sweep from left to the right. The code is pretty much the same as we went through, with only a few modifications.</p>
@@ -1072,175 +938,92 @@ set_rowrank(1) is only for the convenience of calling Svd/Svd_truncate in the ne
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">## DMRG sweep</span>
-<span class="c1">##&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span>
-
-<span class="n">Ekeep</span> <span class="o">=</span> <span class="p">[]</span>
-
-<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">numsweeps</span><span class="o">+</span><span class="mi">2</span><span class="p">):</span>
-
-    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="c1">#print(p)</span>
-
-        <span class="n">dim_l</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">];</span>
-        <span class="n">dim_r</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">];</span>
-
-
-        <span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="c1">## contract</span>
-
-        <span class="n">lbl</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">labels</span><span class="p">()</span> <span class="c1">## memorize label</span>
-        <span class="n">psi_T</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">get_block_</span><span class="p">();</span> <span class="n">psi_T</span><span class="o">.</span><span class="n">flatten_</span><span class="p">()</span> <span class="c1">## flatten to 1d</span>
-
-        <span class="n">psi_T</span><span class="p">,</span> <span class="n">Entemp</span> <span class="o">=</span> <span class="n">optimize_psi</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span> <span class="p">(</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">M</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">2</span><span class="p">]),</span> <span class="n">maxit</span><span class="p">,</span> <span class="n">krydim</span><span class="p">)</span>
-        <span class="n">psi_T</span><span class="o">.</span><span class="n">reshape_</span><span class="p">(</span><span class="n">dim_l</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">dim_r</span><span class="p">)</span> <span class="c1">## convert psi back to 4-leg form</span>
-        <span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
-        <span class="n">psi</span><span class="o">.</span><span class="n">set_labels</span><span class="p">(</span><span class="n">lbl</span><span class="p">);</span>
-        <span class="n">Ekeep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Entemp</span><span class="p">);</span>
-
-        <span class="n">new_dim</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dim_l</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">dim_r</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">chi</span><span class="p">)</span>
-
-        <span class="n">s</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="n">new_dim</span><span class="p">)</span>
-
-        <span class="c1"># s = s.Div(s.get_block_().Norm().item())</span>
-        <span class="c1"># s.Div_(s.get_block_().Norm().item()) // a bug : cannot use</span>
-        <span class="n">slabel</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">labels</span><span class="p">()</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">/</span><span class="n">s</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span><span class="o">.</span><span class="n">Norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-        <span class="n">s</span><span class="o">.</span><span class="n">set_labels</span><span class="p">(</span><span class="n">slabel</span><span class="p">)</span>
-
-
-        <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">s</span><span class="p">)</span> <span class="c1">## absorb s into next neighbor</span>
-
-        <span class="c1"># A[p].print_diagram()</span>
-        <span class="c1"># A[p+1].print_diagram()</span>
-
-        <span class="c1"># update LR from right to left:</span>
-        <span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;R_AMAH.net&quot;</span><span class="p">)</span>
-        <span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;R&quot;</span><span class="p">,</span><span class="s2">&quot;B&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">,</span><span class="s2">&quot;B_Conj&quot;</span><span class="p">],[</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">2</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span><span class="n">M</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">Conj</span><span class="p">()],</span><span class="n">is_clone</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Sweep[r-&gt;l]: </span><span class="si">%d</span><span class="s1">/</span><span class="si">%d</span><span class="s1">, Loc:</span><span class="si">%d</span><span class="s1">,Energy: </span><span class="si">%f</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">numsweeps</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">Ekeep</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
-
-    <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">_</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">is_U</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_vT</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-
-    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="n">dim_l</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">dim_r</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span>
-
-        <span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="c1">## contract</span>
-        <span class="n">lbl</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">labels</span><span class="p">()</span> <span class="c1">## memorize label</span>
-        <span class="n">psi_T</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">get_block_</span><span class="p">();</span> <span class="n">psi_T</span><span class="o">.</span><span class="n">flatten_</span><span class="p">()</span> <span class="c1">## flatten to 1d</span>
-        <span class="n">psi_T</span><span class="p">,</span> <span class="n">Entemp</span> <span class="o">=</span> <span class="n">optimize_psi</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span> <span class="p">(</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">M</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">2</span><span class="p">]),</span> <span class="n">maxit</span><span class="p">,</span> <span class="n">krydim</span><span class="p">)</span>
-        <span class="n">psi_T</span><span class="o">.</span><span class="n">reshape_</span><span class="p">(</span><span class="n">dim_l</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">dim_r</span><span class="p">)</span><span class="c1">## convert psi back to 4-leg form</span>
-        <span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span> <span class="n">psi</span><span class="o">.</span><span class="n">set_labels</span><span class="p">(</span><span class="n">lbl</span><span class="p">);</span>
-        <span class="n">Ekeep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Entemp</span><span class="p">);</span>
-
-        <span class="n">new_dim</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dim_l</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">dim_r</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">chi</span><span class="p">)</span>
-
-        <span class="n">s</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="n">new_dim</span><span class="p">)</span>
-
-        <span class="c1"># s = s/s.get_block_().Norm().item()</span>
-        <span class="n">slabel</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">labels</span><span class="p">()</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">/</span><span class="n">s</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span><span class="o">.</span><span class="n">Norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-        <span class="n">s</span><span class="o">.</span><span class="n">set_labels</span><span class="p">(</span><span class="n">slabel</span><span class="p">)</span>
-
-        <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="c1">## absorb s into next neighbor.</span>
-
-        <span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;L_AMAH.net&quot;</span><span class="p">)</span>
-        <span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;L&quot;</span><span class="p">,</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;A_Conj&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">],[</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">Conj</span><span class="p">(),</span><span class="n">M</span><span class="p">],</span><span class="n">is_clone</span><span class="o">=</span><span class="kc">False</span><span class="p">);</span>
-        <span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Sweep[l-&gt;r]: </span><span class="si">%d</span><span class="s1"> of </span><span class="si">%d</span><span class="s1">, Loc: </span><span class="si">%d</span><span class="s1">,Energy: </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">numsweeps</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">Ekeep</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
-
-    <span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_rowrank</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">_</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">is_U</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">is_vT</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1">## last one.</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done : </span><span class="si">%d</span><span class="s1">&#39;</span><span class="o">%</span> <span class="n">k</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">## DMRG sweep</span>
+<span class="linenos"> 2</span><span class="c1">##&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="n">Ekeep</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">numsweeps</span><span class="o">+</span><span class="mi">2</span><span class="p">):</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span>    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+<span class="linenos"> 9</span>        <span class="c1">#print(p)</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span>        <span class="n">dim_l</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">];</span>
+<span class="linenos">12</span>        <span class="n">dim_r</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">];</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span>        <span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="c1">## contract</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span>        <span class="n">lbl</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">labels</span><span class="p">()</span> <span class="c1">## memorize label</span>
+<span class="linenos">18</span>        <span class="n">psi_T</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">get_block_</span><span class="p">();</span> <span class="n">psi_T</span><span class="o">.</span><span class="n">flatten_</span><span class="p">()</span> <span class="c1">## flatten to 1d</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span>        <span class="n">psi_T</span><span class="p">,</span> <span class="n">Entemp</span> <span class="o">=</span> <span class="n">optimize_psi</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span> <span class="p">(</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">M</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">2</span><span class="p">]),</span> <span class="n">maxit</span><span class="p">,</span> <span class="n">krydim</span><span class="p">)</span>
+<span class="linenos">21</span>        <span class="n">psi_T</span><span class="o">.</span><span class="n">reshape_</span><span class="p">(</span><span class="n">dim_l</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">dim_r</span><span class="p">)</span> <span class="c1">## convert psi back to 4-leg form</span>
+<span class="linenos">22</span>        <span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+<span class="linenos">23</span>        <span class="n">psi</span><span class="o">.</span><span class="n">set_labels</span><span class="p">(</span><span class="n">lbl</span><span class="p">);</span>
+<span class="linenos">24</span>        <span class="n">Ekeep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Entemp</span><span class="p">);</span>
+<span class="linenos">25</span>
+<span class="linenos">26</span>        <span class="n">new_dim</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dim_l</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">dim_r</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">chi</span><span class="p">)</span>
+<span class="linenos">27</span>
+<span class="linenos">28</span>        <span class="n">s</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="n">new_dim</span><span class="p">)</span>
+<span class="linenos">29</span>
+<span class="linenos">30</span>        <span class="c1"># s = s.Div(s.get_block_().Norm().item())</span>
+<span class="linenos">31</span>        <span class="c1"># s.Div_(s.get_block_().Norm().item()) // a bug : cannot use</span>
+<span class="linenos">32</span>        <span class="n">slabel</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">labels</span><span class="p">()</span>
+<span class="linenos">33</span>        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">/</span><span class="n">s</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span><span class="o">.</span><span class="n">Norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="linenos">34</span>        <span class="n">s</span><span class="o">.</span><span class="n">set_labels</span><span class="p">(</span><span class="n">slabel</span><span class="p">)</span>
+<span class="linenos">35</span>
+<span class="linenos">36</span>
+<span class="linenos">37</span>        <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">s</span><span class="p">)</span> <span class="c1">## absorb s into next neighbor</span>
+<span class="linenos">38</span>
+<span class="linenos">39</span>        <span class="c1"># A[p].print_diagram()</span>
+<span class="linenos">40</span>        <span class="c1"># A[p+1].print_diagram()</span>
+<span class="linenos">41</span>
+<span class="linenos">42</span>        <span class="c1"># update LR from right to left:</span>
+<span class="linenos">43</span>        <span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;R_AMAH.net&quot;</span><span class="p">)</span>
+<span class="linenos">44</span>        <span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;R&quot;</span><span class="p">,</span><span class="s2">&quot;B&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">,</span><span class="s2">&quot;B_Conj&quot;</span><span class="p">],[</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">2</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span><span class="n">M</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">Conj</span><span class="p">()],</span><span class="n">is_clone</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos">45</span>        <span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">46</span>
+<span class="linenos">47</span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Sweep[r-&gt;l]: </span><span class="si">%d</span><span class="s1">/</span><span class="si">%d</span><span class="s1">, Loc:</span><span class="si">%d</span><span class="s1">,Energy: </span><span class="si">%f</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">numsweeps</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">Ekeep</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+<span class="linenos">48</span>
+<span class="linenos">49</span>    <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">50</span>    <span class="n">_</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">is_U</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_vT</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">51</span>
+<span class="linenos">52</span>
+<span class="linenos">53</span>    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+<span class="linenos">54</span>        <span class="n">dim_l</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">55</span>        <span class="n">dim_r</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span>
+<span class="linenos">56</span>
+<span class="linenos">57</span>        <span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="c1">## contract</span>
+<span class="linenos">58</span>        <span class="n">lbl</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">labels</span><span class="p">()</span> <span class="c1">## memorize label</span>
+<span class="linenos">59</span>        <span class="n">psi_T</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">get_block_</span><span class="p">();</span> <span class="n">psi_T</span><span class="o">.</span><span class="n">flatten_</span><span class="p">()</span> <span class="c1">## flatten to 1d</span>
+<span class="linenos">60</span>        <span class="n">psi_T</span><span class="p">,</span> <span class="n">Entemp</span> <span class="o">=</span> <span class="n">optimize_psi</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span> <span class="p">(</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">M</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">2</span><span class="p">]),</span> <span class="n">maxit</span><span class="p">,</span> <span class="n">krydim</span><span class="p">)</span>
+<span class="linenos">61</span>        <span class="n">psi_T</span><span class="o">.</span><span class="n">reshape_</span><span class="p">(</span><span class="n">dim_l</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">dim_r</span><span class="p">)</span><span class="c1">## convert psi back to 4-leg form</span>
+<span class="linenos">62</span>        <span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span> <span class="n">psi</span><span class="o">.</span><span class="n">set_labels</span><span class="p">(</span><span class="n">lbl</span><span class="p">);</span>
+<span class="linenos">63</span>        <span class="n">Ekeep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Entemp</span><span class="p">);</span>
+<span class="linenos">64</span>
+<span class="linenos">65</span>        <span class="n">new_dim</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dim_l</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">dim_r</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">chi</span><span class="p">)</span>
+<span class="linenos">66</span>
+<span class="linenos">67</span>        <span class="n">s</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="n">new_dim</span><span class="p">)</span>
+<span class="linenos">68</span>
+<span class="linenos">69</span>        <span class="c1"># s = s/s.get_block_().Norm().item()</span>
+<span class="linenos">70</span>        <span class="n">slabel</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">labels</span><span class="p">()</span>
+<span class="linenos">71</span>        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">/</span><span class="n">s</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span><span class="o">.</span><span class="n">Norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="linenos">72</span>        <span class="n">s</span><span class="o">.</span><span class="n">set_labels</span><span class="p">(</span><span class="n">slabel</span><span class="p">)</span>
+<span class="linenos">73</span>
+<span class="linenos">74</span>        <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="c1">## absorb s into next neighbor.</span>
+<span class="linenos">75</span>
+<span class="linenos">76</span>        <span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;L_AMAH.net&quot;</span><span class="p">)</span>
+<span class="linenos">77</span>        <span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;L&quot;</span><span class="p">,</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;A_Conj&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">],[</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">Conj</span><span class="p">(),</span><span class="n">M</span><span class="p">],</span><span class="n">is_clone</span><span class="o">=</span><span class="kc">False</span><span class="p">);</span>
+<span class="linenos">78</span>        <span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
+<span class="linenos">79</span>
+<span class="linenos">80</span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Sweep[l-&gt;r]: </span><span class="si">%d</span><span class="s1"> of </span><span class="si">%d</span><span class="s1">, Loc: </span><span class="si">%d</span><span class="s1">,Energy: </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">numsweeps</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">Ekeep</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+<span class="linenos">81</span>
+<span class="linenos">82</span>    <span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_rowrank</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos">83</span>    <span class="n">_</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">is_U</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">is_vT</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1">## last one.</span>
+<span class="linenos">84</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done : </span><span class="si">%d</span><span class="s1">&#39;</span><span class="o">%</span> <span class="n">k</span><span class="p">)</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 </section>
 <section id="results">
 <h2><span class="section-number">3.6. </span>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
@@ -1248,46 +1031,31 @@ set_rowrank(1) is only for the convenience of calling Svd/Svd_truncate in the ne
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">#### Compare with exact results (computed from free fermions)</span>
-<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">linalg</span> <span class="k">as</span> <span class="n">LA</span>
-<span class="c1"># import matplotlib.pyplot as plt</span>
-<span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">Nsites</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">Nsites</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="n">k</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">D</span> <span class="o">=</span> <span class="n">LA</span><span class="o">.</span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
-<span class="n">EnExact</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="nb">sum</span><span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="n">D</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">])</span>
-
-<span class="c1">##### Plot results</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Ekeep</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Ekeep</span><span class="p">)</span> <span class="o">-</span> <span class="n">EnExact</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;chi = </span><span class="si">%d</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">chi</span><span class="p">),</span> <span class="n">marker</span> <span class="o">=</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;DMRG for XX model&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Update Step&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Ground Energy Error&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">#### Compare with exact results (computed from free fermions)</span>
+<span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">linalg</span> <span class="k">as</span> <span class="n">LA</span>
+<span class="linenos"> 3</span><span class="c1"># import matplotlib.pyplot as plt</span>
+<span class="linenos"> 4</span><span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">Nsites</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">Nsites</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="n">k</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos"> 5</span><span class="n">D</span> <span class="o">=</span> <span class="n">LA</span><span class="o">.</span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
+<span class="linenos"> 6</span><span class="n">EnExact</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="nb">sum</span><span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="n">D</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">])</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="c1">##### Plot results</span>
+<span class="linenos"> 9</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">10</span><span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="linenos">11</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Ekeep</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Ekeep</span><span class="p">)</span> <span class="o">-</span> <span class="n">EnExact</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;chi = </span><span class="si">%d</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">chi</span><span class="p">),</span> <span class="n">marker</span> <span class="o">=</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="linenos">12</span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="linenos">13</span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;DMRG for XX model&#39;</span><span class="p">)</span>
+<span class="linenos">14</span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Update Step&#39;</span><span class="p">)</span>
+<span class="linenos">15</span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Ground Energy Error&#39;</span><span class="p">)</span>
+<span class="linenos">16</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>For the 20 sites system, the result is:</p>
 <a class="reference internal image-reference" href="../_images/dmrg_res.png"><img alt="../_images/dmrg_res.png" class="align-center" src="../_images/dmrg_res.png" style="width: 450px;" /></a>
-<p id="bibtex-bibliography-example/DMRG-0"><dl class="bibtex citation">
-<dt class="bibtex label" id="schollwock201196"><span class="brackets"><a class="fn-backref" href="#id2">Sch11</a></span></dt>
+<p id="id3"><dl class="citation">
+<dt class="label" id="id4"><span class="brackets"><a class="fn-backref" href="#id2">Sch11</a></span></dt>
 <dd><p>Ulrich Schollwöck. The density-matrix renormalization group in the age of matrix product states. <em>Annals of Physics</em>, 326(1):96–192, 2011. January 2011 Special Issue. URL: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0003491610001752">https://www.sciencedirect.com/science/article/pii/S0003491610001752</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1016/j.aop.2010.09.012">doi:https://doi.org/10.1016/j.aop.2010.09.012</a>.</p>
 </dd>
-<dt class="bibtex label" id="whitedmrg"><span class="brackets"><a class="fn-backref" href="#id1">Whi92</a></span></dt>
+<dt class="label" id="id5"><span class="brackets"><a class="fn-backref" href="#id1">Whi92</a></span></dt>
 <dd><p>Steven R. White. Density matrix formulation for quantum renormalization groups. <em>Phys. Rev. Lett.</em>, 69:2863–2866, Nov 1992. URL: <a class="reference external" href="https://link.aps.org/doi/10.1103/PhysRevLett.69.2863">https://link.aps.org/doi/10.1103/PhysRevLett.69.2863</a>, <a class="reference external" href="https://doi.org/10.1103/PhysRevLett.69.2863">doi:10.1103/PhysRevLett.69.2863</a>.</p>
 </dd>
 </dl>
@@ -1306,7 +1074,7 @@ set_rowrank(1) is only for the convenience of calling Svd/Svd_truncate in the ne
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 4.2.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>
