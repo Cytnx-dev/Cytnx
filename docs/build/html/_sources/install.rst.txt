@@ -251,12 +251,19 @@ There are two methods that you can set-up all the dependencies before starting b
 
 .. code-block:: shell
 
-    $conda install cmake make boost libboost git compilers numpy mkl mkl-include mkl-service pybind11
+    $conda install cmake make boost libboost git compilers numpy mkl mkl-include mkl-service pybind11 libblas=*=*mkl
 
 
 .. Note:: 
 
     This installation includes the compilers/linalg libraries provided by conda-forge, so the installation of compiler on system side is not required. 
+
+.. Hint::
+
+    Trouble shooting:
+
+        1. make sure **conda-forge** channel has the top priority
+        2. make sure libblas=mkl (you can check using *conda list | grep libblas*) 
 
 
 4. in addition, if you want to have gpu support (compile with -DUSE_CUDA=on), then additional packages need to install:
