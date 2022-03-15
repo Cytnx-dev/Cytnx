@@ -1676,10 +1676,30 @@ namespace cytnx{
     }
 
     void SparseUniTensor::_save_dispatch(std::fstream &f) const{
-        cytnx_error_msg(true,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
+        //cytnx_error_msg(true,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
+
+        cytnx_uint64 Nblocks = this->_blocks.size();
+        f.write((char*)&Nblocks,sizeof(cytnx_uint64));
+
+        for(unsigned int i=0;i<this->_blocks.size(); i++){
+            this->_blocks[i]._Save(f);
+        }        
     }
+
     void SparseUniTensor::_load_dispatch(std::fstream &f){
-        cytnx_error_msg(true,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
+        //cytnx_error_msg(true,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
+
+        cytnx_uint64 Nblocks;
+        f.read((char*)&Nblocks,sizeof(cytnx_uint64));
+
+        this->Init(this->_bonds,this->_labels,this->_rowrank,Type.Double,Device.cpu,false,true); 
+        cytnx_error_msg(Nblocks!=this->_blocks.size(),"[ERROR] corrupted data. SparseUniTensor%s","\n");
+    
+        for(unsigned int i=0;i<this->_blocks.size(); i++){
+            this->_blocks[i]._Load(f);
+        }
+
+
     }
 
     // arithmetic 

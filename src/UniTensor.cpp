@@ -49,7 +49,11 @@ namespace cytnx{
         cytnx_error_msg(this->_impl->uten_type_id==UTenType.Void,"[ERROR][UniTensor] cannot save an uninitialize UniTensor.%s","\n");
 
         //temporary disable:
-        cytnx_error_msg(this->_impl->uten_type_id==UTenType.Sparse,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
+        //cytnx_error_msg(this->_impl->uten_type_id==UTenType.Sparse,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
+
+        if(this->_impl->uten_type_id==UTenType.Sparse) 
+            cytnx_error_msg(this->is_contiguous()==false,"[ERROR] Save for SparseUniTensor requires it to be contiguous. Call UniTensor.contiguous() first. %s","\n");
+
 
 
         unsigned int IDDs = 555;
@@ -81,16 +85,18 @@ namespace cytnx{
     }
     void UniTensor::_Load(std::fstream &f){
         cytnx_error_msg(!f.is_open(),"[ERROR][UniTensor] invalid fstream%s","\n");
+
         unsigned int tmpIDDs;
         f.read((char*)&tmpIDDs,sizeof(unsigned int));
         cytnx_error_msg(tmpIDDs!=555,"[ERROR] the object is not a cytnx UniTensor!%s","\n");
+
         int utentype;
         f.read((char*)&utentype,sizeof(int)); // uten type, this is used to determine Sparse/Dense upon load
         if(utentype==UTenType.Dense){
             this->_impl = boost::intrusive_ptr<UniTensor_base>(new DenseUniTensor());
         }else if(utentype==UTenType.Sparse){
             //temporary disable:
-            cytnx_error_msg(this->_impl->uten_type_id==UTenType.Sparse,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
+            //cytnx_error_msg(this->_impl->uten_type_id==UTenType.Sparse,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
             this->_impl = boost::intrusive_ptr<UniTensor_base>(new SparseUniTensor());
         }else{
             cytnx_error_msg(true,"[ERROR] Unknown UniTensor type!%s","\n");

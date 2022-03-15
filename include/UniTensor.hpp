@@ -712,7 +712,6 @@ namespace cytnx{
 
 
 
-
             //===================================
             friend class UniTensor; // allow wrapper to access the private elems
             SparseUniTensor(){

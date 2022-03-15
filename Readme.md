@@ -38,6 +38,7 @@ See The following user guide for install and using of cytnx:
     5. [Fix] Svd_truncate with err does not properly truncate the values.
     6. [Fix] MatVec dgemv reversed argument.
     7. [New] Add Histogram2d class in stat tools 
+    8. [Enhance] Add SparseUniTensor.Save / .Load 
 
     v0.7.4
     1. [Enhance] Lanczos_ER Lanczos_Gnd not convergence with maxiter will now gives warning instead of error. 
