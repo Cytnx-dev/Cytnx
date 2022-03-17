@@ -47,6 +47,7 @@ Continue reading:
     :numbered:
 
     guide/behavior.rst
+    guide/Device.rst
     guide/basic_obj/Tensor.rst
     guide/basic_obj/Storage.rst
     guide/basic_obj/Scalar.rst
