@@ -2,7 +2,7 @@
 #include <complex>
 #include <cstdarg>
 #include <functional>
- 
+#include <type_traits> 
 #include "hptt.h"
 //#include "cutt.h"
 using namespace std;
@@ -41,8 +41,7 @@ Tensor myfunc(const Tensor &Tin){
 }
 
 class MyOp2: public LinOp{
-    public:
-        
+    public:        
         Tensor H;
         MyOp2():
             LinOp("mv",0,Type.Double,Device.cpu){ //invoke base class constructor!
@@ -94,7 +93,23 @@ Scalar run_DMRG(tn_algo::MPO &mpo, tn_algo::MPS &mps, int Nsweeps, std::vector<t
 
 int main(int argc, char *argv[]){
 
+    Device.Print_Property();
 
+
+    auto trry = vec_range(100);
+    auto elem = trry[0];
+
+    cout << trry;
+    vec_tofile("tvec",trry);
+    
+    //std::vector<decltype(trry)>
+    
+    auto trry_read = vec_fromfile<double>("tvec");
+
+    cout << trry_read;
+
+
+    return 0;
 
     // testing Sparse:
     auto bdi = Bond(4,BD_KET,{{0},{-2},{+2},{0}});

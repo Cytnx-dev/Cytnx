@@ -39,6 +39,8 @@ See The following user guide for install and using of cytnx:
     6. [Fix] MatVec dgemv reversed argument.
     7. [New] Add Histogram2d class in stat tools 
     8. [Enhance] Add SparseUniTensor.Save / .Load 
+    9. [Enhance] Add vec_fromfile / vec_tofile in utility.
+
 
     v0.7.4
     1. [Enhance] Lanczos_ER Lanczos_Gnd not convergence with maxiter will now gives warning instead of error. 
