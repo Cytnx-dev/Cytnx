@@ -92,9 +92,19 @@ Scalar run_DMRG(tn_algo::MPO &mpo, tn_algo::MPS &mps, int Nsweeps, std::vector<t
 
 
 int main(int argc, char *argv[]){
-
+    /*
     Device.Print_Property();
 
+
+    auto st0 = arange(10).storage();
+    auto st1 = st0.clone();
+
+    st0.at(4) = st1.at(8);
+
+    print(st0);
+    print(st1);
+
+    return 0;
 
     auto trry = vec_range(100);
     auto elem = trry[0];
@@ -110,6 +120,7 @@ int main(int argc, char *argv[]){
 
 
     return 0;
+    */
 
     // testing Sparse:
     auto bdi = Bond(4,BD_KET,{{0},{-2},{+2},{0}});
@@ -142,7 +153,14 @@ int main(int argc, char *argv[]){
 
     print(U1);
 
+
+    U1.permute({1,0,3,2});
     U1.set_rowrank(3);
+    U1.contiguous_();
+
+    print(U1);
+
+    //U1.set_rowrank(3);
     U1.Save("sps");
 
 

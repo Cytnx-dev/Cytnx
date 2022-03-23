@@ -8,6 +8,13 @@
 #include "utils/vec_print.hpp"
 #include "utils/vec_concatenate.hpp"
 #include <map>
+
+#ifdef UNI_OMP
+#include <omp.h>
+#endif
+
+
+
 using namespace std;
 namespace cytnx{
     typedef Accessor ac;
@@ -453,9 +460,19 @@ namespace cytnx{
                     //for(int t=0;t<acc_in_old.size();t++) cout << acc_in_old[t] << " "; cout << endl;//[DEBUG]
                     //for(int t=0;t<acc_out_old.size();t++) cout << acc_out_old[t] << " "; cout << endl;//[DEBUG]
                     //exit(1);
+                    
 
-                    for(unsigned int i=0;i<this->_blocks[b].shape()[0];i++){
-                        for(unsigned int j=0;j<this->_blocks[b].shape()[1];j++){
+                    
+
+                    //for(unsigned int i=0;i<this->_blocks[b].shape()[0];i++){
+                    //    for(unsigned int j=0;j<this->_blocks[b].shape()[1];j++){
+                    #ifdef UNI_OMP
+                    #pragma omp parallel for schedule(dynamic)
+                    #endif
+                    for(unsigned int elem=0;elem<this->_blocks[b].storage().size();elem++){
+                            unsigned int i=elem/this->_blocks[b].shape()[1];
+                            unsigned int j=elem%this->_blocks[b].shape()[1];
+
                             //decompress 
                             vector<cytnx_uint64> tfidx = vec_concatenate(c2cartesian(this->_inner2outer_row[b][i],acc_in_old), 
                                                                          c2cartesian(this->_inner2outer_col[b][j],acc_out_old));
@@ -496,10 +513,12 @@ namespace cytnx{
                             cout << "oldblock" << endl;
                             cout << this->_blocks[b] << endl;
                             */
-                            tmp->_blocks[tmp->_outer2inner_row[new_row].first].set({ac(tmp->_outer2inner_row[new_row].second),ac(tmp->_outer2inner_col[new_col].second)},this->_blocks[b].get({ac(i),ac(j)}));
 
-                        }// row in block
-                    }// col in block
+                            tmp->_blocks[tmp->_outer2inner_row[new_row].first].storage().at(tmp->_outer2inner_row[new_row].second*tmp->_blocks[tmp->_outer2inner_row[new_row].first].shape()[1] + tmp->_outer2inner_col[new_col].second) = this->_blocks[b].storage().at(i*this->_blocks[b].shape()[1]+j);
+                            //tmp->_blocks[tmp->_outer2inner_row[new_row].first].set({ac(tmp->_outer2inner_row[new_row].second),ac(tmp->_outer2inner_col[new_col].second)},this->_blocks[b].get({ac(i),ac(j)}));
+                    }//traversal elements in given block b
+                //        }// row in block
+                //    }// col in block
                 }//is-diag
             }// each old block         
  
