@@ -122,6 +122,15 @@ int main(int argc, char *argv[]){
     return 0;
     */
 
+    Storage ss1 = {3.,4.,5.,6.};
+    print(ss1.dtype_str());
+    
+
+    auto vss1 = ss1.vector<double>();
+    print(vss1);
+
+    return 0;    
+
     // testing Sparse:
     auto bdi = Bond(4,BD_KET,{{0},{-2},{+2},{0}});
     auto bdo = bdi.redirect();

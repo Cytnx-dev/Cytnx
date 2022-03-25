@@ -1282,6 +1282,22 @@ namespace cytnx{
                 return out;
             }
 
+            /*
+                @brief convert a Storage to C++ vector. 
+                    
+                [Note] 
+                    This function is C++ only
+            */
+            template<class T>
+            std::vector<T> vector(){
+                T tmp;
+                cytnx_error_msg(Type.cy_typeid(tmp)!=this->dtype(),"[ERROR] the dtype of current Storage does not match assigned vector type.%s","\n");
+
+                std::vector<T> out(this->size());
+                memcpy(&out[0],this->data(), sizeof(T)*this->size());
+                return out;
+
+            }
 
 
             /// @cond
