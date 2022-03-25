@@ -1294,7 +1294,14 @@ namespace cytnx{
                 cytnx_error_msg(Type.cy_typeid(tmp)!=this->dtype(),"[ERROR] the dtype of current Storage does not match assigned vector type.%s","\n");
 
                 std::vector<T> out(this->size());
-                memcpy(&out[0],this->data(), sizeof(T)*this->size());
+                Storage S;
+                if(this->device()!=Device.cpu){
+                    S = this->to(Device.cpu); 
+                    memcpy(&out[0],S.data(), sizeof(T)*this->size());
+                }else{
+                    memcpy(&out[0],this->data(), sizeof(T)*this->size());
+                }
+
                 return out;
 
             }
