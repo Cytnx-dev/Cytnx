@@ -1755,5 +1755,46 @@ namespace cytnx{
     UniTensor Contract(const UniTensor &inL, const UniTensor &inR, const bool &cacheL=false, const bool &cacheR=false);
 
 
+    /**
+    @brief Contract multiple UniTensor by tracing the ranks with common labels with pairwise operation. 
+    @param Tns the Tensors. 
+    @return 
+        [UniTensor]
+
+    See also \link cytnx::UniTensor::contract UniTensor.contract \endlink
+
+    */
+    UniTensor Contracts(const std::vector<UniTensor> &TNs);
+
+
+
+    /// @cond
+    void _resolve_CT(std::vector<UniTensor> &TNlist);
+    template<class ... T>
+    void _resolve_CT(std::vector<UniTensor> &TNlist, const UniTensor &in, const T&... args){
+        TNlist.push_back(in);
+        _resolve_CT(TNlist,args...);
+    }
+    /// @endcond
+
+    /**
+    @brief Contract multiple UniTensor by tracing the ranks with common labels with pairwise operation. 
+    @param in... the Tensors. 
+    @return 
+        [UniTensor]
+
+    See also \link cytnx::UniTensor::contract UniTensor.contract \endlink
+
+    */
+    template<class ... T>
+    UniTensor Contracts(const UniTensor& in, const T&... args){
+        std::vector<UniTensor> TNlist;
+        _resolve_CT(TNlist,in,args...);
+        return Contracts(TNlist);
+    }
+
+
+
+
 }
 #endif

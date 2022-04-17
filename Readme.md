@@ -43,6 +43,7 @@ See The following user guide for install and using of cytnx:
     10. [Enhance] Adding omp parallel for SparseUniTensor moving elements, and L1-optimized. 
     11. [New] Add Storage.vector<>() for converting Storage to std::vector.
     12. [Enhance] Adding alias BD_IN=BD_KET, BD_BRA=BD_OUT, BD_NONE=BD_REG. 
+    13. [New] Add Contracts for multiple UniTensors contraction.  
 
     v0.7.4
     1. [Enhance] Lanczos_ER Lanczos_Gnd not convergence with maxiter will now gives warning instead of error. 

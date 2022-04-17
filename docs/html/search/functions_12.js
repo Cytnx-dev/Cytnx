@@ -59,7 +59,7 @@ var searchData=
   ['siinit_5fu16',['SIInit_u16',['../namespacecytnx.html#ab8aadbec448e7bfc534dc0af862c004e',1,'cytnx']]],
   ['siinit_5fu32',['SIInit_u32',['../namespacecytnx.html#aedc30c0b7cad58bbf3ebdd6ab5c5a236',1,'cytnx']]],
   ['siinit_5fu64',['SIInit_u64',['../namespacecytnx.html#a3bba016a6fdd2163560dcb6dec0257dc',1,'cytnx']]],
-  ['size',['size',['../classcytnx_1_1stat_1_1Histogram.html#aab05c06ddff1529b08a4ea7d20bbd58c',1,'cytnx::stat::Histogram::size()'],['../classcytnx_1_1Storage.html#aaf36262622abdab03c90b713c454f78e',1,'cytnx::Storage::size()'],['../classcytnx_1_1tn__algo_1_1MPO.html#a2bc9db45d2ab5f59ce845ab8ff45bebc',1,'cytnx::tn_algo::MPO::size()'],['../classcytnx_1_1tn__algo_1_1MPS.html#a132dea22e52d28a982a2824c4e1e6e28',1,'cytnx::tn_algo::MPS::size()']]],
+  ['size',['size',['../classcytnx_1_1stat_1_1Histogram.html#aab05c06ddff1529b08a4ea7d20bbd58c',1,'cytnx::stat::Histogram::size()'],['../classcytnx_1_1stat_1_1Histogram2d.html#a0d7b99feb15a9b0d652a2717a89f7a30',1,'cytnx::stat::Histogram2d::size()'],['../classcytnx_1_1Storage.html#aaf36262622abdab03c90b713c454f78e',1,'cytnx::Storage::size()'],['../classcytnx_1_1tn__algo_1_1MPO.html#a2bc9db45d2ab5f59ce845ab8ff45bebc',1,'cytnx::tn_algo::MPO::size()'],['../classcytnx_1_1tn__algo_1_1MPS.html#a132dea22e52d28a982a2824c4e1e6e28',1,'cytnx::tn_algo::MPS::size()']]],
   ['snrm2',['snrm2',['../lapack__wrapper_8hpp.html#ad82e7e2e6adbf1fd476e0b027d22a282',1,'lapack_wrapper.hpp']]],
   ['snrm2_5f',['snrm2_',['../lapack__wrapper_8hpp.html#a0080a052fd2c2f23b47e4d016bf4f20e',1,'lapack_wrapper.hpp']]],
   ['sort',['Sort',['../namespacecytnx_1_1algo.html#a72a0c42c4b78524bcac444a5c8ed1c20',1,'cytnx::algo']]],

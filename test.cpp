@@ -93,6 +93,23 @@ Scalar run_DMRG(tn_algo::MPO &mpo, tn_algo::MPS &mps, int Nsweeps, std::vector<t
 
 int main(int argc, char *argv[]){
 
+
+    auto T1 = UniTensor(arange(30).reshape(2,5,3),1);
+    auto T2 = T1.clone().relabels({0,3,4});
+    auto T3 = T1.clone().relabels({5,3,7});
+
+
+    T1.print_diagram();
+    T2.print_diagram();
+    T3.print_diagram();
+
+    auto Ott = Contracts(T1,T2,T3);
+
+    Ott.print_diagram();
+    return 0;
+
+
+
     // testing Sparse:
     auto bdi = Bond(4,BD_IN,{{0},{-2},{+2},{0}});
     auto bdo = bdi.redirect();

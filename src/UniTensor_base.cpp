@@ -379,7 +379,21 @@ namespace cytnx{
         UniTensor Contract(const UniTensor &inL, const UniTensor &inR, const bool &cacheL, const bool &cacheR){
             return inL.contract(inR,cacheL,cacheR);
         }
-    
+  
+        void _resolve_CT(std::vector<UniTensor> &TNlist){};
+        UniTensor Contracts(const std::vector<UniTensor> &TNs){ 
+            cytnx_error_msg(TNs.size()<2,"[ERROR][Contracts] should have more than 2 TNs to contract.%s","\n");
+            UniTensor out = TNs[0].contract(TNs[1]);
+            if(TNs.size()>2){
+                for(int i=2;i<TNs.size();i++){
+                    out = out.contract(TNs[i]);   
+                }
+            }
+            return out;
+        }
+
+
+ 
     //arithmetic
     void UniTensor_base::Add_(const boost::intrusive_ptr<UniTensor_base> &rhs){
         cytnx_error_msg(true,"[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s","\n");
