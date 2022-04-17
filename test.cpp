@@ -92,56 +92,18 @@ Scalar run_DMRG(tn_algo::MPO &mpo, tn_algo::MPS &mps, int Nsweeps, std::vector<t
 
 
 int main(int argc, char *argv[]){
-    /*
-    Device.Print_Property();
-
-
-    auto st0 = arange(10).storage();
-    auto st1 = st0.clone();
-
-    st0.at(4) = st1.at(8);
-
-    print(st0);
-    print(st1);
-
-    return 0;
-
-    auto trry = vec_range(100);
-    auto elem = trry[0];
-
-    cout << trry;
-    vec_tofile("tvec",trry);
-    
-    //std::vector<decltype(trry)>
-    
-    auto trry_read = vec_fromfile<double>("tvec");
-
-    cout << trry_read;
-
-
-    return 0;
-    */
-
-    Storage ss1 = {3.,4.,5.,6.};
-    print(ss1.dtype_str());
-    
-
-    auto vss1 = ss1.vector<double>();
-    print(vss1);
-
-    return 0;    
 
     // testing Sparse:
-    auto bdi = Bond(4,BD_KET,{{0},{-2},{+2},{0}});
+    auto bdi = Bond(4,BD_IN,{{0},{-2},{+2},{0}});
     auto bdo = bdi.redirect();
-    auto phys_bdi = Bond(2,BD_KET,{{1},{-1}});
+    auto phys_bdi = Bond(2,BD_IN,{{1},{-1}});
     auto phys_bdo = phys_bdi.redirect();
 
     auto U1 = UniTensor({bdi,bdo,phys_bdi,phys_bdo},{},2);
 
     U1.print_diagram();
     print(U1);
-        
+    return 0;        
     // I
     U1.at({0,0,0,0}) = 1;
     U1.at({0,0,1,1}) = 1;

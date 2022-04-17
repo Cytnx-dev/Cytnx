@@ -13,7 +13,10 @@ namespace cytnx{
     enum bondType: int{
         BD_KET = -1,
         BD_BRA = 1,
-        BD_REG =0
+        BD_REG =0,
+        BD_NONE=0,
+        BD_IN = -1,
+        BD_OUT = 1
     };
     /// @cond
     class Bond_impl: public intrusive_ptr_base<Bond_impl>{
