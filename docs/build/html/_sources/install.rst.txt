@@ -337,7 +337,7 @@ The following are the avaliable compiling option flags that you can specify in *
 | -DUSE_MKL              |   OFF             | Compile Cytnx with intel MKL lib.  |
 |                        |                   | If =off, default link to openblas  |
 +------------------------+-------------------+------------------------------------+
-| -DUSE_OMP              |   OFF             | Compile with openmp acceleration   |
+| -DUSE_OMP              |   ON              | Compile with openmp acceleration   |
 |                        |                   | If USE_MKL=on, USE_OMP is forced=on|
 +------------------------+-------------------+------------------------------------+
 | -DUSE_CUDA             |   OFF             | Compile with CUDA GPU support      |
