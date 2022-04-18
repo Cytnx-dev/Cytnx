@@ -12,9 +12,15 @@ if(os.path.exists(os.path.join(os.path.dirname(__file__),"include"))):
     # this only set if using anaconda install. 
     __cpp_include__=os.path.join(os.path.dirname(__file__),"include")
     __cpp_lib__=os.path.join(os.path.dirname(__file__),"lib")
+    if not os.path.isdir(__cpp_lib__):
+        __cpp_lib__=os.path.join(os.path.dirname(__file__),"lib64")
+
 else:
     __cpp_include__=os.path.join(os.path.dirname(os.path.dirname(__file__)),"include")
     __cpp_lib__=os.path.join(os.path.dirname(os.path.dirname(__file__)),"lib")
+    if not os.path.isdir(__cpp_lib__):
+        __cpp_lib__=os.path.join(os.path.dirname(os.path.dirname(__file__)),"lib64")
+
 
 __blasINTsize__ = cytnx.__blasINTsize__
 

@@ -44,6 +44,7 @@ See The following user guide for install and using of cytnx:
     11. [New] Add Storage.vector<>() for converting Storage to std::vector.
     12. [Enhance] Adding alias BD_IN=BD_KET, BD_BRA=BD_OUT, BD_NONE=BD_REG. 
     13. [New] Add Contracts for multiple UniTensors contraction.  
+    14. [Fix] cytnx.__cpp_lib__ for some version of cmake and conda install, libpath is lib64 instead of lib.  
 
     v0.7.4
     1. [Enhance] Lanczos_ER Lanczos_Gnd not convergence with maxiter will now gives warning instead of error. 
