@@ -466,7 +466,7 @@ FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${LAPACK_LIBRARIES}\n" "")
 
 FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-I${Boost_INCLUDE_DIRS}\n" "")
 FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "${CMAKE_CXX_FLAGS}\n" "")
-FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-std=c++11\n" "")
+#FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-std=c++11\n" "")
 #foreach(vars ${ALL_CXXDEF})
 #    FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-D${vars}\n" "")
 #endforeach(vars)
