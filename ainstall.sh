@@ -68,5 +68,5 @@ mkdir build
 cd build
 cmake ../ ${FLAG}
 make -j6
-make install
+#make install
 
