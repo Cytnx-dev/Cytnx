@@ -26,18 +26,21 @@ namespace cytnx{
             std::vector<cytnx_uint64> new_shape;
             std::vector<cytnx_uint64> pad_shape1 = Tl.shape();
             std::vector<cytnx_uint64> pad_shape2 = Tr.shape();
+			std::vector<cytnx_uint64> ones(std::abs((long long)Tl.shape().size()-(long long)Tr.shape().size()),1);
             if(Tl.shape().size() > Tr.shape().size()){
-                for(unsigned long long i=Tr.shape().size();i<Tl.shape().size();i++){
-                    if(Tr_pad_left==false) pad_shape2.push_back(1);
-                    else pad_shape2.insert(pad_shape2.begin(),1);
-                }
-
+				if(Tr_pad_left==false){
+					pad_shape2.insert(pad_shape2.end(),std::make_move_iterator(ones.begin()),std::make_move_iterator(ones.end()));
+				}else{
+					ones.insert(ones.end(),std::make_move_iterator(pad_shape2.begin()),std::make_move_iterator(pad_shape2.end()));
+					pad_shape2=std::move(ones);
+				}
             }else if(Tl.shape().size() < Tr.shape().size()){
-                for(unsigned long long i=Tl.shape().size();i<Tr.shape().size();i++){
-                    if(Tl_pad_left==false) pad_shape1.push_back(1);
-                    else pad_shape1.insert(pad_shape1.begin(),1);
-                }
-
+				if(Tl_pad_left==false){
+					pad_shape1.insert(pad_shape1.end(),std::make_move_iterator(ones.begin()),std::make_move_iterator(ones.end()));
+				}else{
+					ones.insert(ones.end(),std::make_move_iterator(pad_shape2.begin()),std::make_move_iterator(pad_shape2.end()));
+					pad_shape1=std::move(ones);
+				}
             }
             new_shape.resize(pad_shape1.size());
 

@@ -1177,21 +1177,15 @@ namespace cytnx{
                 #pragma omp parallel for schedule(dynamic) 
             #endif
                 for(unsigned long long i=0;i<TotalElem;i++){
-                        std::vector<cytnx_uint64> idd;
-                        cytnx_uint64 tmp = i;
-                        cytnx_uint64 tmp2;
+                        cytnx_uint64 tmp = i, tmp2;
+                        cytnx_uint64 x=0,y=0;
                         for(unsigned long long j=0;j<new_shape_acc.size();j++)
                         {
-                            idd.push_back(tmp/new_shape_acc[j]);
-                            tmp= tmp%new_shape_acc[j];
+                            tmp2 = tmp/new_shape_acc[j];
+                            tmp %= new_shape_acc[j];
+                            x += cytnx_uint64(tmp2/shape2[j])*shape1_acc[j];
+                            y += cytnx_uint64(tmp2%shape2[j])*shape2_acc[j];
                         }
-                        //using idd to calculate add of Lin and Rin
-                        tmp = tmp2 = 0;
-                        for(unsigned long long j=0;j<new_shape_acc.size();j++){
-                            tmp += cytnx_uint64(idd[j]/shape2[j])*shape1_acc[j];
-                            tmp2 += cytnx_uint64(idd[j]%shape2[j])*shape2_acc[j];
-                        }
-        
                         _out[i] = _Lin[tmp]*_Rin[tmp2];
                 }
 
