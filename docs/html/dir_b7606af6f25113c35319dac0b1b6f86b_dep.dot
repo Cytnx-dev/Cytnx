@@ -1,9 +1,0 @@
-digraph "include/tn_algo" {
-  compound=true
-  node [ fontsize="10", fontname="Helvetica"];
-  edge [ labelfontsize="10", labelfontname="Helvetica"];
-  subgraph clusterdir_d44c64559bbebec7f509842c48db8b23 {
-    graph [ bgcolor="#ddddee", pencolor="black", label="include" fontname="Helvetica", fontsize="10", URL="dir_d44c64559bbebec7f509842c48db8b23.html"]
-  dir_b7606af6f25113c35319dac0b1b6f86b [shape=box, label="tn_algo", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_b7606af6f25113c35319dac0b1b6f86b.html"];
-  }
-}
