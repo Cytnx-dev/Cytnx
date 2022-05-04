@@ -1,9 +1,0 @@
-<map id="include/contraction_tree.hpp" name="include/contraction_tree.hpp">
-<area shape="rect" id="node2" href="$Network_8hpp.html" title="include/Network.hpp" alt="" coords="357,95,498,121"/>
-<area shape="rect" id="node8" href="$contraction__tree_8cpp.html" title="src/contraction_tree.cpp" alt="" coords="546,95,709,121"/>
-<area shape="rect" id="node3" href="$cytnx_8hpp.html" title="include/cytnx.hpp" alt="" coords="5,169,129,196"/>
-<area shape="rect" id="node4" href="$FermionNetwork_8cpp.html" title="src/FermionNetwork.cpp" alt="" coords="178,169,343,196"/>
-<area shape="rect" id="node5" href="$Network_8cpp.html" title="src/Network.cpp" alt="" coords="368,169,487,196"/>
-<area shape="rect" id="node6" href="$Network__base_8cpp.html" title="src/Network_base.cpp" alt="" coords="511,169,664,196"/>
-<area shape="rect" id="node7" href="$RegularNetwork_8cpp.html" title="src/RegularNetwork.cpp" alt="" coords="689,169,851,196"/>
-</map>

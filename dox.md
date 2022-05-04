@@ -62,7 +62,7 @@
     * \link cytnx::Bond Bond \endlink     [binded] 
     * \link cytnx::Accessor Accessor \endlink [c++ only]
     * \link cytnx::Symmetry Symmetry \endlink [binded]
-    * \link cytnx::CyTensor CyTensor \endlink [binded]
+    * \link cytnx::UniTensor UniTensor \endlink [binded]
     * \link cytnx::Network Network \endlink [binded]
 
 ## linear algebra functions: 

@@ -10,7 +10,7 @@ var searchData=
   ['regularnetwork_2ecpp',['RegularNetwork.cpp',['../RegularNetwork_8cpp.html',1,'']]],
   ['relabel',['relabel',['../classcytnx_1_1UniTensor.html#a497ff915bf717edacbc5a8813393eb3d',1,'cytnx::UniTensor']]],
   ['relabels',['relabels',['../classcytnx_1_1UniTensor.html#a04977b5c16428f35abeefbc7b3e235e1',1,'cytnx::UniTensor']]],
-  ['reshape',['reshape',['../classcytnx_1_1Tensor.html#a57aea99887adf41da14fd7578ef9bf13',1,'cytnx::Tensor::reshape()'],['../classcytnx_1_1UniTensor.html#a18226194a82791cfa6f661293b25d101',1,'cytnx::UniTensor::reshape()']]],
+  ['reshape',['reshape',['../classcytnx_1_1Tensor.html#a57aea99887adf41da14fd7578ef9bf13',1,'cytnx::Tensor::reshape(const std::vector&lt; cytnx_int64 &gt; &amp;new_shape) const'],['../classcytnx_1_1Tensor.html#a15e7c245ee923c77e02209dc5cfe5198',1,'cytnx::Tensor::reshape(const std::vector&lt; cytnx_uint64 &gt; &amp;new_shape) const'],['../classcytnx_1_1Tensor.html#a32e42ecf5755144b071de1be9d13c692',1,'cytnx::Tensor::reshape(const std::initializer_list&lt; cytnx_int64 &gt; &amp;new_shape) const'],['../classcytnx_1_1UniTensor.html#a18226194a82791cfa6f661293b25d101',1,'cytnx::UniTensor::reshape()']]],
   ['reshape_5f',['reshape_',['../classcytnx_1_1Tensor.html#a3723449528b9a20dd46c32c9e042b8f0',1,'cytnx::Tensor::reshape_()'],['../classcytnx_1_1UniTensor.html#a4fe900047caaf4627340fb486091fc9c',1,'cytnx::UniTensor::reshape_()']]],
   ['resize',['resize',['../classcytnx_1_1Storage.html#a2ff5a21f81e9b90a5e78e1ba1698351b',1,'cytnx::Storage']]],
   ['retype',['retype',['../classcytnx_1_1Bond.html#a31c8ff7b0817c37e67a80a225f5bd758',1,'cytnx::Bond']]],

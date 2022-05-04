@@ -143,6 +143,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a57aea99887adf41da14fd7578ef9bf13"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#a57aea99887adf41da14fd7578ef9bf13">reshape</a> (const std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &amp;new_shape) const</td></tr>
 <tr class="memdesc:a57aea99887adf41da14fd7578ef9bf13"><td class="mdescLeft">&#160;</td><td class="mdescRight">return a new <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> that is reshaped.  <a href="#a57aea99887adf41da14fd7578ef9bf13">More...</a><br /></td></tr>
 <tr class="separator:a57aea99887adf41da14fd7578ef9bf13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15e7c245ee923c77e02209dc5cfe5198"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#a15e7c245ee923c77e02209dc5cfe5198">reshape</a> (const std::vector&lt; <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &gt; &amp;new_shape) const</td></tr>
+<tr class="separator:a15e7c245ee923c77e02209dc5cfe5198"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32e42ecf5755144b071de1be9d13c692"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#a32e42ecf5755144b071de1be9d13c692">reshape</a> (const std::initializer_list&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &amp;new_shape) const</td></tr>
+<tr class="separator:a32e42ecf5755144b071de1be9d13c692"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b996d3281e7375b29a7cfe4273b299f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#a7b996d3281e7375b29a7cfe4273b299f">astype</a> (const int &amp;new_type) const</td></tr>
 <tr class="memdesc:a7b996d3281e7375b29a7cfe4273b299f"><td class="mdescLeft">&#160;</td><td class="mdescRight">return a new <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> that cast to different dtype.  <a href="#a7b996d3281e7375b29a7cfe4273b299f">More...</a><br /></td></tr>
 <tr class="separator:a7b996d3281e7375b29a7cfe4273b299f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -3701,7 +3705,7 @@ True
 </div>
 </div>
 <a id="a57aea99887adf41da14fd7578ef9bf13"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a57aea99887adf41da14fd7578ef9bf13">&#9670;&nbsp;</a></span>reshape()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a57aea99887adf41da14fd7578ef9bf13">&#9670;&nbsp;</a></span>reshape() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3781,6 +3785,58 @@ Shape : (5,12)
 
 
 </pre> 
+</div>
+</div>
+<a id="a15e7c245ee923c77e02209dc5cfe5198"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15e7c245ee923c77e02209dc5cfe5198">&#9670;&nbsp;</a></span>reshape() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> cytnx::Tensor::reshape </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>new_shape</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a32e42ecf5755144b071de1be9d13c692"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32e42ecf5755144b071de1be9d13c692">&#9670;&nbsp;</a></span>reshape() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> cytnx::Tensor::reshape </td>
+          <td>(</td>
+          <td class="paramtype">const std::initializer_list&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>new_shape</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
 </div>
 </div>
 <a id="a3723449528b9a20dd46c32c9e042b8f0"></a>
