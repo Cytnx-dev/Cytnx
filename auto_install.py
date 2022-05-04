@@ -259,7 +259,8 @@ if(COMPILE_COMMANDS):
 
 f.write(" ../\n")
 f.write("make -j `nproc`\n")
-f.write("make install")
+f.write("make install\n")
+f.write("ctest")
 
 f.close()
 
