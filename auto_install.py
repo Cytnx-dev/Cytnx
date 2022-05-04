@@ -56,6 +56,8 @@ HPTT_option_finetune=False
 
 BUILD_PYTHON=True
 
+COMPILE_COMMANDS=True
+
 PREFIX=None
 
 step_idx = 1
@@ -170,6 +172,14 @@ if(len(tmp.strip())!=0):
 print("  >>BUILD_PYTHON: ",BUILD_PYTHON)
 print("--------------")
 
+## checking generate compile_commands.json
+#======================================
+tmp = input("[%d] Generate compile_commands.json for IDE support (default ON)?(Y/N):"%(step_idx))
+if(len(tmp.strip())!=0):
+    COMPILE_COMMANDS=resolve_yn(tmp)
+
+print("  >>COMPILE_COMMANDS: ",COMPILE_COMMANDS)
+print("--------------")
 
 ##=================================================================
 print("*************************")
@@ -244,9 +254,11 @@ if(BUILD_PYTHON):
 else:
     f.write(" -DBUILD_PYTHON=off")
 
+if(COMPILE_COMMANDS):
+    f.write(" -DCMAKE_EXPORT_COMPILE_COMMANDS=1")
 
 f.write(" ../\n")
-f.write("make\n")
+f.write("make -j `nproc`\n")
 f.write("make install")
 
 f.close()
