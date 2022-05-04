@@ -1072,6 +1072,8 @@ Variables</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">inL</td><td>the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> #1 </td></tr>
     <tr><td class="paramname">inR</td><td>the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a> #2 </td></tr>
+    <tr><td class="paramname">cacheL</td><td>if the inL should be contiguous align after calling </td></tr>
+    <tr><td class="paramname">cacheR</td><td>if the inR should be contiguous align after calling </td></tr>
   </table>
   </dd>
 </dl>
@@ -1099,7 +1101,7 @@ Variables</h2></td></tr>
 <p>Contract multiple <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">UniTensor</a> by tracing the ranks with common labels with pairwise operation. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">Tns</td><td>the Tensors. </td></tr>
+    <tr><td class="paramname">TNs</td><td>the Tensors. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1139,7 +1141,8 @@ template&lt;class ... T&gt; </div>
 <p>Contract multiple <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation. ">UniTensor</a> by tracing the ranks with common labels with pairwise operation. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">in...</td><td>the Tensors. </td></tr>
+    <tr><td class="paramname">in</td><td>the Tensors. </td></tr>
+    <tr><td class="paramname">args</td><td>the Tensors. </td></tr>
   </table>
   </dd>
 </dl>

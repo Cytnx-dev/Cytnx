@@ -1,9 +1,0 @@
-<map id="include/Tensor.hpp" name="include/Tensor.hpp">
-<area shape="rect" id="node2" href="$Type_8hpp.html" title="Type.hpp" alt="" coords="566,229,642,256"/>
-<area shape="rect" id="node11" href="$cytnx__error_8hpp.html" title="cytnx_error.hpp" alt="" coords="835,311,947,338"/>
-<area shape="rect" id="node18" href="$Storage_8hpp.html" title="Storage.hpp" alt="" coords="837,80,929,107"/>
-<area shape="rect" id="node21" href="$Device_8hpp.html" title="Device.hpp" alt="" coords="139,155,227,181"/>
-<area shape="rect" id="node22" href="$intrusive__ptr__base_8hpp.html" title="intrusive_ptr_base.hpp" alt="" coords="1491,229,1645,256"/>
-<area shape="rect" id="node28" href="$Scalar_8hpp.html" title="Scalar.hpp" alt="" coords="1123,155,1207,181"/>
-<area shape="rect" id="node34" href="$Accessor_8hpp.html" title="Accessor.hpp" alt="" coords="351,155,454,181"/>
-</map>

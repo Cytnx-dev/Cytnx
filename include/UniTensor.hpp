@@ -1746,6 +1746,8 @@ namespace cytnx{
     @brief Contract two UniTensor by tracing the ranks with common labels.
     @param inL the Tensor #1
     @param inR the Tensor #2
+    @param cacheL if the inL should be contiguous align after calling 
+    @param cacheR if the inR should be contiguous align after calling    
     @return 
         [UniTensor]
 
@@ -1757,7 +1759,7 @@ namespace cytnx{
 
     /**
     @brief Contract multiple UniTensor by tracing the ranks with common labels with pairwise operation. 
-    @param Tns the Tensors. 
+    @param TNs the Tensors. 
     @return 
         [UniTensor]
 
@@ -1779,7 +1781,8 @@ namespace cytnx{
 
     /**
     @brief Contract multiple UniTensor by tracing the ranks with common labels with pairwise operation. 
-    @param in... the Tensors. 
+    @param in the Tensors.
+    @param args the Tensors. 
     @return 
         [UniTensor]
 
