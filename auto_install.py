@@ -208,6 +208,7 @@ if(USE_CUTT):
     print("    CUTT_ENABLE_FINE_TUNE: ",CUTT_option_finetune)
 
 print(" BUILD_PYTHON: ",BUILD_PYTHON)
+print(" COMPILE_COMMANDS: ",COMPILE_COMMANDS)
 print("*************************")
 
 
