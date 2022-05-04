@@ -261,7 +261,7 @@ if(COMPILE_COMMANDS):
 f.write(" ../\n")
 f.write("make -j `nproc`\n")
 f.write("make install\n")
-f.write("ctest")
+f.write("GTEST_COLOR=1 ctest --output-on-failure")
 
 f.close()
 
