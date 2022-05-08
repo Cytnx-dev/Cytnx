@@ -80,7 +80,7 @@ namespace cytnx{
             std::vector<Type_struct> Typeinfos;
 
             Type_class();
-            std::string getname(const unsigned int &type_id);
+            const std::string& getname(const unsigned int &type_id);
             unsigned int c_typename_to_id(const std::string &c_name);
             unsigned int typeSize(const unsigned int &type_id);
             bool is_unsigned(const unsigned int &type_id);
