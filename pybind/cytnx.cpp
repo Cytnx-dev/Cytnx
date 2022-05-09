@@ -137,6 +137,8 @@ PYBIND11_MODULE(cytnx,m){
 
     m.attr("__version__") = "0.6.3a";
     m.attr("__blasINTsize__") = cytnx::__blasINTsize__;
+    m.attr("User_debug") = cytnx::User_debug;
+
     //global vars
     //m.attr("cytnxdevice") = cytnx::cytnxdevice;
     //m.attr("Type")   = py::cast(cytnx::Type);    
