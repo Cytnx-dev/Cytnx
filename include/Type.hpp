@@ -109,6 +109,10 @@ namespace cytnx{
 
     extern Type_class Type; 
     extern int __blasINTsize__;
+
+    extern bool User_debug;
+
+
 }//namespace cytnx
 
 

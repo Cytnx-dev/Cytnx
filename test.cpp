@@ -94,6 +94,11 @@ Scalar run_DMRG(tn_algo::MPO &mpo, tn_algo::MPS &mps, int Nsweeps, std::vector<t
 int main(int argc, char *argv[]){
 
 
+    print(User_debug);
+    User_debug=false;
+    
+    print(User_debug);
+
     auto T1 = UniTensor(arange(30).reshape(2,5,3),1);
     auto T2 = T1.clone().relabels({0,3,4});
     auto T3 = T1.clone().relabels({5,3,7});
