@@ -95,9 +95,16 @@ int main(int argc, char *argv[]){
 
 
     print(User_debug);
-    User_debug=false;
+
+    Storage s112 = zeros(10).storage();
+    s112.at<double>(4);
     
+    //User_debug=false;
+
     print(User_debug);
+    s112.at<float>(4);
+
+    return 0;
 
     auto T1 = UniTensor(arange(30).reshape(2,5,3),1);
     auto T2 = T1.clone().relabels({0,3,4});
