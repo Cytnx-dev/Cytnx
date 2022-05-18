@@ -53,10 +53,11 @@ HPTT_option_IBM=False
 HPTT_option_ARM=False
 HPTT_option_finetune=False
 
-
 BUILD_PYTHON=True
 
 COMPILE_COMMANDS=True
+
+RUN_TESTS=False
 
 PREFIX=None
 
@@ -181,6 +182,15 @@ if(len(tmp.strip())!=0):
 print("  >>COMPILE_COMMANDS: ",COMPILE_COMMANDS)
 print("--------------")
 
+## whether run cytnx tests
+#======================================
+tmp = input("[%d] Run cytnx tests (default OFF)?(Y/N):"%(step_idx))
+if(len(tmp.strip())!=0):
+    RUN_TESTS=resolve_yn(tmp)
+
+print("  >>RUN_TESTS: ",RUN_TESTS)
+print("--------------")
+
 ##=================================================================
 print("*************************")
 print("  Review install option  ")
@@ -258,10 +268,14 @@ else:
 if(COMPILE_COMMANDS):
     f.write(" -DCMAKE_EXPORT_COMPILE_COMMANDS=1")
 
+if(RUN_TESTS):
+    f.write(" -DRUN_TESTS=on")
+
 f.write(" ../\n")
 f.write("make -j `nproc`\n")
 f.write("make install\n")
-f.write("GTEST_COLOR=1 ctest --output-on-failure")
+if(RUN_TESTS):
+    f.write("GTEST_COLOR=1 ctest --output-on-failure --gtest_output=xml")
 
 f.close()
 

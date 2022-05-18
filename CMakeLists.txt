@@ -62,6 +62,7 @@ option(USE_MKL "Build using MKL" OFF)
 option(USE_OMP "Build Cytnx with OpenMP" ON)
 option(BUILD_DOC "Build API docuemntation" OFF)
 option(USE_HPTT "Build Cytnx with HPTT" OFF)
+option(RUN_TESTS "Run Cytnx tests" OFF)
 
 if (USE_ICPC)
   message(STATUS, "Build Cytnx with Intel Compilers")
@@ -154,9 +155,10 @@ target_compile_features(cytnx PUBLIC cxx_std_11)
 
 add_subdirectory(src)
 
-enable_testing()
-add_subdirectory(tests)
-
+if(RUN_TESTS)
+	enable_testing()
+	add_subdirectory(tests)
+endif()
 
 include(GNUInstallDirs)
 
