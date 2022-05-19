@@ -30,7 +30,11 @@ namespace cytnx{
     void Network_base::clear(){
         cytnx_error_msg(true,"[ERROR][Network][Clear] call from uninitialize network.%s","\n");
     }
-    UniTensor Network_base::Launch(const bool &optimal){
+	std::string Network_base::getOptimalOrder(){
+        cytnx_error_msg(true,"[ERROR][Network][getOptimalOrder] call from uninitialize network.%s","\n");
+        return "";
+	}
+    UniTensor Network_base::Launch(const bool &optimal, const std::string& contract_order){
         cytnx_error_msg(true,"[ERROR][Network][Launch] call from uninitialize network.%s","\n");
         return UniTensor();
     }
