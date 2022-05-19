@@ -3,7 +3,7 @@ name: CMake Tests
 on: [push]
 
 jobs:
-  build:
+  BuildAndTest:
     runs-on: ubuntu-latest
 
     defaults:
@@ -32,13 +32,24 @@ jobs:
       working-directory: ${{runner.workspace}}/build
       run: $CONDA/bin/cmake --build .
 
-    - name: Test
+    - name: Run CTest
       working-directory: ${{runner.workspace}}/build
-      run: GTEST_OUTPUT=xml:test-results/ GTEST_COLOR=1 ctest -V
+      run: GTEST_COLOR=1 ctest --output-junit junit.xml
 
-    - name: Upload test results
-      uses: actions/upload-artifact@v3
-      if: failure()
+    #- name: Upload test results
+    #  uses: actions/upload-artifact@v3
+    #  with:
+    #    name: test_results_xml
+    #    path: ${{runner.workspace}}/build/test-results/**/*.xml
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v2
       with:
-        name: test_results_xml
-        path: ${{runner.workspace}}/build/test-results/**/*.xml
+        #token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+        #directory: ${{runner.workspace}}/build/test-results/
+        files: ${{runner.workspace}}/build/junit.xml # optional
+        flags: unittests # optional
+        name: codecov-umbrella # optional
+        fail_ci_if_error: true # optional (default = false)
+        verbose: true # optional (default = false)
+        path_to_write_report: ./converage/codecov_report.txt
