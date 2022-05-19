@@ -1,4 +1,4 @@
-# Cytnx [![Build Status (GitHub Actions)](https://github.com/jeffry1829/Cytnx/workflows/CMake%20Tests/badge.svg)](https://github.com/jeffry1829/Cytnx/actions?query=workflow%3A"CMake%20Tests") [![codecov](https://codecov.io/gh/jeffry1829/Cytnx/branch/master/graph/badge.svg?token=90BFSQCVW)](https://codecov.io/gh/jeffry1829/Cytnx)[![Coverity Scan Build Status](https://img.shields.io/coverity/scan/25013.svg)](https://scan.coverity.com/projects/kaihsin-cytnx)
+# Cytnx [![Build Status (GitHub Actions)](https://github.com/jeffry1829/Cytnx/workflows/CMake%20Tests/badge.svg)](https://github.com/jeffry1829/Cytnx/actions?query=workflow%3A"CMake%20Tests") [![codecov](https://codecov.io/gh/jeffry1829/Cytnx/branch/master/graph/badge.svg?token=90BFSQCVW)](https://codecov.io/gh/jeffry1829/Cytnx) [![Coverity Scan Build Status](https://img.shields.io/coverity/scan/25013.svg)](https://scan.coverity.com/projects/kaihsin-cytnx)
 
 ![alt text](./Icon_small.png)
 
