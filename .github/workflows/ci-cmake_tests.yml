@@ -34,7 +34,7 @@ jobs:
 
     - name: Run CTest
       working-directory: ${{runner.workspace}}/build
-      run: GTEST_COLOR=1 ctest --output-junit junit.xml
+      run: GTEST_COLOR=1 ctest --output-junit /home/runner/junit.xml
 
     #- name: Upload test results
     #  uses: actions/upload-artifact@v3
@@ -47,9 +47,8 @@ jobs:
       with:
         #token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
         #directory: ${{runner.workspace}}/build/test-results/
-        file: ${{runner.workspace}}/build/junit.xml # optional
+        files: /home/runner/junit.xml # optional
         flags: unittests # optional
         name: codecov-umbrella # optional
         fail_ci_if_error: true # optional (default = false)
         verbose: true # optional (default = false)
-        path_to_write_report: ./converage/codecov_report.txt
