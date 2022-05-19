@@ -34,7 +34,7 @@ jobs:
 
     - name: Run CTest
       working-directory: ${{runner.workspace}}/build
-      run: GTEST_COLOR=1 ctest --output-junit ${{runner.workspace}}/build/junit.xml
+      run: GTEST_COLOR=1 ctest --output-junit /home/runner/junit.xml
 
     #- name: Upload test results
     #  uses: actions/upload-artifact@v3
@@ -46,10 +46,11 @@ jobs:
       uses: codecov/codecov-action@v2
       with:
         #token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-        directory: ${{runner.workspace}}/build
-        #files: /home/runner/junit.xml # optional
+        #directory: ${{runner.workspace}}/build
+        files: /home/runner/junit.xml # optional
         fail_ci_if_error: true # optional (default = false)
         verbose: true # optional (default = false)
+        version: "v0.1.15"
 
     - name: Download Coverity Build Tool
       working-directory: ${{runner.workspace}}/build
