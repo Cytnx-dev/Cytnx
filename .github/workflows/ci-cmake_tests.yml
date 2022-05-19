@@ -44,10 +44,9 @@ jobs:
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2
-      directory: ${{runner.workspace}}/build
       with:
         #token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-        #directory: ${{runner.workspace}}/build/test-results/
+        directory: ${{runner.workspace}}/build
         #files: /home/runner/junit.xml # optional
         fail_ci_if_error: true # optional (default = false)
         verbose: true # optional (default = false)
