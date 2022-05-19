@@ -42,7 +42,11 @@ See The following user guide for install and using of cytnx:
     12. [Enhance] Adding alias BD_IN=BD_KET, BD_BRA=BD_OUT, BD_NONE=BD_REG. 
     13. [New] Add Contracts for multiple UniTensors contraction.  
     14. [Fix] cytnx.__cpp_lib__ for some version of cmake and conda install, libpath is lib64 instead of lib.  
-
+    15. [Optimize] SparseUniTensor contiguous (moving elements)
+    16. [Optimize] cytnx_error_* will now evaluate the clause first, and then instance the following strings.
+    17. [Enhance] Add Global bool variable User_debug, which when set to false some checking will be skipped, which increasing the execution speed
+    18. [Enhance] Add Network.getOptimalOrder()  
+    
     v0.7.4
     1. [Enhance] Lanczos_ER Lanczos_Gnd not convergence with maxiter will now gives warning instead of error. 
     2. [Enhance] Arithmetic of UniTensor(&)constant now preserve the label of input UniTensor. 
