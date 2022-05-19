@@ -1,11 +1,14 @@
 add_executable(
   test_main
   test_main.cpp
+  Bond_test.cpp
   utils_test/vec_test.cpp
 )
 target_link_libraries(
   test_main
   gtest_main
+  gmock
+  gtest
 )
 target_link_libraries(test_main cytnx)
 include(GoogleTest)

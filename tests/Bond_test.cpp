@@ -1,19 +1,4 @@
-//
-#ifndef __CYTNX_TEST_BOND_H__
-#define __CYTNX_TEST_BOND_H__
-
-#include <time.h>
-
-#include <iostream>
-#include <vector>
-#include <map>
-
-#include "gtest/gtest.h"
-#include "gmock/gmock.h"
-
-#include "cytnx.hpp"
-
-using namespace cytnx;
+#include "Bond_test.h"
 
 TEST(Bond,EmptyBond){
 
@@ -30,7 +15,7 @@ TEST(Bond,SimpleBondNoSymm){
   EXPECT_EQ(bd.type(),BD_REG);
   EXPECT_EQ( bd.dim(),5);
   EXPECT_EQ(bd.Nsym(),0);
-  EXPECT_THAT(bd.syms(), testing::ElementsAre());
+  EXPECT_THAT(bd.syms(), ::testing::ElementsAre());
   Bond bd1=bd.redirect();
   EXPECT_EQ(bd1.type(),BD_REG);
 }
@@ -230,4 +215,3 @@ TEST(Bond,CombindBondSymm){
 //  EXPECT_EQ(2,it->second);
 //}
 //
-#endif
