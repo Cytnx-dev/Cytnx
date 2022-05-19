@@ -47,7 +47,7 @@ jobs:
       with:
         #token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
         #directory: ${{runner.workspace}}/build/test-results/
-        files: ${{runner.workspace}}/build/junit.xml # optional
+        file: ${{runner.workspace}}/build/junit.xml # optional
         flags: unittests # optional
         name: codecov-umbrella # optional
         fail_ci_if_error: true # optional (default = false)
