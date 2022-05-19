@@ -57,15 +57,15 @@ jobs:
     
     - name: Run CTest
       working-directory: ${{runner.workspace}}/build
-      run: GTEST_COLOR=1 ctest --output-junit junit.xml
+      run: GTEST_COLOR=1 ctest --output-junit ${{runner.workspace}}/build/junit.xml
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
         #token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
         #directory: ${{runner.workspace}}/build
-        #files: /home/runner/junit.xml # optional
-        working-directory: ${{runner.workspace}}/build
+        files: ${{runner.workspace}}/build/junit.xml # optional
+        #working-directory: ${{runner.workspace}}/build
         root_dir: ${{runner.workspace}}
         fail_ci_if_error: false # optional (default = false)
         verbose: true # optional (default = false)
