@@ -21,9 +21,8 @@ jobs:
     - name: Install dependencies
       run: |
         conda config --add channels conda-forge
-        conda create --name cytnx python=3.10 _openmp_mutex=*=*_llvm
-        source conda activate cytnx
-        source conda upgrade --all
+        $CONDA/bin/conda env update --name base python=3.10 _openmp_mutex=*=*_llvm
+        conda upgrade --all
         conda install cmake make boost libboost git compilers numpy mkl mkl-include mkl-service pybind11 libblas=*=*mkl
 
     - name: Configure CMake
