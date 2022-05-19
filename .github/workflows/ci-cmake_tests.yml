@@ -28,13 +28,10 @@ jobs:
     - name: Configure CMake
       run: $CONDA/bin/cmake -S $GITHUB_WORKSPACE -B ${{runner.workspace}}/build -DCMAKE_INSTALL_PREFIX=/home/petjelinux/Cytnx_lib -DUSE_MKL=on -DUSE_HPTT=on -DHPTT_ENABLE_FINE_TUNE=on -DHPTT_ENABLE_AVX=on -DBUILD_PYTHON=on -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DRUN_TESTS=on
 
-    - name: Build
-      working-directory: ${{runner.workspace}}/build
-      run: $CONDA/bin/cmake --build . -j `nproc`
+    #- name: Build
+    #   working-directory: ${{runner.workspace}}/build
+    #   run: $CONDA/bin/cmake --build . -j `nproc`
 
-    - name: Run CTest
-      working-directory: ${{runner.workspace}}/build
-      run: GTEST_COLOR=1 ctest --output-junit /home/runner/junit.xml
 
     #- name: Upload test results
     #  uses: actions/upload-artifact@v3
@@ -42,15 +39,6 @@ jobs:
     #    name: test_results_xml
     #    path: ${{runner.workspace}}/build/test-results/**/*.xml
 
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v2
-      with:
-        #token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-        #directory: ${{runner.workspace}}/build
-        files: /home/runner/junit.xml # optional
-        fail_ci_if_error: true # optional (default = false)
-        verbose: true # optional (default = false)
-        version: "v0.1.15"
 
     - name: Download Coverity Build Tool
       working-directory: ${{runner.workspace}}/build
@@ -66,7 +54,23 @@ jobs:
       run: |
         export PATH=`pwd`/cov-analysis-linux64/bin:$PATH
         cov-build --dir cov-int $CONDA/bin/cmake --build . -j `nproc`
+    
+    - name: Run CTest
+      working-directory: ${{runner.workspace}}/build
+      run: GTEST_COLOR=1 ctest --output-junit junit.xml
 
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        #token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+        #directory: ${{runner.workspace}}/build
+        #files: /home/runner/junit.xml # optional
+        working-directory: ${{runner.workspace}}/build
+        root_dir: ${{runner.workspace}}
+        fail_ci_if_error: false # optional (default = false)
+        verbose: true # optional (default = false)
+        #version: "v0.1.15"
+    
     - name: Submit the result to Coverity Scan
       working-directory: ${{runner.workspace}}/build
       run: |
