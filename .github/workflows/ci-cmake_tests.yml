@@ -20,24 +20,24 @@ jobs:
 
     - name: Install dependencies
       run: |
-        conda config --add channels conda-forge
-        conda install python=3.10 _openmp_mutex=*=*_llvm
-        conda upgrade --all
-        conda install cmake make boost libboost git compilers numpy mkl mkl-include mkl-service pybind11 libblas=*=*mkl
+        $CONDA/bin/conda config --add channels conda-forge
+        $CONDA/bin/conda install python=3.10 _openmp_mutex=*=*_llvm
+        $CONDA/bin/conda upgrade --all
+        $CONDA/bin/conda install cmake make boost libboost git compilers numpy mkl mkl-include mkl-service pybind11 libblas=*=*mkl
 
     - name: Configure CMake
-      run: cmake -S $GITHUB_WORKSPACE -B ${{runner.workspace}}/build -DCMAKE_INSTALL_PREFIX=/home/petjelinux/Cytnx_lib -DUSE_MKL=on -DUSE_HPTT=on -DHPTT_ENABLE_FINE_TUNE=on -DHPTT_ENABLE_AVX=on -DBUILD_PYTHON=on -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DRUN_TESTS=on
+      run: $CONDA/bin/cmake -S $GITHUB_WORKSPACE -B ${{runner.workspace}}/build -DCMAKE_INSTALL_PREFIX=/home/petjelinux/Cytnx_lib -DUSE_MKL=on -DUSE_HPTT=on -DHPTT_ENABLE_FINE_TUNE=on -DHPTT_ENABLE_AVX=on -DBUILD_PYTHON=on -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DRUN_TESTS=on
 
     - name: Build
       working-directory: ${{runner.workspace}}/build
-      run: cmake --build .
+      run: $CONDA/bin/cmake --build .
 
     - name: Test
       working-directory: ${{runner.workspace}}/build
       run: GTEST_OUTPUT=xml:test-results/ GTEST_COLOR=1 ctest -V
 
     - name: Upload test results
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       if: failure()
       with:
         name: test_results_xml
