@@ -11,7 +11,6 @@
 #include <fstream>
 #include "intrusive_ptr_base.hpp"
 #include "utils/utils.hpp"
-#include "Network.hpp"
 #include "UniTensor.hpp"
 #include "contraction_tree.hpp"
 namespace cytnx{
@@ -94,7 +93,8 @@ namespace cytnx{
             virtual void Fromfile(const std::string& fname);
             virtual void FromString(const std::vector<std::string> &content);
             virtual void clear();
-            virtual UniTensor Launch(const bool &optimal=false);
+			virtual std::string getOptimalOrder();
+            virtual UniTensor Launch(const bool &optimal=false, const std::string& contract_order="");
             virtual void PrintNet(std::ostream &os);
             virtual boost::intrusive_ptr<Network_base> clone();
             virtual void Savefile(const std::string &fname);
@@ -123,7 +123,8 @@ namespace cytnx{
                 this->TOUT_iBondNum = 0;
                 this->ORDER_tokens.clear();
             }
-            UniTensor Launch(const bool &optimal=false);
+			std::string getOptimalOrder();
+        	UniTensor Launch(const bool &optimal=false, const std::string& contract_order="");
             boost::intrusive_ptr<Network_base> clone(){
                 RegularNetwork *tmp = new RegularNetwork();
                 tmp->name2pos = this->name2pos;
