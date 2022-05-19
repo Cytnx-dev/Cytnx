@@ -1,10 +1,6 @@
-# Cytnx
+# Cytnx [![Build Status (GitHub Actions)](https://github.com/jeffry1829/Cytnx/workflows/CMake%20Tests/badge.svg)](https://github.com/jeffry1829/Cytnx/actions?query=workflow%3A"CMake%20Tests") [![codecov](https://codecov.io/gh/jeffry1829/Cytnx/branch/master/graph/badge.svg?token=90BFSQCVW)](https://codecov.io/gh/jeffry1829/Cytnx)
 
 ![alt text](./Icon_small.png)
-
-| **CI Service** | Build Status |
-|:---------------|-------------:|
-| GitHub Actions | [![Build Status (GitHub Actions)](https://github.com/jeffry1829/Cytnx/workflows/CMake%20Tests/badge.svg)](https://github.com/jeffry1829/Cytnx/actions?query=workflow%3A"CMake%20Tests") |
 
 ## Install 
 See The following user guide for install and using of cytnx:
