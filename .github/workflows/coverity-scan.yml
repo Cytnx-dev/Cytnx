@@ -1,6 +1,9 @@
 name: Coverity Scan
 
 on:
+  push:
+    branches:
+      - add-gtest
   schedule:
     - cron: '0 18 * * *' # Daily at 18:00 UTC
   workflow_dispatch:
