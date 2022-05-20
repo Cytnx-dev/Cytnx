@@ -118,6 +118,7 @@ namespace cytnx{
         //     _moving_elem<cytnx_double>(dest_blocks, src_blocks, dest_shapes, src_shapes, src_shape, src_inner2outer_row, src_inner2outer_col,
         //                             dest_outer2inner_row, dest_outer2inner_col, mapper, inv_mapper, src_inner_rowrank, dest_rowrank);
         // } // end blocks_mvelems
+        
         void blocks_mvelems_d(vector<Tensor> &dest_blocks, const vector<Tensor> &src_blocks,
                             const vector<cytnx_uint64> &src_shape,
                             const vector<vector<cytnx_uint64>>  &src_inner2outer_row, const vector<vector<cytnx_uint64>>  &src_inner2outer_col,
@@ -128,36 +129,37 @@ namespace cytnx{
                                     dest_outer2inner_row, dest_outer2inner_col, mapper, inv_mapper, src_inner_rowrank, dest_rowrank);
         } // end blocks_mvelems
 
+
+        // void  blocks_mvelems_f(...){
+        //     _moving_elem<cytnx_float>(...);
+        // }
+        // void blocks_mvelems_u64(...){
+        //     _moving_elem<cytnx_uint64>(...);
+        // }
+        // void  blocks_mvelems_u32(...){
+        //     _moving_elem<cytnx_uint32>(...);
+        // }
+        // void blocks_mvelems_u16(...){
+        //     _moving_elem<cytnx_uint16>(...);
+        // }
+        // void  blocks_mvelems_i64(...){
+        //     _moving_elem<cytnx_int64>(...);
+        // }
+        // void blocks_mvelems_i32(...){
+        //     _moving_elem<cytnx_int32>(...);
+        // }
+        // void  blocks_mvelems_i16(...){
+        //     _moving_elem<cytnx_int16>(...);
+        // }
+        // void  blocks_mvelems_cd(...){
+        //     _moving_elem<cytnx_complex128>(...);
+        // }
+        // void  blocks_mvelems_cf(...){
+        //     _moving_elem<cytnx_complex64>(...);
+        // }
+        // void  blocks_mvelems_b(...){
+        //     _moving_elem<cytnx_bool>(...);
+        // }
+
     } //namespace utils_internal 
 }//namespace cytnx
-
-// void  blocks_mvelems_f(...){
-//     _moving_elem<cytnx_float>(...);
-// }
-// void blocks_mvelems_u64(...){
-//     _moving_elem<cytnx_uint64>(...);
-// }
-// void  blocks_mvelems_u32(...){
-//     _moving_elem<cytnx_uint32>(...);
-// }
-// void blocks_mvelems_u16(...){
-//     _moving_elem<cytnx_uint16>(...);
-// }
-// void  blocks_mvelems_i64(...){
-//     _moving_elem<cytnx_int64>(...);
-// }
-// void blocks_mvelems_i32(...){
-//     _moving_elem<cytnx_int32>(...);
-// }
-// void  blocks_mvelems_i16(...){
-//     _moving_elem<cytnx_int16>(...);
-// }
-// void  blocks_mvelems_cd(...){
-//     _moving_elem<cytnx_complex128>(...);
-// }
-// void  blocks_mvelems_cf(...){
-//     _moving_elem<cytnx_complex64>(...);
-// }
-// void  blocks_mvelems_b(...){
-//     _moving_elem<cytnx_bool>(...);
-// }
