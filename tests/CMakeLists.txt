@@ -11,6 +11,7 @@ target_link_libraries(
   gtest
 )
 target_link_libraries(test_main cytnx)
+#target_link_libraries(test_main PUBLIC "-lgcov --coverage")
 include(GoogleTest)
 gtest_discover_tests(test_main)
 

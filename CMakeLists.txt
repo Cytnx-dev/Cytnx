@@ -157,6 +157,8 @@ add_subdirectory(src)
 
 if(RUN_TESTS)
 	enable_testing()
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fprofile-arcs -ftest-coverage")
+	target_link_libraries(cytnx PUBLIC "-lgcov --coverage")
 	add_subdirectory(tests)
 endif()
 
