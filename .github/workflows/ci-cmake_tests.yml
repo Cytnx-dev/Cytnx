@@ -33,11 +33,6 @@ jobs:
     #   run: $CONDA/bin/cmake --build . -j `nproc`
 
 
-    #- name: Upload test results
-    #  uses: actions/upload-artifact@v3
-    #  with:
-    #    name: test_results_xml
-    #    path: ${{runner.workspace}}/build/test-results/**/*.xml
 
 
     - name: Download Coverity Build Tool
@@ -57,13 +52,13 @@ jobs:
     
     - name: Run CTest
       working-directory: ${{runner.workspace}}/build
-      run: GTEST_COLOR=1 ctest
+      run: GTEST_COLOR=1 ctest --output-junit junit.xml
     
     - name: Run gcovr
       working-directory: ${{runner.workspace}}/build
       run: |
         $CONDA/bin/conda install gcovr
-        $CONDA/bin/gcovr -r .. . --xml gcovr.xml
+        $CONDA/bin/gcovr -r .. . --xml gcovr.xml -e ".*_deps.*$"
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
@@ -72,7 +67,7 @@ jobs:
         #directory: ${{runner.workspace}}/build
         files: ${{runner.workspace}}/build/gcovr.xml # optional
         #working-directory: ${{runner.workspace}}/build
-        root_dir: ${{runner.workspace}}
+        #root_dir: ${{runner.workspace}}
         fail_ci_if_error: true # optional (default = false)
         verbose: true # optional (default = false)
         #version: "v0.1.15"
@@ -90,3 +85,15 @@ jobs:
           https://scan.coverity.com/builds?project=kaihsin%2FCytnx
       env:
         TOKEN: ${{ secrets.COVERITY_SCAN_TOKEN }}
+    
+    - name: Upload gcovr files
+      uses: actions/upload-artifact@v3
+      with:
+        name: gcovr_xml
+        path: ${{runner.workspace}}/build/gcovr.xml
+    
+    - name: Upload junit files
+      uses: actions/upload-artifact@v3
+      with:
+        name: junit_xml
+        path: ${{runner.workspace}}/build/junit.xml
