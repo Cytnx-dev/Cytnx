@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - add-gtest
   workflow_dispatch:
 
 jobs:
