@@ -21,6 +21,19 @@ namespace cytnx{
 
         utils_internal_interface::utils_internal_interface(){
 
+            blocks_mvelems_ii.resize(N_Type, NULL);
+            // blocks_mvelems_ii[Type.ComplexDouble] = blocks_mvelems_cd;
+            // blocks_mvelems_ii[Type.ComplexFloat ] = blocks_mvelems_cf;
+            blocks_mvelems_ii[Type.Double       ] = blocks_mvelems_d;
+            // blocks_mvelems_ii[Type.Float        ] = blocks_mvelems_f ;
+            // blocks_mvelems_ii[Type.Uint64       ] = blocks_mvelems_u64;
+            // blocks_mvelems_ii[Type.Int64        ] = blocks_mvelems_i64;
+            // blocks_mvelems_ii[Type.Uint32       ] = blocks_mvelems_u32;
+            // blocks_mvelems_ii[Type.Int32        ] = blocks_mvelems_i32;
+            // blocks_mvelems_ii[Type.Uint16       ] = blocks_mvelems_u16;
+            // blocks_mvelems_ii[Type.Int16        ] = blocks_mvelems_i16;
+            // blocks_mvelems_ii[Type.Bool         ] = blocks_mvelems_b;
+
             ElemCast = vector<vector<ElemCast_io> >(N_Type,vector<ElemCast_io>(N_Type,NULL));
             ElemCast[Type.ComplexDouble][Type.ComplexDouble] = Cast_cpu_cdtcd;
             ElemCast[Type.ComplexDouble][Type.ComplexFloat ] = Cast_cpu_cdtcf;

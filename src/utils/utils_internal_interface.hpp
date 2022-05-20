@@ -13,6 +13,9 @@
 #include "utils_internal_cpu/SetElems_cpu.hpp"
 #include "utils_internal_cpu/SetElems_contiguous_cpu.hpp"
 #include "utils_internal_cpu/Complexmem_cpu.hpp"
+
+#include "utils_internal_cpu/blocks_mvelems_cpu.hpp"
+
 #ifdef UNI_GPU
     #include "utils_internal_gpu/cuCast_gpu.hpp"
     #include "utils_internal_gpu/cuAlloc_gpu.hpp"
@@ -44,6 +47,23 @@ namespace cytnx{
         typedef void (*GetElems_conti_io)(void*, void*, const std::vector<cytnx_uint64>&, const std::vector<cytnx_uint64>&,const std::vector<std::vector<cytnx_uint64> >&,const cytnx_uint64 &, const cytnx_uint64 &);
         typedef void (*SetElems_io)(void*, void*, const std::vector<cytnx_uint64>&, const std::vector<cytnx_uint64>&,const std::vector<std::vector<cytnx_uint64> >&,const cytnx_uint64 &, const bool &);
         typedef void (*SetElems_conti_io)(void*, void*, const std::vector<cytnx_uint64>&, const std::vector<cytnx_uint64>&,const std::vector<std::vector<cytnx_uint64> >&,const cytnx_uint64 &, const cytnx_uint64 &, const bool &);
+
+        // typedef void (*blocks_mvelems_io)(vector<Storage> &, const vector<Storage> &,
+        //     const vector<vector<cytnx_uint64>> &, const vector<vector<cytnx_uint64>> &,
+        //     const vector<cytnx_uint64> &,
+        //     const vector<vector<cytnx_uint64>>  &, const vector<vector<cytnx_uint64>>  &,
+        //     map<cytnx_uint64, pair<cytnx_uint64,cytnx_uint64>>  &, map<cytnx_uint64, pair<cytnx_uint64,cytnx_uint64>> &,
+        //     const vector<cytnx_uint64> &, const vector<cytnx_uint64> &,
+        //     const cytnx_uint64 &,  const cytnx_uint64 &);
+
+
+        typedef void (*blocks_mvelems_io)(vector<Tensor> &, const vector<Tensor> &,
+            const vector<cytnx_uint64> &,
+            const vector<vector<cytnx_uint64>>  &, const vector<vector<cytnx_uint64>>  &,
+            map<cytnx_uint64, pair<cytnx_uint64,cytnx_uint64>>  &, map<cytnx_uint64, pair<cytnx_uint64,cytnx_uint64>> &,
+            const vector<cytnx_uint64> &, const vector<cytnx_uint64> &,
+            const cytnx_uint64 &,  const cytnx_uint64 &);
+
         class utils_internal_interface{
             public:
 
@@ -54,6 +74,8 @@ namespace cytnx{
                 std::vector<GetElems_conti_io> GetElems_conti_ii;
                 std::vector<std::vector<SetElems_conti_io> > SetElems_conti_ii;
                 std::vector<std::vector<SetElems_io> > SetElems_ii;
+
+                std::vector<blocks_mvelems_io> blocks_mvelems_ii;
 
                 #ifdef UNI_GPU
                     std::vector<std::vector<ElemCast_io> > cuElemCast;
