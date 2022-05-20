@@ -1,4 +1,5 @@
-# Cytnx [![Build Status (GitHub Actions)](https://github.com/kaihsin/Cytnx/workflows/CMake%20Tests/badge.svg)](https://github.com/jeffry1829/Cytnx/actions?query=workflow%3A"CMake%20Tests") [![codecov](https://codecov.io/gh/kaihsin/Cytnx/branch/master/graph/badge.svg?token=IHXTX7UI6O)](https://codecov.io/gh/kaihsin/Cytnx) [![Coverity Scan Build Status](https://img.shields.io/coverity/scan/25013.svg)](https://scan.coverity.com/projects/kaihsin-cytnx)
+# Cytnx [![Build Status (GitHub Actions)](https://github.com/kaihsin/Cytnx/workflows/CMake%20Tests/badge.svg)](https://github.com/kaihsin/Cytnx/actions?query=workflow%3A"CMake%20Tests") [![codecov](https://codecov.io/gh/kaihsin/Cytnx/branch/master/graph/badge.svg?token=IHXTX7UI6O)](https://codecov.io/gh/kaihsin/Cytnx) [![Coverity Scan Build Status](https://img.shields.io/coverity/scan/25013.svg)](https://scan.coverity.com/projects/kaihsin-cytnx)
+[![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx/badges/version.svg)](https://anaconda.org/kaihsinwu/cytnx) [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx/badges/platforms.svg)](https://anaconda.org/kaihsinwu/cytnx)
 
 ![alt text](./Icon_small.png)
 
@@ -9,9 +10,6 @@ See The following user guide for install and using of cytnx:
 
 ## Intro slide
 [Cytnx_v0.5.pdf (dated 07/25/2020)](https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing)
-
-
-[![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx/badges/version.svg)](https://anaconda.org/kaihsinwu/cytnx) [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx/badges/platforms.svg)](https://anaconda.org/kaihsinwu/cytnx)
 
 ## News
     [v0.7.4] 
