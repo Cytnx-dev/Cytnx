@@ -275,7 +275,7 @@ f.write(" ../\n")
 f.write("make -j `nproc`\n")
 f.write("make install\n")
 if(RUN_TESTS):
-    f.write("GTEST_COLOR=1 ctest --output-on-failure --gtest_output=xml")
+    f.write("GTEST_COLOR=1 ctest --output-junit junit.xml")
 
 f.close()
 
