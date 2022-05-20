@@ -24,4 +24,6 @@ target_sources_local(cytnx
     SetZeros_cpu.cpp
     Range_cpu.cpp
     Complexmem_cpu.cpp
+    blocks_mvelems_cpu.cpp
+    blocks_mvelems_cpu.hpp
 )

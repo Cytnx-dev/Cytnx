@@ -419,116 +419,39 @@ namespace cytnx{
             boost::intrusive_ptr<UniTensor_base> out(this);
             return out;
         }else{
-            //cout << "[non contiguous]" << endl;
-            //make a new instance with only the outer meta:
-            //SparseUniTensor* tmp = this->clone_meta(true,false);
-
             // make new instance  
             SparseUniTensor* tmp = new SparseUniTensor();
             tmp->Init(this->_bonds,this->_labels,this->_rowrank,this->dtype(),this->device(),this->_is_diag);
-            
-            //UniTensor tt; tt._impl = boost::intrusive_ptr<UniTensor_base>(tmp);
-            //cout << tt << endl;
-            //exit(1);
-            //tmp->print_diagram();            
-            
-            //calculate new inner meta, and copy the element from it.   
-            for(unsigned int b=0;b<this->_blocks.size();b++){
-                if(this->_is_diag){
-                    tmp->_blocks[b] = this->_blocks[b];
+        
+            //calculate new inner meta, and copy the element from it.
+            if(this->_is_diag){
+                for(unsigned int b=0;b<this->_blocks.size();b++)
+                    tmp->_blocks[b] = this->_blocks[b];    
+            }else{
+                // vector<Storage> dest_storages;
+                // vector<Storage> src_storages;
+                // vector<vector<cytnx_uint64>> dest_shapes;
+                // vector<vector<cytnx_uint64>> src_shapes;                
+                // for(unsigned int b=0;b<this->_blocks.size();b++){
+                //     dest_storages.push_back(tmp->_blocks[b]._impl->storage());
+                //     src_storages.push_back(this->_blocks[b]._impl->storage());
+                //     dest_shapes.push_back(tmp->_blocks[b].shape());
+                //     src_shapes.push_back(this->_blocks[b].shape());
+                // }
+                // utils_internal::uii.blocks_mvelems_ii[this->dtype()](dest_storages, src_storages,
+                //                                                 dest_shapes, src_shapes,
+                //                                                 this->shape(), this->_inner2outer_row, this->_inner2outer_col,
+                //                                                 tmp->_outer2inner_row, tmp->_outer2inner_col,
+                //                                                 this->_mapper, this->_inv_mapper,
+                //                                                 this->_inner_rowrank, tmp->_rowrank);
 
-                }else{
-                    // build accumulate index with current memory shape.
-                    vector<cytnx_uint64> oldshape = vec_map(this->shape(),this->_inv_mapper);
-                    //cout << oldshape << endl;
-                    //for(int t=0;t<oldshape.size();t++) cout << oldshape[t] << " "; cout << endl;//[DEBUG]
-
-                    vector<cytnx_uint64> acc_in_old(this->_inner_rowrank),acc_out_old(oldshape.size()-this->_inner_rowrank);
-                    acc_out_old[acc_out_old.size()-1] = 1;
-                    acc_in_old[ acc_in_old.size()-1 ] = 1;
-                    for(unsigned int s=0;s<acc_out_old.size()-1;s++){
-                        acc_out_old[acc_out_old.size()-2-s] = oldshape.back()*acc_out_old[acc_out_old.size()-1-s]; 
-                        oldshape.pop_back();
-                    }
-                    oldshape.pop_back();
-                    for(unsigned int s=0;s<acc_in_old.size()-1;s++){
-                        acc_in_old[acc_in_old.size()-2-s] = oldshape.back()*acc_in_old[acc_in_old.size()-1-s]; 
-                        oldshape.pop_back();
-                    }
-                    
-
-                    //for(int t=0;t<acc_in_old.size();t++) cout << acc_in_old[t] << " "; cout << endl;//[DEBUG]
-                    //for(int t=0;t<acc_out_old.size();t++) cout << acc_out_old[t] << " "; cout << endl;//[DEBUG]
-                    //exit(1);
-                    
-
-                    
-
-                    //for(unsigned int i=0;i<this->_blocks[b].shape()[0];i++){
-                    //    for(unsigned int j=0;j<this->_blocks[b].shape()[1];j++){
-                    #ifdef UNI_OMP
-                    #pragma omp parallel for schedule(dynamic)
-                    #endif
-                    for(unsigned int elem=0;elem<this->_blocks[b].storage().size();elem++){
-                            unsigned int i=elem/this->_blocks[b].shape()[1];
-                            unsigned int j=elem%this->_blocks[b].shape()[1];
-
-                            //decompress 
-                            vector<cytnx_uint64> tfidx = vec_concatenate(c2cartesian(this->_inner2outer_row[b][i],acc_in_old), 
-                                                                         c2cartesian(this->_inner2outer_col[b][j],acc_out_old));
-                           
-                            //cout << "old idxs:" ;
-                            //for(int t=0;t<tfidx.size();t++) cout << tfidx[t] << " "; cout << endl;//[DEBUG]
-
-                            tfidx = vec_map(tfidx,this->_mapper); // convert to new index
-
-                            //cout << "new idxs:" ;
-                            //for(int t=0;t<tfidx.size();t++) cout << tfidx[t] << " "; cout << endl;//[DEBUG]
-
-                            //cout << "new shape:" ;
-                            //for(int t=0;t<tmp->_bonds.size();t++) cout << tmp->_bonds[t].dim() << " "; cout << endl;//[DEBUG]
-
-
-                            
-                            //caluclate new row col index:
-                            cytnx_uint64 new_row = 0, new_col=0;
-                            cytnx_uint64 buff=1;
-                            for(unsigned int k=0;k<tmp->labels().size()-tmp->rowrank();k++){
-                                new_col += buff*tfidx.back();
-                                tfidx.pop_back();
-                                buff*=tmp->_bonds[tmp->_bonds.size()-1-k].dim();
-                            }
-                            buff = 1;
-                            for(unsigned int k=0;k<tmp->_rowrank;k++){
-                                new_row += buff*tfidx.back();
-                                tfidx.pop_back();
-                                buff*=tmp->_bonds[tmp->_rowrank-1-k].dim();
-                            }
-                            /* 
-                            cout << new_col << " " << new_row << endl;
-                            cout << "checkblock";
-                            cout << tmp->_outer2inner_row[new_row].first << " " << tmp->_outer2inner_col[new_col].first << endl;
-                            cout << "newblock" << endl;
-                            cout << tmp->_blocks[tmp->_outer2inner_row[new_row].first]<< endl;
-                            cout << "oldblock" << endl;
-                            cout << this->_blocks[b] << endl;
-                            */
-
-                            tmp->_blocks[tmp->_outer2inner_row[new_row].first].storage().at(tmp->_outer2inner_row[new_row].second*tmp->_blocks[tmp->_outer2inner_row[new_row].first].shape()[1] + tmp->_outer2inner_col[new_col].second) = this->_blocks[b].storage().at(i*this->_blocks[b].shape()[1]+j);
-                            //tmp->_blocks[tmp->_outer2inner_row[new_row].first].set({ac(tmp->_outer2inner_row[new_row].second),ac(tmp->_outer2inner_col[new_col].second)},this->_blocks[b].get({ac(i),ac(j)}));
-                    }//traversal elements in given block b
-                //        }// row in block
-                //    }// col in block
-                }//is-diag
-            }// each old block         
- 
- 
+                utils_internal::uii.blocks_mvelems_ii[this->dtype()](tmp->_blocks, this->_blocks, this->shape(),  this->_inner2outer_row, this->_inner2outer_col, tmp->_outer2inner_row, tmp->_outer2inner_col, this->_mapper, this->_inv_mapper, this->_inner_rowrank, tmp->_rowrank);
+            }// is diag
 
             //update comm-meta:
             //tmp->_contiguous = true;
             //tmp->_mapper = utils_internal::range_cpu(cytnx_uint64(this->_bonds.size()));
             //tmp->_inv_mapper = tmp->_mapper;
-            
             //transform to a intr_ptr.
             boost::intrusive_ptr<UniTensor_base> out(tmp);
             return out;
