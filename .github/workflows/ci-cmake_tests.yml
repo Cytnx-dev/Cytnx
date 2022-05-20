@@ -32,8 +32,8 @@ jobs:
       run: $CONDA/bin/cmake -S ${{github.workspace}} -B ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX=/home/runner/work/Cytnx_lib -DUSE_MKL=on -DUSE_HPTT=on -DHPTT_ENABLE_FINE_TUNE=on -DHPTT_ENABLE_AVX=on -DBUILD_PYTHON=on -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DRUN_TESTS=on
 
     - name: Build
-       working-directory: ${{github.workspace}}/build
-       run: $CONDA/bin/cmake --build . -j `nproc`
+      working-directory: ${{github.workspace}}/build
+      run: $CONDA/bin/cmake --build . -j `nproc`
     
     - name: Run CTest
       working-directory: ${{github.workspace}}/build
