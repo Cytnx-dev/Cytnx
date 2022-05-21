@@ -19,6 +19,7 @@ Cytnx user guide and examples
    :maxdepth: 3
 
    install.rst
+   convention.rst
    Guide.rst
    Examples.rst
    Perf_tune.rst

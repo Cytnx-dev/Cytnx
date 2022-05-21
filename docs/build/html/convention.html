@@ -4,12 +4,13 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
-    <title>Index &#8212; Cytnx  documentation</title>
+    <title>Function Naming convention &#8212; Cytnx  documentation</title>
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css" />
@@ -21,8 +22,10 @@
     <script src="_static/doctools.js"></script>
     <script src="_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="_static/sphinxbootstrap4.js"></script>
-    <link rel="index" title="Index" href="#" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="User Guide" href="Guide.html" />
+    <link rel="prev" title="Install &amp; Usage of Cytnx" href="install.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -43,7 +46,7 @@
 </ul>
 </li>
 </ul>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Install &amp; Usage of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="install.html#conda-install">Conda install</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="install.html#using-python-api-after-conda-install">Using python API after Conda install</a></li>
@@ -61,7 +64,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="convention.html">Function Naming convention</a><ul class="simple">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Function Naming convention</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Guide.html">User Guide</a><ul>
@@ -303,10 +306,16 @@
     <div class="related d-flex justify-content-between bg-light flex-wrap" role="navigation" aria-label="related navigation">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="index.html">Cytnx  documentation</a></li>
-            <li class="breadcrumb-item active">Index</li>
+            <li class="breadcrumb-item active">Function Naming convention</li>
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+               <a href="install.html" title="Previous Chapter: Install & Usage of Cytnx" class="btn btn-primary" role="botton" accesskey="P">
+                   &laquo; Install & Usa...
+               </a>
+               <a href="Guide.html" title="Next Chapter: User Guide" class="btn btn-primary" role="botton" accesskey="N">
+                   User Guide &raquo;
+               </a>
            </div>
        </div>
     </div>
@@ -325,7 +334,7 @@
 </ul>
 </li>
 </ul>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Install &amp; Usage of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="install.html#conda-install">Conda install</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="install.html#using-python-api-after-conda-install">Using python API after Conda install</a></li>
@@ -343,7 +352,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="convention.html">Function Naming convention</a><ul class="simple">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Function Naming convention</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Guide.html">User Guide</a><ul>
@@ -535,6 +544,16 @@
               </div>
             
           
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="install.html"
+                          title="previous chapter">Install &amp; Usage of Cytnx</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="Guide.html"
+                          title="next chapter">User Guide</a></p>
+  </div>
 <div id="searchbox" style="display: none">
     <form class="form search" action="search.html" method="get">
       <input type="text" name="q" class="form-control" placeholder="Search..." />
@@ -544,6 +563,10 @@
 </div>
 
 <script type="text/javascript">$('#searchbox').show(0);</script>
+  <ul class="this-page-menu list-unstyled text-right">
+    <li><a href="_sources/convention.rst.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
         </div>
       </div> 
 
@@ -552,65 +575,58 @@
         <div class="bodywrapper">
           <div class="body">
             
+  <section id="function-naming-convention">
+<h1>Function Naming convention<a class="headerlink" href="#function-naming-convention" title="Permalink to this headline">¶</a></h1>
+<p>Generally, the function naming scheme in Cytnx follows the rule:</p>
+<ol class="arabic">
+<li><p>If the function is <strong>acting on objects</strong> (taking object as arguments), they will start with first Letter being <strong>capical</strong>. Example such as linalg function, contract etc…</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Qr</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Sum</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
 
-<h1 id="index">Index</h1>
-
-<div class="genindex-jumpbox">
- <a href="#B"><strong>B</strong></a>
- | <a href="#L"><strong>L</strong></a>
- | <a href="#U"><strong>U</strong></a>
- 
+<span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">)</span>
+</pre></div>
 </div>
-<h2 id="B">B</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li>
-    Bond()
-
-      <ul>
-        <li><a href="guide/cyx/Bond.html#Bond">built-in function</a>
+</div></blockquote>
 </li>
-      </ul></li>
-      <li>
-    built-in function
+<li><p>If a function is a <strong>member function</strong>, or a <strong>generating function</strong> (such as zeros(), ones() …), then they usually start with <strong>lower</strong> letter, for example:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
 
-      <ul>
-        <li><a href="guide/cyx/Bond.html#Bond">Bond()</a>
+<span class="n">A</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></blockquote>
 </li>
-        <li><a href="guide/itersol/Lanczos.html#Lanczos_ER">Lanczos_ER()</a>
+<li><p><strong>Objects</strong> in Cytnx always start with <strong>capical</strong> Letter, for example:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">()</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">Bond</span><span class="p">()</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">Network</span><span class="p">()</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></blockquote>
 </li>
-        <li><a href="guide/cyx/UniTensor_create.html#UniTensor">UniTensor()</a>
+<li><p>Functions end with <strong>underscore</strong> means the <em>input</em> will be changed. If it is a member function, it is inplace operation</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+
+<span class="n">A</span><span class="o">.</span><span class="n">contiguous_</span><span class="p">()</span> <span class="c1"># A gets changed</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span> <span class="c1"># A is not changed, but return a copy B (see Tensor for further info)</span>
+
+<span class="n">A</span><span class="o">.</span><span class="n">permute_</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># A gets changed</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># A is not changed but return a new B as A&#39;s permute</span>
+</pre></div>
+</div>
+</div></blockquote>
 </li>
-      </ul></li>
-  </ul></td>
-</tr></table>
-
-<h2 id="L">L</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li>
-    Lanczos_ER()
-
-      <ul>
-        <li><a href="guide/itersol/Lanczos.html#Lanczos_ER">built-in function</a>
-</li>
-      </ul></li>
-  </ul></td>
-</tr></table>
-
-<h2 id="U">U</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li>
-    UniTensor()
-
-      <ul>
-        <li><a href="guide/cyx/UniTensor_create.html#UniTensor">built-in function</a>
-</li>
-      </ul></li>
-  </ul></td>
-</tr></table>
-
+</ol>
+<div class="toctree-wrapper compound">
+</div>
+</section>
 
 
           </div>
