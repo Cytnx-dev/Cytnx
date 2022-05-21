@@ -8,7 +8,7 @@ FLAG=""
 ##        Set the desntination path for installation in Ins_dest
 #----------------------------------------------
 Ins_dest="/home/kaihsinwu/CYTNX075"
-FLAG+="-DCMAKE_INSTALL_PREFIX=${Ins_dest} "
+FLAG="${FLAG}-DCMAKE_INSTALL_PREFIX=${Ins_dest} "
 #-----------------------------------------------
 
 
@@ -35,7 +35,7 @@ FLAG+="-DCMAKE_INSTALL_PREFIX=${Ins_dest} "
 #        Please follow the guide from official mkl/oneMKL "post-installation" part 
 #        to source the proper setvars.sh and/or vars.sh  
 #----------------------
-FLAG+="-DUSE_MKL=on "
+FLAG="${FLAG}-DUSE_MKL=on "
 #----------------------
 
 
@@ -44,7 +44,7 @@ FLAG+="-DUSE_MKL=on "
 #============================================================================
 # set to "=on" for building python API, required python and pybind11 installed. 
 #--------------------------------
-#FLAG+="-DBUILD_PYTHON=off "
+#FLAG=$FLAG:"-DBUILD_PYTHON=off "
 #--------------------------------
 
 
@@ -55,18 +55,18 @@ FLAG+="-DUSE_MKL=on "
 #        In case boost cannot be found automatically, uncomment the following line,
 #        and set the boost path manually.  
 #-----------------------------------
-#FLAG+="-DBOOSTROOT=/deps/BOOST "
+#FLAG="${FLAG}-DBOOSTROOT=/deps/BOOST "
 #-----------------------------------
 
 
 # [Optional]
-FLAG+="-DUSE_HPTT=on "
+FLAG="${FLAG}-DUSE_HPTT=on "
 
 
 rm -rf build
 mkdir build
 cd build
 cmake ../ ${FLAG}
-make -j6
+#make -j6
 #make install
 
