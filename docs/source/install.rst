@@ -18,19 +18,20 @@ Following we show how to install cytnx from conda.
 .. code-block:: shell
     :linenos:
 
-    $conda create --channel conda-forge --name cytnx python=3.7 _openmp_mutex=*=*_llvm
+    $conda create --channel conda-forge --name cytnx python=3.9 _openmp_mutex=*=*_llvm
 
 .. Note::
 
     1. We do not support native Windows package at this stage. if you are using Windows OS, please use WSL. 
-    2. currently support python 3.6/3.7/3.8, you can change python=* argument to the version you want.  
+    2. [0.7.6+] Currently, supporting python versions are updated to 3.7/3.8/3.9. You can change python=* argument to the version you want.  
+
 
 * For MacOS:
 
 .. code-block:: shell
     :linenos:
 
-    $conda create --channel conda-forge --name cytnx python=3.7 llvm-openmp
+    $conda create --channel conda-forge --name cytnx python=3.9 llvm-openmp
 
 .. note:: 
 

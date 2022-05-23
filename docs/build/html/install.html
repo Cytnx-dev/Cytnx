@@ -24,7 +24,7 @@
     <script src="_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="User Guide" href="Guide.html" />
+    <link rel="next" title="Function Naming convention" href="convention.html" />
     <link rel="prev" title="Introdoction" href="Intro.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
@@ -62,6 +62,9 @@
 </li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="convention.html">Function Naming convention</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Guide.html">User Guide</a><ul>
@@ -259,7 +262,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="%23.html">v0.7.4</a></li>
+              <a  class="nav-link" href="%23.html">v0.7.6</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -285,7 +288,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="%23.html">v0.7.4</a></li>
+                  <a  class="nav-link" href="%23.html">v0.7.6</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -310,8 +313,8 @@
                <a href="Intro.html" title="Previous Chapter: Introdoction" class="btn btn-primary" role="botton" accesskey="P">
                    &laquo; Introdoction
                </a>
-               <a href="Guide.html" title="Next Chapter: User Guide" class="btn btn-primary" role="botton" accesskey="N">
-                   User Guide &raquo;
+               <a href="convention.html" title="Next Chapter: Function Naming convention" class="btn btn-primary" role="botton" accesskey="N">
+                   Function Nami... &raquo;
                </a>
            </div>
        </div>
@@ -347,6 +350,9 @@
 </li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="convention.html">Function Naming convention</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Guide.html">User Guide</a><ul>
@@ -545,8 +551,8 @@
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="Guide.html"
-                          title="next chapter">User Guide</a></p>
+    <p class="topless"><a href="convention.html"
+                          title="next chapter">Function Naming convention</a></p>
   </div>
 <div id="searchbox" style="display: none">
     <form class="form search" action="search.html" method="get">
@@ -583,20 +589,20 @@ Note that both python API and C++ API will be installed together regardless of w
 <ul class="simple">
 <li><p>For linux/WSL:</p></li>
 </ul>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nv">$conda</span> create --channel conda-forge --name cytnx <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7 <span class="nv">_openmp_mutex</span><span class="o">=</span>*<span class="o">=</span>*_llvm
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nv">$conda</span> create --channel conda-forge --name cytnx <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9 <span class="nv">_openmp_mutex</span><span class="o">=</span>*<span class="o">=</span>*_llvm
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ol class="arabic simple">
 <li><p>We do not support native Windows package at this stage. if you are using Windows OS, please use WSL.</p></li>
-<li><p>currently support python 3.6/3.7/3.8, you can change python=* argument to the version you want.</p></li>
+<li><p>[0.7.6+] Currently, supporting python versions are updated to 3.7/3.8/3.9. You can change python=* argument to the version you want.</p></li>
 </ol>
 </div>
 <ul class="simple">
 <li><p>For MacOS:</p></li>
 </ul>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nv">$conda</span> create --channel conda-forge --name cytnx <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7 llvm-openmp
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nv">$conda</span> create --channel conda-forge --name cytnx <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9 llvm-openmp
 </pre></div>
 </div>
 <div class="admonition note">
