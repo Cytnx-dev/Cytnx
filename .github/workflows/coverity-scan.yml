@@ -35,7 +35,6 @@ jobs:
     - name: Download Coverity Build Tool
       working-directory: ${{github.workspace}}/build
       run: |
-        echo $TOKEN
         wget -q https://scan.coverity.com/download/cxx/linux64 --post-data "token=$TOKEN&project=kaihsin%2FCytnx" -O cov-analysis-linux64.tar.gz
         mkdir cov-analysis-linux64
         tar xzf cov-analysis-linux64.tar.gz --strip 1 -C cov-analysis-linux64
