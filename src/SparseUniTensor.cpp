@@ -1315,7 +1315,7 @@ namespace cytnx{
         }
 
         boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
-        out->Init_by_Tensor(t,0);
+        out->Init_by_Tensor(t,false,0);
         return out;
     }
 
