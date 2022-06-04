@@ -62,6 +62,7 @@ option(USE_MKL "Build using MKL" OFF)
 option(USE_OMP "Build Cytnx with OpenMP" ON)
 option(BUILD_DOC "Build API docuemntation" OFF)
 option(USE_HPTT "Build Cytnx with HPTT" OFF)
+option(RUN_TESTS "Run Cytnx tests" OFF)
 
 if (USE_ICPC)
   message(STATUS, "Build Cytnx with Intel Compilers")
@@ -153,6 +154,14 @@ target_compile_features(cytnx PUBLIC cxx_std_11)
 #set_property(TARGET cytnx PROPERTY CXX_STANDARD 11)
 
 add_subdirectory(src)
+
+if(RUN_TESTS)
+	enable_testing()
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fprofile-arcs -ftest-coverage")
+	target_link_libraries(cytnx PUBLIC "-lgcov --coverage")
+	add_subdirectory(tests)
+endif()
+
 include(GNUInstallDirs)
 
 
@@ -308,6 +317,17 @@ if(USE_CUDA)
 endif()
 
 
+######################################################################
+### Get Gtest
+######################################################################
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
+)
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
 
 
 ######################################################################

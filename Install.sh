@@ -1,5 +1,3 @@
-FLAG=""
-#---------------
 
 #=========================================================
 ## 1) Custom install destination (DEFAULT /use/local/cytnx)
@@ -67,6 +65,4 @@ rm -rf build
 mkdir build
 cd build
 cmake ../ ${FLAG}
-#make -j6
-#make install
-
+make -j6
