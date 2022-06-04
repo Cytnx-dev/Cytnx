@@ -1,7 +1,0 @@
-<map id="include/Network.hpp" name="include/Network.hpp">
-<area shape="rect" id="node2" href="$cytnx_8hpp.html" title="include/cytnx.hpp" alt="" coords="5,81,129,108"/>
-<area shape="rect" id="node3" href="$FermionNetwork_8cpp.html" title="src/FermionNetwork.cpp" alt="" coords="178,81,343,108"/>
-<area shape="rect" id="node4" href="$Network_8cpp.html" title="src/Network.cpp" alt="" coords="368,81,487,108"/>
-<area shape="rect" id="node5" href="$Network__base_8cpp.html" title="src/Network_base.cpp" alt="" coords="511,81,664,108"/>
-<area shape="rect" id="node6" href="$RegularNetwork_8cpp.html" title="src/RegularNetwork.cpp" alt="" coords="689,81,851,108"/>
-</map>

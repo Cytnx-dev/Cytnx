@@ -110,7 +110,7 @@ namespace cytnx{
             /**
             @brief init a bond object 
             @param dim the dimension of the bond (rank)
-            @param bondType the tag of the bond, it can be BD_BRA, BD_KET as physical tagged; or BD_REG as regular bond (rank)
+            @param bd_type the tag of the bond, it can be BD_BRA, BD_KET as physical tagged; or BD_REG as regular bond (rank)
             @param in_qnums the quantum number(s) of the bond. it should be a 2d vector with shape (# of symmetry, dim)
             @param in_syms the symmetry object of the bond. [Note] if qnums are provided, the default symmetry type is \link cytnx::Symmetry::U1 Symmetry::U1 \endlink
             
