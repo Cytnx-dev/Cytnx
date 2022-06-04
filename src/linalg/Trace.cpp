@@ -21,7 +21,7 @@ namespace cytnx{
     void _trace_2d(Tensor &out, const Tensor &Tn, const cytnx_uint64 &Ndiag){
         T a=0;
         T *rawdata = Tn.storage().data<T>();
-        Ldim = Tn.shape()[1];
+        cytnx_uint64 Ldim = Tn.shape()[1];
         for(cytnx_uint64 i=0;i<Ndiag;i++)
             a += rawdata[i*Ldim+i];
         out.storage().at<T>(0) = a;
