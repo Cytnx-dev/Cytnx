@@ -135,12 +135,12 @@ namespace cytnx{
                Qshape.push_back(-1);
                Qlbl.push_back(newlbl);
                outT[0].reshape_(Qshape);
-               outCyT[0] = UniTensor(outT[0],Qshape.size()-1);
+               outCyT[0] = UniTensor(outT[0],false,Qshape.size()-1);
                outCyT[0].set_labels(Qlbl);
                
 
                //D
-               outCyT[1] = UniTensor(outT[1],1,true);
+               outCyT[1] = UniTensor(outT[1],true,1);
                outCyT[1].set_labels({newlbl,newlbl-1});
                newlbl-=1;
 
@@ -155,13 +155,13 @@ namespace cytnx{
                     Qlbl.push_back(oldlabel[i]);
                 }
                outT[2].reshape_(Qshape);
-               outCyT[2] = UniTensor(outT[2],1);
+               outCyT[2] = UniTensor(outT[2],false,1);
                outCyT[2].set_labels(Qlbl);
 
 
                // tau
                if(is_tau){
-                   outCyT[3] = UniTensor(outT[3],0);
+                   outCyT[3] = UniTensor(outT[3],false,0);
                }
             
                

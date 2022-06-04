@@ -65,7 +65,7 @@ namespace cytnx{
             const cytnx_uint64& chi = virt_dim;
             
             this->_TNs.resize(N);
-            this->_TNs[0] = UniTensor(cytnx::random::normal({1, vphys_dim[0], min(chi, vphys_dim[0])}, 0., 1.),2);
+            this->_TNs[0] = UniTensor(cytnx::random::normal({1, vphys_dim[0], min(chi, vphys_dim[0])}, 0., 1.),false,2);
             cytnx_uint64 dim1,dim2,dim3;
 
             cytnx_uint64 DR = 1;
@@ -94,7 +94,7 @@ namespace cytnx{
                     DR/=vphys_dim[k];
                     dim3 = std::min(std::min(chi, cytnx_uint64(dim1 * dim2)),DR);
                 }
-                this->_TNs[k] = UniTensor(random::normal({dim1, dim2, dim3},0.,1.,-1),2);
+                this->_TNs[k] = UniTensor(random::normal({dim1, dim2, dim3},0.,1.,-1),false,2);
                 this->_TNs[k].set_labels({2*k,2*k+1,2*k+2});
                 //vec_print(std::cout,this->_TNs[k].shape());// << endl;
             }
@@ -115,7 +115,7 @@ namespace cytnx{
             
             this->_TNs.resize(N);
             //this->_TNs[0] = UniTensor(cytnx::random::normal({1, vphys_dim[0], min(chi, vphys_dim[0])}, 0., 1.,-1),2);
-            this->_TNs[0] = UniTensor(cytnx::zeros({1, vphys_dim[0], min(chi, vphys_dim[0])}),2);
+            this->_TNs[0] = UniTensor(cytnx::zeros({1, vphys_dim[0], min(chi, vphys_dim[0])}),false,2);
             this->_TNs[0].get_block_()(":",select[0],":") = random::normal({1,this->_TNs[0].shape()[2]},0.,1.);
 
             cytnx_uint64 dim1,dim2,dim3;
@@ -145,7 +145,7 @@ namespace cytnx{
                     dim3 = std::min(std::min(chi, cytnx_uint64(dim1 * dim2)),DR);
                 }
                 //cout << dim1 << dim2 << dim3 << endl;
-                this->_TNs[k] = UniTensor(zeros({dim1, dim2, dim3}),2);
+                this->_TNs[k] = UniTensor(zeros({dim1, dim2, dim3}),false,2);
                 this->_TNs[k].get_block_()(":",select[k]) = random::normal({dim1,dim3},0.,1.);
                     
                 //this->_TNs[k] = UniTensor(random::normal({dim1, dim2, dim3},0.,1.,-1,99),2);
