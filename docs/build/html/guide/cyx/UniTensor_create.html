@@ -625,11 +625,11 @@
 <span class="linenos">4</span><span class="n">T</span> <span class="o">=</span> <span class="n">cy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="mi">3</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
 <span class="linenos">5</span>
 <span class="linenos">6</span><span class="c1"># convert to UniTensor:</span>
-<span class="linenos">7</span><span class="n">uT</span> <span class="o">=</span> <span class="n">cy</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">T</span><span class="p">,</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">7</span><span class="n">uT</span> <span class="o">=</span> <span class="n">cy</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Here, we simply convert a Tensor <strong>T</strong> into a UniTensor <strong>uT</strong> simply by wrapping it with constructor <em>cy.UniTensor()</em>. Formally, we should think of this as we constructing a UniTensor <strong>uT</strong> with <strong>T</strong> being <strong>uT</strong>’s <em>block</em> (data).</p>
-<p>An additional argument <em>rowrank</em> is also provided, which we will get back to it in a moment but now, let’s use <strong>print_diagram()</strong> to visualize the UniTensor in a more straightforward way as a diagram:</p>
+<p>We can use <strong>print_diagram()</strong> to visualize the UniTensor in a more straightforward way as a diagram:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">uT</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -650,7 +650,7 @@ on device   : cytnx device: CPU
 </div>
 <p>There are a lot of information provided in this output which we will explain in details:</p>
 <ol class="arabic">
-<li><p><strong>Bonds:</strong> They are attach to the left side and/or right side of the center square (which the left/right side is associate to the <em>rowrank</em> property, we will get back to this later. right now, let’s just assume it take arbitrary integer 0 &lt; rowrank &lt; rank). The number of bonds indicates the rank of the UniTensor, which also indicates in the second line <em>tensor Rank</em>.</p>
+<li><p><strong>Bonds:</strong> They are attach to the left side and/or right side of the center square. Now you might wonder why there are bonds putting on left/right? In cytnx, we use a property called <strong>rowrank</strong> to determine that. The first <em>rowrank</em> bonds will be put on the left and the rest will be on the right. We will get back to this property later. But right now, let’s just assume it take arbitrary integer 0 &lt; rowrank &lt; rank). The number of bonds indicates the rank of the UniTensor, which also indicates in the second line <em>tensor Rank</em>.</p>
 <blockquote>
 <div><dl class="simple">
 <dt><strong>Ex:</strong></dt><dd><p>Here, we have three bonds, indicates it’s a rank-3 UniTensor.</p>
