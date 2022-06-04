@@ -63,7 +63,7 @@ namespace cytnx{
     class Type_class{
         private:
         public:
-            static enum:unsigned int{
+            enum:unsigned int{
                 Void,
                 ComplexDouble,
                 ComplexFloat,
@@ -77,33 +77,33 @@ namespace cytnx{
                 Uint16,
                 Bool
             };
-            static std::vector<Type_struct> Typeinfos;
+            std::vector<Type_struct> Typeinfos;
 
             Type_class();
-            static std::string getname(const unsigned int &type_id);
-            static unsigned int c_typename_to_id(const std::string &c_name);
-            static unsigned int typeSize(const unsigned int &type_id);
-            static bool is_unsigned(const unsigned int &type_id);
-            static bool is_complex(const unsigned int &type_id);
-            static bool is_float(const unsigned int &type_id);
-            static bool is_int(const unsigned int &type_id);
+            const std::string& getname(const unsigned int &type_id);
+            unsigned int c_typename_to_id(const std::string &c_name);
+            unsigned int typeSize(const unsigned int &type_id);
+            bool is_unsigned(const unsigned int &type_id);
+            bool is_complex(const unsigned int &type_id);
+            bool is_float(const unsigned int &type_id);
+            bool is_int(const unsigned int &type_id);
             //int c_typeindex_to_id(const std::type_index &type_idx);
             template<class T>
-            static unsigned int cy_typeid(const T &rc){
+            unsigned int cy_typeid(const T &rc){
                 cytnx_error_msg(true,"[ERROR] invalid type%s","\n");
                 return 0;
             }
-            static unsigned int cy_typeid(const cytnx_complex128 &rc){ return Type_class::ComplexDouble;}
-            static unsigned int cy_typeid(const cytnx_complex64 &rc){ return Type_class::ComplexFloat;}
-            static unsigned int cy_typeid(const cytnx_double &rc){ return Type_class::Double;}
-            static unsigned int cy_typeid(const cytnx_float &rc){ return Type_class::Float;}
-            static unsigned int cy_typeid(const cytnx_uint64 &rc){ return Type_class::Uint64;}
-            static unsigned int cy_typeid(const cytnx_int64 &rc){ return Type_class::Int64;}
-            static unsigned int cy_typeid(const cytnx_uint32 &rc){ return Type_class::Uint32;}
-            static unsigned int cy_typeid(const cytnx_int32 &rc){ return Type_class::Int32;}
-            static unsigned int cy_typeid(const cytnx_uint16 &rc){ return Type_class::Uint16;}
-            static unsigned int cy_typeid(const cytnx_int16 &rc){ return Type_class::Int16;}
-            static unsigned int cy_typeid(const cytnx_bool &rc){ return Type_class::Bool;}
+            unsigned int cy_typeid(const cytnx_complex128 &rc){ return Type_class::ComplexDouble;}
+            unsigned int cy_typeid(const cytnx_complex64 &rc){ return Type_class::ComplexFloat;}
+            unsigned int cy_typeid(const cytnx_double &rc){ return Type_class::Double;}
+            unsigned int cy_typeid(const cytnx_float &rc){ return Type_class::Float;}
+            unsigned int cy_typeid(const cytnx_uint64 &rc){ return Type_class::Uint64;}
+            unsigned int cy_typeid(const cytnx_int64 &rc){ return Type_class::Int64;}
+            unsigned int cy_typeid(const cytnx_uint32 &rc){ return Type_class::Uint32;}
+            unsigned int cy_typeid(const cytnx_int32 &rc){ return Type_class::Int32;}
+            unsigned int cy_typeid(const cytnx_uint16 &rc){ return Type_class::Uint16;}
+            unsigned int cy_typeid(const cytnx_int16 &rc){ return Type_class::Int16;}
+            unsigned int cy_typeid(const cytnx_bool &rc){ return Type_class::Bool;}
     };
     /// @endcond
 
