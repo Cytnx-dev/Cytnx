@@ -53,8 +53,11 @@ HPTT_option_IBM=False
 HPTT_option_ARM=False
 HPTT_option_finetune=False
 
-
 BUILD_PYTHON=True
+
+COMPILE_COMMANDS=True
+
+RUN_TESTS=False
 
 PREFIX=None
 
@@ -170,6 +173,23 @@ if(len(tmp.strip())!=0):
 print("  >>BUILD_PYTHON: ",BUILD_PYTHON)
 print("--------------")
 
+## checking generate compile_commands.json
+#======================================
+tmp = input("[%d] Generate compile_commands.json for IDE support (default ON)?(Y/N):"%(step_idx))
+if(len(tmp.strip())!=0):
+    COMPILE_COMMANDS=resolve_yn(tmp)
+
+print("  >>COMPILE_COMMANDS: ",COMPILE_COMMANDS)
+print("--------------")
+
+## whether run cytnx tests
+#======================================
+tmp = input("[%d] Run cytnx tests (default OFF)?(Y/N):"%(step_idx))
+if(len(tmp.strip())!=0):
+    RUN_TESTS=resolve_yn(tmp)
+
+print("  >>RUN_TESTS: ",RUN_TESTS)
+print("--------------")
 
 ##=================================================================
 print("*************************")
@@ -198,6 +218,7 @@ if(USE_CUTT):
     print("    CUTT_ENABLE_FINE_TUNE: ",CUTT_option_finetune)
 
 print(" BUILD_PYTHON: ",BUILD_PYTHON)
+print(" COMPILE_COMMANDS: ",COMPILE_COMMANDS)
 print("*************************")
 
 
@@ -244,10 +265,17 @@ if(BUILD_PYTHON):
 else:
     f.write(" -DBUILD_PYTHON=off")
 
+if(COMPILE_COMMANDS):
+    f.write(" -DCMAKE_EXPORT_COMPILE_COMMANDS=1")
+
+if(RUN_TESTS):
+    f.write(" -DRUN_TESTS=on")
 
 f.write(" ../\n")
-f.write("make\n")
-f.write("make install")
+f.write("make -j `nproc`\n")
+f.write("make install\n")
+if(RUN_TESTS):
+    f.write("GTEST_COLOR=1 ctest --output-junit junit.xml")
 
 f.close()
 

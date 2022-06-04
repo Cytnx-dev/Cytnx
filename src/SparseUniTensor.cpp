@@ -1503,8 +1503,8 @@ namespace cytnx{
             for(int i=0;i<comm_labels.size();i++){
                 //std::cout << this->_bonds[comm_idx1[i]];
                 //std::cout << rhs->_bonds[comm_idx2[i]];
-                
-                cytnx_error_msg(this->_bonds[comm_idx1[i]].qnums() != rhs->_bonds[comm_idx2[i]].qnums(),"[ERROR] contract bond @ label %d have qnum mismatch.\n",comm_labels[i]);
+                if(User_debug) 
+                    cytnx_error_msg(this->_bonds[comm_idx1[i]].qnums() != rhs->_bonds[comm_idx2[i]].qnums(),"[ERROR] contract bond @ label %d have qnum mismatch.\n",comm_labels[i]);
 
                 cytnx_error_msg(this->_bonds[comm_idx1[i]].type()+rhs->_bonds[comm_idx2[i]].type(), "[ERROR] BRA can only contract with KET. invalid @ label: %d\n",comm_labels[i]);  
             }

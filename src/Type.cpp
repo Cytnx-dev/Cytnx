@@ -11,6 +11,12 @@
         int __blasINTsize__ = sizeof(lapack_int);
     }
 #endif
+
+//global debug flag!
+namespace cytnx{
+    bool User_debug = true;
+}
+
 using namespace std;
 
 /*
@@ -93,7 +99,7 @@ bool cytnx::Type_class::is_unsigned(const unsigned int &type_id){
     return Typeinfos[type_id].is_unsigned;
 }
 
-std::string cytnx::Type_class::getname(const unsigned int &type_id){
+const std::string& cytnx::Type_class::getname(const unsigned int &type_id){
     cytnx_error_msg(type_id >= N_Type,"[ERROR] invalid type_id%s","\n");
     return Typeinfos[type_id].name;
 }

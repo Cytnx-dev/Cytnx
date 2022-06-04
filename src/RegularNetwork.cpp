@@ -615,15 +615,24 @@ namespace cytnx{
 
     }
 
-
-    UniTensor RegularNetwork::Launch(const bool &optimal){
-
-
-
+	string RegularNetwork::getOptimalOrder(){
+        // Creat a SearchTree to search for optim contraction order. 
+        SearchTree Stree;
+        Stree.base_nodes.resize(this->tensors.size()); 
+        for(cytnx_uint64 t = 0; t < this->tensors.size(); t ++){
+            Stree.base_nodes[t].from_utensor(this->tensors[t]); //create psudotensors from base tensors
+            Stree.base_nodes[t].accu_str = this->names[t];
+        } 
+    	Stree.search_order();
+        return Stree.nodes_container.back()[0].accu_str;
+	}
+    UniTensor RegularNetwork::Launch(const bool &optimal, const string& contract_order/*default ""*/){
         //1. check tensors are all set, and put all unitensor on node for contraction:
         cytnx_error_msg(this->tensors.size()==0,"[ERROR][Launch][RegularNetwork] cannot launch an un-initialize network.%s","\n");
         cytnx_error_msg(this->tensors.size()<2,"[ERROR][Launch][RegularNetwork] Network should contain >=2 tensors.%s","\n");
-
+		
+		//check not both optimal=true and contract_order not nullptr
+        cytnx_error_msg(optimal and contract_order!="","[ERROR][Launch][RegularNetwork] cannot launch with optimal=True and given contract_order.%s","\n");
 
         vector<vector<cytnx_int64> > old_labels;
         for(cytnx_uint64 idx=0;idx<this->tensors.size();idx++){
@@ -649,20 +658,15 @@ namespace cytnx{
 
         }else{
             if(optimal==true){
-                // Creat a SearchTree to search for optim contraction order. 
-                SearchTree Stree;
-                Stree.base_nodes.resize(this->tensors.size()); 
-                for(cytnx_uint64 t = 0; t < this->tensors.size(); t ++){
-                    Stree.base_nodes[t].from_utensor(this->tensors[t]); //create psudotensors from base tensors
-                    Stree.base_nodes[t].accu_str = this->names[t];
-                }
-        
-                Stree.search_order();
-                string Optim_ORDERline = Stree.nodes_container.back()[0].accu_str;
+				string Optim_ORDERline = this->getOptimalOrder();
                 this->ORDER_tokens.clear();
                 _parse_ORDER_line_(ORDER_tokens,Optim_ORDERline,999999);
                 CtTree.build_contraction_tree_by_tokens(this->name2pos,ORDER_tokens);
-            }else{
+			}else if(contract_order!=""){
+                this->ORDER_tokens.clear();
+                _parse_ORDER_line_(ORDER_tokens,contract_order,999999);
+                CtTree.build_contraction_tree_by_tokens(this->name2pos,ORDER_tokens);
+			}else{
                 CtTree.build_default_contraction_tree(); 
             }
         }

@@ -207,7 +207,9 @@ namespace cytnx{
         if(this->Nsym()!=0){
             if(this->syms() != rhs.syms()) return false;
         }
-        if(this->_impl->_qnums != rhs._impl->_qnums) return false;
+        if(User_debug)
+            if(this->_impl->_qnums != rhs._impl->_qnums) return false;
+
         return true;        
     }
     bool Bond::operator!=(const Bond &rhs) const{

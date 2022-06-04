@@ -1,7 +1,7 @@
-# Cytnx
+# Cytnx [![Build Status (GitHub Actions)](https://github.com/kaihsin/Cytnx/actions/workflows/ci-cmake_tests.yml/badge.svg?branch=master)](https://github.com/kaihsin/Cytnx/actions/workflows/ci-cmake_tests.yml)[![codecov](https://codecov.io/gh/kaihsin/Cytnx/branch/master/graph/badge.svg?token=IHXTX7UI6O)](https://codecov.io/gh/kaihsin/Cytnx) [![Coverity Scan Build Status](https://img.shields.io/coverity/scan/25013.svg)](https://scan.coverity.com/projects/kaihsin-cytnx)
+[![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx/badges/version.svg)](https://anaconda.org/kaihsinwu/cytnx) [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx/badges/platforms.svg)](https://anaconda.org/kaihsinwu/cytnx)
 
 ![alt text](./Icon_small.png)
-
 
 ## Install 
 See The following user guide for install and using of cytnx:
@@ -11,17 +11,16 @@ See The following user guide for install and using of cytnx:
 ## Intro slide
 [Cytnx_v0.5.pdf (dated 07/25/2020)](https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing)
 
-
-[![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx/badges/version.svg)](https://anaconda.org/kaihsinwu/cytnx) [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx/badges/platforms.svg)](https://anaconda.org/kaihsinwu/cytnx)
-
 ## News
-    [v0.7.4] 
+    [v0.7.6] 
  
 ## Stable Version:
-[v0.7.4](https://github.com/kaihsin/Cytnx/tree/v0.7.4)
+[v0.7.6](https://github.com/kaihsin/Cytnx/tree/v0.7.6)
 
 ## Known issues:
-    v0.7.4
+    v0.7.6
+       
+    v0.7.4/5
     1. [Pending][GPU] iArithmentic need GPU impl. 
 
     v0.7.3
@@ -30,6 +29,18 @@ See The following user guide for install and using of cytnx:
 
 
 ## Current dev Version:
+    v0.7.7
+    
+
+    v0.7.6
+    1. [Enhance] Adding alias BD_IN=BD_KET, BD_BRA=BD_OUT, BD_NONE=BD_REG. 
+    2. [New] Add Contracts for multiple UniTensors contraction.  
+    3. [Fix] cytnx.__cpp_lib__ for some version of cmake and conda install, libpath is lib64 instead of lib.  
+    4. [Optimize] SparseUniTensor contiguous (moving elements)
+    5. [Optimize] cytnx_error_* will now evaluate the clause first, and then instance the following strings.
+    6. [Enhance] Add Global bool variable User_debug, which when set to false some checking will be skipped, which increasing the execution speed
+    7. [Enhance] Add Network.getOptimalOrder()  
+
     v0.7.5
     1. [Fix] ICPC cannot compile issue
     2. [Fix] openblas wrapper of zscal has wrong format, cscal,sscal not wrapped (using mkl is not affected)
@@ -42,10 +53,7 @@ See The following user guide for install and using of cytnx:
     9. [Enhance] Add vec_fromfile / vec_tofile in utility.
     10. [Enhance] Adding omp parallel for SparseUniTensor moving elements, and L1-optimized. 
     11. [New] Add Storage.vector<>() for converting Storage to std::vector.
-    12. [Enhance] Adding alias BD_IN=BD_KET, BD_BRA=BD_OUT, BD_NONE=BD_REG. 
-    13. [New] Add Contracts for multiple UniTensors contraction.  
-    14. [Fix] cytnx.__cpp_lib__ for some version of cmake and conda install, libpath is lib64 instead of lib.  
-
+    
     v0.7.4
     1. [Enhance] Lanczos_ER Lanczos_Gnd not convergence with maxiter will now gives warning instead of error. 
     2. [Enhance] Arithmetic of UniTensor(&)constant now preserve the label of input UniTensor. 
