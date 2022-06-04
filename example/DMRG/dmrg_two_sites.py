@@ -17,7 +17,7 @@ class Hxx(cytnx.LinOp):
 
     def matvec(self, v):
         v_ = v.clone() # if don't clone, vectordot Tr in Lanczos_ER will not be rank-1 
-        psi_u = cytnx.UniTensor(v_, 0) ## share memory, no copy
+        psi_u = cytnx.UniTensor(v_, rowrank=0) ## share memory, no copy
         psi_u.reshape_(*self.shapes)
         self.anet.PutUniTensor("psi",psi_u,False);
         out = self.anet.Launch(optimal=True).get_block_() # get_block_ without copy
@@ -227,7 +227,7 @@ for k in range(1, numsweeps+2):
         psi_T = psi.get_block_(); psi_T.flatten_() ## flatten to 1d
         psi_T, Entemp = optimize_psi(psi_T, (LR[p],M,M,LR[p+2]), maxit, krydim)
         psi_T.reshape_(dim_l,d,d,dim_r)## convert psi back to 4-leg form 
-        psi = cytnx.UniTensor(psi_T,2); psi.set_labels(lbl);
+        psi = cytnx.UniTensor(psi_T,rowrank=2); psi.set_labels(lbl);
         Ekeep.append(Entemp);
         
         new_dim = min(dim_l*d,dim_r*d,chi)

@@ -30,7 +30,7 @@ See The following user guide for install and using of cytnx:
 
 ## Current dev Version:
     v0.7.7
-    
+    1. [Enhance][WARNING] rowrank option now has default value when converting from Tensor. Which is half number of the bonds. Notice that the order of argument are changed between (rowrank) and (is_diag)!    
 
     v0.7.6
     1. [Enhance] Adding alias BD_IN=BD_KET, BD_BRA=BD_OUT, BD_NONE=BD_REG. 

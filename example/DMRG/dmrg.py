@@ -29,7 +29,7 @@ tM[-1,-1] = II;
 tM[0,2] = -h*sx;
 tM[0,1] = -sz;
 tM[1,2] = sz;
-uM = cy.UniTensor(tM,0);
+uM = cy.UniTensor(tM);
 
 mpo = cy.tn_algo.MPO();
 mpo.assign(Nsites,uM);

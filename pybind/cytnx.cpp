@@ -1242,7 +1242,7 @@ PYBIND11_MODULE(cytnx,m){
     //entry.CyTenor
     py::class_<UniTensor>(m,"UniTensor")
                 .def(py::init<>())
-                .def(py::init<const cytnx::Tensor&, const cytnx_uint64&, const bool &>(),py::arg("Tin"),py::arg("rowrank"),py::arg("is_diag")=false)
+                .def(py::init<const cytnx::Tensor&, const bool &, const cytnx_int64&>(),py::arg("Tin"),py::arg("is_diag")=false,py::arg("rowrank")=(cytnx_int64)(-1))
                 .def(py::init<const std::vector<Bond> &, const std::vector<cytnx_int64> &, const cytnx_int64 &, const unsigned int &,const int &, const bool &>(),py::arg("bonds"),py::arg("labels")=std::vector<cytnx_int64>(),py::arg("rowrank")=(cytnx_int64)(-1),py::arg("dtype")=(unsigned int)(cytnx::Type.Double),py::arg("device")=(int)cytnx::Device.cpu,py::arg("is_diag")=false)
                 .def("c_set_name",&UniTensor::set_name)
                 .def("c_set_label",&UniTensor::set_label,py::arg("inx"),py::arg("new_label"), py::arg("by_label")=false)

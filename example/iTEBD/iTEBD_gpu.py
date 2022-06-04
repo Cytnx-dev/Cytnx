@@ -43,12 +43,12 @@ eH.reshape_(2,2,2,2)
 print(eH)
 H.reshape_(2,2,2,2)
 
-eH = cytnx.UniTensor(eH,2)
+eH = cytnx.UniTensor(eH,rowrank=2)
 eH.print_diagram()
 print(eH)
 
 
-H = cytnx.UniTensor(H,2)
+H = cytnx.UniTensor(H,rowrank=2)
 H.print_diagram()
 
 
