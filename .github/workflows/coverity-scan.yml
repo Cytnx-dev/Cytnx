@@ -53,7 +53,7 @@ jobs:
         tar czvf cytnx.tgz cov-int 
         curl \
           --form token=$TOKEN \
-          --form email=jeffry1829@gmail.com \
+          --form email=kaihsinwu@gmail.com \
           --form file=@cytnx.tgz \
           --form version="v0.7.5" \
           --form description="Cytnx" \
