@@ -49,12 +49,12 @@ In the following, let's use a simple rank-3 tensor as example to give you a glan
     T = cy.arange(2*3*4).reshape(2,3,4) 
 
     # convert to UniTensor:
-    uT = cy.UniTensor(T,rowrank=1)
+    uT = cy.UniTensor(T)
 
     
 Here, we simply convert a Tensor **T** into a UniTensor **uT** simply by wrapping it with constructor *cy.UniTensor()*. Formally, we should think of this as we constructing a UniTensor **uT** with **T** being **uT**'s *block* (data). 
 
-An additional argument *rowrank* is also provided, which we will get back to it in a moment but now, let's use **print_diagram()** to visualize the UniTensor in a more straightforward way as a diagram: 
+We can use **print_diagram()** to visualize the UniTensor in a more straightforward way as a diagram: 
 
 
 .. code-block:: python 
@@ -84,7 +84,7 @@ Output >>
 
 There are a lot of information provided in this output which we will explain in details:
 
-1. **Bonds:** They are attach to the left side and/or right side of the center square (which the left/right side is associate to the *rowrank* property, we will get back to this later. right now, let's just assume it take arbitrary integer 0 < rowrank < rank). The number of bonds indicates the rank of the UniTensor, which also indicates in the second line *tensor Rank*. 
+1. **Bonds:** They are attach to the left side and/or right side of the center square. Now you might wonder why there are bonds putting on left/right? In cytnx, we use a property called **rowrank** to determine that. The first *rowrank* bonds will be put on the left and the rest will be on the right. We will get back to this property later. But right now, let's just assume it take arbitrary integer 0 < rowrank < rank). The number of bonds indicates the rank of the UniTensor, which also indicates in the second line *tensor Rank*. 
 
     **Ex:** 
         Here, we have three bonds, indicates it's a rank-3 UniTensor.
