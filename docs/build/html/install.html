@@ -836,12 +836,8 @@ Which is the simplest way to do as conda automatically resolve all the path of e
 <section id="compiling-process">
 <h3>Compiling process<a class="headerlink" href="#compiling-process" title="Permalink to this headline">¶</a></h3>
 <p>Once you installed all the dependencies, it’s time to start building cytnx source code.</p>
-<p>Starting from v0.6.4a, cytnx provide a easy step-by-step install tool:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$python</span> auto_install.py
-</pre></div>
-</div>
-<p>This will prompt user through a series of install options, and generate a shell script <strong>ainstall.sh</strong>. To install, simply execute this script:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$sh</span> ainstall.sh
+<p>Starting from v0.7.6a, cytnx provide a shell script <strong>Install.sh</strong>, which contains all the cmake arguments check list. To install, un-comments and put the custom parameters on the corresponding lines, and simply execute this script:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$sh</span> Install.sh
 </pre></div>
 </div>
 <p><strong>Arguments/options for cmake install</strong></p>

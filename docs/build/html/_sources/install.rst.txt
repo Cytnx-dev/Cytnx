@@ -295,17 +295,11 @@ Compiling process
 -------------------
 Once you installed all the dependencies, it's time to start building cytnx source code. 
 
-Starting from v0.6.4a, cytnx provide a easy step-by-step install tool:
-
-.. code-block:: shell
-    
-    $python auto_install.py
-
-This will prompt user through a series of install options, and generate a shell script **ainstall.sh**. To install, simply execute this script:
+Starting from v0.7.6a, cytnx provide a shell script **Install.sh**, which contains all the cmake arguments check list. To install, un-comments and put the custom parameters on the corresponding lines, and simply execute this script:
 
 .. code-block:: shell
 
-    $sh ainstall.sh
+    $sh Install.sh
 
 
 **Arguments/options for cmake install**
