@@ -1158,7 +1158,7 @@ namespace cytnx{
             \verbinclude example/UniTensor/fromTensor.py.out
 
             */
-            UniTensor(const Tensor &in_tensor, const bool &is_diag=false, const cytnx_int64 &rowrank=-1): _impl(new UniTensor_base()){
+            explicit UniTensor(const Tensor &in_tensor, const bool &is_diag=false, const cytnx_int64 &rowrank=-1): _impl(new UniTensor_base()){
                 this->Init(in_tensor,is_diag,rowrank);
             }
             void Init(const Tensor &in_tensor, const bool &is_diag=false, const cytnx_int64 &rowrank=-1){
