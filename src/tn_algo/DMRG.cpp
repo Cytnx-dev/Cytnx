@@ -107,7 +107,7 @@ namespace cytnx{
                 Tensor matvec(const Tensor& v) override{
                     auto v_ = v.clone();
 
-                    auto psi_u = UniTensor(v_, 0);// ## share memory, no copy
+                    auto psi_u = UniTensor(v_, false,0);// ## share memory, no copy
                     psi_u.reshape_(this->shapes);
                     this->anet.PutUniTensor("psi",psi_u);
                     Tensor out = this->anet.Launch(true).get_block_(); // get_block_ without copy
@@ -157,8 +157,8 @@ namespace cytnx{
             // 1. setting env:
 
             // Initialiaze enviroment: 
-            auto L0 = UniTensor(cytnx::zeros({this->mpo.get_op(0).shape()[0],1,1}),0); //Left boundary
-            auto R0 = UniTensor(cytnx::zeros({this->mpo.get_op(this->mps.size()-1).shape()[1],1,1}),0); //Right boundary
+            auto L0 = UniTensor(cytnx::zeros({this->mpo.get_op(0).shape()[0],1,1}),false,0); //Left boundary
+            auto R0 = UniTensor(cytnx::zeros({this->mpo.get_op(this->mps.size()-1).shape()[1],1,1}),false,0); //Right boundary
             L0.get_block_()(0,0,0) = 1.; R0.get_block_()(-1,0,0)= 1.;
 
             // Put in the left normalization form and calculate transfer matrices LR
@@ -202,8 +202,8 @@ namespace cytnx{
                 auto omps = this->ortho_mps[ip];
                 
                 //init environ:
-                auto hL0 = UniTensor(zeros({1,1}),0); //Left boundary
-                auto hR0 = UniTensor(zeros({1,1}),0); //Right boundary
+                auto hL0 = UniTensor(zeros({1,1}),false,0); //Left boundary
+                auto hR0 = UniTensor(zeros({1,1}),false,0); //Right boundary
                 hL0.get_block_()(0,0) = 1.; hR0.get_block_()(0,0) = 1.;
 
                 this->hLRs[ip].resize(this->mps.size()+1);
@@ -310,7 +310,7 @@ namespace cytnx{
                 
     
                 psi_T.reshape_(dim_l, this->mps.phys_dim(p), this->mps.phys_dim(p+1), dim_r); //convert psi back to 4-leg form 
-                psi = UniTensor(psi_T,2);    
+                psi = UniTensor(psi_T,false,2);    
                 psi.set_labels(lbl);
                 //self.Ekeep.append(Entemp);
 
@@ -427,7 +427,7 @@ namespace cytnx{
                 psi_T = out[1];
                 Entemp = out[0].item();
                 psi_T.reshape_(dim_l,this->mps.phys_dim(p),this->mps.phys_dim(p+1),dim_r);// convert psi back to 4-leg form 
-                psi = UniTensor(psi_T,2); 
+                psi = UniTensor(psi_T,false,2); 
                 psi.set_labels(lbl);
                 //self.Ekeep.append(Entemp);
                 
