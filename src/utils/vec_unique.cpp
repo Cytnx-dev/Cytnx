@@ -42,8 +42,8 @@ namespace cytnx{
     };
 
 
-    //template std::vector<cytnx_complex128> vec_unique(std::vector<cytnx_complex128> &);
-    //template std::vector<cytnx_complex64> vec_unique(std::vector<cytnx_complex64> &);
+    //template std::vector<cytnx_complex128> vec_unique(const std::vector<cytnx_complex128> &);
+    //template std::vector<cytnx_complex64> vec_unique(const std::vector<cytnx_complex64> &);
     template std::vector<cytnx_double> vec_unique(const std::vector<cytnx_double> &);
     template std::vector<cytnx_float> vec_unique(const std::vector<cytnx_float> &);
     template std::vector<cytnx_int64> vec_unique(const std::vector<cytnx_int64> &);
@@ -53,6 +53,4 @@ namespace cytnx{
     template std::vector<cytnx_int16> vec_unique(const std::vector<cytnx_int16> &);
     template std::vector<cytnx_uint16> vec_unique(const std::vector<cytnx_uint16> &);
     //template std::vector<cytnx_bool> vec_unique(const std::vector<cytnx_bool> &);
-
-
 }

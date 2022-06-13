@@ -29,7 +29,7 @@ namespace cytnx{
             std::vector< std::vector<cytnx_int64> > _qnums; //(dim, # of sym)
             std::vector<Symmetry> _syms;
 
-            Bond_impl(): _type(bondType::BD_REG) {};   
+            Bond_impl(): _dim(0) ,_type(bondType::BD_REG) {};   
 
             void Init(const cytnx_uint64 &dim, const bondType &bd_type=bondType::BD_REG, const std::vector<std::vector<cytnx_int64> > &in_qnums = {}, const std::vector<Symmetry> &in_syms={});
 
