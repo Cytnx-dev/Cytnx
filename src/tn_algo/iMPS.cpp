@@ -45,7 +45,7 @@ namespace cytnx{
             this->_TNs.resize(N);
 
             for(cytnx_int64 k=0; k<N; k++){
-                this->_TNs[k] = UniTensor(cytnx::random::normal({chi, vphys_dim[k], chi}, 0., 1.),2);
+                this->_TNs[k] = UniTensor(cytnx::random::normal({chi, vphys_dim[k], chi}, 0., 1.),false,2);
                 this->_TNs[k].set_labels({2*k,2*k+1,2*k+2});
             }
                         

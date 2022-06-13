@@ -162,7 +162,7 @@ namespace cytnx{
 
 
             virtual void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1,const unsigned int &dtype=Type.Double,const int &device = Device.cpu,const bool &is_diag=false, const bool &no_alloc=false);
-            virtual void Init_by_Tensor(const Tensor& in, const cytnx_uint64 &rowrank, const bool &is_diag=false);
+            virtual void Init_by_Tensor(const Tensor& in, const bool &is_diag=false, const cytnx_int64 &rowrank=-1);
             virtual std::vector<cytnx_uint64> shape() const;
             virtual bool      is_blockform() const ;
             virtual bool     is_contiguous() const;
@@ -316,7 +316,7 @@ namespace cytnx{
             // virtual functions
             void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false, const bool &no_alloc=false);
             // this only work for non-symm tensor
-            void Init_by_Tensor(const Tensor& in_tensor, const cytnx_uint64 &rowrank, const bool &is_diag=false);
+            void Init_by_Tensor(const Tensor& in_tensor, const bool &is_diag=false, const cytnx_int64 &rowrank=-1);
             std::vector<cytnx_uint64> shape() const{ 
                 if(this->_is_diag){
                     std::vector<cytnx_uint64> shape = this->_block.shape();
@@ -446,7 +446,7 @@ namespace cytnx{
             // this will only work on non-symm tensor (DenseUniTensor)
             boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors){
                 boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
-                out->Init_by_Tensor(this->_block.get(accessors),0); //wrapping around. 
+                out->Init_by_Tensor(this->_block.get(accessors),false,0); //wrapping around. 
                 return out;
             }
             // this will only work on non-symm tensor (DenseUniTensor)
@@ -721,7 +721,7 @@ namespace cytnx{
 
             // virtual functions
             void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int &dtype=Type.Double,const int &device = Device.cpu, const bool &is_diag=false, const bool &no_alloc=false);
-            void Init_by_Tensor(const Tensor& in_tensor, const cytnx_uint64 &rowrank, const bool &is_diag=false){
+            void Init_by_Tensor(const Tensor& in_tensor, const bool &is_diag =false, const cytnx_int64 &rowrank=-1){
                 cytnx_error_msg(true,"[ERROR][SparseUniTensor] cannot use Init_by_tensor() on a SparseUniTensor.%s","\n");
             }
             std::vector<cytnx_uint64> shape() const{ 
@@ -1139,6 +1139,7 @@ namespace cytnx{
             /**
             @brief Initialize a UniTensor with cytnx::Tensor. 
             @param in_tensor a cytnx::Tensor
+            @param is_diag if the current UniTensor is a diagonal Tensor. This will requires input of Tensor to be 1D. 
             @param rowrank the rowrank of the outcome UniTensor.
     
             [Note] 
@@ -1157,12 +1158,12 @@ namespace cytnx{
             \verbinclude example/UniTensor/fromTensor.py.out
 
             */
-            UniTensor(const Tensor &in_tensor, const cytnx_uint64 &rowrank, const bool &is_diag=false): _impl(new UniTensor_base()){
-                this->Init(in_tensor,rowrank,is_diag);
+            explicit UniTensor(const Tensor &in_tensor, const bool &is_diag=false, const cytnx_int64 &rowrank=-1): _impl(new UniTensor_base()){
+                this->Init(in_tensor,is_diag,rowrank);
             }
-            void Init(const Tensor &in_tensor, const cytnx_uint64 &rowrank, const bool &is_diag=false){
+            void Init(const Tensor &in_tensor, const bool &is_diag=false, const cytnx_int64 &rowrank=-1){
                boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
-               out->Init_by_Tensor(in_tensor, rowrank,is_diag);
+               out->Init_by_Tensor(in_tensor, is_diag,rowrank);
                this->_impl = out;
             }
             //@}

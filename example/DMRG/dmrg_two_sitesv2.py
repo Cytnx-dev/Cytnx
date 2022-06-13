@@ -64,10 +64,10 @@ M = cytnx.zeros([4, 4, d, d])
 M[0,0] = M[3,3] = eye
 M[0,1] = M[2,3] = 2**0.5*sp.real()
 M[0,2] = M[1,3] = 2**0.5*sm.real()
-M = cytnx.UniTensor(M,0)
+M = cytnx.UniTensor(M,rowrank=0)
 
-L0 = cytnx.UniTensor(cytnx.zeros([4,1,1]),0) #Left boundary
-R0 = cytnx.UniTensor(cytnx.zeros([4,1,1]),0) #Right boundary
+L0 = cytnx.UniTensor(cytnx.zeros([4,1,1]),rowrank=0) #Left boundary
+R0 = cytnx.UniTensor(cytnx.zeros([4,1,1]),rowrank=0) #Right boundary
 L0.get_block_()[0,0,0] = 1.; R0.get_block_()[3,0,0] = 1.
 
 ## Init MPS train
@@ -78,11 +78,11 @@ L0.get_block_()[0,0,0] = 1.; R0.get_block_()[3,0,0] = 1.
 #
 ##>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 A = [None for i in range(Nsites)]
-A[0] = cytnx.UniTensor(cytnx.random.normal([1, d, min(chi, d)], 0., 1.),2)
+A[0] = cytnx.UniTensor(cytnx.random.normal([1, d, min(chi, d)], 0., 1.),rowrank=2)
 for k in range(1,Nsites):
     dim1 = A[k-1].shape()[2]; dim2 = d;
     dim3 = min(min(chi, A[k-1].shape()[2] * d), d ** (Nsites - k - 1));
-    A[k] = cytnx.UniTensor(cytnx.random.normal([dim1, dim2, dim3],0.,1.),2)
+    A[k] = cytnx.UniTensor(cytnx.random.normal([dim1, dim2, dim3],0.,1.),rowrank=2)
     A[k].set_labels([2*k,2*k+1,2*k+2])
     A[k].print_diagram()
 

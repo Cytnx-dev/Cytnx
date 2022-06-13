@@ -7,7 +7,7 @@ using namespace cytnx;
 int main(int argc, char* argv[]){
 
     Tensor T = zeros({4,4});
-    UniTensor CyT = UniTensor(T,2); //create un-tagged CyTensor from Tensor
+    UniTensor CyT = UniTensor(T,false,2); //create un-tagged CyTensor from Tensor
     CyT.print_diagram();
 
     cout << "before:" << endl;
@@ -24,7 +24,7 @@ int main(int argc, char* argv[]){
 
     //If we want a new instance of memery, use clone at initialize:
     cout << "[non-share example]" << endl;
-    UniTensor CyT_nonshare = UniTensor(T.clone(),2);
+    UniTensor CyT_nonshare = UniTensor(T.clone(),false,2);
 
     cout << "before:" << endl;
     cout << T << endl;

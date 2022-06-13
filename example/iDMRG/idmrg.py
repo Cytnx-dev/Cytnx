@@ -17,7 +17,7 @@ def Inv_e(a):
 def Projector(psi, L, M1, M2, R):
     ''' psi is Tensor, while L,M1,M2,R are UniTensor.
     Return: h|psi> (Tensor)'''
-    psi_p = cytnx.UniTensor(psi,0) ## share memory, no copy
+    psi_p = cytnx.UniTensor(psi,rowrank=0) ## share memory, no copy
     psi_p.reshape_(L.shape()[1],M1.shape()[2],M2.shape()[2],R.shape()[1])
     anet = cytnx.Network("projector.net")
     anet.PutUniTensor("M2",M2) 
@@ -100,16 +100,16 @@ M = cytnx.zeros([3, 3, d, d])
 M[0,0] = M[2,2] = eye
 M[0,1] = M[1,2] = sz
 M[0,2] = 2*Hx*sx
-M = cytnx.UniTensor(M,0)
+M = cytnx.UniTensor(M,rowrank=0)
 
-L0 = cytnx.UniTensor(cytnx.zeros([3,1,1]),0) #Left boundary
-R0 = cytnx.UniTensor(cytnx.zeros([3,1,1]),0) #Right boundary
+L0 = cytnx.UniTensor(cytnx.zeros([3,1,1]),rowrank=0) #Left boundary
+R0 = cytnx.UniTensor(cytnx.zeros([3,1,1]),rowrank=0) #Right boundary
 L0.get_block_()[0,0,0] = 1.; R0.get_block_()[2,0,0] = 1.;
 
 ## Local Measurement Operator:
 ## Here, we consider a local measurement of energy.
 H = J*cytnx.linalg.Kron(sz,sz) + Hx*(cytnx.linalg.Kron(sx,eye) + cytnx.linalg.Kron(eye,sx))
-H = cytnx.UniTensor(H.reshape(2,2,2,2),2)
+H = cytnx.UniTensor(H.reshape(2,2,2,2),rowrank=2)
 
 ## Init the left and right enviroment
 #
@@ -146,12 +146,12 @@ R = R0
 #    --A[0]--s[0]--B[0]--
 #       |           |
 #    
-psi = cytnx.UniTensor(cytnx.random.normal([1,d,d,1],1,2),2)
+psi = cytnx.UniTensor(cytnx.random.normal([1,d,d,1],1,2),rowrank=2)
 shp = psi.shape()
 psi_T = psi.get_block_(); psi_T.flatten_() ## flatten to 1d
 psi_T, Entemp = eig_Lanczos(psi_T, Projector, (L,M,M,R), maxit, krydim);
 psi_T.reshape_(*shp)
-psi = cytnx.UniTensor(psi_T,2)
+psi = cytnx.UniTensor(psi_T,rowrank=2)
 
 s0,A,B = cytnx.linalg.Svd_truncate(psi,min(chi,d)) ## Svd
 s0/=s0.get_block_().Norm().item() ## normalize
@@ -194,12 +194,12 @@ R = anet.Launch(optimal=True)
 #    --A[1]--s[1]--B[1]--
 #       |           |
 #
-psi = cytnx.UniTensor(cytnx.random.normal([d,d,d,d],0,2),2)
+psi = cytnx.UniTensor(cytnx.random.normal([d,d,d,d],0,2),rowrank=2)
 shp = psi.shape()
 psi_T = psi.get_block_(); psi_T.flatten_() ## flatten to 1d
 psi_T, Entemp = eig_Lanczos(psi_T, Projector, (L,M,M,R), maxit, krydim);
 psi_T.reshape_(*shp)
-psi = cytnx.UniTensor(psi_T,2)
+psi = cytnx.UniTensor(psi_T,rowrank=2)
 s1,A,B = cytnx.linalg.Svd_truncate(psi,min(chi,d*d))
 s1/=s1.get_block_().Norm().item()
 
@@ -312,7 +312,7 @@ for i in range(Niter):
     psi_T = psi.get_block_(); psi_T.flatten_() ## flatten to 1d
     psi_T, Entemp = eig_Lanczos(psi_T, Projector, (L,M,M,R), maxit, krydim);
     psi_T.reshape_(*shp)
-    psi = cytnx.UniTensor(psi_T,2)
+    psi = cytnx.UniTensor(psi_T,rowrank=2)
     s2,A,B = cytnx.linalg.Svd_truncate(psi,min(chi,psi.shape()[0]*psi.shape()[1]))
     s2/=s2.get_block_().Norm().item()
 

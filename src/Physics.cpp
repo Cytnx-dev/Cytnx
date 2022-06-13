@@ -82,33 +82,33 @@ namespace cytnx{
         using namespace cytnx;
         UniTensor pauli_x(const int &device){
             Tensor tmp = cytnx::physics::pauli('x',device);
-            return UniTensor(tmp,1);
+            return UniTensor(tmp,false,1);
         }
         UniTensor pauli_y(const int &device){
             Tensor tmp = cytnx::physics::pauli('y',device);
-            return UniTensor(tmp,1);
+            return UniTensor(tmp,false,1);
         }
         UniTensor pauli_z(const int &device){
             Tensor tmp = cytnx::physics::pauli('z',device);
-            return UniTensor(tmp,1);
+            return UniTensor(tmp,false,1);
         }
         UniTensor hadamard(const int &device){
             Tensor tmp = cytnx::physics::pauli('z',device);
             tmp[{0,1}]=1;
             tmp[{1,0}]=1;
-            return UniTensor(tmp,1);
+            return UniTensor(tmp,false,1);
         }
         UniTensor phase_shift(const cytnx_double &phase, const int &device){
             Tensor tmp = physics::pauli('z',device);
             tmp[{1,1}] = exp(cytnx_complex128(0,phase));
-            return UniTensor(tmp,1);
+            return UniTensor(tmp,false,1);
         }   
 
         UniTensor swap(const int &device){
             Tensor tmp = zeros({4,4},Type.ComplexDouble,device);
             tmp[{0,0}] = tmp[{3,3}] = tmp[{1,2}] = tmp[{2,1}] = 1;
             tmp.reshape_({2,2,2,2});
-            return UniTensor(tmp,2);
+            return UniTensor(tmp,false,2);
         }   
 
         UniTensor sqrt_swap(const int &device){
@@ -117,7 +117,7 @@ namespace cytnx{
             tmp[{1,1}] = tmp[{2,2}] = 0.5*cytnx_complex128(1,1);
             tmp[{1,2}] = tmp[{2,1}] = 0.5*cytnx_complex128(1,-1);
             tmp.reshape_({2,2,2,2});
-            return UniTensor(tmp,2);
+            return UniTensor(tmp,false,2);
         }
 
         UniTensor toffoli(const int &device){
@@ -125,7 +125,7 @@ namespace cytnx{
             tmp[{0,0}] = tmp[{1,1}] = tmp[{2,2}] = tmp[{3,3}] = tmp[{4,4}] = tmp[{5,5}] = 1;
             tmp[{6,7}] = tmp[{7,6}] = 1;
             tmp.reshape_({2,2,2,2,2,2});
-            return UniTensor(tmp,3);
+            return UniTensor(tmp,false,3);
         }
 
         UniTensor cntl_gate_2q(const UniTensor &gate_1q){
@@ -140,7 +140,7 @@ namespace cytnx{
             tmp[{3,3}] = gt[{1,1}];
 
             tmp.reshape_({2,2,2,2});
-            return UniTensor(tmp,2);
+            return UniTensor(tmp,false,2);
 
 
         }

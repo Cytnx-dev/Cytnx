@@ -46,11 +46,11 @@ eH.reshape_(2,2,2,2)
 print(eH)
 H.reshape_(2,2,2,2)
 
-eH = cytnx.UniTensor(eH,2)
+eH = cytnx.UniTensor(eH,rowrank=2)
 eH.tag() # this will tag with in/out(ket/bra) on each bond.
 eH.print_diagram()
 
-H = cytnx.UniTensor(H,2)
+H = cytnx.UniTensor(H,rowrank=2)
 H.tag()
 H.print_diagram()
 

@@ -88,20 +88,31 @@ namespace cytnx{
                 }          
     }
 
-    void DenseUniTensor::Init_by_Tensor(const Tensor& in_tensor, const cytnx_uint64 &rowrank, const bool &is_diag){
+    void DenseUniTensor::Init_by_Tensor(const Tensor& in_tensor, const bool &is_diag, const cytnx_int64 &rowrank){
 
                 cytnx_error_msg(in_tensor.dtype() == Type.Void,"[ERROR][Init_by_Tensor] cannot init a UniTensor from an un-initialize Tensor.%s","\n");
-                if(is_diag)
-                    cytnx_error_msg(in_tensor.shape().size()!=1,"[ERROR][Init_by_tensor] setting is_diag=True should have input Tensor to be rank-1 with diagonal elements.%s","\n");
+                
+                cytnx_int64 i_rowrank = rowrank;
 
-				// DISABLE SCALAR TENSOR FEATURE
+                if(is_diag){
+                    cytnx_error_msg(in_tensor.shape().size()!=1,"[ERROR][Init_by_tensor] setting is_diag=True should have input Tensor to be rank-1 with diagonal elements.%s","\n");
+                    if(rowrank==-1)
+                        i_rowrank = 1;
+                }
+
+                cytnx_error_msg(rowrank<-1,"[ERROR][Init_by_tensor] rowrank should be >=0%s","\n");
+
+
+
+               
+				// DISABLE SCALAR TENSOR FEATURE [khw can we remove this completely??]
                 if(false && in_tensor.storage().size() == 1 && in_tensor.rank()==1){
                     //scalalr:
                     cytnx_error_msg(rowrank != 0, "[ERROR][Init_by_Tensor] detect the input Tensor is a scalar with only one element. the rowrank should be =0%s","\n");
                     this->_bonds.clear();
                     this->_block = in_tensor;
                     this->_labels.clear();
-                    this->_rowrank = rowrank;
+                    this->_rowrank = i_rowrank;
    
                 }else{
                     if(is_diag){
@@ -111,8 +122,8 @@ namespace cytnx{
                         this->_bonds = bds;
                         this->_block = in_tensor;
                         this->_labels = utils_internal::range_cpu<cytnx_int64>(2);
-                        cytnx_error_msg(rowrank != 1,"[ERROR][Init_by_tensor] rowrank should be 1 for UniTensor with is_diag=True.%s","\n");
-                        this->_rowrank = rowrank;
+                        cytnx_error_msg(i_rowrank != 1,"[ERROR][Init_by_tensor] rowrank should be 1 for UniTensor with is_diag=True.%s","\n");
+                        this->_rowrank = i_rowrank;
                         this->_is_diag = true;
 
                     }else{
@@ -123,8 +134,14 @@ namespace cytnx{
                         this->_bonds = bds;
                         this->_block = in_tensor;
                         this->_labels = utils_internal::range_cpu<cytnx_int64>(in_tensor.shape().size());
-                        cytnx_error_msg(rowrank > in_tensor.shape().size(),"[ERROR][Init_by_tensor] rowrank exceed the rank of Tensor.%s","\n");
-                        this->_rowrank = rowrank;
+
+                        if(i_rowrank==-1){
+                            i_rowrank = int(in_tensor.shape().size()/2);
+                        }
+
+                        cytnx_error_msg(i_rowrank > in_tensor.shape().size(),"[ERROR][Init_by_tensor] rowrank exceed the rank of Tensor.%s","\n");
+
+                        this->_rowrank = i_rowrank;
                     }
                 }
     }
@@ -137,6 +154,7 @@ namespace cytnx{
         boost::intrusive_ptr<UniTensor_base> out(out_raw);
         return out;
     }
+
 
     boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabel(const cytnx_int64 &inx, const cytnx_int64 &new_label,const bool &by_label){
         DenseUniTensor *out_raw = this->clone_meta();
@@ -346,14 +364,14 @@ namespace cytnx{
             //if(new_shape.size()!=2){
                 this->_block = cytnx::linalg::Diag(this->_block);
                 this->_block.reshape_(new_shape);
-                this->Init_by_Tensor(this->_block,rowrank); 
+                this->Init_by_Tensor(this->_block,false,rowrank); 
             //}else{
             //    cytnx_error_msg(new_shape[0]!=new_shape[1],"[ERROR] invalid shape. The total elements does not match.%s","\n");
             //    cytnx_error_msg(rowrank!=1,"[ERROR] UniTensor with is_diag=True should have rowrank=1.%s","\n");
             //}
         }else{
             this->_block.reshape_(new_shape);
-            this->Init_by_Tensor(this->_block,rowrank); 
+            this->Init_by_Tensor(this->_block,false,rowrank); 
         }
     }
     boost::intrusive_ptr<UniTensor_base> DenseUniTensor::reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank){
@@ -365,14 +383,14 @@ namespace cytnx{
             //if(new_shape.size()!=2){
                 ((DenseUniTensor*)out.get())->_block = cytnx::linalg::Diag(this->_block);
                 ((DenseUniTensor*)out.get())->_block.reshape_(new_shape);
-                out->Init_by_Tensor(((DenseUniTensor*)out.get())->_block,rowrank); 
+                out->Init_by_Tensor(((DenseUniTensor*)out.get())->_block,false,rowrank); 
             //}else{
             //    cytnx_error_msg(new_shape[0]!=new_shape[1],"[ERROR] invalid shape. The total elements does not match.%s","\n");
             //    cytnx_error_msg(rowrank!=1,"[ERROR] UniTensor with is_diag=True should have rowrank=1.%s","\n");
             //    out = this->clone();    
             //}
         }else{
-            out->Init_by_Tensor(this->_block.reshape(new_shape),rowrank);
+            out->Init_by_Tensor(this->_block.reshape(new_shape),false,rowrank);
         }
         return out;
     }

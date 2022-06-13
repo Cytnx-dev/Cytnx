@@ -33,7 +33,7 @@ T.reshape_(2,2,2,2)
 #            for l in range(2):
 #                for a in range(2):
 #                    Tchk[i,j,k,l] += W[a,i]*W[a,j]*W[a,k]*W[a,l]
-cT = cytnx.UniTensor(T,2)
+cT = cytnx.UniTensor(T,rowrank=2)
 
 
 ## Let's start by normalize the block with it's local partition function 

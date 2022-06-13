@@ -93,17 +93,17 @@ namespace cytnx{
                 cytnx_error_msg(true,"[ERROR] invalid type%s","\n");
                 return 0;
             }
-            unsigned int cy_typeid(const cytnx_complex128 &rc){ return this->ComplexDouble;}
-            unsigned int cy_typeid(const cytnx_complex64 &rc){ return this->ComplexFloat;}
-            unsigned int cy_typeid(const cytnx_double &rc){ return this->Double;}
-            unsigned int cy_typeid(const cytnx_float &rc){ return this->Float;}
-            unsigned int cy_typeid(const cytnx_uint64 &rc){ return this->Uint64;}
-            unsigned int cy_typeid(const cytnx_int64 &rc){ return this->Int64;}
-            unsigned int cy_typeid(const cytnx_uint32 &rc){ return this->Uint32;}
-            unsigned int cy_typeid(const cytnx_int32 &rc){ return this->Int32;}
-            unsigned int cy_typeid(const cytnx_uint16 &rc){ return this->Uint16;}
-            unsigned int cy_typeid(const cytnx_int16 &rc){ return this->Int16;}
-            unsigned int cy_typeid(const cytnx_bool &rc){ return this->Bool;}
+            unsigned int cy_typeid(const cytnx_complex128 &rc){ return Type_class::ComplexDouble;}
+            unsigned int cy_typeid(const cytnx_complex64 &rc){ return Type_class::ComplexFloat;}
+            unsigned int cy_typeid(const cytnx_double &rc){ return Type_class::Double;}
+            unsigned int cy_typeid(const cytnx_float &rc){ return Type_class::Float;}
+            unsigned int cy_typeid(const cytnx_uint64 &rc){ return Type_class::Uint64;}
+            unsigned int cy_typeid(const cytnx_int64 &rc){ return Type_class::Int64;}
+            unsigned int cy_typeid(const cytnx_uint32 &rc){ return Type_class::Uint32;}
+            unsigned int cy_typeid(const cytnx_int32 &rc){ return Type_class::Int32;}
+            unsigned int cy_typeid(const cytnx_uint16 &rc){ return Type_class::Uint16;}
+            unsigned int cy_typeid(const cytnx_int16 &rc){ return Type_class::Int16;}
+            unsigned int cy_typeid(const cytnx_bool &rc){ return Type_class::Bool;}
     };
     /// @endcond
 
