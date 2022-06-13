@@ -6,7 +6,7 @@
 using namespace std;
 
 namespace cytnx{
-    void Network_base::Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout, const std::vector<bool> &is_clone, const std::vector<std::string> &alias, const std::string &contract_order){
+    void Network_base::Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout, const std::vector<std::string> &alias, const std::string &contract_order){
         cytnx_error_msg(true,"[ERROR][Network][Contract_plan] call from uninitialize network.%s","\n");
     }
     void Network_base::Fromfile(const std::string &fname){
@@ -18,13 +18,13 @@ namespace cytnx{
     void Network_base::Savefile(const std::string &fname){
         cytnx_error_msg(true,"[ERROR][Network][Savefile] call from uninitialize network.%s","\n");
     }
-    void Network_base::PutUniTensor(const std::string &name, const UniTensor &utensor, const bool &is_clone){
+    void Network_base::PutUniTensor(const std::string &name, const UniTensor &utensor){
         cytnx_error_msg(true,"[ERROR][Network][PutUniTensor] call from uninitialize network.%s","\n");
     }
-    void Network_base::PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor, const bool &is_clone){
+    void Network_base::PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor){
         cytnx_error_msg(true,"[ERROR][Network][PutUniTensor] call from uninitialize network.%s","\n");
     }
-    void Network_base::PutUniTensors(const std::vector<string> &names, const std::vector<UniTensor> &utensors, const bool &is_clone){
+    void Network_base::PutUniTensors(const std::vector<string> &names, const std::vector<UniTensor> &utensors){
         cytnx_error_msg(true,"[ERROR][Network][PutUniTensors] call from uninitialize network.%s","\n");
     }
     void Network_base::clear(){

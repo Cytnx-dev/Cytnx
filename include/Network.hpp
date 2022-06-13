@@ -85,10 +85,10 @@ namespace cytnx{
             //UniTensor Launch(const std::string &Tname="");
             
             //std::string GetContractOrder() const;
-            virtual void PutUniTensor(const std::string &name, const UniTensor &utensor, const bool &is_clone);
-            virtual void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor, const bool &is_clone);
-            virtual void PutUniTensors(const std::vector<std::string> &name, const std::vector<UniTensor> &utensors, const bool &is_clone);
-            virtual void Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout, const std::vector<bool> &is_clone, const std::vector<std::string> &alias, const std::string &contract_order);
+            virtual void PutUniTensor(const std::string &name, const UniTensor &utensor);
+            virtual void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor);
+            virtual void PutUniTensors(const std::vector<std::string> &name, const std::vector<UniTensor> &utensors);
+            virtual void Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout, const std::vector<std::string> &alias, const std::string &contract_order);
             
             virtual void Fromfile(const std::string& fname);
             virtual void FromString(const std::vector<std::string> &content);
@@ -109,10 +109,10 @@ namespace cytnx{
             RegularNetwork(){this->nwrktype_id = NtType.Regular;};
             void Fromfile(const std::string &fname);
             void FromString(const std::vector<std::string> &contents);
-            void PutUniTensor(const std::string &name, const UniTensor &utensor, const bool &is_clone=true);
-            void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor, const bool &is_clone=true);
-            void PutUniTensors(const std::vector<std::string> &name, const std::vector<UniTensor> &utensors, const bool &is_clone=true);
-            void Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout, const std::vector<bool> &is_clone={}, const std::vector<std::string> &alias={}, const std::string &contract_order="");
+            void PutUniTensor(const std::string &name, const UniTensor &utensor);
+            void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor);
+            void PutUniTensors(const std::vector<std::string> &name, const std::vector<UniTensor> &utensors);
+            void Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout, const std::vector<std::string> &alias={}, const std::string &contract_order="");
             void clear(){
                 this->name2pos.clear();
                 this->CtTree.clear();
@@ -153,10 +153,10 @@ namespace cytnx{
             FermionNetwork(){this->nwrktype_id=NtType.Fermion;};
             void Fromfile(const std::string &fname){};
             void FromString(const std::vector<std::string> &contents){};
-            void PutUniTensor(const std::string &name, const UniTensor &utensor, const bool &is_clone=true){};
-            void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor, const bool &is_clone=true){};
-            void PutUniTensors(const std::vector<std::string> &name, const std::vector<UniTensor> &utensors, const bool &is_clone=true){};
-            void Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout, const std::vector<bool> &is_clone={}, const std::vector<std::string> &alias={}, const std::string &contract_order=""){};
+            void PutUniTensor(const std::string &name, const UniTensor &utensor){};
+            void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor){};
+            void PutUniTensors(const std::vector<std::string> &name, const std::vector<UniTensor> &utensors){};
+            void Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout, const std::vector<std::string> &alias={}, const std::string &contract_order=""){};
             void clear(){
                 this->name2pos.clear();
                 this->CtTree.clear();
@@ -298,11 +298,11 @@ namespace cytnx{
                 
            
 
-            static Network Contract(const std::vector<UniTensor> &tensors, const std::string &Tout, const std::vector<bool> &is_clone={}, const std::vector<std::string> &alias={}, const std::string &contract_order=""){
+            static Network Contract(const std::vector<UniTensor> &tensors, const std::string &Tout, const std::vector<std::string> &alias={}, const std::string &contract_order=""){
                 boost::intrusive_ptr<Network_base> tmp(new RegularNetwork());
                 Network out;
                 out._impl = tmp;
-                out._impl->Contract_plan(tensors,Tout,is_clone,alias,contract_order);
+                out._impl->Contract_plan(tensors,Tout,alias,contract_order);
                 return out;
             }
             
@@ -312,14 +312,14 @@ namespace cytnx{
                 this->Fromfile(fname,network_type);
             }
 
-            void PutUniTensor(const std::string &name, const UniTensor &utensor, const bool &is_clone=true){
-                this->_impl->PutUniTensor(name,utensor,is_clone);
+            void PutUniTensor(const std::string &name, const UniTensor &utensor){
+                this->_impl->PutUniTensor(name,utensor);
             }
-            void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor, const bool &is_clone=true){
-                this->_impl->PutUniTensor(idx,utensor,is_clone);
+            void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor){
+                this->_impl->PutUniTensor(idx,utensor);
             }
-            void PutUniTensors(const std::vector<std::string> &name, const std::vector<UniTensor> &utensors, const bool &is_clone=true){
-                this->_impl->PutUniTensors(name,utensors,is_clone);
+            void PutUniTensors(const std::vector<std::string> &name, const std::vector<UniTensor> &utensors){
+                this->_impl->PutUniTensors(name,utensors);
             }
             UniTensor Launch(const bool &optimal=false){
                 return this->_impl->Launch(optimal);

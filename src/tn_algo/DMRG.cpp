@@ -41,7 +41,7 @@ namespace cytnx{
                                                "TOUT: 0,1;2,3"
                                               });
                         this->anet.PutUniTensor("M2",M2);
-                        this->anet.PutUniTensors({"L","M1","R"},{L,M1,R},false);
+                        this->anet.PutUniTensors({"L","M1","R"},{L,M1,R});
 
                         this->ortho_mps = ortho_mps;
                         this->weight = weight;
@@ -96,7 +96,7 @@ namespace cytnx{
                                                "TOUT: ;0,1,2,3"
                                               });
                         this->anet.PutUniTensor("M2",M2);
-                        this->anet.PutUniTensors({"L","M1","R"},{L,M1,R},false);
+                        this->anet.PutUniTensors({"L","M1","R"},{L,M1,R});
 
                         this->shapes = pshape;                    
                         this->ortho_mps = ortho_mps;
@@ -107,9 +107,9 @@ namespace cytnx{
                 Tensor matvec(const Tensor& v) override{
                     auto v_ = v.clone();
 
-                    auto psi_u = UniTensor(v_, false,0);// ## share memory, no copy
+                    auto psi_u = UniTensor(v_, 0);// ## share memory, no copy
                     psi_u.reshape_(this->shapes);
-                    this->anet.PutUniTensor("psi",psi_u,false);
+                    this->anet.PutUniTensor("psi",psi_u);
                     Tensor out = this->anet.Launch(true).get_block_(); // get_block_ without copy
                     out.flatten_(); // only change meta, without copy.
 
@@ -157,8 +157,8 @@ namespace cytnx{
             // 1. setting env:
 
             // Initialiaze enviroment: 
-            auto L0 = UniTensor(cytnx::zeros({this->mpo.get_op(0).shape()[0],1,1}),false,0); //Left boundary
-            auto R0 = UniTensor(cytnx::zeros({this->mpo.get_op(this->mps.size()-1).shape()[1],1,1}),false,0); //Right boundary
+            auto L0 = UniTensor(cytnx::zeros({this->mpo.get_op(0).shape()[0],1,1}),0); //Left boundary
+            auto R0 = UniTensor(cytnx::zeros({this->mpo.get_op(this->mps.size()-1).shape()[1],1,1}),0); //Right boundary
             L0.get_block_()(0,0,0) = 1.; R0.get_block_()(-1,0,0)= 1.;
 
             // Put in the left normalization form and calculate transfer matrices LR
@@ -202,8 +202,8 @@ namespace cytnx{
                 auto omps = this->ortho_mps[ip];
                 
                 //init environ:
-                auto hL0 = UniTensor(zeros({1,1}),false,0); //Left boundary
-                auto hR0 = UniTensor(zeros({1,1}),false,0); //Right boundary
+                auto hL0 = UniTensor(zeros({1,1}),0); //Left boundary
+                auto hR0 = UniTensor(zeros({1,1}),0); //Right boundary
                 hL0.get_block_()(0,0) = 1.; hR0.get_block_()(0,0) = 1.;
 
                 this->hLRs[ip].resize(this->mps.size()+1);
@@ -223,7 +223,7 @@ namespace cytnx{
                 for(cytnx_int64 p=0;p<this->mps.size()-1;p++){
                     //anet.PutUniTensors(["hL","Av","Ap"],[hLR[p],self.mps.A[p],omps.A[p].Conj()],is_clone=False);
 
-                    anet.PutUniTensors({"hL","Av","Ap"},{hLR[p],this->mps.data()[p],omps.data()[p].Conj()},false);
+                    anet.PutUniTensors({"hL","Av","Ap"},{hLR[p],this->mps.data()[p],omps.data()[p].Conj()});
                     hLR[p+1] = anet.Launch(true);
                 }
                 
@@ -296,7 +296,7 @@ namespace cytnx{
                 for(cytnx_int64 ip=0; ip<this->ortho_mps.size();ip++){
                     auto opsi = Contract(this->ortho_mps[ip].data()[p],this->ortho_mps[ip].data()[p+1]);
                     opsi.set_rowrank(0);
-                    anet.PutUniTensors({"hL","psi","hR"},{this->hLRs[ip][p],opsi,this->hLRs[ip][p+2]},false);
+                    anet.PutUniTensors({"hL","psi","hR"},{this->hLRs[ip][p],opsi,this->hLRs[ip][p+2]});
                     auto out = anet.Launch(true).get_block_();
                     omps.push_back(out);
                     omps.back().flatten_();
@@ -310,7 +310,7 @@ namespace cytnx{
                 
     
                 psi_T.reshape_(dim_l, this->mps.phys_dim(p), this->mps.phys_dim(p+1), dim_r); //convert psi back to 4-leg form 
-                psi = UniTensor(psi_T,false,2);    
+                psi = UniTensor(psi_T,2);    
                 psi.set_labels(lbl);
                 //self.Ekeep.append(Entemp);
 
@@ -340,7 +340,7 @@ namespace cytnx{
                                  "TOUT: ;0,1,2"
                                 });
 
-                anet.PutUniTensors({"R","B","M","B_Conj"},{this->LR[p+2],this->mps.data()[p+1],this->mpo.get_op(p+1),this->mps.data()[p+1].Conj()},false);
+                anet.PutUniTensors({"R","B","M","B_Conj"},{this->LR[p+2],this->mps.data()[p+1],this->mpo.get_op(p+1),this->mps.data()[p+1].Conj()});
                 this->LR[p+1] = anet.Launch(true);
 
                 
@@ -354,7 +354,7 @@ namespace cytnx{
 
                 for(cytnx_int64 ip=0; ip<this->ortho_mps.size(); ip++){
                     auto omps = this->ortho_mps[ip];
-                    anet.PutUniTensors({"hR","Bv","Bp"},{this->hLRs[ip][p+2],this->mps.data()[p+1],omps.data()[p+1].Conj()},false);
+                    anet.PutUniTensors({"hR","Bv","Bp"},{this->hLRs[ip][p+2],this->mps.data()[p+1],omps.data()[p+1].Conj()});
                     this->hLRs[ip][p+1] = anet.Launch(true);
                 }
                 //print('Sweep[r->l]: %d/%d, Loc:%d,Energy: %f'%(k,numsweeps,p,Ekeep[-1]))
@@ -418,7 +418,7 @@ namespace cytnx{
                 for(cytnx_int64 ip=0;ip< this->ortho_mps.size();ip++){
                     auto opsi = Contract(this->ortho_mps[ip].data()[p],this->ortho_mps[ip].data()[p+1]);
                     opsi.set_rowrank(0);
-                    anet.PutUniTensors({"hL","psi","hR"},{this->hLRs[ip][p],opsi,this->hLRs[ip][p+2]},false);
+                    anet.PutUniTensors({"hL","psi","hR"},{this->hLRs[ip][p],opsi,this->hLRs[ip][p+2]});
                     omps.push_back(anet.Launch(true).get_block_()); 
                     omps.back().flatten_();
                 }
@@ -427,7 +427,7 @@ namespace cytnx{
                 psi_T = out[1];
                 Entemp = out[0].item();
                 psi_T.reshape_(dim_l,this->mps.phys_dim(p),this->mps.phys_dim(p+1),dim_r);// convert psi back to 4-leg form 
-                psi = UniTensor(psi_T,false,2); 
+                psi = UniTensor(psi_T,2); 
                 psi.set_labels(lbl);
                 //self.Ekeep.append(Entemp);
                 
@@ -452,7 +452,7 @@ namespace cytnx{
                                 "TOUT: ;0,1,2"
                                 });
 
-                anet.PutUniTensors({"L","A","A_Conj","M"},{this->LR[p],this->mps.data()[p],this->mps.data()[p].Conj(),this->mpo.get_op(p)},false);
+                anet.PutUniTensors({"L","A","A_Conj","M"},{this->LR[p],this->mps.data()[p],this->mps.data()[p].Conj(),this->mpo.get_op(p)});
                 this->LR[p+1] = anet.Launch(true);
                 
                 // update hLR when calculate excited state:
@@ -464,7 +464,7 @@ namespace cytnx{
                                });
                 for(cytnx_int64 ip=0;ip<this->ortho_mps.size();ip++){
                     auto omps = this->ortho_mps[ip];
-                    anet.PutUniTensors({"hL","Av","Ap"},{this->hLRs[ip][p],this->mps.data()[p],omps.data()[p].Conj()},false);
+                    anet.PutUniTensors({"hL","Av","Ap"},{this->hLRs[ip][p],this->mps.data()[p],omps.data()[p].Conj()});
                     this->hLRs[ip][p+1] = anet.Launch(true);
                 }
                 //print('Sweep[l->r]: %d of %d, Loc: %d,Energy: %f' % (k, numsweeps, p, Ekeep[-1]))
@@ -539,7 +539,7 @@ namespace cytnx{
                 for(cytnx_int64 ip=0; ip<this->ortho_mps.size();ip++){
                     auto opsi = Contract(this->ortho_mps[ip].data()[p],this->ortho_mps[ip].data()[p+1]);
                     opsi.set_rowrank(0);
-                    anet.PutUniTensors({"hL","psi","hR"},{this->hLRs[ip][p],opsi,this->hLRs[ip][p+2]},false);
+                    anet.PutUniTensors({"hL","psi","hR"},{this->hLRs[ip][p],opsi,this->hLRs[ip][p+2]});
                     auto out = anet.Launch(true);
                     omps.push_back(out);
                     //omps.back().flatten_();
@@ -586,7 +586,7 @@ namespace cytnx{
                                  "TOUT: ;0,1,2"
                                 });
 
-                anet.PutUniTensors({"R","B","M","B_Conj"},{this->LR[p+2],this->mps.data()[p+1],this->mpo.get_op(p+1),this->mps.data()[p+1].Conj()},false);
+                anet.PutUniTensors({"R","B","M","B_Conj"},{this->LR[p+2],this->mps.data()[p+1],this->mpo.get_op(p+1),this->mps.data()[p+1].Conj()});
                 this->LR[p+1] = anet.Launch(true);
 
                 
@@ -600,7 +600,7 @@ namespace cytnx{
 
                 for(cytnx_int64 ip=0; ip<this->ortho_mps.size(); ip++){
                     auto omps = this->ortho_mps[ip];
-                    anet.PutUniTensors({"hR","Bv","Bp"},{this->hLRs[ip][p+2],this->mps.data()[p+1],omps.data()[p+1].Conj()},false);
+                    anet.PutUniTensors({"hR","Bv","Bp"},{this->hLRs[ip][p+2],this->mps.data()[p+1],omps.data()[p+1].Conj()});
                     this->hLRs[ip][p+1] = anet.Launch(true);
                 }
                 //print('Sweep[r->l]: %d/%d, Loc:%d,Energy: %f'%(k,numsweeps,p,Ekeep[-1]))
@@ -664,7 +664,7 @@ namespace cytnx{
                 for(cytnx_int64 ip=0;ip< this->ortho_mps.size();ip++){
                     auto opsi = Contract(this->ortho_mps[ip].data()[p],this->ortho_mps[ip].data()[p+1]);
                     opsi.set_rowrank(0);
-                    anet.PutUniTensors({"hL","psi","hR"},{this->hLRs[ip][p],opsi,this->hLRs[ip][p+2]},false);
+                    anet.PutUniTensors({"hL","psi","hR"},{this->hLRs[ip][p],opsi,this->hLRs[ip][p+2]});
                     omps.push_back(anet.Launch(true)); 
                     //omps.back().flatten_();
                 }
@@ -699,7 +699,7 @@ namespace cytnx{
                                 "TOUT: ;0,1,2"
                                 });
 
-                anet.PutUniTensors({"L","A","A_Conj","M"},{this->LR[p],this->mps.data()[p],this->mps.data()[p].Conj(),this->mpo.get_op(p)},false);
+                anet.PutUniTensors({"L","A","A_Conj","M"},{this->LR[p],this->mps.data()[p],this->mps.data()[p].Conj(),this->mpo.get_op(p)});
                 this->LR[p+1] = anet.Launch(true);
                 
                 // update hLR when calculate excited state:
@@ -711,7 +711,7 @@ namespace cytnx{
                                });
                 for(cytnx_int64 ip=0;ip<this->ortho_mps.size();ip++){
                     auto omps = this->ortho_mps[ip];
-                    anet.PutUniTensors({"hL","Av","Ap"},{this->hLRs[ip][p],this->mps.data()[p],omps.data()[p].Conj()},false);
+                    anet.PutUniTensors({"hL","Av","Ap"},{this->hLRs[ip][p],this->mps.data()[p],omps.data()[p].Conj()});
                     this->hLRs[ip][p+1] = anet.Launch(true);
                 }
                 //print('Sweep[l->r]: %d of %d, Loc: %d,Energy: %f' % (k, numsweeps, p, Ekeep[-1]))
