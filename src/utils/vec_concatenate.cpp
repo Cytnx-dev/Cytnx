@@ -30,13 +30,16 @@ namespace cytnx{
 
     template<class T>
     void vec_concatenate_(std::vector<T> &out, const std::vector<T> &inL, const std::vector<T> &inR){
-
+        cytnx_error_msg(&out==&inL or &out==&inR,
+                        "[ERROR][vec_concatenate_][Fromfile] You cannot store the result of vec_concatenate_ to inL or inR.%s","\n");
         out.resize(inL.size()+inR.size());
         memcpy(&out[0],&inL[0],sizeof(T)*inL.size());
         memcpy(&out[inL.size()], &inR[0],sizeof(T)*inR.size());
     }
     template<>
     void vec_concatenate_(std::vector<bool> &out, const std::vector<bool> &inL, const std::vector<bool> &inR){
+        cytnx_error_msg(&out==&inL or &out==&inR,
+                        "[ERROR][vec_concatenate_][Fromfile] You cannot store the result of vec_concatenate_ to inL or inR.%s","\n");
         out.resize(inL.size()+inR.size());
         #ifdef UNI_OMP
         #pragma omp parallel for schedule(dynamic)
