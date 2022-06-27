@@ -34,27 +34,27 @@ namespace cytnx {
                  const vector<cytnx_uint64> &remain_rank_id, const vector<cytnx_int64> &shape,
                  const cytnx_uint64 &ax1, const cytnx_uint64 &ax2) {
     UniTensor I = UniTensor(eye(Ndiag), false, -1);
-    I.set_labels({0,1});
+    I.set_labels({0, 1});
     UniTensor UTn = UniTensor(Tn, false, 2);
-    UTn.set_labels(vec_cast<cytnx_uint64,cytnx_int64>(vec_range(100,100+UTn.labels().size())));
-    UTn.set_label(ax1,0);
-    UTn.set_label(ax2,1);
+    UTn.set_labels(vec_cast<cytnx_uint64, cytnx_int64>(vec_range(100, 100 + UTn.labels().size())));
+    UTn.set_label(ax1, 0);
+    UTn.set_label(ax2, 1);
     out = Contract(I, UTn).get_block_();
 
     // vector<cytnx_uint64> indexer(Tn.shape().size(), 0);
     // cytnx_uint64 tmp;
     // for (cytnx_uint64 i = 0; i < Nelem; i++) {
-      // tmp = i;
-      // // calculate indexer
-      // for (int x = 0; x < shape.size(); x++) {
-        // indexer[remain_rank_id[x]] = cytnx_uint64(tmp / accu[x]);
-        // tmp %= accu[x];
-      // }
+    // tmp = i;
+    // // calculate indexer
+    // for (int x = 0; x < shape.size(); x++) {
+    // indexer[remain_rank_id[x]] = cytnx_uint64(tmp / accu[x]);
+    // tmp %= accu[x];
+    // }
 
-      // for (cytnx_uint64 d = 0; d < Ndiag; d++) {
-        // indexer[ax1] = indexer[ax2] = d;
-        // out.storage().at<T>(i) += Tn.at<T>(indexer);
-      // }
+    // for (cytnx_uint64 d = 0; d < Ndiag; d++) {
+    // indexer[ax1] = indexer[ax2] = d;
+    // out.storage().at<T>(i) += Tn.at<T>(indexer);
+    // }
     // }
   }
 
@@ -76,13 +76,12 @@ namespace cytnx {
                       const cytnx_uint64 &Nelem, const vector<cytnx_uint64> &accu,
                       const vector<cytnx_uint64> &remain_rank_id, const vector<cytnx_int64> &shape,
                       const cytnx_uint64 &ax1, const cytnx_uint64 &ax2, const int &Nomp) {
-
     // decide parallel Nelem or Ndiag:
     if (false and Nelem < Ndiag) {
       // each thread need it's own indexer:
       vector<vector<cytnx_uint64>> indexers(Nomp, vector<cytnx_uint64>(Tn.shape().size(), 0));
-      // cout << "Ne < Nd" << endl;
-      #pragma omp parallel for schedule(dynamic)
+  // cout << "Ne < Nd" << endl;
+  #pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 i = 0; i < Nelem; i++) {
         cytnx_uint64 tmp = i;
         // calculate indexer
@@ -90,7 +89,7 @@ namespace cytnx {
           indexers[omp_get_thread_num()][remain_rank_id[x]] = cytnx_uint64(tmp / accu[x]);
           tmp %= accu[x];
         }
-        
+
         for (cytnx_uint64 d = 0; d < Ndiag; d++) {
           indexers[omp_get_thread_num()][ax1] = indexers[omp_get_thread_num()][ax2] = d;
           out.storage().at<T>(i) += Tn.at<T>(indexers[omp_get_thread_num()]);
@@ -98,12 +97,12 @@ namespace cytnx {
       }
 
     } else {
-      #pragma omp parallel
+  #pragma omp parallel
       {
         vector<cytnx_uint64> indexers(Tn.shape().size(), 0);
-        #pragma omp for schedule(static)
+  #pragma omp for schedule(static)
         for (cytnx_uint64 i = 0; i < Nelem; i++) {
-	        cytnx_uint64 tmp;
+          cytnx_uint64 tmp;
           tmp = i;
           // calculate indexer
           for (int x = 0; x < shape.size(); x++) {

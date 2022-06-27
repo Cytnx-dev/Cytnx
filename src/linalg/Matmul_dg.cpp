@@ -81,4 +81,3 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
-
