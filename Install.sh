@@ -27,7 +27,6 @@ FLAG="${FLAG}-DCMAKE_INSTALL_PREFIX=${Ins_dest} "
 #export LD_LIBRARY_PATH=${BLASROOT}/lib
 #---------------------------
 
-
 # 2-b) use MKL:
 # [Note] if using mkl, uncomments the following line and
 #        Please follow the guide from official mkl/oneMKL "post-installation" part 
@@ -42,7 +41,7 @@ FLAG="${FLAG}-DUSE_MKL=on "
 #============================================================================
 # set to "=on" for building python API, required python and pybind11 installed. 
 #--------------------------------
-#FLAG=$FLAG:"-DBUILD_PYTHON=off "
+FLAG=$FLAG:"-DBUILD_PYTHON=on "
 #--------------------------------
 
 
