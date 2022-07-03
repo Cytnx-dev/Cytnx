@@ -32,7 +32,7 @@ FLAG="${FLAG}-DCMAKE_INSTALL_PREFIX=${Ins_dest} "
 #        Please follow the guide from official mkl/oneMKL "post-installation" part 
 #        to source the proper setvars.sh and/or vars.sh  
 #----------------------
-FLAG="${FLAG}-DUSE_MKL=on "
+FLAG="${FLAG}-DUSE_MKL=ON "
 #----------------------
 
 
@@ -41,7 +41,7 @@ FLAG="${FLAG}-DUSE_MKL=on "
 #============================================================================
 # set to "=on" for building python API, required python and pybind11 installed. 
 #--------------------------------
-FLAG="${FLAG}-DBUILD_PYTHON=on "
+FLAG="${FLAG}-DBUILD_PYTHON=ON "
 #--------------------------------
 
 
@@ -62,7 +62,7 @@ FLAG="${FLAG}-DBUILD_PYTHON=on "
 # [Note] set to "=on" for using hptt library to accelrate tensor transpose.
 #        for "=off" case one can skip 5-a) and  5-b)
 #-----------------------------------
-FLAG="${FLAG}-DUSE_HPTT=off"
+FLAG="${FLAG}-DUSE_HPTT=OFF "
 #-----------------------------------
 # 5-a) HPTT fine tune (DEFAULT =off)
 # [Note] set to "=on" to enable fine tune for the native hardware.
@@ -84,7 +84,7 @@ FLAG="${FLAG}-DUSE_HPTT=off"
 # [Note] set to "=on" to build with with GPU (CUDA) support.
 #        for "=off" case one can skip 6-a) and  6-b)
 #-----------------------------------
-FLAG="${FLAG}-DUSE_CUDA=off"
+FLAG="${FLAG}-DUSE_CUDA=OFF "
 #-----------------------------------
 # 6-a) CUTT (DEFAULT =off)
 # [Note] set to "=on" for using CUTT library to accelrate tensor transpose.
@@ -104,7 +104,7 @@ FLAG="${FLAG}-DUSE_CUDA=off"
 #=========================================================
 # [Note] Wheather to generate compile_commands.json for IDE support (DEFAULT =1)
 #-----------------------------------
-FLAG="${FLAG}-DCMAKE_EXPORT_COMPILE_COMMANDS=1"
+FLAG="${FLAG}-DCMAKE_EXPORT_COMPILE_COMMANDS=1 "
 #-----------------------------------
 
 
@@ -113,7 +113,7 @@ FLAG="${FLAG}-DCMAKE_EXPORT_COMPILE_COMMANDS=1"
 #=========================================================
 # [Note] This will run the threaded code in cytnx lib while it will not disable muiltithreading in mkl. (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG}-DUSE_OMP=off"
+FLAG="${FLAG}-DUSE_OMP=OFF "
 #-----------------------------------
 
 
@@ -122,7 +122,7 @@ FLAG="${FLAG}-DUSE_OMP=off"
 #=========================================================
 # [Note] Wheather to run cytnx tests (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG}-DRUN_TESTS=off"
+FLAG="${FLAG}-DRUN_TESTS=OFF "
 #-----------------------------------
 
 
@@ -131,11 +131,11 @@ FLAG="${FLAG}-DRUN_TESTS=off"
 #=========================================================
 # [Note] Build using intel icpc compiler (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG}-DUSE_ICPC=off"
+FLAG="${FLAG}-DUSE_ICPC=OFF "
 #-----------------------------------
 
 
-
+echo ${FLAG}
 rm -rf build
 mkdir build
 cd build
