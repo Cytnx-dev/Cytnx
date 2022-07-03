@@ -41,7 +41,7 @@ FLAG="${FLAG}-DUSE_MKL=on "
 #============================================================================
 # set to "=on" for building python API, required python and pybind11 installed. 
 #--------------------------------
-FLAG=$FLAG:"-DBUILD_PYTHON=on "
+FLAG="${FLAG}-DBUILD_PYTHON=on "
 #--------------------------------
 
 
