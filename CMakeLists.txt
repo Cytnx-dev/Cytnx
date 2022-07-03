@@ -143,10 +143,10 @@ target_include_directories(cytnx
         $<INSTALL_INTERFACE:include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
-# target_include_directories(cytnx SYSTEM
-#     PUBLIC
-# 				${Boost_INCLUDE_DIRS}
-# )
+target_include_directories(cytnx SYSTEM
+    PUBLIC
+				${Boost_INCLUDE_DIRS}
+)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -Wno-c++11-narrowing -w")
 
 
@@ -226,8 +226,7 @@ if (USE_MKL)
 endif()
 
 
-# find_package(Boost REQUIRED)
-add_subdirectory(boost-cmake)
+find_package(Boost REQUIRED)
 message(STATUS "Boost INCCC: ${Boost_INCLUDE_DIRS}")
 message(STATUS ${COMPILE_DEFINITIONS})
 # ----------------------------------------
