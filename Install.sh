@@ -140,4 +140,4 @@ rm -rf build
 mkdir build
 cd build
 cmake ../ ${FLAG}
-make -j6
+make -j`nproc`
