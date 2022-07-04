@@ -9,14 +9,18 @@
 #include "Storage.hpp"
 #include "cytnx_error.hpp"
 
-namespace cytnx{
-    namespace random_internal{
+namespace cytnx {
+  namespace random_internal {
 
-        void Rng_normal_cpu_cd(boost::intrusive_ptr<Storage_base> &in, const double &a, const double &b, const unsigned int &seed );
-        void Rng_normal_cpu_cf(boost::intrusive_ptr<Storage_base> &in, const double &a, const double &b, const unsigned int &seed);
-        void Rng_normal_cpu_d(boost::intrusive_ptr<Storage_base> &in, const double &a, const double &b, const unsigned int &seed );
-        void Rng_normal_cpu_f(boost::intrusive_ptr<Storage_base> &in, const double &a, const double &b, const unsigned int &seed );
-                
-    }
-}
+    void Rng_normal_cpu_cd(boost::intrusive_ptr<Storage_base> &in, const double &a, const double &b,
+                           const unsigned int &seed);
+    void Rng_normal_cpu_cf(boost::intrusive_ptr<Storage_base> &in, const double &a, const double &b,
+                           const unsigned int &seed);
+    void Rng_normal_cpu_d(boost::intrusive_ptr<Storage_base> &in, const double &a, const double &b,
+                          const unsigned int &seed);
+    void Rng_normal_cpu_f(boost::intrusive_ptr<Storage_base> &in, const double &a, const double &b,
+                          const unsigned int &seed);
+
+  }  // namespace random_internal
+}  // namespace cytnx
 #endif

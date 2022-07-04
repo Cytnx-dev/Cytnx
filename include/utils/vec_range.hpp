@@ -9,15 +9,14 @@
 #include "Storage.hpp"
 #include "cytnx_error.hpp"
 
-namespace cytnx{
-        std::vector<cytnx_uint64> vec_range(const cytnx_uint64 &len);
-        std::vector<cytnx_uint64> vec_range(const cytnx_uint64 &start, const cytnx_uint64 &end);
-        
-        
-        template<class T>
-        std::vector<T> vec_range(const cytnx_int64 &len);
-        template<class T>
-        std::vector<T> vec_range(const cytnx_int64 &start, const cytnx_int64 &end);
-        
-}
+namespace cytnx {
+  std::vector<cytnx_uint64> vec_range(const cytnx_uint64 &len);
+  std::vector<cytnx_uint64> vec_range(const cytnx_uint64 &start, const cytnx_uint64 &end);
+
+  template <class T>
+  std::vector<T> vec_range(const cytnx_int64 &len);
+  template <class T>
+  std::vector<T> vec_range(const cytnx_int64 &start, const cytnx_int64 &end);
+
+}  // namespace cytnx
 #endif
