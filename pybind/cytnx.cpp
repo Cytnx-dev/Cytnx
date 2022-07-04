@@ -2562,6 +2562,21 @@ PYBIND11_MODULE(cytnx, m) {
     py::arg("Tn"), py::arg("mode"), py::arg("is_core") = true, py::arg("is_Ls") = false,
     py::arg("truncate_dim") = std::vector<cytnx_int64>());
 
+  m_linalg.def("c_Lanczos",
+               [](LinOp *Hop, const Tensor &Tin, const string method,
+                                const double &CvgCrit, const unsigned int &Maxiter,
+                                const cytnx_uint64 &k, const bool &is_V, const bool &is_row, const cytnx_uint32 &max_krydim,
+                                const bool &verbose) {
+                 return cytnx::linalg::Lanczos(Hop, Tin, method, CvgCrit, Maxiter,k, is_V, is_row, max_krydim, verbose);
+               });
+  m_linalg.def("c_Lanczos",
+              [](LinOp *Hop, const UniTensor &Tin, const string method,
+                              const double &CvgCrit, const unsigned int &Maxiter,
+                              const cytnx_uint64 &k, const bool &is_V, const bool &is_row, const cytnx_uint32 &max_krydim,
+                              const bool &verbose) {
+                 return cytnx::linalg::Lanczos(Hop, Tin, method, CvgCrit, Maxiter,k, is_V, is_row, max_krydim, verbose);
+              });
+
   m_linalg.def("c_Lanczos_ER",
                [](LinOp *Hop, const cytnx_uint64 &k, const bool &is_V, const cytnx_uint64 &maxiter,
                   const double &CvgCrit, const bool &is_row, const Tensor &Tin,
