@@ -8,18 +8,21 @@
 #include "Storage.hpp"
 #include "Type.hpp"
 
-namespace cytnx{
+namespace cytnx {
 
-    namespace linalg_internal{
+  namespace linalg_internal {
 
-        /// Tridiag
-        void Tridiag_internal_d(const boost::intrusive_ptr<Storage_base> &diag, const boost::intrusive_ptr<Storage_base> &s_diag, boost::intrusive_ptr<Storage_base> &S, boost::intrusive_ptr<Storage_base> &U, const cytnx_int64 &L);
-        void Tridiag_internal_f(const boost::intrusive_ptr<Storage_base> &diag, const boost::intrusive_ptr<Storage_base> &s_diag, boost::intrusive_ptr<Storage_base> &S, boost::intrusive_ptr<Storage_base> &U, const cytnx_int64 &L);
+    /// Tridiag
+    void Tridiag_internal_d(const boost::intrusive_ptr<Storage_base> &diag,
+                            const boost::intrusive_ptr<Storage_base> &s_diag,
+                            boost::intrusive_ptr<Storage_base> &S,
+                            boost::intrusive_ptr<Storage_base> &U, const cytnx_int64 &L);
+    void Tridiag_internal_f(const boost::intrusive_ptr<Storage_base> &diag,
+                            const boost::intrusive_ptr<Storage_base> &s_diag,
+                            boost::intrusive_ptr<Storage_base> &S,
+                            boost::intrusive_ptr<Storage_base> &U, const cytnx_int64 &L);
 
-
-    }    
-}
-
-
+  }  // namespace linalg_internal
+}  // namespace cytnx
 
 #endif

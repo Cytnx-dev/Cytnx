@@ -7,12 +7,12 @@
 #include <climits>
 #include "Type.hpp"
 #include "cytnx_error.hpp"
-namespace cytnx{
-    namespace utils_internal{
+namespace cytnx {
+  namespace utils_internal {
 
-    #ifdef UNI_GPU   
-        void cuSetZeros(void* c_ptr, const cytnx_uint64 &bytes);
-    #endif
-    }
-}
+#ifdef UNI_GPU
+    void cuSetZeros(void* c_ptr, const cytnx_uint64& bytes);
+#endif
+  }  // namespace utils_internal
+}  // namespace cytnx
 #endif
