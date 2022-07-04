@@ -7,11 +7,8 @@
 
 using namespace std;
 
-namespace cytnx{
+namespace cytnx {
 
-    ///Fermion Network is developing!
+  /// Fermion Network is developing!
 
-
-}//namespace cytnx
-
-
+}  // namespace cytnx

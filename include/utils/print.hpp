@@ -11,15 +11,13 @@
 #include "Scalar.hpp"
 #include <iostream>
 
-namespace cytnx{
+namespace cytnx {
 
-    template<class T>
-    void print(const T &ipt){
-        std::cout << ipt << std::endl;
-    }
-   
+  template <class T>
+  void print(const T &ipt) {
+    std::cout << ipt << std::endl;
+  }
 
-}// namespace cytnx
-
+}  // namespace cytnx
 
 #endif

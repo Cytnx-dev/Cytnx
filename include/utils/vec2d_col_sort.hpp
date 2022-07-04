@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "Type.hpp"
-namespace cytnx{
-    void vec2d_col_sort(std::vector<std::vector<cytnx_int64>> &v1);
+namespace cytnx {
+  void vec2d_col_sort(std::vector<std::vector<cytnx_int64>> &v1);
 }
 #endif

@@ -2,7 +2,8 @@ add_executable(
   test_main
   test_main.cpp
   Bond_test.cpp
-  utils_test/vec_test.cpp
+  utils_test/vec_concatenate.cpp
+  utils_test/vec_unique.cpp
 )
 target_link_libraries(
   test_main
