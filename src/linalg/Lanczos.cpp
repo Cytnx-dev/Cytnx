@@ -16,52 +16,49 @@ namespace cytnx {
     typedef Accessor ac;
     using namespace std;
 
-    std::vector<Tensor> Lanczos(LinOp *Hop, const Tensor &Tin, const string method,
-                                const double &CvgCrit, const unsigned int &Maxiter,
-                                const cytnx_uint64 &k, const bool &is_V, const bool &is_row, const cytnx_uint32 &max_krydim,
-                                const bool &verbose){
-        if (method.compare("ER") == 0){
-            return Lanczos_ER(Hop, k, is_V, maxiter, CvgCrit, is_row, Tin, max_krydim,verbose);
-        }
-        else if (method.compare("Gnd") == 0){
+    vector<Tensor> Lanczos(LinOp *Hop, const Tensor &Tin, const string method,
+                           const double &CvgCrit, const unsigned int &Maxiter,
+                           const cytnx_uint64 &k, const bool &is_V, const bool &is_row,
+                           const cytnx_uint32 &max_krydim, const bool &verbose) {
+      if (method.compare("ER") == 0) {
+        return Lanczos_ER(Hop, k, is_V, Maxiter, CvgCrit, is_row, Tin, max_krydim, verbose);
+      } else if (method.compare("Gnd") == 0) {
+        cytnx_error_msg(k > 1, "[ERROR][Lanczos] Only k = 1 is supported for 'Gnd' method.%s",
+                        "\n");
+        cytnx_warning_msg(
+          max_krydim > 0,
+          "[WARNING][Lanczos] max_krydim > 0 while it is irrelevent when using 'Gnd' method.%s",
+          "\n");
+        return Lanczos_Gnd(Hop, CvgCrit, is_V, Tin, verbose, Maxiter);
+      } else {
+        cytnx_error_msg(
+          1, "[ERROR][Lanczos] Invalid Lanczos method, should be either 'ER' or 'Gnd'.%s", "\n");
+        return vector<Tensor>();
+      }
 
-            cytnx_error_msg(k > 1,
-                                "[ERROR][Lanczos] Only k = 1 is supported for 'Gnd' method.%s",
-                                "\n");
-            cytnx_warning_msg(max_krydim > 0,
-                                "[WARNING][Lanczos] max_krydim > 0 while it is irrelevent when using 'Gnd' method.%s",
-                                "\n");
-            return Lanczos_Gnd(Hop, Tin, CvgCrit, is_V, verbose, Maxiter);
-        }
-        else {
-            cytnx_error_msg(1, "[ERROR][Lanczos] Invalid Lanczos method, should be either 'ER' or 'Gnd'.%s", "\n");
-            return 0;
-        }
-      
-    }  //Lanczos
+    }  // Lanczos
 
-    std::vector<UniTensor> Lanczos(LinOp *Hop, const UniTensor &Tin, const string method,
-                                const double &CvgCrit, const unsigned int &Maxiter,
-                                const cytnx_uint64 &k, const bool &is_V, const bool &is_row, const cytnx_uint32 &max_krydim,
-                                const bool &verbose){
-        if (method.compare("ER") == 0){
-            cytnx_error_msg(1, "[ERROR][Lanczos] Lanczos method 'ER' for UniTensor is under developing!.%s", "\n");            
-            return 0;
-        }
-        else if (method.compare("Gnd") == 0){
-            cytnx_error_msg(k > 1,
-                                "[ERROR][Lanczos] Only k = 1 is supported for 'Gnd' method.%s",
-                                "\n");
-            cytnx_warning_msg(max_krydim > 0,
-                                "[WARNING][Lanczos] max_krydim > 0 while is irrelevent when using 'Gnd' method.%s",
-                                "\n");
-            return Lanczos_Gnd_Ut(Hop, Tin, CvgCrit, is_V, verbose, Maxiter);
-        }
-        else {
-            cytnx_error_msg(1, "[ERROR][Lanczos] Invalid Lanczos method, should be either 'ER' or 'Gnd'.%s", "\n");
-            return 0;
-        }
-    }  //Lanczos
+    vector<UniTensor> Lanczos(LinOp *Hop, const UniTensor &Tin, const string method,
+                              const double &CvgCrit, const unsigned int &Maxiter,
+                              const cytnx_uint64 &k, const bool &is_V, const bool &is_row,
+                              const cytnx_uint32 &max_krydim, const bool &verbose) {
+      if (method.compare("ER") == 0) {
+        cytnx_error_msg(
+          1, "[ERROR][Lanczos] Lanczos method 'ER' for UniTensor is under developing!.%s", "\n");
+        return vector<UniTensor>();
+      } else if (method.compare("Gnd") == 0) {
+        cytnx_error_msg(k > 1, "[ERROR][Lanczos] Only k = 1 is supported for 'Gnd' method.%s",
+                        "\n");
+        cytnx_warning_msg(
+          max_krydim > 0,
+          "[WARNING][Lanczos] max_krydim > 0 while is irrelevent when using 'Gnd' method.%s", "\n");
+        return Lanczos_Gnd_Ut(Hop, Tin, CvgCrit, is_V, verbose, Maxiter);
+      } else {
+        cytnx_error_msg(
+          1, "[ERROR][Lanczos] Invalid Lanczos method, should be either 'ER' or 'Gnd'.%s", "\n");
+        return vector<UniTensor>();
+      }
+    }  // Lanczos
 
   }  // namespace linalg
 }  // namespace cytnx

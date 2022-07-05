@@ -775,10 +775,11 @@ namespace cytnx {
         To use, define a linear operator with LinOp class either by assign a custom function or
     create a class that inherit LinOp (see LinOp for further details)
     */
-    std::vector<Tensor> Lanczos(LinOp *Hop, const Tensor &Tin = Tensor(), const string method = 'Gnd',
-                                const double &CvgCrit = 1.0e-14, const unsigned int &Maxiter = 10000,
-                                const cytnx_uint64 &k = 1, const bool &is_V = true, const bool &is_row = false, const cytnx_uint32 &max_krydim = 0,
-                                const bool &verbose = false);
+    std::vector<Tensor> Lanczos(LinOp *Hop, const Tensor &Tin = Tensor(),
+                                const std::string method = "Gnd", const double &CvgCrit = 1.0e-14,
+                                const unsigned int &Maxiter = 10000, const cytnx_uint64 &k = 1,
+                                const bool &is_V = true, const bool &is_row = false,
+                                const cytnx_uint32 &max_krydim = 0, const bool &verbose = false);
 
     // Lanczos:
     //===========================================
@@ -807,10 +808,12 @@ namespace cytnx {
         To use, define a linear operator with LinOp class either by assign a custom function or
     create a class that inherit LinOp (see LinOp for further details)
     */
-    std::vector<Tensor> Lanczos(LinOp *Hop, const UniTensor &Tin = UniTensor(), const string method = 'Gnd',
-                                const double &CvgCrit = 1.0e-14, const unsigned int &Maxiter = 10000,
-                                const cytnx_uint64 &k = 1, const bool &is_V = true, const bool &is_row = false, const cytnx_uint32 &max_krydim = 0,
-                                const bool &verbose = false);                                
+    std::vector<UniTensor> Lanczos(LinOp *Hop, const UniTensor &Tin = UniTensor(),
+                                   const std::string method = "Gnd",
+                                   const double &CvgCrit = 1.0e-14,
+                                   const unsigned int &Maxiter = 10000, const cytnx_uint64 &k = 1,
+                                   const bool &is_V = true, const bool &is_row = false,
+                                   const cytnx_uint32 &max_krydim = 0, const bool &verbose = false);
 
     // Lanczos:
     //===========================================
