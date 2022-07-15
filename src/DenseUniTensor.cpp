@@ -345,7 +345,7 @@ namespace cytnx{
 
         if(bond_info){
             for(cytnx_uint64 i=0; i< this->_bonds.size();i++){
-                sprintf(buffer,"lbl:%d ",this->_labels[i]); std::cout << std::string(buffer);
+                sprintf(buffer,"lbl:%ld ",this->_labels[i]); std::cout << std::string(buffer);
                 std::cout << this->_bonds[i] << std::endl;
             }
         }
