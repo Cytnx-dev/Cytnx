@@ -6656,7 +6656,7 @@ namespace cytnx{
                     #endif
                         for(cytnx_uint64 i=0;i<len;i++){
                             std::vector<cytnx_uint64> tmpv = c2cartesian(i,accu_shape);
-                            _out[i] = cytnx_complex128(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)],0);
+                            _out[i] = cytnx_complex128(_Lin[cartesian2c(vec_map(tmpv,invmapper_L),old_accu_shapeL)],0)
                                     - _Rin[cartesian2c(vec_map(tmpv,invmapper_R),old_accu_shapeR)];
                             
                         }
