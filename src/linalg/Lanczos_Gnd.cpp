@@ -105,7 +105,7 @@ namespace cytnx{
             //cout << As << endl;
 
             if(cvg_fin==false){
-                cytnx_warning_msg(true,"[WARNING] iteration not converge after Maxiter!.\n :: Note :: ignore if this is intended","\n");
+                cytnx_warning_msg(true,"[WARNING] iteration not converge after Maxiter!.\n :: Note :: ignore if this is intended%s","\n");
             }
 
             out.push_back(tmpEsVs[0](0));

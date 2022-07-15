@@ -95,6 +95,7 @@ namespace cytnx{
                 cytnx_int64 i_rowrank = rowrank;
 
                 if(is_diag){
+                    //std::cout << in_tensor.shape() << std::endl;
                     cytnx_error_msg(in_tensor.shape().size()!=1,"[ERROR][Init_by_tensor] setting is_diag=True should have input Tensor to be rank-1 with diagonal elements.%s","\n");
                     if(rowrank==-1)
                         i_rowrank = 1;
@@ -253,7 +254,7 @@ namespace cytnx{
         
         sprintf(buffer,"-----------------------%s","\n");         std::cout << std::string(buffer);
         sprintf(buffer,"tensor Name : %s\n",this->_name.c_str()); std::cout << std::string(buffer);
-        sprintf(buffer,"tensor Rank : %d\n",this->_labels.size());std::cout << std::string(buffer);
+        sprintf(buffer,"tensor Rank : %ld\n",this->_labels.size());std::cout << std::string(buffer);
         sprintf(buffer,"block_form  : false%s","\n");             std::cout << std::string(buffer);
         sprintf(buffer,"is_diag     : %s\n",this->_is_diag?"True":"False"); std::cout << std::string(buffer);
         sprintf(buffer,"on device   : %s\n",this->device_str().c_str());    std::cout << std::string(buffer);
@@ -280,8 +281,8 @@ namespace cytnx{
                     else                                         bks = "*<--";
                     memset(l,0,sizeof(char)*40);
                     memset(llbl,0,sizeof(char)*40);
-                    sprintf(l,"%3d %s",this->_labels[i],bks.c_str());
-                    sprintf(llbl,"%-3d",this->_bonds[i].dim()); 
+                    sprintf(l,"%3ld %s",this->_labels[i],bks.c_str());
+                    sprintf(llbl,"%-3lu",this->_bonds[i].dim()); 
                 }else{
                     memset(l,0,sizeof(char)*40);
                     memset(llbl,0,sizeof(char)*40);

@@ -94,6 +94,14 @@ Scalar run_DMRG(tn_algo::MPO &mpo, tn_algo::MPS &mps, int Nsweeps, std::vector<t
 int main(int argc, char *argv[]){
 
 
+    auto T = UniTensor(ones({5,5,5,5,5}), false, 3);
+    T.print_diagram();
+
+    auto out = linalg::Svd(T);
+
+
+    exit(1);
+
     print(User_debug);
 
     Storage s112 = zeros(10).storage();
