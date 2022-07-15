@@ -48,7 +48,7 @@ namespace cytnx{
             }else if(type=='n'){
                 #ifdef UNI_OMP
                     vector<cytnx_uint64> buf;
-                    unsigned int Nproc;
+                    unsigned int Nproc=1;
                     #pragma omp parallel
                     {
                         if(omp_get_thread_num()==0) Nproc = omp_get_num_threads();
@@ -451,7 +451,7 @@ namespace cytnx{
             if(type=='x'){
                 #ifdef UNI_OMP
                     vector<cytnx_float> buf;
-                    unsigned int Nproc;
+                    unsigned int Nproc=1;
                     #pragma omp parallel
                     {
                         if(omp_get_thread_num()==0) Nproc = omp_get_num_threads();
@@ -573,7 +573,7 @@ namespace cytnx{
             if(type=='x'){
                 #ifdef UNI_OMP
                     vector<cytnx_complex64> buf;
-                    unsigned int Nproc;
+                    unsigned int Nproc=1;
                     #pragma omp parallel
                     {
                         if(omp_get_thread_num()==0) Nproc = omp_get_num_threads();
