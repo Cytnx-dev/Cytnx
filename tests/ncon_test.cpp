@@ -1,5 +1,6 @@
 #include "ncon_test.h"
 
-TEST_F(NconTest, ncon) { 
-  cytnx::ncon(input.first, input.second, true); 
-}
+using namespace std;
+using namespace cytnx;
+
+TEST_F(NconTest, ncon) { ncon(input.first, input.second, true); }

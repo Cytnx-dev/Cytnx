@@ -6,14 +6,14 @@
 
 class NetworkTest : public ::testing::Test {
  public:
-  Network NEmpty;
-  Network NetFromFile = Network("testNet.net");
+  cytnx::Network NEmpty;
+  cytnx::Network NetFromFile = cytnx::Network("testNet.net");
 
  protected:
   void SetUp() override {}
   void TearDown() override {
-    NEmpty = Network();
-    NetFromFile = Network("testNet.net");
+    NEmpty = cytnx::Network();
+    NetFromFile = cytnx::Network("testNet.net");
   }
 };
 
