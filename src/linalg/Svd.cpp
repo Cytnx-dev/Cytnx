@@ -261,7 +261,7 @@ namespace cytnx {
           vector<cytnx_int64> shapeU = vec_clone(oldshape, Tin.rowrank());
           shapeU.push_back(-1);
           outT[t].reshape_(shapeU);
-          Cy_U.Init(outT[t], Tin.rowrank());
+          Cy_U.Init(outT[t], false, Tin.rowrank());
           vector<cytnx_int64> labelU = vec_clone(oldlabel, Tin.rowrank());
           labelU.push_back(Cy_S.labels()[0]);
           Cy_U.set_labels(labelU);
@@ -275,7 +275,7 @@ namespace cytnx {
           memcpy(&shapevT[1], &oldshape[Tin.rowrank()], sizeof(cytnx_int64) * (shapevT.size() - 1));
 
           outT[t].reshape_(shapevT);
-          Cy_vT.Init(outT[t], 1);
+          Cy_vT.Init(outT[t], false, 1);
           vector<cytnx_int64> labelvT(shapevT.size());
           labelvT[0] = Cy_S.labels()[1];
           memcpy(&labelvT[1], &oldlabel[Tin.rowrank()], sizeof(cytnx_int64) * (labelvT.size() - 1));

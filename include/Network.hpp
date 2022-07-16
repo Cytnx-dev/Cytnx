@@ -330,7 +330,21 @@ namespace cytnx {
                        const bool &is_clone = true) {
       this->_impl->PutUniTensors(name, utensors, is_clone);
     }
-    UniTensor Launch(const bool &optimal = false) { return this->_impl->Launch(optimal); }
+    std::string getOptimalOrder(const int &network_type = NtType.Regular) {
+      if (network_type == NtType.Regular) {
+        return this->_impl->getOptimalOrder();
+      } else {
+        cytnx_error_msg(true, "[Developing] currently only support regular type network.%s", "\n");
+      }
+    }
+    UniTensor Launch(const bool &optimal, const std::string &contract_order = "",
+                     const int &network_type = NtType.Regular) {
+      if (network_type == NtType.Regular) {
+        return this->_impl->Launch(optimal);
+      } else {
+        cytnx_error_msg(true, "[Developing] currently only support regular type network.%s", "\n");
+      }
+    }
     void clear() {
       // boost::intrusive_ptr<Network_base> tmp(new Network_base());
       this->_impl->clear();
