@@ -59,7 +59,9 @@ namespace cytnx {
       this->nodes_container[0].push_back(this->base_nodes[t]);
     }
 
-    while (this->nodes_container.back().size() == 0) {
+    bool secondtimescan = 0;
+    while (this->nodes_container.back().size() ==
+           0) {  // I can't see the need of this while loop before using secondtimescan
       for (int c = 1; c < this->base_nodes.size(); c++) {
         for (int d1 = 0; d1 < (c + 1) / 2; d1++) {
           int d2 = c - d1 - 1;
@@ -72,7 +74,10 @@ namespace cytnx {
               PsudoUniTensor &t2 = this->nodes_container[d2][i2];
 
               // No common labels
-              if (cytnx::vec_intersect(t1.labels, t2.labels).size() == 0) continue;
+              // If it's the secondtimescan, that's probably because there're need of Kron
+              // operations.
+              if (!secondtimescan and cytnx::vec_intersect(t1.labels, t2.labels).size() == 0)
+                continue;
               // overlap
               if ((t1.ID & t2.ID) > 0) continue;
 
@@ -100,6 +105,7 @@ namespace cytnx {
           }  // for i1
         }  // for d1
       }  // for c
+      secondtimescan = 1;
     }  // while
 
     // cout << nodes_container.back()[0].accu_str << endl;
