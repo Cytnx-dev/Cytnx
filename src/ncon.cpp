@@ -92,12 +92,12 @@ namespace cytnx {
     str_tout.append("\n");
     UniTensor out;
     Network N;
-    cout << net_in + str_tout + str_order << '\n';
+    // cout << net_in + str_tout + str_order << '\n';
     N.FromString(str_split(net_in + str_tout + str_order, true, "\n"));
     for (cytnx_uint64 i = 0; i < tensor_list_in.size(); i++) {
       N.PutUniTensor("t" + to_string(i), tensor_list_in[i]);
     }
-    cout << N;
+    // cout << N;
     if (!optimize) {
       out = N.Launch(false, str_order.substr(7));  // Remove "ORDER: "
     } else {

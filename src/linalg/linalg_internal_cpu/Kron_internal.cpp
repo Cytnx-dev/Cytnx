@@ -61,9 +61,9 @@ namespace cytnx {
                                                      std::is_same<TL, cytnx_complex64>::value) and
                                                     !(std::is_same<TR, cytnx_complex128>::value or
                                                       std::is_same<TR, cytnx_complex64>::value))) {
-            _out[i] = _Lin[tmp] * _Rin[tmp2];
+            _out[i] = _Lin[x] * _Rin[y];
           } else {
-            _out2[i] = _Lin[tmp] * _Rin[tmp2];
+            _out2[i] = _Lin[x] * _Rin[y];
           }
         }
       }
