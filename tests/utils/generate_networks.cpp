@@ -23,7 +23,7 @@ int rnd(int x) { return mrand() % x; }
  * _d is the max bond count per tensor
  * _num is the upperbound of randomly generated numbers
  */
-const int _n = 15, _d = 5, _num = 1e3;
+const int _n = 20, _d = 5, _num = 10;
 int t, n, tot_bond_cnt = 0;
 VI flatlink, flatbonds;
 vector<VI> bonds;
@@ -44,7 +44,9 @@ int main(void) {
     bonds.pb(l);
     tot_bond_cnt += SZ(l);
   }
-  int cont_cnt = rnd((int)tot_bond_cnt / ((int)2)), neg_bond_cnt = tot_bond_cnt - 2 * cont_cnt;
+  // At most 3*2=6 uncontracted bond for preventing from explosion dimention of tensor
+  int tmp = rnd((int)tot_bond_cnt / ((int)2));
+  int cont_cnt = max(tmp, tot_bond_cnt / 2 - 3), neg_bond_cnt = tot_bond_cnt - 2 * cont_cnt;
   rep(i, 1, cont_cnt + 1) rep(__, 0, 2) flatlink.pb(i);
   rep(i, 1, neg_bond_cnt + 1) flatlink.pb(-i);
   shuffle(all(flatlink), mrand);
@@ -66,9 +68,15 @@ int main(void) {
     idx0 += SZ(bonds[i]);
 
     cout << SZ(bonds[i]) << '\n';
-    rep(j, 0, SZ(bonds[i])) cout << bonds[i][j] << ' ';
+    rep(j, 0, SZ(bonds[i])) {
+      cout << bonds[i][j];
+      if (j != SZ(bonds[i]) - 1) cout << ' ';
+    }
     cout << '\n';
-    rep(j, 0, ele_cnt) cout << rnd(_num) << ' ';
+    rep(j, 0, ele_cnt) {
+      cout << rnd(_num) + 1;  // Do not generate zero
+      if (j != ele_cnt - 1) cout << ' ';
+    }
     cout << '\n';
   }
 
@@ -95,7 +103,10 @@ int main(void) {
   }
 
   rep(i, 0, SZ(links)) {
-    rep(j, 0, SZ(links[i])) cout << links[i][j] << ' ';
+    rep(j, 0, SZ(links[i])) {
+      cout << links[i][j];
+      if (j != SZ(links[i]) - 1) cout << ' ';
+    }
     cout << '\n';
   }
   cout << 0 << '\n';  // cont_order count

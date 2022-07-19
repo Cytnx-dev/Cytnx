@@ -12,6 +12,7 @@ TEST_F(NconTest, ncon) {
   for (int i = 0; i < res.shape()[0]; i++) {
     fin >> dans;
     double dres = *(((double*)res.get_block_().storage().data()) + i);
-    EXPECT_NEAR(dans, dres, 1e-8);
+    EXPECT_NEAR(dans, dres, 1e-8);  // We should consider change the epsilon since the resulting
+                                    // tensor may be very large in number
   }
 }

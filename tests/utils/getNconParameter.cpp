@@ -47,7 +47,8 @@ pair<vector<UniTensor>, vector<vector<cytnx_int64>>> getNconParameter(string fil
       T(j) = t;
     }
     T.reshape_(bond);
-    UniTensor uT = UniTensor(T, 0);
+    UniTensor uT =
+      UniTensor(T, false, 0);  // The UniTensors in output.txt are rowrank zero UniTensors
     uTs.pb(uT);
   }
   rep(i, 0, n) {
