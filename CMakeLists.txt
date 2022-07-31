@@ -143,10 +143,10 @@ target_include_directories(cytnx
         $<INSTALL_INTERFACE:include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
-target_include_directories(cytnx SYSTEM
-    PUBLIC
-				${Boost_INCLUDE_DIRS}
-)
+# target_include_directories(cytnx SYSTEM
+#     PUBLIC
+# 				${Boost_INCLUDE_DIRS}
+# )
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -Wno-c++11-narrowing -w")
 
 
@@ -222,11 +222,12 @@ endif()
 if (USE_MKL)
     target_compile_definitions(cytnx PRIVATE UNI_MKL)
     target_compile_definitions(cytnx PRIVATE MKL_ILP64)
-    set(USE_OMP ON FORCE)
+    # set(USE_OMP ON FORCE)
 endif()
 
 
-find_package(Boost REQUIRED)
+# find_package(Boost REQUIRED)
+add_subdirectory(boost-cmake)
 message(STATUS "Boost INCCC: ${Boost_INCLUDE_DIRS}")
 message(STATUS ${COMPILE_DEFINITIONS})
 # ----------------------------------------
@@ -256,7 +257,12 @@ if(USE_OMP)
           target_compile_definitions(cytnx PRIVATE UNI_OMP)
         endif()
     endif()
+else()
+    if(USE_MKL)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
+    endif()
 endif()
+
 target_link_libraries(cytnx PUBLIC Boost::boost ${LAPACK_LIBRARIES})
 
 
@@ -532,7 +538,8 @@ endif()
 if(USE_OMP)
     FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_OMP\n" "")
     if(USE_MKL)
-          message( STATUS " Build OMP Support: YES (force with MKL=on)")
+          # message( STATUS " Build OMP Support: YES (force with MKL=on)")
+          message( STATUS " Build OMP Support: YES")
           FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_MKL\n" "")
     else()
         if(OPENMP_FOUND)

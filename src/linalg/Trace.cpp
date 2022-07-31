@@ -165,7 +165,7 @@ namespace cytnx {
       out.storage().set_zeros();
 
 #ifdef UNI_OMP
-      int Nomp;
+      int Nomp = 1;
   #pragma omp parallel
       {
         if (omp_get_thread_num() == 0) Nomp = omp_get_num_threads();

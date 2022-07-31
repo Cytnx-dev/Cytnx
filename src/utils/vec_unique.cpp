@@ -56,5 +56,4 @@ namespace cytnx {
   template std::vector<cytnx_int16> vec_unique(const std::vector<cytnx_int16> &);
   template std::vector<cytnx_uint16> vec_unique(const std::vector<cytnx_uint16> &);
   // template std::vector<cytnx_bool> vec_unique(const std::vector<cytnx_bool> &);
-
 }  // namespace cytnx

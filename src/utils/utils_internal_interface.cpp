@@ -32,7 +32,6 @@ namespace cytnx {
       // blocks_mvelems_ii[Type.Uint16       ] = blocks_mvelems_u16;
       // blocks_mvelems_ii[Type.Int16        ] = blocks_mvelems_i16;
       // blocks_mvelems_ii[Type.Bool         ] = blocks_mvelems_b;
-
       ElemCast = vector<vector<ElemCast_io>>(N_Type, vector<ElemCast_io>(N_Type, NULL));
       ElemCast[Type.ComplexDouble][Type.ComplexDouble] = Cast_cpu_cdtcd;
       ElemCast[Type.ComplexDouble][Type.ComplexFloat] = Cast_cpu_cdtcf;

@@ -163,12 +163,8 @@ namespace cytnx {
   }
 
   void RegularNetwork::Contract_plan(const std::vector<UniTensor> &utensors,
-                                     const std::string &Tout, const std::vector<bool> &is_clone,
-                                     const std::vector<std::string> &alias,
+                                     const std::string &Tout, const std::vector<std::string> &alias,
                                      const std::string &contract_order) {
-    if (is_clone.size())
-      cytnx_error_msg(utensors.size() != is_clone.size(),
-                      "[ERROR] is_clone mask should have same size as tensors.%s", "\n");
     cytnx_error_msg(utensors.size() < 2,
                     "[ERROR][Network] invalid network. Should have at least 2 tensors defined.%s",
                     "\n");
@@ -299,15 +295,7 @@ namespace cytnx {
     }
 
     // put tensor:
-    for (int i = 0; i < utensors.size(); i++) {
-      if (is_clone.size())
-        if (is_clone[i])
-          this->tensors[i] = utensors[i].clone();
-        else
-          this->tensors[i] = utensors[i];
-      else
-        this->tensors[i] = utensors[i].clone();
-    }
+    for (int i = 0; i < utensors.size(); i++) this->tensors[i] = utensors[i];
   }
 
   void RegularNetwork::FromString(const std::vector<std::string> &contents) {
@@ -499,18 +487,17 @@ namespace cytnx {
   }
 
   void RegularNetwork::PutUniTensors(const std::vector<string> &names,
-                                     const std::vector<UniTensor> &utensors, const bool &is_clone) {
+                                     const std::vector<UniTensor> &utensors) {
     cytnx_error_msg(names.size() != utensors.size(),
                     "[ERROR][RegularNetwork][PutUniTensors] total number of names does not match "
                     "number of input UniTensors.%s",
                     "\n");
     for (int i = 0; i < names.size(); i++) {
-      this->PutUniTensor(names[i], utensors[i], is_clone);
+      this->PutUniTensor(names[i], utensors[i]);
     }
   }
 
-  void RegularNetwork::PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor,
-                                    const bool &is_clone) {
+  void RegularNetwork::PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor) {
     cytnx_error_msg(idx >= this->CtTree.base_nodes.size(),
                     "[ERROR][RegularNetwork][PutUniTensor] index=%d out of range.\n", idx);
 
@@ -524,19 +511,14 @@ namespace cytnx {
                     "input UniTensor does not match the semicolon defined in network file.\n",
                     this->names[idx].c_str());
 
-    if (is_clone) {
-      this->tensors[idx] = utensor.clone();
-    } else {
-      for (int i = 0; i < this->tensors.size(); i++)
-        if (this->tensors[i].uten_type() != UTenType.Void && i != idx)
-          cytnx_error_msg(this->tensors[i].same_data(utensor),
-                          "[ERROR] [%s] and [%d] has same_data. Network cannot have two tensor "
-                          "with same_data(). If two tensors in a Network has the same data, "
-                          "consider set is_clone on either one of them.\n",
-                          this->names[i].c_str(), this->names[idx].c_str());
+    // for(int i=0;i<this->tensors.size();i++)
+    //     if(this->tensors[i].uten_type()!=UTenType.Void && i!=idx)
+    //         cytnx_error_msg(this->tensors[i].same_data(utensor),"[ERROR] [%s] and [%d] has
+    //         same_data. Network cannot have two tensor with same_data(). If two tensors in a
+    //         Network has the same data, consider set is_clone on either one of
+    //         them.\n",this->names[i].c_str(),this->names[idx].c_str());
 
-      this->tensors[idx] = utensor;
-    }
+    this->tensors[idx] = utensor;
   }
 
   void RegularNetwork::Savefile(const std::string &fname) {
@@ -573,6 +555,7 @@ namespace cytnx {
       if (i != this->TOUT_iBondNum - 1) {
         fo << ",";
       }
+
     }
     if (this->TOUT_labels.size() != 0) fo << ";";
     for (int i = TOUT_iBondNum; i < this->TOUT_labels.size(); i++) {
@@ -594,8 +577,7 @@ namespace cytnx {
     fo.close();
   }
 
-  void RegularNetwork::PutUniTensor(const std::string &name, const UniTensor &utensor,
-                                    const bool &is_clone) {
+  void RegularNetwork::PutUniTensor(const std::string &name, const UniTensor &utensor) {
     cytnx_uint64 idx;
     /*
     std::cout << "|" << name <<"|" << std::endl;
@@ -612,7 +594,7 @@ namespace cytnx {
                       name.c_str());
     }
 
-    this->PutUniTensor(idx, utensor, is_clone);
+    this->PutUniTensor(idx, utensor);
   }
 
   void RegularNetwork::PrintNet(std::ostream &os) {
@@ -668,7 +650,8 @@ namespace cytnx {
     SearchTree Stree;
     Stree.base_nodes.resize(this->tensors.size());
     for (cytnx_uint64 t = 0; t < this->tensors.size(); t++) {
-      Stree.base_nodes[t].from_utensor(this->tensors[t]);  // create psudotensors from base tensors
+      // Stree.base_nodes[t].from_utensor(this->tensors[t]); //create psudotensors from base tensors
+      Stree.base_nodes[t].from_utensor(CtTree.base_nodes[t].utensor);
       Stree.base_nodes[t].accu_str = this->names[t];
     }
     Stree.search_order();
@@ -689,18 +672,19 @@ namespace cytnx {
       "[ERROR][Launch][RegularNetwork] cannot launch with optimal=True and given contract_order.%s",
       "\n");
 
-    vector<vector<cytnx_int64>> old_labels;
+    // vector<vector<cytnx_int64> > old_labels;
     for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
       cytnx_error_msg(this->tensors[idx].uten_type() == UTenType.Void,
                       "[ERROR][Launch][RegularNetwork] tensor at [%d], name: [%s] is not set.\n",
                       idx, this->names[idx].c_str());
       // transion save old labels:
-      old_labels.push_back(this->tensors[idx].labels());
+      //  old_labels.push_back(this->tensors[idx].labels());
 
       // modify the label of unitensor (shared):
-      this->tensors[idx].set_labels(this->label_arr[idx]);  // this conflict
+      //  this->tensors[idx].set_labels(this->label_arr[idx]);//this conflict
 
-      this->CtTree.base_nodes[idx].utensor = this->tensors[idx];
+      this->CtTree.base_nodes[idx].utensor =
+        this->tensors[idx].relabels(this->label_arr[idx]);  // this conflict
       // this->CtTree.base_nodes[idx].name = this->tensors[idx].name();
       this->CtTree.base_nodes[idx].is_assigned = true;
 
@@ -790,10 +774,10 @@ namespace cytnx {
     // 4. reset nodes:
     this->CtTree.reset_nodes();
 
-    // 5. reset back the original labels:
-    for (cytnx_uint64 i = 0; i < this->tensors.size(); i++) {
-      this->tensors[i].set_labels(old_labels[i]);
-    }
+    // //5. reset back the original labels:
+    // for(cytnx_uint64 i=0;i<this->tensors.size();i++){
+    //     this->tensors[i].set_labels(old_labels[i]);
+    // }
 
     // 6. permute accroding to pre-set labels:
     if (TOUT_labels.size()) {

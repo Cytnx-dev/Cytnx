@@ -237,10 +237,10 @@ namespace cytnx {
 
       sprintf(buffer, "%s", "Shape :");
       os << string(buffer);
-      sprintf(buffer, " (%d", shape[0]);
+      sprintf(buffer, " (%lu", shape[0]);
       os << string(buffer);
       for (cytnx_size_t i = 1; i < shape.size(); i++) {
-        sprintf(buffer, ",%d", shape[i]);
+        sprintf(buffer, ",%lu", shape[i]);
         os << string(buffer);
       }
       os << ")" << std::endl;
