@@ -555,6 +555,7 @@ namespace cytnx {
       if (i != this->TOUT_iBondNum - 1) {
         fo << ",";
       }
+
     }
     if (this->TOUT_labels.size() != 0) fo << ";";
     for (int i = TOUT_iBondNum; i < this->TOUT_labels.size(); i++) {
