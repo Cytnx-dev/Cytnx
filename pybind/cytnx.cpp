@@ -1512,22 +1512,21 @@ PYBIND11_MODULE(cytnx, m) {
     .def("Savefile", &Network::Savefile, py::arg("fname"))
     .def(
       "PutUniTensor",
-      [](Network &self, const std::string &name, const UniTensor &utensor, const bool &is_clone) {
-        self.PutUniTensor(name, utensor, is_clone);
+      [](Network &self, const std::string &name, const UniTensor &utensor) {
+        self.PutUniTensor(name, utensor);
       },
-      py::arg("name"), py::arg("utensor"), py::arg("is_clone") = true)
+      py::arg("name"), py::arg("utensor"))
     .def(
       "PutUniTensor",
-      [](Network &self, const cytnx_uint64 &idx, const UniTensor &utensor, const bool &is_clone) {
-        self.PutUniTensor(idx, utensor, is_clone);
+      [](Network &self, const cytnx_uint64 &idx, const UniTensor &utensor) {
+        self.PutUniTensor(idx, utensor);
       },
-      py::arg("idx"), py::arg("utensor"), py::arg("is_clone") = true)
+      py::arg("idx"), py::arg("utensor"))
     .def(
       "PutUniTensors",
       [](Network &self, const std::vector<std::string> &names,
-         const std::vector<UniTensor> &utensors,
-         const bool &is_clone) { self.PutUniTensors(names, utensors, is_clone); },
-      py::arg("names"), py::arg("utensors"), py::arg("is_clone") = true)
+         const std::vector<UniTensor> &utensors) { self.PutUniTensors(names, utensors); },
+      py::arg("names"), py::arg("utensors"))
     .def("Launch", &Network::Launch, py::arg("optimal") = false)
     .def("clear", &Network::clear)
     .def("clone", &Network::clone)
@@ -1544,12 +1543,11 @@ PYBIND11_MODULE(cytnx, m) {
     .def_static(
       "Contract",
       [](const std::vector<UniTensor> &utensors, const std::string &Tout,
-         const std::vector<bool> &is_clone = {}, const std::vector<std::string> &alias = {},
-         const std::string &contract_order = "") {
-        return Network::Contract(utensors, Tout, is_clone, alias, contract_order);
+         const std::vector<std::string> &alias = {}, const std::string &contract_order = "") {
+        return Network::Contract(utensors, Tout, alias, contract_order);
       },
-      py::arg("utensors"), py::arg("Tout"), py::arg("is_clone") = std::vector<bool>(),
-      py::arg("alias") = std::vector<std::string>(), py::arg("contract_order") = std::string(""));
+      py::arg("utensors"), py::arg("Tout"), py::arg("alias") = std::vector<std::string>(),
+      py::arg("contract_order") = std::string(""));
 
   py::class_<Symmetry>(m, "Symmetry")
     // construction

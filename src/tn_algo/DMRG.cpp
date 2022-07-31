@@ -35,7 +35,7 @@ namespace cytnx {
         this->anet.FromString({"psi: -1,-2;-3,-4", "L: ;-5,-1,0", "R: ;-7,-4,3", "M1: ;-5,-6,-2,1",
                                "M2: ;-6,-7,-3,2", "TOUT: 0,1;2,3"});
         this->anet.PutUniTensor("M2", M2);
-        this->anet.PutUniTensors({"L", "M1", "R"}, {L, M1, R}, false);
+        this->anet.PutUniTensors({"L", "M1", "R"}, {L, M1, R});
 
         this->ortho_mps = ortho_mps;
         this->weight = weight;
@@ -83,7 +83,7 @@ namespace cytnx {
         this->anet.FromString({"psi: ;-1,-2,-3,-4", "L: ;-5,-1,0", "R: ;-7,-4,3", "M1: ;-5,-6,-2,1",
                                "M2: ;-6,-7,-3,2", "TOUT: ;0,1,2,3"});
         this->anet.PutUniTensor("M2", M2);
-        this->anet.PutUniTensors({"L", "M1", "R"}, {L, M1, R}, false);
+        this->anet.PutUniTensors({"L", "M1", "R"}, {L, M1, R});
 
         this->shapes = pshape;
         this->ortho_mps = ortho_mps;
@@ -96,7 +96,7 @@ namespace cytnx {
 
         auto psi_u = UniTensor(v_, false, 0);  // ## share memory, no copy
         psi_u.reshape_(this->shapes);
-        this->anet.PutUniTensor("psi", psi_u, false);
+        this->anet.PutUniTensor("psi", psi_u);
         Tensor out = this->anet.Launch(true).get_block_();  // get_block_ without copy
         out.flatten_();  // only change meta, without copy.
 
@@ -211,7 +211,7 @@ namespace cytnx {
           // anet.PutUniTensors(["hL","Av","Ap"],[hLR[p],self.mps.A[p],omps.A[p].Conj()],is_clone=False);
 
           anet.PutUniTensors({"hL", "Av", "Ap"},
-                             {hLR[p], this->mps.data()[p], omps.data()[p].Conj()}, false);
+                             {hLR[p], this->mps.data()[p], omps.data()[p].Conj()});
           hLR[p + 1] = anet.Launch(true);
         }
       }
@@ -283,8 +283,7 @@ namespace cytnx {
         for (cytnx_int64 ip = 0; ip < this->ortho_mps.size(); ip++) {
           auto opsi = Contract(this->ortho_mps[ip].data()[p], this->ortho_mps[ip].data()[p + 1]);
           opsi.set_rowrank(0);
-          anet.PutUniTensors({"hL", "psi", "hR"}, {this->hLRs[ip][p], opsi, this->hLRs[ip][p + 2]},
-                             false);
+          anet.PutUniTensors({"hL", "psi", "hR"}, {this->hLRs[ip][p], opsi, this->hLRs[ip][p + 2]});
           auto out = anet.Launch(true).get_block_();
           omps.push_back(out);
           omps.back().flatten_();
@@ -326,8 +325,7 @@ namespace cytnx {
 
         anet.PutUniTensors({"R", "B", "M", "B_Conj"},
                            {this->LR[p + 2], this->mps.data()[p + 1], this->mpo.get_op(p + 1),
-                            this->mps.data()[p + 1].Conj()},
-                           false);
+                            this->mps.data()[p + 1].Conj()});
         this->LR[p + 1] = anet.Launch(true);
 
         // update hLR from right to left for excited states:
@@ -336,9 +334,8 @@ namespace cytnx {
 
         for (cytnx_int64 ip = 0; ip < this->ortho_mps.size(); ip++) {
           auto omps = this->ortho_mps[ip];
-          anet.PutUniTensors(
-            {"hR", "Bv", "Bp"},
-            {this->hLRs[ip][p + 2], this->mps.data()[p + 1], omps.data()[p + 1].Conj()}, false);
+          anet.PutUniTensors({"hR", "Bv", "Bp"}, {this->hLRs[ip][p + 2], this->mps.data()[p + 1],
+                                                  omps.data()[p + 1].Conj()});
           this->hLRs[ip][p + 1] = anet.Launch(true);
         }
         // print('Sweep[r->l]: %d/%d, Loc:%d,Energy: %f'%(k,numsweeps,p,Ekeep[-1]))
@@ -406,8 +403,7 @@ namespace cytnx {
         for (cytnx_int64 ip = 0; ip < this->ortho_mps.size(); ip++) {
           auto opsi = Contract(this->ortho_mps[ip].data()[p], this->ortho_mps[ip].data()[p + 1]);
           opsi.set_rowrank(0);
-          anet.PutUniTensors({"hL", "psi", "hR"}, {this->hLRs[ip][p], opsi, this->hLRs[ip][p + 2]},
-                             false);
+          anet.PutUniTensors({"hL", "psi", "hR"}, {this->hLRs[ip][p], opsi, this->hLRs[ip][p + 2]});
           omps.push_back(anet.Launch(true).get_block_());
           omps.back().flatten_();
         }
@@ -443,8 +439,7 @@ namespace cytnx {
 
         anet.PutUniTensors(
           {"L", "A", "A_Conj", "M"},
-          {this->LR[p], this->mps.data()[p], this->mps.data()[p].Conj(), this->mpo.get_op(p)},
-          false);
+          {this->LR[p], this->mps.data()[p], this->mps.data()[p].Conj(), this->mpo.get_op(p)});
         this->LR[p + 1] = anet.Launch(true);
 
         // update hLR when calculate excited state:
@@ -453,8 +448,7 @@ namespace cytnx {
         for (cytnx_int64 ip = 0; ip < this->ortho_mps.size(); ip++) {
           auto omps = this->ortho_mps[ip];
           anet.PutUniTensors({"hL", "Av", "Ap"},
-                             {this->hLRs[ip][p], this->mps.data()[p], omps.data()[p].Conj()},
-                             false);
+                             {this->hLRs[ip][p], this->mps.data()[p], omps.data()[p].Conj()});
           this->hLRs[ip][p + 1] = anet.Launch(true);
         }
         // print('Sweep[l->r]: %d of %d, Loc: %d,Energy: %f' % (k, numsweeps, p, Ekeep[-1]))
@@ -530,8 +524,7 @@ namespace cytnx {
         for (cytnx_int64 ip = 0; ip < this->ortho_mps.size(); ip++) {
           auto opsi = Contract(this->ortho_mps[ip].data()[p], this->ortho_mps[ip].data()[p + 1]);
           opsi.set_rowrank(0);
-          anet.PutUniTensors({"hL", "psi", "hR"}, {this->hLRs[ip][p], opsi, this->hLRs[ip][p + 2]},
-                             false);
+          anet.PutUniTensors({"hL", "psi", "hR"}, {this->hLRs[ip][p], opsi, this->hLRs[ip][p + 2]});
           auto out = anet.Launch(true);
           omps.push_back(out);
           // omps.back().flatten_();
@@ -575,8 +568,7 @@ namespace cytnx {
 
         anet.PutUniTensors({"R", "B", "M", "B_Conj"},
                            {this->LR[p + 2], this->mps.data()[p + 1], this->mpo.get_op(p + 1),
-                            this->mps.data()[p + 1].Conj()},
-                           false);
+                            this->mps.data()[p + 1].Conj()});
         this->LR[p + 1] = anet.Launch(true);
 
         // update hLR from right to left for excited states:
@@ -585,9 +577,8 @@ namespace cytnx {
 
         for (cytnx_int64 ip = 0; ip < this->ortho_mps.size(); ip++) {
           auto omps = this->ortho_mps[ip];
-          anet.PutUniTensors(
-            {"hR", "Bv", "Bp"},
-            {this->hLRs[ip][p + 2], this->mps.data()[p + 1], omps.data()[p + 1].Conj()}, false);
+          anet.PutUniTensors({"hR", "Bv", "Bp"}, {this->hLRs[ip][p + 2], this->mps.data()[p + 1],
+                                                  omps.data()[p + 1].Conj()});
           this->hLRs[ip][p + 1] = anet.Launch(true);
         }
         // print('Sweep[r->l]: %d/%d, Loc:%d,Energy: %f'%(k,numsweeps,p,Ekeep[-1]))
@@ -654,8 +645,7 @@ namespace cytnx {
         for (cytnx_int64 ip = 0; ip < this->ortho_mps.size(); ip++) {
           auto opsi = Contract(this->ortho_mps[ip].data()[p], this->ortho_mps[ip].data()[p + 1]);
           opsi.set_rowrank(0);
-          anet.PutUniTensors({"hL", "psi", "hR"}, {this->hLRs[ip][p], opsi, this->hLRs[ip][p + 2]},
-                             false);
+          anet.PutUniTensors({"hL", "psi", "hR"}, {this->hLRs[ip][p], opsi, this->hLRs[ip][p + 2]});
           omps.push_back(anet.Launch(true));
           // omps.back().flatten_();
         }
@@ -690,8 +680,7 @@ namespace cytnx {
 
         anet.PutUniTensors(
           {"L", "A", "A_Conj", "M"},
-          {this->LR[p], this->mps.data()[p], this->mps.data()[p].Conj(), this->mpo.get_op(p)},
-          false);
+          {this->LR[p], this->mps.data()[p], this->mps.data()[p].Conj(), this->mpo.get_op(p)});
         this->LR[p + 1] = anet.Launch(true);
 
         // update hLR when calculate excited state:
@@ -700,8 +689,7 @@ namespace cytnx {
         for (cytnx_int64 ip = 0; ip < this->ortho_mps.size(); ip++) {
           auto omps = this->ortho_mps[ip];
           anet.PutUniTensors({"hL", "Av", "Ap"},
-                             {this->hLRs[ip][p], this->mps.data()[p], omps.data()[p].Conj()},
-                             false);
+                             {this->hLRs[ip][p], this->mps.data()[p], omps.data()[p].Conj()});
           this->hLRs[ip][p + 1] = anet.Launch(true);
         }
         // print('Sweep[l->r]: %d of %d, Loc: %d,Energy: %f' % (k, numsweeps, p, Ekeep[-1]))
