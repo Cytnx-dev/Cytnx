@@ -5,3 +5,5 @@ __pycache__
 .python-version
 /build*
 .cache/
+.vscode/
+Testing/
