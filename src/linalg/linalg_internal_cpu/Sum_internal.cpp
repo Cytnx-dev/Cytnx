@@ -53,7 +53,7 @@ namespace cytnx {
 
 #ifdef UNI_OMP
       vector<cytnx_int64> buf;
-      unsigned int Nproc;
+      unsigned int Nproc = 1;
   #pragma omp parallel
       {
         if (omp_get_thread_num() == 0) Nproc = omp_get_num_threads();
