@@ -45,6 +45,7 @@ namespace cytnx {
     return new_vec;
   };
 
+
   // template std::vector<cytnx_complex128> vec_unique(const std::vector<cytnx_complex128> &);
   // template std::vector<cytnx_complex64> vec_unique(const std::vector<cytnx_complex64> &);
   template std::vector<cytnx_double> vec_unique(const std::vector<cytnx_double> &);
