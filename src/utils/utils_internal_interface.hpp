@@ -64,7 +64,6 @@ namespace cytnx {
                                       const std::vector<cytnx_uint64> &,
                                       const std::vector<std::vector<cytnx_uint64>> &,
                                       const cytnx_uint64 &, const cytnx_uint64 &, const bool &);
-
     // typedef void (*blocks_mvelems_io)(vector<Storage> &, const vector<Storage> &,
     //     const vector<vector<cytnx_uint64>> &, const vector<vector<cytnx_uint64>> &,
     //     const vector<cytnx_uint64> &,
