@@ -933,5 +933,5 @@ namespace cytnx {
     // R.%s","\n");
     this->_block = lhs / this->_block;
   }
-
+  
 }  // namespace cytnx
