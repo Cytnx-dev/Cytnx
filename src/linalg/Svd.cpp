@@ -220,6 +220,7 @@ namespace cytnx {
 
       } else {
         // DenseUniTensor:
+        // cout << "entry Dense UT" << endl;
 
         Tensor tmp;
         if (Tin.is_contiguous())
@@ -254,6 +255,7 @@ namespace cytnx {
         }
         Cy_S.Init({newBond, newBond}, {newlbl, newlbl - 1}, 1, Type.Double, Device.cpu,
                   true);  // it is just reference so no hurt to alias ^^
+        // cout << "[AFTER INIT]" << endl;
         Cy_S.put_block_(outT[t]);
         t++;
         if (is_U) {
@@ -261,7 +263,7 @@ namespace cytnx {
           vector<cytnx_int64> shapeU = vec_clone(oldshape, Tin.rowrank());
           shapeU.push_back(-1);
           outT[t].reshape_(shapeU);
-          Cy_U.Init(outT[t], Tin.rowrank());
+          Cy_U.Init(outT[t], false, Tin.rowrank());
           vector<cytnx_int64> labelU = vec_clone(oldlabel, Tin.rowrank());
           labelU.push_back(Cy_S.labels()[0]);
           Cy_U.set_labels(labelU);
@@ -275,7 +277,7 @@ namespace cytnx {
           memcpy(&shapevT[1], &oldshape[Tin.rowrank()], sizeof(cytnx_int64) * (shapevT.size() - 1));
 
           outT[t].reshape_(shapevT);
-          Cy_vT.Init(outT[t], 1);
+          Cy_vT.Init(outT[t], false, 1);
           vector<cytnx_int64> labelvT(shapevT.size());
           labelvT[0] = Cy_S.labels()[1];
           memcpy(&labelvT[1], &oldlabel[Tin.rowrank()], sizeof(cytnx_int64) * (labelvT.size() - 1));
