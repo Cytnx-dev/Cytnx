@@ -2,7 +2,4 @@
 #include <vector>
 #include <iostream>
 #include <string>
-namespace cytnx{
-
-
-}
+namespace cytnx {}

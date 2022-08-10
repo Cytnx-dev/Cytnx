@@ -9,12 +9,12 @@
 #include "Storage.hpp"
 #include "cytnx_error.hpp"
 
-namespace cytnx{
-    namespace utils_internal{
-        
-        void Complexmem_cpu_cdtd(void *out, void *in, const cytnx_uint64 &Nelem, const bool get_real);
-        void Complexmem_cpu_cftf(void *out, void *in, const cytnx_uint64 &Nelem, const bool get_real);
+namespace cytnx {
+  namespace utils_internal {
 
-    }//namespace utils_internal
-}//namespace cytnx
+    void Complexmem_cpu_cdtd(void *out, void *in, const cytnx_uint64 &Nelem, const bool get_real);
+    void Complexmem_cpu_cftf(void *out, void *in, const cytnx_uint64 &Nelem, const bool get_real);
+
+  }  // namespace utils_internal
+}  // namespace cytnx
 #endif
