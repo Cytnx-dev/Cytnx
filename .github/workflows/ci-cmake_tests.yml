@@ -58,11 +58,11 @@ jobs:
         verbose: true # optional (default = false)
         #version: "v0.1.15"
     
-    - name: Upload gcovr files
-      uses: actions/upload-artifact@v3
-      with:
-        name: CMakeError.log
-        path: /home/runner/work/Cytnx/Cytnx/build/CMakeFiles/CMakeError.log
+    #- name: Upload gcovr files
+    #  uses: actions/upload-artifact@v3
+    #  with:
+    #    name: CMakeError.log
+    #    path: /home/runner/work/Cytnx/Cytnx/build/CMakeFiles/CMakeError.log
     
     #- name: Upload junit files
     #  uses: actions/upload-artifact@v3
