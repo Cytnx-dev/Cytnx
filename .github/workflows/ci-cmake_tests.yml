@@ -61,8 +61,8 @@ jobs:
     #- name: Upload gcovr files
     #  uses: actions/upload-artifact@v3
     #  with:
-    #    name: gcovr_xml
-    #    path: ${{github.workspace}}/build/gcovr.xml
+    #    name: CMakeError.log
+    #    path: /home/runner/work/Cytnx/Cytnx/build/CMakeFiles/CMakeError.log
     
     #- name: Upload junit files
     #  uses: actions/upload-artifact@v3
