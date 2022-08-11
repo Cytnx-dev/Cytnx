@@ -248,8 +248,15 @@ endif()
 #    message(FATAL_ERROR "The submodules were not downloaded! GIT_SUBMODULE was turned off or failed. Please update submodules and try again.")
 #endif()
 
+ExternalProject_Add(boost-cmake
+  PREFIX boost-cmake_src
+  GIT_REPOSITORY https://github.com/Orphis/boost-cmake.git
+  GIT_TAG d3951bc7f0b9d09005f92aedcf6acfc595f050ea
+  BINARY_DIR boost-cmake_src/build
+  INSTALL_DIR boost-cmake
+)
 # find_package(Boost REQUIRED)
-add_subdirectory(boost-cmake)
+add_subdirectory(thirdparty/boost-cmake)
 message(STATUS "Boost INCCC: ${Boost_INCLUDE_DIRS}")
 message(STATUS ${COMPILE_DEFINITIONS})
 
