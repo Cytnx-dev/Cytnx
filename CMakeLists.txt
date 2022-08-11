@@ -143,10 +143,10 @@ target_include_directories(cytnx
         $<INSTALL_INTERFACE:include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
-# target_include_directories(cytnx SYSTEM
-#     PUBLIC
-# 				${Boost_INCLUDE_DIRS}
-# )
+target_include_directories(cytnx SYSTEM
+    PUBLIC
+				${Boost_INCLUDE_DIRS}
+)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -Wno-c++11-narrowing -w")
 
 
@@ -229,29 +229,20 @@ endif()
 ######################################################################
 ### Get cmake-boost
 ######################################################################
-find_package(Git QUIET)
-if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
-# Update submodules as needed
-    option(GIT_SUBMODULE "Check submodules during build" ON)
-    if(GIT_SUBMODULE)
-        message(STATUS "Submodule update")
-        execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
-                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                        RESULT_VARIABLE GIT_SUBMOD_RESULT)
-        if(NOT GIT_SUBMOD_RESULT EQUAL "0")
-            message(FATAL_ERROR "git submodule update --init --recursive failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
-        endif()
-    endif()
-endif()
-
-#if(NOT EXISTS "${PROJECT_SOURCE_DIR}/extern/repo/CMakeLists.txt")
-#    message(FATAL_ERROR "The submodules were not downloaded! GIT_SUBMODULE was turned off or failed. Please update submodules and try again.")
-#endif()
-
-# find_package(Boost REQUIRED)
-add_subdirectory(boost-cmake)
-message(STATUS "Boost INCCC: ${Boost_INCLUDE_DIRS}")
-message(STATUS ${COMPILE_DEFINITIONS})
+#include(FetchContent)
+#message("Starting to clone boost-cmake into boost-cmake")
+#FetchContent_Declare(
+#  boost-cmake
+#  URL https://github.com/Orphis/boost-cmake/archive/d3951bc7f0b9d09005f92aedcf6acfc595f050ea.zip
+#  CONFIGURE_COMMAND ""
+#  BUILD_COMMAND ""
+#  INSTALL_COMMAND ""
+#)
+#FetchContent_MakeAvailable(boost-cmake)
+find_package(Boost REQUIRED)
+#add_subdirectory(_deps/boost-cmake-src)
+#message(STATUS "Boost INCCC: ${Boost_INCLUDE_DIRS}")
+#message(STATUS ${COMPILE_DEFINITIONS})
 
 # ----------------------------------------
 # Find OpenMP
