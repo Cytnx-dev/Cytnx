@@ -5,7 +5,7 @@
 ## [Note] uncomments the following lines and 
 ##        Set the desntination path for installation in Ins_dest
 #----------------------------------------------
-Ins_dest="/home/kaihsinwu/CYTNX075"
+Ins_dest="/home/kaihsinwu/CYTNX077"
 FLAG="${FLAG}-DCMAKE_INSTALL_PREFIX=${Ins_dest} "
 #-----------------------------------------------
 
@@ -104,7 +104,7 @@ FLAG="${FLAG}-DUSE_CUDA=OFF "
 #=========================================================
 # [Note] Wheather to generate compile_commands.json for IDE support (DEFAULT =1)
 #-----------------------------------
-FLAG="${FLAG}-DCMAKE_EXPORT_COMPILE_COMMANDS=1 "
+FLAG="${FLAG}-DCMAKE_EXPORT_COMPILE_COMMANDS=0 "
 #-----------------------------------
 
 
