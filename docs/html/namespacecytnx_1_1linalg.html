@@ -29,7 +29,7 @@
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.7.6</span>
+   &#160;<span id="projectnumber">v0.7.7</span>
    </div>
   </td>
  </tr>
@@ -1982,10 +1982,12 @@ template&lt;class T &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>[std::vector&lt;Tensors&gt;] <pre class="fragment">1. the first tensor is least-squares solutions in the K columns.
-2. the second tensor is the sums of squared residuals: Squared Euclidean 2-norm for each column in b - a @ x. If the rank of a is &lt; N or M &lt;= N, this is a zero Tensor.
-3. the third tensor is the rank of matrix A.
-4. the forth tensor is singular values of A.
-</pre></dd></dl>
+2. the second tensor is the sums of squared residuals: Squared Euclidean 2-norm for each
+</pre> column in b - a @ x. If the rank of a is &lt; N or M &lt;= N, this is a zero <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array) ">Tensor</a>.<ol type="1">
+<li>the third tensor is the rank of matrix A.</li>
+<li>the forth tensor is singular values of A.</li>
+</ol>
+</dd></dl>
 <p>#description: Computes the vector x that approximatively solves the equation A @ x = b. The equation may be under-, well-, or over-determined independent columns. If a is square and of full rank, then x (but for round-off error) is the “exact” solution of the equation. Else, x minimizes the Euclidean 2-norm || b - a x ||.</p>
 <p>[Ke] </p>
 
@@ -2739,9 +2741,10 @@ template&lt;class T &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>[std::vector&lt;Tensors&gt;] <pre class="fragment">1. the first tensor is the orthomormal matrix [Q], a 2-d tensor (matrix)
-2. the second tensor is the diagonal matrix [D], a 1-d tensor (matrix). 
-3. the third tensor is the right-upper triangular matrix [R], a 2-d tensor (matrix). 
-4. the forth tensor is the Householder reflectors [H], a 1-d tensor (matrix). It only return when is_tau=true.</pre> </dd></dl>
+2. the second tensor is the diagonal matrix [D], a 1-d tensor (matrix).
+3. the third tensor is the right-upper triangular matrix [R], a 2-d tensor (matrix).
+4. the forth tensor is the Householder reflectors [H], a 1-d tensor (matrix). It only return
+</pre> when is_tau=true. </dd></dl>
 
 </div>
 </div>
@@ -2808,8 +2811,9 @@ template&lt;class T &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>[std::vector&lt;Tensors&gt;] <pre class="fragment">1. the first tensor is the orthomormal matrix [Q], a 2-d tensor (matrix)
-2. the second tensor is the right-upper triangular matrix [R], a 2-d tensor (matrix). 
-3. the third tensor is the Householder reflectors [H], a 1-d tensor (matrix). It only return when is_tau=true.</pre> </dd></dl>
+2. the second tensor is the right-upper triangular matrix [R], a 2-d tensor (matrix).
+3. the third tensor is the Householder reflectors [H], a 1-d tensor (matrix). It only return
+</pre> when is_tau=true. </dd></dl>
 
 </div>
 </div>
@@ -3089,8 +3093,11 @@ template&lt;class T &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>[std::vector&lt;Tensors&gt;] <pre class="fragment">1. the first tensor is a 1-d tensor contanin the singular values
-2. the second tensor is the left uniform matrix [U], a 2-d tensor (matrix). It only return when is_U=true.
-3. the third tensor is the right uniform matrix [vT], a 2-d tensor (matrix). It only return when is_vT=true.</pre> </dd></dl>
+2. the second tensor is the left uniform matrix [U], a 2-d tensor (matrix). It only return
+</pre> when is_U=true.<ol type="1">
+<li>the third tensor is the right uniform matrix [vT], a 2-d tensor (matrix). It only return when is_vT=true. </li>
+</ol>
+</dd></dl>
 
 </div>
 </div>

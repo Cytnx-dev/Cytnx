@@ -29,7 +29,7 @@
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.7.6</span>
+   &#160;<span id="projectnumber">v0.7.7</span>
    </div>
   </td>
  </tr>
@@ -157,7 +157,7 @@ Functions</h2></td></tr>
     <tr><td class="paramname">Sin</td><td>a <a class="el" href="classcytnx_1_1Storage.html">Storage </a> </td></tr>
     <tr><td class="paramname">mean</td><td>the mean of a normal distribution </td></tr>
     <tr><td class="paramname">std</td><td>the standard deviation (sigma) of a normal distribution. </td></tr>
-    <tr><td class="paramname">seed</td><td>the seed for the random generator. [Default] Using device entropy. <pre class="fragment">[Note] The Storage sould be real floating type or complex type.  </pre> </td></tr>
+    <tr><td class="paramname">seed</td><td>the seed for the random generator. [Default] Using device entropy. <pre class="fragment">[Note] The Storage sould be real floating type or complex type.</pre> </td></tr>
   </table>
   </dd>
 </dl>
@@ -208,7 +208,7 @@ Functions</h2></td></tr>
     <tr><td class="paramname">Tin</td><td>a <a class="el" href="classcytnx_1_1Tensor.html">Tensor </a> </td></tr>
     <tr><td class="paramname">mean</td><td>the mean of a normal distribution </td></tr>
     <tr><td class="paramname">std</td><td>the standard deviation (sigma) of a normal distribution. </td></tr>
-    <tr><td class="paramname">seed</td><td>the seed for the random generator. [Default] Using device entropy. <pre class="fragment">[Note] The Tensor sould be real floating type or complex type.  </pre> </td></tr>
+    <tr><td class="paramname">seed</td><td>the seed for the random generator. [Default] Using device entropy. <pre class="fragment">[Note] The Tensor sould be real floating type or complex type.</pre> </td></tr>
   </table>
   </dd>
 </dl>
@@ -259,7 +259,7 @@ Functions</h2></td></tr>
     <tr><td class="paramname">Tin</td><td>a <a class="el" href="classcytnx_1_1UniTensor.html">UniTensor </a> </td></tr>
     <tr><td class="paramname">mean</td><td>the mean of a normal distribution </td></tr>
     <tr><td class="paramname">std</td><td>the standard deviation (sigma) of a normal distribution. </td></tr>
-    <tr><td class="paramname">seed</td><td>the seed for the random generator. [Default] Using device entropy. <pre class="fragment">[Note] The UniTensor sould be real floating type or complex type.  </pre> </td></tr>
+    <tr><td class="paramname">seed</td><td>the seed for the random generator. [Default] Using device entropy. <pre class="fragment">[Note] The UniTensor sould be real floating type or complex type.</pre> </td></tr>
   </table>
   </dd>
 </dl>
@@ -310,10 +310,11 @@ Functions</h2></td></tr>
     <tr><td class="paramname">Sin</td><td>a <a class="el" href="classcytnx_1_1Storage.html">Storage </a> </td></tr>
     <tr><td class="paramname">low</td><td>the lower-bound of the uniform distribution </td></tr>
     <tr><td class="paramname">high</td><td>the higher-bound of the uniform distribution </td></tr>
-    <tr><td class="paramname">seed</td><td>the seed for the random generator. [Default] Using device entropy. <pre class="fragment">[Note] 
+    <tr><td class="paramname">seed</td><td>the seed for the random generator. [Default] Using device entropy. <pre class="fragment">[Note]
 
-    1. The Storage sould be real floating type or complex type.  
-    2. In cpu, it generate random number in domain [low,high); but in gpu(cuda), it generate random number in domain (low,high]; (cuRandv10)</pre> </td></tr>
+    1. The Storage sould be real floating type or complex type.
+    2. In cpu, it generate random number in domain [low,high); but in gpu(cuda), it generate
+</pre> random number in domain (low,high]; (cuRandv10) </td></tr>
   </table>
   </dd>
 </dl>
@@ -364,10 +365,11 @@ Functions</h2></td></tr>
     <tr><td class="paramname">Tin</td><td>a <a class="el" href="classcytnx_1_1Tensor.html">Tensor </a> </td></tr>
     <tr><td class="paramname">low</td><td>the lower-bound of the uniform distribution </td></tr>
     <tr><td class="paramname">high</td><td>the higher-bound of the uniform distribution </td></tr>
-    <tr><td class="paramname">seed</td><td>the seed for the random generator. [Default] Using device entropy. <pre class="fragment">[Note] 
+    <tr><td class="paramname">seed</td><td>the seed for the random generator. [Default] Using device entropy. <pre class="fragment">[Note]
 
-    1. The Tensor sould be real floating type or complex type.  
-    2. In cpu, it generate random number in domain [low,high); but in gpu(cuda), it generate random number in domain (low,high]; (cuRandv10)</pre> </td></tr>
+    1. The Tensor sould be real floating type or complex type.
+    2. In cpu, it generate random number in domain [low,high); but in gpu(cuda), it generate
+</pre> random number in domain (low,high]; (cuRandv10) </td></tr>
   </table>
   </dd>
 </dl>
@@ -418,10 +420,11 @@ Functions</h2></td></tr>
     <tr><td class="paramname">Tin</td><td>a <a class="el" href="classcytnx_1_1Tensor.html">UniTensor </a> </td></tr>
     <tr><td class="paramname">low</td><td>the lower-bound of the uniform distribution </td></tr>
     <tr><td class="paramname">high</td><td>the higher-bound of the uniform distribution </td></tr>
-    <tr><td class="paramname">seed</td><td>the seed for the random generator. [Default] Using device entropy. <pre class="fragment">[Note] 
+    <tr><td class="paramname">seed</td><td>the seed for the random generator. [Default] Using device entropy. <pre class="fragment">[Note]
 
-    1. The UniTensor sould be real floating type or complex type.  
-    2. In cpu, it generate random number in domain [low,high); but in gpu(cuda), it generate random number in domain (low,high]; (cuRandv10)</pre> </td></tr>
+    1. The UniTensor sould be real floating type or complex type.
+    2. In cpu, it generate random number in domain [low,high); but in gpu(cuda), it generate
+</pre> random number in domain (low,high]; (cuRandv10) </td></tr>
   </table>
   </dd>
 </dl>
