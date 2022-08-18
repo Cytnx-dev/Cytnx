@@ -1,0 +1,71 @@
+name: Tests and Codecov
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  BuildAndTest:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        $CONDA/bin/conda config --add channels conda-forge
+        $CONDA/bin/conda install python=3.10 _openmp_mutex=*=*_llvm
+        $CONDA/bin/conda upgrade --all
+        $CONDA/bin/conda install cmake make boost libboost git compilers numpy mkl mkl-include mkl-service pybind11 libblas=*=*mkl
+
+    - name: Configure CMake
+      run: $CONDA/bin/cmake -S ${{github.workspace}} -B ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX=/home/runner/work/Cytnx_lib -DUSE_MKL=on -DUSE_HPTT=on -DHPTT_ENABLE_FINE_TUNE=on -DHPTT_ENABLE_AVX=on -DBUILD_PYTHON=on -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DRUN_TESTS=on
+
+    - name: Build
+      working-directory: ${{github.workspace}}/build
+      run: $CONDA/bin/cmake --build . -j `nproc`
+    
+    - name: Run CTest
+      working-directory: ${{github.workspace}}/build
+      run: GTEST_COLOR=1 ctest --output-junit junit.xml
+    
+    - name: Run gcovr
+      working-directory: ${{github.workspace}}/build
+      run: |
+        $CONDA/bin/conda install gcovr
+        $CONDA/bin/gcovr -r .. . --xml gcovr.xml -e ".*_deps.*$"
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        #token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+        #directory: ${{runner.workspace}}/build
+        files: ${{github.workspace}}/build/gcovr.xml # optional
+        #working-directory: ${{runner.workspace}}/build
+        #root_dir: ${{runner.workspace}}
+        fail_ci_if_error: true # optional (default = false)
+        verbose: true # optional (default = false)
+        #version: "v0.1.15"
+    
+    #- name: Upload gcovr files
+    #  uses: actions/upload-artifact@v3
+    #  with:
+    #    name: CMakeError.log
+    #    path: /home/runner/work/Cytnx/Cytnx/build/CMakeFiles/CMakeError.log
+    
+    #- name: Upload junit files
+    #  uses: actions/upload-artifact@v3
+    #  with:
+    #    name: junit_xml
+    #    path: ${{github.workspace}}/build/junit.xml

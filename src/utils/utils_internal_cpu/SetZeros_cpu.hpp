@@ -8,11 +8,11 @@
 #include "Type.hpp"
 #include "cytnx_error.hpp"
 
-namespace cytnx{
-    namespace utils_internal{
-        
-        void SetZeros(void* c_ptr, const cytnx_uint64 &bytes);
+namespace cytnx {
+  namespace utils_internal {
 
-    }
-}
+    void SetZeros(void* c_ptr, const cytnx_uint64& bytes);
+
+  }
+}  // namespace cytnx
 #endif

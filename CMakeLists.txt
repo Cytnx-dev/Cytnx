@@ -42,7 +42,7 @@ endif()
 #include(version.cmake)
 set(CYTNX_VERSION_MAJOR 0)
 set(CYTNX_VERSION_MINOR 7)
-set(CYTNX_VERSION_PATCH 6)
+set(CYTNX_VERSION_PATCH 7)
 set(CYTNX_VERSION COUNT 0)
 set(CYTNX_VERSION
   ${CYTNX_VERSION_MAJOR}.${CYTNX_VERSION_MINOR}.${CYTNX_VERSION_PATCH}
@@ -62,6 +62,7 @@ option(USE_MKL "Build using MKL" OFF)
 option(USE_OMP "Build Cytnx with OpenMP" ON)
 option(BUILD_DOC "Build API docuemntation" OFF)
 option(USE_HPTT "Build Cytnx with HPTT" OFF)
+option(RUN_TESTS "Run Cytnx tests" OFF)
 
 if (USE_ICPC)
   message(STATUS, "Build Cytnx with Intel Compilers")
@@ -153,6 +154,14 @@ target_compile_features(cytnx PUBLIC cxx_std_11)
 #set_property(TARGET cytnx PROPERTY CXX_STANDARD 11)
 
 add_subdirectory(src)
+
+if(RUN_TESTS)
+	enable_testing()
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fprofile-arcs -ftest-coverage")
+	target_link_libraries(cytnx PUBLIC "-lgcov --coverage")
+	add_subdirectory(tests)
+endif()
+
 include(GNUInstallDirs)
 
 
@@ -213,13 +222,28 @@ endif()
 if (USE_MKL)
     target_compile_definitions(cytnx PRIVATE UNI_MKL)
     target_compile_definitions(cytnx PRIVATE MKL_ILP64)
-    set(USE_OMP ON FORCE)
+    # set(USE_OMP ON FORCE)
 endif()
 
 
+######################################################################
+### Get cmake-boost
+######################################################################
+#include(FetchContent)
+#message("Starting to clone boost-cmake into boost-cmake")
+#FetchContent_Declare(
+#  boost-cmake
+#  URL https://github.com/Orphis/boost-cmake/archive/d3951bc7f0b9d09005f92aedcf6acfc595f050ea.zip
+#  CONFIGURE_COMMAND ""
+#  BUILD_COMMAND ""
+#  INSTALL_COMMAND ""
+#)
+#FetchContent_MakeAvailable(boost-cmake)
 find_package(Boost REQUIRED)
-message(STATUS "Boost INCCC: ${Boost_INCLUDE_DIRS}")
-message(STATUS ${COMPILE_DEFINITIONS})
+#add_subdirectory(_deps/boost-cmake-src)
+#message(STATUS "Boost INCCC: ${Boost_INCLUDE_DIRS}")
+#message(STATUS ${COMPILE_DEFINITIONS})
+
 # ----------------------------------------
 # Find OpenMP
 if(USE_OMP)
@@ -247,7 +271,12 @@ if(USE_OMP)
           target_compile_definitions(cytnx PRIVATE UNI_OMP)
         endif()
     endif()
+else()
+    if(USE_MKL)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
+    endif()
 endif()
+
 target_link_libraries(cytnx PUBLIC Boost::boost ${LAPACK_LIBRARIES})
 
 
@@ -308,6 +337,17 @@ if(USE_CUDA)
 endif()
 
 
+######################################################################
+### Get Gtest
+######################################################################
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
+)
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
 
 
 ######################################################################
@@ -512,7 +552,8 @@ endif()
 if(USE_OMP)
     FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_OMP\n" "")
     if(USE_MKL)
-          message( STATUS " Build OMP Support: YES (force with MKL=on)")
+          # message( STATUS " Build OMP Support: YES (force with MKL=on)")
+          message( STATUS " Build OMP Support: YES")
           FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_MKL\n" "")
     else()
         if(OPENMP_FOUND)

@@ -40,15 +40,15 @@ Hup = H
 Hdown = Hup.clone()
 
 ## Hamiltonain 
-Hu = cy.UniTensor(Hup,3)
-Hd = cy.UniTensor(Hdown,3)
+Hu = cy.UniTensor(Hup,rowrank=3)
+Hd = cy.UniTensor(Hdown,rowrank=3)
 
 ## create 3PESS:
-s1 = cy.UniTensor(cy.random.normal([D,D,D],0,0.5),0)
+s1 = cy.UniTensor(cy.random.normal([D,D,D],0,0.5),rowrank=0)
 s2 = s1.clone()
-A = cy.UniTensor(cy.random.normal([D,2,D],0,0.5),2)
-B = cy.UniTensor(cy.random.normal([D,2,D],0,0.5),2)
-C = cy.UniTensor(cy.random.normal([D,2,D],0,0.5),2)
+A = cy.UniTensor(cy.random.normal([D,2,D],0,0.5),rowrank=2)
+B = cy.UniTensor(cy.random.normal([D,2,D],0,0.5),rowrank=2)
+C = cy.UniTensor(cy.random.normal([D,2,D],0,0.5),rowrank=2)
 Ls1 = [cy.UniTensor([cy.Bond(D),cy.Bond(D)],rowrank=1,is_diag=True) for i in range(3)]
 for i in Ls1:
     i.put_block(cy.ones(D))

@@ -1,0 +1,62 @@
+name: Coverity Scan
+
+on:
+  schedule:
+    - cron: '0 18 * * *' # Daily at 18:00 UTC
+  workflow_dispatch:
+
+jobs:
+  latest:
+    if: (github.event_name == 'schedule' && github.repository == 'kaihsin/Cytnx') || (github.event_name != 'schedule')
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        $CONDA/bin/conda config --add channels conda-forge
+        $CONDA/bin/conda install python=3.10 _openmp_mutex=*=*_llvm
+        $CONDA/bin/conda upgrade --all
+        $CONDA/bin/conda install cmake make boost libboost git compilers numpy mkl mkl-include mkl-service pybind11 libblas=*=*mkl
+
+    - name: Configure CMake
+      run: $CONDA/bin/cmake -S ${{github.workspace}} -B ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX=/home/runner/works/Cytnx_lib -DUSE_MKL=on -DUSE_HPTT=on -DHPTT_ENABLE_FINE_TUNE=on -DHPTT_ENABLE_AVX=on -DBUILD_PYTHON=on -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DRUN_TESTS=on
+
+    - name: Download Coverity Build Tool
+      working-directory: ${{github.workspace}}/build
+      run: |
+        wget -q https://scan.coverity.com/download/cxx/linux64 --post-data "token=$TOKEN&project=kaihsin%2FCytnx" -O cov-analysis-linux64.tar.gz
+        mkdir cov-analysis-linux64
+        tar xzf cov-analysis-linux64.tar.gz --strip 1 -C cov-analysis-linux64
+      env:
+        TOKEN: ${{ secrets.COVERITY_SCAN_TOKEN }}
+
+    - name: Build with cov-build
+      working-directory: ${{github.workspace}}/build
+      run: |
+        export PATH=`pwd`/cov-analysis-linux64/bin:$PATH
+        cov-build --dir cov-int $CONDA/bin/cmake --build . -j `nproc`
+    
+    - name: Submit the result to Coverity Scan
+      working-directory: ${{github.workspace}}/build
+      run: |
+        tar czvf cytnx.tgz cov-int 
+        curl \
+          --form token=$TOKEN \
+          --form email=kaihsinwu@gmail.com \
+          --form file=@cytnx.tgz \
+          --form version="v0.7.5" \
+          --form description="Cytnx" \
+          https://scan.coverity.com/builds?project=kaihsin%2FCytnx
+      env:
+        TOKEN: ${{ secrets.COVERITY_SCAN_TOKEN }}

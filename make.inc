@@ -11,7 +11,7 @@ ICPC=icpc
 # set compile modes:
 
 ## compile with CUDA support:
-GPU_Enable=0
+GPU_Enable=1
 CUDA_PATH=/usr/local/cuda
 
 ## compile with Openmp support:
@@ -25,7 +25,7 @@ MKL_Enable=1
 HPTT_Enable=1
 
 ## compile with CUTT library:
-CUTT_Enable=1
+CUTT_Enable=0
 
 #### DO NOT USE BELOW WHEN CUSTOM INSTALL !!
 #-------------------------------------------

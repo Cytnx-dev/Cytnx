@@ -8,8 +8,3 @@ device: cytnx device: CPU
 size  : 10
 [                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0  ]
 
-dtype : Double (Float64)
-device: cytnx device: CUDA/GPU-id:0
-size  : 10
-[ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
-
