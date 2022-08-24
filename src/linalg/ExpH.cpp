@@ -29,7 +29,6 @@ namespace cytnx {
         s = cytnx::linalg::Exp(a * su[0] + b);
 
       u = su[1];
-      su.clear();
 
       //[Optim required]
       // cout << s << endl;
