@@ -5,7 +5,7 @@
 
 namespace cytnx {
   namespace linalg {
-    Tensor Norm(const Tensor &Tl) {
+    Tensor Norm(const Tensor& Tl) {
       // cytnx_error_msg(Tl.shape().size() != 1,"[Norm] error, tensor Tl ,Norm can only operate on
       // rank-1 Tensor.%s","\n"); cytnx_error_msg(!Tl.is_contiguous(), "[Norm] error tensor Tl must
       // be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
@@ -49,6 +49,12 @@ namespace cytnx {
         return Tensor();
 #endif
       }
+    }
+
+    Tensor Norm(const UniTensor& uTl) {
+      cytnx_error_msg(uTl.uten_type() != UTenType.Dense,
+                      "[Error][Norm] Can only use Norm on DenseUniTensor or Tensor%s", "\n");
+      return Norm(uTl.get_block_());
     }
 
   }  // namespace linalg
