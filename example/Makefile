@@ -3,8 +3,8 @@ CC := g++
 CCFLAGS := -std=c++11 
 INCFLAGS := $(CCFLAGS) -I$(CYTNX_ROOT)/include
 LDFLAGS := -L$(CYTNX_ROOT)
-#SO := $(CYTNX_ROOT)/libcytnx.so
-SO := -lcytnx
+SO := $(CYTNX_ROOT)/libcytnx.so
+#SO := -lcytnx
 
 
  

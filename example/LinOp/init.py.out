@@ -7,21 +7,3 @@ Shape : (4)
 
 
 
-
-Total elem: 4
-type  : Double (Float64)
-cytnx device: CPU
-Shape : (4)
-[3.00000e+00 2.00000e+00 3.00000e+00 0.00000e+00 ]
-
-
-
-
-Total elem: 4
-type  : Double (Float64)
-cytnx device: CPU
-Shape : (4)
-[3.00000e+00 4.00000e+00 5.00000e+00 0.00000e+00 ]
-
-
-

@@ -12,14 +12,16 @@ See The following user guide for install and using of cytnx:
 [Cytnx_v0.5.pdf (dated 07/25/2020)](https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing)
 
 ## News
-    [v0.7.6] 
+    [v0.7.7] 
  
 ## Stable Version:
-[v0.7.6](https://github.com/kaihsin/Cytnx/tree/v0.7.6)
+[v0.7.7](https://github.com/kaihsin/Cytnx/tree/v0.7.7)
 
 ## Known issues:
+    v0.7.7
+
     v0.7.6
-       
+        
     v0.7.4/5
     1. [Pending][GPU] iArithmentic need GPU impl. 
 
@@ -29,8 +31,16 @@ See The following user guide for install and using of cytnx:
 
 
 ## Current dev Version:
+    v0.7.8
+
+
     v0.7.7
     1. [Enhance][WARNING] rowrank option now has default value when converting from Tensor. Which is half number of the bonds. Notice that the order of argument are changed between (rowrank) and (is_diag)!    
+    2. [Fix] Svd will have issue associate to changing of rowrank/is_diag order.
+    3. [Enhance] Internal Syntax format change to clang format. 
+    4. [Change] USE_OMP option gives openmp access only for in-house implementation. Any linalg funciton calling MKL will be parallel. 
+    
+     
 
     v0.7.6
     1. [Enhance] Adding alias BD_IN=BD_KET, BD_BRA=BD_OUT, BD_NONE=BD_REG. 
