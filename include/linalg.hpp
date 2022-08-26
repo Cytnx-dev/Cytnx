@@ -83,8 +83,10 @@ namespace cytnx {
       const bool &is_core = true, const bool &is_Ls = false,
       const std::vector<cytnx_int64> &trucate_dim = std::vector<cytnx_int64>());
 
-    cytnx::UniTensor ExpH(const cytnx::UniTensor &Tin, const double &a = 1, const double &b = 0);
-    cytnx::UniTensor ExpM(const cytnx::UniTensor &Tin, const double &a = 1, const double &b = 0);
+    template <typename T>
+    cytnx::UniTensor ExpH(const cytnx::UniTensor &Tin, const T &a = 1, const T &b = 0);
+    template <typename T>
+    cytnx::UniTensor ExpM(const cytnx::UniTensor &Tin, const T &a = 1, const T &b = 0);
     cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const cytnx_int64 &a = 0,
                            const cytnx_int64 &b = 1, const bool &by_label = false);
     std::vector<cytnx::UniTensor> Qr(const cytnx::UniTensor &Tin, const bool &is_tau = false);
@@ -730,7 +732,8 @@ namespace cytnx {
         perform matrix exponential with \f$O = \exp{aM + b}\f$.
 
     */
-    Tensor ExpH(const Tensor &in, const cytnx_double &a = 1, const cytnx_double &b = 0);
+    template <typename T>
+    Tensor ExpH(const Tensor &in, const T &a = 1, const T &b = 0);
 
     // ExpM:
     //===========================================
@@ -746,7 +749,8 @@ namespace cytnx {
         perform matrix exponential with \f$O = \exp{aM + b}\f$.
 
     */
-    Tensor ExpM(const Tensor &in, const cytnx_double &a = 1, const cytnx_double &b = 0);
+    template <typename T>
+    Tensor ExpM(const Tensor &in, const T &a = 1, const T &b = 0);
 
     // Lanczos:
     //===========================================
