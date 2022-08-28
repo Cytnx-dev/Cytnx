@@ -52,7 +52,8 @@ namespace cytnx{
                 out->_contiguous = this->_contiguous;
                 return out;
             }
-            Tensor_impl(): _contiguous(true){};
+            
+	    Tensor_impl(): _contiguous(true){};
 
             void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype=Type.Double, int device=-1);
             void Init(const Storage &in);                
@@ -88,7 +89,11 @@ namespace cytnx{
                 return _shape;
             }
 
-            const bool& is_contiguous() const{
+            /**
+	    @brief check if the tensor is contiguous
+	    @return [bool] 
+	     */
+	    const bool& is_contiguous() const{
                 return this->_contiguous;
             }
 
@@ -391,7 +396,7 @@ namespace cytnx{
                     self._impl = this->_insimpl;
                     return self;
                 }
-                Tensor operator-=(const Tproxy &rc);
+		Tensor operator-=(const Tproxy &rc);
 
                 template<class T>
                 Tensor operator/=(const T &rc){
@@ -1249,7 +1254,13 @@ namespace cytnx{
                 this->_impl->fill(val);
             }
 
-
+            // equiv:
+	    //==================================================
+	    /**
+	    @brief compare the shape of two tensors
+	    @param rhs Tensor
+	    @return [bool]
+	     */
             bool equiv(const Tensor &rhs){
                 if(this->shape() != rhs.shape()) return false;
                 return true; 
@@ -1290,42 +1301,101 @@ namespace cytnx{
            }
            */
            
-           template<class T>
+
+           //Add:
+	   //==================================================
+	   /**
+	   @brief element-wise add.
+	   @param rhs tensor.
+	   description:
+	   	A new tensor with the value of the sum will be returned.
+	   */
+	   template<class T>
            Tensor Add(const T &rhs){
                 return *this + rhs;
            }
+
+	   /**
+	   @brief element-wise add.
+	   @param rhs tensor.
+           description:
+	   	The value of the sum is assigned to the original tensor. Does not produce a new object.
+
+	    */
            template<class T>
            Tensor& Add_(const T &rhs){
                 return *this += rhs;
            }
-            
+           
+	   /**
+	   @brief element-wise substract.
+	   @param rhs tensor.
+           description:
+           	A new tensor with the value of the originall tesnor subtracted by rhs tensor is returned.
+	    */ 
            template<class T>
            Tensor Sub(const T &rhs){
                 return *this - rhs;
            }
+
+	   /**
+	   @brief element-wise substract.
+	   @param rhs tensor.
+           description:
+	   	The original tensor is subtracted by the rhs tensor. Does not produce a new object.
+	    */
            template<class T>
            Tensor& Sub_(const T &rhs){
                 return *this -= rhs;
            }
-            
+           
+	   /**
+	   @brief elementwise multiplication.
+	   @return [Tensor]
+	    */
            template<class T>
            Tensor Mul(const T &rhs){
                 return *this * rhs;
            }
+
+	   /**
+	   @brief inplace elementwise multiplicaiton
+	   @return [Tensor]
+	    */
            template<class T>
            Tensor& Mul_(const T &rhs){
                 return *this *= rhs;
            }
            
+	   /**
+	   @brief element wise divide
+	   @param rhs tensor
+	   @return [tensor]
+           description:
+	  	The original tensor is divided by the input tensor. 
+	   */
            template<class T>
            Tensor Div(const T &rhs){
                 return *this / rhs;
            }
+
+	   /**
+	   @brief element wise divide
+	   @param rhs tensor 
+	   @return [tensor]
+           descripiton:
+	   	The original tensor is divided by the input tensor, inplacely.
+	   */
            template<class T>
            Tensor& Div_(const T &rhs){
                 return *this /= rhs; 
            }
            
+	   /**
+	   @brief element-wise compare
+	   @param rhs tensor
+	   @return [bool]
+	    */
            template<class T>
            Tensor Cpr(const T &rhs){
                 return *this == rhs;
@@ -1337,7 +1407,11 @@ namespace cytnx{
            //     return *this == rhs; 
            //}
 
-           template<class T>
+           /**
+	   @brief Do a elementwise division, and return the remainder.
+	   @return [Tensor]
+	    */
+	   template<class T>
            Tensor Mod(const T &rhs){
                 return *this % rhs;
            }
@@ -1346,6 +1420,10 @@ namespace cytnx{
                 return this->Mul(-1.);
             }
 
+	    /**
+	    @brief make a 1d tensor with the elements in the original tensor
+	    @return [Tensor]
+	     */
             Tensor flatten() const{
                 Tensor out = this->clone();
                 out.contiguous_();
@@ -1353,6 +1431,9 @@ namespace cytnx{
                 return out;
             }
 
+	    /**
+	    @brief make the original tensor into 1d
+	     */
             void flatten_(){
                 this->contiguous_();
                 this->reshape_({-1});
@@ -1456,22 +1537,136 @@ namespace cytnx{
             // linalg:
             std::vector<Tensor> Svd(const bool &is_U=true, const bool &is_vT=true) const;
             std::vector<Tensor> Eigh(const bool &is_V=true,const bool &row_v=false) const;
-            Tensor& InvM_();
-            Tensor InvM() const; 
+            
+	    /**
+	    @brief inplace perform matrix inverse
+	    @return [Tensor]
+	     */
+	    Tensor& InvM_();
+
+	    /**
+	    @brief Matrix inverse
+	    @return [Tensor]
+	     */
+            Tensor InvM() const;
+
+	    /**
+	    @brief inplace perform Element-wise inverse with clip.
+	    @return [Tensor]
+
+            description:
+	    	1. Performs Elementwise inverse with clip. if A[i] < clip, then 1/A[i] = 0 will be set.
+                2. on return, all the elements will be modified to it's inverse. if Tin is integer type, it will automatically promote to Type.Double.
+	    [Note]For complex type Tensors, the square norm is used to determine the clip.
+
+	     */ 
             Tensor& Inv_(const double &clip);
+            
+	    /**
+	    @brief Element-wise inverse with clip.
+	    @return [Tensor]
+            description:
+	    	Performs Elementwise inverse with clip. if A[i] < clip, then 1/A[i] = 0 will be set.
+	     */
             Tensor Inv(const double &clip) const; 
 
-            Tensor& Conj_();
+            //Conj:
+	    //==================================================
+	    /**
+	    @brief Inplace perform Conjugate on all the element in Tensor.
+	    @return
+	    	[Tensor]
+	    description:
+	    	If the input Tensor is complex, the elements of input Tensor will all be conjugated. If the iput tensor is real, nothing happenes.
+	     */
+	    Tensor& Conj_();
+
+	    /**
+	    @brief Conjugate all the element in Tensor..
+	    @return
+	    	[Tensor]
+	    description:
+	    	If the input Tensor is complex, return a new Tensor with all the elements are conjugated. If the input Tensor is real, return a copy of inpyt Tensor.
+	     */
             Tensor Conj() const;
-            Tensor& Exp_();
+            
+	    // Exp:
+	    //==================================================
+	    /**
+	    @brief inplace perform Exponential on all the element in Tensor.
+	    @param Tin, the input Tensor.
+            description:
+	    	1. on return, the elements in Tin will be modified to it's exponetial value.
+		2. For Real, if the type is not Double, change the type of the input tensor to Double.
+		3. For Complex, if input is ComplexFloat, promote to ComplexDouble.
+	     */
+	    Tensor& Exp_();
+	    
+	    /**
+	    @brief Exponential all the element in Tensor.
+	    @param Tin, the input Tensor
+	    @return 
+	    	[Double Tensor] or [ComplexDouble Tensor]
+	     */
             Tensor Exp() const;
-            Tensor Norm() const;
-            Tensor Pow(const cytnx_double &p) const;
-            Tensor& Pow_(const cytnx_double &p);
+            
+	    /**
+	    @brief calculate the norm of a tensor.
+	    @param Tl input Tensor
+	    @return [Tensor]
+
+	    [Note]
+	    	1. if the input tensor is rank-1, the frobenius norm is calculated.
+		2. if the input tensor is rank-N with N>=2, the tensor will be flatten to 1d first, and calculate the frobenius norm.
+	     */
+	    Tensor Norm() const;
+            
+	    /**
+	    @brief take the power p on all the elements in Tensor.
+	    @param Tin the input Tensor
+	    @param p, the power
+	    @return [Tensor]
+	     */
+	    Tensor Pow(const cytnx_double &p) const;
+            
+	    /**
+	    @brief inplace perform power on all the elements in Tensor.
+	    @param Tin, the input Tensor
+	    @param p, the power.
+	     */
+	    Tensor& Pow_(const cytnx_double &p);
             Tensor Trace(const cytnx_uint64 &a=0, const cytnx_uint64 &b=1) const;
-            Tensor Abs() const;
+            
+	    // Abs:
+	    //==================================================================
+	    /**
+	    @brief Elementwise absolute value.
+            @param Tin tensor.
+            @return
+            	[Tensor]
+            
+            */
+	    Tensor Abs() const;
+
+	    /**
+	    @brief inplace perform elementwise absolute value.
+	    @param Tin, the input Tensor.
+
+	    description:
+	    	on return, the elements in Tin will be modified to its absolute value. Note that if the input tensor is complex, it will be modified to real type.
+		*/
             Tensor& Abs_();
-            Tensor Max() const;
+            
+	    /**
+	    @brief get the maximum element.
+	    [Note] For complex Tensor, only real part is compared.
+	     */
+	    Tensor Max() const;
+
+	    /**
+	    @brief get the minimum element.
+	    [Note] For complex Tensor, only real part is campared.
+	     */
             Tensor Min() const;
 
     };// class Tensor
