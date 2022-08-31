@@ -28,7 +28,7 @@ namespace cytnx {
   void DoubleStorage::_Init_byptr(void *rawptr, const unsigned long long &len_in,
                                   const int &device) {
     //[note], this is an internal function, the device should match the device_id that allocate the
-    //pointer if the pointer is on GPU device.
+    // pointer if the pointer is on GPU device.
 
     this->Mem = rawptr;
     this->len = len_in;

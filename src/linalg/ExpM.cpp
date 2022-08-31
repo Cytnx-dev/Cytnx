@@ -10,7 +10,8 @@ using namespace std;
 namespace cytnx {
   namespace linalg {
 
-    Tensor ExpM(const Tensor &Tin, const cytnx_double &a, const cytnx_double &b) {
+    template <typename T>
+    Tensor ExpM(const Tensor &Tin, const T &a, const T &b) {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[ExpH] error, ExpH can only operate on rank-2 Tensor.%s", "\n");
       // cytnx_error_msg(!Tin.is_contiguous(), "[ExpH] error tensor must be contiguous. Call
@@ -30,7 +31,6 @@ namespace cytnx {
         s = cytnx::linalg::Exp(a * su[0] + b);
 
       u = su[1];
-      su.clear();
 
       //[Optim required]
       // cout << s << endl;
@@ -45,13 +45,25 @@ namespace cytnx {
       return ut;
     }
 
+    template Tensor ExpM(const Tensor &Tin, const cytnx_complex128 &a, const cytnx_complex128 &b);
+    template Tensor ExpM(const Tensor &Tin, const cytnx_complex64 &a, const cytnx_complex64 &b);
+    template Tensor ExpM(const Tensor &Tin, const cytnx_double &a, const cytnx_double &b);
+    template Tensor ExpM(const Tensor &Tin, const cytnx_float &a, const cytnx_float &b);
+    template Tensor ExpM(const Tensor &Tin, const cytnx_uint64 &a, const cytnx_uint64 &b);
+    template Tensor ExpM(const Tensor &Tin, const cytnx_uint32 &a, const cytnx_uint32 &b);
+    template Tensor ExpM(const Tensor &Tin, const cytnx_uint16 &a, const cytnx_uint16 &b);
+    template Tensor ExpM(const Tensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b);
+    template Tensor ExpM(const Tensor &Tin, const cytnx_int32 &a, const cytnx_int32 &b);
+    template Tensor ExpM(const Tensor &Tin, const cytnx_int16 &a, const cytnx_int16 &b);
+
   }  // namespace linalg
 
 }  // namespace cytnx
 
 namespace cytnx {
   namespace linalg {
-    UniTensor ExpM(const UniTensor &Tin, const cytnx_double &a, const cytnx_double &b) {
+    template <typename T>
+    UniTensor ExpM(const UniTensor &Tin, const T &a, const T &b) {
       if (Tin.is_blockform()) {
         // cytnx_error_msg(Tin.is_contiguous()==false, "[ERROR][ExpM] currently ExpM on symmetric
         // UniTensor have to operate on contiguous(). Call contiguous_() or contiguous()
@@ -103,5 +115,19 @@ namespace cytnx {
         return out;
       }
     }
+
+    template UniTensor ExpM(const UniTensor &Tin, const cytnx_complex128 &a,
+                            const cytnx_complex128 &b);
+    template UniTensor ExpM(const UniTensor &Tin, const cytnx_complex64 &a,
+                            const cytnx_complex64 &b);
+    template UniTensor ExpM(const UniTensor &Tin, const cytnx_double &a, const cytnx_double &b);
+    template UniTensor ExpM(const UniTensor &Tin, const cytnx_float &a, const cytnx_float &b);
+    template UniTensor ExpM(const UniTensor &Tin, const cytnx_uint16 &a, const cytnx_uint16 &b);
+    template UniTensor ExpM(const UniTensor &Tin, const cytnx_uint32 &a, const cytnx_uint32 &b);
+    template UniTensor ExpM(const UniTensor &Tin, const cytnx_uint64 &a, const cytnx_uint64 &b);
+    template UniTensor ExpM(const UniTensor &Tin, const cytnx_int16 &a, const cytnx_int16 &b);
+    template UniTensor ExpM(const UniTensor &Tin, const cytnx_int32 &a, const cytnx_int32 &b);
+    template UniTensor ExpM(const UniTensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b);
+
   }  // namespace linalg
 }  // namespace cytnx

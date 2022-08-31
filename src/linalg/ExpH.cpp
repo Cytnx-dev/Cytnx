@@ -10,7 +10,8 @@ using namespace std;
 namespace cytnx {
   namespace linalg {
 
-    Tensor ExpH(const Tensor &Tin, const cytnx_double &a, const cytnx_double &b) {
+    template <typename T>
+    Tensor ExpH(const Tensor &Tin, const T &a, const T &b) {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[ExpH] error, ExpH can only operate on rank-2 Tensor.%s", "\n");
       // cytnx_error_msg(!Tin.is_contiguous(), "[ExpH] error tensor must be contiguous. Call
@@ -29,7 +30,6 @@ namespace cytnx {
         s = cytnx::linalg::Exp(a * su[0] + b);
 
       u = su[1];
-      su.clear();
 
       //[Optim required]
       // cout << s << endl;
@@ -51,13 +51,26 @@ namespace cytnx {
       return ut;
     }
 
+    template Tensor ExpH(const Tensor &Tin, const cytnx_complex128 &a, const cytnx_complex128 &b);
+    template Tensor ExpH(const Tensor &Tin, const cytnx_complex64 &a, const cytnx_complex64 &b);
+    template Tensor ExpH(const Tensor &Tin, const cytnx_double &a, const cytnx_double &b);
+    template Tensor ExpH(const Tensor &Tin, const cytnx_float &a, const cytnx_float &b);
+    template Tensor ExpH(const Tensor &Tin, const cytnx_uint64 &a, const cytnx_uint64 &b);
+    template Tensor ExpH(const Tensor &Tin, const cytnx_uint32 &a, const cytnx_uint32 &b);
+    template Tensor ExpH(const Tensor &Tin, const cytnx_uint16 &a, const cytnx_uint16 &b);
+    template Tensor ExpH(const Tensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b);
+    template Tensor ExpH(const Tensor &Tin, const cytnx_int32 &a, const cytnx_int32 &b);
+    template Tensor ExpH(const Tensor &Tin, const cytnx_int16 &a, const cytnx_int16 &b);
+
   }  // namespace linalg
 
 }  // namespace cytnx
 
 namespace cytnx {
   namespace linalg {
-    UniTensor ExpH(const UniTensor &Tin, const cytnx_double &a, const cytnx_double &b) {
+
+    template <typename T>
+    UniTensor ExpH(const UniTensor &Tin, const T &a, const T &b) {
       if (Tin.uten_type() == UTenType.Sparse) {
         UniTensor out;
         if (Tin.is_contiguous())
@@ -105,5 +118,19 @@ namespace cytnx {
         return out;
       }
     }
+
+    template UniTensor ExpH(const UniTensor &Tin, const cytnx_complex128 &a,
+                            const cytnx_complex128 &b);
+    template UniTensor ExpH(const UniTensor &Tin, const cytnx_complex64 &a,
+                            const cytnx_complex64 &b);
+    template UniTensor ExpH(const UniTensor &Tin, const cytnx_double &a, const cytnx_double &b);
+    template UniTensor ExpH(const UniTensor &Tin, const cytnx_float &a, const cytnx_float &b);
+    template UniTensor ExpH(const UniTensor &Tin, const cytnx_uint16 &a, const cytnx_uint16 &b);
+    template UniTensor ExpH(const UniTensor &Tin, const cytnx_uint32 &a, const cytnx_uint32 &b);
+    template UniTensor ExpH(const UniTensor &Tin, const cytnx_uint64 &a, const cytnx_uint64 &b);
+    template UniTensor ExpH(const UniTensor &Tin, const cytnx_int16 &a, const cytnx_int16 &b);
+    template UniTensor ExpH(const UniTensor &Tin, const cytnx_int32 &a, const cytnx_int32 &b);
+    template UniTensor ExpH(const UniTensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b);
+
   }  // namespace linalg
 }  // namespace cytnx
