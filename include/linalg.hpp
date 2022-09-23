@@ -702,6 +702,7 @@ namespace cytnx {
     @param Sub_diag Tensor #2
     @param is_V: if calculate the eigen value.
     @param k: Return k lowest eigen vector if is_V=True
+    @param throw_excp: Whether to throw exception when error occurs in Tridiag internal function
     @return
         [vector<Tensor>] if is_V = True, the first tensor is the eigen value, and second tensor is
     eigenvector of shape [k,L].
@@ -716,7 +717,7 @@ namespace cytnx {
 
     */
     std::vector<Tensor> Tridiag(const Tensor &Diag, const Tensor &Sub_diag, const bool &is_V = true,
-                                const bool &is_row = false);
+                                const bool &is_row = false, bool throw_excp = false);
 
     // ExpH:
     //===========================================

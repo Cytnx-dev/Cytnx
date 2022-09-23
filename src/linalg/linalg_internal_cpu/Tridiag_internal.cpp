@@ -9,7 +9,8 @@ namespace cytnx {
     void Tridiag_internal_d(const boost::intrusive_ptr<Storage_base> &diag,
                             const boost::intrusive_ptr<Storage_base> &s_diag,
                             boost::intrusive_ptr<Storage_base> &S,
-                            boost::intrusive_ptr<Storage_base> &U, const cytnx_int64 &L) {
+                            boost::intrusive_ptr<Storage_base> &U, const cytnx_int64 &L,
+                            bool throw_excp /*= false*/) {
       char job;
       job = (U->dtype == Type.Void) ? 'N' : 'V';
       // std::cout << L << std::endl;
@@ -31,7 +32,12 @@ namespace cytnx {
       info = LAPACKE_dstev(LAPACK_COL_MAJOR, job, L, (cytnx_double *)S->Mem, Dsv,
                            (cytnx_double *)U->Mem, ldz);
       // std::cout << L << std::endl;
-      cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'dstev': Lapack INFO = ", info);
+      if (!throw_excp and info != 0) {
+        cytnx_error_msg(info != 0, "%s %d",
+                        "Error in Lapack function 'dstev': Lapack INFO = ", info);
+      } else if (info != 0) {
+        throw std::logic_error("Error in Lapack function 'dstev': Lapack INFO = " + info);
+      }
 
       // house keeping
       free(Dsv);
@@ -39,7 +45,8 @@ namespace cytnx {
     void Tridiag_internal_f(const boost::intrusive_ptr<Storage_base> &diag,
                             const boost::intrusive_ptr<Storage_base> &s_diag,
                             boost::intrusive_ptr<Storage_base> &S,
-                            boost::intrusive_ptr<Storage_base> &U, const cytnx_int64 &L) {
+                            boost::intrusive_ptr<Storage_base> &U, const cytnx_int64 &L,
+                            bool throw_excp /*= false*/) {
       char job;
       job = (U->dtype == Type.Void) ? 'N' : 'V';
       // std::cout << L << std::endl;

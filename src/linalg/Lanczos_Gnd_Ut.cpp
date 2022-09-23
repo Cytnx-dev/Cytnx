@@ -117,8 +117,16 @@ namespace cytnx {
         unsafe_Sub_(new_psi, As(i).item(), psi_1);
         unsafe_Sub_(new_psi, Bs(i - 1).item(), psi_0);
 
-        // diagonalize:
-        tmpEsVs = linalg::Tridiag(As, Bs, true, true);
+        try {
+          // diagonalize:
+          auto tmptmp = linalg::Tridiag(As, Bs, true, true, true);
+          tmpEsVs = tmptmp;
+        } catch (std::logic_error le) {
+          std::cout << "[WARNING] Lanczos_Gnd -> Tridiag error: \n";
+          std::cout << le.what() << std::endl;
+          std::cout << "Lanczos continues automatically." << std::endl;
+          break;
+        }
 
         auto tmpB =
           new_psi.Norm().item();  // sqrt(Contract(new_psi,new_psi.Dagger()).item().real());

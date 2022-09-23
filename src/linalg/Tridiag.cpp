@@ -6,7 +6,7 @@
 namespace cytnx {
   namespace linalg {
     std::vector<Tensor> Tridiag(const Tensor &Diag, const Tensor &Sub_diag, const bool &is_V,
-                                const bool &is_row) {
+                                const bool &is_row, bool throw_excp /*= false*/) {
       cytnx_error_msg(Diag.shape().size() != 1,
                       "[Tridiag] error, Tridiag can only accept on vector (rank-1) Tensor.%s",
                       "\n");
@@ -57,7 +57,7 @@ namespace cytnx {
       if (Diag.device() == Device.cpu) {
         cytnx::linalg_internal::lii.Td_ii[cType](
           in_diag._impl->storage()._impl, s_diag._impl->storage()._impl, S._impl->storage()._impl,
-          vT._impl->storage()._impl, in_diag.shape()[0]);
+          vT._impl->storage()._impl, in_diag.shape()[0], throw_excp);
 
         std::vector<Tensor> out;
         out.push_back(S);

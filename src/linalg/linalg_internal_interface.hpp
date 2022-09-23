@@ -105,7 +105,8 @@ namespace cytnx {
     typedef void (*Tdfunc_oii)(const boost::intrusive_ptr<Storage_base> &,
                                const boost::intrusive_ptr<Storage_base> &,
                                boost::intrusive_ptr<Storage_base> &,
-                               boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &);
+                               boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &,
+                               bool throw_excp);
     typedef void (*Kronfunc_oii)(boost::intrusive_ptr<Storage_base> &,
                                  const boost::intrusive_ptr<Storage_base> &,
                                  const boost::intrusive_ptr<Storage_base> &,

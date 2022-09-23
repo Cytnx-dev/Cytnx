@@ -68,9 +68,16 @@ namespace cytnx {
         new_psi -= As(i) * psi_1;
         new_psi -= Bs(i - 1) * psi_0;
 
-        // diagonalize:
-        tmpEsVs = linalg::Tridiag(As, Bs, true, true);
-
+        try {
+          // diagonalize:
+          auto tmptmp = linalg::Tridiag(As, Bs, true, true, true);
+          tmpEsVs = tmptmp;
+        } catch (std::logic_error le) {
+          std::cout << "[WARNING] Lanczos_Gnd -> Tridiag error: \n";
+          std::cout << le.what() << std::endl;
+          std::cout << "Lanczos continues automatically." << std::endl;
+          break;
+        }
         auto tmp = new_psi.Norm().item();
         Bs.append(tmp);
         if (tmp == 0) {
