@@ -220,6 +220,7 @@ namespace cytnx {
 
       } else {
         // DenseUniTensor:
+        // cout << "entry Dense UT" << endl;
 
         Tensor tmp;
         if (Tin.is_contiguous())
@@ -254,6 +255,7 @@ namespace cytnx {
         }
         Cy_S.Init({newBond, newBond}, {newlbl, newlbl - 1}, 1, Type.Double, Device.cpu,
                   true);  // it is just reference so no hurt to alias ^^
+        // cout << "[AFTER INIT]" << endl;
         Cy_S.put_block_(outT[t]);
         t++;
         if (is_U) {

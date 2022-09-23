@@ -42,7 +42,7 @@ endif()
 #include(version.cmake)
 set(CYTNX_VERSION_MAJOR 0)
 set(CYTNX_VERSION_MINOR 7)
-set(CYTNX_VERSION_PATCH 6)
+set(CYTNX_VERSION_PATCH 7)
 set(CYTNX_VERSION COUNT 0)
 set(CYTNX_VERSION
   ${CYTNX_VERSION_MAJOR}.${CYTNX_VERSION_MINOR}.${CYTNX_VERSION_PATCH}
@@ -222,13 +222,28 @@ endif()
 if (USE_MKL)
     target_compile_definitions(cytnx PRIVATE UNI_MKL)
     target_compile_definitions(cytnx PRIVATE MKL_ILP64)
-    set(USE_OMP ON FORCE)
+    # set(USE_OMP ON FORCE)
 endif()
 
 
+######################################################################
+### Get cmake-boost
+######################################################################
+#include(FetchContent)
+#message("Starting to clone boost-cmake into boost-cmake")
+#FetchContent_Declare(
+#  boost-cmake
+#  URL https://github.com/Orphis/boost-cmake/archive/d3951bc7f0b9d09005f92aedcf6acfc595f050ea.zip
+#  CONFIGURE_COMMAND ""
+#  BUILD_COMMAND ""
+#  INSTALL_COMMAND ""
+#)
+#FetchContent_MakeAvailable(boost-cmake)
 find_package(Boost REQUIRED)
-message(STATUS "Boost INCCC: ${Boost_INCLUDE_DIRS}")
-message(STATUS ${COMPILE_DEFINITIONS})
+#add_subdirectory(_deps/boost-cmake-src)
+#message(STATUS "Boost INCCC: ${Boost_INCLUDE_DIRS}")
+#message(STATUS ${COMPILE_DEFINITIONS})
+
 # ----------------------------------------
 # Find OpenMP
 if(USE_OMP)
@@ -256,7 +271,12 @@ if(USE_OMP)
           target_compile_definitions(cytnx PRIVATE UNI_OMP)
         endif()
     endif()
+else()
+    if(USE_MKL)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
+    endif()
 endif()
+
 target_link_libraries(cytnx PUBLIC Boost::boost ${LAPACK_LIBRARIES})
 
 
@@ -532,7 +552,8 @@ endif()
 if(USE_OMP)
     FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_OMP\n" "")
     if(USE_MKL)
-          message( STATUS " Build OMP Support: YES (force with MKL=on)")
+          # message( STATUS " Build OMP Support: YES (force with MKL=on)")
+          message( STATUS " Build OMP Support: YES")
           FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_MKL\n" "")
     else()
         if(OPENMP_FOUND)

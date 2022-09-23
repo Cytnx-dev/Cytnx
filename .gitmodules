@@ -4,3 +4,6 @@
 [submodule "thirdparty/cutt"]
 	path = thirdparty/cutt
 	url = https://github.com/kaihsin/cutt.git
+[submodule "boost-cmake"]
+	path = thirdparty/boost-cmake
+	url = https://github.com/Orphis/boost-cmake.git

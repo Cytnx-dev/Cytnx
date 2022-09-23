@@ -70,17 +70,35 @@ namespace cytnx {
       }
 
       // permute!
-      Tensor tmpL, tmpR;
+      Tensor tmpL, tmpR, out, tmpout;
 
       if (diag_L) {
-        tmpL = Tl;
-        tmpR = Tr.permute(mapperR).reshape({comm_dim, -1});
+        // Both bonds of Diag will be contracted.
+        if (idxl.size() == 2) {
+          tmpL = Tl;
+          tmpR = Tr.permute(mapperR).reshape({Tlshape[idxl[1]], -1});
+          tmpout = Matmul_dg(tmpL, tmpR);
+          tmpout.reshape_({Tlshape[idxl[0]], Tlshape[idxl[1]], -1});
+          out = Trace(tmpout, 0, 1);
+        } else {
+          tmpL = Tl;
+          tmpR = Tr.permute(mapperR).reshape({comm_dim, -1});
+          out = Matmul_dg(tmpL, tmpR);
+        }
       } else {
-        tmpL = Tl.permute(mapperL).reshape({-1, comm_dim});
-        tmpR = Tr;
+        if (idxr.size() == 2) {
+          tmpL = Tl.permute(mapperL).reshape({-1, comm_dim});
+          tmpR = Tr;
+          tmpout = Matmul_dg(tmpL, tmpR);
+          tmpout.reshape_({-1, Tlshape[idxl[1]], Tlshape[idxl[0]]});
+          out = Trace(tmpout, 1, 2);
+        } else {
+          tmpL = Tl.permute(mapperL).reshape({-1, comm_dim});
+          tmpR = Tr;
+          out = Matmul_dg(tmpL, tmpR);
+        }
       }
 
-      Tensor out = Matmul_dg(tmpL, tmpR);
       out.reshape_(new_shape);
 
       return out;

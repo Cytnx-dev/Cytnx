@@ -7,6 +7,8 @@ add_executable(
   utils_test/vec_concatenate.cpp
   utils_test/vec_unique.cpp
   utils/getNconParameter.cpp
+  linalg_test/ExpH_test.cpp
+  linalg_test/ExpM_test.cpp
 )
 target_link_libraries(
   test_main
