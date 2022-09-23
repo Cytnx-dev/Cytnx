@@ -16,6 +16,7 @@
 #include "cytnx.hpp"
 #include "utils/utils.hpp"
 #include "random.hpp"
+#include "ncon.hpp"
 
 #include "UniTensor.hpp"
 #include "Symmetry.hpp"

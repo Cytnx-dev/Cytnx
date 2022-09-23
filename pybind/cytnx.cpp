@@ -1525,9 +1525,13 @@ PYBIND11_MODULE(cytnx, m) {
     .def(
       "PutUniTensors",
       [](Network &self, const std::vector<std::string> &names,
-         const std::vector<UniTensor> &utensors) { self.PutUniTensors(names, utensors); },
-      py::arg("names"), py::arg("utensors"))
-    .def("Launch", &Network::Launch, py::arg("optimal") = false)
+         const std::vector<UniTensor> &utensors,
+         const bool &is_clone) { self.PutUniTensors(names, utensors, is_clone); },
+      py::arg("names"), py::arg("utensors"), py::arg("is_clone") = true)
+    .def("getOptimalOrder", &Network::getOptimalOrder,
+         py::arg("network_type") = (int)NtType.Regular)
+    .def("Launch", &Network::Launch, py::arg("optimal") = false, py::arg("contract_order") = "",
+         py::arg("network_type") = (int)NtType.Regular)
     .def("clear", &Network::clear)
     .def("clone", &Network::clone)
     .def("__copy__", &Network::clone)

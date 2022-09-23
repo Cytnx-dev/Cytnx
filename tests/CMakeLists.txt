@@ -1,9 +1,12 @@
 add_executable(
   test_main
-  test_main.cpp
+  #test_main.cpp
   Bond_test.cpp
+  Network_test.cpp
+  ncon_test.cpp
   utils_test/vec_concatenate.cpp
   utils_test/vec_unique.cpp
+  utils/getNconParameter.cpp
   linalg_test/ExpH_test.cpp
   linalg_test/ExpM_test.cpp
 )
@@ -21,4 +24,14 @@ gtest_discover_tests(test_main)
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/testNet.net"
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/testNet.net"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/output.txt"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/output.txt"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/answer.txt"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/answer.txt"
       DESTINATION ${CMAKE_BINARY_DIR})
