@@ -749,6 +749,68 @@ namespace cytnx {
         perform matrix exponential with \f$O = \exp{aM + b}\f$.
 
     */
+
+    // Lanczos:
+    //===========================================
+    /**
+    @brief perform Lanczos for hermitian/symmetric matrices or linear function.
+    @param Hop the Linear Operator defined by LinOp class or it's inheritance (see LinOp).
+    @param Tin the initial vector, this should be rank-1.
+    @param method the desired Lanczos method to use, can be 'ER' or 'Gnd'.
+    @param CvgCrit the convergence criterion of the energy.
+    @param maxiter the maximum interation steps for each k.
+    @param k the number of lowest k eigen values.
+    @param is_V if set to true, the eigen vectors will be returned.
+    @param is_row whether the return eigen vectors should be in row-major form.
+    @param max_krydim the maximum krylov subspace dimension for each iteration.
+    @param verbose print out iteration info.
+    @return
+        [eigvals (Tensor), eigvecs (Tensor)(option)]
+    #description:
+        This function calculate the eigen value problem using explicitly restarted Lanczos.
+    #Performance tune:
+        For small linear dimension, try to reduce max_krydim.
+    #[Note]
+        To use, define a linear operator with LinOp class either by assign a custom function or
+    create a class that inherit LinOp (see LinOp for further details)
+    */
+    std::vector<Tensor> Lanczos(LinOp *Hop, const Tensor &Tin = Tensor(),
+                                const std::string method = "Gnd", const double &CvgCrit = 1.0e-14,
+                                const unsigned int &Maxiter = 10000, const cytnx_uint64 &k = 1,
+                                const bool &is_V = true, const bool &is_row = false,
+                                const cytnx_uint32 &max_krydim = 0, const bool &verbose = false);
+
+    // Lanczos:
+    //===========================================
+    /**
+    @brief perform Lanczos for hermitian/symmetric matrices or linear function.
+    @param Hop the Linear Operator defined by LinOp class or it's inheritance (see LinOp).
+    @param Tin the initial vector, this should be a UniTensor.
+    @param method the desired Lanczos method to use, can be 'ER' or 'Gnd'.
+    @param CvgCrit the convergence criterion of the energy.
+    @param maxiter the maximum interation steps for each k.
+    @param k the number of lowest k eigen values.
+    @param is_V if set to true, the eigen vectors will be returned.
+    @param is_row whether the return eigen vectors should be in row-major form.
+    @param max_krydim the maximum krylov subspace dimension for each iteration.
+    @param verbose print out iteration info.
+    @return
+        [eigvals (Tensor), eigvecs (Tensor)(option)]
+    #description:
+        This function calculate the eigen value problem using explicitly restarted Lanczos.
+    #Performance tune:
+        For small linear dimension, try to reduce max_krydim.
+    #[Note]
+        To use, define a linear operator with LinOp class either by assign a custom function or
+    create a class that inherit LinOp (see LinOp for further details)
+    */
+    std::vector<UniTensor> Lanczos(LinOp *Hop, const UniTensor &Tin = UniTensor(),
+                                   const std::string method = "Gnd",
+                                   const double &CvgCrit = 1.0e-14,
+                                   const unsigned int &Maxiter = 10000, const cytnx_uint64 &k = 1,
+                                   const bool &is_V = true, const bool &is_row = false,
+                                   const cytnx_uint32 &max_krydim = 0, const bool &verbose = false);
+
     template <typename T>
     Tensor ExpM(const Tensor &in, const T &a = 1, const T &b = 0);
 
