@@ -67,14 +67,14 @@ FLAG="${FLAG}-DUSE_HPTT=OFF "
 # 5-a) HPTT fine tune (DEFAULT =off)
 # [Note] set to "=on" to enable fine tune for the native hardware.
 #-----------------------------------
-# FLAG="${FLAG}-DHPTT_ENABLE_FINE_TUNE=off"
+# FLAG="${FLAG}-DHPTT_ENABLE_FINE_TUNE=off "
 #-----------------------------------
 # 5-b) HPTT variant options (DEFAULT = no option)
 # [Note] uncomment one of the desired options below 1: AVX 2: IBM 3: ARM.
 #-----------------------------------
-# FLAG="${FLAG}-DHPTT_ENABLE_ARM=on"
-# FLAG="${FLAG}-DHPTT_ENABLE_AVX=on"
-# FLAG="${FLAG}-DHPTT_ENABLE_IBM=on"
+# FLAG="${FLAG}-DHPTT_ENABLE_ARM=on "
+# FLAG="${FLAG}-DHPTT_ENABLE_AVX=on "
+# FLAG="${FLAG}-DHPTT_ENABLE_IBM=on "
 #-----------------------------------
 
 
@@ -104,7 +104,7 @@ FLAG="${FLAG}-DUSE_CUDA=OFF "
 #=========================================================
 # [Note] Wheather to generate compile_commands.json for IDE support (DEFAULT =1)
 #-----------------------------------
-FLAG="${FLAG}-DCMAKE_EXPORT_COMPILE_COMMANDS=0 "
+FLAG="${FLAG}-DCMAKE_EXPORT_COMPILE_COMMANDS=1 "
 #-----------------------------------
 
 
@@ -142,3 +142,4 @@ cd build
 cmake ../ ${FLAG}
 make -j`nproc`
 make install
+ctest
