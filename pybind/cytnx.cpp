@@ -1525,9 +1525,8 @@ PYBIND11_MODULE(cytnx, m) {
     .def(
       "PutUniTensors",
       [](Network &self, const std::vector<std::string> &names,
-         const std::vector<UniTensor> &utensors,
-         const bool &is_clone) { self.PutUniTensors(names, utensors, is_clone); },
-      py::arg("names"), py::arg("utensors"), py::arg("is_clone") = true)
+         const std::vector<UniTensor> &utensors) { self.PutUniTensors(names, utensors); },
+      py::arg("names"), py::arg("utensors"))
     .def("getOptimalOrder", &Network::getOptimalOrder,
          py::arg("network_type") = (int)NtType.Regular)
     .def("Launch", &Network::Launch, py::arg("optimal") = false, py::arg("contract_order") = "",
@@ -2511,7 +2510,7 @@ PYBIND11_MODULE(cytnx, m) {
   m_linalg.def("Vectordot", &cytnx::linalg::Vectordot, py::arg("T1"), py::arg("T2"),
                py::arg("is_conj") = false);
   m_linalg.def("Tridiag", &cytnx::linalg::Tridiag, py::arg("A"), py::arg("B"),
-               py::arg("is_V") = true, py::arg("is_row") = false);
+               py::arg("is_V") = true, py::arg("is_row") = false, py::arg("throw_excp") = false);
   m_linalg.def("Norm", &cytnx::linalg::Norm, py::arg("T1"));
   m_linalg.def("Dot", &cytnx::linalg::Dot, py::arg("T1"), py::arg("T2"));
 
