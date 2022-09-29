@@ -1,7 +1,0 @@
-version:
-1. check Readme
-2. check dox and rebuild doc
-3. check pybind __version__
-4. check CMakeList.txt
-5. check conda_build meta.yaml
-6. check user guide 
