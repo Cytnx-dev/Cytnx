@@ -192,6 +192,14 @@ namespace cytnx {
     std::vector<cytnx_bool> out(in_vec.begin(), in_vec.begin() + Nelem);
     return out;
   }
+  template <>
+  std::vector<std::string> vec_clone(const std::vector<std::string> &in_vec,
+                                     const cytnx_uint64 &Nelem) {
+    cytnx_error_msg(Nelem > in_vec.size(),
+                    "[ERROR] Nelem cannot exceed the no. of elements in the in_vec%s", "\n");
+    std::vector<std::string> out(in_vec.begin(), in_vec.begin() + Nelem);
+    return out;
+  }
 
   //========================================================
   template <class T>
@@ -320,6 +328,17 @@ namespace cytnx {
   std::vector<cytnx_bool> vec_clone(const std::vector<cytnx_bool> &in_vec,
                                     const std::vector<cytnx_uint64> &locators) {
     std::vector<cytnx_bool> out(locators.size());
+    for (cytnx_uint64 i = 0; i < locators.size(); i++) {
+      cytnx_error_msg(locators[i] >= in_vec.size(),
+                      "[ERROR] the index [%d] in locators exceed the bbound.\n", locators[i]);
+      out[i] = in_vec[locators[i]];
+    }
+    return out;
+  }
+  template <>
+  std::vector<std::string> vec_clone(const std::vector<std::string> &in_vec,
+                                     const std::vector<cytnx_uint64> &locators) {
+    std::vector<std::string> out(locators.size());
     for (cytnx_uint64 i = 0; i < locators.size(); i++) {
       cytnx_error_msg(locators[i] >= in_vec.size(),
                       "[ERROR] the index [%d] in locators exceed the bbound.\n", locators[i]);
@@ -480,6 +499,19 @@ namespace cytnx {
                     "[ERROR][vec_clone] indices out of range for clone.%s", "\n");
 
     std::vector<cytnx_bool> out(end - start);
+    for (cytnx_uint64 i = start; i < end; i++) {
+      out[i - start] = in_vec[i];
+    }
+    return out;
+  }
+  template <>
+  std::vector<std::string> vec_clone(const std::vector<std::string> &in_vec,
+                                     const cytnx_uint64 &start, const cytnx_uint64 &end) {
+    cytnx_error_msg(start >= end, "[ERROR][vec_clone] start must <= end.%s", "\n");
+    cytnx_error_msg((end - start) > in_vec.size(),
+                    "[ERROR][vec_clone] indices out of range for clone.%s", "\n");
+
+    std::vector<std::string> out(end - start);
     for (cytnx_uint64 i = start; i < end; i++) {
       out[i - start] = in_vec[i];
     }

@@ -77,6 +77,8 @@ namespace cytnx {
                                                     const std::vector<cytnx_int16> &);
   template std::vector<cytnx_uint16> vec_concatenate(const std::vector<cytnx_uint16> &,
                                                      const std::vector<cytnx_uint16> &);
+  template std::vector<std::string> vec_concatenate(const std::vector<std::string> &,
+                                                    const std::vector<std::string> &);
   // template std::vector<cytnx_bool> vec_concatenate(const std::vector<cytnx_bool> &,const
   // std::vector<cytnx_bool> &);
 
@@ -102,6 +104,8 @@ namespace cytnx {
                                  const std::vector<cytnx_uint16> &);
   template void vec_concatenate_(std::vector<cytnx_int16> &out, const std::vector<cytnx_int16> &,
                                  const std::vector<cytnx_int16> &);
+  template void vec_concatenate_(std::vector<std::string> &out, const std::vector<std::string> &,
+                                 const std::vector<std::string> &);
   // template void vec_concatenate_(std::vector<cytnx_bool> &out,const std::vector<cytnx_bool>
   // &,const std::vector<cytnx_bool> &);
 }  // namespace cytnx

@@ -287,6 +287,12 @@ namespace cytnx {
                     "\n");
     return nullptr;
   }
+  boost::intrusive_ptr<UniTensor_base> UniTensor_base::relabels(
+    const std::vector<std::string> &new_labels) {
+    cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
+                    "\n");
+    return nullptr;
+  }
   boost::intrusive_ptr<UniTensor_base> UniTensor_base::relabel(const cytnx_int64 &inx,
                                                                const cytnx_int64 &new_label,
                                                                const bool &by_label) {
@@ -302,6 +308,12 @@ namespace cytnx {
   }
   boost::intrusive_ptr<UniTensor_base> UniTensor_base::relabel(const cytnx_int64 &inx,
                                                                const cytnx_int64 &new_label) {
+    cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
+                    "\n");
+    return nullptr;
+  }
+  boost::intrusive_ptr<UniTensor_base> UniTensor_base::relabel(const std::string &inx,
+                                                               const std::string &new_label) {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
                     "\n");
     return nullptr;

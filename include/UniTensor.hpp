@@ -142,7 +142,7 @@ namespace cytnx {
       std::string new_label = std::to_string(_new_label);
       cytnx_int64 idx;
       if (by_label) {
-        auto res = std::find(this->_labels.begin(), this->_labels.end(), inx);
+        auto res = std::find(this->_labels.begin(), this->_labels.end(), std::to_string(inx));
         cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %d not exists.\n", inx);
         idx = std::distance(this->_labels.begin(), res);
       } else {
@@ -2502,7 +2502,7 @@ namespace cytnx {
       out.truncate_(bond_idx, dim, by_label);
       return out;
     }
-    UniTensor truncate(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim) const {
+    UniTensor truncate(const std::string &bond_idx, const cytnx_uint64 &dim) const {
       UniTensor out = this->clone();
       out.truncate_(bond_idx, dim);
       return out;

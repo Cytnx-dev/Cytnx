@@ -1952,6 +1952,7 @@ PYBIND11_MODULE(cytnx, m) {
                by_label = kwargs["by_label"].cast<bool>();
              }
            }
+
            self.permute_(c_args, rowrank, by_label);
          })
     .def("permute",

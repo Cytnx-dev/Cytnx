@@ -415,7 +415,7 @@ namespace cytnx {
       // cytnx_error_msg(true,"[Developing!]%s","\n");
       std::vector<string>::iterator it;
       for (cytnx_uint64 i = 0; i < mapper.size(); i++) {
-        it = std::find(this->_labels.begin(), this->_labels.end(), mapper[i]);
+        it = std::find(this->_labels.begin(), this->_labels.end(), std::to_string(mapper[i]));
         cytnx_error_msg(it == this->_labels.end(),
                         "[ERROR] label %d does not exist in current UniTensor.\n", mapper[i]);
         mapper_u64.push_back(std::distance(this->_labels.begin(), it));

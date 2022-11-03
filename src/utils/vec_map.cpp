@@ -42,6 +42,8 @@ namespace cytnx {
                                              const std::vector<cytnx_uint64> &);
   template std::vector<cytnx_bool> vec_map(const std::vector<cytnx_bool> &,
                                            const std::vector<cytnx_uint64> &);
+  template std::vector<std::string> vec_map(const std::vector<std::string> &,
+                                            const std::vector<cytnx_uint64> &);
   template std::vector<Bond> vec_map(const std::vector<Bond> &, const std::vector<cytnx_uint64> &);
   template std::vector<Accessor> vec_map(const std::vector<Accessor> &,
                                          const std::vector<cytnx_uint64> &);

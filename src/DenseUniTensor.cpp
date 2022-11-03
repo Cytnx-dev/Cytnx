@@ -340,7 +340,7 @@ namespace cytnx {
       mapper_u64.push_back(std::distance(out_raw->_labels.begin(), it));
     }
 
-    mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
+    // mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
 
     if (out_raw->_is_diag) {
       if (rowrank >= 0) {
