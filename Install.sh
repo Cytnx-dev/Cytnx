@@ -5,7 +5,7 @@
 ## [Note] uncomments the following lines and 
 ##        Set the desntination path for installation in Ins_dest
 #----------------------------------------------
-Ins_dest="/home/kaihsinwu/CYTNX077"
+Ins_dest="/home/petjelinux/Cytnx_lib"
 FLAG="${FLAG}-DCMAKE_INSTALL_PREFIX=${Ins_dest} "
 #-----------------------------------------------
 
@@ -41,7 +41,7 @@ FLAG="${FLAG}-DUSE_MKL=ON "
 #============================================================================
 # set to "=on" for building python API, required python and pybind11 installed. 
 #--------------------------------
-FLAG="${FLAG}-DBUILD_PYTHON=ON "
+FLAG="${FLAG}-DBUILD_PYTHON=OFF "
 #--------------------------------
 
 
@@ -141,5 +141,5 @@ mkdir build
 cd build
 cmake ../ ${FLAG}
 make -j`nproc`
-make install
+#make install
 ctest

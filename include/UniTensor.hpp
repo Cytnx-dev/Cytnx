@@ -18,7 +18,7 @@
 #include <algorithm>
 #include "Symmetry.hpp"
 #include "Bond.hpp"
-//#include "linalg.hpp"
+// #include "linalg.hpp"
 
 // namespace cytnx{
 namespace cytnx {
@@ -47,7 +47,7 @@ namespace cytnx {
     bool _is_diag;
     cytnx_int64 _rowrank;
     std::string _name;
-    std::vector<cytnx_int64> _labels;
+    std::vector<std::string> _labels;
     std::vector<Bond> _bonds;
 
     bool _update_braket() {
@@ -88,14 +88,58 @@ namespace cytnx {
     bool is_diag() const { return this->_is_diag; }
     const bool &is_braket_form() const { return this->_is_braket_form; }
     const bool &is_tag() const { return this->_is_tag; }
-    const std::vector<cytnx_int64> &labels() const { return this->_labels; }
+    const std::vector<std::string> &labels() const { return this->_labels; }
     const std::vector<Bond> &bonds() const { return this->_bonds; }
     std::vector<Bond> &bonds() { return this->_bonds; }
     const std::string &name() const { return this->_name; }
     cytnx_uint64 rank() const { return this->_labels.size(); }
     void set_name(const std::string &in) { this->_name = in; }
-    void set_label(const cytnx_int64 &inx, const cytnx_int64 &new_label,
-                   const bool &by_label = false) {
+    void set_label(const std::string &inx, const std::string &new_label) {
+      cytnx_int64 idx;
+      auto res = std::find(this->_labels.begin(), this->_labels.end(), inx);
+      cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %d not exists.\n", inx);
+      idx = std::distance(this->_labels.begin(), res);
+
+      cytnx_error_msg(idx >= this->_labels.size(), "[ERROR] index exceed the rank of UniTensor%s",
+                      "\n");
+      // check in:
+      bool is_dup = false;
+      for (cytnx_uint64 i = 0; i < this->_labels.size(); i++) {
+        if (i == idx) continue;
+        if (new_label == this->_labels[i]) {
+          is_dup = true;
+          break;
+        }
+      }
+      cytnx_error_msg(is_dup, "[ERROR] alreay has a label that is the same as the input label%s",
+                      "\n");
+      this->_labels[idx] = new_label;
+    }
+    void set_label(const cytnx_int64 &inx, const std::string &new_label) {
+      set_label(std::to_string(inx), new_label);
+    }
+    /**
+     * @brief Set the label object
+     *
+     * @deprecated
+     *
+     * @param inx
+     * @param new_label
+     */
+    void set_label(const cytnx_int64 &inx, const cytnx_int64 &new_label) {
+      set_label(std::to_string(inx), std::to_string(new_label));
+    }
+    /**
+     * @brief Set the label object
+     *
+     * @deprecated
+     *
+     * @param inx
+     * @param _new_label
+     * @param by_label
+     */
+    void set_label(const cytnx_int64 &inx, const cytnx_int64 &_new_label, const bool &by_label) {
+      std::string new_label = std::to_string(_new_label);
       cytnx_int64 idx;
       if (by_label) {
         auto res = std::find(this->_labels.begin(), this->_labels.end(), inx);
@@ -120,7 +164,15 @@ namespace cytnx {
                       "\n");
       this->_labels[idx] = new_label;
     }
+    /**
+     * @brief Set the labels object
+     *
+     * @deprecated
+     *
+     * @param new_labels
+     */
     void set_labels(const std::vector<cytnx_int64> &new_labels);
+    void set_labels(const std::vector<std::string> &new_labels);
 
     /*
     template<class T>
@@ -160,6 +212,11 @@ namespace cytnx {
                       const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
                       const int &device = Device.cpu, const bool &is_diag = false,
                       const bool &no_alloc = false);
+    virtual void Init(const std::vector<Bond> &bonds,
+                      const std::vector<std::string> &in_labels = {},
+                      const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
+                      const int &device = Device.cpu, const bool &is_diag = false,
+                      const bool &no_alloc = false);
     virtual void Init_by_Tensor(const Tensor &in, const bool &is_diag = false,
                                 const cytnx_int64 &rowrank = -1);
     virtual std::vector<cytnx_uint64> shape() const;
@@ -174,10 +231,16 @@ namespace cytnx {
     virtual std::string device_str() const;
     virtual void set_rowrank(const cytnx_uint64 &new_rowrank);
     virtual boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
-                                                         const cytnx_int64 &rowrank = -1,
-                                                         const bool &by_label = false);
-    virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1,
-                          const bool &by_label = false);
+                                                         const cytnx_int64 &rowrank,
+                                                         const bool &by_label);
+    virtual boost::intrusive_ptr<UniTensor_base> permute(const std::vector<std::string> &mapper,
+                                                         const cytnx_int64 &rowrank = -1);
+    virtual boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
+                                                         const cytnx_int64 &rowrank = -1);
+    virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank,
+                          const bool &by_label);
+    virtual void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
+    virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
     virtual boost::intrusive_ptr<UniTensor_base> contiguous_();
     virtual boost::intrusive_ptr<UniTensor_base> contiguous();
     virtual void print_diagram(const bool &bond_info = false);
@@ -221,21 +284,37 @@ namespace cytnx {
                                                          const cytnx_uint64 &rowrank = 0);
     virtual boost::intrusive_ptr<UniTensor_base> to_dense();
     virtual void to_dense_();
+    virtual void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back,
+                              const bool &by_label);
+    virtual void combineBonds(const std::vector<std::string> &indicators,
+                              const bool &permute_back = false);
     virtual void combineBonds(const std::vector<cytnx_int64> &indicators,
-                              const bool &permute_back = false, const bool &by_label = true);
+                              const bool &permute_back = false);
     virtual boost::intrusive_ptr<UniTensor_base> contract(
       const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &mv_elem_self = false,
       const bool &mv_elem_rhs = false);
     virtual std::vector<Bond> getTotalQnums(const bool &physical = false);
     virtual std::vector<std::vector<cytnx_int64>> get_blocks_qnums() const;
-    virtual void Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label = false);
+    virtual void Trace_(const std::string &a, const std::string &b);
+    virtual void Trace_(const cytnx_int64 &a, const cytnx_int64 &b);
+    virtual void Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label);
+    virtual boost::intrusive_ptr<UniTensor_base> Trace(const std::string &a, const std::string &b);
+    virtual boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b);
     virtual boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b,
-                                                       const bool &by_label = false);
+                                                       const bool &by_label);
     virtual boost::intrusive_ptr<UniTensor_base> relabels(
       const std::vector<cytnx_int64> &new_labels);
+    virtual boost::intrusive_ptr<UniTensor_base> relabels(
+      const std::vector<std::string> &new_labels);
     virtual boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
                                                          const cytnx_int64 &new_label,
-                                                         const bool &by_label = false);
+                                                         const bool &by_label);
+    virtual boost::intrusive_ptr<UniTensor_base> relabel(const std::string &inx,
+                                                         const std::string &new_label);
+    virtual boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
+                                                         const cytnx_int64 &new_label);
+    virtual boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
+                                                         const std::string &new_label);
 
     virtual std::vector<Symmetry> syms() const;
 
@@ -268,7 +347,9 @@ namespace cytnx {
     virtual void tag();
 
     virtual void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim,
-                           const bool &by_label = false);
+                           const bool &by_label);
+    virtual void truncate_(const std::string &bond_idx, const cytnx_uint64 &dim);
+    virtual void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim);
 
     virtual bool elem_exists(const std::vector<cytnx_uint64> &locator) const;
 
@@ -352,6 +433,10 @@ namespace cytnx {
               const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
               const int &device = Device.cpu, const bool &is_diag = false,
               const bool &no_alloc = false);
+    void Init(const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels = {},
+              const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
+              const int &device = Device.cpu, const bool &is_diag = false,
+              const bool &no_alloc = false);
     // this only work for non-symm tensor
     void Init_by_Tensor(const Tensor &in_tensor, const bool &is_diag = false,
                         const cytnx_int64 &rowrank = -1);
@@ -392,15 +477,64 @@ namespace cytnx {
     int device() const { return this->_block.device(); }
     std::string dtype_str() const { return Type.getname(this->_block.dtype()); }
     std::string device_str() const { return Device.getname(this->_block.device()); }
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param mapper
+     * @param rowrank
+     * @param by_label
+     * @return boost::intrusive_ptr<UniTensor_base>
+     */
     boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
-                                                 const cytnx_int64 &rowrank = -1,
-                                                 const bool &by_label = false);
-    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1,
-                  const bool &by_label = false);
+                                                 const cytnx_int64 &rowrank, const bool &by_label);
+    boost::intrusive_ptr<UniTensor_base> permute(const std::vector<std::string> &mapper,
+                                                 const cytnx_int64 &rowrank = -1);
+    boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
+                                                 const cytnx_int64 &rowrank = -1);
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param mapper
+     * @param rowrank
+     * @param by_label
+     */
+    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank,
+                  const bool &by_label);
+    void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
+    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
+    boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &new_labels);
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param new_labels
+     * @return boost::intrusive_ptr<UniTensor_base>
+     */
     boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<cytnx_int64> &new_labels);
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param inx
+     * @param new_label
+     * @param by_label
+     * @return boost::intrusive_ptr<UniTensor_base>
+     */
     boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
                                                  const cytnx_int64 &new_label,
-                                                 const bool &by_label = false);
+                                                 const bool &by_label);
+    boost::intrusive_ptr<UniTensor_base> relabel(const std::string &inx,
+                                                 const std::string &new_label);
+    boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
+                                                 const std::string &new_label);
+    boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
+                                                 const cytnx_int64 &new_label);
 
     boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const {
       DenseUniTensor *tmp = this->clone_meta();
@@ -535,9 +669,19 @@ namespace cytnx {
                                                  const cytnx_uint64 &rowrank = 0);
     boost::intrusive_ptr<UniTensor_base> to_dense();
     void to_dense_();
-
-    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back = true,
-                      const bool &by_label = true);
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param indicators
+     * @param permute_back
+     * @param by_label
+     */
+    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back,
+                      const bool &by_label);
+    void combineBonds(const std::vector<std::string> &indicators, const bool &permute_back = true);
+    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back = true);
     boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs,
                                                   const bool &mv_elem_self = false,
                                                   const bool &mv_elem_rhs = false);
@@ -600,10 +744,39 @@ namespace cytnx {
       this->Conj_();
       this->Transpose_();
     }
-
-    void Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label = false);
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param a
+     * @param b
+     * @param by_label
+     */
+    void Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label);
+    void Trace_(const cytnx_int64 &a, const cytnx_int64 &b);
+    void Trace_(const std::string &a, const std::string &b);
+    boost::intrusive_ptr<UniTensor_base> Trace(const std::string &a, const std::string &b) {
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->Trace_(a, b);
+      return out;
+    }
+    boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b) {
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->Trace_(a, b);
+      return out;
+    }
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param a
+     * @param b
+     * @param by_label
+     */
     boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b,
-                                               const bool &by_label = false) {
+                                               const bool &by_label) {
       boost::intrusive_ptr<UniTensor_base> out = this->clone();
       out->Trace_(a, b, by_label);
       return out;
@@ -774,8 +947,18 @@ namespace cytnx {
         this->_is_braket_form = this->_update_braket();
       }
     }
-    void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim,
-                   const bool &by_label = false);
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param bond_idx
+     * @param dim
+     * @param by_label
+     */
+    void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim, const bool &by_label);
+    void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim);
+    void truncate_(const std::string &bond_idx, const cytnx_uint64 &dim);
 
     void _save_dispatch(std::fstream &f) const;
     void _load_dispatch(std::fstream &f);
@@ -843,6 +1026,10 @@ namespace cytnx {
               const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
               const int &device = Device.cpu, const bool &is_diag = false,
               const bool &no_alloc = false);
+    void Init(const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels = {},
+              const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
+              const int &device = Device.cpu, const bool &is_diag = false,
+              const bool &no_alloc = false);
     void Init_by_Tensor(const Tensor &in_tensor, const bool &is_diag = false,
                         const cytnx_int64 &rowrank = -1) {
       cytnx_error_msg(
@@ -889,11 +1076,35 @@ namespace cytnx {
       this->_rowrank = new_rowrank;
       this->_is_braket_form = this->_update_braket();
     }
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param new_labels
+     * @return boost::intrusive_ptr<UniTensor_base>
+     */
     boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<cytnx_int64> &new_labels);
+    boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &new_labels);
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param inx
+     * @param new_label
+     * @param by_label
+     * @return boost::intrusive_ptr<UniTensor_base>
+     */
     boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
                                                  const cytnx_int64 &new_label,
-                                                 const bool &by_label = false);
-
+                                                 const bool &by_label);
+    boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
+                                                 const cytnx_int64 &new_label);
+    boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
+                                                 const std::string &new_label);
+    boost::intrusive_ptr<UniTensor_base> relabel(const std::string &inx,
+                                                 const std::string &new_label);
     unsigned int dtype() const {
 #ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
@@ -933,11 +1144,35 @@ namespace cytnx {
       return out;
     };
 
-    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1,
-                  const bool &by_label = false);
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param mapper
+     * @param rowrank
+     * @param by_label
+     */
+    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank,
+                  const bool &by_label);
+    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
+    void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param mapper
+     * @param rowrank
+     * @param by_label
+     * @return boost::intrusive_ptr<UniTensor_base>
+     */
     boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
-                                                 const cytnx_int64 &rowrank = -1,
-                                                 const bool &by_label = false);
+                                                 const cytnx_int64 &rowrank, const bool &by_label);
+    boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
+                                                 const cytnx_int64 &rowrank = -1);
+    boost::intrusive_ptr<UniTensor_base> permute(const std::vector<std::string> &mapper,
+                                                 const cytnx_int64 &rowrank = -1);
     boost::intrusive_ptr<UniTensor_base> contiguous();
     boost::intrusive_ptr<UniTensor_base> contiguous_() {
       if (!this->_contiguous) {
@@ -1248,8 +1483,23 @@ namespace cytnx {
     void to_dense_() {
       cytnx_error_msg(true, "[ERROR] cannot to_dense_ a UniTensor with symmetry.%s", "\n");
     }
-    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back = true,
-                      const bool &by_label = true) {
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param indicators
+     * @param permute_back
+     * @param by_label
+     */
+    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back,
+                      const bool &by_label) {
+      cytnx_error_msg(true, "[Developing]%s", "\n");
+    };
+    void combineBonds(const std::vector<std::string> &indicators, const bool &permute_back = true) {
+      cytnx_error_msg(true, "[Developing]%s", "\n");
+    };
+    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back = true) {
       cytnx_error_msg(true, "[Developing]%s", "\n");
     };
     boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs,
@@ -1285,9 +1535,42 @@ namespace cytnx {
         this->_blocks[i].Conj_();
       }
     };
+    boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b);
+    boost::intrusive_ptr<UniTensor_base> Trace(const std::string &a, const std::string &b);
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param a
+     * @param b
+     * @param by_label
+     * @return boost::intrusive_ptr<UniTensor_base>
+     */
     boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b,
-                                               const bool &by_label = false);
-    void Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label = false) {
+                                               const bool &by_label);
+    void Trace_(const cytnx_int64 &a, const cytnx_int64 &b) {
+      cytnx_error_msg(true,
+                      "[ERROR] Currently SparseUniTensor does not support inplace Trace!, call "
+                      "Trace() instead!%s",
+                      "\n");
+    }
+    void Trace_(const std::string &a, const std::string &b) {
+      cytnx_error_msg(true,
+                      "[ERROR] Currently SparseUniTensor does not support inplace Trace!, call "
+                      "Trace() instead!%s",
+                      "\n");
+    }
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param a
+     * @param b
+     * @param by_label
+     */
+    void Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label) {
       cytnx_error_msg(true,
                       "[ERROR] Currently SparseUniTensor does not support inplace Trace!, call "
                       "Trace() instead!%s",
@@ -1316,9 +1599,18 @@ namespace cytnx {
     void tag() {
       // no-use!
     }
-
-    void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim,
-                   const bool &by_label = false);
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param bond_idx
+     * @param dim
+     * @param by_label
+     */
+    void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim, const bool &by_label);
+    void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim);
+    void truncate_(const std::string &bond_idx, const cytnx_uint64 &dim);
     const Scalar::Sproxy at_for_sparse(const std::vector<cytnx_uint64> &locator) const;
     const cytnx_complex128 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
                                           const cytnx_complex128 &aux) const;
@@ -1436,6 +1728,32 @@ namespace cytnx {
     the bonds.
 
     */
+    UniTensor(const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels = {},
+              const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
+              const int &device = Device.cpu, const bool &is_diag = false)
+        : _impl(new UniTensor_base()) {
+#ifdef UNI_DEBUG
+      cytnx_warning_msg(
+        true,
+        "[DEBUG] message: entry for UniTensor(const std::vector<Bond> &bonds, const "
+        "std::vector<std::string> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int "
+        "&dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false)%s",
+        "\n");
+#endif
+      this->Init(bonds, in_labels, rowrank, dtype, device, is_diag);
+    }
+    /**
+     * @brief Construct a new Uni Tensor object
+     *
+     * @deprecated
+     *
+     * @param bonds
+     * @param in_labels
+     * @param rowrank
+     * @param dtype
+     * @param device
+     * @param is_diag
+     */
     UniTensor(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels = {},
               const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
               const int &device = Device.cpu, const bool &is_diag = false)
@@ -1448,9 +1766,11 @@ namespace cytnx {
         "&dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false)%s",
         "\n");
 #endif
-      this->Init(bonds, in_labels, rowrank, dtype, device, is_diag);
+      std::vector<std::string> vs;
+      for (int i = 0; i < (int)in_labels.size(); i++) vs.push_back(std::to_string(in_labels[i]));
+      this->Init(bonds, vs, rowrank, dtype, device, is_diag);
     }
-    void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels = {},
+    void Init(const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels = {},
               const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
               const int &device = Device.cpu, const bool &is_diag = false) {
       // checking type:
@@ -1479,6 +1799,26 @@ namespace cytnx {
       }
       this->_impl->Init(bonds, in_labels, rowrank, dtype, device, is_diag, false);
     }
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param bonds
+     * @param in_labels
+     * @param rowrank
+     * @param dtype
+     * @param device
+     * @param is_diag
+     */
+    void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels = {},
+              const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
+              const int &device = Device.cpu, const bool &is_diag = false) {
+      std::vector<std::string> vs;
+      for (int i = 0; i < (int)in_labels.size(); i++) vs.push_back(std::to_string(in_labels[i]));
+      this->Init(bonds, vs, rowrank, dtype, device, is_diag);
+    }
+
     //@}
 
     /**
@@ -1491,6 +1831,7 @@ namespace cytnx {
       return *this;
     }
     /**
+    @deprecated
     @brief set a new label for bond at the assigned index.
     @param idx the index of the bond.
     @param new_label the new label that is assign to the bond.
@@ -1501,8 +1842,37 @@ namespace cytnx {
 
     */
     UniTensor &set_label(const cytnx_int64 &idx, const cytnx_int64 &new_label,
-                         const bool &by_label = false) {
+                         const bool &by_label) {
       this->_impl->set_label(idx, new_label, by_label);
+      return *this;
+    }
+    /**
+    @deprecated
+    @brief set a new label for bond at the assigned index.
+    @param idx the index of the bond.
+    @param new_label the new label that is assign to the bond.
+
+    [Note]
+        the new assign label cannot be the same as the label of any other bonds in the UniTensor.
+        ( cannot have duplicate labels )
+
+    */
+    UniTensor &set_label(const cytnx_int64 &idx, const cytnx_int64 &new_label) {
+      this->_impl->set_label(idx, new_label);
+      return *this;
+    }
+    /**
+    @brief set a new label for bond at the assigned index.
+    @param idx the index of the bond.
+    @param new_label the new label that is assign to the bond.
+
+    [Note]
+        the new assign label cannot be the same as the label of any other bonds in the UniTensor.
+        ( cannot have duplicate labels )
+
+    */
+    UniTensor &set_label(const cytnx_int64 &idx, const std::string &new_label) {
+      this->_impl->set_label(idx, new_label);
       return *this;
     }
 
@@ -1524,6 +1894,7 @@ namespace cytnx {
     */
 
     /**
+    @deprecated
     @brief set new labels for all the bonds.
     @param new_labels the new labels for each bond.
 
@@ -1533,6 +1904,19 @@ namespace cytnx {
 
     */
     UniTensor &set_labels(const std::vector<cytnx_int64> &new_labels) {
+      this->_impl->set_labels(new_labels);
+      return *this;
+    }
+    /**
+    @brief set new labels for all the bonds.
+    @param new_labels the new labels for each bond.
+
+    [Note]
+        the new assign labels cannot have duplicate element(s), and should have the same size as the
+    rank of UniTensor.
+
+    */
+    UniTensor &set_labels(const std::vector<std::string> &new_labels) {
       this->_impl->set_labels(new_labels);
       return *this;
     }
@@ -1577,7 +1961,7 @@ namespace cytnx {
     bool is_tag() const { return this->_impl->is_tag(); }
     std::vector<Symmetry> syms() const { return this->_impl->syms(); }
     const bool &is_braket_form() const { return this->_impl->is_braket_form(); }
-    const std::vector<cytnx_int64> &labels() const { return this->_impl->labels(); }
+    const std::vector<std::string> &labels() const { return this->_impl->labels(); }
     const std::vector<Bond> &bonds() const { return this->_impl->bonds(); }
     std::vector<Bond> &bonds() { return this->_impl->bonds(); }
     std::vector<cytnx_uint64> shape() const { return this->_impl->shape(); }
@@ -1594,15 +1978,48 @@ namespace cytnx {
       out._impl = this->_impl->clone();
       return out;
     }
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param new_labels
+     * @return UniTensor
+     */
     UniTensor relabels(const std::vector<cytnx_int64> &new_labels) const {
       UniTensor out;
       out._impl = this->_impl->relabels(new_labels);
       return out;
     }
+    UniTensor relabels(const std::vector<std::string> &new_labels) const {
+      UniTensor out;
+      out._impl = this->_impl->relabels(new_labels);
+      return out;
+    }
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param inx
+     * @param new_label
+     * @param by_label
+     * @return UniTensor
+     */
     UniTensor relabel(const cytnx_int64 &inx, const cytnx_int64 &new_label,
-                      const bool &by_label = false) const {
+                      const bool &by_label) const {
       UniTensor out;
       out._impl = this->_impl->relabel(inx, new_label, by_label);
+      return out;
+    }
+    UniTensor relabel(const cytnx_int64 &inx, const std::string &new_label) const {
+      UniTensor out;
+      out._impl = this->_impl->relabel(inx, new_label);
+      return out;
+    }
+    UniTensor relabel(const cytnx_int64 &inx, const cytnx_int64 &new_label) const {
+      UniTensor out;
+      out._impl = this->_impl->relabel(inx, new_label);
       return out;
     }
 
@@ -1615,16 +2032,50 @@ namespace cytnx {
       }
       return out;
     }
-
-    UniTensor permute(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1,
-                      const bool &by_label = false) {
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param mapper
+     * @param rowrank
+     * @param by_label
+     * @return UniTensor
+     */
+    UniTensor permute(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank,
+                      const bool &by_label) {
       UniTensor out;
       out._impl = this->_impl->permute(mapper, rowrank, by_label);
       return out;
     }
-    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1,
-                  const bool &by_label = false) {
+    UniTensor permute(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) {
+      UniTensor out;
+      out._impl = this->_impl->permute(mapper, rowrank);
+      return out;
+    }
+    UniTensor permute(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1) {
+      UniTensor out;
+      out._impl = this->_impl->permute(mapper, rowrank);
+      return out;
+    }
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param mapper
+     * @param rowrank
+     * @param by_label
+     */
+    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank,
+                  const bool &by_label) {
       this->_impl->permute_(mapper, rowrank, by_label);
+    }
+    void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1) {
+      this->_impl->permute_(mapper, rowrank);
+    }
+    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) {
+      this->_impl->permute_(mapper, rowrank);
     }
     UniTensor contiguous() const {
       UniTensor out;
@@ -1783,9 +2234,24 @@ namespace cytnx {
       return out;
     }
     void to_dense_() { this->_impl->to_dense_(); }
-    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back = true,
-                      const bool &by_label = true) {
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param indicators
+     * @param permute_back
+     * @param by_label
+     */
+    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back,
+                      const bool &by_label) {
       this->_impl->combineBonds(indicators, permute_back, by_label);
+    }
+    void combineBonds(const std::vector<std::string> &indicators, const bool &permute_back = true) {
+      this->_impl->combineBonds(indicators, permute_back);
+    }
+    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back = true) {
+      this->_impl->combineBonds(indicators, permute_back);
     }
     UniTensor contract(const UniTensor &inR, const bool &mv_elem_self = false,
                        const bool &mv_elem_rhs = false) const {
@@ -1912,15 +2378,47 @@ namespace cytnx {
       return *this;
     }
 
-    UniTensor Trace(const cytnx_int64 &a = 0, const cytnx_int64 &b = 1,
-                    const bool &by_label = false) const {
+    UniTensor Trace(const std::string &a, const std::string &b) const {
       UniTensor out;
-      out._impl = this->_impl->Trace(a, b, by_label);
+      out._impl = this->_impl->Trace(a, b);
       return out;
     }
+    UniTensor Trace(const cytnx_int64 &a = 0, const cytnx_int64 &b = 1) const {
+      UniTensor out;
+      out._impl = this->_impl->Trace(a, b);
+      return out;
+    }
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param a
+     * @param b
+     * @param by_label
+     */
+    UniTensor Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label) const {
+      return Trace(a, b, by_label);
+    }
 
-    UniTensor &Trace_(const cytnx_int64 &a = 0, const cytnx_int64 &b = 1,
-                      const bool &by_label = false) {
+    UniTensor &Trace_(const std::string &a, const std::string &b) {
+      this->_impl->Trace_(a, b);
+      return *this;
+    }
+    UniTensor &Trace_(const cytnx_int64 &a = 0, const cytnx_int64 &b = 1) {
+      this->_impl->Trace_(a, b);
+      return *this;
+    }
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param a
+     * @param b
+     * @param by_label
+     */
+    UniTensor &Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label) {
       this->_impl->Trace_(a, b, by_label);
       return *this;
     }
@@ -1965,16 +2463,53 @@ namespace cytnx {
     void Save(const char *fname) const;
     static UniTensor Load(const std::string &fname);
     static UniTensor Load(const char *fname);
-
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param bond_idx
+     * @param dim
+     * @param by_label
+     * @return UniTensor&
+     */
     UniTensor &truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim,
-                         const bool &by_label = false) {
+                         const bool &by_label) {
       this->_impl->truncate_(bond_idx, dim, by_label);
       return *this;
     }
+    UniTensor &truncate_(const std::string &bond_idx, const cytnx_uint64 &dim) {
+      this->_impl->truncate_(bond_idx, dim);
+      return *this;
+    }
+    UniTensor &truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim) {
+      this->_impl->truncate_(bond_idx, dim);
+      return *this;
+    }
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param bond_idx
+     * @param dim
+     * @param by_label
+     * @return UniTensor
+     */
     UniTensor truncate(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim,
-                       const bool &by_label = false) const {
+                       const bool &by_label) const {
       UniTensor out = this->clone();
       out.truncate_(bond_idx, dim, by_label);
+      return out;
+    }
+    UniTensor truncate(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim) const {
+      UniTensor out = this->clone();
+      out.truncate_(bond_idx, dim);
+      return out;
+    }
+    UniTensor truncate(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim) const {
+      UniTensor out = this->clone();
+      out.truncate_(bond_idx, dim);
       return out;
     }
 

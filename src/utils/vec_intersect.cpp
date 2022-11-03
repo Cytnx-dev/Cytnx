@@ -82,6 +82,8 @@ namespace cytnx {
                                                    const std::vector<cytnx_uint16> &);
   template std::vector<cytnx_bool> vec_intersect(const std::vector<cytnx_bool> &,
                                                  const std::vector<cytnx_bool> &);
+  template std::vector<std::string> vec_intersect(const std::vector<std::string> &,
+                                                 const std::vector<std::string> &);
 
   // template void vec_intersect_(std::vector<cytnx_complex128> &out, const
   // std::vector<cytnx_complex128> &,const std::vector<cytnx_complex128> &); template void
@@ -114,6 +116,9 @@ namespace cytnx {
   template void vec_intersect_(std::vector<cytnx_bool> &out, const std::vector<cytnx_bool> &,
                                const std::vector<cytnx_bool> &, std::vector<cytnx_uint64> &,
                                std::vector<cytnx_uint64> &);
+  template void vec_intersect_(std::vector<std::string> &out, const std::vector<std::string> &,
+                               const std::vector<std::string> &, std::vector<cytnx_uint64> &,
+                               std::vector<cytnx_uint64> &);
   // template void vec_intersect_(std::vector<cytnx_complex128> &out, const
   // std::vector<cytnx_complex128> &,const std::vector<cytnx_complex128> &); template void
   // vec_intersect_(std::vector<cytnx_complex64> &out,const std::vector<cytnx_complex64> &,const
@@ -136,5 +141,7 @@ namespace cytnx {
                                const std::vector<cytnx_uint16> &);
   template void vec_intersect_(std::vector<cytnx_bool> &out, const std::vector<cytnx_bool> &,
                                const std::vector<cytnx_bool> &);
+  template void vec_intersect_(std::vector<std::string> &out, const std::vector<std::string> &,
+                               const std::vector<std::string> &);
 
 }  // namespace cytnx

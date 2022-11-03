@@ -18,7 +18,7 @@ namespace cytnx {
     }
 
     // get bond with common label:
-    vector<cytnx_int64> common_lbl;
+    vector<string> common_lbl;
     vector<cytnx_uint64> comm_idx1, comm_idx2;
     vec_intersect_(common_lbl, t1.labels, t2.labels, comm_idx1, comm_idx2);
 
@@ -32,7 +32,7 @@ namespace cytnx {
     t3.ID = t1.ID ^ t2.ID;
     t3.cost = get_cost(t1, t2);
     vector<cytnx_uint64> loc1, loc2;
-    vector<cytnx_int64> comm_lbl;
+    vector<string> comm_lbl;
     vec_intersect_(comm_lbl, t1.labels, t2.labels, loc1, loc2);
     t3.shape = vec_concatenate(vec_erase(t1.shape, loc1), vec_erase(t2.shape, loc2));
     t3.labels = vec_concatenate(vec_erase(t1.labels, loc1), vec_erase(t2.labels, loc2));

@@ -151,19 +151,26 @@ namespace cytnx {
         // prepare output:
         std::vector<UniTensor> outCyT;
 
-        vector<cytnx_int64> oldlabel = ipt.labels();
-        cytnx_int64 newlbl = -1;
+        vector<string> oldlabel = ipt.labels();
+        // cytnx_int64 newlbl = -1;
+        // for (int i = 0; i < oldlabel.size(); i++) {
+        //   if (oldlabel[i] <= newlbl) newlbl = oldlabel[i] - 1;
+        // }
+        string newlbl = "newlbl";
         for (int i = 0; i < oldlabel.size(); i++) {
-          if (oldlabel[i] <= newlbl) newlbl = oldlabel[i] - 1;
+          if (oldlabel[i] == newlbl) newlbl = newlbl + "new";
         }
 
         // s
         SparseUniTensor *tmps = new SparseUniTensor();
+        // tmps->Init(
+        //   {comm_bdi, comm_bdo}, {newlbl, newlbl - 1}, 1, Type.Double,
+        //   Device.cpu, /* type and device does not matter here, cauz we are going to not alloc*/
+        //   true, true);
         tmps->Init(
-          {comm_bdi, comm_bdo}, {newlbl, newlbl - 1}, 1, Type.Double,
+          {comm_bdi, comm_bdo}, {newlbl, newlbl + "new"}, 1, Type.Double,
           Device.cpu, /* type and device does not matter here, cauz we are going to not alloc*/
           true, true);
-
         // check:
         cytnx_error_msg(tmps->get_blocks_().size() != sls.size(), "[ERROR] internal error s.%s",
                         "\n");
@@ -176,7 +183,7 @@ namespace cytnx {
 
         if (is_U) {
           SparseUniTensor *tmpu = new SparseUniTensor();
-          std::vector<cytnx_int64> LBLS = vec_clone(oldlabel, ipt.rowrank());
+          std::vector<string> LBLS = vec_clone(oldlabel, ipt.rowrank());
           LBLS.push_back(newlbl);
           tmpu->Init(
             Ubds, LBLS, ipt.rowrank(), Type.Double,
@@ -195,9 +202,9 @@ namespace cytnx {
 
         if (is_vT) {
           SparseUniTensor *tmpv = new SparseUniTensor();
-          std::vector<cytnx_int64> LBLS(ipt.rank() - ipt.rowrank() +
-                                        1);  // old_label,ipt.rowrank());
-          LBLS[0] = newlbl - 1;
+          std::vector<string> LBLS(ipt.rank() - ipt.rowrank() + 1);  // old_label,ipt.rowrank());
+          // LBLS[0] = newlbl - 1;
+          LBLS[0] = newlbl + "new";
           memcpy(&LBLS[1], &oldlabel[ipt.rowrank()],
                  sizeof(cytnx_int64) * (ipt.rank() - ipt.rowrank()));
 
@@ -233,7 +240,7 @@ namespace cytnx {
         vector<cytnx_uint64> tmps = tmp.shape();
         vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
         tmps.clear();
-        vector<cytnx_int64> oldlabel = Tin.labels();
+        vector<string> oldlabel = Tin.labels();
 
         // collapse as Matrix:
         cytnx_int64 rowdim = 1;
@@ -249,11 +256,17 @@ namespace cytnx {
         // s
         cytnx::UniTensor &Cy_S = outCyT[t];
         cytnx::Bond newBond(outT[t].shape()[0]);
-        cytnx_int64 newlbl = -1;
+        // cytnx_int64 newlbl = -1;
+        // for (int i = 0; i < oldlabel.size(); i++) {
+        //   if (oldlabel[i] <= newlbl) newlbl = oldlabel[i] - 1;
+        // }
+        string newlbl = "newlbl";
         for (int i = 0; i < oldlabel.size(); i++) {
-          if (oldlabel[i] <= newlbl) newlbl = oldlabel[i] - 1;
+          if (oldlabel[i] == newlbl) newlbl = newlbl + "new";
         }
-        Cy_S.Init({newBond, newBond}, {newlbl, newlbl - 1}, 1, Type.Double, Device.cpu,
+        // Cy_S.Init({newBond, newBond}, {newlbl, newlbl - 1}, 1, Type.Double, Device.cpu,
+        //           true);  // it is just reference so no hurt to alias ^^
+        Cy_S.Init({newBond, newBond}, {newlbl, newlbl + "new"}, 1, Type.Double, Device.cpu,
                   true);  // it is just reference so no hurt to alias ^^
         // cout << "[AFTER INIT]" << endl;
         Cy_S.put_block_(outT[t]);
@@ -264,7 +277,7 @@ namespace cytnx {
           shapeU.push_back(-1);
           outT[t].reshape_(shapeU);
           Cy_U.Init(outT[t], false, Tin.rowrank());
-          vector<cytnx_int64> labelU = vec_clone(oldlabel, Tin.rowrank());
+          vector<string> labelU = vec_clone(oldlabel, Tin.rowrank());
           labelU.push_back(Cy_S.labels()[0]);
           Cy_U.set_labels(labelU);
           t++;  // U
@@ -278,7 +291,7 @@ namespace cytnx {
 
           outT[t].reshape_(shapevT);
           Cy_vT.Init(outT[t], false, 1);
-          vector<cytnx_int64> labelvT(shapevT.size());
+          vector<string> labelvT(shapevT.size());
           labelvT[0] = Cy_S.labels()[1];
           memcpy(&labelvT[1], &oldlabel[Tin.rowrank()], sizeof(cytnx_int64) * (labelvT.size() - 1));
           Cy_vT.set_labels(labelvT);

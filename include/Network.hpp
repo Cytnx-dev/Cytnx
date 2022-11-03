@@ -31,7 +31,7 @@ namespace cytnx {
     int nwrktype_id;
     std::string filename;
     std::vector<UniTensor> tensors;
-    std::vector<cytnx_int64> TOUT_labels;
+    std::vector<std::string> TOUT_labels;
     cytnx_uint64 TOUT_iBondNum;
 
     // bool ordered;
@@ -41,7 +41,7 @@ namespace cytnx {
     std::vector<std::string> ORDER_tokens;
 
     // labels corr to the tn list.
-    std::vector<std::vector<cytnx_int64>> label_arr;
+    std::vector<std::vector<std::string>> label_arr;
     std::vector<cytnx_int64> iBondNums;
 
     // name of tn.

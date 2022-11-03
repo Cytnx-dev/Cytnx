@@ -11,7 +11,7 @@
 #include <pybind11/functional.h>
 
 #include "cytnx.hpp"
-//#include "../include/cytnx_error.hpp"
+// #include "../include/cytnx_error.hpp"
 #include "complex.h"
 
 namespace py = pybind11;
@@ -1633,18 +1633,74 @@ PYBIND11_MODULE(cytnx, m) {
          py::arg("is_diag") = false, py::arg("rowrank") = (cytnx_int64)(-1))
     .def(py::init<const std::vector<Bond> &, const std::vector<cytnx_int64> &, const cytnx_int64 &,
                   const unsigned int &, const int &, const bool &>(),
-         py::arg("bonds"), py::arg("labels") = std::vector<cytnx_int64>(),
+         py::arg("bonds"), py::arg("labels") = std::vector<std::string>(),
          py::arg("rowrank") = (cytnx_int64)(-1),
          py::arg("dtype") = (unsigned int)(cytnx::Type.Double),
          py::arg("device") = (int)cytnx::Device.cpu, py::arg("is_diag") = false)
     .def("c_set_name", &UniTensor::set_name)
-    .def("c_set_label", &UniTensor::set_label, py::arg("inx"), py::arg("new_label"),
-         py::arg("by_label") = false)
-    .def("c_set_labels", &UniTensor::set_labels, py::arg("new_labels"))
+    // .def("c_set_label", &UniTensor::set_label, py::arg("inx"), py::arg("new_label"),
+    //      py::arg("by_label") = false)
+    .def("c_set_label",
+         [](UniTensor &self, py::args args, py::kwargs kwargs) -> UniTensor {
+           cytnx_int64 inx;
+           std::string new_label;
+           cytnx_int64 intnew_label;
+           bool by_label = false;
+
+           if (kwargs) {
+             if (kwargs.contains("inx")) inx = kwargs["inx"].cast<cytnx::cytnx_int64>();
+             if (kwargs.contains("new_label")) new_label = kwargs["new_label"].cast<std::string>();
+             if (kwargs.contains("by_label")) by_label = kwargs["by_label"].cast<bool>();
+           }
+           intnew_label = stoi(new_label);
+           if (!by_label)
+             return self.set_label(inx, new_label);
+           else
+             return self.set_label(inx, intnew_label);
+         })
+    // .def("c_set_labels", &UniTensor::set_labels, py::arg("new_labels"))
+    .def("c_set_labels",
+         [](UniTensor &self, py::args args, py::kwargs kwargs) -> UniTensor {
+           std::vector<std::string> new_labels;
+
+           if (kwargs) {
+             if (kwargs.contains("new_labels"))
+               new_labels = kwargs["new_labels"].cast<std::vector<std::string>>();
+           }
+           return self.set_labels(new_labels);
+         })
     .def("c_set_rowrank", &UniTensor::set_rowrank, py::arg("new_rowrank"))
-    .def("relabels", &UniTensor::relabels, py::arg("new_labels"))
-    .def("relabel", &UniTensor::relabel, py::arg("inx"), py::arg("new_label"),
-         py::arg("by_label") = false)
+    // .def("relabels", &UniTensor::relabels, py::arg("new_labels"))
+    .def("relabels",
+         [](UniTensor &self, py::args args, py::kwargs kwargs) -> UniTensor {
+           std::vector<std::string> new_labels;
+
+           if (kwargs) {
+             if (kwargs.contains("new_labels"))
+               new_labels = kwargs["new_labels"].cast<std::vector<std::string>>();
+           }
+           return self.relabels(new_labels);
+         })
+    // .def("relabel", &UniTensor::relabel, py::arg("inx"), py::arg("new_label"),
+    //      py::arg("by_label") = false)
+    .def("relabel",
+         [](UniTensor &self, py::args args, py::kwargs kwargs) -> UniTensor {
+           cytnx_int64 inx;
+           std::string new_label;
+           cytnx_int64 intnew_label;
+           bool by_label = false;
+
+           if (kwargs) {
+             if (kwargs.contains("inx")) inx = kwargs["inx"].cast<cytnx::cytnx_int64>();
+             if (kwargs.contains("new_label")) new_label = kwargs["new_label"].cast<std::string>();
+             if (kwargs.contains("by_label")) by_label = kwargs["by_label"].cast<bool>();
+           }
+           intnew_label = stoi(new_label);
+           if (!by_label)
+             return self.relabel(inx, new_label);
+           else
+             return self.relabel(inx, intnew_label);
+         })
     .def("rowrank", &UniTensor::rowrank)
     .def("rank", &UniTensor::rank)
     .def("syms", &UniTensor::syms)

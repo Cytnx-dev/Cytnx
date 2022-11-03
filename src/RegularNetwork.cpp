@@ -31,7 +31,7 @@ namespace cytnx {
     cytnx_error_msg(tokens.size() == 0, "[ERROR][Network][Fromfile] line:%d invalid ORDER line.%s",
                     line_num, "\n");
   }
-  void _parse_TOUT_line_(vector<cytnx_int64> &lbls, cytnx_uint64 &TOUT_iBondNum, const string &line,
+  void _parse_TOUT_line_(vector<std::string> &lbls, cytnx_uint64 &TOUT_iBondNum, const string &line,
                          const cytnx_uint64 &line_num) {
     lbls.clear();
     vector<string> tmp = str_split(line, false, ";");
@@ -50,7 +50,7 @@ namespace cytnx {
       cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
                       "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
                       "Invalid TOUT line. label contain non integer.");
-      lbls.push_back(stoi(tmp, nullptr));
+      lbls.push_back(tmp);
     }
     TOUT_iBondNum = lbls.size();
 
@@ -66,7 +66,7 @@ namespace cytnx {
       cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
                       "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
                       "Invalid TOUT line. label contain non integer.");
-      lbls.push_back(stoi(tmp, nullptr));
+      lbls.push_back(tmp);
     }
   }
 
@@ -103,7 +103,7 @@ namespace cytnx {
     }
   }
 
-  void _parse_TN_line_(vector<cytnx_int64> &lbls, cytnx_uint64 &TN_iBondNum, const string &line,
+  void _parse_TN_line_(vector<string> &lbls, cytnx_uint64 &TN_iBondNum, const string &line,
                        const cytnx_uint64 &line_num) {
     lbls.clear();
     vector<string> tmp = str_split(line, false, ";");
@@ -123,7 +123,7 @@ namespace cytnx {
       cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
                       "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
                       "Invalid TN line. label contain non integer.");
-      lbls.push_back(stoi(tmp, nullptr));
+      lbls.push_back(tmp);
     }
     TN_iBondNum = lbls.size();
 
@@ -144,7 +144,7 @@ namespace cytnx {
       cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
                       "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
                       "Invalid TN line. label contain non integer.");
-      lbls.push_back(stoi(tmp, nullptr));
+      lbls.push_back(tmp);
     }
 
     cytnx_error_msg(lbls.size() == 0, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
@@ -218,7 +218,7 @@ namespace cytnx {
 
       this->name2pos[name] = names.size() - 1;  // register
       // cout << name << "|" << names.size() - 1 << endl;
-      this->label_arr.push_back(vector<cytnx_int64>());
+      this->label_arr.push_back(vector<std::string>());
       cytnx_uint64 tmp_iBN;
       // this is an internal function that is defined in this cpp file.
       this->label_arr.back() = utensors[i].labels();
@@ -259,7 +259,7 @@ namespace cytnx {
     }  // check all RN.
 
     // checking label matching:
-    map<cytnx_int64, cytnx_int64> lblcnt;
+    map<std::string, cytnx_int64> lblcnt;
     for (int i = 0; i < this->names.size(); i++) {
       for (int j = 0; j < this->label_arr[i].size(); j++) {
         if (lblcnt.find(this->label_arr[i][j]) == lblcnt.end())
@@ -268,8 +268,8 @@ namespace cytnx {
           lblcnt[this->label_arr[i][j]] += 1;
       }
     }
-    vector<cytnx_int64> expected_TOUT;
-    for (map<cytnx_int64, cytnx_int64>::iterator it = lblcnt.begin(); it != lblcnt.end(); ++it) {
+    vector<std::string> expected_TOUT;
+    for (map<std::string, cytnx_int64>::iterator it = lblcnt.begin(); it != lblcnt.end(); ++it) {
       if (it->second == 1) expected_TOUT.push_back(it->first);
     }
     bool err = false;
@@ -277,7 +277,7 @@ namespace cytnx {
       std::cout << expected_TOUT.size() << std::endl;
       err = true;
     }
-    vector<cytnx_int64> itrsct = vec_intersect(expected_TOUT, this->TOUT_labels);
+    vector<std::string> itrsct = vec_intersect(expected_TOUT, this->TOUT_labels);
     if (itrsct.size() != expected_TOUT.size()) {
       err = true;
     }
@@ -370,7 +370,7 @@ namespace cytnx {
 
         this->name2pos[name] = names.size() - 1;  // register
         // cout << name << "|" << names.size() - 1 << endl;
-        this->label_arr.push_back(vector<cytnx_int64>());
+        this->label_arr.push_back(vector<string>());
         cytnx_uint64 tmp_iBN;
         // this is an internal function that is defined in this cpp file.
         _parse_TN_line_(this->label_arr.back(), tmp_iBN, content, i);
@@ -412,7 +412,7 @@ namespace cytnx {
     }  // check all RN.
 
     // checking label matching:
-    map<cytnx_int64, cytnx_int64> lblcnt;
+    map<string, cytnx_int64> lblcnt;
     for (int i = 0; i < this->names.size(); i++) {
       for (int j = 0; j < this->label_arr[i].size(); j++) {
         if (lblcnt.find(this->label_arr[i][j]) == lblcnt.end())
@@ -421,15 +421,15 @@ namespace cytnx {
           lblcnt[this->label_arr[i][j]] += 1;
       }
     }
-    vector<cytnx_int64> expected_TOUT;
-    for (map<cytnx_int64, cytnx_int64>::iterator it = lblcnt.begin(); it != lblcnt.end(); ++it) {
+    vector<string> expected_TOUT;
+    for (map<string, cytnx_int64>::iterator it = lblcnt.begin(); it != lblcnt.end(); ++it) {
       if (it->second == 1) expected_TOUT.push_back(it->first);
     }
     bool err = false;
     if (expected_TOUT.size() != TOUT_labels.size()) {
       err = true;
     }
-    vector<cytnx_int64> itrsct = vec_intersect(expected_TOUT, this->TOUT_labels);
+    vector<string> itrsct = vec_intersect(expected_TOUT, this->TOUT_labels);
     if (itrsct.size() != expected_TOUT.size()) {
       err = true;
     }
@@ -780,7 +780,7 @@ namespace cytnx {
 
     // 6. permute accroding to pre-set labels:
     if (TOUT_labels.size()) {
-      out.permute_(TOUT_labels, TOUT_iBondNum, true);
+      out.permute_(TOUT_labels, TOUT_iBondNum);
     }
 
     // UniTensor out;

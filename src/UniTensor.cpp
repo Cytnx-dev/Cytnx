@@ -59,7 +59,10 @@ namespace cytnx {
 
     cytnx_uint64 rank = this->_impl->_labels.size();
     f.write((char *)&rank, sizeof(cytnx_uint64));
-    f.write((char *)&(this->_impl->_labels[0]), sizeof(cytnx_int64) * rank);
+    for (cytnx_uint64 i = 0; i < rank; i++) {
+      f.write((char *)&(this->_impl->_labels[i]), sizeof(this->_impl->_labels[i]));
+    }
+    // f.write((char *)&(this->_impl->_labels[0]), sizeof(cytnx_int64) * rank);
     for (cytnx_uint64 i = 0; i < rank; i++) {
       this->_impl->_bonds[i]._Save(f);
     }
@@ -106,8 +109,10 @@ namespace cytnx {
     f.read((char *)&rank, sizeof(cytnx_uint64));
     this->_impl->_labels.resize(rank);
     this->_impl->_bonds.resize(rank);
-
-    f.read((char *)&(this->_impl->_labels[0]), sizeof(cytnx_int64) * rank);
+    for (cytnx_uint64 i = 0; i < rank; i++) {
+      f.read((char *)&(this->_impl->_labels[i]), sizeof(this->_impl->_labels[i]));
+    }
+    // f.read((char *)&(this->_impl->_labels[0]), sizeof(cytnx_int64) * rank);
     for (cytnx_uint64 i = 0; i < rank; i++) {
       this->_impl->_bonds[i]._Load(f);
     }

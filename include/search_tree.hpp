@@ -14,7 +14,7 @@ namespace cytnx {
   class PsudoUniTensor {
    public:
     // UniTensor utensor; //don't worry about copy, because everything are references in cytnx!
-    std::vector<cytnx_int64> labels;
+    std::vector<std::string> labels;
     std::vector<cytnx_uint64> shape;
     bool is_assigned;
     PsudoUniTensor *left;

@@ -16,10 +16,9 @@
 using namespace std;
 namespace cytnx {
   typedef Accessor ac;
-  void SparseUniTensor::Init(const std::vector<Bond> &bonds,
-                             const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank,
-                             const unsigned int &dtype, const int &device, const bool &is_diag,
-                             const bool &no_alloc) {
+  void SparseUniTensor::Init(const std::vector<Bond> &bonds, const std::vector<string> &in_labels,
+                             const cytnx_int64 &rowrank, const unsigned int &dtype,
+                             const int &device, const bool &is_diag, const bool &no_alloc) {
     // the entering is already check all the bonds have symmetry.
     //  need to check:
     //  1. the # of symmetry and their type across all bonds
@@ -69,14 +68,14 @@ namespace cytnx {
 
     // check labels:
     if (in_labels.size() == 0) {
-      for (cytnx_int64 i = 0; i < bonds.size(); i++) this->_labels.push_back(i);
+      for (cytnx_int64 i = 0; i < bonds.size(); i++) this->_labels.push_back(to_string(i));
 
     } else {
       // check bonds & labels dim
       cytnx_error_msg(bonds.size() != in_labels.size(), "%s",
                       "[ERROR] labels must have same lenth as # of bonds.");
 
-      std::vector<cytnx_int64> tmp = vec_unique(in_labels);
+      std::vector<string> tmp = vec_unique(in_labels);
       cytnx_error_msg(tmp.size() != in_labels.size(),
                       "[ERROR] labels cannot contain duplicated elements.%s", "\n");
       this->_labels = in_labels;
@@ -148,6 +147,15 @@ namespace cytnx {
       }
     }
   }
+  void SparseUniTensor::Init(const std::vector<Bond> &bonds,
+                             const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank,
+                             const unsigned int &dtype, const int &device, const bool &is_diag,
+                             const bool &no_alloc) {
+    vector<string> vs;
+    transform(in_labels.begin(), in_labels.end(), vs.begin(),
+              [](cytnx_int64 x) -> string { return to_string(x); });
+    Init(bonds, vs, rowrank, dtype, device, is_diag, no_alloc);
+  }
 
   vector<Bond> SparseUniTensor::getTotalQnums(const bool &physical) {
     if (physical) {
@@ -213,11 +221,11 @@ namespace cytnx {
     std::vector<cytnx_uint64> mapper_u64;
     if (by_label) {
       // cytnx_error_msg(true,"[Developing!]%s","\n");
-      std::vector<cytnx_int64>::iterator it;
+      std::vector<string>::iterator it;
       for (cytnx_uint64 i = 0; i < mapper.size(); i++) {
-        it = std::find(out_raw->_labels.begin(), out_raw->_labels.end(), mapper[i]);
+        it = std::find(out_raw->_labels.begin(), out_raw->_labels.end(), to_string(mapper[i]));
         cytnx_error_msg(it == out_raw->_labels.end(),
-                        "[ERROR] label %d does not exist in current UniTensor.\n", mapper[i]);
+                        "[ERROR] label %s does not exist in current UniTensor.\n", mapper[i]);
         mapper_u64.push_back(std::distance(out_raw->_labels.begin(), it));
       }
 
@@ -273,12 +281,139 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(out_raw);
     return out;
   };
+  boost::intrusive_ptr<UniTensor_base> SparseUniTensor::permute(const std::vector<string> &mapper,
+                                                                const cytnx_int64 &rowrank) {
+    // boost::intrusive_ptr<UniTensor_base> out = this->clone();
+    // out->permute_(mapper,rowrank,by_label);
+    // return out;
+
+    SparseUniTensor *out_raw = this->clone_meta(true, true);
+    out_raw->_blocks = this->_blocks;  // share content!!
+
+    std::vector<cytnx_uint64> mapper_u64;
+    // cytnx_error_msg(true,"[Developing!]%s","\n");
+    std::vector<string>::iterator it;
+    for (cytnx_uint64 i = 0; i < mapper.size(); i++) {
+      it = std::find(out_raw->_labels.begin(), out_raw->_labels.end(), mapper[i]);
+      cytnx_error_msg(it == out_raw->_labels.end(),
+                      "[ERROR] label %s does not exist in current UniTensor.\n", mapper[i]);
+      mapper_u64.push_back(std::distance(out_raw->_labels.begin(), it));
+    }
+
+    out_raw->_bonds = vec_map(vec_clone(out_raw->bonds()), mapper_u64);  // this will check validity
+    out_raw->_labels = vec_map(out_raw->labels(), mapper_u64);
+
+    std::vector<cytnx_uint64> new_fwdmap(out_raw->_mapper.size());
+    std::vector<cytnx_uint64> new_shape(out_raw->_mapper.size());
+    std::vector<cytnx_uint64> new_idxmap(out_raw->_mapper.size());
+
+    for (cytnx_uint32 i = 0; i < mapper_u64.size(); i++) {
+      if (mapper_u64[i] >= mapper_u64.size()) {
+        cytnx_error_msg(1, "%s", "invalid rank index.\n");
+      }
+      // std::cout << this->_mapper[rnks[i]] << " " << i << std::endl;
+      new_idxmap[out_raw->_mapper[mapper_u64[i]]] = i;
+      new_fwdmap[i] = out_raw->_mapper[mapper_u64[i]];
+    }
+
+    out_raw->_inv_mapper = new_idxmap;
+    out_raw->_mapper = new_fwdmap;
+
+    /// checking if permute back to contiguous:
+    bool iconti = true;
+    for (cytnx_uint32 i = 0; i < mapper_u64.size(); i++) {
+      if (new_fwdmap[i] != new_idxmap[i]) {
+        iconti = false;
+        break;
+      }
+      if (new_fwdmap[i] != i) {
+        iconti = false;
+        break;
+      }
+    }
+    out_raw->_contiguous = iconti;
+
+    // check rowrank.
+    if (rowrank >= 0) {
+      cytnx_error_msg((rowrank >= out_raw->_bonds.size()) || (rowrank <= 0),
+                      "[ERROR] rowrank should >=1 and <= UniTensor.rank-1 for SparseUniTensor "
+                      "(UniTensor in blockform)(UniTensor with symmetries).%s",
+                      "\n");
+      out_raw->set_rowrank(rowrank);
+    }
+
+    // update braket form status.
+    out_raw->_is_braket_form = out_raw->_update_braket();
+
+    boost::intrusive_ptr<UniTensor_base> out(out_raw);
+    return out;
+  };
+  boost::intrusive_ptr<UniTensor_base> SparseUniTensor::permute(
+    const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank) {
+    // boost::intrusive_ptr<UniTensor_base> out = this->clone();
+    // out->permute_(mapper,rowrank,by_label);
+    // return out;
+
+    SparseUniTensor *out_raw = this->clone_meta(true, true);
+    out_raw->_blocks = this->_blocks;  // share content!!
+
+    std::vector<cytnx_uint64> mapper_u64;
+    mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
+
+    out_raw->_bonds = vec_map(vec_clone(out_raw->bonds()), mapper_u64);  // this will check validity
+    out_raw->_labels = vec_map(out_raw->labels(), mapper_u64);
+
+    std::vector<cytnx_uint64> new_fwdmap(out_raw->_mapper.size());
+    std::vector<cytnx_uint64> new_shape(out_raw->_mapper.size());
+    std::vector<cytnx_uint64> new_idxmap(out_raw->_mapper.size());
+
+    for (cytnx_uint32 i = 0; i < mapper_u64.size(); i++) {
+      if (mapper_u64[i] >= mapper_u64.size()) {
+        cytnx_error_msg(1, "%s", "invalid rank index.\n");
+      }
+      // std::cout << this->_mapper[rnks[i]] << " " << i << std::endl;
+      new_idxmap[out_raw->_mapper[mapper_u64[i]]] = i;
+      new_fwdmap[i] = out_raw->_mapper[mapper_u64[i]];
+    }
+
+    out_raw->_inv_mapper = new_idxmap;
+    out_raw->_mapper = new_fwdmap;
+
+    /// checking if permute back to contiguous:
+    bool iconti = true;
+    for (cytnx_uint32 i = 0; i < mapper_u64.size(); i++) {
+      if (new_fwdmap[i] != new_idxmap[i]) {
+        iconti = false;
+        break;
+      }
+      if (new_fwdmap[i] != i) {
+        iconti = false;
+        break;
+      }
+    }
+    out_raw->_contiguous = iconti;
+
+    // check rowrank.
+    if (rowrank >= 0) {
+      cytnx_error_msg((rowrank >= out_raw->_bonds.size()) || (rowrank <= 0),
+                      "[ERROR] rowrank should >=1 and <= UniTensor.rank-1 for SparseUniTensor "
+                      "(UniTensor in blockform)(UniTensor with symmetries).%s",
+                      "\n");
+      out_raw->set_rowrank(rowrank);
+    }
+
+    // update braket form status.
+    out_raw->_is_braket_form = out_raw->_update_braket();
+
+    boost::intrusive_ptr<UniTensor_base> out(out_raw);
+    return out;
+  };
   void SparseUniTensor::permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank,
                                  const bool &by_label) {
     std::vector<cytnx_uint64> mapper_u64;
     if (by_label) {
       // cytnx_error_msg(true,"[Developing!]%s","\n");
-      std::vector<cytnx_int64>::iterator it;
+      std::vector<string>::iterator it;
       for (cytnx_uint64 i = 0; i < mapper.size(); i++) {
         it = std::find(this->_labels.begin(), this->_labels.end(), mapper[i]);
         cytnx_error_msg(it == this->_labels.end(),
@@ -337,14 +472,131 @@ namespace cytnx {
     // update braket form status.
     this->_is_braket_form = this->_update_braket();
   }
+  void SparseUniTensor::permute_(const std::vector<string> &mapper, const cytnx_int64 &rowrank) {
+    std::vector<cytnx_uint64> mapper_u64;
+    // cytnx_error_msg(true,"[Developing!]%s","\n");
+    std::vector<string>::iterator it;
+    for (cytnx_uint64 i = 0; i < mapper.size(); i++) {
+      it = std::find(this->_labels.begin(), this->_labels.end(), mapper[i]);
+      cytnx_error_msg(it == this->_labels.end(),
+                      "[ERROR] label %d does not exist in current UniTensor.\n", mapper[i]);
+      mapper_u64.push_back(std::distance(this->_labels.begin(), it));
+    }
+
+    this->_bonds = vec_map(vec_clone(this->bonds()), mapper_u64);  // this will check validity
+    this->_labels = vec_map(this->labels(), mapper_u64);
+
+    std::vector<cytnx_uint64> new_fwdmap(this->_mapper.size());
+    std::vector<cytnx_uint64> new_shape(this->_mapper.size());
+    std::vector<cytnx_uint64> new_idxmap(this->_mapper.size());
+
+    for (cytnx_uint32 i = 0; i < mapper_u64.size(); i++) {
+      if (mapper_u64[i] >= mapper_u64.size()) {
+        cytnx_error_msg(1, "%s", "invalid rank index.\n");
+      }
+      // std::cout << this->_mapper[rnks[i]] << " " << i << std::endl;
+      new_idxmap[this->_mapper[mapper_u64[i]]] = i;
+      new_fwdmap[i] = this->_mapper[mapper_u64[i]];
+    }
+
+    this->_inv_mapper = new_idxmap;
+    this->_mapper = new_fwdmap;
+
+    /// checking if permute back to contiguous:
+    bool iconti = true;
+    for (cytnx_uint32 i = 0; i < mapper_u64.size(); i++) {
+      if (new_fwdmap[i] != new_idxmap[i]) {
+        iconti = false;
+        break;
+      }
+      if (new_fwdmap[i] != i) {
+        iconti = false;
+        break;
+      }
+    }
+    if (this->_inner_rowrank != this->_rowrank) iconti = false;
+    this->_contiguous = iconti;
+
+    // check rowrank.
+    if (rowrank >= 0) {
+      cytnx_error_msg((rowrank >= this->_bonds.size()) || (rowrank <= 0),
+                      "[ERROR] rowrank should >=1 and <= UniTensor.rank-1 for SparseUniTensor "
+                      "(UniTensor in blockform)(UniTensor with symmetries).%s",
+                      "\n");
+      // this->_rowrank = rowrank; //only update the outer meta.
+      this->set_rowrank(rowrank);
+    }
+
+    // update braket form status.
+    this->_is_braket_form = this->_update_braket();
+  }
+  void SparseUniTensor::permute_(const std::vector<cytnx_int64> &mapper,
+                                 const cytnx_int64 &rowrank) {
+    std::vector<cytnx_uint64> mapper_u64;
+    mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
+
+    this->_bonds = vec_map(vec_clone(this->bonds()), mapper_u64);  // this will check validity
+    this->_labels = vec_map(this->labels(), mapper_u64);
+
+    std::vector<cytnx_uint64> new_fwdmap(this->_mapper.size());
+    std::vector<cytnx_uint64> new_shape(this->_mapper.size());
+    std::vector<cytnx_uint64> new_idxmap(this->_mapper.size());
+
+    for (cytnx_uint32 i = 0; i < mapper_u64.size(); i++) {
+      if (mapper_u64[i] >= mapper_u64.size()) {
+        cytnx_error_msg(1, "%s", "invalid rank index.\n");
+      }
+      // std::cout << this->_mapper[rnks[i]] << " " << i << std::endl;
+      new_idxmap[this->_mapper[mapper_u64[i]]] = i;
+      new_fwdmap[i] = this->_mapper[mapper_u64[i]];
+    }
+
+    this->_inv_mapper = new_idxmap;
+    this->_mapper = new_fwdmap;
+
+    /// checking if permute back to contiguous:
+    bool iconti = true;
+    for (cytnx_uint32 i = 0; i < mapper_u64.size(); i++) {
+      if (new_fwdmap[i] != new_idxmap[i]) {
+        iconti = false;
+        break;
+      }
+      if (new_fwdmap[i] != i) {
+        iconti = false;
+        break;
+      }
+    }
+    if (this->_inner_rowrank != this->_rowrank) iconti = false;
+    this->_contiguous = iconti;
+
+    // check rowrank.
+    if (rowrank >= 0) {
+      cytnx_error_msg((rowrank >= this->_bonds.size()) || (rowrank <= 0),
+                      "[ERROR] rowrank should >=1 and <= UniTensor.rank-1 for SparseUniTensor "
+                      "(UniTensor in blockform)(UniTensor with symmetries).%s",
+                      "\n");
+      // this->_rowrank = rowrank; //only update the outer meta.
+      this->set_rowrank(rowrank);
+    }
+
+    // update braket form status.
+    this->_is_braket_form = this->_update_braket();
+  }
 
   boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabels(
-    const std::vector<cytnx_int64> &new_labels) {
+    const std::vector<string> &new_labels) {
     SparseUniTensor *tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_labels(new_labels);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
+  }
+  boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabels(
+    const std::vector<cytnx_int64> &new_labels) {
+    vector<string> vs;
+    transform(new_labels.begin(), new_labels.end(), vs.begin(),
+              [](cytnx_int64 x) -> string { return to_string(x); });
+    relabels(vs);
   }
 
   boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabel(const cytnx_int64 &inx,
@@ -353,6 +605,22 @@ namespace cytnx {
     SparseUniTensor *tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_label(inx, new_label, by_label);
+    boost::intrusive_ptr<UniTensor_base> out(tmp);
+    return out;
+  }
+  boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabel(const cytnx_int64 &inx,
+                                                                const string &new_label) {
+    SparseUniTensor *tmp = this->clone_meta(true, true);
+    tmp->_blocks = this->_blocks;
+    tmp->set_label(inx, new_label);
+    boost::intrusive_ptr<UniTensor_base> out(tmp);
+    return out;
+  }
+  boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabel(const cytnx_int64 &inx,
+                                                                const cytnx_int64 &new_label) {
+    SparseUniTensor *tmp = this->clone_meta(true, true);
+    tmp->_blocks = this->_blocks;
+    tmp->set_label(inx, new_label);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
@@ -408,7 +676,8 @@ namespace cytnx {
           bks = "*<--";
         memset(l, 0, sizeof(char) * 40);
         memset(llbl, 0, sizeof(char) * 40);
-        sprintf(l, "%3d %s", this->_labels[i], bks.c_str());
+        // sprintf(l, "%3d %s", this->_labels[i], bks.c_str());
+        sprintf(l, "%s %s", this->_labels[i], bks.c_str());
         sprintf(llbl, "%-3d", this->_bonds[i].dim());
       } else {
         memset(l, 0, sizeof(char) * 40);
@@ -423,7 +692,8 @@ namespace cytnx {
           bks = "--> ";
         memset(r, 0, sizeof(char) * 40);
         memset(rlbl, 0, sizeof(char) * 40);
-        sprintf(r, "%s %-3d", bks.c_str(), this->_labels[Nin + i]);
+        // sprintf(r, "%s %-3d", bks.c_str(), this->_labels[Nin + i]);
+        sprintf(r, "%s %s", bks.c_str(), this->_labels[Nin + i]);
         sprintf(rlbl, "%3d", this->_bonds[Nin + i].dim());
       } else {
         memset(r, 0, sizeof(char) * 40);
@@ -443,7 +713,8 @@ namespace cytnx {
 
     if (bond_info) {
       for (cytnx_uint64 i = 0; i < this->_bonds.size(); i++) {
-        sprintf(buffer, "lbl:%d ", this->_labels[i]);
+        // sprintf(buffer, "lbl:%d ", this->_labels[i]);
+        sprintf(buffer, "lbl:%s ", this->_labels[i]);
         std::cout << std::string(buffer);
         std::cout << this->_bonds[i] << std::endl;
       }
@@ -1362,14 +1633,141 @@ namespace cytnx {
     cytnx_uint64 ida, idb;
 
     if (by_label) {
-      ida = vec_where(this->_labels, a);
-      idb = vec_where(this->_labels, b);
+      ida = vec_where(this->_labels, to_string(a));
+      idb = vec_where(this->_labels, to_string(b));
     } else {
       cytnx_error_msg(a < 0 || b < 0, "[ERROR] invalid index a, b%s", "\n");
       cytnx_error_msg(a >= this->rank() || b >= this->rank(), "[ERROR] index out of bound%s", "\n");
       ida = a;
       idb = b;
     }
+
+    // check if indices are the same:
+    cytnx_error_msg(
+      ida == idb, "[ERROR][SparseUniTensor::Trace_] index a and index b should not be the same.%s",
+      "\n");
+
+    // check bra-ket if tagged
+    if (this->is_braket_form()) {
+      // check if it is the same species:
+      if (this->_bonds[ida].type() == this->_bonds[idb].type()) {
+        cytnx_error_msg(
+          true, "[ERROR][SparseUniTensor::Trace_] BD_BRA can only contract with BD_KET.%s", "\n");
+      }
+    }
+
+    // check dimension:
+    cytnx_error_msg(
+      this->_bonds[ida].dim() != this->_bonds[idb].dim(),
+      "[ERROR][SparseUniTensor::Trace_] The dimension of two bond for trace does not match!%s",
+      "\n");
+
+    // check qnums:
+    cytnx_error_msg(
+      this->_bonds[ida].qnums() != this->_bonds[idb].qnums(),
+      "[ERROR][SparseUniTensor::Trace_] The qnums of two bond for trace does not match!%s", "\n");
+
+    // trace the block:
+    Tensor t;
+    if (this->_is_diag) {
+      // we need linalg.Sum
+      for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
+        if (t.dtype() == Type.Void)
+          t = linalg::Pow(linalg::Norm(this->_blocks[i]), 2);
+        else
+          t += linalg::Pow(linalg::Norm(this->_blocks[i]), 2);
+      }
+    } else {
+      for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
+        if (t.dtype() == Type.Void)
+          t = linalg::Trace(this->_blocks[i]);
+        else
+          t += linalg::Trace(this->_blocks[i]);
+      }
+    }
+
+    boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
+    out->Init_by_Tensor(t, false, 0);
+    return out;
+  }
+  boost::intrusive_ptr<UniTensor_base> SparseUniTensor::Trace(const cytnx_int64 &a,
+                                                              const cytnx_int64 &b) {
+    cytnx_error_msg(
+      this->_bonds.size() != 2,
+      "[ERROR] SparseUniTensor currently only support Trace on SparseUniTensor with rank-2!%s",
+      "\n");
+    // std::cout << "entry" << std::endl;
+    //[NOTE] Currently ONLY WORK FOR RANK-2 !!
+
+    // 1) from label to indx.
+    cytnx_uint64 ida, idb;
+
+    cytnx_error_msg(a < 0 || b < 0, "[ERROR] invalid index a, b%s", "\n");
+    cytnx_error_msg(a >= this->rank() || b >= this->rank(), "[ERROR] index out of bound%s", "\n");
+    ida = a;
+    idb = b;
+
+    // check if indices are the same:
+    cytnx_error_msg(
+      ida == idb, "[ERROR][SparseUniTensor::Trace_] index a and index b should not be the same.%s",
+      "\n");
+
+    // check bra-ket if tagged
+    if (this->is_braket_form()) {
+      // check if it is the same species:
+      if (this->_bonds[ida].type() == this->_bonds[idb].type()) {
+        cytnx_error_msg(
+          true, "[ERROR][SparseUniTensor::Trace_] BD_BRA can only contract with BD_KET.%s", "\n");
+      }
+    }
+
+    // check dimension:
+    cytnx_error_msg(
+      this->_bonds[ida].dim() != this->_bonds[idb].dim(),
+      "[ERROR][SparseUniTensor::Trace_] The dimension of two bond for trace does not match!%s",
+      "\n");
+
+    // check qnums:
+    cytnx_error_msg(
+      this->_bonds[ida].qnums() != this->_bonds[idb].qnums(),
+      "[ERROR][SparseUniTensor::Trace_] The qnums of two bond for trace does not match!%s", "\n");
+
+    // trace the block:
+    Tensor t;
+    if (this->_is_diag) {
+      // we need linalg.Sum
+      for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
+        if (t.dtype() == Type.Void)
+          t = linalg::Pow(linalg::Norm(this->_blocks[i]), 2);
+        else
+          t += linalg::Pow(linalg::Norm(this->_blocks[i]), 2);
+      }
+    } else {
+      for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
+        if (t.dtype() == Type.Void)
+          t = linalg::Trace(this->_blocks[i]);
+        else
+          t += linalg::Trace(this->_blocks[i]);
+      }
+    }
+
+    boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
+    out->Init_by_Tensor(t, false, 0);
+    return out;
+  }
+  boost::intrusive_ptr<UniTensor_base> SparseUniTensor::Trace(const string &a, const string &b) {
+    cytnx_error_msg(
+      this->_bonds.size() != 2,
+      "[ERROR] SparseUniTensor currently only support Trace on SparseUniTensor with rank-2!%s",
+      "\n");
+    // std::cout << "entry" << std::endl;
+    //[NOTE] Currently ONLY WORK FOR RANK-2 !!
+
+    // 1) from label to indx.
+    cytnx_uint64 ida, idb;
+
+    ida = vec_where(this->_labels, a);
+    idb = vec_where(this->_labels, b);
 
     // check if indices are the same:
     cytnx_error_msg(
@@ -1435,7 +1833,7 @@ namespace cytnx {
                     "[ERROR] two UniTensor have different symmetry type cannot contract.%s", "\n");
 
     // get common labels:
-    std::vector<cytnx_int64> comm_labels;
+    std::vector<string> comm_labels;
     std::vector<cytnx_uint64> comm_idx1, comm_idx2;
     vec_intersect_(comm_labels, this->labels(), rhs->labels(), comm_idx1, comm_idx2);
 
@@ -1443,7 +1841,7 @@ namespace cytnx {
     SparseUniTensor *tmp = new SparseUniTensor();
 
     bool is_scalar_out = false;
-    std::vector<cytnx_int64> out_labels;
+    std::vector<string> out_labels;
     std::vector<Bond> out_bonds;
     cytnx_int64 out_rowrank;
 
@@ -1639,14 +2037,20 @@ namespace cytnx {
         auto idx2 =
           std::distance(rhs->labels().begin(),
                         std::find(rhs->labels().begin(), rhs->labels().end(), this->_labels[idx1]));
-
-        auto minlbl = min(*std::min_element(this->labels().begin(), this->labels().end()),
-                          *std::min_element(rhs->labels().begin(), rhs->labels().end()));
+        vector<cytnx_int64> i64lblthis;
+        vector<cytnx_int64> i64lblrhs;
+        std::transform(this->labels().begin(), this->labels().end(), i64lblthis.begin(),
+                       [](const string &x) -> cytnx_int64 { return stoi(x); });
+        std::transform(this->labels().begin(), this->labels().end(), i64lblrhs.begin(),
+                       [](const string &x) -> cytnx_int64 { return stoi(x); });
+        cytnx_int64 minlblint = min(*std::min_element(i64lblthis.begin(), i64lblthis.end()),
+                                    *std::min_element(i64lblrhs.begin(), i64lblrhs.end()));
+        // string minlbl = to_string(minlblint);
 
         auto new_tlabel = this->labels();
-        new_tlabel[idx1] = minlbl - 1;
+        new_tlabel[idx1] = to_string(minlblint - 1);
         auto new_rlabel = rhs->labels();
-        new_rlabel[idx2] = minlbl - 2;
+        new_rlabel[idx2] = to_string(minlblint - 2);
 
         // recalculate:
         comm_labels.clear();
@@ -1813,6 +2217,12 @@ namespace cytnx {
 
   void SparseUniTensor::truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim,
                                   const bool &by_label) {
+    cytnx_error_msg(true, "[ERROR] truncate for SparseUniTensor is under developing!!%s", "\n");
+  }
+  void SparseUniTensor::truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim) {
+    cytnx_error_msg(true, "[ERROR] truncate for SparseUniTensor is under developing!!%s", "\n");
+  }
+  void SparseUniTensor::truncate_(const string &bond_idx, const cytnx_uint64 &dim) {
     cytnx_error_msg(true, "[ERROR] truncate for SparseUniTensor is under developing!!%s", "\n");
   }
 

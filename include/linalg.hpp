@@ -88,6 +88,9 @@ namespace cytnx {
     template <typename T>
     cytnx::UniTensor ExpM(const cytnx::UniTensor &Tin, const T &a = 1, const T &b = 0);
     cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const cytnx_int64 &a = 0,
+                           const cytnx_int64 &b = 1);
+    cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const std::string &a, const std::string &b);
+    cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const cytnx_int64 &a = 0,
                            const cytnx_int64 &b = 1, const bool &by_label = false);
     std::vector<cytnx::UniTensor> Qr(const cytnx::UniTensor &Tin, const bool &is_tau = false);
     std::vector<cytnx::UniTensor> Qdr(const cytnx::UniTensor &Tin, const bool &is_tau = false);

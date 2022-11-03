@@ -100,7 +100,7 @@ namespace cytnx {
         vector<cytnx_uint64> tmps = tmp.shape();
         vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
         tmps.clear();
-        vector<cytnx_int64> oldlabel = Tin.labels();
+        vector<string> oldlabel = Tin.labels();
 
         // collapse as Matrix:
         cytnx_int64 rowdim = 1;
@@ -113,15 +113,20 @@ namespace cytnx {
         int t = 0;
         vector<cytnx::UniTensor> outCyT(outT.size());
 
-        cytnx_int64 newlbl = INT64_MAX;
+        // cytnx_int64 newlbl = INT64_MAX;
+        // for (int i = 0; i < oldlabel.size(); i++) {
+        //   if (oldlabel[i] < newlbl) newlbl = oldlabel[i];
+        // }
+        // newlbl -= 1;
+
+        string newlbl = "newlbl";
         for (int i = 0; i < oldlabel.size(); i++) {
-          if (oldlabel[i] < newlbl) newlbl = oldlabel[i];
+          if (oldlabel[i] == newlbl) newlbl = newlbl + "new";
         }
-        newlbl -= 1;
 
         // Q
         vector<cytnx_int64> Qshape;
-        vector<cytnx_int64> Qlbl;
+        vector<string> Qlbl;
         for (int i = 0; i < Tin.rowrank(); i++) {
           Qshape.push_back(oldshape[i]);
           Qlbl.push_back(oldlabel[i]);
@@ -134,8 +139,10 @@ namespace cytnx {
 
         // D
         outCyT[1] = UniTensor(outT[1], true, 1);
-        outCyT[1].set_labels({newlbl, newlbl - 1});
-        newlbl -= 1;
+        // outCyT[1].set_labels({newlbl, newlbl - 1});
+        // newlbl -= 1;
+        outCyT[1].set_labels({newlbl, newlbl + "new"});
+        newlbl = newlbl + "new";
 
         // R
         Qshape.clear();
