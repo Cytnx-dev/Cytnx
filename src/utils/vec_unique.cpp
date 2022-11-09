@@ -29,6 +29,23 @@ namespace cytnx {
   };
 
   template <>
+  std::vector<std::string> vec_unique(const std::vector<std::string> &in) {
+    if (in.size() == 0)
+      return std::vector<std::string>();
+    else if (in.size() == 1)
+      return in;
+
+    std::vector<std::string> new_vec(in);
+
+    typename std::vector<std::string>::iterator it;
+    std::sort(new_vec.begin(), new_vec.end());
+
+    it = std::unique(new_vec.begin(), new_vec.begin() + new_vec.size());
+    new_vec.resize(std::distance(new_vec.begin(), it));
+    return new_vec;
+  };
+
+  template <>
   std::vector<bool> vec_unique(const std::vector<bool> &in) {
     if (in.size() == 0)
       return std::vector<bool>();
@@ -55,6 +72,6 @@ namespace cytnx {
   template std::vector<cytnx_uint32> vec_unique(const std::vector<cytnx_uint32> &);
   template std::vector<cytnx_int16> vec_unique(const std::vector<cytnx_int16> &);
   template std::vector<cytnx_uint16> vec_unique(const std::vector<cytnx_uint16> &);
-  template std::vector<std::string> vec_unique(const std::vector<std::string> &);
+  // template std::vector<std::string> vec_unique(const std::vector<std::string> &);
   // template std::vector<cytnx_bool> vec_unique(const std::vector<cytnx_bool> &);
 }  // namespace cytnx

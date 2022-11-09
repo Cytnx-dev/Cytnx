@@ -3,6 +3,7 @@ add_executable(
   #test_main.cpp
   Bond_test.cpp
   Network_test.cpp
+  UniTensor_base_test.cpp
   ncon_test.cpp
   utils_test/vec_concatenate.cpp
   utils_test/vec_unique.cpp

@@ -89,6 +89,19 @@ namespace cytnx {
     const bool &is_braket_form() const { return this->_is_braket_form; }
     const bool &is_tag() const { return this->_is_tag; }
     const std::vector<std::string> &labels() const { return this->_labels; }
+    /**
+     * @brief Get the index of an desired label string
+     *
+     * @param lbl Label you want to find
+     * @return The index of the label. If not found, return -1
+     */
+    cytnx_int64 get_index(std::string lbl) const {
+      std::vector<std::string> lbls = this->_labels;
+      for (cytnx_uint64 i = 0; i < lbls.size(); i++) {
+        if (lbls[i] == lbl) return i;
+      }
+      return -1;
+    }
     const std::vector<Bond> &bonds() const { return this->_bonds; }
     std::vector<Bond> &bonds() { return this->_bonds; }
     const std::string &name() const { return this->_name; }
@@ -1962,6 +1975,13 @@ namespace cytnx {
     std::vector<Symmetry> syms() const { return this->_impl->syms(); }
     const bool &is_braket_form() const { return this->_impl->is_braket_form(); }
     const std::vector<std::string> &labels() const { return this->_impl->labels(); }
+    /**
+     * @brief Get the index of an desired label string
+     *
+     * @param lbl Label you want to find
+     * @return The index of the label. If not found, return -1
+     */
+    cytnx_int64 get_index(std::string lbl) const { return this->_impl->get_index(lbl); }
     const std::vector<Bond> &bonds() const { return this->_impl->bonds(); }
     std::vector<Bond> &bonds() { return this->_impl->bonds(); }
     std::vector<cytnx_uint64> shape() const { return this->_impl->shape(); }
