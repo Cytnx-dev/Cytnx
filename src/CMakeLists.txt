@@ -40,6 +40,9 @@ target_sources_local(cytnx
     Int16Storage.cpp
     BoolStorage.cpp
     ncon.cpp
+    Gncon.cpp
+    Gncon_base.cpp
+    RegularGncon.cpp
 )
 
 #if(UNI_GPU)
