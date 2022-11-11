@@ -616,6 +616,14 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
+  boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabel(const string &inx,
+                                                                const string &new_label) {
+    SparseUniTensor *tmp = this->clone_meta(true, true);
+    tmp->_blocks = this->_blocks;
+    tmp->set_label(inx, new_label);
+    boost::intrusive_ptr<UniTensor_base> out(tmp);
+    return out;
+  }
   boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabel(const cytnx_int64 &inx,
                                                                 const cytnx_int64 &new_label) {
     SparseUniTensor *tmp = this->clone_meta(true, true);
