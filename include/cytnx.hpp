@@ -30,4 +30,7 @@
 #include "tn_algo/MPS.hpp"
 #include "tn_algo/MPO.hpp"
 #include "tn_algo/DMRG.hpp"
+
+#include "Gncon.hpp"
+
 #endif

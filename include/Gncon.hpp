@@ -35,10 +35,7 @@ namespace cytnx {
     std::vector<UniTensor> tensors;
     std::vector<cytnx_int64> TOUT_labels;
 
-    std::vector<std::vector<std::pair<std::string, int>>> table; // table[i] =  i-th tensor's leg names to be contracted, and its target label.
-    std::vector<std::vector<std::string>> rep_labels; // record replace lbls for each tensor.
-    std::vector<std::vector<cytnx_int64>> is_contracted; // auto allocate out leg lbl for each tensor.
-    std::vector<std::vector<std::string>> final_labels;
+    std::vector<std::vector<std::pair<std::string,std::string>>> table; // table[i] =  i-th tensor's leg names to be contracted, and its target label.
 
     cytnx_uint64 TOUT_iBondNum;
 
@@ -49,7 +46,7 @@ namespace cytnx {
     std::vector<std::string> ORDER_tokens;
 
     // labels corr to the tn list.
-    std::vector<std::vector<cytnx_int64>> label_arr;
+    std::vector<std::vector<std::string>> label_arr;
     std::vector<cytnx_int64> iBondNums;
 
     // name of tn.

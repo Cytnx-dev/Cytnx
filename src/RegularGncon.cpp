@@ -11,7 +11,7 @@ using namespace std;
 namespace cytnx {
   // these three are internal functions:
 
-  void _parse_task_line_(string line, std::vector<std::vector<std::pair<string, int>>>& table, vector<std::string>& names, map<string, cytnx_uint64>& name2pos, int i){
+  void _parse_task_line_(string line, vector<vector<pair<string, string>>>& table, vector<std::string>& names, map<string, cytnx_uint64>& name2pos, int i){
 
         vector<string> tmpvs, tmpvs_;
         tmpvs = str_split(line, false, "-");  // note that checking empty string!
@@ -38,12 +38,13 @@ namespace cytnx {
           // check if name not exist:
           if (name2pos.find(tmpvs_[0]) == name2pos.end()){
             names.push_back(tmpvs_[0]);
-            table.push_back(vector<pair<string, int>>());
+            table.push_back(vector<pair<string, string>>());
+            // rep_labels.push_back(vector<pair<string, string>>());
             name2pos[tmpvs_[0]] = names.size()-1;  // register
           }
           // std::cout<<"table size : "<<table.size()<<std::endl;
           // std::cout<<"index : "<<name2pos[tmpvs_[0]]<<std::endl;
-          pair<string, int> ptmp(tmpvs_[1], i);
+          pair<string, string> ptmp(tmpvs_[1], "/"+to_string(i));
           // table[i] =  i-th tensor's leg names to be contracted, and its target labels. 
           table[name2pos[tmpvs_[0]]].push_back(ptmp);
         }
@@ -71,28 +72,27 @@ namespace cytnx {
     cytnx_error_msg(tokens.size() == 0, "[ERROR][Gncon][Fromfile] line:%d invalid ORDER line.%s",
                     line_num, "\n");
   }
-  void _parse_TOUT_line_(vector<cytnx_int64> &lbls, cytnx_uint64 &TOUT_iBondNum, vector<vector<string>> rep_labels,
+  void _parse_TOUT_line_(vector<cytnx_int64> &lbls, cytnx_uint64 &TOUT_iBondNum, vector<vector<pair<string,string>>>& table,
                         map<string, cytnx_uint64> name2pos, const string &line, const cytnx_uint64 &line_num) {
 
     // A:a->b,c->d ; B:b,c
 
     vector<string> tmp = str_split(line, false, ";");
     for(int i = 0; i < tmp.size(); i++){
-      vector<string> tmp_ = str_split(tmp[i], false, ":");
+      vector<string> tmp_ = str_split(tmp[i], false, "/");
       string name = str_strip(tmp_[0]);
       string content = str_strip(tmp_[1]);
+      // std::cout<<"name = "<<name<<std::endl;
+      // std::cout<<"content = "<<content<<std::endl;
       vector<string> reps = str_split(content, false, ",");
       int tidx = name2pos[name];
       for(int j = 0; j < reps.size(); j++){
-        vector<string> ls = str_split(reps[j], false, "->");
-        rep_labels[tidx].push_back(ls[0]);
-        rep_labels[tidx].push_back(ls[1]);
+        vector<string> ls = str_split(reps[j], false, ">");
+        pair<string, string> tmp(ls[0],ls[1]);
+        // std::cout<<"ls[0] = "<<ls[0]<<"ls[1] = "<<ls[1]<<std::endl;
+        table[tidx].push_back(tmp);
       } 
     }
-
-
-
-
 
     // // handle col-space lbl
     // vector<string> ket_lbls = str_split(tmp[0], false, ",");
@@ -160,7 +160,7 @@ namespace cytnx {
   }
 
   /// This is debug function
-  void print_gn(std::vector<std::vector<std::pair<string, int>>>& table, vector<std::string>& names, map<string, cytnx_uint64>& name2pos) {
+  void print_gn(std::vector<vector<pair<string, string>>>& table, vector<string>& names, map<string, cytnx_uint64>& name2pos) {
     std::cout<<"### table  ###"<<std::endl;
     for(int i = 0;i<table.size();i++){
       for(int j = 0; j<table[i].size(); j++){
@@ -388,7 +388,7 @@ namespace cytnx {
 
       // remove any comment at eol :
       line = str_split(line, true, "#")[0];  // remove comment on end.
-      std::cout<<line<<std::endl;
+      // std::cout<<line<<std::endl;
       if(line.find_first_of("-") == string::npos){
 
         // Not a contraction line, should be either ORDER or TOUT
@@ -410,7 +410,7 @@ namespace cytnx {
           // if content has length, then pass to process.
           if (content.length()){
             // this is an internal function that is defined in this cpp file.
-            _parse_TOUT_line_(this->TOUT_labels, this->TOUT_iBondNum, this->rep_labels, this->name2pos, content, i);
+            _parse_TOUT_line_(this->TOUT_labels, this->TOUT_iBondNum, this->table, this->name2pos, content, i);
           }
           
         } else {
@@ -456,7 +456,7 @@ namespace cytnx {
         cytnx_error_msg(true, "%s", "\n");
       }
     }  // check all RN.
-    print_gn(this->table, this->names, this->name2pos);
+    // print_gn(this->table, this->names, this->name2pos);
   }
 
   void RegularGncon::Fromfile(const std::string &fname) {
@@ -515,36 +515,29 @@ namespace cytnx {
                     "[ERROR][RegularGncon][PutUniTensor] index=%d out of range.\n", idx);
 
     // check shape:
-    cytnx_error_msg(this->label_arr[idx].size() != utensor.rank(),
-                    "[ERROR][RegularGncon][PutUniTensor] tensor name: [%s], the rank of input "
-                    "UniTensor does not match the definition in Gncon file.\n",
-                    this->names[idx].c_str());
-    cytnx_error_msg(this->iBondNums[idx] != utensor.rowrank(),
-                    "[ERROR][RegularGncon][PutUniTensor] tensor name: [%s], the row-rank of "
-                    "input UniTensor does not match the semicolon defined in Gncon file.\n",
-                    this->names[idx].c_str());
+    // cytnx_error_msg(this->label_arr[idx].size() != utensor.rank(),
+    //                 "[ERROR][RegularGncon][PutUniTensor] tensor name: [%s], the rank of input "
+    //                 "UniTensor does not match the definition in Gncon file.\n",
+    //                 this->names[idx].c_str());
+    // cytnx_error_msg(this->iBondNums[idx] != utensor.rowrank(),
+    //                 "[ERROR][RegularGncon][PutUniTensor] tensor name: [%s], the row-rank of "
+    //                 "input UniTensor does not match the semicolon defined in Gncon file.\n",
+    //                 this->names[idx].c_str());
 
+    // put tensor
+    this->tensors[idx] = utensor;
 
-    // // put tensor
-    // this->tensors[idx] = utensor;
+    // update label_arr: clear
+    this->label_arr[idx].resize(utensor.rank());
+    // this->is_contracted[idx].resize(utensor.rank());
 
-    // // update label_arr: clear
-    // this->label_arr[idx].resize(utensor.shape().size());
-    // this->is_contracted[idx].resize(utensor.shape().size());
-
-    // // update label_arr: update
-    // for(int i = 0; i < this->table[idx].size(); i++){
-    //   pair<string, int> tmp = this->table[idx][i];
-    //   this->label_arr[idx][utensor.get_idx(tmp.first)] = tmp.second;
-    //   this->is_contracted[idx][utensor.get_idx(tmp.first)] = 1;
-    // }
-
-    // // update tout lbl to index mapping
-    // for(int i = 0; i < this->rep_labels[idx].size(); i++){
-    //   pair<string, int> tmp = this->table[idx][i];
-    //   this->label_arr[idx][utensor.get_idx(tmp.first)] = tmp.second;
-    //   this->is_contracted[idx][utensor.get_idx(tmp.first)] = 1;
-    // }
+    // update label_arr: update
+    for(int i = 0; i < this->table[idx].size(); i++){
+      pair<string, string> tmp = this->table[idx][i];
+      int utidx = utensor.get_index(tmp.first);
+      this->label_arr[idx][utidx] = tmp.second;
+      // this->is_contracted[idx][utidx] = 1;
+    }
   }
 
   void RegularGncon::Savefile(const std::string &fname) {
@@ -700,8 +693,7 @@ namespace cytnx {
       "[ERROR][Launch][RegularGncon] cannot launch with optimal=True and given contract_order.%s",
       "\n");
     int outleg_lbl = -1;
-    this->final_labels.clear();
-    // vector<vector<cytnx_int64> > old_labels;
+    
     for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
       cytnx_error_msg(this->tensors[idx].uten_type() == UTenType.Void,
                       "[ERROR][Launch][RegularGncon] tensor at [%d], name: [%s] is not set.\n",
@@ -709,16 +701,11 @@ namespace cytnx {
       // transion save old labels:
       //  old_labels.push_back(this->tensors[idx].labels());
 
-
-      //fill in the lbls of legs not contracted.
-      for (cytnx_uint64 j = 0; j < this->label_arr[idx].size(); j++){
-        if(this->is_contracted[idx][j]!=1){
-          this->label_arr[idx][j] = outleg_lbl;
-          outleg_lbl-=1;
-          // this->final_labels[idx][this->tensors[idx].get_idx(rep_labels[idx].first)] = rep_labels[idx].second
-          // this->final_labels.push_back(this->rep_labels[idx][j]);
-        }
-      }
+      // std::cout<<"idx: "<<idx<<" label: ";
+      // for (cytnx_uint64 j = 0; j < this->label_arr[idx].size(); j++){
+      //   std::cout<<this->label_arr[idx][j]<<",";
+      // }
+      // std::cout<<std::endl;
 
       // modify the label of unitensor (shared):
       //  this->tensors[idx].set_labels(this->label_arr[idx]);//this conflict  
