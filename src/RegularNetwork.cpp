@@ -106,46 +106,62 @@ namespace cytnx {
   void _parse_TN_line_(vector<string> &lbls, cytnx_uint64 &TN_iBondNum, const string &line,
                        const cytnx_uint64 &line_num) {
     lbls.clear();
-    vector<string> tmp = str_split(line, false, ";");
-    cytnx_error_msg(tmp.size() != 2, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
-                    "Invalid TN line. A \';\' should be used to indicate the rowrank.\nexample1> "
-                    "\'Tn: 0, 1; 2, 3\'\nexample2> \'Tn: ; -1, 2, 3\'");
+    // vector<string> tmp = str_split(line, false, ";");
+    // cytnx_error_msg(tmp.size() != 2, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
+    //                 "Invalid TN line. A \';\' should be used to indicate the rowrank.\nexample1> "
+    //                 "\'Tn: 0, 1; 2, 3\'\nexample2> \'Tn: ; -1, 2, 3\'");
 
-    // handle col-space lbl
-    vector<string> ket_lbls = str_split(tmp[0], false, ",");
-    if (ket_lbls.size() == 1)
-      if (ket_lbls[0].length() == 0) ket_lbls.clear();
-    for (cytnx_uint64 i = 0; i < ket_lbls.size(); i++) {
-      string tmp = str_strip(ket_lbls[i]);
+    // // handle col-space lbl
+    // vector<string> ket_lbls = str_split(tmp[0], false, ",");
+    // if (ket_lbls.size() == 1)
+    //   if (ket_lbls[0].length() == 0) ket_lbls.clear();
+    // for (cytnx_uint64 i = 0; i < ket_lbls.size(); i++) {
+    //   string tmp = str_strip(ket_lbls[i]);
+    //   cytnx_error_msg(tmp.length() == 0,
+    //                   "[ERROR][Network][Fromfile] line:%d Invalid labels for TN line.%s", line_num,
+    //                   "\n");
+    //   cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
+    //                   "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
+    //                   "Invalid TN line. label contain non integer.");
+    //   lbls.push_back(tmp);
+    // }
+    // TN_iBondNum = lbls.size();
+
+    // // handle row-space lbl
+    // vector<string> bra_lbls = str_split(tmp[1], false, ",");
+    // if (bra_lbls.size() == 1)
+    //   if (bra_lbls[0].length() == 0) bra_lbls.clear();
+    // for (cytnx_uint64 i = 0; i < bra_lbls.size(); i++) {
+    //   string tmp = str_strip(bra_lbls[i]);
+    //   cytnx_error_msg(tmp.length() == 0,
+    //                   "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
+    //                   line_num, "\n");
+
+    //   // tri(tmp.c_str()); 
+
+    //   // cout << tmp.size() << endl;
+    //   // cout << tmp.find_first_not_of("0123456789-") << endl;
+    //   cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
+    //                   "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
+    //                   "Invalid TN line. label contain non integer.");
+    //   lbls.push_back(tmp);
+    // }
+
+    vector<string> alllbls = str_split(line, false, ",");
+    if (alllbls.size() == 1)
+      if (alllbls[0].length() == 0) alllbls.clear();
+    for (cytnx_uint64 i = 0; i < alllbls.size(); i++) {
+      string tmp = str_strip(alllbls[i]);
       cytnx_error_msg(tmp.length() == 0,
                       "[ERROR][Network][Fromfile] line:%d Invalid labels for TN line.%s", line_num,
                       "\n");
-      cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
-                      "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
-                      "Invalid TN line. label contain non integer.");
+      // cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
+      //                 "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
+      //                 "Invalid TN line. label contain non integer.");
       lbls.push_back(tmp);
     }
-    TN_iBondNum = lbls.size();
 
-    // handle row-space lbl
-    vector<string> bra_lbls = str_split(tmp[1], false, ",");
-    if (bra_lbls.size() == 1)
-      if (bra_lbls[0].length() == 0) bra_lbls.clear();
-    for (cytnx_uint64 i = 0; i < bra_lbls.size(); i++) {
-      string tmp = str_strip(bra_lbls[i]);
-      cytnx_error_msg(tmp.length() == 0,
-                      "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
-                      line_num, "\n");
-
-      // tri(tmp.c_str());
-
-      // cout << tmp.size() << endl;
-      // cout << tmp.find_first_not_of("0123456789-") << endl;
-      cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
-                      "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
-                      "Invalid TN line. label contain non integer.");
-      lbls.push_back(tmp);
-    }
+    // TN_iBondNum = lbls.size();
 
     cytnx_error_msg(lbls.size() == 0, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
                     "Invalid TN line. no label present in this line, which is invalid.%s", "\n");
@@ -334,7 +350,7 @@ namespace cytnx {
       cytnx_error_msg(name.find_first_of(" ;,") != string::npos,
                       "[ERROR] invalid Tensor name at line %d\n", i);
 
-      // dispatch:
+      // dispatch
       if (name == "ORDER") {
         if (content.length()) {
           // cut the line into tokens,
@@ -351,6 +367,7 @@ namespace cytnx {
       } else {
         this->names.push_back(name);
         // check if name is valid:
+
         if (name2pos.find(name) != name2pos.end()) {
           cytnx_error_msg(true,
                           "[ERROR][Network][Fromfile] tensor name: [%s] has already exist. Cannot "
@@ -506,10 +523,11 @@ namespace cytnx {
                     "[ERROR][RegularNetwork][PutUniTensor] tensor name: [%s], the rank of input "
                     "UniTensor does not match the definition in network file.\n",
                     this->names[idx].c_str());
-    cytnx_error_msg(this->iBondNums[idx] != utensor.rowrank(),
-                    "[ERROR][RegularNetwork][PutUniTensor] tensor name: [%s], the row-rank of "
-                    "input UniTensor does not match the semicolon defined in network file.\n",
-                    this->names[idx].c_str());
+
+    // cytnx_error_msg(this->iBondNums[idx] != utensor.rowrank(),
+    //                 "[ERROR][RegularNetwork][PutUniTensor] tensor name: [%s], the row-rank of "
+    //                 "input UniTensor does not match the semicolon defined in network file.\n",
+    //                 this->names[idx].c_str());
 
     // for(int i=0;i<this->tensors.size();i++)
     //     if(this->tensors[i].uten_type()!=UTenType.Void && i!=idx)
