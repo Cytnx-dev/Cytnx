@@ -1043,6 +1043,13 @@ namespace cytnx {
               const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
               const int &device = Device.cpu, const bool &is_diag = false,
               const bool &no_alloc = false);
+
+    void Shadow_Init(const std::vector<Bond> &bonds,  const std::vector<std::vector<cytnx_int64>> &_block_qnums,
+               const std::vector<std::string> &in_labels = {},
+              const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
+              const int &device = Device.cpu, const bool &is_diag = false,
+              const bool &no_alloc = false);
+
     void Init_by_Tensor(const Tensor &in_tensor, const bool &is_diag = false,
                         const cytnx_int64 &rowrank = -1) {
       cytnx_error_msg(
