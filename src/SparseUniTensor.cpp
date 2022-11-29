@@ -834,7 +834,7 @@ namespace cytnx {
       SparseUniTensor *tmp = new SparseUniTensor();
       // tmp->Init(this->_bonds, this->_labels, this->_rowrank, this->dtype(), this->device(),
       //           this->_is_diag);
-      tmp->Shadow_Init(this->_bonds, this->_blockqnums, this->_labels, this->_rowrank, this->dtype(), this->device(),
+      tmp->Init(this->_bonds, this->_labels, this->_rowrank, this->dtype(), this->device(),
                 this->_is_diag);
 
       // calculate new inner meta, and copy the element from it.
