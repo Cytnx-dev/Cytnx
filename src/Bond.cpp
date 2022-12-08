@@ -132,34 +132,121 @@ namespace cytnx {
 
 
 
-  void Bond_impl::combineBond_(const boost::intrusive_ptr<Bond_impl> &bd_in) {
+  void Bond_impl::combineBond_(const boost::intrusive_ptr<Bond_impl> &bd_in, const bool &is_grp){
+
     // check:
     cytnx_error_msg(this->type() != bd_in->type(), "%s\n",
                     "[ERROR] cannot combine two Bonds with different types.");
     cytnx_error_msg(this->Nsym() != bd_in->Nsym(), "%s\n",
                     "[ERROR] cannot combine two Bonds with differnet symmetry.");
-    if (this->Nsym() != 0)
-      cytnx_error_msg(this->syms() != bd_in->syms(), "%s\n",
+
+
+    this->_dim *= bd_in->dim();  // update to new total dimension
+
+
+    if(this->Nsym() != 0){
+        
+        cytnx_error_msg(this->syms() != bd_in->syms(), "%s\n",
                       "[ERROR] cannot combine two Bonds with differnet symmetry.");
 
-    this->_dim *= bd_in->dim();  // update to new dimension
+        
+        //checking the qnum format:
+        cytnx_error_msg( (this->_degs.size()!=0)^(bd_in->_degs.size()!=0), "%s\n", "[ERROR] cannot combine two symmetry bond with differet format!");
 
-    /// handle symmetry
-    std::vector<std::vector<cytnx_int64>> new_qnums(this->_dim,
-                                                    std::vector<cytnx_int64>(this->Nsym()));
 
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
-    for (cytnx_uint64 d = 0; d < this->_dim; d++) {
-      for (cytnx_uint32 i = 0; i < this->Nsym(); i++) {
-        this->_syms[i].combine_rule_(new_qnums[d][i],
-                                     this->_qnums[cytnx_uint64(d / bd_in->dim())][i],
-                                     bd_in->qnums()[d % bd_in->dim()][i]);
-      }
-    }
+        std::vector<std::vector<cytnx_int64>> new_qnums;
+        if(this->_degs.size()){
 
-    this->_qnums = new_qnums;
+            // new format:
+            cytnx_uint64 Dnew_qnums = this->_qnums.size()*bd_in->_qnums.size();
+            std::vector<cytnx_uint64> new_degs(Dnew_qnums);
+ 
+            if(is_grp){
+
+                std::map< std::vector<cytnx_int64> , std::vector<cytnx_int32> > QNpool;
+                std::vector<cytnx_int64> tmpqnum(this->_syms.size());
+                
+                    
+                for (cytnx_uint64 d = 0; d < Dnew_qnums; d++) {
+                  for (cytnx_uint32 i = 0; i < this->Nsym(); i++) {
+                    this->_syms[i].combine_rule_(tmpqnum[i],
+                                                 this->_qnums[cytnx_uint64(d / bd_in->_qnums.size())][i],
+                                                 bd_in->_qnums[d % bd_in->_qnums.size()][i]);
+                  }
+                  if(QNpool.find(tmpqnum) == QNpool.end()){
+                    QNpool.insert(make_pair(tmpqnum,std::vector<cytnx_int32>({d})));
+                  }else{
+                    QNpool[tmpqnum].push_back(d);
+                  }
+                  new_degs[d] = this->_degs[cytnx_uint64(d / bd_in->_qnums.size())]*bd_in->_degs[d % bd_in->_qnums.size()];
+                }
+                 
+
+
+                //realloc & assign! 
+                this->_qnums.resize(QNpool.size());
+                this->_degs.resize(QNpool.size());
+                
+                cytnx_uint64 cnt=0;
+                for(auto elem: QNpool){
+                    this->_qnums[cnt] = elem.first;
+                    cytnx_uint64 DD = 1;
+                    for(auto i : elem.second){
+                        DD *= new_degs[i]; 
+                    }
+                    this->_degs[cnt] = DD;
+                    cnt++;
+                }
+
+                
+ 
+            }else{
+                new_qnums = std::vector< std::vector<cytnx_int64> >(Dnew_qnums,
+                                                                    std::vector<cytnx_int64>(this->Nsym()));
+
+                #ifdef UNI_OMP
+                #pragma omp parallel for schedule(dynamic)
+                #endif
+                for (cytnx_uint64 d = 0; d < new_qnums.size(); d++) {
+                  for (cytnx_uint32 i = 0; i < this->Nsym(); i++) {
+                    this->_syms[i].combine_rule_(new_qnums[d][i],
+                                                 this->_qnums[cytnx_uint64(d / bd_in->_qnums.size())][i],
+                                                 bd_in->_qnums[d % bd_in->_qnums.size()][i]);
+                    
+                  }
+                  new_degs[d] = this->_degs[cytnx_uint64(d / bd_in->_qnums.size())]*bd_in->_degs[d % bd_in->_qnums.size()];
+                }
+
+
+                cytnx_warning_msg(true,"[WARNING] duplicated qnums might appears!%s","\n");             
+                this->_degs = new_degs;
+                this->_qnums = new_qnums;
+            }   
+
+        }else{
+            // old format:
+
+            new_qnums = std::vector<std::vector<cytnx_int64>>(this->_dim,
+                                                            std::vector<cytnx_int64>(this->Nsym()));
+
+            #ifdef UNI_OMP
+            #pragma omp parallel for schedule(dynamic)
+            #endif
+            for (cytnx_uint64 d = 0; d < this->_dim; d++) {
+              for (cytnx_uint32 i = 0; i < this->Nsym(); i++) {
+                this->_syms[i].combine_rule_(new_qnums[d][i],
+                                             this->_qnums[cytnx_uint64(d / bd_in->dim())][i],
+                                             bd_in->_qnums[d % bd_in->dim()][i]);
+              }
+            }
+            this->_qnums = new_qnums;
+
+        }
+
+
+    } // check if symmetry. 
+
+
   }
 
   //-------------
@@ -421,7 +508,7 @@ namespace cytnx {
     for (cytnx_int32 i = 0; i < bin.Nsym(); i++) {
       os << " " << bin.syms()[i].stype_str() << ":: ";
       for (cytnx_int32 j = 0; j < bin.qnums().size(); j++) {
-        sprintf(buffer, " %+2d", bin.qnums()[j][i]);
+        sprintf(buffer, " %+3d", bin.qnums()[j][i]);
         os << string(buffer);
       }
       os << std::endl;
@@ -429,7 +516,7 @@ namespace cytnx {
     if(bin._impl->_degs.size()){
         os << "Deg>> ";
         for(cytnx_int32 i=0;i<bin.qnums().size();i++){
-            sprintf(buffer, " %2d", bin._impl->_degs[i]);
+            sprintf(buffer, " %3d", bin._impl->_degs[i]);
             os << string(buffer);
         }
         os << std::endl;

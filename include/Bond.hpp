@@ -7,6 +7,7 @@
 #include <initializer_list>
 #include <vector>
 #include <fstream>
+#include <map>
 #include "intrusive_ptr_base.hpp"
 #include "utils/vec_clone.hpp"
 namespace cytnx {
@@ -49,8 +50,6 @@ namespace cytnx {
     const std::vector<Symmetry> &syms() const { return this->_syms; }
     std::vector<Symmetry> &syms() { return this->_syms;}
 
-    
-
     // this is clone return.
     std::vector<std::vector<cytnx_int64>> qnums_clone() const { return this->_qnums; }
     std::vector<Symmetry> syms_clone() const { return vec_clone(this->_syms); }
@@ -67,8 +66,6 @@ namespace cytnx {
         }
       }
         
-      
-
       this->_type = new_bondType;
     }
 
@@ -80,23 +77,28 @@ namespace cytnx {
       this->_type = bondType::BD_REG;
     }
 
+
     boost::intrusive_ptr<Bond_impl> clone() {
       boost::intrusive_ptr<Bond_impl> out(new Bond_impl());
       out->_dim = this->dim();
       out->_type = this->type();
       out->_qnums = this->qnums_clone();
       out->_syms = this->syms_clone();  // return a clone of vec!
+      out->_degs = this->_degs; 
       return out;
     }
 
-    void combineBond_(const boost::intrusive_ptr<Bond_impl> &bd_in);
 
-    boost::intrusive_ptr<Bond_impl> combineBond(const boost::intrusive_ptr<Bond_impl> &bd_in) {
+    // [NOTE] for UniTensor iinternal, we might need to return the QNpool (unordered map for further info on block arrangement!)
+    void combineBond_(const boost::intrusive_ptr<Bond_impl> &bd_in, const bool &is_grp=true);
+
+    boost::intrusive_ptr<Bond_impl> combineBond(const boost::intrusive_ptr<Bond_impl> &bd_in, const bool &is_grp=true) {
       boost::intrusive_ptr<Bond_impl> out = this->clone();
-      out->combineBond_(bd_in);
+      out->combineBond_(bd_in,is_grp);
       return out;
     }
 
+// checked [KHW] ^^
     // return a sorted qnums by removing all duplicates, sorted from large to small.
     std::vector<std::vector<cytnx_int64>> getUniqueQnums(std::vector<cytnx_uint64> &counts,
                                                          const bool &return_counts);
@@ -319,7 +321,7 @@ namespace cytnx {
     #### output>
     \verbinclude example/Bond/combineBondinplace.py.out
     */
-    void combineBond_(const Bond &bd_in) { this->_impl->combineBond_(bd_in._impl); }
+    void combineBond_(const Bond &bd_in, const bool &is_grp=true) { this->_impl->combineBond_(bd_in._impl); }
 
     /**
     @brief combine the input bond with self, and return a new combined Bond instance.
@@ -336,7 +338,7 @@ namespace cytnx {
     #### output>
     \verbinclude example/Bond/combineBond.py.out
     */
-    Bond combineBond(const Bond &bd_in) const {
+    Bond combineBond(const Bond &bd_in, const bool &is_grp=true) const {
       Bond out;
       out._impl = this->_impl->combineBond(bd_in._impl);
       return out;
@@ -357,10 +359,10 @@ namespace cytnx {
     #### output>
     \verbinclude example/Bond/combineBonds.py.out
     */
-    Bond combineBonds(const std::vector<Bond> &bds) {
+    Bond combineBonds(const std::vector<Bond> &bds, const bool &is_grp=true) {
       Bond out = this->clone();
       for (cytnx_uint64 i = 0; i < bds.size(); i++) {
-        out.combineBond_(bds[i]);
+        out.combineBond_(bds[i],is_grp);
       }
       return out;
     }
@@ -379,9 +381,9 @@ namespace cytnx {
     #### output>
     \verbinclude example/Bond/combineBonds_.py.out
     */
-    void combineBonds_(const std::vector<Bond> &bds) {
+    void combineBonds_(const std::vector<Bond> &bds, const bool &is_grp=true) {
       for (cytnx_uint64 i = 0; i < bds.size(); i++) {
-        this->combineBond_(bds[i]);
+        this->combineBond_(bds[i],is_grp);
       }
     }
 

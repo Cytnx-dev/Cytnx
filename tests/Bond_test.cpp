@@ -65,6 +65,25 @@ TEST(Bond, CombindBondSymm) {
   Bond bd_sym_d = bd_sym_a.combineBonds({bd_sym_b, bd_sym_c});
   EXPECT_EQ(bd_sym_d.type(), BD_BRA);
 }
+
+TEST(Bond, InitWithQnum_v2){
+  //default sym
+  Bond bd_sym_a = Bond(BD_KET, {{0,2},{3,5},{1,6},{4,1}} 
+                             , {  4  ,  7  ,  2  ,  3  });
+
+  EXPECT_EQ(bd_sym_a.type(),BD_KET);
+  EXPECT_EQ(bd_sym_a.dim(),16);
+  EXPECT_EQ(bd_sym_a.Nsym(),2);
+  EXPECT_EQ(bd_sym_a.syms(),{Symmetry::U1(),Symmetry::U1()});
+     
+  
+
+
+
+}
+
+
+
 // TEST(Bond, ConstructorTypeQnums){
 //   // Bond(bondType tp, const std::vector<Qnum>& qnums);
 //
