@@ -10,7 +10,9 @@
 #include "intrusive_ptr_base.hpp"
 #include "utils/vec_clone.hpp"
 namespace cytnx {
-  enum bondType : int { BD_KET = -1, BD_BRA = 1, BD_REG = 0, BD_NONE = 0, BD_IN = -1, BD_OUT = 1 };
+
+  /// currently using gBD_* to indicate this is bond with new qnum structure!
+  enum bondType : int { BD_KET = -1, BD_BRA = 1, BD_REG = 0, BD_NONE = 0, BD_IN = -1, BD_OUT = 1};
   /// @cond
   class Bond_impl : public intrusive_ptr_base<Bond_impl> {
    private:
@@ -18,6 +20,11 @@ namespace cytnx {
     friend class Bond;
     cytnx_uint64 _dim;
     bondType _type;
+    std::vector<cytnx_uint64> _degs; // this only works for Qnum 
+    /*
+        [Note], _degs has size only when the Bond is defined with Qnum, deg !! 
+                Use this size to check if the bond is type-2 (new type)
+    */
     std::vector<std::vector<cytnx_int64>> _qnums;  //(dim, # of sym)
     std::vector<Symmetry> _syms;
 
@@ -27,23 +34,41 @@ namespace cytnx {
               const std::vector<std::vector<cytnx_int64>> &in_qnums = {},
               const std::vector<Symmetry> &in_syms = {});
 
+    // new added
+    void Init(const bondType &bd_type, 
+              const std::vector<std::vector<cytnx_int64>> &in_qnums,
+              const std::vector<cytnx_uint64> &degs, 
+              const std::vector<Symmetry> &in_syms = {});
+
+
     bondType type() const { return this->_type; };
     const std::vector<std::vector<cytnx_int64>> &qnums() const { return this->_qnums; }
     std::vector<std::vector<cytnx_int64>> &qnums() { return this->_qnums; }
     const cytnx_uint64 &dim() const { return this->_dim; }
     cytnx_uint32 Nsym() const { return this->_syms.size(); }
     const std::vector<Symmetry> &syms() const { return this->_syms; }
-    std::vector<Symmetry> &syms() { return this->_syms; }
+    std::vector<Symmetry> &syms() { return this->_syms;}
+
+    
 
     // this is clone return.
     std::vector<std::vector<cytnx_int64>> qnums_clone() const { return this->_qnums; }
     std::vector<Symmetry> syms_clone() const { return vec_clone(this->_syms); }
 
     void set_type(const bondType &new_bondType) {
-      if ((this->_type != BD_REG) && (new_bondType == BD_REG)) {
-        cytnx_error_msg(this->_qnums.size(),
+      if((this->_type != BD_REG)){ 
+        if(new_bondType == BD_REG){
+            cytnx_error_msg(this->_qnums.size(),
                         "[ERROR] cannot change type to BD_REG for a symmetry bond.%s", "\n");
+        }
+        if( std::abs(int(this->_type)) != std::abs(int(new_bondType)) ){
+            cytnx_error_msg(this->_qnums.size(),
+                        "[ERROR] cannot exchange BDtype between BD_* <-> gBD_* .%s", "\n");
+        }
       }
+        
+      
+
       this->_type = new_bondType;
     }
 
@@ -105,6 +130,14 @@ namespace cytnx {
         : _impl(new Bond_impl()) {
       this->_impl->Init(dim, bd_type, in_qnums, in_syms);
     }
+    
+    Bond(const bondType &bd_type,
+         const std::vector<std::vector<cytnx_int64>> &in_qnums,
+         const std::vector<cytnx_uint64> &degs,
+         const std::vector<Symmetry> &in_syms = {})
+        : _impl(new Bond_impl()) {
+      this->_impl->Init(bd_type, in_qnums, degs, in_syms);
+    }
 
     /**
     @brief init a bond object
@@ -143,6 +176,16 @@ namespace cytnx {
               const std::vector<Symmetry> &in_syms = {}) {
       this->_impl->Init(dim, bd_type, in_qnums, in_syms);
     }
+
+
+    void Init(const bondType &bd_type,
+              const std::vector<std::vector<cytnx_int64>> &in_qnums,
+              const std::vector<cytnx_uint64> &degs,
+              const std::vector<Symmetry> &in_syms = {}){
+        this->_impl->Init(bd_type,in_qnums,degs,in_syms);
+    }
+
+
 
     /**
     @brief return the current tag type

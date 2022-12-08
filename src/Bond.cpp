@@ -9,6 +9,8 @@ namespace cytnx {
   void Bond_impl::Init(const cytnx_uint64 &dim, const bondType &bd_type,
                        const std::vector<std::vector<cytnx_int64>> &in_qnums,
                        const std::vector<Symmetry> &in_syms) {
+    cytnx_warning_msg(true,"%s","[WARNING] Init Bond with old version, this might be deprecated in future.\n");
+
     cytnx_error_msg(dim == 0, "%s", "[ERROR] Bond_impl cannot have 0 or negative dimension.");
     // check is symmetry:
     if (in_qnums.size() == 0) {
@@ -61,6 +63,74 @@ namespace cytnx {
       }
     }
   }
+
+    void Bond_impl::Init(const bondType &bd_type,
+            const std::vector<std::vector<cytnx_int64>> &in_qnums,
+            const std::vector<cytnx_uint64> &degs,
+            const std::vector<Symmetry> &in_syms){
+        
+        cytnx_error_msg(degs.size() != in_qnums.size(), "%s", "[ERROR] [degs] list must have same size as [qnum] list");
+        cytnx_error_msg(degs.size() == 0, "%s", "[ERROR] [degs & qnums] lists cannot be empty!");
+
+        
+        ///calc total dim:
+        this->_dim = 0;
+        for(auto i: degs){
+            this->_dim += i;
+        }
+
+        // checking qnum size are the same for each entry.
+        cytnx_uint64 N_syms = in_qnums[0].size();
+        for (cytnx_uint64 i = 0; i < in_qnums.size(); i++) {
+            cytnx_error_msg(in_qnums[i].size() != N_syms,
+                            "[ERROR] invalid syms number on qnum @ index %d. the [# of elements for each qnum list] should be the same as [# of symmetries]\n",
+                            i);
+        }
+
+        //checking qnum size from in_qnums with in_syms!
+        if (in_syms.size() == 0){
+            //default U1!
+            this->_syms.clear();
+            this->_syms.resize(N_syms);
+            for (cytnx_uint64 i = 0; i < N_syms; i++) {
+              this->_syms[i] = Symmetry::U1();
+            }
+
+        }else{
+            cytnx_error_msg(
+              in_syms.size() != N_syms, "%s",
+              "[ERROR] the number of symmetry should match the # of cols of passed-in qnums.");
+            this->_syms = vec_clone(in_syms);
+        }
+
+        this->_qnums = in_qnums;
+        this->_degs = degs;
+        this->_type = bd_type;
+
+        // using this constor can only be symmetric!!
+        cytnx_error_msg(
+            bd_type == BD_REG, "%s",
+            "[ERROR] bond with qnums (symmetry) can only have bond_type=BD_BRA or BD_KET");
+
+        // check qnums match the rule of each symmetry type
+        for(cytnx_uint64 d = 0; d < in_qnums.size(); d++) {
+            for (cytnx_uint64 i = 0; i < N_syms; i++)
+            cytnx_error_msg(!this->_syms[i].check_qnum(this->_qnums[d][i]),
+                          "[ERROR] invalid qnums @ index %d with Symmetry: %s\n", d,
+                          this->_syms[i].stype_str().c_str());
+        }
+
+
+
+
+
+    }
+
+    
+
+
+
+
 
   void Bond_impl::combineBond_(const boost::intrusive_ptr<Bond_impl> &bd_in) {
     // check:
@@ -347,14 +417,24 @@ namespace cytnx {
     }
     // os << bin.get_syms().size() << endl;
 
+
     for (cytnx_int32 i = 0; i < bin.Nsym(); i++) {
       os << " " << bin.syms()[i].stype_str() << ":: ";
-      for (cytnx_int32 j = 0; j < bin.dim(); j++) {
+      for (cytnx_int32 j = 0; j < bin.qnums().size(); j++) {
         sprintf(buffer, " %+2d", bin.qnums()[j][i]);
         os << string(buffer);
       }
       os << std::endl;
     }
+    if(bin._impl->_degs.size()){
+        os << "Deg>> ";
+        for(cytnx_int32 i=0;i<bin.qnums().size();i++){
+            sprintf(buffer, " %2d", bin._impl->_degs[i]);
+            os << string(buffer);
+        }
+        os << std::endl;
+    }
+
     free(buffer);
     return os;
   }
