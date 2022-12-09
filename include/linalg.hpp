@@ -754,6 +754,33 @@ namespace cytnx {
 
     */
 
+    // Arnoldi:
+    //===========================================
+    /**
+    @brief perform Arnoldi for matrices or linear function.
+    @param Hop the Linear Operator defined by LinOp class or it's inheritance (see LinOp).
+    @param Tin the initial vector, this should be rank-1.
+    @param which which order eigenvlues and corresponding eigenvectors should be find, can be 
+    'LM' (largest magnitude), 'LR' (largest real part), 'LI' (largest imaginary part), 
+    'SM' (smallest magnitude), 'SR' (smallest real part), 'SI' (smallest imaginary part).
+    @param maxiter the maximum interation steps for each k.
+    @param cvg_crit the convergence criterion of the energy.
+    @param k the number of lowest k eigen values.
+    @param is_V if set to true, the eigen vectors will be returned.
+    @param verbose print out iteration info.
+    @return
+        [eigvals (Tensor), eigvecs (Tensor)(option)]
+    #description:
+        This function calculate the eigen value problem using Arnoldi algorithm.
+    #[Note]
+        To use, define a linear operator with LinOp class either by assign a custom function or
+    create a class that inherit LinOp (see LinOp for further details)
+    */
+    std::vector<Tensor> Arnoldi(
+        LinOp *Hop, const Tensor &Tin = Tensor(), const std::string which = "LM",
+        const cytnx_uint64 &maxiter = 10000, const cytnx_double & cvg_crit = 1.0e-9,
+        const cytnx_uint64 &k = 1, const bool &is_V = true, const bool &verbose = false);
+
     // Lanczos:
     //===========================================
     /**
