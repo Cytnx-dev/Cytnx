@@ -15,10 +15,12 @@ int main(int argc, char *argv[]) {
   cout << vec_unique(A) << endl;
   */
 
+  Bond bd_sym_a = Bond(BD_REG, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
 
-  Bond bd_sym_a = Bond(BD_KET, {{0,2},{3,5},{1,6},{4,1}}
-                             , {  4  ,  7  ,  2  ,  3  });
+  Bond bd_sym_a = Bond(BD_KET, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
   Bond bd_sym_b = bd_sym_a.clone();
+
+  cout << bd_sym_a << endl;
 
   cout << bd_sym_a.type() << endl;
   cout << bd_sym_a.dim() << endl;
@@ -30,12 +32,10 @@ int main(int argc, char *argv[]) {
   print(bd_sym_a);
   print(bd_sym_b);
   bd_sym_a.combineBond_(bd_sym_b);
-    
+
   print(bd_sym_a);
 
-
   exit(1);
-
 
   // Device.Print_Property();
   cytnx_complex128 testC(1, 1);

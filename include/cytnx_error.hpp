@@ -20,21 +20,22 @@
   }
 static inline void error_msg(char const *const func, const char *const file, int const line,
                              bool is_true, char const *format, ...) {
-  try {
-    if (is_true) {
-      va_list args;
-      char output_str[1024];
-      char msg[512];
-      va_start(args, format);
-      vsprintf(msg, format, args);
-      sprintf(output_str, "\n# Cytnx error occur at %s\n# error: %s\n# file : %s (%d)", func, msg,
-              file, line);
-      va_end(args);
-      throw std::logic_error(output_str);
-    }
-  } catch (const char *output_msg) {
-    std::cerr << output_msg << std::endl;
+  // try {
+  if (is_true) {
+    va_list args;
+    char output_str[1024];
+    char msg[512];
+    va_start(args, format);
+    vsprintf(msg, format, args);
+    sprintf(output_str, "\n# Cytnx error occur at %s\n# error: %s\n# file : %s (%d)", func, msg,
+            file, line);
+    va_end(args);
+    // std::cerr << output_str << std::endl;
+    throw std::logic_error(output_str);
   }
+  // } catch (const char *output_msg) {
+  //   std::cerr << output_msg << std::endl;
+  // }
 }
 #define cytnx_warning_msg(is_true, format, ...)                                               \
   {                                                                                           \

@@ -98,11 +98,10 @@ namespace cytnx {
       return out;
     }
 
-// checked [KHW] ^^
     // return a sorted qnums by removing all duplicates, sorted from large to small.
     std::vector<std::vector<cytnx_int64>> getUniqueQnums(std::vector<cytnx_uint64> &counts,
                                                          const bool &return_counts);
-
+// checked [KHW] ^^
     // return the degeneracy of the specify qnum set.
     cytnx_uint64 getDegeneracy(const std::vector<cytnx_int64> &qnum, const bool &return_indices,
                                std::vector<cytnx_uint64> &indices);
