@@ -15,9 +15,20 @@ int main(int argc, char *argv[]) {
   cout << vec_unique(A) << endl;
   */
 
-  Bond bd_sym_a = Bond(BD_REG, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
+  //Bond bd_sym_s = Bond(BD_REG, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
 
   Bond bd_sym_a = Bond(BD_KET, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
+  
+  bd_sym_a.Save("ttba");
+  
+  print(bd_sym_a);
+
+  Bond bd_r = Bond::Load("ttba.cybd");
+  
+  print(bd_r);
+
+  return 0;  
+
   Bond bd_sym_b = bd_sym_a.clone();
 
   cout << bd_sym_a << endl;
