@@ -11,7 +11,9 @@ namespace cytnx {
     } else if (ut_type == this->Dense) {
       return std::string("Dense");
     } else if (ut_type == this->Sparse) {
-      return std::string("Sparse (block-form)");
+      return std::string("Sparse ");
+    } else if (ut_type == this->Block){
+      return std::string("Block ");
     } else {
       cytnx_error_msg(true, "%s\n", "[ERROR] invalid ut_type");
       return std::string("");

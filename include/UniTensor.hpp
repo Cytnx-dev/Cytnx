@@ -30,6 +30,7 @@ namespace cytnx {
       Void = -99,
       Dense = 0,
       Sparse = 1,
+      Block = 2,
     };
     std::string getname(const int &ut_type);
   };
@@ -71,6 +72,8 @@ namespace cytnx {
     friend class UniTensor;  // allow wrapper to access the private elems
     friend class DenseUniTensor;
     friend class SparseUniTensor;
+    friend class BlockUniTensor;
+
 
     UniTensor_base()
         : _is_tag(false),
@@ -225,11 +228,13 @@ namespace cytnx {
                       const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
                       const int &device = Device.cpu, const bool &is_diag = false,
                       const bool &no_alloc = false);
+    // string labels! 
     virtual void Init(const std::vector<Bond> &bonds,
                       const std::vector<std::string> &in_labels = {},
                       const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
                       const int &device = Device.cpu, const bool &is_diag = false,
                       const bool &no_alloc = false);
+    
     virtual void Init_by_Tensor(const Tensor &in, const bool &is_diag = false,
                                 const cytnx_int64 &rowrank = -1);
     virtual std::vector<cytnx_uint64> shape() const;
@@ -1675,6 +1680,33 @@ namespace cytnx {
   /// @endcond
 
   //======================================================================
+  /// @cond
+  class BlockUniTensor : public UniTensor_base {
+    protected:
+    public:
+
+    friend class UniTensor;
+    BlockUniTensor(){
+        this->uten_type_id = UTenType.Block;
+        this->_is_tag = true;
+    } 
+
+    //virtual functions:
+    void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels = {},
+              const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
+              const int &device = Device.cpu, const bool &is_diag = false,
+              const bool &no_alloc = false);
+    
+    void Init(const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels = {},
+              const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
+              const int &device = Device.cpu, const bool &is_diag = false,
+              const bool &no_alloc = false);
+
+    
+
+
+  };
+  //======================================================================
 
   ///@brief An Enhanced tensor specifically designed for physical Tensor network simulation
   class UniTensor {
@@ -1795,11 +1827,17 @@ namespace cytnx {
               const int &device = Device.cpu, const bool &is_diag = false) {
       // checking type:
       bool is_sym = false;
+      int sym_fver = -1;
+
       for (cytnx_uint64 i = 0; i < bonds.size(); i++) {
         // check
-        if (bonds[i].syms().size() != 0)
+        if (bonds[i].syms().size() != 0){
           is_sym = true;
-        else
+          if(sym_fver == -1) sym_fver = bonds[i]._impl->_degs.size();
+          else{ 
+            cytnx_error_msg(sym_fver != bonds[i]._impl->_degs.size(), "[ERROR] All the Bond when init a UniTensor with symmetric must be in the same format!%s","\n");
+          }
+        }else
           cytnx_error_msg(
             is_sym, "[ERROR] cannot have bonds with mixing of symmetry and non-symmetry.%s", "\n");
       }
@@ -1811,8 +1849,15 @@ namespace cytnx {
 #endif
         // cytnx_warning_msg(true,"[warning, still developing, some functions will display
         // \"[Developing]\"][SparseUniTensor]%s","\n");
-        boost::intrusive_ptr<UniTensor_base> out(new SparseUniTensor());
-        this->_impl = out;
+        if(sym_fver == 0){
+            boost::intrusive_ptr<UniTensor_base> out(new SparseUniTensor());
+            this->_impl = out;
+        }else if(sym_fver==-1){
+            cytnx_error_msg(true,"[ERROR] internal error! the Bond is symmetry but the version is not properly determined!%s","\n");
+        }else{
+            boost::intrusive_ptr<UniTensor_base> out(new BlockUniTensor());
+            this->_impl = out;
+        }
       } else {
         boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
         this->_impl = out;
