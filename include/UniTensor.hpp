@@ -1711,6 +1711,33 @@ namespace cytnx {
         }
 
 
+        void set_meta(BlockUniTensor *tmp, const bool &inner, const bool &outer) const {
+          // outer meta
+          if (outer) {
+            tmp->_bonds = vec_clone(this->_bonds);
+            tmp->_labels = this->_labels;
+            tmp->_is_braket_form = this->_is_braket_form;
+            tmp->_rowrank = this->_rowrank;
+            tmp->_name = this->_name;
+          }
+
+          tmp->_is_diag = this->_is_diag;
+
+          // inner meta
+          if (inner) {
+            tmp->_inner_to_outer_idx = this->_inner_to_outer_idx;
+          }
+        }
+
+
+        BlockUniTensor *clone_meta(const bool &inner, const bool &outer) const {
+          BlockUniTensor *tmp = new BlockUniTensor();
+          this->set_meta(tmp, inner, outer);
+          return tmp;
+        };
+
+
+
     friend class UniTensor;
     BlockUniTensor(){
         this->uten_type_id = UTenType.Block;
@@ -1728,7 +1755,64 @@ namespace cytnx {
               const int &device = Device.cpu, const bool &is_diag = false,
               const bool &no_alloc = false);
 
+    void Init_by_Tensor(const Tensor &in_tensor, const bool &is_diag = false,
+                        const cytnx_int64 &rowrank = -1) {
+      cytnx_error_msg(
+        true, "[ERROR][BlockUniTensor] cannot use Init_by_tensor() on a BlockUniTensor.%s", "\n");
+    }
     
+
+    std::vector<cytnx_uint64> shape() const {
+      std::vector<cytnx_uint64> out(this->_bonds.size());
+      for (cytnx_uint64 i = 0; i < out.size(); i++) {
+        out[i] = this->_bonds[i].dim();
+      }
+      return out;
+    }
+
+    bool is_blockform() const { return true; }
+
+    void to_(const int &device) {
+      for (cytnx_uint64 i = 0; i < this->_blocks.size(); i++) {
+        this->_blocks[i].to_(device);
+      }
+    };
+
+    boost::intrusive_ptr<UniTensor_base> to(const int &device) {
+      if (this->device() == device) {
+        return this;
+      } else {
+        boost::intrusive_ptr<UniTensor_base> out = this->clone();
+        out->to_(device);
+        return out;
+      }
+    };
+    
+    boost::intrusive_ptr<UniTensor_base> clone() const {
+      BlockUniTensor *tmp = this->clone_meta(true, true);
+      tmp->_blocks = vec_clone(this->_blocks);
+      boost::intrusive_ptr<UniTensor_base> out(tmp);
+      return out;
+    };
+
+    bool is_contiguous() const { 
+        bool out=true;
+        for(int i=0;i<this->_blocks.size();i++){
+            out &= this->_blocks[i].is_contiguous();
+        }
+        return out; 
+    };
+
+    void set_rowrank(const cytnx_uint64 &new_rowrank) {
+      cytnx_error_msg((new_rowrank < 1) || (new_rowrank >= this->rank()),
+                      "[ERROR][BlockUniTensor] rowrank should be [>=1] and [<UniTensor.rank].%s",
+                      "\n");
+      cytnx_error_msg(new_rowrank >= this->_labels.size(),
+                      "[ERROR] rowrank cannot exceed the rank of UniTensor.%s", "\n");
+
+      this->_rowrank = new_rowrank;
+      this->_is_braket_form = this->_update_braket();
+    }
 
 
   };

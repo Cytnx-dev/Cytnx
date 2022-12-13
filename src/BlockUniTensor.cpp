@@ -117,7 +117,7 @@ namespace cytnx {
             for(cytnx_int32 i=0;i<Loc.size();i++){
                 size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
             }
-            this->_blocks.push_back(Tensor(size,dtype,device));
+            this->_blocks.push_back(zeros(size,dtype,device));
 
             // push its loc
             this->_inner_to_outer_idx.push_back(Loc);
@@ -143,7 +143,6 @@ namespace cytnx {
     }
     
      
-    //cout << "[OK]" << endl;
     
 
     // need to maintain the mapper for contiguous for block_form.
