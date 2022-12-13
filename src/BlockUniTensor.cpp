@@ -8,7 +8,7 @@
 #include "utils/vec_print.hpp"
 #include "utils/vec_concatenate.hpp"
 #include <map>
-
+#include <stack>
 #ifdef UNI_OMP
   #include <omp.h>
 #endif
@@ -95,6 +95,56 @@ namespace cytnx {
     // copy bonds, otherwise it will share objects:
     this->_bonds = vec_clone(bonds);
     this->_is_braket_form = this->_update_braket();
+
+    
+    // checking how many blocks are there, and the size:
+    std::vector<cytnx_uint64> Loc(this->_bonds.size(),0);
+    std::vector<cytnx_int64> tot_qns(this->_bonds[0].Nsym()); // use first bond to determine symmetry size
+    
+    std::vector<cytnx_uint64> size(this->_bonds.size());
+    bool fin=false;
+    while(1){
+       
+        //get elem
+        //cytnx::vec_print(std::cout , Loc);
+        this->_fx_get_total_qnums(Loc, this->_bonds[0].syms(),tot_qns);
+        //cytnx::vec_print(std::cout, Loc);
+        //cytnx::vec_print(std::cout, tot_qns);
+                
+        //if exists:
+        if( std::all_of(tot_qns.begin(),tot_qns.end(), [](const int &i){return i==0;}) ){
+            //get size & init block!
+            for(cytnx_int32 i=0;i<Loc.size();i++){
+                size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
+            }
+            this->_blocks.push_back(Tensor(size,dtype,device));
+
+            // push its loc
+            this->_inner_to_outer_idx.push_back(Loc);
+
+        }
+
+
+
+        while(Loc.size()!=0){
+            Loc.back()+=1;
+            if(Loc.back()==this->_bonds[Loc.size()-1]._impl->_qnums.size()){Loc.pop_back();}
+            else{
+                for(int i=0;i<this->_bonds.size()-Loc.size();i++){
+                    Loc.push_back(0);
+                }
+                break;
+            }
+        }
+            
+        if(Loc.size()==0) break;
+        
+
+    }
+    
+     
+    //cout << "[OK]" << endl;
+    
 
     // need to maintain the mapper for contiguous for block_form.
     //this->_mapper = utils_internal::range_cpu(this->_bonds.size());

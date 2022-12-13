@@ -17,7 +17,12 @@ int main(int argc, char *argv[]) {
 
   //Bond bd_sym_s = Bond(BD_REG, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
 
-  Bond bd_sym_a = Bond(BD_KET, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
+  Bond bd_sym_a = Bond(BD_KET, {{0}, {1}, {2}, {3}}, {4, 7, 2, 3});
+
+  UniTensor TTT({bd_sym_a,bd_sym_a.redirect()},{100,200});
+
+
+  return 0;
   
   bd_sym_a.Save("ttba");
   

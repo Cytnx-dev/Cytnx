@@ -36,9 +36,9 @@ namespace cytnx {
     return out;
   }
 
-  cytnx_int64 Symmetry_base::combine_rule(const cytnx_int64 &inL, const cytnx_int64 &inR) {
+  cytnx_int64 Symmetry_base::combine_rule(const cytnx_int64 &inL, const cytnx_int64 &inR,const bool &is_reverse) {
     cytnx_int64 out;
-    this->combine_rule_(out, inL, inR);
+    this->combine_rule_(out, inL, inR,is_reverse);
     return out;
   }
   cytnx_int64 Symmetry_base::reverse_rule(const cytnx_int64 &in) {
@@ -61,7 +61,7 @@ namespace cytnx {
     cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
   }
   void cytnx::Symmetry_base::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL,
-                                           const cytnx_int64 &inR) {
+                                           const cytnx_int64 &inR, const bool &is_reverse) {
     cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
   }
   void cytnx::Symmetry_base::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) {
@@ -88,8 +88,13 @@ namespace cytnx {
     }
   }
   void cytnx::U1Symmetry::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL,
-                                        const cytnx_int64 &inR) {
-    out = inL + inR;
+                                        const cytnx_int64 &inR, const bool &is_reverse) {
+
+    if(is_reverse) this->reverse_rule_(out,inL+inR);
+    else           out = inL + inR;
+    
+    
+
   }
   void cytnx::U1Symmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) { out = in * -1; }
 
@@ -149,8 +154,12 @@ namespace cytnx {
     }
   }
   void cytnx::ZnSymmetry::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL,
-                                        const cytnx_int64 &inR) {
+                                        const cytnx_int64 &inR, const bool &is_reverse) {
     out = (inL + inR) % (this->n);
+
+    if(is_reverse) this->reverse_rule_(out,(inL + inR) % (this->n));
+    else           out = (inL + inR) % (this->n);
+
   }
   void cytnx::ZnSymmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) { out = in * -1; }
 

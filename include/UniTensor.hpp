@@ -1685,6 +1685,32 @@ namespace cytnx {
     protected:
     public:
 
+        std::vector<std::vector<cytnx_uint64> > _inner_to_outer_idx; 
+        std::vector<Tensor> _blocks;
+
+        // given an index list [loc], get qnums from this->_bonds[loc] and return the combined qnums calculated from Symm object!
+        // this assume 1. symmetry are the same for each bond! 
+        //             2. total_qns are feeded with size len(symmetry)
+        void _fx_get_total_qnums(std::vector<cytnx_uint64> &loc, const std::vector<Symmetry> &syms, std::vector<cytnx_int64> &total_qns){
+            memset(&total_qns[0],0,sizeof(cytnx_int64)*total_qns.size());
+           
+            for(cytnx_int32 i=0;i<syms.size();i++){
+                if(this->_bonds[0].type() == BD_BRA)
+                    total_qns[i] = syms[0].reverse_rule(this->_bonds[0]._impl->_qnums[loc[0]][i]);
+
+                for(auto j=1;j<loc.size();j++){
+                    if(this->_bonds[j].type() == BD_BRA)
+                        total_qns[i] = syms[i].combine_rule(total_qns[i],syms[i].reverse_rule(this->_bonds[j]._impl->_qnums[loc[j]][i]));
+                    else{
+                        total_qns[i] = syms[i].combine_rule(total_qns[i],this->_bonds[j]._impl->_qnums[loc[j]][i]);
+                    }
+                }
+            }             
+
+
+        }
+
+
     friend class UniTensor;
     BlockUniTensor(){
         this->uten_type_id = UTenType.Block;
