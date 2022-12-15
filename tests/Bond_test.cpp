@@ -55,28 +55,228 @@ TEST(Bond, CombineBondNoSymmBraKet) {
   EXPECT_EQ(bd_all.Nsym(), 0);
 }
 
-TEST(Bond, CombindBondSymm) {
-  Bond bd_sym_a = Bond(3, BD_BRA, {{0, 1}, {2, 0}, {-4, 1}}, {Symmetry::U1(), Symmetry::Zn(2)});
+TEST(Bond, InitWithQnum) {
+  // default sym
+  Bond bd_sym_a = Bond(4, BD_KET, {{0, 2}, {3, 5}, {0, 2}, {4, 1}});
+  Bond bd_sym_b = Bond(4, BD_BRA, {{0, 2}, {3, 5}, {0, 2}, {4, 1}});
+  std::vector<cytnx_uint64> ind;
+  EXPECT_EQ(bd_sym_a.dim(), 4);
+  EXPECT_EQ(bd_sym_a.Nsym(), 2);
+  EXPECT_EQ(bd_sym_a.syms(), std::vector<Symmetry>(2, Symmetry::U1()));
+  EXPECT_EQ(bd_sym_a.type(), BD_KET);
+  EXPECT_EQ(bd_sym_a.qnums(),
+            std::vector<std::vector<cytnx::cytnx_int64>>({{0, 2}, {3, 5}, {0, 2}, {4, 1}}));
+  EXPECT_EQ(bd_sym_a.syms_clone(), std::vector<Symmetry>(2, Symmetry::U1()));
+  EXPECT_EQ(bd_sym_a.qnums_clone(),
+            std::vector<std::vector<cytnx::cytnx_int64>>({{0, 2}, {3, 5}, {0, 2}, {4, 1}}));
+  EXPECT_EQ(bd_sym_a.getDegeneracy({0, 2}, ind), 2);
+  EXPECT_EQ(ind, std::vector<cytnx_uint64>({0, 2}));
+  EXPECT_THROW(bd_sym_a.getDegeneracy({9, 9}), std::logic_error);
+  EXPECT_THROW(bd_sym_a.getDegeneracy({0, 2, 1}), std::logic_error);
+  EXPECT_EQ(bd_sym_a.getUniqueQnums(ind),
+            std::vector<std::vector<cytnx::cytnx_int64>>({{4, 1}, {3, 5}, {0, 2}}));
+  EXPECT_EQ(ind, std::vector<cytnx_uint64>({1, 1, 2}));
 
-  Bond bd_sym_b =
-    Bond(4, BD_BRA, {{0, 0}, {2, 1}, {-1, 1}, {3, 0}}, {Symmetry::U1(), Symmetry::Zn(2)});
-  Bond bd_sym_c =
-    Bond(5, BD_BRA, {{1, 1}, {1, 1}, {-1, 1}, {-2, 0}, {0, 0}}, {Symmetry::U1(), Symmetry::Zn(2)});
+  EXPECT_EQ(bd_sym_b.dim(), 4);
+  EXPECT_EQ(bd_sym_b.Nsym(), 2);
+  EXPECT_EQ(bd_sym_b.syms(), std::vector<Symmetry>(2, Symmetry::U1()));
+  EXPECT_EQ(bd_sym_b.type(), BD_KET);
+  EXPECT_EQ(bd_sym_b.qnums(),
+            std::vector<std::vector<cytnx::cytnx_int64>>({{0, 2}, {3, 5}, {0, 2}, {4, 1}}));
+  EXPECT_EQ(bd_sym_b.syms_clone(), std::vector<Symmetry>(2, Symmetry::U1()));
+  EXPECT_EQ(bd_sym_b.qnums_clone(),
+            std::vector<std::vector<cytnx::cytnx_int64>>({{0, 2}, {3, 5}, {0, 2}, {4, 1}}));
+  EXPECT_EQ(bd_sym_b.getDegeneracy({0, 2}, ind), 2);
+  EXPECT_EQ(ind, std::vector<cytnx_uint64>({0, 2}));
+  EXPECT_THROW(bd_sym_b.getDegeneracy({9, 9}), std::logic_error);
+  EXPECT_THROW(bd_sym_b.getDegeneracy({0, 2, 1}), std::logic_error);
+  EXPECT_EQ(bd_sym_b.getUniqueQnums(ind),
+            std::vector<std::vector<cytnx::cytnx_int64>>({{4, 1}, {3, 5}, {0, 2}}));
+  EXPECT_EQ(ind, std::vector<cytnx_uint64>({1, 1, 2}));
+
+  // different sym
+  bd_sym_a =
+    Bond(BD_KET, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3}, {Symmetry::Zn(2), Symmetry::U1()});
+  bd_sym_b =
+    Bond(BD_BRA, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3}, {Symmetry::Zn(2), Symmetry::U1()});
+  EXPECT_EQ(bd_sym_a.dim(), 4);
+  EXPECT_EQ(bd_sym_a.Nsym(), 2);
+  EXPECT_EQ(bd_sym_a.syms(), std::vector<Symmetry>({Symmetry::Zn(2), Symmetry::U1()}));
+  EXPECT_EQ(bd_sym_a.type(), BD_KET);
+  EXPECT_EQ(bd_sym_a.qnums(),
+            std::vector<std::vector<cytnx::cytnx_int64>>({{0, 2}, {3, 5}, {0, 2}, {4, 1}}));
+  EXPECT_EQ(bd_sym_a.syms_clone(), std::vector<Symmetry>({Symmetry::Zn(2), Symmetry::U1()}));
+  EXPECT_EQ(bd_sym_a.qnums_clone(),
+            std::vector<std::vector<cytnx::cytnx_int64>>({{0, 2}, {3, 5}, {0, 2}, {4, 1}}));
+  EXPECT_EQ(bd_sym_a.getDegeneracy({0, 2}, ind), 2);
+  EXPECT_EQ(ind, std::vector<cytnx_uint64>({0, 2}));
+  EXPECT_THROW(bd_sym_a.getDegeneracy({9, 9}), std::logic_error);
+  EXPECT_THROW(bd_sym_a.getDegeneracy({0, 2, 1}), std::logic_error);
+  EXPECT_EQ(bd_sym_a.getUniqueQnums(ind),
+            std::vector<std::vector<cytnx::cytnx_int64>>({{4, 1}, {3, 5}, {0, 2}}));
+  EXPECT_EQ(ind, std::vector<cytnx_uint64>({1, 1, 2}));
+
+  EXPECT_EQ(bd_sym_b.dim(), 4);
+  EXPECT_EQ(bd_sym_b.Nsym(), 2);
+  EXPECT_EQ(bd_sym_b.syms(), std::vector<Symmetry>({Symmetry::Zn(2), Symmetry::U1()}));
+  EXPECT_EQ(bd_sym_b.type(), BD_KET);
+  EXPECT_EQ(bd_sym_b.qnums(),
+            std::vector<std::vector<cytnx::cytnx_int64>>({{0, 2}, {3, 5}, {0, 2}, {4, 1}}));
+  EXPECT_EQ(bd_sym_b.syms_clone(), std::vector<Symmetry>({Symmetry::Zn(2), Symmetry::U1()}));
+  EXPECT_EQ(bd_sym_b.qnums_clone(),
+            std::vector<std::vector<cytnx::cytnx_int64>>({{0, 2}, {3, 5}, {0, 2}, {4, 1}}));
+  EXPECT_EQ(bd_sym_b.getDegeneracy({0, 2}, ind), 2);
+  EXPECT_EQ(ind, std::vector<cytnx_uint64>({0, 2}));
+  EXPECT_THROW(bd_sym_b.getDegeneracy({9, 9}), std::logic_error);
+  EXPECT_THROW(bd_sym_b.getDegeneracy({0, 2, 1}), std::logic_error);
+  EXPECT_EQ(bd_sym_b.getUniqueQnums(ind),
+            std::vector<std::vector<cytnx::cytnx_int64>>({{4, 1}, {3, 5}, {0, 2}}));
+  EXPECT_EQ(ind, std::vector<cytnx_uint64>({1, 1, 2}));
+
+  EXPECT_THROW(Bond(4, BD_KET, {{0, 2, 1}, {3, 5}, {1, 6}, {4, 1}}), std::logic_error);
+  EXPECT_THROW(Bond(4, BD_KET, {{0, 2}, {3, 5}, {1, 6, 1}, {4, 1}}), std::logic_error);
+  EXPECT_THROW(Bond(4, BD_KET, {{0, 2}, {3, 5}, {1, 6}}), std::logic_error);
+  EXPECT_THROW(Bond(0, BD_KET, {}), std::logic_error);
+  EXPECT_THROW(Bond(4, BD_KET, {}), std::logic_error);
+  EXPECT_THROW(
+    Bond(4, BD_KET, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, std::vector<Symmetry>(1, Symmetry::U1())),
+    std::logic_error);
+  EXPECT_THROW(Bond(4, BD_KET, {{0, 2}, {3, 5}, {1, 6}, {4, 1}},
+                    {Symmetry::U1(), Symmetry::U1(), Symmetry::U1()}),
+               std::logic_error);
+}
+
+TEST(Bond, CombindBondSymm) {
+  Bond bd_sym_a = Bond(1, BD_BRA, {{0, 1}}, {Symmetry::U1(), Symmetry::Zn(2)});
+
+  Bond bd_sym_b = Bond(2, BD_BRA, {{0, 0}, {2, 1}}, {Symmetry::U1(), Symmetry::Zn(2)});
+  Bond bd_sym_c = Bond(1, BD_BRA, {{1, 1}}, {Symmetry::U1(), Symmetry::Zn(2)});
   Bond bd_sym_d = bd_sym_a.combineBonds({bd_sym_b, bd_sym_c});
   EXPECT_EQ(bd_sym_d.type(), BD_BRA);
+  EXPECT_EQ(bd_sym_d, Bond(2, BD_BRA, {{1, 0}, {3, 1}}, {Symmetry::U1(), Symmetry::Zn(2)}));
+
+  Bond bd_sym_e = Bond(1, BD_REG, {{1, 1}}, {Symmetry::U1(), Symmetry::Zn(2)});
+  Bond bd_sym_f = Bond(1, BD_KET, {{1, 1}}, {Symmetry::U1(), Symmetry::Zn(2)});
+  Bond bd_sym_g = Bond(1, BD_BRA, {{1, 1}}, {Symmetry::U1(), Symmetry::U1()});
+  Bond bd_sym_h = Bond(BD_BRA, {{1, 1}}, {2}, {Symmetry::U1(), Symmetry::Zn(2)});
+  Bond bd_sym_i = Bond(1, BD_BRA, {{1, 1, 2}}, {Symmetry::U1(), Symmetry::Zn(2), Symmetry::U1()});
+  EXPECT_THROW(bd_sym_a.combineBond(bd_sym_e), std::logic_error);
+  EXPECT_THROW(bd_sym_a.combineBond(bd_sym_f), std::logic_error);
+  EXPECT_THROW(bd_sym_a.combineBond(bd_sym_g), std::logic_error);
+  EXPECT_THROW(bd_sym_a.combineBond(bd_sym_h), std::logic_error);
+  EXPECT_THROW(bd_sym_a.combineBond(bd_sym_i), std::logic_error);
 }
 
 TEST(Bond, InitWithQnum_v2) {
   // default sym
   Bond bd_sym_a = Bond(BD_KET, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
   Bond bd_sym_b = Bond(BD_BRA, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
+  std::vector<cytnx_uint64> ind;
   EXPECT_EQ(bd_sym_a.dim(), 16);
   EXPECT_EQ(bd_sym_a.Nsym(), 2);
   EXPECT_EQ(bd_sym_a.syms(), std::vector<Symmetry>(2, Symmetry::U1()));
+  EXPECT_EQ(bd_sym_a.type(), BD_KET);
+  EXPECT_EQ(bd_sym_a.qnums(),
+            std::vector<std::vector<cytnx::cytnx_int64>>({{0, 2}, {3, 5}, {1, 6}, {4, 1}}));
+  EXPECT_EQ(bd_sym_a.syms_clone(), std::vector<Symmetry>(2, Symmetry::U1()));
+  EXPECT_EQ(bd_sym_a.qnums_clone(),
+            std::vector<std::vector<cytnx::cytnx_int64>>({{0, 2}, {3, 5}, {1, 6}, {4, 1}}));
+  EXPECT_EQ(bd_sym_a.getDegeneracy({0, 2}, ind), 4);
+  EXPECT_EQ(ind, std::vector<cytnx_uint64>({0}));
+  EXPECT_THROW(bd_sym_a.getDegeneracy({9, 9}), std::logic_error);
+  EXPECT_THROW(bd_sym_a.getDegeneracy({0, 2, 1}), std::logic_error);
+  bd_sym_a.getUniqueQnums(ind);
+  EXPECT_EQ(ind, std::vector<cytnx_uint64>({4, 7, 2, 3}));
+
   EXPECT_EQ(bd_sym_b.dim(), 16);
   EXPECT_EQ(bd_sym_b.Nsym(), 2);
   EXPECT_EQ(bd_sym_b.syms(), std::vector<Symmetry>(2, Symmetry::U1()));
+  EXPECT_EQ(bd_sym_b.type(), BD_BRA);
+  EXPECT_EQ(bd_sym_b.qnums(),
+            std::vector<std::vector<cytnx::cytnx_int64>>({{0, 2}, {3, 5}, {1, 6}, {4, 1}}));
+  EXPECT_EQ(bd_sym_b.syms_clone(), std::vector<Symmetry>(2, Symmetry::U1()));
+  EXPECT_EQ(bd_sym_b.qnums_clone(),
+            std::vector<std::vector<cytnx::cytnx_int64>>({{0, 2}, {3, 5}, {1, 6}, {4, 1}}));
+  EXPECT_EQ(bd_sym_b.getDegeneracy({0, 2}, ind), 4);
+  EXPECT_EQ(ind, std::vector<cytnx_uint64>({0}));
+  EXPECT_THROW(bd_sym_b.getDegeneracy({9, 9}), std::logic_error);
+  EXPECT_THROW(bd_sym_b.getDegeneracy({0, 2, 1}), std::logic_error);
+  bd_sym_b.getUniqueQnums(ind);
+  EXPECT_EQ(ind, std::vector<cytnx_uint64>({4, 7, 2, 3}));
+
+  // different sym
+  bd_sym_a =
+    Bond(BD_KET, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3}, {Symmetry::Zn(2), Symmetry::U1()});
+  bd_sym_b =
+    Bond(BD_BRA, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3}, {Symmetry::Zn(2), Symmetry::U1()});
+  EXPECT_EQ(bd_sym_a.dim(), 16);
+  EXPECT_EQ(bd_sym_a.Nsym(), 2);
+  EXPECT_EQ(bd_sym_a.syms(), std::vector<Symmetry>({Symmetry::Zn(2), Symmetry::U1()}));
+  EXPECT_EQ(bd_sym_a.type(), BD_KET);
+  EXPECT_EQ(bd_sym_a.qnums(),
+            std::vector<std::vector<cytnx::cytnx_int64>>({{0, 2}, {3, 5}, {1, 6}, {4, 1}}));
+  EXPECT_EQ(bd_sym_a.syms_clone(), std::vector<Symmetry>({Symmetry::Zn(2), Symmetry::U1()}));
+  EXPECT_EQ(bd_sym_a.qnums_clone(),
+            std::vector<std::vector<cytnx::cytnx_int64>>({{0, 2}, {3, 5}, {1, 6}, {4, 1}}));
+  EXPECT_EQ(bd_sym_a.getDegeneracy({0, 2}, ind), 4);
+  EXPECT_EQ(ind, std::vector<cytnx_uint64>({0}));
+  EXPECT_THROW(bd_sym_a.getDegeneracy({9, 9}), std::logic_error);
+  EXPECT_THROW(bd_sym_a.getDegeneracy({0, 2, 1}), std::logic_error);
+  bd_sym_a.getUniqueQnums(ind);
+  EXPECT_EQ(ind, std::vector<cytnx_uint64>({4, 7, 2, 3}));
+
+  EXPECT_EQ(bd_sym_b.dim(), 16);
+  EXPECT_EQ(bd_sym_b.Nsym(), 2);
+  EXPECT_EQ(bd_sym_b.syms(), std::vector<Symmetry>({Symmetry::Zn(2), Symmetry::U1()}));
+  EXPECT_EQ(bd_sym_b.type(), BD_BRA);
+  EXPECT_EQ(bd_sym_b.qnums(),
+            std::vector<std::vector<cytnx::cytnx_int64>>({{0, 2}, {3, 5}, {1, 6}, {4, 1}}));
+  EXPECT_EQ(bd_sym_b.syms_clone(), std::vector<Symmetry>({Symmetry::Zn(2), Symmetry::U1()}));
+  EXPECT_EQ(bd_sym_b.qnums_clone(),
+            std::vector<std::vector<cytnx::cytnx_int64>>({{0, 2}, {3, 5}, {1, 6}, {4, 1}}));
+  EXPECT_EQ(bd_sym_b.getDegeneracy({0, 2}, ind), 4);
+  EXPECT_EQ(ind, std::vector<cytnx_uint64>({0}));
+  EXPECT_THROW(bd_sym_b.getDegeneracy({9, 9}), std::logic_error);
+  EXPECT_THROW(bd_sym_b.getDegeneracy({0, 2, 1}), std::logic_error);
+  bd_sym_b.getUniqueQnums(ind);
+  EXPECT_EQ(ind, std::vector<cytnx_uint64>({4, 7, 2, 3}));
+
   EXPECT_THROW(Bond(BD_REG, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3}), std::logic_error);
+  EXPECT_THROW(Bond(BD_KET, {{0, 2, 1}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3}), std::logic_error);
+  EXPECT_THROW(Bond(BD_KET, {{0, 2}, {3, 5}, {1, 6, 1}, {4, 1}}, {4, 7, 2, 3}), std::logic_error);
+  // deg should not have zero comp.
+  EXPECT_THROW(Bond(BD_KET, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {0, 7, 2, 3}), std::logic_error);
+  EXPECT_THROW(Bond(BD_KET, {{0, 2}, {3, 5}, {1, 6}}, {4, 7, 2, 3}), std::logic_error);
+  EXPECT_THROW(Bond(BD_KET, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {}), std::logic_error);
+  EXPECT_THROW(Bond(BD_KET, {}, {4, 7, 2, 3}), std::logic_error);
+  EXPECT_THROW(Bond(BD_KET, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {}), std::logic_error);
+  EXPECT_THROW(Bond(BD_KET, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3},
+                    std::vector<Symmetry>(1, Symmetry::U1())),
+               std::logic_error);
+  EXPECT_THROW(Bond(BD_KET, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3},
+                    {Symmetry::U1(), Symmetry::U1(), Symmetry::U1()}),
+               std::logic_error);
+}
+
+TEST(Bond, CombindBondSymm_v2) {
+  Bond bd_sym_a = Bond(BD_BRA, {{0, 1}}, {3}, {Symmetry::U1(), Symmetry::Zn(2)});
+
+  Bond bd_sym_b = Bond(BD_BRA, {{0, 0}, {2, 1}}, {1, 1}, {Symmetry::U1(), Symmetry::Zn(2)});
+  Bond bd_sym_c = Bond(BD_BRA, {{1, 1}}, {2}, {Symmetry::U1(), Symmetry::Zn(2)});
+  Bond bd_sym_d = bd_sym_a.combineBonds({bd_sym_b, bd_sym_c});
+  EXPECT_EQ(bd_sym_d.type(), BD_BRA);
+  EXPECT_EQ(bd_sym_d, Bond(BD_BRA, {{1, 0}, {3, 1}}, {3, 3}, {Symmetry::U1(), Symmetry::Zn(2)}));
+
+  Bond bd_sym_e = Bond(BD_REG, {{1, 1}}, {2}, {Symmetry::U1(), Symmetry::Zn(2)});
+  Bond bd_sym_f = Bond(BD_KET, {{1, 1}}, {2}, {Symmetry::U1(), Symmetry::Zn(2)});
+  Bond bd_sym_g = Bond(BD_BRA, {{1, 1}}, {2}, {Symmetry::U1(), Symmetry::U1()});
+  Bond bd_sym_h = Bond(2, BD_BRA, {{1, 1}, {1, 1}}, {Symmetry::U1(), Symmetry::Zn(2)});
+  Bond bd_sym_i = Bond(BD_BRA, {{1, 1, 2}}, {2}, {Symmetry::U1(), Symmetry::Zn(2), Symmetry::U1()});
+  EXPECT_THROW(bd_sym_a.combineBond(bd_sym_e), std::logic_error);
+  EXPECT_THROW(bd_sym_a.combineBond(bd_sym_f), std::logic_error);
+  EXPECT_THROW(bd_sym_a.combineBond(bd_sym_g), std::logic_error);
+  EXPECT_THROW(bd_sym_a.combineBond(bd_sym_h), std::logic_error);
+  EXPECT_THROW(bd_sym_a.combineBond(bd_sym_i), std::logic_error);
 }
 
 // TEST(Bond, ConstructorTypeQnums){
