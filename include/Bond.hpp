@@ -181,10 +181,10 @@ namespace cytnx {
     /**
     @brief init a bond object
     @param bd_type the tag of the bond, it can be BD_BRA, BD_KET as physical tagged and cannot be BD_REG (regular bond).
-    @param in_qnums the quantum number(s) of the bond. it should be a 2d vector with shape (# of
-    symmetry, dim), note that the quantum numbers in a symmetry must be unique and one should assign the degeneracy using the degs params.
-    @param degs the degeneracy correspond to each qunatum number sets specified in the qnums, should be the size of dim.
-    @param in_syms the symmetry object of the bond. [Note] if qnums are provided, the default
+    @param in_qnums the quantum number(s) of the bond. it should be a 2d vector with shape (# of unique qnum labels, # of
+    symmetry).
+    @param degs the degeneracy correspond to each qunatum number sets specified in the qnums, the size should match the # of rows of passed-in qnums.
+    @param in_syms a vector of symmetry objects of the bond, the size should match the # of cols of passed-in qnums. [Note] if qnums are provided, the default
     symmetry type is \link cytnx::Symmetry::U1 Symmetry::U1 \endlink
 
     description:
@@ -192,6 +192,13 @@ namespace cytnx {
     space or Ket space.
         2. the bond can have arbitrary multiple symmetries, with the type of each symmetry associate
     to the qnums are provided with the in_syms.
+
+    [Note]
+        1. if quantum number(s) are provided (which means the bond is with symmetry) then the bond
+    MUST be tagged with either BD_BRA or BD_KET
+        2. if the bond is non-symmetry, then it can be tagged with BD_BRA or BD_KET, or BD_REG
+    depending on the usage.
+        3. the "bond dimension" is the sum over all numbers specified in degs.
     */
     void Init(const bondType &bd_type,
               const std::vector<std::vector<cytnx_int64>> &in_qnums,
