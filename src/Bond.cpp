@@ -76,6 +76,7 @@ namespace cytnx {
     /// calc total dim:
     this->_dim = 0;
     for (auto i : degs) {
+      cytnx_error_msg(i == 0, "[ERROR] [degs] degs of Bond cannot contain zero%s", "\n");
       this->_dim += i;
     }
 
@@ -265,8 +266,10 @@ namespace cytnx {
 
         auto itt = std::find(this->_qnums.begin(), this->_qnums.end(), qnum);
 
-        cytnx_error_msg(itt == this->_qnums.end(),
-                        "[ERROR] qnums does not exists in the current Bond!%s", "\n");
+        // cytnx_error_msg(itt == this->_qnums.end(),
+        //                 "[ERROR] qnums does not exists in the current Bond!%s", "\n");
+        indices.clear();
+        if (itt == this->_qnums.end()) return 0;
 
         cytnx_uint64 loc = itt - this->_qnums.begin();
 
@@ -453,53 +456,50 @@ namespace cytnx {
     cytnx_error_msg(!f.is_open(), "[ERROR][Bond] invalid fstream%s", "\n");
     unsigned int IDDs = 666;
     f.write((char *)&IDDs, sizeof(unsigned int));
-    
+
     // write format version!
     int ver = 0;
-    if(this->_impl->_degs.size()){
-        ver = 1;
+    if (this->_impl->_degs.size()) {
+      ver = 1;
     }
     f.write((char *)&ver, sizeof(int));
 
     cytnx_uint64 tmp;
-    if(ver==0) f.write((char *)&this->_impl->_dim, sizeof(cytnx_uint64));
-    else{
-        // if it is new version, store the size of qnums list instead!
-        tmp = this->_impl->_qnums.size();
-        f.write((char *)&tmp, sizeof(cytnx_uint64));
+    if (ver == 0)
+      f.write((char *)&this->_impl->_dim, sizeof(cytnx_uint64));
+    else {
+      // if it is new version, store the size of qnums list instead!
+      tmp = this->_impl->_qnums.size();
+      f.write((char *)&tmp, sizeof(cytnx_uint64));
     }
     f.write((char *)&this->_impl->_type, sizeof(int));
-
 
     // write Nsyms:
     cytnx_uint64 Nsym = this->_impl->_syms.size();
     f.write((char *)&Nsym, sizeof(cytnx_uint64));
 
-    if(ver==0){ // old version:
-        if (Nsym != 0) {
-          // writing qnums:
-          for (cytnx_uint64 i = 0; i < this->_impl->_dim; i++) {
-            f.write((char *)&(this->_impl->_qnums[i][0]), sizeof(cytnx_int64) * Nsym);
-          }
-          //
-        }
-    }else{
-        // new version, can only be symmetric!
+    if (ver == 0) {  // old version:
+      if (Nsym != 0) {
         // writing qnums:
-        for (cytnx_uint64 i = 0; i < this->_impl->_qnums.size(); i++) {
-            f.write((char *)&(this->_impl->_qnums[i][0]), sizeof(cytnx_int64) * Nsym);
+        for (cytnx_uint64 i = 0; i < this->_impl->_dim; i++) {
+          f.write((char *)&(this->_impl->_qnums[i][0]), sizeof(cytnx_int64) * Nsym);
         }
-        f.write((char *)&(this->_impl->_degs[0]),sizeof(cytnx_uint64)*this->_impl->_degs.size());
-    
+        //
+      }
+    } else {
+      // new version, can only be symmetric!
+      // writing qnums:
+      for (cytnx_uint64 i = 0; i < this->_impl->_qnums.size(); i++) {
+        f.write((char *)&(this->_impl->_qnums[i][0]), sizeof(cytnx_int64) * Nsym);
+      }
+      f.write((char *)&(this->_impl->_degs[0]), sizeof(cytnx_uint64) * this->_impl->_degs.size());
     }
 
-    if (Nsym != 0){
+    if (Nsym != 0) {
       for (int j = 0; j < Nsym; j++) {
         this->_impl->_syms[j]._Save(f);
       }
     }
-
-
   }
 
   void Bond::_Load(fstream &f) {
@@ -507,63 +507,58 @@ namespace cytnx {
     unsigned int tmpIDDs;
     f.read((char *)&tmpIDDs, sizeof(unsigned int));
     cytnx_error_msg(tmpIDDs != 666, "[ERROR] the object is not a cytnx Bond!%s", "\n");
-    
+
     int ver;
     f.read((char *)&ver, sizeof(int));
 
     cytnx_uint64 tmpD;
-    if(ver==0) f.read((char *)&this->_impl->_dim, sizeof(cytnx_uint64));
-    else{
-        f.read((char *)&tmpD, sizeof(cytnx_uint64));
+    if (ver == 0)
+      f.read((char *)&this->_impl->_dim, sizeof(cytnx_uint64));
+    else {
+      f.read((char *)&tmpD, sizeof(cytnx_uint64));
     }
     f.read((char *)&this->_impl->_type, sizeof(int));
 
-    
     // read Nsyms:
     cytnx_uint64 Nsym_in;
     f.read((char *)&Nsym_in, sizeof(cytnx_uint64));
 
-    if(ver==0){
-        if (Nsym_in != 0) {
-          this->_impl->_qnums =
-            std::vector<std::vector<cytnx_int64>>(this->_impl->_dim, std::vector<cytnx_int64>(Nsym_in));
-          // reading qnums:
-          for (cytnx_uint64 i = 0; i < this->_impl->_dim; i++) {
-            f.read((char *)&(this->_impl->_qnums[i][0]), sizeof(cytnx_int64) * Nsym_in);
-          }
-          //
+    if (ver == 0) {
+      if (Nsym_in != 0) {
+        this->_impl->_qnums = std::vector<std::vector<cytnx_int64>>(
+          this->_impl->_dim, std::vector<cytnx_int64>(Nsym_in));
+        // reading qnums:
+        for (cytnx_uint64 i = 0; i < this->_impl->_dim; i++) {
+          f.read((char *)&(this->_impl->_qnums[i][0]), sizeof(cytnx_int64) * Nsym_in);
         }
-    }else{
-        
-        // new version can only be qnums
-        // recalc _dim! 
-          this->_impl->_qnums =
-            std::vector<std::vector<cytnx_int64>>(tmpD, std::vector<cytnx_int64>(Nsym_in));
-          
-          this->_impl->_degs.resize(tmpD);
-          // reading qnums:
-          for (cytnx_uint64 i = 0; i < tmpD; i++) {
-            f.read((char *)&(this->_impl->_qnums[i][0]), sizeof(cytnx_int64) * Nsym_in);
-          }
-            
-          f.read((char *)&(this->_impl->_degs[0]), sizeof(cytnx_uint64) * tmpD);
+        //
+      }
+    } else {
+      // new version can only be qnums
+      // recalc _dim!
+      this->_impl->_qnums =
+        std::vector<std::vector<cytnx_int64>>(tmpD, std::vector<cytnx_int64>(Nsym_in));
 
-          this->_impl->_dim = 0;
-          for(auto c: this->_impl->_degs){
-            this->_impl->_dim += c;
-          }
+      this->_impl->_degs.resize(tmpD);
+      // reading qnums:
+      for (cytnx_uint64 i = 0; i < tmpD; i++) {
+        f.read((char *)&(this->_impl->_qnums[i][0]), sizeof(cytnx_int64) * Nsym_in);
+      }
 
+      f.read((char *)&(this->_impl->_degs[0]), sizeof(cytnx_uint64) * tmpD);
+
+      this->_impl->_dim = 0;
+      for (auto c : this->_impl->_degs) {
+        this->_impl->_dim += c;
+      }
     }
 
-    if(Nsym_in !=0){
-        this->_impl->_syms.resize(Nsym_in);
-        for (int j = 0; j < Nsym_in; j++) {
-            this->_impl->_syms[j]._Load(f);
-        }
-
+    if (Nsym_in != 0) {
+      this->_impl->_syms.resize(Nsym_in);
+      for (int j = 0; j < Nsym_in; j++) {
+        this->_impl->_syms[j]._Load(f);
+      }
     }
-
-
   }
 
   std::ostream &operator<<(std::ostream &os, const Bond &bin) {
