@@ -6,6 +6,7 @@
 #include "Type.hpp"
 #include "Storage.hpp"
 #include "algo/algo_internal_cpu/Sort_internal.hpp"
+#include "algo/algo_internal_cpu/Concate_internal.hpp"
 #ifdef UNI_GPU
   //#include "algo/algo_internal_gpu/cuSort_internal.hpp"
 #endif

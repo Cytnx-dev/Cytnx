@@ -126,7 +126,7 @@ endif
 
 ## Algo_internal
 OBJS += algo_internal_interface.o
-OBJS += Sort_internal.o
+OBJS += Sort_internal.o Concate_internal.o
 
 
 
@@ -289,6 +289,8 @@ algo_internal_interface.o : $(CytnxPATH)/src/algo/algo_internal_interface.cpp $(
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 
 Sort_internal.o :  $(CytnxPATH)/src/algo/algo_internal_cpu/Sort_internal.cpp $(CytnxPATH)/src/algo/algo_internal_cpu/Sort_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+Concate_internal.o :  $(CytnxPATH)/src/algo/algo_internal_cpu/Concate_internal.cpp $(CytnxPATH)/src/algo/algo_internal_cpu/Concate_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 
 ## algo

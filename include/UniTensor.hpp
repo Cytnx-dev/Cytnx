@@ -253,6 +253,7 @@ namespace cytnx {
                                                          const cytnx_int64 &rowrank = -1);
     virtual boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
                                                          const cytnx_int64 &rowrank = -1);
+
     virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank,
                           const bool &by_label);
     virtual void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
