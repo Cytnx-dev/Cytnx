@@ -22,7 +22,7 @@ namespace cytnx {
   }
   UniTensorType_class UTenType;
   //===================================================
-
+  /*
   void UniTensor_base::Init(const std::vector<Bond> &bonds,
                             const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank,
                             const unsigned int &dtype, const int &device, const bool &is_diag,
@@ -30,6 +30,7 @@ namespace cytnx {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
                     "\n");
   }
+  */
   void UniTensor_base::Init(const std::vector<Bond> &bonds,
                             const std::vector<std::string> &in_labels, const cytnx_int64 &rowrank,
                             const unsigned int &dtype, const int &device, const bool &is_diag,

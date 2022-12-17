@@ -222,12 +222,10 @@ namespace cytnx {
 
     int uten_type() { return this->uten_type_id; }
     std::string uten_type_str() { return UTenType.getname(this->uten_type_id); }
+    
 
-    virtual void Init(const std::vector<Bond> &bonds,
-                      const std::vector<cytnx_int64> &in_labels = {},
-                      const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
-                      const int &device = Device.cpu, const bool &is_diag = false,
-                      const bool &no_alloc = false);
+    /// VIRTUAL FUNCTIONS:
+
     // string labels! 
     virtual void Init(const std::vector<Bond> &bonds,
                       const std::vector<std::string> &in_labels = {},
@@ -447,10 +445,12 @@ namespace cytnx {
     DenseUniTensor() { this->uten_type_id = UTenType.Dense; };
     friend class UniTensor;  // allow wrapper to access the private elems
     // virtual functions
-    void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels = {},
-              const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
-              const int &device = Device.cpu, const bool &is_diag = false,
-              const bool &no_alloc = false);
+    
+    //void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels = {},
+    //          const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
+    //          const int &device = Device.cpu, const bool &is_diag = false,
+    //          const bool &no_alloc = false);
+
     void Init(const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels = {},
               const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
               const int &device = Device.cpu, const bool &is_diag = false,
@@ -1040,10 +1040,10 @@ namespace cytnx {
     };
 
     // virtual functions
-    void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels = {},
-              const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
-              const int &device = Device.cpu, const bool &is_diag = false,
-              const bool &no_alloc = false);
+    //void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels = {},
+    //          const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
+    //          const int &device = Device.cpu, const bool &is_diag = false,
+    //          const bool &no_alloc = false);
     void Init(const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels = {},
               const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
               const int &device = Device.cpu, const bool &is_diag = false,
@@ -1745,10 +1745,10 @@ namespace cytnx {
     } 
 
     //virtual functions:
-    void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels = {},
-              const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
-              const int &device = Device.cpu, const bool &is_diag = false,
-              const bool &no_alloc = false);
+    //void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels = {},
+    //          const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
+    //          const int &device = Device.cpu, const bool &is_diag = false,
+    //          const bool &no_alloc = false);
     
     void Init(const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels = {},
               const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
@@ -1916,7 +1916,7 @@ namespace cytnx {
      * @param device
      * @param is_diag
      */
-    UniTensor(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels = {},
+    UniTensor(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels,
               const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
               const int &device = Device.cpu, const bool &is_diag = false)
         : _impl(new UniTensor_base()) {
@@ -1986,7 +1986,7 @@ namespace cytnx {
      * @param device
      * @param is_diag
      */
-    void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels = {},
+    void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels,
               const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
               const int &device = Device.cpu, const bool &is_diag = false) {
       std::vector<std::string> vs;

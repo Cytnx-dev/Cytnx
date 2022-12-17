@@ -205,15 +205,15 @@ namespace cytnx {
     }
     */
   }
-  void BlockUniTensor::Init(const std::vector<Bond> &bonds,
-                             const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank,
-                             const unsigned int &dtype, const int &device, const bool &is_diag,
-                             const bool &no_alloc) {
-    vector<string> vs;
-    transform(in_labels.begin(), in_labels.end(), vs.begin(),
-              [](cytnx_int64 x) -> string { return to_string(x); });
-    Init(bonds, vs, rowrank, dtype, device, is_diag, no_alloc);
-  }
+  //void BlockUniTensor::Init(const std::vector<Bond> &bonds,
+  //                           const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank,
+  //                           const unsigned int &dtype, const int &device, const bool &is_diag,
+  //                           const bool &no_alloc) {
+  //  vector<string> vs;
+  //  transform(in_labels.begin(), in_labels.end(), vs.begin(),
+  //            [](cytnx_int64 x) -> string { return to_string(x); });
+  //  Init(bonds, vs, rowrank, dtype, device, is_diag, no_alloc);
+  //}
 
 
 
