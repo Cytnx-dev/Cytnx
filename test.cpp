@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
   */
 
 
-  Tensor A1 = arange(12).reshape(3,4);
+  Tensor A1 = arange(12).reshape(4,3).permute(1,0);
   Tensor A2 = arange(20).reshape(5,4);
   Tensor A3 = arange(32).reshape(8,4);
   print(A1);
@@ -24,6 +24,12 @@ int main(int argc, char *argv[]) {
   print(A3);
   print(algo::Vstack({A1,A2,A3}));
 
+
+  A1.permute_(1,0);
+  A2.permute_(1,0);
+  A3.permute_(1,0);
+
+  print(algo::Hstack({A1,A2,A3}));
 
 
 

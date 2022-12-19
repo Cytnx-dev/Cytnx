@@ -24,6 +24,8 @@ namespace cytnx {
     Tensor Concatenate(Tensor T1, Tensor T2);
 
     Tensor Vstack(const std::vector<Tensor> &In_tensors);
+    Tensor Hstack(const std::vector<Tensor> &In_tensors);
+
 
   }  // namespace algo
 }  // namespace cytnx

@@ -11,12 +11,11 @@ namespace cytnx {
 
   namespace algo_internal {
 
-    void Concate_internal(char *out_ptr, std::vector<void*> &ins, const std::vector<cytnx_uint64> &lens, const cytnx_uint64 &ElemSize) {
+    void vConcate_internal(char *out_ptr, std::vector<void*> &ins, const std::vector<cytnx_uint64> &lens, const cytnx_uint64 &ElemSize) {
 
         // require:
         // 1. Data type of out, all [ins] to be the same
         // 2. out is properly allocated! 
-        // 3. size is deref from out.type!
         // 4. checking bool type!!
 
         //cytnx_uint64 ElemSize = Type.typeSize(out->dtype);
@@ -30,6 +29,40 @@ namespace cytnx {
         }
         
     }
+
+
+    void hConcate_internal(char *out_ptr, std::vector<char*> &ins, const std::vector<cytnx_uint64> &lens, const cytnx_uint64 &Dshare, const cytnx_uint64 &Dtot, const cytnx_uint64 &ElemSize){
+       
+
+        // require:
+        // 1. Data type of out, all [ins] to be the same
+        // 2. out is properly allocated! 
+        // 4. checking bool type!!
+       
+        cytnx_uint64 off = 0;
+        std::vector<cytnx_uint64> offs(lens.size());
+        for(int i=0;i<offs.size();i++){
+            offs[i] = off;
+            off += lens[i];
+        }
+
+        // iterate each small chunk:
+        for(cytnx_int64 t=0;t<lens.size();t++){
+            
+            //copy segment for each row!
+            for(cytnx_int64 r=0;r<Dshare;r++){
+                memcpy(out_ptr + (Dtot*r + offs[t])*ElemSize, ins[t] + (r*lens[t])*ElemSize, ElemSize*lens[t]);
+            }// r
+
+        }// t 
+
+
+        
+
+
+    }
+
+
 
   }  // namespace algo_internal
 
