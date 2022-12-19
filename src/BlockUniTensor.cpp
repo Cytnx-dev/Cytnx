@@ -107,7 +107,7 @@ namespace cytnx {
        
         //get elem
         //cytnx::vec_print(std::cout , Loc);
-        this->_fx_get_total_qnums(Loc, this->_bonds[0].syms(),tot_qns);
+        this->_fx_get_total_fluxs(Loc, this->_bonds[0].syms(),tot_qns);
         //cytnx::vec_print(std::cout, Loc);
         //cytnx::vec_print(std::cout, tot_qns);
                 
@@ -142,78 +142,135 @@ namespace cytnx {
 
     }
     
-     
+      
+  }
+
+
+  void BlockUniTensor::print_diagram(const bool &bond_info) {
+    char *buffer = (char *)malloc(1024 * sizeof(char));
+    unsigned int BUFFsize = 100;
+
+    sprintf(buffer, "-----------------------%s", "\n");
+    std::cout << std::string(buffer);
+    sprintf(buffer, "tensor Name : %s\n", this->_name.c_str());
+    std::cout << std::string(buffer);
+    sprintf(buffer, "tensor Rank : %d\n", this->_labels.size());
+    std::cout << std::string(buffer);
+    //sprintf(buffer, "block_form  : true%s", "\n");
+    //std::cout << std::string(buffer);
+    sprintf(buffer, "contiguous  : %s\n", this->is_contiguous() ? "True" : "False");
+    std::cout << std::string(buffer);
+    sprintf(buffer, "valid bocks : %d\n", this->_blocks.size());
+    std::cout << std::string(buffer);
+    //sprintf(buffer, "is diag   : %s\n", this->is_diag() ? "True" : "False");
+    //std::cout << std::string(buffer);
+    sprintf(buffer, "on device   : %s\n", this->device_str().c_str());
+    std::cout << std::string(buffer);
+
+    cytnx_uint64 Nin = this->_rowrank;
+    cytnx_uint64 Nout = this->_labels.size() - this->_rowrank;
+    cytnx_uint64 vl;
+    if (Nin > Nout)
+      vl = Nin;
+    else
+      vl = Nout;
+
+    std::string bks;
+    char *l = (char *)malloc(BUFFsize * sizeof(char));
+    char *llbl = (char *)malloc(BUFFsize * sizeof(char));
+    char *r = (char *)malloc(BUFFsize * sizeof(char));
+    char *rlbl = (char *)malloc(BUFFsize * sizeof(char));
+
+    int Space_Llabel_max=0, Space_Ldim_max=0, Space_Rdim_max =0;
+    //quickly checking the size for each line, only check the largest! 
     
+    for (cytnx_uint64 i = 0; i < vl; i++) {
+        if(i<Nin){
+            if(Space_Llabel_max < this->_labels[i].size()) Space_Llabel_max = this->_labels[i].size();
+            if(Space_Ldim_max < to_string(this->_bonds[i].dim()).size()) Space_Ldim_max = to_string(this->_bonds[i].dim()).size();
+        }
+        if(i<Nout){
+            if(Space_Rdim_max < to_string(this->_bonds[Nin+i].dim()).size()) Space_Rdim_max = to_string(this->_bonds[Nin+i].dim()).size();
+        }
+    }
+    string LallSpace = (string(" ")*(Space_Llabel_max+3+1));
+    string MallSpace = string(" ")*(1 + Space_Ldim_max + 5 + Space_Rdim_max+1);
+    string M_dashes  = string("-")*(1 + Space_Ldim_max + 5 + Space_Rdim_max+1);
+    
+    std::string tmpss;
+    sprintf(buffer, "%s row %s col %s",LallSpace.c_str(),MallSpace.c_str(),"\n");
+    std::cout << std::string(buffer);
+    sprintf(buffer, "%s    -%s-    %s",LallSpace.c_str(),M_dashes.c_str(),"\n");
+    std::cout << std::string(buffer);
+    for (cytnx_uint64 i = 0; i < vl; i++) {
+      sprintf(buffer, "%s    |%s|    %s",LallSpace.c_str(),MallSpace.c_str(),"\n");
+      std::cout << std::string(buffer);
 
-    // need to maintain the mapper for contiguous for block_form.
-    //this->_mapper = utils_internal::range_cpu(this->_bonds.size());
-    //this->_inv_mapper = this->_mapper;
-    //this->_contiguous = true;
-
-    // Symmetry, initialize memories for blocks.
-    /*
-    vector<Bond> tot_bonds = this->getTotalQnums();
-    vector<cytnx_uint64> degenerates;
-    vector<vector<cytnx_int64>> uniq_bonds_row = tot_bonds[0].getUniqueQnums();
-    vector<vector<cytnx_int64>> uniq_bonds_col = tot_bonds[1].getUniqueQnums();
-    // vec_print(std::cout,uniq_bonds_row);// << endl;
-    // vec_print(std::cout,uniq_bonds_col);// << endl;
-    // exit(1);
-    // vec_print(std::cout,tot_bonds[0].qnums());
-    // vec_print(std::cout,tot_bonds[1].qnums());
-    //[DDK]
-
-    // get common qnum set of row-col (bra-ket) space.
-    this->_blockqnums = vec2d_intersect(uniq_bonds_row, uniq_bonds_col, false, false);
-
-    cytnx_error_msg(
-      this->_blockqnums.size() == 0,
-      "[ERROR][BlockUniTensor] invalid qnums. no common block (qnum) in this setup.%s", "\n");
-
-    // vec_print(std::cout,this->_blockqnums);
-
-    // calculate&init the No. of blocks and their sizes.
-    this->_blocks.resize(this->_blockqnums.size());
-    cytnx_uint64 rowdim, coldim;
-    this->_inner2outer_row.resize(this->_blocks.size());
-    this->_inner2outer_col.resize(this->_blocks.size());
-
-    for (cytnx_uint64 i = 0; i < this->_blocks.size(); i++) {
-      rowdim = tot_bonds[0].getDegeneracy(this->_blockqnums[i], this->_inner2outer_row[i]);
-      coldim = tot_bonds[1].getDegeneracy(this->_blockqnums[i], this->_inner2outer_col[i]);
-
-      for (cytnx_uint64 j = 0; j < this->_inner2outer_row[i].size(); j++) {
-        this->_outer2inner_row[this->_inner2outer_row[i][j]] =
-          pair<cytnx_uint64, cytnx_uint64>(i, j);
-      }
-
-      for (cytnx_uint64 j = 0; j < this->_inner2outer_col[i].size(); j++) {
-        this->_outer2inner_col[this->_inner2outer_col[i][j]] =
-          pair<cytnx_uint64, cytnx_uint64>(i, j);
-      }
-
-      if (is_diag) {
-        // checking if each block are square matrix!:
-        cytnx_error_msg(rowdim != coldim,
-                        "[ERROR][BlockUniTensor] is_diag =True can only apply to UniTensor with "
-                        "each block to be a square matrix!\n block[%d] row.dim:[%d] col.dim:[%d]\n",
-                        i, rowdim, coldim);
-        if (!no_alloc) this->_blocks[i] = zeros({rowdim}, dtype, device);
+      if (i < Nin) {
+        if (this->_bonds[i].type() == bondType::BD_KET)
+          bks = " -->";
+        else
+          bks = "*<--";
+        memset(l, 0, sizeof(char) * BUFFsize);
+        memset(llbl, 0, sizeof(char) * BUFFsize);
+        tmpss = this->_labels[i] + std::string(" ")*(Space_Llabel_max-this->_labels[i].size());
+        sprintf(l, "%s %s", tmpss.c_str(), bks.c_str());
+        tmpss = to_string(this->_bonds[i].dim()) + std::string(" ")*(Space_Ldim_max-to_string(this->_bonds[i].dim()).size());
+        sprintf(llbl, "%s", tmpss.c_str());
       } else {
-        if (!no_alloc) this->_blocks[i] = zeros({rowdim, coldim}, dtype, device);
+        memset(l, 0, sizeof(char) * BUFFsize);
+        memset(llbl, 0, sizeof(char) * BUFFsize);
+        tmpss = std::string(" ")*(Space_Llabel_max+5);
+        sprintf(l, "%s",tmpss.c_str());
+        tmpss = std::string(" ")*(Space_Ldim_max);
+        sprintf(llbl, "%s",tmpss.c_str());
+      }
+      if (i < Nout) {
+        if (this->_bonds[Nin + i].type() == bondType::BD_KET)
+          bks = "<--*";
+        else
+          bks = "--> ";
+        memset(r, 0, sizeof(char) * BUFFsize);
+        memset(rlbl, 0, sizeof(char) * BUFFsize);
+        
+        sprintf(r, "%s %s", bks.c_str(), this->_labels[Nin + i].c_str());
+        
+        tmpss = to_string(this->_bonds[Nin+i].dim()) + std::string(" ")*(Space_Rdim_max-to_string(this->_bonds[Nin+i].dim()).size());
+        sprintf(rlbl, "%s", tmpss.c_str());
+
+      } else {
+        memset(r, 0, sizeof(char) * BUFFsize);
+        memset(rlbl, 0, sizeof(char) * BUFFsize);
+        sprintf(r, "%s", "        ");
+        tmpss = std::string(" ")*Space_Rdim_max;
+        sprintf(rlbl, "%s",tmpss.c_str());
+      }
+      sprintf(buffer, "   %s| %s     %s |%s\n", l, llbl, rlbl, r);
+      std::cout << std::string(buffer);
+    }
+    sprintf(buffer, "%s    |%s|    %s",LallSpace.c_str(),MallSpace.c_str(),"\n");
+    std::cout << std::string(buffer);
+    sprintf(buffer, "%s    -%s-    %s",LallSpace.c_str(),M_dashes.c_str(),"\n");
+    std::cout << std::string(buffer);
+    sprintf(buffer, "%s", "\n");
+    std::cout << std::string(buffer);
+
+    if (bond_info) {
+      for (cytnx_uint64 i = 0; i < this->_bonds.size(); i++) {
+        // sprintf(buffer, "lbl:%d ", this->_labels[i]);
+        sprintf(buffer, "lbl:%s ", this->_labels[i].c_str());
+        std::cout << std::string(buffer);
+        std::cout << this->_bonds[i] << std::endl;
       }
     }
-    */
+
+    fflush(stdout);
+    free(l);
+    free(llbl);
+    free(r);
+    free(rlbl);
+    free(buffer);
   }
-  //void BlockUniTensor::Init(const std::vector<Bond> &bonds,
-  //                           const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank,
-  //                           const unsigned int &dtype, const int &device, const bool &is_diag,
-  //                           const bool &no_alloc) {
-  //  vector<string> vs;
-  //  transform(in_labels.begin(), in_labels.end(), vs.begin(),
-  //            [](cytnx_int64 x) -> string { return to_string(x); });
-  //  Init(bonds, vs, rowrank, dtype, device, is_diag, no_alloc);
-  //}
 
 
 

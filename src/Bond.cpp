@@ -9,8 +9,6 @@ namespace cytnx {
   void Bond_impl::Init(const cytnx_uint64 &dim, const bondType &bd_type,
                        const std::vector<std::vector<cytnx_int64>> &in_qnums,
                        const std::vector<Symmetry> &in_syms) {
-    cytnx_warning_msg(
-      true, "%s", "[WARNING] Init Bond with old version, this might be deprecated in future.\n");
 
     cytnx_error_msg(dim == 0, "%s", "[ERROR] Bond_impl cannot have 0 or negative dimension.");
     // check is symmetry:
@@ -21,6 +19,7 @@ namespace cytnx {
       this->_dim = dim;
 
     } else {
+      cytnx_warning_msg(true, "%s", "[WARNING] Init Bond with old version, this might be deprecated in future.\n");
       // cytnx_uint64 Ndim = in_qnums.begin()[0].size();
       cytnx_error_msg(in_qnums.size() != dim, "%s",
                       "[ERROR] invalid qnums. the # of row of qnums list should be identify across "

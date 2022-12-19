@@ -1692,7 +1692,7 @@ namespace cytnx {
         // given an index list [loc], get qnums from this->_bonds[loc] and return the combined qnums calculated from Symm object!
         // this assume 1. symmetry are the same for each bond! 
         //             2. total_qns are feeded with size len(symmetry)
-        void _fx_get_total_qnums(std::vector<cytnx_uint64> &loc, const std::vector<Symmetry> &syms, std::vector<cytnx_int64> &total_qns){
+        void _fx_get_total_fluxs(std::vector<cytnx_uint64> &loc, const std::vector<Symmetry> &syms, std::vector<cytnx_int64> &total_qns){
             memset(&total_qns[0],0,sizeof(cytnx_int64)*total_qns.size());
            
             for(cytnx_int32 i=0;i<syms.size();i++){
@@ -1772,6 +1772,14 @@ namespace cytnx {
     }
 
     bool is_blockform() const { return true; }
+    bool is_contiguous() const { 
+        bool out=true;
+        for(int i=0;i<this->_blocks.size();i++){
+            out &= this->_blocks[i].is_contiguous();
+        }
+        return out; 
+    };
+    
 
     void to_(const int &device) {
       for (cytnx_uint64 i = 0; i < this->_blocks.size(); i++) {
@@ -1796,13 +1804,37 @@ namespace cytnx {
       return out;
     };
 
-    bool is_contiguous() const { 
-        bool out=true;
-        for(int i=0;i<this->_blocks.size();i++){
-            out &= this->_blocks[i].is_contiguous();
-        }
-        return out; 
+    unsigned int dtype() const {
+#ifdef UNI_DEBUG
+      cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
+                      "\n");
+#endif
+      return this->_blocks[0].dtype();
     };
+    int device() const {
+#ifdef UNI_DEBUG
+      cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
+                      "\n");
+#endif
+      return this->_blocks[0].device();
+    };
+    std::string dtype_str() const {
+#ifdef UNI_DEBUG
+      cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
+                      "\n");
+#endif
+      return this->_blocks[0].dtype_str();
+    };
+    std::string device_str() const {
+#ifdef UNI_DEBUG
+      cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
+                      "\n");
+#endif
+      return this->_blocks[0].device_str();
+    };
+
+
+
 
     void set_rowrank(const cytnx_uint64 &new_rowrank) {
       cytnx_error_msg((new_rowrank < 1) || (new_rowrank >= this->rank()),
@@ -1815,6 +1847,7 @@ namespace cytnx {
       this->_is_braket_form = this->_update_braket();
     }
 
+    void print_diagram(const bool &bond_info = false);
 
   };
   //======================================================================
@@ -1866,6 +1899,7 @@ namespace cytnx {
     }
     void Init(const Tensor &in_tensor, const bool &is_diag = false,
               const cytnx_int64 &rowrank = -1) {
+      //std::cout << "[entry!]" << std::endl;
       boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
       out->Init_by_Tensor(in_tensor, is_diag, rowrank);
       this->_impl = out;

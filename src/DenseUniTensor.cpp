@@ -471,7 +471,8 @@ namespace cytnx {
   };
 
   void DenseUniTensor::print_diagram(const bool &bond_info) {
-    char *buffer = (char *)malloc(256 * sizeof(char));
+    char *buffer = (char *)malloc(1024 * sizeof(char));
+    unsigned int BUFFsize = 100;
 
     sprintf(buffer, "-----------------------%s", "\n");
     std::cout << std::string(buffer);
@@ -495,105 +496,147 @@ namespace cytnx {
       vl = Nout;
 
     std::string bks;
-    char *l = (char *)malloc(40 * sizeof(char));
-    char *llbl = (char *)malloc(40 * sizeof(char));
-    char *r = (char *)malloc(40 * sizeof(char));
-    char *rlbl = (char *)malloc(40 * sizeof(char));
+    char *l = (char *)malloc(BUFFsize * sizeof(char));
+    char *llbl = (char *)malloc(BUFFsize * sizeof(char));
+    char *r = (char *)malloc(BUFFsize * sizeof(char));
+    char *rlbl = (char *)malloc(BUFFsize * sizeof(char));
+
+      int Space_Llabel_max=0, Space_Ldim_max=0, Space_Rdim_max =0;
+      //quickly checking the size for each line, only check the largest! 
+
+      for (cytnx_uint64 i = 0; i < vl; i++) {
+        if(i<Nin){
+            if(Space_Llabel_max < this->_labels[i].size()) Space_Llabel_max = this->_labels[i].size();
+            if(Space_Ldim_max < to_string(this->_bonds[i].dim()).size()) Space_Ldim_max = to_string(this->_bonds[i].dim()).size();
+        }
+        if(i<Nout){
+            if(Space_Rdim_max < to_string(this->_bonds[Nin+i].dim()).size()) Space_Rdim_max = to_string(this->_bonds[Nin+i].dim()).size();
+        }
+      }
+      string LallSpace = (string(" ")*(Space_Llabel_max+3+1));
+      string MallSpace = string(" ")*(1 + Space_Ldim_max + 5 + Space_Rdim_max+1);
+      string M_dashes  = string("-")*(1 + Space_Ldim_max + 5 + Space_Rdim_max+1);
+      std::string tmpss;
+
     if (this->is_tag()) {
       sprintf(buffer, "braket_form : %s\n", this->_is_braket_form ? "True" : "False");
       std::cout << std::string(buffer);
-      sprintf(buffer, "        row               col   %s", "\n");
-      std::cout << std::string(buffer);
-      sprintf(buffer, "           ---------------      %s", "\n");
-      std::cout << std::string(buffer);
-      for (cytnx_uint64 i = 0; i < vl; i++) {
-        sprintf(buffer, "           |             |     %s", "\n");
+
+
+        sprintf(buffer, "%s row %s col %s",LallSpace.c_str(),MallSpace.c_str(),"\n");
         std::cout << std::string(buffer);
-        if (i < Nin) {
-          if (this->_bonds[i].type() == bondType::BD_KET)
-            bks = " -->";
-          else
-            bks = "*<--";
-          memset(l, 0, sizeof(char) * 40);
-          memset(llbl, 0, sizeof(char) * 40);
-          // sprintf(l, "%3ld %s", this->_labels[i], bks.c_str());
-          sprintf(l, "%s %s", this->_labels[i], bks.c_str());
-          sprintf(llbl, "%-3lu", this->_bonds[i].dim());
-        } else {
-          memset(l, 0, sizeof(char) * 40);
-          memset(llbl, 0, sizeof(char) * 40);
-          sprintf(l, "%s", "        ");
-          sprintf(llbl, "%s", "   ");
-        }
-        if (i < Nout) {
-          if (this->_bonds[Nin + i].type() == bondType::BD_KET)
-            bks = "<--*";
-          else
-            bks = "--> ";
-          memset(r, 0, sizeof(char) * 40);
-          memset(rlbl, 0, sizeof(char) * 40);
-          // sprintf(r, "%s %-3d", bks.c_str(), this->_labels[Nin + i]);
-          sprintf(r, "%s %s", bks.c_str(), this->_labels[Nin + i]);
-          sprintf(rlbl, "%3d", this->_bonds[Nin + i].dim());
-        } else {
-          memset(r, 0, sizeof(char) * 40);
-          memset(rlbl, 0, sizeof(char) * 40);
-          sprintf(r, "%s", "        ");
-          sprintf(rlbl, "%s", "   ");
-        }
-        sprintf(buffer, "   %s| %s     %s |%s\n", l, llbl, rlbl, r);
+        sprintf(buffer, "%s    -%s-    %s",LallSpace.c_str(),M_dashes.c_str(),"\n");
         std::cout << std::string(buffer);
-      }
-      sprintf(buffer, "           |             |     %s", "\n");
-      std::cout << std::string(buffer);
-      sprintf(buffer, "           ---------------     %s", "\n");
-      std::cout << std::string(buffer);
+        for (cytnx_uint64 i = 0; i < vl; i++) {
+          sprintf(buffer, "%s    |%s|    %s",LallSpace.c_str(),MallSpace.c_str(),"\n");
+          std::cout << std::string(buffer);
+
+          if (i < Nin) {
+            if (this->_bonds[i].type() == bondType::BD_KET)
+              bks = " -->";
+            else
+              bks = "*<--";
+            memset(l, 0, sizeof(char) * BUFFsize);
+            memset(llbl, 0, sizeof(char) * BUFFsize);
+            tmpss = this->_labels[i] + std::string(" ")*(Space_Llabel_max-this->_labels[i].size());
+            sprintf(l, "%s %s", tmpss.c_str(), bks.c_str());
+            tmpss = to_string(this->_bonds[i].dim()) + std::string(" ")*(Space_Ldim_max-to_string(this->_bonds[i].dim()).size());
+            sprintf(llbl, "%s", tmpss.c_str());
+          } else {
+            memset(l, 0, sizeof(char) * BUFFsize);
+            memset(llbl, 0, sizeof(char) * BUFFsize);
+            tmpss = std::string(" ")*(Space_Llabel_max+5);
+            sprintf(l, "%s",tmpss.c_str());
+            tmpss = std::string(" ")*(Space_Ldim_max);
+            sprintf(llbl, "%s",tmpss.c_str());
+          }
+          if (i < Nout) {
+            if (this->_bonds[Nin + i].type() == bondType::BD_KET)
+              bks = "<--*";
+            else
+              bks = "--> ";
+            memset(r, 0, sizeof(char) * BUFFsize);
+            memset(rlbl, 0, sizeof(char) * BUFFsize);
+
+            sprintf(r, "%s %s", bks.c_str(), this->_labels[Nin + i].c_str());
+
+            tmpss = to_string(this->_bonds[Nin+i].dim()) + std::string(" ")*(Space_Rdim_max-to_string(this->_bonds[Nin+i].dim()).size());
+            sprintf(rlbl, "%s", tmpss.c_str());
+
+          } else {
+            memset(r, 0, sizeof(char) * BUFFsize);
+            memset(rlbl, 0, sizeof(char) * BUFFsize);
+            sprintf(r, "%s", "        ");
+            tmpss = std::string(" ")*Space_Rdim_max;
+            sprintf(rlbl, "%s",tmpss.c_str());
+          }
+          sprintf(buffer, "   %s| %s     %s |%s\n", l, llbl, rlbl, r);
+          std::cout << std::string(buffer);
+        }
+        sprintf(buffer, "%s    |%s|    %s",LallSpace.c_str(),MallSpace.c_str(),"\n");
+        std::cout << std::string(buffer);
+        sprintf(buffer, "%s    -%s-    %s",LallSpace.c_str(),M_dashes.c_str(),"\n");
+        std::cout << std::string(buffer);
+        //sprintf(buffer, "%s", "\n");
+        //std::cout << std::string(buffer);
 
     } else {
-      sprintf(buffer, "            -------------      %s", "\n");
+      sprintf(buffer, "%s     %s     %s",LallSpace.c_str(),M_dashes.c_str(),"\n");
       std::cout << std::string(buffer);
       for (cytnx_uint64 i = 0; i < vl; i++) {
         if (i == 0) {
-          sprintf(buffer, "           /             \\     %s", "\n");
+          sprintf(buffer, "%s    /%s\\    %s",LallSpace.c_str(),MallSpace.c_str(),"\n");
           std::cout << std::string(buffer);
         } else {
-          sprintf(buffer, "           |             |     %s", "\n");
+          sprintf(buffer, "%s    |%s|    %s",LallSpace.c_str(),MallSpace.c_str(),"\n");
           std::cout << std::string(buffer);
         }
 
         if (i < Nin) {
-          bks = "__";
-          memset(l, 0, sizeof(char) * 40);
-          memset(llbl, 0, sizeof(char) * 40);
-          // sprintf(l, "%3d %s__", this->_labels[i], bks.c_str());
-          sprintf(l, "%s %s__", this->_labels[i], bks.c_str());
-          sprintf(llbl, "%-3d", this->_bonds[i].dim());
+          bks = "____";
+          memset(l, 0, sizeof(char) *BUFFsize);
+          memset(llbl, 0, sizeof(char) *BUFFsize);
+          tmpss = this->_labels[i] + std::string(" ")*(Space_Llabel_max-this->_labels[i].size());
+          sprintf(l, "%s %s", tmpss.c_str(), bks.c_str());
+          tmpss = to_string(this->_bonds[i].dim()) + std::string(" ")*(Space_Ldim_max-to_string(this->_bonds[i].dim()).size());
+          sprintf(llbl, "%s", tmpss.c_str());
+
         } else {
-          memset(l, 0, sizeof(char) * 40);
-          memset(llbl, 0, sizeof(char) * 40);
-          sprintf(l, "%s", "        ");
-          sprintf(llbl, "%s", "   ");
+          memset(l, 0, sizeof(char) * BUFFsize);
+          memset(llbl, 0, sizeof(char) * BUFFsize);
+        
+          tmpss = std::string(" ")*(Space_Llabel_max+5);
+          sprintf(l, "%s",tmpss.c_str());
+          tmpss = std::string(" ")*(Space_Ldim_max);
+          sprintf(llbl, "%s",tmpss.c_str());
+
         }
         if (i < Nout) {
-          bks = "__";
-          memset(r, 0, sizeof(char) * 40);
-          memset(rlbl, 0, sizeof(char) * 40);
-          // sprintf(r, "__%s %-3d", bks.c_str(), this->_labels[Nin + i]);
-          sprintf(r, "__%s %s", bks.c_str(), this->_labels[Nin + i]);
-          sprintf(rlbl, "%3d", this->_bonds[Nin + i].dim());
+          bks = "____";
+          memset(r, 0, sizeof(char) * BUFFsize);
+          memset(rlbl, 0, sizeof(char) * BUFFsize);
+
+          sprintf(r, "%s %s", bks.c_str(), this->_labels[Nin + i].c_str());
+
+          tmpss = to_string(this->_bonds[Nin+i].dim()) + std::string(" ")*(Space_Rdim_max-to_string(this->_bonds[Nin+i].dim()).size());
+          sprintf(rlbl, "%s", tmpss.c_str());
+
         } else {
           memset(r, 0, sizeof(char) * 40);
           memset(rlbl, 0, sizeof(char) * 40);
           sprintf(r, "%s", "        ");
-          sprintf(rlbl, "%s", "   ");
+          tmpss = std::string(" ")*Space_Rdim_max;
+          sprintf(rlbl, "%s",tmpss.c_str());
+
         }
         sprintf(buffer, "   %s| %s     %s |%s\n", l, llbl, rlbl, r);
         std::cout << std::string(buffer);
       }
-      sprintf(buffer, "           \\             /     %s", "\n");
+      sprintf(buffer, "%s    \\%s/    %s",LallSpace.c_str(),MallSpace.c_str(),"\n");
       std::cout << std::string(buffer);
-      sprintf(buffer, "            -------------      %s", "\n");
+      sprintf(buffer, "%s     %s     %s",LallSpace.c_str(),M_dashes.c_str(),"\n");
       std::cout << std::string(buffer);
+
     }
 
     if (bond_info) {

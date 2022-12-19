@@ -15,6 +15,13 @@ int main(int argc, char *argv[]) {
   cout << vec_unique(A) << endl;
   */
 
+  auto TTNdir = UniTensor(arange(24).reshape(2,3,4)).relabels({"good","evil","badass"});
+    
+  TTNdir.print_diagram();
+
+  TTNdir.tag();
+
+  TTNdir.print_diagram();
 
   Tensor A1 = arange(12).reshape(4,3).permute(1,0);
   Tensor A2 = arange(20).reshape(5,4);
@@ -37,9 +44,9 @@ int main(int argc, char *argv[]) {
 
   Bond bd_sym_a = Bond(BD_KET, {{0}, {1}, {2}, {3}}, {4, 7, 2, 3});
 
-  UniTensor TTT({bd_sym_a,bd_sym_a.redirect()});
+  UniTensor TTT({bd_sym_a,bd_sym_a.redirect()},{1000,2000});
 
-  //print(TTT);
+  TTT.print_diagram();
   return 0;
   
   bd_sym_a.Save("ttba");
