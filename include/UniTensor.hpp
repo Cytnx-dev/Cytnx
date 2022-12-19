@@ -2271,8 +2271,8 @@ namespace cytnx {
         std::vector<char*> new_labels(new_lbls);
         std::vector<std::string> vs(new_labels.size());
         transform(new_labels.begin(),new_labels.end(), vs.begin(),[](char * x) -> std::string { return std::string(x); });
-        std::cout << new_labels.size() << std::endl;
-        std::cout << vs << std::endl;
+        //std::cout << new_labels.size() << std::endl;
+        //std::cout << vs << std::endl;
 
         UniTensor out;
         out._impl =  this->_impl->relabels(vs);
