@@ -11,7 +11,7 @@ namespace cytnx {
 
   namespace algo_internal {
 
-    void Concate_internal(boost::intrusive_ptr<Storage_base> &out, std::vector<boost::intrusive_ptr<Storage_base> > &ins) {
+    void Concate_internal(char *out_ptr, std::vector<void*> &ins, const std::vector<cytnx_uint64> &lens, const cytnx_uint64 &ElemSize) {
 
         // require:
         // 1. Data type of out, all [ins] to be the same
@@ -19,13 +19,14 @@ namespace cytnx {
         // 3. size is deref from out.type!
         // 4. checking bool type!!
 
-        cytnx_uint64 ElemSize = Type.typeSize(out->dtype);
+        //cytnx_uint64 ElemSize = Type.typeSize(out->dtype);
         cytnx_uint64 offs = 0;
-        char *out_ptr = (char*)out->Mem;
+        //char *out_ptr = (char*)out->Mem;
 
         for(cytnx_int32 i=0;i<ins.size();i++){
-            memcpy(out_ptr + offs,ins[i]->Mem,ElemSize*ins[i]->len);
-            offs += ElemSize*ins[i]->len;
+            memcpy(out_ptr + offs,ins[i],ElemSize*lens[i]);
+            offs += ElemSize*lens[i];
+            //std::cout << ElemSize*lens[i] << std::endl;
         }
         
     }

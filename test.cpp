@@ -15,6 +15,18 @@ int main(int argc, char *argv[]) {
   cout << vec_unique(A) << endl;
   */
 
+
+  Tensor A1 = arange(12).reshape(3,4);
+  Tensor A2 = arange(20).reshape(5,4);
+  Tensor A3 = arange(32).reshape(8,4);
+  print(A1);
+  print(A2);
+  print(A3);
+  print(algo::Vstack({A1,A2,A3}));
+
+
+
+
   //Bond bd_sym_s = Bond(BD_REG, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
 
   Bond bd_sym_a = Bond(BD_KET, {{0}, {1}, {2}, {3}}, {4, 7, 2, 3});

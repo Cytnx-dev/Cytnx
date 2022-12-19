@@ -134,7 +134,7 @@ OBJS += Sort_internal.o Concate_internal.o
 OBJS += Lstsq.o Mod.o Lanczos_Gnd_Ut.o Lanczos_Gnd.o Lanczos_ER.o Det.o Sum.o Hosvd.o Min.o Max.o ExpM.o Qdr.o Qr.o Abs_.o Abs.o Pow_.o Pow.o Trace.o Eig.o Dot.o Norm.o ExpH.o Kron.o iAdd.o Add.o iDiv.o Div.o iSub.o Sub.o iMul.o Mul.o Cpr.o Svd.o Svd_truncate.o Inv.o Inv_.o InvM.o InvM_.o Conj.o Conj_.o Exp.o Exp_.o Expf.o Expf_.o Eigh.o Diag.o Matmul_dg.o Matmul.o Tensordot_dg.o Tensordot.o Outer.o Vectordot.o Tridiag.o 
 
 ## Algo
-OBJS += Sort.o Concatenate.o  
+OBJS += Sort.o Concatenate.o  Vstack.o
 
 ## Stat
 OBJS += histogram.o 
@@ -299,7 +299,8 @@ Sort.o : $(CytnxPATH)/src/algo/Sort.cpp $(CytnxPATH)/include/algo.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 Concatenate.o : $(CytnxPATH)/src/algo/Concatenate.cpp $(CytnxPATH)/include/algo.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-
+Vstack.o : $(CytnxPATH)/src/algo/Vstack.cpp $(CytnxPATH)/include/algo.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 ## stat
 #############################
 histogram.o: $(CytnxPATH)/src/stat/histogram.cpp $(CytnxPATH)/include/stat.hpp

@@ -12,7 +12,7 @@ namespace cytnx {
 
   namespace algo_internal {
 
-    void Concate_internal(boost::intrusive_ptr<Storage_base> &out, std::vector<boost::intrusive_ptr<Storage_base> > &ins);
+    void Concate_internal(char *out_ptr, std::vector<void*> &ins, const std::vector<cytnx_uint64> &lens, const cytnx_uint64 &ElemSize);
        
 
 
