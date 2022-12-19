@@ -284,6 +284,7 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(out_raw);
     return out;
   }
+  /*
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::permute(
     const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank) {
     // boost::intrusive_ptr<UniTensor_base> out = this->clone();
@@ -322,6 +323,7 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(out_raw);
     return out;
   }
+  */
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::permute(
     const std::vector<std::string> &mapper, const cytnx_int64 &rowrank) {
     // boost::intrusive_ptr<UniTensor_base> out = this->clone();
@@ -442,6 +444,7 @@ namespace cytnx {
       this->_is_braket_form = this->_update_braket();
     }
   }
+  /*
   void DenseUniTensor::permute_(const std::vector<cytnx_int64> &mapper,
                                 const cytnx_int64 &rowrank) {
     std::vector<cytnx_uint64> mapper_u64;
@@ -469,6 +472,7 @@ namespace cytnx {
       this->_is_braket_form = this->_update_braket();
     }
   };
+  */
 
   void DenseUniTensor::print_blocks(const bool &full_info)const{
     std::ostream &os = std::cout;

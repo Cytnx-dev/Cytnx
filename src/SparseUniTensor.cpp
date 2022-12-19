@@ -436,6 +436,7 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(out_raw);
     return out;
   };
+  /*
   boost::intrusive_ptr<UniTensor_base> SparseUniTensor::permute(
     const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank) {
     // boost::intrusive_ptr<UniTensor_base> out = this->clone();
@@ -496,6 +497,7 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(out_raw);
     return out;
   };
+  */
   void SparseUniTensor::permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank,
                                  const bool &by_label) {
     std::vector<cytnx_uint64> mapper_u64;
@@ -618,6 +620,7 @@ namespace cytnx {
     // update braket form status.
     this->_is_braket_form = this->_update_braket();
   }
+  /*
   void SparseUniTensor::permute_(const std::vector<cytnx_int64> &mapper,
                                  const cytnx_int64 &rowrank) {
     std::vector<cytnx_uint64> mapper_u64;
@@ -670,6 +673,7 @@ namespace cytnx {
     // update braket form status.
     this->_is_braket_form = this->_update_braket();
   }
+  */
 
   boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabels(
     const std::vector<string> &new_labels) {

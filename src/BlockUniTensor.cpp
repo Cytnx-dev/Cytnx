@@ -186,7 +186,7 @@ namespace cytnx {
         else{
             os << "dtype: " << Type.getname(this->_blocks[b].dtype()) << endl;
             os << "device: " << Device.getname(this->_blocks[b].device()) << endl;
-            os << "contiguous: " << this->_blocks[b].is_contiguous() << endl;
+            os << "contiguous: " << (this->_blocks[b].is_contiguous()? "True" : "False") << endl;
             os << "shape: ";
             vec_print_simple(os,this->_blocks[b].shape());
 
@@ -363,5 +363,193 @@ namespace cytnx {
         }
     }
 
+  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::permute(
+    const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank, const bool &by_label) {
+    
+    BlockUniTensor *out_raw = this->clone_meta(true,true);
+    out_raw ->_blocks.resize(this->_blocks.size());
+
+    std::vector<cytnx_uint64> mapper_u64;
+    if (by_label) {
+      // cytnx_error_msg(true,"[Developing!]%s","\n");
+      std::vector<std::string>::iterator it;
+      for (cytnx_uint64 i = 0; i < mapper.size(); i++) {
+        it = std::find(out_raw->_labels.begin(), out_raw->_labels.end(), std::to_string(mapper[i]));
+        cytnx_error_msg(it == out_raw->_labels.end(),
+                        "[ERROR] label %d does not exist in current UniTensor.\n", mapper[i]);
+        mapper_u64.push_back(std::distance(out_raw->_labels.begin(), it));
+      }
+
+    } else {
+      mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
+    }
+
+
+    out_raw->_bonds = vec_map(vec_clone(out_raw->bonds()), mapper_u64);  // this will check validity
+    out_raw->_labels = vec_map(out_raw->labels(), mapper_u64);
+
+
+    //inner_to_outer permute!
+    for(cytnx_int64 b=0;b<this->_inner_to_outer_idx.size();b++){
+        out_raw->_inner_to_outer_idx[b] = vec_map(out_raw->_inner_to_outer_idx[b], mapper_u64);
+        out_raw->_blocks[b] = this->_blocks[b].permute(mapper_u64); 
+    }
+
+    if(out_raw->_is_diag){
+        cytnx_error_msg(true,"[ERROR][BlockUniTensor] currently do not support permute for is_diag=true for BlockUniTensor!%s","\n");
+    }else{
+        if(rowrank >=0){
+            cytnx_error_msg((rowrank >= out_raw->_bonds.size()) || (rowrank < 1),
+                            "[ERROR][BlockUniTensor] rowrank cannot exceed the rank of UniTensor-1, and should be >=1.%s",
+                            "\n");
+            out_raw->_rowrank = rowrank;
+
+        }
+        out_raw->_is_braket_form = out_raw->_update_braket();
+    }
+    boost::intrusive_ptr<UniTensor_base> out(out_raw);
+
+    return out;
+  }
+
+  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::permute(
+    const std::vector<std::string> &mapper, const cytnx_int64 &rowrank) {
+
+        BlockUniTensor *out_raw = this->clone_meta(true,true);
+        out_raw ->_blocks.resize(this->_blocks.size());
+
+        std::vector<cytnx_uint64> mapper_u64;
+        // cytnx_error_msg(true,"[Developing!]%s","\n");
+        std::vector<string>::iterator it;
+        for (cytnx_uint64 i = 0; i < mapper.size(); i++) {
+          it = std::find(out_raw->_labels.begin(), out_raw->_labels.end(), mapper[i]);
+          cytnx_error_msg(it == out_raw->_labels.end(),
+                          "[ERROR] label %s does not exist in current UniTensor.\n", mapper[i]);
+          mapper_u64.push_back(std::distance(out_raw->_labels.begin(), it));
+        }
+
+    
+        out_raw->_bonds = vec_map(vec_clone(out_raw->bonds()), mapper_u64);  // this will check validity
+        out_raw->_labels = vec_map(out_raw->labels(), mapper_u64);
+
+
+        if(out_raw->_is_diag){
+            //inner_to_outer permute!
+            for(cytnx_int64 b=0;b<this->_inner_to_outer_idx.size();b++){
+                out_raw->_inner_to_outer_idx[b] = vec_map(out_raw->_inner_to_outer_idx[b], mapper_u64);
+                //??out_raw->_blocks[b] = this->_blocks[b].permute(mapper_u64);
+            }
+
+            cytnx_error_msg(true,"[ERROR][BlockUniTensor] currently do not support permute for is_diag=true for BlockUniTensor!%s","\n");
+        }else{
+            //inner_to_outer permute!
+            for(cytnx_int64 b=0;b<this->_inner_to_outer_idx.size();b++){
+                out_raw->_inner_to_outer_idx[b] = vec_map(out_raw->_inner_to_outer_idx[b], mapper_u64);
+                out_raw->_blocks[b] = this->_blocks[b].permute(mapper_u64);
+            }
+
+            if(rowrank >=0){
+                cytnx_error_msg((rowrank >= out_raw->_bonds.size()) || (rowrank < 1),
+                                "[ERROR][BlockUniTensor] rowrank cannot exceed the rank of UniTensor-1, and should be >=1.%s",
+                                "\n");
+                out_raw->_rowrank = rowrank;
+
+            }
+            out_raw->_is_braket_form = out_raw->_update_braket();
+        }
+        boost::intrusive_ptr<UniTensor_base> out(out_raw);
+
+        return out;
+
+
+  }
+
+  void BlockUniTensor::permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank,
+                                 const bool &by_label) {
+    std::vector<cytnx_uint64> mapper_u64;
+    if (by_label) {
+      // cytnx_error_msg(true,"[Developing!]%s","\n");
+      std::vector<string>::iterator it;
+      for (cytnx_uint64 i = 0; i < mapper.size(); i++) {
+        it = std::find(this->_labels.begin(), this->_labels.end(), std::to_string(mapper[i]));
+        cytnx_error_msg(it == this->_labels.end(),
+                        "[ERROR] label %d does not exist in current UniTensor.\n", mapper[i]);
+        mapper_u64.push_back(std::distance(this->_labels.begin(), it));
+      }
+
+    } else {
+      mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
+    }
+
+    this->_bonds = vec_map(vec_clone(this->bonds()), mapper_u64);  // this will check validity
+    this->_labels = vec_map(this->labels(), mapper_u64);
+
+    if(this->_is_diag){
+
+        for(cytnx_int64 b=0;b<this->_inner_to_outer_idx.size();b++){
+            this->_inner_to_outer_idx[b] = vec_map(this->_inner_to_outer_idx[b], mapper_u64);
+            //??out_raw->_blocks[b] = this->_blocks[b].permute(mapper_u64);
+        }
+        cytnx_error_msg(true,"[ERROR][BlockUniTensor] currently do not support permute for is_diag=true for BlockUniTensor!%s","\n");
+    }else{
+        //inner_to_outer permute!
+        for(cytnx_int64 b=0;b<this->_inner_to_outer_idx.size();b++){
+            this->_inner_to_outer_idx[b] = vec_map(this->_inner_to_outer_idx[b], mapper_u64);
+            this->_blocks[b].permute_(mapper_u64);
+        }
+
+        if (rowrank >= 0) {
+            cytnx_error_msg((rowrank >= this->_bonds.size()) || (rowrank < 1),
+                                "[ERROR][BlockUniTensor] rowrank cannot exceed the rank of UniTensor-1, and should be >=1.%s",
+                                "\n");
+                this->_rowrank = rowrank;
+        }
+        this->_is_braket_form = this->_update_braket();
+    }
+
+  }
+
+  void BlockUniTensor::permute_(const std::vector<std::string> &mapper,
+                                const cytnx_int64 &rowrank) {
+
+    std::vector<cytnx_uint64> mapper_u64;
+    // cytnx_error_msg(true,"[Developing!]%s","\n");
+    std::vector<std::string>::iterator it;
+    for (cytnx_uint64 i = 0; i < mapper.size(); i++) {
+      it = std::find(this->_labels.begin(), this->_labels.end(), mapper[i]);
+      cytnx_error_msg(it == this->_labels.end(),
+                      "[ERROR] label %d does not exist in current UniTensor.\n", mapper[i]);
+      mapper_u64.push_back(std::distance(this->_labels.begin(), it));
+    }
+
+    this->_bonds = vec_map(vec_clone(this->bonds()), mapper_u64);  // this will check validity
+    this->_labels = vec_map(this->labels(), mapper_u64);
+
+    if(this->_is_diag){
+
+        for(cytnx_int64 b=0;b<this->_inner_to_outer_idx.size();b++){
+            this->_inner_to_outer_idx[b] = vec_map(this->_inner_to_outer_idx[b], mapper_u64);
+            //??out_raw->_blocks[b] = this->_blocks[b].permute(mapper_u64);
+        }
+        cytnx_error_msg(true,"[ERROR][BlockUniTensor] currently do not support permute for is_diag=true for BlockUniTensor!%s","\n");
+    }else{
+        //inner_to_outer permute!
+        for(cytnx_int64 b=0;b<this->_inner_to_outer_idx.size();b++){
+            this->_inner_to_outer_idx[b] = vec_map(this->_inner_to_outer_idx[b], mapper_u64);
+            this->_blocks[b].permute_(mapper_u64);
+        }
+
+        if (rowrank >= 0) {
+            cytnx_error_msg((rowrank >= this->_bonds.size()) || (rowrank < 1),
+                                "[ERROR][BlockUniTensor] rowrank cannot exceed the rank of UniTensor-1, and should be >=1.%s",
+                                "\n");
+                this->_rowrank = rowrank;
+        }
+        this->_is_braket_form = this->_update_braket();
+    }
+
+
+
+  }
 
 }  // namespace cytnx

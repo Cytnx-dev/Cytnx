@@ -123,12 +123,12 @@ namespace cytnx {
                     "\n");
     return nullptr;
   }
-  boost::intrusive_ptr<UniTensor_base> UniTensor_base::permute(
-    const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank) {
-    cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
-                    "\n");
-    return nullptr;
-  }
+  //boost::intrusive_ptr<UniTensor_base> UniTensor_base::permute(
+  //  const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank) {
+  //  cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
+  //                  "\n");
+  //  return nullptr;
+  //}
   void UniTensor_base::permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank,
                                 const bool &by_label) {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
@@ -139,11 +139,11 @@ namespace cytnx {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
                     "\n");
   }
-  void UniTensor_base::permute_(const std::vector<cytnx_int64> &mapper,
-                                const cytnx_int64 &rowrank) {
-    cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
-                    "\n");
-  }
+  //void UniTensor_base::permute_(const std::vector<cytnx_int64> &mapper,
+  //                              const cytnx_int64 &rowrank) {
+  //  cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
+  //                  "\n");
+  //}
 
   boost::intrusive_ptr<UniTensor_base> UniTensor_base::contiguous_() {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",

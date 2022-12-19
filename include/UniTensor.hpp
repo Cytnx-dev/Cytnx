@@ -247,17 +247,17 @@ namespace cytnx {
     virtual std::string device_str() const;
     virtual void set_rowrank(const cytnx_uint64 &new_rowrank);
     virtual boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
-                                                         const cytnx_int64 &rowrank,
-                                                         const bool &by_label);
+                                                         const cytnx_int64 &rowrank = -1,
+                                                         const bool &by_label= false);
     virtual boost::intrusive_ptr<UniTensor_base> permute(const std::vector<std::string> &mapper,
                                                          const cytnx_int64 &rowrank = -1);
-    virtual boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
-                                                         const cytnx_int64 &rowrank = -1);
+    //virtual boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
+    //                                                     const cytnx_int64 &rowrank = -1);
 
-    virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank,
-                          const bool &by_label);
+    virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1,
+                          const bool &by_label=false);
     virtual void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
-    virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
+    //virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
     virtual boost::intrusive_ptr<UniTensor_base> contiguous_();
     virtual boost::intrusive_ptr<UniTensor_base> contiguous();
     virtual void print_diagram(const bool &bond_info = false);
@@ -508,11 +508,11 @@ namespace cytnx {
      * @return boost::intrusive_ptr<UniTensor_base>
      */
     boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
-                                                 const cytnx_int64 &rowrank, const bool &by_label);
+                                                 const cytnx_int64 &rowrank=-1, const bool &by_label=false);
     boost::intrusive_ptr<UniTensor_base> permute(const std::vector<std::string> &mapper,
                                                  const cytnx_int64 &rowrank = -1);
-    boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
-                                                 const cytnx_int64 &rowrank = -1);
+    //boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
+    //                                             const cytnx_int64 &rowrank = -1);
     /**
      * @brief
      *
@@ -522,10 +522,10 @@ namespace cytnx {
      * @param rowrank
      * @param by_label
      */
-    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank,
-                  const bool &by_label);
+    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1,
+                  const bool &by_label=false);
     void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
-    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
+    //void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
     boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &new_labels);
     /**
      * @brief
@@ -1181,9 +1181,9 @@ namespace cytnx {
      * @param rowrank
      * @param by_label
      */
-    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank,
-                  const bool &by_label);
-    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
+    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1,
+                  const bool &by_label=false);
+    //void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
     void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
     /**
      * @brief
@@ -1196,9 +1196,9 @@ namespace cytnx {
      * @return boost::intrusive_ptr<UniTensor_base>
      */
     boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
-                                                 const cytnx_int64 &rowrank, const bool &by_label);
-    boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
-                                                 const cytnx_int64 &rowrank = -1);
+                                                 const cytnx_int64 &rowrank=-1, const bool &by_label=false);
+    //boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
+    //                                             const cytnx_int64 &rowrank = -1);
     boost::intrusive_ptr<UniTensor_base> permute(const std::vector<std::string> &mapper,
                                                  const cytnx_int64 &rowrank = -1);
     boost::intrusive_ptr<UniTensor_base> contiguous();
@@ -1851,7 +1851,21 @@ namespace cytnx {
       this->_rowrank = new_rowrank;
       this->_is_braket_form = this->_update_braket();
     }
-    
+   
+    boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
+                                                         const cytnx_int64 &rowrank=-1,
+                                                         const bool &by_label=false);
+    boost::intrusive_ptr<UniTensor_base> permute(const std::vector<std::string> &mapper,
+                                                         const cytnx_int64 &rowrank = -1);
+    //boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
+    //                                                     const cytnx_int64 &rowrank = -1);
+
+    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1,
+                          const bool &by_label=false);
+    void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
+    //void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
+
+ 
     boost::intrusive_ptr<UniTensor_base> contiguous_() {
       for(unsigned int b=0;b<this->_blocks.size();b++)
         this->_blocks[b].contiguous_();
@@ -2273,17 +2287,17 @@ namespace cytnx {
      * @param by_label
      * @return UniTensor
      */
-    UniTensor permute(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank,
-                      const bool &by_label) {
+    UniTensor permute(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1,
+                      const bool &by_label=false) {
       UniTensor out;
       out._impl = this->_impl->permute(mapper, rowrank, by_label);
       return out;
     }
-    UniTensor permute(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) {
-      UniTensor out;
-      out._impl = this->_impl->permute(mapper, rowrank);
-      return out;
-    }
+    //UniTensor permute(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) {
+    //  UniTensor out;
+    //  out._impl = this->_impl->permute(mapper, rowrank);
+    //  return out;
+    //}
     UniTensor permute(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1) {
       UniTensor out;
       out._impl = this->_impl->permute(mapper, rowrank);
@@ -2298,16 +2312,16 @@ namespace cytnx {
      * @param rowrank
      * @param by_label
      */
-    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank,
-                  const bool &by_label) {
+    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1,
+                  const bool &by_label=false) {
       this->_impl->permute_(mapper, rowrank, by_label);
     }
     void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1) {
       this->_impl->permute_(mapper, rowrank);
     }
-    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) {
-      this->_impl->permute_(mapper, rowrank);
-    }
+    //void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) {
+    //  this->_impl->permute_(mapper, rowrank);
+    //}
     UniTensor contiguous() const {
       UniTensor out;
       out._impl = this->_impl->contiguous();

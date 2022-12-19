@@ -15,6 +15,8 @@ int main(int argc, char *argv[]) {
   cout << vec_unique(A) << endl;
   */
 
+
+  /*
   auto TTNdir = UniTensor(arange(24).reshape(2,3,4)).relabels({"good","evil","badass"});
     
   TTNdir.print_diagram();
@@ -39,15 +41,22 @@ int main(int argc, char *argv[]) {
 
   print(algo::Hstack({A1,A2,A3}));
  
-
+  */
 
   //Bond bd_sym_s = Bond(BD_REG, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
 
   Bond bd_sym_a = Bond(BD_KET, {{0,0}, {1,1}, {2,1}, {3,0}}, {4, 7, 2, 3},{Symmetry::U1(),Symmetry::Zn(2)});
 
-  UniTensor TTT({bd_sym_a,bd_sym_a.redirect()},{1000,2000});
+  UniTensor TTT({bd_sym_a,bd_sym_a,bd_sym_a.redirect(),bd_sym_a.redirect()},{1000,2000,3020,4024});
   TTT.print_diagram();
   TTT.print_blocks(false);
+
+
+  auto TTTp = TTT.permute({1,3,0,2});
+  TTTp.print_diagram();
+  TTTp.print_blocks(false);
+  TTTp.contiguous_();
+  TTTp.print_blocks(false);
   return 0;
   
   bd_sym_a.Save("ttba");
