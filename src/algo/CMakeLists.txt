@@ -5,6 +5,7 @@ target_sources_local(cytnx
     Sort.cpp
     Concatenate.cpp
     Vstack.cpp
+    Hstack.cpp
 )
 
 add_subdirectory(algo_internal_cpu)
