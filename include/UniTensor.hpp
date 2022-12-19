@@ -1877,6 +1877,30 @@ namespace cytnx {
 
     void print_diagram(const bool &bond_info = false);
     void print_blocks(const bool &full_info=true) const;
+
+    boost::intrusive_ptr<UniTensor_base> contract(
+      const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &mv_elem_self = false,
+      const bool &mv_elem_rhs = false);
+   
+
+    boost::intrusive_ptr<UniTensor_base> relabels(
+      const std::vector<cytnx_int64> &new_labels);
+    boost::intrusive_ptr<UniTensor_base> relabels(
+      const std::vector<std::string> &new_labels);
+    boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
+                                                         const cytnx_int64 &new_label,
+                                                         const bool &by_label);
+    boost::intrusive_ptr<UniTensor_base> relabel(const std::string &inx,
+                                                         const std::string &new_label);
+    boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
+                                                         const cytnx_int64 &new_label);
+    boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
+                                                         const std::string &new_label);
+ 
+    std::vector<Symmetry> syms() const;
+
+
+
   };
   //======================================================================
 

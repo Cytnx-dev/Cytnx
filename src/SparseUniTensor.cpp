@@ -685,10 +685,10 @@ namespace cytnx {
   }
   boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabels(
     const std::vector<cytnx_int64> &new_labels) {
-    vector<string> vs;
+    vector<string> vs(new_labels.size());
     transform(new_labels.begin(), new_labels.end(), vs.begin(),
               [](cytnx_int64 x) -> string { return to_string(x); });
-    relabels(vs);
+    return relabels(vs);
   }
 
   boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabel(const cytnx_int64 &inx,

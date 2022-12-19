@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
   //Bond bd_sym_s = Bond(BD_REG, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
 
   Bond bd_sym_a = Bond(BD_KET, {{0,0}, {1,1}, {2,1}, {3,0}}, {4, 7, 2, 3},{Symmetry::U1(),Symmetry::Zn(2)});
-
+  /*
   UniTensor TTT({bd_sym_a,bd_sym_a,bd_sym_a.redirect(),bd_sym_a.redirect()},{1000,2000,3020,4024});
   TTT.print_diagram();
   TTT.print_blocks(false);
@@ -57,6 +57,10 @@ int main(int argc, char *argv[]) {
   TTTp.print_blocks(false);
   TTTp.contiguous_();
   TTTp.print_blocks(false);
+  */
+  UniTensor TTT({bd_sym_a,bd_sym_a.redirect()},{1000,2000});
+  UniTensor TTT2 = TTT.relabels({300,400});
+
   return 0;
   
   bd_sym_a.Save("ttba");

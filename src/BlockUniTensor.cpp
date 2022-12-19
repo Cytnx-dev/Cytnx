@@ -363,6 +363,9 @@ namespace cytnx {
         }
     }
 
+  std::vector<Symmetry> BlockUniTensor::syms() const { return this->_bonds[0].syms(); }
+
+
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::permute(
     const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank, const bool &by_label) {
     
@@ -551,5 +554,133 @@ namespace cytnx {
 
 
   }
+
+  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabels(
+    const std::vector<string> &new_labels) {
+    BlockUniTensor *tmp = this->clone_meta(true, true);
+    tmp->_blocks = this->_blocks;
+    tmp->set_labels(new_labels);
+    boost::intrusive_ptr<UniTensor_base> out(tmp);
+    return out;
+  }
+  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabels(
+    const std::vector<cytnx_int64> &new_labels) {
+    vector<string> vs(new_labels.size());
+    transform(new_labels.begin(), new_labels.end(), vs.begin(),
+              [](cytnx_int64 x) -> string { return to_string(x); });
+    //std::cout << "entry" << endl;
+    return relabels(vs);
+  }
+
+  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const cytnx_int64 &inx,
+                                                                const cytnx_int64 &new_label,
+                                                                const bool &by_label) {
+    BlockUniTensor *tmp = this->clone_meta(true, true);
+    tmp->_blocks = this->_blocks;
+    tmp->set_label(inx, new_label, by_label);
+    boost::intrusive_ptr<UniTensor_base> out(tmp);
+    return out;
+  }
+  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const cytnx_int64 &inx,
+                                                                const string &new_label) {
+    BlockUniTensor *tmp = this->clone_meta(true, true);
+    tmp->_blocks = this->_blocks;
+    tmp->set_label(inx, new_label);
+    boost::intrusive_ptr<UniTensor_base> out(tmp);
+    return out;
+  }
+  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const string &inx,
+                                                                const string &new_label) {
+    BlockUniTensor *tmp = this->clone_meta(true, true);
+    tmp->_blocks = this->_blocks;
+    tmp->set_label(inx, new_label);
+    boost::intrusive_ptr<UniTensor_base> out(tmp);
+    return out;
+  }
+  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const cytnx_int64 &inx,
+                                                                const cytnx_int64 &new_label) {
+    BlockUniTensor *tmp = this->clone_meta(true, true);
+    tmp->_blocks = this->_blocks;
+    tmp->set_label(inx, new_label);
+    boost::intrusive_ptr<UniTensor_base> out(tmp);
+    return out;
+  }
+
+
+
+  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::contract(
+      const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &mv_elem_self,
+      const bool &mv_elem_rhs){
+    // checking type
+    cytnx_error_msg(rhs->uten_type() != UTenType.Block,
+                    "[ERROR] cannot contract symmetry-block UniTensor with other type of UniTensor%s",
+                    "\n");
+
+    //checking symmetry:
+    cytnx_error_msg(this->syms() != rhs->syms(),
+                    "[ERROR] two UniTensor have different symmetry type cannot contract.%s", "\n");
+
+
+    // get common labels:
+    std::vector<string> comm_labels;
+    std::vector<cytnx_uint64> comm_idx1, comm_idx2;
+    vec_intersect_(comm_labels, this->labels(), rhs->labels(), comm_idx1, comm_idx2);
+
+    // output instance;
+    BlockUniTensor *tmp = new BlockUniTensor();
+    BlockUniTensor *Rtn = (BlockUniTensor*)rhs.get();
+    std::vector<string> out_labels;
+    std::vector<Bond> out_bonds;
+    cytnx_int64 out_rowrank;
+    
+
+    if (comm_idx1.size() == 0) {
+        //no-common label:
+        vec_concatenate_(out_labels, this->labels(), rhs->labels());
+        for (cytnx_uint64 i = 0; i < this->_bonds.size(); i++)
+            out_bonds.push_back(this->_bonds[i].clone());
+        for (cytnx_uint64 i = 0; i < rhs->_bonds.size(); i++)
+            out_bonds.push_back(rhs->_bonds[i].clone());
+
+        out_rowrank = this->rowrank() + rhs->rowrank();
+        
+        tmp->Init(out_bonds,out_labels, out_rowrank, this->dtype(), this->device(), this->is_diag());
+            
+        //check each valid block:
+        std::vector<cytnx_uint64> Lidx(this->_bonds.size()); //buffer
+        std::vector<cytnx_uint64> Ridx(rhs->_bonds.size());  //buffer
+        for(cytnx_int32 b=0;b<tmp->_blocks.size();b++){
+            memcpy(&Lidx[0], &tmp->_inner_to_outer_idx[0],sizeof(cytnx_uint64)*this->_bonds.size());
+            memcpy(&Ridx[0], &tmp->_inner_to_outer_idx[this->_bonds.size()],sizeof(cytnx_uint64)*rhs->_bonds.size());
+        
+            auto IDL = vec_argwhere(this->_inner_to_outer_idx,Lidx);
+            auto IDR = vec_argwhere(Rtn->_inner_to_outer_idx,Ridx);
+
+            if(IDL.size()!=IDR.size()){
+                cout << "[ERROR!!]" << endl;
+            }
+            exit(1);
+        }         
+
+
+
+        
+
+
+        cytnx_error_msg(true, "developing%s", "\n");
+    }else{
+
+
+    }
+
+
+
+
+  }
+
+
+
+
+
 
 }  // namespace cytnx
