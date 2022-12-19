@@ -18,11 +18,12 @@ int main(int argc, char *argv[]) {
   auto TTNdir = UniTensor(arange(24).reshape(2,3,4)).relabels({"good","evil","badass"});
     
   TTNdir.print_diagram();
-
+  TTNdir.print_blocks(false);
+  
   TTNdir.tag();
 
   TTNdir.print_diagram();
-
+  TTNdir.print_blocks(false);
   Tensor A1 = arange(12).reshape(4,3).permute(1,0);
   Tensor A2 = arange(20).reshape(5,4);
   Tensor A3 = arange(32).reshape(8,4);

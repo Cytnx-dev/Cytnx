@@ -1851,6 +1851,15 @@ namespace cytnx {
       this->_rowrank = new_rowrank;
       this->_is_braket_form = this->_update_braket();
     }
+    
+    boost::intrusive_ptr<UniTensor_base> contiguous_() {
+      for(unsigned int b=0;b<this->_blocks.size();b++)
+        this->_blocks[b].contiguous_();
+      return boost::intrusive_ptr<UniTensor_base>(this); 
+    }
+
+    boost::intrusive_ptr<UniTensor_base> contiguous();
+
 
     void print_diagram(const bool &bond_info = false);
     void print_blocks(const bool &full_info=true) const;

@@ -343,6 +343,25 @@ namespace cytnx {
     free(buffer);
   }
 
+    boost::intrusive_ptr<UniTensor_base> BlockUniTensor::contiguous() {
+        if(this->is_contiguous()){
+            boost::intrusive_ptr<UniTensor_base> out(this);
+            return out;
+        } else{
+            BlockUniTensor *tmp = new BlockUniTensor();
+            tmp = this->clone_meta(true,true);
+            tmp->_blocks.resize(this->_blocks.size());
+            for(unsigned int b=0;b<this->_blocks.size();b++){
+                if(this->_blocks[b].is_contiguous()){
+                    tmp->_blocks[b] = this->_blocks[b].clone();
+                }else{
+                    tmp->_blocks[b] = this->_blocks[b].contiguous();
+                }
+            }
+            boost::intrusive_ptr<UniTensor_base> out(tmp);
+            return out;
+        }
+    }
 
 
 }  // namespace cytnx
