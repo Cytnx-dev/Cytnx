@@ -58,8 +58,20 @@ int main(int argc, char *argv[]) {
   TTTp.contiguous_();
   TTTp.print_blocks(false);
   */
+  //UniTensor TTT({bd_sym_a,bd_sym_a.redirect(),bd_sym_a,bd_sym_a.redirect()},{1000,2000,300,400});
+  //TTT.print_diagram();
+  //TTT.print_blocks(false);
+  
   UniTensor TTT({bd_sym_a,bd_sym_a.redirect()},{1000,2000});
   UniTensor TTT2 = TTT.relabels({300,400});
+
+
+  TTT.print_diagram();
+  TTT2.print_diagram();
+
+  auto TTO = TTT.contract(TTT2);
+  TTO.print_diagram();
+  TTO.print_blocks(false);
 
   return 0;
   

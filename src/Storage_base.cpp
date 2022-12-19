@@ -200,10 +200,10 @@ namespace cytnx {
                                         const std::vector<cytnx_uint64> &shape,
                                         const std::vector<std::vector<cytnx_uint64>> &locators,
                                         const cytnx_uint64 &Nunit) {
-#ifdef UNI_DEBUG
+    if(User_debug)
     cytnx_error_msg(out->dtype != this->dtype, "%s", "[ERROR][DEBUG] %s",
                     "internal, the output dtype does not match current storage dtype.\n");
-#endif
+
     cytnx_uint64 TotalElem = 1;
     for (cytnx_uint32 i = 0; i < locators.size(); i++) {
       if (locators[i].size())
@@ -254,12 +254,12 @@ namespace cytnx {
                                      const std::vector<cytnx_uint64> &mapper,
                                      const std::vector<cytnx_uint64> &len,
                                      const std::vector<std::vector<cytnx_uint64>> &locators) {
-#ifdef UNI_DEBUG
-    cytnx_error_msg(shape.size() != len.size(), "%s",
-                    "[ERROR][DEBUG] internal Storage, shape.size() != len.size()");
-    cytnx_error_msg(out->dtype != this->dtype, "%s", "[ERROR][DEBUG] %s",
-                    "internal, the output dtype does not match current storage dtype.\n");
-#endif
+    if(User_debug){
+        cytnx_error_msg(shape.size() != len.size(), "%s",
+                        "[ERROR][DEBUG] internal Storage, shape.size() != len.size()");
+        cytnx_error_msg(out->dtype != this->dtype, "%s", "[ERROR][DEBUG] %s",
+                        "internal, the output dtype does not match current storage dtype.\n");
+    }
 
     // std::cout <<"=====" << len.size() << " " << locators.size() << std::endl;
     // create new instance:
@@ -311,10 +311,9 @@ namespace cytnx {
                                      const std::vector<cytnx_uint64> &len,
                                      const std::vector<std::vector<cytnx_uint64>> &locators,
                                      const bool &is_scalar) {
-#ifdef UNI_DEBUG
+    if(User_debug)
     cytnx_error_msg(shape.size() != len.size(), "%s",
                     "[ERROR][DEBUG] internal Storage, shape.size() != len.size()");
-#endif
 
     // std::cout <<"=====" << len.size() << " " << locators.size() << std::endl;
     // create new instance:

@@ -104,9 +104,10 @@ namespace cytnx {
     std::vector<cytnx_uint64> size(this->_bonds.size());
     bool fin=false;
     while(1){
-       
+         
         //get elem
-        //cytnx::vec_print(std::cout , Loc);
+        //cout << "start!" << endl;
+        //cytnx::vec_print_simple(std::cout , Loc);
         this->_fx_get_total_fluxs(Loc, this->_bonds[0].syms(),tot_qns);
 
         //std::cout << "Loc: ";
@@ -130,10 +131,14 @@ namespace cytnx {
 
 
         while(Loc.size()!=0){
-            Loc.back()+=1;
-            if(Loc.back()==this->_bonds[Loc.size()-1]._impl->_qnums.size()){Loc.pop_back();}
+            if(Loc.back()==this->_bonds[Loc.size()-1]._impl->_qnums.size()-1){
+                Loc.pop_back(); 
+                continue;
+            }
             else{
-                for(int i=0;i<this->_bonds.size()-Loc.size();i++){
+                Loc.back()+=1;
+                //cout << "+1 at loc:" << Loc.size()-1 <<endl;
+                while(Loc.size()!=this->_bonds.size()){
                     Loc.push_back(0);
                 }
                 break;
@@ -643,37 +648,62 @@ namespace cytnx {
             out_bonds.push_back(rhs->_bonds[i].clone());
 
         out_rowrank = this->rowrank() + rhs->rowrank();
-        
+       
+
+        //cout << out_bonds;
         tmp->Init(out_bonds,out_labels, out_rowrank, this->dtype(), this->device(), this->is_diag());
-            
+        
+ 
         //check each valid block:
         std::vector<cytnx_uint64> Lidx(this->_bonds.size()); //buffer
         std::vector<cytnx_uint64> Ridx(rhs->_bonds.size());  //buffer
         for(cytnx_int32 b=0;b<tmp->_blocks.size();b++){
-            memcpy(&Lidx[0], &tmp->_inner_to_outer_idx[0],sizeof(cytnx_uint64)*this->_bonds.size());
-            memcpy(&Ridx[0], &tmp->_inner_to_outer_idx[this->_bonds.size()],sizeof(cytnx_uint64)*rhs->_bonds.size());
+            memcpy(&Lidx[0], &tmp->_inner_to_outer_idx[b][0],sizeof(cytnx_uint64)*this->_bonds.size());
+            memcpy(&Ridx[0], &tmp->_inner_to_outer_idx[b][this->_bonds.size()],sizeof(cytnx_uint64)*rhs->_bonds.size());
         
             auto IDL = vec_argwhere(this->_inner_to_outer_idx,Lidx);
             auto IDR = vec_argwhere(Rtn->_inner_to_outer_idx,Ridx);
 
-            if(IDL.size()!=IDR.size()){
-                cout << "[ERROR!!]" << endl;
+            /*
+            cout << b << endl;
+            //vec_print_simple(std::cout,tmp->_inner_to_outer_idx[b]);
+            //vec_print_simple(std::cout,Lidx);
+            //vec_print_simple(std::cout,Ridx);
+            vec_print_simple(std::cout,IDL);
+            vec_print_simple(std::cout,IDR);
+            */
+            if(User_debug){
+                if(IDL.size()==IDR.size()){
+                    cytnx_error_msg(IDL.size()>1,"[ERROR][BlockUniTensor] IDL has more than two ambiguous location!%s","\n");
+                    cytnx_error_msg(IDR.size()>1,"[ERROR][BlockUniTensor] IDL has more than two ambiguous location!%s","\n");
+                    
+                }else{
+                    cytnx_error_msg(true,"[ERROR] duplication, something wrong!%s","\n");
+                 
+                }
             }
-            exit(1);
+            if(IDL.size()){
+                auto tmpR = Rtn->_blocks[IDR[0]];
+                std::vector<cytnx_uint64> shape_L =
+                    vec_concatenate(this->_blocks[IDL[0]].shape(), std::vector<cytnx_uint64>(tmpR.shape().size(), 1));
+
+                auto tmpL = this->_blocks[IDL[0]].reshape(shape_L);
+                auto Ott = linalg::Kron(tmpL,tmpR,false,true);
+                //checking:
+                cytnx_error_msg(Ott.shape()!=tmp->_blocks[b].shape(),"[ERROR] mismatching shape!%s","\n");
+                tmp->_blocks[b] = Ott;
+            } 
+
         }         
+           
 
-
-
-        
-
-
-        cytnx_error_msg(true, "developing%s", "\n");
     }else{
-
+        cytnx_error_msg(true,"developing!%s","\n");
 
     }
 
-
+    boost::intrusive_ptr<UniTensor_base> out(tmp);
+    return out;
 
 
   }

@@ -19,6 +19,9 @@ namespace cytnx {
         return indices;
     }
 
+
+
+
   template <class T>
   cytnx_uint64 vec_where(const std::vector<T> &in, const T &key) {
     typename std::vector<T>::const_iterator it = std::find(in.begin(), in.end(), key);

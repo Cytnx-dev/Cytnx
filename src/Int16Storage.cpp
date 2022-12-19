@@ -46,11 +46,11 @@ namespace cytnx {
     cytnx_error_msg(this->cap % STORAGE_DEFT_SZ != 0,
                     "[ERROR] _Init_by_ptr cannot have not %dx cap_in.", STORAGE_DEFT_SZ);
 
-#ifdef UNI_DEBUG
-    cytnx_error_msg(len_in < 1, "%s", "[ERROR] _Init_by_ptr cannot have len_in < 1.");
-    cytnx_error_msg(this->cap < this->len, "%s",
-                    "[ERROR] _Init_by_ptr cannot have capacity < size.");
-#endif
+    if(User_debug){
+        cytnx_error_msg(len_in < 1, "%s", "[ERROR] _Init_by_ptr cannot have len_in < 1.");
+        cytnx_error_msg(this->cap < this->len, "%s",
+                        "[ERROR] _Init_by_ptr cannot have capacity < size.");
+    }
     this->dtype = Type.Int16;
     this->device = device;
   }
