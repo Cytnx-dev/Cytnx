@@ -723,6 +723,50 @@ namespace cytnx {
 
   std::vector<Symmetry> SparseUniTensor::syms() const { return this->_bonds[0].syms(); }
 
+  void SparseUniTensor::print_blocks(const bool &full_info)const {
+    std::ostream &os = std::cout;
+    os << "-------- start of print ---------\n";
+    char *buffer = (char *)malloc(sizeof(char) * 1024);
+    sprintf(buffer, "Tensor name: %s\n", this->_name.c_str());
+    os << std::string(buffer);
+    if (this->_is_tag) sprintf(buffer, "braket_form : %s\n", this->_is_braket_form ? "True" : "False");
+    os << std::string(buffer);
+    sprintf(buffer, "is_diag    : %s\n", this->_is_diag ? "True" : "False");
+    os << std::string(buffer);
+    sprintf(buffer, "contiguous : %s\n", this->is_contiguous() ? "True" : "False");
+    os << std::string(buffer);
+
+    auto tmp_qnums = this->get_blocks_qnums();
+      std::vector<Tensor> tmp = this->get_blocks_(true);
+      sprintf(buffer, "BLOCKS:: %s", "\n");
+      os << std::string(buffer);
+      os << "=============\n";
+
+      if (!this->is_contiguous()) {
+        cytnx_warning_msg(
+          true,
+          "[WARNING][Symmetric] cout/print UniTensor on a non-contiguous UniTensor. the blocks "
+          "appears here could be different than the current shape of UniTensor.%s",
+          "\n");
+      }
+      for (cytnx_uint64 i = 0; i < tmp.size(); i++) {
+        os << "Qnum:" << tmp_qnums[i] << std::endl;
+        if(full_info)
+            os << tmp[i] << std::endl;
+        else{
+            os << "dtype: " << Type.getname(tmp[i].dtype()) << endl;
+            os << "device: " << Device.getname(tmp[i].device()) << endl;
+            os << "shape: ";
+            vec_print_simple(os,tmp[i].shape());
+
+        }
+        os << "=============\n";
+      }
+      os << "-------- end of print ---------\n";
+
+    free(buffer);
+  }
+
   void SparseUniTensor::print_diagram(const bool &bond_info) {
     char *buffer = (char *)malloc(1024 * sizeof(char));
     unsigned int BUFFsize = 100;    

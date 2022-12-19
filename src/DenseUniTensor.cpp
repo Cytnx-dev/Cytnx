@@ -470,6 +470,30 @@ namespace cytnx {
     }
   };
 
+  void DenseUniTensor::print_blocks(const bool &full_info)const{
+    std::ostream &os = std::cout;
+    os << "-------- start of print ---------\n";
+    char *buffer = (char *)malloc(sizeof(char) * 1024);
+    sprintf(buffer, "Tensor name: %s\n", this->_name.c_str());
+    os << std::string(buffer);
+    if (this->_is_tag) sprintf(buffer, "braket_form : %s\n", this->_is_braket_form ? "True" : "False");
+    os << std::string(buffer);
+    sprintf(buffer, "is_diag    : %s\n", this->_is_diag ? "True" : "False");
+    os << std::string(buffer);
+    sprintf(buffer, "contiguous : %s\n", this->is_contiguous() ? "True" : "False");
+    os << std::string(buffer);
+
+    if(full_info)
+        os << this->_block << std::endl;
+    else{
+        os << "dtype: " << Type.getname(this->_block.dtype()) << endl;
+        os << "device: " << Device.getname(this->_block.device()) << endl;
+        os << "shape: ";
+        vec_print_simple(os,this->_block.shape());
+    }
+    free(buffer);
+  }
+
   void DenseUniTensor::print_diagram(const bool &bond_info) {
     char *buffer = (char *)malloc(1024 * sizeof(char));
     unsigned int BUFFsize = 100;

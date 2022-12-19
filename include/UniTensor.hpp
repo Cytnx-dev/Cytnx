@@ -261,6 +261,7 @@ namespace cytnx {
     virtual boost::intrusive_ptr<UniTensor_base> contiguous_();
     virtual boost::intrusive_ptr<UniTensor_base> contiguous();
     virtual void print_diagram(const bool &bond_info = false);
+    virtual void print_blocks(const bool &full_info=true) const; 
 
     virtual boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const;
 
@@ -585,6 +586,7 @@ namespace cytnx {
       }
     }
     void print_diagram(const bool &bond_info = false);
+    void print_blocks(const bool &full_info=true) const;
     Tensor get_block(const cytnx_uint64 &idx = 0) const { return this->_block.clone(); }
 
     Tensor get_block(const std::vector<cytnx_int64> &qnum, const bool &force) const {
@@ -1210,6 +1212,7 @@ namespace cytnx {
       return boost::intrusive_ptr<UniTensor_base>(this);
     }
     void print_diagram(const bool &bond_info = false);
+    void print_blocks(const bool &full_info=true)const;
 
     std::vector<Symmetry> syms() const;
 
@@ -1698,6 +1701,8 @@ namespace cytnx {
             for(cytnx_int32 i=0;i<syms.size();i++){
                 if(this->_bonds[0].type() == BD_BRA)
                     total_qns[i] = syms[0].reverse_rule(this->_bonds[0]._impl->_qnums[loc[0]][i]);
+                else
+                    total_qns[i] = this->_bonds[0]._impl->_qnums[loc[0]][i];
 
                 for(auto j=1;j<loc.size();j++){
                     if(this->_bonds[j].type() == BD_BRA)
@@ -1848,7 +1853,7 @@ namespace cytnx {
     }
 
     void print_diagram(const bool &bond_info = false);
-
+    void print_blocks(const bool &full_info=true) const;
   };
   //======================================================================
 
@@ -2301,7 +2306,8 @@ namespace cytnx {
     }
     void contiguous_() { this->_impl = this->_impl->contiguous_(); }
     void print_diagram(const bool &bond_info = false) { this->_impl->print_diagram(bond_info); }
-
+    void print_blocks(const bool &full_info=true) const{ this->_impl->print_blocks(full_info); }
+    
     template <class T>
     T &at(const std::vector<cytnx_uint64> &locator) {
       // std::cout << "at " << this->is_blockform()  << std::endl;

@@ -5,11 +5,17 @@
 #include <iostream>
 #include <string>
 namespace cytnx {
+  /*
+  template<typename Test, template<typename...> class Ref>
+  struct is_specialization : std::false_type {};
 
+  template<template<typename...> class Ref, typename... Args>
+  struct is_specialization<Ref<Args...>, Ref>: std::true_type {};
+  */
+
+  
   template <typename T>
-  void vec_print(std::ostream& os, const std::vector<T>& vec) {
-    os << "Vector Print:\n";
-    os << "Total Elements:" << vec.size() << std::endl;
+  void vec_print_simple(std::ostream& os, const std::vector<T>& vec) {
     os << "[";
     unsigned long long NBin = vec.size() / 10;
     if (vec.size() % 10) NBin++;
@@ -26,12 +32,21 @@ namespace cytnx {
 
   template <typename T>
   std::ostream& operator<<(std::ostream& os, const std::vector<T>& vec) {
-    vec_print(os, vec);
+    os << "Vector Print:\n";
+    os << "Total Elements:" << vec.size() << std::endl;
+    vec_print_simple(os, vec);
     return os;
   }
 
-  void vec_print(std::ostream& os, const std::vector<std::string>& vec);
+  void vec_print_simple(std::ostream& os, const std::vector<std::string>& vec);
   std::ostream& operator<<(std::ostream& os, const std::vector<std::string>& vec);
+
+  template<typename T>
+  void vec_print(std::ostream& os, const std::vector<T>& vec){
+     os << vec;
+  }
+
+
 
 }  // namespace cytnx
 #endif

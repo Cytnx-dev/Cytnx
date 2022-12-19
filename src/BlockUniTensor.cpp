@@ -108,8 +108,11 @@ namespace cytnx {
         //get elem
         //cytnx::vec_print(std::cout , Loc);
         this->_fx_get_total_fluxs(Loc, this->_bonds[0].syms(),tot_qns);
-        //cytnx::vec_print(std::cout, Loc);
-        //cytnx::vec_print(std::cout, tot_qns);
+
+        //std::cout << "Loc: ";
+        //cytnx::vec_print_simple(std::cout, Loc);    
+        //std::cout << "tot_flx: ";
+        //cytnx::vec_print_simple(std::cout, tot_qns);
                 
         //if exists:
         if( std::all_of(tot_qns.begin(),tot_qns.end(), [](const int &i){return i==0;}) ){
@@ -145,6 +148,74 @@ namespace cytnx {
       
   }
 
+  void BlockUniTensor::print_blocks(const bool &full_info) const{
+    std::ostream &os = std::cout;
+
+    os << "-------- start of print ---------\n";
+    char *buffer = (char *)malloc(sizeof(char) * 1024);
+    sprintf(buffer, "Tensor name: %s\n", this->_name.c_str());
+    os << std::string(buffer);
+    if (this->_is_tag) sprintf(buffer, "braket_form : %s\n", this->_is_braket_form ? "True" : "False");
+    os << std::string(buffer);
+    sprintf(buffer, "is_diag    : %s\n", this->_is_diag ? "True" : "False");
+    os << std::string(buffer);
+    sprintf(buffer, "[OVERALL] contiguous : %s\n", this->is_contiguous() ? "True" : "False");
+    os << std::string(buffer);
+
+    /*
+    os << "Symmetries: ";
+    for(int s=0;s<this->_bonds[0].Nsym();s++)
+        os << this->_bonds[0]._impl->_syms[s].stype_str() << " ";
+    os << endl;
+    */
+
+    // print each blocks with its qnum! 
+    for(int b=0;b<this->_blocks.size();b++){
+        os << "========================\n";
+        os << "BLOCK [#" << b << "]\n"; 
+        os << "Qn for each axis:\n";
+        for(int s=0;s<this->_bonds[0].Nsym();s++){
+            os << this->_bonds[0]._impl->_syms[s].stype_str() << ": "; 
+            for(int l=0;l<this->_blocks[b].shape().size();l++){
+                os << this->_bonds[l]._impl->_qnums[this->_inner_to_outer_idx[b][l]][s] << "\t";
+            } 
+            os << endl; 
+        }
+        if(full_info)
+            os << this->_blocks[b];
+        else{
+            os << "dtype: " << Type.getname(this->_blocks[b].dtype()) << endl;
+            os << "device: " << Device.getname(this->_blocks[b].device()) << endl;
+            os << "contiguous: " << this->_blocks[b].is_contiguous() << endl;
+            os << "shape: ";
+            vec_print_simple(os,this->_blocks[b].shape());
+
+        }
+    }
+
+    /*
+      auto tmp_qnums = in.get_blocks_qnums();
+      std::vector<Tensor> tmp = in.get_blocks_(true);
+      sprintf(buffer, "BLOCKS:: %s", "\n");
+      os << std::string(buffer);
+      os << "=============\n";
+
+      if (!in.is_contiguous()) {
+        cytnx_warning_msg(
+          true,
+          "[WARNING][Symmetric] cout/print UniTensor on a non-contiguous UniTensor. the blocks "
+          "appears here could be different than the current shape of UniTensor.%s",
+          "\n");
+      }
+      for (cytnx_uint64 i = 0; i < tmp.size(); i++) {
+        os << "Qnum:" << tmp_qnums[i] << std::endl;
+        os << tmp[i] << std::endl;
+        os << "=============\n";
+      }
+      os << "-------- end of print ---------\n";
+    */
+    free(buffer);
+  }
 
   void BlockUniTensor::print_diagram(const bool &bond_info) {
     char *buffer = (char *)malloc(1024 * sizeof(char));
