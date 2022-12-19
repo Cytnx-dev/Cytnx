@@ -2032,7 +2032,9 @@ namespace cytnx {
           is_sym = true;
           if(sym_fver == -1) sym_fver = bonds[i]._impl->_degs.size();
           else{ 
-            cytnx_error_msg(sym_fver != bonds[i]._impl->_degs.size(), "[ERROR] All the Bond when init a UniTensor with symmetric must be in the same format!%s","\n");
+            //std::cout << sym_fver << " " <<
+            //bonds[i]._impl->_degs.size() << std::endl;
+            cytnx_error_msg((bool(sym_fver)^bool(bonds[i]._impl->_degs.size())), "[ERROR] All the Bond when init a UniTensor with symmetric must be in the same format!%s","\n");
           }
         }else
           cytnx_error_msg(
@@ -2265,6 +2267,18 @@ namespace cytnx {
       out._impl = this->_impl->relabels(new_labels);
       return out;
     }
+    UniTensor relabels(const std::initializer_list<char*> &new_lbls) const{
+        std::vector<char*> new_labels(new_lbls);
+        std::vector<std::string> vs(new_labels.size());
+        transform(new_labels.begin(),new_labels.end(), vs.begin(),[](char * x) -> std::string { return std::string(x); });
+        std::cout << new_labels.size() << std::endl;
+        std::cout << vs << std::endl;
+
+        UniTensor out;
+        out._impl =  this->_impl->relabels(vs);
+        return out;
+    }
+
     /**
      * @brief
      *

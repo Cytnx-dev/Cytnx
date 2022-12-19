@@ -44,6 +44,9 @@ int main(int argc, char *argv[]) {
   */
 
   //Bond bd_sym_s = Bond(BD_REG, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
+  Bond bd_sym_s = Bond(BD_KET, {{0}, {1}}, {4, 7});
+  Bond bd_sym_s2 = Bond(BD_BRA, {{0},{1},{2}},{8,9,3});
+  Bond bd_sym_s3 = Bond(BD_BRA, {{-1},{1},{0}},{2,6,5});
 
   Bond bd_sym_a = Bond(BD_KET, {{0,0}, {1,1}, {2,1}, {3,0}}, {4, 7, 2, 3},{Symmetry::U1(),Symmetry::Zn(2)});
   /*
@@ -61,7 +64,16 @@ int main(int argc, char *argv[]) {
   //UniTensor TTT({bd_sym_a,bd_sym_a.redirect(),bd_sym_a,bd_sym_a.redirect()},{1000,2000,300,400});
   //TTT.print_diagram();
   //TTT.print_blocks(false);
-  
+
+  UniTensor T33({bd_sym_s,bd_sym_s,bd_sym_s2,bd_sym_s3});
+  T33.print_diagram();
+  T33.print_blocks(false);
+
+  //auto T33_b = T33.relabels({"a","c","ds","r"});
+  //auto Ot = T33.contract(T33_b);
+  //Ot.print_diagram();
+  //Ot.print_blocks(false);
+  /*  
   UniTensor TTT({bd_sym_a,bd_sym_a.redirect()},{1000,2000});
   UniTensor TTT2 = TTT.relabels({300,400});
 
@@ -72,7 +84,7 @@ int main(int argc, char *argv[]) {
   auto TTO = TTT.contract(TTT2);
   TTO.print_diagram();
   TTO.print_blocks(false);
-
+  */
   return 0;
   
   bd_sym_a.Save("ttba");
