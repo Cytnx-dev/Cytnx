@@ -43,6 +43,9 @@ int main(int argc, char *argv[]) {
  
   */
 
+
+
+
   //Bond bd_sym_s = Bond(BD_REG, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
   Bond bd_sym_s = Bond(BD_KET, {{0}, {1}}, {4, 7});
   Bond bd_sym_s2 = Bond(BD_BRA, {{0},{1},{2}},{8,9,3});
@@ -65,9 +68,15 @@ int main(int argc, char *argv[]) {
   //TTT.print_diagram();
   //TTT.print_blocks(false);
 
-  UniTensor T33({bd_sym_s,bd_sym_s,bd_sym_s2,bd_sym_s3});
-  T33.print_diagram();
-  T33.print_blocks(false);
+  UniTensor T3A({bd_sym_s,bd_sym_s,bd_sym_s2,bd_sym_s3});
+  T3A.print_diagram();
+  T3A.print_blocks(false);
+  UniTensor T3B({bd_sym_s.redirect(),bd_sym_s.redirect(),bd_sym_s2.redirect(),bd_sym_s3.redirect()});
+  
+  auto OutAB = T3A.contract(T3B);
+  
+  OutAB.print_diagram();
+  OutAB.print_blocks();
 
   //auto T33_b = T33.relabels({"a","c","ds","r"});
   //auto Ot = T33.contract(T33_b);

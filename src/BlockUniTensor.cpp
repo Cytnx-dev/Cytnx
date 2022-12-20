@@ -631,15 +631,18 @@ namespace cytnx {
     std::vector<cytnx_uint64> comm_idx1, comm_idx2;
     vec_intersect_(comm_labels, this->labels(), rhs->labels(), comm_idx1, comm_idx2);
 
-    // output instance;
-    BlockUniTensor *tmp = new BlockUniTensor();
-    BlockUniTensor *Rtn = (BlockUniTensor*)rhs.get();
-    std::vector<string> out_labels;
-    std::vector<Bond> out_bonds;
-    cytnx_int64 out_rowrank;
     
 
     if (comm_idx1.size() == 0) {
+        
+        // output instance;
+        BlockUniTensor *tmp = new BlockUniTensor();
+        BlockUniTensor *Rtn = (BlockUniTensor*)rhs.get();
+        std::vector<string> out_labels;
+        std::vector<Bond> out_bonds;
+        cytnx_int64 out_rowrank;
+
+
         //no-common label:
         vec_concatenate_(out_labels, this->labels(), rhs->labels());
         for (cytnx_uint64 i = 0; i < this->_bonds.size(); i++)
@@ -695,18 +698,115 @@ namespace cytnx {
             } 
 
         }         
+
+        boost::intrusive_ptr<UniTensor_base> out(tmp);
+        return out;
            
 
     }else{
-        cytnx_error_msg(true,"developing!%s","\n");
+        //first, get common index!
+        
+        // check qnums & type:
+        for (int i = 0; i < comm_labels.size(); i++) {
+            if (User_debug){
+              cytnx_error_msg(this->_bonds[comm_idx1[i]].qnums() != rhs->_bonds[comm_idx2[i]].qnums(),
+                              "[ERROR] contract bond @ label %d have qnum mismatch.\n", comm_labels[i]);
+              cytnx_error_msg(this->_bonds[comm_idx1[i]].getDegeneracies() != rhs->_bonds[comm_idx2[i]].getDegeneracies(),
+                              "[ERROR] contract bond @ label %d have degeneracies mismatch.\n", comm_labels[i]);
+            }
+            cytnx_error_msg(this->_bonds[comm_idx1[i]].type() + rhs->_bonds[comm_idx2[i]].type(),
+                            "[ERROR] BRA can only contract with KET. invalid @ label: %d\n",
+                            comm_labels[i]);
+        }
+        
+        // proc meta, labels:
+        std::vector<cytnx_uint64> non_comm_idx1 =
+        vec_erase(utils_internal::range_cpu(this->rank()), comm_idx1);
+        std::vector<cytnx_uint64> non_comm_idx2 =
+        vec_erase(utils_internal::range_cpu(rhs->rank()), comm_idx2);
 
-    }
+        std::vector<cytnx_int64> _shadow_comm_idx1(comm_idx1.size()), _shadow_comm_idx2(comm_idx2.size());
+        memcpy(_shadow_comm_idx1.data(),comm_idx1.data(),sizeof(cytnx_int64)*comm_idx1.size());
+        memcpy(_shadow_comm_idx2.data(),comm_idx2.data(),sizeof(cytnx_int64)*comm_idx2.size());
 
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+
+        
+        if ((non_comm_idx1.size() == 0) && (non_comm_idx2.size() == 0)) {
+            // All the legs are contracted, the return will be a scalar
+            
+            // output instance;
+            DenseUniTensor *tmp = new DenseUniTensor();
+            
+            boost::intrusive_ptr<UniTensor_base> Lperm = this->permute(_shadow_comm_idx1);
+            boost::intrusive_ptr<UniTensor_base> Rperm = rhs->permute(_shadow_comm_idx2);
+            
+            BlockUniTensor *Lperm_raw = (BlockUniTensor*)Lperm.get();
+            BlockUniTensor *Rperm_raw = (BlockUniTensor*)Rperm.get();
+            
+
+            //pair the block and contract using vectordot!
+            // naive way!
+            for(unsigned int b=0;b<Lperm_raw->_blocks.size();b++){
+                for(unsigned int a=0;a<Rperm_raw->_blocks.size();a++){
+                    if(Lperm_raw->_inner_to_outer_idx[b] == Rperm_raw->_inner_to_outer_idx[a]){
+                        if(tmp->_block.dtype()==Type.Void)
+                            tmp->_block = linalg::Vectordot(Lperm_raw->_blocks[b].flatten(),Rperm_raw->_blocks[a].flatten()); 
+                        else
+                            tmp->_block += linalg::Vectordot(Lperm_raw->_blocks[b].flatten(),Rperm_raw->_blocks[a].flatten());
+                        
+                        std::cout << b << " " << a << endl;                        
 
 
-  }
+                    } 
+                }
+            }
+            
+            tmp->_rowrank = 0;
+            tmp->_is_tag = false;
+            /*
+            if(mv_elem_self){
+                // calculate reverse mapper:
+                std::vector<cytnx_uint64> inv_mapperL(comm_idx1.size());
+                for (int i = 0; i < comm_idx1.size(); i++) {
+                  inv_mapperL[comm_idx1[i]] = i;
+                }
+                for(unsigned int b=0;b<this->_blocks.size();b++){
+                    this->_blocks[b].permute_(comm_idx1);
+                    this->_blocks[b].contiguous_();
+                    this->_blocks[b].permute_(inv_mapperL);
+                }
+            }
+
+            if(mv_elem_rhs){
+                BlockUniTensor *Rtn = (BlockUniTensor*)rhs.get();
+                // calculate reverse mapper:
+                std::vector<cytnx_uint64> inv_mapperR(comm_idx2.size());
+                for (int i = 0; i < comm_idx2.size(); i++) {
+                  inv_mapperR[comm_idx2[i]] = i;
+                }
+                for(unsigned int b=0;b<Rtn->_blocks.size();b++){
+                    Rtn->_blocks[b].permute_(comm_idx2);
+                    Rtn->_blocks[b].contiguous_();
+                    Rtn->_blocks[b].permute_(inv_mapperR);
+                }
+            }
+            */
+            boost::intrusive_ptr<UniTensor_base> out(tmp);
+            return out;
+            
+
+        }else{
+            cytnx_error_msg(true,"developing!%s","\n");
+
+        } // does it contract all the bond?
+
+        cytnx_error_msg(true,"something wrong!%s","\n");
+
+    } // does it contract all the bond?
+
+
+
+  };
 
 
 

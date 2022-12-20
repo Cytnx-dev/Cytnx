@@ -246,6 +246,7 @@ namespace cytnx {
     virtual std::string dtype_str() const;
     virtual std::string device_str() const;
     virtual void set_rowrank(const cytnx_uint64 &new_rowrank);
+
     virtual boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
                                                          const cytnx_int64 &rowrank = -1,
                                                          const bool &by_label= false);

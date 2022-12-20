@@ -106,6 +106,13 @@ namespace cytnx {
     // return the effective qnums when Bra-Ket mismatch.
     std::vector<std::vector<cytnx_int64>> calc_reverse_qnums();
 
+
+    std::vector<cytnx_uint64>& getDegeneracies(){ return this->_degs;};
+    const std::vector<cytnx_uint64>& getDegeneracies() const{return this->_degs;};
+
+
+
+
   };  // Bond_impl
   ///@endcond
 
@@ -434,6 +441,14 @@ namespace cytnx {
       indices.clear();
       return this->_impl->getDegeneracy(qnum, true, indices);
     }
+
+    std::vector<cytnx_uint64> & getDegeneracies(){
+        return this->_impl->getDegeneracies();
+    }
+    const std::vector<cytnx_uint64> & getDegeneracies() const{
+        return this->_impl->getDegeneracies();
+    }
+
 
     std::vector<std::vector<cytnx_int64>> calc_reverse_qnums() {
       return this->_impl->calc_reverse_qnums();
