@@ -71,12 +71,17 @@ int main(int argc, char *argv[]) {
   UniTensor T3A({bd_sym_s,bd_sym_s,bd_sym_s2,bd_sym_s3});
   T3A.print_diagram();
   T3A.print_blocks(false);
-  UniTensor T3B({bd_sym_s.redirect(),bd_sym_s.redirect(),bd_sym_s2.redirect(),bd_sym_s3.redirect()});
+
+  auto tnB1 = T3A.get_block_({1,0,2,0});
+  print(tnB1);
+  //UniTensor T3B({bd_sym_s.redirect(),bd_sym_s.redirect(),bd_sym_s2.redirect(),bd_sym_s3.redirect()});
   
-  auto OutAB = T3A.contract(T3B);
+
+
+  //auto OutAB = T3A.contract(T3B);
   
-  OutAB.print_diagram();
-  OutAB.print_blocks();
+  //OutAB.print_diagram();
+  //OutAB.print_blocks();
 
   //auto T33_b = T33.relabels({"a","c","ds","r"});
   //auto Ot = T33.contract(T33_b);

@@ -186,6 +186,13 @@ namespace cytnx {
             } 
             os << endl; 
         }
+        
+        os << "Qn indices for each axis:\n";
+        for(int s=0;s<this->_inner_to_outer_idx[b].size();s++){
+            os << this->_inner_to_outer_idx[b][s] << "\t";
+        }
+        os << endl;
+
         if(full_info)
             os << this->_blocks[b];
         else{
