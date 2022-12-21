@@ -27,6 +27,13 @@ namespace cytnx {
   extern SymmetryType_class SymType;
   ///@endcond
 
+  template<class... Ts>
+  std::vector<cytnx_int64> Qs(const cytnx_int64 &e1, const Ts &...elems){
+    std::vector<cytnx_int64> argv = dynamic_arg_int64_resolver(e1, elems...);
+    return argv;
+  }
+
+
   ///@cond
   class Symmetry_base : public intrusive_ptr_base<Symmetry_base> {
    public:

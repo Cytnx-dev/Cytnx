@@ -43,11 +43,12 @@ int main(int argc, char *argv[]) {
  
   */
 
-  Bond phy = Bond(BD_IN,{{0},{1}},{1,1});
-  Bond aux = Bond(BD_IN,{{1}},{1});
+
+  Bond phy = Bond(BD_IN,{Qs(0),Qs(1)},{1,1});
+  Bond aux = Bond(BD_IN,{Qs(1)},{1});
     
   auto Sp = UniTensor({phy,phy.redirect(),aux});
-  Sp.get_block_({0,1,0})(0) = 1;
+  Sp.get_block_({0,1,0}).item() = 1;
 
   Sp.print_diagram(true);
   Sp.print_blocks(false);
