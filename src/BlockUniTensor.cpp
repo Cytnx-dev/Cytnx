@@ -1193,4 +1193,40 @@ namespace cytnx {
   }
 
 
+  void BlockUniTensor::_save_dispatch(std::fstream &f) const {
+    // cytnx_error_msg(true,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
+
+    cytnx_uint64 Nblocks = this->_blocks.size();
+    f.write((char *)&Nblocks, sizeof(cytnx_uint64));
+
+    // save inner_to_outer_idx:
+    for(unsigned int b=0;b<Nblocks;b++){
+        f.write((char*)&this->_inner_to_outer_idx[b][0],sizeof(cytnx_uint64)*this->_bonds.size());
+    }
+    for (unsigned int i = 0; i < this->_blocks.size(); i++) {
+      this->_blocks[i]._Save(f);
+    }
+  }
+
+  void BlockUniTensor::_load_dispatch(std::fstream &f) {
+    // cytnx_error_msg(true,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
+
+    cytnx_uint64 Nblocks;
+    f.read((char *)&Nblocks, sizeof(cytnx_uint64));
+
+    this->_inner_to_outer_idx = std::vector< std::vector<cytnx_uint64> >(Nblocks,std::vector<cytnx_uint64>(this->_bonds.size()));       
+    // read inner_to_outer_idx:
+    for(unsigned int b=0;b<Nblocks;b++){
+        f.read((char*)&this->_inner_to_outer_idx[b][0],sizeof(cytnx_uint64)*this->_bonds.size());
+    }
+    this->_blocks.resize(Nblocks);
+
+    for (unsigned int i = 0; i < this->_blocks.size(); i++) {
+      this->_blocks[i]._Load(f);
+    }
+  }
+
+
+
+
 }  // namespace cytnx

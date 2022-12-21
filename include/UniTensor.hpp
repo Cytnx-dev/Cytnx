@@ -2241,6 +2241,8 @@ namespace cytnx {
     cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux);
     cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
 
+    void _save_dispatch(std::fstream &f) const;
+    void _load_dispatch(std::fstream &f);
 
 
 

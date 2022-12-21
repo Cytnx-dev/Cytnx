@@ -65,10 +65,9 @@ int main(int argc, char *argv[]) {
     }
 
   Sp.print_diagram(true);
-  Sp.print_blocks(false);
+  Sp.print_blocks(true);
 
-
-
+ 
   return 0;
 
 
