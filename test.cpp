@@ -72,8 +72,19 @@ int main(int argc, char *argv[]) {
   T3A.print_diagram();
   T3A.print_blocks(false);
 
-  auto tnB1 = T3A.get_block_({1,0,2,0});
-  print(tnB1);
+  //auto tnB1 = T3A.get_block_({1,0,2,0});
+  //print(tnB1);
+
+
+  UniTensor T3B({bd_sym_s.redirect(),bd_sym_s.redirect(),bd_sym_s2.redirect(),bd_sym_s3.redirect()});
+  T3B = T3B.relabels({4,5,2,6});
+  
+  T3B.print_diagram();
+
+  T3A.contract(T3B);
+
+  return 0;
+
   //UniTensor T3B({bd_sym_s.redirect(),bd_sym_s.redirect(),bd_sym_s2.redirect(),bd_sym_s3.redirect()});
   
 

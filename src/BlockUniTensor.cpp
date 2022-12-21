@@ -658,12 +658,13 @@ namespace cytnx {
             out_bonds.push_back(rhs->_bonds[i].clone());
 
         out_rowrank = this->rowrank() + rhs->rowrank();
-       
-
+        vec_concatenate_(out_labels, this->_labels, rhs->_labels);
+        
         //cout << out_bonds;
         tmp->Init(out_bonds,out_labels, out_rowrank, this->dtype(), this->device(), this->is_diag());
         
- 
+        //tmp->_name = this->_name + "+" + rhs->_name;        
+
         //check each valid block:
         std::vector<cytnx_uint64> Lidx(this->_bonds.size()); //buffer
         std::vector<cytnx_uint64> Ridx(rhs->_bonds.size());  //buffer
@@ -803,7 +804,74 @@ namespace cytnx {
             
 
         }else{
-            cytnx_error_msg(true,"developing!%s","\n");
+            //cytnx_error_msg(true,"developing!%s","\n");
+            BlockUniTensor *tmp = new BlockUniTensor();
+            BlockUniTensor *Rtn = (BlockUniTensor*)rhs.get();
+            std::vector<string> out_labels;
+            std::vector<Bond> out_bonds;
+            cytnx_int64 out_rowrank;
+
+            // these two cannot omp parallel, due to intrusive_ptr
+            for (cytnx_uint64 i = 0; i < non_comm_idx1.size(); i++)
+                out_bonds.push_back(this->_bonds[non_comm_idx1[i]].clone());
+            for (cytnx_uint64 i = 0; i < non_comm_idx2.size(); i++)
+                out_bonds.push_back(rhs->_bonds[non_comm_idx2[i]].clone());
+
+            vec_concatenate_(out_labels, vec_clone(this->_labels, non_comm_idx1),
+                       vec_clone(rhs->_labels, non_comm_idx2));
+
+            out_rowrank = this->rowrank() + rhs->rowrank();
+            for (cytnx_uint64 i = 0; i < comm_idx1.size(); i++)
+              if (comm_idx1[i] < this->_rowrank) out_rowrank--;
+            for (cytnx_uint64 i = 0; i < comm_idx2.size(); i++)
+              if (comm_idx2[i] < rhs->_rowrank) out_rowrank--;
+
+            // Initialize!!
+            tmp->Init(out_bonds,out_labels, out_rowrank, this->dtype(), this->device(), this->is_diag());
+ 
+
+            // now, build the itoi table:
+            std::vector< std::vector<cytnx_uint64> > itoiL_common(this->_blocks.size()), itoiR_common(Rtn->_blocks.size());
+            std::vector< std::vector<cytnx_uint64> > Bkk;
+
+            for(cytnx_int64 a=0;a<this->_blocks.size();a++){
+                itoiL_common[a] = vec_clone(this->_inner_to_outer_idx[a],comm_idx1);
+            }
+
+            for(cytnx_int64 b=0;b<this->_blocks.size();b++){
+                itoiR_common[b] = vec_clone(Rtn->_inner_to_outer_idx[b],comm_idx2);
+            }
+
+            std::vector<cytnx_uint64> Lgbuffer;
+            for(cytnx_int64 a=0;a<this->_blocks.size();a++){
+                for(cytnx_int64 b=0;b<Rtn->_blocks.size();b++){
+                    //check if common index are the same:
+                    if(itoiL_common[a] == itoiR_common[b]){
+                        //std::cout << "[contract] " << a <<" " << b << endl;
+                        
+                        vec_concatenate_(Lgbuffer, vec_clone(this->_inner_to_outer_idx[a],non_comm_idx1)
+                                                 , vec_clone(Rtn->_inner_to_outer_idx[b],non_comm_idx2));
+
+                        //find Lgbuffer in tmp, which specify the target block!
+                        auto it = std::find(tmp->_inner_to_outer_idx.begin(),tmp->_inner_to_outer_idx.end(),Lgbuffer);
+                        if(it != tmp->_inner_to_outer_idx.end()){
+                            cytnx_int64 targ_b = it - tmp->_inner_to_outer_idx.begin();
+                            //cout << "  "  << "targ blk_id:" << targ_b << endl;
+                            tmp->_blocks[targ_b] += linalg::Tensordot(this->_blocks[a], Rtn->_blocks[b], comm_idx1, comm_idx2,
+                                          mv_elem_self, mv_elem_rhs);
+
+                        }else{
+                            cytnx_error_msg(true,"[ERROR][BlockUniTensor] trying to contract L.blk [%d] with R.blk [%d] but no target blk found!\n",a,b); 
+                        }
+
+                    }
+                }
+            }
+            
+            boost::intrusive_ptr<UniTensor_base> out(tmp);
+            return out;
+
+
 
         } // does it contract all the bond?
 

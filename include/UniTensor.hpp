@@ -1939,7 +1939,28 @@ namespace cytnx {
         } 
 
     }
+
+    std::vector<Tensor> get_blocks() const{
+        return vec_clone(this->_blocks);
+    }
+    const std::vector<Tensor> &get_blocks_(const bool &) const{
+        return this->_blocks;
+    }
+    std::vector<Tensor> &get_blocks_(const bool &){
+        return this->_blocks;
+    }
+
+
     
+    bool same_data(const boost::intrusive_ptr<UniTensor_base> &rhs) const {
+      if (rhs->uten_type() != UTenType.Block) return false;
+      if (rhs->get_blocks_(1).size() != this->get_blocks_(1).size()) return false;
+
+      for (int i = 0; i < rhs->get_blocks_(1).size(); i++)
+        if (this->get_blocks_(1)[i].same_data(rhs->get_blocks_(1)[i]) == false) return false;
+
+      return true;
+    }
 
 
 
@@ -2016,6 +2037,104 @@ namespace cytnx {
       boost::intrusive_ptr<UniTensor_base> out(tmp);
       return out;
     };
+
+    // this will only work on non-symm tensor (DenseUniTensor)
+    boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors){
+        cytnx_error_msg(true,
+                      "[ERROR][BlockUniTensor][get] cannot use get on a UniTensor with "
+                      "Symmetry.\n suggestion: try get_block/get_block_/get_blocks/get_blocks_ first.%s",
+                      "\n");
+      return nullptr;
+
+    }
+
+    // this will only work on non-symm tensor (DenseUniTensor)
+    void set(const std::vector<Accessor> &accessors, const Tensor &rhs){
+        cytnx_error_msg(true,
+                      "[ERROR][BlockUniTensor][get] cannot use get on a UniTensor with "
+                      "Symmetry.\n suggestion: try get_block/get_block_/get_blocks/get_blocks_ first.%s",
+                      "\n");
+    }
+
+    void put_block(const Tensor &in, const cytnx_uint64 &idx = 0){
+        cytnx_error_msg(idx >= this->_blocks.size(), "[ERROR][BlockUniTensor] index out of range%s",
+                      "\n");
+        cytnx_error_msg(in.shape() != this->_blocks[idx].shape(),
+                      "[ERROR][BlockUniTensor] the shape of input tensor does not match the shape "
+                      "of block @ idx=%d\n",
+                      idx);
+
+        this->_blocks[idx] = in.clone();
+    }
+    void put_block_(Tensor &in, const cytnx_uint64 &idx = 0){
+        cytnx_error_msg(idx >= this->_blocks.size(), "[ERROR][BlockUniTensor] index out of range%s",
+                      "\n");
+        cytnx_error_msg(in.shape() != this->_blocks[idx].shape(),
+                      "[ERROR][BlockUniTensor] the shape of input tensor does not match the shape "
+                      "of block @ idx=%d\n",
+                      idx);
+
+        this->_blocks[idx] = in;
+
+    }
+    void put_block(const Tensor &in, const std::vector<cytnx_int64> &indices,
+                   const bool &check){
+
+        cytnx_error_msg(indices.size()!=this->rank(),"[ERROR][put_block][BlockUniTensor] len(indices) must be the same as the Tensor rank (number of legs).%s","\n");
+
+        std::vector<cytnx_uint64> inds(indices.begin(),indices.end());
+
+        //find if the indices specify exists!
+        cytnx_int64 b = -1;
+        for(cytnx_uint64 i=0;i<this->_inner_to_outer_idx.size();i++){
+            if(inds == this->_inner_to_outer_idx[i]){
+                b = i;
+                break;
+            }
+        }
+
+        if(b<0){
+            if(check){
+                cytnx_error_msg(true,"[ERROR][put_block][BlockUniTensor] no avaliable block exists, check=true, so error throws. \n    If you want without error when block is not avaliable, set check=false.%s","\n");
+            }
+        }else{
+            cytnx_error_msg(in.shape() != this->_blocks[b].shape(),
+                          "[ERROR][BlockUniTensor] the shape of input tensor does not match the shape "
+                          "of block @ idx=%d\n",
+                          b);
+
+            this->_blocks[b] = in.clone();
+        }
+
+
+    }
+    void put_block_(Tensor &in, const std::vector<cytnx_int64> &indices, const bool &check){
+        cytnx_error_msg(indices.size()!=this->rank(),"[ERROR][put_block][BlockUniTensor] len(indices) must be the same as the Tensor rank (number of legs).%s","\n");
+
+        std::vector<cytnx_uint64> inds(indices.begin(),indices.end());
+
+        //find if the indices specify exists!
+        cytnx_int64 b = -1;
+        for(cytnx_uint64 i=0;i<this->_inner_to_outer_idx.size();i++){
+            if(inds == this->_inner_to_outer_idx[i]){
+                b = i;
+                break;
+            }
+        }
+
+        if(b<0){
+            if(check){
+                cytnx_error_msg(true,"[ERROR][put_block][BlockUniTensor] no avaliable block exists, check=true, so error throws. \n    If you want without error when block is not avaliable, set check=false.%s","\n");
+            }
+        }else{
+            cytnx_error_msg(in.shape() != this->_blocks[b].shape(),
+                          "[ERROR][BlockUniTensor] the shape of input tensor does not match the shape "
+                          "of block @ idx=%d\n",
+                          b);
+            this->_blocks[b] = in;
+        }
+
+    }
 
 
 
