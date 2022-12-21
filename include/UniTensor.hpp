@@ -2136,6 +2136,11 @@ namespace cytnx {
 
     }
 
+    void tag() {
+      // no-use!
+    }
+
+
     boost::intrusive_ptr<UniTensor_base> Conj() {
       boost::intrusive_ptr<UniTensor_base> out = this->clone();
       out->Conj_();
@@ -2164,6 +2169,39 @@ namespace cytnx {
       this->Conj_();
       this->Transpose_();
     }
+
+    void Trace_(const std::string &a, const std::string &b);
+    void Trace_(const cytnx_int64 &a, const cytnx_int64 &b);
+    void Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label);
+
+    boost::intrusive_ptr<UniTensor_base> Trace(const std::string &a, const std::string &b) {
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->Trace_(a, b);
+      return out;
+    }
+    boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b) {
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->Trace_(a, b);
+      return out;
+    }
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param a
+     * @param b
+     * @param by_label
+     */
+    boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b,
+                                               const bool &by_label) {
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->Trace_(a, b, by_label);
+      return out;
+    }
+
+    Tensor Norm() const;
+
 
 
 

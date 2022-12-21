@@ -178,28 +178,32 @@ namespace cytnx {
     for(int b=0;b<this->_blocks.size();b++){
         os << "========================\n";
         os << "BLOCK [#" << b << "]\n"; 
-        os << "Qn for each axis:\n";
+        os << "  |-Qn indices for each axis:\n   {\t";
+        for(int s=0;s<this->_inner_to_outer_idx[b].size();s++){
+            os << this->_inner_to_outer_idx[b][s] << "\t";
+        }
+        os << "}" << endl;
+        os << "\t";
+        for(int s=0;s<this->_bonds.size();s++){
+            os << ((this->_bonds[s].type()>0)?"OUT":"IN") << "\t";
+        }
+        os << endl;
+        os << "  |-Qn for each axis:\n";
         for(int s=0;s<this->_bonds[0].Nsym();s++){
-            os << this->_bonds[0]._impl->_syms[s].stype_str() << ": "; 
+            os << " " <<this->_bonds[0]._impl->_syms[s].stype_str() << ":\t"; 
             for(int l=0;l<this->_blocks[b].shape().size();l++){
-                os << this->_bonds[l]._impl->_qnums[this->_inner_to_outer_idx[b][l]][s] << "\t";
+                os << std::showpos << this->_bonds[l]._impl->_qnums[this->_inner_to_outer_idx[b][l]][s] << "\t";
             } 
             os << endl; 
         }
         
-        os << "Qn indices for each axis:\n";
-        for(int s=0;s<this->_inner_to_outer_idx[b].size();s++){
-            os << this->_inner_to_outer_idx[b][s] << "\t";
-        }
-        os << endl;
-
         if(full_info)
             os << this->_blocks[b];
         else{
-            os << "dtype: " << Type.getname(this->_blocks[b].dtype()) << endl;
-            os << "device: " << Device.getname(this->_blocks[b].device()) << endl;
-            os << "contiguous: " << (this->_blocks[b].is_contiguous()? "True" : "False") << endl;
-            os << "shape: ";
+            os << "  |-dtype:\t" << Type.getname(this->_blocks[b].dtype()) << endl;
+            os << "  |-device:\t" << Device.getname(this->_blocks[b].device()) << endl;
+            os << "  |-contiguous:\t" << (this->_blocks[b].is_contiguous()? "True" : "False") << endl;
+            os << "  |-shape:\t";
             vec_print_simple(os,this->_blocks[b].shape());
 
         }
@@ -890,9 +894,111 @@ namespace cytnx {
       this->bonds()[i].redirect_();
     }
 
-
-
   };
+  void BlockUniTensor::Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label){
+
+    // 1) from label to indx.
+    cytnx_int64 ida, idb;
+
+    if (by_label) {
+      ida = vec_where(this->_labels, std::to_string(a));
+      idb = vec_where(this->_labels, std::to_string(b));
+    } else {
+      cytnx_error_msg(a < 0 || b < 0, "[ERROR] invalid index a, b%s", "\n");
+      cytnx_error_msg(a >= this->rank() || b >= this->rank(), "[ERROR] index out of bound%s", "\n");
+      ida = a;
+      idb = b;
+    }
+
+    this->Trace_(ida,idb);
+
+  }
+  
+  void BlockUniTensor::Trace_(const std::string &a, const std::string &b){
+    // 1) from label to indx.
+    cytnx_int64 ida, idb;
+
+    ida = vec_where(this->_labels, a);
+    idb = vec_where(this->_labels, b);
+
+    this->Trace_(ida,idb);
+  }
+  void BlockUniTensor::Trace_(const cytnx_int64 &a, const cytnx_int64 &b){
+
+    cytnx_int64 ida = a;
+    cytnx_int64 idb = b;
+
+    // check if indices are the same:
+    cytnx_error_msg(ida == idb,
+                    "[ERROR][BlockUniTensor::Trace_] index a and index b should not be the same.%s",
+                    "\n");
+
+    // check if two bonds type are contractable:
+    cytnx_error_msg(this->_bonds[ida].type() == this->_bonds[idb].type(),"[ERROR] BD_BRA/BD_OUT can only contract with BD_KET/BD_IN%s","\n");
+
+    // check if two bonds dimension matches:
+    cytnx_error_msg(
+      this->_bonds[ida]._impl->_degs != this->_bonds[idb]._impl->_degs,
+      "[ERROR][BlockUniTensor::Trace_] The dimension of two bond for trace does not match!%s",
+      "\n");
+
+    // check if two bonds qnum matches:
+    cytnx_error_msg(
+      this->_bonds[ida]._impl->_qnums != this->_bonds[idb]._impl->_qnums,
+      "[ERROR][BlockUniTensor::Trace_] The quantum numbers of two bond for trace does not match!%s",
+      "\n");
+
+
+    // update rowrank:
+    cytnx_int64 tmpRk = this->_rowrank;
+    if (ida < tmpRk) this->_rowrank--;
+    if (idb < tmpRk) this->_rowrank--;
+
+    //trace the block!
+    for(cytnx_int64 i=0;i<this->_blocks.size();i++){
+        this->_blocks[i] = this->_blocks[i].Trace(ida,idb);
+    }
+
+
+    //// deal with Metas:
+
+    // 1) remove the bond, labels:
+    if (ida > idb) std::swap(ida, idb);
+    this->_bonds.erase(this->_bonds.begin() + idb);
+    this->_bonds.erase(this->_bonds.begin() + ida);
+    this->_labels.erase(this->_labels.begin() + idb);
+    this->_labels.erase(this->_labels.begin() + ida);
+
+
+    // 2) inner to outer:
+    for(cytnx_int64 i=0;i < this->_inner_to_outer_idx.size();i++){
+        this->_inner_to_outer_idx[i].erase(this->_inner_to_outer_idx[i].begin() + idb);
+        this->_inner_to_outer_idx[i].erase(this->_inner_to_outer_idx[i].begin() + ida);
+    }
+
+  }
+
+
+  Tensor BlockUniTensor::Norm() const{
+        Scalar t;
+        if (this->_blocks.size()) {
+          t = linalg::Norm(this->_blocks[0]).item();
+          t *= t;
+          for (int blk = 1; blk < this->_blocks.size(); blk++) {
+            Scalar tmp = linalg::Norm(this->_blocks[blk]).item();
+            t += tmp * tmp;
+          }
+
+        } else {
+          t = Scalar(0, Type.Double);
+        }
+
+        t = sqrt(t);
+        Tensor R({1}, t.dtype());
+
+        R(0) = t;
+        return R;
+  }
 
 
 
