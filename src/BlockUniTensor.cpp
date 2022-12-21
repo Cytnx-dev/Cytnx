@@ -194,7 +194,7 @@ namespace cytnx {
             for(int l=0;l<this->_blocks[b].shape().size();l++){
                 os << std::showpos << this->_bonds[l]._impl->_qnums[this->_inner_to_outer_idx[b][l]][s] << "\t";
             } 
-            os << endl; 
+            os << std::noshowpos << endl; 
         }
         
         if(full_info)
@@ -1000,6 +1000,197 @@ namespace cytnx {
         return R;
   }
 
+
+  // helper function:
+  void BlockUniTensor::_fx_locate_elem(cytnx_int64 &bidx, std::vector<cytnx_uint64> &loc_in_T,const std::vector<cytnx_uint64> &locator) const {
+    // 1. check if out of range:
+    cytnx_error_msg(locator.size() != this->_bonds.size(),
+                    "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
+
+
+    for (int i = 0; i < this->_bonds.size(); i++) {
+      cytnx_error_msg(locator[i] >= this->_bonds[i].dim(),
+                      "[ERROR][SparseUniTensor][elem_exists] locator @index: %d out of range.\n",
+                      i);
+    }
+
+    // 2. calculate the location is in which qindices:
+    loc_in_T = locator;
+    std::vector<cytnx_uint64> qindices(loc_in_T.size());
+    for(int i=0;i<this->_bonds.size();i++){
+        for(int d=0;d<this->_bonds[i]._impl->_degs.size();d++){
+            if(loc_in_T[i] >= this->_bonds[i]._impl->_degs[d]) loc_in_T[i] -= this->_bonds[i]._impl->_degs[d];
+            else{qindices[i] = d; break;}
+        }
+    }
+
+    auto it = std::find(this->_inner_to_outer_idx.begin(),this->_inner_to_outer_idx.end(),qindices);
+    
+    if(it == this->_inner_to_outer_idx.end()) bidx = -1;
+    else bidx = it - this->_inner_to_outer_idx.begin();
+  }
+
+
+
+  bool BlockUniTensor::elem_exists(const std::vector<cytnx_uint64> &locator) const{
+    cytnx_int64 bidx;
+    std::vector<cytnx_uint64> loc_in_T;
+    this->_fx_locate_elem(bidx,loc_in_T,locator); 
+    return !(bidx < 0);
+  }
+
+  //-------------------------------------------
+  // at_for_sparse
+  Scalar::Sproxy BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator){
+    cytnx_int64 bidx;
+    std::vector<cytnx_uint64> loc_in_T;
+    this->_fx_locate_elem(bidx,loc_in_T,locator); 
+    if(bidx<0){
+        return Scalar::Sproxy(this->NullRefTensor.storage()._impl,0);
+    }else{
+        return this->_blocks[bidx].at(loc_in_T);
+    }
+  }
+  cytnx_complex128 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                    const cytnx_complex128 &aux){
+    cytnx_int64 bidx;
+    std::vector<cytnx_uint64> loc_in_T;
+    this->_fx_locate_elem(bidx,loc_in_T,locator); 
+    return this->_blocks[bidx].at<cytnx_complex128>(loc_in_T);
+  }
+  cytnx_complex64 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                   const cytnx_complex64 &aux){
+    cytnx_int64 bidx;
+    std::vector<cytnx_uint64> loc_in_T;
+    this->_fx_locate_elem(bidx,loc_in_T,locator); 
+    return this->_blocks[bidx].at<cytnx_complex64>(loc_in_T);
+
+  }
+  cytnx_double &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux){
+    cytnx_int64 bidx;
+    std::vector<cytnx_uint64> loc_in_T;
+    this->_fx_locate_elem(bidx,loc_in_T,locator); 
+    return this->_blocks[bidx].at<cytnx_double>(loc_in_T);
+
+  }
+  cytnx_float &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux){
+    cytnx_int64 bidx;
+    std::vector<cytnx_uint64> loc_in_T;
+    this->_fx_locate_elem(bidx,loc_in_T,locator); 
+    return this->_blocks[bidx].at<cytnx_float>(loc_in_T);
+  }
+  cytnx_uint64 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint64 &aux){
+    cytnx_int64 bidx;
+    std::vector<cytnx_uint64> loc_in_T;
+    this->_fx_locate_elem(bidx,loc_in_T,locator); 
+    return this->_blocks[bidx].at<cytnx_uint64>(loc_in_T);
+  }
+  cytnx_int64 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int64 &aux){
+    cytnx_int64 bidx;
+    std::vector<cytnx_uint64> loc_in_T;
+    this->_fx_locate_elem(bidx,loc_in_T,locator); 
+    return this->_blocks[bidx].at<cytnx_int64>(loc_in_T);
+  }
+  cytnx_uint32 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint32 &aux){
+    cytnx_int64 bidx;
+    std::vector<cytnx_uint64> loc_in_T;
+    this->_fx_locate_elem(bidx,loc_in_T,locator); 
+    return this->_blocks[bidx].at<cytnx_uint32>(loc_in_T);
+  }
+  cytnx_int32 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int32 &aux){
+    cytnx_int64 bidx;
+    std::vector<cytnx_uint64> loc_in_T;
+    this->_fx_locate_elem(bidx,loc_in_T,locator); 
+    return this->_blocks[bidx].at<cytnx_int32>(loc_in_T);
+  }
+  cytnx_uint16 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux){
+    cytnx_int64 bidx;
+    std::vector<cytnx_uint64> loc_in_T;
+    this->_fx_locate_elem(bidx,loc_in_T,locator); 
+    return this->_blocks[bidx].at<cytnx_uint16>(loc_in_T);
+  }
+  cytnx_int16 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux){
+    cytnx_int64 bidx;
+    std::vector<cytnx_uint64> loc_in_T;
+    this->_fx_locate_elem(bidx,loc_in_T,locator); 
+    return this->_blocks[bidx].at<cytnx_int16>(loc_in_T);
+  }
+
+
+  const Scalar::Sproxy BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator) const{
+    cytnx_int64 bidx;
+    std::vector<cytnx_uint64> loc_in_T;
+    this->_fx_locate_elem(bidx,loc_in_T,locator); 
+    if(bidx<0){
+        return Scalar::Sproxy(this->NullRefTensor.storage()._impl,0);
+    }else{
+        return this->_blocks[bidx].at(loc_in_T);
+    }
+  }
+  const cytnx_complex128 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                    const cytnx_complex128 &aux)const {
+    cytnx_int64 bidx;
+    std::vector<cytnx_uint64> loc_in_T;
+    this->_fx_locate_elem(bidx,loc_in_T,locator); 
+    return this->_blocks[bidx].at<cytnx_complex128>(loc_in_T);
+  }
+  const cytnx_complex64 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                   const cytnx_complex64 &aux)const {
+    cytnx_int64 bidx;
+    std::vector<cytnx_uint64> loc_in_T;
+    this->_fx_locate_elem(bidx,loc_in_T,locator); 
+    return this->_blocks[bidx].at<cytnx_complex64>(loc_in_T);
+
+  }
+  const cytnx_double &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux)const {
+    cytnx_int64 bidx;
+    std::vector<cytnx_uint64> loc_in_T;
+    this->_fx_locate_elem(bidx,loc_in_T,locator); 
+    return this->_blocks[bidx].at<cytnx_double>(loc_in_T);
+
+  }
+  const cytnx_float &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux)const {
+    cytnx_int64 bidx;
+    std::vector<cytnx_uint64> loc_in_T;
+    this->_fx_locate_elem(bidx,loc_in_T,locator); 
+    return this->_blocks[bidx].at<cytnx_float>(loc_in_T);
+  }
+  const cytnx_uint64 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint64 &aux)const {
+    cytnx_int64 bidx;
+    std::vector<cytnx_uint64> loc_in_T;
+    this->_fx_locate_elem(bidx,loc_in_T,locator); 
+    return this->_blocks[bidx].at<cytnx_uint64>(loc_in_T);
+  }
+  const cytnx_int64 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int64 &aux)const {
+    cytnx_int64 bidx;
+    std::vector<cytnx_uint64> loc_in_T;
+    this->_fx_locate_elem(bidx,loc_in_T,locator); 
+    return this->_blocks[bidx].at<cytnx_int64>(loc_in_T);
+  }
+  const cytnx_uint32 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint32 &aux)const {
+    cytnx_int64 bidx;
+    std::vector<cytnx_uint64> loc_in_T;
+    this->_fx_locate_elem(bidx,loc_in_T,locator); 
+    return this->_blocks[bidx].at<cytnx_uint32>(loc_in_T);
+  }
+  const cytnx_int32 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int32 &aux)const {
+    cytnx_int64 bidx;
+    std::vector<cytnx_uint64> loc_in_T;
+    this->_fx_locate_elem(bidx,loc_in_T,locator); 
+    return this->_blocks[bidx].at<cytnx_int32>(loc_in_T);
+  }
+  const cytnx_uint16 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux)const {
+    cytnx_int64 bidx;
+    std::vector<cytnx_uint64> loc_in_T;
+    this->_fx_locate_elem(bidx,loc_in_T,locator); 
+    return this->_blocks[bidx].at<cytnx_uint16>(loc_in_T);
+  }
+  const cytnx_int16 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux)const {
+    cytnx_int64 bidx;
+    std::vector<cytnx_uint64> loc_in_T;
+    this->_fx_locate_elem(bidx,loc_in_T,locator); 
+    return this->_blocks[bidx].at<cytnx_int16>(loc_in_T);
+  }
 
 
 }  // namespace cytnx

@@ -1718,6 +1718,7 @@ namespace cytnx {
 
         }
 
+        void _fx_locate_elem(cytnx_int64 &bidx, std::vector<cytnx_uint64> &loc_in_T,const std::vector<cytnx_uint64> &locator) const;
 
         void set_meta(BlockUniTensor *tmp, const bool &inner, const bool &outer) const {
           // outer meta
@@ -2202,6 +2203,44 @@ namespace cytnx {
 
     Tensor Norm() const;
 
+    bool elem_exists(const std::vector<cytnx_uint64> &locator) const;
+
+    const Scalar::Sproxy at_for_sparse(const std::vector<cytnx_uint64> &locator) const;
+    const cytnx_complex128 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                          const cytnx_complex128 &aux) const;
+    const cytnx_complex64 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                         const cytnx_complex64 &aux) const;
+    const cytnx_double &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                      const cytnx_double &aux) const;
+    const cytnx_float &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                     const cytnx_float &aux) const;
+    const cytnx_uint64 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                      const cytnx_uint64 &aux) const;
+    const cytnx_int64 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                     const cytnx_int64 &aux) const;
+    const cytnx_uint32 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                      const cytnx_uint32 &aux) const;
+    const cytnx_int32 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                     const cytnx_int32 &aux) const;
+    const cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                      const cytnx_uint16 &aux) const;
+    const cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                     const cytnx_int16 &aux) const;
+
+    Scalar::Sproxy at_for_sparse(const std::vector<cytnx_uint64> &locator);
+    cytnx_complex128 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                    const cytnx_complex128 &aux);
+    cytnx_complex64 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                   const cytnx_complex64 &aux);
+    cytnx_double &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux);
+    cytnx_float &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux);
+    cytnx_uint64 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint64 &aux);
+    cytnx_int64 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int64 &aux);
+    cytnx_uint32 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint32 &aux);
+    cytnx_int32 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int32 &aux);
+    cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux);
+    cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
+
 
 
 
@@ -2674,9 +2713,14 @@ namespace cytnx {
     void print_blocks(const bool &full_info=true) const{ this->_impl->print_blocks(full_info); }
     
     template <class T>
-    T &at(const std::vector<cytnx_uint64> &locator) {
+    T &at(const std::vector<cytnx_uint64> &locator){
       // std::cout << "at " << this->is_blockform()  << std::endl;
-      if (this->uten_type() == UTenType.Sparse) {
+      if (this->uten_type() ==UTenType.Block){
+        // [NEW] this will not check if it exists, if it is not then error will throw!
+        T aux;
+        return this->_impl->at_for_sparse(locator, aux);
+
+      }else if (this->uten_type() == UTenType.Sparse) {
         if (this->_impl->elem_exists(locator)) {
           T aux;
           return this->_impl->at_for_sparse(locator, aux);
@@ -2692,7 +2736,12 @@ namespace cytnx {
     template <class T>
     const T &at(const std::vector<cytnx_uint64> &locator) const {
       // std::cout << "at " << this->is_blockform()  << std::endl;
-      if (this->uten_type() == UTenType.Sparse) {
+      if (this->uten_type() ==UTenType.Block){
+        // [NEW] this will not check if it exists, if it is not then error will throw!
+        T aux;
+        return this->_impl->at_for_sparse(locator, aux);
+
+      }else if (this->uten_type() == UTenType.Sparse) {
         if (this->_impl->elem_exists(locator)) {
           T aux;  // [workaround] use aux to dispatch.
           return this->_impl->at_for_sparse(locator, aux);
@@ -2706,7 +2755,9 @@ namespace cytnx {
     }
 
     const Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) const {
-      if (this->uten_type() == UTenType.Sparse) {
+      if (this->uten_type() == UTenType.Block){
+        return this->_impl->at_for_sparse(locator);
+      }else if (this->uten_type() == UTenType.Sparse) {
         if (this->_impl->elem_exists(locator)) {
           return this->_impl->at_for_sparse(locator);
         } else {
@@ -2719,7 +2770,9 @@ namespace cytnx {
     }
 
     Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) {
-      if (this->uten_type() == UTenType.Sparse) {
+      if (this->uten_type() == UTenType.Block){ 
+        return this->_impl->at_for_sparse(locator);
+      }else if (this->uten_type() == UTenType.Sparse) {
         if (this->_impl->elem_exists(locator)) {
           return this->_impl->at_for_sparse(locator);
         } else {

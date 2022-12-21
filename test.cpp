@@ -48,14 +48,26 @@ int main(int argc, char *argv[]) {
   Bond aux = Bond(BD_IN,{Qs(1)},{1});
     
   auto Sp = UniTensor({phy,phy.redirect(),aux});
-  Sp.get_block_({0,1,0}).item() = 1;
+  //Sp.get_block_({0,1,0}).item() = 1;
+
+  Sp.print_diagram(true);
+  Sp.print_blocks(false);
+
+  print(Sp.elem_exists({0,0,0}));
+  print(Sp.elem_exists({0,1,0}));
+  print(Sp.elem_exists({1,0,0}));
+  print(Sp.elem_exists({1,1,0}));
+  
+  for(int i=0;i<2;i++)
+    for(int j=0;j<2;j++){
+        auto tmp = Sp.at({i,j,0});
+        if(tmp.exists()) tmp = 1;
+    }
 
   Sp.print_diagram(true);
   Sp.print_blocks(false);
 
 
-  
-  
 
   return 0;
 
