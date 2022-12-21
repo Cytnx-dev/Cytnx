@@ -301,6 +301,15 @@ namespace cytnx {
       out.set_type(bondType(int(out.type()) * -1));
       return out;
     }
+    
+    /**
+    @brief create a new instance of Bond with type changed in btwn BRA / KET:
+
+    */
+    Bond& redirect_(){
+        this->set_type(bondType(int(this->type()) * -1));
+    }
+
 
     /**
     @brief change the tag-type to the default value BD_REG

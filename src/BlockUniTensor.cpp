@@ -884,7 +884,15 @@ namespace cytnx {
   };
 
 
+  void BlockUniTensor::Transpose_(){
+    // modify tag, and reverse qnum:
+    for (int i = 0; i < this->bonds().size(); i++) {
+      this->bonds()[i].redirect_();
+    }
 
+
+
+  };
 
 
 

@@ -2136,6 +2136,34 @@ namespace cytnx {
 
     }
 
+    boost::intrusive_ptr<UniTensor_base> Conj() {
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->Conj_();
+      return out;
+    }
+
+    void Conj_() {
+      for (int i = 0; i < this->_blocks.size(); i++) {
+        this->_blocks[i].Conj_();
+      }
+    };
+
+    void Transpose_();
+    boost::intrusive_ptr<UniTensor_base> Transpose() {
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->Transpose_();
+      return out;
+    }
+
+    boost::intrusive_ptr<UniTensor_base> Dagger() {
+      boost::intrusive_ptr<UniTensor_base> out = this->Conj();
+      out->Transpose_();
+      return out;
+    }
+    void Dagger_() {
+      this->Conj_();
+      this->Transpose_();
+    }
 
 
 
