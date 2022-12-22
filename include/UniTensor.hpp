@@ -246,6 +246,7 @@ namespace cytnx {
     virtual std::string dtype_str() const;
     virtual std::string device_str() const;
     virtual void set_rowrank(const cytnx_uint64 &new_rowrank);
+
     virtual boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
                                                          const cytnx_int64 &rowrank = -1,
                                                          const bool &by_label= false);
@@ -1691,6 +1692,7 @@ namespace cytnx {
 
         std::vector<std::vector<cytnx_uint64> > _inner_to_outer_idx; 
         std::vector<Tensor> _blocks;
+        Tensor NullRefTensor; // this returns when access block is not exists! 
 
         // given an index list [loc], get qnums from this->_bonds[loc] and return the combined qnums calculated from Symm object!
         // this assume 1. symmetry are the same for each bond! 
@@ -1716,6 +1718,7 @@ namespace cytnx {
 
         }
 
+        void _fx_locate_elem(cytnx_int64 &bidx, std::vector<cytnx_uint64> &loc_in_T,const std::vector<cytnx_uint64> &locator) const;
 
         void set_meta(BlockUniTensor *tmp, const bool &inner, const bool &outer) const {
           // outer meta
@@ -1785,6 +1788,7 @@ namespace cytnx {
         return out; 
     };
     
+    cytnx_uint64 Nblocks() const { return this->_blocks.size(); };
 
     void to_(const int &device) {
       for (cytnx_uint64 i = 0; i < this->_blocks.size(); i++) {
@@ -1836,18 +1840,135 @@ namespace cytnx {
                       "\n");
 #endif
       return this->_blocks[0].device_str();
+
     };
 
+    Tensor get_block(const cytnx_uint64 &idx = 0) const {
+      cytnx_error_msg(idx >= this->_blocks.size(), "[ERROR][BlockUniTensor] index out of range%s",
+                      "\n");
+      return this->_blocks[idx].clone();  
+    };
+
+    // this one for Block will return the indicies!!
+    Tensor get_block(const std::vector<cytnx_int64> &indices, const bool &force_return) const {
+         
+        cytnx_error_msg(indices.size()!=this->rank(),"[ERROR][get_block][BlockUniTensor] len(indices) must be the same as the Tensor rank (number of legs).%s","\n");
+        
+        std::vector<cytnx_uint64> inds(indices.begin(),indices.end());
+
+
+        //find if the indices specify exists!
+        cytnx_int64 b = -1;
+        for(cytnx_uint64 i=0;i<this->_inner_to_outer_idx.size();i++){
+            if(inds == this->_inner_to_outer_idx[i]){
+                b = i;
+                break;
+            }
+        }
+        
+        if(b<0){
+            if(force_return){
+                return NullRefTensor;
+            }else{
+                cytnx_error_msg(true,"[ERROR][get_block][BlockUniTensor] no avaliable block exists, force_return=false, so error throws. \n    If you want to return an empty block without error when block is not avaliable, set force_return=True.%s","\n");
+            }
+        }else{
+            return this->_blocks[b].clone();
+        } 
+    }
+    
+    const Tensor& get_block_(const cytnx_uint64 &idx = 0) const {
+      cytnx_error_msg(idx >= this->_blocks.size(), "[ERROR][BlockUniTensor] index out of range%s",
+                      "\n");
+      return this->_blocks[idx];
+    };
+    
+    Tensor& get_block_(const cytnx_uint64 &idx = 0) {
+      cytnx_error_msg(idx >= this->_blocks.size(), "[ERROR][BlockUniTensor] index out of range%s",
+                      "\n");
+      return this->_blocks[idx];
+    };
+    
+    const Tensor &get_block_(const std::vector<cytnx_int64> &indices, const bool &force_return) const {
+        cytnx_error_msg(indices.size()!=this->rank(),"[ERROR][get_block][BlockUniTensor] len(indices) must be the same as the Tensor rank (number of legs).%s","\n");
+        
+        std::vector<cytnx_uint64> inds(indices.begin(),indices.end());
+
+        //find if the indices specify exists!
+        cytnx_int64 b = -1;
+        for(cytnx_uint64 i=0;i<this->_inner_to_outer_idx.size();i++){
+            if(inds == this->_inner_to_outer_idx[i]){
+                b = i;
+                break;
+            }
+        }
+        
+        if(b<0){
+            if(force_return){
+                return this->NullRefTensor;
+            }else{
+                cytnx_error_msg(true,"[ERROR][get_block][BlockUniTensor] no avaliable block exists, force_return=false, so error throws. \n    If you want to return an empty block without error when block is not avaliable, set force_return=True.%s","\n");
+            }
+        }else{
+            return this->_blocks[b];
+        } 
+
+    }
+    
+    Tensor &get_block_(const std::vector<cytnx_int64> &indices, const bool &force_return){
+        cytnx_error_msg(indices.size()!=this->rank(),"[ERROR][get_block][BlockUniTensor] len(indices) must be the same as the Tensor rank (number of legs).%s","\n");
+        
+        std::vector<cytnx_uint64> inds(indices.begin(),indices.end());
+
+        //find if the indices specify exists!
+        cytnx_int64 b = -1;
+        for(cytnx_uint64 i=0;i<this->_inner_to_outer_idx.size();i++){
+            if(inds == this->_inner_to_outer_idx[i]){
+                b = i;
+                break;
+            }
+        }
+        
+        if(b<0){
+            if(force_return){
+                return this->NullRefTensor;
+            }else{
+                cytnx_error_msg(true,"[ERROR][get_block][BlockUniTensor] no avaliable block exists, force_return=false, so error throws. \n    If you want to return an empty block without error when block is not avaliable, set force_return=True.%s","\n");
+            }
+        }else{
+            return this->_blocks[b];
+        } 
+
+    }
+
+    std::vector<Tensor> get_blocks() const{
+        return vec_clone(this->_blocks);
+    }
+    const std::vector<Tensor> &get_blocks_(const bool &) const{
+        return this->_blocks;
+    }
+    std::vector<Tensor> &get_blocks_(const bool &){
+        return this->_blocks;
+    }
+
+
+    
+    bool same_data(const boost::intrusive_ptr<UniTensor_base> &rhs) const {
+      if (rhs->uten_type() != UTenType.Block) return false;
+      if (rhs->get_blocks_(1).size() != this->get_blocks_(1).size()) return false;
+
+      for (int i = 0; i < rhs->get_blocks_(1).size(); i++)
+        if (this->get_blocks_(1)[i].same_data(rhs->get_blocks_(1)[i]) == false) return false;
+
+      return true;
+    }
 
 
 
     void set_rowrank(const cytnx_uint64 &new_rowrank) {
-      cytnx_error_msg((new_rowrank < 1) || (new_rowrank >= this->rank()),
-                      "[ERROR][BlockUniTensor] rowrank should be [>=1] and [<UniTensor.rank].%s",
+      cytnx_error_msg(new_rowrank > this->rank(),
+                      "[ERROR][BlockUniTensor] rowrank should be [>=0] and [<=UniTensor.rank].%s",
                       "\n");
-      cytnx_error_msg(new_rowrank >= this->_labels.size(),
-                      "[ERROR] rowrank cannot exceed the rank of UniTensor.%s", "\n");
-
       this->_rowrank = new_rowrank;
       this->_is_braket_form = this->_update_braket();
     }
@@ -1898,6 +2019,230 @@ namespace cytnx {
                                                          const std::string &new_label);
  
     std::vector<Symmetry> syms() const;
+
+    void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank = 0) {
+      cytnx_error_msg(true, "[ERROR] cannot reshape a UniTensor with symmetry.%s", "\n");
+    }
+    boost::intrusive_ptr<UniTensor_base> reshape(const std::vector<cytnx_int64> &new_shape,
+                                                 const cytnx_uint64 &rowrank = 0) {
+      cytnx_error_msg(true, "[ERROR] cannot reshape a UniTensor with symmetry.%s", "\n");
+      return nullptr;
+    }
+
+    boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const {
+      BlockUniTensor *tmp = this->clone_meta(true, true);
+      tmp->_blocks.resize(this->_blocks.size());
+      for (cytnx_int64 blk = 0; blk < this->_blocks.size(); blk++) {
+        tmp->_blocks[blk] = this->_blocks[blk].astype(dtype);
+      }
+      boost::intrusive_ptr<UniTensor_base> out(tmp);
+      return out;
+    };
+
+    // this will only work on non-symm tensor (DenseUniTensor)
+    boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors){
+        cytnx_error_msg(true,
+                      "[ERROR][BlockUniTensor][get] cannot use get on a UniTensor with "
+                      "Symmetry.\n suggestion: try get_block/get_block_/get_blocks/get_blocks_ first.%s",
+                      "\n");
+      return nullptr;
+
+    }
+
+    // this will only work on non-symm tensor (DenseUniTensor)
+    void set(const std::vector<Accessor> &accessors, const Tensor &rhs){
+        cytnx_error_msg(true,
+                      "[ERROR][BlockUniTensor][get] cannot use get on a UniTensor with "
+                      "Symmetry.\n suggestion: try get_block/get_block_/get_blocks/get_blocks_ first.%s",
+                      "\n");
+    }
+
+    void put_block(const Tensor &in, const cytnx_uint64 &idx = 0){
+        cytnx_error_msg(idx >= this->_blocks.size(), "[ERROR][BlockUniTensor] index out of range%s",
+                      "\n");
+        cytnx_error_msg(in.shape() != this->_blocks[idx].shape(),
+                      "[ERROR][BlockUniTensor] the shape of input tensor does not match the shape "
+                      "of block @ idx=%d\n",
+                      idx);
+
+        this->_blocks[idx] = in.clone();
+    }
+    void put_block_(Tensor &in, const cytnx_uint64 &idx = 0){
+        cytnx_error_msg(idx >= this->_blocks.size(), "[ERROR][BlockUniTensor] index out of range%s",
+                      "\n");
+        cytnx_error_msg(in.shape() != this->_blocks[idx].shape(),
+                      "[ERROR][BlockUniTensor] the shape of input tensor does not match the shape "
+                      "of block @ idx=%d\n",
+                      idx);
+
+        this->_blocks[idx] = in;
+
+    }
+    void put_block(const Tensor &in, const std::vector<cytnx_int64> &indices,
+                   const bool &check){
+
+        cytnx_error_msg(indices.size()!=this->rank(),"[ERROR][put_block][BlockUniTensor] len(indices) must be the same as the Tensor rank (number of legs).%s","\n");
+
+        std::vector<cytnx_uint64> inds(indices.begin(),indices.end());
+
+        //find if the indices specify exists!
+        cytnx_int64 b = -1;
+        for(cytnx_uint64 i=0;i<this->_inner_to_outer_idx.size();i++){
+            if(inds == this->_inner_to_outer_idx[i]){
+                b = i;
+                break;
+            }
+        }
+
+        if(b<0){
+            if(check){
+                cytnx_error_msg(true,"[ERROR][put_block][BlockUniTensor] no avaliable block exists, check=true, so error throws. \n    If you want without error when block is not avaliable, set check=false.%s","\n");
+            }
+        }else{
+            cytnx_error_msg(in.shape() != this->_blocks[b].shape(),
+                          "[ERROR][BlockUniTensor] the shape of input tensor does not match the shape "
+                          "of block @ idx=%d\n",
+                          b);
+
+            this->_blocks[b] = in.clone();
+        }
+
+
+    }
+    void put_block_(Tensor &in, const std::vector<cytnx_int64> &indices, const bool &check){
+        cytnx_error_msg(indices.size()!=this->rank(),"[ERROR][put_block][BlockUniTensor] len(indices) must be the same as the Tensor rank (number of legs).%s","\n");
+
+        std::vector<cytnx_uint64> inds(indices.begin(),indices.end());
+
+        //find if the indices specify exists!
+        cytnx_int64 b = -1;
+        for(cytnx_uint64 i=0;i<this->_inner_to_outer_idx.size();i++){
+            if(inds == this->_inner_to_outer_idx[i]){
+                b = i;
+                break;
+            }
+        }
+
+        if(b<0){
+            if(check){
+                cytnx_error_msg(true,"[ERROR][put_block][BlockUniTensor] no avaliable block exists, check=true, so error throws. \n    If you want without error when block is not avaliable, set check=false.%s","\n");
+            }
+        }else{
+            cytnx_error_msg(in.shape() != this->_blocks[b].shape(),
+                          "[ERROR][BlockUniTensor] the shape of input tensor does not match the shape "
+                          "of block @ idx=%d\n",
+                          b);
+            this->_blocks[b] = in;
+        }
+
+    }
+
+    void tag() {
+      // no-use!
+    }
+
+
+    boost::intrusive_ptr<UniTensor_base> Conj() {
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->Conj_();
+      return out;
+    }
+
+    void Conj_() {
+      for (int i = 0; i < this->_blocks.size(); i++) {
+        this->_blocks[i].Conj_();
+      }
+    };
+
+    void Transpose_();
+    boost::intrusive_ptr<UniTensor_base> Transpose() {
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->Transpose_();
+      return out;
+    }
+
+    boost::intrusive_ptr<UniTensor_base> Dagger() {
+      boost::intrusive_ptr<UniTensor_base> out = this->Conj();
+      out->Transpose_();
+      return out;
+    }
+    void Dagger_() {
+      this->Conj_();
+      this->Transpose_();
+    }
+
+    void Trace_(const std::string &a, const std::string &b);
+    void Trace_(const cytnx_int64 &a, const cytnx_int64 &b);
+    void Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label);
+
+    boost::intrusive_ptr<UniTensor_base> Trace(const std::string &a, const std::string &b) {
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->Trace_(a, b);
+      return out;
+    }
+    boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b) {
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->Trace_(a, b);
+      return out;
+    }
+    /**
+     * @brief
+     *
+     * @deprecated
+     *
+     * @param a
+     * @param b
+     * @param by_label
+     */
+    boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b,
+                                               const bool &by_label) {
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->Trace_(a, b, by_label);
+      return out;
+    }
+
+    Tensor Norm() const;
+
+    bool elem_exists(const std::vector<cytnx_uint64> &locator) const;
+
+    const Scalar::Sproxy at_for_sparse(const std::vector<cytnx_uint64> &locator) const;
+    const cytnx_complex128 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                          const cytnx_complex128 &aux) const;
+    const cytnx_complex64 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                         const cytnx_complex64 &aux) const;
+    const cytnx_double &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                      const cytnx_double &aux) const;
+    const cytnx_float &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                     const cytnx_float &aux) const;
+    const cytnx_uint64 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                      const cytnx_uint64 &aux) const;
+    const cytnx_int64 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                     const cytnx_int64 &aux) const;
+    const cytnx_uint32 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                      const cytnx_uint32 &aux) const;
+    const cytnx_int32 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                     const cytnx_int32 &aux) const;
+    const cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                      const cytnx_uint16 &aux) const;
+    const cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                     const cytnx_int16 &aux) const;
+
+    Scalar::Sproxy at_for_sparse(const std::vector<cytnx_uint64> &locator);
+    cytnx_complex128 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                    const cytnx_complex128 &aux);
+    cytnx_complex64 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                   const cytnx_complex64 &aux);
+    cytnx_double &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux);
+    cytnx_float &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux);
+    cytnx_uint64 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint64 &aux);
+    cytnx_int64 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int64 &aux);
+    cytnx_uint32 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint32 &aux);
+    cytnx_int32 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int32 &aux);
+    cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux);
+    cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
+
+    void _save_dispatch(std::fstream &f) const;
+    void _load_dispatch(std::fstream &f);
 
 
 
@@ -2370,9 +2715,14 @@ namespace cytnx {
     void print_blocks(const bool &full_info=true) const{ this->_impl->print_blocks(full_info); }
     
     template <class T>
-    T &at(const std::vector<cytnx_uint64> &locator) {
+    T &at(const std::vector<cytnx_uint64> &locator){
       // std::cout << "at " << this->is_blockform()  << std::endl;
-      if (this->uten_type() == UTenType.Sparse) {
+      if (this->uten_type() ==UTenType.Block){
+        // [NEW] this will not check if it exists, if it is not then error will throw!
+        T aux;
+        return this->_impl->at_for_sparse(locator, aux);
+
+      }else if (this->uten_type() == UTenType.Sparse) {
         if (this->_impl->elem_exists(locator)) {
           T aux;
           return this->_impl->at_for_sparse(locator, aux);
@@ -2388,7 +2738,12 @@ namespace cytnx {
     template <class T>
     const T &at(const std::vector<cytnx_uint64> &locator) const {
       // std::cout << "at " << this->is_blockform()  << std::endl;
-      if (this->uten_type() == UTenType.Sparse) {
+      if (this->uten_type() ==UTenType.Block){
+        // [NEW] this will not check if it exists, if it is not then error will throw!
+        T aux;
+        return this->_impl->at_for_sparse(locator, aux);
+
+      }else if (this->uten_type() == UTenType.Sparse) {
         if (this->_impl->elem_exists(locator)) {
           T aux;  // [workaround] use aux to dispatch.
           return this->_impl->at_for_sparse(locator, aux);
@@ -2402,7 +2757,9 @@ namespace cytnx {
     }
 
     const Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) const {
-      if (this->uten_type() == UTenType.Sparse) {
+      if (this->uten_type() == UTenType.Block){
+        return this->_impl->at_for_sparse(locator);
+      }else if (this->uten_type() == UTenType.Sparse) {
         if (this->_impl->elem_exists(locator)) {
           return this->_impl->at_for_sparse(locator);
         } else {
@@ -2415,7 +2772,9 @@ namespace cytnx {
     }
 
     Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) {
-      if (this->uten_type() == UTenType.Sparse) {
+      if (this->uten_type() == UTenType.Block){ 
+        return this->_impl->at_for_sparse(locator);
+      }else if (this->uten_type() == UTenType.Sparse) {
         if (this->_impl->elem_exists(locator)) {
           return this->_impl->at_for_sparse(locator);
         } else {

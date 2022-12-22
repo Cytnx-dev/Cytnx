@@ -43,6 +43,38 @@ int main(int argc, char *argv[]) {
  
   */
 
+
+  Bond phy = Bond(BD_IN,{Qs(0),Qs(1)},{1,1});
+  Bond aux = Bond(BD_IN,{Qs(1)},{1});
+    
+  auto Sp = UniTensor({phy,phy.redirect(),aux});
+  //Sp.get_block_({0,1,0}).item() = 1;
+
+  Sp.print_diagram(true);
+  Sp.print_blocks(false);
+
+  print(Sp.elem_exists({0,0,0}));
+  print(Sp.elem_exists({0,1,0}));
+  print(Sp.elem_exists({1,0,0}));
+  print(Sp.elem_exists({1,1,0}));
+  
+  for(int i=0;i<2;i++)
+    for(int j=0;j<2;j++){
+        auto tmp = Sp.at({i,j,0});
+        if(tmp.exists()) tmp = 1;
+    }
+
+  Sp.print_diagram(true);
+  Sp.print_blocks(true);
+
+ 
+  return 0;
+
+
+    
+
+
+
   //Bond bd_sym_s = Bond(BD_REG, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
   Bond bd_sym_s = Bond(BD_KET, {{0}, {1}}, {4, 7});
   Bond bd_sym_s2 = Bond(BD_BRA, {{0},{1},{2}},{8,9,3});
@@ -65,9 +97,31 @@ int main(int argc, char *argv[]) {
   //TTT.print_diagram();
   //TTT.print_blocks(false);
 
-  UniTensor T33({bd_sym_s,bd_sym_s,bd_sym_s2,bd_sym_s3});
-  T33.print_diagram();
-  T33.print_blocks(false);
+  UniTensor T3A({bd_sym_s,bd_sym_s,bd_sym_s2,bd_sym_s3});
+  T3A.print_diagram();
+  T3A.print_blocks(false);
+
+  //auto tnB1 = T3A.get_block_({1,0,2,0});
+  //print(tnB1);
+
+
+  UniTensor T3B({bd_sym_s.redirect(),bd_sym_s.redirect(),bd_sym_s2.redirect(),bd_sym_s3.redirect()});
+  T3B = T3B.relabels({4,5,2,6});
+  
+  T3B.print_diagram();
+
+  T3A.contract(T3B);
+
+  return 0;
+
+  //UniTensor T3B({bd_sym_s.redirect(),bd_sym_s.redirect(),bd_sym_s2.redirect(),bd_sym_s3.redirect()});
+  
+
+
+  //auto OutAB = T3A.contract(T3B);
+  
+  //OutAB.print_diagram();
+  //OutAB.print_blocks();
 
   //auto T33_b = T33.relabels({"a","c","ds","r"});
   //auto Ot = T33.contract(T33_b);

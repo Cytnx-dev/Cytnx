@@ -2466,7 +2466,7 @@ namespace cytnx {
     struct Sproxy {
       boost::intrusive_ptr<Storage_base> _insimpl;
       cytnx_uint64 _loc;
-
+      Sproxy(){}
       Sproxy(boost::intrusive_ptr<Storage_base> _ptr, const cytnx_uint64 &idx)
           : _insimpl(_ptr), _loc(idx) {}
 
@@ -2488,6 +2488,8 @@ namespace cytnx {
 
       Scalar real();
       Scalar imag();
+      bool exists();
+
       // When used to get elements:
       // operator Scalar() const;
     };
