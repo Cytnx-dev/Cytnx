@@ -31,6 +31,13 @@ namespace cytnx {
 
     Bond_impl() : _dim(0), _type(bondType::BD_REG){};
 
+    void _rm_qnum(const cytnx_uint64 &q_index){
+        // this will not check, so check it before using this internal function!!
+        this->_dim -= this->_degs[q_index];
+        this->_degs.erase(this->_degs.begin() + q_index);
+        this->_qnums.erase(this->_qnums.begin() + q_index);
+    }
+
     void Init(const cytnx_uint64 &dim, const bondType &bd_type = bondType::BD_REG,
               const std::vector<std::vector<cytnx_int64>> &in_qnums = {},
               const std::vector<Symmetry> &in_syms = {});

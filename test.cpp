@@ -48,8 +48,43 @@ int main(int argc, char *argv[]) {
   Bond aux = Bond(BD_IN,{Qs(1)},{1});
     
   auto Sp = UniTensor({phy,phy.redirect(),aux});
+  auto Sm = UniTensor({phy,phy.redirect(),aux.redirect()},{3,4,2});
   //Sp.get_block_({0,1,0}).item() = 1;
 
+  Sp.at({0,1,0}) = 1;
+  Sm.at({1,0,0}) = 1;
+
+
+  auto PM = Sp.contract(Sm);
+
+  PM.print_diagram();
+  PM.print_blocks(true);
+
+  auto MP = Sm.contract(Sp);
+
+  MP.print_diagram();
+  MP.print_blocks(true);
+
+  auto Hpmmp = PM + MP;
+  
+  Hpmmp.print_blocks(true);
+
+  return 0;
+  Bond B1 = Bond(BD_IN,{Qs(0),Qs(1)},{3,4});
+  Bond B2 = Bond(BD_IN,{Qs(0),Qs(1)},{5,6});
+  Bond B3 = Bond(BD_OUT,{Qs(0),Qs(1)},{2,3});
+  Bond B4 = Bond(BD_OUT,{Qs(0),Qs(1)},{7,1});
+
+  auto UTB = UniTensor({B1,B2,B3,B4});
+
+  UTB.print_diagram();
+  UTB.print_blocks(false);
+
+
+
+
+
+  /*
   Sp.print_diagram(true);
   Sp.print_blocks(false);
 
@@ -66,7 +101,7 @@ int main(int argc, char *argv[]) {
 
   Sp.print_diagram(true);
   Sp.print_blocks(true);
-
+  */
  
   return 0;
 

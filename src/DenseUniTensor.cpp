@@ -1537,10 +1537,18 @@ namespace cytnx {
 
   // Arithmetic:
   void DenseUniTensor::Add_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
-    cytnx_error_msg(rhs->is_tag(), "[ERROR] cannot perform arithmetic on tagged unitensor R.%s",
-                    "\n");
-    cytnx_error_msg(this->is_tag(), "[ERROR] cannot perform arithmetic on tagged unitensor L.%s",
-                    "\n");
+
+    //checking if Bond have same direction:
+    if(this->is_tag()){
+        cytnx_error_msg(rhs->uten_type() != UTenType.Dense,"[ERROR][DenseUniTensor] cannot perform arithmetic with different type of UniTensor!%s","\n");
+        cytnx_error_msg(!rhs->is_tag(),"[ERROR][DenseUniTensor] cannot perform arithmetic between tag and un-tag DenseUniTensor!%s","\n");
+        cytnx_error_msg(rhs->rank() != this->rank(), "[ERROR] the rank of two UniTensor does not match!%s","\n");
+
+        for(cytnx_int64 i=0;i<this->rank();i++){
+            cytnx_error_msg(this->bonds()[i] != rhs->bonds()[i],"[ERROR] Bond @ %d does not match, therefore cannot perform arithmetic!\n",i);
+        }
+    }
+
     this->_block += rhs->get_block_();
   }
   void DenseUniTensor::Add_(const Scalar &rhs) {
@@ -1550,10 +1558,16 @@ namespace cytnx {
   }
 
   void DenseUniTensor::Sub_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
-    cytnx_error_msg(rhs->is_tag(), "[ERROR] cannot perform arithmetic on tagged unitensor R.%s",
-                    "\n");
-    cytnx_error_msg(this->is_tag(), "[ERROR] cannot perform arithmetic on tagged unitensor L.%s",
-                    "\n");
+    //checking if Bond have same direction:
+    if(this->is_tag()){
+        cytnx_error_msg(rhs->uten_type() != UTenType.Dense,"[ERROR][DenseUniTensor] cannot perform arithmetic with different type of UniTensor!%s","\n");
+        cytnx_error_msg(!rhs->is_tag(),"[ERROR][DenseUniTensor] cannot perform arithmetic between tag and un-tag DenseUniTensor!%s","\n");
+        cytnx_error_msg(rhs->rank() != this->rank(), "[ERROR] the rank of two UniTensor does not match!%s","\n");
+
+        for(cytnx_int64 i=0;i<this->rank();i++){
+            cytnx_error_msg(this->bonds()[i] != rhs->bonds()[i],"[ERROR] Bond @ %d does not match, therefore cannot perform arithmetic!\n",i);
+        }
+    }
     this->_block -= rhs->get_block_();
   }
   void DenseUniTensor::Sub_(const Scalar &rhs) {
@@ -1568,10 +1582,16 @@ namespace cytnx {
   }
 
   void DenseUniTensor::Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
-    cytnx_error_msg(rhs->is_tag(), "[ERROR] cannot perform arithmetic on tagged unitensor R.%s",
-                    "\n");
-    cytnx_error_msg(this->is_tag(), "[ERROR] cannot perform arithmetic on tagged unitensor L.%s",
-                    "\n");
+    //checking if Bond have same direction:
+    if(this->is_tag()){
+        cytnx_error_msg(rhs->uten_type() != UTenType.Dense,"[ERROR][DenseUniTensor] cannot perform arithmetic with different type of UniTensor!%s","\n");
+        cytnx_error_msg(!rhs->is_tag(),"[ERROR][DenseUniTensor] cannot perform arithmetic between tag and un-tag DenseUniTensor!%s","\n");
+        cytnx_error_msg(rhs->rank() != this->rank(), "[ERROR] the rank of two UniTensor does not match!%s","\n");
+
+        for(cytnx_int64 i=0;i<this->rank();i++){
+            cytnx_error_msg(this->bonds()[i] != rhs->bonds()[i],"[ERROR] Bond @ %d does not match, therefore cannot perform arithmetic!\n",i);
+        }
+    }
     this->_block *= rhs->get_block_();
   }
   void DenseUniTensor::Mul_(const Scalar &rhs) {
@@ -1581,10 +1601,16 @@ namespace cytnx {
   }
 
   void DenseUniTensor::Div_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
-    cytnx_error_msg(rhs->is_tag(), "[ERROR] cannot perform arithmetic on tagged unitensor R.%s",
-                    "\n");
-    cytnx_error_msg(this->is_tag(), "[ERROR] cannot perform arithmetic on tagged unitensor L.%s",
-                    "\n");
+    //checking if Bond have same direction:
+    if(this->is_tag()){
+        cytnx_error_msg(rhs->uten_type() != UTenType.Dense,"[ERROR][DenseUniTensor] cannot perform arithmetic with different type of UniTensor!%s","\n");
+        cytnx_error_msg(!rhs->is_tag(),"[ERROR][DenseUniTensor] cannot perform arithmetic between tag and un-tag DenseUniTensor!%s","\n");
+        cytnx_error_msg(rhs->rank() != this->rank(), "[ERROR] the rank of two UniTensor does not match!%s","\n");
+
+        for(cytnx_int64 i=0;i<this->rank();i++){
+            cytnx_error_msg(this->bonds()[i] != rhs->bonds()[i],"[ERROR] Bond @ %d does not match, therefore cannot perform arithmetic!\n",i);
+        }
+    }
     this->_block /= rhs->get_block_();
   }
   void DenseUniTensor::Div_(const Scalar &rhs) {

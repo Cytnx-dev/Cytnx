@@ -2244,6 +2244,46 @@ namespace cytnx {
     void _save_dispatch(std::fstream &f) const;
     void _load_dispatch(std::fstream &f);
 
+    // this will remove the [q_index]-th qnum at [bond_idx]-th Bond! 
+    void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &q_index,
+                           const bool &by_label);
+    void truncate_(const std::string &bond_idx, const cytnx_uint64 &q_index);
+    void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &q_index);
+
+
+    void Add_(const boost::intrusive_ptr<UniTensor_base> &rhs);
+    void Add_(const Scalar &rhs){
+        cytnx_error_msg(true, "[ERROR] cannot perform arithmetic '+' btwn Scalar and BlockUniTensor!.%s",
+                    "\n");
+    }
+
+    void Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs){
+        cytnx_error_msg(true,"[Developing]%s","\n");
+    }
+    void Mul_(const Scalar &rhs);
+
+    void Sub_(const boost::intrusive_ptr<UniTensor_base> &rhs){
+        cytnx_error_msg(true,"[Developing]%s","\n");
+    }
+    void Sub_(const Scalar &rhs){
+        cytnx_error_msg(true, "[ERROR] cannot perform arithmetic '-' btwn Scalar and BlockUniTensor!.%s",
+                    "\n");
+    }
+    void lSub_(const Scalar &lhs){
+        cytnx_error_msg(true, "[ERROR] cannot perform arithmetic '-' btwn Scalar and BlockUniTensor!.%s",
+                    "\n");
+    }
+
+    void Div_(const boost::intrusive_ptr<UniTensor_base> &rhs){
+        cytnx_error_msg(true, "[Developing].%s",
+                    "\n");
+    }
+    void Div_(const Scalar &rhs);
+    void lDiv_(const Scalar &lhs){
+        cytnx_error_msg(true, "[ERROR] cannot arithmetic Scalar/BlockUniTensor.%s", "\n");
+    }
+
+
 
 
   };

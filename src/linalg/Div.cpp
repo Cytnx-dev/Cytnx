@@ -897,10 +897,6 @@ namespace cytnx {
     // cytnx::UniTensor
     //===============
     cytnx::UniTensor Div(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt) {
-      cytnx_error_msg(Lt.is_tag(), "[ERROR] cannot perform arithmetic on tagged unitensor L.%s",
-                      "\n");
-      cytnx_error_msg(Rt.is_tag(), "[ERROR] cannot perform arithmetic on tagged unitensor R.%s",
-                      "\n");
 
       UniTensor out = Lt.clone();
       out.set_labels(vec_range<cytnx_int64>(Lt.rank()));
