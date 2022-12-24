@@ -2257,14 +2257,10 @@ namespace cytnx {
                     "\n");
     }
 
-    void Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs){
-        cytnx_error_msg(true,"[Developing]%s","\n");
-    }
+    void Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs);
     void Mul_(const Scalar &rhs);
 
-    void Sub_(const boost::intrusive_ptr<UniTensor_base> &rhs){
-        cytnx_error_msg(true,"[Developing]%s","\n");
-    }
+    void Sub_(const boost::intrusive_ptr<UniTensor_base> &rhs);
     void Sub_(const Scalar &rhs){
         cytnx_error_msg(true, "[ERROR] cannot perform arithmetic '-' btwn Scalar and BlockUniTensor!.%s",
                     "\n");
@@ -2275,8 +2271,9 @@ namespace cytnx {
     }
 
     void Div_(const boost::intrusive_ptr<UniTensor_base> &rhs){
-        cytnx_error_msg(true, "[Developing].%s",
+        cytnx_error_msg(true, "[ERROR] cannot perform arithmetic '/' btwn two BlockUniTensor!.%s",
                     "\n");
+
     }
     void Div_(const Scalar &rhs);
     void lDiv_(const Scalar &lhs){
