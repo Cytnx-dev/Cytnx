@@ -160,6 +160,7 @@ if(RUN_TESTS)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fprofile-arcs -ftest-coverage")
 	target_link_libraries(cytnx PUBLIC "-lgcov --coverage")
 	add_subdirectory(tests)
+	add_subdirectory(bm_tests)
 endif()
 
 include(GNUInstallDirs)
@@ -338,7 +339,7 @@ endif()
 
 
 ######################################################################
-### Get Gtest
+### Get Gtest & benchmark
 ######################################################################
 include(FetchContent)
 FetchContent_Declare(
@@ -347,7 +348,16 @@ FetchContent_Declare(
 )
 # For Windows: Prevent overriding the parent project's compiler/linker settings
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
+
+FetchContent_Declare(
+  googlebenchmark
+  GIT_REPOSITORY https://github.com/google/benchmark.git
+  GIT_TAG v1.7.1) # need master for benchmark::benchmark
+set(BENCHMARK_ENABLE_TESTING off)    # to suppress benchmark internal tests
+
+FetchContent_MakeAvailable(
+  googletest
+  googlebenchmark)
 
 
 ######################################################################
