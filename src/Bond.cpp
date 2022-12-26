@@ -254,33 +254,39 @@ namespace cytnx {
         // the map returns the new index from old index via
         // new_index = return<cytnx_uint64>[old_index]
         // [Note] this will sort QN from small to large   
-        auto mapper = vec_sort(this->_qnums,true);
-        auto tmp_degs = vec_map(this->_degs,mapper);
-        
-        cytnx_uint64 cnt = 0;
-        cytnx_uint64 loc = 0;
-        std::vector<cytnx_uint64> return_order(this->_qnums.size());
-        std::vector<cytnx_uint64> idx_erase;
-        std::vector<cytnx_int64> *last = &this->_qnums[0];
-        return_order[mapper[0]] = cnt;
-        for(int q=1;q<this->_qnums.size();q++){
-            if(this->_qnums[q] != *last){
-                last = &this->_qnums[q];
-                cnt ++;
-                loc = q;    
-            }else{
-                idx_erase.push_back(q);
-                tmp_degs[loc] += tmp_degs[q];
-                //std::cout << "add from loc" << q << " to " << cnt << std::endl;
-            }
-            return_order[mapper[q]] = cnt;
-        } 
-        this->_degs = tmp_degs;
-        //now, remove:
-        this->_qnums = vec_erase(this->_qnums,idx_erase);
-        vec_erase_(this->_degs,idx_erase);
 
-        return return_order;
+        if(this->_degs.size()){
+            auto mapper = vec_sort(this->_qnums,true);
+            auto tmp_degs = vec_map(this->_degs,mapper);
+            
+            cytnx_uint64 cnt = 0;
+            cytnx_uint64 loc = 0;
+            std::vector<cytnx_uint64> return_order(this->_qnums.size());
+            std::vector<cytnx_uint64> idx_erase;
+            std::vector<cytnx_int64> *last = &this->_qnums[0];
+            return_order[mapper[0]] = cnt;
+            for(int q=1;q<this->_qnums.size();q++){
+                if(this->_qnums[q] != *last){
+                    last = &this->_qnums[q];
+                    cnt ++;
+                    loc = q;    
+                }else{
+                    idx_erase.push_back(q);
+                    tmp_degs[loc] += tmp_degs[q];
+                    //std::cout << "add from loc" << q << " to " << cnt << std::endl;
+                }
+                return_order[mapper[q]] = cnt;
+            } 
+            this->_degs = tmp_degs;
+            //now, remove:
+            this->_qnums = vec_erase(this->_qnums,idx_erase);
+            vec_erase_(this->_degs,idx_erase);
+
+            return return_order;
+        }else{
+            cytnx_error_msg(true,"[ERROR] group_duplicates() only work for new Bond format and with symmetry!%s","\n");
+            return std::vector<cytnx_uint64>();
+        }
   }
 
 
