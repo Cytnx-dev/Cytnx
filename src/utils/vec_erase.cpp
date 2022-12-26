@@ -69,7 +69,9 @@ namespace cytnx {
 
   template std::vector<std::vector<cytnx_uint64> > vec_erase(const std::vector<std::vector<cytnx_uint64> > &,
                                        const std::vector<cytnx_uint64> &);
-
+  template std::vector<std::vector<cytnx_int64> > vec_erase(const std::vector<std::vector<cytnx_int64> > &,
+                                       const std::vector<cytnx_uint64> &);
+  
   template void vec_erase_(std::vector<cytnx_complex128> &, const std::vector<cytnx_uint64> &);
   template void vec_erase_(std::vector<cytnx_complex64> &, const std::vector<cytnx_uint64> &);
   template void vec_erase_(std::vector<cytnx_double> &, const std::vector<cytnx_uint64> &);
@@ -88,4 +90,8 @@ namespace cytnx {
                            const std::vector<cytnx_uint64> &);
   template void vec_erase_(std::vector<std::vector<cytnx_uint64> >&,
                            const std::vector<cytnx_uint64> &);
+
+  template void vec_erase_(std::vector<std::vector<cytnx_int64> >&,
+                           const std::vector<cytnx_uint64> &);
+
 }  // namespace cytnx

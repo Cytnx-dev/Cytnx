@@ -7,6 +7,42 @@ using namespace cytnx;
 typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]) {
+
+
+  auto tbB = Bond(BD_BRA,{Qs(0),Qs(2),Qs(-3),Qs(0),Qs(1),Qs(2)}, {2,3,4,5,6,7});
+
+  cout << tbB << endl;
+
+  print(tbB.group_duplicates());
+
+  cout << tbB << endl;
+
+  //std::vector<cytnx_int64>va = {1,0,9,7,2};
+  //auto mapPer = vec_sort(va,true);
+
+
+  //print(va);
+
+  
+
+  return 0;
+  std::vector<int> avv = {0,2,3,4};
+  std::vector<int> bvv = {0,3,1,4};
+  std::vector<int> cvv = {1,1,1,4};
+
+  cout << (avv < bvv) << endl;
+  cout << (avv > bvv) << endl;
+  cout << (avv == bvv) << endl;
+  
+  cout << (bvv < cvv) << endl;
+  cout << (bvv > cvv) << endl;
+  cout << (bvv == cvv) << endl;
+
+  cout << (cvv < avv) << endl;
+  cout << (cvv > avv) << endl;
+  cout << (cvv == avv) << endl;
+
+  return 0;
   /*
   vector<cytnx_int64> A(10);
   for(int i=0;i<10;i++){
@@ -49,13 +85,18 @@ int main(int argc, char *argv[]) {
     
   auto Sp = UniTensor({phy,phy.redirect(),aux});
   auto Sm = UniTensor({phy,phy.redirect(),aux.redirect()},{3,4,2});
+  auto Sz = UniTensor({phy,phy.redirect()});
+
   //Sp.get_block_({0,1,0}).item() = 1;
 
   Sp.at({0,1,0}) = 1;
   Sm.at({1,0,0}) = 1;
+  Sz.at({0,0}) = 1;
+  Sz.at({1,1}) = -1;
 
 
   auto PM = Sp.contract(Sm);
+  auto ZZ = Sz.contract(Sz.relabels({"a","b"}));
 
   PM.print_diagram();
   PM.print_blocks(true);
@@ -65,7 +106,7 @@ int main(int argc, char *argv[]) {
   MP.print_diagram();
   MP.print_blocks(true);
 
-  auto Hpmmp = PM + MP;
+  auto Hpmmp = 0.5*(PM + MP) + ZZ;
   
   Hpmmp.print_blocks(true);
 
