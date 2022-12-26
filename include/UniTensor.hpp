@@ -1720,6 +1720,9 @@ namespace cytnx {
 
         void _fx_locate_elem(cytnx_int64 &bidx, std::vector<cytnx_uint64> &loc_in_T,const std::vector<cytnx_uint64> &locator) const;
 
+        // internal function, grouping all duplicate qnums in all bonds
+        void _fx_group_duplicates();
+
         void set_meta(BlockUniTensor *tmp, const bool &inner, const bool &outer) const {
           // outer meta
           if (outer) {

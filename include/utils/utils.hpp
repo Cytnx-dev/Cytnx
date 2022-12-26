@@ -16,6 +16,7 @@
 #include "vec_print.hpp"
 #include "vec_io.hpp"
 #include "vec_argsort.hpp"
+#include "vec_sort.hpp"
 #include "dynamic_arg_resolver.hpp"
 
 /// Helper function to print vector with ODT:

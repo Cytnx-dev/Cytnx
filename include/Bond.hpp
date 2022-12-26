@@ -117,6 +117,8 @@ namespace cytnx {
     std::vector<cytnx_uint64>& getDegeneracies(){ return this->_degs;};
     const std::vector<cytnx_uint64>& getDegeneracies() const{return this->_degs;};
 
+    std::vector<cytnx_uint64> group_duplicates();
+
 
 
 
@@ -464,7 +466,12 @@ namespace cytnx {
     const std::vector<cytnx_uint64> & getDegeneracies() const{
         return this->_impl->getDegeneracies();
     }
-
+        
+    // the map returns the new index from old index via
+    // new_index = return<cytnx_uint64>[old_index]
+    std::vector<cytnx_uint64> group_duplicates(){
+        return this->_impl->group_duplicates();
+    }
 
     std::vector<std::vector<cytnx_int64>> calc_reverse_qnums() {
       return this->_impl->calc_reverse_qnums();

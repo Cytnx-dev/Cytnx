@@ -565,6 +565,17 @@ namespace cytnx {
     }
   }
 
+
+  std::vector<cytnx_uint64> group_duplicates(){
+        // the map returns the new index from old index via
+        // new_index = return<cytnx_uint64>[old_index]
+        // [Note] this will sort QN from large to small     
+        
+        
+
+
+  }
+
   std::ostream &operator<<(std::ostream &os, const Bond &bin) {
     char *buffer = (char *)malloc(sizeof(char) * 256);
     os << "Dim = " << bin.dim() << " |";

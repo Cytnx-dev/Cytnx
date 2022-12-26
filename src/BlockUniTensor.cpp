@@ -1361,6 +1361,33 @@ namespace cytnx {
 
   }
 
+  void BlockUniTensor::_fx_group_duplicates(){
+
+
+
+  }
+
+  /*
+  void BlockUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators,
+                                    const bool &permute_back) {
+    cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
+                    "\n");
+    std::vector<cytnx_int64>::iterator it;
+    std::vector<cytnx_uint64> idx_mapper;
+    idx_mapper = std::vector<cytnx_uint64>(indicators.begin(), indicators.end());
+
+    cytnx_error_msg(this->_is_diag,
+                    "[ERROR] cannot combineBond on a is_diag=True UniTensor. suggestion: try "
+                    "UniTensor.to_dense()/to_dense_() first.%s [NOTE] this is BlockUniTensor, so currently under developing!\n",
+                    "\n");
+
+
+    //[later, deal with permute_back]
+    cytnx_error_msg(true,"[DEVLEOPING]%s","\n"); 
+   
+
+  }
+  */
 
 
 }  // namespace cytnx

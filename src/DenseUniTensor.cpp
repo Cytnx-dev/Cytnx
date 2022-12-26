@@ -734,7 +734,7 @@ namespace cytnx {
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
                     "\n");
     std::vector<std::string>::iterator it;
-    std::vector<cytnx_uint64> idx_mapper;
+    std::vector<cytnx_int64> idx_mapper;
     // find the index of label:
     for (cytnx_uint64 i = 0; i < indicators.size(); i++) {
       it = std::find(this->_labels.begin(), this->_labels.end(), indicators[i]);
@@ -742,113 +742,7 @@ namespace cytnx {
                       "\n");
       idx_mapper.push_back(std::distance(this->_labels.begin(), it));
     }
-
-    /// first permute the Tensor:
-    std::vector<cytnx_uint64> old_shape = this->shape();
-
-    cytnx_error_msg(this->_is_diag,
-                    "[ERROR] cannot combineBond on a is_diag=True UniTensor. suggestion: try "
-                    "UniTensor.to_dense()/to_dense_() first.%s",
-                    "\n");
-
-    if (permute_back) {
-      cytnx_uint64 new_Nin = this->_rowrank;
-      //[Fusion tree]>>>
-      for (cytnx_uint64 i = 1; i < idx_mapper.size(); i++) {
-        if (idx_mapper[i] < this->_rowrank) new_Nin -= 1;
-        this->_bonds[idx_mapper[0]].combineBond_(this->_bonds[idx_mapper[i]]);
-      }
-      //<<<
-      /// create mapper for permute
-      std::vector<cytnx_uint64> idx_no_combine = utils_internal::range_cpu(this->_labels.size());
-      vec_erase_(idx_no_combine, idx_mapper);
-
-      std::vector<cytnx_uint64> mapper;
-      vec_concatenate_(mapper, idx_mapper, idx_no_combine);
-
-      std::vector<cytnx_int64> new_shape;
-      new_shape.push_back(-1);
-      for (cytnx_uint64 i = 0; i < idx_no_combine.size(); i++)
-        new_shape.push_back(this->_bonds[idx_no_combine[i]].dim());
-
-      this->_block.permute_(mapper);
-
-      this->_block.reshape_(new_shape);
-
-      std::string f_label = this->_labels[idx_mapper[0]];
-      vec_erase_(this->_bonds, std::vector<cytnx_uint64>(idx_mapper.begin() + 1, idx_mapper.end()));
-      vec_erase_(this->_labels,
-                 std::vector<cytnx_uint64>(idx_mapper.begin() + 1, idx_mapper.end()));
-      // permute back>>
-      // find index
-      cytnx_uint64 x = vec_where(this->_labels, f_label);
-      idx_no_combine = utils_internal::range_cpu(1, this->_labels.size());
-      idx_no_combine.insert(idx_no_combine.begin() + x, 0);
-      this->_block.permute_(idx_no_combine);
-      this->_rowrank = new_Nin;
-
-      if (this->is_tag()) {
-        this->_is_braket_form = this->_update_braket();
-      }
-
-    } else {
-      //[Fusion tree]>>>
-      for (cytnx_uint64 i = 1; i < idx_mapper.size(); i++) {
-        this->_bonds[idx_mapper[0]].combineBond_(this->_bonds[idx_mapper[i]]);
-      }
-      //<<<
-      std::vector<cytnx_uint64> idx_no_combine = utils_internal::range_cpu(this->_labels.size());
-      vec_erase_(idx_no_combine, idx_mapper);
-
-      std::vector<cytnx_uint64> mapper;
-      std::vector<cytnx_int64> new_shape;
-      if (idx_mapper[0] >= this->_rowrank) {
-        std::vector<Bond> new_bonds;
-        std::vector<std::string> new_labels;
-        vec_concatenate_(mapper, idx_no_combine, idx_mapper);
-
-        for (cytnx_uint64 i = 0; i < idx_no_combine.size(); i++) {
-          new_shape.push_back(this->_bonds[idx_no_combine[i]].dim());
-          new_bonds.push_back(this->_bonds[idx_no_combine[i]]);
-          new_labels.push_back(this->_labels[idx_no_combine[i]]);
-        }
-        new_bonds.push_back(this->_bonds[idx_mapper[0]]);
-        new_labels.push_back(this->_labels[idx_mapper[0]]);
-        new_shape.push_back(-1);
-
-        this->_block.permute_(mapper);
-        this->_block.reshape_(new_shape);
-
-        this->_bonds = new_bonds;
-        this->_labels = new_labels;
-        this->_rowrank = this->_labels.size() - 1;
-
-      } else {
-        std::vector<Bond> new_bonds;
-        std::vector<std::string> new_labels;
-        vec_concatenate_(mapper, idx_mapper, idx_no_combine);
-
-        new_bonds.push_back(this->_bonds[idx_mapper[0]]);
-        new_labels.push_back(this->_labels[idx_mapper[0]]);
-        new_shape.push_back(-1);
-        for (cytnx_uint64 i = 0; i < idx_no_combine.size(); i++) {
-          new_shape.push_back(this->_bonds[idx_no_combine[i]].dim());
-          new_bonds.push_back(this->_bonds[idx_no_combine[i]]);
-          new_labels.push_back(this->_labels[idx_no_combine[i]]);
-        }
-
-        this->_block.permute_(mapper);
-        this->_block.reshape_(new_shape);
-
-        this->_bonds = new_bonds;
-        this->_labels = new_labels;
-        this->_rowrank = 1;
-      }
-
-      if (this->is_tag()) {
-        this->_is_braket_form = this->_update_braket();
-      }
-    }  // permute_back
+    this->combineBonds(idx_mapper,permute_back);
   }
   void DenseUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators,
                                     const bool &permute_back) {
@@ -970,7 +864,7 @@ namespace cytnx {
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
                     "\n");
     std::vector<std::string>::iterator it;
-    std::vector<cytnx_uint64> idx_mapper;
+    std::vector<cytnx_int64> idx_mapper;
     if (by_label) {
       // find the index of label:
       for (cytnx_uint64 i = 0; i < indicators.size(); i++) {
@@ -981,115 +875,10 @@ namespace cytnx {
       }
 
     } else {
-      idx_mapper = std::vector<cytnx_uint64>(indicators.begin(), indicators.end());
+      idx_mapper = indicators;
     }
+    this->combineBonds(indicators,permute_back);
 
-    /// first permute the Tensor:
-    std::vector<cytnx_uint64> old_shape = this->shape();
-
-    cytnx_error_msg(this->_is_diag,
-                    "[ERROR] cannot combineBond on a is_diag=True UniTensor. suggestion: try "
-                    "UniTensor.to_dense()/to_dense_() first.%s",
-                    "\n");
-
-    if (permute_back) {
-      cytnx_uint64 new_Nin = this->_rowrank;
-      //[Fusion tree]>>>
-      for (cytnx_uint64 i = 1; i < idx_mapper.size(); i++) {
-        if (idx_mapper[i] < this->_rowrank) new_Nin -= 1;
-        this->_bonds[idx_mapper[0]].combineBond_(this->_bonds[idx_mapper[i]]);
-      }
-      //<<<
-      /// create mapper for permute
-      std::vector<cytnx_uint64> idx_no_combine = utils_internal::range_cpu(this->_labels.size());
-      vec_erase_(idx_no_combine, idx_mapper);
-
-      std::vector<cytnx_uint64> mapper;
-      vec_concatenate_(mapper, idx_mapper, idx_no_combine);
-
-      std::vector<cytnx_int64> new_shape;
-      new_shape.push_back(-1);
-      for (cytnx_uint64 i = 0; i < idx_no_combine.size(); i++)
-        new_shape.push_back(this->_bonds[idx_no_combine[i]].dim());
-
-      this->_block.permute_(mapper);
-
-      this->_block.reshape_(new_shape);
-
-      std::string f_label = this->_labels[idx_mapper[0]];
-      vec_erase_(this->_bonds, std::vector<cytnx_uint64>(idx_mapper.begin() + 1, idx_mapper.end()));
-      vec_erase_(this->_labels,
-                 std::vector<cytnx_uint64>(idx_mapper.begin() + 1, idx_mapper.end()));
-      // permute back>>
-      // find index
-      cytnx_uint64 x = vec_where(this->_labels, f_label);
-      idx_no_combine = utils_internal::range_cpu(1, this->_labels.size());
-      idx_no_combine.insert(idx_no_combine.begin() + x, 0);
-      this->_block.permute_(idx_no_combine);
-      this->_rowrank = new_Nin;
-
-      if (this->is_tag()) {
-        this->_is_braket_form = this->_update_braket();
-      }
-
-    } else {
-      //[Fusion tree]>>>
-      for (cytnx_uint64 i = 1; i < idx_mapper.size(); i++) {
-        this->_bonds[idx_mapper[0]].combineBond_(this->_bonds[idx_mapper[i]]);
-      }
-      //<<<
-      std::vector<cytnx_uint64> idx_no_combine = utils_internal::range_cpu(this->_labels.size());
-      vec_erase_(idx_no_combine, idx_mapper);
-
-      std::vector<cytnx_uint64> mapper;
-      std::vector<cytnx_int64> new_shape;
-      if (idx_mapper[0] >= this->_rowrank) {
-        std::vector<Bond> new_bonds;
-        std::vector<std::string> new_labels;
-        vec_concatenate_(mapper, idx_no_combine, idx_mapper);
-
-        for (cytnx_uint64 i = 0; i < idx_no_combine.size(); i++) {
-          new_shape.push_back(this->_bonds[idx_no_combine[i]].dim());
-          new_bonds.push_back(this->_bonds[idx_no_combine[i]]);
-          new_labels.push_back(this->_labels[idx_no_combine[i]]);
-        }
-        new_bonds.push_back(this->_bonds[idx_mapper[0]]);
-        new_labels.push_back(this->_labels[idx_mapper[0]]);
-        new_shape.push_back(-1);
-
-        this->_block.permute_(mapper);
-        this->_block.reshape_(new_shape);
-
-        this->_bonds = new_bonds;
-        this->_labels = new_labels;
-        this->_rowrank = this->_labels.size() - 1;
-
-      } else {
-        std::vector<Bond> new_bonds;
-        std::vector<std::string> new_labels;
-        vec_concatenate_(mapper, idx_mapper, idx_no_combine);
-
-        new_bonds.push_back(this->_bonds[idx_mapper[0]]);
-        new_labels.push_back(this->_labels[idx_mapper[0]]);
-        new_shape.push_back(-1);
-        for (cytnx_uint64 i = 0; i < idx_no_combine.size(); i++) {
-          new_shape.push_back(this->_bonds[idx_no_combine[i]].dim());
-          new_bonds.push_back(this->_bonds[idx_no_combine[i]]);
-          new_labels.push_back(this->_labels[idx_no_combine[i]]);
-        }
-
-        this->_block.permute_(mapper);
-        this->_block.reshape_(new_shape);
-
-        this->_bonds = new_bonds;
-        this->_labels = new_labels;
-        this->_rowrank = 1;
-      }
-
-      if (this->is_tag()) {
-        this->_is_braket_form = this->_update_braket();
-      }
-    }  // permute_back
   }
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::to_dense() {
