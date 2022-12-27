@@ -4,6 +4,7 @@
 #include "Bond.hpp"
 #include <algorithm>
 #include "utils/utils_internal_interface.hpp"
+#include "utils/utils.hpp"
 using namespace std;
 namespace cytnx {
   void Bond_impl::Init(const cytnx_uint64 &dim, const bondType &bd_type,
@@ -248,6 +249,46 @@ namespace cytnx {
 
     return tmp_qnums;
   }
+
+  std::vector<cytnx_uint64> Bond_impl::group_duplicates(){
+        // the map returns the new index from old index via
+        // new_index = return<cytnx_uint64>[old_index]
+        // [Note] this will sort QN from small to large   
+
+        if(this->_degs.size()){
+            auto mapper = vec_sort(this->_qnums,true);
+            auto tmp_degs = vec_map(this->_degs,mapper);
+            
+            cytnx_uint64 cnt = 0;
+            cytnx_uint64 loc = 0;
+            std::vector<cytnx_uint64> return_order(this->_qnums.size());
+            std::vector<cytnx_uint64> idx_erase;
+            std::vector<cytnx_int64> *last = &this->_qnums[0];
+            return_order[mapper[0]] = cnt;
+            for(int q=1;q<this->_qnums.size();q++){
+                if(this->_qnums[q] != *last){
+                    last = &this->_qnums[q];
+                    cnt ++;
+                    loc = q;    
+                }else{
+                    idx_erase.push_back(q);
+                    tmp_degs[loc] += tmp_degs[q];
+                    //std::cout << "add from loc" << q << " to " << cnt << std::endl;
+                }
+                return_order[mapper[q]] = cnt;
+            } 
+            this->_degs = tmp_degs;
+            //now, remove:
+            this->_qnums = vec_erase(this->_qnums,idx_erase);
+            vec_erase_(this->_degs,idx_erase);
+
+            return return_order;
+        }else{
+            cytnx_error_msg(true,"[ERROR] group_duplicates() only work for new Bond format and with symmetry!%s","\n");
+            return std::vector<cytnx_uint64>();
+        }
+  }
+
 
   cytnx_uint64 Bond_impl::getDegeneracy(const std::vector<cytnx_int64> &qnum,
                                         const bool &return_indices,
@@ -564,6 +605,8 @@ namespace cytnx {
       }
     }
   }
+
+
 
   std::ostream &operator<<(std::ostream &os, const Bond &bin) {
     char *buffer = (char *)malloc(sizeof(char) * 256);
