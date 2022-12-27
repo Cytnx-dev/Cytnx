@@ -650,6 +650,33 @@ namespace cytnx {
     Tensor Kron(const Tensor &Tl, const Tensor &Tr, const bool &Tl_pad_left = false,
                 const bool &Tr_pad_left = false);
 
+
+    // Directsum:
+    //==================================================
+    /**
+    @brief perform directsum of two Tensor.
+    @param T1 rank-n Tensor #1
+    @param T2 rank-n Tensor #2
+    @param shared_axes The axes that are shared by two tensors
+    @return
+        [Tensor]
+
+    description:
+        The function assume two tensor has the same rank, and axes indicated in <shared_axes> are the same for both T1 and T2. 
+    The out put tensors will have same rank as T1 and T2, with the dimension of rest of the axes being the sum of dimensions of T1 and T2. 
+    e.g., the out put shape = (i1+i2,j1+j2, share_axis_1, k1+k2, share_axis_2, ...); where T1.shape = (i1,j1,share_axis_1,k1,share_axis_2 ...)
+    and T2.shape = (i2,j2,share_axis_1,k2,share_axis_2 ...)
+
+
+    [Note]
+        two tensor should on same device.
+
+    */
+    Tensor Directsum(const Tensor &T1, const Tensor &T2, const std::vector<cytnx_uint64> &shared_axes);
+
+
+
+
     // VectorDot:
     //=================================================
     /**
