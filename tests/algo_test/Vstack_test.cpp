@@ -14,18 +14,23 @@ input:One tensor with shape = (3, 4), all possible type on cpu device.
 ====================*/
 TEST(Vstack, only_one_tensor) {
   for (auto dtype : dtype_list) {
+    if(dtype == Type.Bool) //if both bool type, it will throw error
+      continue;
     std::vector<Tensor> Ts = {Tensor({3, 4}, dtype)};
     InitTestData(Ts);
     Tensor vstack_tens = algo::Vstack(Ts);
     CheckResult(vstack_tens, Ts);
   }
 }
+
 /*=====test info=====
 describe:Input multiple tensor with same type. Test all possible data type on cpu device.
 input:Three tensor with the shapes [(3, 4), (2, 4), (5, 4)] and same data type. Test all possible type on cpu device.
 ====================*/
 TEST(Vstack, multi_tensor) {
   for (auto dtype : dtype_list) {
+    if(dtype == Type.Bool) //if both bool type, it will throw error
+      continue;
     std::vector<Tensor> Ts = {
         Tensor({3, 4}, dtype), 
         Tensor({2, 4}, dtype), 
@@ -44,6 +49,8 @@ input:Three tensor on cpu device with the shapes [(3, 4), (2, 4)] but the data t
 TEST(Vstack, two_type_tensor) {
   for (auto dtype1 : dtype_list) {
     for (auto dtype2 : dtype_list) {
+      if (dtype1 == Type.Bool && dtype2 == Type.Bool) // if bothe are bool type, it will throw error.
+	continue;
       std::vector<Tensor> Ts = {
           Tensor({3, 4}, dtype1), 
           Tensor({2, 4}, dtype2)
@@ -58,13 +65,15 @@ TEST(Vstack, two_type_tensor) {
 /*=====test info=====
 describe:Test multiple tensor with different data type.
 input:Four tensor as following
-  T1:shape (3, 4) with complex double type on cpu device.
-  T2:shape (2, 4) with double type on cpu device.
-  T3:shape (1, 4) with double type on cpu device.
-  T4:shape (5, 4) with uint64 type on cpu device.
+  T1:shape (2, 4) with bool type on cpu device.
+  T2:shape (3, 4) with complex double type on cpu device.
+  T3:shape (2, 4) with double type on cpu device.
+  T4:shape (1, 4) with double type on cpu device.
+  T5:shape (5, 4) with uint64 type on cpu device.
 ====================*/
 TEST(Vstack, diff_type_tensor) {
   std::vector<Tensor> Ts = {
+      Tensor({2, 4}, Type.Bool), 
       Tensor({3, 4}, Type.ComplexDouble), 
       Tensor({2, 4}, Type.Double), 
       Tensor({1, 4}, Type.Double), 
@@ -112,12 +121,12 @@ TEST(Vstack, err_contains_void) {
 }
 
 /*=====test info=====
-describe:Test input different row matrix.
+describe:Test input different column matrix.
 input:
   T1:shape (3, 4), data type is double, cpu
   T2:shape (3, 2), data type is double, cpu
 ====================*/
-TEST(Vstack, err_row_not_eq) {
+TEST(Vstack, err_col_not_eq) {
   std::vector<Tensor> Ts = {
       Tensor({3, 4}, Type.Double), 
       Tensor({3, 2}, Type.Double)
@@ -127,26 +136,28 @@ TEST(Vstack, err_row_not_eq) {
 }
 
 /*=====test info=====
-describe:Test input not implemented type.
+describe:Test input not bool type.
 input:
   T:shape (2, 3), data type is bool, cpu
 ====================*/
-TEST(Vstack, err_non_impl_type) {
+TEST(Vstack, err_a_bool_type) {
   std::vector<Tensor> Ts = {Tensor({2, 3}, Type.Bool)};
+  InitTestData(Ts);
   ErrorTestExcute(Ts);
 }
 
 /*=====test info=====
-describe:Test input contains not implemented type.
+describe:Test input types are all bool.
 input:
-  T1:shape (3, 4), data type is double, cpu
+  T1:shape (3, 4), data type is bool, cpu
   T1:shape (2, 4), data type is bool, cpu
 ====================*/
-TEST(Vstack, err_contains_non_impl_type) {
+TEST(Vstack, err_contains_multi_bool_type) {
   std::vector<Tensor> Ts = {
-      Tensor({3, 4}, Type.Double), 
+      Tensor({3, 4}, Type.Bool), 
       Tensor({2, 4}, Type.Bool)
   };
+  InitTestData(Ts);
   ErrorTestExcute(Ts);
 }
 
@@ -178,7 +189,6 @@ void CheckResult(const Tensor& vstack_tens,
   int block_row_shift = 0;
   bool is_same_elem = true;
   for(auto tens : input_tens) {
-    //std::cout << tens;
     auto cvt_tens = tens.astype(expect_dtype);
     auto src_shape = tens.shape();
     auto r_num = src_shape[0]; //row number 

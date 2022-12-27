@@ -19,7 +19,7 @@ static std::vector<unsigned int> dtype_list = {
   Type.Uint32,
   Type.Int16,
   Type.Uint16,
-  //Type.Bool
+  Type.Bool
 };
 
 static std::vector<int> device_list = {
