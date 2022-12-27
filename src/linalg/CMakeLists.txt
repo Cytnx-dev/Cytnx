@@ -41,6 +41,7 @@ target_sources_local(cytnx
     Svd.cpp
     Svd_truncate.cpp
     Tensordot.cpp
+    Directsum.cpp
     Tensordot_dg.cpp
     Vectordot.cpp
     Pow.cpp

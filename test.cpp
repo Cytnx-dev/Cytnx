@@ -8,7 +8,23 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]) {
 
+  auto Aoo = arange(12).astype(Type.ComplexDouble).reshape(4,3);
+  auto Boo = arange(8).astype(Type.Double).reshape(4,2);
+  auto Coo = arange(4).astype(Type.Double).reshape(4,1);
+  auto Doo =  arange(20).astype(Type.Uint64).reshape(4,5);
 
+  print(Aoo);
+  print(Boo);
+  print(Coo);
+  print(Doo);
+
+  std::vector<Tensor> Ts = {Aoo,Boo,Coo,Doo};
+
+
+  auto OTTT = algo::Hstack(Ts);
+  print(OTTT);
+
+  return 0;
   auto tbB = Bond(BD_BRA,{Qs(0),Qs(2),Qs(-3),Qs(0),Qs(1),Qs(2)}, {2,3,4,5,6,7});
 
   cout << tbB << endl;
