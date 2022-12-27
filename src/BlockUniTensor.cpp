@@ -1227,6 +1227,167 @@ namespace cytnx {
   }
 
 
+  void BlockUniTensor::truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &q_index,
+                           const bool &by_label){
+
+        cytnx_int64 bidx = bond_idx;
+        if(by_label){
+            auto it = std::find(this->_labels.begin(), this->_labels.end(), to_string(bond_idx));
+            cytnx_error_msg(it == this->_labels.end(),
+                    "[ERROR] label [%d] does not exist in current UniTensor.\n", bond_idx);
+            bidx = it - this->_labels.begin();
+        }
+
+        cytnx_error_msg((bidx>=this->_labels.size())|| (bidx < 0), "[ERROR][BlockUniTensor][truncate_] bond_idx out of bound.%s","\n");   
+        cytnx_error_msg(q_index >= this->_bonds[bidx].qnums().size(), "[ERROR][BlockUniTensor][truncate_] q_index out of bound @ specify Bond @[%d].\n",bidx);   
+
+        cytnx_error_msg(this->_bonds[bidx].qnums().size()==1,"[ERROR][BlockUniTensor][truncate_] cannot remove the only qnums on a given Bond!%s","\n");
+
+        this->_bonds[bidx]._impl->_rm_qnum(q_index);
+
+        //traversal all blocks, find all blocks that need to remove:
+        std::vector<cytnx_uint64> locs;
+        for(cytnx_int64 b=0;b<this->_blocks.size();b++){
+            if(this->_inner_to_outer_idx[b][bidx] == q_index) locs.push_back(b);
+        }
+
+        //remove!
+        vec_erase_(this->_inner_to_outer_idx,locs);
+        vec_erase_(this->_blocks,locs);
+
+
+
+  }
+  void BlockUniTensor::truncate_(const std::string &bond_idx, const cytnx_uint64 &q_index){
+    auto it = std::find(this->_labels.begin(), this->_labels.end(), bond_idx);
+    cytnx_error_msg(it == this->_labels.end(),
+                    "[ERROR] label [%s] does not exist in current UniTensor.\n", bond_idx.c_str());
+
+    cytnx_int64 idx = it - this->_labels.begin();
+    this->truncate_(idx,q_index,false);
+  }
+  void BlockUniTensor::truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &q_index){
+    this->truncate_(bond_idx,q_index,false);
+  }
+
+
+
+  void BlockUniTensor::Mul_(const Scalar &rhs) {
+    // cytnx_error_msg(true,"[ERROR] cannot perform arithmetic on all tagged tensor, @spase
+    // unitensor%s","\n");
+    for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
+      this->_blocks[i] *= rhs;
+    }
+  }
+
+  void BlockUniTensor::Div_(const Scalar &rhs) {
+    // cytnx_error_msg(true,"[ERROR] cannot perform arithmetic on all tagged tensor, @spase
+    // unitensor%s","\n");
+    for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
+      this->_blocks[i] /= rhs;
+    }
+  }
+
+
+  void BlockUniTensor::Add_(const boost::intrusive_ptr<UniTensor_base> &rhs){
+    //checking Type:
+    cytnx_error_msg(rhs->uten_type()!=UTenType.Block,"[ERROR] cannot add two UniTensor with different type/format.%s","\n");
+
+    BlockUniTensor* Rtn = (BlockUniTensor*)rhs.get();
+    
+    // 1) check each bond.
+    cytnx_error_msg(this->_bonds.size()!=Rtn->_bonds.size(),"[ERROR] cannot add two BlockUniTensor with different rank!%s","\n");
+    for(cytnx_int64 i=0;i<this->_bonds.size();i++){
+        cytnx_error_msg(this->_bonds[i] != Rtn->_bonds[i],"[ERROR] Bond @ index: %d does not match. Therefore cannot perform Add of two UniTensor\n",i);
+    }
+
+    // 2) finding the blocks (they might be not in the same order!
+    for(cytnx_int64 b=0;b<this->_blocks.size();b++){
+        for(cytnx_int64 a=0;a<Rtn->_blocks.size();a++){
+            if(this->_inner_to_outer_idx[b] == Rtn->_inner_to_outer_idx[(b+a)%Rtn->_blocks.size()]){
+                this->_blocks[b] += Rtn->_blocks[(b+a)%Rtn->_blocks.size()];
+                break;
+            }
+        }
+    }
+
+  }
+
+  void BlockUniTensor::Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs){
+    //checking Type:
+    cytnx_error_msg(rhs->uten_type()!=UTenType.Block,"[ERROR] cannot add two UniTensor with different type/format.%s","\n");
+
+    BlockUniTensor* Rtn = (BlockUniTensor*)rhs.get();
+
+    // 1) check each bond.
+    cytnx_error_msg(this->_bonds.size()!=Rtn->_bonds.size(),"[ERROR] cannot add two BlockUniTensor with different rank!%s","\n");
+    for(cytnx_int64 i=0;i<this->_bonds.size();i++){
+        cytnx_error_msg(this->_bonds[i] != Rtn->_bonds[i],"[ERROR] Bond @ index: %d does not match. Therefore cannot perform Add of two UniTensor\n",i);
+    }
+
+    // 2) finding the blocks (they might be not in the same order!
+    for(cytnx_int64 b=0;b<this->_blocks.size();b++){
+        for(cytnx_int64 a=0;a<Rtn->_blocks.size();a++){
+            if(this->_inner_to_outer_idx[b] == Rtn->_inner_to_outer_idx[(b+a)%Rtn->_blocks.size()]){
+                this->_blocks[b] *= Rtn->_blocks[(b+a)%Rtn->_blocks.size()];
+                break;
+            }
+        }
+    }
+
+  }
+
+  void BlockUniTensor::Sub_(const boost::intrusive_ptr<UniTensor_base> &rhs){
+    //checking Type:
+    cytnx_error_msg(rhs->uten_type()!=UTenType.Block,"[ERROR] cannot add two UniTensor with different type/format.%s","\n");
+
+    BlockUniTensor* Rtn = (BlockUniTensor*)rhs.get();
+
+    // 1) check each bond.
+    cytnx_error_msg(this->_bonds.size()!=Rtn->_bonds.size(),"[ERROR] cannot add two BlockUniTensor with different rank!%s","\n");
+    for(cytnx_int64 i=0;i<this->_bonds.size();i++){
+        cytnx_error_msg(this->_bonds[i] != Rtn->_bonds[i],"[ERROR] Bond @ index: %d does not match. Therefore cannot perform Add of two UniTensor\n",i);
+    }
+
+    // 2) finding the blocks (they might be not in the same order!
+    for(cytnx_int64 b=0;b<this->_blocks.size();b++){
+        for(cytnx_int64 a=0;a<Rtn->_blocks.size();a++){
+            if(this->_inner_to_outer_idx[b] == Rtn->_inner_to_outer_idx[(b+a)%Rtn->_blocks.size()]){
+                this->_blocks[b] -= Rtn->_blocks[(b+a)%Rtn->_blocks.size()];
+                break;
+            }
+        }
+    }
+
+  }
+
+  void BlockUniTensor::_fx_group_duplicates(){
+
+
+
+  }
+
+  /*
+  void BlockUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators,
+                                    const bool &permute_back) {
+    cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
+                    "\n");
+    std::vector<cytnx_int64>::iterator it;
+    std::vector<cytnx_uint64> idx_mapper;
+    idx_mapper = std::vector<cytnx_uint64>(indicators.begin(), indicators.end());
+
+    cytnx_error_msg(this->_is_diag,
+                    "[ERROR] cannot combineBond on a is_diag=True UniTensor. suggestion: try "
+                    "UniTensor.to_dense()/to_dense_() first.%s [NOTE] this is BlockUniTensor, so currently under developing!\n",
+                    "\n");
+
+
+    //[later, deal with permute_back]
+    cytnx_error_msg(true,"[DEVLEOPING]%s","\n"); 
+   
+
+  }
+  */
 
 
 }  // namespace cytnx

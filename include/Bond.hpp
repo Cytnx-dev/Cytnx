@@ -31,6 +31,13 @@ namespace cytnx {
 
     Bond_impl() : _dim(0), _type(bondType::BD_REG){};
 
+    void _rm_qnum(const cytnx_uint64 &q_index){
+        // this will not check, so check it before using this internal function!!
+        this->_dim -= this->_degs[q_index];
+        this->_degs.erase(this->_degs.begin() + q_index);
+        this->_qnums.erase(this->_qnums.begin() + q_index);
+    }
+
     void Init(const cytnx_uint64 &dim, const bondType &bd_type = bondType::BD_REG,
               const std::vector<std::vector<cytnx_int64>> &in_qnums = {},
               const std::vector<Symmetry> &in_syms = {});
@@ -109,6 +116,8 @@ namespace cytnx {
 
     std::vector<cytnx_uint64>& getDegeneracies(){ return this->_degs;};
     const std::vector<cytnx_uint64>& getDegeneracies() const{return this->_degs;};
+
+    std::vector<cytnx_uint64> group_duplicates();
 
 
 
@@ -457,7 +466,12 @@ namespace cytnx {
     const std::vector<cytnx_uint64> & getDegeneracies() const{
         return this->_impl->getDegeneracies();
     }
-
+        
+    // the map returns the new index from old index via
+    // new_index = return<cytnx_uint64>[old_index]
+    std::vector<cytnx_uint64> group_duplicates(){
+        return this->_impl->group_duplicates();
+    }
 
     std::vector<std::vector<cytnx_int64>> calc_reverse_qnums() {
       return this->_impl->calc_reverse_qnums();

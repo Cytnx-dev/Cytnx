@@ -112,7 +112,7 @@ OBJS += DMRG.o MPO.o RegularMPO.o MPO_base.o MPS.o RegularMPS.o iMPS.o MPS_base.
 
 ## Utils
 OBJS += utils_internal_interface.o
-OBJS += utils.o Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o vec_io.o vec_print.o vec2d_col_sort.o vec_range.o complex_arithmetic.o is.o vec_intersect.o vec_concatenate.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_contiguous_cpu.o GetElems_cpu.o SetElems_contiguous_cpu.o SetElems_cpu.o cartesian.o str_utils.o Complexmem_cpu.o dynamic_arg_resolver.o blocks_mvelems_cpu.o 
+OBJS += utils.o Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o vec_sort.o vec_argsort.o vec_io.o vec_print.o vec2d_col_sort.o vec_range.o complex_arithmetic.o is.o vec_intersect.o vec_concatenate.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_contiguous_cpu.o GetElems_cpu.o SetElems_contiguous_cpu.o SetElems_cpu.o cartesian.o str_utils.o Complexmem_cpu.o dynamic_arg_resolver.o blocks_mvelems_cpu.o 
 ifeq ($(GPU_Enable),1)
   OBJS += cucomplex_arithmetic.o cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o cuFill_gpu.o cuSetArange_gpu.o cuGetElems_gpu.o  cuSetElems_gpu.o cuComplexmem_gpu.o cuReduce_gpu.o
 endif
@@ -604,6 +604,12 @@ vec_intersect.o: $(CytnxPATH)/src/utils/vec_intersect.cpp $(CytnxPATH)/include/u
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 vec2d_col_sort.o: $(CytnxPATH)/src/utils/vec2d_col_sort.cpp $(CytnxPATH)/include/utils/vec2d_col_sort.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+vec_argsort.o: $(CytnxPATH)/src/utils/vec_argsort.cpp $(CytnxPATH)/include/utils/vec_argsort.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+
+vec_sort.o: $(CytnxPATH)/src/utils/vec_sort.cpp $(CytnxPATH)/include/utils/vec_sort.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+
 str_utils.o: $(CytnxPATH)/src/utils/str_utils.cpp $(CytnxPATH)/include/utils/str_utils.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 dynamic_arg_resolver.o: $(CytnxPATH)/src/utils/dynamic_arg_resolver.cpp $(CytnxPATH)/include/utils/dynamic_arg_resolver.hpp
