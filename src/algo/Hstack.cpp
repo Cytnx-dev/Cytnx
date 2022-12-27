@@ -31,10 +31,13 @@ namespace cytnx {
       cytnx_uint64 Dcomb = In_tensors[0].shape()[1];
 
       bool need_convert = false;
-
       //checking:
       for(int i=1;i<In_tensors.size();i++){
-        if(In_tensors[i].dtype() < dtype_id){ dtype_id = In_tensors[i].dtype(); need_convert = true;}
+        if(In_tensors[i].dtype() != dtype_id){
+            need_convert=true;
+            if(In_tensors[i].dtype() < dtype_id){ dtype_id = In_tensors[i].dtype();}
+        }
+        
         cytnx_error_msg(In_tensors[i].device()!=device_id,"[ERROR][Hstack] elem: [%d], Vstack need all the tensors on the same device!\n",i);
         cytnx_error_msg(In_tensors[i].shape().size()!= 2,"[ERROR][Hstack] elem: [%d], Vstack can only work for rank-2 tensors.\n",i);
         cytnx_error_msg(In_tensors[i].shape()[0] != Dshare, "[ERROR][Hstack] elem: [%d], dimension not match. should be %d but is %d\n",Dshare, In_tensors[i].shape()[1]);
@@ -42,7 +45,6 @@ namespace cytnx {
         Dcomb += Ds[i];
       }  
       cytnx_error_msg(dtype_id==Type.Bool,"[ERROR][Hstack] currently does not support Bool type!%s","\n"); 
-
       //conversion type:
       if(need_convert){
         _Ins.resize(In_tensors.size());
