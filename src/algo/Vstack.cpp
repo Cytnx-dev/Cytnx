@@ -36,7 +36,7 @@ namespace cytnx {
         if(In_tensors[i].dtype() < dtype_id){ dtype_id = In_tensors[i].dtype(); need_convert = true;}
         cytnx_error_msg(In_tensors[i].device()!=device_id,"[ERROR][Vstack] elem: [%d], Vstack need all the tensors on the same device!\n",i);
         cytnx_error_msg(In_tensors[i].shape().size()!= 2,"[ERROR][Vstack] elem: [%d], Vstack can only work for rank-2 tensors.\n",i);
-        cytnx_error_msg(In_tensors[i].shape()[1] != Dshare, "[ERROR][Vstack] elem: [%d], dimension not match. should be %d but is %d\n",Dshare, In_tensors[i].shape()[1]);
+        cytnx_error_msg(In_tensors[i].shape()[1] != Dshare, "[ERROR][Vstack] elem: [%d], dimension not match. should be %d but is %d\n", i, Dshare, In_tensors[i].shape()[1]);
         Ds[i] = In_tensors[i].storage().size();
         Dcomb += In_tensors[i].shape()[0];
       }  

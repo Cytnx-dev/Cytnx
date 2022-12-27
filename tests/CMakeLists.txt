@@ -11,6 +11,8 @@ add_executable(
   linalg_test/ExpH_test.cpp
   linalg_test/ExpM_test.cpp
   linalg_test/Lanczos_Gnd_test.cpp
+  algo_test/Hstack_test.cpp
+  algo_test/Vstack_test.cpp
 
 )
 target_link_libraries(
