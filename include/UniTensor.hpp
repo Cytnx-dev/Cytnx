@@ -246,6 +246,8 @@ namespace cytnx {
     virtual std::string dtype_str() const;
     virtual std::string device_str() const;
     virtual void set_rowrank(const cytnx_uint64 &new_rowrank);
+   
+
 
     virtual boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
                                                          const cytnx_int64 &rowrank = -1,
@@ -417,6 +419,9 @@ namespace cytnx {
                                               const cytnx_uint16 &aux) const;
     virtual const cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
                                              const cytnx_int16 &aux) const;
+
+    virtual void group_basis();
+
 
     virtual void _save_dispatch(std::fstream &f) const;
     virtual void _load_dispatch(std::fstream &f);
@@ -981,6 +986,10 @@ namespace cytnx {
     void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim, const bool &by_label);
     void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim);
     void truncate_(const std::string &bond_idx, const cytnx_uint64 &dim);
+
+    void group_basis(){
+        cytnx_warning_msg(true,"[WARNING] group basis will not have any effect on DensUniTensor.%s","\n");
+    }
 
     void _save_dispatch(std::fstream &f) const;
     void _load_dispatch(std::fstream &f);
@@ -1677,6 +1686,10 @@ namespace cytnx {
     cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux);
     cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
 
+    void group_basis(){
+        cytnx_warning_msg(true,"[WARNING] group basis will not have any effect on SparseUniTensor.%s","\n");
+    }
+
     bool elem_exists(const std::vector<cytnx_uint64> &locator) const;
     void _save_dispatch(std::fstream &f) const;
     void _load_dispatch(std::fstream &f);
@@ -1721,7 +1734,8 @@ namespace cytnx {
         void _fx_locate_elem(cytnx_int64 &bidx, std::vector<cytnx_uint64> &loc_in_T,const std::vector<cytnx_uint64> &locator) const;
 
         // internal function, grouping all duplicate qnums in all bonds
-        void _fx_group_duplicates();
+        void _fx_group_duplicates(const std::vector<cytnx_uint64> &dup_bond_idxs, const std::vector<std::vector<cytnx_uint64> > &idx_mappers);        
+
 
         void set_meta(BlockUniTensor *tmp, const bool &inner, const bool &outer) const {
           // outer meta
@@ -2283,6 +2297,8 @@ namespace cytnx {
         cytnx_error_msg(true, "[ERROR] cannot arithmetic Scalar/BlockUniTensor.%s", "\n");
     }
 
+    void group_basis();
+    
 
 
 

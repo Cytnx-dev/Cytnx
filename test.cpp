@@ -8,6 +8,12 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]) {
 
+  auto BBD = Bond(BD_KET,{Qs(0),Qs(3),Qs(0),Qs(7),Qs(-1),Qs(3)},{1,1,1,1,1,1});
+
+  cout << BBD.has_duplicate_qnums();
+
+
+  return 0;
 
   Tensor Taa = arange(20).reshape(4,5);
   Tensor Tbb = arange(12).reshape(4,3);

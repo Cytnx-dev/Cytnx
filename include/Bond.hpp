@@ -8,6 +8,7 @@
 #include <vector>
 #include <fstream>
 #include <map>
+#include <algorithm>
 #include "intrusive_ptr_base.hpp"
 #include "utils/vec_clone.hpp"
 namespace cytnx {
@@ -57,6 +58,16 @@ namespace cytnx {
     // this is clone return.
     std::vector<std::vector<cytnx_int64>> qnums_clone() const { return this->_qnums; }
     std::vector<Symmetry> syms_clone() const { return vec_clone(this->_syms); }
+
+    bool has_duplicate_qnums() const{
+        if(this->_degs.size()){
+            auto tmp = this->_qnums;
+            std::sort(tmp.begin(),tmp.end());
+            return std::adjacent_find(tmp.begin(), tmp.end()) != tmp.end();
+        }else{
+            return false;
+        }
+    }
 
     void set_type(const bondType &new_bondType) {
       if ((this->_type != BD_REG)) {
@@ -471,6 +482,10 @@ namespace cytnx {
     // new_index = return<cytnx_uint64>[old_index]
     std::vector<cytnx_uint64> group_duplicates(){
         return this->_impl->group_duplicates();
+    }
+
+    bool has_duplicate_qnums() const {
+        return this->_impl->has_duplicate_qnums();
     }
 
     std::vector<std::vector<cytnx_int64>> calc_reverse_qnums() {
