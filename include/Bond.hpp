@@ -92,7 +92,7 @@ namespace cytnx {
       this->_type = bondType::BD_REG;
     }
 
-    boost::intrusive_ptr<Bond_impl> clone() {
+    boost::intrusive_ptr<Bond_impl> clone() const {
       boost::intrusive_ptr<Bond_impl> out(new Bond_impl());
       out->_dim = this->dim();
       out->_type = this->type();
@@ -128,7 +128,13 @@ namespace cytnx {
     std::vector<cytnx_uint64>& getDegeneracies(){ return this->_degs;};
     const std::vector<cytnx_uint64>& getDegeneracies() const{return this->_degs;};
 
-    std::vector<cytnx_uint64> group_duplicates();
+    std::vector<cytnx_uint64> group_duplicates_();
+
+    boost::intrusive_ptr<Bond_impl> group_duplicates(std::vector<cytnx_uint64> &mapper) const{
+        boost::intrusive_ptr<Bond_impl> out = this->clone();
+        mapper = out->group_duplicates_();
+        return out;
+    }
 
 
 
@@ -480,8 +486,14 @@ namespace cytnx {
         
     // the map returns the new index from old index via
     // new_index = return<cytnx_uint64>[old_index]
-    std::vector<cytnx_uint64> group_duplicates(){
-        return this->_impl->group_duplicates();
+    std::vector<cytnx_uint64> group_duplicates_(){
+        return this->_impl->group_duplicates_();
+    }
+
+    Bond group_duplicates(std::vector<cytnx_uint64> &mapper) const{
+        Bond out;
+        out._impl = this->_impl->group_duplicates(mapper);
+        return out;
     }
 
     bool has_duplicate_qnums() const {

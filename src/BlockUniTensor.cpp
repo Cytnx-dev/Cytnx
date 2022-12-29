@@ -1367,62 +1367,84 @@ namespace cytnx {
         //auto mod_idxs = dup_bond_idxs; std::sort(mod_idx.begin(),mod_idx.end());
         
         //generating new inner_to_outer_idx:
-        std::vector<std::vector<cytnx_uint64> > tmp_inner_to_outer_idx = this->_inner_to_outer_idx;
-        
-        //modify:
-        for(cytnx_int64 i=0;i<this->_inner_to_outer_idx.size();i++){
-            for(cytnx_int64 s=0;s<dup_bond_idxs.size();s++){
-                tmp_inner_to_outer_idx[i][dup_bond_idxs[s]] = idx_mappers[s][ this->_inner_to_outer_idx[i][dup_bond_idxs[s]] ];
-            }
-        }
+        std::vector<std::vector<cytnx_uint64> > tmp_inner_to_outer_idx;
 
-        std::vector<int> mask(this->_blocks.size());
-        std::vector<Tensor> new_blocks;
-        std::vector<std::vector<cytnx_uint64> > new_inner_to_outer_idx;
+
         
-        std::vector<cytnx_uint64> no_combine(this->rank());
-        for(cytnx_int64 b=0;b<this->_blocks.size();b++){
-            if(mask[b]==1) continue;
-            new_blocks.push_back(this->_blocks[b]);
-            new_inner_to_outer_idx.push_back(tmp_inner_to_outer_idx[b]);
-            for(cytnx_int64 a=b+1;a<this->_blocks.size();a++){
-                if(mask[a]==1) continue; 
-                if(tmp_inner_to_outer_idx[a] == tmp_inner_to_outer_idx[b]){
-                    // need to combine two!
-                    // checking which bonds does not need to combine!
-                    no_combine.clear();
-                    for(int s=0;s<this->rank();s++){
-                        if(this->_inner_to_outer_idx[a][s] == this->_inner_to_outer_idx[b][s]){
-                            no_combine.push_back(s);
-                        }
-                    }                    
-                    mask[a] = 1; 
-                    new_blocks.back() = linalg::Directsum(new_blocks.back(),this->_blocks[a],no_combine);        
+        //process one by one:
+        for(cytnx_int64 bn=0;bn<dup_bond_idxs.size();bn++){
+            //cout << "BOND:" << dup_bond_idxs[bn] << endl;
+            //cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n";
+            tmp_inner_to_outer_idx = this->_inner_to_outer_idx;
+
+            for(cytnx_int64 i=0;i<this->_inner_to_outer_idx.size();i++){            
+                tmp_inner_to_outer_idx[i][dup_bond_idxs[bn]] = idx_mappers[bn][ this->_inner_to_outer_idx[i][dup_bond_idxs[bn]] ];
+            }
+            
+            std::vector<int> mask(this->_blocks.size());
+            std::vector<Tensor> new_blocks;
+            std::vector<std::vector<cytnx_uint64> > new_inner_to_outer_idx;
+            
+            std::vector<cytnx_uint64> no_combine; // same for each bond!
+            for(cytnx_uint64 i=0;i<this->rank();i++){
+                if(i!=dup_bond_idxs[bn]) no_combine.push_back(i);
+            }
+
+            for(cytnx_int64 b=0;b<this->_blocks.size();b++){
+                if(mask[b]==1) continue;
+                mask[b] = 1;
+                new_blocks.push_back(this->_blocks[b]);
+                new_inner_to_outer_idx.push_back(tmp_inner_to_outer_idx[b]);
+                for(cytnx_int64 a=b+1;a<this->_blocks.size();a++){
+                    if(mask[a]==1) continue; 
+                    if(tmp_inner_to_outer_idx[a] == tmp_inner_to_outer_idx[b]){
+                        // need to combine two!
+                        // checking which bonds does not need to combine!
+                        mask[a] = 1;
+                        /* 
+                        std::cout << "CALL DS:\n";
+                        std::cout << no_combine << std::endl;
+                        std::cout << "targ: old/new itoi:\n";
+                        std::cout << this->_inner_to_outer_idx[b] << std::endl;
+                        std::cout << tmp_inner_to_outer_idx[b] << std::endl;
+                        std::cout << "----------\n" << std::endl;
+                        std::cout << "src: old/new itoi:\n";
+                        std::cout << this->_inner_to_outer_idx[a] << std::endl;
+                        std::cout << tmp_inner_to_outer_idx[a] << std::endl;
+                        std::cout << "----------\n" << std::endl;
+                        std::cout << new_blocks.back().shape() << std::endl;
+                        std::cout << this->_blocks[a].shape() << std::endl;
+                        std::cout << "=============\n" << std::endl;    
+                        */
+                        new_blocks.back() = linalg::Directsum(new_blocks.back(),this->_blocks[a],no_combine);        
+
+                    }
+
                 }
-
-            }
-        }
-         
-        this->_blocks = new_blocks;
-        this->_inner_to_outer_idx = new_inner_to_outer_idx;
-        
+            }// traversal each block!
+            
+            this->_blocks = new_blocks;
+            this->_inner_to_outer_idx = new_inner_to_outer_idx;
+            
+        } 
 
   }
 
-  void BlockUniTensor::group_basis(){
-       /*
+  void BlockUniTensor::group_basis_(){
+       
        std::vector<cytnx_uint64> has_dup;
        std::vector<std::vector<cytnx_uint64> > idx_mappers;
        for(cytnx_uint64 i=0;i<this->_bonds.size();i++){
            if(this->_bonds[i].has_duplicate_qnums()){
                 has_dup.push_back(i);
-                idx_mappers.push_back(this->_bonds[i].group_duplicates());
+                idx_mappers.push_back(this->_bonds[i].group_duplicates_());
            } 
        } 
         
+
        // this modify _inner_to_outer_idx and blocks!
        this->_fx_group_duplicates(has_dup,idx_mappers);
-       */
+       
   }
 
   /*

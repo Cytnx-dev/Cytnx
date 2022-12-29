@@ -8,9 +8,26 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]) {
 
-  auto BBD = Bond(BD_KET,{Qs(0),Qs(3),Qs(0),Qs(7),Qs(-1),Qs(3)},{1,1,1,1,1,1});
+  auto BBA = Bond(BD_KET,{Qs(0),Qs(1),Qs(0),Qs(1),Qs(2)},{1,2,3,4,5});
+  auto BBB = Bond(BD_KET,{Qs(-1),Qs(-1),Qs(0),Qs(2),Qs(1)},{1,2,3,4,5});
 
-  cout << BBD.has_duplicate_qnums();
+  auto bba = BBA.clone(); bba.group_duplicates_();
+  auto bbb = BBB.clone(); bbb.group_duplicates_();
+
+  auto TAT = UniTensor({BBA,BBA,BBB.redirect(),BBB.redirect()});
+  print(BBA);
+  print(BBA);
+  print(BBB.redirect());
+  print(BBB.redirect());
+  TAT.print_diagram();
+
+  auto tat = UniTensor({bba,bba,bbb.redirect(),bbb.redirect()}); 
+
+  tat.print_diagram();
+
+  auto TBT = TAT.group_basis(); 
+
+  TBT.print_diagram();
 
 
   return 0;
@@ -27,7 +44,7 @@ int main(int argc, char *argv[]) {
 
   cout << tbB << endl;
 
-  print(tbB.group_duplicates());
+  print(tbB.group_duplicates_());
 
   cout << tbB << endl;
 

@@ -250,7 +250,7 @@ namespace cytnx {
     return tmp_qnums;
   }
 
-  std::vector<cytnx_uint64> Bond_impl::group_duplicates(){
+  std::vector<cytnx_uint64> Bond_impl::group_duplicates_(){
         // the map returns the new index from old index via
         // new_index = return<cytnx_uint64>[old_index]
         // [Note] this will sort QN from small to large   

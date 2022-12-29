@@ -420,7 +420,7 @@ namespace cytnx {
     virtual const cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
                                              const cytnx_int16 &aux) const;
 
-    virtual void group_basis();
+    virtual void group_basis_();
 
 
     virtual void _save_dispatch(std::fstream &f) const;
@@ -987,7 +987,7 @@ namespace cytnx {
     void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim);
     void truncate_(const std::string &bond_idx, const cytnx_uint64 &dim);
 
-    void group_basis(){
+    void group_basis_(){
         cytnx_warning_msg(true,"[WARNING] group basis will not have any effect on DensUniTensor.%s","\n");
     }
 
@@ -1686,7 +1686,7 @@ namespace cytnx {
     cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux);
     cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
 
-    void group_basis(){
+    void group_basis_(){
         cytnx_warning_msg(true,"[WARNING] group basis will not have any effect on SparseUniTensor.%s","\n");
     }
 
@@ -2297,7 +2297,7 @@ namespace cytnx {
         cytnx_error_msg(true, "[ERROR] cannot arithmetic Scalar/BlockUniTensor.%s", "\n");
     }
 
-    void group_basis();
+    void group_basis_();
     
 
 
@@ -2769,7 +2769,18 @@ namespace cytnx {
     void contiguous_() { this->_impl = this->_impl->contiguous_(); }
     void print_diagram(const bool &bond_info = false) { this->_impl->print_diagram(bond_info); }
     void print_blocks(const bool &full_info=true) const{ this->_impl->print_blocks(full_info); }
-    
+   
+    void group_basis_(){
+        this->_impl->group_basis_(); 
+    }
+
+    UniTensor group_basis() const{
+        UniTensor out = this->clone();
+        out.group_basis_();
+        return out;
+    }
+
+ 
     template <class T>
     T &at(const std::vector<cytnx_uint64> &locator){
       // std::cout << "at " << this->is_blockform()  << std::endl;
