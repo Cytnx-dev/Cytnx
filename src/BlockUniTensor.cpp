@@ -841,8 +841,8 @@ namespace cytnx {
             for(cytnx_int64 a=0;a<this->_blocks.size();a++){
                 itoiL_common[a] = vec_clone(this->_inner_to_outer_idx[a],comm_idx1);
             }
-
-            for(cytnx_int64 b=0;b<this->_blocks.size();b++){
+            
+            for(cytnx_int64 b=0;b<Rtn->_blocks.size();b++){
                 itoiR_common[b] = vec_clone(Rtn->_inner_to_outer_idx[b],comm_idx2);
             }
 
