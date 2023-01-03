@@ -998,24 +998,42 @@ namespace cytnx {
 
     for (int i = 0; i < this->_bonds.size(); i++) {
       cytnx_error_msg(locator[i] >= this->_bonds[i].dim(),
-                      "[ERROR][SparseUniTensor][elem_exists] locator @index: %d out of range.\n",
+                      "[ERROR][BlockUniTensor][elem_exists] locator @index: %d out of range.\n",
                       i);
     }
 
     // 2. calculate the location is in which qindices:
-    loc_in_T = locator;
-    std::vector<cytnx_uint64> qindices(loc_in_T.size());
-    for(int i=0;i<this->_bonds.size();i++){
-        for(int d=0;d<this->_bonds[i]._impl->_degs.size();d++){
-            if(loc_in_T[i] >= this->_bonds[i]._impl->_degs[d]) loc_in_T[i] -= this->_bonds[i]._impl->_degs[d];
-            else{qindices[i] = d; break;}
-        }
-    }
+    if(this->is_diag()){
+        if(locator[0]!=locator[1]) bidx = -1;
+        else{
+            loc_in_T.push_back(locator[0]);
+            std::vector<cytnx_uint64> qindices(2);
+            // its diag, so we can just use single bond!
+            for(int d=0;d<this->_bonds[0]._impl->_degs.size();d++){
+                if(loc_in_T[0] >= this->_bonds[0]._impl->_degs[d]) loc_in_T[0] -= this->_bonds[0]._impl->_degs[d];
+                else{qindices[0] = qindices[1] = d; break;}
+            }
+            auto it = std::find(this->_inner_to_outer_idx.begin(),this->_inner_to_outer_idx.end(),qindices);
+            if(it == this->_inner_to_outer_idx.end()) bidx = -1;
+            else bidx = it - this->_inner_to_outer_idx.begin();
 
-    auto it = std::find(this->_inner_to_outer_idx.begin(),this->_inner_to_outer_idx.end(),qindices);
-    
-    if(it == this->_inner_to_outer_idx.end()) bidx = -1;
-    else bidx = it - this->_inner_to_outer_idx.begin();
+        }
+
+    }else{
+        loc_in_T = locator;
+        std::vector<cytnx_uint64> qindices(loc_in_T.size());
+        for(int i=0;i<this->_bonds.size();i++){
+            for(int d=0;d<this->_bonds[i]._impl->_degs.size();d++){
+                if(loc_in_T[i] >= this->_bonds[i]._impl->_degs[d]) loc_in_T[i] -= this->_bonds[i]._impl->_degs[d];
+                else{qindices[i] = d; break;}
+            }
+        }
+
+        auto it = std::find(this->_inner_to_outer_idx.begin(),this->_inner_to_outer_idx.end(),qindices);
+        
+        if(it == this->_inner_to_outer_idx.end()) bidx = -1;
+        else bidx = it - this->_inner_to_outer_idx.begin();
+    }
   }
 
 
@@ -1218,6 +1236,7 @@ namespace cytnx {
   void BlockUniTensor::truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &q_index,
                            const bool &by_label){
 
+        cytnx_error_msg(this->is_diag(),"[ERROR][BlockUniTensor][truncate_] cannot use truncate_ when is_diag() = true.%s","\n");
         cytnx_int64 bidx = bond_idx;
         if(by_label){
             auto it = std::find(this->_labels.begin(), this->_labels.end(), to_string(bond_idx));
@@ -1288,6 +1307,8 @@ namespace cytnx {
     for(cytnx_int64 i=0;i<this->_bonds.size();i++){
         cytnx_error_msg(this->_bonds[i] != Rtn->_bonds[i],"[ERROR] Bond @ index: %d does not match. Therefore cannot perform Add of two UniTensor\n",i);
     }
+    
+    cytnx_error_msg(this->is_diag()!=Rtn->is_diag(),"[ERROR] cannot add BlockUniTensor with is_diag=true and is_diag=false.%s","\n");
 
     // 2) finding the blocks (they might be not in the same order!
     for(cytnx_int64 b=0;b<this->_blocks.size();b++){
@@ -1313,6 +1334,8 @@ namespace cytnx {
         cytnx_error_msg(this->_bonds[i] != Rtn->_bonds[i],"[ERROR] Bond @ index: %d does not match. Therefore cannot perform Add of two UniTensor\n",i);
     }
 
+    cytnx_error_msg(this->is_diag()!=Rtn->is_diag(),"[ERROR] cannot add BlockUniTensor with is_diag=true and is_diag=false.%s","\n");
+
     // 2) finding the blocks (they might be not in the same order!
     for(cytnx_int64 b=0;b<this->_blocks.size();b++){
         for(cytnx_int64 a=0;a<Rtn->_blocks.size();a++){
@@ -1336,6 +1359,8 @@ namespace cytnx {
     for(cytnx_int64 i=0;i<this->_bonds.size();i++){
         cytnx_error_msg(this->_bonds[i] != Rtn->_bonds[i],"[ERROR] Bond @ index: %d does not match. Therefore cannot perform Add of two UniTensor\n",i);
     }
+    
+    cytnx_error_msg(this->is_diag()!=Rtn->is_diag(),"[ERROR] cannot add BlockUniTensor with is_diag=true and is_diag=false.%s","\n");
 
     // 2) finding the blocks (they might be not in the same order!
     for(cytnx_int64 b=0;b<this->_blocks.size();b++){

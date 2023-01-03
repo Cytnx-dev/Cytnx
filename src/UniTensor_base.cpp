@@ -650,4 +650,14 @@ namespace cytnx {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
                     "\n");
   }
+
+  const std::vector<cytnx_uint64>& UniTensor_base::get_qindices(const cytnx_uint64 &bidx) const{
+    cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
+                    "\n");
+  }
+  std::vector<cytnx_uint64>& UniTensor_base::get_qindices(const cytnx_uint64 &bidx){
+    cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
+                    "\n");
+  }
+
 }  // namespace cytnx

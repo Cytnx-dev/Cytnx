@@ -421,6 +421,8 @@ namespace cytnx {
                                              const cytnx_int16 &aux) const;
 
     virtual void group_basis_();
+    virtual const std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx) const;
+    virtual std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx);
 
 
     virtual void _save_dispatch(std::fstream &f) const;
@@ -993,6 +995,16 @@ namespace cytnx {
 
     void _save_dispatch(std::fstream &f) const;
     void _load_dispatch(std::fstream &f);
+
+    const std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx) const{
+        cytnx_error_msg(true,"[ERROR] get_qindices can only be unsed on UniTensor with Symmetry.%s","\n");
+        
+    }
+    std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx){
+        cytnx_error_msg(true,"[ERROR] get_qindices can only be unsed on UniTensor with Symmetry.%s","\n");
+    }
+
+
     // end virtual function
   };
   /// @endcond
@@ -1693,7 +1705,17 @@ namespace cytnx {
     bool elem_exists(const std::vector<cytnx_uint64> &locator) const;
     void _save_dispatch(std::fstream &f) const;
     void _load_dispatch(std::fstream &f);
+
+    const std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx) const{
+        cytnx_error_msg(true,"[ERROR][SparseUniTensor] get_qindices can only be unsed on BlockUniTensor with Symmetry.%s","\n");
+    }
+    std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx){
+        cytnx_error_msg(true,"[ERROR][SparseUniTensor] get_qindices can only be unsed on BlockUniTensor.%s","\n");
+    }
+
+
     // end virtual func
+
   };
   /// @endcond
 
@@ -1986,6 +2008,11 @@ namespace cytnx {
       cytnx_error_msg(new_rowrank > this->rank(),
                       "[ERROR][BlockUniTensor] rowrank should be [>=0] and [<=UniTensor.rank].%s",
                       "\n");
+      if(this->is_diag()){
+        cytnx_error_msg(new_rowrank != 1,
+                      "[ERROR][BlockUniTensor] rowrank should be [==1] when is_diag =true!.%s",
+                      "\n");
+      }
       this->_rowrank = new_rowrank;
       this->_is_braket_form = this->_update_braket();
     }
@@ -2320,6 +2347,16 @@ namespace cytnx {
                               const bool &by_label);
     void combineBonds(const std::vector<std::string> &indicators,
                               const bool &force = false);
+
+    const std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx) const{
+        cytnx_error_msg(bidx>=this->Nblocks(),"[ERROR][BlockUniTensor] bidx out of bound! only %d blocks in current UTen.\n",this->Nblocks());
+        return this->_inner_to_outer_idx[bidx];
+    }
+    std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx){
+        cytnx_error_msg(bidx>=this->Nblocks(),"[ERROR][BlockUniTensor] bidx out of bound! only %d blocks in current UTen.\n",this->Nblocks());
+        return this->_inner_to_outer_idx[bidx];
+    }
+
 
   };
   //======================================================================
@@ -3265,6 +3302,28 @@ namespace cytnx {
       out.truncate_(bond_idx, dim);
       return out;
     }
+
+    /**
+    @brief get the q-indices on each leg for the [bidx]-th block 
+    @param bidx the bidx-th block in current block list. 
+    @return 
+        [vector]
+
+    */
+    const std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx) const{
+        return this->_impl->get_qindices(bidx);
+    }
+    /**
+    @brief get the q-indices on each leg for the [bidx]-th block 
+    @param bidx the bidx-th block in current block list. 
+    @return 
+        [vector]
+
+    */
+    std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx){
+        return this->_impl->get_qindices(bidx);
+    }
+
 
     /// @cond
     void _Load(std::fstream &f);
