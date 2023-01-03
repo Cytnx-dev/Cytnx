@@ -1447,27 +1447,162 @@ namespace cytnx {
        
   }
 
-  /*
+  
   void BlockUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators,
-                                    const bool &permute_back) {
+                                    const bool &force) {
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
                     "\n");
     std::vector<cytnx_int64>::iterator it;
-    std::vector<cytnx_uint64> idx_mapper;
-    idx_mapper = std::vector<cytnx_uint64>(indicators.begin(), indicators.end());
+    std::vector<cytnx_int64> idx_mapper; idx_mapper.reserve(this->rank());
+    //std::vector<cytnx_int64> new_shape_aft_perm; new_shape_aft_perm.reserve(this->rank()-indicators.size()+1);
+
+    //idx_mapper = std::vector<cytnx_uint64>(indicators.begin(), indicators.end());
 
     cytnx_error_msg(this->_is_diag,
                     "[ERROR] cannot combineBond on a is_diag=True UniTensor. suggestion: try "
                     "UniTensor.to_dense()/to_dense_() first.%s [NOTE] this is BlockUniTensor, so currently under developing!\n",
                     "\n");
 
+    
+    //get the mapper:
+    int cnt = 0;
+    int idor; 
+    for(int i=0;i<this->rank();i++){
+        if(cnt==indicators.size()){
+            idx_mapper.push_back(i);
+            //new_shape_aft_perm.push_back(0);
+        }else{
+            if(std::find(indicators.begin(),indicators.end(),i)==indicators.end()){
+                idx_mapper.push_back(i);
+                //new_shape_aft_perm.push_back(0);
+            }else{
+                if(i==indicators[0]){
+                    //new_shape_aft_perm.push_back(-1);
+                    idor = idx_mapper.size(); //new_shape_aft_perm.size();
+                    for(int j=0;j<indicators.size();j++)
+                        idx_mapper.push_back(indicators[j]);    
+                }
+                cnt += 1;
+            }
+        }
+    }
+    //std::cout << idx_mapper << std::endl;
+    //std::cout << new_shape_aft_perm << std::endl;
 
-    //[later, deal with permute_back]
-    cytnx_error_msg(true,"[DEVLEOPING]%s","\n"); 
-   
+    this->permute_(idx_mapper);
+    this->contiguous_();
+
+    //group bonds:
+    std::vector<Bond> new_bonds; 
+    std::vector<cytnx_uint64> cb_stride(indicators.size());
+    //std::cout << "idor" << idor << std::endl;
+    //std::cout << "rank" << this->rank() << std::endl; 
+    for(int i=0;i<this->rank();i++){
+        if(i==idor){
+            Bond tmp = this->_bonds[i];
+            cb_stride[0] = this->_bonds[i].qnums().size();
+            for(int j=1;j<indicators.size();j++){
+                cb_stride[j] = this->_bonds[i+j].qnums().size();
+                if(force) tmp._impl->force_combineBond_(this->_bonds[i+j]._impl,false); // no grouping
+                else tmp.combineBond_(this->_bonds[i+j]); // no grouping
+            }
+            new_bonds.push_back(tmp);
+            i += indicators.size()-1;
+            
+        }else{
+            new_bonds.push_back(this->_bonds[i]);
+        }
+    }
+    
+    // remove labels:
+    this->_labels.erase(this->_labels.begin()+idor+1,this->_labels.begin()+idor+1+indicators.size()-1);
+    this->_bonds = new_bonds;    
+
+
+    //reshape each blocks, and update_inner_to_outer_idx:
+    //process stride:
+    memcpy(&cb_stride[0],&cb_stride[1],sizeof(cytnx_uint64)*(cb_stride.size()-1));
+    cb_stride.back()=1;
+    for(int i=cb_stride.size()-2;i>=0;i--){
+        cb_stride[i]*=cb_stride[i+1];
+    }
+    
+    std::vector<cytnx_int64> new_shape; new_shape.reserve(this->rank());
+    for(int b=0;b<this->_blocks.size();b++){
+        new_shape.clear();
+        for(int i=0;i<this->_blocks[b].shape().size();i++){
+            if(i==idor){
+                i+=indicators.size()-1;
+                new_shape.push_back(-1);                
+            }else{
+                new_shape.push_back(this->_blocks[b].shape()[i]);                
+            }
+        }
+        this->_blocks[b].reshape_(new_shape);
+    }
+
+    for(int b=0;b<this->_blocks.size();b++){
+        this->_inner_to_outer_idx[b][idor] *= cb_stride[0]; 
+        for(int i=idor+1;i<idor+indicators.size();i++){
+            this->_inner_to_outer_idx[b][idor]+= this->_inner_to_outer_idx[b][i] * cb_stride[i-idor]; 
+        }
+        if(idor+indicators.size()<this->_inner_to_outer_idx[b].size()){
+            memcpy(&this->_inner_to_outer_idx[b][idor+1],&this->_inner_to_outer_idx[b][idor+indicators.size()],sizeof(cytnx_uint64)*(this->_inner_to_outer_idx[b].size()-idor-indicators.size()));
+        }
+        this->_inner_to_outer_idx[b].resize(this->rank());
+    } 
+    //std::cout << this->_inner_to_outer_idx << std::endl;
+    
+    //check rowrank:
+    if(this->_rowrank >= this->rank()) this->_rowrank = this->rank();
+
+    this->_is_braket_form = this->_update_braket();
+
+    //regroup:
+    this->group_basis_();
+
 
   }
-  */
+ 
+
+  void BlockUniTensor::combineBonds(const std::vector<std::string> &indicators,
+                                    const bool &force) {
+    cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
+                    "\n");
+    std::vector<std::string>::iterator it;
+    std::vector<cytnx_int64> idx_mapper;
+    // find the index of label:
+    for (cytnx_uint64 i = 0; i < indicators.size(); i++) {
+      it = std::find(this->_labels.begin(), this->_labels.end(), indicators[i]);
+      cytnx_error_msg(it == this->_labels.end(), "[ERROR] labels not found in current UniTensor%s",
+                      "\n");
+      idx_mapper.push_back(std::distance(this->_labels.begin(), it));
+    }
+    this->combineBonds(idx_mapper,force);
+  }
+ 
+  void BlockUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators,
+                                    const bool &force, const bool &by_label) {
+    cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
+                    "\n");
+    std::vector<std::string>::iterator it;
+    std::vector<cytnx_int64> idx_mapper;
+    if (by_label) {
+      // find the index of label:
+      for (cytnx_uint64 i = 0; i < indicators.size(); i++) {
+        it = std::find(this->_labels.begin(), this->_labels.end(), std::to_string(indicators[i]));
+        cytnx_error_msg(it == this->_labels.end(),
+                        "[ERROR] labels not found in current UniTensor%s", "\n");
+        idx_mapper.push_back(std::distance(this->_labels.begin(), it));
+      }
+
+    } else {
+      idx_mapper = indicators;
+    }
+    this->combineBonds(idx_mapper,force);
+
+  }
+
 
 
 }  // namespace cytnx

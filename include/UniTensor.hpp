@@ -305,12 +305,12 @@ namespace cytnx {
                                                          const cytnx_uint64 &rowrank = 0);
     virtual boost::intrusive_ptr<UniTensor_base> to_dense();
     virtual void to_dense_();
-    virtual void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back,
+    virtual void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
                               const bool &by_label);
     virtual void combineBonds(const std::vector<std::string> &indicators,
-                              const bool &permute_back = false);
+                              const bool &force = false);
     virtual void combineBonds(const std::vector<cytnx_int64> &indicators,
-                              const bool &permute_back = false);
+                              const bool &force = false);
     virtual boost::intrusive_ptr<UniTensor_base> contract(
       const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &mv_elem_self = false,
       const bool &mv_elem_rhs = false);
@@ -705,10 +705,10 @@ namespace cytnx {
      * @param permute_back
      * @param by_label
      */
-    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back,
+    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
                       const bool &by_label);
-    void combineBonds(const std::vector<std::string> &indicators, const bool &permute_back = true);
-    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back = true);
+    void combineBonds(const std::vector<std::string> &indicators, const bool &force = true);
+    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force = true);
     boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs,
                                                   const bool &mv_elem_self = false,
                                                   const bool &mv_elem_rhs = false);
@@ -1531,14 +1531,14 @@ namespace cytnx {
      * @param permute_back
      * @param by_label
      */
-    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back,
+    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
                       const bool &by_label) {
       cytnx_error_msg(true, "[Developing]%s", "\n");
     };
-    void combineBonds(const std::vector<std::string> &indicators, const bool &permute_back = true) {
+    void combineBonds(const std::vector<std::string> &indicators, const bool &force = true) {
       cytnx_error_msg(true, "[Developing]%s", "\n");
     };
-    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back = true) {
+    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force = true) {
       cytnx_error_msg(true, "[Developing]%s", "\n");
     };
     boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs,
@@ -2299,8 +2299,12 @@ namespace cytnx {
 
     void group_basis_();
     
-
-
+    void combineBonds(const std::vector<cytnx_int64> &indicators,
+                              const bool &force = false);
+    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
+                              const bool &by_label);
+    void combineBonds(const std::vector<std::string> &indicators,
+                              const bool &force = false);
 
   };
   //======================================================================
@@ -2953,15 +2957,15 @@ namespace cytnx {
      * @param permute_back
      * @param by_label
      */
-    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back,
+    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
                       const bool &by_label) {
-      this->_impl->combineBonds(indicators, permute_back, by_label);
+      this->_impl->combineBonds(indicators, force, by_label);
     }
-    void combineBonds(const std::vector<std::string> &indicators, const bool &permute_back = true) {
-      this->_impl->combineBonds(indicators, permute_back);
+    void combineBonds(const std::vector<std::string> &indicators, const bool &force = false) {
+      this->_impl->combineBonds(indicators, force);
     }
-    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back = true) {
-      this->_impl->combineBonds(indicators, permute_back);
+    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force = false) {
+      this->_impl->combineBonds(indicators, force);
     }
     UniTensor contract(const UniTensor &inR, const bool &mv_elem_self = false,
                        const bool &mv_elem_rhs = false) const {

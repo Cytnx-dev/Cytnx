@@ -136,6 +136,7 @@ namespace cytnx {
         return out;
     }
 
+    void force_combineBond_(const boost::intrusive_ptr<Bond_impl> &bd_in, const bool &is_grp);
 
 
 

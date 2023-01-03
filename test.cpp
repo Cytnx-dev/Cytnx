@@ -8,45 +8,25 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]) {
 
-  auto envB1 = Bond(BD_IN, {Qs(-2), Qs(0), Qs(2)}, {1, 2, 1});
-  // auto envLB2 = Bond(100,BD_KET, {{-6}, {-6}, {-4}, {-4}, {-4}, {-4}, {-4}, {-4}, {-4}, {-4},
-  // {-4}, {-2}, {-2}, {-2}, {-2}, {-2}, {-2}, {-2}, {-2}, {-2}, {-2}, {-2}, {-2}, {-2}, {-2}, {-2},
-  // {-2}, {-2}, {-2}, {-2}, {-2}, {-2}, {-2}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0},
-  // {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0},
-  // {0}, {0}, {2}, {2}, {2}, {2}, {2}, {2}, {2}, {2}, {2}, {2}, {2}, {2}, {2}, {2}, {2}, {2}, {2},
-  // {2}, {2}, {2}, {2}, {2}, {2}, {2}, {4}, {4}, {4}, {4}, {4}, {4}, {4}, {4}, {4}, {4}, {6},
-  // {6}});
-  auto envLB2 = Bond(BD_IN, {Qs(-6), Qs(-4), Qs(-2), Qs(0), Qs(2), Qs(4), Qs(6)},
-                     {2, 9, 22, 31, 24, 10, 2});  // D=100
-  // auto envRB2 = Bond(100,BD_KET, {{-6}, {-4}, {-4}, {-4}, {-4}, {-4}, {-4}, {-4}, {-4}, {-2},
-  // {-2}, {-2}, {-2}, {-2}, {-2}, {-2}, {-2}, {-2}, {-2}, {-2}, {-2}, {-2}, {-2}, {-2}, {-2}, {-2},
-  // {-2}, {-2}, {-2}, {-2}, {-2}, {-2}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0},
-  // {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {2},
-  // {2}, {2}, {2}, {2}, {2}, {2}, {2}, {2}, {2}, {2}, {2}, {2}, {2}, {2}, {2}, {2}, {2}, {2}, {2},
-  // {2}, {2}, {2}, {2}, {2}, {4}, {4}, {4}, {4}, {4}, {4}, {4}, {4}, {4}, {4}, {4}, {6}, {6}});
-  auto envRB2 = Bond(BD_IN, {Qs(-6), Qs(-4), Qs(-2), Qs(0), Qs(2), Qs(4), Qs(6)},
-                     {1, 8, 23, 31, 24, 11, 2});  // D=100
-  // auto phyB = Bond(2,BD_KET,{{1}, {-1}});
-  auto phyB = Bond(BD_IN, {Qs(-1), Qs(1)}, {1, 1});
-  // auto MB = Bond(4,BD_KET, {{0}, {-2}, {2}, {0}});
-  auto MB = Bond(BD_IN, {Qs(-2), Qs(0), Qs(2)}, {1, 2, 1});
 
-  // auto M1 = UniTensor({MB, MB.redirect(), phyB, phyB.redirect()});
-  // auto M2 =  UniTensor({MB, MB.redirect(), phyB, phyB.redirect()});
-  auto psi = UniTensor({envLB2, phyB.redirect(), phyB.redirect(), envRB2.redirect()});
-  // auto L = UniTensor({envB1.redirect(), envLB2.redirect(), envLB2});
-  auto R = UniTensor({envB1, envRB2, envRB2.redirect()});
+  auto S = UniTensor(arange(200).reshape(4,5,2,5));
 
-  // auto L_ = L.relabels({-5,-1,0});
-  auto R_ = R.relabels({'a', 'c', 'b'});
-  // auto M1_ = M1.relabels({-5,-6,-2,1});
-  // auto M2_ = M2.relabels({-6,-7,-3,2});
-  auto psi_ = psi.relabels({'d', 'e', 'f', 'c'});
-  // auto out = L_.contract(M1_.contract(M2_.contract(psi_.contract(R_, false, false), false,
-  // false), false, false), false, false);
-  auto OTT = psi_.contract(R_);
+  S.print_diagram();
+  S.print_blocks();
+
+  S.combineBonds({3,1});
+
+  S.print_diagram();
+  S.print_blocks();
+
 
   return 0;
+
+
+  std::vector<int> tmptt = {0,1,2,3,4,5,6,7};
+  memcpy(&tmptt[0],&tmptt[1],sizeof(int)*(tmptt.size()-1));
+  print(tmptt); 
+
   auto BBA = Bond(BD_KET, {Qs(0), Qs(1), Qs(0), Qs(1), Qs(2)}, {1, 2, 3, 4, 5});
   auto BBB = Bond(BD_KET, {Qs(-1), Qs(-1), Qs(0), Qs(2), Qs(1)}, {1, 2, 3, 4, 5});
 
@@ -62,13 +42,27 @@ int main(int argc, char *argv[]) {
   print(BBB.redirect());
   TAT.print_diagram(true);
 
+
+  auto bbbrbba = bbb.redirect().clone();
+  bbbrbba._impl->force_combineBond_(bba._impl,false);
+  
+  auto bbabbbr = bba.clone();
+  bbabbbr._impl->force_combineBond_(bbb.redirect()._impl,false);
+
+  auto tst = UniTensor({bba, bbb.redirect(), bbbrbba});
+  auto tst2 = UniTensor({bba, bbabbbr,bbb.redirect()});
+  //print("-------");
+  //print(((BlockUniTensor*)tst._impl.get())->_inner_to_outer_idx);
+  //print("-------");
+  //print("-------");
+  //print(((BlockUniTensor*)tst2._impl.get())->_inner_to_outer_idx);
+  //print("-------");
+
   auto tat = UniTensor({bba, bba, bbb.redirect(), bbb.redirect()});
 
   tat.print_diagram(true);
 
-  auto TBT = TAT.group_basis();
-
-  TBT.print_diagram(true);
+  tat.combineBonds({1,3});
 
   return 0;
 
