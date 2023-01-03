@@ -79,7 +79,7 @@ namespace cytnx {
         : _is_tag(false),
           _name(std::string("")),
           _is_braket_form(false),
-          _rowrank(-1),
+          _rowrank(0),
           _is_diag(false),
           uten_type_id(UTenType.Void){};
 
@@ -2195,11 +2195,21 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> Trace(const std::string &a, const std::string &b) {
       boost::intrusive_ptr<UniTensor_base> out = this->clone();
       out->Trace_(a, b);
+      if(out->rank()==0){
+        DenseUniTensor *tmp = new DenseUniTensor();
+        tmp->_block = ((BlockUniTensor*)out.get())->_blocks[0];
+        out = boost::intrusive_ptr<UniTensor_base>(tmp);
+      }
       return out;
     }
     boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b) {
       boost::intrusive_ptr<UniTensor_base> out = this->clone();
       out->Trace_(a, b);
+      if(out->rank()==0){
+        DenseUniTensor *tmp = new DenseUniTensor();
+        tmp->_block = ((BlockUniTensor*)out.get())->_blocks[0];
+        out = boost::intrusive_ptr<UniTensor_base>(tmp);
+      }
       return out;
     }
     /**
@@ -2215,6 +2225,11 @@ namespace cytnx {
                                                const bool &by_label) {
       boost::intrusive_ptr<UniTensor_base> out = this->clone();
       out->Trace_(a, b, by_label);
+      if(out->rank()==0){
+        DenseUniTensor *tmp = new DenseUniTensor();
+        tmp->_block = ((BlockUniTensor*)out.get())->_blocks[0];
+        out = boost::intrusive_ptr<UniTensor_base>(tmp);
+      }
       return out;
     }
 
@@ -3117,10 +3132,26 @@ namespace cytnx {
 
     UniTensor &Trace_(const std::string &a, const std::string &b) {
       this->_impl->Trace_(a, b);
+      if(this->uten_type()==UTenType.Block){
+        // handle if no leg left case for BlockUniTensor.
+        if(this->rank()==0){
+            DenseUniTensor *tmp = new DenseUniTensor();
+            tmp->_block = this->get_blocks_(true)[0];
+            this->_impl = boost::intrusive_ptr<UniTensor_base>(tmp);
+        }
+      }
       return *this;
     }
     UniTensor &Trace_(const cytnx_int64 &a = 0, const cytnx_int64 &b = 1) {
       this->_impl->Trace_(a, b);
+      if(this->uten_type()==UTenType.Block){
+        // handle if no leg left case for BlockUniTensor.
+        if(this->rank()==0){
+            DenseUniTensor *tmp = new DenseUniTensor();
+            tmp->_block = this->get_blocks_(true)[0];
+            this->_impl = boost::intrusive_ptr<UniTensor_base>(tmp);
+        }
+      }
       return *this;
     }
     /**
@@ -3134,6 +3165,14 @@ namespace cytnx {
      */
     UniTensor &Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label) {
       this->_impl->Trace_(a, b, by_label);
+      if(this->uten_type()==UTenType.Block){
+        // handle if no leg left case for BlockUniTensor.
+        if(this->rank()==0){
+            DenseUniTensor *tmp = new DenseUniTensor();
+            tmp->_block = this->get_blocks_(true)[0];
+            this->_impl = boost::intrusive_ptr<UniTensor_base>(tmp);
+        }
+      }
       return *this;
     }
 

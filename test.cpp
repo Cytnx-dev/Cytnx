@@ -20,7 +20,6 @@ int main(int argc, char *argv[]) {
   S.print_blocks();
 
 
-  return 0;
 
 
   std::vector<int> tmptt = {0,1,2,3,4,5,6,7};
@@ -29,6 +28,14 @@ int main(int argc, char *argv[]) {
 
   auto BBA = Bond(BD_KET, {Qs(0), Qs(1), Qs(0), Qs(1), Qs(2)}, {1, 2, 3, 4, 5});
   auto BBB = Bond(BD_KET, {Qs(-1), Qs(-1), Qs(0), Qs(2), Qs(1)}, {1, 2, 3, 4, 5});
+
+  auto Ttrace = UniTensor({BBA,BBA.redirect()});
+
+  Ttrace.Trace_(0,1);
+
+  Ttrace.print_diagram();
+  return 0;
+
 
   auto bba = BBA.clone();
   bba.group_duplicates_();

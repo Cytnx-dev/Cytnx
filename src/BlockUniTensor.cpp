@@ -89,67 +89,81 @@ namespace cytnx {
       this->_labels = in_labels;
     }
 
-    cytnx_error_msg(is_diag,"[ERROR][BlockUniTensor] Cannot set is_diag=true when the UniTensor is with symmetry.%s","\n");
+    //cytnx_error_msg(is_diag,"[ERROR][BlockUniTensor] Cannot set is_diag=true when the UniTensor is with symmetry.%s","\n");
+    if(is_diag){
+        cytnx_error_msg(bonds.size()!=2,"[ERROR][BlockUniTensor] is_diag = true must be rank-2 with one in-bond and one out-bond.%s","\n");
+        cytnx_error_msg(bonds[0].type()== bonds[1].type(), "[ERROR][BlockUniTensor] is_diag=true must have one in-bond and oue out-bond.%s","\n");
+        if(rowrank != 1, "[ERROR][BlockUniTensor] is_diag = true must have rowrank=1.%s","\n");
+
+        //checking basis!
+        cytnx_error_msg(bonds[0].redirect() != bonds[1],"[ERROR][BlockUniTensor] is_diag=true the in-bond and out-bond basis must match!%s","\n");
+
+    }
     this->_is_diag = is_diag;
 
     // copy bonds, otherwise it will share objects:
     this->_bonds = vec_clone(bonds);
     this->_is_braket_form = this->_update_braket();
 
-    
-    // checking how many blocks are there, and the size:
-    std::vector<cytnx_uint64> Loc(this->_bonds.size(),0);
-    std::vector<cytnx_int64> tot_qns(this->_bonds[0].Nsym()); // use first bond to determine symmetry size
-    
-    std::vector<cytnx_uint64> size(this->_bonds.size());
-    bool fin=false;
-    while(1){
-         
-        //get elem
-        //cout << "start!" << endl;
-        //cytnx::vec_print_simple(std::cout , Loc);
-        this->_fx_get_total_fluxs(Loc, this->_bonds[0].syms(),tot_qns);
-
-        //std::cout << "Loc: ";
-        //cytnx::vec_print_simple(std::cout, Loc);    
-        //std::cout << "tot_flx: ";
-        //cytnx::vec_print_simple(std::cout, tot_qns);
-                
-        //if exists:
-        if( std::all_of(tot_qns.begin(),tot_qns.end(), [](const int &i){return i==0;}) ){
-            //get size & init block!
-            for(cytnx_int32 i=0;i<Loc.size();i++){
-                size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
-            }
-            this->_blocks.push_back(zeros(size,dtype,device));
-
-            // push its loc
-            this->_inner_to_outer_idx.push_back(Loc);
-
+    if(this->_is_diag){
+        for(int b=0;b<this->_bonds[0].qnums().size();b++){
+            this->_inner_to_outer_idx.push_back({b,b});
+            this->_blocks.push_back(zeros(this->_bonds[0]._impl->_degs[b],dtype,device));
         }
 
+    }else{
+        // checking how many blocks are there, and the size:
+        std::vector<cytnx_uint64> Loc(this->_bonds.size(),0);
+        std::vector<cytnx_int64> tot_qns(this->_bonds[0].Nsym()); // use first bond to determine symmetry size
+        std::vector<cytnx_uint64> size(this->_bonds.size());
+        bool fin=false;
+        while(1){
+             
+            //get elem
+            //cout << "start!" << endl;
+            //cytnx::vec_print_simple(std::cout , Loc);
+            this->_fx_get_total_fluxs(Loc, this->_bonds[0].syms(),tot_qns);
 
-
-        while(Loc.size()!=0){
-            if(Loc.back()==this->_bonds[Loc.size()-1]._impl->_qnums.size()-1){
-                Loc.pop_back(); 
-                continue;
-            }
-            else{
-                Loc.back()+=1;
-                //cout << "+1 at loc:" << Loc.size()-1 <<endl;
-                while(Loc.size()!=this->_bonds.size()){
-                    Loc.push_back(0);
+            //std::cout << "Loc: ";
+            //cytnx::vec_print_simple(std::cout, Loc);    
+            //std::cout << "tot_flx: ";
+            //cytnx::vec_print_simple(std::cout, tot_qns);
+                    
+            //if exists:
+            if( std::all_of(tot_qns.begin(),tot_qns.end(), [](const int &i){return i==0;}) ){
+                //get size & init block!
+                for(cytnx_int32 i=0;i<Loc.size();i++){
+                    size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
                 }
-                break;
-            }
-        }
-            
-        if(Loc.size()==0) break;
-        
+                this->_blocks.push_back(zeros(size,dtype,device));
 
-    }
-    
+                // push its loc
+                this->_inner_to_outer_idx.push_back(Loc);
+
+            }
+
+
+
+            while(Loc.size()!=0){
+                if(Loc.back()==this->_bonds[Loc.size()-1]._impl->_qnums.size()-1){
+                    Loc.pop_back(); 
+                    continue;
+                }
+                else{
+                    Loc.back()+=1;
+                    //cout << "+1 at loc:" << Loc.size()-1 <<endl;
+                    while(Loc.size()!=this->_bonds.size()){
+                        Loc.push_back(0);
+                    }
+                    break;
+                }
+            }
+                
+            if(Loc.size()==0) break;
+            
+
+        }
+   }// is_diag? 
       
   }
 
@@ -249,8 +263,8 @@ namespace cytnx {
     std::cout << std::string(buffer);
     sprintf(buffer, "valid bocks : %d\n", this->_blocks.size());
     std::cout << std::string(buffer);
-    //sprintf(buffer, "is diag   : %s\n", this->is_diag() ? "True" : "False");
-    //std::cout << std::string(buffer);
+    sprintf(buffer, "is diag   : %s\n", this->is_diag() ? "True" : "False");
+    std::cout << std::string(buffer);
     sprintf(buffer, "on device   : %s\n", this->device_str().c_str());
     std::cout << std::string(buffer);
 
@@ -401,6 +415,11 @@ namespace cytnx {
 
     } else {
       mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
+      //checking:
+      for(int i=0;i<mapper_u64.size();i++){
+        cytnx_error_msg(mapper_u64[i] >= this->rank(), "[ERROR] index %d out of bound!\n",mapper_u64[i]);
+      }
+
     }
 
 
@@ -408,15 +427,19 @@ namespace cytnx {
     out_raw->_labels = vec_map(out_raw->labels(), mapper_u64);
 
 
-    //inner_to_outer permute!
-    for(cytnx_int64 b=0;b<this->_inner_to_outer_idx.size();b++){
-        out_raw->_inner_to_outer_idx[b] = vec_map(out_raw->_inner_to_outer_idx[b], mapper_u64);
-        out_raw->_blocks[b] = this->_blocks[b].permute(mapper_u64); 
-    }
-
     if(out_raw->_is_diag){
-        cytnx_error_msg(true,"[ERROR][BlockUniTensor] currently do not support permute for is_diag=true for BlockUniTensor!%s","\n");
+        //cytnx_error_msg(true,"[ERROR][BlockUniTensor] currently do not support permute for is_diag=true for BlockUniTensor!%s","\n");
+        if(rowrank >= 0)
+            cytnx_error_msg(rowrank != 1, "[ERROR][BlockUniTensor] is_diag=true must have rowrank=1.%s","\n");
+        out_raw->_is_braket_form = out_raw->_update_braket();
+
     }else{
+        //inner_to_outer permute!
+        for(cytnx_int64 b=0;b<this->_inner_to_outer_idx.size();b++){
+            out_raw->_inner_to_outer_idx[b] = vec_map(out_raw->_inner_to_outer_idx[b], mapper_u64);
+            out_raw->_blocks[b] = this->_blocks[b].permute(mapper_u64); 
+        }
+
         if(rowrank >=0){
             cytnx_error_msg((rowrank >= out_raw->_bonds.size()) || (rowrank < 1),
                             "[ERROR][BlockUniTensor] rowrank cannot exceed the rank of UniTensor-1, and should be >=1.%s",
@@ -437,48 +460,17 @@ namespace cytnx {
         BlockUniTensor *out_raw = this->clone_meta(true,true);
         out_raw ->_blocks.resize(this->_blocks.size());
 
-        std::vector<cytnx_uint64> mapper_u64;
+        std::vector<cytnx_int64> mapper_i64;
         // cytnx_error_msg(true,"[Developing!]%s","\n");
         std::vector<string>::iterator it;
-        for (cytnx_uint64 i = 0; i < mapper.size(); i++) {
+        for (cytnx_int64 i = 0; i < mapper.size(); i++) {
           it = std::find(out_raw->_labels.begin(), out_raw->_labels.end(), mapper[i]);
           cytnx_error_msg(it == out_raw->_labels.end(),
                           "[ERROR] label %s does not exist in current UniTensor.\n", mapper[i]);
-          mapper_u64.push_back(std::distance(out_raw->_labels.begin(), it));
+          mapper_i64.push_back(std::distance(out_raw->_labels.begin(), it));
         }
-
-    
-        out_raw->_bonds = vec_map(vec_clone(out_raw->bonds()), mapper_u64);  // this will check validity
-        out_raw->_labels = vec_map(out_raw->labels(), mapper_u64);
-
-
-        if(out_raw->_is_diag){
-            //inner_to_outer permute!
-            for(cytnx_int64 b=0;b<this->_inner_to_outer_idx.size();b++){
-                out_raw->_inner_to_outer_idx[b] = vec_map(out_raw->_inner_to_outer_idx[b], mapper_u64);
-                //??out_raw->_blocks[b] = this->_blocks[b].permute(mapper_u64);
-            }
-
-            cytnx_error_msg(true,"[ERROR][BlockUniTensor] currently do not support permute for is_diag=true for BlockUniTensor!%s","\n");
-        }else{
-            //inner_to_outer permute!
-            for(cytnx_int64 b=0;b<this->_inner_to_outer_idx.size();b++){
-                out_raw->_inner_to_outer_idx[b] = vec_map(out_raw->_inner_to_outer_idx[b], mapper_u64);
-                out_raw->_blocks[b] = this->_blocks[b].permute(mapper_u64);
-            }
-
-            if(rowrank >=0){
-                cytnx_error_msg((rowrank >= out_raw->_bonds.size()) || (rowrank < 1),
-                                "[ERROR][BlockUniTensor] rowrank cannot exceed the rank of UniTensor-1, and should be >=1.%s",
-                                "\n");
-                out_raw->_rowrank = rowrank;
-
-            }
-            out_raw->_is_braket_form = out_raw->_update_braket();
-        }
-        boost::intrusive_ptr<UniTensor_base> out(out_raw);
-
-        return out;
+ 
+        return this->permute(mapper_i64,rowrank,false);
 
 
   }
@@ -498,6 +490,10 @@ namespace cytnx {
 
     } else {
       mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
+      //checking:
+      for(int i=0;i<mapper_u64.size();i++){
+        cytnx_error_msg(mapper_u64[i] >= this->rank(), "[ERROR] index %d out of bound!\n",mapper_u64[i]);
+      }
     }
 
     this->_bonds = vec_map(vec_clone(this->bonds()), mapper_u64);  // this will check validity
@@ -505,11 +501,10 @@ namespace cytnx {
 
     if(this->_is_diag){
 
-        for(cytnx_int64 b=0;b<this->_inner_to_outer_idx.size();b++){
-            this->_inner_to_outer_idx[b] = vec_map(this->_inner_to_outer_idx[b], mapper_u64);
-            //??out_raw->_blocks[b] = this->_blocks[b].permute(mapper_u64);
-        }
-        cytnx_error_msg(true,"[ERROR][BlockUniTensor] currently do not support permute for is_diag=true for BlockUniTensor!%s","\n");
+        if(rowrank >= 0)
+            cytnx_error_msg(rowrank != 1, "[ERROR][BlockUniTensor] is_diag=true must have rowrank=1.%s","\n");
+        this->_is_braket_form = this->_update_braket();
+
     }else{
         //inner_to_outer permute!
         for(cytnx_int64 b=0;b<this->_inner_to_outer_idx.size();b++){
@@ -531,43 +526,17 @@ namespace cytnx {
   void BlockUniTensor::permute_(const std::vector<std::string> &mapper,
                                 const cytnx_int64 &rowrank) {
 
-    std::vector<cytnx_uint64> mapper_u64;
+    std::vector<cytnx_int64> mapper_i64;
     // cytnx_error_msg(true,"[Developing!]%s","\n");
     std::vector<std::string>::iterator it;
     for (cytnx_uint64 i = 0; i < mapper.size(); i++) {
       it = std::find(this->_labels.begin(), this->_labels.end(), mapper[i]);
       cytnx_error_msg(it == this->_labels.end(),
                       "[ERROR] label %d does not exist in current UniTensor.\n", mapper[i]);
-      mapper_u64.push_back(std::distance(this->_labels.begin(), it));
+      mapper_i64.push_back(std::distance(this->_labels.begin(), it));
     }
 
-    this->_bonds = vec_map(vec_clone(this->bonds()), mapper_u64);  // this will check validity
-    this->_labels = vec_map(this->labels(), mapper_u64);
-
-    if(this->_is_diag){
-
-        for(cytnx_int64 b=0;b<this->_inner_to_outer_idx.size();b++){
-            this->_inner_to_outer_idx[b] = vec_map(this->_inner_to_outer_idx[b], mapper_u64);
-            //??out_raw->_blocks[b] = this->_blocks[b].permute(mapper_u64);
-        }
-        cytnx_error_msg(true,"[ERROR][BlockUniTensor] currently do not support permute for is_diag=true for BlockUniTensor!%s","\n");
-    }else{
-        //inner_to_outer permute!
-        for(cytnx_int64 b=0;b<this->_inner_to_outer_idx.size();b++){
-            this->_inner_to_outer_idx[b] = vec_map(this->_inner_to_outer_idx[b], mapper_u64);
-            this->_blocks[b].permute_(mapper_u64);
-        }
-
-        if (rowrank >= 0) {
-            cytnx_error_msg((rowrank >= this->_bonds.size()) || (rowrank < 1),
-                                "[ERROR][BlockUniTensor] rowrank cannot exceed the rank of UniTensor-1, and should be >=1.%s",
-                                "\n");
-                this->_rowrank = rowrank;
-        }
-        this->_is_braket_form = this->_update_braket();
-    }
-
-
+    this->permute_(mapper_i64,rowrank,false);
 
   }
 
@@ -665,7 +634,7 @@ namespace cytnx {
         vec_concatenate_(out_labels, this->_labels, rhs->_labels);
         
         //cout << out_bonds;
-        tmp->Init(out_bonds,out_labels, out_rowrank, this->dtype(), this->device(), this->is_diag());
+        tmp->Init(out_bonds,out_labels, out_rowrank, this->dtype(), this->device(),false);
         
         //tmp->_name = this->_name + "+" + rhs->_name;        
 
@@ -698,11 +667,13 @@ namespace cytnx {
                 }
             }
             if(IDL.size()){
-                auto tmpR = Rtn->_blocks[IDR[0]];
-                std::vector<cytnx_uint64> shape_L =
-                    vec_concatenate(this->_blocks[IDL[0]].shape(), std::vector<cytnx_uint64>(tmpR.shape().size(), 1));
 
-                auto tmpL = this->_blocks[IDL[0]].reshape(shape_L);
+                auto tmpR = Rtn->is_diag()?linalg::Diag(Rtn->_blocks[IDR[0]]):Rtn->_blocks[IDR[0]];
+                auto tmpL = this->is_diag()?linalg::Diag(this->_blocks[IDL[0]]):this->_blocks[IDL[0]];
+                std::vector<cytnx_uint64> shape_L =
+                    vec_concatenate(tmpL.shape(), std::vector<cytnx_uint64>(tmpR.shape().size(), 1));
+
+                tmpL = tmpL.reshape(shape_L);
                 auto Ott = linalg::Kron(tmpL,tmpR,false,true);
                 //checking:
                 cytnx_error_msg(Ott.shape()!=tmp->_blocks[b].shape(),"[ERROR] mismatching shape!%s","\n");
@@ -831,7 +802,7 @@ namespace cytnx {
               if (comm_idx2[i] < rhs->_rowrank) out_rowrank--;
 
             // Initialize!!
-            tmp->Init(out_bonds,out_labels, out_rowrank, this->dtype(), this->device(), this->is_diag());
+            tmp->Init(out_bonds,out_labels, out_rowrank, this->dtype(), this->device(), false);
  
 
             // now, build the itoi table:
@@ -861,9 +832,13 @@ namespace cytnx {
                         if(it != tmp->_inner_to_outer_idx.end()){
                             cytnx_int64 targ_b = it - tmp->_inner_to_outer_idx.begin();
                             //cout << "  "  << "targ blk_id:" << targ_b << endl;
-                            tmp->_blocks[targ_b] += linalg::Tensordot(this->_blocks[a], Rtn->_blocks[b], comm_idx1, comm_idx2,
-                                          mv_elem_self, mv_elem_rhs);
+                            if(this->is_diag()!=Rtn->is_diag()){
+                                tmp->_blocks[targ_b] += linalg::Tensordot_dg(this->_blocks[a], Rtn->_blocks[b], comm_idx1, comm_idx2, this->is_diag());
 
+                            }else{
+                                tmp->_blocks[targ_b] += linalg::Tensordot(this->_blocks[a], Rtn->_blocks[b], comm_idx1, comm_idx2,
+                                          mv_elem_self, mv_elem_rhs);
+                            }
                         }else{
                             cytnx_error_msg(true,"[ERROR][BlockUniTensor] trying to contract L.blk [%d] with R.blk [%d] but no target blk found!\n",a,b); 
                         }
@@ -954,14 +929,6 @@ namespace cytnx {
     if (ida < tmpRk) this->_rowrank--;
     if (idb < tmpRk) this->_rowrank--;
 
-    //trace the block!
-    for(cytnx_int64 i=0;i<this->_blocks.size();i++){
-        this->_blocks[i] = this->_blocks[i].Trace(ida,idb);
-    }
-
-
-    //// deal with Metas:
-
     // 1) remove the bond, labels:
     if (ida > idb) std::swap(ida, idb);
     this->_bonds.erase(this->_bonds.begin() + idb);
@@ -969,12 +936,33 @@ namespace cytnx {
     this->_labels.erase(this->_labels.begin() + idb);
     this->_labels.erase(this->_labels.begin() + ida);
 
+    //trace the block!
+    std::vector<Tensor> new_blocks;
+    vec2d<cytnx_uint64> new_itoi;
+    if(this->_labels.size()==0){
+        // if there is no leg left, leaving only one block, and let API to handle the BlockUniTensor->DenseUniTensor!
+        new_blocks.push_back(zeros(1,this->dtype(),this->device()));
+        for(cytnx_int64 i=0;i<this->_blocks.size();i++){
+            if(this->_inner_to_outer_idx[i][ida] == this->_inner_to_outer_idx[i][idb]){
+                if(this->is_diag()) new_blocks.back()+=linalg::Sum(this->_blocks[i]);
+                else new_blocks.back() += this->_blocks[i].Trace(ida,idb);
+            }
+        }
+        
+    }else{
+        for(cytnx_int64 i=0;i<this->_blocks.size();i++){
+            if(this->_inner_to_outer_idx[i][ida] == this->_inner_to_outer_idx[i][idb]){
+                new_blocks.push_back(this->_blocks[i].Trace(ida,idb));
+                new_itoi.push_back(this->_inner_to_outer_idx[i]);
+                new_itoi.back().erase(new_itoi.back().begin() + idb);
+                new_itoi.back().erase(new_itoi.back().begin() + ida);
+            }
+        }
 
-    // 2) inner to outer:
-    for(cytnx_int64 i=0;i < this->_inner_to_outer_idx.size();i++){
-        this->_inner_to_outer_idx[i].erase(this->_inner_to_outer_idx[i].begin() + idb);
-        this->_inner_to_outer_idx[i].erase(this->_inner_to_outer_idx[i].begin() + ida);
     }
+
+    this->_blocks = new_blocks;
+    this->_inner_to_outer_idx = new_itoi;
 
   }
 
