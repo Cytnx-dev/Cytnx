@@ -5,7 +5,7 @@
 ## [Note] uncomments the following lines and 
 ##        Set the desntination path for installation in Ins_dest
 #----------------------------------------------
-Ins_dest="/home/j9263178/cytnx_kj_ins"
+Ins_dest="~/cy_test"
 FLAG="${FLAG}-DCMAKE_INSTALL_PREFIX=${Ins_dest} "
 #-----------------------------------------------
 
@@ -62,7 +62,7 @@ FLAG="${FLAG}-DBUILD_PYTHON=OFF "
 # [Note] set to "=on" for using hptt library to accelrate tensor transpose.
 #        for "=off" case one can skip 5-a) and  5-b)
 #-----------------------------------
-FLAG="${FLAG}-DUSE_HPTT=OFF "
+FLAG="${FLAG}-DUSE_HPTT=ON "
 #-----------------------------------
 # 5-a) HPTT fine tune (DEFAULT =off)
 # [Note] set to "=on" to enable fine tune for the native hardware.
@@ -122,7 +122,7 @@ FLAG="${FLAG}-DUSE_OMP=OFF "
 #=========================================================
 # [Note] Wheather to run cytnx tests (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG}-DRUN_TESTS=OFF "
+FLAG="${FLAG}-DRUN_TESTS=ON "
 #-----------------------------------
 
 

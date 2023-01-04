@@ -8,6 +8,16 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]) {
 
+  auto TNtst = arange(180).reshape(15,12);
+  cout << TNtst << endl;
+  cout << algo::Vsplit(TNtst,{2,5,4,3,1}) << endl;
+
+
+  cout << algo::Hsplit(TNtst,{2,3,1,2,4}) << endl;
+
+  return 0;
+  
+
 
   auto S = UniTensor(arange(200).reshape(4,5,2,5));
 
