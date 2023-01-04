@@ -108,7 +108,7 @@ namespace cytnx {
     if(this->_is_diag){
         for(int b=0;b<this->_bonds[0].qnums().size();b++){
             this->_inner_to_outer_idx.push_back({b,b});
-            this->_blocks.push_back(zeros(this->_bonds[0]._impl->_degs[b],dtype,device));
+            if(!no_alloc) this->_blocks.push_back(zeros(this->_bonds[0]._impl->_degs[b],dtype,device));
         }
 
     }else{
@@ -132,11 +132,12 @@ namespace cytnx {
             //if exists:
             if( std::all_of(tot_qns.begin(),tot_qns.end(), [](const int &i){return i==0;}) ){
                 //get size & init block!
-                for(cytnx_int32 i=0;i<Loc.size();i++){
-                    size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
+                if(!no_alloc){
+                    for(cytnx_int32 i=0;i<Loc.size();i++){
+                        size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
+                    }
+                    this->_blocks.push_back(zeros(size,dtype,device));
                 }
-                this->_blocks.push_back(zeros(size,dtype,device));
-
                 // push its loc
                 this->_inner_to_outer_idx.push_back(Loc);
 
@@ -1463,6 +1464,8 @@ namespace cytnx {
   
   void BlockUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators,
                                     const bool &force) {
+    cytnx_error_msg(this->is_diag(),"[ERROR][BlockUniTensor] cannot combineBonds when is_diag = true!%s","\n");
+
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
                     "\n");
     std::vector<cytnx_int64>::iterator it;

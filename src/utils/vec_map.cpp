@@ -5,6 +5,7 @@
 #include <cstring>
 #include "Bond.hpp"
 #include "Accessor.hpp"
+#include "Tensor.hpp"
 namespace cytnx {
 
 
@@ -50,7 +51,8 @@ namespace cytnx {
   template std::vector<Accessor> vec_map(const std::vector<Accessor> &,
                                          const std::vector<cytnx_uint64> &);
 
-
+  template std::vector<Tensor> vec_map(const std::vector<Tensor> &, const std::vector<cytnx_uint64>&);
+ 
   template std::vector<std::vector<cytnx_uint64> > vec_map(const std::vector<std::vector<cytnx_uint64> > &, const std::vector<cytnx_uint64> &);
   template std::vector<std::vector<cytnx_int64> > vec_map(const std::vector<std::vector<cytnx_int64> > &, const std::vector<cytnx_uint64> &);
 

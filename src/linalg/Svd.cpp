@@ -2,6 +2,7 @@
 #include "linalg_internal_interface.hpp"
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
+#include "algo.hpp"
 #include <iostream>
 #include <vector>
 
@@ -74,158 +75,12 @@ namespace cytnx {
 
 namespace cytnx {
   namespace linalg {
-    std::vector<cytnx::UniTensor> Svd(const cytnx::UniTensor &Tin, const bool &is_U,
-                                      const bool &is_vT) {
-      // using rowrank to split the bond to form a matrix.
-      cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1,
-                      "[Svd][ERROR] Svd for DenseUniTensor should have rank>1 and rowrank>0%s",
-                      "\n");
 
-      if (Tin.uten_type() == UTenType.Sparse) {
-        // cytnx_error_msg(true,"[Svd][Developing] Svd for SparseUniTensor is developing.%s","\n");
-
-        UniTensor ipt = Tin.contiguous();
-
-        cytnx_uint64 i_Rk = ipt.rank();
-        cytnx_uint64 i_rowrank = ipt.rowrank();
-        vector<Bond> Ubds;
-        vector<Bond> vTbds(1);  // pre-set for left bd of vT
-        auto comm_qnums = ipt.get_blocks_qnums();
-
-        for (int i = 0; i < i_Rk; i++) {
-          if (i < i_rowrank)
-            Ubds.push_back(ipt.bonds()[i]);
-          else
-            vTbds.push_back(ipt.bonds()[i]);
-        }
-
-        // std::cout << Ubds << std::endl;
-        // std::cout << vTbds << std::endl;
-
-        // now, calculate svd for each blocks:
-        std::vector<Tensor> Uls;
-        std::vector<Tensor> sls(comm_qnums.size());
-        std::vector<Tensor> vTls;
-
-        if (is_U) Uls.resize(comm_qnums.size());
-        if (is_vT) vTls.resize(comm_qnums.size());
-
-        std::vector<Tensor> &i_blocks = ipt.get_blocks_();
-        // std::vector<cytnx_uint64> degs(comm_qnums.size()); //deg of each blocks
-        cytnx_uint64 total_comm_dim = 0;
-        std::vector<std::vector<cytnx_int64>> tmp_qns;
-
-        for (int blk = 0; blk < comm_qnums.size(); blk++) {
-          // std::cout << "QN block: " << blk << std::endl;
-          int idd = 0;
-          auto out = linalg::Svd(i_blocks[blk], is_U, is_vT);
-
-          sls[blk] = out[idd];
-          cytnx_uint64 deg = sls[blk].shape()[0];
-          total_comm_dim += deg;
-
-          std::vector<std::vector<cytnx_int64>> this_qnums(deg, comm_qnums[blk]);
-
-          tmp_qns.insert(tmp_qns.end(), this_qnums.begin(), this_qnums.end());
-
-          idd++;
-          if (is_U) {
-            Uls[blk] = out[idd];
-            idd++;
-          }
-          if (is_vT) {
-            vTls[blk] = out[idd];
-          }
-        }
-
-        // std::cout << tmp_qns.size() << std::endl;
-        // std::cout << total_comm_dim << std::endl;
-
-        // construct common bond:
-        Bond comm_bdi(total_comm_dim, bondType::BD_KET, tmp_qns);
-        Bond comm_bdo = comm_bdi.clone().set_type(bondType::BD_BRA);
-
-        Ubds.push_back(comm_bdo);
-        vTbds[0] = comm_bdi;
-
-        // prepare output:
-        std::vector<UniTensor> outCyT;
-
-        vector<string> oldlabel = ipt.labels();
-        // cytnx_int64 newlbl = -1;
-        // for (int i = 0; i < oldlabel.size(); i++) {
-        //   if (oldlabel[i] <= newlbl) newlbl = oldlabel[i] - 1;
-        // }
-        string newlbl = "newlbl";
-        for (int i = 0; i < oldlabel.size(); i++) {
-          if (oldlabel[i] == newlbl) newlbl = newlbl + "new";
-        }
-
-        // s
-        SparseUniTensor *tmps = new SparseUniTensor();
-        // tmps->Init(
-        //   {comm_bdi, comm_bdo}, {newlbl, newlbl - 1}, 1, Type.Double,
-        //   Device.cpu, /* type and device does not matter here, cauz we are going to not alloc*/
-        //   true, true);
-        tmps->Init(
-          {comm_bdi, comm_bdo}, {newlbl, newlbl + "new"}, 1, Type.Double,
-          Device.cpu, /* type and device does not matter here, cauz we are going to not alloc*/
-          true, true);
-        // check:
-        cytnx_error_msg(tmps->get_blocks_().size() != sls.size(), "[ERROR] internal error s.%s",
-                        "\n");
-
-        // wrapping:
-        tmps->_blocks = sls;
-        UniTensor s;
-        s._impl = boost::intrusive_ptr<UniTensor_base>(tmps);
-        outCyT.push_back(s);
-
-        if (is_U) {
-          SparseUniTensor *tmpu = new SparseUniTensor();
-          std::vector<string> LBLS = vec_clone(oldlabel, ipt.rowrank());
-          LBLS.push_back(newlbl);
-          tmpu->Init(
-            Ubds, LBLS, ipt.rowrank(), Type.Double,
-            Device.cpu, /* type and device does not matter here, cauz we are going to not alloc*/
-            false, true);
-
-          // check:
-          cytnx_error_msg(tmpu->get_blocks_().size() != Uls.size(), "[ERROR] internal error U.%s",
-                          "\n");
-
-          tmpu->_blocks = Uls;
-          UniTensor u;
-          u._impl = boost::intrusive_ptr<UniTensor_base>(tmpu);
-          outCyT.push_back(u);
-        }
-
-        if (is_vT) {
-          SparseUniTensor *tmpv = new SparseUniTensor();
-          std::vector<string> LBLS(ipt.rank() - ipt.rowrank() + 1);  // old_label,ipt.rowrank());
-          // LBLS[0] = newlbl - 1;
-          LBLS[0] = newlbl + "new";
-          memcpy(&LBLS[1], &oldlabel[ipt.rowrank()],
-                 sizeof(cytnx_int64) * (ipt.rank() - ipt.rowrank()));
-
-          tmpv->Init(
-            vTbds, LBLS, 1, Type.Double,
-            Device.cpu, /* type and device does not matter here, cauz we are going to not alloc*/
-            false, true);
-
-          // check:
-          cytnx_error_msg(tmpv->get_blocks_().size() != vTls.size(), "[ERROR] internal error vT.%s",
-                          "\n");
-
-          tmpv->_blocks = vTls;
-          UniTensor vT;
-          vT._impl = boost::intrusive_ptr<UniTensor_base>(tmpv);
-          outCyT.push_back(vT);
-        }
-
-        return outCyT;
-
-      } else {
+    // actual impls: 
+    void _svd_Dense_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin, const bool &is_U,
+                                      const bool &is_vT){
+        //[Note] outCyT must be empty!    
+    
         // DenseUniTensor:
         // cout << "entry Dense UT" << endl;
 
@@ -251,7 +106,7 @@ namespace cytnx {
         if (Tin.is_contiguous()) tmp.reshape_(oldshape);
 
         int t = 0;
-        vector<cytnx::UniTensor> outCyT(outT.size());
+        outCyT.resize(outT.size());
 
         // s
         cytnx::UniTensor &Cy_S = outCyT[t];
@@ -325,11 +180,313 @@ namespace cytnx {
 
         }  // if tag
 
-        return outCyT;
+        
+    }
 
-      }  // is block form ?
+    void _svd_Sparse_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin, const bool &is_U,
+                                      const bool &is_vT){
+        //[NOTE] outCyT must be empty vector!        
 
-    }  // Svd
+        // cytnx_error_msg(true,"[Svd][Developing] Svd for SparseUniTensor is developing.%s","\n");
+
+        UniTensor ipt = Tin.contiguous();
+
+        cytnx_uint64 i_Rk = ipt.rank();
+        cytnx_uint64 i_rowrank = ipt.rowrank();
+        vector<Bond> Ubds;
+        vector<Bond> vTbds(1);  // pre-set for left bd of vT
+        auto comm_qnums = ipt.get_blocks_qnums();
+
+        for (int i = 0; i < i_Rk; i++) {
+          if (i < i_rowrank)
+            Ubds.push_back(ipt.bonds()[i]);
+          else
+            vTbds.push_back(ipt.bonds()[i]);
+        }
+
+        // std::cout << Ubds << std::endl;
+        // std::cout << vTbds << std::endl;
+
+        // now, calculate svd for each blocks:
+        std::vector<Tensor> Uls;
+        std::vector<Tensor> sls(comm_qnums.size());
+        std::vector<Tensor> vTls;
+
+        if (is_U) Uls.resize(comm_qnums.size());
+        if (is_vT) vTls.resize(comm_qnums.size());
+
+        std::vector<Tensor> &i_blocks = ipt.get_blocks_();
+        // std::vector<cytnx_uint64> degs(comm_qnums.size()); //deg of each blocks
+        cytnx_uint64 total_comm_dim = 0;
+        std::vector<std::vector<cytnx_int64>> tmp_qns;
+
+        for (int blk = 0; blk < comm_qnums.size(); blk++) {
+          // std::cout << "QN block: " << blk << std::endl;
+          int idd = 0;
+          auto out = linalg::Svd(i_blocks[blk], is_U, is_vT);
+
+          sls[blk] = out[idd];
+          cytnx_uint64 deg = sls[blk].shape()[0];
+          total_comm_dim += deg;
+
+          std::vector<std::vector<cytnx_int64>> this_qnums(deg, comm_qnums[blk]);
+
+          tmp_qns.insert(tmp_qns.end(), this_qnums.begin(), this_qnums.end());
+
+          idd++;
+          if (is_U) {
+            Uls[blk] = out[idd];
+            idd++;
+          }
+          if (is_vT) {
+            vTls[blk] = out[idd];
+          }
+
+        }// for blk 
+
+        // std::cout << tmp_qns.size() << std::endl;
+        // std::cout << total_comm_dim << std::endl;
+
+        // construct common bond:
+        Bond comm_bdi(total_comm_dim, bondType::BD_KET, tmp_qns);
+        Bond comm_bdo = comm_bdi.clone().set_type(bondType::BD_BRA);
+
+        Ubds.push_back(comm_bdo);
+        vTbds[0] = comm_bdi;
+
+        // prepare output:
+        //std::vector<UniTensor> outCyT;
+
+        vector<string> oldlabel = ipt.labels();
+        // cytnx_int64 newlbl = -1;
+        // for (int i = 0; i < oldlabel.size(); i++) {
+        //   if (oldlabel[i] <= newlbl) newlbl = oldlabel[i] - 1;
+        // }
+        string newlbl = "newlbl";
+        for (int i = 0; i < oldlabel.size(); i++) {
+          if (oldlabel[i] == newlbl) newlbl = newlbl + "new";
+        }
+
+        // s
+        SparseUniTensor *tmps = new SparseUniTensor();
+        // tmps->Init(
+        //   {comm_bdi, comm_bdo}, {newlbl, newlbl - 1}, 1, Type.Double,
+        //   Device.cpu, /* type and device does not matter here, cauz we are going to not alloc*/
+        //   true, true);
+        tmps->Init(
+          {comm_bdi, comm_bdo}, {newlbl, newlbl + "new"}, 1, Type.Double,
+          Device.cpu, /* type and device does not matter here, cauz we are going to not alloc*/
+          true, true);
+        // check:
+        cytnx_error_msg(tmps->get_blocks_().size() != sls.size(), "[ERROR] internal error s.%s",
+                        "\n");
+
+        // wrapping:
+        tmps->_blocks = sls;
+        UniTensor s;
+        s._impl = boost::intrusive_ptr<UniTensor_base>(tmps);
+        outCyT.push_back(s);
+
+        if (is_U) {
+          SparseUniTensor *tmpu = new SparseUniTensor();
+          std::vector<string> LBLS = vec_clone(oldlabel, ipt.rowrank());
+          LBLS.push_back(newlbl);
+          tmpu->Init(
+            Ubds, LBLS, ipt.rowrank(), Type.Double,
+            Device.cpu, /* type and device does not matter here, cauz we are going to not alloc*/
+            false, true);
+
+          // check:
+          cytnx_error_msg(tmpu->get_blocks_().size() != Uls.size(), "[ERROR] internal error U.%s",
+                          "\n");
+
+          tmpu->_blocks = Uls;
+          UniTensor u;
+          u._impl = boost::intrusive_ptr<UniTensor_base>(tmpu);
+          outCyT.push_back(u);
+        }
+
+        if (is_vT) {
+          SparseUniTensor *tmpv = new SparseUniTensor();
+          std::vector<string> LBLS(ipt.rank() - ipt.rowrank() + 1);  // old_label,ipt.rowrank());
+          // LBLS[0] = newlbl - 1;
+          LBLS[0] = newlbl + "new";
+          memcpy(&LBLS[1], &oldlabel[ipt.rowrank()],
+                 sizeof(cytnx_int64) * (ipt.rank() - ipt.rowrank()));
+
+          tmpv->Init(
+            vTbds, LBLS, 1, Type.Double,
+            Device.cpu, /* type and device does not matter here, cauz we are going to not alloc*/
+            false, true);
+
+          // check:
+          cytnx_error_msg(tmpv->get_blocks_().size() != vTls.size(), "[ERROR] internal error vT.%s",
+                          "\n");
+
+          tmpv->_blocks = vTls;
+          UniTensor vT;
+          vT._impl = boost::intrusive_ptr<UniTensor_base>(tmpv);
+          outCyT.push_back(vT);
+        }
+
+
+    }; // _svd_Sparse_UT
+
+    Tensor _linalg_fx_Combine_matric_blocks(std::vector<Tensor> &Tlist, const cytnx_uint64 &Row_Nblk, const cytnx_uint64 &Col_Nblk){
+        std::vector<Tensor> rows; rows.reserve(Row_Nblk);
+        for(int r=0;r<Row_Nblk;r++){
+            std::vector<Tensor> tmp(Tlist.begin()+r*Col_Nblk,Tlist.begin()+(r+1)*Col_Nblk);
+            rows.push_back(algo::Hstack(tmp));
+        } 
+        return algo::Vstack(rows);
+    }
+
+    void _svd_Block_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin, const bool &is_U,
+                                      const bool &is_vT){
+
+        // outCyT must be empty and Tin must be checked with proper rowrank!
+
+        // 1) getting the combineBond L and combineBond R for qnum list without grouping:
+        // 
+        //   BDLeft -[ ]- BDRight 
+        //
+        std::vector<cytnx_uint64> strides; strides.reserve(Tin.rank());
+        auto BdLeft = Tin.bonds()[0].clone();
+        for(int i=1;i<Tin.rowrank();i++){
+            strides.push_back(Tin.bonds()[i].qnums().size());
+            BdLeft._impl->force_combineBond_(Tin.bonds()[i]._impl,false); // no grouping
+        } 
+        std::cout << BdLeft << std::endl;               
+        strides.push_back(1);
+        auto BdRight = Tin.bonds()[Tin.rowrank()].clone();
+        for(int i=Tin.rowrank()+1;i<Tin.rank();i++){
+            strides.push_back(Tin.bonds()[i].qnums().size());
+            BdRight._impl->force_combineBond_(Tin.bonds()[i]._impl,false); // no grouping
+        }
+        strides.push_back(1);
+        std::cout << BdRight << std::endl;               
+        std::cout << strides << std::endl;
+        
+        // 2) making new inner_to_outer_idx lists for each block:
+        // -> a. get stride:
+        for(int i=Tin.rowrank()-2;i>=0;i--){
+            strides[i]*=strides[i+1];
+        }
+        for(int i=Tin.rank()-2;i>=Tin.rowrank();i--){
+            strides[i]*=strides[i+1];
+        }
+        std::cout << strides << std::endl;
+        // ->b. calc new inner_to_outer_idx!
+        vec2d<cytnx_uint64> new_itoi(Tin.Nblocks(),std::vector<cytnx_uint64>(2));
+        
+        int cnt;
+        for(cytnx_uint64 b=0;b<Tin.Nblocks();b++){
+            const std::vector<cytnx_uint64> &tmpv =  Tin.get_qindices(b); 
+            for(cnt=0;cnt<Tin.rowrank();cnt++){
+                new_itoi[b][0] += tmpv[cnt]*strides[cnt];
+            }
+            for(cnt=Tin.rowrank();cnt<Tin.rank();cnt++){
+                new_itoi[b][1] += tmpv[cnt]*strides[cnt];
+            }
+        } 
+        //std::cout << new_itoi <<  std::endl;
+ 
+        // 3) categorize:
+        // key = qnum, val = list of block locations: 
+        std::map<std::vector<cytnx_int64>, std::vector<cytnx_int64> > mgrp;
+        for(cytnx_uint64 b=0;b<Tin.Nblocks();b++){ 
+            mgrp[BdLeft.qnums()[new_itoi[b][0]]].push_back(b);
+        }
+
+        // 4) for each qcharge in key, combining the blocks into a big chunk!
+        // ->a initialize an empty shell of UniTensor!
+        vec2d<cytnx_int64> aux_qnums;      // for sharing bond
+        std::vector<cytnx_uint64> aux_degs; // forsharing bond
+        std::vector<Tensor> S_blocks;
+
+        for (auto const& x : mgrp)
+        {
+            vec2d<cytnx_uint64> itoi_indicators(x.second.size());
+            cout << x.second.size() << "-------" << endl;
+            for(int i=0;i<x.second.size();i++){
+                itoi_indicators[i] = new_itoi[x.second[i]];
+                std::cout << new_itoi[x.second[i]] << std::endl;
+            }
+            auto order = vec_sort(itoi_indicators,true);
+            std::vector<Tensor> Tlist(itoi_indicators.size());
+            std::vector<cytnx_uint64> row_szs(order.size(),1);
+            cytnx_uint64 Rblk_dim = 0;
+            cytnx_int64 tmp = -1;
+            for(int i=0;i<order.size();i++){
+                if(itoi_indicators[i][0] != tmp){
+                    tmp = itoi_indicators[i][0];
+                    Rblk_dim ++;
+                }
+                Tlist[i] = Tin.get_blocks()[x.second[order[i]]];
+                for(int j=0;j<Tin.rowrank();j++){
+                    row_szs[i]*= Tlist[i].shape()[j];
+                }
+                Tlist[i] = Tlist[i].reshape({row_szs[i],-1});
+            }
+            cytnx_error_msg(Tlist.size()%Rblk_dim,"[Internal ERROR] Tlist is not complete!%s","\n");
+            // BTen is the big block!!
+            Tensor BTen = _linalg_fx_Combine_matric_blocks(Tlist, Rblk_dim, Tlist.size()/Rblk_dim);
+            
+
+            // Now we can perform linalg!
+            aux_qnums.push_back(x.first);
+            auto out = linalg::Svd(BTen, is_U, is_vT);
+            aux_degs.push_back(out[0].shape()[0]);
+            S_blocks.push_back(out[0]);
+
+        } 
+        
+        //process S:
+        Bond Bd_aux = Bond(BD_IN, aux_qnums,aux_degs, Tin.syms());
+        BlockUniTensor* S_ptr = new BlockUniTensor();
+        S_ptr->Init({Bd_aux,Bd_aux.redirect()},
+                    {"_aux_L","_aux_R"},1,
+                    Type.Double, Device.cpu, // this two will be overwrite later, so doesnt matter.
+                    true, // is_diag!
+                    true); // no_alloc!
+        S_ptr->_blocks = S_blocks;
+        UniTensor S;
+        S._impl = boost::intrusive_ptr<UniTensor_base>(S_ptr);
+        
+        outCyT.push_back(S);
+
+
+
+
+    } // _svd_Block_UT
+
+
+    std::vector<cytnx::UniTensor> Svd(const cytnx::UniTensor &Tin, const bool &is_U,
+                                      const bool &is_vT) {
+
+      // using rowrank to split the bond to form a matrix.
+      cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1,
+                      "[Svd][ERROR] Svd for UniTensor should have rank>1 and rowrank>0%s",
+                      "\n");
+      
+      std::vector<UniTensor> outCyT;
+      if (Tin.uten_type() == UTenType.Dense) {
+        _svd_Dense_UT(outCyT, Tin, is_U,is_vT);
+
+      } else if (Tin.uten_type() == UTenType.Block){
+        _svd_Block_UT(outCyT, Tin, is_U,is_vT);
+
+      }  else {
+        _svd_Sparse_UT(outCyT, Tin, is_U,is_vT);
+
+      }// is block form ?
+
+      return outCyT;
+
+    }; // Svd
+
+
+
 
   }  // namespace linalg
 }  // namespace cytnx

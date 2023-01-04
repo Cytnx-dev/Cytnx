@@ -20,8 +20,6 @@ int main(int argc, char *argv[]) {
   S.print_blocks();
 
 
-
-
   std::vector<int> tmptt = {0,1,2,3,4,5,6,7};
   memcpy(&tmptt[0],&tmptt[1],sizeof(int)*(tmptt.size()-1));
   print(tmptt); 
@@ -29,19 +27,20 @@ int main(int argc, char *argv[]) {
   auto BBA = Bond(BD_KET, {Qs(0), Qs(1), Qs(0), Qs(1), Qs(2)}, {1, 2, 3, 4, 5});
   auto BBB = Bond(BD_KET, {Qs(-1), Qs(-1), Qs(0), Qs(2), Qs(1)}, {1, 2, 3, 4, 5});
 
-  auto Ttrace = UniTensor({BBA,BBA.redirect()});
+  //auto Ttrace = UniTensor({BBA,BBA.redirect()});
 
-  Ttrace.Trace_(0,1);
+  //Ttrace.Trace_(0,1);
 
-  Ttrace.print_diagram();
-  return 0;
+  //Ttrace.print_diagram();
+  //return 0;
 
-
+ 
   auto bba = BBA.clone();
   bba.group_duplicates_();
   auto bbb = BBB.clone();
   bbb.group_duplicates_();
 
+  /*
   auto TAT = UniTensor({BBA, BBA, BBB.redirect(), BBB.redirect()});
   print(BBA);
   print(BBA);
@@ -64,12 +63,15 @@ int main(int argc, char *argv[]) {
   //print("-------");
   //print(((BlockUniTensor*)tst2._impl.get())->_inner_to_outer_idx);
   //print("-------");
+  */
 
   auto tat = UniTensor({bba, bba, bbb.redirect(), bbb.redirect()});
 
   tat.print_diagram(true);
 
-  tat.combineBonds({1,3});
+  linalg::Svd(tat,true,true);
+  
+
 
   return 0;
 
