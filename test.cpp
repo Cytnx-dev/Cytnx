@@ -8,40 +8,114 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]) {
 
+  /*
+  auto TNtst = arange(180).reshape(15,12);
+  cout << TNtst << endl;
+  cout << algo::Vsplit(TNtst,{2,5,4,3,1}) << endl;
 
-  Tensor Taa = arange(20).reshape(4,5);
-  Tensor Tbb = arange(12).reshape(4,3);
 
-  auto Too = linalg::Directsum(Taa,Tbb,{0});
+  cout << algo::Hsplit(TNtst,{2,3,1,2,4}) << endl;
+
+  return 0;
+  */
+
+
+  auto S = UniTensor(arange(200).reshape(4,5,2,5));
+
+  S.print_diagram();
+  S.print_blocks();
+
+  S.combineBonds({3,1});
+
+  S.print_diagram();
+  S.print_blocks();
+
+
+  std::vector<int> tmptt = {0,1,2,3,4,5,6,7};
+  memcpy(&tmptt[0],&tmptt[1],sizeof(int)*(tmptt.size()-1));
+  print(tmptt); 
+
+  auto BBA = Bond(BD_KET, {Qs(0), Qs(1), Qs(0), Qs(1), Qs(2)}, {1, 2, 3, 4, 5});
+  auto BBB = Bond(BD_KET, {Qs(-1), Qs(-1), Qs(0), Qs(2), Qs(1)}, {1, 2, 3, 4, 5});
+
+  //auto Ttrace = UniTensor({BBA,BBA.redirect()});
+
+  //Ttrace.Trace_(0,1);
+
+  //Ttrace.print_diagram();
+  //return 0;
+
+ 
+  auto bba = BBA.clone();
+  bba.group_duplicates_();
+  auto bbb = BBB.clone();
+  bbb.group_duplicates_();
+
+  /*
+  auto TAT = UniTensor({BBA, BBA, BBB.redirect(), BBB.redirect()});
+  print(BBA);
+  print(BBA);
+  print(BBB.redirect());
+  print(BBB.redirect());
+  TAT.print_diagram(true);
+
+
+  auto bbbrbba = bbb.redirect().clone();
+  bbbrbba._impl->force_combineBond_(bba._impl,false);
+  
+  auto bbabbbr = bba.clone();
+  bbabbbr._impl->force_combineBond_(bbb.redirect()._impl,false);
+
+  auto tst = UniTensor({bba, bbb.redirect(), bbbrbba});
+  auto tst2 = UniTensor({bba, bbabbbr,bbb.redirect()});
+  //print("-------");
+  //print(((BlockUniTensor*)tst._impl.get())->_inner_to_outer_idx);
+  //print("-------");
+  //print("-------");
+  //print(((BlockUniTensor*)tst2._impl.get())->_inner_to_outer_idx);
+  //print("-------");
+  */
+
+  auto tat = UniTensor({bba, bba, bbb.redirect(), bbb.redirect()});
+
+  tat.print_diagram(true);
+
+  linalg::Svd(tat,true,true);
+  
+
+
+  return 0;
+
+  Tensor Taa = arange(20).reshape(4, 5);
+  Tensor Tbb = arange(12).reshape(4, 3);
+
+  auto Too = linalg::Directsum(Taa, Tbb, {0});
 
   print(Too);
 
   return 0;
-  auto tbB = Bond(BD_BRA,{Qs(0),Qs(2),Qs(-3),Qs(0),Qs(1),Qs(2)}, {2,3,4,5,6,7});
+  auto tbB = Bond(BD_BRA, {Qs(0), Qs(2), Qs(-3), Qs(0), Qs(1), Qs(2)}, {2, 3, 4, 5, 6, 7});
 
   cout << tbB << endl;
 
-  print(tbB.group_duplicates());
+  print(tbB.group_duplicates_());
 
   cout << tbB << endl;
 
-  //std::vector<cytnx_int64>va = {1,0,9,7,2};
-  //auto mapPer = vec_sort(va,true);
+  // std::vector<cytnx_int64>va = {1,0,9,7,2};
+  // auto mapPer = vec_sort(va,true);
 
-
-  //print(va);
-
-  
+  // print(va);
 
   return 0;
-  std::vector<int> avv = {0,2,3,4};
-  std::vector<int> bvv = {0,3,1,4};
-  std::vector<int> cvv = {1,1,1,4};
+  std::vector<int> avv = {0, 2, 3, 4};
+  std::vector<int> bvv = {0, 3, 1, 4};
+  std::vector<int> cvv = {1, 1, 1, 4};
 
   cout << (avv < bvv) << endl;
   cout << (avv > bvv) << endl;
   cout << (avv == bvv) << endl;
-  
+
   cout << (bvv < cvv) << endl;
   cout << (bvv > cvv) << endl;
   cout << (bvv == cvv) << endl;
@@ -59,13 +133,12 @@ int main(int argc, char *argv[]) {
   cout << vec_unique(A) << endl;
   */
 
-
   /*
   auto TTNdir = UniTensor(arange(24).reshape(2,3,4)).relabels({"good","evil","badass"});
-    
+
   TTNdir.print_diagram();
   TTNdir.print_blocks(false);
-  
+
   TTNdir.tag();
 
   TTNdir.print_diagram();
@@ -84,27 +157,25 @@ int main(int argc, char *argv[]) {
   A3.permute_(1,0);
 
   print(algo::Hstack({A1,A2,A3}));
- 
+
   */
 
+  Bond phy = Bond(BD_IN, {Qs(0), Qs(1)}, {1, 1});
+  Bond aux = Bond(BD_IN, {Qs(1)}, {1});
 
-  Bond phy = Bond(BD_IN,{Qs(0),Qs(1)},{1,1});
-  Bond aux = Bond(BD_IN,{Qs(1)},{1});
-    
-  auto Sp = UniTensor({phy,phy.redirect(),aux});
-  auto Sm = UniTensor({phy,phy.redirect(),aux.redirect()},{3,4,2});
-  auto Sz = UniTensor({phy,phy.redirect()});
+  auto Sp = UniTensor({phy, phy.redirect(), aux});
+  auto Sm = UniTensor({phy, phy.redirect(), aux.redirect()}, {3, 4, 2});
+  auto Sz = UniTensor({phy, phy.redirect()});
 
-  //Sp.get_block_({0,1,0}).item() = 1;
+  // Sp.get_block_({0,1,0}).item() = 1;
 
-  Sp.at({0,1,0}) = 1;
-  Sm.at({1,0,0}) = 1;
-  Sz.at({0,0}) = 1;
-  Sz.at({1,1}) = -1;
-
+  Sp.at({0, 1, 0}) = 1;
+  Sm.at({1, 0, 0}) = 1;
+  Sz.at({0, 0}) = 1;
+  Sz.at({1, 1}) = -1;
 
   auto PM = Sp.contract(Sm);
-  auto ZZ = Sz.contract(Sz.relabels({"a","b"}));
+  auto ZZ = Sz.contract(Sz.relabels({"a", "b"}));
 
   PM.print_diagram();
   PM.print_blocks(true);
@@ -114,24 +185,20 @@ int main(int argc, char *argv[]) {
   MP.print_diagram();
   MP.print_blocks(true);
 
-  auto Hpmmp = 0.5*(PM + MP) + ZZ;
-  
+  auto Hpmmp = 0.5 * (PM + MP) + ZZ;
+
   Hpmmp.print_blocks(true);
 
   return 0;
-  Bond B1 = Bond(BD_IN,{Qs(0),Qs(1)},{3,4});
-  Bond B2 = Bond(BD_IN,{Qs(0),Qs(1)},{5,6});
-  Bond B3 = Bond(BD_OUT,{Qs(0),Qs(1)},{2,3});
-  Bond B4 = Bond(BD_OUT,{Qs(0),Qs(1)},{7,1});
+  Bond B1 = Bond(BD_IN, {Qs(0), Qs(1)}, {3, 4});
+  Bond B2 = Bond(BD_IN, {Qs(0), Qs(1)}, {5, 6});
+  Bond B3 = Bond(BD_OUT, {Qs(0), Qs(1)}, {2, 3});
+  Bond B4 = Bond(BD_OUT, {Qs(0), Qs(1)}, {7, 1});
 
-  auto UTB = UniTensor({B1,B2,B3,B4});
+  auto UTB = UniTensor({B1, B2, B3, B4});
 
   UTB.print_diagram();
   UTB.print_blocks(false);
-
-
-
-
 
   /*
   Sp.print_diagram(true);
@@ -141,7 +208,7 @@ int main(int argc, char *argv[]) {
   print(Sp.elem_exists({0,1,0}));
   print(Sp.elem_exists({1,0,0}));
   print(Sp.elem_exists({1,1,0}));
-  
+
   for(int i=0;i<2;i++)
     for(int j=0;j<2;j++){
         auto tmp = Sp.at({i,j,0});
@@ -151,20 +218,16 @@ int main(int argc, char *argv[]) {
   Sp.print_diagram(true);
   Sp.print_blocks(true);
   */
- 
+
   return 0;
 
-
-    
-
-
-
-  //Bond bd_sym_s = Bond(BD_REG, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
+  // Bond bd_sym_s = Bond(BD_REG, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
   Bond bd_sym_s = Bond(BD_KET, {{0}, {1}}, {4, 7});
-  Bond bd_sym_s2 = Bond(BD_BRA, {{0},{1},{2}},{8,9,3});
-  Bond bd_sym_s3 = Bond(BD_BRA, {{-1},{1},{0}},{2,6,5});
+  Bond bd_sym_s2 = Bond(BD_BRA, {{0}, {1}, {2}}, {8, 9, 3});
+  Bond bd_sym_s3 = Bond(BD_BRA, {{-1}, {1}, {0}}, {2, 6, 5});
 
-  Bond bd_sym_a = Bond(BD_KET, {{0,0}, {1,1}, {2,1}, {3,0}}, {4, 7, 2, 3},{Symmetry::U1(),Symmetry::Zn(2)});
+  Bond bd_sym_a =
+    Bond(BD_KET, {{0, 0}, {1, 1}, {2, 1}, {3, 0}}, {4, 7, 2, 3}, {Symmetry::U1(), Symmetry::Zn(2)});
   /*
   UniTensor TTT({bd_sym_a,bd_sym_a,bd_sym_a.redirect(),bd_sym_a.redirect()},{1000,2000,3020,4024});
   TTT.print_diagram();
@@ -177,41 +240,40 @@ int main(int argc, char *argv[]) {
   TTTp.contiguous_();
   TTTp.print_blocks(false);
   */
-  //UniTensor TTT({bd_sym_a,bd_sym_a.redirect(),bd_sym_a,bd_sym_a.redirect()},{1000,2000,300,400});
-  //TTT.print_diagram();
-  //TTT.print_blocks(false);
+  // UniTensor TTT({bd_sym_a,bd_sym_a.redirect(),bd_sym_a,bd_sym_a.redirect()},{1000,2000,300,400});
+  // TTT.print_diagram();
+  // TTT.print_blocks(false);
 
-  UniTensor T3A({bd_sym_s,bd_sym_s,bd_sym_s2,bd_sym_s3});
+  UniTensor T3A({bd_sym_s, bd_sym_s, bd_sym_s2, bd_sym_s3});
   T3A.print_diagram();
   T3A.print_blocks(false);
 
-  //auto tnB1 = T3A.get_block_({1,0,2,0});
-  //print(tnB1);
+  // auto tnB1 = T3A.get_block_({1,0,2,0});
+  // print(tnB1);
 
+  UniTensor T3B(
+    {bd_sym_s.redirect(), bd_sym_s.redirect(), bd_sym_s2.redirect(), bd_sym_s3.redirect()});
+  T3B = T3B.relabels({4, 5, 2, 6});
 
-  UniTensor T3B({bd_sym_s.redirect(),bd_sym_s.redirect(),bd_sym_s2.redirect(),bd_sym_s3.redirect()});
-  T3B = T3B.relabels({4,5,2,6});
-  
   T3B.print_diagram();
 
   T3A.contract(T3B);
 
   return 0;
 
-  //UniTensor T3B({bd_sym_s.redirect(),bd_sym_s.redirect(),bd_sym_s2.redirect(),bd_sym_s3.redirect()});
-  
+  // UniTensor
+  // T3B({bd_sym_s.redirect(),bd_sym_s.redirect(),bd_sym_s2.redirect(),bd_sym_s3.redirect()});
 
+  // auto OutAB = T3A.contract(T3B);
 
-  //auto OutAB = T3A.contract(T3B);
-  
-  //OutAB.print_diagram();
-  //OutAB.print_blocks();
+  // OutAB.print_diagram();
+  // OutAB.print_blocks();
 
-  //auto T33_b = T33.relabels({"a","c","ds","r"});
-  //auto Ot = T33.contract(T33_b);
-  //Ot.print_diagram();
-  //Ot.print_blocks(false);
-  /*  
+  // auto T33_b = T33.relabels({"a","c","ds","r"});
+  // auto Ot = T33.contract(T33_b);
+  // Ot.print_diagram();
+  // Ot.print_blocks(false);
+  /*
   UniTensor TTT({bd_sym_a,bd_sym_a.redirect()},{1000,2000});
   UniTensor TTT2 = TTT.relabels({300,400});
 
@@ -224,16 +286,16 @@ int main(int argc, char *argv[]) {
   TTO.print_blocks(false);
   */
   return 0;
-  
+
   bd_sym_a.Save("ttba");
-  
+
   print(bd_sym_a);
 
   Bond bd_r = Bond::Load("ttba.cybd");
-  
+
   print(bd_r);
 
-  return 0;  
+  return 0;
 
   Bond bd_sym_b = bd_sym_a.clone();
 
@@ -557,6 +619,7 @@ int main(int argc, char *argv[]) {
   CyTensor re(sss,2); // construct by block will not copy, and share same memory.
   cout << re << endl;
   */
+
 
   return 0;
 }

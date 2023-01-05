@@ -27,6 +27,15 @@ namespace cytnx {
     Tensor Hstack(const std::vector<Tensor> &In_tensors);
 
 
+    void Vsplit_(std::vector<Tensor> &out, const Tensor &Tin, const std::vector<cytnx_uint64> &dims);
+    void Hsplit_(std::vector<Tensor> &out, const Tensor &Tin, const std::vector<cytnx_uint64> &dims);
+    std::vector<Tensor> Vsplit( const Tensor &Tin, const std::vector<cytnx_uint64> &dims);
+    std::vector<Tensor> Hsplit( const Tensor &Tin, const std::vector<cytnx_uint64> &dims);
+    
+
+
+
+
   }  // namespace algo
 }  // namespace cytnx
 

@@ -730,7 +730,7 @@ namespace cytnx {
     return out;
   }
   void DenseUniTensor::combineBonds(const std::vector<std::string> &indicators,
-                                    const bool &permute_back) {
+                                    const bool &force) {
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
                     "\n");
     std::vector<std::string>::iterator it;
@@ -742,10 +742,87 @@ namespace cytnx {
                       "\n");
       idx_mapper.push_back(std::distance(this->_labels.begin(), it));
     }
-    this->combineBonds(idx_mapper,permute_back);
+    this->combineBonds(idx_mapper,force);
   }
   void DenseUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators,
-                                    const bool &permute_back) {
+                                    const bool &force) {
+    cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
+                    "\n");
+    std::vector<cytnx_int64>::iterator it;
+    std::vector<cytnx_int64> idx_mapper; idx_mapper.reserve(this->rank());
+  
+    cytnx_error_msg(this->_is_diag,
+                    "[ERROR] cannot combineBond on a is_diag=True UniTensor. suggestion: try "
+                    "UniTensor.to_dense()/to_dense_() first.%s",
+                    "\n");
+
+    //get the mapper:
+    int cnt = 0;
+    int idor;
+    for(int i=0;i<this->rank();i++){
+        if(cnt==indicators.size()){
+            idx_mapper.push_back(i);
+        }else{
+            if(std::find(indicators.begin(),indicators.end(),i)==indicators.end()){
+                idx_mapper.push_back(i);
+            }else{
+                if(i==indicators[0]){
+                    idor = idx_mapper.size(); //new_shape_aft_perm.size();
+                    for(int j=0;j<indicators.size();j++)
+                        idx_mapper.push_back(indicators[j]);
+                }
+                cnt += 1;
+            }
+        }
+    }
+    this->permute_(idx_mapper);
+
+    //group bonds:
+    std::vector<Bond> new_bonds;
+    //std::cout << "idor" << idor << std::endl;
+    //std::cout << "rank" << this->rank() << std::endl; 
+    for(int i=0;i<this->rank();i++){
+        if(i==idor){
+            Bond tmp = this->_bonds[i];
+            for(int j=1;j<indicators.size();j++){
+                if(force) tmp._impl->force_combineBond_(this->_bonds[i+j]._impl,false); 
+                else  tmp.combineBond_(this->_bonds[i+j]);
+            }
+            new_bonds.push_back(tmp);
+            i += indicators.size()-1;
+
+        }else{
+            new_bonds.push_back(this->_bonds[i]);
+        }
+    }
+
+    // remove labels, update bonds:
+    this->_labels.erase(this->_labels.begin()+idor+1,this->_labels.begin()+idor+1+indicators.size()-1);
+    this->_bonds = new_bonds;
+
+    // new shape:
+    std::vector<cytnx_int64> new_shape(this->_block.shape().begin(),this->_block.shape().end());
+    new_shape[idor] = -1;
+    if(idor+indicators.size()<new_shape.size()){
+        memcpy(&new_shape[idor+1],&new_shape[idor+indicators.size()],sizeof(cytnx_int64)*(new_shape.size()-idor-indicators.size()));
+    }
+    new_shape.resize(this->rank()); // rank follows this->_labels.size()!
+    
+    this->_block.reshape_(new_shape); 
+
+    if(this->_rowrank >= this->rank()) this->_rowrank = this->rank();
+
+    if (this->is_tag()) {
+        this->_is_braket_form = this->_update_braket();
+    }
+
+
+
+  }
+
+  /*
+  void DenseUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators,
+                                    const bool &force) {
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
                     "\n");
     std::vector<cytnx_int64>::iterator it;
@@ -859,8 +936,10 @@ namespace cytnx {
       }
     }  // permute_back
   }
+  */
+
   void DenseUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators,
-                                    const bool &permute_back, const bool &by_label) {
+                                    const bool &force, const bool &by_label) {
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
                     "\n");
     std::vector<std::string>::iterator it;
@@ -877,7 +956,7 @@ namespace cytnx {
     } else {
       idx_mapper = indicators;
     }
-    this->combineBonds(indicators,permute_back);
+    this->combineBonds(idx_mapper,force);
 
   }
 
