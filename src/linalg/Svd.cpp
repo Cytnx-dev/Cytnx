@@ -331,16 +331,7 @@ namespace cytnx {
 
 
     }; // _svd_Sparse_UT
-
-    Tensor _linalg_fx_Combine_matric_blocks(std::vector<Tensor> &Tlist, const cytnx_uint64 &Row_Nblk, const cytnx_uint64 &Col_Nblk){
-        std::vector<Tensor> rows; rows.reserve(Row_Nblk);
-        for(int r=0;r<Row_Nblk;r++){
-            std::vector<Tensor> tmp(Tlist.begin()+r*Col_Nblk,Tlist.begin()+(r+1)*Col_Nblk);
-            rows.push_back(algo::Hstack(tmp));
-        } 
-        return algo::Vstack(rows);
-    }
-
+    
     void _svd_Block_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin, const bool &is_U,
                                       const bool &is_vT){
 
@@ -356,7 +347,7 @@ namespace cytnx {
             strides.push_back(Tin.bonds()[i].qnums().size());
             BdLeft._impl->force_combineBond_(Tin.bonds()[i]._impl,false); // no grouping
         } 
-        std::cout << BdLeft << std::endl;               
+        //std::cout << BdLeft << std::endl;               
         strides.push_back(1);
         auto BdRight = Tin.bonds()[Tin.rowrank()].clone();
         for(int i=Tin.rowrank()+1;i<Tin.rank();i++){
@@ -364,8 +355,8 @@ namespace cytnx {
             BdRight._impl->force_combineBond_(Tin.bonds()[i]._impl,false); // no grouping
         }
         strides.push_back(1);
-        std::cout << BdRight << std::endl;               
-        std::cout << strides << std::endl;
+        //std::cout << BdRight << std::endl;               
+        //std::cout << strides << std::endl;
         
         // 2) making new inner_to_outer_idx lists for each block:
         // -> a. get stride:
@@ -375,7 +366,7 @@ namespace cytnx {
         for(int i=Tin.rank()-2;i>=Tin.rowrank();i--){
             strides[i]*=strides[i+1];
         }
-        std::cout << strides << std::endl;
+        //std::cout << strides << std::endl;
         // ->b. calc new inner_to_outer_idx!
         vec2d<cytnx_uint64> new_itoi(Tin.Nblocks(),std::vector<cytnx_uint64>(2));
         
@@ -438,7 +429,7 @@ namespace cytnx {
             cytnx_error_msg(Tlist.size()%Rblk_dim,"[Internal ERROR] Tlist is not complete!%s","\n");
             // BTen is the big block!!
             cytnx_uint64 Cblk_dim = Tlist.size()/Rblk_dim;
-            Tensor BTen = _linalg_fx_Combine_matric_blocks(Tlist, Rblk_dim, Cblk_dim);
+            Tensor BTen = algo::_fx_Matric_combine(Tlist, Rblk_dim, Cblk_dim);
             
             // Now we can perform linalg!
             aux_qnums.push_back(x.first);

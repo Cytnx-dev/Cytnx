@@ -8,6 +8,48 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]) {
 
+  Bond phy = Bond(BD_IN, {Qs(0), Qs(1)}, {1, 1});
+  Bond aux = Bond(BD_IN, {Qs(1)}, {1});
+
+  auto Sp = UniTensor({phy, phy.redirect(), aux},{0,2,-1});
+  auto Sm = UniTensor({phy, phy.redirect(), aux.redirect()}, {1, 3, -1});
+  auto Sz = UniTensor({phy, phy.redirect()});
+
+  // Sp.get_block_({0,1,0}).item() = 1;
+
+  Sp.at({0, 1, 0}) = 1;
+  Sm.at({1, 0, 0}) = 1;
+  Sz.at({0, 0}) = 1;
+  Sz.at({1, 1}) = -1;
+
+  auto PM = Sp.contract(Sm);
+  auto ZZ = Sz.contract(Sz.relabels({"a", "b"}));
+
+  PM.print_diagram();
+  PM.print_blocks(true);
+
+  auto MP = Sm.contract(Sp);
+
+  MP.print_diagram();
+  MP.print_blocks(true);
+
+  auto Hpmmp = 0.5 * (PM + MP) + ZZ;
+  Hpmmp.permute_({0,2,1,3});
+
+  Hpmmp.print_blocks(true);
+
+  Hpmmp.set_rowrank(2);
+    
+  Hpmmp.print_diagram();
+
+  auto Exp_Hpmmp = linalg::ExpH(Hpmmp,1);
+
+  Exp_Hpmmp.print_diagram();
+  Exp_Hpmmp.print_blocks(true);
+
+
+  return 0;
+
   /*
   auto TNtst = arange(180).reshape(15,12);
   cout << TNtst << endl;
@@ -75,14 +117,20 @@ int main(int argc, char *argv[]) {
   //print(((BlockUniTensor*)tst2._impl.get())->_inner_to_outer_idx);
   //print("-------");
   */
+  print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
   auto tat = UniTensor({bba, bba, bbb.redirect(), bbb.redirect()});
 
   tat.print_diagram(true);
 
-  linalg::Svd(tat,true,true);
+  auto Osvd = linalg::Svd(tat,true,true);
   
-
+  Osvd[0].print_diagram();
+  Osvd[0].print_blocks(false);
+  Osvd[1].print_diagram();
+  Osvd[1].print_blocks(false);
+  Osvd[2].print_diagram();
+  Osvd[2].print_blocks(false);
 
   return 0;
 
@@ -159,35 +207,6 @@ int main(int argc, char *argv[]) {
   print(algo::Hstack({A1,A2,A3}));
 
   */
-
-  Bond phy = Bond(BD_IN, {Qs(0), Qs(1)}, {1, 1});
-  Bond aux = Bond(BD_IN, {Qs(1)}, {1});
-
-  auto Sp = UniTensor({phy, phy.redirect(), aux});
-  auto Sm = UniTensor({phy, phy.redirect(), aux.redirect()}, {3, 4, 2});
-  auto Sz = UniTensor({phy, phy.redirect()});
-
-  // Sp.get_block_({0,1,0}).item() = 1;
-
-  Sp.at({0, 1, 0}) = 1;
-  Sm.at({1, 0, 0}) = 1;
-  Sz.at({0, 0}) = 1;
-  Sz.at({1, 1}) = -1;
-
-  auto PM = Sp.contract(Sm);
-  auto ZZ = Sz.contract(Sz.relabels({"a", "b"}));
-
-  PM.print_diagram();
-  PM.print_blocks(true);
-
-  auto MP = Sm.contract(Sp);
-
-  MP.print_diagram();
-  MP.print_blocks(true);
-
-  auto Hpmmp = 0.5 * (PM + MP) + ZZ;
-
-  Hpmmp.print_blocks(true);
 
   return 0;
   Bond B1 = Bond(BD_IN, {Qs(0), Qs(1)}, {3, 4});
