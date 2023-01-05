@@ -1,7 +1,9 @@
+#include "../test_tools.h"
 #include "stack_test.h"
 
 using namespace cytnx;
 using namespace testing;
+using namespace TestTools;
 
 namespace HstackTest {
 
@@ -17,7 +19,7 @@ TEST(Hstack, only_one_tensor) {
     if(dtype == Type.Bool) //if both bool type, it will throw error
       continue;
     std::vector<Tensor> Ts = {Tensor({4, 3}, dtype)};
-    InitTestData(Ts);
+    InitTensorUniform(Ts);
     Tensor hstack_tens = algo::Hstack(Ts);
     CheckResult(hstack_tens, Ts);
   }
@@ -36,7 +38,7 @@ TEST(Hstack, multi_tensor) {
         Tensor({4, 2}, dtype), 
         Tensor({4, 5}, dtype)
     };
-    InitTestData(Ts);
+    InitTensorUniform(Ts);
     Tensor hstack_tens = algo::Hstack(Ts);
     CheckResult(hstack_tens, Ts);
   }
@@ -55,7 +57,7 @@ TEST(Hstack, two_type_tensor) {
           Tensor({4, 3}, dtype1), 
           Tensor({4, 2}, dtype2)
       };
-      InitTestData(Ts);
+      InitTensorUniform(Ts);
       Tensor hstack_tens = algo::Hstack(Ts);
       CheckResult(hstack_tens, Ts);
     }
@@ -79,7 +81,7 @@ TEST(Hstack, diff_type_tensor) {
       Tensor({4, 1}, Type.Double), 
       Tensor({4, 5}, Type.Uint64)
   };
-  InitTestData(Ts);
+  InitTensorUniform(Ts);
   Tensor hstack_tens = algo::Hstack(Ts);
   CheckResult(hstack_tens, Ts);
 }
@@ -101,7 +103,7 @@ input:void tensor, cpu
 ====================*/
 TEST(Hstack, err_tensor_void) {
   std::vector<Tensor> Ts = {Tensor()};
-  InitTestData(Ts);
+  InitTensorUniform(Ts);
   ErrorTestExcute(Ts);
 }
 
@@ -116,7 +118,7 @@ TEST(Hstack, err_contains_void) {
       Tensor({4, 3}, Type.Double), 
       Tensor()
   };
-  InitTestData(Ts);
+  InitTensorUniform(Ts);
   ErrorTestExcute(Ts);
 }
 
@@ -131,7 +133,7 @@ TEST(Hstack, err_row_not_eq) {
       Tensor({4, 3}, Type.Double), 
       Tensor({2, 3}, Type.Double)
   };
-  InitTestData(Ts);
+  InitTensorUniform(Ts);
   ErrorTestExcute(Ts);
 }
 
@@ -142,7 +144,7 @@ input:
 ====================*/
 TEST(Hstack, err_a_bool_type) {
   std::vector<Tensor> Ts = {Tensor({2, 3}, Type.Bool)};
-  InitTestData(Ts);
+  InitTensorUniform(Ts);
   ErrorTestExcute(Ts);
 }
 
@@ -157,11 +159,11 @@ TEST(Hstack, err_multi_bool_type) {
       Tensor({4, 3}, Type.Bool), 
       Tensor({4, 2}, Type.Bool)
   };
-  InitTestData(Ts);
+  InitTensorUniform(Ts);
   ErrorTestExcute(Ts);
 }
 
-void InitTestData(std::vector<Tensor>& Ts) {
+void InitTensorUniform(std::vector<Tensor>& Ts) {
   unsigned int rand_seed = 0;
   for(auto& T : Ts) {
     auto dtype = T.dtype();
@@ -213,7 +215,7 @@ void InitTestData(std::vector<Tensor>& Ts) {
     }
     T = tmp.astype(dtype);
   } //for
-} // func:InitTestData
+} // func:InitTensorUniform
 
 bool IsElemSame(const Tensor& T1, const std::vector<cytnx_uint64>& idices1,
                 const Tensor& T2, const std::vector<cytnx_uint64>& idices2) {

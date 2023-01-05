@@ -1,7 +1,9 @@
+#include "../test_tools.h"
 #include "stack_test.h"
 
 using namespace cytnx;
 using namespace testing;
+using namespace TestTools;
 
 namespace VstackTest {
 
@@ -17,7 +19,7 @@ TEST(Vstack, only_one_tensor) {
     if(dtype == Type.Bool) //if both bool type, it will throw error
       continue;
     std::vector<Tensor> Ts = {Tensor({3, 4}, dtype)};
-    InitTestData(Ts);
+    InitTensorUniform(Ts);
     Tensor vstack_tens = algo::Vstack(Ts);
     CheckResult(vstack_tens, Ts);
   }
@@ -36,7 +38,7 @@ TEST(Vstack, multi_tensor) {
         Tensor({2, 4}, dtype), 
         Tensor({5, 4}, dtype)
     };
-    InitTestData(Ts);
+    InitTensorUniform(Ts);
     Tensor vstack_tens = algo::Vstack(Ts);
     CheckResult(vstack_tens, Ts);
   }
@@ -55,7 +57,7 @@ TEST(Vstack, two_type_tensor) {
           Tensor({3, 4}, dtype1), 
           Tensor({2, 4}, dtype2)
       };
-      InitTestData(Ts);
+      InitTensorUniform(Ts);
       Tensor vstack_tens = algo::Vstack(Ts);
       CheckResult(vstack_tens, Ts);
     }
@@ -79,7 +81,7 @@ TEST(Vstack, diff_type_tensor) {
       Tensor({1, 4}, Type.Double), 
       Tensor({5, 4}, Type.Uint64)
   };
-  InitTestData(Ts);
+  InitTensorUniform(Ts);
   Tensor vstack_tens = algo::Vstack(Ts);
   CheckResult(vstack_tens, Ts);
 }
@@ -101,7 +103,7 @@ input:void tensor, cpu
 ====================*/
 TEST(Vstack, err_tensor_void) {
   std::vector<Tensor> Ts = {Tensor()};
-  InitTestData(Ts);
+  InitTensorUniform(Ts);
   ErrorTestExcute(Ts);
 }
 
@@ -116,7 +118,7 @@ TEST(Vstack, err_contains_void) {
       Tensor({3, 4}, Type.Double), 
       Tensor()
   };
-  InitTestData(Ts);
+  InitTensorUniform(Ts);
   ErrorTestExcute(Ts);
 }
 
@@ -131,7 +133,7 @@ TEST(Vstack, err_col_not_eq) {
       Tensor({3, 4}, Type.Double), 
       Tensor({3, 2}, Type.Double)
   };
-  InitTestData(Ts);
+  InitTensorUniform(Ts);
   ErrorTestExcute(Ts);
 }
 
@@ -142,7 +144,7 @@ input:
 ====================*/
 TEST(Vstack, err_a_bool_type) {
   std::vector<Tensor> Ts = {Tensor({2, 3}, Type.Bool)};
-  InitTestData(Ts);
+  InitTensorUniform(Ts);
   ErrorTestExcute(Ts);
 }
 
@@ -157,7 +159,7 @@ TEST(Vstack, err_contains_multi_bool_type) {
       Tensor({3, 4}, Type.Bool), 
       Tensor({2, 4}, Type.Bool)
   };
-  InitTestData(Ts);
+  InitTensorUniform(Ts);
   ErrorTestExcute(Ts);
 }
 
