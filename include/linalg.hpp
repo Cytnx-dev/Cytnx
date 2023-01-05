@@ -764,7 +764,9 @@ namespace cytnx {
 
     */
     template <typename T>
-    Tensor ExpH(const Tensor &in, const T &a = 1, const T &b = 0);
+    Tensor ExpH(const Tensor &in, const T &a, const T &b =0);
+
+
 
     // ExpM:
     //===========================================

@@ -32,6 +32,15 @@ namespace cytnx {
     std::vector<Tensor> Vsplit( const Tensor &Tin, const std::vector<cytnx_uint64> &dims);
     std::vector<Tensor> Hsplit( const Tensor &Tin, const std::vector<cytnx_uint64> &dims);
     
+    
+
+
+
+
+    ///@cond
+    Tensor _fx_Matric_combine(std::vector<Tensor> &Tlist, const cytnx_uint64 &Row_Nblk, const cytnx_uint64 &Col_Nblk);
+    void _fx_Matric_split(std::vector<Tensor> &out, const Tensor &Tin, const std::vector<cytnx_uint64> &rdims, const std::vector<cytnx_uint64> &cdims);
+    ///@endcond
 
 
 

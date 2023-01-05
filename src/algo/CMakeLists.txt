@@ -8,6 +8,7 @@ target_sources_local(cytnx
     Hstack.cpp
     Vsplit.cpp
     Hsplit.cpp
+    Matric.cpp
 )
 
 add_subdirectory(algo_internal_cpu)
