@@ -17,6 +17,13 @@
 //#endif
 
 namespace cytnx {
+  template <class T>
+  using vec3d = std::vector<std::vector<std::vector<T> > >;
+  
+  template <class T>
+  using vec2d = std::vector<std::vector<T> >;
+
+
   typedef double cytnx_double;
   typedef float cytnx_float;
   typedef uint64_t cytnx_uint64;

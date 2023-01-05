@@ -79,7 +79,7 @@ namespace cytnx {
         : _is_tag(false),
           _name(std::string("")),
           _is_braket_form(false),
-          _rowrank(-1),
+          _rowrank(0),
           _is_diag(false),
           uten_type_id(UTenType.Void){};
 
@@ -246,6 +246,8 @@ namespace cytnx {
     virtual std::string dtype_str() const;
     virtual std::string device_str() const;
     virtual void set_rowrank(const cytnx_uint64 &new_rowrank);
+   
+
 
     virtual boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
                                                          const cytnx_int64 &rowrank = -1,
@@ -303,12 +305,12 @@ namespace cytnx {
                                                          const cytnx_uint64 &rowrank = 0);
     virtual boost::intrusive_ptr<UniTensor_base> to_dense();
     virtual void to_dense_();
-    virtual void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back,
+    virtual void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
                               const bool &by_label);
     virtual void combineBonds(const std::vector<std::string> &indicators,
-                              const bool &permute_back = false);
+                              const bool &force = false);
     virtual void combineBonds(const std::vector<cytnx_int64> &indicators,
-                              const bool &permute_back = false);
+                              const bool &force = false);
     virtual boost::intrusive_ptr<UniTensor_base> contract(
       const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &mv_elem_self = false,
       const bool &mv_elem_rhs = false);
@@ -417,6 +419,11 @@ namespace cytnx {
                                               const cytnx_uint16 &aux) const;
     virtual const cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
                                              const cytnx_int16 &aux) const;
+
+    virtual void group_basis_();
+    virtual const std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx) const;
+    virtual std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx);
+
 
     virtual void _save_dispatch(std::fstream &f) const;
     virtual void _load_dispatch(std::fstream &f);
@@ -700,10 +707,10 @@ namespace cytnx {
      * @param permute_back
      * @param by_label
      */
-    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back,
+    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
                       const bool &by_label);
-    void combineBonds(const std::vector<std::string> &indicators, const bool &permute_back = true);
-    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back = true);
+    void combineBonds(const std::vector<std::string> &indicators, const bool &force = true);
+    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force = true);
     boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs,
                                                   const bool &mv_elem_self = false,
                                                   const bool &mv_elem_rhs = false);
@@ -982,8 +989,22 @@ namespace cytnx {
     void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim);
     void truncate_(const std::string &bond_idx, const cytnx_uint64 &dim);
 
+    void group_basis_(){
+        cytnx_warning_msg(true,"[WARNING] group basis will not have any effect on DensUniTensor.%s","\n");
+    }
+
     void _save_dispatch(std::fstream &f) const;
     void _load_dispatch(std::fstream &f);
+
+    const std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx) const{
+        cytnx_error_msg(true,"[ERROR] get_qindices can only be unsed on UniTensor with Symmetry.%s","\n");
+        
+    }
+    std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx){
+        cytnx_error_msg(true,"[ERROR] get_qindices can only be unsed on UniTensor with Symmetry.%s","\n");
+    }
+
+
     // end virtual function
   };
   /// @endcond
@@ -1522,14 +1543,14 @@ namespace cytnx {
      * @param permute_back
      * @param by_label
      */
-    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back,
+    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
                       const bool &by_label) {
       cytnx_error_msg(true, "[Developing]%s", "\n");
     };
-    void combineBonds(const std::vector<std::string> &indicators, const bool &permute_back = true) {
+    void combineBonds(const std::vector<std::string> &indicators, const bool &force = true) {
       cytnx_error_msg(true, "[Developing]%s", "\n");
     };
-    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back = true) {
+    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force = true) {
       cytnx_error_msg(true, "[Developing]%s", "\n");
     };
     boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs,
@@ -1677,10 +1698,24 @@ namespace cytnx {
     cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux);
     cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
 
+    void group_basis_(){
+        cytnx_warning_msg(true,"[WARNING] group basis will not have any effect on SparseUniTensor.%s","\n");
+    }
+
     bool elem_exists(const std::vector<cytnx_uint64> &locator) const;
     void _save_dispatch(std::fstream &f) const;
     void _load_dispatch(std::fstream &f);
+
+    const std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx) const{
+        cytnx_error_msg(true,"[ERROR][SparseUniTensor] get_qindices can only be unsed on BlockUniTensor with Symmetry.%s","\n");
+    }
+    std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx){
+        cytnx_error_msg(true,"[ERROR][SparseUniTensor] get_qindices can only be unsed on BlockUniTensor.%s","\n");
+    }
+
+
     // end virtual func
+
   };
   /// @endcond
 
@@ -1721,7 +1756,8 @@ namespace cytnx {
         void _fx_locate_elem(cytnx_int64 &bidx, std::vector<cytnx_uint64> &loc_in_T,const std::vector<cytnx_uint64> &locator) const;
 
         // internal function, grouping all duplicate qnums in all bonds
-        void _fx_group_duplicates();
+        void _fx_group_duplicates(const std::vector<cytnx_uint64> &dup_bond_idxs, const std::vector<std::vector<cytnx_uint64> > &idx_mappers);        
+
 
         void set_meta(BlockUniTensor *tmp, const bool &inner, const bool &outer) const {
           // outer meta
@@ -1972,6 +2008,11 @@ namespace cytnx {
       cytnx_error_msg(new_rowrank > this->rank(),
                       "[ERROR][BlockUniTensor] rowrank should be [>=0] and [<=UniTensor.rank].%s",
                       "\n");
+      if(this->is_diag()){
+        cytnx_error_msg(new_rowrank != 1,
+                      "[ERROR][BlockUniTensor] rowrank should be [==1] when is_diag =true!.%s",
+                      "\n");
+      }
       this->_rowrank = new_rowrank;
       this->_is_braket_form = this->_update_braket();
     }
@@ -2181,11 +2222,21 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> Trace(const std::string &a, const std::string &b) {
       boost::intrusive_ptr<UniTensor_base> out = this->clone();
       out->Trace_(a, b);
+      if(out->rank()==0){
+        DenseUniTensor *tmp = new DenseUniTensor();
+        tmp->_block = ((BlockUniTensor*)out.get())->_blocks[0];
+        out = boost::intrusive_ptr<UniTensor_base>(tmp);
+      }
       return out;
     }
     boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b) {
       boost::intrusive_ptr<UniTensor_base> out = this->clone();
       out->Trace_(a, b);
+      if(out->rank()==0){
+        DenseUniTensor *tmp = new DenseUniTensor();
+        tmp->_block = ((BlockUniTensor*)out.get())->_blocks[0];
+        out = boost::intrusive_ptr<UniTensor_base>(tmp);
+      }
       return out;
     }
     /**
@@ -2201,6 +2252,11 @@ namespace cytnx {
                                                const bool &by_label) {
       boost::intrusive_ptr<UniTensor_base> out = this->clone();
       out->Trace_(a, b, by_label);
+      if(out->rank()==0){
+        DenseUniTensor *tmp = new DenseUniTensor();
+        tmp->_block = ((BlockUniTensor*)out.get())->_blocks[0];
+        out = boost::intrusive_ptr<UniTensor_base>(tmp);
+      }
       return out;
     }
 
@@ -2283,7 +2339,23 @@ namespace cytnx {
         cytnx_error_msg(true, "[ERROR] cannot arithmetic Scalar/BlockUniTensor.%s", "\n");
     }
 
+    void group_basis_();
+    
+    void combineBonds(const std::vector<cytnx_int64> &indicators,
+                              const bool &force = false);
+    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
+                              const bool &by_label);
+    void combineBonds(const std::vector<std::string> &indicators,
+                              const bool &force = false);
 
+    const std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx) const{
+        cytnx_error_msg(bidx>=this->Nblocks(),"[ERROR][BlockUniTensor] bidx out of bound! only %d blocks in current UTen.\n",this->Nblocks());
+        return this->_inner_to_outer_idx[bidx];
+    }
+    std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx){
+        cytnx_error_msg(bidx>=this->Nblocks(),"[ERROR][BlockUniTensor] bidx out of bound! only %d blocks in current UTen.\n",this->Nblocks());
+        return this->_inner_to_outer_idx[bidx];
+    }
 
 
   };
@@ -2753,7 +2825,18 @@ namespace cytnx {
     void contiguous_() { this->_impl = this->_impl->contiguous_(); }
     void print_diagram(const bool &bond_info = false) { this->_impl->print_diagram(bond_info); }
     void print_blocks(const bool &full_info=true) const{ this->_impl->print_blocks(full_info); }
-    
+   
+    void group_basis_(){
+        this->_impl->group_basis_(); 
+    }
+
+    UniTensor group_basis() const{
+        UniTensor out = this->clone();
+        out.group_basis_();
+        return out;
+    }
+
+ 
     template <class T>
     T &at(const std::vector<cytnx_uint64> &locator){
       // std::cout << "at " << this->is_blockform()  << std::endl;
@@ -2926,15 +3009,15 @@ namespace cytnx {
      * @param permute_back
      * @param by_label
      */
-    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back,
+    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
                       const bool &by_label) {
-      this->_impl->combineBonds(indicators, permute_back, by_label);
+      this->_impl->combineBonds(indicators, force, by_label);
     }
-    void combineBonds(const std::vector<std::string> &indicators, const bool &permute_back = true) {
-      this->_impl->combineBonds(indicators, permute_back);
+    void combineBonds(const std::vector<std::string> &indicators, const bool &force = false) {
+      this->_impl->combineBonds(indicators, force);
     }
-    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &permute_back = true) {
-      this->_impl->combineBonds(indicators, permute_back);
+    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force = false) {
+      this->_impl->combineBonds(indicators, force);
     }
     UniTensor contract(const UniTensor &inR, const bool &mv_elem_self = false,
                        const bool &mv_elem_rhs = false) const {
@@ -3086,10 +3169,26 @@ namespace cytnx {
 
     UniTensor &Trace_(const std::string &a, const std::string &b) {
       this->_impl->Trace_(a, b);
+      if(this->uten_type()==UTenType.Block){
+        // handle if no leg left case for BlockUniTensor.
+        if(this->rank()==0){
+            DenseUniTensor *tmp = new DenseUniTensor();
+            tmp->_block = this->get_blocks_(true)[0];
+            this->_impl = boost::intrusive_ptr<UniTensor_base>(tmp);
+        }
+      }
       return *this;
     }
     UniTensor &Trace_(const cytnx_int64 &a = 0, const cytnx_int64 &b = 1) {
       this->_impl->Trace_(a, b);
+      if(this->uten_type()==UTenType.Block){
+        // handle if no leg left case for BlockUniTensor.
+        if(this->rank()==0){
+            DenseUniTensor *tmp = new DenseUniTensor();
+            tmp->_block = this->get_blocks_(true)[0];
+            this->_impl = boost::intrusive_ptr<UniTensor_base>(tmp);
+        }
+      }
       return *this;
     }
     /**
@@ -3103,6 +3202,14 @@ namespace cytnx {
      */
     UniTensor &Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label) {
       this->_impl->Trace_(a, b, by_label);
+      if(this->uten_type()==UTenType.Block){
+        // handle if no leg left case for BlockUniTensor.
+        if(this->rank()==0){
+            DenseUniTensor *tmp = new DenseUniTensor();
+            tmp->_block = this->get_blocks_(true)[0];
+            this->_impl = boost::intrusive_ptr<UniTensor_base>(tmp);
+        }
+      }
       return *this;
     }
 
@@ -3195,6 +3302,28 @@ namespace cytnx {
       out.truncate_(bond_idx, dim);
       return out;
     }
+
+    /**
+    @brief get the q-indices on each leg for the [bidx]-th block 
+    @param bidx the bidx-th block in current block list. 
+    @return 
+        [vector]
+
+    */
+    const std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx) const{
+        return this->_impl->get_qindices(bidx);
+    }
+    /**
+    @brief get the q-indices on each leg for the [bidx]-th block 
+    @param bidx the bidx-th block in current block list. 
+    @return 
+        [vector]
+
+    */
+    std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx){
+        return this->_impl->get_qindices(bidx);
+    }
+
 
     /// @cond
     void _Load(std::fstream &f);

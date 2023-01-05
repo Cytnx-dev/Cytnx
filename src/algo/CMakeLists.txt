@@ -6,6 +6,8 @@ target_sources_local(cytnx
     Concatenate.cpp
     Vstack.cpp
     Hstack.cpp
+    Vsplit.cpp
+    Hsplit.cpp
 )
 
 add_subdirectory(algo_internal_cpu)

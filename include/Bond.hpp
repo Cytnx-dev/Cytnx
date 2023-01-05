@@ -8,6 +8,7 @@
 #include <vector>
 #include <fstream>
 #include <map>
+#include <algorithm>
 #include "intrusive_ptr_base.hpp"
 #include "utils/vec_clone.hpp"
 namespace cytnx {
@@ -58,6 +59,16 @@ namespace cytnx {
     std::vector<std::vector<cytnx_int64>> qnums_clone() const { return this->_qnums; }
     std::vector<Symmetry> syms_clone() const { return vec_clone(this->_syms); }
 
+    bool has_duplicate_qnums() const{
+        if(this->_degs.size()){
+            auto tmp = this->_qnums;
+            std::sort(tmp.begin(),tmp.end());
+            return std::adjacent_find(tmp.begin(), tmp.end()) != tmp.end();
+        }else{
+            return false;
+        }
+    }
+
     void set_type(const bondType &new_bondType) {
       if ((this->_type != BD_REG)) {
         if (new_bondType == BD_REG) {
@@ -81,7 +92,7 @@ namespace cytnx {
       this->_type = bondType::BD_REG;
     }
 
-    boost::intrusive_ptr<Bond_impl> clone() {
+    boost::intrusive_ptr<Bond_impl> clone() const {
       boost::intrusive_ptr<Bond_impl> out(new Bond_impl());
       out->_dim = this->dim();
       out->_type = this->type();
@@ -117,8 +128,15 @@ namespace cytnx {
     std::vector<cytnx_uint64>& getDegeneracies(){ return this->_degs;};
     const std::vector<cytnx_uint64>& getDegeneracies() const{return this->_degs;};
 
-    std::vector<cytnx_uint64> group_duplicates();
+    std::vector<cytnx_uint64> group_duplicates_();
 
+    boost::intrusive_ptr<Bond_impl> group_duplicates(std::vector<cytnx_uint64> &mapper) const{
+        boost::intrusive_ptr<Bond_impl> out = this->clone();
+        mapper = out->group_duplicates_();
+        return out;
+    }
+
+    void force_combineBond_(const boost::intrusive_ptr<Bond_impl> &bd_in, const bool &is_grp);
 
 
 
@@ -469,8 +487,18 @@ namespace cytnx {
         
     // the map returns the new index from old index via
     // new_index = return<cytnx_uint64>[old_index]
-    std::vector<cytnx_uint64> group_duplicates(){
-        return this->_impl->group_duplicates();
+    std::vector<cytnx_uint64> group_duplicates_(){
+        return this->_impl->group_duplicates_();
+    }
+
+    Bond group_duplicates(std::vector<cytnx_uint64> &mapper) const{
+        Bond out;
+        out._impl = this->_impl->group_duplicates(mapper);
+        return out;
+    }
+
+    bool has_duplicate_qnums() const {
+        return this->_impl->has_duplicate_qnums();
     }
 
     std::vector<std::vector<cytnx_int64>> calc_reverse_qnums() {

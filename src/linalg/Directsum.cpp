@@ -10,7 +10,6 @@
 using namespace std;
 namespace cytnx {
   namespace linalg {
-
     cytnx::Tensor Directsum(const cytnx::Tensor &T1, const cytnx::Tensor &T2, const std::vector<cytnx_uint64> &shared_axes) {
         
         //check:
