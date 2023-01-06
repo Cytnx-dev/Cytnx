@@ -86,6 +86,29 @@ TEST(Vstack, diff_type_tensor) {
   CheckResult(vstack_tens, Ts);
 }
 
+/*=====test info=====
+describe:Test non contiguous tensor.
+input:Three tensors as following
+  T1:shape (2, 4) with non contiguous, bool type on cpu device.
+  T2:shape (3, 4) with non contiguous complex double type on cpu device.
+  T3:shape (1, 4) with non contiguous double type on cpu device.
+====================*/
+TEST(Vstack, non_contiguous_tensor) {
+  std::vector<Tensor> Ts = {
+      Tensor({4, 2}, Type.Bool), 
+      Tensor({4, 3}, Type.ComplexDouble), 
+      Tensor({4, 1}, Type.Double), 
+  };
+  InitTensorUniform(Ts);
+  //permute the it will not be contiguous
+  for (auto& T : Ts) {
+    T.permute_({1, 0});
+    ASSERT_FALSE(T.is_contiguous());
+  }
+  Tensor vstack_tens = algo::Vstack(Ts);
+  CheckResult(vstack_tens, Ts);
+}
+
 //error test
 
 /*=====test info=====
@@ -188,6 +211,7 @@ void CheckResult(const Tensor& vstack_tens,
   EXPECT_EQ(vstack_shape[0], D_total);
 
   //3. check tensor elements
+  EXPECT_TRUE(vstack_tens.is_contiguous());
   int block_row_shift = 0;
   bool is_same_elem = true;
   for(auto tens : input_tens) {

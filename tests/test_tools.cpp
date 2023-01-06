@@ -164,6 +164,9 @@ bool AreNearlyEqTensor(const Tensor& T1, const Tensor& T2, const cytnx_double to
     return false;
   if (T1.shape() != T2.shape())
     return false;
+  if (T1.is_contiguous() != T2.is_contiguous())
+    return false;
+
   return AreNearlyEqStorage(T1.storage(), T2.storage(), tol);
 }
 

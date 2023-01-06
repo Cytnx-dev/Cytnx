@@ -8,6 +8,8 @@ using namespace TestTools;
 
 namespace DirectsumTest {
 
+static cytnx_uint64 rand_seed1, rand_seed2;
+
 void ExcuteDirectsumTest(const Tensor& T1, const Tensor& T2, 
                          const std::vector<cytnx_uint64> shared_axes);
 
@@ -28,8 +30,8 @@ TEST(Directsum, allDType) {
       for (auto dtype2 : dtype_list) {
         Tensor T1 = Tensor({12, 5, 7}, dtype1, device);
         Tensor T2 = Tensor({12, 5, 8}, dtype2, device);
-        InitTensorUniform(T1);
-        InitTensorUniform(T2);
+        InitTensorUniform(T1, rand_seed1 = 0);
+        InitTensorUniform(T2, rand_seed2 = 1);
         std::vector<cytnx_uint64> shared_axes = {1};
         ExcuteDirectsumTest(T1, T2, shared_axes);
       }
@@ -47,8 +49,8 @@ input:
 TEST(Directsum, shared_axes_combination) {
   Tensor T1 = Tensor({7, 5, 3, 3});
   Tensor T2 = Tensor({7, 9, 3, 3});
-  InitTensorUniform(T1);
-  InitTensorUniform(T2);
+  InitTensorUniform(T1, rand_seed1 = 0);
+  InitTensorUniform(T2, rand_seed2 = 1);
   std::vector<std::vector<cytnx_uint64>> shared_axes_list = 
   { {},                                                              //empty 
     {0}, {2}, {3},                                                   //1 elem
@@ -70,8 +72,8 @@ input:
 TEST(Directsum, shared_axes_empty) {
   Tensor T1 = Tensor({2, 1, 2});
   Tensor T2 = Tensor({2, 4, 3});
-  InitTensorUniform(T1);
-  InitTensorUniform(T2);
+  InitTensorUniform(T1, rand_seed1 = 0);
+  InitTensorUniform(T2, rand_seed2 = 1);
   std::vector<cytnx_uint64> shared_axes = {};
   ExcuteDirectsumTest(T1, T2, shared_axes);
 }
@@ -87,8 +89,8 @@ TEST(Directsum, one_elem_tens) {
   for (auto dtype : dtype_list) {
     Tensor T1 = Tensor({1}, dtype);
     Tensor T2 = Tensor({1}, dtype);
-    InitTensorUniform(T1);
-    InitTensorUniform(T2);
+    InitTensorUniform(T1, rand_seed1 = 0);
+    InitTensorUniform(T2, rand_seed2 = 1);
     std::vector<cytnx_uint64> shared_axes = {};
     ExcuteDirectsumTest(T1, T2, shared_axes);
   }
@@ -102,12 +104,13 @@ input:
   axes:empty, {0}, {1}.
 ====================*/
 TEST(Directsum, matrix_case) {
-  std::vector<std::vector<cytnx_uint64>> shared_axes_list = {{}, {0}, {1}};
+  std::vector<std::vector<cytnx_uint64>> shared_axes_list = 
+      {{}, {0}, {1}, {0, 1}, {1, 0}};
   for (auto dtype : dtype_list) {
     Tensor T1 = Tensor({3, 2}, dtype);
     Tensor T2 = Tensor({3, 2}, dtype);
-    InitTensorUniform(T1);
-    InitTensorUniform(T2);
+    InitTensorUniform(T1, rand_seed1 = 0);
+    InitTensorUniform(T2, rand_seed2 = 1);
     for (auto& shared_axes: shared_axes_list) {
       ExcuteDirectsumTest(T1, T2, shared_axes);
     }
@@ -130,6 +133,64 @@ TEST(Directsum, tens_share_memory) {
     for (auto& shared_axes: shared_axes_list) {
       ExcuteDirectsumTest(T1, T2, shared_axes);
     }
+  }
+}
+
+/*=====test info=====
+describe:Test the shared axes contain all axes.
+input:
+  T1:complex double type tensor with shape {2, 3} on cpu.
+  T2:double type tensor with shape {2, 3} on cpu.
+  axes:{0, 1}
+====================*/
+TEST(Directsum, shared_axis_contains_all) {
+  Tensor T1 = Tensor({2, 3}, Type.ComplexDouble);
+  Tensor T2 = Tensor({2, 3}, Type.Double);
+  InitTensorUniform(T1, rand_seed1 = 0);
+  InitTensorUniform(T2, rand_seed2 = 1);
+  std::vector<cytnx_uint64> shared_axes = {0, 1};
+  ExcuteDirectsumTest(T1, T2, shared_axes);
+}
+
+/*=====test info=====
+describe:Test the shared axes contain all axes. Input tensors have only one elem.
+input:
+  T1:complex double type tensor with shape {1} on cpu.
+  T2:double type tensor with shape {1} on cpu.
+  axes:{0}
+====================*/
+TEST(Directsum, shared_axis_contains_all_tens_one_elem) {
+  Tensor T1 = Tensor({1}, Type.ComplexDouble);
+  Tensor T2 = Tensor({1}, Type.Double);
+  InitTensorUniform(T1, rand_seed1 = 0);
+  InitTensorUniform(T2, rand_seed2 = 1);
+  std::vector<cytnx_uint64> shared_axes = {0};
+  ExcuteDirectsumTest(T1, T2, shared_axes);
+}
+
+/*=====test info=====
+describe:Test for not contiguous tensor.
+input:
+  T1:int32 data type not contiguous tensor with shape {5, 7, 3, 3} on cpu.
+  T2:double data type not contiguous tensor with shape {9, 7, 3, 3} on cpu.
+  axes:empty
+====================*/
+TEST(Directsum, not_contiguous) {
+  Tensor T1 = Tensor({7, 5, 3, 3}, Type.Int32);
+  Tensor T2 = Tensor({7, 9, 3, 3}, Type.Double);
+  InitTensorUniform(T1, rand_seed1 = 0);
+  InitTensorUniform(T2, rand_seed2 = 1);
+  //permute then they will not contiguous
+  T1.permute_({1, 0, 2, 3}); //shape:[5, 7, 3, 3]
+  T2.permute_({1, 0, 2, 3}); //shape:[9, 7, 3, 3]
+  std::vector<std::vector<cytnx_uint64>> shared_axes_list = 
+  { {},                                                              //empty 
+    {1}, {2}, {3},                                                   //1 elem
+    {1, 2}, {2, 1}, {2, 3}, {3, 2}, {1, 3}, {3, 1},                  //2 elem
+    {1, 2, 3}, {1, 3, 2}, {2, 1, 3}, {2, 3, 1}, {3, 1, 2}, {3, 2, 1} //3 elem
+  };
+  for(auto& shared_axes : shared_axes_list) {
+    ExcuteDirectsumTest(T1, T2, shared_axes);
   }
 }
 
@@ -158,8 +219,8 @@ input:
 TEST(Directsum, err_diff_rank) {
   Tensor T1 = Tensor({2});
   Tensor T2 = Tensor({2, 1});
-  InitTensorUniform(T1);
-  InitTensorUniform(T2);
+  InitTensorUniform(T1, rand_seed1 = 0);
+  InitTensorUniform(T2, rand_seed2 = 1);
   std::vector<cytnx_uint64> shared_axes = {};
   ErrorTestExcute(T1, T2, shared_axes);
 }
@@ -174,8 +235,8 @@ input:
 TEST(Directsum, err_shared_axis_dim_wrong) {
   Tensor T1 = Tensor({2, 3, 3});
   Tensor T2 = Tensor({2, 1, 3});
-  InitTensorUniform(T1);
-  InitTensorUniform(T2);
+  InitTensorUniform(T1, rand_seed1 = 0);
+  InitTensorUniform(T2, rand_seed2 = 1);
   std::vector<cytnx_uint64> shared_axes = {2, 1};
   ErrorTestExcute(T1, T2, shared_axes);
 }
@@ -190,8 +251,8 @@ input:
 TEST(Directsum, err_shared_axis_out_range) {
   Tensor T1 = Tensor({2, 3, 3});
   Tensor T2 = Tensor({2, 1, 3});
-  InitTensorUniform(T1);
-  InitTensorUniform(T2);
+  InitTensorUniform(T1, rand_seed1 = 0);
+  InitTensorUniform(T2, rand_seed2 = 1);
   std::vector<cytnx_uint64> shared_axes = {3};
   ErrorTestExcute(T1, T2, shared_axes);
 }
@@ -206,8 +267,8 @@ input:
 TEST(Directsum, err_one_shared_axis_out_range) {
   Tensor T1 = Tensor({2, 3, 3});
   Tensor T2 = Tensor({2, 1, 3});
-  InitTensorUniform(T1);
-  InitTensorUniform(T2);
+  InitTensorUniform(T1, rand_seed1 = 0);
+  InitTensorUniform(T2, rand_seed2 = 1);
   std::vector<cytnx_uint64> shared_axes = {3, 0};
   ErrorTestExcute(T1, T2, shared_axes);
 }
@@ -222,52 +283,36 @@ input:
 TEST(Directsum, err_shared_axis_not_uniqe) {
   Tensor T1 = Tensor({2, 3, 3});
   Tensor T2 = Tensor({2, 1, 3});
-  InitTensorUniform(T1);
-  InitTensorUniform(T2);
+  InitTensorUniform(T1, rand_seed1 = 0);
+  InitTensorUniform(T2, rand_seed2 = 1);
   std::vector<cytnx_uint64> shared_axes = {0, 0};
   ErrorTestExcute(T1, T2, shared_axes);
 }
 
-/*=====test info=====
-describe:Test the shared axes cotain all axes.
-input:
-  T1:double type tensor with shape {2, 3} on cpu.
-  T2:double type tensor with shape {2, 3} on cpu.
-  axes:{0, 1}
-====================*/
-TEST(Directsum, err_shared_axis_contains_all) {
-  Tensor T1 = Tensor({2, 3});
-  Tensor T2 = Tensor({2, 3});
-  InitTensorUniform(T1);
-  InitTensorUniform(T2);
-  std::vector<cytnx_uint64> shared_axes = {0, 1};
-  ErrorTestExcute(T1, T2, shared_axes);
-}
-
-/*=====test info=====
-describe:Test the shared axes cotain all axes. Input tensors have only one elem.
-input:
-  T1:double type tensor with shape {1} on cpu.
-  T2:double type tensor with shape {1} on cpu.
-  axes:{0}
-====================*/
-TEST(Directsum, err_shared_axis_contains_all_tens_one_elem) {
-  Tensor T1 = Tensor({1});
-  Tensor T2 = Tensor({1});
-  InitTensorUniform(T1);
-  InitTensorUniform(T2);
-  std::vector<cytnx_uint64> shared_axes = {0};
-  ErrorTestExcute(T1, T2, shared_axes);
-}
 
 int CheckWhichRange(
     const std::vector<cytnx_uint64>& T1_shape, 
     const std::vector<cytnx_uint64>& idxs,
     const std::vector<cytnx_uint64>& non_share_axes) {
+/*
+ This function check, for the given output indices, which source tensor element should be take. 
+   For example, T1 shape = [2, 3, 3], non_share_axes = [1, 2], and
+   case 1: if idxs (1, 2, 2), then we need to find the element in T1. --> return 1.
+   case 2: if idxs (1, 4, 4), then we need to find the element in T2. --> return 2.
+   case 3: if idxs (1, 2, 4), then the element neither belons to T1 nor T2. --> return 0.
+*/
   std::vector<int> check_list;
   for (auto& i : non_share_axes) {
-    check_list.push_back(((int)(idxs[i] + 1) - (int)T1_shape[i]) <= 0 ? -1 : 1);
+    check_list.push_back((static_cast<int>(idxs[i] + 1) - 
+                          static_cast<int>(T1_shape[i])) <= 0 ? -1 : 1);
   }
+/*
+  the elements of check list need to be all equal then the indices belongs to T1 or T2. Otherwise, non.
+    For example, T1 shape = [2, 3, 3], non_share_axes = [1, 2], and
+    case 1: if idxs (1, 2, 2), check_list = [-1, -1], check_list elements all equal to -1 --> belongs to T1.
+    case 2: if idxs (1, 4, 4), check_list = [ 1,  1], check_list elements all equal to  1 --> belongs to T2.
+    case 3: if idxs (1, 2, 4), check_list = [-1,  1], check_list elements not all equal --> neither T1 nor T2.
+*/
   bool all_eq = false;
   if(check_list.size() == 1) {
     all_eq = true;
@@ -300,17 +345,17 @@ std::vector<cytnx_uint64> GetSrcIdxs(
   }
   which_T = CheckWhichRange(T1_shape, idxs, non_share_axes);
   switch (which_T) {
-    case 1:
+    case 1: //belongs to T1
       for (auto& i : non_share_axes) {
         src_idxs[i] = idxs[i];
       }
       break;
-    case 2:
+    case 2: //belons to T2
       for (auto& i : non_share_axes) {
         src_idxs[i] = idxs[i] - T1_shape[i];
       }
       break;
-    case 0:
+    case 0: //neither
       break;
   }
   return src_idxs;
@@ -413,7 +458,15 @@ Tensor ConstructExpectTens(const Tensor& T1, const Tensor& T2,
 void ExcuteDirectsumTest(const Tensor& T1, const Tensor& T2, 
                          const std::vector<cytnx_uint64> shared_axes) {
   auto dirsum_T = linalg::Directsum(T1, T2, shared_axes);
-  auto expect_T = ConstructExpectTens(T1, T2, shared_axes); 
+  Tensor expect_T;
+  //if shared axes contain all axes, the output is equal to T2 but convert to strongest type.
+  if (shared_axes.size() == T1.rank()) {
+    //convert T2 to strongest type
+    auto expect_dtype = std::min(T1.dtype(), T2.dtype()); 
+    expect_T = T2.astype(expect_dtype);
+  } else {
+    expect_T = ConstructExpectTens(T1, T2, shared_axes); 
+  }
   //std::cout << dirsum_T << expect_T << std::endl;
   EXPECT_TRUE(AreEqTensor(dirsum_T, expect_T));
 }

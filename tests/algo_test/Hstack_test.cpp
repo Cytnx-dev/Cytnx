@@ -66,7 +66,7 @@ TEST(Hstack, two_type_tensor) {
 
 /*=====test info=====
 describe:Test multiple tensor with different data type.
-input:Four tensor as following
+input:Five tensors as following
   T1:shape (4, 2) with bool type on cpu device.
   T2:shape (4, 3) with complex double type on cpu device.
   T3:shape (4, 2) with double type on cpu device.
@@ -82,6 +82,29 @@ TEST(Hstack, diff_type_tensor) {
       Tensor({4, 5}, Type.Uint64)
   };
   InitTensorUniform(Ts);
+  Tensor hstack_tens = algo::Hstack(Ts);
+  CheckResult(hstack_tens, Ts);
+}
+
+/*=====test info=====
+describe:Test non contiguous tensor.
+input:Three tensors as following
+  T1:shape (4, 2) with non contiguous, bool type on cpu device.
+  T2:shape (4, 3) with non contiguous complex double type on cpu device.
+  T3:shape (4, 1) with non contiguous double type on cpu device.
+====================*/
+TEST(Hstack, non_contiguous_tensor) {
+  std::vector<Tensor> Ts = {
+      Tensor({2, 4}, Type.Bool), 
+      Tensor({3, 4}, Type.ComplexDouble), 
+      Tensor({1, 4}, Type.Double), 
+  };
+  InitTensorUniform(Ts);
+  //permute the it will not be contiguous
+  for (auto& T : Ts) {
+    T.permute_({1, 0});
+    ASSERT_FALSE(T.is_contiguous());
+  }
   Tensor hstack_tens = algo::Hstack(Ts);
   CheckResult(hstack_tens, Ts);
 }
@@ -334,6 +357,7 @@ void CheckResult(const Tensor& hstack_tens,
   EXPECT_EQ(hstack_shape[1], D_total);
 
   //3. check tensor elements
+  EXPECT_TRUE(hstack_tens.is_contiguous());
   int block_col_shift = 0;
   bool is_same_elem = true;
   for(auto tens : input_tens) {
