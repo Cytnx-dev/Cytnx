@@ -423,6 +423,8 @@ namespace cytnx {
     virtual void group_basis_();
     virtual const std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx) const;
     virtual std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx);
+    virtual const vec2d<cytnx_uint64> & get_itoi() const;
+    virtual vec2d<cytnx_uint64> & get_itoi();
 
 
     virtual void _save_dispatch(std::fstream &f) const;
@@ -1002,6 +1004,13 @@ namespace cytnx {
     }
     std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx){
         cytnx_error_msg(true,"[ERROR] get_qindices can only be unsed on UniTensor with Symmetry.%s","\n");
+    }
+
+    const vec2d<cytnx_uint64> & get_itoi() const{
+        cytnx_error_msg(true,"[ERROR] get_itoi can only be unsed on UniTensor with Symmetry.%s","\n");
+    }
+    vec2d<cytnx_uint64> & get_itoi(){
+        cytnx_error_msg(true,"[ERROR] get_itoi can only be unsed on UniTensor with Symmetry.%s","\n");
     }
 
 
@@ -1712,6 +1721,12 @@ namespace cytnx {
     std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx){
         cytnx_error_msg(true,"[ERROR][SparseUniTensor] get_qindices can only be unsed on BlockUniTensor.%s","\n");
     }
+    const vec2d<cytnx_uint64> & get_itoi() const{
+        cytnx_error_msg(true,"[ERROR][SparseUniTensor] get_itoi can only be unsed on BlockUniTensor with Symmetry.%s","\n");
+    }
+    vec2d<cytnx_uint64> & get_itoi(){
+        cytnx_error_msg(true,"[ERROR][SparseUniTensor] get_itoi can only be unsed on BlockUniTensor with Symmetry.%s","\n");
+    }
 
 
     // end virtual func
@@ -2356,6 +2371,14 @@ namespace cytnx {
         cytnx_error_msg(bidx>=this->Nblocks(),"[ERROR][BlockUniTensor] bidx out of bound! only %d blocks in current UTen.\n",this->Nblocks());
         return this->_inner_to_outer_idx[bidx];
     }
+
+    const vec2d<cytnx_uint64> & get_itoi() const{
+        return this->_inner_to_outer_idx;
+    }
+    vec2d<cytnx_uint64> & get_itoi(){
+        return this->_inner_to_outer_idx;
+    }
+
 
 
   };
@@ -3323,6 +3346,22 @@ namespace cytnx {
     std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx){
         return this->_impl->get_qindices(bidx);
     }
+
+    
+
+    /**
+    @brief get the q-indices on each leg for all the blocks 
+    @return 
+        [2d vector]
+
+    */
+    const vec2d<cytnx_uint64> & get_itoi() const{
+        return this->_impl->get_itoi();
+    }
+    vec2d<cytnx_uint64> & get_itoi(){
+        return this->_impl->get_itoi();
+    }
+
 
 
     /// @cond

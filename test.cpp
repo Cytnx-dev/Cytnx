@@ -8,6 +8,11 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]) {
 
+  auto ottt = linalg::Svd(arange(200).reshape(10,20));
+
+  cout << ottt[0] << endl;
+  return 0;
+
   Bond phy = Bond(BD_IN, {Qs(0), Qs(1)}, {1, 1});
   Bond aux = Bond(BD_IN, {Qs(1)}, {1});
 

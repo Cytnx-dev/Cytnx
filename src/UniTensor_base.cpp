@@ -660,4 +660,15 @@ namespace cytnx {
                     "\n");
   }
 
+  const vec2d<cytnx_uint64> & UniTensor_base::get_itoi() const{
+    cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
+                    "\n");
+
+  }
+  vec2d<cytnx_uint64> & UniTensor_base::get_itoi(){
+    cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
+                    "\n");
+  }
+
+
 }  // namespace cytnx
