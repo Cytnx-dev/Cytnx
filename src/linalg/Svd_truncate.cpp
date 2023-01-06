@@ -516,7 +516,7 @@ namespace cytnx {
             UniTensor &U = outCyT[t];
             to_be_remove.clear();
             U.bonds().back() = S.bonds()[1].clone();
-            std::vector<Accessor> acs(U.rowrank()+1);
+            std::vector<Accessor> acs(U.rank());
             for(int i=0;i<U.rowrank();i++) acs[i] = ac::all();
          
             for(int b=0;b<U.Nblocks();b++){
@@ -540,7 +540,7 @@ namespace cytnx {
             UniTensor &vT = outCyT[t];
             to_be_remove.clear();
             vT.bonds().back() = S.bonds()[0].clone();
-            std::vector<Accessor> acs(vT.rowrank()+1);
+            std::vector<Accessor> acs(vT.rank());
             for(int i=1;i<vT.rank();i++) acs[i] = ac::all();
 
             for(int b=0;b<vT.Nblocks();b++){

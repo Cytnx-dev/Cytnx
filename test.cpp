@@ -11,7 +11,6 @@ int main(int argc, char *argv[]) {
   auto ottt = linalg::Svd(arange(200).reshape(10,20));
 
   cout << ottt[0] << endl;
-  return 0;
 
   Bond phy = Bond(BD_IN, {Qs(0), Qs(1)}, {1, 1});
   Bond aux = Bond(BD_IN, {Qs(1)}, {1});
@@ -52,6 +51,15 @@ int main(int argc, char *argv[]) {
   Exp_Hpmmp.print_diagram();
   Exp_Hpmmp.print_blocks(true);
 
+  auto Outsvd = linalg::Svd_truncate(Hpmmp,100, 0);
+  /*
+  Outsvd[0].print_diagram();
+  Outsvd[0].print_blocks();
+  Outsvd[1].print_diagram();
+  Outsvd[1].print_blocks();
+  Outsvd[2].print_diagram();
+  Outsvd[2].print_blocks();
+  */
 
   return 0;
 
