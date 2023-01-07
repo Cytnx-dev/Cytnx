@@ -497,7 +497,8 @@ namespace cytnx {
                     new_qid.push_back(new_dims.size());
                     new_dims.push_back(kdim);
                     tot_dim += kdim;
-                    S.get_blocks_()[b] = S.get_blocks_()[b].get({ac::range(0,kdim)});
+                    if(kdim != S.get_blocks_()[b].shape()[0])
+                        S.get_blocks_()[b] = S.get_blocks_()[b].get({ac::range(0,kdim)});
                 }
                 
           }
@@ -523,8 +524,10 @@ namespace cytnx {
                 if(keep_dims[U.get_qindices(b).back()]==0) to_be_remove.push_back(b);
                 else{ 
                     ///process blocks:
-                    acs.back() = ac::range(0,keep_dims[U.get_qindices(b).back()]);
-                    U.get_blocks_()[b] = U.get_blocks_()[b].get(acs);
+                    if(keep_dims[U.get_qindices(b).back()] != U.get_blocks_()[b].shape().back()){
+                        acs.back() = ac::range(0,keep_dims[U.get_qindices(b).back()]);
+                        U.get_blocks_()[b] = U.get_blocks_()[b].get(acs);
+                    }
 
                     // change to new qindices:
                     U.get_qindices(b).back() = new_qid[ U.get_qindices(b).back() ];
@@ -547,9 +550,10 @@ namespace cytnx {
                 if(keep_dims[vT.get_qindices(b)[0]]==0) to_be_remove.push_back(b);
                 else{ 
                     ///process blocks:
-                    acs[0] = ac::range(0,keep_dims[vT.get_qindices(b)[0]]);
-                    vT.get_blocks_()[b] = vT.get_blocks_()[b].get(acs);
-
+                    if(keep_dims[vT.get_qindices(b)[0]] != vT.get_blocks_()[b].shape()[0]){
+                        acs[0] = ac::range(0,keep_dims[vT.get_qindices(b)[0]]);
+                        vT.get_blocks_()[b] = vT.get_blocks_()[b].get(acs);
+                    }
                     // change to new qindices:
                     vT.get_qindices(b)[0] = new_qid[ vT.get_qindices(b)[0] ];
                 }
