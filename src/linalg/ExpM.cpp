@@ -168,9 +168,12 @@ namespace cytnx {
             cytnx_int64 tmp = -1;
             cytnx_uint64 row_szs;
             std::vector<cytnx_uint64> rdims,cdims; //this is used to split!
+            vec2d<cytnx_uint64> old_shape(order.size());
+
             for(int i=0;i<order.size();i++){
                 Tlist[i] = Tin.get_blocks()[x.second[order[i]]];
                 row_szs = 1;
+                old_shape[i] = Tlist[i].shape();
                 for(int j=0;j<Tin.rowrank();j++){
                     row_szs*= Tlist[i].shape()[j];
                 }
@@ -193,6 +196,11 @@ namespace cytnx {
 
             Tlist.clear();
             algo::_fx_Matric_split(Tlist, BTen, rdims,cdims);
+
+            //resize:
+            for(int i=0;i<Tlist.size();i++){
+                Tlist[i].reshape_(old_shape[i]);
+            }
 
 
             //put into new blocks:

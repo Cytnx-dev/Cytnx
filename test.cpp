@@ -45,21 +45,20 @@ int main(int argc, char *argv[]) {
   Hpmmp.set_rowrank(2);
     
   Hpmmp.print_diagram();
-
   auto Exp_Hpmmp = linalg::ExpH(Hpmmp,1);
 
   Exp_Hpmmp.print_diagram();
   Exp_Hpmmp.print_blocks(true);
-
+  return 0;
   auto Outsvd = linalg::Svd_truncate(Hpmmp,100, 0);
-  /*
+  
   Outsvd[0].print_diagram();
   Outsvd[0].print_blocks();
   Outsvd[1].print_diagram();
   Outsvd[1].print_blocks();
   Outsvd[2].print_diagram();
   Outsvd[2].print_blocks();
-  */
+  
 
   return 0;
 
