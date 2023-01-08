@@ -4,6 +4,8 @@
 #include <iostream>
 #include <vector>
 #include "UniTensor.hpp"
+#include "algo.hpp"
+
 
 using namespace std;
 typedef cytnx::Accessor ac;
@@ -81,6 +83,11 @@ namespace cytnx {
 namespace cytnx {
   namespace linalg {
     std::vector<UniTensor> Qdr(const UniTensor &Tin, const bool &is_tau) {
+      
+      
+
+
+
       if (Tin.is_blockform()) {
         cytnx_error_msg(true, "[Qdr for sparse UniTensor is developling%s]", "\n");
       } else {

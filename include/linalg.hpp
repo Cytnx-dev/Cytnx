@@ -293,7 +293,7 @@ namespace cytnx {
 
         1. the first tensor is the orthomormal matrix [Q], a 2-d tensor (matrix)
         2. the second tensor is the right-upper triangular matrix [R], a 2-d tensor (matrix).
-        3. the third tensor is the Householder reflectors [H], a 1-d tensor (matrix). It only return
+        3. the third tensor is the Householder reflectors [H], a 1-d tensor (vector). It only return
     when is_tau=true.
     */
     std::vector<Tensor> Qr(const Tensor &Tin, const bool &is_tau = false);
