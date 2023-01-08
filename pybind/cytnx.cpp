@@ -1485,6 +1485,8 @@ PYBIND11_MODULE(cytnx, m) {
     .value("BD_BRA", bondType::BD_BRA)
     .value("BD_KET", bondType::BD_KET)
     .value("BD_REG", bondType::BD_REG)
+    .value("BD_IN", bondType::BD_IN)
+    .value("BD_OUT", bondType::BD_OUT)
     .export_values();
 
   py::class_<Network>(m, "Network")
@@ -1591,9 +1593,27 @@ PYBIND11_MODULE(cytnx, m) {
          py::arg("dim"), py::arg("bond_type") = bondType::BD_REG,
          py::arg("qnums") = std::vector<std::vector<cytnx_int64>>(),
          py::arg("symmetries") = std::vector<Symmetry>())
+    /*
     .def("Init", &Bond::Init, py::arg("dim"), py::arg("bond_type") = bondType::BD_REG,
          py::arg("qnums") = std::vector<std::vector<cytnx_int64>>(),
          py::arg("symmetries") = std::vector<Symmetry>())
+    */
+
+    .def("Init", 
+         [](Bond &self, const bondType &bd_type, const std::vector<std::vector<cytnx_int64>> &in_qnums,
+            const std::vector<cytnx_uint64> &degs, const std::vector<Symmetry> &in_syms){
+                self.Init(bd_type,in_qnums,degs,in_syms);
+            }, 
+         py::arg("bond_type"), py::arg("qnums"), py::arg("degs"), py::arg("symmetries") )
+
+    .def("Init", 
+         [](Bond &self, const cytnx_uint64 &dim, const bondType &bd_type, 
+            const std::vector<std::vector<cytnx_int64>> &in_qnums, const std::vector<Symmetry> &in_syms){
+                self.Init(dim,bd_type,in_qnums,in_syms);
+            }, 
+         py::arg("dim"), py::arg("bond_type") = bondType::BD_REG, py::arg("qnums")={}, py::arg("symmetries")={})
+
+
 
     .def(
       "__repr__",
@@ -2046,8 +2066,32 @@ PYBIND11_MODULE(cytnx, m) {
       py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
     .def("to_dense", &UniTensor::to_dense)
     .def("to_dense_", &UniTensor::to_dense_)
+    /*
     .def("combineBonds", &UniTensor::combineBonds, py::arg("indicators"),
          py::arg("permute_back") = true, py::arg("by_label") = true)
+    */
+    .def("combineBonds", 
+         [](UniTensor &self, const std::vector<cytnx_int64> &indicators, const bool &force,
+            const bool &by_label)
+         {  
+            if(by_label){
+                cytnx_warning_msg(true,"[Deprecated notice] by_label option is going to be deprecated. using string will automatically recognized as labels.%s","\n");
+                self.combineBonds(indicators,force,by_label);
+            }else{
+                self.combineBonds(indicators,force);
+            }
+         },
+         py::arg("indicators"), py::arg("force") = false, py::arg("by_label") = false)
+
+    .def("combineBonds",
+         [](UniTensor &self, const std::vector<std::string> &indicators, const bool &force)
+         {
+            self.combineBonds(indicators,force);
+         },
+         py::arg("indicators"), py::arg("force") = false)
+
+
+
     .def("contract", &UniTensor::contract)
 
     // arithmetic >>
@@ -2445,19 +2489,89 @@ PYBIND11_MODULE(cytnx, m) {
     .def("cPow_", &UniTensor::Pow_)
     .def("cConj_", &UniTensor::Conj_)
     .def("Conj", &UniTensor::Conj)
+    
+    /*
     .def("cTrace_", &UniTensor::Trace_, py::arg("a") = 0, py::arg("b") = 1,
          py::arg("by_label") = false)
-    .def("Trace", &UniTensor::Trace, py::arg("a") = 0, py::arg("b") = 1,
-         py::arg("by_label") = false)
+    */
+
+    .def("cTrace_", [](UniTensor &self, const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label){
+                        if(by_label){
+                            cytnx_warning_msg(true,"[Deprecated notice] by_label option is going to be deprecated. using string will automatically recognized as labels.%s","\n");
+                            return self.Trace_(a,b,by_label);
+                        }else{
+                            return self.Trace_(a,b);
+                        }
+                    },
+                    py::arg("a")=0, py::arg("b")=1, py::arg("by_label")=false)
+
+    .def("cTrace_", [](UniTensor &self, const std::string &a, const std::string &b){
+                    return self.Trace_(a,b);
+                 },
+                 py::arg("a"), py::arg("b"))
+
+
+    .def("Trace", [](UniTensor &self, const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label){
+                    if(by_label){
+                        cytnx_warning_msg(true,"[Deprecated notice] by_label option is going to be deprecated. using string will automatically recognized as labels.%s","\n");
+                        return self.Trace(a,b,by_label);
+                    }else{
+                        return self.Trace(a,b);
+                    }
+                 },
+                 py::arg("a")=0, py::arg("b")=1, py::arg("by_label")=false)
+
+    .def("Trace", [](UniTensor &self, const std::string &a, const std::string &b){
+                    return self.Trace(a,b);
+                 },
+                 py::arg("a"), py::arg("b"))
+
     .def("Norm", &UniTensor::Norm)
     .def("cTranspose_", &UniTensor::Transpose_)
     .def("Transpose", &UniTensor::Transpose)
     .def("cDagger_", &UniTensor::Dagger_)
     .def("Dagger", &UniTensor::Dagger)
     .def("ctag", &UniTensor::tag)
+    /*
     .def("truncate", &UniTensor::truncate, py::arg("bond_idx"), py::arg("dim"),
          py::arg("by_label") = false)
     .def("ctruncate_", &UniTensor::truncate_);
+    */
+
+    .def("truncate",[](UniTensor &self, const cytnx_int64 &bond_idx, const cytnx_uint64 &dim,
+                       const bool &by_label){
+                        if(by_label){
+                            cytnx_warning_msg(true,"[Deprecated notice] by_label option is going to be deprecated. using string will automatically recognized as labels.%s","\n");
+                            return self.truncate(bond_idx, dim, by_label);
+                        }else{
+                            return self.truncate(bond_idx, dim);
+                        }
+                    },
+                    py::arg("bond_idx"), py::arg("dim"),py::arg("by_label") = false)
+    .def("truncate",[](UniTensor &self, const std::string &label, const cytnx_uint64 &dim){
+                        return self.truncate(label, dim);
+                    },
+                    py::arg("label"), py::arg("dim"))  
+
+    .def("ctruncate_",[](UniTensor &self, const cytnx_int64 &bond_idx, const cytnx_uint64 &dim,
+                       const bool &by_label){
+                        if(by_label){
+                            cytnx_warning_msg(true,"[Deprecated notice] by_label option is going to be deprecated. using string will automatically recognized as labels.%s","\n");
+                            return self.truncate_(bond_idx, dim, by_label);
+                        }else{
+                            return self.truncate_(bond_idx, dim);
+                        }
+                    },
+                    py::arg("bond_idx"), py::arg("dim"),py::arg("by_label") = false)
+
+    .def("ctruncate_",[](UniTensor &self, const std::string &label, const cytnx_uint64 &dim){
+                        return self.truncate(label, dim);
+                    },
+                    py::arg("label"), py::arg("dim"))  
+    ;
+
+
+
   m.def("Contract", Contract, py::arg("Tl"), py::arg("Tr"), py::arg("cacheL") = false,
         py::arg("cacheR") = false);
 
@@ -2619,7 +2733,7 @@ PYBIND11_MODULE(cytnx, m) {
     },
     py::arg("Tn"), py::arg("mode"), py::arg("is_core") = true, py::arg("is_Ls") = false,
     py::arg("truncate_dim") = std::vector<cytnx_int64>());
-
+ /*
   m_linalg.def(
     "Lanczos",
     [](LinOp *Hop, const Tensor &Tin, const std::string method, const double &CvgCrit,
@@ -2661,7 +2775,7 @@ PYBIND11_MODULE(cytnx, m) {
                   const bool &verbose, const cytnx_uint64 &maxiter) {
                  return cytnx::linalg::Lanczos_Gnd_Ut(Hop, Tin, CvgCrit, is_V, verbose, maxiter);
                });
-
+  */
   m_linalg.def(
     "Lstsq",
     [](const Tensor &A, const Tensor &b, const float &rcond) {

@@ -32,9 +32,15 @@ def Conj_(self):
     return self
 
 @add_method(UniTensor)
-def Trace_(self,a,b,by_label=False):
+def Trace_(self,a:int,b:int,by_label=False):
     self.cTrace_(a,b,by_label);
     return self
+
+@add_method(UniTensor)
+def Trace_(self,a:str,b:str):
+    self.cTrace_(a,b);
+    return self
+
 
 @add_method(UniTensor)
 def Transpose_(self):
