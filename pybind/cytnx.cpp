@@ -134,7 +134,7 @@ void f_UniTensor_setelem_scal_cf(UniTensor &self, const std::vector<cytnx_uint64
 }
 
 PYBIND11_MODULE(cytnx, m) {
-  m.attr("__version__") = "0.6.3a";
+  m.attr("__version__") = "0.7";
   m.attr("__blasINTsize__") = cytnx::__blasINTsize__;
   m.attr("User_debug") = cytnx::User_debug;
 
@@ -1691,6 +1691,7 @@ PYBIND11_MODULE(cytnx, m) {
     .def("retype", &Bond::retype)
     .def("clear_type", &Bond::clear_type)
     .def("redirect", &Bond::redirect)
+    .def("c_redirect_", &Bond::redirect_)
     .def("clone", &Bond::clone)
     .def("__copy__", &Bond::clone)
     .def("__deepcopy__", &Bond::clone)
@@ -1698,6 +1699,50 @@ PYBIND11_MODULE(cytnx, m) {
     .def("combineBond_", &Bond::combineBond_)
     .def("combineBonds", &Bond::combineBonds)
     .def("combineBonds_", &Bond::combineBonds_)
+    .def("getDegeneracies", [](Bond &self){
+                                return self.getDegeneracies();
+                            })
+
+    .def("getDegeneracy", [](Bond &self, const std::vector<cytnx_int64> &qnum){
+                            return self.getDegeneracy(qnum);
+                          },py::arg("qnum"))
+    .def("getDegeneracy", [](Bond &self, const cytnx::Qs &qnum){
+                            return self.getDegeneracy(std::vector<cytnx_int64>(qnum));
+                          },py::arg("qnum"))
+
+
+
+    .def("c_getDegeneracy_refarg", [](Bond &self, const std::vector<cytnx_int64> &qnum, py::list &indices){
+                            std::vector<cytnx_uint64> inds;
+                            auto out = self.getDegeneracy(qnum,inds);
+                            for(int i=0;i<inds.size();i++){
+                                indices.append(inds[i]);
+                            }
+                            return out;
+                          },py::arg("qnum"), py::arg("indices"))
+    .def("c_getDegeneracy_refarg", [](Bond &self, const cytnx::Qs &qnum, py::list &indices){
+                            std::vector<cytnx_uint64> inds; 
+                            auto out = self.getDegeneracy(std::vector<cytnx_int64>(qnum),inds);
+                            for(int i=0;i<inds.size();i++){
+                                indices.append(inds[i]);
+                            }
+                            return out;
+                          },py::arg("qnum"), py::arg("indices"))
+
+    .def("group_duplicates_", &Bond::group_duplicates)
+    .def("c_group_duplicates_refarg", [](Bond &self, py::list &mapper){
+                                        std::vector<cytnx_uint64> mprs;
+                                        Bond out = self.group_duplicates(mprs);  
+                                        for(int i=0;i<mprs.size();i++){
+                                            mapper.append(mprs[i]);
+                                        }
+                                        return out;
+                                      }, py::arg("mapper")) 
+
+    .def("has_duplicate_qnums", &Bond::has_duplicate_qnums)
+    .def("calc_reverse_qnums", &Bond::calc_reverse_qnums)
+
+
     .def(
       "Save", [](Bond &self, const std::string &fname) { self.Save(fname); }, py::arg("fname"))
     .def_static(
