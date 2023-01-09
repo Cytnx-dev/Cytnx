@@ -1307,6 +1307,7 @@ namespace cytnx {
         [Note]
             This function is C++ only
     */
+    /*
     template <class T>
     std::vector<T> vector() {
       T tmp;
@@ -1325,6 +1326,9 @@ namespace cytnx {
 
       return out;
     }
+    */
+    template <class T>
+    std::vector<T> vector();
 
     /// @cond
 

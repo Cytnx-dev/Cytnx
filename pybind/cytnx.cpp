@@ -551,6 +551,33 @@ PYBIND11_MODULE(cytnx, m) {
     .def("append", &cytnx::Storage::append<cytnx::cytnx_int16>, py::arg("val"))
     .def("append", &cytnx::Storage::append<cytnx::cytnx_uint16>, py::arg("val"))
     .def("append", &cytnx::Storage::append<cytnx::cytnx_bool>, py::arg("val"))
+
+     
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_complex128>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_complex64>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_double>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_float>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_uint64>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_int64>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_uint32>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_int32>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_uint16>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_int16>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_bool>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
+    
+
+    .def("c_pylist_complex128", &cytnx::Storage::vector<cytnx_complex128>)
+    .def("c_pylist_complex64", &cytnx::Storage::vector<cytnx_complex64>)
+    .def("c_pylist_double", &cytnx::Storage::vector<cytnx_double>)
+    .def("c_pylist_float", &cytnx::Storage::vector<cytnx_float>)
+    .def("c_pylist_uint64", &cytnx::Storage::vector<cytnx_uint64>)
+    .def("c_pylist_int64", &cytnx::Storage::vector<cytnx_int64>)
+    .def("c_pylist_uint32", &cytnx::Storage::vector<cytnx_uint32>)
+    .def("c_pylist_int32", &cytnx::Storage::vector<cytnx_int32>)
+    .def("c_pylist_uint16", &cytnx::Storage::vector<cytnx_uint16>)
+    .def("c_pylist_int16", &cytnx::Storage::vector<cytnx_int16>)
+    .def("c_pylist_bool", &cytnx::Storage::vector<cytnx_bool>)
+
     .def(
       "Save", [](cytnx::Storage &self, const std::string &fname) { self.Save(fname); },
       py::arg("fname"))
