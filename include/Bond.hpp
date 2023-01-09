@@ -169,6 +169,21 @@ namespace cytnx {
       this->_impl->Init(bd_type, in_qnums, degs, in_syms);
     }
 
+    // this is needed for python binding!
+    Bond(const bondType &bd_type, const std::vector<cytnx::Qs> &in_qnums,
+         const std::vector<cytnx_uint64> &degs, const std::vector<Symmetry> &in_syms = {})
+        : _impl(new Bond_impl()) {
+      vec2d<cytnx_int64> qnums(in_qnums.begin(),in_qnums.end()); 
+      this->_impl->Init(bd_type, qnums, degs, in_syms);
+    }
+
+    Bond(const bondType &bd_type, const std::vector< std::pair<std::vector<cytnx_int64>, cytnx_uint64> > &in_qnums_dims,
+         const std::vector<Symmetry> &in_syms = {})
+        : _impl(new Bond_impl()) {
+      this->Init(bd_type, in_qnums_dims, in_syms);
+    }
+
+
     /**
     @brief init a bond object
     @param dim the dimension of the bond (rank)
@@ -236,6 +251,23 @@ namespace cytnx {
               const std::vector<cytnx_uint64> &degs, const std::vector<Symmetry> &in_syms = {}) {
       this->_impl->Init(bd_type, in_qnums, degs, in_syms);
     }
+
+    void Init(const bondType &bd_type, const std::vector< std::pair<std::vector<cytnx_int64>, cytnx_uint64> > &in_qnums_dims,
+         const std::vector<Symmetry> &in_syms = {}){
+      
+      vec2d<cytnx_int64> qnums(in_qnums_dims.size());
+      std::vector<cytnx_uint64> degs(in_qnums_dims.size());
+      for(int i=0;i<in_qnums_dims.size();i++){
+        qnums[i] = in_qnums_dims[i].first;
+        degs[i] = in_qnums_dims[i].second;
+      }
+            
+      this->_impl->Init(bd_type, qnums, degs, in_syms);
+
+    }
+
+
+
 
     /**
     @brief return the current tag type

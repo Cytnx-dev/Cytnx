@@ -6,7 +6,18 @@ using namespace cytnx;
 
 typedef cytnx::Accessor ac;
 
+
 int main(int argc, char *argv[]) {
+
+  vec2d<cytnx_int64> testlist;
+
+  Bond tqn = Bond(BD_IN,{Qs(0),Qs(4)},{2,3});
+  Bond tqnv2 = Bond(BD_IN,{Qs(0)>>2,Qs(4)>>3});
+
+  print(tqn);
+  print(tqnv2);
+  return 0;
+
 
   auto ottt = linalg::Svd(arange(200).reshape(10,20));
 

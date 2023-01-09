@@ -239,6 +239,8 @@ PYBIND11_MODULE(cytnx, m) {
     py::arg("dtype") = (unsigned int)(cytnx::Type.Double),
     py::arg("device") = (int)(cytnx::Device.cpu));
 
+
+
   m.def("_from_numpy", [](py::buffer b) -> Tensor {
     py::buffer_info info = b.request();
 
@@ -1612,6 +1614,13 @@ PYBIND11_MODULE(cytnx, m) {
     //.def("check_qnum", &Symmetry::check_qnum,py::arg("qnum"))
     //.def("check_qnums", &Symmetry::check_qnums, py::arg("qnums"))
     ;
+  py::class_<Qs>(m, "_cQs")
+    .def(py::init< const std::vector<cytnx_int64> >(), py::arg("qin"))
+    .def("__rshift__", [](Qs &self, const cytnx_uint64 &dim){
+                            return self>>dim;
+                        }, py::arg("dim"));
+    
+
   py::class_<Bond>(m, "Bond")
     // construction
     .def(py::init<>())
@@ -1620,25 +1629,46 @@ PYBIND11_MODULE(cytnx, m) {
          py::arg("dim"), py::arg("bond_type") = bondType::BD_REG,
          py::arg("qnums") = std::vector<std::vector<cytnx_int64>>(),
          py::arg("symmetries") = std::vector<Symmetry>())
-    /*
-    .def("Init", &Bond::Init, py::arg("dim"), py::arg("bond_type") = bondType::BD_REG,
-         py::arg("qnums") = std::vector<std::vector<cytnx_int64>>(),
-         py::arg("symmetries") = std::vector<Symmetry>())
-    */
+    .def(py::init<const bondType &, const std::vector<std::vector<cytnx_int64> > &, 
+                  const  std::vector<cytnx_uint64> &, const std::vector<Symmetry> &>(),
+         py::arg("bond_type"), py::arg("qnums"), py::arg("degs"), py::arg("symmetries")=std::vector<Symmetry>())
+    
+    .def(py::init<const bondType &, const std::vector<std::pair<std::vector<cytnx_int64>,cytnx_uint64 > > &, 
+                  const std::vector<Symmetry> &>(),
+         py::arg("bond_type"), py::arg("qnums"), py::arg("symmetries")=std::vector<Symmetry>())
+    
+    .def(py::init<const bondType &, const std::vector<cytnx::Qs> &, 
+                  const  std::vector<cytnx_uint64> &, const std::vector<Symmetry> &>(),
+         py::arg("bond_type"), py::arg("qnums"), py::arg("degs"), py::arg("symmetries")=std::vector<Symmetry>())
 
     .def("Init", 
          [](Bond &self, const bondType &bd_type, const std::vector<std::vector<cytnx_int64>> &in_qnums,
             const std::vector<cytnx_uint64> &degs, const std::vector<Symmetry> &in_syms){
                 self.Init(bd_type,in_qnums,degs,in_syms);
             }, 
-         py::arg("bond_type"), py::arg("qnums"), py::arg("degs"), py::arg("symmetries") )
+         py::arg("bond_type"), py::arg("qnums"), py::arg("degs"), py::arg("symmetries")=std::vector<Symmetry>())
 
     .def("Init", 
          [](Bond &self, const cytnx_uint64 &dim, const bondType &bd_type, 
             const std::vector<std::vector<cytnx_int64>> &in_qnums, const std::vector<Symmetry> &in_syms){
                 self.Init(dim,bd_type,in_qnums,in_syms);
             }, 
-         py::arg("dim"), py::arg("bond_type") = bondType::BD_REG, py::arg("qnums")={}, py::arg("symmetries")={})
+         py::arg("dim"), py::arg("bond_type") = bondType::BD_REG, py::arg("qnums")=std::vector<std::vector<cytnx_int64>>(), py::arg("symmetries")=std::vector<Symmetry>())
+
+    .def("Init", 
+         [](Bond &self, const bondType &bd_type, const std::vector< std::pair<std::vector<cytnx_int64>,cytnx_uint64> > &in_qnums_degs,
+            const std::vector<Symmetry> &in_syms){
+                self.Init(bd_type,in_qnums_degs,in_syms);
+            },
+         py::arg("bond_type"), py::arg("qnums"), py::arg("symmetries")=std::vector<Symmetry>())
+
+    .def("Init", 
+        [](Bond &self, const bondType &bd_type, const std::vector<cytnx::Qs> &in_qnums,
+            const std::vector<cytnx_uint64> &degs, const std::vector<Symmetry> &in_syms){
+                vec2d<cytnx_int64> qnums(in_qnums.begin(),in_qnums.end());
+                self.Init(bd_type,qnums,degs,in_syms);
+            },
+         py::arg("bond_type"), py::arg("qnums"), py::arg("degs"), py::arg("symmetries")=std::vector<Symmetry>())
 
 
 
