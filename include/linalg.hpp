@@ -84,9 +84,14 @@ namespace cytnx {
       const std::vector<cytnx_int64> &trucate_dim = std::vector<cytnx_int64>());
 
     template <typename T>
-    cytnx::UniTensor ExpH(const cytnx::UniTensor &Tin, const T &a = 1, const T &b = 0);
+    cytnx::UniTensor ExpH(const cytnx::UniTensor &Tin, const T &a, const T &b = 0);
     template <typename T>
-    cytnx::UniTensor ExpM(const cytnx::UniTensor &Tin, const T &a = 1, const T &b = 0);
+    cytnx::UniTensor ExpM(const cytnx::UniTensor &Tin, const T &a, const T &b = 0);
+
+    cytnx::UniTensor ExpH(const cytnx::UniTensor &Tin);
+    cytnx::UniTensor ExpM(const cytnx::UniTensor &Tin);
+
+
     cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const cytnx_int64 &a = 0,
                            const cytnx_int64 &b = 1);
     cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const std::string &a, const std::string &b);
@@ -765,7 +770,8 @@ namespace cytnx {
     */
     template <typename T>
     Tensor ExpH(const Tensor &in, const T &a, const T &b =0);
-
+    Tensor ExpH(const Tensor &in);
+    
 
 
     // ExpM:
@@ -782,6 +788,10 @@ namespace cytnx {
         perform matrix exponential with \f$O = \exp{aM + b}\f$.
 
     */
+    template <typename T>
+    Tensor ExpM(const Tensor &in, const T &a, const T &b = 0);
+
+    Tensor ExpM(const Tensor &in);
 
     // Lanczos:
     //===========================================
@@ -842,10 +852,8 @@ namespace cytnx {
                                    const double &CvgCrit = 1.0e-14,
                                    const unsigned int &Maxiter = 10000, const cytnx_uint64 &k = 1,
                                    const bool &is_V = true, const bool &is_row = false,
-                                   const cytnx_uint32 &max_krydim = 0, const bool &verbose = false);
+                                   const cytnx_uint32 &max_krydim = 4, const bool &verbose = false);
 
-    template <typename T>
-    Tensor ExpM(const Tensor &in, const T &a = 1, const T &b = 0);
 
     // Lanczos:
     //===========================================

@@ -52,6 +52,10 @@ namespace cytnx {
       return ut;
     }
 
+    Tensor ExpH(const Tensor &Tin){
+        return linalg::ExpH(Tin,double(1),double(0));
+    }
+
     template Tensor ExpH(const Tensor &Tin, const cytnx_complex128 &a, const cytnx_complex128 &b);
     template Tensor ExpH(const Tensor &Tin, const cytnx_complex64 &a, const cytnx_complex64 &b);
     template Tensor ExpH(const Tensor &Tin, const cytnx_double &a, const cytnx_double &b);
@@ -265,6 +269,10 @@ namespace cytnx {
 
 
     }// ExpH()
+
+    UniTensor ExpH(const UniTensor &Tin){
+        return linalg::ExpH(Tin,double(1),double(0));
+    }
 
     template UniTensor ExpH(const UniTensor &Tin, const cytnx_complex128 &a,
                             const cytnx_complex128 &b);
