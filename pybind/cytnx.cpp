@@ -1587,8 +1587,8 @@ PYBIND11_MODULE(cytnx, m) {
     // construction
     .def(py::init<>())
     //.def(py::init<const int &, const int&>())
-    .def("U1", &Symmetry::U1)
-    .def("Zn", &Symmetry::Zn)
+    .def_static("U1", &Symmetry::U1)
+    .def_static("Zn", &Symmetry::Zn)
     .def("clone", &Symmetry::clone)
     .def("stype", &Symmetry::stype)
     .def("stype_str", &Symmetry::stype_str)
@@ -1597,6 +1597,17 @@ PYBIND11_MODULE(cytnx, m) {
     .def("__copy__", &Symmetry::clone)
     .def("__deepcopy__", &Symmetry::clone)
     .def("__eq__", &Symmetry::operator==)
+    .def("check_qnum", &Symmetry::check_qnum, py::arg("qnum"))
+    .def("check_qnums", &Symmetry::check_qnums, py::arg("qnums"))
+    .def("combine_rule", [](Symmetry &self, const cytnx_int64 &inL, const cytnx_int64 &inR, const bool &is_reverse){
+                            return self.combine_rule(inL,inR,is_reverse);
+                         }, py::arg("qnL"), py::arg("qnR"),py::arg("is_reverse")=false)
+    .def("reverse_rule", [](Symmetry &self, const cytnx_int64 &qin){
+                            return self.reverse_rule(qin);
+                         }, py::arg("qin"))
+ 
+
+
     .def(
       "Save", [](Symmetry &self, const std::string &fname) { self.Save(fname); }, py::arg("fname"))
     .def_static(
