@@ -2559,6 +2559,7 @@ namespace cytnx {
               const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
               const int &device = Device.cpu, const bool &is_diag = false) {
       std::vector<std::string> vs;
+      cytnx_warning_msg(true,"[Deprecated warning] specify label with integers will be depreated soon. use string instead.%s","\n");
       for (int i = 0; i < (int)in_labels.size(); i++) vs.push_back(std::to_string(in_labels[i]));
       this->Init(bonds, vs, rowrank, dtype, device, is_diag);
     }
@@ -2620,6 +2621,42 @@ namespace cytnx {
       return *this;
     }
 
+    UniTensor &set_label(const cytnx_int64 &idx, const char* new_label){
+      this->_impl->set_label(idx, std::string(new_label));
+      return *this;
+    }
+
+    /**
+    @brief set a new label for bond to replace one of the current label.
+    @param old_label the current label of the bond.
+    @param new_label the new label that is assign to the bond.
+
+    [Note]
+        the new assign label cannot be the same as the label of any other bonds in the UniTensor.
+        ( cannot have duplicate labels )
+
+    */
+    UniTensor &set_label(const std::string &old_label, const std::string &new_label) {
+      this->_impl->set_label(old_label, new_label);
+      return *this;
+    }
+
+    UniTensor &set_label(const char* old_label, const std::string &new_label) {
+      this->_impl->set_label(std::string(old_label), new_label);
+      return *this;
+    }
+ 
+    UniTensor &set_label(const std::string &old_label, const char* new_label) {
+      this->_impl->set_label(old_label, std::string(new_label));
+      return *this;
+    }
+
+    UniTensor &set_label(const char* old_label, const char* new_label) {
+      this->_impl->set_label(std::string(old_label), std::string(new_label));
+      return *this;
+    }
+
+
     /**
     @brief change a new label for bond with original label.
     @param old_lbl the original label of the bond that to be replaced.
@@ -2664,6 +2701,15 @@ namespace cytnx {
       this->_impl->set_labels(new_labels);
       return *this;
     }
+    UniTensor &set_labels(const std::initializer_list<char*> &new_labels) {
+      std::vector<char*> new_lbls(new_labels);
+      std::vector<std::string> vs(new_lbls.size());
+      transform(new_lbls.begin(),new_lbls.end(), vs.begin(),[](char * x) -> std::string { return std::string(x); });
+ 
+      this->_impl->set_labels(vs);
+      return *this;
+    }
+
     UniTensor &set_rowrank(const cytnx_uint64 &new_rowrank) {
       this->_impl->set_rowrank(new_rowrank);
       return *this;
@@ -2770,7 +2816,7 @@ namespace cytnx {
      * @return UniTensor
      */
     UniTensor relabel(const cytnx_int64 &inx, const cytnx_int64 &new_label,
-                      const bool &by_label) const {
+                      const bool &by_label=false) const {
       UniTensor out;
       out._impl = this->_impl->relabel(inx, new_label, by_label);
       return out;
@@ -2780,9 +2826,9 @@ namespace cytnx {
       out._impl = this->_impl->relabel(inx, new_label);
       return out;
     }
-    UniTensor relabel(const cytnx_int64 &inx, const cytnx_int64 &new_label) const {
+    UniTensor relabel(const std::string &old_label, const std::string &new_label) const {
       UniTensor out;
-      out._impl = this->_impl->relabel(inx, new_label);
+      out._impl = this->_impl->relabel(old_label, new_label);
       return out;
     }
 
@@ -2798,7 +2844,7 @@ namespace cytnx {
     /**
      * @brief
      *
-     * @deprecated
+     * @bylabel will be deprecated! 
      *
      * @param mapper
      * @param rowrank
@@ -2821,6 +2867,16 @@ namespace cytnx {
       out._impl = this->_impl->permute(mapper, rowrank);
       return out;
     }
+    UniTensor permute( const std::initializer_list<char*> &mapper, const cytnx_int64 &rowrank= -1){
+        std::vector<char*> mprs = mapper;
+        std::vector<std::string> vs(mprs.size());
+        transform(mprs.begin(),mprs.end(),vs.begin(),[](char * x) -> std::string { return std::string(x); });
+
+        return this->permute(vs,rowrank);
+    }
+
+    
+
     /**
      * @brief
      *
@@ -2837,6 +2893,14 @@ namespace cytnx {
     void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1) {
       this->_impl->permute_(mapper, rowrank);
     }
+    void permute_( const std::initializer_list<char*> &mapper, const cytnx_int64 &rowrank= -1){
+        std::vector<char*> mprs = mapper;
+        std::vector<std::string> vs(mprs.size());
+        transform(mprs.begin(),mprs.end(),vs.begin(),[](char * x) -> std::string { return std::string(x); });
+
+        this->permute_(vs,rowrank);
+    }
+
     //void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) {
     //  this->_impl->permute_(mapper, rowrank);
     //}

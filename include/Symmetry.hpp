@@ -45,7 +45,7 @@ namespace cytnx {
         }
 
         // interprete as 2d vector directly implicitly convert!
-        operator std::vector<cytnx_int64>() const {
+        explicit operator std::vector<cytnx_int64>() const {
             return this->tmpQs;
         };
         

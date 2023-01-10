@@ -9,6 +9,10 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]) {
 
+  Scalar::Sproxy spA;
+  Scalar::Sproxy spB = spA;
+
+
   vec2d<cytnx_int64> testlist;
 
   Bond tqn = Bond(BD_IN,{Qs(0),Qs(4)},{2,3});

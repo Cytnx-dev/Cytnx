@@ -169,6 +169,13 @@ namespace cytnx {
       this->_impl->Init(bd_type, in_qnums, degs, in_syms);
     }
 
+
+    Bond(const bondType &bd_type, const std::initializer_list<std::vector<cytnx_int64>> &in_qnums,
+         const std::vector<cytnx_uint64> &degs, const std::vector<Symmetry> &in_syms = {})
+        : _impl(new Bond_impl()) {
+      this->_impl->Init(bd_type, in_qnums, degs, in_syms);
+    }
+
     // this is needed for python binding!
     Bond(const bondType &bd_type, const std::vector<cytnx::Qs> &in_qnums,
          const std::vector<cytnx_uint64> &degs, const std::vector<Symmetry> &in_syms = {})
@@ -176,6 +183,8 @@ namespace cytnx {
       vec2d<cytnx_int64> qnums(in_qnums.begin(),in_qnums.end()); 
       this->_impl->Init(bd_type, qnums, degs, in_syms);
     }
+
+    
 
     Bond(const bondType &bd_type, const std::vector< std::pair<std::vector<cytnx_int64>, cytnx_uint64> > &in_qnums_dims,
          const std::vector<Symmetry> &in_syms = {})
