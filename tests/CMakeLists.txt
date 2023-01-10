@@ -5,6 +5,7 @@ add_executable(
   Network_test.cpp
   UniTensor_base_test.cpp
   ncon_test.cpp
+  BlockUniTensor_test.cpp
   utils_test/vec_concatenate.cpp
   utils_test/vec_unique.cpp
   utils/getNconParameter.cpp
