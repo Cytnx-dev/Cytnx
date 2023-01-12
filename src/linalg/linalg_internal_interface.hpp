@@ -5,6 +5,7 @@
 
 #include "Type.hpp"
 #include "Storage.hpp"
+#include "Scalar.hpp"
 #include "linalg/linalg_internal_cpu/Arithmetic_internal.hpp"
 #include "linalg/linalg_internal_cpu/iArithmetic_internal.hpp"
 #include "linalg/linalg_internal_cpu/Svd_internal.hpp"
@@ -30,6 +31,8 @@
 #include "linalg/linalg_internal_cpu/Sum_internal.hpp"
 #include "linalg/linalg_internal_cpu/Det_internal.hpp"
 #include "linalg/linalg_internal_cpu/Lstsq_internal.hpp"
+#include "linalg/linalg_internal_cpu/Axpy_internal.hpp"
+
 #ifdef UNI_GPU
   #include "linalg/linalg_internal_gpu/cuArithmetic_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuSvd_internal.hpp"
@@ -60,6 +63,9 @@ namespace cytnx {
       boost::intrusive_ptr<Storage_base> &, const unsigned long long &len,
       const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L,
       const std::vector<cytnx_uint64> &invmapper_R, const char &type);
+
+    typedef void (*axpy_oii)(const boost::intrusive_ptr<Storage_base> &, boost::intrusive_ptr<Storage_base> &, const Scalar &);
+
     typedef void (*Svdfunc_oii)(const boost::intrusive_ptr<Storage_base> &,
                                 boost::intrusive_ptr<Storage_base> &,
                                 boost::intrusive_ptr<Storage_base> &,
@@ -158,6 +164,8 @@ namespace cytnx {
       std::vector<Detfunc_oii> Det_ii;
 
       std::vector<Lstsqfunc_oii> Lstsq_ii;
+
+      std::vector<axpy_oii> axpy_ii;
 
 #ifdef UNI_GPU
       std::vector<std::vector<Arithmeticfunc_oii>> cuAri_ii;

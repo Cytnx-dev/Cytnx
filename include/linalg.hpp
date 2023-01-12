@@ -971,6 +971,31 @@ namespace cytnx {
     */
     std::vector<Tensor> Lstsq(const Tensor &A, const Tensor &b, const float &rcond = -1);
 
+
+    /**
+    @brief Blas Axpy, performing return = a*x + y 
+    @param a Scalar. 
+    @param x Tensor, can be any rank
+    @param y Tensor, can be any rank
+    @return
+        [Tensor]
+
+    #description:
+        This function performs a*x+y where x,y are Tensor and a is a Scalar. The dtype of return 
+        Tensor will be the strongest among x,y and a.
+
+        If y is not specify, then it performs a*x -> return 
+
+    #[Note]
+        This will return a new tensor. 
+
+    */
+    Tensor Axpy(const Scalar &a, const Tensor &x, const Tensor &y = Tensor());
+    
+    void Axpy_(const Scalar &a, const Tensor &x, Tensor &y);
+
+
+
   }  // namespace linalg
 
   // operators:

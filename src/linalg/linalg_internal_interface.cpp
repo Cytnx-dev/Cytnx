@@ -688,6 +688,16 @@ namespace cytnx {
       Lstsq_ii[Type.Double] = Lstsq_internal_d;
       Lstsq_ii[Type.Float] = Lstsq_internal_f;
 
+
+      //===============
+      axpy_ii = std::vector<axpy_oii>(5);
+      axpy_ii[Type.ComplexDouble] = Axpy_internal_cd;
+      axpy_ii[Type.ComplexFloat] = Axpy_internal_cf;
+      axpy_ii[Type.Double] = Axpy_internal_d;
+      axpy_ii[Type.Float] = Axpy_internal_f;
+
+
+
 #ifdef UNI_GPU
       cuAri_ii = vector<vector<Arithmeticfunc_oii>>(N_Type, vector<Arithmeticfunc_oii>(N_Type));
 

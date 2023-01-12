@@ -9,9 +9,15 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]) {
 
-  Scalar::Sproxy spA;
-  Scalar::Sproxy spB = spA;
 
+  auto STx = ones(100).reshape(5,20);
+  auto STy = arange(100).reshape(5,20);
+  print(linalg::Axpy(4,STx));
+  print(linalg::Axpy(4,STx,STy));
+  print(STx);
+
+
+  return 0;
 
   vec2d<cytnx_int64> testlist;
 

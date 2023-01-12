@@ -119,7 +119,7 @@ endif
 
 ## Linalg_internal
 OBJS += linalg_internal_interface.o
-OBJS += Lstsq_internal.o Mod_internal.o Det_internal.o Sum_internal.o MaxMin_internal.o QR_internal.o Abs_internal.o Pow_internal.o Eig_internal.o Matvec_internal.o Norm_internal.o Kron_internal.o Cpr_internal.o iAdd_internal.o Add_internal.o iSub_internal.o Sub_internal.o iMul_internal.o Mul_internal.o iDiv_internal.o Div_internal.o iArithmetic_internal.o Arithmetic_internal.o Svd_internal.o Inv_inplace_internal.o InvM_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_dg_internal.o Matmul_internal.o Diag_internal.o Outer_internal.o Vectordot_internal.o Tridiag_internal.o 
+OBJS += Lstsq_internal.o Mod_internal.o Det_internal.o Sum_internal.o MaxMin_internal.o QR_internal.o Abs_internal.o Pow_internal.o Eig_internal.o Matvec_internal.o Norm_internal.o Kron_internal.o Cpr_internal.o iAdd_internal.o Add_internal.o iSub_internal.o Sub_internal.o iMul_internal.o Mul_internal.o iDiv_internal.o Div_internal.o iArithmetic_internal.o Arithmetic_internal.o Svd_internal.o Inv_inplace_internal.o InvM_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_dg_internal.o Matmul_internal.o Diag_internal.o Outer_internal.o Vectordot_internal.o Tridiag_internal.o Axpy_internal.o
 ifeq ($(GPU_Enable),1)
   OBJS += cuMod_internal.o cuPow_internal.o cuVectordot_internal.o cuMatvec_internal.o cuNorm_internal.o cuCpr_internal.o cuAdd_internal.o cuSub_internal.o cuMul_internal.o cuDiv_internal.o cuArithmetic_internal.o cuSvd_internal.o cuInv_inplace_internal.o cuInvM_inplace_internal.o cuConj_inplace_internal.o cuExp_internal.o  cuEigh_internal.o cuMatmul_dg_internal.o cuMatmul_internal.o cuDiag_internal.o cuOuter_internal.o
 endif
@@ -131,7 +131,7 @@ OBJS += Sort_internal.o Split_internal.o Concate_internal.o
 
 
 ## Linalg
-OBJS += Lstsq.o Mod.o Lanczos.o Lanczos_Gnd_Ut.o Lanczos_Gnd.o Lanczos_ER.o Det.o Sum.o Hosvd.o Min.o Max.o ExpM.o Qdr.o Qr.o Abs_.o Abs.o Pow_.o Pow.o Trace.o Eig.o Dot.o Norm.o ExpH.o Kron.o iAdd.o Add.o iDiv.o Div.o iSub.o Sub.o iMul.o Mul.o Cpr.o Svd.o Svd_truncate.o Inv.o Inv_.o InvM.o InvM_.o Conj.o Conj_.o Exp.o Exp_.o Expf.o Expf_.o Eigh.o Diag.o Matmul_dg.o Matmul.o Tensordot_dg.o Tensordot.o Outer.o Vectordot.o Tridiag.o Directsum.o 
+OBJS += Lstsq.o Mod.o Lanczos.o Lanczos_Gnd_Ut.o Lanczos_Gnd.o Lanczos_ER.o Det.o Sum.o Hosvd.o Min.o Max.o ExpM.o Qdr.o Qr.o Abs_.o Abs.o Pow_.o Pow.o Trace.o Eig.o Dot.o Norm.o ExpH.o Kron.o iAdd.o Add.o iDiv.o Div.o iSub.o Sub.o iMul.o Mul.o Cpr.o Svd.o Svd_truncate.o Inv.o Inv_.o InvM.o InvM_.o Conj.o Conj_.o Exp.o Exp_.o Expf.o Expf_.o Eigh.o Diag.o Matmul_dg.o Matmul.o Tensordot_dg.o Tensordot.o Outer.o Vectordot.o Tridiag.o Directsum.o Axpy.o
 
 ## Algo
 OBJS += Sort.o Concatenate.o  Hsplit.o Matric.o Vsplit.o Vstack.o Hstack.o
@@ -397,6 +397,9 @@ Matmul_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Matmul_internal
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 Matmul_dg_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Matmul_dg_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Matmul_dg_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+
+Axpy_internal.o: $(CytnxPATH)/src/linalg/linalg_internal_cpu/Axpy_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Axpy_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $< 
 
 Matvec_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Matvec_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Matvec_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
@@ -750,6 +753,10 @@ Pow_.o: $(CytnxPATH)/src/linalg/Pow_.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Abs.o: $(CytnxPATH)/src/linalg/Abs.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+
+Axpy.o: $(CytnxPATH)/src/linalg/Axpy.cpp $(CytnxPATH)/include/linalg.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+
 Abs_.o: $(CytnxPATH)/src/linalg/Abs_.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Hosvd.o: $(CytnxPATH)/src/linalg/Hosvd.cpp $(CytnxPATH)/include/linalg.hpp
