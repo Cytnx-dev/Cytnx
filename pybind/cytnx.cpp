@@ -3084,6 +3084,9 @@ PYBIND11_MODULE(cytnx, m) {
                py::arg("is_V") = true, py::arg("is_row") = false, py::arg("throw_excp") = false);
   m_linalg.def("Norm", &cytnx::linalg::Norm, py::arg("T1"));
   m_linalg.def("Dot", &cytnx::linalg::Dot, py::arg("T1"), py::arg("T2"));
+  m_linalg.def("Axpy", &cytnx::linalg::Axpy, py::arg("a"), py::arg("x"), py::arg("y") = Tensor());
+  m_linalg.def("Axpy_", &cytnx::linalg::Axpy_, py::arg("a"), py::arg("x"), py::arg("y"));
+
 
   m_linalg.def(
     "Trace",
