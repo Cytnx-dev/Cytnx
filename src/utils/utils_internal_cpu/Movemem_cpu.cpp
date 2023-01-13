@@ -42,14 +42,13 @@ namespace cytnx {
 
 #else
 
-      std::vector<cytnx_uint64> newshape(old_shape.size());
-      for (cytnx_uint64 i = 0; i < old_shape.size(); i++) newshape[i] = old_shape[mapper[i]];
-
-      std::vector<cytnx_uint64> shifter_old(old_shape.size());
-      std::vector<cytnx_uint64> shifter_new(old_shape.size());
+      std::vector<cytnx_int64> newshape(old_shape.size());
+      for (cytnx_int64 i = 0; i < old_shape.size(); i++){
+        newshape[i] = old_shape[mapper[i]];
+      }
+      std::vector<cytnx_int64> shifter_new(old_shape.size());
 
       for (cytnx_int64 i = old_shape.size() - 1; i >= 0; i--) {
-        shifter_old[i] = accu_old;
         shifter_new[i] = accu_new;
         accu_old *= old_shape[i];
         accu_new *= newshape[i];
@@ -81,20 +80,28 @@ namespace cytnx {
       }
 
   #else
-      std::vector<cytnx_uint64> old_inds(old_shape.size());
-      cytnx_uint64 j, old_loc;
-      for (cytnx_uint64 n = 0; n < accu_old; n++) {
-        // calc new id:
-        old_loc = n;
-        for (j = 0; j < old_shape.size(); j++) {
-          old_inds[j] = old_loc / shifter_old[j];
-          old_loc = old_loc % shifter_old[j];
+      std::vector<cytnx_int64> old_inds(old_shape.size());
+      cytnx_int64 j, new_loc=0;
+      for (cytnx_int64 n = 0; n < accu_old; n++) {
+        bool recalc = 0;
+        for(int i=(int)old_shape.size()-1;i>=0;i--) {
+          if(old_inds[i]>=old_shape[i]){
+            recalc=1;
+            old_inds[i-1]++;
+            old_inds[i]=0;
+          }else break;
         }
-        old_loc = 0;  // position:
-        for (j = 0; j < old_shape.size(); j++) {
-          old_loc += shifter_new[j] * old_inds[mapper[j]];
+        if(recalc){
+          new_loc = 0;
+          for (j = 0; j < old_shape.size(); j++) {
+            new_loc += shifter_new[j] * old_inds[mapper[j]];
+          }
+        }else{
+          if(n!=0) new_loc+=shifter_new[invmapper[old_shape.size()-1]];
         }
-        des[old_loc] = src[n];
+        des[new_loc] = src[n];
+
+        old_inds[old_shape.size()-1]++;
       }
   #endif
 #endif  // hptt
@@ -139,14 +146,13 @@ namespace cytnx {
 
 #else
 
-      std::vector<cytnx_uint64> newshape(old_shape.size());
-      for (cytnx_uint64 i = 0; i < old_shape.size(); i++) newshape[i] = old_shape[mapper[i]];
-
-      std::vector<cytnx_uint64> shifter_old(old_shape.size());
-      std::vector<cytnx_uint64> shifter_new(old_shape.size());
+      std::vector<cytnx_int64> newshape(old_shape.size());
+      for (cytnx_int64 i = 0; i < old_shape.size(); i++){
+        newshape[i] = old_shape[mapper[i]];
+      }
+      std::vector<cytnx_int64> shifter_new(old_shape.size());
 
       for (cytnx_int64 i = old_shape.size() - 1; i >= 0; i--) {
-        shifter_old[i] = accu_old;
         shifter_new[i] = accu_new;
         accu_old *= old_shape[i];
         accu_new *= newshape[i];
@@ -178,20 +184,28 @@ namespace cytnx {
       }
 
   #else
-      std::vector<cytnx_uint64> old_inds(old_shape.size());
-      cytnx_uint64 j, old_loc;
-      for (cytnx_uint64 n = 0; n < accu_old; n++) {
-        // calc new id:
-        old_loc = n;
-        for (j = 0; j < old_shape.size(); j++) {
-          old_inds[j] = old_loc / shifter_old[j];
-          old_loc = old_loc % shifter_old[j];
+      std::vector<cytnx_int64> old_inds(old_shape.size());
+      cytnx_int64 j, new_loc=0;
+      for (cytnx_int64 n = 0; n < accu_old; n++) {
+        bool recalc = 0;
+        for(int i=(int)old_shape.size()-1;i>=0;i--) {
+          if(old_inds[i]>=old_shape[i]){
+            recalc=1;
+            old_inds[i-1]++;
+            old_inds[i]=0;
+          }else break;
         }
-        old_loc = 0;  // position:
-        for (j = 0; j < old_shape.size(); j++) {
-          old_loc += shifter_new[j] * old_inds[mapper[j]];
+        if(recalc){
+          new_loc = 0;
+          for (j = 0; j < old_shape.size(); j++) {
+            new_loc += shifter_new[j] * old_inds[mapper[j]];
+          }
+        }else{
+          if(n!=0) new_loc+=shifter_new[invmapper[old_shape.size()-1]];
         }
-        des[old_loc] = src[n];
+        des[new_loc] = src[n];
+
+        old_inds[old_shape.size()-1]++;
       }
   #endif
 #endif  // hptt
@@ -219,7 +233,8 @@ namespace cytnx {
         in->dtype_str().c_str());
 #endif
 
-      cytnx_double *des = (cytnx_double *)calloc(in->cap, sizeof(cytnx_double));
+      // cytnx_double *des = (cytnx_double *)calloc(in->cap, sizeof(cytnx_double));
+      cytnx_double *des = (cytnx_double *)malloc(in->cap*sizeof(cytnx_double));
       cytnx_double *src = static_cast<cytnx_double *>(in->Mem);
       cytnx_uint64 accu_old = 1, accu_new = 1;
 
@@ -236,14 +251,13 @@ namespace cytnx {
 
 #else
 
-      std::vector<cytnx_uint64> newshape(old_shape.size());
-      for (cytnx_uint64 i = 0; i < old_shape.size(); i++) newshape[i] = old_shape[mapper[i]];
-
-      std::vector<cytnx_uint64> shifter_old(old_shape.size());
-      std::vector<cytnx_uint64> shifter_new(old_shape.size());
+      std::vector<cytnx_int64> newshape(old_shape.size());
+      for (cytnx_int64 i = 0; i < old_shape.size(); i++){
+        newshape[i] = old_shape[mapper[i]];
+      }
+      std::vector<cytnx_int64> shifter_new(old_shape.size());
 
       for (cytnx_int64 i = old_shape.size() - 1; i >= 0; i--) {
-        shifter_old[i] = accu_old;
         shifter_new[i] = accu_new;
         accu_old *= old_shape[i];
         accu_new *= newshape[i];
@@ -275,20 +289,28 @@ namespace cytnx {
       }
 
   #else
-      std::vector<cytnx_uint64> old_inds(old_shape.size());
-      cytnx_uint64 j, old_loc;
-      for (cytnx_uint64 n = 0; n < accu_old; n++) {
-        // calc new id:
-        old_loc = n;
-        for (j = 0; j < old_shape.size(); j++) {
-          old_inds[j] = old_loc / shifter_old[j];
-          old_loc = old_loc % shifter_old[j];
+      std::vector<cytnx_int64> old_inds(old_shape.size());
+      cytnx_int64 j, new_loc=0;
+      for (cytnx_int64 n = 0; n < accu_old; n++) {
+        bool recalc = 0;
+        for(int i=(int)old_shape.size()-1;i>=0;i--) {
+          if(old_inds[i]>=old_shape[i]){
+            recalc=1;
+            old_inds[i-1]++;
+            old_inds[i]=0;
+          }else break;
         }
-        old_loc = 0;  // position:
-        for (j = 0; j < old_shape.size(); j++) {
-          old_loc += shifter_new[j] * old_inds[mapper[j]];
+        if(recalc){
+          new_loc = 0;
+          for (j = 0; j < old_shape.size(); j++) {
+            new_loc += shifter_new[j] * old_inds[mapper[j]];
+          }
+        }else{
+          if(n!=0) new_loc+=shifter_new[invmapper[old_shape.size()-1]];
         }
-        des[old_loc] = src[n];
+        des[new_loc] = src[n];
+
+        old_inds[old_shape.size()-1]++;
       }
   #endif
 
@@ -332,14 +354,13 @@ namespace cytnx {
       accu_old = in->size();
 #else
 
-      std::vector<cytnx_uint64> newshape(old_shape.size());
-      for (cytnx_uint64 i = 0; i < old_shape.size(); i++) newshape[i] = old_shape[mapper[i]];
-
-      std::vector<cytnx_uint64> shifter_old(old_shape.size());
-      std::vector<cytnx_uint64> shifter_new(old_shape.size());
+      std::vector<cytnx_int64> newshape(old_shape.size());
+      for (cytnx_int64 i = 0; i < old_shape.size(); i++){
+        newshape[i] = old_shape[mapper[i]];
+      }
+      std::vector<cytnx_int64> shifter_new(old_shape.size());
 
       for (cytnx_int64 i = old_shape.size() - 1; i >= 0; i--) {
-        shifter_old[i] = accu_old;
         shifter_new[i] = accu_new;
         accu_old *= old_shape[i];
         accu_new *= newshape[i];
@@ -371,20 +392,28 @@ namespace cytnx {
       }
 
   #else
-      std::vector<cytnx_uint64> old_inds(old_shape.size());
-      cytnx_uint64 j, old_loc;
-      for (cytnx_uint64 n = 0; n < accu_old; n++) {
-        // calc new id:
-        old_loc = n;
-        for (j = 0; j < old_shape.size(); j++) {
-          old_inds[j] = old_loc / shifter_old[j];
-          old_loc = old_loc % shifter_old[j];
+      std::vector<cytnx_int64> old_inds(old_shape.size());
+      cytnx_int64 j, new_loc=0;
+      for (cytnx_int64 n = 0; n < accu_old; n++) {
+        bool recalc = 0;
+        for(int i=(int)old_shape.size()-1;i>=0;i--) {
+          if(old_inds[i]>=old_shape[i]){
+            recalc=1;
+            old_inds[i-1]++;
+            old_inds[i]=0;
+          }else break;
         }
-        old_loc = 0;  // position:
-        for (j = 0; j < old_shape.size(); j++) {
-          old_loc += shifter_new[j] * old_inds[mapper[j]];
+        if(recalc){
+          new_loc = 0;
+          for (j = 0; j < old_shape.size(); j++) {
+            new_loc += shifter_new[j] * old_inds[mapper[j]];
+          }
+        }else{
+          if(n!=0) new_loc+=shifter_new[invmapper[old_shape.size()-1]];
         }
-        des[old_loc] = src[n];
+        des[new_loc] = src[n];
+
+        old_inds[old_shape.size()-1]++;
       }
   #endif
 #endif  // hptt

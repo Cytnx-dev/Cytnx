@@ -5,7 +5,7 @@
 ## [Note] uncomments the following lines and 
 ##        Set the desntination path for installation in Ins_dest
 #----------------------------------------------
-Ins_dest="~/cy_test"
+Ins_dest="/home/petjelinux/Cytnx_lib"
 FLAG="${FLAG}-DCMAKE_INSTALL_PREFIX=${Ins_dest} "
 #-----------------------------------------------
 
@@ -67,13 +67,13 @@ FLAG="${FLAG}-DUSE_HPTT=ON "
 # 5-a) HPTT fine tune (DEFAULT =off)
 # [Note] set to "=on" to enable fine tune for the native hardware.
 #-----------------------------------
-# FLAG="${FLAG}-DHPTT_ENABLE_FINE_TUNE=off "
+FLAG="${FLAG}-DHPTT_ENABLE_FINE_TUNE=ON "
 #-----------------------------------
 # 5-b) HPTT variant options (DEFAULT = no option)
 # [Note] uncomment one of the desired options below 1: AVX 2: IBM 3: ARM.
 #-----------------------------------
 # FLAG="${FLAG}-DHPTT_ENABLE_ARM=on "
-# FLAG="${FLAG}-DHPTT_ENABLE_AVX=on "
+FLAG="${FLAG}-DHPTT_ENABLE_AVX=on "
 # FLAG="${FLAG}-DHPTT_ENABLE_IBM=on "
 #-----------------------------------
 
@@ -136,8 +136,8 @@ FLAG="${FLAG}-DUSE_ICPC=OFF "
 
 
 echo ${FLAG}
-# rm -rf build
-# mkdir build
+rm -rf build
+mkdir build
 cd build
 cmake ../ ${FLAG}
 make -j`nproc`

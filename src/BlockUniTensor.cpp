@@ -107,7 +107,7 @@ namespace cytnx {
 
     if(this->_is_diag){
         for(int b=0;b<this->_bonds[0].qnums().size();b++){
-            this->_inner_to_outer_idx.push_back({b,b});
+            this->_inner_to_outer_idx.push_back({(cytnx_uint64)b,(cytnx_uint64)b});
             if(!no_alloc) this->_blocks.push_back(zeros(this->_bonds[0]._impl->_degs[b],dtype,device));
         }
 
@@ -137,6 +137,7 @@ namespace cytnx {
                         size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
                     }
                     this->_blocks.push_back(zeros(size,dtype,device));
+                    // this->_blocks.push_back(Tensor(size,dtype,device));
                 }
                 // push its loc
                 this->_inner_to_outer_idx.push_back(Loc);
@@ -839,6 +840,8 @@ namespace cytnx {
                             }else{
                                 tmp->_blocks[targ_b] += linalg::Tensordot(this->_blocks[a], Rtn->_blocks[b], comm_idx1, comm_idx2,
                                           mv_elem_self, mv_elem_rhs);
+                                // tmp->_blocks[targ_b] = linalg::Tensordot(this->_blocks[a], Rtn->_blocks[b], comm_idx1, comm_idx2,
+                                //           mv_elem_self, mv_elem_rhs);
                             }
                         }else{
                             cytnx_error_msg(true,"[ERROR][BlockUniTensor] trying to contract L.blk [%d] with R.blk [%d] but no target blk found!\n",a,b); 
