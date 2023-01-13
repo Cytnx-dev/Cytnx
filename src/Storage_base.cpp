@@ -72,12 +72,12 @@ namespace cytnx {
   }
 
   //==========================
-  void Storage_base::Init(const unsigned long long &len_in, const int &device) {
+  void Storage_base::Init(const unsigned long long &len_in, const int &device, const bool &init_zero) {
     // cout << "Base.init" << endl;
   }
 
-  Storage_base::Storage_base(const unsigned long long &len_in, const int &device) {
-    this->Init(len_in, device);
+  Storage_base::Storage_base(const unsigned long long &len_in, const int &device, const bool &init_zero) {
+    this->Init(len_in, device, init_zero);
   }
 
   Storage_base &Storage_base::operator=(Storage_base &Rhs) {

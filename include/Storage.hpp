@@ -35,7 +35,7 @@ namespace cytnx {
     Storage_base() : cap(0), len(0), Mem(NULL), dtype(0), device(-1){};
     // Storage_base(const std::initializer_list<unsigned int> &init_shape);
     // Storage_base(const std::vector<unsigned int> &init_shape);
-    Storage_base(const unsigned long long &len_in, const int &device);
+    Storage_base(const unsigned long long &len_in, const int &device, const bool &init_zero=true);
 
     Storage_base(Storage_base &Rhs);
     Storage_base &operator=(Storage_base &Rhs);
@@ -146,7 +146,7 @@ namespace cytnx {
                             const cytnx_uint64 &Nunit, const bool &is_scalar);
     // these is the one that do the work, and customize with Storage_base
     // virtual void Init(const std::vector<unsigned int> &init_shape);
-    virtual void Init(const unsigned long long &len_in, const int &device = -1);
+    virtual void Init(const unsigned long long &len_in, const int &device = -1, const bool &init_zero = true);
     virtual void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device = -1,
                              const bool &iscap = false, const unsigned long long &cap_in = 0);
 
@@ -223,7 +223,7 @@ namespace cytnx {
   class FloatStorage : public Storage_base {
    public:
     FloatStorage() { this->dtype = Type.Float; };
-    void Init(const unsigned long long &len_in, const int &device = -1);
+    void Init(const unsigned long long &len_in, const int &device = -1, const bool &init_zero=true);
     void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device = -1,
                      const bool &iscap = false, const unsigned long long &cap_in = 0);
     boost::intrusive_ptr<Storage_base> _create_new_sametype();
@@ -291,7 +291,7 @@ namespace cytnx {
   class DoubleStorage : public Storage_base {
    public:
     DoubleStorage() { this->dtype = Type.Double; };
-    void Init(const unsigned long long &len_in, const int &device = -1);
+    void Init(const unsigned long long &len_in, const int &device = -1, const bool &init_zero=true);
     void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device = -1,
                      const bool &iscap = false, const unsigned long long &cap_in = 0);
     boost::intrusive_ptr<Storage_base> _create_new_sametype();
@@ -359,7 +359,7 @@ namespace cytnx {
   class ComplexDoubleStorage : public Storage_base {
    public:
     ComplexDoubleStorage() { this->dtype = Type.ComplexDouble; };
-    void Init(const unsigned long long &len_in, const int &device = -1);
+    void Init(const unsigned long long &len_in, const int &device = -1, const bool &init_zero = true);
     void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device = -1,
                      const bool &iscap = false, const unsigned long long &cap_in = 0);
     boost::intrusive_ptr<Storage_base> _create_new_sametype();
@@ -427,7 +427,7 @@ namespace cytnx {
   class ComplexFloatStorage : public Storage_base {
    public:
     ComplexFloatStorage() { this->dtype = Type.ComplexFloat; };
-    void Init(const unsigned long long &len_in, const int &device = -1);
+    void Init(const unsigned long long &len_in, const int &device = -1, const bool &init_zero = true);
     void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device = -1,
                      const bool &iscap = false, const unsigned long long &cap_in = 0);
     boost::intrusive_ptr<Storage_base> _create_new_sametype();
@@ -495,7 +495,7 @@ namespace cytnx {
   class Int64Storage : public Storage_base {
    public:
     Int64Storage() { this->dtype = Type.Int64; };
-    void Init(const unsigned long long &len_in, const int &device = -1);
+    void Init(const unsigned long long &len_in, const int &device = -1, const bool &init_zero = true);
     void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device = -1,
                      const bool &iscap = false, const unsigned long long &cap_in = 0);
     boost::intrusive_ptr<Storage_base> _create_new_sametype();
@@ -563,7 +563,7 @@ namespace cytnx {
   class Uint64Storage : public Storage_base {
    public:
     Uint64Storage() { this->dtype = Type.Uint64; };
-    void Init(const unsigned long long &len_in, const int &device = -1);
+    void Init(const unsigned long long &len_in, const int &device = -1, const bool &init_zero = true);
     void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device = -1,
                      const bool &iscap = false, const unsigned long long &cap_in = 0);
     boost::intrusive_ptr<Storage_base> _create_new_sametype();
@@ -630,7 +630,7 @@ namespace cytnx {
   class Int32Storage : public Storage_base {
    public:
     Int32Storage() { this->dtype = Type.Int32; };
-    void Init(const unsigned long long &len_in, const int &device = -1);
+    void Init(const unsigned long long &len_in, const int &device = -1, const bool &init_zero = true);
     void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device = -1,
                      const bool &iscap = false, const unsigned long long &cap_in = 0);
     boost::intrusive_ptr<Storage_base> _create_new_sametype();
@@ -697,7 +697,7 @@ namespace cytnx {
   class Uint32Storage : public Storage_base {
    public:
     Uint32Storage() { this->dtype = Type.Uint32; };
-    void Init(const unsigned long long &len_in, const int &device = -1);
+    void Init(const unsigned long long &len_in, const int &device = -1, const bool &init_zero= true);
     void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device = -1,
                      const bool &iscap = false, const unsigned long long &cap_in = 0);
     boost::intrusive_ptr<Storage_base> _create_new_sametype();
@@ -764,7 +764,7 @@ namespace cytnx {
   class Uint16Storage : public Storage_base {
    public:
     Uint16Storage() { this->dtype = Type.Uint16; };
-    void Init(const unsigned long long &len_in, const int &device = -1);
+    void Init(const unsigned long long &len_in, const int &device = -1, const bool &init_zero=true);
     void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device = -1,
                      const bool &iscap = false, const unsigned long long &cap_in = 0);
     boost::intrusive_ptr<Storage_base> _create_new_sametype();
@@ -832,7 +832,7 @@ namespace cytnx {
   class Int16Storage : public Storage_base {
    public:
     Int16Storage() { this->dtype = Type.Int16; };
-    void Init(const unsigned long long &len_in, const int &device = -1);
+    void Init(const unsigned long long &len_in, const int &device = -1, const bool &init_zero=true);
     void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device = -1,
                      const bool &iscap = false, const unsigned long long &cap_in = 0);
     boost::intrusive_ptr<Storage_base> _create_new_sametype();
@@ -899,7 +899,7 @@ namespace cytnx {
   class BoolStorage : public Storage_base {
    public:
     BoolStorage() { this->dtype = Type.Bool; };
-    void Init(const unsigned long long &len_in, const int &device = -1);
+    void Init(const unsigned long long &len_in, const int &device = -1, const bool &init_zero=true);
     void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device = -1,
                      const bool &iscap = false, const unsigned long long &cap_in = 0);
     boost::intrusive_ptr<Storage_base> _create_new_sametype();
@@ -1004,15 +1004,15 @@ namespace cytnx {
     \verbinclude example/Storage/Init.py.out
     */
     void Init(const unsigned long long &size, const unsigned int &dtype = Type.Double,
-              int device = -1) {
+              int device = -1, const bool &init_zero = true) {
       cytnx_error_msg(dtype >= N_Type, "%s", "[ERROR] invalid argument: dtype");
       this->_impl = __SII.USIInit[dtype]();
-      this->_impl->Init(size, device);
+      this->_impl->Init(size, device,init_zero);
     }
     Storage(const unsigned long long &size, const unsigned int &dtype = Type.Double,
-            int device = -1)
+            int device = -1, const bool &init_zero=true)
         : _impl(new Storage_base()) {
-      Init(size, dtype, device);
+      Init(size, dtype, device,init_zero);
     }
     Storage() : _impl(new Storage_base()){};
     ///@cond

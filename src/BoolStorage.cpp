@@ -8,7 +8,7 @@ using namespace cytnx;
 
 namespace cytnx {
   //+++++++++++++++++++
-  void BoolStorage::Init(const unsigned long long &len_in, const int &device) {
+  void BoolStorage::Init(const unsigned long long &len_in, const int &device, const bool &init_zero) {
     // cout << "Bool.init" << endl;
     // check:
     this->len = len_in;
@@ -24,8 +24,8 @@ namespace cytnx {
     }
 
     if (device == Device.cpu) {
-      // this->Mem = utils_internal::Malloc_cpu(this->cap*sizeof(bool));
-      this->Mem = utils_internal::Calloc_cpu(this->cap, sizeof(bool));
+      if(init_zero) this->Mem = utils_internal::Calloc_cpu(this->cap, sizeof(bool));
+      else this->Mem = utils_internal::Malloc_cpu(this->cap*sizeof(bool));
     } else {
 #ifdef UNI_GPU
       cytnx_error_msg(device >= Device.Ngpus, "%s", "[ERROR] invalid device.");
