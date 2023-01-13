@@ -110,10 +110,10 @@ namespace cytnx {
     const std::string &name() const { return this->_name; }
     cytnx_uint64 rank() const { return this->_labels.size(); }
     void set_name(const std::string &in) { this->_name = in; }
-    void set_label(const std::string &inx, const std::string &new_label) {
+    void set_label(const std::string &oldlbl, const std::string &new_label) {
       cytnx_int64 idx;
-      auto res = std::find(this->_labels.begin(), this->_labels.end(), inx);
-      cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %d not exists.\n", inx);
+      auto res = std::find(this->_labels.begin(), this->_labels.end(), oldlbl);
+      cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %d not exists.\n", oldlbl);
       idx = std::distance(this->_labels.begin(), res);
 
       cytnx_error_msg(idx >= this->_labels.size(), "[ERROR] index exceed the rank of UniTensor%s",
@@ -132,7 +132,22 @@ namespace cytnx {
       this->_labels[idx] = new_label;
     }
     void set_label(const cytnx_int64 &inx, const std::string &new_label) {
-      set_label(std::to_string(inx), new_label);
+      cytnx_error_msg(inx < 0 , "[ERROR] index is negative%s",
+                      "\n");
+      cytnx_error_msg(inx >= this->_labels.size(), "[ERROR] index exceed the rank of UniTensor%s",
+                      "\n");
+      // check in:
+      bool is_dup = false;
+      for (cytnx_uint64 i = 0; i < this->_labels.size(); i++) {
+        if (i == inx) continue;
+        if (new_label == this->_labels[i]) {
+          is_dup = true;
+          break;
+        }
+      }
+      cytnx_error_msg(is_dup, "[ERROR] alreay has a label that is the same as the input label%s",
+                      "\n");
+      this->_labels[inx] = new_label;
     }
     /**
      * @brief Set the label object

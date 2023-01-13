@@ -5,6 +5,7 @@ add_executable(
   Network_test.cpp
   UniTensor_base_test.cpp
   ncon_test.cpp
+  BlockUniTensor_test.cpp
   utils_test/vec_concatenate.cpp
   utils_test/vec_unique.cpp
   utils/getNconParameter.cpp
@@ -37,4 +38,13 @@ file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/output.txt"
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/answer.txt"
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/answer.txt"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/OriginalBUT.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+      file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/OriginalBUT.cytnx"
+      DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/BUtrT.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/BUtrT.cytnx"
       DESTINATION ${CMAKE_BINARY_DIR})

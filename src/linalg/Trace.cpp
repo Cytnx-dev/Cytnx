@@ -45,8 +45,10 @@ namespace cytnx {
     I.set_labels({"0", "1"});
     UniTensor UTn = UniTensor(Tn, false, 2);
     UTn.set_labels(vec_cast<cytnx_uint64, cytnx_int64>(vec_range(100, 100 + UTn.labels().size())));
-    UTn.set_label(ax1, "0");
-    UTn.set_label(ax2, "1");
+    // UTn.set_label(ax1, "0");
+    // UTn.set_label(ax2, "1");
+    UTn._impl->_labels[ax1]="0";
+    UTn._impl->_labels[ax2]="1";
     out = Contract(I, UTn).get_block_();
 
     // vector<cytnx_uint64> indexer(Tn.shape().size(), 0);
