@@ -682,12 +682,10 @@ namespace cytnx {
                 tmp->_blocks[b] = Ott;
             } 
 
-        }         
+        }
 
         boost::intrusive_ptr<UniTensor_base> out(tmp);
         return out;
-           
-
     }else{
         //first, get common index!
         
