@@ -179,19 +179,46 @@ dmrg_tfim: dmrg_tfim.o libcytnx.so
 #	#export LD_LIBRARY_PATH=.
 
 libcytnx.so: $(ALLOBJS)
-	$(CC) -shared -o $@ $^ $(LDFLAGS)
+	$(CC) -shared -Wl,-z,defs -o $@ $^ $(LDFLAGS)
 
-pyobj: $(ALLOBJS)
-	$(CC) $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes)  pybind/cytnx.cpp $^ $(LDFLAGS) -shared -o cytnx/cytnx$(shell python3-config --extension-suffix)
+#  old:
+#pyobj: $(ALLOBJS) 
+#	$(CC) $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes)  pybind/cytnx.cpp $^ $(LDFLAGS) -shared -o cytnx/cytnx$(shell python3-config --extension-suffix)
+#	#$(CC) $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) pybind/cytnx.cpp $^ $(LDFLAGS) -shared -o cytnx/cytnx$(shell python3-config --extension-suffix)
 
-
-#cytnx.o: pybind/cytnx.cpp
-#	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes)  $< -o $@
-
-#pyobj: cytnx.o 
-#	$(CC) -L. $< -shared -o cytnx/cytnx$(shell python3-config --extension-suffix) $(LDFLAGS) -lcytnx
+pyobj: $(ALLOBJS) pycytnx.o generator_py.o storage_py.o tensor_py.o symmetry_py.o bond_py.o network_py.o linop_py.o unitensor_py.o linalg_py.o algo_py.o physics_related_py.o random_py.o tnalgo_py.o 
+	$(CC) $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $^ $(LDFLAGS) -shared -o cytnx/cytnx$(shell python3-config --extension-suffix)
 
 
+pycytnx.o: pybind/cytnx.cpp
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+
+generator_py.o: pybind/generator_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+storage_py.o: pybind/storage_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+tensor_py.o: pybind/tensor_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+symmetry_py.o: pybind/symmetry_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+bond_py.o: pybind/bond_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+network_py.o: pybind/network_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+linop_py.o: pybind/linop_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+unitensor_py.o: pybind/unitensor_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+linalg_py.o: pybind/linalg_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+algo_py.o: pybind/algo_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+random_py.o: pybind/random_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+physics_related_py.o: pybind/physics_related_py.cpp
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+tnalgo_py.o: pybind/tnalgo_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
 
 doc : 
 	doxygen docs.doxygen

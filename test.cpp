@@ -9,6 +9,7 @@ typedef cytnx::Accessor ac;
 
 int main(int argc, char *argv[]) {
 
+  auto Tvt = Tensor();
 
   auto STx = ones(100).reshape(5,20);
   auto STy = arange(100).reshape(5,20);

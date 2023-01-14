@@ -398,7 +398,21 @@ IF(BUILD_PYTHON)
             )
         endif()
     endif()
-    pybind11_add_module(pycytnx SHARED pybind/cytnx.cpp)
+    pybind11_add_module(pycytnx SHARED pybind/cytnx.cpp 
+                                       pybind/generator_py.cpp
+                                       pybind/storage_py.cpp
+                                       pybind/tensor_py.cpp
+                                       pybind/symmetry_py.cpp
+                                       pybind/bond_py.cpp
+                                       pybind/network_py.cpp
+                                       pybind/linop_py.cpp
+                                       pybind/unitensor_py.cpp
+                                       pybind/linalg_py.cpp
+                                       pybind/algo_py.cpp
+                                       pybind/physics_related_py.cpp
+                                       pybind/random_py.cpp
+                                       pybind/tnalgo_py.cpp
+                                       )
     target_link_libraries(pycytnx PRIVATE cytnx)
     set_target_properties(pycytnx PROPERTIES OUTPUT_NAME cytnx)
     #add_library(cytnx MODULE pybind/cytnx.cpp)
