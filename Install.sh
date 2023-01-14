@@ -5,7 +5,7 @@
 ## [Note] uncomments the following lines and 
 ##        Set the desntination path for installation in Ins_dest
 #----------------------------------------------
-Ins_dest="/home/kaihsinwu/CYTNX_tpy"
+Ins_dest="/home/petjelinux/Cytnx_lib"
 FLAG="${FLAG}-DCMAKE_INSTALL_PREFIX=${Ins_dest} "
 #-----------------------------------------------
 
@@ -41,7 +41,7 @@ FLAG="${FLAG}-DUSE_MKL=ON "
 #============================================================================
 # set to "=on" for building python API, required python and pybind11 installed. 
 #--------------------------------
-FLAG="${FLAG}-DBUILD_PYTHON=ON "
+FLAG="${FLAG}-DBUILD_PYTHON=OFF "
 #--------------------------------
 
 
@@ -67,7 +67,7 @@ FLAG="${FLAG}-DUSE_HPTT=ON "
 # 5-a) HPTT fine tune (DEFAULT =off)
 # [Note] set to "=on" to enable fine tune for the native hardware.
 #-----------------------------------
-FLAG="${FLAG}-DHPTT_ENABLE_FINE_TUNE=OFF "
+FLAG="${FLAG}-DHPTT_ENABLE_FINE_TUNE=ON "
 #-----------------------------------
 # 5-b) HPTT variant options (DEFAULT = no option)
 # [Note] uncomment one of the desired options below 1: AVX 2: IBM 3: ARM.
@@ -122,7 +122,7 @@ FLAG="${FLAG}-DUSE_OMP=OFF "
 #=========================================================
 # [Note] Wheather to run cytnx tests (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG}-DRUN_TESTS=OFF "
+FLAG="${FLAG}-DRUN_TESTS=ON "
 #-----------------------------------
 
 

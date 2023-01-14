@@ -14,7 +14,7 @@ namespace cytnx {
 
 // global debug flag!
 namespace cytnx {
-  bool User_debug = true;
+  bool User_debug = false;
 }
 
 using namespace std;
@@ -49,41 +49,41 @@ int c_typeindex_to_id(const std::type_index &type_idx){
 }
 */
 
-cytnx::Type_class::Type_class() {
-  Typeinfos.resize(N_Type);
-  //{name,unsigned,complex,float,int,typesize}
-  Typeinfos[this->Void] = (Type_struct){std::string("Void"), true, false, false, false, 0};
-  Typeinfos[this->ComplexDouble] = (Type_struct){std::string("Complex Double (Complex Float64)"),
-                                                 false,
-                                                 true,
-                                                 true,
-                                                 false,
-                                                 sizeof(cytnx_complex128)};
-  Typeinfos[this->ComplexFloat] = (Type_struct){std::string("Complex Float (Complex Float32)"),
-                                                false,
-                                                true,
-                                                true,
-                                                false,
-                                                sizeof(cytnx_complex64)};
-  Typeinfos[this->Double] =
-    (Type_struct){std::string("Double (Float64)"), false, false, true, false, sizeof(cytnx_double)};
-  Typeinfos[this->Float] =
-    (Type_struct){std::string("Float (Float32)"), false, false, true, false, sizeof(cytnx_float)};
-  Typeinfos[this->Int64] =
-    (Type_struct){std::string("Int64"), false, false, false, true, sizeof(cytnx_int64)};
-  Typeinfos[this->Uint64] =
-    (Type_struct){std::string("Uint64"), true, false, false, true, sizeof(cytnx_uint64)};
-  Typeinfos[this->Int32] =
-    (Type_struct){std::string("Int32"), false, false, false, true, sizeof(cytnx_int32)};
-  Typeinfos[this->Uint32] =
-    (Type_struct){std::string("Uint32"), true, false, false, true, sizeof(cytnx_uint32)};
-  Typeinfos[this->Int16] =
-    (Type_struct){std::string("Int16"), false, false, false, true, sizeof(cytnx_int16)};
-  Typeinfos[this->Uint16] =
-    (Type_struct){std::string("Uint16"), true, false, false, true, sizeof(cytnx_uint16)};
-  Typeinfos[this->Bool] =
-    (Type_struct){std::string("Bool"), true, false, false, false, sizeof(cytnx_bool)};
-}
+// constexpr cytnx::Type_class::Type_class() {
+  // Typeinfos.resize(N_Type);
+  // //{name,unsigned,complex,float,int,typesize}
+  // Typeinfos[this->Void] = (Type_struct){std::string("Void"), true, false, false, false, 0};
+  // Typeinfos[this->ComplexDouble] = (Type_struct){std::string("Complex Double (Complex Float64)"),
+  //                                                false,
+  //                                                true,
+  //                                                true,
+  //                                                false,
+  //                                                sizeof(cytnx_complex128)};
+  // Typeinfos[this->ComplexFloat] = (Type_struct){std::string("Complex Float (Complex Float32)"),
+  //                                               false,
+  //                                               true,
+  //                                               true,
+  //                                               false,
+  //                                               sizeof(cytnx_complex64)};
+  // Typeinfos[this->Double] =
+  //   (Type_struct){std::string("Double (Float64)"), false, false, true, false, sizeof(cytnx_double)};
+  // Typeinfos[this->Float] =
+  //   (Type_struct){std::string("Float (Float32)"), false, false, true, false, sizeof(cytnx_float)};
+  // Typeinfos[this->Int64] =
+  //   (Type_struct){std::string("Int64"), false, false, false, true, sizeof(cytnx_int64)};
+  // Typeinfos[this->Uint64] =
+  //   (Type_struct){std::string("Uint64"), true, false, false, true, sizeof(cytnx_uint64)};
+  // Typeinfos[this->Int32] =
+  //   (Type_struct){std::string("Int32"), false, false, false, true, sizeof(cytnx_int32)};
+  // Typeinfos[this->Uint32] =
+  //   (Type_struct){std::string("Uint32"), true, false, false, true, sizeof(cytnx_uint32)};
+  // Typeinfos[this->Int16] =
+  //   (Type_struct){std::string("Int16"), false, false, false, true, sizeof(cytnx_int16)};
+  // Typeinfos[this->Uint16] =
+  //   (Type_struct){std::string("Uint16"), true, false, false, true, sizeof(cytnx_uint16)};
+  // Typeinfos[this->Bool] =
+  //   (Type_struct){std::string("Bool"), true, false, false, false, sizeof(cytnx_bool)};
+// }
 
 bool cytnx::Type_class::is_float(const unsigned int &type_id) {
   cytnx_error_msg(type_id >= N_Type, "[ERROR] invalid type_id%s", "\n");

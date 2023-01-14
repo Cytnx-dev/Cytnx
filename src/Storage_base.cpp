@@ -11,65 +11,65 @@ namespace cytnx {
 
   // Storage Init interface.
   //=============================
-  boost::intrusive_ptr<Storage_base> SIInit_cd() {
-    boost::intrusive_ptr<Storage_base> out(new ComplexDoubleStorage());
-    return out;
-  }
-  boost::intrusive_ptr<Storage_base> SIInit_cf() {
-    boost::intrusive_ptr<Storage_base> out(new ComplexFloatStorage());
-    return out;
-  }
-  boost::intrusive_ptr<Storage_base> SIInit_d() {
-    boost::intrusive_ptr<Storage_base> out(new DoubleStorage());
-    return out;
-  }
-  boost::intrusive_ptr<Storage_base> SIInit_f() {
-    boost::intrusive_ptr<Storage_base> out(new FloatStorage());
-    return out;
-  }
-  boost::intrusive_ptr<Storage_base> SIInit_u64() {
-    boost::intrusive_ptr<Storage_base> out(new Uint64Storage());
-    return out;
-  }
-  boost::intrusive_ptr<Storage_base> SIInit_i64() {
-    boost::intrusive_ptr<Storage_base> out(new Int64Storage());
-    return out;
-  }
-  boost::intrusive_ptr<Storage_base> SIInit_u32() {
-    boost::intrusive_ptr<Storage_base> out(new Uint32Storage());
-    return out;
-  }
-  boost::intrusive_ptr<Storage_base> SIInit_i32() {
-    boost::intrusive_ptr<Storage_base> out(new Int32Storage());
-    return out;
-  }
-  boost::intrusive_ptr<Storage_base> SIInit_u16() {
-    boost::intrusive_ptr<Storage_base> out(new Uint16Storage());
-    return out;
-  }
-  boost::intrusive_ptr<Storage_base> SIInit_i16() {
-    boost::intrusive_ptr<Storage_base> out(new Int16Storage());
-    return out;
-  }
-  boost::intrusive_ptr<Storage_base> SIInit_b() {
-    boost::intrusive_ptr<Storage_base> out(new BoolStorage());
-    return out;
-  }
+  // boost::intrusive_ptr<Storage_base> SIInit_cd() {
+  //   boost::intrusive_ptr<Storage_base> out(new ComplexDoubleStorage());
+  //   return out;
+  // }
+  // boost::intrusive_ptr<Storage_base> SIInit_cf() {
+  //   boost::intrusive_ptr<Storage_base> out(new ComplexFloatStorage());
+  //   return out;
+  // }
+  // boost::intrusive_ptr<Storage_base> SIInit_d() {
+  //   boost::intrusive_ptr<Storage_base> out(new DoubleStorage());
+  //   return out;
+  // }
+  // boost::intrusive_ptr<Storage_base> SIInit_f() {
+  //   boost::intrusive_ptr<Storage_base> out(new FloatStorage());
+  //   return out;
+  // }
+  // boost::intrusive_ptr<Storage_base> SIInit_u64() {
+  //   boost::intrusive_ptr<Storage_base> out(new Uint64Storage());
+  //   return out;
+  // }
+  // boost::intrusive_ptr<Storage_base> SIInit_i64() {
+  //   boost::intrusive_ptr<Storage_base> out(new Int64Storage());
+  //   return out;
+  // }
+  // boost::intrusive_ptr<Storage_base> SIInit_u32() {
+  //   boost::intrusive_ptr<Storage_base> out(new Uint32Storage());
+  //   return out;
+  // }
+  // boost::intrusive_ptr<Storage_base> SIInit_i32() {
+  //   boost::intrusive_ptr<Storage_base> out(new Int32Storage());
+  //   return out;
+  // }
+  // boost::intrusive_ptr<Storage_base> SIInit_u16() {
+  //   boost::intrusive_ptr<Storage_base> out(new Uint16Storage());
+  //   return out;
+  // }
+  // boost::intrusive_ptr<Storage_base> SIInit_i16() {
+  //   boost::intrusive_ptr<Storage_base> out(new Int16Storage());
+  //   return out;
+  // }
+  // boost::intrusive_ptr<Storage_base> SIInit_b() {
+  //   boost::intrusive_ptr<Storage_base> out(new BoolStorage());
+  //   return out;
+  // }
 
-  Storage_init_interface::Storage_init_interface() {
-    USIInit.resize(N_Type);
-    USIInit[this->Double] = SIInit_d;
-    USIInit[this->Float] = SIInit_f;
-    USIInit[this->ComplexDouble] = SIInit_cd;
-    USIInit[this->ComplexFloat] = SIInit_cf;
-    USIInit[this->Uint64] = SIInit_u64;
-    USIInit[this->Int64] = SIInit_i64;
-    USIInit[this->Uint32] = SIInit_u32;
-    USIInit[this->Int32] = SIInit_i32;
-    USIInit[this->Uint16] = SIInit_u16;
-    USIInit[this->Int16] = SIInit_i16;
-    USIInit[this->Bool] = SIInit_b;
-  }
+  // constexpr Storage_init_interface::Storage_init_interface() {
+  //   USIInit.resize(N_Type);
+  //   USIInit[this->Double] = SIInit_d;
+  //   USIInit[this->Float] = SIInit_f;
+  //   USIInit[this->ComplexDouble] = SIInit_cd;
+  //   USIInit[this->ComplexFloat] = SIInit_cf;
+  //   USIInit[this->Uint64] = SIInit_u64;
+  //   USIInit[this->Int64] = SIInit_i64;
+  //   USIInit[this->Uint32] = SIInit_u32;
+  //   USIInit[this->Int32] = SIInit_i32;
+  //   USIInit[this->Uint16] = SIInit_u16;
+  //   USIInit[this->Int16] = SIInit_i16;
+  //   USIInit[this->Bool] = SIInit_b;
+  // }
 
   //==========================
   void Storage_base::Init(const unsigned long long &len_in, const int &device, const bool &init_zero) {

@@ -9,7 +9,7 @@ include(ExternalProject)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 message(STATUS ${CMAKE_MODULE_PATH})
 
-#set(CMAKE_CXX_STANDARD 11)
+#set(CMAKE_CXX_STANDARD 17)
 #set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #set(CMAKE_CXX_EXTENSIONS OFF)
@@ -132,7 +132,7 @@ endif()
 ### PROJECT
 ######################################################################
 project(CYTNX VERSION ${CYTNX_VERSION} LANGUAGES CXX C )
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 add_library(cytnx STATIC)
 set_property(TARGET cytnx PROPERTY C_VISIBILITY_PRESET hidden)
@@ -148,10 +148,11 @@ target_include_directories(cytnx SYSTEM
     PUBLIC
 				${Boost_INCLUDE_DIRS}
 )
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -Wno-c++11-narrowing -w")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -Wno-c++11-narrowing -w")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -w")
 
 
-target_compile_features(cytnx PUBLIC cxx_std_11)
+target_compile_features(cytnx PUBLIC cxx_std_17)
 #set_property(TARGET cytnx PROPERTY CXX_STANDARD 11)
 
 add_subdirectory(src)

@@ -105,6 +105,10 @@ namespace cytnx {
     this->_bonds = vec_clone(bonds);
     this->_is_braket_form = this->_update_braket();
 
+    // vector<cytnx_uint64> blocklens;
+    // vector<vector<cytnx_uint64>> blocksizes;
+    // cytnx_uint64 totblocksize = 0;
+
     if(this->_is_diag){
         for(int b=0;b<this->_bonds[0].qnums().size();b++){
             this->_inner_to_outer_idx.push_back({(cytnx_uint64)b,(cytnx_uint64)b});
@@ -133,18 +137,20 @@ namespace cytnx {
             if( std::all_of(tot_qns.begin(),tot_qns.end(), [](const int &i){return i==0;}) ){
                 //get size & init block!
                 if(!no_alloc){
+                    // cytnx_uint64 blockNelem = 1;
                     for(cytnx_int32 i=0;i<Loc.size();i++){
                         size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
+                        // blockNelem *= size[i];
                     }
                     this->_blocks.push_back(zeros(size,dtype,device));
-                    // this->_blocks.push_back(Tensor(size,dtype,device));
+                    // blocklens.push_back(blockNelem);
+                    // blocksizes.push_back(size);
+                    // totblocksize += blockNelem;
                 }
                 // push its loc
                 this->_inner_to_outer_idx.push_back(Loc);
 
             }
-
-
 
             while(Loc.size()!=0){
                 if(Loc.back()==this->_bonds[Loc.size()-1]._impl->_qnums.size()-1){
@@ -162,9 +168,26 @@ namespace cytnx {
             }
                 
             if(Loc.size()==0) break;
-            
-
         }
+
+        // if(!no_alloc){
+        //   cytnx_uint64 offset=0;
+          
+        //   char* ptr = (char*)utils_internal::Calloc_cpu(
+        //     totblocksize+blocklens.size()*STORAGE_DEFT_SZ,
+        //     Type.typeSize(dtype));
+        //   for(cytnx_int64 k=0;k<blocklens.size();k++){
+        //     cytnx_uint64 cap=0;
+        //     if (blocklens[k] % STORAGE_DEFT_SZ) {
+        //       cap = ((unsigned long long)((blocklens[k]) / STORAGE_DEFT_SZ) + 1) * STORAGE_DEFT_SZ;
+        //     } else {
+        //       cap = blocklens[k];
+        //     }
+        //     this->_blocks.push_back(Tensor(Storage(ptr+(offset*Type.typeSize(dtype)),
+        //         blocklens[k],dtype,device,true,cap),blocksizes[k],dtype,device));
+        //     offset+=cap;
+        //   }
+        // }
    }// is_diag? 
       
   }

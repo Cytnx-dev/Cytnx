@@ -351,7 +351,7 @@ namespace cytnx {
 
   //-----------------------------------------------
   void Tensor_impl::Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype,
-                         int device) {
+                         int device, bool init_zero) {
     // check:
     cytnx_error_msg(dtype >= N_Type, "%s", "[ERROR] invalid argument: dtype");
     cytnx_error_msg(shape.size() == 0, "%s",
@@ -362,7 +362,7 @@ namespace cytnx {
       Nelem *= shape[i];
     }
     // this->_storage = __SII.USIInit[dtype]();
-    this->_storage.Init(Nelem, dtype, device);
+    this->_storage.Init(Nelem, dtype, device, init_zero);
     this->_shape = shape;
     this->_mapper = vec_range(shape.size());
     this->_invmapper = this->_mapper;
@@ -380,6 +380,26 @@ namespace cytnx {
     this->_invmapper = this->_mapper;
     this->_contiguous = true;
   }
+  // void Tensor_impl::Init(const Storage &in, const std::vector<cytnx_uint64> &shape,
+  //   const unsigned int &dtype, int device) {
+  //   cytnx_error_msg(in.dtype() == Type.Void,
+  //                   "[ERROR] cannot init Tensor using un-initialized Storage%s", "\n");
+  //   // check:
+  //   cytnx_error_msg(dtype >= N_Type, "%s", "[ERROR] invalid argument: dtype");
+  //   cytnx_error_msg(shape.size() == 0, "%s",
+  //                   "[ERROR] invalid argument: shape. Must at least have one element.");
+  //   cytnx_uint64 Nelem = 1;
+  //   for (int i = 0; i < shape.size(); i++) {
+  //     cytnx_error_msg(shape[i] == 0, "%s", "[ERROR] shape cannot have 0 dimension in any rank.");
+  //     Nelem *= shape[i];
+  //   }
+  //   this->_storage = in;
+  //   // this->_storage = __SII.USIInit[dtype]();
+  //   this->_shape = shape;
+  //   this->_mapper = vec_range(shape.size());
+  //   this->_invmapper = this->_mapper;
+  //   this->_contiguous = true;
+  // }
 
   boost::intrusive_ptr<Tensor_impl> Tensor_impl::permute(const std::vector<cytnx_uint64> &rnks) {
     // check::

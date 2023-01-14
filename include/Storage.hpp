@@ -965,12 +965,69 @@ namespace cytnx {
   ///@cond
   typedef boost::intrusive_ptr<Storage_base> (*pStorage_init)();
   ///@endcond
-
+  inline boost::intrusive_ptr<Storage_base> SIInit_cd() {
+    boost::intrusive_ptr<Storage_base> out(new ComplexDoubleStorage());
+    return out;
+  }
+  inline boost::intrusive_ptr<Storage_base> SIInit_cf() {
+    boost::intrusive_ptr<Storage_base> out(new ComplexFloatStorage());
+    return out;
+  }
+  inline boost::intrusive_ptr<Storage_base> SIInit_d() {
+    boost::intrusive_ptr<Storage_base> out(new DoubleStorage());
+    return out;
+  }
+  inline boost::intrusive_ptr<Storage_base> SIInit_f() {
+    boost::intrusive_ptr<Storage_base> out(new FloatStorage());
+    return out;
+  }
+  inline boost::intrusive_ptr<Storage_base> SIInit_u64() {
+    boost::intrusive_ptr<Storage_base> out(new Uint64Storage());
+    return out;
+  }
+  inline boost::intrusive_ptr<Storage_base> SIInit_i64() {
+    boost::intrusive_ptr<Storage_base> out(new Int64Storage());
+    return out;
+  }
+  inline boost::intrusive_ptr<Storage_base> SIInit_u32() {
+    boost::intrusive_ptr<Storage_base> out(new Uint32Storage());
+    return out;
+  }
+  inline boost::intrusive_ptr<Storage_base> SIInit_i32() {
+    boost::intrusive_ptr<Storage_base> out(new Int32Storage());
+    return out;
+  }
+  inline boost::intrusive_ptr<Storage_base> SIInit_u16() {
+    boost::intrusive_ptr<Storage_base> out(new Uint16Storage());
+    return out;
+  }
+  inline boost::intrusive_ptr<Storage_base> SIInit_i16() {
+    boost::intrusive_ptr<Storage_base> out(new Int16Storage());
+    return out;
+  }
+  inline boost::intrusive_ptr<Storage_base> SIInit_b() {
+    boost::intrusive_ptr<Storage_base> out(new BoolStorage());
+    return out;
+  }
   ///@cond
   class Storage_init_interface : public Type_class {
    public:
-    std::vector<pStorage_init> USIInit;
-    Storage_init_interface();
+    // std::vector<pStorage_init> USIInit;
+    inline static pStorage_init USIInit[N_Type];
+    constexpr Storage_init_interface(){
+      // USIInit.resize(N_Type);
+      USIInit[this->Double] = SIInit_d;
+      USIInit[this->Float] = SIInit_f;
+      USIInit[this->ComplexDouble] = SIInit_cd;
+      USIInit[this->ComplexFloat] = SIInit_cf;
+      USIInit[this->Uint64] = SIInit_u64;
+      USIInit[this->Int64] = SIInit_i64;
+      USIInit[this->Uint32] = SIInit_u32;
+      USIInit[this->Int32] = SIInit_i32;
+      USIInit[this->Uint16] = SIInit_u16;
+      USIInit[this->Int16] = SIInit_i16;
+      USIInit[this->Bool] = SIInit_b;
+    }
   };
   extern Storage_init_interface __SII;
   ///@endcond;
@@ -1009,11 +1066,22 @@ namespace cytnx {
       this->_impl = __SII.USIInit[dtype]();
       this->_impl->Init(size, device,init_zero);
     }
+    // void _Init_byptr(void *rawptr, const unsigned long long &len_in, const unsigned int &dtype = Type.Double, const int &device = -1,
+    //                              const bool &iscap = false, const unsigned long long &cap_in = 0){
+    //   cytnx_error_msg(dtype >= N_Type, "%s", "[ERROR] invalid argument: dtype");
+    //   this->_impl = __SII.USIInit[dtype]();
+    //   this->_impl->_Init_byptr(rawptr, len_in, device, iscap, cap_in);
+    // }
     Storage(const unsigned long long &size, const unsigned int &dtype = Type.Double,
             int device = -1, const bool &init_zero=true)
         : _impl(new Storage_base()) {
       Init(size, dtype, device,init_zero);
     }
+    // Storage(void *rawptr, const unsigned long long &len_in, const unsigned int &dtype = Type.Double, const int &device = -1,
+    //       const bool &iscap = false, const unsigned long long &cap_in = 0)
+    //       : _impl(new Storage_base()){
+    //   _Init_byptr(rawptr,len_in,dtype,device,iscap,cap_in);
+    // }
     Storage() : _impl(new Storage_base()){};
     ///@cond
     Storage(boost::intrusive_ptr<Storage_base> in_impl) { this->_impl = in_impl; }

@@ -8,8 +8,8 @@
 namespace cytnx {
 
   Tensor zeros(const cytnx_uint64 &Nelem, const unsigned int &dtype, const int &device) {
-    Tensor out({Nelem}, dtype, device);  // the default
-    // By default, out is init as zeros
+    Tensor out({Nelem}, dtype, device, true);  // init_zero
+    // out is already init as zeros
     // out._impl->storage().set_zeros();
     return out;
   }
@@ -17,8 +17,8 @@ namespace cytnx {
                const int &device) {
     // std::cout << "OK" << std::endl;
     // std::cout << Nelem << std::endl;
-    Tensor out(Nelem, dtype, device);
-    out._impl->storage().set_zeros();
+    Tensor out(Nelem, dtype, device, true);
+    // out._impl->storage().set_zeros();
     return out;
   }
   //-----------------
