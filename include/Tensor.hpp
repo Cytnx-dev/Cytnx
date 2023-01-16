@@ -51,7 +51,7 @@ namespace cytnx {
     Tensor_impl() : _contiguous(true){};
 
     void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype = Type.Double,
-              int device = -1, bool init_zero = 1);
+              int device = -1, const bool &init_zero = true);
     void Init(const Storage &in);
     // void Init(const Storage &in, const std::vector<cytnx_uint64> &shape,
     // const unsigned int &dtype, int device);
@@ -688,7 +688,7 @@ namespace cytnx {
     \verbinclude example/Tensor/Init.py.out
     */
     void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype = Type.Double,
-              const int &device = -1, bool init_zero = 1) {
+              const int &device = -1, const bool &init_zero = true) {
       boost::intrusive_ptr<Tensor_impl> tmp(new Tensor_impl());
       this->_impl = tmp;
       this->_impl->Init(shape, dtype, device, init_zero);
@@ -705,7 +705,7 @@ namespace cytnx {
     //   this->_impl->Init(storage, shape, dtype, device);
     // }
     Tensor(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype = Type.Double,
-           const int &device = -1, bool init_zero = 1)
+           const int &device = -1, const bool &init_zero = 1)
         : _impl(new Tensor_impl()) {
       this->Init(shape, dtype, device, init_zero);
     }

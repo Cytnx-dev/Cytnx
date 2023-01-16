@@ -56,8 +56,8 @@ namespace cytnx {
   };
 
   struct Type_struct {
-    // std::string name;
-    char name[35];
+    std::string name;
+    //char name[35];
     bool is_unsigned;
     bool is_complex;
     bool is_float;
@@ -121,7 +121,7 @@ namespace cytnx {
         (Type_struct){"Uint16", true, false, false, true, sizeof(cytnx_uint16)};
       Typeinfos[this->Bool] =
         (Type_struct){"Bool", true, false, false, false, sizeof(cytnx_bool)};
-    }
+    };
     const std::string &getname(const unsigned int &type_id);
     unsigned int c_typename_to_id(const std::string &c_name);
     unsigned int typeSize(const unsigned int &type_id);
