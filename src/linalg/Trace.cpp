@@ -78,8 +78,11 @@ namespace cytnx {
 
       if (shape.size() == 0){
         // 2d
-        linalg_internal::lii.Trace_ii[Tn.dtype()](true, out,Tn,Ndiag,Nomp, 0,{},{},{},0,0); // only the first 4 args will be used.
- 
+        if(Tn.device()==Device.cpu) linalg_internal::lii.Trace_ii[Tn.dtype()](true, out,Tn,Ndiag,Nomp, 0,{},{},{},0,0); // only the first 4 args will be used.
+        else{
+            cytnx_error_msg(true,"[ERROR][Trace] GPU is under developing.%s","\n");
+
+        }
       } else {
         // nd
         vector<cytnx_uint64> remain_rank_id;
@@ -90,9 +93,11 @@ namespace cytnx {
         for (cytnx_uint64 i = 0; i < Tn.shape().size(); i++) {
           if (i != ax1 && i != ax2) remain_rank_id.push_back(i);
         }
+        if(Tn.device()==Device.cpu) linalg_internal::lii.Trace_ii[Tn.dtype()](false, out,Tn,Ndiag,Nelem,Nomp,accu,remain_rank_id,shape,ax1,ax2);
+        else{
+            cytnx_error_msg(true,"[ERROR][Trace] GPU is under developing.%s","\n");
 
-        linalg_internal::lii.Trace_ii[Tn.dtype()](false, out,Tn,Ndiag,Nelem,Nomp,accu,remain_rank_id,shape,ax1,ax2);
-
+        }
         out.reshape_(shape);
       }
 
