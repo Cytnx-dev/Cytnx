@@ -873,6 +873,13 @@ namespace cytnx {
       cuAbs_ii[Type.Uint16] = cuAbs_internal_pass;
       cuAbs_ii[Type.Bool] = cuAbs_internal_pass;
 
+      //===============
+      cuGer_ii = std::vector<ger_oii>(5);
+      cuGer_ii[Type.ComplexDouble] = cuGer_internal_cd;
+      cuGer_ii[Type.ComplexFloat] = cuGer_internal_cf;
+      cuGer_ii[Type.Double] = cuGer_internal_d;
+      cuGer_ii[Type.Float] = cuGer_internal_f;
+
 
       // Pow
       //====================

@@ -50,7 +50,18 @@ namespace cytnx {
                                                    py.storage()._impl,
                                                    alph);
         }else{
-            cytnx_error_msg(true,"[Developing ger.gpu]%s","\n");
+
+#ifdef UNI_GPU
+            checkCudaErrors(cudaSetDevice(px.device()));
+            linalg_internal::lii.cuGer_ii[fin_dtype](out.storage()._impl, px.storage()._impl,
+                                                   py.storage()._impl,
+                                                   alph);
+#else
+            cytnx_error_msg(true, "[Ger] fatal error,%s",
+                        "try to call the gpu section without CUDA support.\n");
+
+#endif
+            //cytnx_error_msg(true,"[Developing ger.gpu]%s","\n");
         }
         
         
