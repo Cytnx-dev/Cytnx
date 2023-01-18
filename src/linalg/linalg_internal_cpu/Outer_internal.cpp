@@ -1,4 +1,5 @@
 #include "Outer_internal.hpp"
+#include "Ger_internal.hpp"
 #include "utils/utils_internal_interface.hpp"
 #include "utils/complex_arithmetic.hpp"
 #include "lapack_wrapper.hpp"
@@ -19,16 +20,9 @@ namespace cytnx {
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin, const cytnx_uint64 &j1,
                               const cytnx_uint64 &j2) {
-      cytnx_complex128 *_out = (cytnx_complex128 *)out->Mem;
-      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
-      cytnx_complex128 *_Rin = (cytnx_complex128 *)Rin->Mem;
 
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
-      for (unsigned long long r = 0; r < j1 * j2; r++) {
-        _out[r] = _Lin[cytnx_uint64(r / j2)] * _Rin[(r % j2)];
-      }
+      Ger_internal_cd(out,Lin,Rin,cytnx_complex128(1.));
+
     }
     void Outer_internal_cdtcf(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
@@ -200,16 +194,8 @@ namespace cytnx {
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin, const cytnx_uint64 &j1,
                               const cytnx_uint64 &j2) {
-      cytnx_complex64 *_out = (cytnx_complex64 *)out->Mem;
-      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->Mem;
-      cytnx_complex64 *_Rin = (cytnx_complex64 *)Rin->Mem;
+      Ger_internal_cf(out,Lin,Rin,cytnx_complex64(1.));
 
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
-      for (unsigned long long r = 0; r < j1 * j2; r++) {
-        _out[r] = _Lin[cytnx_uint64(r / j2)] * _Rin[(r % j2)];
-      }
     }
     void Outer_internal_cftd(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
@@ -381,16 +367,7 @@ namespace cytnx {
                             const boost::intrusive_ptr<Storage_base> &Lin,
                             const boost::intrusive_ptr<Storage_base> &Rin, const cytnx_uint64 &j1,
                             const cytnx_uint64 &j2) {
-      cytnx_double *_out = (cytnx_double *)out->Mem;
-      cytnx_double *_Lin = (cytnx_double *)Lin->Mem;
-      cytnx_double *_Rin = (cytnx_double *)Rin->Mem;
-
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
-      for (unsigned long long r = 0; r < j1 * j2; r++) {
-        _out[r] = _Lin[cytnx_uint64(r / j2)] * _Rin[(r % j2)];
-      }
+      Ger_internal_d(out,Lin,Rin,double(1.));
     }
     void Outer_internal_dtf(boost::intrusive_ptr<Storage_base> &out,
                             const boost::intrusive_ptr<Storage_base> &Lin,
@@ -562,16 +539,7 @@ namespace cytnx {
                             const boost::intrusive_ptr<Storage_base> &Lin,
                             const boost::intrusive_ptr<Storage_base> &Rin, const cytnx_uint64 &j1,
                             const cytnx_uint64 &j2) {
-      cytnx_float *_out = (cytnx_float *)out->Mem;
-      cytnx_float *_Lin = (cytnx_float *)Lin->Mem;
-      cytnx_float *_Rin = (cytnx_float *)Rin->Mem;
-
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
-      for (unsigned long long r = 0; r < j1 * j2; r++) {
-        _out[r] = _Lin[cytnx_uint64(r / j2)] * _Rin[(r % j2)];
-      }
+      Ger_internal_f(out,Lin,Rin,float(1.));
     }
     void Outer_internal_ftu64(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,

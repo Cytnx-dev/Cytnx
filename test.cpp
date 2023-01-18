@@ -1,6 +1,6 @@
 #include "cytnx.hpp"
 #include <complex>
-#include "magma.h"
+//#include "magma.h"
 //#include "mkl.h"
 
 using namespace std;
@@ -12,9 +12,10 @@ typedef cytnx::Accessor ac;
 // Solve A * X = B, where A and X are stored in CPU host memory.
 // Internally, MAGMA transfers data to the GPU device
 // and uses a hybrid CPU + GPU algorithm.
-
+/*
 void cpu_interface( magma_int_t n, magma_int_t nrhs )
 {
+    
     magmaDoubleComplex *A=NULL, *X=NULL;
     magma_int_t *ipiv=NULL;
     magma_int_t lda  = n;
@@ -48,11 +49,11 @@ cleanup:
     magma_free_cpu( ipiv );
 }
 
-
+*/
 
 
 int main(int argc, char *argv[]) {
-  /*
+  
   Scalar Sas = Scalar();
   print(Sas.dtype());
   print(Sas);
@@ -65,21 +66,21 @@ int main(int argc, char *argv[]) {
   print(ry);
   
   print(linalg::Ger(rx,ry));
-  */
+  
 
   //MKLVersion pv;
   //MKL_Get_Version(&pv);
 
 
-  magma_init();
+  //magma_init();
 
-  magma_int_t n = 1000;
-  magma_int_t nrhs = 1;
+  //magma_int_t n = 1000;
+  //magma_int_t nrhs = 1;
   /*
   printf( "using MAGMA CPU interface\n" );
   cpu_interface( n, nrhs );
   */
-  magma_finalize();
+  //magma_finalize();
   
   return 0;
 
