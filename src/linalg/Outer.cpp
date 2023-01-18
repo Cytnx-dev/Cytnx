@@ -35,8 +35,8 @@ namespace cytnx {
           out._impl->storage()._impl, Tl._impl->storage()._impl, Tr._impl->storage()._impl, j1, j2);
       } else {
 #ifdef UNI_GPU
-        cytnx_error_msg(true, "[Outer] currently Outer is not support for GPU, pending for fix.%s",
-                        "\n");
+        //cytnx_error_msg(true, "[Outer] currently Outer is not support for GPU, pending for fix.%s",
+        //                "\n");
         checkCudaErrors(cudaSetDevice(Tl.device()));
         cytnx::linalg_internal::lii.cuOuter_ii[Tl.dtype()][Tr.dtype()](
           out._impl->storage()._impl, Tl._impl->storage()._impl, Tr._impl->storage()._impl, j1, j2);
