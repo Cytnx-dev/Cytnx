@@ -27,6 +27,9 @@ HPTT_Enable=1
 ## compile with CUTT library:
 CUTT_Enable=1
 
+## compile with MAGMA library:
+MAGMA_Enable=1
+
 #### DO NOT USE BELOW WHEN CUSTOM INSTALL !!
 #-------------------------------------------
 ## un-commend when distribute by docker
