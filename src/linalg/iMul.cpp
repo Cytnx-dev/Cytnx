@@ -36,8 +36,15 @@ namespace cytnx {
         } else {
 #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Rt.device()));
-          // linalg_internal::lii.cuAri_ii[Lt.dtype()][Rt.dtype()](out._impl->storage()._impl,Lt._impl->storage()._impl,Rt._impl->storage()._impl,out._impl->storage()._impl->size(),{},{},{},1);
-          cytnx_error_msg(true, "[Developing] iMul for GPU%s", "\n");
+          Tensor tmpo;
+          if(Lt.dtype() <= Rt.dtype()) tmpo = Lt;
+          else tmpo = Lt.clone();
+          linalg_internal::lii.cuAri_ii[Lt.dtype()][Rt.dtype()](tmpo._impl->storage()._impl,Lt._impl->storage()._impl,R._impl->storage()._impl,Lt._impl->storage()._impl->size(),{},{},{},1);
+          //cytnx_error_msg(true, "[Developing] iAdd for GPU%s", "\n");
+
+          if(Lt.dtype() > Rt.dtype()) Lt = tmpo;
+
+
 #else
           cytnx_error_msg(true, "[Mul] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");
@@ -52,7 +59,11 @@ namespace cytnx {
             Rt._impl->invmapper(), 1);
         } else {
 #ifdef UNI_GPU
-          cytnx_error_msg(true, "[Developing] iMul for GPU%s", "\n");
+          cytnx_error_msg(true,
+                          "[iMul][on GPU/CUDA] error two tensors must be contiguous. Call "
+                          "Contiguous_() or Contiguous() first%s",
+                          "\n");
+
 #else
           cytnx_error_msg(true, "[Mul] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");
