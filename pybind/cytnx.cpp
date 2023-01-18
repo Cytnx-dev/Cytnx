@@ -43,7 +43,7 @@ void algo_binding(py::module &m);
 void physics_related_binding(py::module &m);
 void random_binding(py::module &m);
 void tnalgo_binding(py::module &m);
-
+void scalar_binding(py::module &m);
 
 PYBIND11_MODULE(cytnx, m) {
   m.attr("__version__") = "0.7";
@@ -91,6 +91,7 @@ PYBIND11_MODULE(cytnx, m) {
 
 
   generator_binding(m);
+  scalar_binding(m);
   storage_binding(m);
   tensor_binding(m);
   bond_binding(m);

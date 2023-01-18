@@ -38,7 +38,7 @@ target_sources_local(cytnx
     Lstsq_internal.hpp
     
     Axpy_internal.hpp
-
+    Ger_internal.hpp
 
     Add_internal.cpp
     iAdd_internal.cpp
@@ -78,7 +78,7 @@ target_sources_local(cytnx
     Lstsq_internal.cpp
 
     Axpy_internal.cpp
-
+    Ger_internal.cpp
 )
 
 

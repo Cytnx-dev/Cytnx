@@ -250,6 +250,11 @@ void linalg_binding(py::module &m){
   m_linalg.def("Axpy", [](const Scalar &a, const Tensor &x, const Tensor &y){
                           return cytnx::linalg::Axpy(a,x,y);
                        }, py::arg("a"), py::arg("x"), py::arg("y"));
+
+  m_linalg.def("Ger", [](const Tensor &x, const Tensor &y, const Scalar &a){
+                          return cytnx::linalg::Ger(x,y,a);
+                       }, py::arg("x"), py::arg("y"), py::arg("a") = Scalar());
+
   m_linalg.def("Axpy_", &cytnx::linalg::Axpy_, py::arg("a"), py::arg("x"), py::arg("y"));
 
   

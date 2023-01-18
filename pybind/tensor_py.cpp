@@ -338,6 +338,7 @@ void tensor_binding(py::module &m){
              if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
                throw py::error_already_set();
              // if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
+             std::cout << start << " " << stop << " " << step << std::endl;
              accessors.push_back(cytnx::Accessor::range(start, stop, step));
              for (cytnx_uint32 axis = 1; axis < self.shape().size(); axis++) {
                accessors.push_back(Accessor::all());

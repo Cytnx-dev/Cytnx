@@ -994,6 +994,26 @@ namespace cytnx {
     
     void Axpy_(const Scalar &a, const Tensor &x, Tensor &y);
 
+    /**
+    @brief Blas Ger, performing return = a*vec(x)*vec(y)^T 
+    @param x Tensor, rank-1 with size nx
+    @param y Tensor, rank-1 with size ny
+    @param a Scalar, if not provided a = 1. 
+    @return
+        [Tensor with shape (nx,ny)]
+
+    #description:
+        This function performs a*x*y^T where x,y are rank-1 Tensor with dimension nx and ny respectively; and a is a Scalar. The dtype of return 
+        Tensor will be the strongest among x,y and a.
+
+
+    #[Note]
+        This will return a new tensor. 
+
+    */
+    Tensor Ger(const Tensor &x, const Tensor &y, const Scalar &a=Scalar());
+    
+
 
 
   }  // namespace linalg

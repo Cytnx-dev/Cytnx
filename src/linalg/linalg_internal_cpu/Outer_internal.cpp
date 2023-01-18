@@ -7,6 +7,9 @@
   #include <omp.h>
 #endif
 
+// change to *ger 
+
+
 namespace cytnx {
 
   namespace linalg_internal {

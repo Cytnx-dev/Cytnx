@@ -713,6 +713,14 @@ namespace cytnx {
       axpy_ii[Type.Double] = Axpy_internal_d;
       axpy_ii[Type.Float] = Axpy_internal_f;
 
+      //===============
+      ger_ii = std::vector<ger_oii>(5);
+      ger_ii[Type.ComplexDouble] = Ger_internal_cd;
+      ger_ii[Type.ComplexFloat] = Ger_internal_cf;
+      ger_ii[Type.Double] = Ger_internal_d;
+      ger_ii[Type.Float] = Ger_internal_f;
+
+
 
 
 #ifdef UNI_GPU

@@ -53,6 +53,19 @@ cleanup:
 
 int main(int argc, char *argv[]) {
 
+  Scalar Sas = Scalar();
+  print(Sas.dtype());
+  print(Sas);
+
+
+  Tensor rx = arange(10)+1;
+  Tensor ry = arange(10)(ac("::-1"))+1;
+
+  print(rx);
+  print(ry);
+  
+  print(linalg::Ger(rx,ry));
+
   //MKLVersion pv;
   //MKL_Get_Version(&pv);
 
