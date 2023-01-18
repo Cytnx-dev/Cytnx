@@ -36,6 +36,7 @@
 
 #ifdef UNI_GPU
   #include "linalg/linalg_internal_gpu/cuArithmetic_internal.hpp"
+  #include "linalg/linalg_internal_gpu/cuAbs_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuSvd_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuEigh_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuInvM_inplace_internal.hpp"
@@ -50,7 +51,6 @@
   #include "linalg/linalg_internal_gpu/cuMatvec_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuVectordot_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuPow_internal.hpp"
-  //#include "linalg/linalg_internal_gpu/cuAbs_internal.hpp"
 #endif
 
 namespace cytnx {
@@ -192,6 +192,7 @@ namespace cytnx {
       std::vector<Normfunc_oii> cuNorm_ii;
       std::vector<Vectordotfunc_oii> cuVd_ii;
       std::vector<Powfunc_oii> cuPow_ii;
+      std::vector<Absfunc_oii> cuAbs_ii;
 #endif
 
       linalg_internal_interface();

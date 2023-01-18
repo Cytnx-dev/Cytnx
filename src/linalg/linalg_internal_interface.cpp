@@ -850,6 +850,22 @@ namespace cytnx {
       cuAri_ii[Type.Bool][Type.Int16] = cuArithmetic_internal_bti16;
       cuAri_ii[Type.Bool][Type.Bool] = cuArithmetic_internal_btb;
 
+      //=====================
+      cuAbs_ii = vector<Absfunc_oii>(N_Type);
+
+      cuAbs_ii[Type.ComplexDouble] = cuAbs_internal_cd;
+      cuAbs_ii[Type.ComplexFloat] = cuAbs_internal_cf;
+      cuAbs_ii[Type.Double] = cuAbs_internal_d;
+      cuAbs_ii[Type.Float] = cuAbs_internal_f;
+      cuAbs_ii[Type.Int64] = cuAbs_internal_i64;
+      cuAbs_ii[Type.Uint64] = cuAbs_internal_pass;
+      cuAbs_ii[Type.Int32] = cuAbs_internal_i32;
+      cuAbs_ii[Type.Uint32] = cuAbs_internal_pass;
+      cuAbs_ii[Type.Int16] = cuAbs_internal_i16;
+      cuAbs_ii[Type.Uint16] = cuAbs_internal_pass;
+      cuAbs_ii[Type.Bool] = cuAbs_internal_pass;
+
+
       // Pow
       //====================
       cuPow_ii = vector<Powfunc_oii>(5);

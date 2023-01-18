@@ -127,12 +127,12 @@ void tensor_binding(py::module &m){
     // construction
     .def(py::init<>())
     .def(py::init<const cytnx::Tensor &>())
-    .def(py::init<const std::vector<cytnx::cytnx_uint64> &, const unsigned int &, int>(),
+    .def(py::init<const std::vector<cytnx::cytnx_uint64> &, const unsigned int &, int, const bool &>(),
          py::arg("shape"), py::arg("dtype") = (cytnx_uint64)cytnx::Type.Double,
-         py::arg("device") = (int)cytnx::Device.cpu)
+         py::arg("device") = (int)cytnx::Device.cpu, py::arg("init_zero")=true)
     .def("Init", &cytnx::Tensor::Init, py::arg("shape"),
          py::arg("dtype") = (cytnx_uint64)cytnx::Type.Double,
-         py::arg("device") = (int)cytnx::Device.cpu)
+         py::arg("device") = (int)cytnx::Device.cpu, py::arg("init_zero")=true)
     .def("dtype", &cytnx::Tensor::dtype)
     .def("dtype_str", &cytnx::Tensor::dtype_str)
     .def("device", &cytnx::Tensor::device)

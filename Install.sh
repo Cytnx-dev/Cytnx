@@ -90,13 +90,23 @@ FLAG="${FLAG}-DUSE_CUDA=OFF "
 # [Note] set to "=on" for using CUTT library to accelrate tensor transpose.
 #        for "=off" case one can skip 6-b)
 #-----------------------------------
-# FLAG="${FLAG}-DUSE_CUTT=off"
+# FLAG="${FLAG}-DUSE_CUTT=off "
 #-----------------------------------
 # 6-b) CUTT fine tune (DEFAULT =off)
 # [Note] set to "=on" to enable fine tune for the native hardware.
 #-----------------------------------
-# FLAG="${FLAG}-DCUTT_ENABLE_FINE_TUNE=off"
+# FLAG="${FLAG}-DCUTT_ENABLE_FINE_TUNE=off "
 #-----------------------------------
+# 6-c) Magma (DEFALT = on)
+# [Note] set to "=off" will make some of the GPU functions unavailable. 
+#        in case MAGMA is not automatically find, please specify MAGMAROOT path 
+#        where the magma is installed
+#-----------------------------------
+# FLAG="${FLAG}-DUSE_MAGMA=OFF "
+# MAGMA_ROOT=/usr/local/magma
+#-----------------------------------
+
+
 
 
 #=========================================================

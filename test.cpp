@@ -1,13 +1,74 @@
 #include "cytnx.hpp"
 #include <complex>
+//#include "magma.h"
+//#include "mkl.h"
 
 using namespace std;
 using namespace cytnx;
 
 typedef cytnx::Accessor ac;
 
+// ------------------------------------------------------------
+// Solve A * X = B, where A and X are stored in CPU host memory.
+// Internally, MAGMA transfers data to the GPU device
+// and uses a hybrid CPU + GPU algorithm.
+/*
+void cpu_interface( magma_int_t n, magma_int_t nrhs )
+{
+    magmaDoubleComplex *A=NULL, *X=NULL;
+    magma_int_t *ipiv=NULL;
+    magma_int_t lda  = n;
+    magma_int_t ldx  = lda;
+    magma_int_t info = 0;
+
+    // magma_*malloc_cpu routines for CPU memory are type-safe and align to memory boundaries,
+    // but you can use malloc or new if you prefer.
+    magma_zmalloc_cpu( &A, lda*n ); 
+    magma_zmalloc_cpu( &X, ldx*nrhs );
+    magma_imalloc_cpu( &ipiv, n );
+    if (A == NULL || X == NULL || ipiv == NULL) {
+        fprintf( stderr, "malloc failed\n" );
+        goto cleanup;
+    }
+
+    // Replace these with your code to initialize A and X
+    //zfill_matrix( n, n, A, lda );
+    //zfill_rhs( n, nrhs, X, ldx );
+
+    magma_zgesv( n, 1, A, lda, ipiv, X, lda, &info );
+    if (info != 0) {
+        fprintf( stderr, "magma_zgesv failed with info=%d\n", info );
+    }
+
+    // TODO: use result in X
+    
+cleanup:
+    magma_free_cpu( A );
+    magma_free_cpu( X ); 
+    magma_free_cpu( ipiv );
+}
+
+*/
+
 
 int main(int argc, char *argv[]) {
+
+  //MKLVersion pv;
+  //MKL_Get_Version(&pv);
+
+
+  //magma_init();
+
+  //magma_int_t n = 1000;
+  //magma_int_t nrhs = 1;
+  /*
+  printf( "using MAGMA CPU interface\n" );
+  cpu_interface( n, nrhs );
+  */
+  //magma_finalize();
+  
+  return 0;
+
 
   auto Tvt = Tensor();
 

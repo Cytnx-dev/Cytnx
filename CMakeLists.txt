@@ -64,6 +64,8 @@ option(USE_OMP "Build Cytnx with OpenMP" ON)
 option(BUILD_DOC "Build API docuemntation" OFF)
 option(USE_HPTT "Build Cytnx with HPTT" OFF)
 option(RUN_TESTS "Run Cytnx tests" OFF)
+option(USE_CUTT "Build Cytnx with CUTT" OFF)
+
 
 if (USE_ICPC)
   message(STATUS, "Build Cytnx with Intel Compilers")
@@ -186,6 +188,12 @@ if(USE_CUDA)
         target_compile_definitions(cytnx PRIVATE UNI_CUTT)
         target_link_libraries(cytnx PRIVATE ${install_dir}/lib/libcutt.a)
     endif()
+
+    if(USE_MAGMA)
+       find_package( MAGMA REQUIRED) 
+       
+    endif()
+
 endif()
 
 #####################################################################
@@ -282,7 +290,11 @@ endif()
 
 target_link_libraries(cytnx PUBLIC Boost::boost ${LAPACK_LIBRARIES})
 
-
+if(USE_CUDA)
+    if(USE_MAGMA)
+        target_link_libraries(cytnx PUBLIC ${MAGMA_LIBRARIES})
+    endif()
+endif()
 #####
 #function(CUDA_CONVERT_FLAGS EXISTING_TARGET)
 #    get_property(old_flags TARGET ${EXISTING_TARGET} PROPERTY INTERFACE_COMPILE_OPTIONS)
