@@ -17,7 +17,7 @@ namespace cytnx {
       cytnx_complex128 *_y = (cytnx_complex128 *)y->Mem;
       cytnx_complex128 _a = complex128(a);
       
-      cblas_zgerc(CblasRowMajor,x->size(), y->size(), &_a, _x, 1, _y, 1,_A,y->size());    
+      cblas_zgeru(CblasRowMajor,x->size(), y->size(), &_a, _x, 1, _y, 1,_A,y->size());    
     
     }
     
@@ -31,7 +31,7 @@ namespace cytnx {
       cytnx_complex64 *_y = (cytnx_complex64 *)y->Mem;
       cytnx_complex64 _a = complex64(a);
       
-      cblas_cgerc(CblasRowMajor,x->size(), y->size(), &_a, _x, 1, _y, 1,_A,y->size());    
+      cblas_cgeru(CblasRowMajor,x->size(), y->size(), &_a, _x, 1, _y, 1,_A,y->size());    
     
     }
     
