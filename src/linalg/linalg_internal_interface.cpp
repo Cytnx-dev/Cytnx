@@ -482,6 +482,23 @@ namespace cytnx {
       Td_ii[Type.Double] = Tridiag_internal_d;
       Td_ii[Type.Float] = Tridiag_internal_f;
 
+
+      //=====================
+      Trace_ii = vector<Tracefunc_oii>(N_Type);
+
+      Trace_ii[Type.ComplexDouble] = Trace_internal_cd;
+      Trace_ii[Type.ComplexFloat] = Trace_internal_cf;
+      Trace_ii[Type.Double] = Trace_internal_d;
+      Trace_ii[Type.Float] = Trace_internal_f;
+      Trace_ii[Type.Uint64] = Trace_internal_u64;
+      Trace_ii[Type.Int64] = Trace_internal_i64;
+      Trace_ii[Type.Uint32] = Trace_internal_u32;
+      Trace_ii[Type.Int32] = Trace_internal_i32;
+      Trace_ii[Type.Uint16] = Trace_internal_u16;
+      Trace_ii[Type.Int16] = Trace_internal_i16;
+      Trace_ii[Type.Bool] = Trace_internal_b;
+
+
       //================
       Kron_ii = vector<vector<Kronfunc_oii>>(N_Type, vector<Kronfunc_oii>(N_Type, NULL));
 

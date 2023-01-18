@@ -49,7 +49,7 @@ endif
 
 
 NVCC:= $(CUDA_PATH)/bin/nvcc -ccbin $(CC)
-NVFLAGS:= -m64 ${OPTIM} -lineinfo
+NVFLAGS:= -std=c++17 -m64 ${OPTIM} -lineinfo
 SMS ?= 60
 GENCODE_FLAGS:= -arch=sm_$(SMS)
 
@@ -119,7 +119,7 @@ endif
 
 ## Linalg_internal
 OBJS += linalg_internal_interface.o
-OBJS += Lstsq_internal.o Mod_internal.o Det_internal.o Sum_internal.o MaxMin_internal.o QR_internal.o Abs_internal.o Pow_internal.o Eig_internal.o Matvec_internal.o Norm_internal.o Kron_internal.o Cpr_internal.o iAdd_internal.o Add_internal.o iSub_internal.o Sub_internal.o iMul_internal.o Mul_internal.o iDiv_internal.o Div_internal.o iArithmetic_internal.o Arithmetic_internal.o Svd_internal.o Inv_inplace_internal.o InvM_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_dg_internal.o Matmul_internal.o Diag_internal.o Outer_internal.o Vectordot_internal.o Tridiag_internal.o Axpy_internal.o
+OBJS += Lstsq_internal.o Mod_internal.o Det_internal.o Sum_internal.o MaxMin_internal.o QR_internal.o Abs_internal.o Pow_internal.o Eig_internal.o Matvec_internal.o Norm_internal.o Kron_internal.o Cpr_internal.o iAdd_internal.o Add_internal.o iSub_internal.o Sub_internal.o iMul_internal.o Mul_internal.o iDiv_internal.o Div_internal.o iArithmetic_internal.o Arithmetic_internal.o Svd_internal.o Inv_inplace_internal.o InvM_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_dg_internal.o Matmul_internal.o Diag_internal.o Outer_internal.o Vectordot_internal.o Trace_internal.o Tridiag_internal.o Axpy_internal.o
 ifeq ($(GPU_Enable),1)
   OBJS += cuMod_internal.o cuPow_internal.o cuVectordot_internal.o cuMatvec_internal.o cuNorm_internal.o cuCpr_internal.o cuAdd_internal.o cuSub_internal.o cuMul_internal.o cuDiv_internal.o cuArithmetic_internal.o cuSvd_internal.o cuInv_inplace_internal.o cuInvM_inplace_internal.o cuConj_inplace_internal.o cuExp_internal.o  cuEigh_internal.o cuMatmul_dg_internal.o cuMatmul_internal.o cuDiag_internal.o cuOuter_internal.o
 endif
@@ -409,6 +409,9 @@ Exp_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Exp_internal.cpp $
 Pow_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Pow_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Pow_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 Diag_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Diag_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Diag_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+
+Trace_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Trace_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Trace_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 
 InvM_inplace_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/InvM_inplace_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/InvM_inplace_internal.hpp

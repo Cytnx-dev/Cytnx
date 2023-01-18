@@ -32,6 +32,7 @@
 #include "linalg/linalg_internal_cpu/Det_internal.hpp"
 #include "linalg/linalg_internal_cpu/Lstsq_internal.hpp"
 #include "linalg/linalg_internal_cpu/Axpy_internal.hpp"
+#include "linalg/linalg_internal_cpu/Trace_internal.hpp"
 
 #ifdef UNI_GPU
   #include "linalg/linalg_internal_gpu/cuArithmetic_internal.hpp"
@@ -135,6 +136,13 @@ namespace cytnx {
                                   boost::intrusive_ptr<Storage_base> &r, const cytnx_int64 &M,
                                   const cytnx_int64 &N, const cytnx_int64 &nrhs,
                                   const cytnx_float &rcond);
+    
+    typedef void (*Tracefunc_oii)(const bool &, Tensor &, const Tensor &, const cytnx_uint64 &, const int &,
+                           const cytnx_uint64 &, const std::vector<cytnx_uint64> &,
+                           const std::vector<cytnx_uint64> &, const std::vector<cytnx_int64> &,
+                           const cytnx_uint64 &, const cytnx_uint64 &);
+
+
 
     class linalg_internal_interface {
      public:
@@ -164,6 +172,7 @@ namespace cytnx {
       std::vector<Detfunc_oii> Det_ii;
 
       std::vector<Lstsqfunc_oii> Lstsq_ii;
+      std::vector<Tracefunc_oii> Trace_ii;
 
       std::vector<axpy_oii> axpy_ii;
 
