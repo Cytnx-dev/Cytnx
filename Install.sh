@@ -84,7 +84,7 @@ FLAG="${FLAG}-DHPTT_ENABLE_AVX=on "
 # [Note] set to "=on" to build with with GPU (CUDA) support.
 #        for "=off" case one can skip 6-a) and  6-b)
 #-----------------------------------
-FLAG="${FLAG}-DUSE_CUDA=OFF "
+FLAG="${FLAG}-DUSE_CUDA=ON "
 #-----------------------------------
 # 6-a) CUTT (DEFAULT =off)
 # [Note] set to "=on" for using CUTT library to accelrate tensor transpose.
@@ -102,8 +102,9 @@ FLAG="${FLAG}-DUSE_CUDA=OFF "
 #        in case MAGMA is not automatically find, please specify MAGMAROOT path 
 #        where the magma is installed
 #-----------------------------------
-# FLAG="${FLAG}-DUSE_MAGMA=OFF "
-# MAGMA_ROOT=/usr/local/magma
+MAGMA_ROOT=${HOME}/MAGMA
+FLAG="${FLAG}-DUSE_MAGMA=OFF "
+FLAG="${FLAG}-DMAGMA_ROOT=${MAGMA_ROOT} "
 #-----------------------------------
 
 
@@ -132,7 +133,7 @@ FLAG="${FLAG}-DUSE_OMP=OFF "
 #=========================================================
 # [Note] Wheather to run cytnx tests (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG}-DRUN_TESTS=ON "
+FLAG="${FLAG}-DRUN_TESTS=OFF "
 #-----------------------------------
 
 
@@ -150,6 +151,6 @@ echo ${FLAG}
 # mkdir build
 cd build
 cmake ../ ${FLAG}
-make -j`nproc`
-make install
-ctest
+#make -j`nproc`
+#make install
+#ctest

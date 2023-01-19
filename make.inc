@@ -28,7 +28,7 @@ HPTT_Enable=1
 CUTT_Enable=1
 
 ## compile with MAGMA library:
-MAGMA_Enable=0
+MAGMA_Enable=1
 MAGMA_PATH=${HOME}/MAGMA
 
 

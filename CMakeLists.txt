@@ -65,7 +65,7 @@ option(BUILD_DOC "Build API docuemntation" OFF)
 option(USE_HPTT "Build Cytnx with HPTT" OFF)
 option(RUN_TESTS "Run Cytnx tests" OFF)
 option(USE_CUTT "Build Cytnx with CUTT" OFF)
-
+option(USE_MAGMA "Build Cytnx with MAGMA (required CUDA)" ON)
 
 if (USE_ICPC)
   message(STATUS, "Build Cytnx with Intel Compilers")
@@ -191,7 +191,13 @@ if(USE_CUDA)
 
     if(USE_MAGMA)
        find_package( MAGMA REQUIRED) 
-       
+       message(STATUS "^^^magma root aft: ${MAGMA_ROOT}")
+       message(STATUS "^^^magma inc dr: ${MAGMA_INCLUDE_DIRS}")
+       message(STATUS "^^^magma lib dr: ${MAGMA_LIBRARY_DIRS}")
+       message(STATUS "^^^magma libs: ${MAGMA_LIBRARIES}")
+       #add_dependencies(cytnx magma)
+       target_compile_definitions(cytnx PRIVATE UNI_MAGMA)
+       target_link_libraries(cytnx PRIVATE ${MAGMA_LIBRARIES})       
     endif()
 
 endif()
@@ -290,11 +296,6 @@ endif()
 
 target_link_libraries(cytnx PUBLIC Boost::boost ${LAPACK_LIBRARIES})
 
-if(USE_CUDA)
-    if(USE_MAGMA)
-        target_link_libraries(cytnx PUBLIC ${MAGMA_LIBRARIES})
-    endif()
-endif()
 #####
 #function(CUDA_CONVERT_FLAGS EXISTING_TARGET)
 #    get_property(old_flags TARGET ${EXISTING_TARGET} PROPERTY INTERFACE_COMPILE_OPTIONS)
@@ -321,9 +322,9 @@ endif()
 if(USE_CUDA)
   set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_CUDA")
   enable_language(CUDA)
-  find_package(CUDA REQUIRED)
+  find_package(CUDAToolkit REQUIRED)
   if(NOT DEFINED CMAKE_CUDA_STANDARD)
-    set(CMAKE_CUDA_STANDARD 11)
+    set(CMAKE_CUDA_STANDARD 17)
     set(CMAKE_CUDA_STANDARD_REQUIRED ON)
   endif()
 
@@ -346,9 +347,9 @@ if(USE_CUDA)
   target_compile_definitions(cytnx PRIVATE UNI_GPU)
   #target_compile_options(cytnx PRIVATE ${CMAKE_CUDA_FLAGS})
   #target_compile_options(cytnx PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:>)
-  target_include_directories(cytnx PRIVATE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
-  target_link_libraries(cytnx PRIVATE ${CUDA_cusolver_LIBRARY})
-  target_link_libraries(cytnx PRIVATE -lcublas -lcurand)
+  target_include_directories(cytnx PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
+  target_link_libraries(cytnx PRIVATE CUDA::toolkit)
+  target_link_libraries(cytnx PRIVATE CUDA::cudart CUDA::cublas CUDA::cusparse CUDA::curand CUDA::cusolver)
 endif()
 
 
@@ -583,7 +584,18 @@ if(USE_CUDA)
         message( STATUS " --CUTT option NO_ALIGN_ALLOC: ${HPTT_NO_ALIGN_ALLOC}")
         FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_CUTT\n" "")
   endif()
+  
+  if(USE_MAGMA)
+        message( STATUS "Build with MAGMA: YES")
+        FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_MAGMA\n" "")
+        FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${MAGMA_LIBRARIES} -ldl\n" "") # use > to indicate special rt processing 
+        message( STATUS "MAGMA: libdir:${MAGMA_LIBRARY_DIRS} incdir:${MAGMA_INCLUDE_DIRS} libs:${MAGMA_LIBRARIES}")
+
+  endif()
+
+
 else()
+
   message( STATUS " Build CUDA Support: NO")
 endif()
 

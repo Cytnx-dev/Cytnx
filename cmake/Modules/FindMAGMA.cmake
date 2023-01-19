@@ -16,22 +16,36 @@
 
 #If environment variable MAGMA_ROOT is specified, it has same effect as MAGMA_ROOT
 
-MAGMA_ROOT?=/usr/local/magma
-if( NOT MAGMA_ROOT AND NOT $ENV{MAGMA_ROOT} STREQUAL "" )
-    set( MAGMA_ROOT $ENV{MAGMA_ROOT} )
+if( MAGMA_ROOT STREQUAL "") 
+    if(NOT $ENV{MAGMA_ROOT} STREQUAL "" )
+        set( MAGMA_ROOT $ENV{MAGMA_ROOT})
+    endif()
+endif()
+
+if( MAGMA_ROOT STREQUAL "")
+    set(MAGMA_FOUND FALSE)
+else()
     # set library directories
     set(MAGMA_LIBRARY_DIRS ${MAGMA_ROOT}/lib)
     # set include directories
     set(MAGMA_INCLUDE_DIRS ${MAGMA_ROOT}/include)
     # set libraries
     find_library(
-        MAGMA_LIBRARIES
+        MAGMA_LIB
         NAMES "magma"
         PATHS ${MAGMA_ROOT}
         PATH_SUFFIXES "lib"
         NO_DEFAULT_PATH
     )
+    find_library(
+        MAGMA_LIB_SPARSE
+        NAMES "magma_sparse"
+        PATHS ${MAGMA_ROOT}
+        PATH_SUFFIXES "lib"
+        NO_DEFAULT_PATH
+    )
+    set(MAGMA_LIBRARIES "${MAGMA_LIB};${MAGMA_LIB_SPARSE}")
+
+    message(STATUS "ok")
     set(MAGMA_FOUND TRUE)
-else()
-    set(MAGMA_FOUND FALSE)
 endif()
