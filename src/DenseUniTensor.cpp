@@ -52,16 +52,21 @@ namespace cytnx {
         this->_rowrank = rowrank;
       }
     } else {
+      
       if (bonds.size() == 0)
         this->_rowrank = 0;
       else {
-        cytnx_error_msg(
-          rowrank < 0,
-          "[ERROR] initialize a non-symmetry, un-tagged tensor should assign a >=0 rowrank.%s",
-          "\n");
-        cytnx_error_msg(rowrank > bonds.size(),
-                        "[ERROR] rowrank cannot exceed total rank of Tensor.%s", "\n");
-        this->_rowrank = rowrank;
+        if(rowrank==-1){
+            this->_rowrank=1;
+        }else{
+            cytnx_error_msg(
+              rowrank < 0,
+              "[ERROR] initialize a non-symmetry, un-tagged tensor should assign a >=0 rowrank.%s",
+              "\n");
+            cytnx_error_msg(rowrank > bonds.size(),
+                            "[ERROR] rowrank cannot exceed total rank of Tensor.%s", "\n");
+            this->_rowrank = rowrank;
+        }
       }
     }
 
