@@ -108,6 +108,12 @@ cleanup:
 }
 
 
+int init(){return magma_init();}
+int finalize(){return magma_finalize();}
+
+void pp(){
+    Type.getname(Type.Double);
+}
 
 
 int main(int argc, char *argv[]) {
@@ -125,20 +131,23 @@ int main(int argc, char *argv[]) {
   
   print(linalg::Ger(rx,ry));
   */  
+  //pp();
+  //pp();
+  //pp();
+  
 
+  
   MKLVersion pv;
   MKL_Get_Version(&pv);
 
-
-  cout << magma_init();
-
+  
   magma_int_t n = 1000;
   magma_int_t nrhs = 1;
   
   //printf( "using MAGMA CPU interface\n" );
   cpu_interface( n, nrhs );
     
-  cout << magma_finalize();
+  //cout << finalize();
   
   return 0;
 

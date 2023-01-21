@@ -19,6 +19,7 @@ namespace cytnx {
     Device_class();
     void Print_Property();
     std::string getname(const int &device_id);
+    ~Device_class();
     // void cudaDeviceSynchronize();
   };
   /// @endcond

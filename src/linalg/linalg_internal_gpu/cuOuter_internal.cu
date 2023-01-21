@@ -1,6 +1,7 @@
 #include <cuda.h>
 #include <device_launch_parameters.h>
 #include "cuOuter_internal.hpp"
+#include "cuGer_internal.hpp"
 #include "utils/utils_internal_interface.hpp"
 
 #ifdef UNI_OMP
@@ -30,6 +31,7 @@ namespace cytnx{
             __syncthreads();
         }
         void cuOuter_internal_cdtcd(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin, const cytnx_uint64 &j1, const cytnx_uint64 &j2 ){
+            /*
             cuDoubleComplex *_out = (cuDoubleComplex*)out->Mem;
             cuDoubleComplex *_Lin = (cuDoubleComplex*)Lin->Mem;
             cuDoubleComplex *_Rin = (cuDoubleComplex*)Rin->Mem;
@@ -39,6 +41,8 @@ namespace cytnx{
             if(Nelem%512) NBlocks += 1;
                 
             cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,j2,_Rin );
+            */
+            cuGer_internal_cd(out,Lin,Rin,Scalar(1,Type.ComplexDouble));
             
         }
 
@@ -270,6 +274,7 @@ namespace cytnx{
             __syncthreads();
         }
         void cuOuter_internal_cftcf(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin, const cytnx_uint64 &j1, const cytnx_uint64 &j2 ){
+            /*
             cuFloatComplex *_out = (cuFloatComplex*)out->Mem;
             cuFloatComplex *_Lin = (cuFloatComplex*)Lin->Mem;
             cuFloatComplex *_Rin = (cuFloatComplex*)Rin->Mem;
@@ -279,6 +284,8 @@ namespace cytnx{
             if(Nelem%512) NBlocks += 1;
                 
             cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,j2,_Rin );
+            */
+            cuGer_internal_cf(out,Lin,Rin,Scalar(1,Type.ComplexFloat));
         }
 
 
@@ -499,6 +506,7 @@ namespace cytnx{
 
 
         void cuOuter_internal_dtd(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin, const cytnx_uint64 &j1, const cytnx_uint64 &j2 ){
+            /*
             cytnx_double *_out = (cytnx_double*)out->Mem;
             cytnx_double *_Lin = (cytnx_double*)Lin->Mem;
             cytnx_double *_Rin = (cytnx_double*)Rin->Mem;
@@ -508,7 +516,8 @@ namespace cytnx{
             if(Nelem%512) NBlocks += 1;
                 
             cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,j2,_Rin );
-
+            */
+            cuGer_internal_d(out,Lin,Rin,Scalar(1,Type.Double));
 
         }
         void cuOuter_internal_dtf(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin, const cytnx_uint64 &j1, const cytnx_uint64 &j2 ){
@@ -670,6 +679,7 @@ namespace cytnx{
 
         }
         void cuOuter_internal_ftf(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin, const cytnx_uint64 &j1, const cytnx_uint64 &j2 ){
+            /*
             cytnx_float *_out = (cytnx_float*)out->Mem;
             cytnx_float *_Lin = (cytnx_float*)Lin->Mem;
             cytnx_float *_Rin = (cytnx_float*)Rin->Mem;
@@ -679,7 +689,8 @@ namespace cytnx{
             if(Nelem%512) NBlocks += 1;
                 
             cuOuter_kernel<<<NBlocks,512>>>(_out,_Lin,Nelem,j2,_Rin );
-
+            */
+            cuGer_internal_f(out,Lin,Rin,Scalar(1,Type.Float));
         }
         void cuOuter_internal_ftu64(boost::intrusive_ptr<Storage_base> & out, const boost::intrusive_ptr<Storage_base> & Lin, const boost::intrusive_ptr<Storage_base> & Rin, const cytnx_uint64 &j1, const cytnx_uint64 &j2 ){
             cytnx_float *_out = (cytnx_float*)out->Mem;

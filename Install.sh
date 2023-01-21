@@ -41,7 +41,7 @@ FLAG="${FLAG}-DUSE_MKL=ON "
 #============================================================================
 # set to "=on" for building python API, required python and pybind11 installed. 
 #--------------------------------
-FLAG="${FLAG}-DBUILD_PYTHON=OFF "
+FLAG="${FLAG}-DBUILD_PYTHON=ON "
 #--------------------------------
 
 
@@ -103,7 +103,7 @@ FLAG="${FLAG}-DUSE_CUDA=ON "
 #        where the magma is installed
 #-----------------------------------
 MAGMA_ROOT=${HOME}/MAGMA
-FLAG="${FLAG}-DUSE_MAGMA=OFF "
+FLAG="${FLAG}-DUSE_MAGMA=ON "
 FLAG="${FLAG}-DMAGMA_ROOT=${MAGMA_ROOT} "
 #-----------------------------------
 
@@ -149,6 +149,6 @@ echo ${FLAG}
 # mkdir build
 cd build
 cmake ../ ${FLAG}
-#make -j`nproc`
-#make install
+make -j6
+make install
 #ctest

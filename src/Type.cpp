@@ -19,6 +19,10 @@ namespace cytnx {
 
 using namespace std;
 
+namespace cytnx {
+  Type_class Type;
+}
+
 /*
 Type_class::Type_class(){
     this->c_typeid2_cy_typeid[type_index(typeid(void))] = this->Void;
@@ -85,35 +89,35 @@ int c_typeindex_to_id(const std::type_index &type_idx){
   //   (Type_struct){std::string("Bool"), true, false, false, false, sizeof(cytnx_bool)};
 // }
 
-bool cytnx::Type_class::is_float(const unsigned int &type_id) {
+bool cytnx::Type_class::is_float(const unsigned int &type_id) const{
   cytnx_error_msg(type_id >= N_Type, "[ERROR] invalid type_id%s", "\n");
   return Typeinfos[type_id].is_float;
 }
 
-bool cytnx::Type_class::is_int(const unsigned int &type_id) {
+bool cytnx::Type_class::is_int(const unsigned int &type_id) const{
   cytnx_error_msg(type_id >= N_Type, "[ERROR] invalid type_id%s", "\n");
   return Typeinfos[type_id].is_int;
 }
 
-bool cytnx::Type_class::is_complex(const unsigned int &type_id) {
+bool cytnx::Type_class::is_complex(const unsigned int &type_id) const{
   cytnx_error_msg(type_id >= N_Type, "[ERROR] invalid type_id%s", "\n");
   return Typeinfos[type_id].is_complex;
 }
 
-bool cytnx::Type_class::is_unsigned(const unsigned int &type_id) {
+bool cytnx::Type_class::is_unsigned(const unsigned int &type_id) const{
   cytnx_error_msg(type_id >= N_Type, "[ERROR] invalid type_id%s", "\n");
   return Typeinfos[type_id].is_unsigned;
 }
 
-const std::string &cytnx::Type_class::getname(const unsigned int &type_id) {
+const std::string &cytnx::Type_class::getname(const unsigned int &type_id) const {
   cytnx_error_msg(type_id >= N_Type, "[ERROR] invalid type_id%s", "\n");
   return Typeinfos[type_id].name;
 }
-unsigned int cytnx::Type_class::typeSize(const unsigned int &type_id) {
+unsigned int cytnx::Type_class::typeSize(const unsigned int &type_id) const {
   cytnx_error_msg(type_id >= N_Type, "[ERROR] invalid type_id%s", "\n");
   return Typeinfos[type_id].typeSize;
 }
-unsigned int cytnx::Type_class::c_typename_to_id(const std::string &c_name) {
+unsigned int cytnx::Type_class::c_typename_to_id(const std::string &c_name) const{
   if (c_name == typeid(cytnx_complex128).name()) {
     return Type_class::ComplexDouble;
   } else if (c_name == typeid(cytnx_complex64).name()) {
@@ -142,6 +146,3 @@ unsigned int cytnx::Type_class::c_typename_to_id(const std::string &c_name) {
   }
 }
 
-namespace cytnx {
-  Type_class Type;
-}

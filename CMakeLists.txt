@@ -191,6 +191,9 @@ if(USE_CUDA)
 
     if(USE_MAGMA)
        find_package( MAGMA REQUIRED) 
+       if(NOT MAGMA_FOUND)
+          message(FATAL_ERROR "MAGMA not found!")
+       endif()
        message(STATUS "^^^magma root aft: ${MAGMA_ROOT}")
        message(STATUS "^^^magma inc dr: ${MAGMA_INCLUDE_DIRS}")
        message(STATUS "^^^magma lib dr: ${MAGMA_LIBRARY_DIRS}")
@@ -356,6 +359,7 @@ endif()
 ######################################################################
 ### Get Gtest & benchmark
 ######################################################################
+if(RUN_TESTS)
 include(FetchContent)
 FetchContent_Declare(
   googletest
@@ -373,7 +377,7 @@ set(BENCHMARK_ENABLE_TESTING off)    # to suppress benchmark internal tests
 FetchContent_MakeAvailable(
   googletest
   googlebenchmark)
-
+endif()
 
 ######################################################################
 ### Build Documents

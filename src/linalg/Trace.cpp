@@ -2,7 +2,7 @@
 #include "utils/utils.hpp"
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
-#include "cytnx.hpp"
+//#include "cytnx.hpp"
 
 #include "linalg_internal_interface.hpp"
 
