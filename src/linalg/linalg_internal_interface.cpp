@@ -858,6 +858,38 @@ namespace cytnx {
       cuAri_ii[Type.Bool][Type.Int16] = cuArithmetic_internal_bti16;
       cuAri_ii[Type.Bool][Type.Bool] = cuArithmetic_internal_btb;
 
+
+      //=====================
+      cuMM_ii = vector<MaxMinfunc_oii>(N_Type);
+
+      cuMM_ii[Type.ComplexDouble] = cuMaxMin_internal_cd;
+      cuMM_ii[Type.ComplexFloat] = cuMaxMin_internal_cf;
+      cuMM_ii[Type.Double] = cuMaxMin_internal_d;
+      cuMM_ii[Type.Float] = cuMaxMin_internal_f;
+      cuMM_ii[Type.Uint64] = cuMaxMin_internal_u64;
+      cuMM_ii[Type.Int64] = cuMaxMin_internal_i64;
+      cuMM_ii[Type.Uint32] = cuMaxMin_internal_u32;
+      cuMM_ii[Type.Int32] = cuMaxMin_internal_i32;
+      cuMM_ii[Type.Uint16] = cuMaxMin_internal_u16;
+      cuMM_ii[Type.Int16] = cuMaxMin_internal_i16;
+      cuMM_ii[Type.Bool] = cuMaxMin_internal_b;
+
+      //=====================
+      cuSum_ii = vector<MaxMinfunc_oii>(N_Type);
+
+      cuSum_ii[Type.ComplexDouble] = cuSum_internal_cd;
+      cuSum_ii[Type.ComplexFloat] = cuSum_internal_cf;
+      cuSum_ii[Type.Double] = cuSum_internal_d;
+      cuSum_ii[Type.Float] = cuSum_internal_f;
+      cuSum_ii[Type.Uint64] = cuSum_internal_u64;
+      cuSum_ii[Type.Int64] = cuSum_internal_i64;
+      cuSum_ii[Type.Uint32] = cuSum_internal_u32;
+      cuSum_ii[Type.Int32] = cuSum_internal_i32;
+      cuSum_ii[Type.Uint16] = cuSum_internal_u16;
+      cuSum_ii[Type.Int16] = cuSum_internal_i16;
+      cuSum_ii[Type.Bool] = cuSum_internal_b;
+
+
       //=====================
       cuAbs_ii = vector<Absfunc_oii>(N_Type);
 

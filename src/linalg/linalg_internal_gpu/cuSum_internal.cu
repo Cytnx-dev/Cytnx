@@ -50,8 +50,21 @@ namespace cytnx{
                           const char &type){
             utils_internal::cuReduce_gpu_u32((cytnx_uint32*)out->Mem,(cytnx_uint32*)ten->Mem,Nelem);
         }
-
-
+        void cuSum_internal_i16(boost::intrusive_ptr<Storage_base> &out,
+                          const boost::intrusive_ptr<Storage_base> &ten, const cytnx_uint64 &Nelem,
+                          const char &type){
+            utils_internal::cuReduce_gpu_i16((cytnx_int16*)out->Mem,(cytnx_int16*)ten->Mem,Nelem);
+        }
+        void cuSum_internal_u16(boost::intrusive_ptr<Storage_base> &out,
+                          const boost::intrusive_ptr<Storage_base> &ten, const cytnx_uint64 &Nelem,
+                          const char &type){
+            utils_internal::cuReduce_gpu_u16((cytnx_uint16*)out->Mem,(cytnx_uint16*)ten->Mem,Nelem);
+        }
+        void cuSum_internal_b(boost::intrusive_ptr<Storage_base> &out,
+                          const boost::intrusive_ptr<Storage_base> &ten, const cytnx_uint64 &Nelem,
+                          const char &type){
+            cytnx_error_msg(true,"[ERROR] Sum cannot perform on Bool type. use astype() to convert to desire type first.%s","\n");
+        }
 
     }//namespace linalg_internal
 }//namespace cytnx

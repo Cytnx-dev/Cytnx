@@ -135,6 +135,15 @@ int main(int argc, char *argv[]) {
   //pp();
   //pp();
 
+  Tensor Tg = zeros({3,6},Type.ComplexDouble);
+  Tensor Tgr = arange(18).reshape(3,6);
+  Tensor Tgi = arange(18).reshape(3,6) + 4;
+
+  //LAPACKE_zlacp2(LAPACK_ROW_MAJOR,'A',3,6, (double*)Tgr.storage().data(),6,(cytnx_complex128*)Tg.storage().data(),6);
+  //LAPACKE_zlacp2(LAPACK_ROW_MAJOR,'A',3,6, (double*)Tgr.storage().data(),6,(cytnx_complex128*)(&((cytnx_double*)Tg.storage().data())[1]),6);
+
+  cout << Tg ;
+
 
   Tensor D1 = arange(4)+1; D1.reshape_(2,2);
   cout << linalg::Det(D1);

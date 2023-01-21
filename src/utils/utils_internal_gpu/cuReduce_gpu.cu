@@ -9,28 +9,13 @@ namespace cytnx{
 
         template <class X> 
         __device__ void warp_unroll(X *smem,int tid){
-          X v = 0;
-          v += smem[tid+32]; __syncwarp();
-          smem[tid] = v;
-          v += smem[tid+16]; __syncwarp();
-          smem[tid] = v;
-          v += smem[tid+8]; __syncwarp();
-          smem[tid] = v;
-          v += smem[tid+4]; __syncwarp();
-          smem[tid] = v;
-          v += smem[tid+2]; __syncwarp();
-          smem[tid] = v;
-          v += smem[tid+1]; __syncwarp();
-          smem[tid] = v;
-
-          /* deprecated after volta, warp_unroll(volatile X*smem, int thidx);
-          smem[thidx]+=smem[thidx + 32];
-          smem[thidx]+=smem[thidx + 16];
-          smem[thidx]+=smem[thidx + 8 ];
-          smem[thidx]+=smem[thidx + 4 ];
-          smem[thidx]+=smem[thidx + 2 ];
-          smem[thidx]+=smem[thidx + 1 ];
-          */
+          X v = smem[tid+32]; __syncwarp();
+          v += __shfl_down_sync(0xFFFFFFFFU,v,16);
+          v += __shfl_down_sync(0xFFFFFFFFU,v,8);
+          v += __shfl_down_sync(0xFFFFFFFFU,v,4);
+          v += __shfl_down_sync(0xFFFFFFFFU,v,2);
+          v += __shfl_down_sync(0xFFFFFFFFU,v,1);
+          smem[tid] = v; __syncwarp();
         }
 
 
@@ -253,7 +238,12 @@ namespace cytnx{
         void cuReduce_gpu_u32(cytnx_uint32* out, cytnx_uint32* in, const cytnx_uint64 &Nelem){
             cuReduce_gpu_generic(out,in,Nelem);
         }
-
+        void cuReduce_gpu_i16(cytnx_int16* out, cytnx_int16* in, const cytnx_uint64 &Nelem){
+            cuReduce_gpu_generic(out,in,Nelem);
+        }
+        void cuReduce_gpu_u16(cytnx_uint16* out, cytnx_uint16* in, const cytnx_uint64 &Nelem){
+            cuReduce_gpu_generic(out,in,Nelem);
+        }
 
         void cuReduce_gpu_cf(cytnx_complex64* out, cytnx_complex64* in, const cytnx_uint64 &Nelem){
             cytnx_uint64 Nelems = Nelem;

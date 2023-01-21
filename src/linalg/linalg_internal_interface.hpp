@@ -54,6 +54,9 @@
   #include "linalg/linalg_internal_gpu/cuPow_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuGer_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuDet_internal.hpp"
+  #include "linalg/linalg_internal_gpu/cuSum_internal.hpp"
+  #include "linalg/linalg_internal_gpu/cuMaxMin_internal.hpp"
+
 #endif
 
 namespace cytnx {
@@ -203,6 +206,8 @@ namespace cytnx {
       std::vector<Absfunc_oii> cuAbs_ii;
       std::vector<ger_oii> cuGer_ii;
       std::vector<Detfunc_oii> cuDet_ii;
+      std::vector<MaxMinfunc_oii> cuMM_ii;
+      std::vector<MaxMinfunc_oii> cuSum_ii;
 #endif
 
       linalg_internal_interface();

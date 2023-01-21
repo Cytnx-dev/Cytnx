@@ -12,6 +12,8 @@
 namespace cytnx {
   namespace utils_internal {
     
+    void cuReduce_gpu_u16(cytnx_uint16* out, cytnx_uint16* in, const cytnx_uint64& Nelem);
+    void cuReduce_gpu_i16(cytnx_int16* out, cytnx_int16* in, const cytnx_uint64& Nelem);
     void cuReduce_gpu_u32(cytnx_uint32* out, cytnx_uint32* in, const cytnx_uint64& Nelem);
     void cuReduce_gpu_i32(cytnx_int32* out, cytnx_int32* in, const cytnx_uint64& Nelem);
     void cuReduce_gpu_u64(cytnx_uint64* out, cytnx_uint64* in, const cytnx_uint64& Nelem);
