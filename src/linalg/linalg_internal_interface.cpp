@@ -879,7 +879,13 @@ namespace cytnx {
       cuGer_ii[Type.ComplexFloat] = cuGer_internal_cf;
       cuGer_ii[Type.Double] = cuGer_internal_d;
       cuGer_ii[Type.Float] = cuGer_internal_f;
-
+      
+      //===================
+      cuDet_ii = vector<Detfunc_oii>(5);
+      cuDet_ii[Type.ComplexDouble] = cuDet_internal_cd;
+      cuDet_ii[Type.ComplexFloat] = cuDet_internal_cf;
+      cuDet_ii[Type.Double] = cuDet_internal_d;
+      cuDet_ii[Type.Float] = cuDet_internal_f;
 
       // Pow
       //====================

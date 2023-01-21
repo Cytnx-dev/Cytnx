@@ -134,7 +134,13 @@ int main(int argc, char *argv[]) {
   //pp();
   //pp();
   //pp();
-  
+
+
+  Tensor D1 = arange(4)+1; D1.reshape_(2,2);
+  cout << linalg::Det(D1);
+  D1.to_(Device.cuda);
+  cout << D1.device_str() << endl;
+  cout << linalg::Det(D1);   
 
   
   MKLVersion pv;

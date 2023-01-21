@@ -96,7 +96,9 @@ namespace cytnx {
     constexpr Type_class(){
       // Typeinfos.resize(N_Type);
       //{name,unsigned,complex,float,int,typesize}
-      std::cout << "init Type" << std::endl;
+      #ifdef DEBUG
+        std::cout << "[DEBUG] Type constructor call. " << std::endl;
+      #endif
       Typeinfos[this->Void] = (Type_struct){"Void", true, false, false, false, 0};
       Typeinfos[this->ComplexDouble] = (Type_struct){"Complex Double (Complex Float64)",
                                                     false,
