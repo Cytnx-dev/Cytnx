@@ -11,7 +11,7 @@ ICPC=icpc
 # set compile modes:
 
 ## compile with CUDA support:
-GPU_Enable=1
+GPU_Enable=0
 CUDA_PATH=/usr/local/cuda
 
 ## compile with Openmp support:
@@ -25,10 +25,10 @@ MKL_Enable=1
 HPTT_Enable=1
 
 ## compile with CUTT library:
-CUTT_Enable=1
+CUTT_Enable=0
 
 ## compile with MAGMA library:
-MAGMA_Enable=1
+MAGMA_Enable=0
 MAGMA_PATH=${HOME}/MAGMA
 
 

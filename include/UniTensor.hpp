@@ -158,7 +158,7 @@ namespace cytnx {
      * @param new_label
      */
     void set_label(const cytnx_int64 &inx, const cytnx_int64 &new_label) {
-      set_label(std::to_string(inx), std::to_string(new_label));
+      set_label(inx, std::to_string(new_label));
     }
     /**
      * @brief Set the label object
@@ -179,21 +179,9 @@ namespace cytnx {
       } else {
         idx = inx;
       }
+     
+      set_label(idx,new_label);
 
-      cytnx_error_msg(idx >= this->_labels.size(), "[ERROR] index exceed the rank of UniTensor%s",
-                      "\n");
-      // check in:
-      bool is_dup = false;
-      for (cytnx_uint64 i = 0; i < this->_labels.size(); i++) {
-        if (i == idx) continue;
-        if (new_label == this->_labels[i]) {
-          is_dup = true;
-          break;
-        }
-      }
-      cytnx_error_msg(is_dup, "[ERROR] alreay has a label that is the same as the input label%s",
-                      "\n");
-      this->_labels[idx] = new_label;
     }
     /**
      * @brief Set the labels object

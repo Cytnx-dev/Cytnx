@@ -2,7 +2,7 @@
 #include <complex>
 
 #include "mkl.h"
-#include "magma_v2.h"
+//#include "magma_v2.h"
 //#include "magma_lapack.h"
 
 
@@ -11,105 +11,6 @@ using namespace cytnx;
 
 typedef cytnx::Accessor ac;
 
-void zfill_matrix(
-    magma_int_t m, magma_int_t n, magmaDoubleComplex *A, magma_int_t lda )
-{
-    #define A(i_, j_) A[ (i_) + (j_)*lda ]
-
-    magma_int_t i, j;
-    for (j=0; j < n; ++j) {
-        for (i=0; i < m; ++i) {
-            A(i,j) = MAGMA_Z_MAKE( rand() / ((double) RAND_MAX),    // real part
-                                   rand() / ((double) RAND_MAX) );  // imag part
-        }
-    }
-
-    #undef A
-}
-
-
-// ------------------------------------------------------------
-// Replace with your code to initialize the X rhs.
-void zfill_rhs(
-    magma_int_t m, magma_int_t nrhs, magmaDoubleComplex *X, magma_int_t ldx )
-{
-    zfill_matrix( m, nrhs, X, ldx );
-}
-
-
-// ------------------------------------------------------------
-// Replace with your code to initialize the dA matrix on the GPU device.
-// This simply leverages the CPU version above to initialize it to random values,
-// and copies the matrix to the GPU.
-void zfill_matrix_gpu(
-    magma_int_t m, magma_int_t n, magmaDoubleComplex *dA, magma_int_t ldda,
-    magma_queue_t queue )
-{
-    magmaDoubleComplex *A;
-    magma_int_t lda = ldda;
-    magma_zmalloc_cpu( &A, m*lda );
-    if (A == NULL) {
-        fprintf( stderr, "malloc failed\n" );
-        return;
-    }
-    zfill_matrix( m, n, A, lda );
-    magma_zsetmatrix( m, n, A, lda, dA, ldda, queue );
-    magma_free_cpu( A );
-}
-
-
-// ------------------------------------------------------------
-// Replace with your code to initialize the dX rhs on the GPU device.
-void zfill_rhs_gpu(
-    magma_int_t m, magma_int_t nrhs, magmaDoubleComplex *dX, magma_int_t lddx,
-    magma_queue_t queue )
-{
-    zfill_matrix_gpu( m, nrhs, dX, lddx, queue );
-}
-
-
-// ------------------------------------------------------------
-// Solve A * X = B, where A and X are stored in CPU host memory.
-// Internally, MAGMA transfers data to the GPU device
-// and uses a hybrid CPU + GPU algorithm.
-void cpu_interface( magma_int_t n, magma_int_t nrhs )
-{
-    magmaDoubleComplex *A=NULL, *X=NULL;
-    magma_int_t *ipiv=NULL;
-    magma_int_t lda  = n;
-    magma_int_t ldx  = lda;
-    magma_int_t info = 0;
-
-    // magma_*malloc_cpu routines for CPU memory are type-safe and align to memory boundaries,
-    // but you can use malloc or new if you prefer.
-    magma_zmalloc_cpu( &A, lda*n );
-    magma_zmalloc_cpu( &X, ldx*nrhs );
-    magma_imalloc_cpu( &ipiv, n );
-    if (A == NULL || X == NULL || ipiv == NULL) {
-        fprintf( stderr, "malloc failed\n" );
-        goto cleanup;
-    }
-
-    // Replace these with your code to initialize A and X
-    zfill_matrix( n, n, A, lda );
-    zfill_rhs( n, nrhs, X, ldx );
-
-    magma_zgesv( n, 1, A, lda, ipiv, X, ldx, &info );
-    if (info != 0) {
-        fprintf( stderr, "magma_zgesv failed with info=%d\n", info );
-    }
-
-    // TODO: use result in X
-
-cleanup:
-    magma_free_cpu( A );
-    magma_free_cpu( X );
-    magma_free_cpu( ipiv );
-}
-
-
-int init(){return magma_init();}
-int finalize(){return magma_finalize();}
 
 void pp(){
     Type.getname(Type.Double);
@@ -139,12 +40,14 @@ int main(int argc, char *argv[]) {
   Tensor Tgr = arange(18).reshape(3,6);
   Tensor Tgi = arange(18).reshape(3,6) + 4;
 
+  cout << linalg::Svd_truncate(UniTensor(Tgr),2);
+  
   //LAPACKE_zlacp2(LAPACK_ROW_MAJOR,'A',3,6, (double*)Tgr.storage().data(),6,(cytnx_complex128*)Tg.storage().data(),6);
   //LAPACKE_zlacp2(LAPACK_ROW_MAJOR,'A',3,6, (double*)Tgr.storage().data(),6,(cytnx_complex128*)(&((cytnx_double*)Tg.storage().data())[1]),6);
 
   cout << Tg ;
 
-
+  /*
   Tensor D1 = arange(4)+1; D1.reshape_(2,2);
   cout << linalg::Det(D1);
   D1.to_(Device.cuda);
@@ -161,9 +64,9 @@ int main(int argc, char *argv[]) {
   
   //printf( "using MAGMA CPU interface\n" );
   cpu_interface( n, nrhs );
-    
+        
   //cout << finalize();
-  
+  */
   return 0;
 
 

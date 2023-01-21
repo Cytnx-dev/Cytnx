@@ -107,16 +107,7 @@ namespace cytnx {
         int t = 0;
         outCyT.resize(outT.size());
 
-        // cytnx_int64 newlbl = INT64_MAX;
-        // for (int i = 0; i < oldlabel.size(); i++) {
-        //   if (oldlabel[i] < newlbl) newlbl = oldlabel[i];
-        // }
-        // newlbl -= 1;
-
-        string newlbl = "newlbl";
-        for (int i = 0; i < oldlabel.size(); i++) {
-          if (oldlabel[i] == newlbl) newlbl = newlbl + "new";
-        }
+        string newlbl = "_aux_";
 
         // Q
         vector<cytnx_int64> Qshape;
