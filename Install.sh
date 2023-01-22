@@ -6,7 +6,7 @@
 ##        Set the desntination path for installation in Ins_dest
 #----------------------------------------------
 Ins_dest="$HOME/Cytnx_lib"
-FLAG="${FLAG}-DCMAKE_INSTALL_PREFIX=${Ins_dest} "
+FLAG="${FLAG} -DCMAKE_INSTALL_PREFIX=${Ins_dest}"
 #-----------------------------------------------
 
 
@@ -32,7 +32,7 @@ FLAG="${FLAG}-DCMAKE_INSTALL_PREFIX=${Ins_dest} "
 #        Please follow the guide from official mkl/oneMKL "post-installation" part 
 #        to source the proper setvars.sh and/or vars.sh  
 #----------------------
-FLAG="${FLAG}-DUSE_MKL=ON "
+FLAG="${FLAG} -DUSE_MKL=ON"
 #----------------------
 
 
@@ -41,7 +41,7 @@ FLAG="${FLAG}-DUSE_MKL=ON "
 #============================================================================
 # set to "=on" for building python API, required python and pybind11 installed. 
 #--------------------------------
-FLAG="${FLAG}-DBUILD_PYTHON=ON "
+FLAG="${FLAG} -DBUILD_PYTHON=ON"
 #--------------------------------
 
 
@@ -62,19 +62,19 @@ FLAG="${FLAG}-DBUILD_PYTHON=ON "
 # [Note] set to "=on" for using hptt library to accelrate tensor transpose.
 #        for "=off" case one can skip 5-a) and  5-b)
 #-----------------------------------
-FLAG="${FLAG}-DUSE_HPTT=ON "
+FLAG="${FLAG} -DUSE_HPTT=ON"
 #-----------------------------------
 # 5-a) HPTT fine tune (DEFAULT =off)
 # [Note] set to "=on" to enable fine tune for the native hardware.
 #-----------------------------------
-FLAG="${FLAG}-DHPTT_ENABLE_FINE_TUNE=ON "
+FLAG="${FLAG} -DHPTT_ENABLE_FINE_TUNE=ON"
 #-----------------------------------
 # 5-b) HPTT variant options (DEFAULT = no option)
 # [Note] uncomment one of the desired options below 1: AVX 2: IBM 3: ARM.
 #-----------------------------------
-# FLAG="${FLAG}-DHPTT_ENABLE_ARM=on "
-FLAG="${FLAG}-DHPTT_ENABLE_AVX=on "
-# FLAG="${FLAG}-DHPTT_ENABLE_IBM=on "
+# FLAG="${FLAG} -DHPTT_ENABLE_ARM=on"
+FLAG="${FLAG} -DHPTT_ENABLE_AVX=on"
+# FLAG="${FLAG} -DHPTT_ENABLE_IBM=on"
 #-----------------------------------
 
 
@@ -84,18 +84,18 @@ FLAG="${FLAG}-DHPTT_ENABLE_AVX=on "
 # [Note] set to "=on" to build with with GPU (CUDA) support.
 #        for "=off" case one can skip 6-a) and  6-b)
 #-----------------------------------
-FLAG="${FLAG}-DUSE_CUDA=ON "
+FLAG="${FLAG} -DUSE_CUDA=ON "
 #-----------------------------------
 # 6-a) CUTT (DEFAULT =off)
 # [Note] set to "=on" for using CUTT library to accelrate tensor transpose.
 #        for "=off" case one can skip 6-b)
 #-----------------------------------
-# FLAG="${FLAG}-DUSE_CUTT=off "
+# FLAG="${FLAG} -DUSE_CUTT=off "
 #-----------------------------------
 # 6-b) CUTT fine tune (DEFAULT =off)
 # [Note] set to "=on" to enable fine tune for the native hardware.
 #-----------------------------------
-# FLAG="${FLAG}-DCUTT_ENABLE_FINE_TUNE=off "
+# FLAG="${FLAG} -DCUTT_ENABLE_FINE_TUNE=off "
 #-----------------------------------
 # 6-c) Magma (DEFALT = on)
 # [Note] set to "=off" will make some of the GPU functions unavailable. 
@@ -103,17 +103,23 @@ FLAG="${FLAG}-DUSE_CUDA=ON "
 #        where the magma is installed
 #-----------------------------------
 MAGMA_ROOT=${HOME}/MAGMA
-FLAG="${FLAG}-DUSE_MAGMA=ON "
-FLAG="${FLAG}-DMAGMA_ROOT=${MAGMA_ROOT} "
+FLAG="${FLAG} -DUSE_MAGMA=ON "
+FLAG="${FLAG} -DMAGMA_ROOT=${MAGMA_ROOT} "
 #-----------------------------------
-
+# 6-d) CuTensor (DEFALT = on)
+# [Note] set to "=off" will make permutation on GPU into using cutt library.
+# [Note] CUTENSOR_ROOT is required to given, either from enviroment variable in bashrc
+#        or given in the following line using -DCUTENSOR_ROOT
+CUTENSOR_ROOT=/usr/local/libcutensor-1.6.2.3
+FLAG="${FLAG} -DUSE_CUTENSOR=ON "
+FLAG="${FLAG} -DCUTENSOR_ROOT=${CUTENSOR_ROOT} "
 
 #=========================================================
 # 7) Generate compile_commands.json (DEFAULT =off):
 #=========================================================
 # [Note] Wheather to generate compile_commands.json for IDE support (DEFAULT =1)
 #-----------------------------------
-FLAG="${FLAG}-DCMAKE_EXPORT_COMPILE_COMMANDS=1 "
+FLAG="${FLAG} -DCMAKE_EXPORT_COMPILE_COMMANDS=1 "
 #-----------------------------------
 
 
@@ -122,7 +128,7 @@ FLAG="${FLAG}-DCMAKE_EXPORT_COMPILE_COMMANDS=1 "
 #=========================================================
 # [Note] This will run the threaded code in cytnx lib while it will not disable muiltithreading in mkl. (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG}-DUSE_OMP=OFF "
+FLAG="${FLAG} -DUSE_OMP=OFF "
 #-----------------------------------
 
 
@@ -131,7 +137,7 @@ FLAG="${FLAG}-DUSE_OMP=OFF "
 #=========================================================
 # [Note] Wheather to run cytnx tests (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG}-DRUN_TESTS=OFF "
+FLAG="${FLAG} -DRUN_TESTS=OFF "
 #-----------------------------------
 
 
@@ -140,7 +146,7 @@ FLAG="${FLAG}-DRUN_TESTS=OFF "
 #=========================================================
 # [Note] Build using intel icpc compiler (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG}-DUSE_ICPC=OFF "
+FLAG="${FLAG} -DUSE_ICPC=OFF "
 #-----------------------------------
 
 
@@ -149,6 +155,6 @@ echo ${FLAG}
 # mkdir build
 cd build
 cmake ../ ${FLAG}
-make -j6
-make install
+#make -j6
+#make install
 #ctest

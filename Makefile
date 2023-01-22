@@ -77,12 +77,20 @@ ifeq ($(MAGMA_Enable),1)
   LDFLAGS += $(MAGMA_PATH)/lib/libmagma.a $(MAGMA_PATH)/lib/libmagma_sparse.a
 endif
 
+
+
 ALL_CCFLAGS := 
 ifeq ($(GPU_Enable),1)
   ifeq ($(CUTT_Enable),1)
    CCFLAGS += -DUNI_CUTT
    INCFLAGS+= -I$(CUTT_PATH)/include
    LDFLAGS+= $(CUTT_PATH)/lib/libcutt.a
+  endif
+
+  ifeq ($(CUTN_Enable),1)
+   CCFLAGS += -DUNI_CUTENSOR
+   INCFLAGS+=-I$(CUTENSOR_ROOT)/include
+   LDFLAGS+= -L$(CUTENSOR_ROOT)/lib/11/libcutensor_static.a
   endif
 
   CCFLAGS += -I$(CUDA_PATH)/include -DUNI_GPU

@@ -27,6 +27,11 @@ HPTT_Enable=1
 ## compile with CUTT library:
 CUTT_Enable=0
 
+## comiple with cuTensor library:
+CUTN_Enable=0
+CUTENSOR_ROOT=/usr/local/libcutensor-1.6.2.3
+
+
 ## compile with MAGMA library:
 MAGMA_Enable=0
 MAGMA_PATH=${HOME}/MAGMA

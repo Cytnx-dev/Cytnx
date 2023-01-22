@@ -66,6 +66,8 @@ option(USE_HPTT "Build Cytnx with HPTT" OFF)
 option(RUN_TESTS "Run Cytnx tests" OFF)
 option(USE_CUTT "Build Cytnx with CUTT" OFF)
 option(USE_MAGMA "Build Cytnx with MAGMA (required CUDA)" ON)
+option(USE_CUTENSOR "Build Cytnx with CUTENSOR (required CUDA)" ON)
+
 
 if (USE_ICPC)
   message(STATUS, "Build Cytnx with Intel Compilers")
@@ -353,6 +355,21 @@ if(USE_CUDA)
   target_include_directories(cytnx PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
   target_link_libraries(cytnx PRIVATE CUDA::toolkit)
   target_link_libraries(cytnx PRIVATE CUDA::cudart CUDA::cublas CUDA::cusparse CUDA::curand CUDA::cusolver)
+
+  if(USE_CUTENSOR)
+    find_package(CUTENSOR REQUIRED)
+    if(CUTENSOR_FOUND)
+        target_compile_definitions(cytnx PUBLIC UNI_CUTENSOR)
+        target_include_directories(cytnx PRIVATE ${CUTENSOR_INCLUDE_DIRS})
+        target_link_libraries(cytnx PRIVATE ${CUTENSOR_LIBRARIES})
+    else()
+        message(FATAL_ERROR "cannot find cutensor! please specify cutensor root with -DCUTENSOR_ROOT")
+    endif()
+
+  endif()
+
+
+
 endif()
 
 
@@ -594,9 +611,14 @@ if(USE_CUDA)
         FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_MAGMA\n" "")
         FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${MAGMA_LIBRARIES} -ldl\n" "") # use > to indicate special rt processing 
         message( STATUS "MAGMA: libdir:${MAGMA_LIBRARY_DIRS} incdir:${MAGMA_INCLUDE_DIRS} libs:${MAGMA_LIBRARIES}")
-
   endif()
 
+  if(USE_CUTENSOR)
+        message( STATUS "Build with CuTensor: YES")
+        FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_CUTENSOR\n" "")
+        FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUTENSOR_LIBRARIES} -ldl\n" "") # use > to indicate special rt processing 
+        message( STATUS "CuTensor: libdir:${CUTENSOR_LIBRARY_DIRS} incdir:${CUTENSOR_INCLUDE_DIRS} libs:${CUTENSOR_LIBRARIES}")
+  endif()
 
 else()
 
