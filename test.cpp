@@ -36,16 +36,27 @@ int main(int argc, char *argv[]) {
   //pp();
   //pp();
 
-  Tensor Tg = zeros({3,6},Type.ComplexDouble);
-  Tensor Tgr = arange(18).reshape(3,6);
-  Tensor Tgi = arange(18).reshape(3,6) + 4;
+  auto SZ = physics::pauli('z').real();//.to(Device.cuda)
+  auto SX = physics::pauli('x').real();//.to(Device.cuda)
+  //return 0;
+  print(SZ);
+  print(SX);
+  print(linalg::Kron(SZ,SX));
+  SZ.to_(Device.cuda);
+  SX.to_(Device.cuda);
+  print(linalg::Kron(SZ,SX));
 
-  cout << linalg::Svd_truncate(UniTensor(Tgr),2);
+  return 0;
+  //Tensor Tg = zeros({3,6},Type.ComplexDouble);
+  //Tensor Tgr = arange(18).reshape(3,6);
+  //Tensor Tgi = arange(18).reshape(3,6) + 4;
+
+  //cout << linalg::Svd_truncate(UniTensor(Tgr),2);
   
   //LAPACKE_zlacp2(LAPACK_ROW_MAJOR,'A',3,6, (double*)Tgr.storage().data(),6,(cytnx_complex128*)Tg.storage().data(),6);
   //LAPACKE_zlacp2(LAPACK_ROW_MAJOR,'A',3,6, (double*)Tgr.storage().data(),6,(cytnx_complex128*)(&((cytnx_double*)Tg.storage().data())[1]),6);
 
-  cout << Tg ;
+  //cout << Tg ;
 
   /*
   Tensor D1 = arange(4)+1; D1.reshape_(2,2);

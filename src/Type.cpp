@@ -22,17 +22,20 @@ using namespace std;
 namespace cytnx {
   Type_class Type;
   unsigned int Type_class::type_promote(const unsigned int &typeL, const unsigned int &typeR){
-
       if(typeL < typeR){
           if(typeL==0) return 0;
 
           if(!this->is_unsigned(typeR) && this->is_unsigned(typeL)){
             return typeL-1;
+          }else{
+            return typeL;
           }
       }else{
           if(typeR==0) return 0;
           if(!this->is_unsigned(typeL) && this->is_unsigned(typeR)){
             return typeR-1;
+          }else{
+            return typeR;
           }
       }
 

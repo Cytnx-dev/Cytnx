@@ -22,6 +22,7 @@ namespace cytnx {
       auto Tl = _Tl.contiguous();
       auto Tr = _Tr.contiguous();
 
+
       // check the new shape:
 
       std::vector<cytnx_uint64> new_shape;
@@ -55,6 +56,7 @@ namespace cytnx {
       }
 
       Tensor out(new_shape, Type.type_promote(Tl.dtype(),Tr.dtype()), Tl.device());
+
 
       if (Tl.device() == Device.cpu) {
         cytnx::linalg_internal::lii.Kron_ii[Tl.dtype()][Tr.dtype()](
