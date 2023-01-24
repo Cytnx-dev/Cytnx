@@ -25,6 +25,8 @@ target_sources_local(cytnx
     cuDet_internal.hpp
     cuSum_internal.hpp
     cuMaxMin_internal.hpp
+    cuKron_internal.hpp
+
 
     cuAbs_internal.cu
     cuAdd_internal.cu
@@ -52,4 +54,5 @@ target_sources_local(cytnx
     cuDet_internal.cu
     cuSum_internal.cu
     cuMaxMin_internal.cu
+    cuKron_internal.cu
 )

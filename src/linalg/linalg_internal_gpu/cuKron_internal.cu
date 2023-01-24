@@ -1,38 +1,74 @@
-#include "linalg/linalg_internal_cpu/Kron_internal.hpp"
-
-#include "utils/complex_arithmetic.hpp"
+#include "linalg/linalg_internal_gpu/cuKron_internal.hpp"
 #include "utils/utils_internal_interface.hpp"
+#include "utils/utils_internal_gpu/cuAlloc_gpu.hpp"
 #include <algorithm>
-//#include "lapack_wrapper.hpp"
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
+
+#include "cytnx_error.hpp"
+#include "Type.hpp"
+#include "lapack_wrapper.hpp"
+
 
 namespace cytnx {
 
   namespace linalg_internal {
 
-    namespace {
-      template <class TL, class TR>
-      void Kron_general(boost::intrusive_ptr<Storage_base> &out,
+     template <class TO,class TL, class TR>
+     __global__ void cuKron_kernel(TO* out, const TL* Lin, const TR* Rin, 
+                                   cytnx_uint64* meta_infos, int len_nsa,
+                                   int offset1, int offset2, int offset3, cytnx_uint64 Nelem){
+
+            extern __shared__ cytnx_uint64 info[];
+
+
+            // copy data into shared mem:
+            if(threadIdx.x <offset3){
+                info[threadIdx.x] = meta_infos[threadIdx.x];
+            }
+            __syncthreads();
+
+            //cytnx_uint64 *new_shape_acc = info;
+            //cytnx_uint64 *shape1_acc = &info[len_nsa];
+            //cytnx_uint64 *shape2_acc = &info[offset1];
+            //cytnx_uint64 *shape2 = &info[offset2];
+            
+            if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
+                cytnx_uint64 tmp = blockIdx.x*blockDim.x + threadIdx.x;
+                cytnx_uint64 tmp2;
+                cytnx_uint64 x = 0, y = 0;
+                for(int j = 0; j < len_nsa; j++) {
+                    tmp2 = tmp / info[j];
+                    tmp %= info[j];
+                    x += cytnx_uint64(tmp2 / info[offset2+j]) * info[len_nsa+j];
+                    y += cytnx_uint64(tmp2 % info[offset2+j]) * info[offset1+j];
+                }
+                out[tmp] = Lin[x] * Rin[y];
+            }
+
+    }
+
+    #define _TNinB_KRON_ 256
+
+    template<class TO, class TL, class TR>
+    void cuKron_general(boost::intrusive_ptr<Storage_base> &out,
                         const boost::intrusive_ptr<Storage_base> &Lin,
                         const boost::intrusive_ptr<Storage_base> &Rin,
                         const std::vector<cytnx_uint64> &shape1,
-                        const std::vector<cytnx_uint64> &shape2) {
-        TL *_out = (TL *)out->Mem;
-        TR *_out2 = (TR *)out->Mem;
+                        const std::vector<cytnx_uint64> &shape2){
+        TO *_out = (TO *)out->Mem;
         TL *_Lin = (TL *)Lin->Mem;
-        TR *_Rin = (TR *)Rin->Mem;
-
+        TR *_Rin = (TR *)Rin->Mem;    
+    
         cytnx_error_msg(shape1.size() != shape2.size(),
-                        "[ERROR][Internal Kron] T1 rank != T2 rank %s", "\n");
-        cytnx_uint64 TotalElem = shape1[0] * shape2[0];
+                        "[ERROR][Internal cuKron] T1 rank != T2 rank %s", "\n");
+
+
         std::vector<cytnx_uint64> new_shape_acc(shape1.size());
         std::vector<cytnx_uint64> shape1_acc(shape1.size());
         std::vector<cytnx_uint64> shape2_acc(shape2.size());
         new_shape_acc.back() = 1;
         shape1_acc.back() = 1;
         shape2_acc.back() = 1;
+        cytnx_uint64 TotalElem = shape1[0] * shape2[0];
 
         for (unsigned long long i = 1; i < new_shape_acc.size(); i++) {
           new_shape_acc[new_shape_acc.size() - 1 - i] = new_shape_acc[new_shape_acc.size() - i] *
@@ -45,1120 +81,1121 @@ namespace cytnx {
             shape2_acc[shape2_acc.size() - i] * shape2[shape2_acc.size() - i];
         }
 
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
-        for (unsigned long long i = 0; i < TotalElem; i++) {
-          cytnx_uint64 tmp = i, tmp2;
-          cytnx_uint64 x = 0, y = 0;
-          for (unsigned long long j = 0; j < new_shape_acc.size(); j++) {
-            tmp2 = tmp / new_shape_acc[j];
-            tmp %= new_shape_acc[j];
-            x += cytnx_uint64(tmp2 / shape2[j]) * shape1_acc[j];
-            y += cytnx_uint64(tmp2 % shape2[j]) * shape2_acc[j];
-          }
-          if constexpr (sizeof(TL) > sizeof(TR) or ((std::is_same<TL, cytnx_complex128>::value or
-                                                     std::is_same<TL, cytnx_complex64>::value) and
-                                                    !(std::is_same<TR, cytnx_complex128>::value or
-                                                      std::is_same<TR, cytnx_complex64>::value))) {
-            _out[i] = _Lin[x] * _Rin[y];
-          } else {
-            _out2[i] = _Lin[x] * _Rin[y];
-          }
-        }
-      }
+        int offset1 = new_shape_acc.size() + shape1_acc.size();
+        int offset2 = offset1+shape2_acc.size();
+        int offset3 = offset2+shape2.size();
+        
 
-    }  // namespace
+        cytnx_uint64* dshare_info = (cytnx_uint64*)utils_internal::cuMalloc_gpu((new_shape_acc.size()+shape1_acc.size()+shape2_acc.size()+shape2.size())*sizeof(cytnx_uint64));
+        cudaMemcpy(dshare_info,new_shape_acc.data(),new_shape_acc.size()*sizeof(cytnx_uint64),cudaMemcpyHostToDevice);
+        cudaMemcpy((char*)dshare_info +  new_shape_acc.size()*sizeof(cytnx_uint64),shape1_acc.data(),shape1_acc.size()*sizeof(cytnx_uint64),cudaMemcpyHostToDevice);
+        cudaMemcpy((char*)dshare_info + offset1*sizeof(cytnx_uint64)              ,shape2_acc.data(),shape2_acc.size()*sizeof(cytnx_uint64),cudaMemcpyHostToDevice);
+        cudaMemcpy((char*)dshare_info + offset2*sizeof(cytnx_uint64)              ,shape2.data(),shape2.size()*sizeof(cytnx_uint64),cudaMemcpyHostToDevice);
 
-    // Functions below are generated by ./generators/gen_Kron_internal.py
+        cytnx_uint64 NBlocks = TotalElem/_TNinB_KRON_;
+        if(TotalElem%_TNinB_KRON_) NBlocks += 1;
+        
 
+        cuKron_kernel<<<NBlocks,_TNinB_KRON_,offset3*sizeof(cytnx_uint64)>>>(_out,_Lin,_Rin, dshare_info, new_shape_acc.size(),
+                                                     offset1, offset2, offset3, TotalElem);
+
+
+        cudaFree(dshare_info);
+
+
+
+    }
+
+    
     // This function is generated by python script
-    void Kron_internal_cdtcd(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_cdtcd(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_complex128, cytnx_complex128>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cuDoubleComplex,cuDoubleComplex, cuDoubleComplex>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_cdtcf(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_cdtcf(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_complex128, cytnx_complex64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cuDoubleComplex, cuDoubleComplex, cuFloatComplex>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_cdtd(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_cdtd(boost::intrusive_ptr<Storage_base> &out,
                             const boost::intrusive_ptr<Storage_base> &Lin,
                             const boost::intrusive_ptr<Storage_base> &Rin,
                             const std::vector<cytnx_uint64> &shape1,
                             const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_complex128, cytnx_double>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cuDoubleComplex,cuDoubleComplex, cytnx_double>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_cdtf(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_cdtf(boost::intrusive_ptr<Storage_base> &out,
                             const boost::intrusive_ptr<Storage_base> &Lin,
                             const boost::intrusive_ptr<Storage_base> &Rin,
                             const std::vector<cytnx_uint64> &shape1,
                             const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_complex128, cytnx_float>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cuDoubleComplex,cuDoubleComplex, cytnx_float>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_cdti64(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_cdti64(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const std::vector<cytnx_uint64> &shape1,
                               const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_complex128, cytnx_int64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cuDoubleComplex,cuDoubleComplex, cytnx_int64>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_cdtu64(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_cdtu64(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const std::vector<cytnx_uint64> &shape1,
                               const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_complex128, cytnx_uint64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cuDoubleComplex,cuDoubleComplex, cytnx_uint64>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_cdti32(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_cdti32(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const std::vector<cytnx_uint64> &shape1,
                               const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_complex128, cytnx_int32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cuDoubleComplex,cuDoubleComplex, cytnx_int32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_cdtu32(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_cdtu32(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const std::vector<cytnx_uint64> &shape1,
                               const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_complex128, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cuDoubleComplex,cuDoubleComplex, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_cdti16(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_cdti16(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const std::vector<cytnx_uint64> &shape1,
                               const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_complex128, cytnx_int16>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cuDoubleComplex,cuDoubleComplex, cytnx_int16>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_cdtu16(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_cdtu16(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const std::vector<cytnx_uint64> &shape1,
                               const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_complex128, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cuDoubleComplex,cuDoubleComplex, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_cdtb(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_cdtb(boost::intrusive_ptr<Storage_base> &out,
                             const boost::intrusive_ptr<Storage_base> &Lin,
                             const boost::intrusive_ptr<Storage_base> &Rin,
                             const std::vector<cytnx_uint64> &shape1,
                             const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_complex128, bool>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cuDoubleComplex,cuDoubleComplex, bool>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_cftcd(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_cftcd(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_complex64, cytnx_complex128>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cuDoubleComplex,cuFloatComplex, cuDoubleComplex>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_cftcf(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_cftcf(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_complex64, cytnx_complex64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cuFloatComplex, cuFloatComplex, cuFloatComplex>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_cftd(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_cftd(boost::intrusive_ptr<Storage_base> &out,
                             const boost::intrusive_ptr<Storage_base> &Lin,
                             const boost::intrusive_ptr<Storage_base> &Rin,
                             const std::vector<cytnx_uint64> &shape1,
                             const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_complex64, cytnx_double>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cuFloatComplex, cuFloatComplex, cytnx_double>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_cftf(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_cftf(boost::intrusive_ptr<Storage_base> &out,
                             const boost::intrusive_ptr<Storage_base> &Lin,
                             const boost::intrusive_ptr<Storage_base> &Rin,
                             const std::vector<cytnx_uint64> &shape1,
                             const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_complex64, cytnx_float>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cuFloatComplex, cuFloatComplex, cytnx_float>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_cfti64(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_cfti64(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const std::vector<cytnx_uint64> &shape1,
                               const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_complex64, cytnx_int64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cuFloatComplex, cuFloatComplex, cytnx_int64>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_cftu64(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_cftu64(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const std::vector<cytnx_uint64> &shape1,
                               const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_complex64, cytnx_uint64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cuFloatComplex, cuFloatComplex, cytnx_uint64>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_cfti32(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_cfti32(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const std::vector<cytnx_uint64> &shape1,
                               const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_complex64, cytnx_int32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cuFloatComplex, cuFloatComplex, cytnx_int32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_cftu32(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_cftu32(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const std::vector<cytnx_uint64> &shape1,
                               const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_complex64, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cuFloatComplex, cuFloatComplex, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_cfti16(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_cfti16(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const std::vector<cytnx_uint64> &shape1,
                               const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_complex64, cytnx_int16>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cuFloatComplex, cuFloatComplex, cytnx_int16>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_cftu16(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_cftu16(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const std::vector<cytnx_uint64> &shape1,
                               const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_complex64, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cuFloatComplex, cuFloatComplex, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_cftb(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_cftb(boost::intrusive_ptr<Storage_base> &out,
                             const boost::intrusive_ptr<Storage_base> &Lin,
                             const boost::intrusive_ptr<Storage_base> &Rin,
                             const std::vector<cytnx_uint64> &shape1,
                             const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_complex64, bool>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cuFloatComplex, cuFloatComplex, bool>(out, Lin, Rin, shape1, shape2);
     }
-
+    /*
     // This function is generated by python script
-    void Kron_internal_dtcd(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_dtcd(boost::intrusive_ptr<Storage_base> &out,
                             const boost::intrusive_ptr<Storage_base> &Lin,
                             const boost::intrusive_ptr<Storage_base> &Rin,
                             const std::vector<cytnx_uint64> &shape1,
                             const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_double, cytnx_complex128>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_double, cuDoubleComplex>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_dtcf(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_dtcf(boost::intrusive_ptr<Storage_base> &out,
                             const boost::intrusive_ptr<Storage_base> &Lin,
                             const boost::intrusive_ptr<Storage_base> &Rin,
                             const std::vector<cytnx_uint64> &shape1,
                             const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_double, cytnx_complex64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_double, cuFloatComplex>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_dtd(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_dtd(boost::intrusive_ptr<Storage_base> &out,
                            const boost::intrusive_ptr<Storage_base> &Lin,
                            const boost::intrusive_ptr<Storage_base> &Rin,
                            const std::vector<cytnx_uint64> &shape1,
                            const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_double, cytnx_double>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_double, cytnx_double>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_dtf(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_dtf(boost::intrusive_ptr<Storage_base> &out,
                            const boost::intrusive_ptr<Storage_base> &Lin,
                            const boost::intrusive_ptr<Storage_base> &Rin,
                            const std::vector<cytnx_uint64> &shape1,
                            const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_double, cytnx_float>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_double, cytnx_float>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_dti64(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_dti64(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_double, cytnx_int64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_double, cytnx_int64>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_dtu64(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_dtu64(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_double, cytnx_uint64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_double, cytnx_uint64>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_dti32(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_dti32(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_double, cytnx_int32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_double, cytnx_int32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_dtu32(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_dtu32(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_double, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_double, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_dti16(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_dti16(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_double, cytnx_int16>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_double, cytnx_int16>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_dtu16(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_dtu16(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_double, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_double, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_dtb(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_dtb(boost::intrusive_ptr<Storage_base> &out,
                            const boost::intrusive_ptr<Storage_base> &Lin,
                            const boost::intrusive_ptr<Storage_base> &Rin,
                            const std::vector<cytnx_uint64> &shape1,
                            const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_double, bool>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_double, bool>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_ftcd(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_ftcd(boost::intrusive_ptr<Storage_base> &out,
                             const boost::intrusive_ptr<Storage_base> &Lin,
                             const boost::intrusive_ptr<Storage_base> &Rin,
                             const std::vector<cytnx_uint64> &shape1,
                             const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_float, cytnx_complex128>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_float, cuDoubleComplex>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_ftcf(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_ftcf(boost::intrusive_ptr<Storage_base> &out,
                             const boost::intrusive_ptr<Storage_base> &Lin,
                             const boost::intrusive_ptr<Storage_base> &Rin,
                             const std::vector<cytnx_uint64> &shape1,
                             const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_float, cytnx_complex64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_float, cuFloatComplex>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_ftd(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_ftd(boost::intrusive_ptr<Storage_base> &out,
                            const boost::intrusive_ptr<Storage_base> &Lin,
                            const boost::intrusive_ptr<Storage_base> &Rin,
                            const std::vector<cytnx_uint64> &shape1,
                            const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_float, cytnx_double>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_float, cytnx_double>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_ftf(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_ftf(boost::intrusive_ptr<Storage_base> &out,
                            const boost::intrusive_ptr<Storage_base> &Lin,
                            const boost::intrusive_ptr<Storage_base> &Rin,
                            const std::vector<cytnx_uint64> &shape1,
                            const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_float, cytnx_float>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_float, cytnx_float>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_fti64(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_fti64(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_float, cytnx_int64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_float, cytnx_int64>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_ftu64(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_ftu64(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_float, cytnx_uint64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_float, cytnx_uint64>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_fti32(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_fti32(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_float, cytnx_int32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_float, cytnx_int32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_ftu32(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_ftu32(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_float, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_float, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_fti16(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_fti16(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_float, cytnx_int16>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_float, cytnx_int16>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_ftu16(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_ftu16(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_float, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_float, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_ftb(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_ftb(boost::intrusive_ptr<Storage_base> &out,
                            const boost::intrusive_ptr<Storage_base> &Lin,
                            const boost::intrusive_ptr<Storage_base> &Rin,
                            const std::vector<cytnx_uint64> &shape1,
                            const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_float, bool>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_float, bool>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i64tcd(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i64tcd(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const std::vector<cytnx_uint64> &shape1,
                               const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int64, cytnx_complex128>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int64, cuDoubleComplex>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i64tcf(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i64tcf(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const std::vector<cytnx_uint64> &shape1,
                               const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int64, cytnx_complex64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int64, cuFloatComplex>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i64td(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i64td(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int64, cytnx_double>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int64, cytnx_double>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i64tf(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i64tf(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int64, cytnx_float>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int64, cytnx_float>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i64ti64(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i64ti64(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int64, cytnx_int64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int64, cytnx_int64>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i64tu64(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i64tu64(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int64, cytnx_uint64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int64, cytnx_uint64>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i64ti32(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i64ti32(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int64, cytnx_int32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int64, cytnx_int32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i64tu32(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i64tu32(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int64, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int64, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i64ti16(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i64ti16(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int64, cytnx_int16>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int64, cytnx_int16>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i64tu16(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i64tu16(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int64, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int64, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i64tb(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i64tb(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int64, bool>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int64, bool>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u64tcd(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u64tcd(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const std::vector<cytnx_uint64> &shape1,
                               const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint64, cytnx_complex128>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint64, cuDoubleComplex>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u64tcf(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u64tcf(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const std::vector<cytnx_uint64> &shape1,
                               const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint64, cytnx_complex64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint64, cuFloatComplex>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u64td(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u64td(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint64, cytnx_double>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint64, cytnx_double>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u64tf(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u64tf(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint64, cytnx_float>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint64, cytnx_float>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u64ti64(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u64ti64(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint64, cytnx_int64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint64, cytnx_int64>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u64tu64(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u64tu64(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint64, cytnx_uint64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint64, cytnx_uint64>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u64ti32(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u64ti32(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint64, cytnx_int32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint64, cytnx_int32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u64tu32(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u64tu32(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint64, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint64, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u64ti16(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u64ti16(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint64, cytnx_int16>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint64, cytnx_int16>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u64tu16(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u64tu16(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint64, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint64, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u64tb(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u64tb(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint64, bool>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint64, bool>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i32tcd(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i32tcd(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const std::vector<cytnx_uint64> &shape1,
                               const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int32, cytnx_complex128>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int32, cuDoubleComplex>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i32tcf(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i32tcf(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const std::vector<cytnx_uint64> &shape1,
                               const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int32, cytnx_complex64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int32, cuFloatComplex>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i32td(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i32td(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int32, cytnx_double>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int32, cytnx_double>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i32tf(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i32tf(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int32, cytnx_float>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int32, cytnx_float>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i32ti64(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i32ti64(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int32, cytnx_int64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int32, cytnx_int64>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i32tu64(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i32tu64(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int32, cytnx_uint64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int32, cytnx_uint64>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i32ti32(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i32ti32(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int32, cytnx_int32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int32, cytnx_int32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i32tu32(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i32tu32(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int32, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int32, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i32ti16(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i32ti16(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int32, cytnx_int16>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int32, cytnx_int16>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i32tu16(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i32tu16(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int32, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int32, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i32tb(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i32tb(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int32, bool>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int32, bool>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u32tcd(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u32tcd(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const std::vector<cytnx_uint64> &shape1,
                               const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint32, cytnx_complex128>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint32, cuDoubleComplex>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u32tcf(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u32tcf(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const std::vector<cytnx_uint64> &shape1,
                               const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint32, cytnx_complex64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint32, cuFloatComplex>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u32td(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u32td(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint32, cytnx_double>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint32, cytnx_double>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u32tf(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u32tf(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint32, cytnx_float>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint32, cytnx_float>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u32ti64(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u32ti64(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint32, cytnx_int64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint32, cytnx_int64>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u32tu64(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u32tu64(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint32, cytnx_uint64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint32, cytnx_uint64>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u32ti32(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u32ti32(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint32, cytnx_int32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint32, cytnx_int32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u32tu32(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u32tu32(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint32, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint32, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u32ti16(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u32ti16(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint32, cytnx_int16>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint32, cytnx_int16>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u32tu16(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u32tu16(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint32, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint32, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u32tb(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u32tb(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint32, bool>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint32, bool>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i16tcd(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i16tcd(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const std::vector<cytnx_uint64> &shape1,
                               const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int16, cytnx_complex128>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int16, cuDoubleComplex>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i16tcf(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i16tcf(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const std::vector<cytnx_uint64> &shape1,
                               const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int16, cytnx_complex64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int16, cuFloatComplex>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i16td(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i16td(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int16, cytnx_double>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int16, cytnx_double>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i16tf(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i16tf(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int16, cytnx_float>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int16, cytnx_float>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i16ti64(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i16ti64(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int16, cytnx_int64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int16, cytnx_int64>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i16tu64(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i16tu64(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int16, cytnx_uint64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int16, cytnx_uint64>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i16ti32(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i16ti32(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int16, cytnx_int32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int16, cytnx_int32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i16tu32(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i16tu32(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int16, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int16, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i16ti16(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i16ti16(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int16, cytnx_int16>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int16, cytnx_int16>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i16tu16(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i16tu16(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int16, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int16, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_i16tb(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_i16tb(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_int16, bool>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_int16, bool>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u16tcd(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u16tcd(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const std::vector<cytnx_uint64> &shape1,
                               const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint32, cytnx_complex128>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint32, cuDoubleComplex>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u16tcf(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u16tcf(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const std::vector<cytnx_uint64> &shape1,
                               const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint32, cytnx_complex64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint32, cuFloatComplex>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u16td(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u16td(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint32, cytnx_double>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint32, cytnx_double>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u16tf(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u16tf(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint32, cytnx_float>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint32, cytnx_float>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u16ti64(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u16ti64(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint32, cytnx_int64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint32, cytnx_int64>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u16tu64(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u16tu64(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint32, cytnx_uint64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint32, cytnx_uint64>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u16ti32(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u16ti32(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint32, cytnx_int32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint32, cytnx_int32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u16tu32(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u16tu32(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint32, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint32, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u16ti16(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u16ti16(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint32, cytnx_int16>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint32, cytnx_int16>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u16tu16(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u16tu16(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const std::vector<cytnx_uint64> &shape1,
                                const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint32, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint32, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_u16tb(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_u16tb(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<cytnx_uint32, bool>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<cytnx_uint32, bool>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_btcd(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_btcd(boost::intrusive_ptr<Storage_base> &out,
                             const boost::intrusive_ptr<Storage_base> &Lin,
                             const boost::intrusive_ptr<Storage_base> &Rin,
                             const std::vector<cytnx_uint64> &shape1,
                             const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<bool, cytnx_complex128>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<bool, cuDoubleComplex>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_btcf(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_btcf(boost::intrusive_ptr<Storage_base> &out,
                             const boost::intrusive_ptr<Storage_base> &Lin,
                             const boost::intrusive_ptr<Storage_base> &Rin,
                             const std::vector<cytnx_uint64> &shape1,
                             const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<bool, cytnx_complex64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<bool, cuFloatComplex>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_btd(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_btd(boost::intrusive_ptr<Storage_base> &out,
                            const boost::intrusive_ptr<Storage_base> &Lin,
                            const boost::intrusive_ptr<Storage_base> &Rin,
                            const std::vector<cytnx_uint64> &shape1,
                            const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<bool, cytnx_double>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<bool, cytnx_double>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_btf(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_btf(boost::intrusive_ptr<Storage_base> &out,
                            const boost::intrusive_ptr<Storage_base> &Lin,
                            const boost::intrusive_ptr<Storage_base> &Rin,
                            const std::vector<cytnx_uint64> &shape1,
                            const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<bool, cytnx_float>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<bool, cytnx_float>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_bti64(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_bti64(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<bool, cytnx_int64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<bool, cytnx_int64>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_btu64(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_btu64(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<bool, cytnx_uint64>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<bool, cytnx_uint64>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_bti32(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_bti32(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<bool, cytnx_int32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<bool, cytnx_int32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_btu32(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_btu32(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<bool, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<bool, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_bti16(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_bti16(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<bool, cytnx_int16>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<bool, cytnx_int16>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_btu16(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_btu16(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &Lin,
                              const boost::intrusive_ptr<Storage_base> &Rin,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<bool, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<bool, cytnx_uint32>(out, Lin, Rin, shape1, shape2);
     }
 
     // This function is generated by python script
-    void Kron_internal_btb(boost::intrusive_ptr<Storage_base> &out,
+    void cuKron_internal_btb(boost::intrusive_ptr<Storage_base> &out,
                            const boost::intrusive_ptr<Storage_base> &Lin,
                            const boost::intrusive_ptr<Storage_base> &Rin,
                            const std::vector<cytnx_uint64> &shape1,
                            const std::vector<cytnx_uint64> &shape2) {
-      Kron_general<bool, bool>(out, Lin, Rin, shape1, shape2);
+      cuKron_general<bool, bool>(out, Lin, Rin, shape1, shape2);
     }
+    */
+
   }  // namespace linalg_internal
 }  // namespace cytnx
