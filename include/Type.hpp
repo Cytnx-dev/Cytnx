@@ -155,9 +155,13 @@ namespace cytnx {
     unsigned int cy_typeid(const cytnx_uint16 &rc) const{ return Type_class::Uint16; }
     unsigned int cy_typeid(const cytnx_int16 &rc) const{ return Type_class::Int16; }
     unsigned int cy_typeid(const cytnx_bool &rc) const{ return Type_class::Bool; }
+
+    unsigned int type_promote(const unsigned int &typeL, const unsigned int &typeR);
+
   };
   /// @endcond
 
+  int type_promote(const int &typeL, const int &typeR);
 
   extern Type_class Type; // move to cytnx.hpp and guarded
   //static const Type_class Type = Type_class();

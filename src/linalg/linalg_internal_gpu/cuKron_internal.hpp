@@ -124,7 +124,7 @@ namespace cytnx {
                             const boost::intrusive_ptr<Storage_base> &inR,
                             const std::vector<cytnx_uint64> &shape1,
                             const std::vector<cytnx_uint64> &shape2);
-    /*
+    
     void cuKron_internal_dtcd(boost::intrusive_ptr<Storage_base> &out,
                             const boost::intrusive_ptr<Storage_base> &inL,
                             const boost::intrusive_ptr<Storage_base> &inR,
@@ -292,7 +292,7 @@ namespace cytnx {
                              const boost::intrusive_ptr<Storage_base> &inR,
                              const std::vector<cytnx_uint64> &shape1,
                              const std::vector<cytnx_uint64> &shape2);
-
+    
     void cuKron_internal_u64tcd(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &inL,
                               const boost::intrusive_ptr<Storage_base> &inR,
@@ -628,7 +628,7 @@ namespace cytnx {
                            const boost::intrusive_ptr<Storage_base> &inR,
                            const std::vector<cytnx_uint64> &shape1,
                            const std::vector<cytnx_uint64> &shape2);
-    */
+    
   }  // namespace linalg_internal
 }  // namespace cytnx
 

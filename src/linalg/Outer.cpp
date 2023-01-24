@@ -25,7 +25,7 @@ namespace cytnx {
 
       std::vector<cytnx_uint64> new_shape = {Tl.shape()[0], Tr.shape()[0]};
 
-      Tensor out(new_shape, Tl.dtype() < Tr.dtype() ? Tl.dtype() : Tr.dtype(), Tl.device());
+      Tensor out(new_shape,Type.type_promote(Tl.dtype(),Tr.dtype()), Tl.device());
       cytnx_uint64 j1, j2;
       j1 = Tl.shape()[0];
       j2 = Tr.shape()[0];
