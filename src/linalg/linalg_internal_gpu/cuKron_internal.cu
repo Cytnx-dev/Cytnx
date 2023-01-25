@@ -1,12 +1,13 @@
 #include "linalg/linalg_internal_gpu/cuKron_internal.hpp"
 #include "utils/utils_internal_interface.hpp"
+#include "utils/utils.hpp"
 #include "utils/utils_internal_gpu/cuAlloc_gpu.hpp"
 #include <algorithm>
 
 #include "cytnx_error.hpp"
 #include "Type.hpp"
 #include "lapack_wrapper.hpp"
-
+#include <iostream>
 
 namespace cytnx {
 
@@ -20,6 +21,7 @@ namespace cytnx {
             extern __shared__ cytnx_uint64 info[];
 
 
+
             // copy data into shared mem:
             if(threadIdx.x <offset3){
                 info[threadIdx.x] = meta_infos[threadIdx.x];
@@ -30,18 +32,20 @@ namespace cytnx {
             //cytnx_uint64 *shape1_acc = &info[len_nsa];
             //cytnx_uint64 *shape2_acc = &info[offset1];
             //cytnx_uint64 *shape2 = &info[offset2];
+
+            
             
             if(blockIdx.x*blockDim.x + threadIdx.x < Nelem){
                 cytnx_uint64 tmp = blockIdx.x*blockDim.x + threadIdx.x;
                 cytnx_uint64 tmp2;
                 cytnx_uint64 x = 0, y = 0;
-                for(int j = 0; j < len_nsa; j++) {
+                for(cytnx_uint64 j = 0; j < len_nsa; j++) {
                     tmp2 = tmp / info[j];
                     tmp %= info[j];
                     x += cytnx_uint64(tmp2 / info[offset2+j]) * info[len_nsa+j];
                     y += cytnx_uint64(tmp2 % info[offset2+j]) * info[offset1+j];
                 }
-                out[tmp] = Lin[x] * Rin[y];
+                out[blockIdx.x*blockDim.x + threadIdx.x] = Lin[x] * Rin[y];
             }
 
     }
@@ -85,17 +89,16 @@ namespace cytnx {
         int offset2 = offset1+shape2_acc.size();
         int offset3 = offset2+shape2.size();
         
-
         cytnx_uint64* dshare_info = (cytnx_uint64*)utils_internal::cuMalloc_gpu((new_shape_acc.size()+shape1_acc.size()+shape2_acc.size()+shape2.size())*sizeof(cytnx_uint64));
-        cudaMemcpy(dshare_info,new_shape_acc.data(),new_shape_acc.size()*sizeof(cytnx_uint64),cudaMemcpyHostToDevice);
-        cudaMemcpy((char*)dshare_info +  new_shape_acc.size()*sizeof(cytnx_uint64),shape1_acc.data(),shape1_acc.size()*sizeof(cytnx_uint64),cudaMemcpyHostToDevice);
-        cudaMemcpy((char*)dshare_info + offset1*sizeof(cytnx_uint64)              ,shape2_acc.data(),shape2_acc.size()*sizeof(cytnx_uint64),cudaMemcpyHostToDevice);
-        cudaMemcpy((char*)dshare_info + offset2*sizeof(cytnx_uint64)              ,shape2.data(),shape2.size()*sizeof(cytnx_uint64),cudaMemcpyHostToDevice);
+        checkCudaErrors(cudaMemcpy(dshare_info,&new_shape_acc[0],new_shape_acc.size()*sizeof(cytnx_uint64),cudaMemcpyHostToDevice));
+        checkCudaErrors(cudaMemcpy((char*)dshare_info +  new_shape_acc.size()*sizeof(cytnx_uint64),shape1_acc.data(),shape1_acc.size()*sizeof(cytnx_uint64),cudaMemcpyHostToDevice));
+        checkCudaErrors(cudaMemcpy((char*)dshare_info + offset1*sizeof(cytnx_uint64)              ,shape2_acc.data(),shape2_acc.size()*sizeof(cytnx_uint64),cudaMemcpyHostToDevice));
+        checkCudaErrors(cudaMemcpy((char*)dshare_info + offset2*sizeof(cytnx_uint64)              ,shape2.data(),shape2.size()*sizeof(cytnx_uint64),cudaMemcpyHostToDevice));
 
         cytnx_uint64 NBlocks = TotalElem/_TNinB_KRON_;
         if(TotalElem%_TNinB_KRON_) NBlocks += 1;
         
-
+        cudaDeviceSynchronize();
         cuKron_kernel<<<NBlocks,_TNinB_KRON_,offset3*sizeof(cytnx_uint64)>>>(_out,_Lin,_Rin, dshare_info, new_shape_acc.size(),
                                                      offset1, offset2, offset3, TotalElem);
 
