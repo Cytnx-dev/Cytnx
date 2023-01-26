@@ -13,22 +13,9 @@ namespace cytnx {
   namespace linalg_internal {
 
     /// cuTensordot
-    void cuTensordot_internal_cd(boost::intrusive_ptr<Storage_base> &out,
-                                 const boost::intrusive_ptr<Storage_base> &Lin,
-                                 const boost::intrusive_ptr<Storage_base> &Rin,
-                                 const unsigned long long &len, const bool &is_conj);
-    void cuTensordot_internal_cf(boost::intrusive_ptr<Storage_base> &out,
-                                 const boost::intrusive_ptr<Storage_base> &Lin,
-                                 const boost::intrusive_ptr<Storage_base> &Rin,
-                                 const unsigned long long &len, const bool &is_conj);
-    void cuTensordot_internal_d(boost::intrusive_ptr<Storage_base> &out,
-                                const boost::intrusive_ptr<Storage_base> &Lin,
-                                const boost::intrusive_ptr<Storage_base> &Rin,
-                                const unsigned long long &len, const bool &is_conj);
-    void cuTensordot_internal_f(boost::intrusive_ptr<Storage_base> &out,
-                                const boost::intrusive_ptr<Storage_base> &Lin,
-                                const boost::intrusive_ptr<Storage_base> &Rin,
-                                const unsigned long long &len, const bool &is_conj);
+    void cuTensordot_internal_cd(Tensor &out,
+                                 const Tensor &Lin,
+                                 const Tensor &Rin, const std::vector<cytnx_uint64> &idxl, const std::vector<cytnx_uint64> &idxr);
 
     
 

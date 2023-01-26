@@ -92,6 +92,13 @@ ifeq ($(GPU_Enable),1)
    INCFLAGS+=-I$(CUTENSOR_ROOT)/include
    LDFLAGS+= $(CUTENSOR_ROOT)/lib/11/libcutensor_static.a
   endif
+  
+  ifeq ($(CUQN_Enable),1)
+   CCFLAGS += -DUNI_CUQUANTUM
+   INCFLAGS+=-I$(CUQUANTUM_ROOT)/include
+   LDFLAGS+= $(CUQUANTUM_ROOT)/lib/libcutensornet_static.a
+   LDFLAGS+= $(CUQUANTUM_ROOT)/lib/libcustatevec_static.a
+  endif
 
   CCFLAGS += -I$(CUDA_PATH)/include -DUNI_GPU
   ALL_CCFLAGS += $(NVFLAGS)

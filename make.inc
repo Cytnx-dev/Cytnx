@@ -31,6 +31,10 @@ CUTT_Enable=0
 CUTN_Enable=1
 CUTENSOR_ROOT=/usr/local/libcutensor-1.6.2.3
 
+## compile with cuQuantum library:
+CUQN_Enable=0
+CUQUANTUM_ROOT=/usr/local/cuquantum-22.11.0.13
+
 
 ## compile with MAGMA library:
 MAGMA_Enable=0

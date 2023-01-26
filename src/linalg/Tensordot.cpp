@@ -44,13 +44,6 @@ namespace cytnx {
           std::vector<cytnx_uint64> inv_mapperL, inv_mapperR;
           std::vector<cytnx_uint64> oldshapeL, oldshapeR;
 
-          // check if two tensor has same data, to prevent conflict!
-          if (cacheL && cacheR) {
-            cytnx_error_msg(Tl.same_data(Tr),
-                            "[ERROR] tensordot with both mv_elem options = True cannot have both two "
-                            "input tensors to be the same.%s",
-                            "\n");
-          }
           if (cacheL) {
             // calculate reverse mapper:
             inv_mapperL.resize(mapperL.size());
@@ -110,6 +103,15 @@ namespace cytnx {
         "\n");
       cytnx_error_msg(Tl.device() != Tr.device(),
                       "[ERROR] two tensor for Tensordot cannot on different devices.%s", "\n");
+
+      // check if two tensor has same data, to prevent conflict!
+      if (cacheL && cacheR) {
+        cytnx_error_msg(Tl.same_data(Tr),
+                        "[ERROR] tensordot with both mv_elem options = True cannot have both two "
+                        "input tensors to be the same.%s",
+                        "\n");
+      }
+
 
       Tensor out;
 

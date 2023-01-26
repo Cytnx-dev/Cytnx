@@ -66,7 +66,8 @@ option(USE_HPTT "Build Cytnx with HPTT" OFF)
 option(RUN_TESTS "Run Cytnx tests" OFF)
 option(USE_CUTT "Build Cytnx with CUTT" OFF)
 option(USE_MAGMA "Build Cytnx with MAGMA (required CUDA)" ON)
-option(USE_CUTENSOR "Build Cytnx with CUTENSOR (required CUDA)" ON)
+option(USE_CUTENSOR "Build Cytnx with CuTensor (required CUDA)" ON)
+option(USE_CUQUANTUM "Build Cytnx with CUQuantum (required CUDA)" ON)
 
 
 if (USE_ICPC)
@@ -367,6 +368,18 @@ if(USE_CUDA)
     endif()
 
   endif()
+  
+  if(USE_CUQUANTUM)
+    find_package(CUQUANTUM REQUIRED)
+    if(CUQUANTUM_FOUND)
+        target_compile_definitions(cytnx PUBLIC UNI_CUQUANTUM)
+        target_include_directories(cytnx PRIVATE ${CUQUANTUM_INCLUDE_DIRS})
+        target_link_libraries(cytnx PRIVATE ${CUQUANTUM_LIBRARIES})
+    else()
+        message(FATAL_ERROR "cannot find cuquantum! please specify cuquantum root with -DCUQUANTUM_ROOT")
+    endif()
+
+  endif()
 
 
 
@@ -619,7 +632,13 @@ if(USE_CUDA)
         FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUTENSOR_LIBRARIES} -ldl\n" "") # use > to indicate special rt processing 
         message( STATUS "CuTensor: libdir:${CUTENSOR_LIBRARY_DIRS} incdir:${CUTENSOR_INCLUDE_DIRS} libs:${CUTENSOR_LIBRARIES}")
   endif()
-
+  
+  if(USE_CUQUANTUM)
+        message( STATUS "Build with CuQuantum: YES")
+        FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_CUQUANTUM\n" "")
+        FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUQUANTUM_LIBRARIES} -ldl\n" "") # use > to indicate special rt processing 
+        message( STATUS "CuQuantum: libdir:${CUQUANTUM_LIBRARY_DIRS} incdir:${CUQUANTUM_INCLUDE_DIRS} libs:${CUQUANTUM_LIBRARIES}")
+  endif()
 else()
 
   message( STATUS " Build CUDA Support: NO")
