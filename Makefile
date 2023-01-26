@@ -90,7 +90,7 @@ ifeq ($(GPU_Enable),1)
   ifeq ($(CUTN_Enable),1)
    CCFLAGS += -DUNI_CUTENSOR
    INCFLAGS+=-I$(CUTENSOR_ROOT)/include
-   LDFLAGS+= -L$(CUTENSOR_ROOT)/lib/11/libcutensor_static.a
+   LDFLAGS+= $(CUTENSOR_ROOT)/lib/11/libcutensor_static.a
   endif
 
   CCFLAGS += -I$(CUDA_PATH)/include -DUNI_GPU
@@ -104,7 +104,7 @@ endif
 
 ALL_LDFLAGS :=
 ifeq ($(GPU_Enable),1)
-  LDFLAGS += -lcublas -lcusolver -lcurand -lcudart -lcusparse #$(MAGMA_PATH)/lib/libmagma.a $(MAGMA_PATH)/lib/libmagma_sparse.a
+  LDFLAGS += -lcublasLt -lcublas -lcusolver -lcurand -lcudart -lcusparse #$(MAGMA_PATH)/lib/libmagma.a $(MAGMA_PATH)/lib/libmagma_sparse.a
   ALL_LDFLAGS += $(addprefix -Xlinker , $(LDFLAGS)) 
   ALL_LDFLAGS += -L$(CUDA_PATH)/lib64
   LDFLAGS += -L$(CUDA_PATH)/lib64 

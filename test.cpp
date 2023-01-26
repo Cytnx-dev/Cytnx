@@ -35,6 +35,14 @@ int main(int argc, char *argv[]) {
   //pp();
   //pp();
   //pp();
+  cytnx_uint64 DATA = 10423;
+   
+  cytnx_double IONE = 1;
+
+  cytnx_double OUT = *((cytnx_double*)&DATA) * IONE;
+
+  cout << *((cytnx_uint64*)&OUT) << endl; return 0;
+
 
   auto SZ = physics::pauli('z').real();//.to(Device.cuda)
   auto SX = physics::pauli('x').real();//.to(Device.cuda)
@@ -45,6 +53,15 @@ int main(int argc, char *argv[]) {
   SZ.to_(Device.cuda);
   SX.to_(Device.cuda);
   print(linalg::Kron(SZ,SX));
+
+  auto Tg = arange(2*3*4*5*6).reshape(2,3,4,5,6);
+  print(Tg);
+  auto Tgcpup = Tg.permute(1,4,0,3,2).contiguous();
+  auto Tggpup = Tg.to(Device.cuda).permute(1,4,0,3,2).contiguous();
+
+  cout << Tgcpup;
+  cout << Tggpup;
+
 
   return 0;
   //Tensor Tg = zeros({3,6},Type.ComplexDouble);
