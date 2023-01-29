@@ -68,7 +68,7 @@ endif
 ifeq ($(HPTT_Enable),1)
   CCFLAGS += -DUNI_HPTT 
   INCFLAGS+= -I$(HPTT_PATH)/include
-  LDFLAGS += $(HPTT_PATH)/lib/libhptt.a
+  LDFLAGS += $(HPTT_PATH)/lib/libhptt.so
 endif
 
 ifeq ($(MAGMA_Enable),1)
