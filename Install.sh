@@ -113,6 +113,16 @@ FLAG="${FLAG} -DMAGMA_ROOT=${MAGMA_ROOT} "
 CUTENSOR_ROOT=/usr/local/libcutensor-1.6.2.3
 FLAG="${FLAG} -DUSE_CUTENSOR=ON "
 FLAG="${FLAG} -DCUTENSOR_ROOT=${CUTENSOR_ROOT} "
+#-----------------------------------
+# 6-e) CuQuantum (DEFALT = on)
+# [Note] set to "=off" will 
+# [Note] CUQUANTUM_ROOT is required to given, either from enviroment variable in bashrc
+#        or given in the following line using -DCUTENSOR_ROOT
+CUQUANTUM_ROOT=/usr/local/cuqunatum-......
+FLAG="${FLAG} -DUSE_CUQUANTUM=OFF "
+#FLAG="${FLAG} -DCUQUANTUM_ROOT=${CUQUANTUM_ROOT} "
+
+
 
 #=========================================================
 # 7) Generate compile_commands.json (DEFAULT =off):
@@ -137,7 +147,7 @@ FLAG="${FLAG} -DUSE_OMP=OFF "
 #=========================================================
 # [Note] Wheather to run cytnx tests (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG} -DRUN_TESTS=OFF "
+FLAG="${FLAG} -DRUN_TESTS=ON "
 #-----------------------------------
 
 
@@ -151,8 +161,8 @@ FLAG="${FLAG} -DUSE_ICPC=OFF "
 
 
 echo ${FLAG}
-# rm -rf build
-# mkdir build
+rm -rf build
+mkdir build
 cd build
 cmake ../ ${FLAG}
 #make -j6

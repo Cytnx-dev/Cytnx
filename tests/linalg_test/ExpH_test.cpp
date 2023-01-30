@@ -54,7 +54,7 @@ TEST(ExpH_UT, UTCompareWithScipyExpH){
   //convert to UT
   UniTensor UT = UniTensor(t_i);
   UT.set_rowrank(2);
-  UT.set_labels(["a","b","c","d"]);
+  UT.set_labels({"a","b","c","d"});
     
   
   double dt = 0.05;
@@ -66,7 +66,7 @@ TEST(ExpH_UT, UTCompareWithScipyExpH){
 
 
   //checking data:
-  UTFin.reshape_(4,4);
+  UTFin.reshape_({4,4});
   Tensor &t_f = UTFin.get_block_();
   for (int i = 0; i < 16; i++) {
     int x = i / 4, y = i % 4;

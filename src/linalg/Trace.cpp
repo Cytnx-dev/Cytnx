@@ -93,6 +93,7 @@ namespace cytnx {
         for (cytnx_uint64 i = 0; i < Tn.shape().size(); i++) {
           if (i != ax1 && i != ax2) remain_rank_id.push_back(i);
         }
+        //std::cout << "entry Trace" << std::endl;
         if(Tn.device()==Device.cpu) linalg_internal::lii.Trace_ii[Tn.dtype()](false, out,Tn,Ndiag,Nelem,Nomp,accu,remain_rank_id,shape,ax1,ax2);
         else{
             cytnx_error_msg(true,"[ERROR][Trace] GPU is under developing.%s","\n");

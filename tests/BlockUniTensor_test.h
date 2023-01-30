@@ -8,9 +8,9 @@ using namespace cytnx;
 
 class BlockUniTensorTest : public ::testing::Test {
  public:
-  Bond B1 = Bond(BD_IN, {Qs(0), Qs(1)}, {1, 2});
+  Bond B1 = Bond(BD_IN, {Qs(0)>>1, Qs(1)>>2});
   Bond B2 = Bond(BD_IN, {Qs(0), Qs(1)}, {3, 4});
-  Bond B3 = Bond(BD_OUT, {Qs(0), Qs(1)}, {2, 3});
+  Bond B3 = Bond(BD_OUT, {Qs(0)>>2, Qs(1)>>3});
   Bond B4 = Bond(BD_OUT, {Qs(0), Qs(1)}, {1, 2});
   UniTensor BUT1 = UniTensor({B1, B2, B3, B4});
 

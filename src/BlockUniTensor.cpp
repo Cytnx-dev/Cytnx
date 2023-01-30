@@ -976,8 +976,14 @@ namespace cytnx {
         
     }else{
         for(cytnx_int64 i=0;i<this->_blocks.size();i++){
+            //std::cout << "blk: " << i << std::endl;
             if(this->_inner_to_outer_idx[i][ida] == this->_inner_to_outer_idx[i][idb]){
+                //cout << "start trace" << endl;
+                //cout << this->_blocks[i] << endl; 
+                //cout << ida << " " << idb << endl;
+                //cout << this->_blocks[i].Trace(ida,idb) << endl;
                 new_blocks.push_back(this->_blocks[i].Trace(ida,idb));
+                //cout << "after trace" << endl;
                 new_itoi.push_back(this->_inner_to_outer_idx[i]);
                 new_itoi.back().erase(new_itoi.back().begin() + idb);
                 new_itoi.back().erase(new_itoi.back().begin() + ida);
