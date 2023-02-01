@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
   //pp();
   //pp();
   //pp();
-  /*
+  
   Bond B1p = Bond(BD_IN, {Qs(-1), Qs(0), Qs(1)}, {2, 1, 2});
   Bond B2p = Bond(BD_OUT, {Qs(-1), Qs(0), Qs(1)}, {4, 3, 4});
   Bond B3p = Bond(BD_IN, {Qs(-1), Qs(0), Qs(2)}, {1, 1, 1});
@@ -44,17 +44,29 @@ int main(int argc, char *argv[]) {
   UniTensor BUT4 = UniTensor({B1p, B2p, B3p, B4p});
   UniTensor BUtrT4 = UniTensor({B2p, B3p});
 
-  auto tmpa = BUT4.Trace(0,3);
-  
-  return 0;
-  for(size_t j=1;j<=11;j++)
-      for(size_t k=1;k<=3;k++)
-        if(BUtrT4.at({j-1,k-1}).exists()){
-          cout << "OPK" << endl;
-          //cout << (Scalar(tmpa.at({j-1,k-1})-BUtrT4.at({j-1,k-1})).abs()<1e-5) << endl;
-        }
 
-  */
+  Bond B1 = Bond(BD_IN, {Qs(0)>>1, Qs(1)>>2});
+  Bond B2 = Bond(BD_IN, {Qs(0), Qs(1)}, {3, 4});
+  Bond B3 = Bond(BD_OUT, {Qs(0)>>2, Qs(1)>>3});
+  Bond B4 = Bond(BD_OUT, {Qs(0), Qs(1)}, {1, 2});
+  UniTensor BUT1 = UniTensor({B1, B2, B3, B4});
+
+  BUT1.Trace(-1,2);
+  return 0;
+
+
+  auto tmpa = BUT4.Trace(0,3);
+
+  //BUtrT4.print_diagram();
+  //BUtrT4.print_blocks(false);  
+  for(size_t j=1;j<=11;j++)
+      for(size_t k=1;k<=3;k++){
+        if(BUtrT4.at({j-1,k-1}).exists()){
+          //cout << "OPK" << endl;
+          cout << (Scalar(tmpa.at({j-1,k-1})-BUtrT4.at({j-1,k-1})).abs()<1e-5) << endl;
+        }
+      }
+  return 0;
 
   auto TA1 = arange(40).reshape(2,5,2,2);
   /*
@@ -369,16 +381,6 @@ int main(int argc, char *argv[]) {
   */
 
   return 0;
-  Bond B1 = Bond(BD_IN, {Qs(0), Qs(1)}, {3, 4});
-  Bond B2 = Bond(BD_IN, {Qs(0), Qs(1)}, {5, 6});
-  Bond B3 = Bond(BD_OUT, {Qs(0), Qs(1)}, {2, 3});
-  Bond B4 = Bond(BD_OUT, {Qs(0), Qs(1)}, {7, 1});
-
-  auto UTB = UniTensor({B1, B2, B3, B4});
-
-  UTB.print_diagram();
-  UTB.print_blocks(false);
-
   /*
   Sp.print_diagram(true);
   Sp.print_blocks(false);

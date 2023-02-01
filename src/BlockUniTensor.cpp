@@ -929,6 +929,9 @@ namespace cytnx {
     cytnx_int64 idb = b;
 
     // check if indices are the same:
+    cytnx_error_msg(a < 0 || b < 0, "[ERROR] invalid index a, b%s", "\n");
+    cytnx_error_msg(a >= this->rank() || b >= this->rank(), "[ERROR] index out of bound%s", "\n");
+
     cytnx_error_msg(ida == idb,
                     "[ERROR][BlockUniTensor::Trace_] index a and index b should not be the same.%s",
                     "\n");
