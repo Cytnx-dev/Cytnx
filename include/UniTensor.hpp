@@ -2704,6 +2704,15 @@ namespace cytnx {
       this->_impl->set_labels(new_labels);
       return *this;
     }
+    UniTensor &set_labels(const std::initializer_list<char> &new_labels){
+      std::vector<char> new_lbls(new_labels);
+      std::vector<std::string> vs(new_lbls.size());
+      transform(new_lbls.begin(),new_lbls.end(), vs.begin(),[](char x) -> std::string { return std::string(1,x); });
+
+      this->_impl->set_labels(vs);
+      return *this;
+
+    }
     UniTensor &set_labels(const std::initializer_list<char*> &new_labels) {
       std::vector<char*> new_lbls(new_labels);
       std::vector<std::string> vs(new_lbls.size());

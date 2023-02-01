@@ -57,6 +57,18 @@ int main(int argc, char *argv[]) {
   */
 
   auto TA1 = arange(40).reshape(2,5,2,2);
+  /*
+  auto UTU = UniTensor(TA1);
+  cytnx::UniTensor I_UT = cytnx::UniTensor(ones(2,TA1.dtype()), true, -1);
+  I_UT.set_labels({"0","3"});
+  UTU.print_diagram();
+  I_UT.print_diagram();
+  //return 0;
+  auto OTT = UTU.contract(I_UT);
+  std::cout << OTT << std::endl;
+  OTT.print_diagram();
+  //std::cout << I_UT << std::endl;
+  */
   std::cout << TA1.Trace(0,3) << std::endl;
 
   return 0;

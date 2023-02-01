@@ -33,15 +33,11 @@ namespace cytnx {
                  const std::vector<cytnx_uint64> &remain_rank_id, const std::vector<cytnx_int64> &shape,
                  const cytnx_uint64 &ax1, const cytnx_uint64 &ax2){
      
-    cytnx::UniTensor I_UT = cytnx::UniTensor(eye(Ndiag), false, -1);
+    cytnx::UniTensor I_UT = cytnx::UniTensor(eye(Ndiag,Tn.dtype()), false, -1);
 
-    I_UT.set_labels({"0", "1"});
     UniTensor UTn = UniTensor(Tn, false, 2);
-    UTn.set_labels(vec_cast<cytnx_uint64, cytnx_int64>(vec_range(100, 100 + UTn.labels().size())));
-    // UTn.set_label(ax1, "0");
-    // UTn.set_label(ax2, "1");
-    UTn._impl->_labels[ax1]="0";
-    UTn._impl->_labels[ax2]="1";
+    I_UT.set_labels({UTn._impl->_labels[ax1],UTn._impl->_labels[ax2]});
+
     out = Contract(I_UT, UTn).get_block_();
 
     // std::vector<cytnx_uint64> indexer(Tn.shape().size(), 0);
@@ -77,7 +73,8 @@ namespace cytnx {
      for (int i = 1; i < Nomp; i++) buffer[0] += buffer[i];
      out.storage().at<T>({0}) = buffer[0];
   }
-
+    
+  /*
   template <class T>
   void _trace_nd_para(Tensor &out, const Tensor &Tn, const cytnx_uint64 &Ndiag, const int &Nomp,
                       const cytnx_uint64 &Nelem, const std::vector<cytnx_uint64> &accu,
@@ -117,7 +114,7 @@ namespace cytnx {
             indexers[remain_rank_id[x]] = cytnx_uint64(tmp / accu[x]);
             tmp %= accu[x];
           }
-
+          std::cout << omp_get_thread_num() << " " << i << Nelem << std::endl;
           for (cytnx_uint64 d = 0; d < Ndiag; d++) {
             indexers[ax1] = indexers[ax2] = d;
             out.storage().at<T>(i) += Tn.at<T>(indexers);
@@ -127,6 +124,7 @@ namespace cytnx {
       }// end omp para
     }// end if switch 
   }
+  [Deprecated] */
 #endif
 
 
@@ -144,7 +142,7 @@ namespace cytnx {
             #endif            
         }else{
             #ifdef UNI_OMP
-                _trace_nd_para<cytnx_complex128>(out,Tn,Ndiag,Nomp, Nelem,accu,remain_rank_id, shape, ax1, ax2);
+                _trace_nd<cytnx_complex128>(out,Tn,Ndiag,Nelem,accu,remain_rank_id, shape, ax1, ax2);
             #else
                 _trace_nd<cytnx_complex128>(out,Tn,Ndiag,Nelem,accu,remain_rank_id, shape, ax1, ax2);
             #endif
@@ -166,7 +164,7 @@ namespace cytnx {
             #endif            
         }else{
             #ifdef UNI_OMP
-                _trace_nd_para<cytnx_complex64>(out,Tn,Ndiag,Nomp, Nelem,accu,remain_rank_id, shape, ax1, ax2);
+                _trace_nd<cytnx_complex64>(out,Tn,Ndiag,Nelem,accu,remain_rank_id, shape, ax1, ax2);
             #else
                 _trace_nd<cytnx_complex64>(out,Tn,Ndiag,Nelem,accu,remain_rank_id, shape, ax1, ax2);
             #endif
@@ -188,7 +186,7 @@ namespace cytnx {
             #endif            
         }else{
             #ifdef UNI_OMP
-                _trace_nd_para<cytnx_double>(out,Tn,Ndiag,Nomp, Nelem,accu,remain_rank_id, shape, ax1, ax2);
+                _trace_nd<cytnx_double>(out,Tn,Ndiag,Nelem,accu,remain_rank_id, shape, ax1, ax2);
             #else
                 _trace_nd<cytnx_double>(out,Tn,Ndiag,Nelem,accu,remain_rank_id, shape, ax1, ax2);
             #endif
@@ -210,7 +208,7 @@ namespace cytnx {
             #endif            
         }else{
             #ifdef UNI_OMP
-                _trace_nd_para<cytnx_float>(out,Tn,Ndiag,Nomp, Nelem,accu,remain_rank_id, shape, ax1, ax2);
+                _trace_nd<cytnx_float>(out,Tn,Ndiag,Nelem,accu,remain_rank_id, shape, ax1, ax2);
             #else
                 _trace_nd<cytnx_float>(out,Tn,Ndiag,Nelem,accu,remain_rank_id, shape, ax1, ax2);
             #endif
@@ -232,7 +230,7 @@ namespace cytnx {
             #endif            
         }else{
             #ifdef UNI_OMP
-                _trace_nd_para<cytnx_uint64>(out,Tn,Ndiag,Nomp, Nelem,accu,remain_rank_id, shape, ax1, ax2);
+                _trace_nd<cytnx_uint64>(out,Tn,Ndiag,Nelem,accu,remain_rank_id, shape, ax1, ax2);
             #else
                 _trace_nd<cytnx_uint64>(out,Tn,Ndiag,Nelem,accu,remain_rank_id, shape, ax1, ax2);
             #endif
@@ -254,7 +252,7 @@ namespace cytnx {
             #endif            
         }else{
             #ifdef UNI_OMP
-                _trace_nd_para<cytnx_int64>(out,tn,ndiag,nomp, nelem,accu,remain_rank_id, shape, ax1, ax2);
+                _trace_nd<cytnx_int64>(out,tn,ndiag,nelem,accu,remain_rank_id, shape, ax1, ax2);
             #else
                 _trace_nd<cytnx_int64>(out,tn,ndiag,nelem,accu,remain_rank_id, shape, ax1, ax2);
             #endif
@@ -276,7 +274,7 @@ namespace cytnx {
             #endif            
         }else{
             #ifdef UNI_OMP
-                _trace_nd_para<cytnx_uint32>(out,tn,ndiag,nomp, nelem,accu,remain_rank_id, shape, ax1, ax2);
+                _trace_nd<cytnx_uint32>(out,tn,ndiag,nelem,accu,remain_rank_id, shape, ax1, ax2);
             #else
                 _trace_nd<cytnx_uint32>(out,tn,ndiag,nelem,accu,remain_rank_id, shape, ax1, ax2);
             #endif
@@ -299,7 +297,7 @@ namespace cytnx {
             #endif            
         }else{
             #ifdef UNI_OMP
-                _trace_nd_para<cytnx_int32>(out,tn,ndiag,nomp, nelem,accu,remain_rank_id, shape, ax1, ax2);
+                _trace_nd<cytnx_int32>(out,tn,ndiag,nelem,accu,remain_rank_id, shape, ax1, ax2);
             #else
                 _trace_nd<cytnx_int32>(out,tn,ndiag,nelem,accu,remain_rank_id, shape, ax1, ax2);
             #endif
@@ -321,7 +319,7 @@ namespace cytnx {
             #endif            
         }else{
             #ifdef UNI_OMP
-                _trace_nd_para<cytnx_uint16>(out,tn,ndiag,nomp, nelem,accu,remain_rank_id, shape, ax1, ax2);
+                _trace_nd<cytnx_uint16>(out,tn,ndiag,nelem,accu,remain_rank_id, shape, ax1, ax2);
             #else
                 _trace_nd<cytnx_uint16>(out,tn,ndiag,nelem,accu,remain_rank_id, shape, ax1, ax2);
             #endif
@@ -343,7 +341,7 @@ namespace cytnx {
             #endif            
         }else{
             #ifdef UNI_OMP
-                _trace_nd_para<cytnx_int16>(out,tn,ndiag,nomp, nelem,accu,remain_rank_id, shape, ax1, ax2);
+                _trace_nd<cytnx_int16>(out,tn,ndiag,nelem,accu,remain_rank_id, shape, ax1, ax2);
             #else
                 _trace_nd<cytnx_int16>(out,tn,ndiag,nelem,accu,remain_rank_id, shape, ax1, ax2);
             #endif
