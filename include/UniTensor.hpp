@@ -113,7 +113,7 @@ namespace cytnx {
     void set_label(const std::string &oldlbl, const std::string &new_label) {
       cytnx_int64 idx;
       auto res = std::find(this->_labels.begin(), this->_labels.end(), oldlbl);
-      cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %d not exists.\n", oldlbl);
+      cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %s not exists.\n", oldlbl);
       idx = std::distance(this->_labels.begin(), res);
 
       cytnx_error_msg(idx >= this->_labels.size(), "[ERROR] index exceed the rank of UniTensor%s",
@@ -174,7 +174,7 @@ namespace cytnx {
       cytnx_int64 idx;
       if (by_label) {
         auto res = std::find(this->_labels.begin(), this->_labels.end(), std::to_string(inx));
-        cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %d not exists.\n", inx);
+        cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %s not exists.\n", inx);
         idx = std::distance(this->_labels.begin(), res);
       } else {
         idx = inx;

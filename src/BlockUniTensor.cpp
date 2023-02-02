@@ -892,6 +892,7 @@ namespace cytnx {
     // modify tag, and reverse qnum:
     for (int i = 0; i < this->bonds().size(); i++) {
       this->bonds()[i].redirect_();
+      this->bonds()[i].qnums() = this->bonds()[i].calc_reverse_qnums();
     }
 
   };

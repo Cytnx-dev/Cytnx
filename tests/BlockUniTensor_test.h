@@ -29,12 +29,20 @@ class BlockUniTensorTest : public ::testing::Test {
   Bond B3p = Bond(BD_IN, {Qs(-1), Qs(0), Qs(2)}, {1, 1, 1});
   Bond B4p = Bond(BD_OUT, {Qs(-1), Qs(0), Qs(1)}, {2, 1, 2});
   UniTensor BUT4 = UniTensor({B1p, B2p, B3p, B4p});
+  UniTensor BUconjT4 = UniTensor({B1p, B2p, B3p, B4p});
   UniTensor BUtrT4 = UniTensor({B2p, B3p});
+
+  Bond bd_sym_f =
+    Bond(BD_KET, {{0, 2}, {1, 5}, {1, 6}, {0, 1}}, {4, 7, 2, 3}, {Symmetry::Zn(2), Symmetry::U1()});
+  Bond bd_sym_g =
+    Bond(BD_BRA, {{0, 2}, {1, 5}, {1, 6}, {0, 1}}, {4, 7, 2, 3}, {Symmetry::Zn(2), Symmetry::U1()});
+  UniTensor BUT5 = UniTensor({bd_sym_f, bd_sym_g});
 
  protected:
   void SetUp() override {
-    BUT4.Load("OriginalBUT.cytnx");
-    BUtrT4.Load("BUtrT.cytnx");
+    BUT4 = BUT4.Load("OriginalBUT.cytnx");
+    BUconjT4 = BUconjT4.Load("BUconjT.cytnx");
+    BUtrT4 = BUtrT4.Load("BUtrT.cytnx");
     // cytnx::vec_print(std::cout, BUT4.labels());
     // cytnx::vec_print(std::cout, BUtrT4.labels());
   }
