@@ -43,8 +43,6 @@ class BlockUniTensorTest : public ::testing::Test {
     BUT4 = BUT4.Load("OriginalBUT.cytnx");
     BUconjT4 = BUconjT4.Load("BUconjT.cytnx");
     BUtrT4 = BUtrT4.Load("BUtrT.cytnx");
-    // cytnx::vec_print(std::cout, BUT4.labels());
-    // cytnx::vec_print(std::cout, BUtrT4.labels());
   }
   void TearDown() override {}
 };

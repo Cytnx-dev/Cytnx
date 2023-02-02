@@ -376,6 +376,7 @@ namespace cytnx {
     */
     Bond& redirect_(){
         this->set_type(bondType(int(this->type()) * -1));
+        return *this;
     }
 
 

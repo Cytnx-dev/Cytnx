@@ -161,7 +161,9 @@ namespace cytnx {
     else           out = (inL + inR) % (this->n);
 
   }
-  void cytnx::ZnSymmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) { out = in * -1; }
+  void cytnx::ZnSymmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) { 
+    out = -in<0?-in+this->n:-in;
+  }
 
   void cytnx::ZnSymmetry::print_info() const {
     cout << "--------------------\n";
