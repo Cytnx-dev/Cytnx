@@ -28,6 +28,7 @@ target_sources_local(cytnx
     iSub_internal.hpp
     Svd_internal.hpp
     Tridiag_internal.hpp
+    Trace_internal.hpp
     Vectordot_internal.hpp
     Pow_internal.hpp
     Abs_internal.hpp
@@ -35,6 +36,9 @@ target_sources_local(cytnx
     Sum_internal.hpp
     Det_internal.hpp
     Lstsq_internal.hpp
+    
+    Axpy_internal.hpp
+    Ger_internal.hpp
 
     Add_internal.cpp
     iAdd_internal.cpp
@@ -58,6 +62,7 @@ target_sources_local(cytnx
     Mod_internal.cpp
     Outer_internal.cpp
     Kron_internal.cpp
+    Trace_internal.cpp
     Tridiag_internal.cpp
     Sub_internal.cpp
     iSub_internal.cpp
@@ -71,6 +76,9 @@ target_sources_local(cytnx
     Sum_internal.cpp
     Det_internal.cpp
     Lstsq_internal.cpp
+
+    Axpy_internal.cpp
+    Ger_internal.cpp
 )
 
 

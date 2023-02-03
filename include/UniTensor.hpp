@@ -110,10 +110,10 @@ namespace cytnx {
     const std::string &name() const { return this->_name; }
     cytnx_uint64 rank() const { return this->_labels.size(); }
     void set_name(const std::string &in) { this->_name = in; }
-    void set_label(const std::string &inx, const std::string &new_label) {
+    void set_label(const std::string &oldlbl, const std::string &new_label) {
       cytnx_int64 idx;
-      auto res = std::find(this->_labels.begin(), this->_labels.end(), inx);
-      cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %d not exists.\n", inx);
+      auto res = std::find(this->_labels.begin(), this->_labels.end(), oldlbl);
+      cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %s not exists.\n", oldlbl);
       idx = std::distance(this->_labels.begin(), res);
 
       cytnx_error_msg(idx >= this->_labels.size(), "[ERROR] index exceed the rank of UniTensor%s",
@@ -132,7 +132,22 @@ namespace cytnx {
       this->_labels[idx] = new_label;
     }
     void set_label(const cytnx_int64 &inx, const std::string &new_label) {
-      set_label(std::to_string(inx), new_label);
+      cytnx_error_msg(inx < 0 , "[ERROR] index is negative%s",
+                      "\n");
+      cytnx_error_msg(inx >= this->_labels.size(), "[ERROR] index exceed the rank of UniTensor%s",
+                      "\n");
+      // check in:
+      bool is_dup = false;
+      for (cytnx_uint64 i = 0; i < this->_labels.size(); i++) {
+        if (i == inx) continue;
+        if (new_label == this->_labels[i]) {
+          is_dup = true;
+          break;
+        }
+      }
+      cytnx_error_msg(is_dup, "[ERROR] alreay has a label that is the same as the input label%s",
+                      "\n");
+      this->_labels[inx] = new_label;
     }
     /**
      * @brief Set the label object
@@ -143,7 +158,7 @@ namespace cytnx {
      * @param new_label
      */
     void set_label(const cytnx_int64 &inx, const cytnx_int64 &new_label) {
-      set_label(std::to_string(inx), std::to_string(new_label));
+      set_label(inx, std::to_string(new_label));
     }
     /**
      * @brief Set the label object
@@ -159,26 +174,14 @@ namespace cytnx {
       cytnx_int64 idx;
       if (by_label) {
         auto res = std::find(this->_labels.begin(), this->_labels.end(), std::to_string(inx));
-        cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %d not exists.\n", inx);
+        cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %s not exists.\n", inx);
         idx = std::distance(this->_labels.begin(), res);
       } else {
         idx = inx;
       }
+     
+      set_label(idx,new_label);
 
-      cytnx_error_msg(idx >= this->_labels.size(), "[ERROR] index exceed the rank of UniTensor%s",
-                      "\n");
-      // check in:
-      bool is_dup = false;
-      for (cytnx_uint64 i = 0; i < this->_labels.size(); i++) {
-        if (i == idx) continue;
-        if (new_label == this->_labels[i]) {
-          is_dup = true;
-          break;
-        }
-      }
-      cytnx_error_msg(is_dup, "[ERROR] alreay has a label that is the same as the input label%s",
-                      "\n");
-      this->_labels[idx] = new_label;
     }
     /**
      * @brief Set the labels object
@@ -423,6 +426,8 @@ namespace cytnx {
     virtual void group_basis_();
     virtual const std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx) const;
     virtual std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx);
+    virtual const vec2d<cytnx_uint64> & get_itoi() const;
+    virtual vec2d<cytnx_uint64> & get_itoi();
 
 
     virtual void _save_dispatch(std::fstream &f) const;
@@ -1002,6 +1007,13 @@ namespace cytnx {
     }
     std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx){
         cytnx_error_msg(true,"[ERROR] get_qindices can only be unsed on UniTensor with Symmetry.%s","\n");
+    }
+
+    const vec2d<cytnx_uint64> & get_itoi() const{
+        cytnx_error_msg(true,"[ERROR] get_itoi can only be unsed on UniTensor with Symmetry.%s","\n");
+    }
+    vec2d<cytnx_uint64> & get_itoi(){
+        cytnx_error_msg(true,"[ERROR] get_itoi can only be unsed on UniTensor with Symmetry.%s","\n");
     }
 
 
@@ -1712,6 +1724,12 @@ namespace cytnx {
     std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx){
         cytnx_error_msg(true,"[ERROR][SparseUniTensor] get_qindices can only be unsed on BlockUniTensor.%s","\n");
     }
+    const vec2d<cytnx_uint64> & get_itoi() const{
+        cytnx_error_msg(true,"[ERROR][SparseUniTensor] get_itoi can only be unsed on BlockUniTensor with Symmetry.%s","\n");
+    }
+    vec2d<cytnx_uint64> & get_itoi(){
+        cytnx_error_msg(true,"[ERROR][SparseUniTensor] get_itoi can only be unsed on BlockUniTensor with Symmetry.%s","\n");
+    }
 
 
     // end virtual func
@@ -2357,6 +2375,14 @@ namespace cytnx {
         return this->_inner_to_outer_idx[bidx];
     }
 
+    const vec2d<cytnx_uint64> & get_itoi() const{
+        return this->_inner_to_outer_idx;
+    }
+    vec2d<cytnx_uint64> & get_itoi(){
+        return this->_inner_to_outer_idx;
+    }
+
+
 
   };
   //======================================================================
@@ -2536,6 +2562,7 @@ namespace cytnx {
               const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
               const int &device = Device.cpu, const bool &is_diag = false) {
       std::vector<std::string> vs;
+      cytnx_warning_msg(true,"[Deprecated warning] specify label with integers will be depreated soon. use string instead.%s","\n");
       for (int i = 0; i < (int)in_labels.size(); i++) vs.push_back(std::to_string(in_labels[i]));
       this->Init(bonds, vs, rowrank, dtype, device, is_diag);
     }
@@ -2597,6 +2624,42 @@ namespace cytnx {
       return *this;
     }
 
+    UniTensor &set_label(const cytnx_int64 &idx, const char* new_label){
+      this->_impl->set_label(idx, std::string(new_label));
+      return *this;
+    }
+
+    /**
+    @brief set a new label for bond to replace one of the current label.
+    @param old_label the current label of the bond.
+    @param new_label the new label that is assign to the bond.
+
+    [Note]
+        the new assign label cannot be the same as the label of any other bonds in the UniTensor.
+        ( cannot have duplicate labels )
+
+    */
+    UniTensor &set_label(const std::string &old_label, const std::string &new_label) {
+      this->_impl->set_label(old_label, new_label);
+      return *this;
+    }
+
+    UniTensor &set_label(const char* old_label, const std::string &new_label) {
+      this->_impl->set_label(std::string(old_label), new_label);
+      return *this;
+    }
+ 
+    UniTensor &set_label(const std::string &old_label, const char* new_label) {
+      this->_impl->set_label(old_label, std::string(new_label));
+      return *this;
+    }
+
+    UniTensor &set_label(const char* old_label, const char* new_label) {
+      this->_impl->set_label(std::string(old_label), std::string(new_label));
+      return *this;
+    }
+
+
     /**
     @brief change a new label for bond with original label.
     @param old_lbl the original label of the bond that to be replaced.
@@ -2641,6 +2704,24 @@ namespace cytnx {
       this->_impl->set_labels(new_labels);
       return *this;
     }
+    UniTensor &set_labels(const std::initializer_list<char> &new_labels){
+      std::vector<char> new_lbls(new_labels);
+      std::vector<std::string> vs(new_lbls.size());
+      transform(new_lbls.begin(),new_lbls.end(), vs.begin(),[](char x) -> std::string { return std::string(1,x); });
+
+      this->_impl->set_labels(vs);
+      return *this;
+
+    }
+    UniTensor &set_labels(const std::initializer_list<char*> &new_labels) {
+      std::vector<char*> new_lbls(new_labels);
+      std::vector<std::string> vs(new_lbls.size());
+      transform(new_lbls.begin(),new_lbls.end(), vs.begin(),[](char * x) -> std::string { return std::string(x); });
+ 
+      this->_impl->set_labels(vs);
+      return *this;
+    }
+
     UniTensor &set_rowrank(const cytnx_uint64 &new_rowrank) {
       this->_impl->set_rowrank(new_rowrank);
       return *this;
@@ -2747,7 +2828,7 @@ namespace cytnx {
      * @return UniTensor
      */
     UniTensor relabel(const cytnx_int64 &inx, const cytnx_int64 &new_label,
-                      const bool &by_label) const {
+                      const bool &by_label=false) const {
       UniTensor out;
       out._impl = this->_impl->relabel(inx, new_label, by_label);
       return out;
@@ -2757,9 +2838,9 @@ namespace cytnx {
       out._impl = this->_impl->relabel(inx, new_label);
       return out;
     }
-    UniTensor relabel(const cytnx_int64 &inx, const cytnx_int64 &new_label) const {
+    UniTensor relabel(const std::string &old_label, const std::string &new_label) const {
       UniTensor out;
-      out._impl = this->_impl->relabel(inx, new_label);
+      out._impl = this->_impl->relabel(old_label, new_label);
       return out;
     }
 
@@ -2775,7 +2856,7 @@ namespace cytnx {
     /**
      * @brief
      *
-     * @deprecated
+     * @bylabel will be deprecated! 
      *
      * @param mapper
      * @param rowrank
@@ -2798,6 +2879,16 @@ namespace cytnx {
       out._impl = this->_impl->permute(mapper, rowrank);
       return out;
     }
+    UniTensor permute( const std::initializer_list<char*> &mapper, const cytnx_int64 &rowrank= -1){
+        std::vector<char*> mprs = mapper;
+        std::vector<std::string> vs(mprs.size());
+        transform(mprs.begin(),mprs.end(),vs.begin(),[](char * x) -> std::string { return std::string(x); });
+
+        return this->permute(vs,rowrank);
+    }
+
+    
+
     /**
      * @brief
      *
@@ -2814,6 +2905,14 @@ namespace cytnx {
     void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1) {
       this->_impl->permute_(mapper, rowrank);
     }
+    void permute_( const std::initializer_list<char*> &mapper, const cytnx_int64 &rowrank= -1){
+        std::vector<char*> mprs = mapper;
+        std::vector<std::string> vs(mprs.size());
+        transform(mprs.begin(),mprs.end(),vs.begin(),[](char * x) -> std::string { return std::string(x); });
+
+        this->permute_(vs,rowrank);
+    }
+
     //void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) {
     //  this->_impl->permute_(mapper, rowrank);
     //}
@@ -3323,6 +3422,22 @@ namespace cytnx {
     std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx){
         return this->_impl->get_qindices(bidx);
     }
+
+    
+
+    /**
+    @brief get the q-indices on each leg for all the blocks 
+    @return 
+        [2d vector]
+
+    */
+    const vec2d<cytnx_uint64> & get_itoi() const{
+        return this->_impl->get_itoi();
+    }
+    vec2d<cytnx_uint64> & get_itoi(){
+        return this->_impl->get_itoi();
+    }
+
 
 
     /// @cond

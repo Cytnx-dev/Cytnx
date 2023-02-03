@@ -84,9 +84,14 @@ namespace cytnx {
       const std::vector<cytnx_int64> &trucate_dim = std::vector<cytnx_int64>());
 
     template <typename T>
-    cytnx::UniTensor ExpH(const cytnx::UniTensor &Tin, const T &a = 1, const T &b = 0);
+    cytnx::UniTensor ExpH(const cytnx::UniTensor &Tin, const T &a, const T &b = 0);
     template <typename T>
-    cytnx::UniTensor ExpM(const cytnx::UniTensor &Tin, const T &a = 1, const T &b = 0);
+    cytnx::UniTensor ExpM(const cytnx::UniTensor &Tin, const T &a, const T &b = 0);
+
+    cytnx::UniTensor ExpH(const cytnx::UniTensor &Tin);
+    cytnx::UniTensor ExpM(const cytnx::UniTensor &Tin);
+
+
     cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const cytnx_int64 &a = 0,
                            const cytnx_int64 &b = 1);
     cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const std::string &a, const std::string &b);
@@ -293,7 +298,7 @@ namespace cytnx {
 
         1. the first tensor is the orthomormal matrix [Q], a 2-d tensor (matrix)
         2. the second tensor is the right-upper triangular matrix [R], a 2-d tensor (matrix).
-        3. the third tensor is the Householder reflectors [H], a 1-d tensor (matrix). It only return
+        3. the third tensor is the Householder reflectors [H], a 1-d tensor (vector). It only return
     when is_tau=true.
     */
     std::vector<Tensor> Qr(const Tensor &Tin, const bool &is_tau = false);
@@ -765,7 +770,8 @@ namespace cytnx {
     */
     template <typename T>
     Tensor ExpH(const Tensor &in, const T &a, const T &b =0);
-
+    Tensor ExpH(const Tensor &in);
+    
 
 
     // ExpM:
@@ -782,6 +788,10 @@ namespace cytnx {
         perform matrix exponential with \f$O = \exp{aM + b}\f$.
 
     */
+    template <typename T>
+    Tensor ExpM(const Tensor &in, const T &a, const T &b = 0);
+
+    Tensor ExpM(const Tensor &in);
 
     // Lanczos:
     //===========================================
@@ -842,10 +852,8 @@ namespace cytnx {
                                    const double &CvgCrit = 1.0e-14,
                                    const unsigned int &Maxiter = 10000, const cytnx_uint64 &k = 1,
                                    const bool &is_V = true, const bool &is_row = false,
-                                   const cytnx_uint32 &max_krydim = 0, const bool &verbose = false);
+                                   const cytnx_uint32 &max_krydim = 4, const bool &verbose = false);
 
-    template <typename T>
-    Tensor ExpM(const Tensor &in, const T &a = 1, const T &b = 0);
 
     // Lanczos:
     //===========================================
@@ -962,6 +970,51 @@ namespace cytnx {
     [Ke]
     */
     std::vector<Tensor> Lstsq(const Tensor &A, const Tensor &b, const float &rcond = -1);
+
+
+    /**
+    @brief Blas Axpy, performing return = a*x + y 
+    @param a Scalar. 
+    @param x Tensor, can be any rank
+    @param y Tensor, can be any rank
+    @return
+        [Tensor]
+
+    #description:
+        This function performs a*x+y where x,y are Tensor and a is a Scalar. The dtype of return 
+        Tensor will be the strongest among x,y and a.
+
+        If y is not specify, then it performs a*x -> return 
+
+    #[Note]
+        This will return a new tensor. 
+
+    */
+    Tensor Axpy(const Scalar &a, const Tensor &x, const Tensor &y = Tensor());
+    
+    void Axpy_(const Scalar &a, const Tensor &x, Tensor &y);
+
+    /**
+    @brief Blas Ger, performing return = a*vec(x)*vec(y)^T 
+    @param x Tensor, rank-1 with size nx
+    @param y Tensor, rank-1 with size ny
+    @param a Scalar, if not provided a = 1. 
+    @return
+        [Tensor with shape (nx,ny)]
+
+    #description:
+        This function performs a*x*y^T where x,y are rank-1 Tensor with dimension nx and ny respectively; and a is a Scalar. The dtype of return 
+        Tensor will be the strongest among x,y and a.
+
+
+    #[Note]
+        This will return a new tensor. 
+
+    */
+    Tensor Ger(const Tensor &x, const Tensor &y, const Scalar &a=Scalar());
+    
+
+
 
   }  // namespace linalg
 

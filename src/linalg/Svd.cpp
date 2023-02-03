@@ -5,7 +5,7 @@
 #include "algo.hpp"
 #include <iostream>
 #include <vector>
-
+#include <string>
 using namespace std;
 namespace cytnx {
   namespace linalg {
@@ -96,7 +96,7 @@ namespace cytnx {
         vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
         tmps.clear();
         vector<string> oldlabel = Tin.labels();
-
+        
         // collapse as Matrix:
         cytnx_int64 rowdim = 1;
         for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tmp.shape()[i];
@@ -107,25 +107,17 @@ namespace cytnx {
 
         int t = 0;
         outCyT.resize(outT.size());
-
+        
         // s
         cytnx::UniTensor &Cy_S = outCyT[t];
         cytnx::Bond newBond(outT[t].shape()[0]);
-        // cytnx_int64 newlbl = -1;
-        // for (int i = 0; i < oldlabel.size(); i++) {
-        //   if (oldlabel[i] <= newlbl) newlbl = oldlabel[i] - 1;
-        // }
-        string newlbl = "newlbl";
-        for (int i = 0; i < oldlabel.size(); i++) {
-          if (oldlabel[i] == newlbl) newlbl = newlbl + "new";
-        }
-        // Cy_S.Init({newBond, newBond}, {newlbl, newlbl - 1}, 1, Type.Double, Device.cpu,
-        //           true);  // it is just reference so no hurt to alias ^^
-        Cy_S.Init({newBond, newBond}, {newlbl, newlbl + "new"}, 1, Type.Double, Device.cpu,
-                  true);  // it is just reference so no hurt to alias ^^
+        
+        Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")}, 1, Type.Double, Device.cpu,true);  // it is just reference so no hurt to alias ^^
+
         // cout << "[AFTER INIT]" << endl;
         Cy_S.put_block_(outT[t]);
         t++;
+        
         if (is_U) {
           cytnx::UniTensor &Cy_U = outCyT[t];
           vector<cytnx_int64> shapeU = vec_clone(oldshape, Tin.rowrank());
@@ -137,7 +129,6 @@ namespace cytnx {
           Cy_U.set_labels(labelU);
           t++;  // U
         }
-
         if (is_vT) {
           cytnx::UniTensor &Cy_vT = outCyT[t];
           vector<cytnx_int64> shapevT(Tin.rank() - Tin.rowrank() + 1);
@@ -146,13 +137,14 @@ namespace cytnx {
 
           outT[t].reshape_(shapevT);
           Cy_vT.Init(outT[t], false, 1);
+          //cout << shapevT.size() << endl;
           vector<string> labelvT(shapevT.size());
           labelvT[0] = Cy_S.labels()[1];
-          memcpy(&labelvT[1], &oldlabel[Tin.rowrank()], sizeof(cytnx_int64) * (labelvT.size() - 1));
+          //memcpy(&labelvT[1], &oldlabel[Tin.rowrank()], sizeof(cytnx_int64) * (labelvT.size() - 1));
+          std::copy(oldlabel.begin() + Tin.rowrank(), oldlabel.end(), labelvT.begin()+1);
           Cy_vT.set_labels(labelvT);
           t++;  // vT
         }
-
         // if tag, then update  the tagging informations
         if (Tin.is_tag()) {
           Cy_S.tag();
@@ -258,14 +250,6 @@ namespace cytnx {
         //std::vector<UniTensor> outCyT;
 
         vector<string> oldlabel = ipt.labels();
-        // cytnx_int64 newlbl = -1;
-        // for (int i = 0; i < oldlabel.size(); i++) {
-        //   if (oldlabel[i] <= newlbl) newlbl = oldlabel[i] - 1;
-        // }
-        string newlbl = "newlbl";
-        for (int i = 0; i < oldlabel.size(); i++) {
-          if (oldlabel[i] == newlbl) newlbl = newlbl + "new";
-        }
 
         // s
         SparseUniTensor *tmps = new SparseUniTensor();
@@ -274,7 +258,7 @@ namespace cytnx {
         //   Device.cpu, /* type and device does not matter here, cauz we are going to not alloc*/
         //   true, true);
         tmps->Init(
-          {comm_bdi, comm_bdo}, {newlbl, newlbl + "new"}, 1, Type.Double,
+          {comm_bdi, comm_bdo}, {std::string("_aux_L"),std::string("_aux_R")}, 1, Type.Double,
           Device.cpu, /* type and device does not matter here, cauz we are going to not alloc*/
           true, true);
         // check:
@@ -290,7 +274,7 @@ namespace cytnx {
         if (is_U) {
           SparseUniTensor *tmpu = new SparseUniTensor();
           std::vector<string> LBLS = vec_clone(oldlabel, ipt.rowrank());
-          LBLS.push_back(newlbl);
+          LBLS.push_back(s.labels()[0]);
           tmpu->Init(
             Ubds, LBLS, ipt.rowrank(), Type.Double,
             Device.cpu, /* type and device does not matter here, cauz we are going to not alloc*/
@@ -310,9 +294,8 @@ namespace cytnx {
           SparseUniTensor *tmpv = new SparseUniTensor();
           std::vector<string> LBLS(ipt.rank() - ipt.rowrank() + 1);  // old_label,ipt.rowrank());
           // LBLS[0] = newlbl - 1;
-          LBLS[0] = newlbl + "new";
-          memcpy(&LBLS[1], &oldlabel[ipt.rowrank()],
-                 sizeof(cytnx_int64) * (ipt.rank() - ipt.rowrank()));
+          LBLS[0] = s.labels()[1];
+          std::copy(oldlabel.begin()+ipt.rowrank(), oldlabel.end(), LBLS.begin()+1);
 
           tmpv->Init(
             vTbds, LBLS, 1, Type.Double,

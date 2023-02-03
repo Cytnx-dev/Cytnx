@@ -1,12 +1,183 @@
 #include "cytnx.hpp"
 #include <complex>
 
+#include "mkl.h"
+//#include "magma_v2.h"
+//#include "magma_lapack.h"
+
+
 using namespace std;
 using namespace cytnx;
 
 typedef cytnx::Accessor ac;
 
+
+void pp(){
+    Type.getname(Type.Double);
+}
+
+
 int main(int argc, char *argv[]) {
+  /*
+  Scalar Sas = Scalar();
+  print(Sas.dtype());
+  print(Sas);
+
+
+  Tensor rx = arange(10)+1;
+  Tensor ry = arange(10)(ac("::-1"))+1;
+
+  print(rx);
+  print(ry);
+  
+  print(linalg::Ger(rx,ry));
+  */  
+  //pp();
+  //pp();
+  //pp();
+  
+  Bond B1p = Bond(BD_IN, {Qs(-1), Qs(0), Qs(1)}, {2, 1, 2});
+  Bond B2p = Bond(BD_OUT, {Qs(-1), Qs(0), Qs(1)}, {4, 3, 4});
+  Bond B3p = Bond(BD_IN, {Qs(-1), Qs(0), Qs(2)}, {1, 1, 1});
+  Bond B4p = Bond(BD_OUT, {Qs(-1), Qs(0), Qs(1)}, {2, 1, 2});
+ 
+  UniTensor BUT4 = UniTensor({B1p, B2p, B3p, B4p});
+  auto TT44 = BUT4.Trace(0,3);
+  TT44.print_diagram();
+  TT44.print_blocks();
+  return 0;
+
+  UniTensor BUtrT4 = UniTensor({B2p, B3p});
+
+
+  Bond B1 = Bond(BD_IN, {Qs(0)>>1, Qs(1)>>2});
+  Bond B2 = Bond(BD_IN, {Qs(0), Qs(1)}, {3, 4});
+  Bond B3 = Bond(BD_OUT, {Qs(0)>>2, Qs(1)>>3});
+  Bond B4 = Bond(BD_OUT, {Qs(0), Qs(1)}, {1, 2});
+  UniTensor BUT1 = UniTensor({B1, B2, B3, B4});
+
+  //BUT1.Trace(-1,2);
+  //return 0;
+
+
+  auto tmpa = BUT4.Trace(0,3);
+  BUT4.Transpose();
+
+  return 0;
+  //BUtrT4.print_diagram();
+  //BUtrT4.print_blocks(false);  
+  for(size_t j=1;j<=11;j++)
+      for(size_t k=1;k<=3;k++){
+        if(BUtrT4.at({j-1,k-1}).exists()){
+          //cout << "OPK" << endl;
+          cout << (Scalar(tmpa.at({j-1,k-1})-BUtrT4.at({j-1,k-1})).abs()<1e-5) << endl;
+        }
+      }
+  return 0;
+
+  auto TA1 = arange(40).reshape(2,5,2,2);
+  /*
+  auto UTU = UniTensor(TA1);
+  cytnx::UniTensor I_UT = cytnx::UniTensor(ones(2,TA1.dtype()), true, -1);
+  I_UT.set_labels({"0","3"});
+  UTU.print_diagram();
+  I_UT.print_diagram();
+  //return 0;
+  auto OTT = UTU.contract(I_UT);
+  std::cout << OTT << std::endl;
+  OTT.print_diagram();
+  //std::cout << I_UT << std::endl;
+  */
+  std::cout << TA1.Trace(0,3) << std::endl;
+
+  return 0;
+  cytnx_uint64 DATA = 10423;
+   
+  cytnx_double IONE = 1;
+
+  cytnx_double OUT = *((cytnx_double*)&DATA) * IONE;
+
+  cout << *((cytnx_uint64*)&OUT) << endl; return 0;
+
+
+  auto SZ = physics::pauli('z').real();//.to(Device.cuda)
+  auto SX = physics::pauli('x').real();//.to(Device.cuda)
+  //return 0;
+  print(SZ);
+  print(SX);
+  print(linalg::Kron(SZ,SX));
+  SZ.to_(Device.cuda);
+  SX.to_(Device.cuda);
+  print(linalg::Kron(SZ,SX));
+
+  auto Tg = arange(2*3*4*5*6).reshape(2,3,4,5,6);
+  print(Tg);
+  auto Tgcpup = Tg.permute(1,4,0,3,2).contiguous();
+  auto Tggpup = Tg.to(Device.cuda).permute(1,4,0,3,2).contiguous();
+
+  cout << Tgcpup;
+  cout << Tggpup;
+
+
+  return 0;
+  //Tensor Tg = zeros({3,6},Type.ComplexDouble);
+  //Tensor Tgr = arange(18).reshape(3,6);
+  //Tensor Tgi = arange(18).reshape(3,6) + 4;
+
+  //cout << linalg::Svd_truncate(UniTensor(Tgr),2);
+  
+  //LAPACKE_zlacp2(LAPACK_ROW_MAJOR,'A',3,6, (double*)Tgr.storage().data(),6,(cytnx_complex128*)Tg.storage().data(),6);
+  //LAPACKE_zlacp2(LAPACK_ROW_MAJOR,'A',3,6, (double*)Tgr.storage().data(),6,(cytnx_complex128*)(&((cytnx_double*)Tg.storage().data())[1]),6);
+
+  //cout << Tg ;
+
+  /*
+  Tensor D1 = arange(4)+1; D1.reshape_(2,2);
+  cout << linalg::Det(D1);
+  D1.to_(Device.cuda);
+  cout << D1.device_str() << endl;
+  cout << linalg::Det(D1);   
+
+  
+  MKLVersion pv;
+  MKL_Get_Version(&pv);
+
+  
+  magma_int_t n = 1000;
+  magma_int_t nrhs = 1;
+  
+  //printf( "using MAGMA CPU interface\n" );
+  cpu_interface( n, nrhs );
+        
+  //cout << finalize();
+  */
+  return 0;
+
+
+  auto Tvt = Tensor();
+
+  auto STx = ones(100).reshape(5,20);
+  auto STy = arange(100).reshape(5,20);
+  print(linalg::Axpy(4,STx));
+  print(linalg::Axpy(4,STx,STy));
+  print(STx);
+
+
+  return 0;
+
+  vec2d<cytnx_int64> testlist;
+
+  Bond tqn = Bond(BD_IN,{Qs(0),Qs(4)},{2,3});
+  Bond tqnv2 = Bond(BD_IN,{Qs(0)>>2,Qs(4)>>3});
+
+  print(tqn);
+  print(tqnv2);
+  return 0;
+
+
+  auto ottt = linalg::Svd(arange(200).reshape(10,20));
+
+  cout << ottt[0] << endl;
 
   Bond phy = Bond(BD_IN, {Qs(0), Qs(1)}, {1, 1});
   Bond aux = Bond(BD_IN, {Qs(1)}, {1});
@@ -41,12 +212,20 @@ int main(int argc, char *argv[]) {
   Hpmmp.set_rowrank(2);
     
   Hpmmp.print_diagram();
-
   auto Exp_Hpmmp = linalg::ExpH(Hpmmp,1);
 
   Exp_Hpmmp.print_diagram();
   Exp_Hpmmp.print_blocks(true);
-
+  return 0;
+  auto Outsvd = linalg::Svd_truncate(Hpmmp,100, 0);
+  
+  Outsvd[0].print_diagram();
+  Outsvd[0].print_blocks();
+  Outsvd[1].print_diagram();
+  Outsvd[1].print_blocks();
+  Outsvd[2].print_diagram();
+  Outsvd[2].print_blocks();
+  
 
   return 0;
 
@@ -209,16 +388,6 @@ int main(int argc, char *argv[]) {
   */
 
   return 0;
-  Bond B1 = Bond(BD_IN, {Qs(0), Qs(1)}, {3, 4});
-  Bond B2 = Bond(BD_IN, {Qs(0), Qs(1)}, {5, 6});
-  Bond B3 = Bond(BD_OUT, {Qs(0), Qs(1)}, {2, 3});
-  Bond B4 = Bond(BD_OUT, {Qs(0), Qs(1)}, {7, 1});
-
-  auto UTB = UniTensor({B1, B2, B3, B4});
-
-  UTB.print_diagram();
-  UTB.print_blocks(false);
-
   /*
   Sp.print_diagram(true);
   Sp.print_blocks(false);

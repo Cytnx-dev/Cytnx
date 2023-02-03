@@ -7,7 +7,7 @@
 using namespace std;
 
 namespace cytnx {
-  void Int32Storage::Init(const unsigned long long &len_in, const int &device) {
+  void Int32Storage::Init(const unsigned long long &len_in, const int &device, const bool &init_zero) {
     // cout << "Int32.init" << endl;
     this->len = len_in;
 
@@ -22,8 +22,8 @@ namespace cytnx {
     }
 
     if (device == Device.cpu) {
-      // this->Mem = utils_internal::Malloc_cpu(this->cap*sizeof(cytnx_int32));
-      this->Mem = utils_internal::Calloc_cpu(this->cap, sizeof(cytnx_int32));
+      if(init_zero) this->Mem = utils_internal::Calloc_cpu(this->cap, sizeof(cytnx_int32));
+      else this->Mem = utils_internal::Malloc_cpu(this->cap*sizeof(cytnx_int32));
     } else {
 #ifdef UNI_GPU
       cytnx_error_msg(device >= Device.Ngpus, "%s", "[ERROR] invalid device.");

@@ -27,12 +27,41 @@ namespace cytnx {
   extern SymmetryType_class SymType;
   ///@endcond
 
+
+  // helper class, has implicitly conversion to vector<int64>! 
+  class Qs{
+    private:
+        std::vector<cytnx_int64> tmpQs;
+
+    public:
+        
+        template <class... Ts>
+        Qs(const cytnx_int64 &e1, const Ts... elems) {
+          this->tmpQs = dynamic_arg_int64_resolver(e1, elems...);
+        }
+
+        Qs(const std::vector<cytnx_int64> &qin){
+            this->tmpQs = qin;
+        }
+
+        // interprete as 2d vector directly implicitly convert!
+        explicit operator std::vector<cytnx_int64>() const {
+            return this->tmpQs;
+        };
+        
+        std::pair<std::vector<cytnx_int64>, cytnx_uint64> operator>>(const cytnx_uint64 &dim){
+            return make_pair(this->tmpQs,dim);
+        }
+
+  };
+
+  /* 
   template<class... Ts>
   std::vector<cytnx_int64> Qs(const cytnx_int64 &e1, const Ts &...elems){
     std::vector<cytnx_int64> argv = dynamic_arg_int64_resolver(e1, elems...);
     return argv;
   }
-
+  */
 
   ///@cond
   class Symmetry_base : public intrusive_ptr_base<Symmetry_base> {

@@ -9,8 +9,9 @@ include(ExternalProject)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 message(STATUS ${CMAKE_MODULE_PATH})
 
-#set(CMAKE_CXX_STANDARD 11)
+#set(CMAKE_CXX_STANDARD 17)
 #set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #set(CMAKE_CXX_EXTENSIONS OFF)
 
 
@@ -25,7 +26,7 @@ set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 if (NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE "DEBUG")
+  set(CMAKE_BUILD_TYPE "RELEASE")
 endif()
 
 string(TOLOWER "${CMAKE_BUILD_TYPE}" cmake_build_type_tolower)
@@ -63,6 +64,11 @@ option(USE_OMP "Build Cytnx with OpenMP" ON)
 option(BUILD_DOC "Build API docuemntation" OFF)
 option(USE_HPTT "Build Cytnx with HPTT" OFF)
 option(RUN_TESTS "Run Cytnx tests" OFF)
+option(USE_CUTT "Build Cytnx with CUTT" OFF)
+option(USE_MAGMA "Build Cytnx with MAGMA (required CUDA)" ON)
+option(USE_CUTENSOR "Build Cytnx with CuTensor (required CUDA)" ON)
+option(USE_CUQUANTUM "Build Cytnx with CUQuantum (required CUDA)" ON)
+
 
 if (USE_ICPC)
   message(STATUS, "Build Cytnx with Intel Compilers")
@@ -106,7 +112,7 @@ ExternalProject_Add(hptt
   GIT_TAG fc9c8cb9b71f4f6d16aad435bdce20025b342a73
   BINARY_DIR hptt_src/build
   INSTALL_DIR hptt
-  CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DENABLE_ARM=${HPTT_ENABLE_ARM} -DENABLE_AVX=${HPTT_ENABLE_AVX} -DENABLE_IBM=${HPTT_ENABLE_IBM} -DFINE_TUNE=${HPTT_ENABLE_FINE_TUNE}
+  CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DENABLE_ARM=${HPTT_ENABLE_ARM} -DENABLE_AVX=${HPTT_ENABLE_AVX} -DENABLE_IBM=${HPTT_ENABLE_IBM} -DFINE_TUNE=${HPTT_ENABLE_FINE_TUNE}
 )
 endif()
 
@@ -122,7 +128,7 @@ if (USE_CUDA)
       GIT_TAG 27ed59a42f2610923084c4687327d00f4c2d1d2d
       BINARY_DIR cutt_src/build
       INSTALL_DIR cutt
-      CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DNO_ALIGN_ALLOC=${CUTT_NO_ALIGN_ALLOC} -DENABLE_NVTOOLS=${CUTT_ENABLE_NVTOOLS} -DFINE_TUNE=${CUTT_ENABLE_FINE_TUNE}
+      CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DCMAKE_BUILD_TYPE=Release -DNO_ALIGN_ALLOC=${CUTT_NO_ALIGN_ALLOC} -DENABLE_NVTOOLS=${CUTT_ENABLE_NVTOOLS} -DFINE_TUNE=${CUTT_ENABLE_FINE_TUNE}
     )
     endif()
 endif()
@@ -131,7 +137,7 @@ endif()
 ### PROJECT
 ######################################################################
 project(CYTNX VERSION ${CYTNX_VERSION} LANGUAGES CXX C )
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 add_library(cytnx STATIC)
 set_property(TARGET cytnx PROPERTY C_VISIBILITY_PRESET hidden)
@@ -147,10 +153,11 @@ target_include_directories(cytnx SYSTEM
     PUBLIC
 				${Boost_INCLUDE_DIRS}
 )
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -Wno-c++11-narrowing -w")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -Wno-c++11-narrowing -w")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -w")
 
 
-target_compile_features(cytnx PUBLIC cxx_std_11)
+target_compile_features(cytnx PUBLIC cxx_std_17)
 #set_property(TARGET cytnx PROPERTY CXX_STANDARD 11)
 
 add_subdirectory(src)
@@ -184,6 +191,22 @@ if(USE_CUDA)
         target_compile_definitions(cytnx PRIVATE UNI_CUTT)
         target_link_libraries(cytnx PRIVATE ${install_dir}/lib/libcutt.a)
     endif()
+
+    if(USE_MAGMA)
+       find_package( MAGMA REQUIRED) 
+       if(NOT MAGMA_FOUND)
+          message(FATAL_ERROR "MAGMA not found!")
+       endif()
+       message(STATUS "^^^magma root aft: ${MAGMA_ROOT}")
+       message(STATUS "^^^magma inc dr: ${MAGMA_INCLUDE_DIRS}")
+       message(STATUS "^^^magma lib dr: ${MAGMA_LIBRARY_DIRS}")
+       message(STATUS "^^^magma libs: ${MAGMA_LIBRARIES}")
+       #add_dependencies(cytnx magma)
+       target_include_directories(cytnx PRIVATE ${MAGMA_INCLUDE_DIRS})
+       target_compile_definitions(cytnx PRIVATE UNI_MAGMA)
+       target_link_libraries(cytnx PRIVATE ${MAGMA_LIBRARIES})       
+    endif()
+
 endif()
 
 #####################################################################
@@ -280,7 +303,6 @@ endif()
 
 target_link_libraries(cytnx PUBLIC Boost::boost ${LAPACK_LIBRARIES})
 
-
 #####
 #function(CUDA_CONVERT_FLAGS EXISTING_TARGET)
 #    get_property(old_flags TARGET ${EXISTING_TARGET} PROPERTY INTERFACE_COMPILE_OPTIONS)
@@ -307,9 +329,9 @@ target_link_libraries(cytnx PUBLIC Boost::boost ${LAPACK_LIBRARIES})
 if(USE_CUDA)
   set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_CUDA")
   enable_language(CUDA)
-  find_package(CUDA REQUIRED)
+  find_package(CUDAToolkit REQUIRED)
   if(NOT DEFINED CMAKE_CUDA_STANDARD)
-    set(CMAKE_CUDA_STANDARD 11)
+    set(CMAKE_CUDA_STANDARD 17)
     set(CMAKE_CUDA_STANDARD_REQUIRED ON)
   endif()
 
@@ -332,15 +354,43 @@ if(USE_CUDA)
   target_compile_definitions(cytnx PRIVATE UNI_GPU)
   #target_compile_options(cytnx PRIVATE ${CMAKE_CUDA_FLAGS})
   #target_compile_options(cytnx PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:>)
-  target_include_directories(cytnx PRIVATE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
-  target_link_libraries(cytnx PRIVATE ${CUDA_cusolver_LIBRARY})
-  target_link_libraries(cytnx PRIVATE -lcublas -lcurand)
+  target_include_directories(cytnx PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
+  target_link_libraries(cytnx PRIVATE CUDA::toolkit)
+  target_link_libraries(cytnx PRIVATE CUDA::cudart CUDA::cublas CUDA::cusparse CUDA::curand CUDA::cusolver)
+
+  if(USE_CUTENSOR)
+    find_package(CUTENSOR REQUIRED)
+    if(CUTENSOR_FOUND)
+        target_compile_definitions(cytnx PUBLIC UNI_CUTENSOR)
+        target_include_directories(cytnx PRIVATE ${CUTENSOR_INCLUDE_DIRS})
+        target_link_libraries(cytnx PRIVATE ${CUTENSOR_LIBRARIES})
+    else()
+        message(FATAL_ERROR "cannot find cutensor! please specify cutensor root with -DCUTENSOR_ROOT")
+    endif()
+
+  endif()
+  
+  if(USE_CUQUANTUM)
+    find_package(CUQUANTUM REQUIRED)
+    if(CUQUANTUM_FOUND)
+        target_compile_definitions(cytnx PUBLIC UNI_CUQUANTUM)
+        target_include_directories(cytnx PRIVATE ${CUQUANTUM_INCLUDE_DIRS})
+        target_link_libraries(cytnx PRIVATE ${CUQUANTUM_LIBRARIES})
+    else()
+        message(FATAL_ERROR "cannot find cuquantum! please specify cuquantum root with -DCUQUANTUM_ROOT")
+    endif()
+
+  endif()
+
+
+
 endif()
 
 
 ######################################################################
 ### Get Gtest & benchmark
 ######################################################################
+if(RUN_TESTS)
 include(FetchContent)
 FetchContent_Declare(
   googletest
@@ -358,7 +408,7 @@ set(BENCHMARK_ENABLE_TESTING off)    # to suppress benchmark internal tests
 FetchContent_MakeAvailable(
   googletest
   googlebenchmark)
-
+endif()
 
 ######################################################################
 ### Build Documents
@@ -397,7 +447,22 @@ IF(BUILD_PYTHON)
             )
         endif()
     endif()
-    pybind11_add_module(pycytnx SHARED pybind/cytnx.cpp)
+    pybind11_add_module(pycytnx SHARED pybind/cytnx.cpp 
+                                       pybind/generator_py.cpp
+                                       pybind/storage_py.cpp
+                                       pybind/tensor_py.cpp
+                                       pybind/symmetry_py.cpp
+                                       pybind/bond_py.cpp
+                                       pybind/network_py.cpp
+                                       pybind/linop_py.cpp
+                                       pybind/unitensor_py.cpp
+                                       pybind/linalg_py.cpp
+                                       pybind/algo_py.cpp
+                                       pybind/physics_related_py.cpp
+                                       pybind/random_py.cpp
+                                       pybind/tnalgo_py.cpp
+                                       pybind/scalar_py.cpp
+                                       )
     target_link_libraries(pycytnx PRIVATE cytnx)
     set_target_properties(pycytnx PROPERTIES OUTPUT_NAME cytnx)
     #add_library(cytnx MODULE pybind/cytnx.cpp)
@@ -554,7 +619,29 @@ if(USE_CUDA)
         message( STATUS " --CUTT option NO_ALIGN_ALLOC: ${HPTT_NO_ALIGN_ALLOC}")
         FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_CUTT\n" "")
   endif()
+  
+  if(USE_MAGMA)
+        message( STATUS "Build with MAGMA: YES")
+        FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_MAGMA\n" "")
+        FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${MAGMA_LIBRARIES} -ldl\n" "") # use > to indicate special rt processing 
+        message( STATUS "MAGMA: libdir:${MAGMA_LIBRARY_DIRS} incdir:${MAGMA_INCLUDE_DIRS} libs:${MAGMA_LIBRARIES}")
+  endif()
+
+  if(USE_CUTENSOR)
+        message( STATUS "Build with CuTensor: YES")
+        FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_CUTENSOR\n" "")
+        FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUTENSOR_LIBRARIES} -ldl\n" "") # use > to indicate special rt processing 
+        message( STATUS "CuTensor: libdir:${CUTENSOR_LIBRARY_DIRS} incdir:${CUTENSOR_INCLUDE_DIRS} libs:${CUTENSOR_LIBRARIES}")
+  endif()
+  
+  if(USE_CUQUANTUM)
+        message( STATUS "Build with CuQuantum: YES")
+        FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_CUQUANTUM\n" "")
+        FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUQUANTUM_LIBRARIES} -ldl\n" "") # use > to indicate special rt processing 
+        message( STATUS "CuQuantum: libdir:${CUQUANTUM_LIBRARY_DIRS} incdir:${CUQUANTUM_INCLUDE_DIRS} libs:${CUQUANTUM_LIBRARIES}")
+  endif()
 else()
+
   message( STATUS " Build CUDA Support: NO")
 endif()
 

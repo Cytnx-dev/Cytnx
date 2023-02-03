@@ -22,6 +22,7 @@ namespace cytnx {
       auto Tl = _Tl.contiguous();
       auto Tr = _Tr.contiguous();
 
+
       // check the new shape:
 
       std::vector<cytnx_uint64> new_shape;
@@ -54,7 +55,8 @@ namespace cytnx {
         new_shape[i] = pad_shape1[i] * pad_shape2[i];
       }
 
-      Tensor out(new_shape, Tl.dtype() < Tr.dtype() ? Tl.dtype() : Tr.dtype(), Tl.device());
+      Tensor out(new_shape, Type.type_promote(Tl.dtype(),Tr.dtype()), Tl.device());
+
 
       if (Tl.device() == Device.cpu) {
         cytnx::linalg_internal::lii.Kron_ii[Tl.dtype()][Tr.dtype()](
@@ -62,11 +64,12 @@ namespace cytnx {
           pad_shape1, pad_shape2);
       } else {
 #ifdef UNI_GPU
-        cytnx_error_msg(true, "[Kron] currently Kron is not support for GPU, pending for fix.%s",
-                        "\n");
-        checkCudaErrors(cudaSetDevice(Tl.device()));
-        // cytnx::linalg_internal::lii.cuOuter_ii[Tl.dtype()][Tr.dtype()](out._impl->storage()._impl,
-        // Tl._impl->storage()._impl, Tr._impl->storage()._impl,i1,j1,i2,j2);
+        //cytnx_error_msg(true, "[Kron] currently Kron is not support for GPU, pending for fix.%s",
+        //                "\n");
+        //checkCudaErrors(cudaSetDevice(Tl.device()));
+         cytnx::linalg_internal::lii.cuKron_ii[Tl.dtype()][Tr.dtype()]( 
+           out._impl->storage()._impl,Tl._impl->storage()._impl, Tr._impl->storage()._impl,
+           pad_shape1, pad_shape2);
 #else
         cytnx_error_msg(true, "[Kron] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");

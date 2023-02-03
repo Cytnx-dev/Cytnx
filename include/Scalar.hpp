@@ -2470,25 +2470,35 @@ namespace cytnx {
       Sproxy(boost::intrusive_ptr<Storage_base> _ptr, const cytnx_uint64 &idx)
           : _insimpl(_ptr), _loc(idx) {}
 
-      // When used to set elems:
-      const Sproxy &operator=(const Scalar &rc);
-      const Sproxy &operator=(const cytnx_complex128 &rc);
-      const Sproxy &operator=(const cytnx_complex64 &rc);
-      const Sproxy &operator=(const cytnx_double &rc);
-      const Sproxy &operator=(const cytnx_float &rc);
-      const Sproxy &operator=(const cytnx_uint64 &rc);
-      const Sproxy &operator=(const cytnx_int64 &rc);
-      const Sproxy &operator=(const cytnx_uint32 &rc);
-      const Sproxy &operator=(const cytnx_int32 &rc);
-      const Sproxy &operator=(const cytnx_uint16 &rc);
-      const Sproxy &operator=(const cytnx_int16 &rc);
-      const Sproxy &operator=(const cytnx_bool &rc);
+      Sproxy(const Sproxy &rhs){
+        this->_insimpl = rhs._insimpl;
+        this->_loc = rhs._loc;
+      }
 
-      const Sproxy &operator=(const Sproxy &rc);
+      // When used to set elems:
+      Sproxy& operator=(const Scalar &rc);
+      Sproxy& operator=(const cytnx_complex128 &rc);
+      Sproxy& operator=(const cytnx_complex64 &rc);
+      Sproxy& operator=(const cytnx_double &rc);
+      Sproxy& operator=(const cytnx_float &rc);
+      Sproxy& operator=(const cytnx_uint64 &rc);
+      Sproxy& operator=(const cytnx_int64 &rc);
+      Sproxy& operator=(const cytnx_uint32 &rc);
+      Sproxy& operator=(const cytnx_int32 &rc);
+      Sproxy& operator=(const cytnx_uint16 &rc);
+      Sproxy& operator=(const cytnx_int16 &rc);
+      Sproxy& operator=(const cytnx_bool &rc);
+
+      Sproxy& operator=(const Sproxy &rc);
+
+      Sproxy copy() const{
+        Sproxy out = *this;
+        return out;
+      } 
 
       Scalar real();
       Scalar imag();
-      bool exists();
+      bool exists() const;
 
       // When used to get elements:
       // operator Scalar() const;

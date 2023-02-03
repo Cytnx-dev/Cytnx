@@ -51,8 +51,10 @@ namespace cytnx {
     Tensor_impl() : _contiguous(true){};
 
     void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype = Type.Double,
-              int device = -1);
+              int device = -1, const bool &init_zero = true);
     void Init(const Storage &in);
+    // void Init(const Storage &in, const std::vector<cytnx_uint64> &shape,
+    // const unsigned int &dtype, int device);
     /*
     template<class T>
     void From_vec(const T &ndvec){
@@ -216,6 +218,8 @@ namespace cytnx {
 
         out->_storage._impl =
           this->_storage._impl->Move_memory(oldshape, this->_mapper, this->_invmapper);
+        // this->_storage._impl->Move_memory_(oldshape, this->_mapper, this->_invmapper);
+        // out->_storage._impl = this->_storage._impl;
         // std::cout << out->_storage << std::endl;
         out->_invmapper = vec_range(this->_invmapper.size());
         out->_mapper = out->_invmapper;
@@ -236,6 +240,7 @@ namespace cytnx {
 
         this->_storage._impl =
           this->_storage._impl->Move_memory(oldshape, this->_mapper, this->_invmapper);
+        // this->_storage._impl->Move_memory_(oldshape, this->_mapper, this->_invmapper);
         this->_mapper = vec_range(this->_invmapper.size());
         this->_invmapper = this->_mapper;
         this->_contiguous = true;
@@ -683,16 +688,36 @@ namespace cytnx {
     \verbinclude example/Tensor/Init.py.out
     */
     void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype = Type.Double,
-              const int &device = -1) {
+              const int &device = -1, const bool &init_zero = true) {
       boost::intrusive_ptr<Tensor_impl> tmp(new Tensor_impl());
       this->_impl = tmp;
-      this->_impl->Init(shape, dtype, device);
+      this->_impl->Init(shape, dtype, device, init_zero);
     }
+    // void Init(const Storage& storage) {
+    //   boost::intrusive_ptr<Tensor_impl> tmp(new Tensor_impl());
+    //   this->_impl = tmp;
+    //   this->_impl->Init(storage);
+    // }
+    // void Init(const Storage& storage, const std::vector<cytnx_uint64> &shape,
+    //   const unsigned int &dtype = Type.Double, const int &device = -1) {
+    //   boost::intrusive_ptr<Tensor_impl> tmp(new Tensor_impl());
+    //   this->_impl = tmp;
+    //   this->_impl->Init(storage, shape, dtype, device);
+    // }
     Tensor(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype = Type.Double,
-           const int &device = -1)
+           const int &device = -1, const bool &init_zero = 1)
         : _impl(new Tensor_impl()) {
-      this->Init(shape, dtype, device);
+      this->Init(shape, dtype, device, init_zero);
     }
+    // Tensor(const Storage& storage)
+    //     : _impl(new Tensor_impl()) {
+    //   this->Init(storage);
+    // }
+    // Tensor(const Storage& storage, const std::vector<cytnx_uint64> &shape,
+    //   const unsigned int &dtype = Type.Double, const int &device = -1)
+    //     : _impl(new Tensor_impl()) {
+    //   this->Init(storage, shape, dtype, device);
+    // }
     //@}
 
     static Tensor from_storage(const Storage &in) {

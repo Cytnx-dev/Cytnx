@@ -14,9 +14,9 @@ namespace cytnx {
       } else {
 #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(out.device()));
-        // cytnx::linalg_internal::lii.cuSum_ii[out.dtype()](out._impl->storage()._impl,Tin._impl->storage()._impl,Tin._impl->storage()._impl->size(),'
-        // ');
-        cytnx_error_msg(true, "[Sum] Developing.%s", "\n");
+        cytnx::linalg_internal::lii.cuSum_ii[out.dtype()](out._impl->storage()._impl,
+                                                          Tin._impl->storage()._impl,
+                                                          Tin._impl->storage()._impl->size(),' ');
 #else
         cytnx_error_msg(true, "[Sum] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");

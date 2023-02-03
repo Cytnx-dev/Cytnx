@@ -7,3 +7,7 @@
 [submodule "boost-cmake"]
 	path = thirdparty/boost-cmake
 	url = https://github.com/Orphis/boost-cmake.git
+
+[submodule "thirdparty/magma"]
+	path = thirdparty/magma
+	url = https://bitbucket.org/icl/magma/branch/v2.7.0/magma.git

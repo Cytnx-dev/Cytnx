@@ -67,20 +67,25 @@ namespace cytnx {
   namespace linalg {
     UniTensor Pow(const UniTensor &Tin, const double &p) {
       UniTensor out;
-      if (Tin.is_blockform()) {
+      if(Tin.uten_type()==UTenType.Dense){
+        out = Tin.clone();
+        out.get_block_().Pow_(p);
+      }else if(Tin.uten_type() == UTenType.Block){
+        cytnx_error_msg(true,"[Pow][BlockUniTensor] Currently disable and evaluating. This is unphysical operation and will destroy Symmetry structure.%s","\n");
+      }else{
         // cytnx_error_msg(true,"[Pow][SparseUniTensor] Developing%s","\n");
         out = Tin.clone();
         auto tmp = out.get_blocks_();
         for (int i = 0; i < tmp.size(); i++) {
           tmp[i].Pow_(p);
         }
-
-      } else {
-        out = Tin.clone();
-        out.get_block_().Pow_(p);
       }
 
+
       return out;
-    }
+    };
+
+
+
   }  // namespace linalg
 }  // namespace cytnx
