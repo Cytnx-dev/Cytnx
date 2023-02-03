@@ -98,8 +98,8 @@ TEST_F(BlockUniTensorTest, Transpose){
   tmp = BUT5.Transpose();
   EXPECT_EQ(tmp.bonds()[0].type(), BD_BRA);
   EXPECT_EQ(tmp.bonds()[1].type(), BD_KET);
-  EXPECT_EQ(tmp.bonds()[0].qnums(),std::vector<std::vector<cytnx_int64>>({{0,-2}, {1,-5}, {1,-6}, {0,-1}}));
-  EXPECT_EQ(tmp.bonds()[1].qnums(),std::vector<std::vector<cytnx_int64>>({{0,-2}, {1,-5}, {1,-6}, {0,-1}}));
+  EXPECT_EQ(tmp.bonds()[0].qnums(),std::vector<std::vector<cytnx_int64>>({{0,2}, {1,5}, {1,6}, {0,1}}));
+  EXPECT_EQ(tmp.bonds()[1].qnums(),std::vector<std::vector<cytnx_int64>>({{0,2}, {1,5}, {1,6}, {0,1}}));
 
   BUT1.Transpose_();
   EXPECT_EQ(BUT1.bonds()[0].type(), BD_OUT);
@@ -110,8 +110,8 @@ TEST_F(BlockUniTensorTest, Transpose){
   BUT5.Transpose_();
   EXPECT_EQ(BUT5.bonds()[0].type(), BD_BRA);
   EXPECT_EQ(BUT5.bonds()[1].type(), BD_KET);
-  EXPECT_EQ(BUT5.bonds()[0].qnums(),std::vector<std::vector<cytnx_int64>>({{0,-2}, {1,-5}, {1,-6}, {0,-1}}));
-  EXPECT_EQ(BUT5.bonds()[1].qnums(),std::vector<std::vector<cytnx_int64>>({{0,-2}, {1,-5}, {1,-6}, {0,-1}}));
+  EXPECT_EQ(BUT5.bonds()[0].qnums(),std::vector<std::vector<cytnx_int64>>({{0,2}, {1,5}, {1,6}, {0,1}}));
+  EXPECT_EQ(BUT5.bonds()[1].qnums(),std::vector<std::vector<cytnx_int64>>({{0,2}, {1,5}, {1,6}, {0,1}}));
 }
 
 TEST_F(BlockUniTensorTest, Dagger){
@@ -124,8 +124,8 @@ TEST_F(BlockUniTensorTest, Dagger){
   tmp = BUT5.Dagger();
   EXPECT_EQ(tmp.bonds()[0].type(), BD_BRA);
   EXPECT_EQ(tmp.bonds()[1].type(), BD_KET);
-  EXPECT_EQ(tmp.bonds()[0].qnums(),std::vector<std::vector<cytnx_int64>>({{0,-2}, {1,-5}, {1,-6}, {0,-1}}));
-  EXPECT_EQ(tmp.bonds()[1].qnums(),std::vector<std::vector<cytnx_int64>>({{0,-2}, {1,-5}, {1,-6}, {0,-1}}));
+  EXPECT_EQ(tmp.bonds()[0].qnums(),std::vector<std::vector<cytnx_int64>>({{0,2}, {1,5}, {1,6}, {0,1}}));
+  EXPECT_EQ(tmp.bonds()[1].qnums(),std::vector<std::vector<cytnx_int64>>({{0,2}, {1,5}, {1,6}, {0,1}}));
 
   BUT1.Dagger_();
   EXPECT_EQ(BUT1.bonds()[0].type(), BD_OUT);
@@ -136,8 +136,8 @@ TEST_F(BlockUniTensorTest, Dagger){
   BUT5.Dagger_();
   EXPECT_EQ(BUT5.bonds()[0].type(), BD_BRA);
   EXPECT_EQ(BUT5.bonds()[1].type(), BD_KET);
-  EXPECT_EQ(BUT5.bonds()[0].qnums(),std::vector<std::vector<cytnx_int64>>({{0,-2}, {1,-5}, {1,-6}, {0,-1}}));
-  EXPECT_EQ(BUT5.bonds()[1].qnums(),std::vector<std::vector<cytnx_int64>>({{0,-2}, {1,-5}, {1,-6}, {0,-1}}));
+  EXPECT_EQ(BUT5.bonds()[0].qnums(),std::vector<std::vector<cytnx_int64>>({{0,2}, {1,5}, {1,6}, {0,1}}));
+  EXPECT_EQ(BUT5.bonds()[1].qnums(),std::vector<std::vector<cytnx_int64>>({{0,2}, {1,5}, {1,6}, {0,1}}));
 
   tmp = BUT4.Dagger();
   for(size_t i=1;i<=5;i++)for(size_t j=1;j<=11;j++)
