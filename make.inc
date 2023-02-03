@@ -11,7 +11,7 @@ ICPC=icpc
 # set compile modes:
 
 ## compile with CUDA support:
-GPU_Enable=0
+GPU_Enable=1
 CUDA_PATH=/usr/local/cuda
 
 ## compile with Openmp support:
@@ -37,7 +37,7 @@ CUQUANTUM_ROOT=/usr/local/cuquantum-22.11.0.13
 
 
 ## compile with MAGMA library:
-MAGMA_Enable=0
+MAGMA_Enable=1
 MAGMA_PATH=${HOME}/MAGMA
 
 

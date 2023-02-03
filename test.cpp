@@ -42,6 +42,11 @@ int main(int argc, char *argv[]) {
   Bond B4p = Bond(BD_OUT, {Qs(-1), Qs(0), Qs(1)}, {2, 1, 2});
  
   UniTensor BUT4 = UniTensor({B1p, B2p, B3p, B4p});
+  auto TT44 = BUT4.Trace(0,3);
+  TT44.print_diagram();
+  TT44.print_blocks();
+  return 0;
+
   UniTensor BUtrT4 = UniTensor({B2p, B3p});
 
 
@@ -51,12 +56,14 @@ int main(int argc, char *argv[]) {
   Bond B4 = Bond(BD_OUT, {Qs(0), Qs(1)}, {1, 2});
   UniTensor BUT1 = UniTensor({B1, B2, B3, B4});
 
-  BUT1.Trace(-1,2);
-  return 0;
+  //BUT1.Trace(-1,2);
+  //return 0;
 
 
   auto tmpa = BUT4.Trace(0,3);
+  BUT4.Transpose();
 
+  return 0;
   //BUtrT4.print_diagram();
   //BUtrT4.print_blocks(false);  
   for(size_t j=1;j<=11;j++)
