@@ -497,6 +497,56 @@ TEST_F(BlockUniTensorTest, clone) {
             }
 }
 
+TEST_F(BlockUniTensorTest, permute1) {
+    // rank-3 tensor
+    std::vector<cytnx_int64> a = {1,2,0};
+    auto permuted = UT_permute_1.permute(a, -1);
+    for(size_t i=0;i<10;i++)
+        for(size_t j=0;j<6;j++)
+            for(size_t k=0;k<10;k++){
+                EXPECT_EQ(permuted.at({i,j,k}).exists(), UT_permute_ans1.at({i,j,k}).exists());
+                if(permuted.at({i,j,k}).exists())
+                    EXPECT_EQ(double(permuted.at({i,j,k}).real()), double(UT_permute_ans1.at({i,j,k}).real()));
+            }
+}
+
+TEST_F(BlockUniTensorTest, permute2) {
+  std::vector<cytnx_int64> a = {1,0};
+  auto permuted = UT_permute_2.permute(a, -1);
+
+  for(size_t j=0;j<10;j++)
+    for(size_t k=0;k<10;k++){
+        EXPECT_EQ(permuted.at({j,k}).exists(), UT_permute_ans2.at({j,k}).exists());
+        if(permuted.at({j,k}).exists())
+            EXPECT_EQ(double(permuted.at({j,k}).real()), double(UT_permute_ans2.at({j,k}).real()));
+    }
+}
+
+TEST_F(BlockUniTensorTest, permute_1) {
+    // rank-3 tensor
+    std::vector<cytnx_int64> a = {1,2,0};
+    auto permuted = UT_permute_1.clone();
+    permuted.permute_(a, -1);
+    for(size_t i=0;i<10;i++)
+        for(size_t j=0;j<6;j++)
+            for(size_t k=0;k<10;k++){
+                EXPECT_EQ(permuted.at({i,j,k}).exists(), UT_permute_ans1.at({i,j,k}).exists());
+                if(permuted.at({i,j,k}).exists())
+                    EXPECT_EQ(double(permuted.at({i,j,k}).real()), double(UT_permute_ans1.at({i,j,k}).real()));
+            }
+}
+
+TEST_F(BlockUniTensorTest, permute_2) {
+    std::vector<cytnx_int64> a = {1,0};
+    auto permuted = UT_permute_2.clone();
+    permuted.permute_(a, -1);
+    for(size_t j=0;j<10;j++)
+        for(size_t k=0;k<10;k++){
+            EXPECT_EQ(permuted.at({j,k}).exists(), UT_permute_ans2.at({j,k}).exists());
+            if(permuted.at({j,k}).exists())
+                EXPECT_EQ(double(permuted.at({j,k}).real()), double(UT_permute_ans2.at({j,k}).real()));
+        }
+}
 
 TEST_F(BlockUniTensorTest, contract1) {
     // two sparse matrix

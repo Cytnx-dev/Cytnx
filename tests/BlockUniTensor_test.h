@@ -80,6 +80,13 @@ class BlockUniTensorTest : public ::testing::Test {
   UniTensor UT_contract_R3 = UniTensor({C3B3.redirect(), C3B1.redirect(), C3B2.redirect()});
   UniTensor UT_contract_ans3 = UniTensor({C3B1, C3B2, C3B1.redirect(), C3B2.redirect()});
 
+  UniTensor UT_permute_1 = UniTensor({C3B1, C3B2, C3B3});
+  UniTensor UT_permute_ans1 = UniTensor({C3B3, C3B1, C3B2});
+  UniTensor UT_permute_2 = UniTensor({C3B1, C3B2.redirect()});
+  UniTensor UT_permute_ans2 = UniTensor({C3B2.redirect(), C3B1});
+  // UniTensor UT_permute_3 = UniTensor({C3B3.redirect(), C3B3});
+  // UniTensor UT_permute_ans3 = UniTensor({C3B3, C3B3.redirect()});
+
  protected:
   void SetUp() override {
     BUT4 = BUT4.Load("OriginalBUT.cytnx");
@@ -102,6 +109,12 @@ class BlockUniTensorTest : public ::testing::Test {
     UT_contract_R3 = UT_contract_R3.Load("contract_R3.cytnx");
     UT_contract_ans3 =  UT_contract_ans3.Load("contract_ans3.cytnx");
     
+    UT_permute_1 = UT_permute_1.Load("permute_T1.cytnx");
+    UT_permute_ans1 = UT_permute_ans1.Load("permute_ans1.cytnx");
+    UT_permute_2 = UT_permute_2.Load("permute_T2.cytnx");
+    UT_permute_ans2 = UT_permute_ans2.Load("permute_ans2.cytnx");
+    // UT_permute_3 = UT_permute_3.Load("permute_T3.cytnx");
+    // UT_permute_ans3 = UT_permute_ans3.Load("permute_ans3.cytnx");
   }
   void TearDown() override {}
 };
