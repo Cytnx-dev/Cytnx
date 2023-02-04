@@ -215,7 +215,7 @@ TEST_F(BlockUniTensorTest, Init){
     EXPECT_NO_THROW(BkUt.Init({phy,phy.redirect(),aux},{"a", "b", "c"},2,Type.Float,Device.cpu,false,false));
     EXPECT_NO_THROW(BkUt.Init({phy,phy.redirect(),aux},{"a", "b", "c"},1,Type.Float,Device.cpu,false,false));
     EXPECT_NO_THROW(BkUt.Init({phy,phy.redirect(),aux},{"a", "b", "c"},-1,Type.Float,Device.cpu,false,false));
-    EXPECT_NO_THROW(BkUt.Init({phy,phy.redirect(),aux},{"a", "b", "c"},-2,Type.Float,Device.cpu,false,false));
+    EXPECT_ANY_THROW(BkUt.Init({phy,phy.redirect(),aux},{"a", "b", "c"},-2,Type.Float,Device.cpu,false,false));
     EXPECT_NO_THROW(BkUt.Init({phy,phy.redirect(),aux},{"a", "b", "c"},0,Type.Float,Device.cpu,false,false));
 
     // is_diag = true, but rank>2
@@ -274,12 +274,13 @@ TEST_F(BlockUniTensorTest, is_contiguous) {
 
 TEST_F(BlockUniTensorTest, set_rowrank) {
     // Spf is a rank-3 tensor
-    EXPECT_NO_THROW(Spf.set_rowrank(-2));
-    EXPECT_NO_THROW(Spf.set_rowrank(-1));
-    EXPECT_NO_THROW(Spf.set_rowrank(0));
+    EXPECT_ANY_THROW(Spf.set_rowrank(-2)); //set_rowrank cannot be negative! 
+    EXPECT_ANY_THROW(Spf.set_rowrank(-1));
+    EXPECT_NO_THROW(Spf.set_rowrank(0)); 
     EXPECT_NO_THROW(Spf.set_rowrank(1));
     EXPECT_NO_THROW(Spf.set_rowrank(2));
-    EXPECT_ANY_THROW(Spf.set_rowrank(3));
+    EXPECT_NO_THROW(Spf.set_rowrank(3));
+    EXPECT_ANY_THROW(Spf.set_rowrank(4)); //set_rowrank can only from 0-3 for rank-3 tn
 }
 
 TEST_F(BlockUniTensorTest, astype) {
