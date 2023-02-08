@@ -62,12 +62,17 @@ namespace cytnx {
                     "\n");
 
 
-    if (rowrank < 0) {
+    if (rowrank == -1) {
       this->_rowrank = N_ket;
       //this->_inner_rowrank = N_ket;
     } else {
-      cytnx_error_msg((rowrank < 1) || (rowrank > bonds.size() - 1),
-                      "[ERROR][BlockUniTensor] rowrank must be >=1 and <=rank-1.%s", "\n");
+      if(is_diag){
+        cytnx_error_msg(rowrank != 1,
+                      "[ERROR][BlockUniTensor] rowrank must be = 1 when is_diag = true.%s", "\n");
+      }else{
+      cytnx_error_msg((rowrank < 0) || (rowrank > bonds.size() ),
+                      "[ERROR][BlockUniTensor] rowrank must be >=0 and <=rank.%s", "\n");
+      }
       this->_rowrank = rowrank;
       //this->_inner_rowrank = rowrank;
       // update braket_form >>>

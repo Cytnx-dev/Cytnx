@@ -1,3 +1,4 @@
+ns  
 
 #=========================================================
 ## 1) Custom install destination (DEFAULT /use/local/cytnx)
@@ -73,7 +74,7 @@ FLAG="${FLAG} -DHPTT_ENABLE_FINE_TUNE=ON"
 # [Note] uncomment one of the desired options below 1: AVX 2: IBM 3: ARM.
 #-----------------------------------
 # FLAG="${FLAG} -DHPTT_ENABLE_ARM=on"
-FLAG="${FLAG} -DHPTT_ENABLE_AVX=on"
+FLAG="${FLAG} -DHPTT_ENABLE_AVX=off"
 # FLAG="${FLAG} -DHPTT_ENABLE_IBM=on"
 #-----------------------------------
 
@@ -84,7 +85,7 @@ FLAG="${FLAG} -DHPTT_ENABLE_AVX=on"
 # [Note] set to "=on" to build with with GPU (CUDA) support.
 #        for "=off" case one can skip 6-a) and  6-b)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_CUDA=OFF "
+FLAG="${FLAG} -DUSE_CUDA=ON "
 #-----------------------------------
 # 6-a) CUTT (DEFAULT =off)
 # [Note] set to "=on" for using CUTT library to accelrate tensor transpose.
@@ -165,6 +166,6 @@ echo ${FLAG}
 # mkdir build
 cd build
 cmake ../ ${FLAG}
-make -j`nproc`
-make install
-ctest
+#make -j`nproc`
+#make install
+#ctest
