@@ -1,5 +1,7 @@
+#include "cytnx.hpp"
+#include <gtest/gtest.h>
 #include "../test_tools.h"
-#include "stack_test.h"
+
 
 using namespace cytnx;
 using namespace testing;
@@ -8,7 +10,6 @@ using namespace TestTools;
 namespace HstackTest {
 
 void CheckResult(const Tensor& hstack_tens, const std::vector<Tensor> &input_tens);
-void ErrorTestExcute(const std::vector<Tensor>& Ts);
 
 /*=====test info=====
 describe:Input only one tensor. Test all possible data type on cpu device.
@@ -117,7 +118,9 @@ input:empty vector, cpu
 ====================*/
 TEST(Hstack, err_empty) {
   std::vector<Tensor> empty;
-  ErrorTestExcute(empty);
+  EXPECT_THROW({
+    Tensor tens = algo::Hstack(empty);
+  }, std::logic_error);
 }
 
 /*=====test info=====
@@ -127,7 +130,9 @@ input:void tensor, cpu
 TEST(Hstack, err_tensor_void) {
   std::vector<Tensor> Ts = {Tensor()};
   InitTensorUniform(Ts);
-  ErrorTestExcute(Ts);
+  EXPECT_THROW({
+    Tensor tens = algo::Hstack(Ts);
+  }, std::logic_error);
 }
 
 /*=====test info=====
@@ -142,7 +147,9 @@ TEST(Hstack, err_contains_void) {
       Tensor()
   };
   InitTensorUniform(Ts);
-  ErrorTestExcute(Ts);
+  EXPECT_THROW({
+    Tensor tens = algo::Hstack(Ts);
+  }, std::logic_error);
 }
 
 /*=====test info=====
@@ -157,7 +164,9 @@ TEST(Hstack, err_row_not_eq) {
       Tensor({2, 3}, Type.Double)
   };
   InitTensorUniform(Ts);
-  ErrorTestExcute(Ts);
+  EXPECT_THROW({
+    Tensor tens = algo::Hstack(Ts);
+  }, std::logic_error);
 }
 
 /*=====test info=====
@@ -168,7 +177,9 @@ input:
 TEST(Hstack, err_a_bool_type) {
   std::vector<Tensor> Ts = {Tensor({2, 3}, Type.Bool)};
   InitTensorUniform(Ts);
-  ErrorTestExcute(Ts);
+  EXPECT_THROW({
+    Tensor tens = algo::Hstack(Ts);
+  }, std::logic_error);
 }
 
 /*=====test info=====
@@ -183,154 +194,10 @@ TEST(Hstack, err_multi_bool_type) {
       Tensor({4, 2}, Type.Bool)
   };
   InitTensorUniform(Ts);
-  ErrorTestExcute(Ts);
+  EXPECT_THROW({
+    Tensor tens = algo::Hstack(Ts);
+  }, std::logic_error);
 }
-
-void InitTensorUniform(std::vector<Tensor>& Ts) {
-  unsigned int rand_seed = 0;
-  for(auto& T : Ts) {
-    auto dtype = T.dtype();
-    EXPECT_EQ(T.device(), Device.cpu); //for cuda still not implement
-    if(dtype == Type.Void) 
-      continue;
-    //The function 'astype' still not implement for casting complex to real currently.
-    //  if 'astype' implement cast from comlex to double, we can just cast from complex to another.
-    auto tmp_type = (dtype == Type.ComplexDouble || dtype == Type.ComplexFloat) ? 
-        Type.ComplexDouble : Type.Double;
-    Tensor tmp = Tensor(T.shape(), tmp_type, T.device());
-    rand_seed++;
-    double l_bd;
-    double h_bd;
-    switch (dtype) {
-      case Type.Void: //never
-        continue;
-      case Type.ComplexDouble:
-      case Type.ComplexFloat:
-      case Type.Double:
-      case Type.Float:
-      case Type.Int64:
-      case Type.Int32: 
-        l_bd = -1000000, h_bd = 1000000;
-        break;
-      case Type.Uint64:
-      case Type.Uint32:
-        l_bd = 0, h_bd = 1000000;
-        break;
-      case Type.Int16: 
-	l_bd = std::numeric_limits<int16_t>::min();
-	h_bd = std::numeric_limits<int16_t>::max();
-        break;
-      case Type.Uint16: 
-	l_bd = std::numeric_limits<uint16_t>::min();
-	h_bd = std::numeric_limits<uint16_t>::max();
-        break;
-      case Type.Bool: 
-        l_bd = 0.0, h_bd = 2.0;
-        break;
-      default: //wrong input 
-        FAIL();
-    } //switch
-    random::Make_uniform(tmp, l_bd, h_bd, rand_seed);
-    if(dtype == Type.Bool) {
-      //bool type prepare:double in range (0, 2) -> uint32 [0, 1] ->bool
-      //  bool type prepare:1.X -> 1 ->true; 0.X -> 0 ->false
-      tmp = tmp.astype(Type.Uint32); 
-    }
-    T = tmp.astype(dtype);
-  } //for
-} // func:InitTensorUniform
-
-bool IsElemSame(const Tensor& T1, const std::vector<cytnx_uint64>& idices1,
-                const Tensor& T2, const std::vector<cytnx_uint64>& idices2) {
-  if(T1.dtype() != T2.dtype())
-    return false;
-  if(T1.device() != T2.device())
-    return false;
-  switch (T1.dtype()) {
-    case Type.Void:
-      break;
-    case Type.ComplexDouble: {
-      auto t1_val = T1.at<std::complex<double>>(idices1);
-      auto t2_val = T2.at<std::complex<double>>(idices2);
-      if(t1_val != t2_val)
-        return false;
-      break;
-    }
-    case Type.ComplexFloat: {
-      auto t1_val = T1.at<std::complex<float>>(idices1);
-      auto t2_val = T2.at<std::complex<float>>(idices2);
-      if(t1_val != t2_val)
-        return false;
-      break;
-    }
-    case Type.Double: {
-      auto t1_val = T1.at<double>(idices1);
-      auto t2_val = T2.at<double>(idices2);
-      if(t1_val != t2_val)
-        return false;
-      break;
-    }
-    case Type.Float: {
-      auto t1_val = T1.at<float>(idices1);
-      auto t2_val = T2.at<float>(idices2);
-      if(t1_val != t2_val)
-        return false;
-      break;
-    }
-    case Type.Int64: {
-      auto t1_val = T1.at<int64_t>(idices1);
-      auto t2_val = T2.at<int64_t>(idices2);
-      if(t1_val != t2_val)
-        return false;
-      break;
-    }
-    case Type.Uint64: {
-      auto t1_val = T1.at<uint64_t>(idices1);
-      auto t2_val = T2.at<uint64_t>(idices2);
-      if(t1_val != t2_val)
-        return false;
-      break;
-    }
-    case Type.Int32: {
-      auto t1_val = T1.at<int32_t>(idices1);
-      auto t2_val = T2.at<int32_t>(idices2);
-      if(t1_val != t2_val)
-        return false;
-      break;
-    }
-    case Type.Uint32: {
-      auto t1_val = T1.at<uint32_t>(idices1);
-      auto t2_val = T2.at<uint32_t>(idices2);
-      if(t1_val != t2_val)
-        return false;
-      break;
-    }
-    case Type.Int16: {
-      auto t1_val = T1.at<int16_t>(idices1);
-      auto t2_val = T2.at<int16_t>(idices2);
-      if(t1_val != t2_val)
-        return false;
-      break;
-    }
-    case Type.Uint16: {
-      auto t1_val = T1.at<uint16_t>(idices1);
-      auto t2_val = T2.at<uint16_t>(idices2);
-      if(t1_val != t2_val)
-        return false;
-      break;
-    }
-    case Type.Bool: {
-      auto t1_val = T1.at<bool>(idices1);
-      auto t2_val = T2.at<bool>(idices2);
-      if(t1_val != t2_val)
-        return false;
-      break;
-    }
-    default:
-      return false;
-  } //switch
-  return true;
-} //func:CheckElemSame
 
 void CheckResult(const Tensor& hstack_tens, 
 		 const std::vector<Tensor> &input_tens) {
@@ -368,26 +235,15 @@ void CheckResult(const Tensor& hstack_tens,
     for(int r = 0; r < r_num; ++r) {
       for(int c = 0; c < c_num; ++c) {
         auto dst_c = c + block_col_shift;
-	is_same_elem = IsElemSame(cvt_tens, {r, c}, hstack_tens, {r, dst_c});
-	if(!is_same_elem)
-          break;
+	is_same_elem = AreElemSame(cvt_tens, {r, c}, hstack_tens, {r, dst_c});
+	if(!is_same_elem) break;
       } //end col
+      if(!is_same_elem) break;
     } //end row
+    if(!is_same_elem) break;
     block_col_shift += c_num;
   } //end input tens vec
   EXPECT_TRUE(is_same_elem);
 } //fucn:CheckResult
-
-void ErrorTestExcute(const std::vector<Tensor>& Ts) {
-  try {
-    Tensor tens = algo::Hstack(Ts);
-    std::cerr << "[Test Error] This test should throw error but not !" << std::endl;
-    FAIL();
-  } catch(const std::exception& ex) {
-    auto err_msg = ex.what();
-    std::cerr << err_msg << std::endl;
-    SUCCEED();
-  }
-}
 
 } //namespace

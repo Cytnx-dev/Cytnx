@@ -37,9 +37,18 @@ static std::vector<int> device_list = {
 void InitTensorUniform(Tensor& T, unsigned int rand_seed = 0);
 void InitTensorUniform(std::vector<Tensor>& T, unsigned int rand_seed = 0);
 
-bool AreNearlyEqTensor(const Tensor& T1, const Tensor& T2, const cytnx_double tol = 0);
+bool AreNearlyEqTensor(const Tensor& T1, const Tensor& T2, 
+                       const cytnx_double tol = 0);
 bool AreEqTensor(const Tensor& T1, const Tensor& T2);
 
+bool AreNearlyEqUniTensor(const UniTensor& Ut1, const UniTensor& Ut2, 
+                          const cytnx_double tol = 0);
+bool AreEqUniTensor(const UniTensor& Ut1, const UniTensor& Ut2);
+ 
+bool AreElemSame(const Tensor& T1, const std::vector<cytnx_uint64>& idices1,
+                 const Tensor& T2, const std::vector<cytnx_uint64>& idices2);
+
+void InitUniTensorUniform(UniTensor& UT, unsigned int rand_seed = 0);
 } //namespace TestTools
 
 #endif

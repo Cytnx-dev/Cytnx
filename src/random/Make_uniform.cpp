@@ -49,7 +49,7 @@ namespace cytnx {
 
     void Make_uniform(UniTensor &Tin, const double &low, const double &high,
                       const unsigned int &seed) {
-      if (Tin.uten_type() == UTenType.Sparse) {
+      if (Tin.uten_type() == UTenType.Sparse || Tin.uten_type() == UTenType.Block) {
         for (cytnx_int64 i = 0; i < Tin.get_blocks_().size(); i++) {
           Make_uniform(Tin.get_blocks_()[i], low, high, seed + i);
         }

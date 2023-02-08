@@ -1,6 +1,6 @@
 #include "test_tools.h"
 
-#define RAND_MAX_VAL 1000000
+#define RAND_MAX_VAL 1000
 #define RAND_MIN_VAL ((-1) * RAND_MAX_VAL)
 
 using namespace cytnx;
@@ -102,16 +102,10 @@ bool AreNearlyEqStorage(const Storage& stor1, const Storage& stor2,
 
 //Tensor
 //random initialize
-void InitTensorUniform(Tensor& T, unsigned int rand_seed) {
-  auto dtype = T.dtype();
+void GetRandRange(const unsigned int dtype, cytnx_double* low_bd, 
+                  cytnx_double* high_bd) {
   if (dtype == Type.Void)
     return;
-  //  if 'astype' implement cast from comlex to double, we can just cast from complex to another.
-  auto tmp_type = (dtype == Type.ComplexDouble || dtype == Type.ComplexFloat) ? 
-      Type.ComplexDouble : Type.Double;
-  Tensor tmp = Tensor(T.shape(), tmp_type, T.device());
-  double l_bd;
-  double h_bd;
   switch (dtype) {
     case Type.Void: //return directly
       return;
@@ -121,26 +115,38 @@ void InitTensorUniform(Tensor& T, unsigned int rand_seed) {
     case Type.Float:
     case Type.Int64:
     case Type.Int32: 
-      l_bd = RAND_MIN_VAL, h_bd = RAND_MAX_VAL;
+      *low_bd = RAND_MIN_VAL, *high_bd = RAND_MAX_VAL;
       break;
     case Type.Uint64:
     case Type.Uint32:
-      l_bd = 0, h_bd = RAND_MAX_VAL;
+      *low_bd = 0, *high_bd = RAND_MAX_VAL;
       break;
     case Type.Int16: 
-      l_bd = std::numeric_limits<int16_t>::min();
-      h_bd = std::numeric_limits<int16_t>::max();
+      *low_bd = std::numeric_limits<int16_t>::min();
+      *high_bd = std::numeric_limits<int16_t>::max();
       break;
     case Type.Uint16: 
-      l_bd = std::numeric_limits<uint16_t>::min();
-      h_bd = std::numeric_limits<uint16_t>::max();
+      *low_bd = std::numeric_limits<uint16_t>::min();
+      *high_bd = std::numeric_limits<uint16_t>::max();
       break;
     case Type.Bool: 
-      l_bd = 0.0, h_bd = 2.0;
+      *low_bd = 0.0, *high_bd = 2.0;
       break;
     default: //wrong input 
       break;
   } //switch
+}
+ 
+void InitTensorUniform(Tensor& T, unsigned int rand_seed) {
+  auto dtype = T.dtype();
+  if (dtype == Type.Void)
+    return;
+  cytnx_double l_bd, h_bd;
+  GetRandRange(dtype, &l_bd, &h_bd);
+  //  if 'astype' implement cast from comlex to double, we can just cast from complex to another.
+  auto tmp_type = (dtype == Type.ComplexDouble || dtype == Type.ComplexFloat) ? 
+      Type.ComplexDouble : Type.Double;
+  Tensor tmp = Tensor(T.shape(), tmp_type, T.device());
   random::Make_uniform(tmp, l_bd, h_bd, rand_seed);
   if(dtype == Type.Bool) {
     //bool type prepare:double in range (0, 2) -> uint32 [0, 1] ->bool
@@ -175,6 +181,143 @@ bool AreEqTensor(const Tensor& T1, const Tensor& T2) {
   return AreNearlyEqTensor(T1, T2, tol);
 }
 
+bool AreElemSame(const Tensor& T1, const std::vector<cytnx_uint64>& idices1,
+                 const Tensor& T2, const std::vector<cytnx_uint64>& idices2) {
+  if(T1.dtype() != T2.dtype())
+    return false;
+  if(T1.device() != T2.device())
+    return false;
+  //we don't need to check tensor shape here because we want to compare the
+  //  different shape result elements.
+  try {
+    switch (T1.dtype()) {
+      case Type.Void:
+        break;
+      case Type.ComplexDouble: {
+        auto t1_val = T1.at<std::complex<double>>(idices1);
+        auto t2_val = T2.at<std::complex<double>>(idices2);
+        if(t1_val != t2_val)
+          return false;
+        break;
+      }
+      case Type.ComplexFloat: {
+        auto t1_val = T1.at<std::complex<float>>(idices1);
+        auto t2_val = T2.at<std::complex<float>>(idices2);
+        if(t1_val != t2_val)
+          return false;
+        break;
+      }
+      case Type.Double: {
+        auto t1_val = T1.at<double>(idices1);
+        auto t2_val = T2.at<double>(idices2);
+        if(t1_val != t2_val)
+          return false;
+        break;
+      }
+      case Type.Float: {
+        auto t1_val = T1.at<float>(idices1);
+        auto t2_val = T2.at<float>(idices2);
+        if(t1_val != t2_val)
+          return false;
+        break;
+      }
+      case Type.Int64: {
+        auto t1_val = T1.at<int64_t>(idices1);
+        auto t2_val = T2.at<int64_t>(idices2);
+        if(t1_val != t2_val)
+          return false;
+        break;
+      }
+      case Type.Uint64: {
+        auto t1_val = T1.at<uint64_t>(idices1);
+        auto t2_val = T2.at<uint64_t>(idices2);
+        if(t1_val != t2_val)
+          return false;
+        break;
+      }
+      case Type.Int32: {
+        auto t1_val = T1.at<int32_t>(idices1);
+        auto t2_val = T2.at<int32_t>(idices2);
+        if(t1_val != t2_val)
+          return false;
+        break;
+      }
+      case Type.Uint32: {
+        auto t1_val = T1.at<uint32_t>(idices1);
+        auto t2_val = T2.at<uint32_t>(idices2);
+        if(t1_val != t2_val)
+          return false;
+        break;
+      }
+      case Type.Int16: {
+        auto t1_val = T1.at<int16_t>(idices1);
+        auto t2_val = T2.at<int16_t>(idices2);
+        if(t1_val != t2_val)
+          return false;
+        break;
+      }
+      case Type.Uint16: {
+        auto t1_val = T1.at<uint16_t>(idices1);
+        auto t2_val = T2.at<uint16_t>(idices2);
+        if(t1_val != t2_val)
+          return false;
+        break;
+      }
+      case Type.Bool: {
+        auto t1_val = T1.at<bool>(idices1);
+        auto t2_val = T2.at<bool>(idices2);
+        if(t1_val != t2_val)
+          return false;
+        break;
+      }
+      default:
+        return false;
+    } //switch
+  } //try
+  catch(const std::exception& ex) {
+    cytnx_error_msg(true,"[ERROR][test_tools]", __FUNCTION__, ex.what(), "\n" );
+  }
+  return true;
+} //func:CheckElemSame
 
+//UniTensor
+bool AreNearlyEqUniTensor(const UniTensor& Ut1, const UniTensor& Ut2, 
+                          const cytnx_double tol) {
+  const std::vector<Tensor>& blocks1 = Ut1.get_blocks();
+  const std::vector<Tensor>& blocks2 = Ut2.get_blocks();
+  if (blocks1.size() != blocks2.size())
+    return false;
+  auto blocks_num = blocks1.size();
+  for (size_t i = 0; i < blocks_num; ++i) {
+    if (!AreNearlyEqTensor(blocks1[i], blocks2[i], tol)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool AreEqUniTensor(const UniTensor& Ut1, const UniTensor& Ut2) {
+  return AreNearlyEqUniTensor(Ut1, Ut2, 0);
+}
+
+//UniTensor
+void InitUniTensorUniform(UniTensor& UT, unsigned int rand_seed) {
+  auto dtype = UT.dtype();
+  if (dtype == Type.Void)
+    return;
+  cytnx_double l_bd, h_bd;
+  GetRandRange(dtype, &l_bd, &h_bd);
+  //  if 'astype' implement cast from comlex to double, we can just cast from complex to another.
+  auto tmp_type = (dtype == Type.ComplexDouble || dtype == Type.ComplexFloat) ? 
+      Type.ComplexDouble : Type.Double;
+  UniTensor tmp = UT.astype(tmp_type);
+  random::Make_uniform(tmp, l_bd, h_bd, rand_seed);
+  if(dtype == Type.Bool) {
+    //bool type prepare:double in range (0, 2) -> uint32 [0, 1] ->bool
+    //  bool type prepare:1.X -> 1 ->true; 0.X -> 0 ->false
+    tmp = tmp.astype(Type.Uint32); 
+  }
+  UT = tmp.astype(dtype);
+} // func:InitTensUniform
 
 } //namespace

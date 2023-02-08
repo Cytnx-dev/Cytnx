@@ -1,5 +1,7 @@
+#include "cytnx.hpp"
+#include <gtest/gtest.h>
 #include "../test_tools.h"
-#include "stack_test.h"
+
 
 using namespace cytnx;
 using namespace testing;
@@ -8,7 +10,6 @@ using namespace TestTools;
 namespace VstackTest {
 
 void CheckResult(const Tensor& vstack_tens, const std::vector<Tensor> &input_tens);
-void ErrorTestExcute(const std::vector<Tensor>& Ts);
 
 /*=====test info=====
 describe:Input only one tensor. Test all possible data type on cpu device.
@@ -117,7 +118,9 @@ input:empty vector, cpu
 ====================*/
 TEST(Vstack, err_empty) {
   std::vector<Tensor> empty;
-  ErrorTestExcute(empty);
+  EXPECT_THROW({
+    Tensor tens = algo::Vstack(empty);
+  }, std::logic_error);
 }
 
 /*=====test info=====
@@ -127,7 +130,9 @@ input:void tensor, cpu
 TEST(Vstack, err_tensor_void) {
   std::vector<Tensor> Ts = {Tensor()};
   InitTensorUniform(Ts);
-  ErrorTestExcute(Ts);
+  EXPECT_THROW({
+    Tensor tens = algo::Vstack(Ts);
+  }, std::logic_error);
 }
 
 /*=====test info=====
@@ -142,7 +147,9 @@ TEST(Vstack, err_contains_void) {
       Tensor()
   };
   InitTensorUniform(Ts);
-  ErrorTestExcute(Ts);
+  EXPECT_THROW({
+    Tensor tens = algo::Vstack(Ts);
+  }, std::logic_error);
 }
 
 /*=====test info=====
@@ -157,7 +164,9 @@ TEST(Vstack, err_col_not_eq) {
       Tensor({3, 2}, Type.Double)
   };
   InitTensorUniform(Ts);
-  ErrorTestExcute(Ts);
+  EXPECT_THROW({
+    Tensor tens = algo::Vstack(Ts);
+  }, std::logic_error);
 }
 
 /*=====test info=====
@@ -168,7 +177,9 @@ input:
 TEST(Vstack, err_a_bool_type) {
   std::vector<Tensor> Ts = {Tensor({2, 3}, Type.Bool)};
   InitTensorUniform(Ts);
-  ErrorTestExcute(Ts);
+  EXPECT_THROW({
+    Tensor tens = algo::Vstack(Ts);
+  }, std::logic_error);
 }
 
 /*=====test info=====
@@ -183,7 +194,9 @@ TEST(Vstack, err_contains_multi_bool_type) {
       Tensor({2, 4}, Type.Bool)
   };
   InitTensorUniform(Ts);
-  ErrorTestExcute(Ts);
+  EXPECT_THROW({
+    Tensor tens = algo::Vstack(Ts);
+  }, std::logic_error);
 }
 
 void CheckResult(const Tensor& vstack_tens, 
@@ -222,26 +235,15 @@ void CheckResult(const Tensor& vstack_tens,
     for(int r = 0; r < r_num; ++r) {
       auto dst_r = r + block_row_shift;
       for(int c = 0; c < c_num; ++c) {
-	is_same_elem = IsElemSame(cvt_tens, {r, c}, vstack_tens, {dst_r, c});
-	if(!is_same_elem)
-          break;
+	is_same_elem = AreElemSame(cvt_tens, {r, c}, vstack_tens, {dst_r, c});
+        if(!is_same_elem) break;
       } //end col
+      if(!is_same_elem) break;
     } //end row
+    if(!is_same_elem) break;
     block_row_shift += r_num;
   } //end input tens vec
   EXPECT_TRUE(is_same_elem);
 } //fucn:CheckResult
-
-void ErrorTestExcute(const std::vector<Tensor>& Ts) {
-  try {
-    Tensor tens = algo::Vstack(Ts);
-    std::cerr << "[Test Error] This test should throw error but not !" << std::endl;
-    FAIL();
-  } catch(const std::exception& ex) {
-    auto err_msg = ex.what();
-    std::cerr << err_msg << std::endl;
-    SUCCEED();
-  }
-}
 
 } //namespace

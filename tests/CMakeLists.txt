@@ -1,6 +1,7 @@
 add_executable(
   test_main
   test_tools.cpp
+  common_data_generator.cpp
   #test_main.cpp
   Bond_test.cpp
   Network_test.cpp
@@ -14,7 +15,10 @@ add_executable(
   linalg_test/ExpH_test.cpp
   linalg_test/ExpM_test.cpp
   linalg_test/Lanczos_Gnd_test.cpp
+  linalg_test/Svd_test.cpp
+  algo_test/Hsplit_test.cpp
   algo_test/Hstack_test.cpp
+  algo_test/Vsplit_test.cpp
   algo_test/Vstack_test.cpp
 
 )

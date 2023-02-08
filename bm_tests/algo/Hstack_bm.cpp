@@ -58,7 +58,7 @@ static void BM_Hstack_F64_non_conti(benchmark::State& state)
   std::vector<Tensor> tens_list(tens_num);
   for(int i = 0; i < tens_num; ++i) {
     tens_list[i] = (i + 1) * ones({D_row, D_col});
-    tens_list[i].permute_({1, 0});
+    tens_list[i].permute_({1, 0}); //change row <-> col
   }
 
   //start test here
