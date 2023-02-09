@@ -1,5 +1,7 @@
 add_executable(
   test_main
+  test_tools.cpp
+  common_data_generator.cpp
   #test_main.cpp
   Bond_test.cpp
   Network_test.cpp
@@ -9,9 +11,15 @@ add_executable(
   utils_test/vec_concatenate.cpp
   utils_test/vec_unique.cpp
   utils/getNconParameter.cpp
+  linalg_test/Directsum_test.cpp
   linalg_test/ExpH_test.cpp
   linalg_test/ExpM_test.cpp
   linalg_test/Lanczos_Gnd_test.cpp
+  linalg_test/Svd_test.cpp
+  algo_test/Hsplit_test.cpp
+  algo_test/Hstack_test.cpp
+  algo_test/Vsplit_test.cpp
+  algo_test/Vstack_test.cpp
 
 )
 target_link_libraries(
