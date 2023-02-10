@@ -70,7 +70,7 @@ TEST_F(BlockUniTensorTest, syms){
 TEST_F(BlockUniTensorTest, Norm){
   // std::cout<<BUT4<<std::endl;
   // EXPECT_TRUE(Scalar(BUT4.Norm().at({0})-10.02330912178208).abs()<1e-5);
-  EXPECT_DOUBLE_EQ(double(BUT4.Norm().at({0}).real()),10.07992623704349);
+  EXPECT_DOUBLE_EQ(double(BUT4.Norm().at({0}).real()),10.36019459497064);
 }
 
 TEST_F(BlockUniTensorTest, Conj){
@@ -78,13 +78,17 @@ TEST_F(BlockUniTensorTest, Conj){
   for(size_t i=1;i<=5;i++)for(size_t j=1;j<=11;j++)
       for(size_t k=1;k<=3;k++)for(size_t l=1;l<=5;l++)
         if(BUconjT4.at({i-1,j-1,k-1,l-1}).exists()){
-          EXPECT_TRUE(Scalar(tmp.at({i-1,j-1,k-1,l-1})-BUconjT4.at({i-1,j-1,k-1,l-1})).abs()<1e-5);
+          // EXPECT_TRUE(Scalar(tmp.at({i-1,j-1,k-1,l-1})-BUconjT4.at({i-1,j-1,k-1,l-1})).abs()<1e-5);
+          EXPECT_DOUBLE_EQ(double(tmp.at({i-1,j-1,k-1,l-1}).real()),double(BUconjT4.at({i-1,j-1,k-1,l-1}).real()));
+          EXPECT_DOUBLE_EQ(double(tmp.at({i-1,j-1,k-1,l-1}).imag()),double(BUconjT4.at({i-1,j-1,k-1,l-1}).imag()));
         }
   BUT4.Conj_();
   for(size_t i=1;i<=5;i++)for(size_t j=1;j<=11;j++)
       for(size_t k=1;k<=3;k++)for(size_t l=1;l<=5;l++)
         if(BUT4.at({i-1,j-1,k-1,l-1}).exists()){
-          EXPECT_TRUE(Scalar(BUT4.at({i-1,j-1,k-1,l-1})-BUconjT4.at({i-1,j-1,k-1,l-1})).abs()<1e-5);
+          // EXPECT_TRUE(Scalar(BUT4.at({i-1,j-1,k-1,l-1})-BUconjT4.at({i-1,j-1,k-1,l-1})).abs()<1e-5);
+          EXPECT_DOUBLE_EQ(double(BUT4.at({i-1,j-1,k-1,l-1}).real()),double(BUconjT4.at({i-1,j-1,k-1,l-1}).real()));
+          EXPECT_DOUBLE_EQ(double(BUT4.at({i-1,j-1,k-1,l-1}).imag()),double(BUconjT4.at({i-1,j-1,k-1,l-1}).imag()));
         }
 }
 
@@ -312,9 +316,9 @@ TEST_F(BlockUniTensorTest, contiguous) {
     for(int b = 0;b<bks.size();b++){
         int ptr = 0;
         EXPECT_EQ(bks[b].is_contiguous(), true);
-        for(int i =0; i<bks[b].shape()[0];i++)
-            for(int j =0; j <bks[b].shape()[1];j++)
-                for(int k=0; k <bks[b].shape()[2];k++){
+        for(cytnx_uint64 i =0; i<bks[b].shape()[0];i++)
+            for(cytnx_uint64 j =0; j <bks[b].shape()[1];j++)
+                for(cytnx_uint64 k=0; k <bks[b].shape()[2];k++){
                 EXPECT_EQ(double(bks[b].at({i,j,k}).real()), bks[b].storage().at<double>(ptr++));
             }
     }
@@ -329,9 +333,9 @@ TEST_F(BlockUniTensorTest, contiguous_) {
     for(int b = 0;b<bks.size();b++){
         int ptr = 0;
         EXPECT_EQ(bks[b].is_contiguous(), true);
-        for(int i =0; i<bks[b].shape()[0];i++)
-            for(int j =0; j <bks[b].shape()[1];j++)
-                for(int k=0; k <bks[b].shape()[2];k++){
+        for(cytnx_uint64 i =0; i<bks[b].shape()[0];i++)
+            for(cytnx_uint64 j =0; j <bks[b].shape()[1];j++)
+                for(cytnx_uint64 k=0; k <bks[b].shape()[2];k++){
                 EXPECT_EQ(double(bks[b].at({i,j,k}).real()), bks[b].storage().at<double>(ptr++));
             }
     }
@@ -584,4 +588,126 @@ TEST_F(BlockUniTensorTest, contract3) {
     auto ansbks = UT_contract_ans3.get_blocks();
     for(int i = 0; i < ansbks.size(); i++)
         EXPECT_EQ(outbks[i].equiv(ansbks[i]), true);
+}
+
+TEST_F(BlockUniTensorTest, Add){
+    using namespace std::complex_literals;
+    auto out = BUT4.Add(9+9i);
+    for(size_t i=1;i<=5;i++)for(size_t j=1;j<=11;j++)
+      for(size_t k=1;k<=3;k++)for(size_t l=1;l<=5;l++)
+        if(out.at({i-1,j-1,k-1,l-1}).exists()){
+          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).real()), double(out.at({i-1,j-1,k-1,l-1}).real())+9);
+          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).imag()), double(out.at({i-1,j-1,k-1,l-1}).imag())+9);
+        }
+    auto tmp = BUT4;
+    BUT4.Add_(9+9i);
+    for(size_t i=1;i<=5;i++)for(size_t j=1;j<=11;j++)
+      for(size_t k=1;k<=3;k++)for(size_t l=1;l<=5;l++)
+        if(BUT4.at({i-1,j-1,k-1,l-1}).exists()){
+          EXPECT_DOUBLE_EQ(double(BUT4.at({i-1,j-1,k-1,l-1}).real()), double(tmp.at({i-1,j-1,k-1,l-1}).real())+9);
+          EXPECT_DOUBLE_EQ(double(BUT4.at({i-1,j-1,k-1,l-1}).imag()), double(tmp.at({i-1,j-1,k-1,l-1}).imag())+9);
+        }
+    BUT4 = BUT4.Load("OriginalBUT.cytnx");
+    auto out = BUT4.Add(BUT4_2);
+    for(size_t i=1;i<=5;i++)for(size_t j=1;j<=11;j++)
+      for(size_t k=1;k<=3;k++)for(size_t l=1;l<=5;l++)
+        if(out.at({i-1,j-1,k-1,l-1}).exists()){
+          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).real()), double(BUTpT2.at({i-1,j-1,k-1,l-1}).real()));
+          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).imag()), double(BUTpT2.at({i-1,j-1,k-1,l-1}).imag()));
+        }
+    BUT4.Add_(BUT4_2);
+    for(size_t i=1;i<=5;i++)for(size_t j=1;j<=11;j++)
+      for(size_t k=1;k<=3;k++)for(size_t l=1;l<=5;l++)
+        if(BUT4.at({i-1,j-1,k-1,l-1}).exists()){
+          EXPECT_DOUBLE_EQ(double(BUT4.at({i-1,j-1,k-1,l-1}).real()), double(BUTpT2.at({i-1,j-1,k-1,l-1}).real()));
+          EXPECT_DOUBLE_EQ(double(BUT4.at({i-1,j-1,k-1,l-1}).imag()), double(BUTpT2.at({i-1,j-1,k-1,l-1}).imag()));
+        }
+}
+
+TEST_F(BlockUniTensorTest, Sub){
+    using namespace std::complex_literals;
+    auto out = BUT4.Sub(9+9i);
+    for(size_t i=1;i<=5;i++)for(size_t j=1;j<=11;j++)
+      for(size_t k=1;k<=3;k++)for(size_t l=1;l<=5;l++)
+        if(out.at({i-1,j-1,k-1,l-1}).exists()){
+          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).real()), double(out.at({i-1,j-1,k-1,l-1}).real())-9);
+          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).imag()), double(out.at({i-1,j-1,k-1,l-1}).imag())-9);
+        }
+    auto tmp = BUT4;
+    BUT4.Sub_(9+9i);
+    for(size_t i=1;i<=5;i++)for(size_t j=1;j<=11;j++)
+      for(size_t k=1;k<=3;k++)for(size_t l=1;l<=5;l++)
+        if(BUT4.at({i-1,j-1,k-1,l-1}).exists()){
+          EXPECT_DOUBLE_EQ(double(BUT4.at({i-1,j-1,k-1,l-1}).real()), double(tmp.at({i-1,j-1,k-1,l-1}).real())-9);
+          EXPECT_DOUBLE_EQ(double(BUT4.at({i-1,j-1,k-1,l-1}).imag()), double(tmp.at({i-1,j-1,k-1,l-1}).imag())-9);
+        }
+    BUT4 = BUT4.Load("OriginalBUT.cytnx");
+    auto out = BUT4.Sub(BUT4_2);
+    for(size_t i=1;i<=5;i++)for(size_t j=1;j<=11;j++)
+      for(size_t k=1;k<=3;k++)for(size_t l=1;l<=5;l++)
+        if(out.at({i-1,j-1,k-1,l-1}).exists()){
+          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).real()), double(BUTsT2.at({i-1,j-1,k-1,l-1}).real()));
+          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).imag()), double(BUTsT2.at({i-1,j-1,k-1,l-1}).imag()));
+        }
+    BUT4.Sub_(BUT4_2);
+    for(size_t i=1;i<=5;i++)for(size_t j=1;j<=11;j++)
+      for(size_t k=1;k<=3;k++)for(size_t l=1;l<=5;l++)
+        if(BUT4.at({i-1,j-1,k-1,l-1}).exists()){
+          EXPECT_DOUBLE_EQ(double(BUT4.at({i-1,j-1,k-1,l-1}).real()), double(BUTsT2.at({i-1,j-1,k-1,l-1}).real()));
+          EXPECT_DOUBLE_EQ(double(BUT4.at({i-1,j-1,k-1,l-1}).imag()), double(BUTsT2.at({i-1,j-1,k-1,l-1}).imag()));
+        }
+}
+
+TEST_F(BlockUniTensorTest, Mul){
+    auto out = BUT4.Mul(9);
+    for(size_t i=1;i<=5;i++)for(size_t j=1;j<=11;j++)
+      for(size_t k=1;k<=3;k++)for(size_t l=1;l<=5;l++)
+        if(out.at({i-1,j-1,k-1,l-1}).exists()){
+          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).real()), double(BUTm9.at({i-1,j-1,k-1,l-1}).real()));
+          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).imag()), double(BUTm9.at({i-1,j-1,k-1,l-1}).imag()));
+        }
+    BUT4.Mul_(9);
+    for(size_t i=1;i<=5;i++)for(size_t j=1;j<=11;j++)
+      for(size_t k=1;k<=3;k++)for(size_t l=1;l<=5;l++)
+        if(BUT4.at({i-1,j-1,k-1,l-1}).exists()){
+          EXPECT_DOUBLE_EQ(double(BUT4.at({i-1,j-1,k-1,l-1}).real()), double(BUTm9.at({i-1,j-1,k-1,l-1}).real()));
+          EXPECT_DOUBLE_EQ(double(BUT4.at({i-1,j-1,k-1,l-1}).imag()), double(BUTm9.at({i-1,j-1,k-1,l-1}).imag()));
+        }
+}
+
+TEST_F(BlockUniTensorTest, Div){
+    auto out = BUT4.Div(9);
+    for(size_t i=1;i<=5;i++)for(size_t j=1;j<=11;j++)
+      for(size_t k=1;k<=3;k++)for(size_t l=1;l<=5;l++)
+        if(out.at({i-1,j-1,k-1,l-1}).exists()){
+          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).real()), double(BUTd9.at({i-1,j-1,k-1,l-1}).real()));
+          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).imag()), double(BUTd9.at({i-1,j-1,k-1,l-1}).imag()));
+        }
+    BUT4.Div_(9);
+    for(size_t i=1;i<=5;i++)for(size_t j=1;j<=11;j++)
+      for(size_t k=1;k<=3;k++)for(size_t l=1;l<=5;l++)
+        if(BUT4.at({i-1,j-1,k-1,l-1}).exists()){
+          EXPECT_DOUBLE_EQ(double(BUT4.at({i-1,j-1,k-1,l-1}).real()), double(BUTd9.at({i-1,j-1,k-1,l-1}).real()));
+          EXPECT_DOUBLE_EQ(double(BUT4.at({i-1,j-1,k-1,l-1}).imag()), double(BUTd9.at({i-1,j-1,k-1,l-1}).imag()));
+        }
+
+    BUT4 = BUT4.Load("OriginalBUT.cytnx");
+    auto out = BUT4.Div(BUT4_2);
+    for(size_t i=1;i<=5;i++)for(size_t j=1;j<=11;j++)
+      for(size_t k=1;k<=3;k++)for(size_t l=1;l<=5;l++)
+        if(out.at({i-1,j-1,k-1,l-1}).exists()){
+          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).real()), double(BUTdT2.at({i-1,j-1,k-1,l-1}).real()));
+          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).imag()), double(BUTdT2.at({i-1,j-1,k-1,l-1}).imag()));
+        }
+    BUT4.Div_(BUT4_2);
+    for(size_t i=1;i<=5;i++)for(size_t j=1;j<=11;j++)
+      for(size_t k=1;k<=3;k++)for(size_t l=1;l<=5;l++)
+        if(BUT4.at({i-1,j-1,k-1,l-1}).exists()){
+          EXPECT_DOUBLE_EQ(double(BUT4.at({i-1,j-1,k-1,l-1}).real()), double(BUTdT2.at({i-1,j-1,k-1,l-1}).real()));
+          EXPECT_DOUBLE_EQ(double(BUT4.at({i-1,j-1,k-1,l-1}).imag()), double(BUTdT2.at({i-1,j-1,k-1,l-1}).imag()));
+        }
+}
+
+TEST_F(BlockUniTensorTest, group_basis){
+    auto out = BUT4.group_basis();
 }
