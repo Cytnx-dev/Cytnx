@@ -23,7 +23,6 @@ int main(int argc, char *argv[]) {
   print(Sas.dtype());
   print(Sas);
 
-
   Tensor rx = arange(10)+1;
   Tensor ry = arange(10)(ac("::-1"))+1;
 

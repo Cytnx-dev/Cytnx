@@ -589,6 +589,7 @@ namespace cytnx {
     return inL.contract(inR, cacheL, cacheR);
   }
 
+
   void _resolve_CT(std::vector<UniTensor> &TNlist){};
   UniTensor Contracts(const std::vector<UniTensor> &TNs) {
     cytnx_error_msg(TNs.size() < 2, "[ERROR][Contracts] should have more than 2 TNs to contract.%s",
