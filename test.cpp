@@ -35,6 +35,9 @@ int main(int argc, char *argv[]) {
   //pp();
   //pp();
   //pp();
+
+
+  
   
   Bond B1p = Bond(BD_IN, {Qs(-1), Qs(0), Qs(1)}, {2, 1, 2});
   Bond B2p = Bond(BD_OUT, {Qs(-1), Qs(0), Qs(1)}, {4, 3, 4});

@@ -236,11 +236,13 @@ if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES))
     set(BLA_VENDOR OpenBLAS)
     find_package( BLAS REQUIRED)
     find_package( LAPACK REQUIRED)
+    target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES})
     message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}" )
   endif()
 else()
   set(LAPACK_LIBRARIES  ${BLAS_LIBRARIES}  ${LAPACK_LIBRARIES})
   message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}")
+  target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES})
 endif()
 
 if (USE_MKL)
@@ -299,6 +301,27 @@ else()
     if(USE_MKL)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
     endif()
+
+    if(USE_HPTT)
+        find_package( OpenMP )
+        if ( OPENMP_FOUND )
+          if(NOT TARGET OpenMP::OpenMP_CXX)
+            find_package(Threads REQUIRED)
+            add_library(OpenMP::OpenMP_CXX IMPORTED INTERFACE)
+            set_property(TARGET OpenMP::OpenMP_CXX
+                         PROPERTY INTERFACE_COMPILE_OPTIONS "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>")
+            # Only works if the same flag is passed to the linker; use CMake 3.9+ otherwise (Intel, AppleClang)
+            set_property(TARGET OpenMP::OpenMP_CXX
+                         PROPERTY INTERFACE_LINK_LIBRARIES "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>" Threads::Threads)
+
+          else()
+            set_property(TARGET OpenMP::OpenMP_CXX
+                         PROPERTY INTERFACE_COMPILE_OPTIONS "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>")    
+          endif()
+          target_link_libraries(cytnx PRIVATE OpenMP::OpenMP_CXX)
+        endif()
+    endif()
+
 endif()
 
 target_link_libraries(cytnx PUBLIC Boost::boost ${LAPACK_LIBRARIES})

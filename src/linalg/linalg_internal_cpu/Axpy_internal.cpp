@@ -14,7 +14,7 @@ namespace cytnx {
       cytnx_complex128 *_x = (cytnx_complex128 *)x->Mem;
       cytnx_complex128 *_y = (cytnx_complex128 *)y->Mem;
       cytnx_complex128 _a = complex128(a);
-      cblas_zaxpy (x->size(), &_a, _x, 1, _y, 1);    
+      cblas_zaxpy (x->size(), (double*)&_a, (double*)_x, 1, (double*)_y, 1);    
     
     }
     
@@ -25,7 +25,7 @@ namespace cytnx {
       cytnx_complex64 *_x = (cytnx_complex64 *)x->Mem;
       cytnx_complex64 *_y = (cytnx_complex64 *)y->Mem;
       cytnx_complex64 _a = complex64(a);
-      cblas_caxpy (x->size(), &_a, _x, 1, _y, 1);    
+      cblas_caxpy (x->size(), (float*)&_a, (float*)_x, 1, (float*)_y, 1);    
     
     }
 

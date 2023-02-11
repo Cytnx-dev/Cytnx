@@ -608,12 +608,12 @@ TEST_F(BlockUniTensorTest, Add){
           EXPECT_DOUBLE_EQ(double(BUT4.at({i-1,j-1,k-1,l-1}).imag()), double(tmp.at({i-1,j-1,k-1,l-1}).imag())+9);
         }
     BUT4 = BUT4.Load("OriginalBUT.cytnx");
-    auto out = BUT4.Add(BUT4_2);
+    auto out2 = BUT4.Add(BUT4_2);
     for(size_t i=1;i<=5;i++)for(size_t j=1;j<=11;j++)
       for(size_t k=1;k<=3;k++)for(size_t l=1;l<=5;l++)
-        if(out.at({i-1,j-1,k-1,l-1}).exists()){
-          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).real()), double(BUTpT2.at({i-1,j-1,k-1,l-1}).real()));
-          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).imag()), double(BUTpT2.at({i-1,j-1,k-1,l-1}).imag()));
+        if(out2.at({i-1,j-1,k-1,l-1}).exists()){
+          EXPECT_DOUBLE_EQ(double(out2.at({i-1,j-1,k-1,l-1}).real()), double(BUTpT2.at({i-1,j-1,k-1,l-1}).real()));
+          EXPECT_DOUBLE_EQ(double(out2.at({i-1,j-1,k-1,l-1}).imag()), double(BUTpT2.at({i-1,j-1,k-1,l-1}).imag()));
         }
     BUT4.Add_(BUT4_2);
     for(size_t i=1;i<=5;i++)for(size_t j=1;j<=11;j++)
@@ -642,12 +642,12 @@ TEST_F(BlockUniTensorTest, Sub){
           EXPECT_DOUBLE_EQ(double(BUT4.at({i-1,j-1,k-1,l-1}).imag()), double(tmp.at({i-1,j-1,k-1,l-1}).imag())-9);
         }
     BUT4 = BUT4.Load("OriginalBUT.cytnx");
-    auto out = BUT4.Sub(BUT4_2);
+    auto out2 = BUT4.Sub(BUT4_2);
     for(size_t i=1;i<=5;i++)for(size_t j=1;j<=11;j++)
       for(size_t k=1;k<=3;k++)for(size_t l=1;l<=5;l++)
-        if(out.at({i-1,j-1,k-1,l-1}).exists()){
-          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).real()), double(BUTsT2.at({i-1,j-1,k-1,l-1}).real()));
-          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).imag()), double(BUTsT2.at({i-1,j-1,k-1,l-1}).imag()));
+        if(out2.at({i-1,j-1,k-1,l-1}).exists()){
+          EXPECT_DOUBLE_EQ(double(out2.at({i-1,j-1,k-1,l-1}).real()), double(BUTsT2.at({i-1,j-1,k-1,l-1}).real()));
+          EXPECT_DOUBLE_EQ(double(out2.at({i-1,j-1,k-1,l-1}).imag()), double(BUTsT2.at({i-1,j-1,k-1,l-1}).imag()));
         }
     BUT4.Sub_(BUT4_2);
     for(size_t i=1;i<=5;i++)for(size_t j=1;j<=11;j++)
@@ -692,12 +692,12 @@ TEST_F(BlockUniTensorTest, Div){
         }
 
     BUT4 = BUT4.Load("OriginalBUT.cytnx");
-    auto out = BUT4.Div(BUT4_2);
+    auto out2 = BUT4.Div(BUT4_2);
     for(size_t i=1;i<=5;i++)for(size_t j=1;j<=11;j++)
       for(size_t k=1;k<=3;k++)for(size_t l=1;l<=5;l++)
-        if(out.at({i-1,j-1,k-1,l-1}).exists()){
-          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).real()), double(BUTdT2.at({i-1,j-1,k-1,l-1}).real()));
-          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).imag()), double(BUTdT2.at({i-1,j-1,k-1,l-1}).imag()));
+        if(out2.at({i-1,j-1,k-1,l-1}).exists()){
+          EXPECT_DOUBLE_EQ(double(out2.at({i-1,j-1,k-1,l-1}).real()), double(BUTdT2.at({i-1,j-1,k-1,l-1}).real()));
+          EXPECT_DOUBLE_EQ(double(out2.at({i-1,j-1,k-1,l-1}).imag()), double(BUTdT2.at({i-1,j-1,k-1,l-1}).imag()));
         }
     BUT4.Div_(BUT4_2);
     for(size_t i=1;i<=5;i++)for(size_t j=1;j<=11;j++)
