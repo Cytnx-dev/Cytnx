@@ -709,5 +709,79 @@ TEST_F(BlockUniTensorTest, Div){
 }
 
 TEST_F(BlockUniTensorTest, group_basis){
-    auto out = BUT4.group_basis();
+  auto out = BUT6.group_basis();
+  EXPECT_DOUBLE_EQ(double(out.at({0,0}).real()), double(2));
+
+  EXPECT_DOUBLE_EQ(double(out.at({0,1}).real()), double(4));
+
+  EXPECT_DOUBLE_EQ(double(out.at({1,0}).real()), double(3));
+
+  EXPECT_DOUBLE_EQ(double(out.at({1,1}).real()), double(5));
+
+  EXPECT_DOUBLE_EQ(double(out.at({2,2}).real()), double(1));
+
+  EXPECT_EQ(out.shape(),std::vector<cytnx_uint64>({3,3}));
+  EXPECT_EQ(out.device(),Device.cpu);
+  EXPECT_EQ(out.bonds()[0].qnums(),std::vector<std::vector<cytnx_int64>>({{0},{1}}));
+  EXPECT_EQ(out.bonds()[1].qnums(),std::vector<std::vector<cytnx_int64>>({{0},{1}}));
+}
+
+TEST_F(BlockUniTensorTest, get_qindices){
+  auto out = BUT6.get_qindices(0);
+  EXPECT_EQ(out.size(),2);
+  EXPECT_EQ(out[0],0);
+  EXPECT_EQ(out[1],0);
+
+  out = BUT6.get_qindices(1);
+  EXPECT_EQ(out.size(),2);
+  EXPECT_EQ(out[0],1);
+  EXPECT_EQ(out[1],1);
+
+  out = BUT6.get_qindices(2);
+  EXPECT_EQ(out.size(),2);
+  EXPECT_EQ(out[0],1);
+  EXPECT_EQ(out[1],2);
+
+  out = BUT6.get_qindices(3);
+  EXPECT_EQ(out.size(),2);
+  EXPECT_EQ(out[0],2);
+  EXPECT_EQ(out[1],1);
+
+  out = BUT6.get_qindices(4);
+  EXPECT_EQ(out.size(),2);
+  EXPECT_EQ(out[0],2);
+  EXPECT_EQ(out[1],2);
+}
+
+TEST_F(BlockUniTensorTest, get_itoi){
+  auto out = BUT6.get_itoi();
+  EXPECT_EQ(out.size(),5);
+  EXPECT_EQ(out[0],std::vector<cytnx_uint64>({0,0}));
+  EXPECT_EQ(out[1],std::vector<cytnx_uint64>({1,1}));
+  EXPECT_EQ(out[2],std::vector<cytnx_uint64>({1,2}));
+  EXPECT_EQ(out[3],std::vector<cytnx_uint64>({2,1}));
+  EXPECT_EQ(out[4],std::vector<cytnx_uint64>({2,2}));
+}
+
+TEST_F(BlockUniTensorTest, at_for_sparse){
+  BUT6 = BUT6.astype(Type.ComplexDouble);
+  auto out = BUT6.at({0,0});
+  EXPECT_DOUBLE_EQ(double(out.real()), double(1));
+  EXPECT_DOUBLE_EQ(double(out.imag()), double(0));
+
+  out = BUT6.at({1,1});
+  EXPECT_DOUBLE_EQ(double(out.real()), double(2));
+  EXPECT_DOUBLE_EQ(double(out.imag()), double(0));
+
+  out = BUT6.at({1,2});
+  EXPECT_DOUBLE_EQ(double(out.real()), double(4));
+  EXPECT_DOUBLE_EQ(double(out.imag()), double(0));
+
+  out = BUT6.at({2,1});
+  EXPECT_DOUBLE_EQ(double(out.real()), double(3));
+  EXPECT_DOUBLE_EQ(double(out.imag()), double(0));
+
+  out = BUT6.at({2,2});
+  EXPECT_DOUBLE_EQ(double(out.real()), double(5));
+  EXPECT_DOUBLE_EQ(double(out.imag()), double(0));
 }

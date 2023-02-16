@@ -8,6 +8,7 @@ add_executable(
   UniTensor_base_test.cpp
   ncon_test.cpp
   BlockUniTensor_test.cpp
+  DenseUniTensor_test.cpp
   utils_test/vec_concatenate.cpp
   utils_test/vec_unique.cpp
   utils/getNconParameter.cpp
@@ -88,6 +89,11 @@ file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/BUTd9.cytnx"
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/BUTd9.cytnx"
       DESTINATION ${CMAKE_BINARY_DIR})
 
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/BUTdT2.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/BUTdT2.cytnx"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/contract_ans1.cytnx"
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/contract_ans1.cytnx"
@@ -190,4 +196,29 @@ file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/permute_ans2.cytnx"
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/permute_ans3.cytnx"
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/permute_ans3.cytnx"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/denseutensor1.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/denseutensor1.cytnx"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/denseutensor2.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/denseutensor2.cytnx"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/densecontres1.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/densecontres1.cytnx"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/densecontres2.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/densecontres2.cytnx"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/densecontres3.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/densecontres3.cytnx"
       DESTINATION ${CMAKE_BINARY_DIR})

@@ -38,6 +38,10 @@ class BlockUniTensorTest : public ::testing::Test {
   UniTensor BUTd9 = UniTensor({B1p, B2p, B3p, B4p});
   UniTensor BUTdT2 = UniTensor({B1p, B2p, B3p, B4p});
 
+  Bond B1g = Bond(BD_IN, {Qs(1), Qs(0), Qs(0)}, {1, 1, 1});
+  Bond B2g = Bond(BD_OUT, {Qs(1), Qs(0), Qs(0)}, {1, 1, 1});
+  UniTensor BUT6 = UniTensor({B1g, B2g});
+
   Bond bd_sym_f =
     Bond(BD_KET, {{0, 2}, {1, 5}, {1, 6}, {0, 1}}, {4, 7, 2, 3}, {Symmetry::Zn(2), Symmetry::U1()});
   Bond bd_sym_g =
@@ -104,6 +108,12 @@ class BlockUniTensorTest : public ::testing::Test {
     BUTm9 = BUTm9.Load("BUTm9.cytnx");
     BUTd9 = BUTd9.Load("BUTd9.cytnx");
     BUTdT2 = BUTdT2.Load("BUTdT2.cytnx");
+
+    BUT6.at({0,0}) = 1;
+    BUT6.at({1,1}) = 2;
+    BUT6.at({2,1}) = 3;
+    BUT6.at({1,2}) = 4;
+    BUT6.at({2,2}) = 5;
 
     t0 = Tensor::Load("put_block_t0.cytn");
     t1a = Tensor::Load("put_block_t1a.cytn");

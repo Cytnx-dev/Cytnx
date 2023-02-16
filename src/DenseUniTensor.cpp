@@ -192,7 +192,7 @@ namespace cytnx {
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabels(
     const std::vector<cytnx_int64> &new_labels) {
-    std::vector<std::string> vs(new_labels.size());
+    std::vector<std::string> vs;
     for (int i = 0; i < (int)new_labels.size(); i++) vs.push_back(std::to_string(new_labels[i]));
     return relabels(vs);
   }
