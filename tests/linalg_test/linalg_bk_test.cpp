@@ -36,3 +36,14 @@ TEST_F(linalg_bk_Test, Qr1){
           }
       }
 }
+
+TEST_F(linalg_bk_Test, expH){
+    auto res = linalg::ExpH(H);
+    for(int i = 0;i<27;i++)
+      for(int j = 0; j<27;j++){
+          if(res.elem_exists({i,j})){
+            EXPECT_TRUE(abs((double)(res.at({i,j}).real())-(double)(expH_ans.at({i,j}).real())) < 1E-8);
+            //EXPECT_EQ((double)(R.at({i,j}).real()),(double)(Qr_Rans.at({i,j}).real()));
+          }
+      }
+}

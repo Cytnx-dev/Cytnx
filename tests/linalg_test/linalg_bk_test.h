@@ -30,6 +30,8 @@ class linalg_bk_Test : public ::testing::Test {
   Tensor Qr_Qans = Tensor::Load(data_dir+"Qr/qr_Qans.cytn");
   Tensor Qr_Rans = Tensor::Load(data_dir+"Qr/qr_Rans.cytn");
 
+  //==================== ExpH ===================
+  Tensor expH_ans = Tensor::Load(data_dir+"expH/expH_ans.cytn");
  protected:
   void SetUp() override {
     //================ svd truncate =======================
