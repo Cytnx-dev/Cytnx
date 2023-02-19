@@ -102,7 +102,7 @@ FLAG="${FLAG} -DUSE_CUDA=OFF "
 #        where the magma is installed
 #-----------------------------------
 MAGMA_ROOT=${HOME}/MAGMA
-FLAG="${FLAG} -DUSE_MAGMA=ON "
+FLAG="${FLAG} -DUSE_MAGMA=OFF "
 FLAG="${FLAG} -DMAGMA_ROOT=${MAGMA_ROOT} "
 #-----------------------------------
 # 6-d) CuTensor (DEFALT = on)
@@ -160,10 +160,10 @@ FLAG="${FLAG} -DUSE_ICPC=OFF "
 
 
 echo ${FLAG}
-rm -rf build
-mkdir build
+# rm -rf build
+# mkdir build
 cd build
 cmake ../ ${FLAG}
-#make -j`nproc`
-#make install
-#ctest
+make -j`nproc`
+make install
+ctest
