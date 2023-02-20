@@ -1,5 +1,5 @@
-#ifndef _H_linalg_bk_test
-#define _H_linalg_bk_test
+#ifndef _H_linalg_test
+#define _H_linalg_test
 
 #include "cytnx.hpp"
 #include <gtest/gtest.h>
@@ -8,7 +8,7 @@ using namespace cytnx;
 
 std::string data_dir = "../../tests/test_data_base/linalg/";
 
-class linalg_bk_Test : public ::testing::Test {
+class linalg_Test : public ::testing::Test {
  public:
   
   // ==================== svd_truncate ===================
@@ -32,6 +32,13 @@ class linalg_bk_Test : public ::testing::Test {
 
   //==================== ExpH ===================
   Tensor expH_ans = Tensor::Load(data_dir+"expH/expH_ans.cytn");
+
+  //==================== Pow ===================
+  Tensor Pow_ans = Tensor::Load(data_dir+"Pow/Pow_ans.cytn");
+
+  //==================== Mod ===================
+  Tensor Mod_ans = Tensor::Load(data_dir+"Mod/Mod_ans.cytn");
+  Tensor ModUtUt_ans = Tensor::Load(data_dir+"Mod/ModUtUt_ans.cytn");
  protected:
   void SetUp() override {
     //================ svd truncate =======================
