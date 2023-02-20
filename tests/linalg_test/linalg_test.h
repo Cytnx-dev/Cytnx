@@ -50,7 +50,7 @@ class linalg_Test : public ::testing::Test {
     H.put_block(A,0);
     H.put_block(B,1);
     H.put_block(C,2);
-    H.set_labels({'a','b'});
+    H.set_labels({"a","b"});
   }
   void TearDown() override {}
 };
