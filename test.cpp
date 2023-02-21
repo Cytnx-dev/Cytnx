@@ -18,6 +18,15 @@ void pp(){
 
 
 int main(int argc, char *argv[]) {
+
+
+  auto T0 = UniTensor::Load("tests/OriginalBUT.cytnx");
+  auto TC = UniTensor::Load("tests/BUconjT.cytnx");
+
+  print(T0);
+  print(TC);
+  return 0;
+
   /*
   Scalar Sas = Scalar();
   print(Sas.dtype());
@@ -36,14 +45,48 @@ int main(int argc, char *argv[]) {
   //pp();
 
 
+  /*  
+  UniTensor AY(zeros({2,3,4}));
   
-  
+  AY = AY.astype(Type.ComplexDouble);
+ 
+  random::Make_normal(AY.get_block_(),0,0.2);
+ 
+  print(AY);
+
+
+  AY.Conj_();
+
+  print(AY);
+
+  print(AY.at({0,0,0}).real());
+  print(AY.at({0,0,0}).imag());
+
+
+  return 0;
+  */
+
   Bond B1p = Bond(BD_IN, {Qs(-1), Qs(0), Qs(1)}, {2, 1, 2});
   Bond B2p = Bond(BD_OUT, {Qs(-1), Qs(0), Qs(1)}, {4, 3, 4});
   Bond B3p = Bond(BD_IN, {Qs(-1), Qs(0), Qs(2)}, {1, 1, 1});
   Bond B4p = Bond(BD_OUT, {Qs(-1), Qs(0), Qs(1)}, {2, 1, 2});
  
   UniTensor BUT4 = UniTensor({B1p, B2p, B3p, B4p});
+  BUT4 = BUT4.astype(Type.ComplexDouble);
+
+  for(int i=0;i<BUT4.get_blocks_().size();i++){
+    random::Make_normal(BUT4.get_blocks_()[i],0,0.2);
+  }  
+
+  print(BUT4);
+
+  auto cB4 = BUT4.Conj();
+
+  print(cB4); 
+
+
+  return 0;
+
   auto TT44 = BUT4.Trace(0,3);
   TT44.print_diagram();
   TT44.print_blocks();
