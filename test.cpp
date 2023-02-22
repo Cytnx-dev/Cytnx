@@ -24,9 +24,10 @@ int main(int argc, char *argv[]) {
   auto TC = UniTensor::Load("tests/BUconjT.cytnx");
 
 
-  print(T0);
-  print(TC);
+  //print(T0);
+  //print(TC);
   T0.print_diagram();
+  T0.print_block(0);
   return 0;
 
   /*

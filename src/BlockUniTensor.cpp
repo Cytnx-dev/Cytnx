@@ -280,7 +280,51 @@ namespace cytnx {
 
         os<< (std::string(" ")*(3+Lmax+5)) << std::string("-")*(4+mL+mR+5) << endl;
   } 
+  void BlockUniTensor::print_block(const cytnx_int64 &idx, const bool &full_info)const{
+        cytnx_error_msg((idx < 0) || (idx >= this->_blocks.size()),"[ERROR] index [%d] out of bound. should be >0 and < number of available blocks %d\n",idx,this->_blocks.size());
 
+        std::ostream &os = std::cout;
+        
+        os << "========================\n";
+        if(this->_is_diag) os << " *is_diag: True\n";
+        os << "BLOCK [#" << idx << "]\n"; 
+        /*
+        os << "  |-Qn indices for each axis:\n   {\t";
+        for(int s=0;s<this->_inner_to_outer_idx[idx].size();s++){
+            os << this->_inner_to_outer_idx[idx][s] << "\t";
+        }
+        os << "}" << endl;
+        os << "\t";
+        for(int s=0;s<this->_bonds.size();s++){
+            os << ((this->_bonds[s].type()>0)?"OUT":"IN") << "\t";
+        }
+        os << endl;
+        os << "  |-Qn for each axis:\n";
+        for(int s=0;s<this->_bonds[0].Nsym();s++){
+            os << " " <<this->_bonds[0]._impl->_syms[s].stype_str() << ":\t"; 
+            for(int l=0;l<this->_blocks[idx].shape().size();l++){
+                os << std::showpos << this->_bonds[l]._impl->_qnums[this->_inner_to_outer_idx[idx][l]][s] << "\t";
+            } 
+            os << std::noshowpos << endl; 
+        }
+        */
+        os << " |- []   : Qn index \n";
+        os << " |- Sym(): Qnum of correspond symmetry\n";
+        beauty_print_block(os, this->_rowrank, this->_labels.size() - this->_rowrank, this->_inner_to_outer_idx[idx], this->_bonds, this->_blocks[idx]);
+     
+
+        if(full_info)
+            os << this->_blocks[idx];
+        else{
+            os << "  |-dtype:\t" << Type.getname(this->_blocks[idx].dtype()) << endl;
+            os << "  |-device:\t" << Device.getname(this->_blocks[idx].device()) << endl;
+            os << "  |-contiguous:\t" << (this->_blocks[idx].is_contiguous()? "True" : "False") << endl;
+            os << "  |-shape:\t";
+            vec_print_simple(os,this->_blocks[idx].shape());
+
+        }
+
+  }
 
   void BlockUniTensor::print_blocks(const bool &full_info) const{
     std::ostream &os = std::cout;
@@ -305,43 +349,7 @@ namespace cytnx {
 
     // print each blocks with its qnum! 
     for(int b=0;b<this->_blocks.size();b++){
-        os << "========================\n";
-        os << "BLOCK [#" << b << "]\n"; 
-        /*
-        os << "  |-Qn indices for each axis:\n   {\t";
-        for(int s=0;s<this->_inner_to_outer_idx[b].size();s++){
-            os << this->_inner_to_outer_idx[b][s] << "\t";
-        }
-        os << "}" << endl;
-        os << "\t";
-        for(int s=0;s<this->_bonds.size();s++){
-            os << ((this->_bonds[s].type()>0)?"OUT":"IN") << "\t";
-        }
-        os << endl;
-        os << "  |-Qn for each axis:\n";
-        for(int s=0;s<this->_bonds[0].Nsym();s++){
-            os << " " <<this->_bonds[0]._impl->_syms[s].stype_str() << ":\t"; 
-            for(int l=0;l<this->_blocks[b].shape().size();l++){
-                os << std::showpos << this->_bonds[l]._impl->_qnums[this->_inner_to_outer_idx[b][l]][s] << "\t";
-            } 
-            os << std::noshowpos << endl; 
-        }
-        */
-        os << " |- []   : Qn index \n";
-        os << " |- Sym(): Qnum of correspond symmetry\n";
-        beauty_print_block(os, this->_rowrank, this->_labels.size() - this->_rowrank, this->_inner_to_outer_idx[b], this->_bonds, this->_blocks[b]);
-     
-
-        if(full_info)
-            os << this->_blocks[b];
-        else{
-            os << "  |-dtype:\t" << Type.getname(this->_blocks[b].dtype()) << endl;
-            os << "  |-device:\t" << Device.getname(this->_blocks[b].device()) << endl;
-            os << "  |-contiguous:\t" << (this->_blocks[b].is_contiguous()? "True" : "False") << endl;
-            os << "  |-shape:\t";
-            vec_print_simple(os,this->_blocks[b].shape());
-
-        }
+        this->print_block(b,full_info);
     }
 
     /*
@@ -382,7 +390,7 @@ namespace cytnx {
     //std::cout << std::string(buffer);
     sprintf(buffer, "contiguous  : %s\n", this->is_contiguous() ? "True" : "False");
     std::cout << std::string(buffer);
-    sprintf(buffer, "valid bocks : %d\n", this->_blocks.size());
+    sprintf(buffer, "valid blocks : %d\n", this->_blocks.size());
     std::cout << std::string(buffer);
     sprintf(buffer, "is diag   : %s\n", this->is_diag() ? "True" : "False");
     std::cout << std::string(buffer);

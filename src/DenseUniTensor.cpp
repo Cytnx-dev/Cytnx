@@ -478,8 +478,7 @@ namespace cytnx {
     }
   };
   */
-
-  void DenseUniTensor::print_blocks(const bool &full_info)const{
+  void DenseUniTensor::print_block(const cytnx_int64 &idx, const bool &full_info) const{
     std::ostream &os = std::cout;
     os << "-------- start of print ---------\n";
     char *buffer = (char *)malloc(sizeof(char) * 1024);
@@ -501,6 +500,9 @@ namespace cytnx {
         vec_print_simple(os,this->_block.shape());
     }
     free(buffer);
+  }
+  void DenseUniTensor::print_blocks(const bool &full_info)const{
+    this->print_block(0,full_info);
   }
 
   void DenseUniTensor::print_diagram(const bool &bond_info) {

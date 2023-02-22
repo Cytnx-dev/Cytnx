@@ -727,6 +727,10 @@ namespace cytnx {
 
   std::vector<Symmetry> SparseUniTensor::syms() const { return this->_bonds[0].syms(); }
 
+  void SparseUniTensor::print_block(const cytnx_int64 &idx, const bool &full_info)const{
+        cytnx_error_msg(true,"[ERROR] SpareUniTensor does not support individual printing.%s","\n");
+  }
+
   void SparseUniTensor::print_blocks(const bool &full_info)const {
     std::ostream &os = std::cout;
     os << "-------- start of print ---------\n";

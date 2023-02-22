@@ -268,6 +268,7 @@ namespace cytnx {
     virtual boost::intrusive_ptr<UniTensor_base> contiguous();
     virtual void print_diagram(const bool &bond_info = false);
     virtual void print_blocks(const bool &full_info=true) const; 
+    virtual void print_block(const cytnx_int64 &idx, const bool &full_info=true) const;
 
     virtual boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const;
 
@@ -606,6 +607,7 @@ namespace cytnx {
     }
     void print_diagram(const bool &bond_info = false);
     void print_blocks(const bool &full_info=true) const;
+    void print_block(const cytnx_int64 &idx, const bool &full_info=true) const;
     Tensor get_block(const cytnx_uint64 &idx = 0) const { return this->_block.clone(); }
 
     Tensor get_block(const std::vector<cytnx_int64> &qnum, const bool &force) const {
@@ -1253,7 +1255,7 @@ namespace cytnx {
     }
     void print_diagram(const bool &bond_info = false);
     void print_blocks(const bool &full_info=true)const;
-
+    void print_block(const cytnx_int64 &idx, const bool &full_info=true) const;
     std::vector<Symmetry> syms() const;
 
     Tensor get_block(const cytnx_uint64 &idx = 0) const {
@@ -2066,6 +2068,7 @@ namespace cytnx {
 
     void print_diagram(const bool &bond_info = false);
     void print_blocks(const bool &full_info=true) const;
+    void print_block(const cytnx_int64 &idx, const bool &full_info=true) const;
 
     boost::intrusive_ptr<UniTensor_base> contract(
       const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &mv_elem_self = false,
@@ -2931,7 +2934,8 @@ namespace cytnx {
     void contiguous_() { this->_impl = this->_impl->contiguous_(); }
     void print_diagram(const bool &bond_info = false) { this->_impl->print_diagram(bond_info); }
     void print_blocks(const bool &full_info=true) const{ this->_impl->print_blocks(full_info); }
-   
+    void print_block(const cytnx_int64 &idx, const bool &full_info=true) const{this->_impl->print_block(idx,full_info);}
+
     void group_basis_(){
         this->_impl->group_basis_(); 
     }
