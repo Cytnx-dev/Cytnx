@@ -23,8 +23,10 @@ int main(int argc, char *argv[]) {
   auto T0 = UniTensor::Load("tests/OriginalBUT.cytnx");
   auto TC = UniTensor::Load("tests/BUconjT.cytnx");
 
+
   print(T0);
   print(TC);
+  T0.print_diagram();
   return 0;
 
   /*

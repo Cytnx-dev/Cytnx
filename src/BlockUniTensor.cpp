@@ -197,6 +197,91 @@ namespace cytnx {
       
   }
 
+  void beauty_print_block(std::ostream &os, const cytnx_uint64 &Nin, const cytnx_uint64 &Nout, const std::vector<cytnx_uint64> &qn_indices, const std::vector<Bond> &bonds, const Tensor &block){
+        cytnx_uint64 Total_line = Nin < Nout ? Nout:Nin;
+        
+        std::vector<std::string> Lside(Total_line);
+        std::vector<std::string> Rside(Total_line);
+        std::vector<std::string> MidL(Total_line);
+        std::vector<std::string> MidR(Total_line);
+        cytnx_uint64 Lmax = 0;
+        cytnx_uint64 mL = 0;
+        cytnx_uint64 mR = 0;
+        
+        for(int i=0;i<Total_line;i++){
+            //Lside:
+            if(i<Nin){
+                Lside[i] += "[" + to_string(qn_indices[i]) + "] ";
+                for(int s=0;s<bonds[0].Nsym();s++){
+                    Lside[i] += bonds[0]._impl->_syms[s].stype_str() + "(" + to_string(bonds[i]._impl->_qnums[qn_indices[i]][s]) + ")";
+                }
+                if(Lmax < Lside[i].size()) Lmax = Lside[i].size();
+                
+                MidL[i] += to_string(block.shape()[i]);
+                if(mL < MidL[i].size()) mL =  MidL[i].size();
+            }
+                
+            //Rside:
+            if(i<Nout){
+                Rside[i] += "[" + to_string(qn_indices[Nin+i]) + "] ";
+                for(int s=0;s<bonds[0].Nsym();s++){
+                    Rside[i] += bonds[0]._impl->_syms[s].stype_str() + "(" + to_string(bonds[Nin+i]._impl->_qnums[qn_indices[Nin+i]][s]) + ")";
+                }
+                MidR[i] += to_string(block.shape()[Nin+i]);
+                if(mR < MidR[i].size()) mR =  MidR[i].size();
+            }           
+
+        }
+       
+        //filling space:
+        for(int i=0;i<Total_line;i++){
+            if(Lside[i].size() < Lmax){
+                Lside[i] += string(" ")*(Lmax-Lside[i].size());
+            }
+            if(MidL[i].size() < mL){
+                MidL[i] += string(" ")*(mL-MidL[i].size());
+            }
+            if(MidR[i].size() < mR){
+                MidR[i] += string(" ")*(mR-MidR[i].size());
+            }
+        }
+        
+        //starting printing:
+        // 3spacing, Lmax , 5 for arrow
+        std::string empty_line = (std::string(" ")*(3+Lmax+5)) + "| " + std::string(" ")*(mL+5+mR) + " |";
+        os<< (std::string(" ")*(3+Lmax+5)) << std::string("-")*(4+mL+mR+5) << endl;
+        os << empty_line << endl;
+
+        std::string bks;
+        for(int i=0;i<Total_line;i++){
+            os << "   " << Lside[i];
+            //arrow:
+            if(i < Nin){
+                if(bonds[i].type() == bondType::BD_KET)
+                    bks = "  -->";
+                else
+                    bks = " *<--";
+            }else{
+                bks = "     ";
+            }
+            os << bks << "| " << MidL[i] << "     " << MidR[i] << " |";
+            if(i < Nout){
+                if (bonds[Nin + i].type() == bondType::BD_KET)
+                  bks = "<--* ";
+                else
+                  bks = "-->  ";
+            }else{
+                bks = "";
+            }
+            
+            os << bks << Rside[i] << endl;
+            os << empty_line << endl;            
+        }
+
+        os<< (std::string(" ")*(3+Lmax+5)) << std::string("-")*(4+mL+mR+5) << endl;
+  } 
+
+
   void BlockUniTensor::print_blocks(const bool &full_info) const{
     std::ostream &os = std::cout;
 
@@ -222,6 +307,7 @@ namespace cytnx {
     for(int b=0;b<this->_blocks.size();b++){
         os << "========================\n";
         os << "BLOCK [#" << b << "]\n"; 
+        /*
         os << "  |-Qn indices for each axis:\n   {\t";
         for(int s=0;s<this->_inner_to_outer_idx[b].size();s++){
             os << this->_inner_to_outer_idx[b][s] << "\t";
@@ -240,7 +326,12 @@ namespace cytnx {
             } 
             os << std::noshowpos << endl; 
         }
-        
+        */
+        os << " |- []   : Qn index \n";
+        os << " |- Sym(): Qnum of correspond symmetry\n";
+        beauty_print_block(os, this->_rowrank, this->_labels.size() - this->_rowrank, this->_inner_to_outer_idx[b], this->_bonds, this->_blocks[b]);
+     
+
         if(full_info)
             os << this->_blocks[b];
         else{
