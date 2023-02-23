@@ -22,13 +22,14 @@ else
   PYOBJFLAGS := 
 endif
 
+current_dir = $(shell pwd)
 
 ## 
-CytnxPATH=.
+CytnxPATH=$(current_dir)
 INCFLAGS :=-I$(CytnxPATH)/include -I$(CytnxPATH)/src
 
-HPTT_PATH=./thirdparty/hptt
-CUTT_PATH=./thirdparty/cutt
+HPTT_PATH=$(CytnxPATH)/thirdparty/hptt
+CUTT_PATH=$(CytnxPATH)/thirdparty/cutt
 MAGMA_PATH?=
 
 ifeq ($(ICPC_Enable),1)
@@ -180,14 +181,14 @@ endif
 TESTPATH=tests
 
 
-all: test dmrg_tfim
+all: test 
 
 
 #test: test.o $(ALLOBJS)
 #	#$(CC) -o $@ $^ $(CCFLAGS) $(LDFLAGS)
 #	$(NVCC) $(ALL_CCFLAGS) $(ALL_LDFLAGS) $^ -o $@
 
-test: test.o libcytnx.so
+test: test.o libcytnx.so libcytnx.a
 	$(CC) -L. -o $@ $< -fopenmp $(LDFLAGS) -lcytnx 
 	#export LD_LIBRARY_PATH=.
 
@@ -201,6 +202,9 @@ dmrg_tfim: dmrg_tfim.o libcytnx.so
 
 libcytnx.so: $(ALLOBJS)
 	$(CC) -shared -Wl,-z,defs -o $@ $^ $(LDFLAGS)
+
+libcytnx.a: $(ALLOBJS)
+	ar rcs libcytnx.a $(ALLOBJS)
 
 #  old:
 #pyobj: $(ALLOBJS) 

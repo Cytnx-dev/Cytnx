@@ -19,7 +19,15 @@ void pp(){
 
 int main(int argc, char *argv[]) {
 
-
+  Bond B1 = Bond(BD_IN,{Qs(0),Qs(1)},{3,4});
+  Bond B2 = Bond(BD_IN,{Qs(0),Qs(1)},{5,6});
+  Bond B3 = Bond(BD_OUT,{Qs(0),Qs(1)},{2,3});
+  Bond B4 = Bond(BD_OUT,{Qs(0),Qs(1)},{7,1});
+  auto UTB = UniTensor({B1,B2,B3,B4});
+  UTB.print_diagram();
+  UTB.print_blocks(false);
+  return 0;
+  /*
   auto T0 = UniTensor::Load("tests/OriginalBUT.cytnx");
   auto TC = UniTensor::Load("tests/BUconjT.cytnx");
 
@@ -29,7 +37,7 @@ int main(int argc, char *argv[]) {
   T0.print_diagram();
   T0.print_block(0);
   return 0;
-
+  */
   /*
   Scalar Sas = Scalar();
   print(Sas.dtype());
@@ -98,14 +106,6 @@ int main(int argc, char *argv[]) {
   UniTensor BUtrT4 = UniTensor({B2p, B3p});
 
 
-  Bond B1 = Bond(BD_IN, {Qs(0)>>1, Qs(1)>>2});
-  Bond B2 = Bond(BD_IN, {Qs(0), Qs(1)}, {3, 4});
-  Bond B3 = Bond(BD_OUT, {Qs(0)>>2, Qs(1)>>3});
-  Bond B4 = Bond(BD_OUT, {Qs(0), Qs(1)}, {1, 2});
-  UniTensor BUT1 = UniTensor({B1, B2, B3, B4});
-
-  //BUT1.Trace(-1,2);
-  //return 0;
 
 
   auto tmpa = BUT4.Trace(0,3);

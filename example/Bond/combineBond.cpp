@@ -19,9 +19,9 @@ int main() {
       combine symmetry bonds,
       with U1 x Z2 multiple symmetry
   */
-  Bond bd_d = Bond(3, BD_BRA, {{0, 1}, {2, 0}, {-4, 1}}, {Symmetry::U1(), Symmetry::Zn(2)});
+  Bond bd_d = Bond(BD_BRA, {Qs(0, 1)>>1, Qs(2, 0)>>1, Qs(-4, 1)>>1}, {Symmetry::U1(), Symmetry::Zn(2)});
 
-  Bond bd_e = Bond(4, BD_BRA, {{0, 0}, {2, 1}, {-1, 1}, {3, 0}}, {Symmetry::U1(), Symmetry::Zn(2)});
+  Bond bd_e = Bond(BD_BRA, {Qs(0, 0)>>1, Qs(2, 1)>>1, Qs(-1, 1)>>1, Qs(3, 0)>>1}, {Symmetry::U1(), Symmetry::Zn(2)});
 
   Bond bd_f = bd_d.combineBond(bd_e);
   cout << bd_f << endl;
