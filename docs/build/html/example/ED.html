@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -19,7 +19,10 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -50,14 +53,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Install &amp; Usage of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#conda-install">Conda install</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../install.html#using-python-api-after-conda-install">Using python API after Conda install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#depedencies">Depedencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#compiling-process">Compiling process</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../adv_install.html">Advanced Install Cytnx</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../adv_install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#depedencies">Depedencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#compiling-process">Compiling process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -174,7 +182,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">7.2. Lanczos solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../guide/cyx.html">8. Cytnx extensions</a><ul>
@@ -184,6 +195,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Bond.html">8.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#create-the-bonds">8.2.2. Create the Bonds</a></li>
 </ul>
@@ -343,14 +355,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Install &amp; Usage of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#conda-install">Conda install</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../install.html#using-python-api-after-conda-install">Using python API after Conda install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#depedencies">Depedencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#compiling-process">Compiling process</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../adv_install.html">Advanced Install Cytnx</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../adv_install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#depedencies">Depedencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#compiling-process">Compiling process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -467,7 +484,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">7.2. Lanczos solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../guide/cyx.html">8. Cytnx extensions</a><ul>
@@ -477,6 +497,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Bond.html">8.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#create-the-bonds">8.2.2. Create the Bonds</a></li>
 </ul>
@@ -581,37 +602,33 @@
           <div class="body">
             
   <section id="exact-diagonalization">
-<h1><span class="section-number">1. </span>Exact Diagonalization<a class="headerlink" href="#exact-diagonalization" title="Permalink to this headline">¶</a></h1>
+<h1><span class="section-number">1. </span>Exact Diagonalization<a class="headerlink" href="#exact-diagonalization" title="Permalink to this heading">¶</a></h1>
 <p>Consider the example of a 1D transverse field Ising model with Hamiltonain defines as</p>
-<div class="math">
-<p><img src="../_images/math/1ae2ab3d128ee9b8146be3d153453b54b8f1e810.png" alt="H = J\sum_{\left&lt;ij\right&gt;}\sigma^{z}_i\sigma^{z}_j - H_x\sum_i \sigma^{x}_i"/></p>
-</div><p>where <img class="math" src="../_images/math/f19a54dab8b2981a9c593dbceb749a37f4fe8b30.png" alt="\left&lt;ij\right&gt;"/> denotes nearest neighbor interaction, and <img class="math" src="../_images/math/ce3f0bb97c9c7f72ed406b3c0d9940a240b13304.png" alt="\sigma^{x,z}"/> is the pauli-matrices.</p>
-<p>The model undergoes a phase transition  at <img class="math" src="../_images/math/c980699a020a974dc1ee6d602c7c08e3c4c19021.png" alt="H_x^c/J = 1"/> with avoid level crossing. For further information, see <em>insert url!</em></p>
+<div class="math notranslate nohighlight">
+\[H = J\sum_{\left&lt;ij\right&gt;}\sigma^{z}_i\sigma^{z}_j - H_x\sum_i \sigma^{x}_i\]</div>
+<p>where <span class="math notranslate nohighlight">\(\left&lt;ij\right&gt;\)</span> denotes nearest neighbor interaction, and <span class="math notranslate nohighlight">\(\sigma^{x,z}\)</span> is the pauli-matrices.</p>
+<p>The model undergoes a phase transition  at <span class="math notranslate nohighlight">\(H_x^c/J = 1\)</span> with avoid level crossing. For further information, see <em>insert url!</em></p>
 <p>Here, we are interesting to observe this avoid level crossing where the gap closes with increasing system size. For this, we want to get the low-level energy spectrums.</p>
-<p>Generally, the native way to calculate the energy specturm of this Hamiltonian is through the product of local pauli-matrices. However, the size of this many-body Hamiltonian growth exponentially with size of chain <img class="math" src="../_images/math/19eef1966f7c545af3ac8c0fa486974d873e3c65.png" alt="L"/> as <img class="math" src="../_images/math/1ac025bcd85e9ce8b501ce17ba7877971fbdf625.png" alt="2^{L}"/>. It is not pratical to store this large Hamiltonain.</p>
+<p>Generally, the native way to calculate the energy specturm of this Hamiltonian is through the product of local pauli-matrices. However, the size of this many-body Hamiltonian growth exponentially with size of chain <span class="math notranslate nohighlight">\(L\)</span> as <span class="math notranslate nohighlight">\(2^{L}\)</span>. It is not pratical to store this large Hamiltonain.</p>
 <p>Notice that this many-body Hamiltonain is very sparse, with lots of elements equal to zero. Thus it is very useful to use LinOp to represent this Hamiltonain, and call <strong>Lanczos_ER</strong> to get the low-level energies.</p>
 <section id="bit-representation-of-basis-states">
-<h2><span class="section-number">1.1. </span>Bit representation of basis states<a class="headerlink" href="#bit-representation-of-basis-states" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.1. </span>Bit representation of basis states<a class="headerlink" href="#bit-representation-of-basis-states" title="Permalink to this heading">¶</a></h2>
 <p>First thing we want to do is to represent the basis states using bit-representation.
-Here, let’s choose the <img class="math" src="../_images/math/8d051150f8669295ecdbe92367941012175a824d.png" alt="z"/> -basis.
+Here, let’s choose the <span class="math notranslate nohighlight">\(z\)</span> -basis.
 For example:</p>
-<div class="math">
-<p><img src="../_images/math/95c5e9a26cba272a50897d4f58d47911d23b1d80.png" alt="| \uparrow\uparrow\uparrow \cdots \uparrow\downarrow &gt; = \mathrm{bit}(000...01) = \mathrm{int}(1)
-
-| \uparrow\uparrow\uparrow \cdots \downarrow\downarrow &gt; = \mathrm{bit}(000...11) = \mathrm{int}(3)"/></p>
-</div><p>This each configuration (basis state) can be identify with a integer ID.</p>
-<p>Now, since we want to consider the Hamiltonian as <em>operation</em> that acting on the input vector and mapping to the output vector, we can think of pauli-matrices <img class="math" src="../_images/math/ce3f0bb97c9c7f72ed406b3c0d9940a240b13304.png" alt="\sigma^{x,z}"/> acting on the basis state, and map from input state to output state with coefficient <img class="math" src="../_images/math/d520a12f1579170834c32ad5f656de081bbb36fe.png" alt="c"/> as <img class="math" src="../_images/math/762973d4c74cabf88d4e2fa5daf82a7ab16ad8de.png" alt="c|\psi_{out}&gt; = \sigma^{x,z}|\psi_{in}&gt;"/> .</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}| \uparrow\uparrow\uparrow \cdots \uparrow\downarrow &gt; = \mathrm{bit}(000...01) = \mathrm{int}(1)\\| \uparrow\uparrow\uparrow \cdots \downarrow\downarrow &gt; = \mathrm{bit}(000...11) = \mathrm{int}(3)\end{aligned}\end{align} \]</div>
+<p>This each configuration (basis state) can be identify with a integer ID.</p>
+<p>Now, since we want to consider the Hamiltonian as <em>operation</em> that acting on the input vector and mapping to the output vector, we can think of pauli-matrices <span class="math notranslate nohighlight">\(\sigma^{x,z}\)</span> acting on the basis state, and map from input state to output state with coefficient <span class="math notranslate nohighlight">\(c\)</span> as <span class="math notranslate nohighlight">\(c|\psi_{out}&gt; = \sigma^{x,z}|\psi_{in}&gt;\)</span> .</p>
 <p>For example:</p>
-<div class="math">
-<p><img src="../_images/math/5abd48ee35e0499c04cf5ec46d6e14640f87390a.png" alt="J\sigma_0^{z}\sigma_1^{z} | \uparrow\uparrow\uparrow \cdots \uparrow\downarrow &gt; = -J | \uparrow\uparrow\uparrow \cdots \uparrow\downarrow &gt;
-
-H_x\sigma_0^{x} | \uparrow\uparrow\uparrow \cdots \uparrow\downarrow &gt; = H_x | \uparrow\uparrow\uparrow \cdots \uparrow\uparrow &gt;"/></p>
-</div><p>The first example, <img class="math" src="../_images/math/79875dec455d1476b856c590eb791b9ac3782d3a.png" alt="J\sigma_0^{z}\sigma_1^{z}"/> map from basis with ID=1 to ID=1 with coefficient <img class="math" src="../_images/math/49a62c5fa55d184e16e67b79eabfb5244dd1d524.png" alt="-J"/>, which is a diagonal elements in the many body Hamiltonian.
-The second example which <img class="math" src="../_images/math/d7109c8614516be709ab98d3095bf08aedaa20b8.png" alt="H_x\sigma_0^{x}"/> operate on state with ID=1 resulting as a state with ID=0 and corresponding coefficient <img class="math" src="../_images/math/43570e4cdde42ee9772f213df372ef4432d99766.png" alt="H_x"/>, which is a off-diagonal elements in the many-body Hamiltonian.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}J\sigma_0^{z}\sigma_1^{z} | \uparrow\uparrow\uparrow \cdots \uparrow\downarrow &gt; = -J | \uparrow\uparrow\uparrow \cdots \uparrow\downarrow &gt;\\H_x\sigma_0^{x} | \uparrow\uparrow\uparrow \cdots \uparrow\downarrow &gt; = H_x | \uparrow\uparrow\uparrow \cdots \uparrow\uparrow &gt;\end{aligned}\end{align} \]</div>
+<p>The first example, <span class="math notranslate nohighlight">\(J\sigma_0^{z}\sigma_1^{z}\)</span> map from basis with ID=1 to ID=1 with coefficient <span class="math notranslate nohighlight">\(-J\)</span>, which is a diagonal elements in the many body Hamiltonian.
+The second example which <span class="math notranslate nohighlight">\(H_x\sigma_0^{x}\)</span> operate on state with ID=1 resulting as a state with ID=0 and corresponding coefficient <span class="math notranslate nohighlight">\(H_x\)</span>, which is a off-diagonal elements in the many-body Hamiltonian.</p>
 <p>With aformentioned rule, we are now ready to implement the TFIM Hamiltonian using <strong>LinOp</strong> class.</p>
 </section>
 <section id="implementation">
-<h2><span class="section-number">1.2. </span>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.2. </span>Implementation<a class="headerlink" href="#implementation" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic simple">
 <li><p>Let’s inherit the <strong>LinOp</strong> class, and implement the aformentioned mapping in the overload of <strong>matvec</strong>:</p></li>
 </ol>
@@ -652,53 +669,53 @@ The second example which <img class="math" src="../_images/math/d7109c8614516be7
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">namespace</span><span class="w"> </span><span class="nn">cy</span><span class="o">=</span><span class="nn">cytnx</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 2</span><span class="k">class</span><span class="w"> </span><span class="nc">Hising</span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">cy</span><span class="o">::</span><span class="n">LinOp</span><span class="p">{</span><span class="w"></span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">namespace</span><span class="w"> </span><span class="nn">cy</span><span class="o">=</span><span class="nn">cytnx</span><span class="p">;</span>
+<span class="linenos"> 2</span><span class="k">class</span><span class="w"> </span><span class="nc">Hising</span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">cy</span><span class="o">::</span><span class="n">LinOp</span><span class="p">{</span>
 <span class="linenos"> 3</span>
-<span class="linenos"> 4</span><span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="linenos"> 5</span><span class="w">        </span><span class="n">cytnx_double</span><span class="w"> </span><span class="n">J</span><span class="p">,</span><span class="n">Hx</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 6</span><span class="w">        </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">L</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 4</span><span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="linenos"> 5</span><span class="w">        </span><span class="n">cytnx_double</span><span class="w"> </span><span class="n">J</span><span class="p">,</span><span class="n">Hx</span><span class="p">;</span>
+<span class="linenos"> 6</span><span class="w">        </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">L</span><span class="p">;</span>
 <span class="linenos"> 7</span>
-<span class="linenos"> 8</span><span class="w">    </span><span class="n">Hising</span><span class="p">(</span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">L</span><span class="p">,</span><span class="w"> </span><span class="n">cytnx_double</span><span class="w"> </span><span class="n">J</span><span class="p">,</span><span class="w"> </span><span class="n">cytnx_double</span><span class="w"> </span><span class="n">Hx</span><span class="p">)</span><span class="o">:</span><span class="w"></span>
+<span class="linenos"> 8</span><span class="w">    </span><span class="n">Hising</span><span class="p">(</span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">L</span><span class="p">,</span><span class="w"> </span><span class="n">cytnx_double</span><span class="w"> </span><span class="n">J</span><span class="p">,</span><span class="w"> </span><span class="n">cytnx_double</span><span class="w"> </span><span class="n">Hx</span><span class="p">)</span><span class="o">:</span>
 <span class="linenos"> 9</span><span class="w">        </span><span class="n">cy</span><span class="o">::</span><span class="n">LinOp</span><span class="p">(</span><span class="s">&quot;mv&quot;</span><span class="p">,</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">L</span><span class="p">),</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span><span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">)</span><span class="w"> </span><span class="c1">//rememeber to invoke base class constructor</span>
-<span class="linenos">10</span><span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="linenos">10</span><span class="w">    </span><span class="p">{</span>
 <span class="linenos">11</span><span class="w">        </span><span class="c1">//custom members</span>
-<span class="linenos">12</span><span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">J</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">J</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">13</span><span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">Hx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Hx</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">14</span><span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">L</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">15</span><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">12</span><span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">J</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">J</span><span class="p">;</span>
+<span class="linenos">13</span><span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">Hx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Hx</span><span class="p">;</span>
+<span class="linenos">14</span><span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">L</span><span class="p">;</span>
+<span class="linenos">15</span><span class="w">    </span><span class="p">}</span>
 <span class="linenos">16</span>
-<span class="linenos">17</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">SzSz</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ipt_id</span><span class="p">,</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">out_id</span><span class="p">){</span><span class="w"></span>
-<span class="linenos">18</span><span class="w">        </span><span class="n">out_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ipt_id</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">19</span><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="mf">1.</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">2.</span><span class="o">*</span><span class="p">(((</span><span class="n">ipt_id</span><span class="o">&gt;&gt;</span><span class="n">i</span><span class="p">)</span><span class="o">&amp;</span><span class="mh">0x1</span><span class="p">)</span><span class="o">^</span><span class="p">((</span><span class="n">ipt_id</span><span class="o">&gt;&gt;</span><span class="n">j</span><span class="p">)</span><span class="o">&amp;</span><span class="mh">0x1</span><span class="p">)));</span><span class="w"></span>
-<span class="linenos">20</span><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">17</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">SzSz</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ipt_id</span><span class="p">,</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">out_id</span><span class="p">){</span>
+<span class="linenos">18</span><span class="w">        </span><span class="n">out_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ipt_id</span><span class="p">;</span>
+<span class="linenos">19</span><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="mf">1.</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">2.</span><span class="o">*</span><span class="p">(((</span><span class="n">ipt_id</span><span class="o">&gt;&gt;</span><span class="n">i</span><span class="p">)</span><span class="o">&amp;</span><span class="mh">0x1</span><span class="p">)</span><span class="o">^</span><span class="p">((</span><span class="n">ipt_id</span><span class="o">&gt;&gt;</span><span class="n">j</span><span class="p">)</span><span class="o">&amp;</span><span class="mh">0x1</span><span class="p">)));</span>
+<span class="linenos">20</span><span class="w">    </span><span class="p">}</span>
 <span class="linenos">21</span>
-<span class="linenos">22</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">Sx</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ipt_id</span><span class="p">,</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">out_id</span><span class="p">){</span><span class="w"></span>
-<span class="linenos">23</span><span class="w">        </span><span class="n">out_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ipt_id</span><span class="o">^</span><span class="p">((</span><span class="mh">0x1</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">i</span><span class="p">);</span><span class="w"></span>
-<span class="linenos">24</span><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mf">1.0</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">25</span><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">22</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">Sx</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ipt_id</span><span class="p">,</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">out_id</span><span class="p">){</span>
+<span class="linenos">23</span><span class="w">        </span><span class="n">out_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ipt_id</span><span class="o">^</span><span class="p">((</span><span class="mh">0x1</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">i</span><span class="p">);</span>
+<span class="linenos">24</span><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mf">1.0</span><span class="p">;</span>
+<span class="linenos">25</span><span class="w">    </span><span class="p">}</span>
 <span class="linenos">26</span>
 <span class="linenos">27</span><span class="w">    </span><span class="c1">// let&#39;s overload this with custom operation:</span>
-<span class="linenos">28</span><span class="w">    </span><span class="n">Tensor</span><span class="w"> </span><span class="n">matvec</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Tensor</span><span class="w"> </span><span class="o">&amp;</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">{</span><span class="w"></span>
-<span class="linenos">29</span><span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zeros</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">.</span><span class="n">dtype</span><span class="p">(),</span><span class="n">v</span><span class="p">.</span><span class="n">device</span><span class="p">());</span><span class="w"></span>
-<span class="linenos">30</span><span class="w">        </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">oid</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">31</span><span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">amp</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">28</span><span class="w">    </span><span class="n">Tensor</span><span class="w"> </span><span class="n">matvec</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Tensor</span><span class="w"> </span><span class="o">&amp;</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">{</span>
+<span class="linenos">29</span><span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zeros</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">.</span><span class="n">dtype</span><span class="p">(),</span><span class="n">v</span><span class="p">.</span><span class="n">device</span><span class="p">());</span>
+<span class="linenos">30</span><span class="w">        </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">oid</span><span class="p">;</span>
+<span class="linenos">31</span><span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">amp</span><span class="p">;</span>
 <span class="linenos">32</span>
-<span class="linenos">33</span><span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">a</span><span class="o">&lt;</span><span class="n">v</span><span class="p">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">];</span><span class="n">a</span><span class="o">++</span><span class="p">){</span><span class="w"></span>
-<span class="linenos">34</span><span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">){</span><span class="w"></span>
-<span class="linenos">35</span><span class="w">                </span><span class="n">amp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">SzSz</span><span class="p">(</span><span class="n">i</span><span class="p">,(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">oid</span><span class="p">);</span><span class="w"></span>
-<span class="linenos">36</span><span class="w">                </span><span class="n">out</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">amp</span><span class="o">*</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">J</span><span class="o">*</span><span class="n">v</span><span class="p">(</span><span class="n">a</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">33</span><span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">a</span><span class="o">&lt;</span><span class="n">v</span><span class="p">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">];</span><span class="n">a</span><span class="o">++</span><span class="p">){</span>
+<span class="linenos">34</span><span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+<span class="linenos">35</span><span class="w">                </span><span class="n">amp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">SzSz</span><span class="p">(</span><span class="n">i</span><span class="p">,(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">oid</span><span class="p">);</span>
+<span class="linenos">36</span><span class="w">                </span><span class="n">out</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">amp</span><span class="o">*</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">J</span><span class="o">*</span><span class="n">v</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
 <span class="linenos">37</span>
-<span class="linenos">38</span><span class="w">                </span><span class="n">amp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">Sx</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">oid</span><span class="p">);</span><span class="w"></span>
-<span class="linenos">39</span><span class="w">                </span><span class="n">out</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">amp</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">Hx</span><span class="p">)</span><span class="o">*</span><span class="n">v</span><span class="p">(</span><span class="n">a</span><span class="p">);</span><span class="w"></span>
-<span class="linenos">40</span><span class="w">            </span><span class="p">}</span><span class="w"></span>
-<span class="linenos">41</span><span class="w">        </span><span class="p">}</span><span class="w"></span>
-<span class="linenos">42</span><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">out</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">43</span><span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="linenos">44</span><span class="p">};</span><span class="w"></span>
+<span class="linenos">38</span><span class="w">                </span><span class="n">amp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">Sx</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">oid</span><span class="p">);</span>
+<span class="linenos">39</span><span class="w">                </span><span class="n">out</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">amp</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">Hx</span><span class="p">)</span><span class="o">*</span><span class="n">v</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+<span class="linenos">40</span><span class="w">            </span><span class="p">}</span>
+<span class="linenos">41</span><span class="w">        </span><span class="p">}</span>
+<span class="linenos">42</span><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">out</span><span class="p">;</span>
+<span class="linenos">43</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">44</span><span class="p">};</span>
 </pre></div>
 </div>
-<p>Note that here, we defone two member functions <strong>SzSz()</strong> and  <strong>Sx()</strong> that operate on site <img class="math" src="../_images/math/5183ea9096ac86aff6e13dd3d4389ae47617b059.png" alt="i,j"/> with basis ID <img class="math" src="../_images/math/2a6e197a3ae23b617ffd3a2148dbb2ca9914228c.png" alt="ipt_id"/> and return the output basis ID and corresponding coefficients.</p>
+<p>Note that here, we defone two member functions <strong>SzSz()</strong> and  <strong>Sx()</strong> that operate on site <span class="math notranslate nohighlight">\(i,j\)</span> with basis ID <span class="math notranslate nohighlight">\(ipt_id\)</span> and return the output basis ID and corresponding coefficients.</p>
 <p>Inside the overload <strong>matvec</strong>, we then traversal all the basis states coefficients in input vector <strong>v</strong>, and using <strong>SzSz()</strong> and <strong>Sx()</strong> to calculate the mapping to the output vector <strong>out</strong>.</p>
 <p>The class constructor takes three arguments: <strong>L</strong>, the size of ising chain; <strong>J</strong>, the ZZ coupling and <strong>Hx</strong>, the transverse field.</p>
 <div class="admonition hint">
@@ -722,11 +739,11 @@ The second example which <img class="math" src="../_images/math/d7109c8614516be7
 <ul class="simple">
 <li><p>In c++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">L</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">2</span><span class="kt">double</span><span class="w"> </span><span class="n">J</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">3</span><span class="kt">double</span><span class="w"> </span><span class="n">Hx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.3</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">4</span><span class="k">auto</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Hising</span><span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">J</span><span class="p">,</span><span class="n">Hx</span><span class="p">);</span><span class="w"></span>
-<span class="linenos">5</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">cy</span><span class="o">::</span><span class="n">linalg</span><span class="o">::</span><span class="n">Lanczos_ER</span><span class="p">(</span><span class="o">&amp;</span><span class="n">H</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">L</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<span class="linenos">2</span><span class="kt">double</span><span class="w"> </span><span class="n">J</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="linenos">3</span><span class="kt">double</span><span class="w"> </span><span class="n">Hx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.3</span><span class="p">;</span>
+<span class="linenos">4</span><span class="k">auto</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Hising</span><span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">J</span><span class="p">,</span><span class="n">Hx</span><span class="p">);</span>
+<span class="linenos">5</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">cy</span><span class="o">::</span><span class="n">linalg</span><span class="o">::</span><span class="n">Lanczos_ER</span><span class="p">(</span><span class="o">&amp;</span><span class="n">H</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
 </pre></div>
 </div>
 <p>Output&gt;&gt;</p>
@@ -761,12 +778,12 @@ Shape : (16,3)
 </div>
 </section>
 <section id="results">
-<h2><span class="section-number">1.3. </span>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.3. </span>Results<a class="headerlink" href="#results" title="Permalink to this heading">¶</a></h2>
 <blockquote>
-<div><p>Here, we show the result using the aformentioned implementation. We define a common parameter <img class="math" src="../_images/math/106b04b320e75010b1d8029e59244f234f75e6f9.png" alt="s"/> such that <img class="math" src="../_images/math/d23dbd90f7227d83bd4dabffcb08c32c89ac68d9.png" alt="J = -s"/> and <img class="math" src="../_images/math/35388e84827a23bf848167ee4367c039facbfb85.png" alt="Hx=(1-s)"/>, and we plot the second gap <img class="math" src="../_images/math/f66c698a635334c35de53f6d6b347d5f08403e63.png" alt="\Delta E_{20}"/> that shows the avoid level crossing:</p>
+<div><p>Here, we show the result using the aformentioned implementation. We define a common parameter <span class="math notranslate nohighlight">\(s\)</span> such that <span class="math notranslate nohighlight">\(J = -s\)</span> and <span class="math notranslate nohighlight">\(Hx=(1-s)\)</span>, and we plot the second gap <span class="math notranslate nohighlight">\(\Delta E_{20}\)</span> that shows the avoid level crossing:</p>
 </div></blockquote>
 <a class="reference internal image-reference" href="../_images/ED_Egap.png"><img alt="../_images/ED_Egap.png" class="align-center" src="../_images/ED_Egap.png" style="width: 600px;" /></a>
-<p>The <img class="math" src="../_images/math/19eef1966f7c545af3ac8c0fa486974d873e3c65.png" alt="L"/> here is the system size.</p>
+<p>The <span class="math notranslate nohighlight">\(L\)</span> here is the system size.</p>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <p>The complete example code can be found in Github repo under example/ED folder.</p>
@@ -785,7 +802,7 @@ Shape : (16,3)
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 4.4.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.3.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

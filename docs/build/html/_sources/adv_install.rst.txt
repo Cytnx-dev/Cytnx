@@ -1,0 +1,259 @@
+Advanced Install Cytnx
+============================
+
+Build/Install Cytnx from source
+*********************************
+For advanced user who wish to build cytnx from source, we provides the cmake install. 
+
+
+Depedencies
+-------------------
+Cytnx required the following minimum dependencies:
+    
+* cmake >=3.14
+* git 
+* make
+* Boost v1.53+ [check_deleted, atomicadd, intrusive_ptr] 
+* openblas (or mkl, see below) 
+* gcc v6+ (or icpc, see below) (recommand latest or equivalent clang on Mac/Linux with C++11 support) (required -std=c++11)
+
+In addition, you might want to install the following optional dependencies if you want cytnx to compile with features like openmp, mkl and/or CUDA support. 
+
+[Openmp]
+
+* openmp
+
+[MKL]
+
+* intel mkl 
+
+[CUDA]
+
+* Nvidia cuda library v10+
+* Nvidia cuDNN library 
+* Nvidia cuTensor library
+* Nvidia cuQuantum library
+
+[MAGMA]
+
+* MAGMA 2.7 currently required strict cuda version v11.8
+
+
+[Python API]
+
+* python >= 3.6
+* pybind11 
+* python-graphviz 
+* graphviz
+* numpy 
+
+There are two methods that you can set-up all the dependencies before starting build process: 
+
+1. Using conda to install dependencies 
+2. Directly install dependencies one-by-one via system package manager 
+
+.. Note::
+    
+    We recommend using conda to handle all the dependencies (including compiling tools). 
+    Which is the simplest way to do as conda automatically resolve all the path of each dependencies, allowing cmake to automatically capture those.  
+
+    How it works?
+        
+        >> the conda-forge channel includes not only the python package but also other pre-compiled libraries/compilers. 
+
+
+
+**option A. Using anaconda/conda to install deps:**
+
+1. Install anaconda/miniconda, setting the virtual enviroments
+
+* For Linux/WSL:
+
+.. code-block:: shell
+
+    $conda config --add channels conda-forge
+    $conda create --name cytnx python=3.8 _openmp_mutex=*=*_llvm
+    $conda activate cytnx
+    $conda upgrade --all 
+    
+
+* For MacOS:
+
+.. code-block:: shell
+
+    $conda config --add channels conda-forge
+    $conda create --name cytnx python=3.8 llvm-openmp
+    $conda activate cytnx
+    $conda upgrade --all 
+
+.. Note::
+    
+    1. The python=3.8 indicates the python version you want to use. Generally, cytnx is tested with 3.7/3.8/3.9. You can replace this with the version you want to use. 
+    2. the last line is to update all the libraries such that they are all dependent on conda-forge channel. 
+
+
+2. Install the following dependencies:
+
+.. code-block:: shell
+
+    $conda install cmake make boost libboost git compilers numpy mkl mkl-include mkl-service pybind11 libblas=*=*mkl
+
+
+.. Note:: 
+
+    This installation includes the compilers/linalg libraries provided by conda-forge, so the installation of compiler on system side is not required. 
+
+.. Hint::
+
+    Trouble shooting:
+
+        1. make sure **conda-forge** channel has the top priority
+        2. make sure libblas=mkl (you can check using *conda list | grep libblas*) 
+
+
+4. in addition, if you want to have gpu support (compile with -DUSE_CUDA=on), then additional packages need to install:
+
+.. code-block:: shell
+
+    $conda install cudatoolkit cudatoolkit-dev 
+
+
+**option B. Install deps via system package manager**
+
+You can also choose to install deps directly from the system package manager, but one need to carefully resolve the dependency path for cmake to capture them succesfully. 
+
+
+.. warning::
+
+    For MacOS, standard brew install openblas will not work since it lack lapacke.h wrapper support. 
+
+    If you are using MacOS, please install intel mkl (free) instead. 
+
+    For python API, we recommend install of python using anaconda or miniconda
+
+
+ 
+Compiling process 
+-------------------
+Once you installed all the dependencies, it's time to start building cytnx source code. 
+
+Starting from v0.7.6a, cytnx provide a shell script **Install.sh**, which contains all the cmake arguments check list. To install, un-comments and put the custom parameters on the corresponding lines, and simply execute this script:
+
+.. code-block:: shell
+
+    $sh Install.sh
+
+
+**Arguments/options for cmake install**
+
+Please see the following steps for the standard cmake compiling process and all the compiling options:
+
+
+1. create a build directory:
+
+.. code-block:: shell
+
+    $make build
+    $cd build
+
+2. use cmake to auto matically generate compiling files:
+
+.. code-block:: shell
+
+    $cmake [option] <cytnx repo directory>
+
+The following are the avaliable compiling option flags that you can specify in **[option]**:
+
++------------------------+-------------------+------------------------------------+
+|       options          | default           |          description               |
++------------------------+-------------------+------------------------------------+
+| -DCMAME_INSTALL_PREFIX | /usr/local/cytnx  | Install desination of the library  |
++------------------------+-------------------+------------------------------------+
+| -DBUILD_PYTHON         |   ON              | Compile and install python API     |
++------------------------+-------------------+------------------------------------+
+| -DUSE_ICPC             |   OFF             | Compile using intel icpc compiler  |
++------------------------+-------------------+------------------------------------+
+| -DUSE_MKL              |   OFF             | Compile Cytnx with intel MKL lib.  |
+|                        |                   | If =off, default link to openblas  |
++------------------------+-------------------+------------------------------------+
+| -DUSE_OMP              |   ON              | Compile with openmp acceleration   |
+|                        |                   | If USE_MKL=on, USE_OMP is forced=on|
++------------------------+-------------------+------------------------------------+
+| -DUSE_CUDA             |   OFF             | Compile with CUDA GPU support      |
++------------------------+-------------------+------------------------------------+
+| -DUSE_HPTT             |   OFF             | Accelerate tensor transpose with   |
+|                        |                   | hptt                               |
++------------------------+-------------------+------------------------------------+
+
+Additional options for HPTT if -DUSE_HPTT=on:
+
++-------------------------+-------------------+------------------------------------+
+|       options           | default           |          description               |
++-------------------------+-------------------+------------------------------------+
+| -DHPTT_ENABLE_FINE_TUNE |  OFF              | HPTT optimized with native hardware|
++-------------------------+-------------------+------------------------------------+
+| -DHPTT_ENABLE_AVX       |  OFF              | Compile HPTT with AVX instruction  |
++-------------------------+-------------------+------------------------------------+
+| -DHPTT_ENABLE_ARM       |  OFF              | Compile HPTT with ARM arch.        | 
++-------------------------+-------------------+------------------------------------+
+| -DHPTT_ENABLE_IBM       |  OFF              | Compile HPTT with ppc64le arch     | 
++-------------------------+-------------------+------------------------------------+
+
+
+3. compile the code:
+    
+    $make 
+
+4. install to the target location:
+
+    $make install 
+
+
+
+Using python API after self-build install
+-------------------------------------------
+To use python API after self-build, one need to add the path where you install cytnx before import it. 
+The simplest way (and the most flexible way) to do that is to add it into sys.path right at the beginning of your code. 
+
+In the following, we will use **CYTNX_ROOT** (capital letters) to represent the path where you install the cytnx. You should replace it with the path where cytnx is installed. 
+
+.. code-block:: python 
+    :linenos:
+
+    import sys
+    sys.path.insert(0,CYTNX_ROOT)
+    import cytnx
+
+    A = cytnx.ones(4)
+    print(A)
+
+* Output:
+
+.. code-block:: text
+    
+    Total elem: 4
+    type  : Double (Float64)
+    cytnx device: CPU
+    Shape : (4)
+    [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
+
+
+Using C++ API after self-build install
+------------------------------------------
+In the case cytnx is installed locally from binary build, not from anaconda, one can use the following lines to extract the linking and compiling varialbes:
+
+.. code-block:: shell
+
+    CYTNX_INC := $(shell python -c "exec(\"import sys\nsys.path.append(\'$(CYTNX_ROOT)\')\nimport cytnx\nprint(cytnx.__cpp_include__)\")")
+    CYTNX_LDFLAGS := $(shell python -c "exec(\"import sys\nsys.path.append(\'$(CYTNX_ROOT)\')\nimport cytnx\nprint(cytnx.__cpp_linkflags__)\")")
+    CYTNX_LIB := $(shell python -c "exec(\"import sys\nsys.path.append(\'$(CYTNX_ROOT)\')\nimport cytnx\nprint(cytnx.__cpp_lib__)\")")/libcytnx.a
+    CYTNX_CXXFLAGS := $(shell python -c "exec(\"import sys\nsys.path.append(\'$(CYTNX_ROOT)\')\nimport cytnx\nprint(cytnx.__cpp_flags__)\")")
+
+.. Note::
+    
+    CYTNX_ROOT is the path where cytnx is installed from binary build. 
+
+
+
+.. toctree::
+

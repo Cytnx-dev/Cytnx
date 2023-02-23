@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -19,7 +19,9 @@
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -50,14 +52,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../../install.html">Install &amp; Usage of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../install.html#conda-install">Conda install</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../install.html#using-python-api-after-conda-install">Using python API after Conda install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#depedencies">Depedencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#compiling-process">Compiling process</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../adv_install.html">Advanced Install Cytnx</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../adv_install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#depedencies">Depedencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#compiling-process">Compiling process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -174,7 +181,10 @@
 <li class="toctree-l4"><a class="reference internal" href="LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">7.2. Lanczos solver</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">7.2. Lanczos solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../cyx.html">8. Cytnx extensions</a><ul>
@@ -184,6 +194,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../cyx/Bond.html">8.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#create-the-bonds">8.2.2. Create the Bonds</a></li>
 </ul>
@@ -345,14 +356,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../../install.html">Install &amp; Usage of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../install.html#conda-install">Conda install</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../install.html#using-python-api-after-conda-install">Using python API after Conda install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#depedencies">Depedencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#compiling-process">Compiling process</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../adv_install.html">Advanced Install Cytnx</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../adv_install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#depedencies">Depedencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#compiling-process">Compiling process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -469,7 +485,10 @@
 <li class="toctree-l4"><a class="reference internal" href="LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">7.2. Lanczos solver</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">7.2. Lanczos solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../cyx.html">8. Cytnx extensions</a><ul>
@@ -479,6 +498,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../cyx/Bond.html">8.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#create-the-bonds">8.2.2. Create the Bonds</a></li>
 </ul>
@@ -583,7 +603,7 @@
           <div class="body">
             
   <section id="lanczos-solver">
-<h1><span class="section-number">7.2. </span>Lanczos solver<a class="headerlink" href="#lanczos-solver" title="Permalink to this headline">¶</a></h1>
+<h1><span class="section-number">7.2. </span>Lanczos solver<a class="headerlink" href="#lanczos-solver" title="Permalink to this heading">¶</a></h1>
 <p>Currently (v0.5.5a) Cytnx provide the Lanczos iterative solver that solve the eigen value problem of the custom operator defined using <strong>LinOp</strong> class.</p>
 <p>To use, you can pass either the <strong>LinOp</strong> itself or any of it’s interitance object to <strong>linalg.Lanczos_ER</strong></p>
 <ul class="simple">
@@ -591,10 +611,10 @@
 </ul>
 <dl class="py function">
 <dt class="sig sig-object py" id="Lanczos_ER">
-<span class="sig-name descname"><span class="pre">Lanczos_ER</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Hop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_V</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CvgCrit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0e-14</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_row</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">false</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Tensor()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_krydim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Lanczos_ER" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">Lanczos_ER</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Hop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_V</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CvgCrit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-14</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_row</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">false</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Tensor()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_krydim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Lanczos_ER" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform Lanczos for hermitian/symmetric matrices or linear function.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>Hop</strong> (<em>LinOp</em>) – the Linear Operator defined by LinOp class or it’s inheritance.</p></li>
 <li><p><strong>k</strong> (<em>uint64</em>) – the number of lowest k eigen values</p></li>
@@ -606,10 +626,10 @@
 <li><p><strong>max_krydim</strong> (<em>uint32</em>) – the maximum krylov subspace dimension for each iteration</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>[eigvals (Tensor), eigvecs (Tensor)(option)]</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>vector&lt;Tensor&gt; (C++ API)/list of Tensor(python API)</p>
 </dd>
 </dl>
@@ -641,23 +661,23 @@
 <ul class="simple">
 <li><p>In c++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">cytnx</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 2</span><span class="k">class</span><span class="w"> </span><span class="nc">MyOp</span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">LinOp</span><span class="p">{</span><span class="w"></span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">cytnx</span><span class="p">;</span>
+<span class="linenos"> 2</span><span class="k">class</span><span class="w"> </span><span class="nc">MyOp</span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">LinOp</span><span class="p">{</span>
 <span class="linenos"> 3</span>
-<span class="linenos"> 4</span><span class="w">    </span><span class="n">MyOp</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="n">LinOp</span><span class="p">(</span><span class="s">&quot;mv&quot;</span><span class="p">,</span><span class="mi">4</span><span class="p">){}</span><span class="w"></span>
+<span class="linenos"> 4</span><span class="w">    </span><span class="n">MyOp</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="n">LinOp</span><span class="p">(</span><span class="s">&quot;mv&quot;</span><span class="p">,</span><span class="mi">4</span><span class="p">){}</span>
 <span class="linenos"> 5</span>
-<span class="linenos"> 6</span><span class="w">    </span><span class="n">Tensor</span><span class="w"> </span><span class="n">matvec</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Tensor</span><span class="w"> </span><span class="o">&amp;</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">{</span><span class="w"></span>
-<span class="linenos"> 7</span><span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arange</span><span class="p">(</span><span class="mi">16</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span><span class="w"></span>
-<span class="linenos"> 8</span><span class="w">        </span><span class="n">A</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span><span class="w"></span>
-<span class="linenos"> 9</span><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">linalg</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">v</span><span class="p">);</span><span class="w"></span>
-<span class="linenos">10</span><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="linenos"> 6</span><span class="w">    </span><span class="n">Tensor</span><span class="w"> </span><span class="n">matvec</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Tensor</span><span class="w"> </span><span class="o">&amp;</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">{</span>
+<span class="linenos"> 7</span><span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arange</span><span class="p">(</span><span class="mi">16</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+<span class="linenos"> 8</span><span class="w">        </span><span class="n">A</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<span class="linenos"> 9</span><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">linalg</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">v</span><span class="p">);</span>
+<span class="linenos">10</span><span class="w">    </span><span class="p">}</span>
 <span class="linenos">11</span>
-<span class="linenos">12</span><span class="p">};</span><span class="w"></span>
+<span class="linenos">12</span><span class="p">};</span>
 <span class="linenos">13</span>
-<span class="linenos">14</span><span class="k">auto</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MyOp</span><span class="p">();</span><span class="w"></span>
+<span class="linenos">14</span><span class="k">auto</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MyOp</span><span class="p">();</span>
 <span class="linenos">15</span>
 <span class="linenos">16</span><span class="k">auto</span><span class="w"> </span><span class="n">v0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span><span class="w"> </span><span class="c1">// trial state</span>
-<span class="linenos">17</span><span class="k">auto</span><span class="w"> </span><span class="n">ev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">linalg</span><span class="o">::</span><span class="n">Lanczos_ER</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span><span class="mf">1.0e-14</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="n">v0</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">17</span><span class="k">auto</span><span class="w"> </span><span class="n">ev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">linalg</span><span class="o">::</span><span class="n">Lanczos_ER</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span><span class="mf">1.0e-14</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="n">v0</span><span class="p">);</span>
 <span class="linenos">18</span>
 <span class="linenos">19</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">ev</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"> </span><span class="c1">//eigen val</span>
 <span class="linenos">20</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">ev</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"> </span><span class="c1">//eigen vec</span>
@@ -703,7 +723,7 @@ Shape : (4)
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 4.4.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.3.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

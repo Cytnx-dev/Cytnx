@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -19,7 +19,10 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -50,14 +53,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Install &amp; Usage of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#conda-install">Conda install</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../install.html#using-python-api-after-conda-install">Using python API after Conda install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#depedencies">Depedencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#compiling-process">Compiling process</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../adv_install.html">Advanced Install Cytnx</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../adv_install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#depedencies">Depedencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#compiling-process">Compiling process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -174,7 +182,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">7.2. Lanczos solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../guide/cyx.html">8. Cytnx extensions</a><ul>
@@ -184,6 +195,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Bond.html">8.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#create-the-bonds">8.2.2. Create the Bonds</a></li>
 </ul>
@@ -343,14 +355,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Install &amp; Usage of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#conda-install">Conda install</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../install.html#using-python-api-after-conda-install">Using python API after Conda install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#depedencies">Depedencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#compiling-process">Compiling process</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../adv_install.html">Advanced Install Cytnx</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../adv_install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#depedencies">Depedencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#compiling-process">Compiling process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -467,7 +484,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">7.2. Lanczos solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../guide/cyx.html">8. Cytnx extensions</a><ul>
@@ -477,6 +497,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Bond.html">8.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#create-the-bonds">8.2.2. Create the Bonds</a></li>
 </ul>
@@ -581,7 +602,7 @@
           <div class="body">
             
   <section id="idmrg">
-<h1><span class="section-number">4. </span>iDMRG<a class="headerlink" href="#idmrg" title="Permalink to this headline">¶</a></h1>
+<h1><span class="section-number">4. </span>iDMRG<a class="headerlink" href="#idmrg" title="Permalink to this heading">¶</a></h1>
 <p><strong>By : Hsu Ke, Kai-Hsin Wu</strong></p>
 <p>In the previous example we demostrated how the finite size DMRG is implemented,
 Here we present the infinite system size DMRG (iDMRG) scheme which consider the system with <em>infinite boundary condition</em><span id="id1">[<a class="reference internal" href="#id3" title="Ho N. Phien, Guifré Vidal, and Ian P. McCulloch. Infinite boundary conditions for matrix product state calculations. Phys. Rev. B, 86:245107, Dec 2012. URL: https://link.aps.org/doi/10.1103/PhysRevB.86.245107, doi:10.1103/PhysRevB.86.245107.">PVM12</a>]</span>,
@@ -591,23 +612,21 @@ at the fixed point, a translationally invariant wavefunction is produced.</p>
 a DMRG approach where an efficient local eigensolver is used to find a variationally optimal state ought to be much more robust and efficient.
 There are also disadavatages for iDMRG, we recommend the interested reader to refer to the paper of iDMRG or benchmarks made in the relevant papers.</p>
 <p>Here, we use a 1D transverse field Ising model (TFIM) as a simple example to show how to implement iDMRG algorithm in Cytnx and get the infinite system size (variational) ground state.</p>
-<div class="math">
-<p><img src="../_images/math/3a80d325383b0e507f20ffe9fccf30dd2b64a1ea.png" alt="H = J\sum_{ij} \sigma^{z}_i\sigma^{z}_j - H_x\sum_i \sigma^{x}_i"/></p>
-</div><p>where <img class="math" src="../_images/math/ce3f0bb97c9c7f72ed406b3c0d9940a240b13304.png" alt="\sigma^{x,z}"/> are the pauli matrices.
+<div class="math notranslate nohighlight">
+\[H = J\sum_{ij} \sigma^{z}_i\sigma^{z}_j - H_x\sum_i \sigma^{x}_i\]</div>
+<p>where <span class="math notranslate nohighlight">\(\sigma^{x,z}\)</span> are the pauli matrices.
 The infinite size ground state can be represent by MPS as variational ansatz, refer to the previous examples.</p>
 <p>The MPO is constucted as following:</p>
-<div class="math">
-<p><img src="../_images/math/a71c00836f6b46e1104331a048bbafb3b3f72488.png" alt="M_j = \begin{bmatrix}
+<div class="math notranslate nohighlight">
+\[\begin{split}   M_j = \begin{bmatrix}
 I &amp; S^z_j&amp; H_x S^x_j \\
 0 &amp; 0 &amp; S^z_j \\
-0 &amp; 0 &amp; I  \end{bmatrix}"/></p>
-</div><p>with the left and right boundary:</p>
-<div class="math">
-<p><img src="../_images/math/6c209b9731df3337001268a4a200037c439e7468.png" alt="L = \begin{bmatrix} 1\\ 0\\ 0 \end{bmatrix}
-
-R = \begin{bmatrix} 0\\ 0\\ 1 \end{bmatrix}"/></p>
-</div><section id="initialization">
-<h2><span class="section-number">4.1. </span>Initialization<a class="headerlink" href="#initialization" title="Permalink to this headline">¶</a></h2>
+0 &amp; 0 &amp; I  \end{bmatrix}\end{split}\]</div>
+<p>with the left and right boundary:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\begin{split}L = \begin{bmatrix} 1\\ 0\\ 0 \end{bmatrix}\end{split}\\\begin{split}R = \begin{bmatrix} 0\\ 0\\ 1 \end{bmatrix}\end{split}\end{aligned}\end{align} \]</div>
+<section id="initialization">
+<h2><span class="section-number">4.1. </span>Initialization<a class="headerlink" href="#initialization" title="Permalink to this heading">¶</a></h2>
 <p>The initailzation of MPO is much the same as we did in the previous DMRG example:</p>
 <ul class="simple">
 <li><p>In python</p></li>
@@ -635,7 +654,7 @@ R = \begin{bmatrix} 0\\ 0\\ 1 \end{bmatrix}"/></p>
 </div>
 </section>
 <section id="update-procedure">
-<h2><span class="section-number">4.2. </span>Update procedure<a class="headerlink" href="#update-procedure" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">4.2. </span>Update procedure<a class="headerlink" href="#update-procedure" title="Permalink to this heading">¶</a></h2>
 <p>The first step of iDMRG is to obtain a initial two-site state, which is done by solving the eigenvalue problem of two-site hamitonian:</p>
 <a class="reference internal image-reference" href="../_images/idmrg_n0.png"><img alt="../_images/idmrg_n0.png" class="align-center" src="../_images/idmrg_n0.png" style="width: 600px;" /></a>
 <p>Let’s implement the function solving eigenvalue problem using in-built Lanczos method and the needed linear operation class:</p>
@@ -665,7 +684,7 @@ R = \begin{bmatrix} 0\\ 0\\ 1 \end{bmatrix}"/></p>
 <span class="linenos">21</span>        <span class="k">return</span> <span class="n">H_psi</span>
 <span class="linenos">22</span>
 <span class="linenos">23</span><span class="k">def</span> <span class="nf">eig_Lanczos</span><span class="p">(</span><span class="n">psivec</span><span class="p">,</span> <span class="n">functArgs</span><span class="p">,</span> <span class="n">Cvgcrit</span><span class="o">=</span><span class="mf">1.0e-15</span><span class="p">,</span><span class="n">maxit</span><span class="o">=</span><span class="mi">100000</span><span class="p">):</span>
-<span class="linenos">24</span>    <span class="sd">&quot;&quot;&quot; Lanczos method for finding smallest algebraic eigenvector of linear \</span>
+<span class="linenos">24</span><span class="w">    </span><span class="sd">&quot;&quot;&quot; Lanczos method for finding smallest algebraic eigenvector of linear \</span>
 <span class="linenos">25</span><span class="sd">    operator defined as a function&quot;&quot;&quot;</span>
 <span class="linenos">26</span>    <span class="c1">#print(eig_Lanczos)</span>
 <span class="linenos">27</span>
@@ -772,7 +791,7 @@ for the n=2 iteration as follows, which looks like a inserted two new sites betw
 <p>But where does that trial form come from? To gain more insight about it, we can instead consider the iTEBD approach here,
 which is done by perform an evolution “gate” on the two sites:</p>
 <a class="reference internal image-reference" href="../_images/idmrg_gate.png"><img alt="../_images/idmrg_gate.png" class="align-center" src="../_images/idmrg_gate.png" style="width: 350px;" /></a>
-<p>Suppose we didn’t even know what <img class="math" src="../_images/math/af809d42ebe58463b1b00677b3405f11505c0b92.png" alt="s_n"/> looks like here, it’s just a <img class="math" src="../_images/math/af809d42ebe58463b1b00677b3405f11505c0b92.png" alt="s_n"/>,
+<p>Suppose we didn’t even know what <span class="math notranslate nohighlight">\(s_n\)</span> looks like here, it’s just a <span class="math notranslate nohighlight">\(s_n\)</span>,
 then we can simply follows the procedures mentioned in the iTEBD example, we have the following Vidal’s form for unit cell of two sites at n-th step:</p>
 <a class="reference internal image-reference" href="../_images/idmrg_vidal.png"><img alt="../_images/idmrg_vidal.png" class="align-center" src="../_images/idmrg_vidal.png" style="width: 550px;" /></a>
 <p>this immediately suggests the above trial form if we try to rotate the center to the left and right and use translation symmetry.</p>
@@ -849,12 +868,13 @@ then we can simply follows the procedures mentioned in the iTEBD example, we hav
 <span class="linenos">8</span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ground state E&quot;</span><span class="p">,</span><span class="n">E</span><span class="p">)</span>
 </pre></div>
 </div>
-<p id="id2"><dl class="citation">
-<dt class="label" id="id3"><span class="brackets"><a class="fn-backref" href="#id1">PVM12</a></span></dt>
-<dd><p>Ho N. Phien, Guifré Vidal, and Ian P. McCulloch. Infinite boundary conditions for matrix product state calculations. <em>Phys. Rev. B</em>, 86:245107, Dec 2012. URL: <a class="reference external" href="https://link.aps.org/doi/10.1103/PhysRevB.86.245107">https://link.aps.org/doi/10.1103/PhysRevB.86.245107</a>, <a class="reference external" href="https://doi.org/10.1103/PhysRevB.86.245107">doi:10.1103/PhysRevB.86.245107</a>.</p>
-</dd>
-</dl>
-</p>
+<div class="docutils container" id="id2">
+<div class="citation" id="id3" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">PVM12</a><span class="fn-bracket">]</span></span>
+<p>Ho N. Phien, Guifré Vidal, and Ian P. McCulloch. Infinite boundary conditions for matrix product state calculations. <em>Phys. Rev. B</em>, 86:245107, Dec 2012. URL: <a class="reference external" href="https://link.aps.org/doi/10.1103/PhysRevB.86.245107">https://link.aps.org/doi/10.1103/PhysRevB.86.245107</a>, <a class="reference external" href="https://doi.org/10.1103/PhysRevB.86.245107">doi:10.1103/PhysRevB.86.245107</a>.</p>
+</div>
+</div>
+</div>
 </section>
 </section>
 
@@ -869,7 +889,7 @@ then we can simply follows the procedures mentioned in the iTEBD example, we hav
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 4.4.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.3.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

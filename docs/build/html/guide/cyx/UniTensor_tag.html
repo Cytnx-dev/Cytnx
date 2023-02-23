@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -19,7 +19,9 @@
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -50,14 +52,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../../install.html">Install &amp; Usage of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../install.html#conda-install">Conda install</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../install.html#using-python-api-after-conda-install">Using python API after Conda install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#depedencies">Depedencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#compiling-process">Compiling process</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../adv_install.html">Advanced Install Cytnx</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../adv_install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#depedencies">Depedencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#compiling-process">Compiling process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -174,7 +181,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../cyx.html">8. Cytnx extensions</a><ul class="current">
@@ -184,6 +194,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Bond.html">8.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Bond.html#create-the-bonds">8.2.2. Create the Bonds</a></li>
 </ul>
@@ -347,14 +358,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../../install.html">Install &amp; Usage of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../install.html#conda-install">Conda install</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../install.html#using-python-api-after-conda-install">Using python API after Conda install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#depedencies">Depedencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#compiling-process">Compiling process</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../adv_install.html">Advanced Install Cytnx</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../adv_install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#depedencies">Depedencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#compiling-process">Compiling process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -471,7 +487,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../cyx.html">8. Cytnx extensions</a><ul class="current">
@@ -481,6 +500,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Bond.html">8.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Bond.html#create-the-bonds">8.2.2. Create the Bonds</a></li>
 </ul>
@@ -585,12 +605,12 @@
           <div class="body">
             
   <section id="tagged-unitensor">
-<h1><span class="section-number">8.3.2. </span>Tagged UniTensor<a class="headerlink" href="#tagged-unitensor" title="Permalink to this headline">¶</a></h1>
+<h1><span class="section-number">8.3.2. </span>Tagged UniTensor<a class="headerlink" href="#tagged-unitensor" title="Permalink to this heading">¶</a></h1>
 <p>In this section we introduce the <strong>tagged UniTensor</strong>, which is the UniTensor with its bonds being <em>directional</em>,
 in this case, depending on wheather the bonds have symmetriy (quantum number),
 the resulting UniTensor can be further categorized into <strong>non-symmetry</strong> and with <strong>symmetry</strong> (block form).</p>
 <section id="non-symmetry-tagged-unitensor">
-<h2><span class="section-number">8.3.2.1. </span>Non-symmetry Tagged UniTensor<a class="headerlink" href="#non-symmetry-tagged-unitensor" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">8.3.2.1. </span>Non-symmetry Tagged UniTensor<a class="headerlink" href="#non-symmetry-tagged-unitensor" title="Permalink to this heading">¶</a></h2>
 <p>To create the non-symmetry Tagged UniTensor, we initialize it with <strong>non-symmetry and direcitonal bonds</strong>, although no symmetry can be exploit in these bonds,
 The direction information still add some physical properties to the UniTensor.
 Let’s create UniTensors <strong>Ta</strong>, <strong>Tb</strong> and <strong>Tc</strong> in this way and investigate their properties:</p>
@@ -680,7 +700,7 @@ as we mentioned in the 7.1 Tensor notation section, <strong>two bonds with confl
 </div>
 </section>
 <section id="symmetry-tagged-unitensor">
-<h2><span class="section-number">8.3.2.2. </span>Symmetry Tagged UniTensor<a class="headerlink" href="#symmetry-tagged-unitensor" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">8.3.2.2. </span>Symmetry Tagged UniTensor<a class="headerlink" href="#symmetry-tagged-unitensor" title="Permalink to this heading">¶</a></h2>
 <p>Tensor with symmetries has several advantages in physical simulations, due to the constrain from the symmetries, we have less free parameter in the tensors
 , both the memory needed and the cost of several tensor operations and algorithms can be substantially reduced.</p>
 <p>To bring the symmetries into our UniTensor, we simply initialize it using bonds with <strong>direction and the symmetry (quantum numbers)</strong> properties.
@@ -740,7 +760,7 @@ now consider the only bond in the colspace and its quantum numbers, we expect th
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 4.4.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.3.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -19,7 +19,10 @@
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -50,14 +53,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../../install.html">Install &amp; Usage of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../install.html#conda-install">Conda install</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../install.html#using-python-api-after-conda-install">Using python API after Conda install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#depedencies">Depedencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#compiling-process">Compiling process</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../adv_install.html">Advanced Install Cytnx</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../adv_install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#depedencies">Depedencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#compiling-process">Compiling process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -174,7 +182,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../cyx.html">8. Cytnx extensions</a><ul class="current">
@@ -184,6 +195,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Bond.html">8.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Bond.html#create-the-bonds">8.2.2. Create the Bonds</a></li>
 </ul>
@@ -345,14 +357,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../../install.html">Install &amp; Usage of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../install.html#conda-install">Conda install</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../install.html#using-python-api-after-conda-install">Using python API after Conda install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#depedencies">Depedencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#compiling-process">Compiling process</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../adv_install.html">Advanced Install Cytnx</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../adv_install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#depedencies">Depedencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#compiling-process">Compiling process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -469,7 +486,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../cyx.html">8. Cytnx extensions</a><ul class="current">
@@ -479,6 +499,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Bond.html">8.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Bond.html#create-the-bonds">8.2.2. Create the Bonds</a></li>
 </ul>
@@ -583,13 +604,13 @@
           <div class="body">
             
   <section id="tensor-notation">
-<h1><span class="section-number">8.1. </span>Tensor Notation<a class="headerlink" href="#tensor-notation" title="Permalink to this headline">¶</a></h1>
+<h1><span class="section-number">8.1. </span>Tensor Notation<a class="headerlink" href="#tensor-notation" title="Permalink to this heading">¶</a></h1>
 <p>Before going into the objects in the cytnx_extension, let’s first introduce the useful notations people usually use in the tensor network.</p>
 <p>A tensor can be think of as a multi-dimensional array. For example, a rank-0 tensor is scalar, rank-1 tensor is vector and rank-2 tensor is matrix etc.
 Mathmatically, a rank-N tensor can be written in symbolic notation as</p>
-<div class="math">
-<p><img src="../../_images/math/8a0a7ef3ca549ca33366e30bed2ee4231068c853.png" alt="T_{i_1,i_2 \cdots, i_N}"/></p>
-</div><p>This notation is standard, but when considering lots of tensors multiply together, the expression is sometimes quite difficult to read and not easy to understand.
+<div class="math notranslate nohighlight">
+\[T_{i_1,i_2 \cdots, i_N}\]</div>
+<p>This notation is standard, but when considering lots of tensors multiply together, the expression is sometimes quite difficult to read and not easy to understand.
 This is where the graphical tensor notation is useful.</p>
 <p>Usually, in the standard tensor network paper, the tensor notation is quite common and frequently used to explain the tensor network algorithms. Let’s take a look at it.</p>
 <p>Each tensor constitude a node (sometimes it also called vertex in graph theory) and several bonds (legs) attach to it.
@@ -597,22 +618,22 @@ The number of bonds represent the <em>rank</em> of a tensor.</p>
 <a class="reference internal image-reference" href="../../_images/Not.png"><img alt="../../_images/Not.png" class="align-center" src="../../_images/Not.png" style="width: 600px;" /></a>
 <p>For example as show in above, (a) represent a rank-0 tensor, which is a scalar. (b) is a rank-1 tensor which is a <em>vector</em>, (c) is a rank-2 tensor which is <em>matrix</em> and (d) is a rank-3 tensor.</p>
 <section id="tensor-contraction">
-<h2><span class="section-number">8.1.1. </span>Tensor Contraction<a class="headerlink" href="#tensor-contraction" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">8.1.1. </span>Tensor Contraction<a class="headerlink" href="#tensor-contraction" title="Permalink to this heading">¶</a></h2>
 <p>One of the most important operation of tensors is to multiply multiple tensors together, and summing over the indices.
-For example, consider three tensors <img class="math" src="../../_images/math/b85aa5d096f451f74c3f19d187450e4b7166a35d.png" alt="A_{\alpha\beta\gamma}"/> a rank-3 tensor, <img class="math" src="../../_images/math/fa446b61e5e692f8a1a28bd18aa4a6c8c719c782.png" alt="B_{\beta\delta}"/> is a rank-2 tensor (matrix) and <img class="math" src="../../_images/math/f91e96efdad1125a56c558402dc4a8d4e0d4c458.png" alt="C_{\gamma}"/> is a rank-1 tensor (vector) multiply together to get a rank-2 tensor <img class="math" src="../../_images/math/614881ca167324e5065b49ad0e9f7fa7bc1d386b.png" alt="D_{\alpha\delta}"/> by summing over the common indices <img class="math" src="../../_images/math/8ceb890e86f3ee05f7699fc14911c5beff97d33d.png" alt="\beta,\gamma"/>. With einstain notation:</p>
-<div class="math">
-<p><img src="../../_images/math/d9fe6fda84befbd70840b57a6bb43febfff650b5.png" alt="D_{\alpha\delta} = A_{\alpha\beta\gamma}B_{\beta\delta}C_{\gamma}"/></p>
-</div><p>In the tensor notation, this is equivalent as the following diagram:</p>
+For example, consider three tensors <span class="math notranslate nohighlight">\(A_{\alpha\beta\gamma}\)</span> a rank-3 tensor, <span class="math notranslate nohighlight">\(B_{\beta\delta}\)</span> is a rank-2 tensor (matrix) and <span class="math notranslate nohighlight">\(C_{\gamma}\)</span> is a rank-1 tensor (vector) multiply together to get a rank-2 tensor <span class="math notranslate nohighlight">\(D_{\alpha\delta}\)</span> by summing over the common indices <span class="math notranslate nohighlight">\(\beta,\gamma\)</span>. With einstain notation:</p>
+<div class="math notranslate nohighlight">
+\[D_{\alpha\delta} = A_{\alpha\beta\gamma}B_{\beta\delta}C_{\gamma}\]</div>
+<p>In the tensor notation, this is equivalent as the following diagram:</p>
 <a class="reference internal image-reference" href="../../_images/cont.png"><img alt="../../_images/cont.png" class="align-center" src="../../_images/cont.png" style="width: 550px;" /></a>
 <p>where the dash line indicate connetion of two bonds with the same indices. Summing over a index simply reprent by the connection of bonds and two (or more) tensors are called to <em>contract</em> together.</p>
 </section>
 <section id="direction-of-bond">
-<h2><span class="section-number">8.1.2. </span>Direction of bond<a class="headerlink" href="#direction-of-bond" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">8.1.2. </span>Direction of bond<a class="headerlink" href="#direction-of-bond" title="Permalink to this heading">¶</a></h2>
 <p>Above, we have shown that every symbolic tensor notation can be represented by graphical tensor notation, and each bond can be interpreted as vector space.
-In quantum system, sometimes we want to indicate the physical space with <em>bra</em> (<img class="math" src="../../_images/math/4d1af477d226b33f70c5b4077bf289a3ffe49094.png" alt="&lt;\psi|"/>) and <em>ket</em> (<img class="math" src="../../_images/math/68721ce7388cc7b4aaf53a2230b45e0a4a8c43e2.png" alt="|\psi&gt;"/>). For example, a matrix can be generally represent as <img class="math" src="../../_images/math/f6dd51a0baa3db7eca832958d5a45215145d8e69.png" alt="A = |\alpha&gt;&lt;\beta|"/>, and <em>ket</em> can only multiply (contract) with a <em>bra</em>.
+In quantum system, sometimes we want to indicate the physical space with <em>bra</em> (<span class="math notranslate nohighlight">\(&lt;\psi|\)</span>) and <em>ket</em> (<span class="math notranslate nohighlight">\(|\psi&gt;\)</span>). For example, a matrix can be generally represent as <span class="math notranslate nohighlight">\(A = |\alpha&gt;&lt;\beta|\)</span>, and <em>ket</em> can only multiply (contract) with a <em>bra</em>.
 In terms of tensor notation, we give each bond a <strong>direction</strong> (arrow) where bond with arrow pointing into the node indicates a <em>ket</em> and arrow pointing away from the node indicates a <em>bra</em> as shown in the following:</p>
 <a class="reference internal image-reference" href="../../_images/braket.png"><img alt="../../_images/braket.png" class="align-center" src="../../_images/braket.png" style="width: 500px;" /></a>
-<p>(a) indicate a rank-3 tensor <img class="math" src="../../_images/math/31f0d0f836f2f138befe5ea1abd0fe6f6b263f31.png" alt="A = |\alpha&gt;&lt;\beta|&lt;\delta|"/> and (b) is a rank-2 tensor <img class="math" src="../../_images/math/faa1d73b8efd0c7668bb794d95d48b7eeeef57f8.png" alt="B = |\alpha&gt;&lt;\beta|"/>.
+<p>(a) indicate a rank-3 tensor <span class="math notranslate nohighlight">\(A = |\alpha&gt;&lt;\beta|&lt;\delta|\)</span> and (b) is a rank-2 tensor <span class="math notranslate nohighlight">\(B = |\alpha&gt;&lt;\beta|\)</span>.
 Just like in physics, a <em>ket</em> bond cannot multiply with a <em>bra</em> bond. In the tensor notation, this can be very straightforwardly presented, as two bonds with conflict direction cannot contract with each other, as shown in the following:</p>
 <a class="reference internal image-reference" href="../../_images/braket_cont.png"><img alt="../../_images/braket_cont.png" class="align-center" src="../../_images/braket_cont.png" style="width: 350px;" /></a>
 <div class="admonition note">
@@ -635,7 +656,7 @@ Just like in physics, a <em>ket</em> bond cannot multiply with a <em>bra</em> bo
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 4.4.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.3.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

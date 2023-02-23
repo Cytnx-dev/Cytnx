@@ -38,15 +38,17 @@ _version = 'v0.7.6'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinxcontrib.bibtex']#,'sphinx.ext.autosectionlabel']
+# https://sublime-and-sphinx-guide.readthedocs.io/en/latest/references.html
+extensions = ['sphinxcontrib.bibtex','sphinx.ext.autosectionlabel']
 bibtex_bibfiles = ["example/ref.dmrg.bib",\
                    "example/ref.hotrg.bib",\
                    "example/ref.itebd.bib",\
                    "example/ref.idmrg.bib",\
                   ]
 extensions.append('sphinx.ext.extlinks')
-extensions.append('sphinx.ext.imgmath')
+#extensions.append('sphinx.ext.imgmath')
 #extensions.append('ablog')
+extensions.append('sphinx.ext.mathjax')
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

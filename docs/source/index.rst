@@ -19,6 +19,7 @@ Cytnx user guide and examples
    :maxdepth: 3
 
    install.rst
+   adv_install.rst
    convention.rst
    Guide.rst
    Examples.rst
