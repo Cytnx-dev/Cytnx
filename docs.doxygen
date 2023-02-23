@@ -986,7 +986,7 @@ FILTER_SOURCE_PATTERNS =
 # (index.html). This can be useful if you have a project on for instance GitHub
 # and want to reuse the introduction page also for the doxygen output.
 
-USE_MDFILE_AS_MAINPAGE = "./dox.md"
+USE_MDFILE_AS_MAINPAGE = ./dox.md
 
 #---------------------------------------------------------------------------
 # Configuration options related to source browsing
@@ -1198,7 +1198,9 @@ HTML_STYLESHEET        =
 # list). For an example see the documentation.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_EXTRA_STYLESHEET  = 
+HTML_EXTRA_STYLESHEET   =
+#HTML_EXTRA_STYLESHEET  = thirdparty/doxygen-awesome-css/doxygen-awesome.css \
+#                         thirdparty/doxygen-awesome-css/doxygen-awesome-sidebar-only.css 
 #"doxygen_conf/custom_dark_theme.css" "doxygen_conf/custom.css"
 
 # The HTML_EXTRA_FILES tag can be used to specify one or more extra images or
