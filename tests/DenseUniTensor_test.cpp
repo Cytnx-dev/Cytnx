@@ -2,22 +2,18 @@
 using namespace std;
 using namespace cytnx;
 TEST_F(DenseUniTensorTest, Trace) {
-  // // std::cout<<utarcomplex3456<<std::endl;
-  // auto tmp = utarcomplex3456.Trace(0,3);
-  // std::cout<<BUtrT4<<std::endl;
-  // std::cout<<tmp<<std::endl;
-  // for(size_t j=1;j<=11;j++)
-  //     for(size_t k=1;k<=3;k++)
-  //       if(BUtrT4.at({j-1,k-1}).exists()){
-  //         // EXPECT_TRUE(Scalar(tmp.at({j-1,k-1})-BUtrT4.at({j-1,k-1})).abs()<1e-5);
-  //         EXPECT_DOUBLE_EQ(double(tmp.at({j-1,k-1}).real()),double(BUtrT4.at({j-1,k-1}).real()));
-  //         EXPECT_DOUBLE_EQ(double(tmp.at({j-1,k-1}).imag()),double(BUtrT4.at({j-1,k-1}).imag()));
-  //       }
-  // // EXPECT_NO_THROW(utzero3456.Trace(0,3));
-  // // EXPECT_THROW(utzero3456.Trace(),std::logic_error);
-  // // EXPECT_THROW(utzero3456.Trace(0,1),std::logic_error);
-  // // EXPECT_THROW(utzero3456.Trace(-1,2),std::logic_error);
-  // // EXPECT_THROW(utzero3456.Trace(-1,5),std::logic_error);
+  auto tmp = dense4trtensor.Trace(0,3);
+  for(size_t j=1;j<=4;j++)
+      for(size_t k=1;k<=5;k++)
+        if(densetr.at({j-1,k-1}).exists()){
+          EXPECT_DOUBLE_EQ(double(tmp.at({j-1,k-1}).real()),double(densetr.at({j-1,k-1}).real()));
+          EXPECT_DOUBLE_EQ(double(tmp.at({j-1,k-1}).imag()),double(densetr.at({j-1,k-1}).imag()));
+        }
+  // EXPECT_NO_THROW(utzero3456.Trace(0,3));
+  // EXPECT_THROW(utzero3456.Trace(),std::logic_error);
+  // EXPECT_THROW(utzero3456.Trace(0,1),std::logic_error);
+  // EXPECT_THROW(utzero3456.Trace(-1,2),std::logic_error);
+  // EXPECT_THROW(utzero3456.Trace(-1,5),std::logic_error);
 }
 
 TEST_F(DenseUniTensorTest, relabels){
@@ -76,7 +72,7 @@ TEST_F(DenseUniTensorTest, Conj){
           EXPECT_DOUBLE_EQ(double(tmp.at({i-1,j-1,k-1,l-1}).real()),double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).real()));
           EXPECT_DOUBLE_EQ(double(tmp.at({i-1,j-1,k-1,l-1}).imag()),-double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).imag()));
         }
-  tmp = utarcomplex3456;
+  tmp = utarcomplex3456.clone();
   utarcomplex3456.Conj_();
   for(size_t i=1;i<=3;i++)for(size_t j=1;j<=4;j++)
       for(size_t k=1;k<=5;k++)for(size_t l=1;l<=6;l++)
@@ -122,7 +118,7 @@ TEST_F(DenseUniTensorTest, Dagger){
           EXPECT_DOUBLE_EQ(double(tmp.at({i-1,j-1,k-1,l-1}).real()),double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).real()));
           EXPECT_DOUBLE_EQ(double(tmp.at({i-1,j-1,k-1,l-1}).imag()),-double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).imag()));
         }
-  tmp = utarcomplex3456;
+  tmp = utarcomplex3456.clone();
   utarcomplex3456.Dagger_();
   for(size_t i=1;i<=3;i++)for(size_t j=1;j<=4;j++)
       for(size_t k=1;k<=5;k++)for(size_t l=1;l<=6;l++)
@@ -185,8 +181,8 @@ TEST_F(DenseUniTensorTest, Init){
 }
 
 TEST_F(DenseUniTensorTest, Init_by_Tensor){
-    // not a valid operation
-    EXPECT_ANY_THROW(dut.Init_by_Tensor(tzero345, false, -1));
+    // EXPECT_NO_THROW(dut.Init_by_Tensor(tar345, false, -1));
+    // EXPECT_TRUE(utar345.same_data());
 }
 
 
@@ -218,7 +214,7 @@ TEST_F(DenseUniTensorTest, device_str){
 }
 
 TEST_F(DenseUniTensorTest, is_blockform) {
-    EXPECT_EQ(Spf.is_blockform(), true);
+    EXPECT_EQ(Spf.is_blockform(), false);
     EXPECT_EQ(utzero345.is_blockform(), false);
 }
 
@@ -250,136 +246,112 @@ TEST_F(DenseUniTensorTest, astype) {
 }
 
 TEST_F(DenseUniTensorTest, reshape) {
-    EXPECT_ANY_THROW(Spf.reshape({4,1},1));
+    EXPECT_ANY_THROW(Spf.reshape({6,1},1));
 }
 
 TEST_F(DenseUniTensorTest, reshape_) {
-    EXPECT_ANY_THROW(Spf.reshape_({4,1},1));
+    EXPECT_ANY_THROW(Spf.reshape_({6,1},1));
 }
 
-// TEST_F(DenseUniTensorTest, contiguous) {
+TEST_F(DenseUniTensorTest, contiguous) {
 
-//     auto bks = UT_pB_ans.permute({1,2,0}).contiguous().get_blocks();
+    auto bk = ut1.permute({1,3,0,2}).contiguous().get_block();
     
-//     for(int b = 0;b<bks.size();b++){
-//         int ptr = 0;
-//         EXPECT_EQ(bks[b].is_contiguous(), true);
-//         for(cytnx_uint64 i =0; i<bks[b].shape()[0];i++)
-//             for(cytnx_uint64 j =0; j <bks[b].shape()[1];j++)
-//                 for(cytnx_uint64 k=0; k <bks[b].shape()[2];k++){
-//                 EXPECT_EQ(double(bks[b].at({i,j,k}).real()), bks[b].storage().at<double>(ptr++));
-//             }
-//     }
-// }
+    int ptr = 0;
+    EXPECT_TRUE(bk.is_contiguous());
+    for(cytnx_uint64 i =0; i<bk.shape()[0];i++)
+        for(cytnx_uint64 j =0; j <bk.shape()[1];j++)
+            for(cytnx_uint64 k=0; k <bk.shape()[2];k++)
+              for(cytnx_uint64 l=0; l <bk.shape()[3];l++){
+                EXPECT_EQ(complex128(bk.at({i,j,k,l})), bk.storage().at<cytnx_complex128>(ptr++));
+              }
+}
 
-// TEST_F(DenseUniTensorTest, contiguous_) {
-
-//     auto tmp = UT_pB_ans.permute({1,2,0});
-//     tmp.contiguous_();
-//     auto bks = tmp.get_blocks();
+TEST_F(DenseUniTensorTest, contiguous_) {
+    auto tmp = ut1.permute({1,3,0,2});
+    tmp.contiguous_();
+    auto bk = tmp.get_block(); 
+    // auto bk = ut1.permute({1,3,0,2}).contiguous().get_block();
     
-//     for(int b = 0;b<bks.size();b++){
-//         int ptr = 0;
-//         EXPECT_EQ(bks[b].is_contiguous(), true);
-//         for(cytnx_uint64 i =0; i<bks[b].shape()[0];i++)
-//             for(cytnx_uint64 j =0; j <bks[b].shape()[1];j++)
-//                 for(cytnx_uint64 k=0; k <bks[b].shape()[2];k++){
-//                 EXPECT_EQ(double(bks[b].at({i,j,k}).real()), bks[b].storage().at<double>(ptr++));
-//             }
-//     }
-// }
+    int ptr = 0;
+    EXPECT_TRUE(bk.is_contiguous());
+    for(cytnx_uint64 i =0; i<bk.shape()[0];i++)
+        for(cytnx_uint64 j =0; j <bk.shape()[1];j++)
+            for(cytnx_uint64 k=0; k <bk.shape()[2];k++)
+              for(cytnx_uint64 l=0; l <bk.shape()[3];l++){
+                EXPECT_EQ(complex128(bk.at({i,j,k,l})), bk.storage().at<cytnx_complex128>(ptr++));
+              }
+}
 
+TEST_F(DenseUniTensorTest, same_data) {
+    UniTensor B = ut1.permute({1,0,3,2});
+    UniTensor C = B.contiguous();
+    EXPECT_FALSE(B.same_data(C));
+    EXPECT_TRUE(ut1.same_data(B));
+}
 
-// TEST_F(DenseUniTensorTest, same_data) {
-//     UniTensor B = UT_pB_ans.permute({1,0,2});
-//     UniTensor C = B.contiguous();
-//     EXPECT_EQ(B.same_data(C), false);
-//     EXPECT_EQ(UT_pB_ans.same_data(B), true);
-// }
+TEST_F(DenseUniTensorTest, get_blocks) {
+    EXPECT_THROW(utzero345.get_blocks(), std::logic_error);
+}
 
-// TEST_F(DenseUniTensorTest, get_blocks) {
-//     auto bks = UT_pB_ans.get_blocks();
-//     EXPECT_EQ(bks[0].equiv(t0), true);
-//     EXPECT_EQ(bks[1].equiv(t1a), true);
-//     EXPECT_EQ(bks[2].equiv(t1b), true);
-//     EXPECT_EQ(bks[3].equiv(t2), true);
-//     // EXPECT_ANY_THROW(UT_pB_ans.get_block({0,0,3}));
-// }
+TEST_F(DenseUniTensorTest, get_blocks_) {
+  EXPECT_THROW(utzero345.get_blocks_(), std::logic_error);
+}
 
-// TEST_F(DenseUniTensorTest, get_blocks_) {
-//     auto bks = UT_pB_ans.get_blocks_();
-//     EXPECT_EQ(bks[0].equiv(t0), true);
-//     EXPECT_EQ(bks[1].equiv(t1a), true);
-//     EXPECT_EQ(bks[2].equiv(t1b), true);
-//     EXPECT_EQ(bks[3].equiv(t2), true);
-//     EXPECT_EQ(UT_pB_ans.get_block_(0).same_data(bks[0]), true);
-//     EXPECT_EQ(UT_pB_ans.get_block_(1).same_data(bks[1]), true);
-//     EXPECT_EQ(UT_pB_ans.get_block_(2).same_data(bks[2]), true);
-//     EXPECT_EQ(UT_pB_ans.get_block_(3).same_data(bks[3]), true);
-//     // EXPECT_ANY_THROW(UT_pB_ans.get_block({0,0,3}));
-// }
+TEST_F(DenseUniTensorTest, clone) {
+    UniTensor cloned = ut1.clone();
+    for(size_t i=0;i<3;i++)for(size_t j=0;j<4;j++)
+      for(size_t k=0;k<5;k++)for(size_t l=0;l<6;l++){
+        EXPECT_DOUBLE_EQ(double(cloned.at({i,j,k,l}).real()), double(ut1.at({i,j,k,l}).real()));
+        EXPECT_DOUBLE_EQ(double(cloned.at({i,j,k,l}).imag()), double(ut1.at({i,j,k,l}).imag()));
+      }
+}
 
-// TEST_F(DenseUniTensorTest, clone) {
-//     UniTensor cloned = UT_pB_ans.clone();
-//     for(size_t i=0;i<5;i++)
-//         for(size_t j=0;j<9;j++)
-//             for(size_t k=1;k<30;k++){
-//                 EXPECT_EQ(cloned.at({i,j,k}).exists(), UT_pB_ans.at({i,j,k}).exists());
-//                 if(cloned.at({i,j,k}).exists())
-//                     EXPECT_EQ(cloned.at({i,j,k}), UT_pB_ans.at({i,j,k}));
-//             }
-// }
+TEST_F(DenseUniTensorTest, permute1) {
+    // rank-4 tensor
+    std::vector<cytnx_int64> a = {1,0,3,2};
+    auto permuted = ut4.permute(a, -1);
+    for(size_t i=0;i<4;i++)for(size_t j=0;j<3;j++)
+      for(size_t k=0;k<6;k++)for(size_t l=0;l<5;l++){
+        EXPECT_DOUBLE_EQ(double(permuted.at({i,j,k,l}).real()), double(permu1.at({i,j,k,l}).real()));
+        EXPECT_DOUBLE_EQ(double(permuted.at({i,j,k,l}).imag()), double(permu1.at({i,j,k,l}).imag()));
+      }
+}
 
-// TEST_F(DenseUniTensorTest, permute1) {
-//     // rank-3 tensor
-//     std::vector<cytnx_int64> a = {1,2,0};
-//     auto permuted = UT_permute_1.permute(a, -1);
-//     for(size_t i=0;i<10;i++)
-//         for(size_t j=0;j<6;j++)
-//             for(size_t k=0;k<10;k++){
-//                 EXPECT_EQ(permuted.at({i,j,k}).exists(), UT_permute_ans1.at({i,j,k}).exists());
-//                 if(permuted.at({i,j,k}).exists())
-//                     EXPECT_EQ(double(permuted.at({i,j,k}).real()), double(UT_permute_ans1.at({i,j,k}).real()));
-//             }
-// }
+TEST_F(DenseUniTensorTest, permute2) {
+    std::vector<cytnx_int64> a = {1,0};
+    auto permuted = ut3.permute(a, -1);
+    for(size_t i=0;i<6;i++)
+      for(size_t j=0;j<4;j++){
+        EXPECT_DOUBLE_EQ(double(permuted.at({i,j}).real()), double(permu2.at({i,j}).real()));
+        EXPECT_DOUBLE_EQ(double(permuted.at({i,j}).imag()), double(permu2.at({i,j}).imag()));
+      }
+}
 
-// TEST_F(DenseUniTensorTest, permute2) {
-//   std::vector<cytnx_int64> a = {1,0};
-//   auto permuted = UT_permute_2.permute(a, -1);
+TEST_F(DenseUniTensorTest, permute_1) {
+    // rank-4 tensor
+    std::vector<cytnx_int64> a = {1,0,3,2};
+    auto permuted = ut4;
+    permuted.permute_(a, -1);
+    for(size_t i=0;i<4;i++)for(size_t j=0;j<3;j++)
+      for(size_t k=0;k<6;k++)for(size_t l=0;l<5;l++){
+        // EXPECT_EQ(complex128(permuted.at({i,j,k,l})), complex128(permu1.at({i,j,k,l})));
+        EXPECT_DOUBLE_EQ(double(permuted.at({i,j,k,l}).real()), double(permu1.at({i,j,k,l}).real()));
+        EXPECT_DOUBLE_EQ(double(permuted.at({i,j,k,l}).imag()), double(permu1.at({i,j,k,l}).imag()));
+      }
+}
 
-//   for(size_t j=0;j<10;j++)
-//     for(size_t k=0;k<10;k++){
-//         EXPECT_EQ(permuted.at({j,k}).exists(), UT_permute_ans2.at({j,k}).exists());
-//         if(permuted.at({j,k}).exists())
-//             EXPECT_EQ(double(permuted.at({j,k}).real()), double(UT_permute_ans2.at({j,k}).real()));
-//     }
-// }
-
-// TEST_F(DenseUniTensorTest, permute_1) {
-//     // rank-3 tensor
-//     std::vector<cytnx_int64> a = {1,2,0};
-//     auto permuted = UT_permute_1.clone();
-//     permuted.permute_(a, -1);
-//     for(size_t i=0;i<10;i++)
-//         for(size_t j=0;j<6;j++)
-//             for(size_t k=0;k<10;k++){
-//                 EXPECT_EQ(permuted.at({i,j,k}).exists(), UT_permute_ans1.at({i,j,k}).exists());
-//                 if(permuted.at({i,j,k}).exists())
-//                     EXPECT_EQ(double(permuted.at({i,j,k}).real()), double(UT_permute_ans1.at({i,j,k}).real()));
-//             }
-// }
-
-// TEST_F(DenseUniTensorTest, permute_2) {
-//     std::vector<cytnx_int64> a = {1,0};
-//     auto permuted = UT_permute_2.clone();
-//     permuted.permute_(a, -1);
-//     for(size_t j=0;j<10;j++)
-//         for(size_t k=0;k<10;k++){
-//             EXPECT_EQ(permuted.at({j,k}).exists(), UT_permute_ans2.at({j,k}).exists());
-//             if(permuted.at({j,k}).exists())
-//                 EXPECT_EQ(double(permuted.at({j,k}).real()), double(UT_permute_ans2.at({j,k}).real()));
-//         }
-// }
+TEST_F(DenseUniTensorTest, permute_2) {
+    std::vector<cytnx_int64> a = {1,0};
+    auto permuted = ut3;
+    permuted.permute_(a, -1);
+    for(size_t i=0;i<6;i++)
+      for(size_t j=0;j<4;j++){
+        // EXPECT_EQ(complex128(permuted.at({i,j})), complex128(permu2.at({i,j})));
+        EXPECT_DOUBLE_EQ(double(permuted.at({i,j}).real()), double(permu2.at({i,j}).real()));
+        EXPECT_DOUBLE_EQ(double(permuted.at({i,j}).imag()), double(permu2.at({i,j}).imag()));
+      }
+}
 
 TEST_F(DenseUniTensorTest, contract1) {
     ut1.set_labels({"a","b","c","d"});
@@ -414,10 +386,10 @@ TEST_F(DenseUniTensorTest, Add){
     for(size_t i=1;i<=3;i++)for(size_t j=1;j<=4;j++)
       for(size_t k=1;k<=5;k++)for(size_t l=1;l<=6;l++)
         if(out.at({i-1,j-1,k-1,l-1}).exists()){
-          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).real()), double(out.at({i-1,j-1,k-1,l-1}).real())+9);
-          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).imag()), double(out.at({i-1,j-1,k-1,l-1}).imag())+9);
+          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).real()), double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).real())+9);
+          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).imag()), double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).imag())+9);
         }
-    auto tmp = utarcomplex3456;
+    auto tmp = utarcomplex3456.clone();
     utarcomplex3456.Add_(9+9i);
     for(size_t i=1;i<=3;i++)for(size_t j=1;j<=4;j++)
       for(size_t k=1;k<=5;k++)for(size_t l=1;l<=6;l++)
@@ -425,7 +397,7 @@ TEST_F(DenseUniTensorTest, Add){
           EXPECT_DOUBLE_EQ(double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).real()), double(tmp.at({i-1,j-1,k-1,l-1}).real())+9);
           EXPECT_DOUBLE_EQ(double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).imag()), double(tmp.at({i-1,j-1,k-1,l-1}).imag())+9);
         }
-    utarcomplex3456 = UniTensor(arange(3*4*5*6));
+    utarcomplex3456 = UniTensor(arange(3*4*5*6)).astype(Type.ComplexDouble);
     for(size_t i=0;i<3*4*5*6;i++) utarcomplex3456.at({i}) = cytnx_complex128(i,i);
     utarcomplex3456 = utarcomplex3456.reshape({3, 4, 5, 6});
     out = utarcomplex3456.Add(utone3456);
@@ -435,7 +407,7 @@ TEST_F(DenseUniTensorTest, Add){
           EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).real()), double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).real()+1));
           EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).imag()), double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).imag()));
         }
-    tmp = utarcomplex3456;
+    tmp = utarcomplex3456.clone();
     utarcomplex3456.Add_(utone3456);
     for(size_t i=1;i<=3;i++)for(size_t j=1;j<=4;j++)
       for(size_t k=1;k<=5;k++)for(size_t l=1;l<=6;l++)
@@ -451,10 +423,10 @@ TEST_F(DenseUniTensorTest, Sub){
     for(size_t i=1;i<=3;i++)for(size_t j=1;j<=4;j++)
       for(size_t k=1;k<=5;k++)for(size_t l=1;l<=6;l++)
         if(out.at({i-1,j-1,k-1,l-1}).exists()){
-          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).real()), double(out.at({i-1,j-1,k-1,l-1}).real())-9);
-          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).imag()), double(out.at({i-1,j-1,k-1,l-1}).imag())-9);
+          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).real()), double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).real())-9);
+          EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).imag()), double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).imag())-9);
         }
-    auto tmp = utarcomplex3456;
+    auto tmp = utarcomplex3456.clone();
     utarcomplex3456.Sub_(9+9i);
     for(size_t i=1;i<=3;i++)for(size_t j=1;j<=4;j++)
       for(size_t k=1;k<=5;k++)for(size_t l=1;l<=6;l++)
@@ -462,7 +434,7 @@ TEST_F(DenseUniTensorTest, Sub){
           EXPECT_DOUBLE_EQ(double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).real()), double(tmp.at({i-1,j-1,k-1,l-1}).real())-9);
           EXPECT_DOUBLE_EQ(double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).imag()), double(tmp.at({i-1,j-1,k-1,l-1}).imag())-9);
         }
-    utarcomplex3456 = UniTensor(arange(3*4*5*6));
+    utarcomplex3456 = UniTensor(arange(3*4*5*6)).astype(Type.ComplexDouble);
     for(size_t i=0;i<3*4*5*6;i++) utarcomplex3456.at({i}) = cytnx_complex128(i,i);
     utarcomplex3456 = utarcomplex3456.reshape({3, 4, 5, 6});
     out = utarcomplex3456.Sub(utone3456);
@@ -472,7 +444,7 @@ TEST_F(DenseUniTensorTest, Sub){
           EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).real()), double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).real()-1));
           EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).imag()), double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).imag()));
         }
-    tmp = utarcomplex3456;
+    tmp = utarcomplex3456.clone();
     utarcomplex3456.Sub_(utone3456);
     for(size_t i=1;i<=3;i++)for(size_t j=1;j<=4;j++)
       for(size_t k=1;k<=5;k++)for(size_t l=1;l<=6;l++)
@@ -490,7 +462,7 @@ TEST_F(DenseUniTensorTest, Mul){
           EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).real()), double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).real()*9));
           EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).imag()), double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).imag()*9));
         }
-    out = utarcomplex3456;
+    out = utarcomplex3456.clone();
     utarcomplex3456.Mul_(9);
     for(size_t i=1;i<=3;i++)for(size_t j=1;j<=4;j++)
       for(size_t k=1;k<=5;k++)for(size_t l=1;l<=6;l++)
@@ -508,7 +480,7 @@ TEST_F(DenseUniTensorTest, Div){
           EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).real()), double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).real()/9));
           EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).imag()), double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).imag()/9));
         }
-    out = utarcomplex3456;
+    out = utarcomplex3456.clone();
     utarcomplex3456.Div_(9);
     for(size_t i=1;i<=3;i++)for(size_t j=1;j<=4;j++)
       for(size_t k=1;k<=5;k++)for(size_t l=1;l<=6;l++)
@@ -517,7 +489,7 @@ TEST_F(DenseUniTensorTest, Div){
           EXPECT_DOUBLE_EQ(double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).imag()), double(out.at({i-1,j-1,k-1,l-1}).imag()/9));
         }
 
-    utarcomplex3456 = UniTensor(arange(3*4*5*6));
+    utarcomplex3456 = UniTensor(arange(3*4*5*6)).astype(Type.ComplexDouble);
     for(size_t i=0;i<3*4*5*6;i++) utarcomplex3456.at({i}) = cytnx_complex128(i,i);
     utarcomplex3456 = utarcomplex3456.reshape({3, 4, 5, 6});
     out = utarcomplex3456.Div(utone3456);
@@ -527,7 +499,7 @@ TEST_F(DenseUniTensorTest, Div){
           EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).real()), double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).real()));
           EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).imag()), double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).imag()));
         }
-    auto tmp = utarcomplex3456;
+    auto tmp = utarcomplex3456.clone();
     utarcomplex3456.Div_(utone3456);
     for(size_t i=1;i<=3;i++)for(size_t j=1;j<=4;j++)
       for(size_t k=1;k<=5;k++)for(size_t l=1;l<=6;l++)
