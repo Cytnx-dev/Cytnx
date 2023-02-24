@@ -80,7 +80,7 @@ namespace cytnx {
                       "\n");
 
       As(0) = Contract(new_psi.Dagger(), psi_1).item().real();
-
+      
       // As(0) =
       // linalg::Vectordot(new_psi.get_block_().flatten(),psi_1.get_block_().flatten(),true);
 

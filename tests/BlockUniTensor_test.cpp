@@ -591,6 +591,15 @@ TEST_F(BlockUniTensorTest, contract3) {
         EXPECT_EQ(outbks[i].equiv(ansbks[i]), true);
 }
 
+TEST_F(BlockUniTensorTest, contract4) {
+    //// Diag tensor
+    auto dI = Bond(BD_IN,{{0},{1}},{1,1});
+    auto dJ = Bond(BD_OUT,{{0},{1}},{1,1});
+    auto t = UniTensor({dI,dJ},{1,2,3},1,Type.Double,Device.cpu,true);
+    EXPECT_NO_THROW(t.contract(t.Dagger()));
+}
+
+
 TEST_F(BlockUniTensorTest, Add){
     using namespace std::complex_literals;
     // auto out = BUT4.Add(9+9i);
