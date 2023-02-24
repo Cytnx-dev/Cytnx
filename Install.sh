@@ -4,8 +4,7 @@
 ## [Note] uncomments the following lines and 
 ##        Set the desntination path for installation in Ins_dest
 #----------------------------------------------
-# Ins_dest="$HOME/Cytnx_lib"
-Ins_dest="/home/j9263178/cytnx_bk_new"
+Ins_dest="$HOME/Cytnx_lib"
 FLAG="${FLAG} -DCMAKE_INSTALL_PREFIX=${Ins_dest}"
 #-----------------------------------------------
 
@@ -147,7 +146,7 @@ FLAG="${FLAG} -DUSE_OMP=OFF "
 #=========================================================
 # [Note] Wheather to run cytnx tests (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG} -DRUN_TESTS=OFF "
+FLAG="${FLAG} -DRUN_TESTS=ON "
 #-----------------------------------
 
 
@@ -167,4 +166,4 @@ cd build
 cmake ../ ${FLAG}
 make -j`nproc`
 make install
-# ctest
+ctest
