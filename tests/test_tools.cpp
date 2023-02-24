@@ -283,15 +283,29 @@ bool AreElemSame(const Tensor& T1, const std::vector<cytnx_uint64>& idices1,
 //UniTensor
 bool AreNearlyEqUniTensor(const UniTensor& Ut1, const UniTensor& Ut2, 
                           const cytnx_double tol) {
-  const std::vector<Tensor>& blocks1 = Ut1.get_blocks();
-  const std::vector<Tensor>& blocks2 = Ut2.get_blocks();
-  if (blocks1.size() != blocks2.size())
+  if (Ut1.uten_type() != Ut2.uten_type())
     return false;
-  auto blocks_num = blocks1.size();
-  for (size_t i = 0; i < blocks_num; ++i) {
-    if (!AreNearlyEqTensor(blocks1[i], blocks2[i], tol)) {
+  //dense
+  if (Ut1.uten_type() == UTenType.Dense) {
+    Tensor block1 = Ut1.get_block();
+    Tensor block2 = Ut1.get_block();
+    if (!AreNearlyEqTensor(block1, block2, tol))
       return false;
+  } 
+  // block
+  else if (Ut1.uten_type() == UTenType.Block) {
+    const std::vector<Tensor>& blocks1 = Ut1.get_blocks();
+    const std::vector<Tensor>& blocks2 = Ut2.get_blocks();
+    if (blocks1.size() != blocks2.size())
+      return false;
+    auto blocks_num = blocks1.size();
+    for (size_t i = 0; i < blocks_num; ++i) {
+      if (!AreNearlyEqTensor(blocks1[i], blocks2[i], tol)) {
+        return false;
+      }
     }
+  } else { //void
+    return false;
   }
   return true;
 }
