@@ -864,7 +864,7 @@ namespace cytnx {
                         else
                             tmp->_block += linalg::Vectordot(Lperm_raw->_blocks[b].flatten(),Rperm_raw->_blocks[a].flatten());
                         
-                        std::cout << b << " " << a << endl;                        
+                        // std::cout << b << " " << a << endl;                        
 
 
                     } 

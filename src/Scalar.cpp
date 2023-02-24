@@ -39,10 +39,11 @@ namespace cytnx {
 
   // eq c == Scalar;
   bool operator==(const Scalar& lc, const Scalar& rs) {
-    if (lc.dtype() < rs.dtype())
-      return lc.geq(rs);
-    else
-      return rs.geq(lc);
+    // if (lc.dtype() < rs.dtype())
+    //   return lc.geq(rs);
+    // else
+    //   return rs.geq(lc);
+    return lc.eq(rs);
   };
 
   Scalar abs(const Scalar& c) { return c.abs(); };
