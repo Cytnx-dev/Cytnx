@@ -29,8 +29,18 @@ class BlockUniTensorTest : public ::testing::Test {
   Bond B3p = Bond(BD_IN, {Qs(-1), Qs(0), Qs(2)}, {1, 1, 1});
   Bond B4p = Bond(BD_OUT, {Qs(-1), Qs(0), Qs(1)}, {2, 1, 2});
   UniTensor BUT4 = UniTensor({B1p, B2p, B3p, B4p});
+  UniTensor BUT4_2 = UniTensor({B1p, B2p, B3p, B4p});
   UniTensor BUconjT4 = UniTensor({B1p, B2p, B3p, B4p});
   UniTensor BUtrT4 = UniTensor({B2p, B3p});
+  UniTensor BUTpT2 = UniTensor({B1p, B2p, B3p, B4p});
+  UniTensor BUTsT2 = UniTensor({B1p, B2p, B3p, B4p});
+  UniTensor BUTm9 = UniTensor({B1p, B2p, B3p, B4p});
+  UniTensor BUTd9 = UniTensor({B1p, B2p, B3p, B4p});
+  UniTensor BUTdT2 = UniTensor({B1p, B2p, B3p, B4p});
+
+  Bond B1g = Bond(BD_IN, {Qs(1), Qs(0), Qs(0)}, {1, 1, 1});
+  Bond B2g = Bond(BD_OUT, {Qs(1), Qs(0), Qs(0)}, {1, 1, 1});
+  UniTensor BUT6 = UniTensor({B1g, B2g});
 
   Bond bd_sym_f =
     Bond(BD_KET, {{0, 2}, {1, 5}, {1, 6}, {0, 1}}, {4, 7, 2, 3}, {Symmetry::Zn(2), Symmetry::U1()});
@@ -90,8 +100,20 @@ class BlockUniTensorTest : public ::testing::Test {
  protected:
   void SetUp() override {
     BUT4 = BUT4.Load("OriginalBUT.cytnx");
+    BUT4_2 = BUT4_2.Load("OriginalBUT2.cytnx");
     BUconjT4 = BUconjT4.Load("BUconjT.cytnx");
     BUtrT4 = BUtrT4.Load("BUtrT.cytnx");
+    BUTpT2 = BUTpT2.Load("BUTpT2.cytnx");
+    BUTsT2 = BUTsT2.Load("BUTsT2.cytnx");
+    BUTm9 = BUTm9.Load("BUTm9.cytnx");
+    BUTd9 = BUTd9.Load("BUTd9.cytnx");
+    BUTdT2 = BUTdT2.Load("BUTdT2.cytnx");
+
+    BUT6.at({0,0}) = 1;
+    BUT6.at({1,1}) = 2;
+    BUT6.at({2,1}) = 3;
+    BUT6.at({1,2}) = 4;
+    BUT6.at({2,2}) = 5;
 
     t0 = Tensor::Load("put_block_t0.cytn");
     t1a = Tensor::Load("put_block_t1a.cytn");

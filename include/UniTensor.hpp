@@ -268,6 +268,7 @@ namespace cytnx {
     virtual boost::intrusive_ptr<UniTensor_base> contiguous();
     virtual void print_diagram(const bool &bond_info = false);
     virtual void print_blocks(const bool &full_info=true) const; 
+    virtual void print_block(const cytnx_int64 &idx, const bool &full_info=true) const;
 
     virtual boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const;
 
@@ -606,6 +607,7 @@ namespace cytnx {
     }
     void print_diagram(const bool &bond_info = false);
     void print_blocks(const bool &full_info=true) const;
+    void print_block(const cytnx_int64 &idx, const bool &full_info=true) const;
     Tensor get_block(const cytnx_uint64 &idx = 0) const { return this->_block.clone(); }
 
     Tensor get_block(const std::vector<cytnx_int64> &qnum, const bool &force) const {
@@ -1253,7 +1255,7 @@ namespace cytnx {
     }
     void print_diagram(const bool &bond_info = false);
     void print_blocks(const bool &full_info=true)const;
-
+    void print_block(const cytnx_int64 &idx, const bool &full_info=true) const;
     std::vector<Symmetry> syms() const;
 
     Tensor get_block(const cytnx_uint64 &idx = 0) const {
@@ -2066,6 +2068,7 @@ namespace cytnx {
 
     void print_diagram(const bool &bond_info = false);
     void print_blocks(const bool &full_info=true) const;
+    void print_block(const cytnx_int64 &idx, const bool &full_info=true) const;
 
     boost::intrusive_ptr<UniTensor_base> contract(
       const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &mv_elem_self = false,
@@ -2336,8 +2339,8 @@ namespace cytnx {
 
     void Add_(const boost::intrusive_ptr<UniTensor_base> &rhs);
     void Add_(const Scalar &rhs){
-        cytnx_error_msg(true, "[ERROR] cannot perform arithmetic '+' btwn Scalar and BlockUniTensor!.%s",
-                    "\n");
+        cytnx_error_msg(true, "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and BlockUniTensor.\n %s \n",
+                    "This operation will destroy block structure. [Suggest] using get/set_block(s) to do operation on the block(s).");
     }
 
     void Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs);
@@ -2345,22 +2348,23 @@ namespace cytnx {
 
     void Sub_(const boost::intrusive_ptr<UniTensor_base> &rhs);
     void Sub_(const Scalar &rhs){
-        cytnx_error_msg(true, "[ERROR] cannot perform arithmetic '-' btwn Scalar and BlockUniTensor!.%s",
-                    "\n");
+        cytnx_error_msg(true, "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and BlockUniTensor.\n %s \n",
+                    "This operation will destroy block structure. [Suggest] using get/set_block(s) to do operation on the block(s).");
     }
     void lSub_(const Scalar &lhs){
-        cytnx_error_msg(true, "[ERROR] cannot perform arithmetic '-' btwn Scalar and BlockUniTensor!.%s",
-                    "\n");
+        cytnx_error_msg(true, "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and BlockUniTensor.\n %s \n",
+                    "This operation will destroy block structure. [Suggest] using get/set_block(s) to do operation on the block(s).");
     }
 
     void Div_(const boost::intrusive_ptr<UniTensor_base> &rhs){
-        cytnx_error_msg(true, "[ERROR] cannot perform arithmetic '/' btwn two BlockUniTensor!.%s",
-                    "\n");
+        cytnx_error_msg(true, "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and BlockUniTensor.\n %s \n",
+                    "This operation will destroy block structure. [Suggest] using get/set_block(s) to do operation on the block(s).");
 
     }
     void Div_(const Scalar &rhs);
     void lDiv_(const Scalar &lhs){
-        cytnx_error_msg(true, "[ERROR] cannot arithmetic Scalar/BlockUniTensor.%s", "\n");
+        cytnx_error_msg(true, "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and BlockUniTensor.\n %s \n",
+                    "This operation will destroy block structure. [Suggest] using get/set_block(s) to do operation on the block(s).");
     }
 
     void group_basis_();
@@ -2930,7 +2934,8 @@ namespace cytnx {
     void contiguous_() { this->_impl = this->_impl->contiguous_(); }
     void print_diagram(const bool &bond_info = false) { this->_impl->print_diagram(bond_info); }
     void print_blocks(const bool &full_info=true) const{ this->_impl->print_blocks(full_info); }
-   
+    void print_block(const cytnx_int64 &idx, const bool &full_info=true) const{this->_impl->print_block(idx,full_info);}
+
     void group_basis_(){
         this->_impl->group_basis_(); 
     }

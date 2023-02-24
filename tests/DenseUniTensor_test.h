@@ -1,17 +1,62 @@
-#ifndef _H_DENSEUNITENSOR_BASE_TEST
-#define _H_DENSEUNITENSOR_BASE_TEST
+#ifndef _H_DENSEUNITENSOR_TEST
+#define _H_DENSEUNITENSOR_TEST
 
 #include "cytnx.hpp"
 #include <gtest/gtest.h>
-using namespace std;
+
 using namespace cytnx;
+using namespace std;
 class DenseUniTensorTest : public ::testing::Test {
  public:
-  cytnx::UniTensor utzero345;
-  cytnx::UniTensor utone345;
+  UniTensor utzero345;
+  UniTensor utone345;
+  UniTensor utar345;
+  UniTensor utzero3456;
+  UniTensor utone3456;
+  UniTensor utar3456;
+  UniTensor utarcomplex345;
+  UniTensor utarcomplex3456;
+  Bond phy = Bond(2,BD_REG);
+  Bond aux = Bond(1,BD_REG);
+  DenseUniTensor dut;
+  Tensor tzero345 = zeros({3, 4, 5}).astype(Type.ComplexDouble);
+  Tensor tar345 = arange({3*4*5}).reshape({3,4,5}).astype(Type.ComplexDouble);
+
+  UniTensor Spf = UniTensor({phy,phy.redirect(),aux},{1,2,3},1,Type.Float,Device.cpu,false);
+  UniTensor Spd = UniTensor({phy,phy.redirect(),aux},{1,2,3},1,Type.Double,Device.cpu,false);
+  UniTensor Spcf = UniTensor({phy,phy.redirect(),aux},{1,2,3},1,Type.ComplexFloat,Device.cpu,false);
+  UniTensor Spcd = UniTensor({phy,phy.redirect(),aux},{1,2,3},1,Type.ComplexDouble,Device.cpu,false);
+
+  UniTensor ut1,ut2,contres1,contres2,contres3,dense4trtensor,densetr;
+  UniTensor ut3,ut4,permu1,permu2;
  protected:
   void SetUp() override {
-    utzero345 = cytnx::UniTensor(cytnx::zeros(3 * 4 * 5)).reshape({3, 4, 5});
+    utzero345 = UniTensor(zeros(3 * 4 * 5)).reshape({3, 4, 5}).astype(Type.ComplexDouble);
+    utone345 = UniTensor(ones(3 * 4 * 5)).reshape({3, 4, 5}).astype(Type.ComplexDouble);
+    utar345 = UniTensor(arange(3*4*5)).reshape({3, 4, 5}).astype(Type.ComplexDouble);
+    utzero3456 = UniTensor(zeros(3 * 4 * 5 * 6)).reshape({3, 4, 5, 6}).astype(Type.ComplexDouble);
+    utone3456 = UniTensor(ones(3 * 4 * 5 * 6)).reshape({3, 4, 5, 6}).astype(Type.ComplexDouble);
+    utar3456 = UniTensor(arange(3*4*5*6)).reshape({3, 4, 5, 6}).astype(Type.ComplexDouble);
+    utarcomplex345 = UniTensor(arange(3*4*5)).astype(Type.ComplexDouble);
+    for(size_t i=0;i<3*4*5;i++) utarcomplex345.at({i}) = cytnx_complex128(i,i);
+    utarcomplex345 = utarcomplex345.reshape({3, 4, 5}).astype(Type.ComplexDouble);
+    utarcomplex3456 = UniTensor(arange(3*4*5*6)).astype(Type.ComplexDouble);
+    for(size_t i=0;i<3*4*5*6;i++) utarcomplex3456.at({i}) = cytnx_complex128(i,i);
+    utarcomplex3456 = utarcomplex3456.reshape({3, 4, 5, 6}).astype(Type.ComplexDouble);
+
+    ut1 = ut1.Load("denseutensor1.cytnx").astype(Type.ComplexDouble);
+    ut2 = ut2.Load("denseutensor2.cytnx").astype(Type.ComplexDouble);
+    contres1 = contres1.Load("densecontres1.cytnx").astype(Type.ComplexDouble);
+    contres2 = contres2.Load("densecontres2.cytnx").astype(Type.ComplexDouble);
+    contres3 = contres3.Load("densecontres3.cytnx").astype(Type.ComplexDouble);
+
+    dense4trtensor = dense4trtensor.Load("dense4trtensor.cytnx").astype(Type.ComplexDouble);
+    densetr = densetr.Load("densetr.cytnx").astype(Type.ComplexDouble);
+
+    ut3 = ut3.Load("denseutensor3.cytnx").astype(Type.ComplexDouble);
+    ut4 = ut4.Load("denseutensor4.cytnx").astype(Type.ComplexDouble);
+    permu1 = permu1.Load("densepermu1.cytnx").astype(Type.ComplexDouble);
+    permu2 = permu2.Load("densepermu2.cytnx").astype(Type.ComplexDouble);
   }
   void TearDown() override {}
 };

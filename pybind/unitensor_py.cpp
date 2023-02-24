@@ -497,7 +497,8 @@ void unitensor_binding(py::module &m){
          py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
     .def("print_blocks", &UniTensor::print_blocks, py::arg("full_info") = true,
          py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
-
+    .def("print_block", &UniTensor::print_block, py::arg("idx"), py::arg("full_info") = true,
+         py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
 
     .def("group_basis_", &UniTensor::group_basis_)
     .def("group_basis", &UniTensor::group_basis)

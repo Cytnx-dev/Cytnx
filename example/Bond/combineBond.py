@@ -8,11 +8,11 @@ print(bd_b)
 print(bd_c)
 
 
-bd_d = Bond(3,BD_BRA,[[0,1],[2,0],[-4,1]],
+bd_d = Bond(BD_BRA,[Qs(0,1)>>1,Qs(2,0)>>1,Qs(-4,1)>>1],
                       [Symmetry.U1(),
                        Symmetry.Zn(2)])
                                 
-bd_e = Bond(4,BD_BRA,[[0,0],[2,1],[-1,1],[3,0]],
+bd_e = Bond(BD_BRA,[Qs(0,0)>>1,Qs(2,1)>>1,Qs(-1,1)>>1,Qs(3,0)>>1],
                       [Symmetry.U1(),
                        Symmetry.Zn(2)])
 
