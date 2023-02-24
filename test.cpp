@@ -18,11 +18,30 @@ void pp(){
 
 
 int main(int argc, char *argv[]) {
+
+  Bond B1 = Bond(BD_IN,{Qs(0),Qs(1)},{3,4});
+  Bond B2 = Bond(BD_IN,{Qs(0),Qs(1)},{5,6});
+  Bond B3 = Bond(BD_OUT,{Qs(0),Qs(1)},{2,3});
+  Bond B4 = Bond(BD_OUT,{Qs(0),Qs(1)},{7,1});
+  auto UTB = UniTensor({B1,B2,B3,B4});
+  UTB.print_diagram();
+  UTB.print_blocks(false);
+  return 0;
+  /*
+  auto T0 = UniTensor::Load("tests/OriginalBUT.cytnx");
+  auto TC = UniTensor::Load("tests/BUconjT.cytnx");
+
+
+  //print(T0);
+  //print(TC);
+  T0.print_diagram();
+  T0.print_block(0);
+  return 0;
+  */
   /*
   Scalar Sas = Scalar();
   print(Sas.dtype());
   print(Sas);
-
 
   Tensor rx = arange(10)+1;
   Tensor ry = arange(10)(ac("::-1"))+1;
@@ -35,13 +54,50 @@ int main(int argc, char *argv[]) {
   //pp();
   //pp();
   //pp();
+
+
+  /*  
+  UniTensor AY(zeros({2,3,4}));
   
+  AY = AY.astype(Type.ComplexDouble);
+ 
+  random::Make_normal(AY.get_block_(),0,0.2);
+ 
+  print(AY);
+
+
+  AY.Conj_();
+
+  print(AY);
+
+  print(AY.at({0,0,0}).real());
+  print(AY.at({0,0,0}).imag());
+
+
+  return 0;
+  */
+
   Bond B1p = Bond(BD_IN, {Qs(-1), Qs(0), Qs(1)}, {2, 1, 2});
   Bond B2p = Bond(BD_OUT, {Qs(-1), Qs(0), Qs(1)}, {4, 3, 4});
   Bond B3p = Bond(BD_IN, {Qs(-1), Qs(0), Qs(2)}, {1, 1, 1});
   Bond B4p = Bond(BD_OUT, {Qs(-1), Qs(0), Qs(1)}, {2, 1, 2});
  
   UniTensor BUT4 = UniTensor({B1p, B2p, B3p, B4p});
+  BUT4 = BUT4.astype(Type.ComplexDouble);
+
+  for(int i=0;i<BUT4.get_blocks_().size();i++){
+    random::Make_normal(BUT4.get_blocks_()[i],0,0.2);
+  }  
+
+  print(BUT4);
+
+  auto cB4 = BUT4.Conj();
+
+  print(cB4); 
+
+
+  return 0;
+
   auto TT44 = BUT4.Trace(0,3);
   TT44.print_diagram();
   TT44.print_blocks();
@@ -50,14 +106,6 @@ int main(int argc, char *argv[]) {
   UniTensor BUtrT4 = UniTensor({B2p, B3p});
 
 
-  Bond B1 = Bond(BD_IN, {Qs(0)>>1, Qs(1)>>2});
-  Bond B2 = Bond(BD_IN, {Qs(0), Qs(1)}, {3, 4});
-  Bond B3 = Bond(BD_OUT, {Qs(0)>>2, Qs(1)>>3});
-  Bond B4 = Bond(BD_OUT, {Qs(0), Qs(1)}, {1, 2});
-  UniTensor BUT1 = UniTensor({B1, B2, B3, B4});
-
-  //BUT1.Trace(-1,2);
-  //return 0;
 
 
   auto tmpa = BUT4.Trace(0,3);

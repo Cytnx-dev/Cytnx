@@ -247,6 +247,8 @@ namespace cytnx {
 
         _expm_Block_UT(out,Tin,a,b);
 
+        return out;
+
       }else{
         // cytnx_error_msg(Tin.is_contiguous()==false, "[ERROR][ExpM] currently ExpM on symmetric
         // UniTensor have to operate on contiguous(). Call contiguous_() or contiguous()

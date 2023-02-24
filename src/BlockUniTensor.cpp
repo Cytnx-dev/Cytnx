@@ -197,6 +197,135 @@ namespace cytnx {
       
   }
 
+  void beauty_print_block(std::ostream &os, const cytnx_uint64 &Nin, const cytnx_uint64 &Nout, const std::vector<cytnx_uint64> &qn_indices, const std::vector<Bond> &bonds, const Tensor &block){
+        cytnx_uint64 Total_line = Nin < Nout ? Nout:Nin;
+        
+        std::vector<std::string> Lside(Total_line);
+        std::vector<std::string> Rside(Total_line);
+        std::vector<std::string> MidL(Total_line);
+        std::vector<std::string> MidR(Total_line);
+        cytnx_uint64 Lmax = 0;
+        cytnx_uint64 mL = 0;
+        cytnx_uint64 mR = 0;
+        
+        for(int i=0;i<Total_line;i++){
+            //Lside:
+            if(i<Nin){
+                Lside[i] += "[" + to_string(qn_indices[i]) + "] ";
+                for(int s=0;s<bonds[0].Nsym();s++){
+                    Lside[i] += bonds[0]._impl->_syms[s].stype_str() + "(" + to_string(bonds[i]._impl->_qnums[qn_indices[i]][s]) + ")";
+                }
+                if(Lmax < Lside[i].size()) Lmax = Lside[i].size();
+                
+                MidL[i] += to_string(block.shape()[i]);
+                if(mL < MidL[i].size()) mL =  MidL[i].size();
+            }
+                
+            //Rside:
+            if(i<Nout){
+                Rside[i] += "[" + to_string(qn_indices[Nin+i]) + "] ";
+                for(int s=0;s<bonds[0].Nsym();s++){
+                    Rside[i] += bonds[0]._impl->_syms[s].stype_str() + "(" + to_string(bonds[Nin+i]._impl->_qnums[qn_indices[Nin+i]][s]) + ")";
+                }
+                MidR[i] += to_string(block.shape()[Nin+i]);
+                if(mR < MidR[i].size()) mR =  MidR[i].size();
+            }           
+
+        }
+       
+        //filling space:
+        for(int i=0;i<Total_line;i++){
+            if(Lside[i].size() < Lmax){
+                Lside[i] += string(" ")*(Lmax-Lside[i].size());
+            }
+            if(MidL[i].size() < mL){
+                MidL[i] += string(" ")*(mL-MidL[i].size());
+            }
+            if(MidR[i].size() < mR){
+                MidR[i] += string(" ")*(mR-MidR[i].size());
+            }
+        }
+        
+        //starting printing:
+        // 3spacing, Lmax , 5 for arrow
+        std::string empty_line = (std::string(" ")*(3+Lmax+5)) + "| " + std::string(" ")*(mL+5+mR) + " |";
+        os<< (std::string(" ")*(3+Lmax+5)) << std::string("-")*(4+mL+mR+5) << endl;
+        os << empty_line << endl;
+
+        std::string bks;
+        for(int i=0;i<Total_line;i++){
+            os << "   " << Lside[i];
+            //arrow:
+            if(i < Nin){
+                if(bonds[i].type() == bondType::BD_KET)
+                    bks = "  -->";
+                else
+                    bks = " *<--";
+            }else{
+                bks = "     ";
+            }
+            os << bks << "| " << MidL[i] << "     " << MidR[i] << " |";
+            if(i < Nout){
+                if (bonds[Nin + i].type() == bondType::BD_KET)
+                  bks = "<--* ";
+                else
+                  bks = "-->  ";
+            }else{
+                bks = "";
+            }
+            
+            os << bks << Rside[i] << endl;
+            os << empty_line << endl;            
+        }
+
+        os<< (std::string(" ")*(3+Lmax+5)) << std::string("-")*(4+mL+mR+5) << endl;
+  } 
+  void BlockUniTensor::print_block(const cytnx_int64 &idx, const bool &full_info)const{
+        cytnx_error_msg((idx < 0) || (idx >= this->_blocks.size()),"[ERROR] index [%d] out of bound. should be >0 and < number of available blocks %d\n",idx,this->_blocks.size());
+
+        std::ostream &os = std::cout;
+        
+        os << "========================\n";
+        if(this->_is_diag) os << " *is_diag: True\n";
+        os << "BLOCK [#" << idx << "]\n"; 
+        /*
+        os << "  |-Qn indices for each axis:\n   {\t";
+        for(int s=0;s<this->_inner_to_outer_idx[idx].size();s++){
+            os << this->_inner_to_outer_idx[idx][s] << "\t";
+        }
+        os << "}" << endl;
+        os << "\t";
+        for(int s=0;s<this->_bonds.size();s++){
+            os << ((this->_bonds[s].type()>0)?"OUT":"IN") << "\t";
+        }
+        os << endl;
+        os << "  |-Qn for each axis:\n";
+        for(int s=0;s<this->_bonds[0].Nsym();s++){
+            os << " " <<this->_bonds[0]._impl->_syms[s].stype_str() << ":\t"; 
+            for(int l=0;l<this->_blocks[idx].shape().size();l++){
+                os << std::showpos << this->_bonds[l]._impl->_qnums[this->_inner_to_outer_idx[idx][l]][s] << "\t";
+            } 
+            os << std::noshowpos << endl; 
+        }
+        */
+        os << " |- []   : Qn index \n";
+        os << " |- Sym(): Qnum of correspond symmetry\n";
+        beauty_print_block(os, this->_rowrank, this->_labels.size() - this->_rowrank, this->_inner_to_outer_idx[idx], this->_bonds, this->_blocks[idx]);
+     
+
+        if(full_info)
+            os << this->_blocks[idx];
+        else{
+            os << "  |-dtype:\t" << Type.getname(this->_blocks[idx].dtype()) << endl;
+            os << "  |-device:\t" << Device.getname(this->_blocks[idx].device()) << endl;
+            os << "  |-contiguous:\t" << (this->_blocks[idx].is_contiguous()? "True" : "False") << endl;
+            os << "  |-shape:\t";
+            vec_print_simple(os,this->_blocks[idx].shape());
+
+        }
+
+  }
+
   void BlockUniTensor::print_blocks(const bool &full_info) const{
     std::ostream &os = std::cout;
 
@@ -220,37 +349,7 @@ namespace cytnx {
 
     // print each blocks with its qnum! 
     for(int b=0;b<this->_blocks.size();b++){
-        os << "========================\n";
-        os << "BLOCK [#" << b << "]\n"; 
-        os << "  |-Qn indices for each axis:\n   {\t";
-        for(int s=0;s<this->_inner_to_outer_idx[b].size();s++){
-            os << this->_inner_to_outer_idx[b][s] << "\t";
-        }
-        os << "}" << endl;
-        os << "\t";
-        for(int s=0;s<this->_bonds.size();s++){
-            os << ((this->_bonds[s].type()>0)?"OUT":"IN") << "\t";
-        }
-        os << endl;
-        os << "  |-Qn for each axis:\n";
-        for(int s=0;s<this->_bonds[0].Nsym();s++){
-            os << " " <<this->_bonds[0]._impl->_syms[s].stype_str() << ":\t"; 
-            for(int l=0;l<this->_blocks[b].shape().size();l++){
-                os << std::showpos << this->_bonds[l]._impl->_qnums[this->_inner_to_outer_idx[b][l]][s] << "\t";
-            } 
-            os << std::noshowpos << endl; 
-        }
-        
-        if(full_info)
-            os << this->_blocks[b];
-        else{
-            os << "  |-dtype:\t" << Type.getname(this->_blocks[b].dtype()) << endl;
-            os << "  |-device:\t" << Device.getname(this->_blocks[b].device()) << endl;
-            os << "  |-contiguous:\t" << (this->_blocks[b].is_contiguous()? "True" : "False") << endl;
-            os << "  |-shape:\t";
-            vec_print_simple(os,this->_blocks[b].shape());
-
-        }
+        this->print_block(b,full_info);
     }
 
     /*
@@ -291,7 +390,7 @@ namespace cytnx {
     //std::cout << std::string(buffer);
     sprintf(buffer, "contiguous  : %s\n", this->is_contiguous() ? "True" : "False");
     std::cout << std::string(buffer);
-    sprintf(buffer, "valid bocks : %d\n", this->_blocks.size());
+    sprintf(buffer, "valid blocks : %d\n", this->_blocks.size());
     std::cout << std::string(buffer);
     sprintf(buffer, "is diag   : %s\n", this->is_diag() ? "True" : "False");
     std::cout << std::string(buffer);
@@ -765,7 +864,7 @@ namespace cytnx {
                         else
                             tmp->_block += linalg::Vectordot(Lperm_raw->_blocks[b].flatten(),Rperm_raw->_blocks[a].flatten());
                         
-                        std::cout << b << " " << a << endl;                        
+                        // std::cout << b << " " << a << endl;                        
 
 
                     } 

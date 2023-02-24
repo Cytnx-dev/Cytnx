@@ -157,7 +157,7 @@ namespace cytnx {
     fstream f;
     f.open(fname, ios::in | ios::binary);
     if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for load.%s", "\n");
+      cytnx_error_msg(true, "[ERROR] invalid file path for load. >> %s\n", fname.c_str());
     }
     out._Load(f);
     f.close();
@@ -168,7 +168,7 @@ namespace cytnx {
     fstream f;
     f.open(fname, ios::in | ios::binary);
     if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for load.%s", "\n");
+      cytnx_error_msg(true, "[ERROR] invalid file path for load. >> %s\n", fname);
     }
     out._Load(f);
     f.close();

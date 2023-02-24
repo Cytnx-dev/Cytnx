@@ -2823,6 +2823,28 @@ namespace cytnx {
       }
     }
 
+    // comparison ==
+    template <class T>
+    bool eq(const T &rc) const {
+      Scalar tmp;
+      int rid = Type.cy_typeid(rc);
+      if (rid < this->dtype()) {
+        tmp = this->astype(rid);
+        return tmp._impl->eq(rc);
+      } else {
+        return this->_impl->eq(rc);
+      }
+    }
+    bool eq(const Scalar &rhs) const {
+      Scalar tmp;
+      if (rhs.dtype() < this->dtype()) {
+        tmp = this->astype(rhs.dtype());
+        return tmp._impl->eq(rhs._impl);
+      } else {
+        return this->_impl->eq(rhs._impl);
+      }
+    }
+
     // radd: Scalar + c
     template <class T>
     Scalar radd(const T &rc) const {

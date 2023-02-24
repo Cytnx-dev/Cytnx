@@ -163,6 +163,10 @@ namespace cytnx {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
                     "\n");
   }
+  void UniTensor_base::print_block(const cytnx_int64 &idx, const bool &full_info) const{
+    cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
+                    "\n");
+  }
   Tensor UniTensor_base::get_block(const cytnx_uint64 &idx) const {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
                     "\n");
@@ -588,6 +592,7 @@ namespace cytnx {
                      const bool &cacheR) {
     return inL.contract(inR, cacheL, cacheR);
   }
+
 
   void _resolve_CT(std::vector<UniTensor> &TNlist){};
   UniTensor Contracts(const std::vector<UniTensor> &TNs) {

@@ -8,6 +8,7 @@ add_executable(
   UniTensor_base_test.cpp
   ncon_test.cpp
   BlockUniTensor_test.cpp
+  DenseUniTensor_test.cpp
   utils_test/vec_concatenate.cpp
   utils_test/vec_unique.cpp
   utils/getNconParameter.cpp
@@ -16,6 +17,7 @@ add_executable(
   linalg_test/ExpM_test.cpp
   linalg_test/Lanczos_Gnd_test.cpp
   linalg_test/Svd_test.cpp
+  linalg_test/linalg_test.cpp
   algo_test/Hsplit_test.cpp
   algo_test/Hstack_test.cpp
   algo_test/Vsplit_test.cpp
@@ -53,6 +55,11 @@ file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/OriginalBUT.cytnx"
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/OriginalBUT.cytnx"
       DESTINATION ${CMAKE_BINARY_DIR})
 
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/OriginalBUT2.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/OriginalBUT2.cytnx"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/BUtrT.cytnx"
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/BUtrT.cytnx"
@@ -61,6 +68,31 @@ file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/BUtrT.cytnx"
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/BUconjT.cytnx"
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/BUconjT.cytnx"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/BUTpT2.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/BUTpT2.cytnx"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/BUTsT2.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/BUTsT2.cytnx"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/BUTm9.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/BUTm9.cytnx"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/BUTd9.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/BUTd9.cytnx"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/BUTdT2.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/BUTdT2.cytnx"
       DESTINATION ${CMAKE_BINARY_DIR})
 
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/contract_ans1.cytnx"
@@ -165,4 +197,59 @@ file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/permute_ans2.cytnx"
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/permute_ans3.cytnx"
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/permute_ans3.cytnx"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/denseutensor1.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/denseutensor1.cytnx"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/denseutensor2.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/denseutensor2.cytnx"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/densecontres1.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/densecontres1.cytnx"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/densecontres2.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/densecontres2.cytnx"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/densecontres3.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/densecontres3.cytnx"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/dense4trtensor.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/dense4trtensor.cytnx"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/densetr.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/densetr.cytnx"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/denseutensor3.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/denseutensor3.cytnx"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/denseutensor4.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/denseutensor4.cytnx"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/densepermu1.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/densepermu1.cytnx"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/densepermu2.cytnx"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/densepermu2.cytnx"
       DESTINATION ${CMAKE_BINARY_DIR})

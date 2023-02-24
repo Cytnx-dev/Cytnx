@@ -20,7 +20,7 @@ typedef MKL_INT blas_int;
 typedef int32_t blas_int;
   //#endif
   #include <lapacke.h>
-
+  #include <cblas.h>
 extern "C" {
 
 // BLAS functions
