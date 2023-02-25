@@ -14,7 +14,10 @@ namespace cytnx {
     return *this;
   }
   UniTensor UniTensor::Add(const UniTensor &rhs) const { return cytnx::linalg::Add(*this, rhs); }
-  UniTensor UniTensor::Add(const Scalar &rhs) const { return cytnx::linalg::Add(*this, rhs); }
+  UniTensor UniTensor::Add(const Scalar &rhs) const { 
+    //cout << "lyer1: " << rhs << endl;
+    return cytnx::linalg::Add(*this, rhs); 
+  }
 
   UniTensor UniTensor::Sub(const UniTensor &rhs) const { return cytnx::linalg::Sub(*this, rhs); }
   UniTensor UniTensor::Sub(const Scalar &rhs) const { return cytnx::linalg::Sub(*this, rhs); }

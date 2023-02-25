@@ -520,6 +520,7 @@ namespace cytnx {
           if(is_vT){
             UniTensor &vT = outCyT[t];
             to_be_remove.clear();
+            // vT.bonds().back() = S.bonds()[0].clone();
             vT.bonds().front() = S.bonds()[0].clone();
             std::vector<Accessor> acs(vT.rank());
             for(int i=1;i<vT.rank();i++) acs[i] = ac::all();

@@ -19,6 +19,17 @@ void pp(){
 
 int main(int argc, char *argv[]) {
 
+  auto iS = UniTensor(arange(120).reshape(2,3,4,5).astype(Type.ComplexDouble));
+
+  cout << Scalar(9+9i);
+  cout << iS;
+
+  auto oS = iS.Add(9+9i);
+  cout << oS;
+
+  return 0;
+
+
   Bond B1 = Bond(BD_IN,{Qs(0),Qs(1)},{3,4});
   Bond B2 = Bond(BD_IN,{Qs(0),Qs(1)},{5,6});
   Bond B3 = Bond(BD_OUT,{Qs(0),Qs(1)},{2,3});

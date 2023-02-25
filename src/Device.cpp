@@ -13,7 +13,7 @@ namespace cytnx {
 
 
   Device_class::Device_class() : Ngpus(0), Ncpus(1) {
-     cout << "init_device class!" << endl;
+     //cout << "init_device class!" << endl;
 #ifdef UNI_GPU
 
     // get all available gpus

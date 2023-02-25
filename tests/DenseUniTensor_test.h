@@ -16,8 +16,8 @@ class DenseUniTensorTest : public ::testing::Test {
   UniTensor utar3456;
   UniTensor utarcomplex345;
   UniTensor utarcomplex3456;
-  Bond phy = Bond(2,BD_REG);
-  Bond aux = Bond(1,BD_REG);
+  Bond phy = Bond(2,BD_IN);
+  Bond aux = Bond(1,BD_IN);
   DenseUniTensor dut;
   Tensor tzero345 = zeros({3, 4, 5}).astype(Type.ComplexDouble);
   Tensor tar345 = arange({3*4*5}).reshape({3,4,5}).astype(Type.ComplexDouble);

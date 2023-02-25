@@ -25,6 +25,7 @@ namespace cytnx {
     this->_is_tag = false;
     cytnx_uint32 N_ket = 0;
     if (bonds.size() != 0) this->_is_tag = (bonds[0].type() != bondType::BD_REG);
+    
     for (cytnx_uint64 i = 0; i < bonds.size(); i++) {
       // check
       cytnx_error_msg(bonds[i].qnums().size() != 0, "%s",
@@ -41,14 +42,26 @@ namespace cytnx {
       }
       cytnx_error_msg(bonds[i].dim() == 0, "%s", "[ERROR] All bonds must have dimension >=1");
     }
+    //cout << N_ket << endl;
+    //cout << is_diag << endl;
+    //cout << this->_is_tag << endl; 
 
     // check rowrank
     if (this->_is_tag) {
-      if (rowrank < 0) {
+      if(is_diag){
+        //cout << "NKET = " << N_ket << endl;
+        cytnx_error_msg(N_ket != 1,"[ERROR][DenseUniTensor] is_diag = true with tagged UniTensor must have one IN (KET) bond  and one OUT (BRA) bond.%s","\n");
+      }
+      if (rowrank == -1) {
         this->_rowrank = N_ket;
-      } else {
-        cytnx_error_msg(rowrank > bonds.size(),
-                        "[ERROR] rowrank cannot exceed total rank of Tensor.%s", "\n");
+      }else{
+        if(is_diag){
+            cytnx_error_msg(rowrank != 1,
+                      "[ERROR][DenseUniTensor] rowrank must be = 1 when is_diag = true.%s", "\n");
+        }else{
+            cytnx_error_msg((rowrank < 0) || (rowrank > bonds.size()),
+                        "[ERROR] rowrank is invalid or cannot exceed total rank of Tensor.%s", "\n");
+        }
         this->_rowrank = rowrank;
       }
     } else {
@@ -59,12 +72,17 @@ namespace cytnx {
         if(rowrank==-1){
             this->_rowrank=1;
         }else{
-            cytnx_error_msg(
-              rowrank < 0,
-              "[ERROR] initialize a non-symmetry, un-tagged tensor should assign a >=0 rowrank.%s",
-              "\n");
-            cytnx_error_msg(rowrank > bonds.size(),
-                            "[ERROR] rowrank cannot exceed total rank of Tensor.%s", "\n");
+            if(is_diag){
+                cytnx_error_msg(rowrank != 1,
+                      "[ERROR][DenseUniTensor] rowrank must be = 1 when is_diag = true.%s", "\n");
+            }else{
+                cytnx_error_msg(
+                  rowrank < 0,
+                  "[ERROR] initialize a non-symmetry, un-tagged tensor should assign a >=0 rowrank.%s",
+                  "\n");
+                cytnx_error_msg(rowrank > bonds.size(),
+                                "[ERROR] rowrank cannot exceed total rank of Tensor.%s", "\n");
+            }
             this->_rowrank = rowrank;
         }
       }
@@ -1427,6 +1445,7 @@ namespace cytnx {
     this->_block += rhs->get_block_();
   }
   void DenseUniTensor::Add_(const Scalar &rhs) {
+    //cout << rhs << endl;
     // cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor
     // L.%s","\n");
     this->_block += rhs;
