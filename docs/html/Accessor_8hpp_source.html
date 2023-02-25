@@ -11,7 +11,6 @@
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
-<script type="text/javascript" src="doxygen-awesome-zephyr.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -116,7 +115,7 @@ $(function() {
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <a class="code hl_class" href="classcytnx_1_1Accessor.html">Accessor</a>() : _type(Accessor::none){};</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="comment">// single constructor</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="comment"></span>    <span class="keyword">explicit</span> <a class="code hl_class" href="classcytnx_1_1Accessor.html">Accessor</a>(<span class="keyword">const</span> cytnx_int64 &amp;loc);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="classcytnx_1_1Accessor.html#a9f6fa9087f09756e020355a05196d384">   56</a></span><span class="comment"></span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classcytnx_1_1Accessor.html#a9f6fa9087f09756e020355a05196d384">Accessor</a>(<span class="keyword">const</span> cytnx_int64 &amp;loc);</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="comment">// explicit Accessor(const Tensor &amp;tn);// construct from Tensor, should be 1d with dtype</span></div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="comment">// integer.</span></div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
@@ -136,15 +135,15 @@ $(function() {
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="comment">// all constr. ( use string to dispatch )</span></div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keyword">explicit</span> <a class="code hl_class" href="classcytnx_1_1Accessor.html">Accessor</a>(<span class="keyword">const</span> std::string &amp;str);</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keyword">explicit</span> Accessor(<span class="keyword">const</span> std::string &amp;str);</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="comment">// range constr.</span></div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <a class="code hl_class" href="classcytnx_1_1Accessor.html">Accessor</a>(<span class="keyword">const</span> cytnx_int64 &amp;min, <span class="keyword">const</span> cytnx_int64 &amp;max, <span class="keyword">const</span> cytnx_int64 &amp;step);</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    Accessor(<span class="keyword">const</span> cytnx_int64 &amp;min, <span class="keyword">const</span> cytnx_int64 &amp;max, <span class="keyword">const</span> cytnx_int64 &amp;step);</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="comment">// copy constructor:</span></div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <a class="code hl_class" href="classcytnx_1_1Accessor.html">Accessor</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcytnx_1_1Accessor.html">Accessor</a> &amp;rhs);</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    Accessor(<span class="keyword">const</span> Accessor &amp;rhs);</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="comment">// copy assignment:</span></div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <a class="code hl_class" href="classcytnx_1_1Accessor.html">Accessor</a> &amp;operator=(<span class="keyword">const</span> <a class="code hl_class" href="classcytnx_1_1Accessor.html">Accessor</a> &amp;rhs);</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    Accessor &amp;operator=(<span class="keyword">const</span> Accessor &amp;rhs);</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keywordtype">int</span> type()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> this-&gt;_type; }</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
@@ -221,7 +220,7 @@ $(function() {
 <div class="ttc" id="aclasscytnx_1_1Accessor_html"><div class="ttname"><a href="classcytnx_1_1Accessor.html">cytnx::Accessor</a></div><div class="ttdoc">object that mimic the python slice to access elements in C++ [this is for c++ API only].</div><div class="ttdef"><b>Definition:</b> Accessor.hpp:16</div></div>
 <div class="ttc" id="aclasscytnx_1_1Accessor_html_a71b8c4af7182a2c9144929bdef9ff4fd"><div class="ttname"><a href="classcytnx_1_1Accessor.html#a71b8c4af7182a2c9144929bdef9ff4fd">cytnx::Accessor::all</a></div><div class="ttdeci">static Accessor all()</div><div class="ttdoc">access the whole rank, this is similar to [:] in python</div><div class="ttdef"><b>Definition:</b> Accessor.hpp:104</div></div>
 <div class="ttc" id="aclasscytnx_1_1Accessor_html_a7a5a508a58b71897c3dd162195aceaa9"><div class="ttname"><a href="classcytnx_1_1Accessor.html#a7a5a508a58b71897c3dd162195aceaa9">cytnx::Accessor::range</a></div><div class="ttdeci">static Accessor range(const cytnx_int64 &amp;min, const cytnx_int64 &amp;max, const cytnx_int64 &amp;step=1)</div><div class="ttdoc">access the range at assigned rank, this is similar to min:max:step in python</div><div class="ttdef"><b>Definition:</b> Accessor.hpp:123</div></div>
-<div class="ttc" id="aclasscytnx_1_1Accessor_html_a9f6fa9087f09756e020355a05196d384"><div class="ttname"><a href="classcytnx_1_1Accessor.html#a9f6fa9087f09756e020355a05196d384">cytnx::Accessor::Accessor</a></div><div class="ttdeci">Accessor(const cytnx_int64 &amp;loc)</div><div class="ttdoc">access the specific index at the assigned rank in Tensor.</div><div class="ttdef"><b>Definition:</b> Accessor.cpp:10</div></div>
+<div class="ttc" id="aclasscytnx_1_1Accessor_html_a9f6fa9087f09756e020355a05196d384"><div class="ttname"><a href="classcytnx_1_1Accessor.html#a9f6fa9087f09756e020355a05196d384">cytnx::Accessor::Accessor</a></div><div class="ttdeci">Accessor(const cytnx_int64 &amp;loc)</div><div class="ttdoc">access the specific index at the assigned rank in Tensor.</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- HTML footer for doxygen 1.9.1-->
 <!-- start footer part -->

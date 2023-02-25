@@ -11,7 +11,6 @@
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
-<script type="text/javascript" src="doxygen-awesome-zephyr.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -308,11 +307,10 @@ Tensor</h2>
 <li>access single element using .at <div class="fragment"><div class="line">Tensor A({3,4,5},Type.Double);</div>
 <div class="line"><span class="keywordtype">double</span> val = A.at&lt;<span class="keywordtype">double</span>&gt;(0,2,2);</div>
 </div><!-- fragment --></li>
-<li>access elements with python slices similarity: <div class="fragment"><div class="line"><span class="keyword">typedef</span> Accessor <a class="code hl_class" href="classcytnx_1_1Accessor.html">ac</a>;</div>
+<li>access elements with python slices similarity: <div class="fragment"><div class="line"><span class="keyword">typedef</span> Accessor ac;</div>
 <div class="line">Tensor A({3,4,5},Type.Double);</div>
 <div class="line">Tensor out = A(0,<span class="stringliteral">&quot;:&quot;</span>,<span class="stringliteral">&quot;1:4&quot;</span>); </div>
 <div class="line"><span class="comment">// equivalent to python: out = A[0,:,1:4]    </span></div>
-<div class="ttc" id="aclasscytnx_1_1Accessor_html"><div class="ttname"><a href="classcytnx_1_1Accessor.html">cytnx::Accessor</a></div><div class="ttdoc">object that mimic the python slice to access elements in C++ [this is for c++ API only].</div><div class="ttdef"><b>Definition:</b> Accessor.hpp:16</div></div>
 </div><!-- fragment --></li>
 </ul>
 <h1><a class="anchor" id="autotoc_md15"></a>

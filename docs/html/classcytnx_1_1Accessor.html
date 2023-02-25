@@ -11,7 +11,6 @@
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
-<script type="text/javascript" src="doxygen-awesome-zephyr.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -173,7 +172,7 @@ c++ API:</h3>
 <div class="line"><span class="keyword">using namespace </span>std;</div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">  <span class="comment">// 1. handy alias:</span></div>
-<div class="line">  <span class="keyword">typedef</span> <a class="code hl_class" href="classcytnx_1_1Accessor.html">Accessor</a> <a class="code hl_class" href="classcytnx_1_1Accessor.html">ac</a>;</div>
+<div class="line">  <span class="keyword">typedef</span> <a class="code hl_class" href="classcytnx_1_1Accessor.html">Accessor</a> ac;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">/*</span></div>
 <div class="line"><span class="comment">      2. Create a Tensor with</span></div>
@@ -191,7 +190,7 @@ c++ API:</h3>
 <div class="line"><span class="comment">      -&gt; A[0,:,0:2:1]</span></div>
 <div class="line"><span class="comment"></span> </div>
 <div class="line"><span class="comment">  */</span></div>
-<div class="line">  <a class="code hl_class" href="classcytnx_1_1Tensor.html">Tensor</a> B = A(0, <a class="code hl_function" href="classcytnx_1_1Accessor.html#a71b8c4af7182a2c9144929bdef9ff4fd">ac::all</a>(), <a class="code hl_function" href="classcytnx_1_1Accessor.html#a7a5a508a58b71897c3dd162195aceaa9">ac::range</a>(0, 2, 1));</div>
+<div class="line">  <a class="code hl_class" href="classcytnx_1_1Tensor.html">Tensor</a> B = A(0, ac::all(), ac::range(0, 2, 1));</div>
 <div class="line">  cout &lt;&lt; B &lt;&lt; endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">/* [Note] Conversion from python slice to ac:</span></div>
@@ -205,8 +204,6 @@ c++ API:</h3>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
 <div class="ttc" id="aclasscytnx_1_1Accessor_html"><div class="ttname"><a href="classcytnx_1_1Accessor.html">cytnx::Accessor</a></div><div class="ttdoc">object that mimic the python slice to access elements in C++ [this is for c++ API only].</div><div class="ttdef"><b>Definition:</b> Accessor.hpp:16</div></div>
-<div class="ttc" id="aclasscytnx_1_1Accessor_html_a71b8c4af7182a2c9144929bdef9ff4fd"><div class="ttname"><a href="classcytnx_1_1Accessor.html#a71b8c4af7182a2c9144929bdef9ff4fd">cytnx::Accessor::all</a></div><div class="ttdeci">static Accessor all()</div><div class="ttdoc">access the whole rank, this is similar to [:] in python</div><div class="ttdef"><b>Definition:</b> Accessor.hpp:104</div></div>
-<div class="ttc" id="aclasscytnx_1_1Accessor_html_a7a5a508a58b71897c3dd162195aceaa9"><div class="ttname"><a href="classcytnx_1_1Accessor.html#a7a5a508a58b71897c3dd162195aceaa9">cytnx::Accessor::range</a></div><div class="ttdeci">static Accessor range(const cytnx_int64 &amp;min, const cytnx_int64 &amp;max, const cytnx_int64 &amp;step=1)</div><div class="ttdoc">access the range at assigned rank, this is similar to min:max:step in python</div><div class="ttdef"><b>Definition:</b> Accessor.hpp:123</div></div>
 <div class="ttc" id="aclasscytnx_1_1Tensor_html"><div class="ttname"><a href="classcytnx_1_1Tensor.html">cytnx::Tensor</a></div><div class="ttdoc">an tensor (multi-dimensional array)</div><div class="ttdef"><b>Definition:</b> Tensor.hpp:335</div></div>
 <div class="ttc" id="aclasscytnx_1_1Tensor_html_a3723449528b9a20dd46c32c9e042b8f0"><div class="ttname"><a href="classcytnx_1_1Tensor.html#a3723449528b9a20dd46c32c9e042b8f0">cytnx::Tensor::reshape_</a></div><div class="ttdeci">void reshape_(const std::vector&lt; cytnx_int64 &gt; &amp;new_shape)</div><div class="ttdoc">reshape the Tensor, inplacely</div><div class="ttdef"><b>Definition:</b> Tensor.hpp:942</div></div>
 </div><!-- fragment --> <h4><a class="anchor" id="autotoc_md21"></a>
@@ -312,7 +309,7 @@ c++ API:</h3>
 <div class="line"><span class="keyword">using namespace </span>std;</div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">  <span class="comment">// 1. handy alias:</span></div>
-<div class="line">  <span class="keyword">typedef</span> <a class="code hl_class" href="classcytnx_1_1Accessor.html">Accessor</a> <a class="code hl_class" href="classcytnx_1_1Accessor.html">ac</a>;</div>
+<div class="line">  <span class="keyword">typedef</span> <a class="code hl_class" href="classcytnx_1_1Accessor.html">Accessor</a> ac;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">/*</span></div>
 <div class="line"><span class="comment">      2. Create a Tensor with</span></div>
@@ -330,7 +327,7 @@ c++ API:</h3>
 <div class="line"><span class="comment">      -&gt; A[0,:,0:2:1]</span></div>
 <div class="line"><span class="comment"></span> </div>
 <div class="line"><span class="comment">  */</span></div>
-<div class="line">  <a class="code hl_class" href="classcytnx_1_1Tensor.html">Tensor</a> B = A(0, <a class="code hl_function" href="classcytnx_1_1Accessor.html#a71b8c4af7182a2c9144929bdef9ff4fd">ac::all</a>(), <a class="code hl_function" href="classcytnx_1_1Accessor.html#a7a5a508a58b71897c3dd162195aceaa9">ac::range</a>(0, 2, 1));</div>
+<div class="line">  <a class="code hl_class" href="classcytnx_1_1Tensor.html">Tensor</a> B = A(0, ac::all(), ac::range(0, 2, 1));</div>
 <div class="line">  cout &lt;&lt; B &lt;&lt; endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">/* [Note] Conversion from python slice to ac:</span></div>
@@ -470,7 +467,7 @@ c++ API:</h3>
 <div class="line"><span class="keyword">using namespace </span>std;</div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">  <span class="comment">// 1. handy alias:</span></div>
-<div class="line">  <span class="keyword">typedef</span> <a class="code hl_class" href="classcytnx_1_1Accessor.html">Accessor</a> <a class="code hl_class" href="classcytnx_1_1Accessor.html">ac</a>;</div>
+<div class="line">  <span class="keyword">typedef</span> <a class="code hl_class" href="classcytnx_1_1Accessor.html">Accessor</a> ac;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">/*</span></div>
 <div class="line"><span class="comment">      2. Create a Tensor with</span></div>
@@ -488,7 +485,7 @@ c++ API:</h3>
 <div class="line"><span class="comment">      -&gt; A[0,:,0:2:1]</span></div>
 <div class="line"><span class="comment"></span> </div>
 <div class="line"><span class="comment">  */</span></div>
-<div class="line">  <a class="code hl_class" href="classcytnx_1_1Tensor.html">Tensor</a> B = A(0, <a class="code hl_function" href="classcytnx_1_1Accessor.html#a71b8c4af7182a2c9144929bdef9ff4fd">ac::all</a>(), <a class="code hl_function" href="classcytnx_1_1Accessor.html#a7a5a508a58b71897c3dd162195aceaa9">ac::range</a>(0, 2, 1));</div>
+<div class="line">  <a class="code hl_class" href="classcytnx_1_1Tensor.html">Tensor</a> B = A(0, ac::all(), ac::range(0, 2, 1));</div>
 <div class="line">  cout &lt;&lt; B &lt;&lt; endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">/* [Note] Conversion from python slice to ac:</span></div>
@@ -568,9 +565,8 @@ Shape : (3,2)
 </pre> 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following files:<ul>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/<a class="el" href="Accessor_8hpp_source.html">Accessor.hpp</a></li>
-<li>src/Accessor.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.9.1-->

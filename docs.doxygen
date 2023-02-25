@@ -908,7 +908,9 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = "./python_doc" "./dox.md" "./include" "./include/tn_algo" "./include/linalg.hpp" "./include/utils/utils.hpp" "./include/UniTensor.hpp" "./src" "./misc_doc" #"./src/linalg" "./src/utils"
+INPUT                  = ./include/linalg.hpp ./python_doc ./dox.md ./include ./include/tn_algo ./include/linalg.hpp ./include/utils/utils.hpp ./misc_doc 
+
+#"./src/linalg" "./src/utils"
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
@@ -928,7 +930,7 @@ INPUT_ENCODING         = UTF-8
 # form: pattern=encoding (like *.php=ISO-8859-1). See cfg_input_encoding
 # "INPUT_ENCODING" for further information on supported encodings.
 
-INPUT_FILE_ENCODING    =
+INPUT_FILE_ENCODING    = 
 
 # If the value of the INPUT tag contains directories, you can use the
 # FILE_PATTERNS tag to specify one or more wildcard patterns (like *.cpp and
@@ -1330,7 +1332,7 @@ HTML_EXTRA_STYLESHEET  = doxygen_conf/doxygen-awesome.css \
 # files will be copied as-is; there are no commands or markers available.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_EXTRA_FILES       = #doxygen_conf/doxygen-awesome-darkmode-toggle.js \
+HTML_EXTRA_FILES       = doxygen_conf/doxygen-awesome-darkmode-toggle.js \
                          #doxygen_conf/doxygen-awesome-zephyr.js
 
 

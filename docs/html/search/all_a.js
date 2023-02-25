@@ -5,6 +5,6 @@ var searchData=
   ['lanczos_5fgnd_2',['Lanczos_Gnd',['../namespacecytnx_1_1linalg.html#ae1d138b06f259478aa7f4276ebba9430',1,'cytnx::linalg']]],
   ['lanczos_5fgnd_5fut_3',['Lanczos_Gnd_Ut',['../namespacecytnx_1_1linalg.html#a5f5b483903d6b472ca75b471eea8227b',1,'cytnx::linalg']]],
   ['linop_4',['LinOp',['../classcytnx_1_1LinOp.html',1,'cytnx::LinOp'],['../classcytnx_1_1LinOp.html#a4c85814f56d28735575bb577d1d97afa',1,'cytnx::LinOp::LinOp()']]],
-  ['load_5',['Load',['../classcytnx_1_1Storage.html#a830f293f47a42ede8dbc57d3a3bff605',1,'cytnx::Storage::Load()'],['../classcytnx_1_1Tensor.html#a4100edea617039a2b9a0ee3ca2b2aa36',1,'cytnx::Tensor::Load()']]],
+  ['load_5',['Load',['../classcytnx_1_1Storage.html#a12d92ef18b3d463d0f4086ef613abb4e',1,'cytnx::Storage::Load()'],['../classcytnx_1_1Tensor.html#a8205da1c5c72a31a2570c6371063edf8',1,'cytnx::Tensor::Load()']]],
   ['lstsq_6',['Lstsq',['../namespacecytnx_1_1linalg.html#a59fdd5725d0fe8c422dfe602629d34d7',1,'cytnx::linalg']]]
 ];
