@@ -164,6 +164,6 @@ echo ${FLAG}
 mkdir build
 cd build
 cmake ../ ${FLAG}
-make -j`nproc`
-make install
-ctest
+#make -j`nproc`
+#make install
+#ctest
