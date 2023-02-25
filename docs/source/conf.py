@@ -39,7 +39,9 @@ _version = 'v0.7.6'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 # https://sublime-and-sphinx-guide.readthedocs.io/en/latest/references.html
-extensions = ['sphinxcontrib.bibtex','sphinx.ext.autosectionlabel']
+extensions = ['sphinxcontrib.bibtex',\
+              'sphinx.ext.autosectionlabel',\
+              'breathe']
 bibtex_bibfiles = ["example/ref.dmrg.bib",\
                    "example/ref.hotrg.bib",\
                    "example/ref.itebd.bib",\
@@ -107,7 +109,7 @@ html_theme_options = {
     # True indicates an external link.
     # False indicates path of pages in the document.
     'navbar_links' : [
-         ('API Doc', 'https://kaihsin.github.io/Cytnx/docs/html/index.html', True),
+         ('API Doc', 'https://kaihsinwu.gitlab.io/cytnx_api', True),
          ("Github", "https://github.com/kaihsin/Cytnx", True),
          ("%s"%(_version), "#", False)
     ],
@@ -133,7 +135,17 @@ html_theme_options = {
     'table_thead_class' : 'inverse',
 
 }
+"""
+# -- Breathe configuration -------------------------------------------------
 
+breathe_projects = {
+	"Cyc": "/home/kaihsinwu/Dropbox/Cytnx/docs/xml/"
+}
+
+breathe_default_project = "Cyc"
+breathe_default_members = ('members', 'undoc-members')
+#breathe_default_members = ('members')
+"""
 ## ablog
 #import ablog
 #templates_path.append(ablog.get_html_templates_path())
