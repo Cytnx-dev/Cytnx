@@ -1300,19 +1300,21 @@ namespace cytnx {
   }
 
   void DenseUniTensor::Transpose_() {
-    std::vector<cytnx_int64> new_permute =
-      vec_concatenate(vec_range<cytnx_int64>(this->rowrank(), this->rank()),
-                      vec_range<cytnx_int64>(0, this->rowrank()));
-    this->permute_(new_permute);
-    if (this->is_tag()) {
-      this->_rowrank = this->rank() - this->_rowrank;
+    if (this->is_tag()){
+      //this->_rowrank = this->rank() - this->_rowrank;
       for (int i = 0; i < this->rank(); i++) {
         this->_bonds[i].set_type((this->_bonds[i].type() == BD_KET) ? BD_BRA : BD_KET);
       }
       this->_is_braket_form = this->_update_braket();
-    } else {
-      this->_rowrank = this->rank() - this->_rowrank;
+
+    }else{
+        std::vector<cytnx_int64> new_permute =
+        vec_concatenate(vec_range<cytnx_int64>(this->rowrank(), this->rank()),
+                        vec_range<cytnx_int64>(0, this->rowrank()));
+        this->permute_(new_permute);
+        this->_rowrank = this->rank() - this->_rowrank;
     }
+
   }
 
   void DenseUniTensor::_save_dispatch(std::fstream &f) const { this->_block._Save(f); }
