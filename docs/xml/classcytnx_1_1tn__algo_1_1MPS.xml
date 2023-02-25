@@ -1,0 +1,393 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classcytnx_1_1tn__algo_1_1MPS" kind="class" language="C++" prot="public">
+    <compoundname>cytnx::tn_algo::MPS</compoundname>
+    <includes refid="MPS_8hpp" local="no">MPS.hpp</includes>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classcytnx_1_1tn__algo_1_1MPS_1a8a529b3f7870b15a2da6cb4c8ed1a297" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1tn__algo_1_1MPS" kindref="compound">MPS</ref> &amp;</type>
+        <definition>MPS &amp; cytnx::tn_algo::MPS::Init</definition>
+        <argsstring>(const cytnx_uint64 &amp;N, const std::vector&lt; cytnx_uint64 &gt; &amp;vphys_dim, const cytnx_uint64 &amp;virt_dim, const cytnx_int64 &amp;dtype=Type.Double, const cytnx_int64 &amp;mps_type=0)</argsstring>
+        <name>Init</name>
+        <qualifiedname>cytnx::tn_algo::MPS::Init</qualifiedname>
+        <param>
+          <type>const <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref> &amp;</type>
+          <declname>N</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref> &gt; &amp;</type>
+          <declname>vphys_dim</declname>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref> &amp;</type>
+          <declname>virt_dim</declname>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>dtype</declname>
+          <defval>Type.Double</defval>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>mps_type</declname>
+          <defval>0</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/tn_algo/MPS.hpp" line="200" column="11" bodyfile="include/tn_algo/MPS.hpp" bodystart="200" bodyend="212"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1tn__algo_1_1MPS_1a57761778216a1f9307b0a378d4dd0b1d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1tn__algo_1_1MPS" kindref="compound">MPS</ref> &amp;</type>
+        <definition>MPS &amp; cytnx::tn_algo::MPS::Init</definition>
+        <argsstring>(const cytnx_uint64 &amp;N, const cytnx_uint64 &amp;phys_dim, const cytnx_uint64 &amp;virt_dim, const cytnx_int64 &amp;dtype=Type.Double, const cytnx_int64 &amp;mps_type=0)</argsstring>
+        <name>Init</name>
+        <qualifiedname>cytnx::tn_algo::MPS::Init</qualifiedname>
+        <param>
+          <type>const <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref> &amp;</type>
+          <declname>N</declname>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref> &amp;</type>
+          <declname>phys_dim</declname>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref> &amp;</type>
+          <declname>virt_dim</declname>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>dtype</declname>
+          <defval>Type.Double</defval>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>mps_type</declname>
+          <defval>0</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/tn_algo/MPS.hpp" line="213" column="11" bodyfile="include/tn_algo/MPS.hpp" bodystart="213" bodyend="219"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1tn__algo_1_1MPS_1a9e071ec0215eb1db3d5abc186725d82d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1tn__algo_1_1MPS" kindref="compound">MPS</ref> &amp;</type>
+        <definition>MPS &amp; cytnx::tn_algo::MPS::Init_Msector</definition>
+        <argsstring>(const cytnx_uint64 &amp;N, const std::vector&lt; cytnx_uint64 &gt; &amp;vphys_dim, const cytnx_uint64 &amp;virt_dim, const std::vector&lt; cytnx_int64 &gt; &amp;select, const cytnx_int64 &amp;dtype=Type.Double, const cytnx_int64 &amp;mps_type=0)</argsstring>
+        <name>Init_Msector</name>
+        <qualifiedname>cytnx::tn_algo::MPS::Init_Msector</qualifiedname>
+        <param>
+          <type>const <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref> &amp;</type>
+          <declname>N</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref> &gt; &amp;</type>
+          <declname>vphys_dim</declname>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref> &amp;</type>
+          <declname>virt_dim</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &gt; &amp;</type>
+          <declname>select</declname>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>dtype</declname>
+          <defval>Type.Double</defval>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>mps_type</declname>
+          <defval>0</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/tn_algo/MPS.hpp" line="222" column="11" bodyfile="include/tn_algo/MPS.hpp" bodystart="222" bodyend="235"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1tn__algo_1_1MPS_1a132dea22e52d28a982a2824c4e1e6e28" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref></type>
+        <definition>cytnx_uint64 cytnx::tn_algo::MPS::size</definition>
+        <argsstring>()</argsstring>
+        <name>size</name>
+        <qualifiedname>cytnx::tn_algo::MPS::size</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/tn_algo/MPS.hpp" line="253" column="20" bodyfile="include/tn_algo/MPS.hpp" bodystart="253" bodyend="253"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1tn__algo_1_1MPS_1a633c948d16045e4d40621baf6a0690e7" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int cytnx::tn_algo::MPS::mps_type</definition>
+        <argsstring>() const</argsstring>
+        <name>mps_type</name>
+        <qualifiedname>cytnx::tn_algo::MPS::mps_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/tn_algo/MPS.hpp" line="255" column="11" bodyfile="include/tn_algo/MPS.hpp" bodystart="255" bodyend="255"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1tn__algo_1_1MPS_1a020dff1e2a3793e6a514558964a2cb33" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::string</type>
+        <definition>std::string cytnx::tn_algo::MPS::mps_type_str</definition>
+        <argsstring>() const</argsstring>
+        <name>mps_type_str</name>
+        <qualifiedname>cytnx::tn_algo::MPS::mps_type_str</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/tn_algo/MPS.hpp" line="256" column="19" bodyfile="include/tn_algo/MPS.hpp" bodystart="256" bodyend="256"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1tn__algo_1_1MPS_1a8f3fc0f338e7070e9b13708390aadcfc" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1tn__algo_1_1MPS" kindref="compound">MPS</ref></type>
+        <definition>MPS cytnx::tn_algo::MPS::clone</definition>
+        <argsstring>() const</argsstring>
+        <name>clone</name>
+        <qualifiedname>cytnx::tn_algo::MPS::clone</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/tn_algo/MPS.hpp" line="258" column="11" bodyfile="include/tn_algo/MPS.hpp" bodystart="258" bodyend="262"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1tn__algo_1_1MPS_1a3cc204e47081983046319b1ba25ab40d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &gt; &amp;</type>
+        <definition>std::vector&lt; UniTensor &gt; &amp; cytnx::tn_algo::MPS::data</definition>
+        <argsstring>()</argsstring>
+        <name>data</name>
+        <qualifiedname>cytnx::tn_algo::MPS::data</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/tn_algo/MPS.hpp" line="264" column="19" bodyfile="include/tn_algo/MPS.hpp" bodystart="264" bodyend="264"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1tn__algo_1_1MPS_1af43485358bca71c71c050c9b06f2ae8b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1tn__algo_1_1MPS" kindref="compound">MPS</ref> &amp;</type>
+        <definition>MPS &amp; cytnx::tn_algo::MPS::Into_Lortho</definition>
+        <argsstring>()</argsstring>
+        <name>Into_Lortho</name>
+        <qualifiedname>cytnx::tn_algo::MPS::Into_Lortho</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/tn_algo/MPS.hpp" line="266" column="11" bodyfile="include/tn_algo/MPS.hpp" bodystart="266" bodyend="269"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1tn__algo_1_1MPS_1a40e4afae4fd86ec0f838f7d11c817012" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1tn__algo_1_1MPS" kindref="compound">MPS</ref> &amp;</type>
+        <definition>MPS &amp; cytnx::tn_algo::MPS::S_mvleft</definition>
+        <argsstring>()</argsstring>
+        <name>S_mvleft</name>
+        <qualifiedname>cytnx::tn_algo::MPS::S_mvleft</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/tn_algo/MPS.hpp" line="270" column="11" bodyfile="include/tn_algo/MPS.hpp" bodystart="270" bodyend="273"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1tn__algo_1_1MPS_1aa2811a3f2e41b0e0aa6c1393859b9758" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1tn__algo_1_1MPS" kindref="compound">MPS</ref> &amp;</type>
+        <definition>MPS &amp; cytnx::tn_algo::MPS::S_mvright</definition>
+        <argsstring>()</argsstring>
+        <name>S_mvright</name>
+        <qualifiedname>cytnx::tn_algo::MPS::S_mvright</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/tn_algo/MPS.hpp" line="274" column="11" bodyfile="include/tn_algo/MPS.hpp" bodystart="274" bodyend="277"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1tn__algo_1_1MPS_1aba39c73c4b8d33d94559a616c1da38e6" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Scalar" kindref="compound">Scalar</ref></type>
+        <definition>Scalar cytnx::tn_algo::MPS::norm</definition>
+        <argsstring>() const</argsstring>
+        <name>norm</name>
+        <qualifiedname>cytnx::tn_algo::MPS::norm</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/tn_algo/MPS.hpp" line="279" column="14" bodyfile="include/tn_algo/MPS.hpp" bodystart="279" bodyend="279"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1tn__algo_1_1MPS_1a5768151428d84352784b1157a2ee1d2f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref></type>
+        <definition>cytnx_int64 cytnx::tn_algo::MPS::phys_dim</definition>
+        <argsstring>(const cytnx_int64 &amp;idx)</argsstring>
+        <name>phys_dim</name>
+        <qualifiedname>cytnx::tn_algo::MPS::phys_dim</qualifiedname>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>idx</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/tn_algo/MPS.hpp" line="281" column="19" bodyfile="include/tn_algo/MPS.hpp" bodystart="281" bodyend="281"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1tn__algo_1_1MPS_1acf8af8397333a1cf054d071e595b20a9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+        <definition>cytnx_int64 &amp; cytnx::tn_algo::MPS::virt_dim</definition>
+        <argsstring>()</argsstring>
+        <name>virt_dim</name>
+        <qualifiedname>cytnx::tn_algo::MPS::virt_dim</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/tn_algo/MPS.hpp" line="283" column="19" bodyfile="include/tn_algo/MPS.hpp" bodystart="283" bodyend="283"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1tn__algo_1_1MPS_1ac369d62659f37992b8983fc2105a00ab" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+        <definition>cytnx_int64 &amp; cytnx::tn_algo::MPS::S_loc</definition>
+        <argsstring>()</argsstring>
+        <name>S_loc</name>
+        <qualifiedname>cytnx::tn_algo::MPS::S_loc</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/tn_algo/MPS.hpp" line="285" column="19" bodyfile="include/tn_algo/MPS.hpp" bodystart="285" bodyend="285"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1tn__algo_1_1MPS_1a32f64eca18d9b84bebc0214082ebbddf" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::tn_algo::MPS::Save</definition>
+        <argsstring>(const std::string &amp;fname) const</argsstring>
+        <name>Save</name>
+        <qualifiedname>cytnx::tn_algo::MPS::Save</qualifiedname>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>fname</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/tn_algo/MPS.hpp" line="292" column="12"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1tn__algo_1_1MPS_1a3384b7a59c1603e4a9fdd95f6d46eb95" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::tn_algo::MPS::Save</definition>
+        <argsstring>(const char *fname) const</argsstring>
+        <name>Save</name>
+        <qualifiedname>cytnx::tn_algo::MPS::Save</qualifiedname>
+        <param>
+          <type>const char *</type>
+          <declname>fname</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/tn_algo/MPS.hpp" line="293" column="12"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="classcytnx_1_1tn__algo_1_1MPS_1adccf0e8dcf43f18caa89554afa12116a" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1tn__algo_1_1MPS" kindref="compound">MPS</ref></type>
+        <definition>static MPS cytnx::tn_algo::MPS::Load</definition>
+        <argsstring>(const std::string &amp;fname)</argsstring>
+        <name>Load</name>
+        <qualifiedname>cytnx::tn_algo::MPS::Load</qualifiedname>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>fname</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/tn_algo/MPS.hpp" line="295" column="18"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1tn__algo_1_1MPS_1a693464be68e08f301fe168a0f5c3ed67" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1tn__algo_1_1MPS" kindref="compound">MPS</ref></type>
+        <definition>static MPS cytnx::tn_algo::MPS::Load</definition>
+        <argsstring>(const char *fname)</argsstring>
+        <name>Load</name>
+        <qualifiedname>cytnx::tn_algo::MPS::Load</qualifiedname>
+        <param>
+          <type>const char *</type>
+          <declname>fname</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/tn_algo/MPS.hpp" line="296" column="18"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/tn_algo/MPS.hpp" line="167" column="5" bodyfile="include/tn_algo/MPS.hpp" bodystart="167" bodyend="297"/>
+    <listofallmembers>
+      <member refid="classcytnx_1_1tn__algo_1_1MPS_1a8f3fc0f338e7070e9b13708390aadcfc" prot="public" virt="non-virtual"><scope>cytnx::tn_algo::MPS</scope><name>clone</name></member>
+      <member refid="classcytnx_1_1tn__algo_1_1MPS_1a3cc204e47081983046319b1ba25ab40d" prot="public" virt="non-virtual"><scope>cytnx::tn_algo::MPS</scope><name>data</name></member>
+      <member refid="classcytnx_1_1tn__algo_1_1MPS_1a8a529b3f7870b15a2da6cb4c8ed1a297" prot="public" virt="non-virtual"><scope>cytnx::tn_algo::MPS</scope><name>Init</name></member>
+      <member refid="classcytnx_1_1tn__algo_1_1MPS_1a57761778216a1f9307b0a378d4dd0b1d" prot="public" virt="non-virtual"><scope>cytnx::tn_algo::MPS</scope><name>Init</name></member>
+      <member refid="classcytnx_1_1tn__algo_1_1MPS_1a9e071ec0215eb1db3d5abc186725d82d" prot="public" virt="non-virtual"><scope>cytnx::tn_algo::MPS</scope><name>Init_Msector</name></member>
+      <member refid="classcytnx_1_1tn__algo_1_1MPS_1af43485358bca71c71c050c9b06f2ae8b" prot="public" virt="non-virtual"><scope>cytnx::tn_algo::MPS</scope><name>Into_Lortho</name></member>
+      <member refid="classcytnx_1_1tn__algo_1_1MPS_1adccf0e8dcf43f18caa89554afa12116a" prot="public" virt="non-virtual"><scope>cytnx::tn_algo::MPS</scope><name>Load</name></member>
+      <member refid="classcytnx_1_1tn__algo_1_1MPS_1a693464be68e08f301fe168a0f5c3ed67" prot="public" virt="non-virtual"><scope>cytnx::tn_algo::MPS</scope><name>Load</name></member>
+      <member refid="classcytnx_1_1tn__algo_1_1MPS_1a633c948d16045e4d40621baf6a0690e7" prot="public" virt="non-virtual"><scope>cytnx::tn_algo::MPS</scope><name>mps_type</name></member>
+      <member refid="classcytnx_1_1tn__algo_1_1MPS_1a020dff1e2a3793e6a514558964a2cb33" prot="public" virt="non-virtual"><scope>cytnx::tn_algo::MPS</scope><name>mps_type_str</name></member>
+      <member refid="classcytnx_1_1tn__algo_1_1MPS_1aba39c73c4b8d33d94559a616c1da38e6" prot="public" virt="non-virtual"><scope>cytnx::tn_algo::MPS</scope><name>norm</name></member>
+      <member refid="classcytnx_1_1tn__algo_1_1MPS_1a5768151428d84352784b1157a2ee1d2f" prot="public" virt="non-virtual"><scope>cytnx::tn_algo::MPS</scope><name>phys_dim</name></member>
+      <member refid="classcytnx_1_1tn__algo_1_1MPS_1ac369d62659f37992b8983fc2105a00ab" prot="public" virt="non-virtual"><scope>cytnx::tn_algo::MPS</scope><name>S_loc</name></member>
+      <member refid="classcytnx_1_1tn__algo_1_1MPS_1a40e4afae4fd86ec0f838f7d11c817012" prot="public" virt="non-virtual"><scope>cytnx::tn_algo::MPS</scope><name>S_mvleft</name></member>
+      <member refid="classcytnx_1_1tn__algo_1_1MPS_1aa2811a3f2e41b0e0aa6c1393859b9758" prot="public" virt="non-virtual"><scope>cytnx::tn_algo::MPS</scope><name>S_mvright</name></member>
+      <member refid="classcytnx_1_1tn__algo_1_1MPS_1a32f64eca18d9b84bebc0214082ebbddf" prot="public" virt="non-virtual"><scope>cytnx::tn_algo::MPS</scope><name>Save</name></member>
+      <member refid="classcytnx_1_1tn__algo_1_1MPS_1a3384b7a59c1603e4a9fdd95f6d46eb95" prot="public" virt="non-virtual"><scope>cytnx::tn_algo::MPS</scope><name>Save</name></member>
+      <member refid="classcytnx_1_1tn__algo_1_1MPS_1a132dea22e52d28a982a2824c4e1e6e28" prot="public" virt="non-virtual"><scope>cytnx::tn_algo::MPS</scope><name>size</name></member>
+      <member refid="classcytnx_1_1tn__algo_1_1MPS_1acf8af8397333a1cf054d071e595b20a9" prot="public" virt="non-virtual"><scope>cytnx::tn_algo::MPS</scope><name>virt_dim</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

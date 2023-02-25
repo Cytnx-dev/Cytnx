@@ -36,7 +36,7 @@
 \DoxyCodeLine{36     \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}}() : \_type(Accessor::none)\{\};}
 \DoxyCodeLine{38 }
 \DoxyCodeLine{39     \textcolor{comment}{// single constructor}}
-\DoxyCodeLine{56 \textcolor{comment}{}    \textcolor{keyword}{explicit} \mbox{\hyperlink{classcytnx_1_1Accessor_a9f6fa9087f09756e020355a05196d384}{Accessor}}(\textcolor{keyword}{const} cytnx\_int64 \&loc);}
+\DoxyCodeLine{56 \textcolor{comment}{}    \textcolor{keyword}{explicit} \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}}(\textcolor{keyword}{const} cytnx\_int64 \&loc);}
 \DoxyCodeLine{57     \textcolor{comment}{// explicit Accessor(const Tensor \&tn);// construct from Tensor, should be 1d with dtype}}
 \DoxyCodeLine{58     \textcolor{comment}{// integer.}}
 \DoxyCodeLine{59 }
@@ -56,15 +56,15 @@
 \DoxyCodeLine{73 }
 \DoxyCodeLine{75 }
 \DoxyCodeLine{76     \textcolor{comment}{// all constr. ( use string to dispatch )}}
-\DoxyCodeLine{77     \textcolor{keyword}{explicit} Accessor(\textcolor{keyword}{const} std::string \&str);}
+\DoxyCodeLine{77     \textcolor{keyword}{explicit} \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}}(\textcolor{keyword}{const} std::string \&str);}
 \DoxyCodeLine{78 }
 \DoxyCodeLine{79     \textcolor{comment}{// range constr.}}
-\DoxyCodeLine{80     Accessor(\textcolor{keyword}{const} cytnx\_int64 \&min, \textcolor{keyword}{const} cytnx\_int64 \&max, \textcolor{keyword}{const} cytnx\_int64 \&step);}
+\DoxyCodeLine{80     \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}}(\textcolor{keyword}{const} cytnx\_int64 \&min, \textcolor{keyword}{const} cytnx\_int64 \&max, \textcolor{keyword}{const} cytnx\_int64 \&step);}
 \DoxyCodeLine{81 }
 \DoxyCodeLine{82     \textcolor{comment}{// copy constructor:}}
-\DoxyCodeLine{83     Accessor(\textcolor{keyword}{const} Accessor \&rhs);}
+\DoxyCodeLine{83     \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}}(\textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} \&rhs);}
 \DoxyCodeLine{84     \textcolor{comment}{// copy assignment:}}
-\DoxyCodeLine{85     Accessor \&operator=(\textcolor{keyword}{const} Accessor \&rhs);}
+\DoxyCodeLine{85     \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} \&operator=(\textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} \&rhs);}
 \DoxyCodeLine{87 }
 \DoxyCodeLine{88     \textcolor{keywordtype}{int} type()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_type; \}}
 \DoxyCodeLine{89 }

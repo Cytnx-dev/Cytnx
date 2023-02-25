@@ -1,32 +1,41 @@
-<!-- HTML header for doxygen 1.9.1-->
+<!-- HTML header for doxygen 1.9.5-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Cytnx: include/Type.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
-<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+       <script type="text/javascript">
+           DoxygenAwesomeDarkModeToggle.init()
+       </script>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="titlearea">
 <table cellspacing="0" cellpadding="0">
  <tbody>
- <tr style="height: 56px;">
+ <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
-  <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.7.7</span>
+  <td id="projectalign">
+   <div id="projectname">Cytnx<span id="projectnumber">&#160;v0.7.7</span>
    </div>
   </td>
  </tr>
@@ -81,7 +90,7 @@ $(function() {
   <div class="headertitle"><div class="title">Type.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef _H_TYPE_</span></div>
+<a href="Type_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef _H_TYPE_</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define _H_TYPE_</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;string&gt;</span></div>
@@ -92,33 +101,33 @@ $(function() {
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;typeinfo&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;unordered_map&gt;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;typeindex&gt;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;cytnx_error.hpp&quot;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="cytnx__error_8hpp.html">cytnx_error.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment">//#ifdef UNI_MKL</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#define MKL_Complex8 std::complex&lt;float&gt;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#define MKL_Complex16 std::complex&lt;double&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="Type_8hpp.html#a0b45f62ef34311fdb79b8de82d75c0d3">   14</a></span><span class="preprocessor">#define MKL_Complex8 std::complex&lt;float&gt;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="Type_8hpp.html#a1fa119034fee07a6d5449926cbb7915a">   15</a></span><span class="preprocessor">#define MKL_Complex16 std::complex&lt;double&gt;</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment">//#endif</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">namespace </span>cytnx {</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecytnx.html">cytnx</a> {</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  <span class="keyword">using </span>vec3d = std::vector&lt;std::vector&lt;std::vector&lt;T&gt; &gt; &gt;;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="namespacecytnx.html#abdef434dfef3c3f9ab5e6a25e678896b">   21</a></span>  <span class="keyword">using </span><a class="code hl_typedef" href="namespacecytnx.html#abdef434dfef3c3f9ab5e6a25e678896b">vec3d</a> = std::vector&lt;std::vector&lt;std::vector&lt;T&gt; &gt; &gt;;</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  </div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  <span class="keyword">using </span>vec2d = std::vector&lt;std::vector&lt;T&gt; &gt;;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="namespacecytnx.html#aabad17adc76c275cbe89b1e5c5900895">   24</a></span>  <span class="keyword">using </span><a class="code hl_typedef" href="namespacecytnx.html#aabad17adc76c275cbe89b1e5c5900895">vec2d</a> = std::vector&lt;std::vector&lt;T&gt; &gt;;</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="keyword">typedef</span> <span class="keywordtype">double</span> cytnx_double;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="keyword">typedef</span> <span class="keywordtype">float</span> cytnx_float;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  <span class="keyword">typedef</span> uint64_t cytnx_uint64;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <span class="keyword">typedef</span> uint32_t cytnx_uint32;</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <span class="keyword">typedef</span> uint16_t cytnx_uint16;</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <span class="keyword">typedef</span> int64_t cytnx_int64;</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keyword">typedef</span> int32_t cytnx_int32;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keyword">typedef</span> int16_t cytnx_int16;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <span class="keyword">typedef</span> <span class="keywordtype">size_t</span> cytnx_size_t;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keyword">typedef</span> std::complex&lt;float&gt; cytnx_complex64;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="keyword">typedef</span> std::complex&lt;double&gt; cytnx_complex128;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <span class="keyword">typedef</span> <span class="keywordtype">bool</span> cytnx_bool;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="namespacecytnx.html#a17b847d265f6551b952fd9847198a464">   27</a></span>  <span class="keyword">typedef</span> <span class="keywordtype">double</span> <a class="code hl_typedef" href="namespacecytnx.html#a17b847d265f6551b952fd9847198a464">cytnx_double</a>;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="namespacecytnx.html#a456fea0ea7baaa151496b24424829253">   28</a></span>  <span class="keyword">typedef</span> <span class="keywordtype">float</span> <a class="code hl_typedef" href="namespacecytnx.html#a456fea0ea7baaa151496b24424829253">cytnx_float</a>;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">   29</a></span>  <span class="keyword">typedef</span> uint64_t <a class="code hl_typedef" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a>;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="namespacecytnx.html#a335d8fee19dee02206dbecec6e5ec610">   30</a></span>  <span class="keyword">typedef</span> uint32_t <a class="code hl_typedef" href="namespacecytnx.html#a335d8fee19dee02206dbecec6e5ec610">cytnx_uint32</a>;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="namespacecytnx.html#a7f757c129de8dd3de3a4f2d802aa9bbb">   31</a></span>  <span class="keyword">typedef</span> uint16_t <a class="code hl_typedef" href="namespacecytnx.html#a7f757c129de8dd3de3a4f2d802aa9bbb">cytnx_uint16</a>;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">   32</a></span>  <span class="keyword">typedef</span> int64_t <a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a>;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="namespacecytnx.html#a6504b8a7b459f70c0a24d4ea2893a976">   33</a></span>  <span class="keyword">typedef</span> int32_t <a class="code hl_typedef" href="namespacecytnx.html#a6504b8a7b459f70c0a24d4ea2893a976">cytnx_int32</a>;</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="namespacecytnx.html#a5f27130c68405db77c52f17c3a084f62">   34</a></span>  <span class="keyword">typedef</span> int16_t <a class="code hl_typedef" href="namespacecytnx.html#a5f27130c68405db77c52f17c3a084f62">cytnx_int16</a>;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="namespacecytnx.html#aa94c3f663288772a54b4926a62303f7c">   35</a></span>  <span class="keyword">typedef</span> <span class="keywordtype">size_t</span> <a class="code hl_typedef" href="namespacecytnx.html#aa94c3f663288772a54b4926a62303f7c">cytnx_size_t</a>;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="namespacecytnx.html#a63d2515ecaa35660c85571236e61fec7">   36</a></span>  <span class="keyword">typedef</span> std::complex&lt;float&gt; <a class="code hl_typedef" href="namespacecytnx.html#a63d2515ecaa35660c85571236e61fec7">cytnx_complex64</a>;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="namespacecytnx.html#a401ce1c8c4599b9a1a860e9e225e6b9e">   37</a></span>  <span class="keyword">typedef</span> std::complex&lt;double&gt; <a class="code hl_typedef" href="namespacecytnx.html#a401ce1c8c4599b9a1a860e9e225e6b9e">cytnx_complex128</a>;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="namespacecytnx.html#a33aeeaf2c3d5b78b26cc6440916acbf2">   38</a></span>  <span class="keyword">typedef</span> <span class="keywordtype">bool</span> <a class="code hl_typedef" href="namespacecytnx.html#a33aeeaf2c3d5b78b26cc6440916acbf2">cytnx_bool</a>;</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <span class="keyword">struct </span>__type {</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">enum</span> __pybind_type {</div>
@@ -187,31 +196,31 @@ $(function() {
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>                                                    <span class="keyword">true</span>,</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>                                                    <span class="keyword">true</span>,</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>                                                    <span class="keyword">false</span>,</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>                                                    <span class="keyword">sizeof</span>(cytnx_complex128)};</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>                                                    <span class="keyword">sizeof</span>(<a class="code hl_typedef" href="namespacecytnx.html#a401ce1c8c4599b9a1a860e9e225e6b9e">cytnx_complex128</a>)};</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>      Typeinfos[this-&gt;ComplexFloat] = (Type_struct){<span class="stringliteral">&quot;Complex Float (Complex Float32)&quot;</span>,</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>                                                    <span class="keyword">false</span>,</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>                                                    <span class="keyword">true</span>,</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>                                                    <span class="keyword">true</span>,</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>                                                    <span class="keyword">false</span>,</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>                                                    <span class="keyword">sizeof</span>(cytnx_complex64)};</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>                                                    <span class="keyword">sizeof</span>(<a class="code hl_typedef" href="namespacecytnx.html#a63d2515ecaa35660c85571236e61fec7">cytnx_complex64</a>)};</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>      Typeinfos[this-&gt;Double] =</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        (Type_struct){<span class="stringliteral">&quot;Double (Float64)&quot;</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">true</span>, <span class="keyword">false</span>, <span class="keyword">sizeof</span>(cytnx_double)};</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        (Type_struct){<span class="stringliteral">&quot;Double (Float64)&quot;</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">true</span>, <span class="keyword">false</span>, <span class="keyword">sizeof</span>(<a class="code hl_typedef" href="namespacecytnx.html#a17b847d265f6551b952fd9847198a464">cytnx_double</a>)};</div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>      Typeinfos[this-&gt;Float] =</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        (Type_struct){<span class="stringliteral">&quot;Float (Float32)&quot;</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">true</span>, <span class="keyword">false</span>, <span class="keyword">sizeof</span>(cytnx_float)};</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        (Type_struct){<span class="stringliteral">&quot;Float (Float32)&quot;</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">true</span>, <span class="keyword">false</span>, <span class="keyword">sizeof</span>(<a class="code hl_typedef" href="namespacecytnx.html#a456fea0ea7baaa151496b24424829253">cytnx_float</a>)};</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>      Typeinfos[this-&gt;Int64] =</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        (Type_struct){<span class="stringliteral">&quot;Int64&quot;</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">true</span>, <span class="keyword">sizeof</span>(cytnx_int64)};</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        (Type_struct){<span class="stringliteral">&quot;Int64&quot;</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">true</span>, <span class="keyword">sizeof</span>(<a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a>)};</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>      Typeinfos[this-&gt;Uint64] =</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        (Type_struct){<span class="stringliteral">&quot;Uint64&quot;</span>, <span class="keyword">true</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">true</span>, <span class="keyword">sizeof</span>(cytnx_uint64)};</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        (Type_struct){<span class="stringliteral">&quot;Uint64&quot;</span>, <span class="keyword">true</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">true</span>, <span class="keyword">sizeof</span>(<a class="code hl_typedef" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a>)};</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>      Typeinfos[this-&gt;Int32] =</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        (Type_struct){<span class="stringliteral">&quot;Int32&quot;</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">true</span>, <span class="keyword">sizeof</span>(cytnx_int32)};</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        (Type_struct){<span class="stringliteral">&quot;Int32&quot;</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">true</span>, <span class="keyword">sizeof</span>(<a class="code hl_typedef" href="namespacecytnx.html#a6504b8a7b459f70c0a24d4ea2893a976">cytnx_int32</a>)};</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>      Typeinfos[this-&gt;Uint32] =</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        (Type_struct){<span class="stringliteral">&quot;Uint32&quot;</span>, <span class="keyword">true</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">true</span>, <span class="keyword">sizeof</span>(cytnx_uint32)};</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        (Type_struct){<span class="stringliteral">&quot;Uint32&quot;</span>, <span class="keyword">true</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">true</span>, <span class="keyword">sizeof</span>(<a class="code hl_typedef" href="namespacecytnx.html#a335d8fee19dee02206dbecec6e5ec610">cytnx_uint32</a>)};</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>      Typeinfos[this-&gt;Int16] =</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        (Type_struct){<span class="stringliteral">&quot;Int16&quot;</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">true</span>, <span class="keyword">sizeof</span>(cytnx_int16)};</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        (Type_struct){<span class="stringliteral">&quot;Int16&quot;</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">true</span>, <span class="keyword">sizeof</span>(<a class="code hl_typedef" href="namespacecytnx.html#a5f27130c68405db77c52f17c3a084f62">cytnx_int16</a>)};</div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>      Typeinfos[this-&gt;Uint16] =</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        (Type_struct){<span class="stringliteral">&quot;Uint16&quot;</span>, <span class="keyword">true</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">true</span>, <span class="keyword">sizeof</span>(cytnx_uint16)};</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        (Type_struct){<span class="stringliteral">&quot;Uint16&quot;</span>, <span class="keyword">true</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">true</span>, <span class="keyword">sizeof</span>(<a class="code hl_typedef" href="namespacecytnx.html#a7f757c129de8dd3de3a4f2d802aa9bbb">cytnx_uint16</a>)};</div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>      Typeinfos[this-&gt;Bool] =</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        (Type_struct){<span class="stringliteral">&quot;Bool&quot;</span>, <span class="keyword">true</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">sizeof</span>(cytnx_bool)};</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        (Type_struct){<span class="stringliteral">&quot;Bool&quot;</span>, <span class="keyword">true</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">sizeof</span>(<a class="code hl_typedef" href="namespacecytnx.html#a33aeeaf2c3d5b78b26cc6440916acbf2">cytnx_bool</a>)};</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    };</div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="keyword">const</span> std::string &amp;getname(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> &amp;type_id) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> c_typename_to_id(<span class="keyword">const</span> std::string &amp;c_name)<span class="keyword">const</span>;</div>
@@ -223,7 +232,7 @@ $(function() {
 <div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    <span class="comment">// int c_typeindex_to_id(const std::type_index &amp;type_idx);</span></div>
 <div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
 <div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> cy_typeid(<span class="keyword">const</span> T &amp;rc)<span class="keyword"> const</span>{</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>      cytnx_error_msg(<span class="keyword">true</span>, <span class="stringliteral">&quot;[ERROR] invalid type%s&quot;</span>, <span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>      <a class="code hl_define" href="cytnx__error_8hpp.html#aa2edc77cab5ba7d1561fd1ea6cfba9ac">cytnx_error_msg</a>(<span class="keyword">true</span>, <span class="stringliteral">&quot;[ERROR] invalid type%s&quot;</span>, <span class="stringliteral">&quot;\n&quot;</span>);</div>
 <div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>      <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    }</div>
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    <span class="keyword">static</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> cy_typeid(<span class="keyword">const</span> cytnx_complex128 &amp;rc){ <span class="keywordflow">return</span> Type_class::ComplexDouble; }</div>
@@ -238,39 +247,46 @@ $(function() {
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <span class="keyword">static</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> cy_typeid(<span class="keyword">const</span> cytnx_int16 &amp;rc){ <span class="keywordflow">return</span> Type_class::Int16; }</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    <span class="keyword">static</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> cy_typeid(<span class="keyword">const</span> cytnx_bool &amp;rc){ <span class="keywordflow">return</span> Type_class::Bool; }</div>
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> type_promote(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> &amp;typeL, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> &amp;typeR);</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code hl_function" href="namespacecytnx.html#a4062a3955eae17ae174ec7ac26d56508">type_promote</a>(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> &amp;typeL, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> &amp;typeR);</div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  };</div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>  <span class="keywordtype">int</span> type_promote(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;typeL, <span class="keyword">const</span> <span class="keywordtype">int</span> &amp;typeR);</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno"><a class="line" href="namespacecytnx.html#a4062a3955eae17ae174ec7ac26d56508">  164</a></span>  <span class="keywordtype">int</span> <a class="code hl_function" href="namespacecytnx.html#a4062a3955eae17ae174ec7ac26d56508">type_promote</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;typeL, <span class="keyword">const</span> <span class="keywordtype">int</span> &amp;typeR);</div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span> </div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>  <span class="keyword">extern</span> Type_class Type; <span class="comment">// move to cytnx.hpp and guarded</span></div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>  <span class="keyword">extern</span> Type_class <a class="code hl_variable" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">Type</a>; <span class="comment">// move to cytnx.hpp and guarded</span></div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>  <span class="comment">//static const Type_class Type = Type_class();</span></div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>  <span class="keyword">extern</span> <span class="keywordtype">int</span> __blasINTsize__;</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>  <span class="keyword">extern</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="namespacecytnx.html#afbd550656f35ac86a0703b2f122c09cc">__blasINTsize__</a>;</div>
 <div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span> </div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>  <span class="keyword">extern</span> <span class="keywordtype">bool</span> User_debug;</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>  <span class="keyword">extern</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="namespacecytnx.html#a27aa2c9f9401b20248afcfb1ab761b06">User_debug</a>;</div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span> </div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>}  <span class="comment">// namespace cytnx</span></div>
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span> </div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="acytnx__error_8hpp_html"><div class="ttname"><a href="cytnx__error_8hpp.html">cytnx_error.hpp</a></div></div>
+<div class="ttc" id="acytnx__error_8hpp_html_aa2edc77cab5ba7d1561fd1ea6cfba9ac"><div class="ttname"><a href="cytnx__error_8hpp.html#aa2edc77cab5ba7d1561fd1ea6cfba9ac">cytnx_error_msg</a></div><div class="ttdeci">#define cytnx_error_msg(is_true, format,...)</div><div class="ttdef"><b>Definition:</b> cytnx_error.hpp:16</div></div>
+<div class="ttc" id="anamespacecytnx_html"><div class="ttname"><a href="namespacecytnx.html">cytnx</a></div><div class="ttdef"><b>Definition:</b> Network_misc.hpp:1</div></div>
+<div class="ttc" id="anamespacecytnx_html_a17b847d265f6551b952fd9847198a464"><div class="ttname"><a href="namespacecytnx.html#a17b847d265f6551b952fd9847198a464">cytnx::cytnx_double</a></div><div class="ttdeci">double cytnx_double</div><div class="ttdef"><b>Definition:</b> Type.hpp:27</div></div>
+<div class="ttc" id="anamespacecytnx_html_a27aa2c9f9401b20248afcfb1ab761b06"><div class="ttname"><a href="namespacecytnx.html#a27aa2c9f9401b20248afcfb1ab761b06">cytnx::User_debug</a></div><div class="ttdeci">bool User_debug</div><div class="ttdef"><b>Definition:</b> Type.cpp:17</div></div>
+<div class="ttc" id="anamespacecytnx_html_a335d8fee19dee02206dbecec6e5ec610"><div class="ttname"><a href="namespacecytnx.html#a335d8fee19dee02206dbecec6e5ec610">cytnx::cytnx_uint32</a></div><div class="ttdeci">uint32_t cytnx_uint32</div><div class="ttdef"><b>Definition:</b> Type.hpp:30</div></div>
+<div class="ttc" id="anamespacecytnx_html_a33aeeaf2c3d5b78b26cc6440916acbf2"><div class="ttname"><a href="namespacecytnx.html#a33aeeaf2c3d5b78b26cc6440916acbf2">cytnx::cytnx_bool</a></div><div class="ttdeci">bool cytnx_bool</div><div class="ttdef"><b>Definition:</b> Type.hpp:38</div></div>
+<div class="ttc" id="anamespacecytnx_html_a401ce1c8c4599b9a1a860e9e225e6b9e"><div class="ttname"><a href="namespacecytnx.html#a401ce1c8c4599b9a1a860e9e225e6b9e">cytnx::cytnx_complex128</a></div><div class="ttdeci">std::complex&lt; double &gt; cytnx_complex128</div><div class="ttdef"><b>Definition:</b> Type.hpp:37</div></div>
+<div class="ttc" id="anamespacecytnx_html_a4062a3955eae17ae174ec7ac26d56508"><div class="ttname"><a href="namespacecytnx.html#a4062a3955eae17ae174ec7ac26d56508">cytnx::type_promote</a></div><div class="ttdeci">int type_promote(const int &amp;typeL, const int &amp;typeR)</div></div>
+<div class="ttc" id="anamespacecytnx_html_a456fea0ea7baaa151496b24424829253"><div class="ttname"><a href="namespacecytnx.html#a456fea0ea7baaa151496b24424829253">cytnx::cytnx_float</a></div><div class="ttdeci">float cytnx_float</div><div class="ttdef"><b>Definition:</b> Type.hpp:28</div></div>
+<div class="ttc" id="anamespacecytnx_html_a5f27130c68405db77c52f17c3a084f62"><div class="ttname"><a href="namespacecytnx.html#a5f27130c68405db77c52f17c3a084f62">cytnx::cytnx_int16</a></div><div class="ttdeci">int16_t cytnx_int16</div><div class="ttdef"><b>Definition:</b> Type.hpp:34</div></div>
+<div class="ttc" id="anamespacecytnx_html_a63d2515ecaa35660c85571236e61fec7"><div class="ttname"><a href="namespacecytnx.html#a63d2515ecaa35660c85571236e61fec7">cytnx::cytnx_complex64</a></div><div class="ttdeci">std::complex&lt; float &gt; cytnx_complex64</div><div class="ttdef"><b>Definition:</b> Type.hpp:36</div></div>
+<div class="ttc" id="anamespacecytnx_html_a6504b8a7b459f70c0a24d4ea2893a976"><div class="ttname"><a href="namespacecytnx.html#a6504b8a7b459f70c0a24d4ea2893a976">cytnx::cytnx_int32</a></div><div class="ttdeci">int32_t cytnx_int32</div><div class="ttdef"><b>Definition:</b> Type.hpp:33</div></div>
+<div class="ttc" id="anamespacecytnx_html_a7f757c129de8dd3de3a4f2d802aa9bbb"><div class="ttname"><a href="namespacecytnx.html#a7f757c129de8dd3de3a4f2d802aa9bbb">cytnx::cytnx_uint16</a></div><div class="ttdeci">uint16_t cytnx_uint16</div><div class="ttdef"><b>Definition:</b> Type.hpp:31</div></div>
+<div class="ttc" id="anamespacecytnx_html_a9a7ab808c7cbef775461ccc31eaabeb4"><div class="ttname"><a href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx::cytnx_uint64</a></div><div class="ttdeci">uint64_t cytnx_uint64</div><div class="ttdef"><b>Definition:</b> Type.hpp:29</div></div>
+<div class="ttc" id="anamespacecytnx_html_aa7b7ff4d6d244994d35853a6ce547587"><div class="ttname"><a href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx::cytnx_int64</a></div><div class="ttdeci">int64_t cytnx_int64</div><div class="ttdef"><b>Definition:</b> Type.hpp:32</div></div>
+<div class="ttc" id="anamespacecytnx_html_aa94c3f663288772a54b4926a62303f7c"><div class="ttname"><a href="namespacecytnx.html#aa94c3f663288772a54b4926a62303f7c">cytnx::cytnx_size_t</a></div><div class="ttdeci">size_t cytnx_size_t</div><div class="ttdef"><b>Definition:</b> Type.hpp:35</div></div>
+<div class="ttc" id="anamespacecytnx_html_aabad17adc76c275cbe89b1e5c5900895"><div class="ttname"><a href="namespacecytnx.html#aabad17adc76c275cbe89b1e5c5900895">cytnx::vec2d</a></div><div class="ttdeci">std::vector&lt; std::vector&lt; T &gt; &gt; vec2d</div><div class="ttdef"><b>Definition:</b> Type.hpp:24</div></div>
+<div class="ttc" id="anamespacecytnx_html_abdef434dfef3c3f9ab5e6a25e678896b"><div class="ttname"><a href="namespacecytnx.html#abdef434dfef3c3f9ab5e6a25e678896b">cytnx::vec3d</a></div><div class="ttdeci">std::vector&lt; std::vector&lt; std::vector&lt; T &gt; &gt; &gt; vec3d</div><div class="ttdef"><b>Definition:</b> Type.hpp:21</div></div>
+<div class="ttc" id="anamespacecytnx_html_ac2c6c045a5fd258e21bd0786744839c2"><div class="ttname"><a href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">cytnx::Type</a></div><div class="ttdeci">Type_class Type</div><div class="ttdef"><b>Definition:</b> Type.cpp:23</div></div>
+<div class="ttc" id="anamespacecytnx_html_afbd550656f35ac86a0703b2f122c09cc"><div class="ttname"><a href="namespacecytnx.html#afbd550656f35ac86a0703b2f122c09cc">cytnx::__blasINTsize__</a></div><div class="ttdeci">int __blasINTsize__</div><div class="ttdef"><b>Definition:</b> Type.cpp:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- HTML footer for doxygen 1.9.1-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
-<script type="text/javascript">
-  $(function() {
-    toggleButton = document.createElement('doxygen-awesome-dark-mode-toggle')
-    toggleButton.title = "Toggle Light/Dark Mode"
-    $(document).ready(function(){
-      document.getElementById("MSearchBox").parentNode.appendChild(toggleButton)
-    })
-    // every resize will remove the button, which is why it has to be added again:
-    $(window).resize(function(){
-      document.getElementById("MSearchBox").parentNode.appendChild(toggleButton)
-    })
-  })
-</script>
 </body>
 </html>

@@ -1,32 +1,41 @@
-<!-- HTML header for doxygen 1.9.1-->
+<!-- HTML header for doxygen 1.9.5-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Cytnx: include/contraction_tree.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
-<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+       <script type="text/javascript">
+           DoxygenAwesomeDarkModeToggle.init()
+       </script>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="titlearea">
 <table cellspacing="0" cellpadding="0">
  <tbody>
- <tr style="height: 56px;">
+ <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
-  <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.7.7</span>
+  <td id="projectalign">
+   <div id="projectname">Cytnx<span id="projectnumber">&#160;v0.7.7</span>
    </div>
   </td>
  </tr>
@@ -81,18 +90,18 @@ $(function() {
   <div class="headertitle"><div class="title">contraction_tree.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef _H_contraction_tree_</span></div>
+<a href="contraction__tree_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef _H_contraction_tree_</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define _H_contraction_tree_</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;Type.hpp&quot;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;UniTensor.hpp&quot;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;cytnx_error.hpp&quot;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;utils/utils.hpp&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="Type_8hpp.html">Type.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;<a class="code" href="UniTensor_8hpp.html">UniTensor.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="cytnx__error_8hpp.html">cytnx_error.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;<a class="code" href="utils_8hpp.html">utils/utils.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;map&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">namespace </span>cytnx {</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecytnx.html">cytnx</a> {</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>  <span class="keyword">class </span>Node {</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>   <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    UniTensor utensor;  <span class="comment">// don&#39;t worry about copy, because everything are references in cytnx!</span></div>
@@ -110,7 +119,7 @@ $(function() {
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>      this-&gt;utensor = rhs.utensor;</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>      this-&gt;is_assigned = rhs.is_assigned;</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    }</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    Node &amp;operator==(<span class="keyword">const</span> Node &amp;rhs) {</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    Node &amp;<a class="code hl_function" href="namespacecytnx.html#a6d2f2c308c9fbe7a791d981aa48ec5b6">operator==</a>(<span class="keyword">const</span> Node &amp;rhs) {</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>      this-&gt;left = rhs.left;</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>      this-&gt;right = rhs.right;</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>      this-&gt;root = rhs.root;</div>
@@ -124,7 +133,7 @@ $(function() {
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>      this-&gt;right = in_right;</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>      in_left-&gt;root = <span class="keyword">this</span>;</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>      in_right-&gt;root = <span class="keyword">this</span>;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>      <span class="keywordflow">if</span> (in_uten.uten_type() != UTenType.Void) this-&gt;utensor = in_uten;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>      <span class="keywordflow">if</span> (in_uten.uten_type() != <a class="code hl_variable" href="namespacecytnx.html#a224ad816267928be693a2396f5483e06">UTenType</a>.Void) this-&gt;utensor = in_uten;</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    }</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordtype">void</span> assign_utensor(<span class="keyword">const</span> UniTensor &amp;in_uten) {</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>      this-&gt;utensor = in_uten;</div>
@@ -146,7 +155,7 @@ $(function() {
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>      this-&gt;nodes_container = rhs.nodes_container;</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>      this-&gt;base_nodes = rhs.base_nodes;</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    }</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    ContractionTree &amp;operator==(<span class="keyword">const</span> ContractionTree &amp;rhs) {</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    ContractionTree &amp;<a class="code hl_function" href="namespacecytnx.html#a6d2f2c308c9fbe7a791d981aa48ec5b6">operator==</a>(<span class="keyword">const</span> ContractionTree &amp;rhs) {</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>      this-&gt;nodes_container = rhs.nodes_container;</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>      this-&gt;base_nodes = rhs.base_nodes;</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>      <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
@@ -182,24 +191,17 @@ $(function() {
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>  };</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>}  <span class="comment">// namespace cytnx</span></div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aType_8hpp_html"><div class="ttname"><a href="Type_8hpp.html">Type.hpp</a></div></div>
+<div class="ttc" id="aUniTensor_8hpp_html"><div class="ttname"><a href="UniTensor_8hpp.html">UniTensor.hpp</a></div></div>
+<div class="ttc" id="acytnx__error_8hpp_html"><div class="ttname"><a href="cytnx__error_8hpp.html">cytnx_error.hpp</a></div></div>
+<div class="ttc" id="anamespacecytnx_html"><div class="ttname"><a href="namespacecytnx.html">cytnx</a></div><div class="ttdef"><b>Definition:</b> Network_misc.hpp:1</div></div>
+<div class="ttc" id="anamespacecytnx_html_a224ad816267928be693a2396f5483e06"><div class="ttname"><a href="namespacecytnx.html#a224ad816267928be693a2396f5483e06">cytnx::UTenType</a></div><div class="ttdeci">UniTensorType_class UTenType</div><div class="ttdef"><b>Definition:</b> UniTensor_base.cpp:23</div></div>
+<div class="ttc" id="anamespacecytnx_html_a6d2f2c308c9fbe7a791d981aa48ec5b6"><div class="ttname"><a href="namespacecytnx.html#a6d2f2c308c9fbe7a791d981aa48ec5b6">cytnx::operator==</a></div><div class="ttdeci">Tensor operator==(const Tensor &amp;Lt, const Tensor &amp;Rt)</div></div>
+<div class="ttc" id="autils_8hpp_html"><div class="ttname"><a href="utils_8hpp.html">utils.hpp</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- HTML footer for doxygen 1.9.1-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
-<script type="text/javascript">
-  $(function() {
-    toggleButton = document.createElement('doxygen-awesome-dark-mode-toggle')
-    toggleButton.title = "Toggle Light/Dark Mode"
-    $(document).ready(function(){
-      document.getElementById("MSearchBox").parentNode.appendChild(toggleButton)
-    })
-    // every resize will remove the button, which is why it has to be added again:
-    $(window).resize(function(){
-      document.getElementById("MSearchBox").parentNode.appendChild(toggleButton)
-    })
-  })
-</script>
 </body>
 </html>

@@ -1,32 +1,41 @@
-<!-- HTML header for doxygen 1.9.1-->
+<!-- HTML header for doxygen 1.9.5-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Cytnx: cytnx::Symmetry Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
-<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+       <script type="text/javascript">
+           DoxygenAwesomeDarkModeToggle.init()
+       </script>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="titlearea">
 <table cellspacing="0" cellpadding="0">
  <tbody>
- <tr style="height: 56px;">
+ <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
-  <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.7.7</span>
+  <td id="projectalign">
+   <div id="projectname">Cytnx<span id="projectnumber">&#160;v0.7.7</span>
    </div>
   </td>
  </tr>
@@ -74,7 +83,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>cytnx</b></li><li class="navelem"><a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespacecytnx.html">cytnx</a></li><li class="navelem"><a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -105,44 +114,37 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0ba15e919a5693923e54c2c6f7d376c6"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Symmetry.html#a0ba15e919a5693923e54c2c6f7d376c6">stype_str</a> () const</td></tr>
 <tr class="memdesc:a0ba15e919a5693923e54c2c6f7d376c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the symmetry type name of current <a class="el" href="classcytnx_1_1Symmetry.html" title="the symmetry object">Symmetry</a> object.  <a href="classcytnx_1_1Symmetry.html#a0ba15e919a5693923e54c2c6f7d376c6">More...</a><br /></td></tr>
 <tr class="separator:a0ba15e919a5693923e54c2c6f7d376c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a066741cabfe04df9e9e2782f047188b0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Symmetry.html#a066741cabfe04df9e9e2782f047188b0">check_qnum</a> (const cytnx_int64 &amp;qnum)</td></tr>
+<tr class="memitem:a066741cabfe04df9e9e2782f047188b0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Symmetry.html#a066741cabfe04df9e9e2782f047188b0">check_qnum</a> (const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;qnum)</td></tr>
 <tr class="memdesc:a066741cabfe04df9e9e2782f047188b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">check the quantum number is within the valid value range of current <a class="el" href="classcytnx_1_1Symmetry.html" title="the symmetry object">Symmetry</a>.  <a href="classcytnx_1_1Symmetry.html#a066741cabfe04df9e9e2782f047188b0">More...</a><br /></td></tr>
 <tr class="separator:a066741cabfe04df9e9e2782f047188b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38c1572a027e289430434b56324e2ead"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Symmetry.html#a38c1572a027e289430434b56324e2ead">check_qnums</a> (const std::vector&lt; cytnx_int64 &gt; &amp;qnums)</td></tr>
+<tr class="memitem:a38c1572a027e289430434b56324e2ead"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Symmetry.html#a38c1572a027e289430434b56324e2ead">check_qnums</a> (const std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &amp;qnums)</td></tr>
 <tr class="memdesc:a38c1572a027e289430434b56324e2ead"><td class="mdescLeft">&#160;</td><td class="mdescRight">check all the quantum numbers are within the valid value range of current <a class="el" href="classcytnx_1_1Symmetry.html" title="the symmetry object">Symmetry</a>.  <a href="classcytnx_1_1Symmetry.html#a38c1572a027e289430434b56324e2ead">More...</a><br /></td></tr>
 <tr class="separator:a38c1572a027e289430434b56324e2ead"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a31bbcdd3d98027dd31bce170879926"><td class="memItemLeft" align="right" valign="top">std::vector&lt; cytnx_int64 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Symmetry.html#a0a31bbcdd3d98027dd31bce170879926">combine_rule</a> (const std::vector&lt; cytnx_int64 &gt; &amp;inL, const std::vector&lt; cytnx_int64 &gt; &amp;inR)</td></tr>
+<tr class="memitem:a0a31bbcdd3d98027dd31bce170879926"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Symmetry.html#a0a31bbcdd3d98027dd31bce170879926">combine_rule</a> (const std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &amp;inL, const std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &amp;inR)</td></tr>
 <tr class="memdesc:a0a31bbcdd3d98027dd31bce170879926"><td class="mdescLeft">&#160;</td><td class="mdescRight">apply combine rule of current symmetry to two quantum number lists.  <a href="classcytnx_1_1Symmetry.html#a0a31bbcdd3d98027dd31bce170879926">More...</a><br /></td></tr>
 <tr class="separator:a0a31bbcdd3d98027dd31bce170879926"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a2e6c3f679b5e6774f269b78c8239e8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Symmetry.html#a7a2e6c3f679b5e6774f269b78c8239e8">combine_rule_</a> (std::vector&lt; cytnx_int64 &gt; &amp;out, const std::vector&lt; cytnx_int64 &gt; &amp;inL, const std::vector&lt; cytnx_int64 &gt; &amp;inR)</td></tr>
+<tr class="memitem:a7a2e6c3f679b5e6774f269b78c8239e8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Symmetry.html#a7a2e6c3f679b5e6774f269b78c8239e8">combine_rule_</a> (std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &amp;out, const std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &amp;inL, const std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &amp;inR)</td></tr>
 <tr class="memdesc:a7a2e6c3f679b5e6774f269b78c8239e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">apply combine rule of current symmetry to two quantum number lists, and store it into parameter  <a href="classcytnx_1_1Symmetry.html#a7a2e6c3f679b5e6774f269b78c8239e8">More...</a><br /></td></tr>
 <tr class="separator:a7a2e6c3f679b5e6774f269b78c8239e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2aaefd177003560b4c12fbbefe30c3c3"><td class="memItemLeft" align="right" valign="top">cytnx_int64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Symmetry.html#a2aaefd177003560b4c12fbbefe30c3c3">combine_rule</a> (const cytnx_int64 &amp;inL, const cytnx_int64 &amp;inR, const bool &amp;is_reverse=false) const</td></tr>
+<tr class="memitem:a2aaefd177003560b4c12fbbefe30c3c3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Symmetry.html#a2aaefd177003560b4c12fbbefe30c3c3">combine_rule</a> (const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;inL, const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;inR, const bool &amp;is_reverse=false) const</td></tr>
 <tr class="memdesc:a2aaefd177003560b4c12fbbefe30c3c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">apply combine rule of current symmetry to two quantum numbers.  <a href="classcytnx_1_1Symmetry.html#a2aaefd177003560b4c12fbbefe30c3c3">More...</a><br /></td></tr>
 <tr class="separator:a2aaefd177003560b4c12fbbefe30c3c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8542d45b69268355f0b07dea280ba1e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Symmetry.html#a8542d45b69268355f0b07dea280ba1e3">combine_rule_</a> (cytnx_int64 &amp;out, const cytnx_int64 &amp;inL, const cytnx_int64 &amp;inR, const bool &amp;is_reverse=false)</td></tr>
+<tr class="memitem:a8542d45b69268355f0b07dea280ba1e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Symmetry.html#a8542d45b69268355f0b07dea280ba1e3">combine_rule_</a> (<a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;out, const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;inL, const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;inR, const bool &amp;is_reverse=false)</td></tr>
 <tr class="memdesc:a8542d45b69268355f0b07dea280ba1e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">apply combine rule of current symmetry to two quantum numbers, and store the combined quntun number into parameter  <a href="classcytnx_1_1Symmetry.html#a8542d45b69268355f0b07dea280ba1e3">More...</a><br /></td></tr>
 <tr class="separator:a8542d45b69268355f0b07dea280ba1e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac7dfa6758b9dfb1963f19f0eec7cc4a3"><td class="memItemLeft" align="right" valign="top"><a id="ac7dfa6758b9dfb1963f19f0eec7cc4a3" name="ac7dfa6758b9dfb1963f19f0eec7cc4a3"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>reverse_rule_</b> (cytnx_int64 &amp;out, const cytnx_int64 &amp;in)</td></tr>
+<tr class="memitem:ac7dfa6758b9dfb1963f19f0eec7cc4a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Symmetry.html#ac7dfa6758b9dfb1963f19f0eec7cc4a3">reverse_rule_</a> (<a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;out, const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;in)</td></tr>
 <tr class="separator:ac7dfa6758b9dfb1963f19f0eec7cc4a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f856245a37472cb51c74cff0777d15e"><td class="memItemLeft" align="right" valign="top"><a id="a9f856245a37472cb51c74cff0777d15e" name="a9f856245a37472cb51c74cff0777d15e"></a>
-cytnx_int64&#160;</td><td class="memItemRight" valign="bottom"><b>reverse_rule</b> (const cytnx_int64 &amp;in) const</td></tr>
+<tr class="memitem:a9f856245a37472cb51c74cff0777d15e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Symmetry.html#a9f856245a37472cb51c74cff0777d15e">reverse_rule</a> (const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;in) const</td></tr>
 <tr class="separator:a9f856245a37472cb51c74cff0777d15e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0aaa29d0445cfc85ffab300aa4a8174"><td class="memItemLeft" align="right" valign="top"><a id="ae0aaa29d0445cfc85ffab300aa4a8174" name="ae0aaa29d0445cfc85ffab300aa4a8174"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Save</b> (const std::string &amp;fname) const</td></tr>
+<tr class="memitem:ae0aaa29d0445cfc85ffab300aa4a8174"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Symmetry.html#ae0aaa29d0445cfc85ffab300aa4a8174">Save</a> (const std::string &amp;fname) const</td></tr>
 <tr class="separator:ae0aaa29d0445cfc85ffab300aa4a8174"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a26e822590e88a8d865b6833bc0b3e368"><td class="memItemLeft" align="right" valign="top"><a id="a26e822590e88a8d865b6833bc0b3e368" name="a26e822590e88a8d865b6833bc0b3e368"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Save</b> (const char *fname) const</td></tr>
+<tr class="memitem:a26e822590e88a8d865b6833bc0b3e368"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Symmetry.html#a26e822590e88a8d865b6833bc0b3e368">Save</a> (const char *fname) const</td></tr>
 <tr class="separator:a26e822590e88a8d865b6833bc0b3e368"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f32669cdcdbf2dc1dff1f588c025981"><td class="memItemLeft" align="right" valign="top"><a id="a8f32669cdcdbf2dc1dff1f588c025981" name="a8f32669cdcdbf2dc1dff1f588c025981"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>print_info</b> () const</td></tr>
+<tr class="memitem:a8f32669cdcdbf2dc1dff1f588c025981"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Symmetry.html#a8f32669cdcdbf2dc1dff1f588c025981">print_info</a> () const</td></tr>
 <tr class="separator:a8f32669cdcdbf2dc1dff1f588c025981"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6726fdd96c12ddfa4b16adde9341aef0"><td class="memItemLeft" align="right" valign="top"><a id="a6726fdd96c12ddfa4b16adde9341aef0" name="a6726fdd96c12ddfa4b16adde9341aef0"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a> &amp;rhs) const</td></tr>
+<tr class="memitem:a6726fdd96c12ddfa4b16adde9341aef0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Symmetry.html#a6726fdd96c12ddfa4b16adde9341aef0">operator==</a> (const <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a> &amp;rhs) const</td></tr>
 <tr class="separator:a6726fdd96c12ddfa4b16adde9341aef0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad102f58e1226ec26ae9a3bc2d6c366d2"><td class="memItemLeft" align="right" valign="top"><a id="ad102f58e1226ec26ae9a3bc2d6c366d2" name="ad102f58e1226ec26ae9a3bc2d6c366d2"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a> &amp;rhs) const</td></tr>
+<tr class="memitem:ad102f58e1226ec26ae9a3bc2d6c366d2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Symmetry.html#ad102f58e1226ec26ae9a3bc2d6c366d2">operator!=</a> (const <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a> &amp;rhs) const</td></tr>
 <tr class="separator:ad102f58e1226ec26ae9a3bc2d6c366d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
@@ -151,14 +153,12 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memdesc:a9218fd66fc9cca64cd3d792e0019592a"><td class="mdescLeft">&#160;</td><td class="mdescRight">create a U1 symmetry object  <a href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">More...</a><br /></td></tr>
 <tr class="separator:a9218fd66fc9cca64cd3d792e0019592a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a066083aa705f8fc749b3bbb606f89359"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">Zn</a> (const int &amp;<a class="el" href="classcytnx_1_1Symmetry.html#a5d9e73259f21dc79f7086f8418afca8e">n</a>)</td></tr>
-<tr class="memdesc:a066083aa705f8fc749b3bbb606f89359"><td class="mdescLeft">&#160;</td><td class="mdescRight">create a Zn descrete symmetry object with <img class="formulaInl" alt="$n\in\mathbb{N}$" src="form_1.png"/>  <a href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">More...</a><br /></td></tr>
+<tr class="memdesc:a066083aa705f8fc749b3bbb606f89359"><td class="mdescLeft">&#160;</td><td class="mdescRight">create a Zn descrete symmetry object with \(n\in\mathbb{N}\)  <a href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">More...</a><br /></td></tr>
 <tr class="separator:a066083aa705f8fc749b3bbb606f89359"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1fe28cc1afa852d01415b469b78a8b5"><td class="memItemLeft" align="right" valign="top"><a id="af1fe28cc1afa852d01415b469b78a8b5" name="af1fe28cc1afa852d01415b469b78a8b5"></a>
-static <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Load</b> (const std::string &amp;fname)</td></tr>
-<tr class="separator:af1fe28cc1afa852d01415b469b78a8b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7e57944a9a2236d695c327fa0c971b1"><td class="memItemLeft" align="right" valign="top"><a id="aa7e57944a9a2236d695c327fa0c971b1" name="aa7e57944a9a2236d695c327fa0c971b1"></a>
-static <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Load</b> (const char *fname)</td></tr>
-<tr class="separator:aa7e57944a9a2236d695c327fa0c971b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43a66664194dd16288dc26abf5caf59c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Symmetry.html#a43a66664194dd16288dc26abf5caf59c">Load</a> (const std::string &amp;fname)</td></tr>
+<tr class="separator:a43a66664194dd16288dc26abf5caf59c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a357ab372fea2738c341e33404c472459"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Symmetry.html#a357ab372fea2738c341e33404c472459">Load</a> (const char *fname)</td></tr>
+<tr class="separator:a357ab372fea2738c341e33404c472459"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >the symmetry object </p>
@@ -175,7 +175,7 @@ static <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a>&#160;</td><
         <tr>
           <td class="memname">bool cytnx::Symmetry::check_qnum </td>
           <td>(</td>
-          <td class="paramtype">const cytnx_int64 &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;&#160;</td>
           <td class="paramname"><em>qnum</em></td><td>)</td>
           <td></td>
         </tr>
@@ -210,7 +210,7 @@ static <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a>&#160;</td><
         <tr>
           <td class="memname">bool cytnx::Symmetry::check_qnums </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; cytnx_int64 &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>qnums</em></td><td>)</td>
           <td></td>
         </tr>
@@ -258,14 +258,12 @@ static <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a>&#160;</td><
 
 <p>return a clone instance of current <a class="el" href="classcytnx_1_1Symmetry.html" title="the symmetry object">Symmetry</a> object. </p>
 <dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Symmetry.html" title="the symmetry object">Symmetry</a>]</dd></dl>
-<h2><a class="anchor" id="autotoc_md148"></a>
-Example:</h2>
-<h3><a class="anchor" id="autotoc_md149"></a>
-c++ API:</h3>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div>
+<h2>Example:</h2>
+<h3>c++ API:</h3>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">using namespace </span>cytnx;</div>
+<div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacecytnx.html">cytnx</a>;</div>
 <div class="line"><span class="keyword">using namespace </span>std;</div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">  <span class="comment">/* 1.</span></div>
@@ -287,14 +285,14 @@ c++ API:</h3>
 <div class="line">}</div>
 <div class="ttc" id="aclasscytnx_1_1Symmetry_html"><div class="ttname"><a href="classcytnx_1_1Symmetry.html">cytnx::Symmetry</a></div><div class="ttdoc">the symmetry object</div><div class="ttdef"><b>Definition:</b> Symmetry.hpp:148</div></div>
 <div class="ttc" id="aclasscytnx_1_1Symmetry_html_a9218fd66fc9cca64cd3d792e0019592a"><div class="ttname"><a href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">cytnx::Symmetry::U1</a></div><div class="ttdeci">static Symmetry U1()</div><div class="ttdoc">create a U1 symmetry object</div><div class="ttdef"><b>Definition:</b> Symmetry.hpp:205</div></div>
-</div><!-- fragment --> <h4><a class="anchor" id="autotoc_md150"></a>
-output&gt;</h4>
+<div class="ttc" id="acytnx_8hpp_html"><div class="ttname"><a href="cytnx_8hpp.html">cytnx.hpp</a></div></div>
+<div class="ttc" id="anamespacecytnx_html"><div class="ttname"><a href="namespacecytnx.html">cytnx</a></div><div class="ttdef"><b>Definition:</b> Network_misc.hpp:1</div></div>
+</div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">1
 1
 0
 1
-</pre> <h3><a class="anchor" id="autotoc_md151"></a>
-python API:</h3>
+</pre> <h3>python API:</h3>
 <div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div>
 <div class="line"> </div>
 <div class="line">sym_A = Symmetry.U1()</div>
@@ -306,8 +304,7 @@ python API:</h3>
 <div class="line">print(sym_C <span class="keywordflow">is</span> sym_A) <span class="comment">#false</span></div>
 <div class="line">print(sym_C == sym_A) <span class="comment">#true</span></div>
 <div class="line"> </div>
-</div><!-- fragment --> <h4><a class="anchor" id="autotoc_md152"></a>
-output&gt;</h4>
+</div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">True
 True
 False
@@ -325,15 +322,15 @@ True
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">cytnx_int64 cytnx::Symmetry::combine_rule </td>
+          <td class="memname"><a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> cytnx::Symmetry::combine_rule </td>
           <td>(</td>
-          <td class="paramtype">const cytnx_int64 &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;&#160;</td>
           <td class="paramname"><em>inL</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const cytnx_int64 &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;&#160;</td>
           <td class="paramname"><em>inR</em>, </td>
         </tr>
         <tr>
@@ -377,15 +374,15 @@ True
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt; cytnx_int64 &gt; cytnx::Symmetry::combine_rule </td>
+          <td class="memname">std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; cytnx::Symmetry::combine_rule </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; cytnx_int64 &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>inL</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::vector&lt; cytnx_int64 &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>inR</em>&#160;</td>
         </tr>
         <tr>
@@ -425,19 +422,19 @@ True
         <tr>
           <td class="memname">void cytnx::Symmetry::combine_rule_ </td>
           <td>(</td>
-          <td class="paramtype">cytnx_int64 &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;&#160;</td>
           <td class="paramname"><em>out</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const cytnx_int64 &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;&#160;</td>
           <td class="paramname"><em>inL</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const cytnx_int64 &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;&#160;</td>
           <td class="paramname"><em>inR</em>, </td>
         </tr>
         <tr>
@@ -484,19 +481,19 @@ True
         <tr>
           <td class="memname">void cytnx::Symmetry::combine_rule_ </td>
           <td>(</td>
-          <td class="paramtype">std::vector&lt; cytnx_int64 &gt; &amp;&#160;</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>out</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::vector&lt; cytnx_int64 &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>inL</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::vector&lt; cytnx_int64 &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>inR</em>&#160;</td>
         </tr>
         <tr>
@@ -525,6 +522,58 @@ True
 
 </div>
 </div>
+<a id="a357ab372fea2738c341e33404c472459" name="a357ab372fea2738c341e33404c472459"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a357ab372fea2738c341e33404c472459">&#9670;&#160;</a></span>Load() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx_1_1Symmetry.html">cytnx::Symmetry</a> cytnx::Symmetry::Load </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>fname</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a43a66664194dd16288dc26abf5caf59c" name="a43a66664194dd16288dc26abf5caf59c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a43a66664194dd16288dc26abf5caf59c">&#9670;&#160;</a></span>Load() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcytnx_1_1Symmetry.html">cytnx::Symmetry</a> cytnx::Symmetry::Load </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>fname</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a5d9e73259f21dc79f7086f8418afca8e" name="a5d9e73259f21dc79f7086f8418afca8e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5d9e73259f21dc79f7086f8418afca8e">&#9670;&#160;</a></span>n()</h2>
 
@@ -550,12 +599,170 @@ True
 
 <p>return the descrete n of current <a class="el" href="classcytnx_1_1Symmetry.html" title="the symmetry object">Symmetry</a> object. </p>
 <dl class="section return"><dt>Returns</dt><dd>[int]</dd></dl>
-<h3><a class="anchor" id="autotoc_md153"></a>
-[Note]</h3>
+<h3>[Note]</h3>
 <ol type="1">
 <li>for U1, n=1 will be returned.</li>
 <li>for Zn, n is the descrete symmetry number. (ex: Z2, n=2) </li>
 </ol>
+
+</div>
+</div>
+<a id="ad102f58e1226ec26ae9a3bc2d6c366d2" name="ad102f58e1226ec26ae9a3bc2d6c366d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad102f58e1226ec26ae9a3bc2d6c366d2">&#9670;&#160;</a></span>operator!=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cytnx::Symmetry::operator!= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a> &amp;&#160;</td>
+          <td class="paramname"><em>rhs</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6726fdd96c12ddfa4b16adde9341aef0" name="a6726fdd96c12ddfa4b16adde9341aef0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6726fdd96c12ddfa4b16adde9341aef0">&#9670;&#160;</a></span>operator==()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cytnx::Symmetry::operator== </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcytnx_1_1Symmetry.html">Symmetry</a> &amp;&#160;</td>
+          <td class="paramname"><em>rhs</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8f32669cdcdbf2dc1dff1f588c025981" name="a8f32669cdcdbf2dc1dff1f588c025981"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f32669cdcdbf2dc1dff1f588c025981">&#9670;&#160;</a></span>print_info()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cytnx::Symmetry::print_info </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9f856245a37472cb51c74cff0777d15e" name="a9f856245a37472cb51c74cff0777d15e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f856245a37472cb51c74cff0777d15e">&#9670;&#160;</a></span>reverse_rule()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> cytnx::Symmetry::reverse_rule </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;&#160;</td>
+          <td class="paramname"><em>in</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac7dfa6758b9dfb1963f19f0eec7cc4a3" name="ac7dfa6758b9dfb1963f19f0eec7cc4a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7dfa6758b9dfb1963f19f0eec7cc4a3">&#9670;&#160;</a></span>reverse_rule_()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cytnx::Symmetry::reverse_rule_ </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;&#160;</td>
+          <td class="paramname"><em>out</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;&#160;</td>
+          <td class="paramname"><em>in</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a26e822590e88a8d865b6833bc0b3e368" name="a26e822590e88a8d865b6833bc0b3e368"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26e822590e88a8d865b6833bc0b3e368">&#9670;&#160;</a></span>Save() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cytnx::Symmetry::Save </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>fname</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae0aaa29d0445cfc85ffab300aa4a8174" name="ae0aaa29d0445cfc85ffab300aa4a8174"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0aaa29d0445cfc85ffab300aa4a8174">&#9670;&#160;</a></span>Save() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cytnx::Symmetry::Save </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>fname</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -639,23 +846,18 @@ True
 </div><div class="memdoc">
 
 <p>create a U1 symmetry object </p>
-<h3><a class="anchor" id="autotoc_md132"></a>
-valid qnum value range:</h3>
+<h3>valid qnum value range:</h3>
 <pre class="fragment">\f$(-\infty , \infty)\f$
-</pre> <h3><a class="anchor" id="autotoc_md133"></a>
-combine rule:</h3>
+</pre> <h3>combine rule:</h3>
 <pre class="fragment">Q + Q
-</pre> <h3><a class="anchor" id="autotoc_md134"></a>
-description:</h3>
+</pre> <h3>description:</h3>
 <p >create a new U1 symmetry object that serive as a generator. The symmetry object is a property of <a class="el" href="classcytnx_1_1Bond.html">Bond </a>. It is used to identify the symmetry of the quantum number set, as well as providing the combining rule for the quantum number when Bonds are combined.</p>
-<h2><a class="anchor" id="autotoc_md135"></a>
-Example:</h2>
-<h3><a class="anchor" id="autotoc_md136"></a>
-c++ API:</h3>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div>
+<h2>Example:</h2>
+<h3>c++ API:</h3>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">using namespace </span>cytnx;</div>
+<div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacecytnx.html">cytnx</a>;</div>
 <div class="line"><span class="keyword">using namespace </span>std;</div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">  <span class="comment">/* 1.</span></div>
@@ -666,13 +868,13 @@ c++ API:</h3>
 <div class="line">  <span class="comment">/* 2.</span></div>
 <div class="line"><span class="comment">      using with Bond to define a bond with symmetry.</span></div>
 <div class="line"><span class="comment">  */</span></div>
-<div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_sym_u1_a = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(4, BD_KET, {{0}, {-4}, {-2}, {3}}, {sym_u1});</div>
-<div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_sym_u1_b = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(4, BD_KET, {{0}, {-4}, {-2}, {3}});  <span class="comment">// default is U1 symmetry</span></div>
+<div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_sym_u1_a = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(4, <a class="code hl_enumvalue" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc">BD_KET</a>, {{0}, {-4}, {-2}, {3}}, {sym_u1});</div>
+<div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_sym_u1_b = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(4, <a class="code hl_enumvalue" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc">BD_KET</a>, {{0}, {-4}, {-2}, {3}});  <span class="comment">// default is U1 symmetry</span></div>
 <div class="line">  cout &lt;&lt; bd_sym_u1_a &lt;&lt; endl;</div>
 <div class="line">  cout &lt;&lt; bd_sym_u1_b &lt;&lt; endl;</div>
 <div class="line">  cout &lt;&lt; (bd_sym_u1_a == bd_sym_u1_b) &lt;&lt; endl;  <span class="comment">// true</span></div>
 <div class="line"> </div>
-<div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_sym_u1_c = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(5, BD_KET, {{-1}, {1}, {2}, {-2}, {0}});</div>
+<div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_sym_u1_c = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(5, <a class="code hl_enumvalue" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc">BD_KET</a>, {{-1}, {1}, {2}, {-2}, {0}});</div>
 <div class="line">  cout &lt;&lt; bd_sym_u1_c &lt;&lt; endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">/* 3.</span></div>
@@ -685,8 +887,8 @@ c++ API:</h3>
 <div class="line">}</div>
 <div class="ttc" id="aclasscytnx_1_1Bond_html"><div class="ttname"><a href="classcytnx_1_1Bond.html">cytnx::Bond</a></div><div class="ttdoc">the object contains auxiliary properties for each Tensor rank (bond)</div><div class="ttdef"><b>Definition:</b> Bond.hpp:147</div></div>
 <div class="ttc" id="aclasscytnx_1_1Bond_html_a4714d9891e02b2aebf6756ec68c25e5c"><div class="ttname"><a href="classcytnx_1_1Bond.html#a4714d9891e02b2aebf6756ec68c25e5c">cytnx::Bond::combineBond</a></div><div class="ttdeci">Bond combineBond(const Bond &amp;bd_in, const bool &amp;is_grp=true) const</div><div class="ttdoc">combine the input bond with self, and return a new combined Bond instance.</div><div class="ttdef"><b>Definition:</b> Bond.hpp:442</div></div>
-</div><!-- fragment --> <h4><a class="anchor" id="autotoc_md137"></a>
-output&gt;</h4>
+<div class="ttc" id="anamespacecytnx_html_ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc"><div class="ttname"><a href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc">cytnx::BD_KET</a></div><div class="ttdeci">@ BD_KET</div><div class="ttdef"><b>Definition:</b> Bond.hpp:17</div></div>
+</div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">Dim = 4 |type: KET&gt;     
  U1::  +0 -4 -2 +3
 
@@ -700,8 +902,7 @@ Dim = 5 |type: KET&gt;
 Dim = 20 |type: KET&gt;     
  U1::  -1 +1 +2 -2 +0 -5 -3 -2 -6 -4 -3 -1 +0 -4 -2 +2 +4 +5 +1 +3
 
-</pre> <h3><a class="anchor" id="autotoc_md138"></a>
-python API:</h3>
+</pre> <h3>python API:</h3>
 <div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div>
 <div class="line"> </div>
 <div class="line">sym_u1 = Symmetry.U1();</div>
@@ -719,8 +920,7 @@ python API:</h3>
 <div class="line">print(bd_sym_all)</div>
 <div class="line"> </div>
 <div class="line"> </div>
-</div><!-- fragment --> <h4><a class="anchor" id="autotoc_md139"></a>
-output&gt;</h4>
+</div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">Dim = 4 |type: KET&gt;     
  U1::  +0 -4 -2 +3
 
@@ -765,24 +965,19 @@ Dim = 20 |type: KET&gt;
 </table>
 </div><div class="memdoc">
 
-<p>create a Zn descrete symmetry object with <img class="formulaInl" alt="$n\in\mathbb{N}$" src="form_1.png"/> </p>
-<h3><a class="anchor" id="autotoc_md140"></a>
-valid qnum value range:</h3>
+<p>create a Zn descrete symmetry object with \(n\in\mathbb{N}\) </p>
+<h3>valid qnum value range:</h3>
 <pre class="fragment">\f$[0 , n)\f$
-</pre> <h3><a class="anchor" id="autotoc_md141"></a>
-combine rule:</h3>
+</pre> <h3>combine rule:</h3>
 <pre class="fragment">(Q + Q)%n
-</pre> <h3><a class="anchor" id="autotoc_md142"></a>
-description:</h3>
-<p >create a new Zn descrete symmetry object with integer <img class="formulaInl" alt="$ n $" src="form_2.png"/> that serive as a generator. The symmetry object is a property of <a class="el" href="classcytnx_1_1Bond.html">Bond </a>. It is used to identify the symmetry of the quantum number set, as well as providing the combining rule for the quantum number when Bonds are combined.</p>
-<h2><a class="anchor" id="autotoc_md143"></a>
-Example:</h2>
-<h3><a class="anchor" id="autotoc_md144"></a>
-c++ API:</h3>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div>
+</pre> <h3>description:</h3>
+<p >create a new Zn descrete symmetry object with integer \( n \) that serive as a generator. The symmetry object is a property of <a class="el" href="classcytnx_1_1Bond.html">Bond </a>. It is used to identify the symmetry of the quantum number set, as well as providing the combining rule for the quantum number when Bonds are combined.</p>
+<h2>Example:</h2>
+<h3>c++ API:</h3>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">using namespace </span>cytnx;</div>
+<div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacecytnx.html">cytnx</a>;</div>
 <div class="line"><span class="keyword">using namespace </span>std;</div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">  <span class="comment">// example of Z2 symmetry object</span></div>
@@ -795,8 +990,8 @@ c++ API:</h3>
 <div class="line"><span class="comment">      Note that the qnums should obey the valid value range of the correspond symmetry.</span></div>
 <div class="line"><span class="comment">      with Z2 = [0,2)</span></div>
 <div class="line"><span class="comment">  */</span></div>
-<div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_sym_z2_A = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(4, BD_KET, {{0}, {0}, {1}, {1}}, {sym_z2});</div>
-<div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_sym_z2_B = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(3, BD_KET, {{0}, {1}, {1}}, {sym_z2});</div>
+<div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_sym_z2_A = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(4, <a class="code hl_enumvalue" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc">BD_KET</a>, {{0}, {0}, {1}, {1}}, {sym_z2});</div>
+<div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_sym_z2_B = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(3, <a class="code hl_enumvalue" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc">BD_KET</a>, {{0}, {1}, {1}}, {sym_z2});</div>
 <div class="line">  cout &lt;&lt; bd_sym_z2_A &lt;&lt; endl;</div>
 <div class="line">  cout &lt;&lt; bd_sym_z2_B &lt;&lt; endl;</div>
 <div class="line"> </div>
@@ -816,8 +1011,8 @@ c++ API:</h3>
 <div class="line"><span class="comment">      Note that the qnums should obey the valid value range of the correspond symmetry.</span></div>
 <div class="line"><span class="comment">      with Z4 = [0,4)</span></div>
 <div class="line"><span class="comment">  */</span></div>
-<div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_sym_z4_A = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(4, BD_KET, {{0}, {3}, {1}, {2}}, {sym_z4});</div>
-<div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_sym_z4_B = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(3, BD_KET, {{2}, {3}, {1}}, {sym_z4});</div>
+<div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_sym_z4_A = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(4, <a class="code hl_enumvalue" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc">BD_KET</a>, {{0}, {3}, {1}, {2}}, {sym_z4});</div>
+<div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_sym_z4_B = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(3, <a class="code hl_enumvalue" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc">BD_KET</a>, {{2}, {3}, {1}}, {sym_z4});</div>
 <div class="line">  cout &lt;&lt; bd_sym_z4_A &lt;&lt; endl;</div>
 <div class="line">  cout &lt;&lt; bd_sym_z4_B &lt;&lt; endl;</div>
 <div class="line"> </div>
@@ -830,8 +1025,7 @@ c++ API:</h3>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
 <div class="ttc" id="aclasscytnx_1_1Symmetry_html_a066083aa705f8fc749b3bbb606f89359"><div class="ttname"><a href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">cytnx::Symmetry::Zn</a></div><div class="ttdeci">static Symmetry Zn(const int &amp;n)</div><div class="ttdoc">create a Zn descrete symmetry object with</div><div class="ttdef"><b>Definition:</b> Symmetry.hpp:236</div></div>
-</div><!-- fragment --> <h4><a class="anchor" id="autotoc_md145"></a>
-output&gt;</h4>
+</div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">Dim = 4 |type: KET&gt;     
  Z2::  +0 +0 +1 +1
 
@@ -850,8 +1044,7 @@ Dim = 3 |type: KET&gt;
 Dim = 12 |type: KET&gt;     
  Z4::  +2 +3 +1 +1 +2 +0 +3 +0 +2 +0 +1 +3
 
-</pre> <h3><a class="anchor" id="autotoc_md146"></a>
-python API:</h3>
+</pre> <h3>python API:</h3>
 <div class="fragment"><div class="line"><span class="keyword">from</span> cytnx <span class="keyword">import</span> *</div>
 <div class="line"><span class="comment">#example of Z2 symmetry object </span></div>
 <div class="line"><span class="comment">#------------------------------------</span></div>
@@ -878,8 +1071,7 @@ python API:</h3>
 <div class="line">bd_sym_z4all = bd_sym_z4_A.combineBond(bd_sym_z4_B)</div>
 <div class="line">print(bd_sym_z4all)</div>
 <div class="line"> </div>
-</div><!-- fragment --> <h4><a class="anchor" id="autotoc_md147"></a>
-output&gt;</h4>
+</div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">Dim = 4 |type: KET&gt;     
  Z2::  +0 +0 +1 +1
 
@@ -907,27 +1099,14 @@ Dim = 12 |type: KET&gt;
 </pre> 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>include/<a class="el" href="Symmetry_8hpp_source.html">Symmetry.hpp</a></li>
+<li>src/<a class="el" href="Symmetry_8cpp.html">Symmetry.cpp</a></li>
 </ul>
 </div><!-- contents -->
-<!-- HTML footer for doxygen 1.9.1-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
-<script type="text/javascript">
-  $(function() {
-    toggleButton = document.createElement('doxygen-awesome-dark-mode-toggle')
-    toggleButton.title = "Toggle Light/Dark Mode"
-    $(document).ready(function(){
-      document.getElementById("MSearchBox").parentNode.appendChild(toggleButton)
-    })
-    // every resize will remove the button, which is why it has to be added again:
-    $(window).resize(function(){
-      document.getElementById("MSearchBox").parentNode.appendChild(toggleButton)
-    })
-  })
-</script>
 </body>
 </html>

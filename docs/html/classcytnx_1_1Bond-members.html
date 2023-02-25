@@ -1,32 +1,41 @@
-<!-- HTML header for doxygen 1.9.1-->
+<!-- HTML header for doxygen 1.9.5-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Cytnx: Member List</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
-<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+       <script type="text/javascript">
+           DoxygenAwesomeDarkModeToggle.init()
+       </script>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="titlearea">
 <table cellspacing="0" cellpadding="0">
  <tbody>
- <tr style="height: 56px;">
+ <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
-  <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.7.7</span>
+  <td id="projectalign">
+   <div id="projectname">Cytnx<span id="projectnumber">&#160;v0.7.7</span>
    </div>
   </td>
  </tr>
@@ -74,7 +83,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>cytnx</b></li><li class="navelem"><a class="el" href="classcytnx_1_1Bond.html">Bond</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespacecytnx.html">cytnx</a></li><li class="navelem"><a class="el" href="classcytnx_1_1Bond.html">Bond</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -84,12 +93,12 @@ $(function() {
 
 <p>This is the complete list of members for <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>, including all inherited members.</p>
 <table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Bond</b>(const cytnx_uint64 &amp;dim, const bondType &amp;bd_type=bondType::BD_REG, const std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt; &amp;in_qnums={}, const std::vector&lt; Symmetry &gt; &amp;in_syms={}) (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>Bond</b>(const bondType &amp;bd_type, const std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt; &amp;in_qnums, const std::vector&lt; cytnx_uint64 &gt; &amp;degs, const std::vector&lt; Symmetry &gt; &amp;in_syms={}) (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Bond</b>(const bondType &amp;bd_type, const std::initializer_list&lt; std::vector&lt; cytnx_int64 &gt; &gt; &amp;in_qnums, const std::vector&lt; cytnx_uint64 &gt; &amp;degs, const std::vector&lt; Symmetry &gt; &amp;in_syms={}) (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>Bond</b>(const bondType &amp;bd_type, const std::vector&lt; cytnx::Qs &gt; &amp;in_qnums, const std::vector&lt; cytnx_uint64 &gt; &amp;degs, const std::vector&lt; Symmetry &gt; &amp;in_syms={}) (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Bond</b>(const bondType &amp;bd_type, const std::vector&lt; std::pair&lt; std::vector&lt; cytnx_int64 &gt;, cytnx_uint64 &gt; &gt; &amp;in_qnums_dims, const std::vector&lt; Symmetry &gt; &amp;in_syms={}) (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>calc_reverse_qnums</b>() (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a80ee6b9a0dd288e74d885f6f288b5a0c">Bond</a>(const cytnx_uint64 &amp;dim, const bondType &amp;bd_type=bondType::BD_REG, const std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt; &amp;in_qnums={}, const std::vector&lt; Symmetry &gt; &amp;in_syms={})</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#ad7ed392eb1b39599c02bbfbe54c37bd1">Bond</a>(const bondType &amp;bd_type, const std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt; &amp;in_qnums, const std::vector&lt; cytnx_uint64 &gt; &amp;degs, const std::vector&lt; Symmetry &gt; &amp;in_syms={})</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#afb6df33abf8e641b8774695410c20df5">Bond</a>(const bondType &amp;bd_type, const std::initializer_list&lt; std::vector&lt; cytnx_int64 &gt; &gt; &amp;in_qnums, const std::vector&lt; cytnx_uint64 &gt; &amp;degs, const std::vector&lt; Symmetry &gt; &amp;in_syms={})</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a67dc45b1aee78ed58c04b7fa886f06c1">Bond</a>(const bondType &amp;bd_type, const std::vector&lt; cytnx::Qs &gt; &amp;in_qnums, const std::vector&lt; cytnx_uint64 &gt; &amp;degs, const std::vector&lt; Symmetry &gt; &amp;in_syms={})</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#ac77af41f1ce762a13c83c2cdee57c3a4">Bond</a>(const bondType &amp;bd_type, const std::vector&lt; std::pair&lt; std::vector&lt; cytnx_int64 &gt;, cytnx_uint64 &gt; &gt; &amp;in_qnums_dims, const std::vector&lt; Symmetry &gt; &amp;in_syms={})</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#ad18be3898c20c341162a6536fe2e3275">calc_reverse_qnums</a>()</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a6272e30153df85944fc98bf5419dc1c8">clear_type</a>()</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a8c4d6443ffe7c3f3ecd8c474fd9a18eb">clone</a>() const</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a4714d9891e02b2aebf6756ec68c25e5c">combineBond</a>(const Bond &amp;bd_in, const bool &amp;is_grp=true) const</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
@@ -97,56 +106,42 @@ $(function() {
   <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a5282d90bef238154945707bffca76875">combineBonds</a>(const std::vector&lt; Bond &gt; &amp;bds, const bool &amp;is_grp=true)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a38a40e58d24fb4d75597df25b7bf8918">combineBonds_</a>(const std::vector&lt; Bond &gt; &amp;bds, const bool &amp;is_grp=true)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#aa072647e03a4c797479445bd41b9eacf">dim</a>() const</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>getDegeneracies</b>() (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>getDegeneracies</b>() const (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a7de5eb6ed487a48bd9a1f0ef168531b9">getDegeneracies</a>()</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a7275210ee5fa1e3e4ba86928b694f687">getDegeneracies</a>() const</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a121d5fb24f782cf66889771146af5da8">getDegeneracy</a>(const std::vector&lt; cytnx_int64 &gt; &amp;qnum) const</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>getDegeneracy</b>(const std::vector&lt; cytnx_int64 &gt; &amp;qnum, std::vector&lt; cytnx_uint64 &gt; &amp;indices) const (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a8d714304116d09bd23e6f05d05aaf7dd">getDegeneracy</a>(const std::vector&lt; cytnx_int64 &gt; &amp;qnum, std::vector&lt; cytnx_uint64 &gt; &amp;indices) const</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#acf017e64c9629e0a03ee996a4375b06c">getUniqueQnums</a>(std::vector&lt; cytnx_uint64 &gt; &amp;counts)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>getUniqueQnums</b>() (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>group_duplicates</b>(std::vector&lt; cytnx_uint64 &gt; &amp;mapper) const (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>group_duplicates_</b>() (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>has_duplicate_qnums</b>() const (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#aa5985c9247209576081c8dc8a97b7c6a">getUniqueQnums</a>()</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a5c7a08632dd9e9ac4d6eca53c90ab8bd">group_duplicates</a>(std::vector&lt; cytnx_uint64 &gt; &amp;mapper) const</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a17c1a184dc318c03baddc829171bf01e">group_duplicates_</a>()</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#acd82fa191fc9a25f12ae37899a3aea1e">has_duplicate_qnums</a>() const</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a707a803fa98fb6a87b5f3c3b3000509f">Init</a>(const cytnx_uint64 &amp;dim, const bondType &amp;bd_type=bondType::BD_REG, const std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt; &amp;in_qnums={}, const std::vector&lt; Symmetry &gt; &amp;in_syms={})</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#ae7a70f6506d6035ec022ab03099a915d">Init</a>(const bondType &amp;bd_type, const std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt; &amp;in_qnums, const std::vector&lt; cytnx_uint64 &gt; &amp;degs, const std::vector&lt; Symmetry &gt; &amp;in_syms={})</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Init</b>(const bondType &amp;bd_type, const std::vector&lt; std::pair&lt; std::vector&lt; cytnx_int64 &gt;, cytnx_uint64 &gt; &gt; &amp;in_qnums_dims, const std::vector&lt; Symmetry &gt; &amp;in_syms={}) (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>Load</b>(const std::string &amp;fname) (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Load</b>(const char *fname) (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a3034fd7472ae82db9b45742c43dd66d3">Init</a>(const bondType &amp;bd_type, const std::vector&lt; std::pair&lt; std::vector&lt; cytnx_int64 &gt;, cytnx_uint64 &gt; &gt; &amp;in_qnums_dims, const std::vector&lt; Symmetry &gt; &amp;in_syms={})</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a553d5676f47535d00090db04947497bf">Load</a>(const std::string &amp;fname)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a5f4f9cfd532b527120874cbd45fd133e">Load</a>(const char *fname)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#acd46a218add6a88c1cc9035b06adb7b6">Nsym</a>() const</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>operator!=</b>(const Bond &amp;rhs) const (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>operator*</b>(const Bond &amp;rhs) const (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>operator*=</b>(const Bond &amp;rhs) (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>operator==</b>(const Bond &amp;rhs) const (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#ae2e27cb3fd963f0bb9d599097fa1feb7">operator!=</a>(const Bond &amp;rhs) const</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a58e9304701945d156b88fafa8c64971d">operator*</a>(const Bond &amp;rhs) const</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a3eb1aba2986bf720dafd48fff2180b49">operator*=</a>(const Bond &amp;rhs)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#afdf23503375937b9fc5fb892685fe056">operator==</a>(const Bond &amp;rhs) const</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#ab4f05193a012bd9a077374b5f305e898">qnums</a>() const</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>qnums</b>() (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a01299b8751c7d71c1bc2a6afe900da2c">qnums</a>()</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a491a89aa4434d4056dd3e5de7e70e1e7">qnums_clone</a>() const</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a6f47360919864f12affe9fda49b03994">redirect</a>() const</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#aa023d872df52de5594b963e109ab7723">redirect_</a>()</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a31c8ff7b0817c37e67a80a225f5bd758">retype</a>(const bondType &amp;new_bondType)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Save</b>(const std::string &amp;fname) const (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>Save</b>(const char *fname) const (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#af1b9953c2262fb7eb41e92f65c741f20">Save</a>(const std::string &amp;fname) const</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#ac8bf81d181d2847dded0a51ec451fb5c">Save</a>(const char *fname) const</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a01be559109c1c7ecaccd0916a2954239">set_type</a>(const bondType &amp;new_bondType)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a408221e843ca57b779f5a5717188a8a8">syms</a>() const</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>syms</b>() (defined in <a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a>)</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#abc64fadea2b867f4649df8e775803a39">syms</a>()</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a95a33764b6adf5644e91578c908504ca">syms_clone</a>() const</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classcytnx_1_1Bond.html#a8517743cec9589ed551114ea7e55fbb1">type</a>() const</td><td class="entry"><a class="el" href="classcytnx_1_1Bond.html">cytnx::Bond</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
 </table></div><!-- contents -->
-<!-- HTML footer for doxygen 1.9.1-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
-<script type="text/javascript">
-  $(function() {
-    toggleButton = document.createElement('doxygen-awesome-dark-mode-toggle')
-    toggleButton.title = "Toggle Light/Dark Mode"
-    $(document).ready(function(){
-      document.getElementById("MSearchBox").parentNode.appendChild(toggleButton)
-    })
-    // every resize will remove the button, which is why it has to be added again:
-    $(window).resize(function(){
-      document.getElementById("MSearchBox").parentNode.appendChild(toggleButton)
-    })
-  })
-</script>
 </body>
 </html>

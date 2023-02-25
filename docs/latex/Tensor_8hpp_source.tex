@@ -606,8 +606,8 @@
 \DoxyCodeLine{621     \textcolor{keywordtype}{void} Tofile(\textcolor{keyword}{const} std::string \&fname) \textcolor{keyword}{const};}
 \DoxyCodeLine{622     \textcolor{keywordtype}{void} Tofile(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *fname) \textcolor{keyword}{const};}
 \DoxyCodeLine{623     \textcolor{keywordtype}{void} Tofile(std::fstream \&f) \textcolor{keyword}{const};}
-\DoxyCodeLine{632     \textcolor{keyword}{static} \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_a8205da1c5c72a31a2570c6371063edf8}{Load}}(\textcolor{keyword}{const} std::string \&fname);}
-\DoxyCodeLine{633     \textcolor{keyword}{static} \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_a8205da1c5c72a31a2570c6371063edf8}{Load}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *fname);}
+\DoxyCodeLine{632     \textcolor{keyword}{static} \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_a4100edea617039a2b9a0ee3ca2b2aa36}{Load}}(\textcolor{keyword}{const} std::string \&fname);}
+\DoxyCodeLine{633     \textcolor{keyword}{static} \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_a4100edea617039a2b9a0ee3ca2b2aa36}{Load}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *fname);}
 \DoxyCodeLine{634     \textcolor{keyword}{static} \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} Fromfile(\textcolor{keyword}{const} std::string \&fname, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&\mbox{\hyperlink{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}{dtype}},}
 \DoxyCodeLine{635                            \textcolor{keyword}{const} cytnx\_int64 \&count = -\/1);}
 \DoxyCodeLine{636     \textcolor{keyword}{static} \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} Fromfile(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *fname, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&\mbox{\hyperlink{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}{dtype}},}
@@ -616,7 +616,7 @@
 \DoxyCodeLine{639     \textcolor{comment}{// static Tensor Frombinary(const std::string \&fname);}}
 \DoxyCodeLine{640 }
 \DoxyCodeLine{642     boost::intrusive\_ptr<Tensor\_impl> \_impl;}
-\DoxyCodeLine{643     \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}() : \_impl(new Tensor\_impl())\{\};}
+\DoxyCodeLine{643     \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}() : \_impl(\textcolor{keyword}{new} Tensor\_impl())\{\};}
 \DoxyCodeLine{644     \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}(\textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \&rhs) \{ \_impl = rhs.\_impl; \}}
 \DoxyCodeLine{645 }
 \DoxyCodeLine{646     \textcolor{comment}{/*}}
@@ -629,7 +629,7 @@
 \DoxyCodeLine{653 \textcolor{comment}{    \}}}
 \DoxyCodeLine{654 \textcolor{comment}{    */}}
 \DoxyCodeLine{655 }
-\DoxyCodeLine{656     Tensor \&operator=(\textcolor{keyword}{const} Tensor \&rhs) \{}
+\DoxyCodeLine{656     \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \&operator=(\textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \&rhs) \{}
 \DoxyCodeLine{657       \_impl = rhs.\_impl;}
 \DoxyCodeLine{658       \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
 \DoxyCodeLine{659     \}}

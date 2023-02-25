@@ -1,11 +1,13 @@
 var searchData=
 [
-  ['ger_0',['Ger',['../namespacecytnx_1_1linalg.html#aad5bd110b48c053428e72ecceb2aa04d',1,'cytnx::linalg']]],
-  ['get_1',['get',['../classcytnx_1_1Tensor.html#ad7b928e4cb89d40cbd99aefab9aa0075',1,'cytnx::Tensor']]],
-  ['get_5findex_2',['get_index',['../classcytnx_1_1UniTensor.html#a1c7a9eebcb74305bbf42e57d667086d8',1,'cytnx::UniTensor']]],
-  ['get_5fitoi_3',['get_itoi',['../classcytnx_1_1UniTensor.html#ae7525954cafa6cf69b4fc69dcabae4c3',1,'cytnx::UniTensor']]],
-  ['get_5fqindices_4',['get_qindices',['../classcytnx_1_1UniTensor.html#ad323800d8b97faa8aad9b980eb6b9c7f',1,'cytnx::UniTensor::get_qindices(const cytnx_uint64 &amp;bidx) const'],['../classcytnx_1_1UniTensor.html#a118c7e66008dd037063e3e71604ebd74',1,'cytnx::UniTensor::get_qindices(const cytnx_uint64 &amp;bidx)']]],
-  ['getdegeneracy_5',['getDegeneracy',['../classcytnx_1_1Bond.html#a121d5fb24f782cf66889771146af5da8',1,'cytnx::Bond']]],
-  ['getuniqueqnums_6',['getUniqueQnums',['../classcytnx_1_1Bond.html#acf017e64c9629e0a03ee996a4375b06c',1,'cytnx::Bond']]],
-  ['gncon_7',['Gncon',['../classcytnx_1_1Gncon.html',1,'cytnx']]]
+  ['f_0',['f',['../namespacesp.html#a28254a57bcb1ef4a92692a6ac2d5e7ae',1,'sp']]],
+  ['fermionnetwork_2ecpp_1',['FermionNetwork.cpp',['../FermionNetwork_8cpp.html',1,'']]],
+  ['fill_2',['fill',['../classcytnx_1_1Storage.html#a48f0424f051a4b3a821eb964be4cd5db',1,'cytnx::Storage::fill()'],['../classcytnx_1_1Tensor.html#a0c7f2bac2a03be7d22769c7cb896afbe',1,'cytnx::Tensor::fill(const T &amp;val)']]],
+  ['flatten_3',['flatten',['../classcytnx_1_1Tensor.html#ab6679015cd4b8d0c33207a28986a0b75',1,'cytnx::Tensor']]],
+  ['flatten_5f_4',['flatten_',['../classcytnx_1_1Tensor.html#ab026b0d58ba0bfbaaa20d5b4ac420c2e',1,'cytnx::Tensor']]],
+  ['floatstorage_2ecpp_5',['FloatStorage.cpp',['../FloatStorage_8cpp.html',1,'']]],
+  ['from_5fstorage_6',['from_storage',['../classcytnx_1_1Tensor.html#afd3a86c7edd3af568060dfb6bfa5aecb',1,'cytnx::Tensor']]],
+  ['from_5fvector_7',['from_vector',['../classcytnx_1_1Storage.html#a92f5d8c9eea09dd899c8eea1c125d94b',1,'cytnx::Storage']]],
+  ['fromfile_8',['Fromfile',['../classcytnx_1_1Gncon.html#a1edbe6357fc885dc741898dd0f85825a',1,'cytnx::Gncon::Fromfile()'],['../classcytnx_1_1Network.html#a00bc1bf6b9291a0416d5c0fb5beaa284',1,'cytnx::Network::Fromfile()'],['../classcytnx_1_1Storage.html#aae11c5cc673616aa2fde4e203be4d6bc',1,'cytnx::Storage::Fromfile(const std::string &amp;fname, const unsigned int &amp;dtype, const cytnx_int64 &amp;count=-1)'],['../classcytnx_1_1Storage.html#ae25a7b0e0f1a37c1f919fcc8f71e3ec0',1,'cytnx::Storage::Fromfile(const char *fname, const unsigned int &amp;dtype, const cytnx_int64 &amp;count=-1)'],['../classcytnx_1_1Tensor.html#afda200022018b04ca0a29dfb45b7f53c',1,'cytnx::Tensor::Fromfile(const std::string &amp;fname, const unsigned int &amp;dtype, const cytnx_int64 &amp;count=-1)'],['../classcytnx_1_1Tensor.html#a1af3441ab3d1bd45f5ead47eead6b81e',1,'cytnx::Tensor::Fromfile(const char *fname, const unsigned int &amp;dtype, const cytnx_int64 &amp;count=-1)']]],
+  ['fromstring_9',['FromString',['../classcytnx_1_1Gncon.html#ae992acb8b77264cfd321f9b62819fa86',1,'cytnx::Gncon::FromString()'],['../classcytnx_1_1Network.html#aa863a755e95a85411a15af58d1ac4057',1,'cytnx::Network::FromString()']]]
 ];

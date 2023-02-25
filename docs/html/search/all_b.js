@@ -1,11 +1,19 @@
 var searchData=
 [
-  ['matmul_0',['Matmul',['../namespacecytnx_1_1linalg.html#a53feb441b4b1bd263714ed33e093728f',1,'cytnx::linalg']]],
-  ['matmul_5fdg_1',['Matmul_dg',['../namespacecytnx_1_1linalg.html#af2e6723dc80031eb28fc10cc19826dda',1,'cytnx::linalg']]],
-  ['max_2',['Max',['../namespacecytnx_1_1linalg.html#a93ef263824e2dcdab4832ea628959d19',1,'cytnx::linalg']]],
-  ['min_3',['Min',['../namespacecytnx_1_1linalg.html#a25b5f2fdfb550aabc9cc41daa963e1fb',1,'cytnx::linalg']]],
-  ['mod_4',['Mod',['../namespacecytnx_1_1linalg.html#a56d73db3d0cdd3a2ca5ed5f88f0738ff',1,'cytnx::linalg::Mod(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)'],['../namespacecytnx_1_1linalg.html#ab8ac85bd0291ab12523eec073aef1fa3',1,'cytnx::linalg::Mod(const Tensor &amp;Lt, const Tensor &amp;Rt)']]],
-  ['mpo_5',['MPO',['../classcytnx_1_1tn__algo_1_1MPO.html',1,'cytnx::tn_algo']]],
-  ['mps_6',['MPS',['../classcytnx_1_1tn__algo_1_1MPS.html',1,'cytnx::tn_algo']]],
-  ['mul_7',['Mul',['../namespacecytnx_1_1linalg.html#a8705f85e347439577708173ab963f909',1,'cytnx::linalg::Mul(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)'],['../namespacecytnx_1_1linalg.html#a2fc49876b7b53f6f6e97ce70f475f636',1,'cytnx::linalg::Mul(const Tensor &amp;Lt, const Tensor &amp;Rt)']]]
+  ['labels_0',['labels',['../classcytnx_1_1UniTensor.html#ad46c621c998425501578d4e39d9eb3fc',1,'cytnx::UniTensor']]],
+  ['lanczos_1',['Lanczos',['../namespacecytnx_1_1linalg.html#a91b798c44c9479338b03e13f73284b3f',1,'cytnx::linalg::Lanczos(LinOp *Hop, const Tensor &amp;Tin=Tensor(), const std::string method=&quot;Gnd&quot;, const double &amp;CvgCrit=1.0e-14, const unsigned int &amp;Maxiter=10000, const cytnx_uint64 &amp;k=1, const bool &amp;is_V=true, const bool &amp;is_row=false, const cytnx_uint32 &amp;max_krydim=0, const bool &amp;verbose=false)'],['../namespacecytnx_1_1linalg.html#a7518c86cddfc48a2848d79e4dc6e8d14',1,'cytnx::linalg::Lanczos(LinOp *Hop, const UniTensor &amp;Tin=UniTensor(), const std::string method=&quot;Gnd&quot;, const double &amp;CvgCrit=1.0e-14, const unsigned int &amp;Maxiter=10000, const cytnx_uint64 &amp;k=1, const bool &amp;is_V=true, const bool &amp;is_row=false, const cytnx_uint32 &amp;max_krydim=4, const bool &amp;verbose=false)']]],
+  ['lanczos_5fer_2',['Lanczos_ER',['../namespacecytnx_1_1linalg.html#abf13b4960e1c68f717840de7e555f1f0',1,'cytnx::linalg']]],
+  ['lanczos_5fgnd_3',['Lanczos_Gnd',['../namespacecytnx_1_1linalg.html#ae1d138b06f259478aa7f4276ebba9430',1,'cytnx::linalg']]],
+  ['lanczos_5fgnd_5fut_4',['Lanczos_Gnd_Ut',['../namespacecytnx_1_1linalg.html#a5f5b483903d6b472ca75b471eea8227b',1,'cytnx::linalg']]],
+  ['lapack_5fwrapper_2ehpp_5',['lapack_wrapper.hpp',['../lapack__wrapper_8hpp.html',1,'']]],
+  ['launch_6',['Launch',['../classcytnx_1_1Gncon.html#af09a8396d351c080a20db07c947dd9d0',1,'cytnx::Gncon::Launch()'],['../classcytnx_1_1Network.html#ab302e1d5b2acbe65f419670f7d1d4514',1,'cytnx::Network::Launch()']]],
+  ['leq_7',['leq',['../classcytnx_1_1Scalar.html#a09ce9b85cfb4d2bcfbb23d32dd3e1eb8',1,'cytnx::Scalar::leq(const T &amp;rc) const'],['../classcytnx_1_1Scalar.html#a9d1cbf6d92e9ca210af660402ef5be55',1,'cytnx::Scalar::leq(const Scalar &amp;rhs) const']]],
+  ['less_8',['less',['../classcytnx_1_1Scalar.html#a0794f4891038ef8971fbe0e743572f68',1,'cytnx::Scalar::less(const Scalar &amp;rhs) const'],['../classcytnx_1_1Scalar.html#a4ec389262ae60e291a00d7ba893757b3',1,'cytnx::Scalar::less(const T &amp;rc) const']]],
+  ['linalg_2ehpp_9',['linalg.hpp',['../linalg_8hpp.html',1,'']]],
+  ['linop_10',['LinOp',['../classcytnx_1_1LinOp.html',1,'cytnx::LinOp'],['../classcytnx_1_1LinOp.html#a4c85814f56d28735575bb577d1d97afa',1,'cytnx::LinOp::LinOp()']]],
+  ['linop_2ecpp_11',['LinOp.cpp',['../LinOp_8cpp.html',1,'']]],
+  ['linop_2ehpp_12',['LinOp.hpp',['../LinOp_8hpp.html',1,'']]],
+  ['linspace_13',['linspace',['../namespacecytnx.html#a1d2699133d66fb4140459de8553696df',1,'cytnx']]],
+  ['load_14',['Load',['../classcytnx_1_1Storage.html#ace206b1c452015d7c43a389d55f5ea86',1,'cytnx::Storage::Load()'],['../classcytnx_1_1tn__algo_1_1MPS.html#a693464be68e08f301fe168a0f5c3ed67',1,'cytnx::tn_algo::MPS::Load(const char *fname)'],['../classcytnx_1_1tn__algo_1_1MPS.html#adccf0e8dcf43f18caa89554afa12116a',1,'cytnx::tn_algo::MPS::Load(const std::string &amp;fname)'],['../classcytnx_1_1UniTensor.html#aed9b552449afb530d3a13679d98c38d1',1,'cytnx::UniTensor::Load(const char *fname)'],['../classcytnx_1_1UniTensor.html#a264c745da83b46edb936cd2f2b301707',1,'cytnx::UniTensor::Load(const std::string &amp;fname)'],['../classcytnx_1_1Tensor.html#a2a11de9a3ecd1411ef9231c8092628ec',1,'cytnx::Tensor::Load(const char *fname)'],['../classcytnx_1_1Tensor.html#a4100edea617039a2b9a0ee3ca2b2aa36',1,'cytnx::Tensor::Load(const std::string &amp;fname)'],['../classcytnx_1_1Symmetry.html#a357ab372fea2738c341e33404c472459',1,'cytnx::Symmetry::Load(const char *fname)'],['../classcytnx_1_1Symmetry.html#a43a66664194dd16288dc26abf5caf59c',1,'cytnx::Symmetry::Load(const std::string &amp;fname)'],['../classcytnx_1_1Storage.html#a830f293f47a42ede8dbc57d3a3bff605',1,'cytnx::Storage::Load()'],['../classcytnx_1_1Bond.html#a5f4f9cfd532b527120874cbd45fd133e',1,'cytnx::Bond::Load(const char *fname)'],['../classcytnx_1_1Bond.html#a553d5676f47535d00090db04947497bf',1,'cytnx::Bond::Load(const std::string &amp;fname)']]],
+  ['lstsq_15',['Lstsq',['../namespacecytnx_1_1linalg.html#a59fdd5725d0fe8c422dfe602629d34d7',1,'cytnx::linalg']]]
 ];

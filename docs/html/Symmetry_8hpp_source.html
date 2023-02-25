@@ -1,32 +1,41 @@
-<!-- HTML header for doxygen 1.9.1-->
+<!-- HTML header for doxygen 1.9.5-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Cytnx: include/Symmetry.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
-<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+       <script type="text/javascript">
+           DoxygenAwesomeDarkModeToggle.init()
+       </script>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="titlearea">
 <table cellspacing="0" cellpadding="0">
  <tbody>
- <tr style="height: 56px;">
+ <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
-  <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.7.7</span>
+  <td id="projectalign">
+   <div id="projectname">Cytnx<span id="projectnumber">&#160;v0.7.7</span>
    </div>
   </td>
  </tr>
@@ -81,18 +90,18 @@ $(function() {
   <div class="headertitle"><div class="title">Symmetry.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef _H_Symmetry</span></div>
+<a href="Symmetry_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef _H_Symmetry</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define _H_Symmetry</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;Type.hpp&quot;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;cytnx_error.hpp&quot;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;intrusive_ptr_base.hpp&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="Type_8hpp.html">Type.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;<a class="code" href="cytnx__error_8hpp.html">cytnx_error.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="intrusive__ptr__base_8hpp.html">intrusive_ptr_base.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;cstdio&gt;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;ostream&gt;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;utils/vec_clone.hpp&quot;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">namespace </span>cytnx {</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecytnx.html">cytnx</a> {</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>  <span class="keyword">struct </span>__sym {</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    <span class="keyword">enum</span> __stype { U = -1, Z = 0 };</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>  };</div>
@@ -106,7 +115,7 @@ $(function() {
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    };</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    std::string getname(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;stype);</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  };</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="keyword">extern</span> SymmetryType_class SymType;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="keyword">extern</span> SymmetryType_class <a class="code hl_variable" href="namespacecytnx.html#ae8b2b1a6be5f66828af0c051065bb642">SymType</a>;</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <span class="comment">// helper class, has implicitly conversion to vector&lt;int64&gt;! </span></div>
@@ -117,20 +126,20 @@ $(function() {
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        </div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <span class="keyword">template</span> &lt;<span class="keyword">class</span>... Ts&gt;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <a class="code hl_class" href="classcytnx_1_1Qs.html">Qs</a>(<span class="keyword">const</span> cytnx_int64 &amp;e1, <span class="keyword">const</span> Ts... elems) {</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classcytnx_1_1Qs.html#a3f956a47670aa44026633ea9e2633e53">   39</a></span>        <a class="code hl_function" href="classcytnx_1_1Qs.html#a3f956a47670aa44026633ea9e2633e53">Qs</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;e1, <span class="keyword">const</span> Ts... elems) {</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>          this-&gt;tmpQs = dynamic_arg_int64_resolver(e1, elems...);</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        }</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        <a class="code hl_class" href="classcytnx_1_1Qs.html">Qs</a>(<span class="keyword">const</span> std::vector&lt;cytnx_int64&gt; &amp;qin){</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classcytnx_1_1Qs.html#ac0109bb5f8c190e4107037bb384291b9">   43</a></span>        <a class="code hl_function" href="classcytnx_1_1Qs.html#ac0109bb5f8c190e4107037bb384291b9">Qs</a>(<span class="keyword">const</span> std::vector&lt;cytnx_int64&gt; &amp;qin){</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>            this-&gt;tmpQs = qin;</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        }</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="comment">// interprete as 2d vector directly implicitly convert!</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <span class="keyword">explicit</span> <span class="keyword">operator</span> std::vector&lt;cytnx_int64&gt;()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classcytnx_1_1Qs.html#a675e53e190288b69181e18e2a1943b24">   48</a></span>        <span class="keyword">explicit</span> <span class="keyword">operator</span> std::vector&lt;cytnx_int64&gt;()<span class="keyword"> const </span>{</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            <span class="keywordflow">return</span> this-&gt;tmpQs;</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        };</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        std::pair&lt;std::vector&lt;cytnx_int64&gt;, cytnx_uint64&gt; operator&gt;&gt;(<span class="keyword">const</span> cytnx_uint64 &amp;dim){</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="classcytnx_1_1Qs.html#ae801e134abaa3aab35bb79f28d716d23">   52</a></span>        std::pair&lt;std::vector&lt;cytnx_int64&gt;, <a class="code hl_typedef" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a>&gt; <a class="code hl_function" href="classcytnx_1_1Qs.html#ae801e134abaa3aab35bb79f28d716d23">operator&gt;&gt;</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx_uint64</a> &amp;dim){</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            <span class="keywordflow">return</span> make_pair(this-&gt;tmpQs,dim);</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        }</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
@@ -149,15 +158,15 @@ $(function() {
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordtype">int</span> stype_id;</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keywordtype">int</span> n;</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    Symmetry_base() : stype_id(SymType.Void){};</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    Symmetry_base(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;n) : stype_id(SymType.Void) { this-&gt;Init(n); };</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    Symmetry_base(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;n) : stype_id(<a class="code hl_variable" href="namespacecytnx.html#ae8b2b1a6be5f66828af0c051065bb642">SymType</a>.Void) { this-&gt;Init(n); };</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    Symmetry_base(<span class="keyword">const</span> Symmetry_base &amp;rhs);</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    Symmetry_base &amp;operator=(<span class="keyword">const</span> Symmetry_base &amp;rhs);</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    std::vector&lt;cytnx_int64&gt; combine_rule(<span class="keyword">const</span> std::vector&lt;cytnx_int64&gt; &amp;inL,</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>                                          <span class="keyword">const</span> std::vector&lt;cytnx_int64&gt; &amp;inR);</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    cytnx_int64 combine_rule(<span class="keyword">const</span> cytnx_int64 &amp;inL, <span class="keyword">const</span> cytnx_int64 &amp;inR, <span class="keyword">const</span> <span class="keywordtype">bool</span> &amp;is_reverse);</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> combine_rule(<span class="keyword">const</span> cytnx_int64 &amp;inL, <span class="keyword">const</span> cytnx_int64 &amp;inR, <span class="keyword">const</span> <span class="keywordtype">bool</span> &amp;is_reverse);</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    cytnx_int64 reverse_rule(<span class="keyword">const</span> cytnx_int64 &amp;in);</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> reverse_rule(<span class="keyword">const</span> cytnx_int64 &amp;in);</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> Init(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;n){};</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="keyword">virtual</span> boost::intrusive_ptr&lt;Symmetry_base&gt; clone() { <span class="keywordflow">return</span> <span class="keyword">nullptr</span>; };</div>
@@ -175,12 +184,12 @@ $(function() {
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  <span class="keyword">class </span>U1Symmetry : <span class="keyword">public</span> Symmetry_base {</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>   <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    U1Symmetry() { this-&gt;stype_id = SymType.U; };</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    U1Symmetry() { this-&gt;stype_id = <a class="code hl_variable" href="namespacecytnx.html#ae8b2b1a6be5f66828af0c051065bb642">SymType</a>.U; };</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    U1Symmetry(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;n) { this-&gt;Init(n); };</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    <span class="keywordtype">void</span> Init(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;n) {</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>      this-&gt;stype_id = SymType.U;</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>      this-&gt;stype_id = <a class="code hl_variable" href="namespacecytnx.html#ae8b2b1a6be5f66828af0c051065bb642">SymType</a>.U;</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>      this-&gt;n = n;</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>      <span class="keywordflow">if</span> (n != 1) cytnx_error_msg(1, <span class="stringliteral">&quot;%s&quot;</span>, <span class="stringliteral">&quot;[ERROR] U1Symmetry should set n = 1&quot;</span>);</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>      <span class="keywordflow">if</span> (n != 1) <a class="code hl_define" href="cytnx__error_8hpp.html#aa2edc77cab5ba7d1561fd1ea6cfba9ac">cytnx_error_msg</a>(1, <span class="stringliteral">&quot;%s&quot;</span>, <span class="stringliteral">&quot;[ERROR] U1Symmetry should set n = 1&quot;</span>);</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    }</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    boost::intrusive_ptr&lt;Symmetry_base&gt; clone() {</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>      boost::intrusive_ptr&lt;Symmetry_base&gt; out(<span class="keyword">new</span> U1Symmetry(this-&gt;n));</div>
@@ -197,12 +206,12 @@ $(function() {
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>  <span class="keyword">class </span>ZnSymmetry : <span class="keyword">public</span> Symmetry_base {</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>   <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    ZnSymmetry() { this-&gt;stype_id = SymType.Z; };</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    ZnSymmetry() { this-&gt;stype_id = <a class="code hl_variable" href="namespacecytnx.html#ae8b2b1a6be5f66828af0c051065bb642">SymType</a>.Z; };</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    ZnSymmetry(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;n) { this-&gt;Init(n); };</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="keywordtype">void</span> Init(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;n) {</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>      this-&gt;stype_id = SymType.Z;</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>      this-&gt;stype_id = <a class="code hl_variable" href="namespacecytnx.html#ae8b2b1a6be5f66828af0c051065bb642">SymType</a>.Z;</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>      this-&gt;n = n;</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>      <span class="keywordflow">if</span> (n &lt;= 1) cytnx_error_msg(1, <span class="stringliteral">&quot;%s&quot;</span>, <span class="stringliteral">&quot;[ERROR] ZnSymmetry can only have n &gt; 1&quot;</span>);</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>      <span class="keywordflow">if</span> (n &lt;= 1) <a class="code hl_define" href="cytnx__error_8hpp.html#aa2edc77cab5ba7d1561fd1ea6cfba9ac">cytnx_error_msg</a>(1, <span class="stringliteral">&quot;%s&quot;</span>, <span class="stringliteral">&quot;[ERROR] ZnSymmetry can only have n &gt; 1&quot;</span>);</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    }</div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    boost::intrusive_ptr&lt;Symmetry_base&gt; clone() {</div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>      boost::intrusive_ptr&lt;Symmetry_base&gt; out(<span class="keyword">new</span> ZnSymmetry(this-&gt;n));</div>
@@ -229,14 +238,14 @@ $(function() {
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    };  <span class="comment">// default is U1Symmetry</span></div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <span class="keywordtype">void</span> Init(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;<a class="code hl_function" href="classcytnx_1_1Symmetry.html#a47a73a6248750acc221104e3079d652c">stype</a> = -1, <span class="keyword">const</span> <span class="keywordtype">int</span> &amp;<a class="code hl_function" href="classcytnx_1_1Symmetry.html#a5d9e73259f21dc79f7086f8418afca8e">n</a> = 0) {</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>      <span class="keywordflow">if</span> (<a class="code hl_function" href="classcytnx_1_1Symmetry.html#a47a73a6248750acc221104e3079d652c">stype</a> == SymType.U) {</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>      <span class="keywordflow">if</span> (<a class="code hl_function" href="classcytnx_1_1Symmetry.html#a47a73a6248750acc221104e3079d652c">stype</a> == <a class="code hl_variable" href="namespacecytnx.html#ae8b2b1a6be5f66828af0c051065bb642">SymType</a>.U) {</div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>        boost::intrusive_ptr&lt;Symmetry_base&gt; tmp(<span class="keyword">new</span> U1Symmetry(1));</div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>        this-&gt;_impl = tmp;</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>      } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code hl_function" href="classcytnx_1_1Symmetry.html#a47a73a6248750acc221104e3079d652c">stype</a> == SymType.Z) {</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>      } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code hl_function" href="classcytnx_1_1Symmetry.html#a47a73a6248750acc221104e3079d652c">stype</a> == <a class="code hl_variable" href="namespacecytnx.html#ae8b2b1a6be5f66828af0c051065bb642">SymType</a>.Z) {</div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>        boost::intrusive_ptr&lt;Symmetry_base&gt; tmp(<span class="keyword">new</span> ZnSymmetry(<a class="code hl_function" href="classcytnx_1_1Symmetry.html#a5d9e73259f21dc79f7086f8418afca8e">n</a>));</div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        this-&gt;_impl = tmp;</div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        cytnx_error_msg(1, <span class="stringliteral">&quot;%s&quot;</span>, <span class="stringliteral">&quot;[ERROR] invalid symmetry type.&quot;</span>);</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        <a class="code hl_define" href="cytnx__error_8hpp.html#aa2edc77cab5ba7d1561fd1ea6cfba9ac">cytnx_error_msg</a>(1, <span class="stringliteral">&quot;%s&quot;</span>, <span class="stringliteral">&quot;[ERROR] invalid symmetry type.&quot;</span>);</div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>      }</div>
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    }</div>
 <div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    <a class="code hl_class" href="classcytnx_1_1Symmetry.html">Symmetry</a> &amp;operator=(<span class="keyword">const</span> <a class="code hl_class" href="classcytnx_1_1Symmetry.html">Symmetry</a> &amp;rhs) {</div>
@@ -246,9 +255,9 @@ $(function() {
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    <a class="code hl_class" href="classcytnx_1_1Symmetry.html">Symmetry</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcytnx_1_1Symmetry.html">Symmetry</a> &amp;rhs) { this-&gt;_impl = rhs._impl; }</div>
 <div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
 <div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    <span class="comment">//[genenrators]</span></div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno"><a class="line" href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">  205</a></span><span class="comment"></span>    <span class="keyword">static</span> <a class="code hl_class" href="classcytnx_1_1Symmetry.html">Symmetry</a> <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">U1</a>() { <span class="keywordflow">return</span> <a class="code hl_class" href="classcytnx_1_1Symmetry.html">Symmetry</a>(SymType.U, 1); }</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno"><a class="line" href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">  205</a></span><span class="comment"></span>    <span class="keyword">static</span> <a class="code hl_class" href="classcytnx_1_1Symmetry.html">Symmetry</a> <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">U1</a>() { <span class="keywordflow">return</span> <a class="code hl_class" href="classcytnx_1_1Symmetry.html">Symmetry</a>(<a class="code hl_variable" href="namespacecytnx.html#ae8b2b1a6be5f66828af0c051065bb642">SymType</a>.U, 1); }</div>
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno"><a class="line" href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">  236</a></span>    <span class="keyword">static</span> <a class="code hl_class" href="classcytnx_1_1Symmetry.html">Symmetry</a> <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">Zn</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;<a class="code hl_function" href="classcytnx_1_1Symmetry.html#a5d9e73259f21dc79f7086f8418afca8e">n</a>) { <span class="keywordflow">return</span> <a class="code hl_class" href="classcytnx_1_1Symmetry.html">Symmetry</a>(SymType.Z, <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a5d9e73259f21dc79f7086f8418afca8e">n</a>); }</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno"><a class="line" href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">  236</a></span>    <span class="keyword">static</span> <a class="code hl_class" href="classcytnx_1_1Symmetry.html">Symmetry</a> <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">Zn</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;<a class="code hl_function" href="classcytnx_1_1Symmetry.html#a5d9e73259f21dc79f7086f8418afca8e">n</a>) { <span class="keywordflow">return</span> <a class="code hl_class" href="classcytnx_1_1Symmetry.html">Symmetry</a>(<a class="code hl_variable" href="namespacecytnx.html#ae8b2b1a6be5f66828af0c051065bb642">SymType</a>.Z, <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a5d9e73259f21dc79f7086f8418afca8e">n</a>); }</div>
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno"><a class="line" href="classcytnx_1_1Symmetry.html#a2b407bcad5cdad20edddffeeda6befe7">  252</a></span>    <a class="code hl_class" href="classcytnx_1_1Symmetry.html">Symmetry</a> <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a2b407bcad5cdad20edddffeeda6befe7">clone</a>()<span class="keyword"> const </span>{</div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>      <a class="code hl_class" href="classcytnx_1_1Symmetry.html">Symmetry</a> out;</div>
@@ -261,10 +270,10 @@ $(function() {
 <div class="line"><a id="l00275" name="l00275"></a><span class="lineno"><a class="line" href="classcytnx_1_1Symmetry.html#a5d9e73259f21dc79f7086f8418afca8e">  275</a></span>    <span class="keywordtype">int</span> &amp;<a class="code hl_function" href="classcytnx_1_1Symmetry.html#a5d9e73259f21dc79f7086f8418afca8e">n</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> this-&gt;_impl-&gt;n; }</div>
 <div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span> </div>
 <div class="line"><a id="l00283" name="l00283"></a><span class="lineno"><a class="line" href="classcytnx_1_1Symmetry.html#a0ba15e919a5693923e54c2c6f7d376c6">  283</a></span>    std::string <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a0ba15e919a5693923e54c2c6f7d376c6">stype_str</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>      <span class="keywordflow">return</span> SymType.getname(this-&gt;_impl-&gt;stype_id) + std::to_string(this-&gt;_impl-&gt;n);</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>      <span class="keywordflow">return</span> <a class="code hl_variable" href="namespacecytnx.html#ae8b2b1a6be5f66828af0c051065bb642">SymType</a>.getname(this-&gt;_impl-&gt;stype_id) + std::to_string(this-&gt;_impl-&gt;n);</div>
 <div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>    }</div>
 <div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span> </div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno"><a class="line" href="classcytnx_1_1Symmetry.html#a066741cabfe04df9e9e2782f047188b0">  293</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a066741cabfe04df9e9e2782f047188b0">check_qnum</a>(<span class="keyword">const</span> cytnx_int64 &amp;qnum) { <span class="keywordflow">return</span> this-&gt;_impl-&gt;check_qnum(qnum); }</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno"><a class="line" href="classcytnx_1_1Symmetry.html#a066741cabfe04df9e9e2782f047188b0">  293</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a066741cabfe04df9e9e2782f047188b0">check_qnum</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;qnum) { <span class="keywordflow">return</span> this-&gt;_impl-&gt;check_qnum(qnum); }</div>
 <div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span> </div>
 <div class="line"><a id="l00301" name="l00301"></a><span class="lineno"><a class="line" href="classcytnx_1_1Symmetry.html#a38c1572a027e289430434b56324e2ead">  301</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a38c1572a027e289430434b56324e2ead">check_qnums</a>(<span class="keyword">const</span> std::vector&lt;cytnx_int64&gt; &amp;qnums) {</div>
 <div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>      <span class="keywordflow">return</span> this-&gt;_impl-&gt;check_qnums(qnums);</div>
@@ -280,39 +289,43 @@ $(function() {
 <div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>      this-&gt;_impl-&gt;combine_rule_(out, inL, inR);</div>
 <div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>    }</div>
 <div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span> </div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno"><a class="line" href="classcytnx_1_1Symmetry.html#a2aaefd177003560b4c12fbbefe30c3c3">  337</a></span>    cytnx_int64 <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a2aaefd177003560b4c12fbbefe30c3c3">combine_rule</a>(<span class="keyword">const</span> cytnx_int64 &amp;inL, <span class="keyword">const</span> cytnx_int64 &amp;inR, <span class="keyword">const</span> <span class="keywordtype">bool</span> &amp;is_reverse = <span class="keyword">false</span>)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno"><a class="line" href="classcytnx_1_1Symmetry.html#a2aaefd177003560b4c12fbbefe30c3c3">  337</a></span>    <a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a2aaefd177003560b4c12fbbefe30c3c3">combine_rule</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;inL, <span class="keyword">const</span> <a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;inR, <span class="keyword">const</span> <span class="keywordtype">bool</span> &amp;is_reverse = <span class="keyword">false</span>)<span class="keyword"> const </span>{</div>
 <div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>      <span class="keywordflow">return</span> this-&gt;_impl-&gt;combine_rule(inL, inR, is_reverse);</div>
 <div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>    }</div>
 <div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span> </div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno"><a class="line" href="classcytnx_1_1Symmetry.html#a8542d45b69268355f0b07dea280ba1e3">  349</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a8542d45b69268355f0b07dea280ba1e3">combine_rule_</a>(cytnx_int64 &amp;out, <span class="keyword">const</span> cytnx_int64 &amp;inL, <span class="keyword">const</span> cytnx_int64 &amp;inR, <span class="keyword">const</span> <span class="keywordtype">bool</span> &amp;is_reverse=<span class="keyword">false</span>) {</div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno"><a class="line" href="classcytnx_1_1Symmetry.html#a8542d45b69268355f0b07dea280ba1e3">  349</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a8542d45b69268355f0b07dea280ba1e3">combine_rule_</a>(<a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;out, <span class="keyword">const</span> <a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;inL, <span class="keyword">const</span> <a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;inR, <span class="keyword">const</span> <span class="keywordtype">bool</span> &amp;is_reverse=<span class="keyword">false</span>) {</div>
 <div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>      this-&gt;_impl-&gt;combine_rule_(out, inL, inR, is_reverse);</div>
 <div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>    }</div>
 <div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span> </div>
-<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>    <span class="keywordtype">void</span> reverse_rule_(cytnx_int64 &amp;out, <span class="keyword">const</span> cytnx_int64 &amp;in) {</div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno"><a class="line" href="classcytnx_1_1Symmetry.html#ac7dfa6758b9dfb1963f19f0eec7cc4a3">  353</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcytnx_1_1Symmetry.html#ac7dfa6758b9dfb1963f19f0eec7cc4a3">reverse_rule_</a>(<a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;out, <span class="keyword">const</span> <a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;in) {</div>
 <div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>      this-&gt;_impl-&gt;reverse_rule_(out, in);</div>
 <div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>    }</div>
 <div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span> </div>
-<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>    cytnx_int64 reverse_rule(<span class="keyword">const</span> cytnx_int64 &amp;in)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> this-&gt;_impl-&gt;reverse_rule(in); }</div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno"><a class="line" href="classcytnx_1_1Symmetry.html#a9f856245a37472cb51c74cff0777d15e">  357</a></span>    <a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a9f856245a37472cb51c74cff0777d15e">reverse_rule</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;in)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> this-&gt;_impl-&gt;reverse_rule(in); }</div>
 <div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span> </div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>    <span class="keywordtype">void</span> Save(<span class="keyword">const</span> std::string &amp;fname) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>    <span class="keywordtype">void</span> Save(<span class="keyword">const</span> <span class="keywordtype">char</span> *fname) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>    <span class="keyword">static</span> Symmetry Load(<span class="keyword">const</span> std::string &amp;fname);</div>
-<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>    <span class="keyword">static</span> Symmetry Load(<span class="keyword">const</span> <span class="keywordtype">char</span> *fname);</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcytnx_1_1Symmetry.html#ae0aaa29d0445cfc85ffab300aa4a8174">Save</a>(<span class="keyword">const</span> std::string &amp;fname) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcytnx_1_1Symmetry.html#ae0aaa29d0445cfc85ffab300aa4a8174">Save</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *fname) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>    <span class="keyword">static</span> <a class="code hl_class" href="classcytnx_1_1Symmetry.html">Symmetry</a> <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a43a66664194dd16288dc26abf5caf59c">Load</a>(<span class="keyword">const</span> std::string &amp;fname);</div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>    <span class="keyword">static</span> <a class="code hl_class" href="classcytnx_1_1Symmetry.html">Symmetry</a> <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a43a66664194dd16288dc26abf5caf59c">Load</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *fname);</div>
 <div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span> </div>
 <div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>    <span class="keywordtype">void</span> _Save(std::fstream &amp;f) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>    <span class="keywordtype">void</span> _Load(std::fstream &amp;f);</div>
 <div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span> </div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>    <span class="keywordtype">void</span> print_info()<span class="keyword"> const </span>{ this-&gt;_impl-&gt;print_info(); }</div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno"><a class="line" href="classcytnx_1_1Symmetry.html#a8f32669cdcdbf2dc1dff1f588c025981">  369</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a8f32669cdcdbf2dc1dff1f588c025981">print_info</a>()<span class="keyword"> const </span>{ this-&gt;_impl-&gt;print_info(); }</div>
 <div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span> </div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> Symmetry &amp;rhs) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>    <span class="keywordtype">bool</span> operator!=(<span class="keyword">const</span> Symmetry &amp;rhs) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a6726fdd96c12ddfa4b16adde9341aef0">operator==</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcytnx_1_1Symmetry.html">Symmetry</a> &amp;rhs) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classcytnx_1_1Symmetry.html#ad102f58e1226ec26ae9a3bc2d6c366d2">operator!=</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcytnx_1_1Symmetry.html">Symmetry</a> &amp;rhs) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>  };</div>
 <div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span> </div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>  std::ostream &amp;operator&lt;&lt;(std::ostream &amp;os, <span class="keyword">const</span> Symmetry &amp;in);</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno"><a class="line" href="namespacecytnx.html#a661de64fc3049c7e954ea8acdf43e647">  375</a></span>  std::ostream &amp;<a class="code hl_function" href="namespacecytnx.html#a4aecfe97bd064be86b1e5877cce14203">operator&lt;&lt;</a>(std::ostream &amp;os, <span class="keyword">const</span> <a class="code hl_class" href="classcytnx_1_1Symmetry.html">Symmetry</a> &amp;in);</div>
 <div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span> </div>
 <div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>}  <span class="comment">// namespace cytnx</span></div>
 <div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aType_8hpp_html"><div class="ttname"><a href="Type_8hpp.html">Type.hpp</a></div></div>
 <div class="ttc" id="aclasscytnx_1_1Qs_html"><div class="ttname"><a href="classcytnx_1_1Qs.html">cytnx::Qs</a></div><div class="ttdef"><b>Definition:</b> Symmetry.hpp:32</div></div>
+<div class="ttc" id="aclasscytnx_1_1Qs_html_a3f956a47670aa44026633ea9e2633e53"><div class="ttname"><a href="classcytnx_1_1Qs.html#a3f956a47670aa44026633ea9e2633e53">cytnx::Qs::Qs</a></div><div class="ttdeci">Qs(const cytnx_int64 &amp;e1, const Ts... elems)</div><div class="ttdef"><b>Definition:</b> Symmetry.hpp:39</div></div>
+<div class="ttc" id="aclasscytnx_1_1Qs_html_ac0109bb5f8c190e4107037bb384291b9"><div class="ttname"><a href="classcytnx_1_1Qs.html#ac0109bb5f8c190e4107037bb384291b9">cytnx::Qs::Qs</a></div><div class="ttdeci">Qs(const std::vector&lt; cytnx_int64 &gt; &amp;qin)</div><div class="ttdef"><b>Definition:</b> Symmetry.hpp:43</div></div>
+<div class="ttc" id="aclasscytnx_1_1Qs_html_ae801e134abaa3aab35bb79f28d716d23"><div class="ttname"><a href="classcytnx_1_1Qs.html#ae801e134abaa3aab35bb79f28d716d23">cytnx::Qs::operator&gt;&gt;</a></div><div class="ttdeci">std::pair&lt; std::vector&lt; cytnx_int64 &gt;, cytnx_uint64 &gt; operator&gt;&gt;(const cytnx_uint64 &amp;dim)</div><div class="ttdef"><b>Definition:</b> Symmetry.hpp:52</div></div>
 <div class="ttc" id="aclasscytnx_1_1Symmetry_html"><div class="ttname"><a href="classcytnx_1_1Symmetry.html">cytnx::Symmetry</a></div><div class="ttdoc">the symmetry object</div><div class="ttdef"><b>Definition:</b> Symmetry.hpp:148</div></div>
 <div class="ttc" id="aclasscytnx_1_1Symmetry_html_a066083aa705f8fc749b3bbb606f89359"><div class="ttname"><a href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">cytnx::Symmetry::Zn</a></div><div class="ttdeci">static Symmetry Zn(const int &amp;n)</div><div class="ttdoc">create a Zn descrete symmetry object with</div><div class="ttdef"><b>Definition:</b> Symmetry.hpp:236</div></div>
 <div class="ttc" id="aclasscytnx_1_1Symmetry_html_a066741cabfe04df9e9e2782f047188b0"><div class="ttname"><a href="classcytnx_1_1Symmetry.html#a066741cabfe04df9e9e2782f047188b0">cytnx::Symmetry::check_qnum</a></div><div class="ttdeci">bool check_qnum(const cytnx_int64 &amp;qnum)</div><div class="ttdoc">check the quantum number is within the valid value range of current Symmetry.</div><div class="ttdef"><b>Definition:</b> Symmetry.hpp:293</div></div>
@@ -321,29 +334,30 @@ $(function() {
 <div class="ttc" id="aclasscytnx_1_1Symmetry_html_a2aaefd177003560b4c12fbbefe30c3c3"><div class="ttname"><a href="classcytnx_1_1Symmetry.html#a2aaefd177003560b4c12fbbefe30c3c3">cytnx::Symmetry::combine_rule</a></div><div class="ttdeci">cytnx_int64 combine_rule(const cytnx_int64 &amp;inL, const cytnx_int64 &amp;inR, const bool &amp;is_reverse=false) const</div><div class="ttdoc">apply combine rule of current symmetry to two quantum numbers.</div><div class="ttdef"><b>Definition:</b> Symmetry.hpp:337</div></div>
 <div class="ttc" id="aclasscytnx_1_1Symmetry_html_a2b407bcad5cdad20edddffeeda6befe7"><div class="ttname"><a href="classcytnx_1_1Symmetry.html#a2b407bcad5cdad20edddffeeda6befe7">cytnx::Symmetry::clone</a></div><div class="ttdeci">Symmetry clone() const</div><div class="ttdoc">return a clone instance of current Symmetry object.</div><div class="ttdef"><b>Definition:</b> Symmetry.hpp:252</div></div>
 <div class="ttc" id="aclasscytnx_1_1Symmetry_html_a38c1572a027e289430434b56324e2ead"><div class="ttname"><a href="classcytnx_1_1Symmetry.html#a38c1572a027e289430434b56324e2ead">cytnx::Symmetry::check_qnums</a></div><div class="ttdeci">bool check_qnums(const std::vector&lt; cytnx_int64 &gt; &amp;qnums)</div><div class="ttdoc">check all the quantum numbers are within the valid value range of current Symmetry.</div><div class="ttdef"><b>Definition:</b> Symmetry.hpp:301</div></div>
+<div class="ttc" id="aclasscytnx_1_1Symmetry_html_a43a66664194dd16288dc26abf5caf59c"><div class="ttname"><a href="classcytnx_1_1Symmetry.html#a43a66664194dd16288dc26abf5caf59c">cytnx::Symmetry::Load</a></div><div class="ttdeci">static Symmetry Load(const std::string &amp;fname)</div><div class="ttdef"><b>Definition:</b> Symmetry.cpp:200</div></div>
 <div class="ttc" id="aclasscytnx_1_1Symmetry_html_a47a73a6248750acc221104e3079d652c"><div class="ttname"><a href="classcytnx_1_1Symmetry.html#a47a73a6248750acc221104e3079d652c">cytnx::Symmetry::stype</a></div><div class="ttdeci">int stype() const</div><div class="ttdoc">return the symmetry type-id of current Symmetry object.</div><div class="ttdef"><b>Definition:</b> Symmetry.hpp:264</div></div>
 <div class="ttc" id="aclasscytnx_1_1Symmetry_html_a5d9e73259f21dc79f7086f8418afca8e"><div class="ttname"><a href="classcytnx_1_1Symmetry.html#a5d9e73259f21dc79f7086f8418afca8e">cytnx::Symmetry::n</a></div><div class="ttdeci">int &amp; n() const</div><div class="ttdoc">return the descrete n of current Symmetry object.</div><div class="ttdef"><b>Definition:</b> Symmetry.hpp:275</div></div>
+<div class="ttc" id="aclasscytnx_1_1Symmetry_html_a6726fdd96c12ddfa4b16adde9341aef0"><div class="ttname"><a href="classcytnx_1_1Symmetry.html#a6726fdd96c12ddfa4b16adde9341aef0">cytnx::Symmetry::operator==</a></div><div class="ttdeci">bool operator==(const Symmetry &amp;rhs) const</div><div class="ttdef"><b>Definition:</b> Symmetry.cpp:12</div></div>
 <div class="ttc" id="aclasscytnx_1_1Symmetry_html_a7a2e6c3f679b5e6774f269b78c8239e8"><div class="ttname"><a href="classcytnx_1_1Symmetry.html#a7a2e6c3f679b5e6774f269b78c8239e8">cytnx::Symmetry::combine_rule_</a></div><div class="ttdeci">void combine_rule_(std::vector&lt; cytnx_int64 &gt; &amp;out, const std::vector&lt; cytnx_int64 &gt; &amp;inL, const std::vector&lt; cytnx_int64 &gt; &amp;inR)</div><div class="ttdoc">apply combine rule of current symmetry to two quantum number lists, and store it into parameter</div><div class="ttdef"><b>Definition:</b> Symmetry.hpp:325</div></div>
 <div class="ttc" id="aclasscytnx_1_1Symmetry_html_a8542d45b69268355f0b07dea280ba1e3"><div class="ttname"><a href="classcytnx_1_1Symmetry.html#a8542d45b69268355f0b07dea280ba1e3">cytnx::Symmetry::combine_rule_</a></div><div class="ttdeci">void combine_rule_(cytnx_int64 &amp;out, const cytnx_int64 &amp;inL, const cytnx_int64 &amp;inR, const bool &amp;is_reverse=false)</div><div class="ttdoc">apply combine rule of current symmetry to two quantum numbers, and store the combined quntun number i...</div><div class="ttdef"><b>Definition:</b> Symmetry.hpp:349</div></div>
+<div class="ttc" id="aclasscytnx_1_1Symmetry_html_a8f32669cdcdbf2dc1dff1f588c025981"><div class="ttname"><a href="classcytnx_1_1Symmetry.html#a8f32669cdcdbf2dc1dff1f588c025981">cytnx::Symmetry::print_info</a></div><div class="ttdeci">void print_info() const</div><div class="ttdef"><b>Definition:</b> Symmetry.hpp:369</div></div>
 <div class="ttc" id="aclasscytnx_1_1Symmetry_html_a9218fd66fc9cca64cd3d792e0019592a"><div class="ttname"><a href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">cytnx::Symmetry::U1</a></div><div class="ttdeci">static Symmetry U1()</div><div class="ttdoc">create a U1 symmetry object</div><div class="ttdef"><b>Definition:</b> Symmetry.hpp:205</div></div>
+<div class="ttc" id="aclasscytnx_1_1Symmetry_html_a9f856245a37472cb51c74cff0777d15e"><div class="ttname"><a href="classcytnx_1_1Symmetry.html#a9f856245a37472cb51c74cff0777d15e">cytnx::Symmetry::reverse_rule</a></div><div class="ttdeci">cytnx_int64 reverse_rule(const cytnx_int64 &amp;in) const</div><div class="ttdef"><b>Definition:</b> Symmetry.hpp:357</div></div>
+<div class="ttc" id="aclasscytnx_1_1Symmetry_html_ac7dfa6758b9dfb1963f19f0eec7cc4a3"><div class="ttname"><a href="classcytnx_1_1Symmetry.html#ac7dfa6758b9dfb1963f19f0eec7cc4a3">cytnx::Symmetry::reverse_rule_</a></div><div class="ttdeci">void reverse_rule_(cytnx_int64 &amp;out, const cytnx_int64 &amp;in)</div><div class="ttdef"><b>Definition:</b> Symmetry.hpp:353</div></div>
+<div class="ttc" id="aclasscytnx_1_1Symmetry_html_ad102f58e1226ec26ae9a3bc2d6c366d2"><div class="ttname"><a href="classcytnx_1_1Symmetry.html#ad102f58e1226ec26ae9a3bc2d6c366d2">cytnx::Symmetry::operator!=</a></div><div class="ttdeci">bool operator!=(const Symmetry &amp;rhs) const</div><div class="ttdef"><b>Definition:</b> Symmetry.cpp:15</div></div>
+<div class="ttc" id="aclasscytnx_1_1Symmetry_html_ae0aaa29d0445cfc85ffab300aa4a8174"><div class="ttname"><a href="classcytnx_1_1Symmetry.html#ae0aaa29d0445cfc85ffab300aa4a8174">cytnx::Symmetry::Save</a></div><div class="ttdeci">void Save(const std::string &amp;fname) const</div><div class="ttdef"><b>Definition:</b> Symmetry.cpp:180</div></div>
+<div class="ttc" id="acytnx__error_8hpp_html"><div class="ttname"><a href="cytnx__error_8hpp.html">cytnx_error.hpp</a></div></div>
+<div class="ttc" id="acytnx__error_8hpp_html_aa2edc77cab5ba7d1561fd1ea6cfba9ac"><div class="ttname"><a href="cytnx__error_8hpp.html#aa2edc77cab5ba7d1561fd1ea6cfba9ac">cytnx_error_msg</a></div><div class="ttdeci">#define cytnx_error_msg(is_true, format,...)</div><div class="ttdef"><b>Definition:</b> cytnx_error.hpp:16</div></div>
+<div class="ttc" id="aintrusive__ptr__base_8hpp_html"><div class="ttname"><a href="intrusive__ptr__base_8hpp.html">intrusive_ptr_base.hpp</a></div></div>
+<div class="ttc" id="anamespacecytnx_html"><div class="ttname"><a href="namespacecytnx.html">cytnx</a></div><div class="ttdef"><b>Definition:</b> Network_misc.hpp:1</div></div>
+<div class="ttc" id="anamespacecytnx_html_a4aecfe97bd064be86b1e5877cce14203"><div class="ttname"><a href="namespacecytnx.html#a4aecfe97bd064be86b1e5877cce14203">cytnx::operator&lt;&lt;</a></div><div class="ttdeci">std::ostream &amp; operator&lt;&lt;(std::ostream &amp;os, const Scalar &amp;in)</div><div class="ttdef"><b>Definition:</b> Scalar.cpp:10</div></div>
+<div class="ttc" id="anamespacecytnx_html_a9a7ab808c7cbef775461ccc31eaabeb4"><div class="ttname"><a href="namespacecytnx.html#a9a7ab808c7cbef775461ccc31eaabeb4">cytnx::cytnx_uint64</a></div><div class="ttdeci">uint64_t cytnx_uint64</div><div class="ttdef"><b>Definition:</b> Type.hpp:29</div></div>
+<div class="ttc" id="anamespacecytnx_html_aa7b7ff4d6d244994d35853a6ce547587"><div class="ttname"><a href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx::cytnx_int64</a></div><div class="ttdeci">int64_t cytnx_int64</div><div class="ttdef"><b>Definition:</b> Type.hpp:32</div></div>
+<div class="ttc" id="anamespacecytnx_html_ae8b2b1a6be5f66828af0c051065bb642"><div class="ttname"><a href="namespacecytnx.html#ae8b2b1a6be5f66828af0c051065bb642">cytnx::SymType</a></div><div class="ttdeci">SymmetryType_class SymType</div><div class="ttdef"><b>Definition:</b> Symmetry.cpp:250</div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- HTML footer for doxygen 1.9.1-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
-<script type="text/javascript">
-  $(function() {
-    toggleButton = document.createElement('doxygen-awesome-dark-mode-toggle')
-    toggleButton.title = "Toggle Light/Dark Mode"
-    $(document).ready(function(){
-      document.getElementById("MSearchBox").parentNode.appendChild(toggleButton)
-    })
-    // every resize will remove the button, which is why it has to be added again:
-    $(window).resize(function(){
-      document.getElementById("MSearchBox").parentNode.appendChild(toggleButton)
-    })
-  })
-</script>
 </body>
 </html>

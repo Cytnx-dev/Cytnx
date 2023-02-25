@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classcytnx_1_1Qs" kind="class" language="C++" prot="public">
+    <compoundname>cytnx::Qs</compoundname>
+    <includes refid="Symmetry_8hpp" local="no">Symmetry.hpp</includes>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classcytnx_1_1Qs_1ab841cbd3af85193201771d0bb567cb1d" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &gt;</type>
+        <definition>std::vector&lt;cytnx_int64&gt; cytnx::Qs::tmpQs</definition>
+        <argsstring></argsstring>
+        <name>tmpQs</name>
+        <qualifiedname>cytnx::Qs::tmpQs</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="34" column="21" bodyfile="include/Symmetry.hpp" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classcytnx_1_1Qs_1a3f956a47670aa44026633ea9e2633e53" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class...</type>
+            <declname>Ts</declname>
+            <defname>Ts</defname>
+          </param>
+        </templateparamlist>
+        <type></type>
+        <definition>cytnx::Qs::Qs</definition>
+        <argsstring>(const cytnx_int64 &amp;e1, const Ts... elems)</argsstring>
+        <name>Qs</name>
+        <qualifiedname>cytnx::Qs::Qs</qualifiedname>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>e1</declname>
+        </param>
+        <param>
+          <type>const Ts...</type>
+          <declname>elems</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="39" column="9" bodyfile="include/Symmetry.hpp" bodystart="39" bodyend="41"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Qs_1ac0109bb5f8c190e4107037bb384291b9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>cytnx::Qs::Qs</definition>
+        <argsstring>(const std::vector&lt; cytnx_int64 &gt; &amp;qin)</argsstring>
+        <name>Qs</name>
+        <qualifiedname>cytnx::Qs::Qs</qualifiedname>
+        <param>
+          <type>const std::vector&lt; <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &gt; &amp;</type>
+          <declname>qin</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="43" column="9" bodyfile="include/Symmetry.hpp" bodystart="43" bodyend="45"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Qs_1a675e53e190288b69181e18e2a1943b24" prot="public" static="no" const="yes" explicit="yes" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>cytnx::Qs::operator std::vector&lt; cytnx_int64 &gt;</definition>
+        <argsstring>() const</argsstring>
+        <name>operator std::vector&lt; cytnx_int64 &gt;</name>
+        <qualifiedname>cytnx::Qs::vector&lt; cytnx_int64 &gt;</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="48" column="18" bodyfile="include/Symmetry.hpp" bodystart="48" bodyend="50"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Qs_1ae801e134abaa3aab35bb79f28d716d23" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::pair&lt; std::vector&lt; <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &gt;, <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref> &gt;</type>
+        <definition>std::pair&lt; std::vector&lt; cytnx_int64 &gt;, cytnx_uint64 &gt; cytnx::Qs::operator&gt;&gt;</definition>
+        <argsstring>(const cytnx_uint64 &amp;dim)</argsstring>
+        <name>operator&gt;&gt;</name>
+        <qualifiedname>cytnx::Qs::operator&gt;&gt;</qualifiedname>
+        <param>
+          <type>const <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref> &amp;</type>
+          <declname>dim</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="52" column="19" bodyfile="include/Symmetry.hpp" bodystart="52" bodyend="54"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/Symmetry.hpp" line="32" column="3" bodyfile="include/Symmetry.hpp" bodystart="32" bodyend="56"/>
+    <listofallmembers>
+      <member refid="classcytnx_1_1Qs_1a675e53e190288b69181e18e2a1943b24" prot="public" virt="non-virtual"><scope>cytnx::Qs</scope><name>operator std::vector&lt; cytnx_int64 &gt;</name></member>
+      <member refid="classcytnx_1_1Qs_1ae801e134abaa3aab35bb79f28d716d23" prot="public" virt="non-virtual"><scope>cytnx::Qs</scope><name>operator&gt;&gt;</name></member>
+      <member refid="classcytnx_1_1Qs_1a3f956a47670aa44026633ea9e2633e53" prot="public" virt="non-virtual"><scope>cytnx::Qs</scope><name>Qs</name></member>
+      <member refid="classcytnx_1_1Qs_1ac0109bb5f8c190e4107037bb384291b9" prot="public" virt="non-virtual"><scope>cytnx::Qs</scope><name>Qs</name></member>
+      <member refid="classcytnx_1_1Qs_1ab841cbd3af85193201771d0bb567cb1d" prot="private" virt="non-virtual"><scope>cytnx::Qs</scope><name>tmpQs</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -71,7 +71,7 @@ See also \mbox{\hyperlink{classcytnx_1_1Tensor_ad7b928e4cb89d40cbd99aefab9aa0075
 \DoxyCodeLine{\textcolor{keyword}{using namespace }std;}
 \DoxyCodeLine{\textcolor{keywordtype}{int} main() \{}
 \DoxyCodeLine{  \textcolor{comment}{// 1. handy alias:}}
-\DoxyCodeLine{  \textcolor{keyword}{typedef} \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} ac;}
+\DoxyCodeLine{  \textcolor{keyword}{typedef} \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} \mbox{\hyperlink{classcytnx_1_1Accessor}{ac}};}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{/*}}
 \DoxyCodeLine{\textcolor{comment}{      2. Create a Tensor with}}
@@ -89,7 +89,7 @@ See also \mbox{\hyperlink{classcytnx_1_1Tensor_ad7b928e4cb89d40cbd99aefab9aa0075
 \DoxyCodeLine{\textcolor{comment}{      -\/> A[0,:,0:2:1]}}
 \DoxyCodeLine{\textcolor{comment}{}}
 \DoxyCodeLine{\textcolor{comment}{  */}}
-\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} B = A(0, ac::all(), ac::range(0, 2, 1));}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} B = A(0, \mbox{\hyperlink{classcytnx_1_1Accessor_a71b8c4af7182a2c9144929bdef9ff4fd}{ac::all}}(), \mbox{\hyperlink{classcytnx_1_1Accessor_a7a5a508a58b71897c3dd162195aceaa9}{ac::range}}(0, 2, 1));}
 \DoxyCodeLine{  cout << B << endl;}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{/* [Note] Conversion from python slice to ac:}}
@@ -199,7 +199,7 @@ access the whole rank, this is similar to \mbox{[}\+:\mbox{]} in python
 \DoxyCodeLine{\textcolor{keyword}{using namespace }std;}
 \DoxyCodeLine{\textcolor{keywordtype}{int} main() \{}
 \DoxyCodeLine{  \textcolor{comment}{// 1. handy alias:}}
-\DoxyCodeLine{  \textcolor{keyword}{typedef} \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} ac;}
+\DoxyCodeLine{  \textcolor{keyword}{typedef} \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} \mbox{\hyperlink{classcytnx_1_1Accessor}{ac}};}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{/*}}
 \DoxyCodeLine{\textcolor{comment}{      2. Create a Tensor with}}
@@ -217,7 +217,7 @@ access the whole rank, this is similar to \mbox{[}\+:\mbox{]} in python
 \DoxyCodeLine{\textcolor{comment}{      -\/> A[0,:,0:2:1]}}
 \DoxyCodeLine{\textcolor{comment}{}}
 \DoxyCodeLine{\textcolor{comment}{  */}}
-\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} B = A(0, ac::all(), ac::range(0, 2, 1));}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} B = A(0, \mbox{\hyperlink{classcytnx_1_1Accessor_a71b8c4af7182a2c9144929bdef9ff4fd}{ac::all}}(), \mbox{\hyperlink{classcytnx_1_1Accessor_a7a5a508a58b71897c3dd162195aceaa9}{ac::range}}(0, 2, 1));}
 \DoxyCodeLine{  cout << B << endl;}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{/* [Note] Conversion from python slice to ac:}}
@@ -333,7 +333,7 @@ access the range at assigned rank, this is similar to min\+:max\+:step in python
 \DoxyCodeLine{\textcolor{keyword}{using namespace }std;}
 \DoxyCodeLine{\textcolor{keywordtype}{int} main() \{}
 \DoxyCodeLine{  \textcolor{comment}{// 1. handy alias:}}
-\DoxyCodeLine{  \textcolor{keyword}{typedef} \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} ac;}
+\DoxyCodeLine{  \textcolor{keyword}{typedef} \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} \mbox{\hyperlink{classcytnx_1_1Accessor}{ac}};}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{/*}}
 \DoxyCodeLine{\textcolor{comment}{      2. Create a Tensor with}}
@@ -351,7 +351,7 @@ access the range at assigned rank, this is similar to min\+:max\+:step in python
 \DoxyCodeLine{\textcolor{comment}{      -\/> A[0,:,0:2:1]}}
 \DoxyCodeLine{\textcolor{comment}{}}
 \DoxyCodeLine{\textcolor{comment}{  */}}
-\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} B = A(0, ac::all(), ac::range(0, 2, 1));}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} B = A(0, \mbox{\hyperlink{classcytnx_1_1Accessor_a71b8c4af7182a2c9144929bdef9ff4fd}{ac::all}}(), \mbox{\hyperlink{classcytnx_1_1Accessor_a7a5a508a58b71897c3dd162195aceaa9}{ac::range}}(0, 2, 1));}
 \DoxyCodeLine{  cout << B << endl;}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{/* [Note] Conversion from python slice to ac:}}
@@ -439,6 +439,7 @@ Shape : (3,2)
 \end{DoxyVerbInclude}
  
 
-The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-include/Accessor.\+hpp\end{DoxyCompactItemize}
+include/Accessor.\+hpp\item 
+src/Accessor.\+cpp\end{DoxyCompactItemize}

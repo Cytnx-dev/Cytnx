@@ -1,32 +1,41 @@
-<!-- HTML header for doxygen 1.9.1-->
+<!-- HTML header for doxygen 1.9.5-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Cytnx: include/tn_algo/DMRG.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
-<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+       <script type="text/javascript">
+           DoxygenAwesomeDarkModeToggle.init()
+       </script>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="titlearea">
 <table cellspacing="0" cellpadding="0">
  <tbody>
- <tr style="height: 56px;">
+ <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
-  <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.7.7</span>
+  <td id="projectalign">
+   <div id="projectname">Cytnx<span id="projectnumber">&#160;v0.7.7</span>
    </div>
   </td>
  </tr>
@@ -81,50 +90,50 @@ $(function() {
   <div class="headertitle"><div class="title">DMRG.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef _H_DMRG_</span></div>
+<a href="DMRG_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef _H_DMRG_</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define _H_DMRG_</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;cytnx_error.hpp&quot;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;Device.hpp&quot;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;intrusive_ptr_base.hpp&quot;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;UniTensor.hpp&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="cytnx__error_8hpp.html">cytnx_error.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;<a class="code" href="Device_8hpp.html">Device.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="intrusive__ptr__base_8hpp.html">intrusive_ptr_base.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;<a class="code" href="UniTensor_8hpp.html">UniTensor.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;fstream&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;utils/vec_clone.hpp&quot;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;Accessor.hpp&quot;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="Accessor_8hpp.html">Accessor.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;initializer_list&gt;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;Scalar.hpp&quot;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;tn_algo/MPS.hpp&quot;</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &quot;tn_algo/MPO.hpp&quot;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="Scalar_8hpp.html">Scalar.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;<a class="code" href="MPS_8hpp.html">tn_algo/MPS.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &quot;<a class="code" href="MPO_8hpp.html">tn_algo/MPO.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">namespace </span>cytnx {</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  <span class="keyword">namespace </span>tn_algo {</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecytnx.html">cytnx</a> {</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="namespacecytnx_1_1tn__algo.html">   20</a></span>  <span class="keyword">namespace </span>tn_algo {</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keyword">class </span>DMRG_impl : <span class="keyword">public</span> intrusive_ptr_base&lt;DMRG_impl&gt; {</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>     <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>     <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>      MPS mps;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>      MPO mpo;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>      <a class="code hl_class" href="classcytnx_1_1tn__algo_1_1MPS.html">MPS</a> mps;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>      <a class="code hl_class" href="classcytnx_1_1tn__algo_1_1MPO.html">MPO</a> mpo;</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>      <span class="comment">// for getting excited states:</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>      std::vector&lt;MPS&gt; ortho_mps;</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>      <span class="keywordtype">double</span> weight;</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>      <span class="comment">// iterative solver param:</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>      cytnx_int64 maxit;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>      cytnx_int64 krydim;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>      <a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> maxit;</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>      <a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> krydim;</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>      <span class="comment">// environ:</span></div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>      std::vector&lt;UniTensor&gt; LR;</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>      std::vector&lt;std::vector&lt;UniTensor&gt;&gt; hLRs;  <span class="comment">// excited states</span></div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>      <span class="keyword">friend</span> <span class="keyword">class </span>MPS;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>      <span class="keyword">friend</span> <span class="keyword">class </span>MPO;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>      <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="classcytnx_1_1tn__algo_1_1MPS.html">MPS</a>;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>      <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="classcytnx_1_1tn__algo_1_1MPO.html">MPO</a>;</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>      <span class="keywordtype">void</span> initialize();</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>      Scalar sweep(<span class="keyword">const</span> <span class="keywordtype">bool</span> &amp;verbose, <span class="keyword">const</span> cytnx_int64 &amp;maxit, <span class="keyword">const</span> cytnx_int64 &amp;krydim);</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>      Scalar sweepv2(<span class="keyword">const</span> <span class="keywordtype">bool</span> &amp;verbose, <span class="keyword">const</span> cytnx_int64 &amp;maxit, <span class="keyword">const</span> cytnx_int64 &amp;krydim);</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>      <a class="code hl_class" href="classcytnx_1_1Scalar.html">Scalar</a> sweep(<span class="keyword">const</span> <span class="keywordtype">bool</span> &amp;verbose, <span class="keyword">const</span> <a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;maxit, <span class="keyword">const</span> <a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;krydim);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>      <a class="code hl_class" href="classcytnx_1_1Scalar.html">Scalar</a> sweepv2(<span class="keyword">const</span> <span class="keywordtype">bool</span> &amp;verbose, <span class="keyword">const</span> <a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;maxit, <span class="keyword">const</span> <a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;krydim);</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    };</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="comment">// API</span></div>
@@ -147,25 +156,25 @@ $(function() {
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>      <a class="code hl_class" href="classcytnx_1_1tn__algo_1_1DMRG.html">DMRG</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcytnx_1_1tn__algo_1_1DMRG.html">DMRG</a> &amp;rhs) { _impl = rhs._impl; }</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>      <a class="code hl_class" href="classcytnx_1_1tn__algo_1_1DMRG.html">DMRG</a> &amp;operator=(<span class="keyword">const</span> <a class="code hl_class" href="classcytnx_1_1tn__algo_1_1DMRG.html">DMRG</a> &amp;rhs) {</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="classcytnx_1_1tn__algo_1_1DMRG.html#a51a599bb8945fcdda13cbc9fe9bac440">   71</a></span>      <a class="code hl_class" href="classcytnx_1_1tn__algo_1_1DMRG.html">DMRG</a> &amp;<a class="code hl_function" href="classcytnx_1_1tn__algo_1_1DMRG.html#a51a599bb8945fcdda13cbc9fe9bac440">operator=</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcytnx_1_1tn__algo_1_1DMRG.html">DMRG</a> &amp;rhs) {</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        _impl = rhs._impl;</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>      }</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>      <a class="code hl_class" href="classcytnx_1_1tn__algo_1_1DMRG.html">DMRG</a> &amp;initialize() {</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        this-&gt;_impl-&gt;initialize();</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno"><a class="line" href="classcytnx_1_1tn__algo_1_1DMRG.html#a2d6091b4952754b1b74c9c16dc1d65b9">   76</a></span>      <a class="code hl_class" href="classcytnx_1_1tn__algo_1_1DMRG.html">DMRG</a> &amp;<a class="code hl_function" href="classcytnx_1_1tn__algo_1_1DMRG.html#a2d6091b4952754b1b74c9c16dc1d65b9">initialize</a>() {</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        this-&gt;_impl-&gt;<a class="code hl_function" href="classcytnx_1_1tn__algo_1_1DMRG.html#a2d6091b4952754b1b74c9c16dc1d65b9">initialize</a>();</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>      }</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>      <span class="comment">// return the current energy</span></div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>      <a class="code hl_class" href="classcytnx_1_1Scalar.html">Scalar</a> sweep(<span class="keyword">const</span> <span class="keywordtype">bool</span> &amp;verbose = <span class="keyword">false</span>, <span class="keyword">const</span> cytnx_int64 &amp;maxit = 4000,</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>                   <span class="keyword">const</span> cytnx_int64 &amp;krydim = 4) {</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="classcytnx_1_1tn__algo_1_1DMRG.html#aea9d74df98f5830bd38a4488553946c7">   82</a></span>      <a class="code hl_class" href="classcytnx_1_1Scalar.html">Scalar</a> <a class="code hl_function" href="classcytnx_1_1tn__algo_1_1DMRG.html#aea9d74df98f5830bd38a4488553946c7">sweep</a>(<span class="keyword">const</span> <span class="keywordtype">bool</span> &amp;verbose = <span class="keyword">false</span>, <span class="keyword">const</span> <a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;maxit = 4000,</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>                   <span class="keyword">const</span> <a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;krydim = 4) {</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        <span class="keywordflow">return</span> this-&gt;_impl-&gt;sweep(verbose, maxit, krydim);</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>      }</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>      <span class="comment">// return the current energy</span></div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>      <a class="code hl_class" href="classcytnx_1_1Scalar.html">Scalar</a> sweepv2(<span class="keyword">const</span> <span class="keywordtype">bool</span> &amp;verbose = <span class="keyword">false</span>, <span class="keyword">const</span> cytnx_int64 &amp;maxit = 4000,</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>                     <span class="keyword">const</span> cytnx_int64 &amp;krydim = 4) {</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno"><a class="line" href="classcytnx_1_1tn__algo_1_1DMRG.html#a100dea35e5da0eb3b2e634aba242402c">   88</a></span>      <a class="code hl_class" href="classcytnx_1_1Scalar.html">Scalar</a> <a class="code hl_function" href="classcytnx_1_1tn__algo_1_1DMRG.html#a100dea35e5da0eb3b2e634aba242402c">sweepv2</a>(<span class="keyword">const</span> <span class="keywordtype">bool</span> &amp;verbose = <span class="keyword">false</span>, <span class="keyword">const</span> <a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;maxit = 4000,</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>                     <span class="keyword">const</span> <a class="code hl_typedef" href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx_int64</a> &amp;krydim = 4) {</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        <span class="keywordflow">return</span> this-&gt;_impl-&gt;sweepv2(verbose, maxit, krydim);</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>      }</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    };</div>
@@ -174,28 +183,28 @@ $(function() {
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>}  <span class="comment">// namespace cytnx</span></div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aAccessor_8hpp_html"><div class="ttname"><a href="Accessor_8hpp.html">Accessor.hpp</a></div></div>
+<div class="ttc" id="aDevice_8hpp_html"><div class="ttname"><a href="Device_8hpp.html">Device.hpp</a></div></div>
+<div class="ttc" id="aMPO_8hpp_html"><div class="ttname"><a href="MPO_8hpp.html">MPO.hpp</a></div></div>
+<div class="ttc" id="aMPS_8hpp_html"><div class="ttname"><a href="MPS_8hpp.html">MPS.hpp</a></div></div>
+<div class="ttc" id="aScalar_8hpp_html"><div class="ttname"><a href="Scalar_8hpp.html">Scalar.hpp</a></div></div>
+<div class="ttc" id="aUniTensor_8hpp_html"><div class="ttname"><a href="UniTensor_8hpp.html">UniTensor.hpp</a></div></div>
 <div class="ttc" id="aclasscytnx_1_1Scalar_html"><div class="ttname"><a href="classcytnx_1_1Scalar.html">cytnx::Scalar</a></div><div class="ttdef"><b>Definition:</b> Scalar.hpp:2463</div></div>
 <div class="ttc" id="aclasscytnx_1_1tn__algo_1_1DMRG_html"><div class="ttname"><a href="classcytnx_1_1tn__algo_1_1DMRG.html">cytnx::tn_algo::DMRG</a></div><div class="ttdef"><b>Definition:</b> DMRG.hpp:50</div></div>
+<div class="ttc" id="aclasscytnx_1_1tn__algo_1_1DMRG_html_a100dea35e5da0eb3b2e634aba242402c"><div class="ttname"><a href="classcytnx_1_1tn__algo_1_1DMRG.html#a100dea35e5da0eb3b2e634aba242402c">cytnx::tn_algo::DMRG::sweepv2</a></div><div class="ttdeci">Scalar sweepv2(const bool &amp;verbose=false, const cytnx_int64 &amp;maxit=4000, const cytnx_int64 &amp;krydim=4)</div><div class="ttdef"><b>Definition:</b> DMRG.hpp:88</div></div>
+<div class="ttc" id="aclasscytnx_1_1tn__algo_1_1DMRG_html_a2d6091b4952754b1b74c9c16dc1d65b9"><div class="ttname"><a href="classcytnx_1_1tn__algo_1_1DMRG.html#a2d6091b4952754b1b74c9c16dc1d65b9">cytnx::tn_algo::DMRG::initialize</a></div><div class="ttdeci">DMRG &amp; initialize()</div><div class="ttdef"><b>Definition:</b> DMRG.hpp:76</div></div>
+<div class="ttc" id="aclasscytnx_1_1tn__algo_1_1DMRG_html_a51a599bb8945fcdda13cbc9fe9bac440"><div class="ttname"><a href="classcytnx_1_1tn__algo_1_1DMRG.html#a51a599bb8945fcdda13cbc9fe9bac440">cytnx::tn_algo::DMRG::operator=</a></div><div class="ttdeci">DMRG &amp; operator=(const DMRG &amp;rhs)</div><div class="ttdef"><b>Definition:</b> DMRG.hpp:71</div></div>
+<div class="ttc" id="aclasscytnx_1_1tn__algo_1_1DMRG_html_aea9d74df98f5830bd38a4488553946c7"><div class="ttname"><a href="classcytnx_1_1tn__algo_1_1DMRG.html#aea9d74df98f5830bd38a4488553946c7">cytnx::tn_algo::DMRG::sweep</a></div><div class="ttdeci">Scalar sweep(const bool &amp;verbose=false, const cytnx_int64 &amp;maxit=4000, const cytnx_int64 &amp;krydim=4)</div><div class="ttdef"><b>Definition:</b> DMRG.hpp:82</div></div>
 <div class="ttc" id="aclasscytnx_1_1tn__algo_1_1MPO_html"><div class="ttname"><a href="classcytnx_1_1tn__algo_1_1MPO.html">cytnx::tn_algo::MPO</a></div><div class="ttdef"><b>Definition:</b> MPO.hpp:49</div></div>
 <div class="ttc" id="aclasscytnx_1_1tn__algo_1_1MPS_html"><div class="ttname"><a href="classcytnx_1_1tn__algo_1_1MPS.html">cytnx::tn_algo::MPS</a></div><div class="ttdef"><b>Definition:</b> MPS.hpp:167</div></div>
+<div class="ttc" id="acytnx__error_8hpp_html"><div class="ttname"><a href="cytnx__error_8hpp.html">cytnx_error.hpp</a></div></div>
+<div class="ttc" id="aintrusive__ptr__base_8hpp_html"><div class="ttname"><a href="intrusive__ptr__base_8hpp.html">intrusive_ptr_base.hpp</a></div></div>
+<div class="ttc" id="anamespacecytnx_html"><div class="ttname"><a href="namespacecytnx.html">cytnx</a></div><div class="ttdef"><b>Definition:</b> Network_misc.hpp:1</div></div>
+<div class="ttc" id="anamespacecytnx_html_aa7b7ff4d6d244994d35853a6ce547587"><div class="ttname"><a href="namespacecytnx.html#aa7b7ff4d6d244994d35853a6ce547587">cytnx::cytnx_int64</a></div><div class="ttdeci">int64_t cytnx_int64</div><div class="ttdef"><b>Definition:</b> Type.hpp:32</div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- HTML footer for doxygen 1.9.1-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
-<script type="text/javascript">
-  $(function() {
-    toggleButton = document.createElement('doxygen-awesome-dark-mode-toggle')
-    toggleButton.title = "Toggle Light/Dark Mode"
-    $(document).ready(function(){
-      document.getElementById("MSearchBox").parentNode.appendChild(toggleButton)
-    })
-    // every resize will remove the button, which is why it has to be added again:
-    $(window).resize(function(){
-      document.getElementById("MSearchBox").parentNode.appendChild(toggleButton)
-    })
-  })
-</script>
 </body>
 </html>

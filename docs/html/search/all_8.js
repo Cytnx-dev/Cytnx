@@ -1,10 +1,13 @@
 var searchData=
 [
-  ['imag_0',['imag',['../classcytnx_1_1Storage.html#ad7557a7109f2764fe97049a348971b39',1,'cytnx::Storage']]],
-  ['init_1',['Init',['../classcytnx_1_1Bond.html#a707a803fa98fb6a87b5f3c3b3000509f',1,'cytnx::Bond::Init(const cytnx_uint64 &amp;dim, const bondType &amp;bd_type=bondType::BD_REG, const std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt; &amp;in_qnums={}, const std::vector&lt; Symmetry &gt; &amp;in_syms={})'],['../classcytnx_1_1Bond.html#ae7a70f6506d6035ec022ab03099a915d',1,'cytnx::Bond::Init(const bondType &amp;bd_type, const std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt; &amp;in_qnums, const std::vector&lt; cytnx_uint64 &gt; &amp;degs, const std::vector&lt; Symmetry &gt; &amp;in_syms={})'],['../classcytnx_1_1Storage.html#a2b1417ecb023beeb06c0efe53da6e42e',1,'cytnx::Storage::Init()'],['../classcytnx_1_1Tensor.html#aee8c0febe1794bd79edc52f2caac9cc3',1,'cytnx::Tensor::Init()'],['../classcytnx_1_1UniTensor.html#af88d05dc8c534accadc7d894dc691d1b',1,'cytnx::UniTensor::Init()']]],
-  ['inv_2',['Inv',['../namespacecytnx_1_1linalg.html#a8680f6a91b7110d68c1d9e9a4da700d6',1,'cytnx::linalg']]],
-  ['inv_5f_3',['Inv_',['../namespacecytnx_1_1linalg.html#aa664cc05d63056151c826d8457791c5d',1,'cytnx::linalg']]],
-  ['invm_4',['InvM',['../namespacecytnx_1_1linalg.html#af819d2fc4522d2a6287aa16dfbe3f787',1,'cytnx::linalg']]],
-  ['invm_5f_5',['InvM_',['../namespacecytnx_1_1linalg.html#ac414e561888051c1fbacde18c9039fbf',1,'cytnx::linalg']]],
-  ['item_6',['item',['../classcytnx_1_1Tensor.html#a59bb8b7cf3d142d49c51d694e58ace68',1,'cytnx::Tensor']]]
+  ['hadamard_0',['hadamard',['../namespacecytnx_1_1qgates.html#a37aadd0c317df789f26bad99652d0d3e',1,'cytnx::qgates']]],
+  ['has_5fduplicate_5fqnums_1',['has_duplicate_qnums',['../classcytnx_1_1Bond.html#acd82fa191fc9a25f12ae37899a3aea1e',1,'cytnx::Bond']]],
+  ['hbar_2',['hBar',['../Physics_8hpp.html#adafb6f190ca6cd537bf81bb83b86fdca',1,'Physics.hpp']]],
+  ['histogram_3',['Histogram',['../classcytnx_1_1stat_1_1Histogram.html',1,'cytnx::stat::Histogram'],['../classcytnx_1_1stat_1_1Histogram.html#a352c96dc863dbe89ed3cd93d9578cf28',1,'cytnx::stat::Histogram::Histogram()']]],
+  ['histogram2d_4',['Histogram2d',['../classcytnx_1_1stat_1_1Histogram2d.html',1,'cytnx::stat::Histogram2d'],['../classcytnx_1_1stat_1_1Histogram2d.html#a9c049e4ebca66b565db0e7d2b133d50c',1,'cytnx::stat::Histogram2d::Histogram2d()']]],
+  ['hosvd_5',['Hosvd',['../namespacecytnx_1_1linalg.html#aa1a08b9294b199a6d56f5f5aa2fa58cc',1,'cytnx::linalg::Hosvd(const cytnx::UniTensor &amp;Tin, const std::vector&lt; cytnx_uint64 &gt; &amp;mode, const bool &amp;is_core=true, const bool &amp;is_Ls=false, const std::vector&lt; cytnx_int64 &gt; &amp;trucate_dim=std::vector&lt; cytnx_int64 &gt;())'],['../namespacecytnx_1_1linalg.html#a6c3142f633f9aca2f80bb359b9c58cf5',1,'cytnx::linalg::Hosvd(const Tensor &amp;Tin, const std::vector&lt; cytnx_uint64 &gt; &amp;mode, const bool &amp;is_core=true, const bool &amp;is_Ls=false, const std::vector&lt; cytnx_int64 &gt; &amp;trucate_dim=std::vector&lt; cytnx_int64 &gt;())']]],
+  ['hplanck_6',['hPlanck',['../Physics_8hpp.html#acb991e9f5a4457fb08f1d844165d4042',1,'Physics.hpp']]],
+  ['hsplit_7',['Hsplit',['../namespacecytnx_1_1algo.html#a882e6a0d33e659d35f7f1df18a51152a',1,'cytnx::algo']]],
+  ['hsplit_5f_8',['Hsplit_',['../namespacecytnx_1_1algo.html#a030124e0b8e894d35837134e3111e3c7',1,'cytnx::algo']]],
+  ['hstack_9',['Hstack',['../namespacecytnx_1_1algo.html#aab9f9b299fa60c565206f5f0c021618b',1,'cytnx::algo']]]
 ];

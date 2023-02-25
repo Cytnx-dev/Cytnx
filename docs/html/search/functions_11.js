@@ -1,13 +1,21 @@
 var searchData=
 [
-  ['tensordot_0',['Tensordot',['../namespacecytnx_1_1linalg.html#a242f1b9c1ee7938ba050121773ab4b55',1,'cytnx::linalg']]],
-  ['tensordot_5fdg_1',['Tensordot_dg',['../namespacecytnx_1_1linalg.html#ac77faf8e0c0153e1890610a6e21f36af',1,'cytnx::linalg']]],
-  ['to_2',['to',['../classcytnx_1_1Storage.html#a2abfcaacf807934be5dd21c254fdb30e',1,'cytnx::Storage::to()'],['../classcytnx_1_1Tensor.html#acf7f697a9434f9bc98a7d00a555ee982',1,'cytnx::Tensor::to()']]],
-  ['to_5f_3',['to_',['../classcytnx_1_1Storage.html#a0bbf2cbefb5d0835bcb4f0d05e400870',1,'cytnx::Storage::to_()'],['../classcytnx_1_1Tensor.html#a114a31fbb8bf4a90f150b6a67e42183a',1,'cytnx::Tensor::to_()']]],
-  ['trace_4',['Trace',['../classcytnx_1_1UniTensor.html#a5b1311d9ef1d586b8a1bc8da0723dde0',1,'cytnx::UniTensor::Trace()'],['../namespacecytnx_1_1linalg.html#a02d7105bf16d23128687ba92fb231b54',1,'cytnx::linalg::Trace()']]],
-  ['trace_5f_5',['Trace_',['../classcytnx_1_1UniTensor.html#a84fc453e18c73323887ce155bf7dd247',1,'cytnx::UniTensor']]],
-  ['tridiag_6',['Tridiag',['../namespacecytnx_1_1linalg.html#a5a502c7d0a6a46f0e695f211a42ab9dc',1,'cytnx::linalg']]],
-  ['truncate_7',['truncate',['../classcytnx_1_1UniTensor.html#a22a06f64274ea1ac34d83bd6e2ff264e',1,'cytnx::UniTensor']]],
-  ['truncate_5f_8',['truncate_',['../classcytnx_1_1UniTensor.html#a8cb549e31b88cad78ee53b92107cfb3a',1,'cytnx::UniTensor']]],
-  ['type_9',['type',['../classcytnx_1_1Bond.html#a8517743cec9589ed551114ea7e55fbb1',1,'cytnx::Bond']]]
+  ['radd_0',['radd',['../classcytnx_1_1Scalar.html#af42ff2e02ccbb4bc5863cbc332757b1a',1,'cytnx::Scalar::radd(const Scalar &amp;rhs) const'],['../classcytnx_1_1Scalar.html#af46a3c1bba5d6d27517990621bee15a7',1,'cytnx::Scalar::radd(const T &amp;rc) const']]],
+  ['range_1',['range',['../classcytnx_1_1Accessor.html#a7a5a508a58b71897c3dd162195aceaa9',1,'cytnx::Accessor']]],
+  ['rank_2',['rank',['../classcytnx_1_1Tensor.html#aa3ee5ed793cacd43d3fadbd92d7920a4',1,'cytnx::Tensor::rank()'],['../classcytnx_1_1UniTensor.html#a95239beb2137a790e5765e32060ff09f',1,'cytnx::UniTensor::rank()']]],
+  ['rdiv_3',['rdiv',['../classcytnx_1_1Scalar.html#aaa4e2404d4dba02f088a679dcd55eac8',1,'cytnx::Scalar::rdiv(const T &amp;rc) const'],['../classcytnx_1_1Scalar.html#ae108fe64019ba439fe580bb0cefad267',1,'cytnx::Scalar::rdiv(const Scalar &amp;rhs) const']]],
+  ['real_4',['real',['../classcytnx_1_1Scalar.html#a5aeb04244fabccd410a6480d6d4aabe6',1,'cytnx::Scalar::real()'],['../classcytnx_1_1Storage.html#a1c28604bf7751c817c44dc3286d6520f',1,'cytnx::Storage::real()'],['../classcytnx_1_1Tensor.html#ac863dbd316a4771a95810a2e9b922c4e',1,'cytnx::Tensor::real()']]],
+  ['redirect_5',['redirect',['../classcytnx_1_1Bond.html#a6f47360919864f12affe9fda49b03994',1,'cytnx::Bond']]],
+  ['redirect_5f_6',['redirect_',['../classcytnx_1_1Bond.html#aa023d872df52de5594b963e109ab7723',1,'cytnx::Bond']]],
+  ['relabel_7',['relabel',['../classcytnx_1_1UniTensor.html#a497ff915bf717edacbc5a8813393eb3d',1,'cytnx::UniTensor::relabel(const cytnx_int64 &amp;inx, const cytnx_int64 &amp;new_label, const bool &amp;by_label=false) const'],['../classcytnx_1_1UniTensor.html#ace3f158d0212942e6e9b0d5d07ebbf92',1,'cytnx::UniTensor::relabel(const cytnx_int64 &amp;inx, const std::string &amp;new_label) const'],['../classcytnx_1_1UniTensor.html#a89b99b81994e6be6ee5c11ed18256f59',1,'cytnx::UniTensor::relabel(const std::string &amp;old_label, const std::string &amp;new_label) const']]],
+  ['relabels_8',['relabels',['../classcytnx_1_1UniTensor.html#a4c30689806c65ea691ab89e3d4383f76',1,'cytnx::UniTensor::relabels(const std::initializer_list&lt; char * &gt; &amp;new_lbls) const'],['../classcytnx_1_1UniTensor.html#aea30e0417a4b6552a016d77ff10cc032',1,'cytnx::UniTensor::relabels(const std::vector&lt; std::string &gt; &amp;new_labels) const'],['../classcytnx_1_1UniTensor.html#a04977b5c16428f35abeefbc7b3e235e1',1,'cytnx::UniTensor::relabels(const std::vector&lt; cytnx_int64 &gt; &amp;new_labels) const']]],
+  ['reshape_9',['reshape',['../classcytnx_1_1Tensor.html#a57aea99887adf41da14fd7578ef9bf13',1,'cytnx::Tensor::reshape(const std::vector&lt; cytnx_int64 &gt; &amp;new_shape) const'],['../classcytnx_1_1Tensor.html#a15e7c245ee923c77e02209dc5cfe5198',1,'cytnx::Tensor::reshape(const std::vector&lt; cytnx_uint64 &gt; &amp;new_shape) const'],['../classcytnx_1_1Tensor.html#a32e42ecf5755144b071de1be9d13c692',1,'cytnx::Tensor::reshape(const std::initializer_list&lt; cytnx_int64 &gt; &amp;new_shape) const'],['../classcytnx_1_1UniTensor.html#a18226194a82791cfa6f661293b25d101',1,'cytnx::UniTensor::reshape()']]],
+  ['reshape_5f_10',['reshape_',['../classcytnx_1_1Tensor.html#a3723449528b9a20dd46c32c9e042b8f0',1,'cytnx::Tensor::reshape_()'],['../classcytnx_1_1UniTensor.html#a4fe900047caaf4627340fb486091fc9c',1,'cytnx::UniTensor::reshape_()']]],
+  ['resize_11',['resize',['../classcytnx_1_1Storage.html#a2ff5a21f81e9b90a5e78e1ba1698351b',1,'cytnx::Storage']]],
+  ['retype_12',['retype',['../classcytnx_1_1Bond.html#a31c8ff7b0817c37e67a80a225f5bd758',1,'cytnx::Bond']]],
+  ['reverse_5frule_13',['reverse_rule',['../classcytnx_1_1Symmetry.html#a9f856245a37472cb51c74cff0777d15e',1,'cytnx::Symmetry']]],
+  ['reverse_5frule_5f_14',['reverse_rule_',['../classcytnx_1_1Symmetry.html#ac7dfa6758b9dfb1963f19f0eec7cc4a3',1,'cytnx::Symmetry']]],
+  ['rmul_15',['rmul',['../classcytnx_1_1Scalar.html#a279ffe4d5bfd5761103b1db1a26f2f8d',1,'cytnx::Scalar::rmul(const T &amp;rc) const'],['../classcytnx_1_1Scalar.html#acab78dfecd16f8aa5639cdadcf8033d5',1,'cytnx::Scalar::rmul(const Scalar &amp;rhs) const']]],
+  ['rowrank_16',['rowrank',['../classcytnx_1_1UniTensor.html#a373efd1b4ee3f0588f30f4795f2c5c16',1,'cytnx::UniTensor']]],
+  ['rsub_17',['rsub',['../classcytnx_1_1Scalar.html#a3fb06a43f99f5d63e24c8e9bc68e036f',1,'cytnx::Scalar::rsub(const T &amp;rc) const'],['../classcytnx_1_1Scalar.html#af1f45d939e5a81579ad0d0f41df066b8',1,'cytnx::Scalar::rsub(const Scalar &amp;rhs) const']]]
 ];

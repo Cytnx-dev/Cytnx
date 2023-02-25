@@ -81,19 +81,22 @@ bool {\bfseries operator!=} (const \mbox{\hyperlink{classcytnx_1_1Storage}{Stora
 \item 
 \mbox{\Hypertarget{classcytnx_1_1Storage_abfabe912f8d0b33eba8ca210c7fca910}\label{classcytnx_1_1Storage_abfabe912f8d0b33eba8ca210c7fca910}} 
 Scalar\+::\+Sproxy {\bfseries operator()} (const cytnx\+\_\+uint64 \&idx)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Storage_a3a04d665077403b507c84dc301359c5c}\label{classcytnx_1_1Storage_a3a04d665077403b507c84dc301359c5c}} 
+template$<$$>$ std\+::vector$<$ cytnx\+\_\+bool $>$ {\bfseries vector} ()
 \end{DoxyCompactItemize}
 \doxysubsection*{Static Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-static \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} \mbox{\hyperlink{classcytnx_1_1Storage_a12d92ef18b3d463d0f4086ef613abb4e}{Load}} (const std\+::string \&fname)
+static \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} \mbox{\hyperlink{classcytnx_1_1Storage_a830f293f47a42ede8dbc57d3a3bff605}{Load}} (const std\+::string \&fname)
 \begin{DoxyCompactList}\small\item\em Load current \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} from file. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classcytnx_1_1Storage_a7f2090ec019d6de4891b595bed6aa01d}\label{classcytnx_1_1Storage_a7f2090ec019d6de4891b595bed6aa01d}} 
+\mbox{\Hypertarget{classcytnx_1_1Storage_ace206b1c452015d7c43a389d55f5ea86}\label{classcytnx_1_1Storage_ace206b1c452015d7c43a389d55f5ea86}} 
 static \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} {\bfseries Load} (const char $\ast$fname)
 \item 
-\mbox{\Hypertarget{classcytnx_1_1Storage_a81d39359e179157a6286d71d57dc8826}\label{classcytnx_1_1Storage_a81d39359e179157a6286d71d57dc8826}} 
+\mbox{\Hypertarget{classcytnx_1_1Storage_aae11c5cc673616aa2fde4e203be4d6bc}\label{classcytnx_1_1Storage_aae11c5cc673616aa2fde4e203be4d6bc}} 
 static \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} {\bfseries Fromfile} (const std\+::string \&fname, const unsigned int \&\mbox{\hyperlink{classcytnx_1_1Storage_a51b99e00d854442b662c540c5a960831}{dtype}}, const cytnx\+\_\+int64 \&count=-\/1)
 \item 
-\mbox{\Hypertarget{classcytnx_1_1Storage_aaf551c88ba3f7e17d697f76e0d4fa285}\label{classcytnx_1_1Storage_aaf551c88ba3f7e17d697f76e0d4fa285}} 
+\mbox{\Hypertarget{classcytnx_1_1Storage_ae25a7b0e0f1a37c1f919fcc8f71e3ec0}\label{classcytnx_1_1Storage_ae25a7b0e0f1a37c1f919fcc8f71e3ec0}} 
 static \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} {\bfseries Fromfile} (const char $\ast$fname, const unsigned int \&\mbox{\hyperlink{classcytnx_1_1Storage_a51b99e00d854442b662c540c5a960831}{dtype}}, const cytnx\+\_\+int64 \&count=-\/1)
 \item 
 \mbox{\Hypertarget{classcytnx_1_1Storage_a92f5d8c9eea09dd899c8eea1c125d94b}\label{classcytnx_1_1Storage_a92f5d8c9eea09dd899c8eea1c125d94b}} 
@@ -617,11 +620,11 @@ size  : 10
 
 
 \end{DoxyVerbInclude}
- \mbox{\Hypertarget{classcytnx_1_1Storage_a12d92ef18b3d463d0f4086ef613abb4e}\label{classcytnx_1_1Storage_a12d92ef18b3d463d0f4086ef613abb4e}} 
+ \mbox{\Hypertarget{classcytnx_1_1Storage_a830f293f47a42ede8dbc57d3a3bff605}\label{classcytnx_1_1Storage_a830f293f47a42ede8dbc57d3a3bff605}} 
 \index{cytnx::Storage@{cytnx::Storage}!Load@{Load}}
 \index{Load@{Load}!cytnx::Storage@{cytnx::Storage}}
 \doxysubsubsection{\texorpdfstring{Load()}{Load()}}
-{\footnotesize\ttfamily static \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} cytnx\+::\+Storage\+::\+Load (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{fname }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} cytnx\+::\+Storage\+::\+Load (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{fname }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
 
 
@@ -940,6 +943,7 @@ move the current \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} to different 
 \end{DoxyParams}
 see also \mbox{\hyperlink{classcytnx_1_1Storage_a2abfcaacf807934be5dd21c254fdb30e}{Storage.\+to() }} 
 
-The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-include/Storage.\+hpp\end{DoxyCompactItemize}
+include/Storage.\+hpp\item 
+src/Storage.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,464 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classcytnx_1_1LinOp" kind="class" language="C++" prot="public">
+    <compoundname>cytnx::LinOp</compoundname>
+    <includes refid="LinOp_8hpp" local="no">LinOp.hpp</includes>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classcytnx_1_1LinOp_1a28d0512985d35f0cb72f297288f2cdcc" prot="private" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string cytnx::LinOp::_type</definition>
+        <argsstring></argsstring>
+        <name>_type</name>
+        <qualifiedname>cytnx::LinOp::_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/LinOp.hpp" line="23" column="17" bodyfile="include/LinOp.hpp" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classcytnx_1_1LinOp_1a38afcf53b4dc771d8c23e0441450a2d8" prot="private" static="no" mutable="no">
+        <type><ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref></type>
+        <definition>cytnx_uint64 cytnx::LinOp::_nx</definition>
+        <argsstring></argsstring>
+        <name>_nx</name>
+        <qualifiedname>cytnx::LinOp::_nx</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/LinOp.hpp" line="26" column="18" bodyfile="include/LinOp.hpp" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classcytnx_1_1LinOp_1ac76c9e57aa2113b01bf71c3d509499fb" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int cytnx::LinOp::_device</definition>
+        <argsstring></argsstring>
+        <name>_device</name>
+        <qualifiedname>cytnx::LinOp::_device</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/LinOp.hpp" line="29" column="9" bodyfile="include/LinOp.hpp" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classcytnx_1_1LinOp_1a232ded9ea0ee4107477119fdaf5c4f1b" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int cytnx::LinOp::_dtype</definition>
+        <argsstring></argsstring>
+        <name>_dtype</name>
+        <qualifiedname>cytnx::LinOp::_dtype</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/LinOp.hpp" line="30" column="9" bodyfile="include/LinOp.hpp" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classcytnx_1_1LinOp_1af3a0dac626a93e3d76f99ec240ba29d8" prot="private" static="no" mutable="no">
+        <type>std::map&lt; <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref>, std::pair&lt; std::vector&lt; <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref> &gt;, <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt; &gt;</type>
+        <definition>std::map&lt;cytnx_uint64, std::pair&lt;std::vector&lt;cytnx_uint64&gt;, Tensor&gt; &gt; cytnx::LinOp::_elems</definition>
+        <argsstring></argsstring>
+        <name>_elems</name>
+        <qualifiedname>cytnx::LinOp::_elems</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/LinOp.hpp" line="34" column="7" bodyfile="include/LinOp.hpp" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classcytnx_1_1LinOp_1a85e4b563c270ccc9a92a5035e50dfd42" prot="private" static="no" mutable="no">
+        <type>std::map&lt; <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref>, std::pair&lt; std::vector&lt; <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref> &gt;, <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt; &gt;::iterator</type>
+        <definition>std::map&lt;cytnx_uint64,std::pair&lt;std::vector&lt;cytnx_uint64&gt;,Tensor&gt;&gt;::iterator cytnx::LinOp::_elems_it</definition>
+        <argsstring></argsstring>
+        <name>_elems_it</name>
+        <qualifiedname>cytnx::LinOp::_elems_it</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/LinOp.hpp" line="35" column="25" bodyfile="include/LinOp.hpp" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classcytnx_1_1LinOp_1afe4a5981a4750cce363fee653c429e92" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::LinOp::_mv_elemfunc</definition>
+        <argsstring>(const Tensor &amp;)</argsstring>
+        <name>_mv_elemfunc</name>
+        <qualifiedname>cytnx::LinOp::_mv_elemfunc</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <defname>Tin</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/LinOp.hpp" line="37" column="12" bodyfile="src/LinOp.cpp" bodystart="24" bodyend="62"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classcytnx_1_1LinOp_1a4c85814f56d28735575bb577d1d97afa" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>cytnx::LinOp::LinOp</definition>
+        <argsstring>(const std::string &amp;type, const cytnx_uint64 &amp;nx, const int &amp;dtype=Type.Double, const int &amp;device=Device.cpu)</argsstring>
+        <name>LinOp</name>
+        <qualifiedname>cytnx::LinOp::LinOp</qualifiedname>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>type</declname>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref> &amp;</type>
+          <declname>nx</declname>
+        </param>
+        <param>
+          <type>const int &amp;</type>
+          <declname>dtype</declname>
+          <defval>Type.Double</defval>
+        </param>
+        <param>
+          <type>const int &amp;</type>
+          <declname>device</declname>
+          <defval>Device.cpu</defval>
+        </param>
+        <briefdescription>
+<para>Linear Operator class for iterative solvers. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>type</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the type of operator, currently it can only be &quot;mv&quot; (matvec) or &quot;mv_elem&quot; (matvec with pre-store element) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>nx</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the last dimension of operator, this should be the dimension of the input vector when &quot;mv_elem&quot; is used. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>dtype</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the Operator&apos;s dtype. Note that this should match the input/output <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>&apos;s dtype. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>device</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the Operator&apos;s on device.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<heading level="2">Note:</heading>
+</para>
+<para><orderedlist>
+<listitem><para>the device and dtype should be set. This should be the same as the input and output vectors. by default, we assume custom_f take input and output vector to be on CPU and Double type.</para>
+</listitem></orderedlist>
+</para>
+<para><heading level="2">Details:</heading>
+</para>
+<para>The <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> class is a class that defines a custom Linear operation acting on a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> or <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. To use, inherit this class and override the matvec function. See the following examples for how to use them.</para>
+<para><heading level="2">Example:</heading>
+</para>
+<para><heading level="3">c++ API:</heading>
+</para>
+<para><programlisting filename="example/LinOp/init.cpp"></programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim></verbatim> <heading level="3">python API:</heading>
+</para>
+<para><programlisting filename="example/LinOp/init.py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>cytnx<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>*</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>LinOp<sp/>class<sp/>provides<sp/>a<sp/>base<sp/>class<sp/>that<sp/>defines<sp/>the<sp/>operation<sp/>on<sp/>a<sp/>vector.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>This<sp/>class<sp/>or<sp/>it&apos;s<sp/>derived<sp/>class<sp/>are<sp/>required<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>for<sp/>using<sp/>the<sp/>cytnx&apos;s<sp/>iterative<sp/>solver<sp/>such<sp/>as<sp/>Lanczos<sp/>and<sp/>Arnodi.<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#-----------------------------------------</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>Suppose<sp/>we<sp/>want<sp/>to<sp/>define<sp/>a<sp/>custom<sp/>linear<sp/>operation<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>acting<sp/>on<sp/>input<sp/>vector<sp/>t<sp/>(dim=4)<sp/>that<sp/>swap<sp/>the<sp/>first<sp/>and<sp/>last<sp/>element<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>and<sp/>add<sp/>the<sp/>2nd<sp/>and<sp/>3rd<sp/>element<sp/>with<sp/>one.<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">t<sp/>=<sp/>arange(4)</highlight></codeline>
+<codeline><highlight class="normal">print(t)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>Method<sp/>1,<sp/>write<sp/>a<sp/>custom<sp/>function,<sp/>and<sp/>assign<sp/>into<sp/>the<sp/>LinOp<sp/>class</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>-----------------------------------</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>[Note]<sp/>the<sp/>function<sp/>should<sp/>have<sp/>the<sp/>signature<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Tensor<sp/>f(const<sp/>Tensor&amp;)<sp/>as<sp/>in<sp/>C++</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">myfunc(v):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>out<sp/>=<sp/>v.clone();</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>out[0],<sp/>out[3]<sp/>=<sp/>v[3],<sp/>v[0];<sp/></highlight><highlight class="comment">#swap</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>out[1]+=1<sp/></highlight><highlight class="comment">#add<sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>out[2]+=1<sp/></highlight><highlight class="comment">#add<sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>out;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">lop<sp/>=<sp/>LinOp(</highlight><highlight class="stringliteral">&quot;mv&quot;</highlight><highlight class="normal">,nx=4,dtype=Type.Double,device=Device.cpu,custom_f=myfunc)</highlight></codeline>
+<codeline><highlight class="normal">print(lop.matvec(t))<sp/></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>Method<sp/>2,<sp/>write<sp/>a<sp/>custom<sp/>class<sp/>that<sp/>inherit<sp/>LinOp<sp/>class.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>------------------------------------</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>[Note]<sp/>Instead<sp/>of<sp/>writing<sp/>a<sp/>custom<sp/>class,<sp/>we<sp/>overload<sp/>the<sp/>matvec()<sp/>directly.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Inheritance<sp/>is<sp/>handy<sp/>if<sp/>there<sp/>are<sp/>additional<sp/>parameters/arguments<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>needed<sp/>for<sp/>the<sp/>custom<sp/>operation.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">MyOp(LinOp):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>AddConst<sp/>=<sp/>1<sp/></highlight><highlight class="comment">#<sp/>let&apos;s<sp/>make<sp/>it<sp/>a<sp/>class<sp/>member.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__init__(self,typ,nx,aconst):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>LinOp.__init__(self,typ,nx,Type.Double,Device.cpu)<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.AddConst<sp/>=<sp/>aconst</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">matvec(self,v):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>out<sp/>=<sp/>v.clone()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>out[0],out[3]<sp/>=<sp/>v[3],v[0]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>out[1]+=self.AddConst<sp/></highlight><highlight class="comment">#add<sp/>the<sp/>constant</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>out[2]+=self.AddConst<sp/></highlight><highlight class="comment">#add<sp/>the<sp/>constant</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>out</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">mylop<sp/>=<sp/>MyOp(</highlight><highlight class="stringliteral">&quot;mv&quot;</highlight><highlight class="normal">,nx=4,aconst=3)<sp/></highlight><highlight class="comment">#<sp/>let&apos;s<sp/>add<sp/>3<sp/>instead<sp/>of<sp/>one.<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">print(mylop.matvec(t))<sp/></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>
+Total elem: 4
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4)
+[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 ]
+
+
+
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/LinOp.hpp" line="74" column="5" bodyfile="include/LinOp.hpp" bodystart="74" bodyend="88"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1LinOp_1adcdd3fb4a8e375e3225b11ea5e2c56ca" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void cytnx::LinOp::set_elem</definition>
+        <argsstring>(const cytnx_uint64 &amp;i, const cytnx_uint64 &amp;j, const T &amp;elem, const bool check_exists=true)</argsstring>
+        <name>set_elem</name>
+        <qualifiedname>cytnx::LinOp::set_elem</qualifiedname>
+        <param>
+          <type>const <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref> &amp;</type>
+          <declname>i</declname>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref> &amp;</type>
+          <declname>j</declname>
+        </param>
+        <param>
+          <type>const T &amp;</type>
+          <declname>elem</declname>
+        </param>
+        <param>
+          <type>const bool</type>
+          <declname>check_exists</declname>
+          <defval>true</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/LinOp.hpp" line="102" column="10" bodyfile="include/LinOp.hpp" bodystart="102" bodyend="121"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1LinOp_1afa706c8f70c20e993d8721b963a38b74" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Tensor::Tproxy</type>
+        <definition>Tensor::Tproxy cytnx::LinOp::operator()</definition>
+        <argsstring>(const cytnx_uint64 &amp;i, const cytnx_uint64 &amp;j)</argsstring>
+        <name>operator()</name>
+        <qualifiedname>cytnx::LinOp::operator()</qualifiedname>
+        <param>
+          <type>const <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref> &amp;</type>
+          <declname>i</declname>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref> &amp;</type>
+          <declname>j</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/LinOp.hpp" line="122" column="20" bodyfile="include/LinOp.hpp" bodystart="122" bodyend="149"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1LinOp_1aeb31367ba356298976de92fef9e948cf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::LinOp::set_device</definition>
+        <argsstring>(const int &amp;device)</argsstring>
+        <name>set_device</name>
+        <qualifiedname>cytnx::LinOp::set_device</qualifiedname>
+        <param>
+          <type>const int &amp;</type>
+          <declname>device</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/LinOp.hpp" line="151" column="10" bodyfile="include/LinOp.hpp" bodystart="151" bodyend="154"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1LinOp_1af71ddba715715d03342a323c82b0eb7f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::LinOp::set_dtype</definition>
+        <argsstring>(const int &amp;dtype)</argsstring>
+        <name>set_dtype</name>
+        <qualifiedname>cytnx::LinOp::set_dtype</qualifiedname>
+        <param>
+          <type>const int &amp;</type>
+          <declname>dtype</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/LinOp.hpp" line="155" column="10" bodyfile="include/LinOp.hpp" bodystart="155" bodyend="158"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int cytnx::LinOp::device</definition>
+        <argsstring>() const</argsstring>
+        <name>device</name>
+        <qualifiedname>cytnx::LinOp::device</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/LinOp.hpp" line="159" column="9" bodyfile="include/LinOp.hpp" bodystart="159" bodyend="159"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1LinOp_1a64aa0529d6f0d5fd4bb06b900a469a08" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int cytnx::LinOp::dtype</definition>
+        <argsstring>() const</argsstring>
+        <name>dtype</name>
+        <qualifiedname>cytnx::LinOp::dtype</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/LinOp.hpp" line="160" column="9" bodyfile="include/LinOp.hpp" bodystart="160" bodyend="160"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1LinOp_1a7d5704336a5a9f786a582ba0a668b521" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref></type>
+        <definition>cytnx_uint64 cytnx::LinOp::nx</definition>
+        <argsstring>() const</argsstring>
+        <name>nx</name>
+        <qualifiedname>cytnx::LinOp::nx</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/LinOp.hpp" line="161" column="18" bodyfile="include/LinOp.hpp" bodystart="161" bodyend="161"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1LinOp_1af3e9b2601404994b0ce40b4a148ab637" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::LinOp::_print</definition>
+        <argsstring>()</argsstring>
+        <name>_print</name>
+        <qualifiedname>cytnx::LinOp::_print</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/LinOp.hpp" line="163" column="10" bodyfile="src/LinOp.cpp" bodystart="10" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1LinOp_1abd7cc9836466e3a652293356a4f00e14" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>UniTensor cytnx::LinOp::matvec</definition>
+        <argsstring>(const Tensor &amp;Tin)</argsstring>
+        <name>matvec</name>
+        <qualifiedname>cytnx::LinOp::matvec</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Tin</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/LinOp.hpp" line="169" column="20" bodyfile="src/LinOp.cpp" bodystart="64" bodyend="75"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/LinOp.hpp" line="20" column="3" bodyfile="include/LinOp.hpp" bodystart="20" bodyend="176"/>
+    <listofallmembers>
+      <member refid="classcytnx_1_1LinOp_1ac76c9e57aa2113b01bf71c3d509499fb" prot="private" virt="non-virtual"><scope>cytnx::LinOp</scope><name>_device</name></member>
+      <member refid="classcytnx_1_1LinOp_1a232ded9ea0ee4107477119fdaf5c4f1b" prot="private" virt="non-virtual"><scope>cytnx::LinOp</scope><name>_dtype</name></member>
+      <member refid="classcytnx_1_1LinOp_1af3a0dac626a93e3d76f99ec240ba29d8" prot="private" virt="non-virtual"><scope>cytnx::LinOp</scope><name>_elems</name></member>
+      <member refid="classcytnx_1_1LinOp_1a85e4b563c270ccc9a92a5035e50dfd42" prot="private" virt="non-virtual"><scope>cytnx::LinOp</scope><name>_elems_it</name></member>
+      <member refid="classcytnx_1_1LinOp_1afe4a5981a4750cce363fee653c429e92" prot="private" virt="non-virtual"><scope>cytnx::LinOp</scope><name>_mv_elemfunc</name></member>
+      <member refid="classcytnx_1_1LinOp_1a38afcf53b4dc771d8c23e0441450a2d8" prot="private" virt="non-virtual"><scope>cytnx::LinOp</scope><name>_nx</name></member>
+      <member refid="classcytnx_1_1LinOp_1af3e9b2601404994b0ce40b4a148ab637" prot="public" virt="non-virtual"><scope>cytnx::LinOp</scope><name>_print</name></member>
+      <member refid="classcytnx_1_1LinOp_1a28d0512985d35f0cb72f297288f2cdcc" prot="private" virt="non-virtual"><scope>cytnx::LinOp</scope><name>_type</name></member>
+      <member refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" prot="public" virt="non-virtual"><scope>cytnx::LinOp</scope><name>device</name></member>
+      <member refid="classcytnx_1_1LinOp_1a64aa0529d6f0d5fd4bb06b900a469a08" prot="public" virt="non-virtual"><scope>cytnx::LinOp</scope><name>dtype</name></member>
+      <member refid="classcytnx_1_1LinOp_1a4c85814f56d28735575bb577d1d97afa" prot="public" virt="non-virtual"><scope>cytnx::LinOp</scope><name>LinOp</name></member>
+      <member refid="classcytnx_1_1LinOp_1abd7cc9836466e3a652293356a4f00e14" prot="public" virt="virtual"><scope>cytnx::LinOp</scope><name>matvec</name></member>
+      <member refid="classcytnx_1_1LinOp_1a7d5704336a5a9f786a582ba0a668b521" prot="public" virt="non-virtual"><scope>cytnx::LinOp</scope><name>nx</name></member>
+      <member refid="classcytnx_1_1LinOp_1afa706c8f70c20e993d8721b963a38b74" prot="public" virt="non-virtual"><scope>cytnx::LinOp</scope><name>operator()</name></member>
+      <member refid="classcytnx_1_1LinOp_1aeb31367ba356298976de92fef9e948cf" prot="public" virt="non-virtual"><scope>cytnx::LinOp</scope><name>set_device</name></member>
+      <member refid="classcytnx_1_1LinOp_1af71ddba715715d03342a323c82b0eb7f" prot="public" virt="non-virtual"><scope>cytnx::LinOp</scope><name>set_dtype</name></member>
+      <member refid="classcytnx_1_1LinOp_1adcdd3fb4a8e375e3225b11ea5e2c56ca" prot="public" virt="non-virtual"><scope>cytnx::LinOp</scope><name>set_elem</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

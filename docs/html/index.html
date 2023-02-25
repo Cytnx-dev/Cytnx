@@ -1,32 +1,41 @@
-<!-- HTML header for doxygen 1.9.1-->
+<!-- HTML header for doxygen 1.9.5-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Cytnx: Cytnx</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
-<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+       <script type="text/javascript">
+           DoxygenAwesomeDarkModeToggle.init()
+       </script>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="titlearea">
 <table cellspacing="0" cellpadding="0">
  <tbody>
- <tr style="height: 56px;">
+ <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
-  <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Cytnx
-   &#160;<span id="projectnumber">v0.7.7</span>
+  <td id="projectalign">
+   <div id="projectname">Cytnx<span id="projectnumber">&#160;v0.7.7</span>
    </div>
   </td>
  </tr>
@@ -77,24 +86,22 @@ $(function() {
   <div class="headertitle"><div class="title">Cytnx </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p ><a class="anchor" id="md_dox"></a> </p>
-<h1><a class="anchor" id="autotoc_md1"></a>
-Stable Version:</h1>
+<div class="textblock"><p ><a class="anchor" id="md_dox"></a> </p><h1>Stable Version:</h1>
 <p ><a href="https://github.com/kaihsin/Cytnx/tree/v0.7.6">v0.7.6</a></p>
-<h1><a class="anchor" id="autotoc_md2"></a>
-Feature:</h1>
-<h2><a class="anchor" id="autotoc_md3"></a>
-Python x C++</h2>
+<h1>Feature:</h1>
+<h2>Python x C++</h2>
 <p >Benefit from both side. One can do simple prototype on python side and easy transfer to C++ with small effort!</p>
 <div class="fragment"><div class="line"><span class="comment">// c++ version:</span></div>
-<div class="line"><span class="preprocessor">#include &quot;cytnx.hpp&quot;</span></div>
-<div class="line"><a class="code hl_class" href="classcytnx_1_1Tensor.html">cytnx::Tensor</a> A({3,4,5},cytnx::Type.Double,cytnx::Device.cpu)</div>
+<div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div>
+<div class="line"><a class="code hl_class" href="classcytnx_1_1Tensor.html">cytnx::Tensor</a> A({3,4,5},<a class="code hl_variable" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">cytnx::Type</a>.Double,<a class="code hl_variable" href="namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a">cytnx::Device</a>.cpu)</div>
 <div class="ttc" id="aclasscytnx_1_1Tensor_html"><div class="ttname"><a href="classcytnx_1_1Tensor.html">cytnx::Tensor</a></div><div class="ttdoc">an tensor (multi-dimensional array)</div><div class="ttdef"><b>Definition:</b> Tensor.hpp:335</div></div>
+<div class="ttc" id="acytnx_8hpp_html"><div class="ttname"><a href="cytnx_8hpp.html">cytnx.hpp</a></div></div>
+<div class="ttc" id="anamespacecytnx_html_a0159aceab8996db3faf89716e4dd6b9a"><div class="ttname"><a href="namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a">cytnx::Device</a></div><div class="ttdeci">Device_class Device</div><div class="ttdef"><b>Definition:</b> Device.cpp:140</div></div>
+<div class="ttc" id="anamespacecytnx_html_ac2c6c045a5fd258e21bd0786744839c2"><div class="ttname"><a href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">cytnx::Type</a></div><div class="ttdeci">Type_class Type</div><div class="ttdef"><b>Definition:</b> Type.cpp:23</div></div>
 </div><!-- fragment --><div class="fragment"><div class="line"><span class="comment"># python version:</span></div>
 <div class="line"><span class="keyword">import</span> cytnx</div>
 <div class="line">A =  <a class="code hl_class" href="classcytnx_1_1Tensor.html">cytnx.Tensor</a>([3,4,5],dtype=cytnx.Type.Double,device=cytnx.Device.cpu)</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md4"></a>
-1. All the Storage and Tensor can now have mulitple type support.</h2>
+</div><!-- fragment --><h2>1. All the Storage and Tensor can now have mulitple type support.</h2>
 <p >The avaliable types are :</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -122,13 +129,11 @@ Python x C++</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">cytnx_bool   </td><td class="markdownTableBodyNone">bool   </td><td class="markdownTableBodyNone">Type.Bool   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md5"></a>
-2. Multiple devices support.</h2>
+<h2>2. Multiple devices support.</h2>
 <ul>
 <li>simple moving btwn CPU and GPU (see below)</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md6"></a>
-Objects:</h1>
+<h1>Objects:</h1>
 <ul>
 <li><a class="el" href="classcytnx_1_1Storage.html">Storage </a> [binded]</li>
 <li><a class="el" href="classcytnx_1_1Tensor.html">Tensor </a> [binded]</li>
@@ -138,8 +143,7 @@ Objects:</h1>
 <li><a class="el" href="classcytnx_1_1UniTensor.html">UniTensor </a> [binded]</li>
 <li><a class="el" href="classcytnx_1_1Network.html">Network </a> [binded]</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md7"></a>
-linear algebra functions:</h1>
+<h1>linear algebra functions:</h1>
 <p >See <a class="el" href="namespacecytnx_1_1linalg.html">cytnx::linalg </a> for further details</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -157,19 +161,19 @@ linear algebra functions:</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><a class="el" href="namespacecytnx_1_1linalg.html#a56d73db3d0cdd3a2ca5ed5f88f0738ff">Mod</a>   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">+,+=[tn]   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y (<a class="el" href="#a2744949ae1bbbef4a852b11153617b5d">Tensor.Add_</a>)    </td></tr>
+<td class="markdownTableBodyNone">+,+=[tn]   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y (<a class="el" href="classcytnx_1_1Tensor.html#a2744949ae1bbbef4a852b11153617b5d">Tensor.Add_</a>)    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">-,-=[tn]   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y (<a class="el" href="#aff0275bf4752791ebc51b3f02b456115">Tensor.Sub_</a>)    </td></tr>
+<td class="markdownTableBodyNone">-,-=[tn]   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y (<a class="el" href="classcytnx_1_1Tensor.html#aff0275bf4752791ebc51b3f02b456115">Tensor.Sub_</a>)    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">*,*=[tn]   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y (<a class="el" href="#a9eb8827f29f8932c24d8315017b7c7e2">Tensor.Mul_</a>)    </td></tr>
+<td class="markdownTableBodyNone">*,*=[tn]   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y (<a class="el" href="classcytnx_1_1Tensor.html#a9eb8827f29f8932c24d8315017b7c7e2">Tensor.Mul_</a>)    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">/,/=[tn]   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y (<a class="el" href="#a7e079fdaf9bb56c21e1300dbf08e7223">Tensor.Div_</a>)    </td></tr>
+<td class="markdownTableBodyNone">/,/=[tn]   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y (<a class="el" href="classcytnx_1_1Tensor.html#a7e079fdaf9bb56c21e1300dbf08e7223">Tensor.Div_</a>)    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">== [tn]   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y (<a class="el" href="">Tensor.Cpr_</a>)    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a class="el" href="#ad3681539523188fce02d6332cfa1ffd1">Svd</a>   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="namespacecytnx_1_1linalg.html#ad3681539523188fce02d6332cfa1ffd1">Svd</a>   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">*<a class="el" href="#a73ad52d4027c912fe24ffdffc2d893f8">Svd_truncate</a>   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">N    </td></tr>
+<td class="markdownTableBodyNone">*<a class="el" href="namespacecytnx_1_1linalg.html#a73ad52d4027c912fe24ffdffc2d893f8">Svd_truncate</a>   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">N    </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><a class="el" href="namespacecytnx_1_1linalg.html#af819d2fc4522d2a6287aa16dfbe3f787">InvM</a>   </td><td class="markdownTableBodyNone"><a class="el" href="namespacecytnx_1_1linalg.html#ac414e561888051c1fbacde18c9039fbf">InvM_</a>   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y    </td></tr>
 <tr class="markdownTableRowOdd">
@@ -181,9 +185,9 @@ linear algebra functions:</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><a class="el" href="namespacecytnx_1_1linalg.html#a5831918722e5d18f4eaf37834b8fbf77">Expf</a>   </td><td class="markdownTableBodyNone"><a class="el" href="namespacecytnx_1_1linalg.html#a5de1faf71c76cdc6b7fa5ba3a3e21bbb">Expf_</a>   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">*<a class="el" href="#ae394378db613a244ad518504047669c0">ExpH</a>   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">N    </td></tr>
+<td class="markdownTableBodyNone">*<a class="el" href="namespacecytnx_1_1linalg.html#ae394378db613a244ad518504047669c0">ExpH</a>   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">N    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">*<a class="el" href="#ad5c478aa9da366c15ec7a2351dc99d93">ExpM</a>   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">N    </td></tr>
+<td class="markdownTableBodyNone">*<a class="el" href="namespacecytnx_1_1linalg.html#ad5c478aa9da366c15ec7a2351dc99d93">ExpM</a>   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">N    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a class="el" href="namespacecytnx_1_1linalg.html#a63fb9c9751ff27d22f84a52a876cc6fc">Eigh</a>   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y    </td></tr>
 <tr class="markdownTableRowEven">
@@ -211,15 +215,15 @@ linear algebra functions:</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a class="el" href="namespacecytnx_1_1linalg.html#a3ded6435c7b47eb348d03783bfe72611">Abs</a>   </td><td class="markdownTableBodyNone"><a class="el" href="namespacecytnx_1_1linalg.html#a30687e6240a889c04637b33ef90c2525">Abs_</a>   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">N   </td><td class="markdownTableBodyNone">Y    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a class="el" href="#a194461432b34c60984a02569a4d9c903">Qr</a>   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">N   </td><td class="markdownTableBodyNone">N    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="namespacecytnx_1_1linalg.html#a194461432b34c60984a02569a4d9c903">Qr</a>   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">N   </td><td class="markdownTableBodyNone">N    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a class="el" href="#ac3a4d9f746e4d05555de50ac9fca9a77">Qdr</a>   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">N   </td><td class="markdownTableBodyNone">N    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="namespacecytnx_1_1linalg.html#ac3a4d9f746e4d05555de50ac9fca9a77">Qdr</a>   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">N   </td><td class="markdownTableBodyNone">N    </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><a class="el" href="namespacecytnx_1_1linalg.html#a25b5f2fdfb550aabc9cc41daa963e1fb">Min</a>   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">N   </td><td class="markdownTableBodyNone">Y    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a class="el" href="namespacecytnx_1_1linalg.html#a93ef263824e2dcdab4832ea628959d19">Max</a>   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">N   </td><td class="markdownTableBodyNone">Y    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">*<a class="el" href="#a2345742316261ec8d04ceb2797c6b521">Trace</a>   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">N   </td><td class="markdownTableBodyNone">N   </td></tr>
+<td class="markdownTableBodyNone">*<a class="el" href="namespacecytnx_1_1linalg.html#a2345742316261ec8d04ceb2797c6b521">Trace</a>   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">N   </td><td class="markdownTableBodyNone">N   </td></tr>
 </table>
 <pre class="fragment">iterative solver
 
@@ -231,30 +235,26 @@ linear algebra functions:</h1>
 ^ this is temporary disable
 
 . this is floating point type only
-</pre> <h1><a class="anchor" id="autotoc_md8"></a>
-Container Generators</h1>
-<p >Tensor: <a class="el" href="#ab8a79a03fb0465f3eb2641017f3f1755">zeros()</a>, <a class="el" href="#a83fb7bbe73368751a0d0f535d4a10a33">ones()</a>, <a class="el" href="#a685cf4e94754373ae4f12622b168fb98">arange()</a>, <a class="el" href="#af8aa7e619c030f80c54e4d26b576484b">identity()</a>, <a class="el" href="#affbd9073156ce86d5e5c03742603c631">eye()</a>,</p>
-<h1><a class="anchor" id="autotoc_md9"></a>
-Physics Category</h1>
-<p >Tensor: <a class="el" href="#a9f018f04ccd068e899a8fcfe2e9b82d4">spin()</a> <a class="el" href="#a1c6ebefa40751712dfb8976b015f48d6">pauli()</a></p>
-<h1><a class="anchor" id="autotoc_md10"></a>
-Random</h1>
-<p >See <a class="el" href="">cytnx::random </a> for further details</p>
+</pre> <h1>Container Generators</h1>
+<p >Tensor: <a class="el" href="namespacecytnx.html#ab8a79a03fb0465f3eb2641017f3f1755">zeros()</a>, <a class="el" href="namespacecytnx.html#a83fb7bbe73368751a0d0f535d4a10a33">ones()</a>, <a class="el" href="namespacecytnx.html#a685cf4e94754373ae4f12622b168fb98">arange()</a>, <a class="el" href="namespacecytnx.html#af8aa7e619c030f80c54e4d26b576484b">identity()</a>, <a class="el" href="namespacecytnx.html#affbd9073156ce86d5e5c03742603c631">eye()</a>,</p>
+<h1>Physics Category</h1>
+<p >Tensor: <a class="el" href="namespacecytnx_1_1physics.html#a9f018f04ccd068e899a8fcfe2e9b82d4">spin()</a> <a class="el" href="namespacecytnx_1_1physics.html#a1c6ebefa40751712dfb8976b015f48d6">pauli()</a></p>
+<h1>Random</h1>
+<p >See <a class="el" href="namespacecytnx_1_1random.html">cytnx::random </a> for further details</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">func   </th><th class="markdownTableHeadNone">Tn   </th><th class="markdownTableHeadNone">Stor   </th><th class="markdownTableHeadNone">CPU   </th><th class="markdownTableHeadNone">GPU    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">*<a class="el" href="#ac456ace342f35864d3a927b3ce9fccbd">Make_normal</a>   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y    </td></tr>
+<td class="markdownTableBodyNone">*<a class="el" href="namespacecytnx_1_1random.html#ac456ace342f35864d3a927b3ce9fccbd">Make_normal</a>   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">^<a class="el" href="#a11ab0d554038b6339bf33a67c4977b70">normal</a>   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td></tr>
+<td class="markdownTableBodyNone">^<a class="el" href="namespacecytnx_1_1random.html#a11ab0d554038b6339bf33a67c4977b70">normal</a>   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">Y   </td></tr>
 </table>
 <ul>
 <li>this is initializer</li>
 </ul>
 <p >^ this is generator</p>
 <p >[Note] The difference of initializer and generator is that initializer is used to initialize the Tensor, and generator generates a new Tensor.</p>
-<h1><a class="anchor" id="autotoc_md11"></a>
-conda install</h1>
+<h1>conda install</h1>
 <p >[Currently Linux only]</p>
 <p >without CUDA</p><ul>
 <li>python 3.6/3.7/3.8: conda install -c kaihsinwu cytnx</li>
@@ -262,10 +262,8 @@ conda install</h1>
 <p >with CUDA</p><ul>
 <li>python 3.6/3.7/3.8: conda install -c kaihsinwu cytnx_cuda</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md12"></a>
-Some snippets:</h1>
-<h2><a class="anchor" id="autotoc_md13"></a>
-Storage</h2>
+<h1>Some snippets:</h1>
+<h2>Storage</h2>
 <ul>
 <li>Memory container with GPU/CPU support. maintain type conversions (type casting btwn Storages) and moving btwn devices.</li>
 <li>Generic type object, the behavior is very similar to python. <div class="fragment"><div class="line">Storage A(400,Type.Double);</div>
@@ -277,21 +275,20 @@ Storage</h2>
 <div class="line">Storage C = A.to(Device.cuda+0); </div>
 </div><!-- fragment --></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md14"></a>
-Tensor</h2>
+<h2>Tensor</h2>
 <ul>
 <li>A tensor, API very similar to numpy and pytorch.</li>
 <li>simple moving btwn CPU and GPU: <div class="fragment"><div class="line">Tensor A({3,4},Type.Double,Device.cpu); <span class="comment">// create tensor on CPU (default)</span></div>
-<div class="line">Tensor B({3,4},Type.Double,Device.cuda+0); <span class="comment">// create tensor on GPU with gpu-id=0</span></div>
+<div class="line">Tensor B({3,4},<a class="code hl_variable" href="namespacecytnx.html#ac2c6c045a5fd258e21bd0786744839c2">Type</a>.Double,<a class="code hl_variable" href="namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a">Device</a>.cuda+0); <span class="comment">// create tensor on GPU with gpu-id=0</span></div>
 <div class="line"> </div>
 <div class="line"> </div>
 <div class="line">Tensor C = B; <span class="comment">// C and B share same memory.</span></div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// move A to gpu</span></div>
-<div class="line">Tensor D = A.to(Device.cuda+0);</div>
+<div class="line">Tensor D = A.to(<a class="code hl_variable" href="namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a">Device</a>.cuda+0);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// inplace move A to gpu</span></div>
-<div class="line">A.to_(Device.cuda+0);</div>
+<div class="line">A.to_(<a class="code hl_variable" href="namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a">Device</a>.cuda+0);</div>
 </div><!-- fragment --></li>
 <li>Type conversion in between avaliable: <div class="fragment"><div class="line">Tensor A({3,4},Type.Double);</div>
 <div class="line">Tensor B = A.astype(Type.Uint64); <span class="comment">// cast double to uint64_t</span></div>
@@ -307,50 +304,33 @@ Tensor</h2>
 <li>access single element using .at <div class="fragment"><div class="line">Tensor A({3,4,5},Type.Double);</div>
 <div class="line"><span class="keywordtype">double</span> val = A.at&lt;<span class="keywordtype">double</span>&gt;(0,2,2);</div>
 </div><!-- fragment --></li>
-<li>access elements with python slices similarity: <div class="fragment"><div class="line"><span class="keyword">typedef</span> Accessor ac;</div>
+<li>access elements with python slices similarity: <div class="fragment"><div class="line"><span class="keyword">typedef</span> Accessor <a class="code hl_typedef" href="DenseUniTensor_8cpp.html#abb126f94f3d42e9104cf6bb7d4c035b8">ac</a>;</div>
 <div class="line">Tensor A({3,4,5},Type.Double);</div>
 <div class="line">Tensor out = A(0,<span class="stringliteral">&quot;:&quot;</span>,<span class="stringliteral">&quot;1:4&quot;</span>); </div>
 <div class="line"><span class="comment">// equivalent to python: out = A[0,:,1:4]    </span></div>
+<div class="ttc" id="aDenseUniTensor_8cpp_html_abb126f94f3d42e9104cf6bb7d4c035b8"><div class="ttname"><a href="DenseUniTensor_8cpp.html#abb126f94f3d42e9104cf6bb7d4c035b8">ac</a></div><div class="ttdeci">cytnx::Accessor ac</div><div class="ttdef"><b>Definition:</b> DenseUniTensor.cpp:9</div></div>
 </div><!-- fragment --></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md15"></a>
-Fast Examples</h1>
+<h1>Fast Examples</h1>
 <pre class="fragment">See test.cpp for using C++ .
 See test.py for using python  
-</pre> <h1><a class="anchor" id="autotoc_md16"></a>
-Developer</h1>
+</pre> <h1>Developer</h1>
 <pre class="fragment">Kai-Hsin Wu (Boston Univ.) kaihsinwu@gmail.com 
-</pre> <h1><a class="anchor" id="autotoc_md17"></a>
-Contributors</h1>
+</pre> <h1>Contributors</h1>
 <pre class="fragment">Ying-Jer Kao (NTU, Taiwan): setuptool, cmake
 Yen-Hsin Wu (NTU, Taiwan): Network optimization
 Yu-Hsueh Chen (NTU, Taiwan): example, and testing
 Po-Kwan Wu (OSU): Icon optimization    
 Wen-Han Kao (UMN, USA) : testing of conda install 
 Ke Hsu (NTU, Taiwan): Lstsq, linalg funcitons and examples  
-</pre> <h1><a class="anchor" id="autotoc_md18"></a>
-Refereces:</h1>
+</pre> <h1>Refereces:</h1>
 <pre class="fragment">* example/DMRG:
     https://www.tensors.net/dmrg
 </pre> </div></div><!-- PageDoc -->
 </div><!-- contents -->
-<!-- HTML footer for doxygen 1.9.1-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
-<script type="text/javascript">
-  $(function() {
-    toggleButton = document.createElement('doxygen-awesome-dark-mode-toggle')
-    toggleButton.title = "Toggle Light/Dark Mode"
-    $(document).ready(function(){
-      document.getElementById("MSearchBox").parentNode.appendChild(toggleButton)
-    })
-    // every resize will remove the button, which is why it has to be added again:
-    $(window).resize(function(){
-      document.getElementById("MSearchBox").parentNode.appendChild(toggleButton)
-    })
-  })
-</script>
 </body>
 </html>

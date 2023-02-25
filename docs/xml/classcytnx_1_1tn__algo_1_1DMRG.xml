@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classcytnx_1_1tn__algo_1_1DMRG" kind="class" language="C++" prot="public">
+    <compoundname>cytnx::tn_algo::DMRG</compoundname>
+    <includes refid="DMRG_8hpp" local="no">DMRG.hpp</includes>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classcytnx_1_1tn__algo_1_1DMRG_1a51a599bb8945fcdda13cbc9fe9bac440" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1tn__algo_1_1DMRG" kindref="compound">DMRG</ref> &amp;</type>
+        <definition>DMRG &amp; cytnx::tn_algo::DMRG::operator=</definition>
+        <argsstring>(const DMRG &amp;rhs)</argsstring>
+        <name>operator=</name>
+        <qualifiedname>cytnx::tn_algo::DMRG::operator=</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1tn__algo_1_1DMRG" kindref="compound">DMRG</ref> &amp;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/tn_algo/DMRG.hpp" line="71" column="12" bodyfile="include/tn_algo/DMRG.hpp" bodystart="71" bodyend="74"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1tn__algo_1_1DMRG_1a2d6091b4952754b1b74c9c16dc1d65b9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1tn__algo_1_1DMRG" kindref="compound">DMRG</ref> &amp;</type>
+        <definition>DMRG &amp; cytnx::tn_algo::DMRG::initialize</definition>
+        <argsstring>()</argsstring>
+        <name>initialize</name>
+        <qualifiedname>cytnx::tn_algo::DMRG::initialize</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/tn_algo/DMRG.hpp" line="76" column="12" bodyfile="include/tn_algo/DMRG.hpp" bodystart="76" bodyend="79"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1tn__algo_1_1DMRG_1aea9d74df98f5830bd38a4488553946c7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Scalar" kindref="compound">Scalar</ref></type>
+        <definition>Scalar cytnx::tn_algo::DMRG::sweep</definition>
+        <argsstring>(const bool &amp;verbose=false, const cytnx_int64 &amp;maxit=4000, const cytnx_int64 &amp;krydim=4)</argsstring>
+        <name>sweep</name>
+        <qualifiedname>cytnx::tn_algo::DMRG::sweep</qualifiedname>
+        <param>
+          <type>const bool &amp;</type>
+          <declname>verbose</declname>
+          <defval>false</defval>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>maxit</declname>
+          <defval>4000</defval>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>krydim</declname>
+          <defval>4</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/tn_algo/DMRG.hpp" line="82" column="14" bodyfile="include/tn_algo/DMRG.hpp" bodystart="82" bodyend="85"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1tn__algo_1_1DMRG_1a100dea35e5da0eb3b2e634aba242402c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Scalar" kindref="compound">Scalar</ref></type>
+        <definition>Scalar cytnx::tn_algo::DMRG::sweepv2</definition>
+        <argsstring>(const bool &amp;verbose=false, const cytnx_int64 &amp;maxit=4000, const cytnx_int64 &amp;krydim=4)</argsstring>
+        <name>sweepv2</name>
+        <qualifiedname>cytnx::tn_algo::DMRG::sweepv2</qualifiedname>
+        <param>
+          <type>const bool &amp;</type>
+          <declname>verbose</declname>
+          <defval>false</defval>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>maxit</declname>
+          <defval>4000</defval>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>krydim</declname>
+          <defval>4</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/tn_algo/DMRG.hpp" line="88" column="14" bodyfile="include/tn_algo/DMRG.hpp" bodystart="88" bodyend="91"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/tn_algo/DMRG.hpp" line="50" column="5" bodyfile="include/tn_algo/DMRG.hpp" bodystart="50" bodyend="92"/>
+    <listofallmembers>
+      <member refid="classcytnx_1_1tn__algo_1_1DMRG_1a2d6091b4952754b1b74c9c16dc1d65b9" prot="public" virt="non-virtual"><scope>cytnx::tn_algo::DMRG</scope><name>initialize</name></member>
+      <member refid="classcytnx_1_1tn__algo_1_1DMRG_1a51a599bb8945fcdda13cbc9fe9bac440" prot="public" virt="non-virtual"><scope>cytnx::tn_algo::DMRG</scope><name>operator=</name></member>
+      <member refid="classcytnx_1_1tn__algo_1_1DMRG_1aea9d74df98f5830bd38a4488553946c7" prot="public" virt="non-virtual"><scope>cytnx::tn_algo::DMRG</scope><name>sweep</name></member>
+      <member refid="classcytnx_1_1tn__algo_1_1DMRG_1a100dea35e5da0eb3b2e634aba242402c" prot="public" virt="non-virtual"><scope>cytnx::tn_algo::DMRG</scope><name>sweepv2</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>
