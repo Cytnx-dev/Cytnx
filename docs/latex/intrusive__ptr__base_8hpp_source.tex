@@ -1,0 +1,67 @@
+\hypertarget{intrusive__ptr__base_8hpp_source}{}\doxysection{intrusive\+\_\+ptr\+\_\+base.\+hpp}
+\label{intrusive__ptr__base_8hpp_source}\index{include/intrusive\_ptr\_base.hpp@{include/intrusive\_ptr\_base.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_H\_intrusive\_ptr\_base\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_H\_intrusive\_ptr\_base\_}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <ostream>}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <cassert>}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include <boost/smart\_ptr/intrusive\_ptr.hpp>}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include <boost/checked\_delete.hpp>}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <boost/detail/atomic\_count.hpp>}}
+\DoxyCodeLine{9 }
+\DoxyCodeLine{10 \textcolor{keyword}{namespace }cytnx \{}
+\DoxyCodeLine{12   \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{13   \textcolor{keyword}{class }intrusive\_ptr\_base \{}
+\DoxyCodeLine{14    \textcolor{keyword}{public}:}
+\DoxyCodeLine{16     intrusive\_ptr\_base()}
+\DoxyCodeLine{17         : ref\_count(0)\{}
+\DoxyCodeLine{18             \textcolor{comment}{// pass}}
+\DoxyCodeLine{19           \};}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{22     intrusive\_ptr\_base(intrusive\_ptr\_base<T> \textcolor{keyword}{const} \&) : ref\_count(0) \{}
+\DoxyCodeLine{23       \textcolor{comment}{// pass}}
+\DoxyCodeLine{24     \}}
+\DoxyCodeLine{25 }
+\DoxyCodeLine{26     \textcolor{comment}{// copy assignment}}
+\DoxyCodeLine{27     intrusive\_ptr\_base \&operator=(intrusive\_ptr\_base \textcolor{keyword}{const} \&rhs) \{}
+\DoxyCodeLine{28       \textcolor{comment}{// not allowed.}}
+\DoxyCodeLine{29       \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{30     \}}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32     \textcolor{comment}{// hook boost::intrusive\_ptr add}}
+\DoxyCodeLine{33     \textcolor{keyword}{friend} \textcolor{keywordtype}{void} intrusive\_ptr\_add\_ref(intrusive\_ptr\_base<T> \textcolor{keyword}{const} *s) \{}
+\DoxyCodeLine{34       \textcolor{comment}{// add ref}}
+\DoxyCodeLine{35       \textcolor{comment}{// std::cout << "{}add"{} << std::endl;}}
+\DoxyCodeLine{36       assert(s-\/>ref\_count >= 0);}
+\DoxyCodeLine{37       assert(s != 0);}
+\DoxyCodeLine{38       ++s-\/>ref\_count;}
+\DoxyCodeLine{39     \}}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41     \textcolor{comment}{// hook boost::intrusive\_ptr release}}
+\DoxyCodeLine{42     \textcolor{keyword}{friend} \textcolor{keywordtype}{void} intrusive\_ptr\_release(intrusive\_ptr\_base<T> \textcolor{keyword}{const} *s) \{}
+\DoxyCodeLine{43       \textcolor{comment}{// release ref}}
+\DoxyCodeLine{44       \textcolor{comment}{// std::cout << "{}release"{} << std::endl;}}
+\DoxyCodeLine{45       assert(s-\/>ref\_count > 0);}
+\DoxyCodeLine{46       assert(s != 0);}
+\DoxyCodeLine{47       \textcolor{keywordflow}{if} (-\/-\/s-\/>ref\_count == 0) boost::checked\_delete(\textcolor{keyword}{static\_cast<}T \textcolor{keyword}{const }*\textcolor{keyword}{>}(s));}
+\DoxyCodeLine{48     \}}
+\DoxyCodeLine{49 }
+\DoxyCodeLine{50     boost::intrusive\_ptr<T> self() \{ \textcolor{keywordflow}{return} boost::intrusive\_ptr<T>((T *)\textcolor{keyword}{this}); \}}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52     boost::intrusive\_ptr<const T> self()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{53       \textcolor{keywordflow}{return} boost::intrusive\_ptr<const T>((T \textcolor{keyword}{const} *)\textcolor{keyword}{this});}
+\DoxyCodeLine{54     \}}
+\DoxyCodeLine{55 }
+\DoxyCodeLine{56     \textcolor{keywordtype}{int} refcount()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} ref\_count; \}}
+\DoxyCodeLine{57 }
+\DoxyCodeLine{58    \textcolor{keyword}{private}:}
+\DoxyCodeLine{59     \textcolor{comment}{// should be modifiable within the class.}}
+\DoxyCodeLine{60     \textcolor{keyword}{mutable} boost::detail::atomic\_count ref\_count;}
+\DoxyCodeLine{61   \};}
+\DoxyCodeLine{63 \}  \textcolor{comment}{// namespace cytnx}}
+\DoxyCodeLine{64 }
+\DoxyCodeLine{65 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

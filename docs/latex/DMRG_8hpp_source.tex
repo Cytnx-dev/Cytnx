@@ -1,0 +1,99 @@
+\hypertarget{DMRG_8hpp_source}{}\doxysection{DMRG.\+hpp}
+\label{DMRG_8hpp_source}\index{include/tn\_algo/DMRG.hpp@{include/tn\_algo/DMRG.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_H\_DMRG\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_H\_DMRG\_}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include "{}cytnx\_error.hpp"{}}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include "{}Device.hpp"{}}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}intrusive\_ptr\_base.hpp"{}}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include "{}UniTensor.hpp"{}}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include <fstream>}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include "{}utils/vec\_clone.hpp"{}}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include "{}Accessor.hpp"{}}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include <initializer\_list>}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#include "{}Scalar.hpp"{}}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#include "{}tn\_algo/MPS.hpp"{}}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#include "{}tn\_algo/MPO.hpp"{}}}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19 \textcolor{keyword}{namespace }cytnx \{}
+\DoxyCodeLine{20   \textcolor{keyword}{namespace }tn\_algo \{}
+\DoxyCodeLine{22     \textcolor{keyword}{class }DMRG\_impl : \textcolor{keyword}{public} intrusive\_ptr\_base<DMRG\_impl> \{}
+\DoxyCodeLine{23      \textcolor{keyword}{private}:}
+\DoxyCodeLine{24      \textcolor{keyword}{public}:}
+\DoxyCodeLine{25       MPS mps;}
+\DoxyCodeLine{26       MPO mpo;}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28       \textcolor{comment}{// for getting excited states:}}
+\DoxyCodeLine{29       std::vector<MPS> ortho\_mps;}
+\DoxyCodeLine{30       \textcolor{keywordtype}{double} weight;}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32       \textcolor{comment}{// iterative solver param:}}
+\DoxyCodeLine{33       cytnx\_int64 maxit;}
+\DoxyCodeLine{34       cytnx\_int64 krydim;}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36       \textcolor{comment}{// environ:}}
+\DoxyCodeLine{37       std::vector<UniTensor> LR;}
+\DoxyCodeLine{38       std::vector<std::vector<UniTensor>> hLRs;  \textcolor{comment}{// excited states}}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40       \textcolor{keyword}{friend} \textcolor{keyword}{class }MPS;}
+\DoxyCodeLine{41       \textcolor{keyword}{friend} \textcolor{keyword}{class }MPO;}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43       \textcolor{keywordtype}{void} initialize();}
+\DoxyCodeLine{44       Scalar sweep(\textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&verbose, \textcolor{keyword}{const} cytnx\_int64 \&maxit, \textcolor{keyword}{const} cytnx\_int64 \&krydim);}
+\DoxyCodeLine{45       Scalar sweepv2(\textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&verbose, \textcolor{keyword}{const} cytnx\_int64 \&maxit, \textcolor{keyword}{const} cytnx\_int64 \&krydim);}
+\DoxyCodeLine{46     \};}
+\DoxyCodeLine{48 }
+\DoxyCodeLine{49     \textcolor{comment}{// API}}
+\DoxyCodeLine{50     \textcolor{keyword}{class }\mbox{\hyperlink{classcytnx_1_1tn__algo_1_1DMRG}{DMRG}} \{}
+\DoxyCodeLine{51      \textcolor{keyword}{private}:}
+\DoxyCodeLine{52      \textcolor{keyword}{public}:}
+\DoxyCodeLine{54       boost::intrusive\_ptr<DMRG\_impl> \_impl;}
+\DoxyCodeLine{55       \mbox{\hyperlink{classcytnx_1_1tn__algo_1_1DMRG}{DMRG}}(\mbox{\hyperlink{classcytnx_1_1tn__algo_1_1MPO}{MPO}} mpo, \mbox{\hyperlink{classcytnx_1_1tn__algo_1_1MPS}{MPS}} mps, std::vector<MPS> ortho\_mps = \{\}, \textcolor{keyword}{const} \textcolor{keywordtype}{double} \&weight = 30)}
+\DoxyCodeLine{56           : \_impl(\textcolor{keyword}{new} DMRG\_impl()) \{}
+\DoxyCodeLine{57         \textcolor{comment}{// currently default init is DMRG\_impl;}}
+\DoxyCodeLine{58 }
+\DoxyCodeLine{59         \textcolor{comment}{// mpo and mps:}}
+\DoxyCodeLine{60         this-\/>\_impl-\/>mpo = mpo;}
+\DoxyCodeLine{61         this-\/>\_impl-\/>mps = mps;}
+\DoxyCodeLine{62 }
+\DoxyCodeLine{63         \textcolor{comment}{// for getting excited states:}}
+\DoxyCodeLine{64         this-\/>\_impl-\/>ortho\_mps = ortho\_mps;}
+\DoxyCodeLine{65         this-\/>\_impl-\/>weight = weight;}
+\DoxyCodeLine{66       \};}
+\DoxyCodeLine{67 }
+\DoxyCodeLine{68       \mbox{\hyperlink{classcytnx_1_1tn__algo_1_1DMRG}{DMRG}}(\textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1tn__algo_1_1DMRG}{DMRG}} \&rhs) \{ \_impl = rhs.\_impl; \}}
+\DoxyCodeLine{70 }
+\DoxyCodeLine{71       \mbox{\hyperlink{classcytnx_1_1tn__algo_1_1DMRG}{DMRG}} \&operator=(\textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1tn__algo_1_1DMRG}{DMRG}} \&rhs) \{}
+\DoxyCodeLine{72         \_impl = rhs.\_impl;}
+\DoxyCodeLine{73         \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{74       \}}
+\DoxyCodeLine{75 }
+\DoxyCodeLine{76       \mbox{\hyperlink{classcytnx_1_1tn__algo_1_1DMRG}{DMRG}} \&initialize() \{}
+\DoxyCodeLine{77         this-\/>\_impl-\/>initialize();}
+\DoxyCodeLine{78         \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{79       \}}
+\DoxyCodeLine{80 }
+\DoxyCodeLine{81       \textcolor{comment}{// return the current energy}}
+\DoxyCodeLine{82       \mbox{\hyperlink{classcytnx_1_1Scalar}{Scalar}} sweep(\textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&verbose = \textcolor{keyword}{false}, \textcolor{keyword}{const} cytnx\_int64 \&maxit = 4000,}
+\DoxyCodeLine{83                    \textcolor{keyword}{const} cytnx\_int64 \&krydim = 4) \{}
+\DoxyCodeLine{84         \textcolor{keywordflow}{return} this-\/>\_impl-\/>sweep(verbose, maxit, krydim);}
+\DoxyCodeLine{85       \}}
+\DoxyCodeLine{86 }
+\DoxyCodeLine{87       \textcolor{comment}{// return the current energy}}
+\DoxyCodeLine{88       \mbox{\hyperlink{classcytnx_1_1Scalar}{Scalar}} sweepv2(\textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&verbose = \textcolor{keyword}{false}, \textcolor{keyword}{const} cytnx\_int64 \&maxit = 4000,}
+\DoxyCodeLine{89                      \textcolor{keyword}{const} cytnx\_int64 \&krydim = 4) \{}
+\DoxyCodeLine{90         \textcolor{keywordflow}{return} this-\/>\_impl-\/>sweepv2(verbose, maxit, krydim);}
+\DoxyCodeLine{91       \}}
+\DoxyCodeLine{92     \};}
+\DoxyCodeLine{93 }
+\DoxyCodeLine{94   \}  \textcolor{comment}{// namespace tn\_algo}}
+\DoxyCodeLine{95 \}  \textcolor{comment}{// namespace cytnx}}
+\DoxyCodeLine{96 }
+\DoxyCodeLine{97 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

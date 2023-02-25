@@ -1,0 +1,280 @@
+\hypertarget{Network_8hpp_source}{}\doxysection{Network.\+hpp}
+\label{Network_8hpp_source}\index{include/Network.hpp@{include/Network.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_H\_Network\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_H\_Network\_}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include "{}Type.hpp"{}}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include "{}cytnx\_error.hpp"{}}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include <initializer\_list>}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <map>}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include <fstream>}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include "{}intrusive\_ptr\_base.hpp"{}}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include "{}utils/utils.hpp"{}}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include "{}UniTensor.hpp"{}}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include "{}contraction\_tree.hpp"{}}}
+\DoxyCodeLine{14 \textcolor{keyword}{namespace }cytnx \{}
+\DoxyCodeLine{16   \textcolor{keyword}{struct }\_\_ntwk \{}
+\DoxyCodeLine{17     \textcolor{keyword}{enum} \_\_nttype \{ Void = -\/1, Regular = 0, Fermion = 1 \};}
+\DoxyCodeLine{18   \};}
+\DoxyCodeLine{19   \textcolor{keyword}{class }NetworkType\_class \{}
+\DoxyCodeLine{20    \textcolor{keyword}{public}:}
+\DoxyCodeLine{21     enum : \textcolor{keywordtype}{int} \{ Void = -\/1, Regular = 0, Fermion = 1 \};}
+\DoxyCodeLine{22     std::string getname(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&nwrktype\_id);}
+\DoxyCodeLine{23   \};}
+\DoxyCodeLine{24   \textcolor{keyword}{extern} NetworkType\_class NtType;}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{28   \textcolor{keyword}{class }Network\_base : \textcolor{keyword}{public} intrusive\_ptr\_base<Network\_base> \{}
+\DoxyCodeLine{29     \textcolor{comment}{// protected:}}
+\DoxyCodeLine{30    \textcolor{keyword}{public}:}
+\DoxyCodeLine{31     \textcolor{keywordtype}{int} nwrktype\_id;}
+\DoxyCodeLine{32     std::string filename;}
+\DoxyCodeLine{33     std::vector<UniTensor> tensors;}
+\DoxyCodeLine{34     std::vector<std::string> TOUT\_labels;}
+\DoxyCodeLine{35     cytnx\_uint64 TOUT\_iBondNum;}
+\DoxyCodeLine{36 }
+\DoxyCodeLine{37     \textcolor{comment}{// bool ordered;}}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{39     \textcolor{comment}{// Contraction order.}}
+\DoxyCodeLine{40     ContractionTree CtTree;}
+\DoxyCodeLine{41     std::vector<std::string> ORDER\_tokens;}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43     \textcolor{comment}{// labels corr to the tn list.}}
+\DoxyCodeLine{44     std::vector<std::vector<std::string>> label\_arr;}
+\DoxyCodeLine{45     std::vector<cytnx\_int64> iBondNums;}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47     \textcolor{comment}{// name of tn.}}
+\DoxyCodeLine{48     std::vector<std::string> names;}
+\DoxyCodeLine{49     std::map<std::string, cytnx\_uint64> name2pos;}
+\DoxyCodeLine{50 }
+\DoxyCodeLine{51     \textcolor{keyword}{friend} \textcolor{keyword}{class }FermionNetwork;}
+\DoxyCodeLine{52     \textcolor{keyword}{friend} \textcolor{keyword}{class }RegularNetwork;}
+\DoxyCodeLine{53     \textcolor{keyword}{friend} \textcolor{keyword}{class }Network;}
+\DoxyCodeLine{54     Network\_base() : nwrktype\_id(NtType.Void)\{\};}
+\DoxyCodeLine{55 }
+\DoxyCodeLine{56     \textcolor{keywordtype}{bool} HasPutAllUniTensor() \{}
+\DoxyCodeLine{57       \textcolor{keywordflow}{for} (cytnx\_uint64 i = 0; i < this-\/>tensors.size(); i++) \{}
+\DoxyCodeLine{58         \textcolor{keywordflow}{if} (this-\/>tensors[i].uten\_type() == UTenType.Void) \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{59       \}}
+\DoxyCodeLine{60       \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{61     \}}
+\DoxyCodeLine{62 }
+\DoxyCodeLine{63     \textcolor{comment}{// void print\_network() const;}}
+\DoxyCodeLine{64 }
+\DoxyCodeLine{65     \textcolor{comment}{// void PreConstruct(bool force = true);}}
+\DoxyCodeLine{66 }
+\DoxyCodeLine{67     \textcolor{comment}{// void PutTensor(cytnx\_int64 idx, const UniTensor\& UniT, bool force = true);}}
+\DoxyCodeLine{68 }
+\DoxyCodeLine{69     \textcolor{comment}{// void PutTensor(const std::string  \&name, const UniTensor \&UniT, bool force = true);}}
+\DoxyCodeLine{70 }
+\DoxyCodeLine{71     \textcolor{comment}{// UniTensor Launch(const std::string \&Tname="{}"{});}}
+\DoxyCodeLine{72 }
+\DoxyCodeLine{73     \textcolor{comment}{// std::string GetContractOrder() const;}}
+\DoxyCodeLine{74     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} PutUniTensor(\textcolor{keyword}{const} std::string \&name, \textcolor{keyword}{const} UniTensor \&utensor);}
+\DoxyCodeLine{75     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} PutUniTensor(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} UniTensor \&utensor);}
+\DoxyCodeLine{76     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} PutUniTensors(\textcolor{keyword}{const} std::vector<std::string> \&name,}
+\DoxyCodeLine{77                                \textcolor{keyword}{const} std::vector<UniTensor> \&utensors);}
+\DoxyCodeLine{78     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} Contract\_plan(\textcolor{keyword}{const} std::vector<UniTensor> \&utensors, \textcolor{keyword}{const} std::string \&Tout,}
+\DoxyCodeLine{79                                \textcolor{keyword}{const} std::vector<std::string> \&alias,}
+\DoxyCodeLine{80                                \textcolor{keyword}{const} std::string \&contract\_order);}
+\DoxyCodeLine{81 }
+\DoxyCodeLine{82     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} Fromfile(\textcolor{keyword}{const} std::string \&fname);}
+\DoxyCodeLine{83     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} FromString(\textcolor{keyword}{const} std::vector<std::string> \&content);}
+\DoxyCodeLine{84     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} clear();}
+\DoxyCodeLine{85     \textcolor{keyword}{virtual} std::string getOptimalOrder();}
+\DoxyCodeLine{86     \textcolor{keyword}{virtual} UniTensor Launch(\textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&optimal = \textcolor{keyword}{false}, \textcolor{keyword}{const} std::string \&contract\_order = \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{87     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} PrintNet(std::ostream \&os);}
+\DoxyCodeLine{88     \textcolor{keyword}{virtual} boost::intrusive\_ptr<Network\_base> clone();}
+\DoxyCodeLine{89     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} Savefile(\textcolor{keyword}{const} std::string \&fname);}
+\DoxyCodeLine{90     \textcolor{keyword}{virtual} \string~Network\_base()\{\};}
+\DoxyCodeLine{91 }
+\DoxyCodeLine{92   \};  \textcolor{comment}{// Network\_base}}
+\DoxyCodeLine{93 }
+\DoxyCodeLine{94   \textcolor{keyword}{class }RegularNetwork : \textcolor{keyword}{public} Network\_base \{}
+\DoxyCodeLine{95    \textcolor{keyword}{public}:}
+\DoxyCodeLine{96     RegularNetwork() \{ this-\/>nwrktype\_id = NtType.Regular; \};}
+\DoxyCodeLine{97     \textcolor{keywordtype}{void} Fromfile(\textcolor{keyword}{const} std::string \&fname);}
+\DoxyCodeLine{98     \textcolor{keywordtype}{void} FromString(\textcolor{keyword}{const} std::vector<std::string> \&contents);}
+\DoxyCodeLine{99     \textcolor{keywordtype}{void} PutUniTensor(\textcolor{keyword}{const} std::string \&name, \textcolor{keyword}{const} UniTensor \&utensor);}
+\DoxyCodeLine{100     \textcolor{keywordtype}{void} PutUniTensor(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} UniTensor \&utensor);}
+\DoxyCodeLine{101     \textcolor{keywordtype}{void} PutUniTensors(\textcolor{keyword}{const} std::vector<std::string> \&name,}
+\DoxyCodeLine{102                        \textcolor{keyword}{const} std::vector<UniTensor> \&utensors);}
+\DoxyCodeLine{103     \textcolor{keywordtype}{void} Contract\_plan(\textcolor{keyword}{const} std::vector<UniTensor> \&utensors, \textcolor{keyword}{const} std::string \&Tout,}
+\DoxyCodeLine{104                        \textcolor{keyword}{const} std::vector<std::string> \&alias = \{\},}
+\DoxyCodeLine{105                        \textcolor{keyword}{const} std::string \&contract\_order = \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{106     \textcolor{keywordtype}{void} clear() \{}
+\DoxyCodeLine{107       this-\/>name2pos.clear();}
+\DoxyCodeLine{108       this-\/>CtTree.clear();}
+\DoxyCodeLine{109       this-\/>names.clear();}
+\DoxyCodeLine{110       this-\/>iBondNums.clear();}
+\DoxyCodeLine{111       this-\/>label\_arr.clear();}
+\DoxyCodeLine{112       this-\/>TOUT\_labels.clear();}
+\DoxyCodeLine{113       this-\/>TOUT\_iBondNum = 0;}
+\DoxyCodeLine{114       this-\/>ORDER\_tokens.clear();}
+\DoxyCodeLine{115     \}}
+\DoxyCodeLine{116     std::string getOptimalOrder();}
+\DoxyCodeLine{117     UniTensor Launch(\textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&optimal = \textcolor{keyword}{false}, \textcolor{keyword}{const} std::string \&contract\_order = \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{118     boost::intrusive\_ptr<Network\_base> clone() \{}
+\DoxyCodeLine{119       RegularNetwork *tmp = \textcolor{keyword}{new} RegularNetwork();}
+\DoxyCodeLine{120       tmp-\/>name2pos = this-\/>name2pos;}
+\DoxyCodeLine{121       tmp-\/>CtTree = this-\/>CtTree;}
+\DoxyCodeLine{122       tmp-\/>names = this-\/>names;}
+\DoxyCodeLine{123       tmp-\/>iBondNums = this-\/>iBondNums;}
+\DoxyCodeLine{124       tmp-\/>label\_arr = this-\/>label\_arr;}
+\DoxyCodeLine{125       tmp-\/>TOUT\_labels = this-\/>TOUT\_labels;}
+\DoxyCodeLine{126       tmp-\/>TOUT\_iBondNum = this-\/>TOUT\_iBondNum;}
+\DoxyCodeLine{127       tmp-\/>ORDER\_tokens = this-\/>ORDER\_tokens;}
+\DoxyCodeLine{128       boost::intrusive\_ptr<Network\_base> out(tmp);}
+\DoxyCodeLine{129       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{130     \}}
+\DoxyCodeLine{131     \textcolor{keywordtype}{void} PrintNet(std::ostream \&os);}
+\DoxyCodeLine{132     \textcolor{keywordtype}{void} Savefile(\textcolor{keyword}{const} std::string \&fname);}
+\DoxyCodeLine{133     \string~RegularNetwork()\{\};}
+\DoxyCodeLine{134   \};}
+\DoxyCodeLine{135 }
+\DoxyCodeLine{136   \textcolor{comment}{// Under dev!!}}
+\DoxyCodeLine{137   \textcolor{keyword}{class }FermionNetwork : \textcolor{keyword}{public} Network\_base \{}
+\DoxyCodeLine{138    \textcolor{keyword}{protected}:}
+\DoxyCodeLine{139     \textcolor{comment}{// [Future] Swap gates.}}
+\DoxyCodeLine{140 }
+\DoxyCodeLine{141    \textcolor{keyword}{public}:}
+\DoxyCodeLine{142     FermionNetwork() \{ this-\/>nwrktype\_id = NtType.Fermion; \};}
+\DoxyCodeLine{143     \textcolor{keywordtype}{void} Fromfile(\textcolor{keyword}{const} std::string \&fname)\{\};}
+\DoxyCodeLine{144     \textcolor{keywordtype}{void} FromString(\textcolor{keyword}{const} std::vector<std::string> \&contents)\{\};}
+\DoxyCodeLine{145     \textcolor{keywordtype}{void} PutUniTensor(\textcolor{keyword}{const} std::string \&name, \textcolor{keyword}{const} UniTensor \&utensor)\{\};}
+\DoxyCodeLine{146     \textcolor{keywordtype}{void} PutUniTensor(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} UniTensor \&utensor)\{\};}
+\DoxyCodeLine{147     \textcolor{keywordtype}{void} PutUniTensors(\textcolor{keyword}{const} std::vector<std::string> \&name,}
+\DoxyCodeLine{148                        \textcolor{keyword}{const} std::vector<UniTensor> \&utensors)\{\};}
+\DoxyCodeLine{149     \textcolor{keywordtype}{void} Contract\_plan(\textcolor{keyword}{const} std::vector<UniTensor> \&utensors, \textcolor{keyword}{const} std::string \&Tout,}
+\DoxyCodeLine{150                        \textcolor{keyword}{const} std::vector<std::string> \&alias = \{\},}
+\DoxyCodeLine{151                        \textcolor{keyword}{const} std::string \&contract\_order = \textcolor{stringliteral}{"{}"{}})\{\};}
+\DoxyCodeLine{152     \textcolor{keywordtype}{void} clear() \{}
+\DoxyCodeLine{153       this-\/>name2pos.clear();}
+\DoxyCodeLine{154       this-\/>CtTree.clear();}
+\DoxyCodeLine{155       this-\/>names.clear();}
+\DoxyCodeLine{156       this-\/>iBondNums.clear();}
+\DoxyCodeLine{157       this-\/>label\_arr.clear();}
+\DoxyCodeLine{158       this-\/>TOUT\_labels.clear();}
+\DoxyCodeLine{159       this-\/>TOUT\_iBondNum = 0;}
+\DoxyCodeLine{160       this-\/>ORDER\_tokens.clear();}
+\DoxyCodeLine{161     \}}
+\DoxyCodeLine{162     UniTensor Launch(\textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&optimal = \textcolor{keyword}{false}) \{ \textcolor{keywordflow}{return} UniTensor(); \};}
+\DoxyCodeLine{163     boost::intrusive\_ptr<Network\_base> clone() \{}
+\DoxyCodeLine{164       FermionNetwork *tmp = \textcolor{keyword}{new} FermionNetwork();}
+\DoxyCodeLine{165       tmp-\/>name2pos = this-\/>name2pos;}
+\DoxyCodeLine{166       tmp-\/>CtTree = this-\/>CtTree;}
+\DoxyCodeLine{167       tmp-\/>names = this-\/>names;}
+\DoxyCodeLine{168       tmp-\/>iBondNums = this-\/>iBondNums;}
+\DoxyCodeLine{169       tmp-\/>label\_arr = this-\/>label\_arr;}
+\DoxyCodeLine{170       tmp-\/>TOUT\_labels = this-\/>TOUT\_labels;}
+\DoxyCodeLine{171       tmp-\/>TOUT\_iBondNum = this-\/>TOUT\_iBondNum;}
+\DoxyCodeLine{172       tmp-\/>ORDER\_tokens = this-\/>ORDER\_tokens;}
+\DoxyCodeLine{173       boost::intrusive\_ptr<Network\_base> out(tmp);}
+\DoxyCodeLine{174       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{175     \}}
+\DoxyCodeLine{176     \textcolor{keywordtype}{void} PrintNet(std::ostream \&os)\{\};}
+\DoxyCodeLine{177     \textcolor{keywordtype}{void} Savefile(\textcolor{keyword}{const} std::string \&fname)\{\};}
+\DoxyCodeLine{178     \string~FermionNetwork()\{\};}
+\DoxyCodeLine{179   \};}
+\DoxyCodeLine{180 }
+\DoxyCodeLine{182 }
+\DoxyCodeLine{183   \textcolor{comment}{/* @brief the Network object for easy build tensor network.}}
+\DoxyCodeLine{184 \textcolor{comment}{}}
+\DoxyCodeLine{185 \textcolor{comment}{       The Network is an object that allow one to create a complex network from a pre-\/defined}}
+\DoxyCodeLine{186 \textcolor{comment}{     Network file. By putting the Tensors into the Network, the user simply call “Network.Launch()”}}
+\DoxyCodeLine{187 \textcolor{comment}{     to get the out-\/come.}}
+\DoxyCodeLine{188 \textcolor{comment}{  */}}
+\DoxyCodeLine{189   \textcolor{keyword}{class }Network \{}
+\DoxyCodeLine{190    \textcolor{keyword}{public}:}
+\DoxyCodeLine{192     boost::intrusive\_ptr<Network\_base> \_impl;}
+\DoxyCodeLine{193     Network() : \_impl(new Network\_base())\{\};}
+\DoxyCodeLine{194     Network(\textcolor{keyword}{const} Network \&rhs) \{ this-\/>\_impl = rhs.\_impl; \}}
+\DoxyCodeLine{195     Network \&operator=(\textcolor{keyword}{const} Network \&rhs) \{}
+\DoxyCodeLine{196       this-\/>\_impl = rhs.\_impl;}
+\DoxyCodeLine{197       \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{198     \}}
+\DoxyCodeLine{200 }
+\DoxyCodeLine{248     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Network_a00bc1bf6b9291a0416d5c0fb5beaa284}{Fromfile}}(\textcolor{keyword}{const} std::string \&fname, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&network\_type = NtType.Regular) \{}
+\DoxyCodeLine{249       \textcolor{keywordflow}{if} (network\_type == NtType.Regular) \{}
+\DoxyCodeLine{250         boost::intrusive\_ptr<Network\_base> tmp(\textcolor{keyword}{new} RegularNetwork());}
+\DoxyCodeLine{251         this-\/>\_impl = tmp;}
+\DoxyCodeLine{252       \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{253         cytnx\_error\_msg(\textcolor{keyword}{true}, \textcolor{stringliteral}{"{}[Developing] currently only support regular type network.\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{254       \}}
+\DoxyCodeLine{255       this-\/>\_impl-\/>Fromfile(fname);}
+\DoxyCodeLine{256     \}}
+\DoxyCodeLine{257 }
+\DoxyCodeLine{285     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Network_aa863a755e95a85411a15af58d1ac4057}{FromString}}(\textcolor{keyword}{const} std::vector<std::string> \&contents,}
+\DoxyCodeLine{286                     \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&network\_type = NtType.Regular) \{}
+\DoxyCodeLine{287       \textcolor{keywordflow}{if} (network\_type == NtType.Regular) \{}
+\DoxyCodeLine{288         boost::intrusive\_ptr<Network\_base> tmp(\textcolor{keyword}{new} RegularNetwork());}
+\DoxyCodeLine{289         this-\/>\_impl = tmp;}
+\DoxyCodeLine{290       \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{291         cytnx\_error\_msg(\textcolor{keyword}{true}, \textcolor{stringliteral}{"{}[Developing] currently only support regular type network.\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{292       \}}
+\DoxyCodeLine{293       this-\/>\_impl-\/>FromString(contents);}
+\DoxyCodeLine{294     \}}
+\DoxyCodeLine{295     \textcolor{comment}{// void Savefile(const std::string \&fname);}}
+\DoxyCodeLine{296 }
+\DoxyCodeLine{297     \textcolor{keyword}{static} \mbox{\hyperlink{classcytnx_1_1Network}{Network}} Contract(\textcolor{keyword}{const} std::vector<UniTensor> \&tensors, \textcolor{keyword}{const} std::string \&Tout,}
+\DoxyCodeLine{298                             \textcolor{keyword}{const} std::vector<std::string> \&alias = \{\},}
+\DoxyCodeLine{299                             \textcolor{keyword}{const} std::string \&contract\_order = \textcolor{stringliteral}{"{}"{}}) \{}
+\DoxyCodeLine{300       boost::intrusive\_ptr<Network\_base> tmp(\textcolor{keyword}{new} RegularNetwork());}
+\DoxyCodeLine{301       Network out;}
+\DoxyCodeLine{302       out.\_impl = tmp;}
+\DoxyCodeLine{303       out.\_impl-\/>Contract\_plan(tensors, Tout, alias, contract\_order);}
+\DoxyCodeLine{304       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{305     \}}
+\DoxyCodeLine{306 }
+\DoxyCodeLine{307     Network(\textcolor{keyword}{const} std::string \&fname, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&network\_type = NtType.Regular) \{}
+\DoxyCodeLine{308       this-\/>\mbox{\hyperlink{classcytnx_1_1Network_a00bc1bf6b9291a0416d5c0fb5beaa284}{Fromfile}}(fname, network\_type);}
+\DoxyCodeLine{309     \}}
+\DoxyCodeLine{310 }
+\DoxyCodeLine{311     \textcolor{keywordtype}{void} PutUniTensor(\textcolor{keyword}{const} std::string \&name, \textcolor{keyword}{const} UniTensor \&utensor) \{}
+\DoxyCodeLine{312       this-\/>\_impl-\/>PutUniTensor(name, utensor);}
+\DoxyCodeLine{313     \}}
+\DoxyCodeLine{314     \textcolor{keywordtype}{void} PutUniTensor(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} UniTensor \&utensor) \{}
+\DoxyCodeLine{315       this-\/>\_impl-\/>PutUniTensor(idx, utensor);}
+\DoxyCodeLine{316     \}}
+\DoxyCodeLine{317     \textcolor{keywordtype}{void} PutUniTensors(\textcolor{keyword}{const} std::vector<std::string> \&name,}
+\DoxyCodeLine{318                        \textcolor{keyword}{const} std::vector<UniTensor> \&utensors) \{}
+\DoxyCodeLine{319       this-\/>\_impl-\/>PutUniTensors(name, utensors);}
+\DoxyCodeLine{320     \}}
+\DoxyCodeLine{321     std::string getOptimalOrder(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&network\_type = NtType.Regular) \{}
+\DoxyCodeLine{322       \textcolor{keywordflow}{if} (network\_type == NtType.Regular) \{}
+\DoxyCodeLine{323         \textcolor{keywordflow}{return} this-\/>\_impl-\/>getOptimalOrder();}
+\DoxyCodeLine{324       \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{325         cytnx\_error\_msg(\textcolor{keyword}{true}, \textcolor{stringliteral}{"{}[Developing] currently only support regular type network.\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{326       \}}
+\DoxyCodeLine{327     \}}
+\DoxyCodeLine{328     UniTensor Launch(\textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&optimal, \textcolor{keyword}{const} std::string \&contract\_order = \textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{329                      \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&network\_type = NtType.Regular) \{}
+\DoxyCodeLine{330       \textcolor{keywordflow}{if} (network\_type == NtType.Regular) \{}
+\DoxyCodeLine{331         \textcolor{keywordflow}{return} this-\/>\_impl-\/>Launch(optimal);}
+\DoxyCodeLine{332       \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{333         cytnx\_error\_msg(\textcolor{keyword}{true}, \textcolor{stringliteral}{"{}[Developing] currently only support regular type network.\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{334       \}}
+\DoxyCodeLine{335     \}}
+\DoxyCodeLine{336     \textcolor{keywordtype}{void} clear() \{}
+\DoxyCodeLine{337       \textcolor{comment}{// boost::intrusive\_ptr<Network\_base> tmp(new Network\_base());}}
+\DoxyCodeLine{338       this-\/>\_impl-\/>clear();}
+\DoxyCodeLine{339     \}}
+\DoxyCodeLine{340 }
+\DoxyCodeLine{341     Network clone() \{}
+\DoxyCodeLine{342       Network out;}
+\DoxyCodeLine{343       out.\_impl = this-\/>\_impl-\/>clone();}
+\DoxyCodeLine{344       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{345     \}}
+\DoxyCodeLine{346     \textcolor{keywordtype}{void} PrintNet() \{ this-\/>\_impl-\/>PrintNet(std::cout); \}}
+\DoxyCodeLine{347 }
+\DoxyCodeLine{348     \textcolor{keywordtype}{void} Savefile(\textcolor{keyword}{const} std::string \&fname) \{ this-\/>\_impl-\/>Savefile(fname); \}}
+\DoxyCodeLine{349   \};}
+\DoxyCodeLine{350 }
+\DoxyCodeLine{352   std::ostream \&operator<<(std::ostream \&os, \textcolor{keyword}{const} Network \&bin);}
+\DoxyCodeLine{354 \}  \textcolor{comment}{// namespace cytnx}}
+\DoxyCodeLine{355 }
+\DoxyCodeLine{356 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

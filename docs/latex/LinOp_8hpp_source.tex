@@ -1,0 +1,150 @@
+\hypertarget{LinOp_8hpp_source}{}\doxysection{Lin\+Op.\+hpp}
+\label{LinOp_8hpp_source}\index{include/LinOp.hpp@{include/LinOp.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_H\_LinOp\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_H\_LinOp\_}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include "{}Type.hpp"{}}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include "{}cytnx\_error.hpp"{}}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}Tensor.hpp"{}}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include "{}Scalar.hpp"{}}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include "{}UniTensor.hpp"{}}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include <fstream>}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include <functional>}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include <map>}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include <utility>}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include <algorithm>}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#include "{}intrusive\_ptr\_base.hpp"{}}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#include "{}utils/vec\_clone.hpp"{}}}
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18 \textcolor{keyword}{namespace }cytnx \{}
+\DoxyCodeLine{19 }
+\DoxyCodeLine{20   \textcolor{keyword}{class }\mbox{\hyperlink{classcytnx_1_1LinOp}{LinOp}} \{}
+\DoxyCodeLine{21    \textcolor{keyword}{private}:}
+\DoxyCodeLine{22     \textcolor{comment}{// type:}}
+\DoxyCodeLine{23     std::string \_type;}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25     \textcolor{comment}{// nx}}
+\DoxyCodeLine{26     cytnx\_uint64 \_nx;}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28     \textcolor{comment}{// device}}
+\DoxyCodeLine{29     \textcolor{keywordtype}{int} \_device;}
+\DoxyCodeLine{30     \textcolor{keywordtype}{int} \_dtype;}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32     \textcolor{comment}{// pre-\/storage data:}}
+\DoxyCodeLine{33     std::map<cytnx\_uint64, std::pair<std::vector<cytnx\_uint64>, \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}>>}
+\DoxyCodeLine{34       \_elems;  \textcolor{comment}{// map[i] -\/> pair[<js>,<Storage>]}}
+\DoxyCodeLine{35     std::map<cytnx\_uint64, std::pair<std::vector<cytnx\_uint64>, \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}>>::iterator \_elems\_it;}
+\DoxyCodeLine{36 }
+\DoxyCodeLine{37     \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \_mv\_elemfunc(\textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \&);}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{39    \textcolor{keyword}{public}:}
+\DoxyCodeLine{41     \textcolor{comment}{// we need driver of void f(nx,vin,vout)}}
+\DoxyCodeLine{43 \textcolor{comment}{}}
+\DoxyCodeLine{74     \mbox{\hyperlink{classcytnx_1_1LinOp_a4c85814f56d28735575bb577d1d97afa}{LinOp}}(\textcolor{keyword}{const} std::string \&type, \textcolor{keyword}{const} cytnx\_uint64 \&nx, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&dtype = Type.Double,}
+\DoxyCodeLine{75           \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = Device.cpu) \{}
+\DoxyCodeLine{76       \textcolor{keywordflow}{if} (type == \textcolor{stringliteral}{"{}mv"{}}) \{}
+\DoxyCodeLine{77       \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (type == \textcolor{stringliteral}{"{}mv\_elem"{}}) \{}
+\DoxyCodeLine{78       \} \textcolor{keywordflow}{else}}
+\DoxyCodeLine{79         cytnx\_error\_msg(type != \textcolor{stringliteral}{"{}mv"{}},}
+\DoxyCodeLine{80                         \textcolor{stringliteral}{"{}[ERROR][LinOp] currently only type=\(\backslash\)"{}mv\(\backslash\)"{} (matvec) can be used.\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{81 }
+\DoxyCodeLine{82       this-\/>\_type = type;}
+\DoxyCodeLine{83       this-\/>\_nx = nx;}
+\DoxyCodeLine{84       cytnx\_error\_msg(device < -\/1 || device >= Device.Ngpus, \textcolor{stringliteral}{"{}[ERROR] invalid device.\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{85       this-\/>\_device = device;}
+\DoxyCodeLine{86       cytnx\_error\_msg(dtype < 1 || dtype >= N\_Type, \textcolor{stringliteral}{"{}[ERROR] invalid dtype.\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{87       this-\/>\_dtype = dtype;}
+\DoxyCodeLine{88     \};}
+\DoxyCodeLine{89     \textcolor{comment}{/*}}
+\DoxyCodeLine{90 \textcolor{comment}{    void set\_func(std::function<Tensor(const Tensor\&)> custom\_f, const int \&dtype, const int}}
+\DoxyCodeLine{91 \textcolor{comment}{    \&device)\{ if(this-\/>\_type=="{}mv"{})\{ this-\/>\_mvfunc = custom\_f; cytnx\_error\_msg(device<-\/1 || device}}
+\DoxyCodeLine{92 \textcolor{comment}{    >=Device.Ngpus,"{}[ERROR] invalid device.\%s"{},"{}\(\backslash\)n"{}); this-\/>\_device = device;}}
+\DoxyCodeLine{93 \textcolor{comment}{            cytnx\_error\_msg(dtype<1 || dtype >= N\_Type,"{}[ERROR] invalid dtype.\%s"{},"{}\(\backslash\)n"{});}}
+\DoxyCodeLine{94 \textcolor{comment}{            this-\/>\_dtype = dtype;}}
+\DoxyCodeLine{95 \textcolor{comment}{        \}else\{}}
+\DoxyCodeLine{96 \textcolor{comment}{            cytnx\_error\_msg(true,"{}[ERROR] cannot specify func with type=mv\_elem\%s. use set\_elem}}
+\DoxyCodeLine{97 \textcolor{comment}{    instead."{},"{}\(\backslash\)n"{});}}
+\DoxyCodeLine{98 \textcolor{comment}{        \}}}
+\DoxyCodeLine{99 \textcolor{comment}{    \};}}
+\DoxyCodeLine{100 \textcolor{comment}{    */}}
+\DoxyCodeLine{101     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{102     \textcolor{keywordtype}{void} set\_elem(\textcolor{keyword}{const} cytnx\_uint64 \&i, \textcolor{keyword}{const} cytnx\_uint64 \&j, \textcolor{keyword}{const} T \&elem,}
+\DoxyCodeLine{103                   \textcolor{keyword}{const} \textcolor{keywordtype}{bool} check\_exists = \textcolor{keyword}{true}) \{}
+\DoxyCodeLine{104       this-\/>\_elems\_it = this-\/>\_elems.find(i);}
+\DoxyCodeLine{105       \textcolor{keywordflow}{if} (this-\/>\_elems\_it == this-\/>\_elems.end()) \{}
+\DoxyCodeLine{106         \textcolor{comment}{// not exists:}}
+\DoxyCodeLine{107         \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} x(\{1\}, this-\/>\_dtype);}
+\DoxyCodeLine{108         x(0) = elem;}
+\DoxyCodeLine{109         this-\/>\_elems[i] = std::pair<std::vector<cytnx\_uint64>, Tensor>(\{j\}, x);}
+\DoxyCodeLine{110 }
+\DoxyCodeLine{111       \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{112         std::vector<cytnx\_uint64> \&vi = this-\/>\_elems\_it-\/>second.first;  \textcolor{comment}{// pair:}}
+\DoxyCodeLine{113         Tensor \&ie = this-\/>\_elems\_it-\/>second.second;}
+\DoxyCodeLine{114         \textcolor{keywordflow}{if} (check\_exists) \{}
+\DoxyCodeLine{115           cytnx\_error\_msg(std::find(vi.begin(), vi.end(), j) != vi.end(),}
+\DoxyCodeLine{116                           \textcolor{stringliteral}{"{}[ERROR] the element is set\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{117         \}}
+\DoxyCodeLine{118         vi.push\_back(j);}
+\DoxyCodeLine{119         ie.append(elem);}
+\DoxyCodeLine{120       \}}
+\DoxyCodeLine{121     \};}
+\DoxyCodeLine{122     Tensor::Tproxy operator()(\textcolor{keyword}{const} cytnx\_uint64 \&i, \textcolor{keyword}{const} cytnx\_uint64 \&j) \{}
+\DoxyCodeLine{123       \textcolor{comment}{//[Note that this can only call by mv\_elem]}}
+\DoxyCodeLine{124       \textcolor{comment}{// if the element is not exists, it will create one.}}
+\DoxyCodeLine{125       this-\/>\_elems\_it = this-\/>\_elems.find(i);}
+\DoxyCodeLine{126       \textcolor{keywordflow}{if} (this-\/>\_elems\_it == this-\/>\_elems.end()) \{}
+\DoxyCodeLine{127         \textcolor{comment}{// not exists:}}
+\DoxyCodeLine{128         Tensor x(\{1\}, this-\/>\_dtype);}
+\DoxyCodeLine{129         x(0) = 0;}
+\DoxyCodeLine{130         this-\/>\_elems[i] = std::pair<std::vector<cytnx\_uint64>, Tensor>(\{j\}, x);}
+\DoxyCodeLine{131         \textcolor{keywordflow}{return} this-\/>\_elems[i].second(0);}
+\DoxyCodeLine{132       \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{133         std::vector<cytnx\_uint64> \&vi = this-\/>\_elems\_it-\/>second.first;  \textcolor{comment}{// pair:}}
+\DoxyCodeLine{134         Tensor \&ie = this-\/>\_elems\_it-\/>second.second;}
+\DoxyCodeLine{135         \textcolor{keyword}{auto} tmp\_it = std::find(vi.begin(), vi.end(), j);}
+\DoxyCodeLine{136 }
+\DoxyCodeLine{137         \textcolor{comment}{// if(check\_exists)\{}}
+\DoxyCodeLine{138         \textcolor{comment}{//     cytnx\_error\_msg(std::find(vi.begin(), vi.end(), j)!=vi.end(),"{}[ERROR] the element is}}
+\DoxyCodeLine{139         \textcolor{comment}{//     set\%s"{},"{}\(\backslash\)n"{});}}
+\DoxyCodeLine{140         \textcolor{comment}{// \}}}
+\DoxyCodeLine{141         \textcolor{keywordflow}{if} (tmp\_it == vi.end()) \{}
+\DoxyCodeLine{142           vi.push\_back(j);}
+\DoxyCodeLine{143           ie.append(0);}
+\DoxyCodeLine{144           \textcolor{keywordflow}{return} ie(vi.size() -\/ 1);}
+\DoxyCodeLine{145         \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{146           \textcolor{keywordflow}{return} ie(std::distance(vi.begin(), tmp\_it));}
+\DoxyCodeLine{147         \}}
+\DoxyCodeLine{148       \}}
+\DoxyCodeLine{149     \}}
+\DoxyCodeLine{150 }
+\DoxyCodeLine{151     \textcolor{keywordtype}{void} set\_device(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device) \{}
+\DoxyCodeLine{152       cytnx\_error\_msg(device < -\/1 || device >= Device.Ngpus, \textcolor{stringliteral}{"{}[ERROR] invalid device.\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{153       this-\/>\_device = device;}
+\DoxyCodeLine{154     \};}
+\DoxyCodeLine{155     \textcolor{keywordtype}{void} set\_dtype(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&dtype) \{}
+\DoxyCodeLine{156       cytnx\_error\_msg(dtype < 1 || dtype >= N\_Type, \textcolor{stringliteral}{"{}[ERROR] invalid dtype.\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{157       this-\/>\_dtype = dtype;}
+\DoxyCodeLine{158     \};}
+\DoxyCodeLine{159     \textcolor{keywordtype}{int} device()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_device; \};}
+\DoxyCodeLine{160     \textcolor{keywordtype}{int} dtype()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_dtype; \};}
+\DoxyCodeLine{161     cytnx\_uint64 nx()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_nx; \};}
+\DoxyCodeLine{162 }
+\DoxyCodeLine{163     \textcolor{keywordtype}{void} \_print();}
+\DoxyCodeLine{164 }
+\DoxyCodeLine{166     \textcolor{comment}{// this expose to interitance:}}
+\DoxyCodeLine{167     \textcolor{comment}{// need user to check the output to be Tensor}}
+\DoxyCodeLine{169 \textcolor{comment}{}    \textcolor{keyword}{virtual} Tensor matvec(\textcolor{keyword}{const} Tensor \&Tin);}
+\DoxyCodeLine{170 }
+\DoxyCodeLine{172     \textcolor{comment}{// this expose to interface:}}
+\DoxyCodeLine{173     \textcolor{keyword}{virtual} UniTensor matvec(\textcolor{keyword}{const} UniTensor \&Tin);}
+\DoxyCodeLine{174     \textcolor{comment}{// virtual std::vector<UniTensor> matvec(const std::vector<UniTensor> \&Tin);}}
+\DoxyCodeLine{176 \textcolor{comment}{}  \};}
+\DoxyCodeLine{177 }
+\DoxyCodeLine{178 \}  \textcolor{comment}{// namespace cytnx}}
+\DoxyCodeLine{179 }
+\DoxyCodeLine{180 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

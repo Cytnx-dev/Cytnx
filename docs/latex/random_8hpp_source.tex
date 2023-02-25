@@ -1,0 +1,84 @@
+\hypertarget{random_8hpp_source}{}\doxysection{random.\+hpp}
+\label{random_8hpp_source}\index{include/random.hpp@{include/random.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_random\_H\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_random\_H\_}}
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include "{}Type.hpp"{}}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include "{}Device.hpp"{}}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include "{}cytnx\_error.hpp"{}}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}Tensor.hpp"{}}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include "{}Storage.hpp"{}}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include "{}UniTensor.hpp"{}}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include <initializer\_list>}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include <random>}}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{13 \textcolor{keyword}{namespace }cytnx \{}
+\DoxyCodeLine{14   \textcolor{keyword}{namespace }random \{}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{16     \textcolor{comment}{// [Storage]}}
+\DoxyCodeLine{17     \textcolor{comment}{// =============================================================================================================}}
+\DoxyCodeLine{18     \textcolor{comment}{// =============================================================================================================}}
+\DoxyCodeLine{19     \textcolor{comment}{// Make\_normal:}}
+\DoxyCodeLine{20     \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{31 \textcolor{comment}{}    \textcolor{keywordtype}{void} Make\_normal(Storage \&Sin, \textcolor{keyword}{const} \textcolor{keywordtype}{double} \&mean, \textcolor{keyword}{const} \textcolor{keywordtype}{double} \&std,}
+\DoxyCodeLine{32                      \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&seed = std::random\_device()());}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34     \textcolor{comment}{// Make\_uniform:}}
+\DoxyCodeLine{35     \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{50 \textcolor{comment}{}    \textcolor{keywordtype}{void} Make\_uniform(Storage \&Sin, \textcolor{keyword}{const} \textcolor{keywordtype}{double} \&low = 0, \textcolor{keyword}{const} \textcolor{keywordtype}{double} \&high = 1,}
+\DoxyCodeLine{51                       \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&seed = std::random\_device()());}
+\DoxyCodeLine{52 }
+\DoxyCodeLine{53     \textcolor{comment}{// [Tensor]}}
+\DoxyCodeLine{54     \textcolor{comment}{// =============================================================================================================}}
+\DoxyCodeLine{55     \textcolor{comment}{// =============================================================================================================}}
+\DoxyCodeLine{56     \textcolor{comment}{// Make\_normal:}}
+\DoxyCodeLine{57     \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{68 \textcolor{comment}{}    \textcolor{keywordtype}{void} Make\_normal(Tensor \&Tin, \textcolor{keyword}{const} \textcolor{keywordtype}{double} \&mean, \textcolor{keyword}{const} \textcolor{keywordtype}{double} \&std,}
+\DoxyCodeLine{69                      \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&seed = std::random\_device()());}
+\DoxyCodeLine{70 }
+\DoxyCodeLine{71     \textcolor{comment}{// Make\_uniform:}}
+\DoxyCodeLine{72     \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{87 \textcolor{comment}{}    \textcolor{keywordtype}{void} Make\_uniform(Tensor \&Tin, \textcolor{keyword}{const} \textcolor{keywordtype}{double} \&low = 0, \textcolor{keyword}{const} \textcolor{keywordtype}{double} \&high = 1,}
+\DoxyCodeLine{88                       \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&seed = std::random\_device()());}
+\DoxyCodeLine{89 }
+\DoxyCodeLine{90     \textcolor{comment}{// [UniTensor]}}
+\DoxyCodeLine{91     \textcolor{comment}{// =============================================================================================================}}
+\DoxyCodeLine{92     \textcolor{comment}{// =============================================================================================================}}
+\DoxyCodeLine{93     \textcolor{comment}{// Make\_normal:}}
+\DoxyCodeLine{94     \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{105 \textcolor{comment}{}    \textcolor{keywordtype}{void} Make\_normal(UniTensor \&Tin, \textcolor{keyword}{const} \textcolor{keywordtype}{double} \&mean, \textcolor{keyword}{const} \textcolor{keywordtype}{double} \&std,}
+\DoxyCodeLine{106                      \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&seed = std::random\_device()());}
+\DoxyCodeLine{107 }
+\DoxyCodeLine{108     \textcolor{comment}{// Make\_uniform:}}
+\DoxyCodeLine{109     \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{124 \textcolor{comment}{}    \textcolor{keywordtype}{void} Make\_uniform(UniTensor \&Tin, \textcolor{keyword}{const} \textcolor{keywordtype}{double} \&low = 0, \textcolor{keyword}{const} \textcolor{keywordtype}{double} \&high = 1,}
+\DoxyCodeLine{125                       \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&seed = std::random\_device()());}
+\DoxyCodeLine{126 }
+\DoxyCodeLine{127     \textcolor{comment}{// normal:}}
+\DoxyCodeLine{129 \textcolor{comment}{}}
+\DoxyCodeLine{142     Tensor normal(\textcolor{keyword}{const} cytnx\_uint64 \&Nelem, \textcolor{keyword}{const} \textcolor{keywordtype}{double} \&mean, \textcolor{keyword}{const} \textcolor{keywordtype}{double} \&std,}
+\DoxyCodeLine{143                   \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = Device.cpu,}
+\DoxyCodeLine{144                   \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&seed = std::random\_device()());}
+\DoxyCodeLine{145 }
+\DoxyCodeLine{159     Tensor normal(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&Nelem, \textcolor{keyword}{const} \textcolor{keywordtype}{double} \&mean, \textcolor{keyword}{const} \textcolor{keywordtype}{double} \&std,}
+\DoxyCodeLine{160                   \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = Device.cpu,}
+\DoxyCodeLine{161                   \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&seed = std::random\_device()());}
+\DoxyCodeLine{163 }
+\DoxyCodeLine{164     \textcolor{comment}{// uniform:}}
+\DoxyCodeLine{166 \textcolor{comment}{}}
+\DoxyCodeLine{179     Tensor uniform(\textcolor{keyword}{const} cytnx\_uint64 \&Nelem, \textcolor{keyword}{const} \textcolor{keywordtype}{double} \&low, \textcolor{keyword}{const} \textcolor{keywordtype}{double} \&high,}
+\DoxyCodeLine{180                    \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = Device.cpu,}
+\DoxyCodeLine{181                    \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&seed = std::random\_device()());}
+\DoxyCodeLine{182 }
+\DoxyCodeLine{196     Tensor uniform(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&Nelem, \textcolor{keyword}{const} \textcolor{keywordtype}{double} \&low, \textcolor{keyword}{const} \textcolor{keywordtype}{double} \&high,}
+\DoxyCodeLine{197                    \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = Device.cpu,}
+\DoxyCodeLine{198                    \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&seed = std::random\_device()());}
+\DoxyCodeLine{200 }
+\DoxyCodeLine{201   \}  \textcolor{comment}{// namespace random}}
+\DoxyCodeLine{202 \}  \textcolor{comment}{// namespace cytnx}}
+\DoxyCodeLine{203 }
+\DoxyCodeLine{204 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

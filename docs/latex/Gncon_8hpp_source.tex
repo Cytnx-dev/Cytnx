@@ -1,0 +1,285 @@
+\hypertarget{Gncon_8hpp_source}{}\doxysection{Gncon.\+hpp}
+\label{Gncon_8hpp_source}\index{include/Gncon.hpp@{include/Gncon.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_H\_Gncon\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_H\_Gncon\_}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include "{}Type.hpp"{}}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include "{}cytnx\_error.hpp"{}}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include <initializer\_list>}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <map>}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include <fstream>}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include "{}intrusive\_ptr\_base.hpp"{}}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include "{}utils/utils.hpp"{}}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include "{}UniTensor.hpp"{}}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include "{}contraction\_tree.hpp"{}}}
+\DoxyCodeLine{14 \textcolor{keyword}{namespace }cytnx \{}
+\DoxyCodeLine{16   \textcolor{comment}{// struct \_\_ntwk \{}}
+\DoxyCodeLine{17   \textcolor{comment}{//   enum \_\_GNType \{ Void = -\/1, Regular = 0, Fermion = 1 \};}}
+\DoxyCodeLine{18   \textcolor{comment}{// \};}}
+\DoxyCodeLine{19   \textcolor{keyword}{class }GnconType\_class \{}
+\DoxyCodeLine{20    \textcolor{keyword}{public}:}
+\DoxyCodeLine{21     enum : \textcolor{keywordtype}{int} \{ Void = -\/1, Regular = 0, Fermion = 1 \};}
+\DoxyCodeLine{22     std::string getname(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&nwrktype\_id);}
+\DoxyCodeLine{23   \};}
+\DoxyCodeLine{24   \textcolor{keyword}{extern} GnconType\_class GNType;}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{28   \textcolor{keyword}{class }Gncon\_base : \textcolor{keyword}{public} intrusive\_ptr\_base<Gncon\_base> \{}
+\DoxyCodeLine{29     \textcolor{comment}{// protected:}}
+\DoxyCodeLine{30    \textcolor{keyword}{public}:}
+\DoxyCodeLine{31     \textcolor{keywordtype}{int} nwrktype\_id;}
+\DoxyCodeLine{32     std::string filename;}
+\DoxyCodeLine{33     \textcolor{comment}{// std::vector<std::vector<string>> tasks;  // ex: "{}A:a-\/B:b"{},... => [["{}A"{},"{}a"{},"{}B"{},"{}b"{}],...]}}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{35     std::vector<UniTensor> tensors;}
+\DoxyCodeLine{36     std::vector<cytnx\_int64> TOUT\_labels;}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38     std::vector<std::vector<std::pair<std::string,std::string>>> table; \textcolor{comment}{// table[i] =  i-\/th tensor's leg names to be contracted, and its target label.}}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40     cytnx\_uint64 TOUT\_iBondNum;}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42     \textcolor{comment}{// bool ordered;}}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44     \textcolor{comment}{// Contraction order.}}
+\DoxyCodeLine{45     ContractionTree CtTree;}
+\DoxyCodeLine{46     std::vector<std::string> ORDER\_tokens;}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{48     \textcolor{comment}{// labels corr to the tn list.}}
+\DoxyCodeLine{49     std::vector<std::vector<std::string>> label\_arr;}
+\DoxyCodeLine{50     std::vector<cytnx\_int64> iBondNums;}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52     \textcolor{comment}{// name of tn.}}
+\DoxyCodeLine{53     std::vector<std::string> names;}
+\DoxyCodeLine{54     std::map<std::string, cytnx\_uint64> name2pos;}
+\DoxyCodeLine{55 }
+\DoxyCodeLine{56     \textcolor{keyword}{friend} \textcolor{keyword}{class }FermionGncon;}
+\DoxyCodeLine{57     \textcolor{keyword}{friend} \textcolor{keyword}{class }RegularGncon;}
+\DoxyCodeLine{58     \textcolor{keyword}{friend} \textcolor{keyword}{class }Gncon;}
+\DoxyCodeLine{59     Gncon\_base() : nwrktype\_id(GNType.Void)\{\};}
+\DoxyCodeLine{60 }
+\DoxyCodeLine{61     \textcolor{keywordtype}{bool} HasPutAllUniTensor() \{}
+\DoxyCodeLine{62       \textcolor{keywordflow}{for} (cytnx\_uint64 i = 0; i < this-\/>tensors.size(); i++) \{}
+\DoxyCodeLine{63         \textcolor{keywordflow}{if} (this-\/>tensors[i].uten\_type() == UTenType.Void) \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{64       \}}
+\DoxyCodeLine{65       \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{66     \}}
+\DoxyCodeLine{67 }
+\DoxyCodeLine{68     \textcolor{comment}{// void print\_Gncon() const;}}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{70     \textcolor{comment}{// void PreConstruct(bool force = true);}}
+\DoxyCodeLine{71 }
+\DoxyCodeLine{72     \textcolor{comment}{// void PutTensor(cytnx\_int64 idx, const UniTensor\& UniT, bool force = true);}}
+\DoxyCodeLine{73 }
+\DoxyCodeLine{74     \textcolor{comment}{// void PutTensor(const std::string  \&name, const UniTensor \&UniT, bool force = true);}}
+\DoxyCodeLine{75 }
+\DoxyCodeLine{76     \textcolor{comment}{// UniTensor Launch(const std::string \&Tname="{}"{});}}
+\DoxyCodeLine{77 }
+\DoxyCodeLine{78     \textcolor{comment}{// std::string GetContractOrder() const;}}
+\DoxyCodeLine{79     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} PutUniTensor(\textcolor{keyword}{const} std::string \&name, \textcolor{keyword}{const} UniTensor \&utensor);}
+\DoxyCodeLine{80     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} PutUniTensor(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} UniTensor \&utensor);}
+\DoxyCodeLine{81     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} PutUniTensors(\textcolor{keyword}{const} std::vector<std::string> \&name,}
+\DoxyCodeLine{82                                \textcolor{keyword}{const} std::vector<UniTensor> \&utensors);}
+\DoxyCodeLine{83     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} Contract\_plan(\textcolor{keyword}{const} std::vector<UniTensor> \&utensors, \textcolor{keyword}{const} std::string \&Tout,}
+\DoxyCodeLine{84                                \textcolor{keyword}{const} std::vector<std::string> \&alias,}
+\DoxyCodeLine{85                                \textcolor{keyword}{const} std::string \&contract\_order);}
+\DoxyCodeLine{86 }
+\DoxyCodeLine{87     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} Fromfile(\textcolor{keyword}{const} std::string \&fname);}
+\DoxyCodeLine{88     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} FromString(\textcolor{keyword}{const} std::vector<std::string> \&content);}
+\DoxyCodeLine{89     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} clear();}
+\DoxyCodeLine{90     \textcolor{keyword}{virtual} std::string getOptimalOrder();}
+\DoxyCodeLine{91     \textcolor{keyword}{virtual} UniTensor Launch(\textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&optimal = \textcolor{keyword}{false}, \textcolor{keyword}{const} std::string \&contract\_order = \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{92     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} PrintNet(std::ostream \&os);}
+\DoxyCodeLine{93     \textcolor{keyword}{virtual} boost::intrusive\_ptr<Gncon\_base> clone();}
+\DoxyCodeLine{94     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} Savefile(\textcolor{keyword}{const} std::string \&fname);}
+\DoxyCodeLine{95     \textcolor{keyword}{virtual} \string~Gncon\_base()\{\};}
+\DoxyCodeLine{96 }
+\DoxyCodeLine{97   \};  \textcolor{comment}{// Gncon\_base}}
+\DoxyCodeLine{98 }
+\DoxyCodeLine{99   \textcolor{keyword}{class }RegularGncon : \textcolor{keyword}{public} Gncon\_base \{}
+\DoxyCodeLine{100    \textcolor{keyword}{public}:}
+\DoxyCodeLine{101     RegularGncon() \{ this-\/>nwrktype\_id = GNType.Regular; \};}
+\DoxyCodeLine{102     \textcolor{keywordtype}{void} Fromfile(\textcolor{keyword}{const} std::string \&fname);}
+\DoxyCodeLine{103     \textcolor{keywordtype}{void} FromString(\textcolor{keyword}{const} std::vector<std::string> \&contents);}
+\DoxyCodeLine{104     \textcolor{keywordtype}{void} PutUniTensor(\textcolor{keyword}{const} std::string \&name, \textcolor{keyword}{const} UniTensor \&utensor);}
+\DoxyCodeLine{105     \textcolor{keywordtype}{void} PutUniTensor(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} UniTensor \&utensor);}
+\DoxyCodeLine{106     \textcolor{keywordtype}{void} PutUniTensors(\textcolor{keyword}{const} std::vector<std::string> \&name,}
+\DoxyCodeLine{107                        \textcolor{keyword}{const} std::vector<UniTensor> \&utensors);}
+\DoxyCodeLine{108     \textcolor{keywordtype}{void} Contract\_plan(\textcolor{keyword}{const} std::vector<UniTensor> \&utensors, \textcolor{keyword}{const} std::string \&Tout,}
+\DoxyCodeLine{109                        \textcolor{keyword}{const} std::vector<std::string> \&alias = \{\},}
+\DoxyCodeLine{110                        \textcolor{keyword}{const} std::string \&contract\_order = \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{111     \textcolor{keywordtype}{void} clear() \{}
+\DoxyCodeLine{112       this-\/>name2pos.clear();}
+\DoxyCodeLine{113       this-\/>CtTree.clear();}
+\DoxyCodeLine{114       this-\/>names.clear();}
+\DoxyCodeLine{115       this-\/>iBondNums.clear();}
+\DoxyCodeLine{116       this-\/>label\_arr.clear();}
+\DoxyCodeLine{117       this-\/>TOUT\_labels.clear();}
+\DoxyCodeLine{118       this-\/>TOUT\_iBondNum = 0;}
+\DoxyCodeLine{119       this-\/>ORDER\_tokens.clear();}
+\DoxyCodeLine{120     \}}
+\DoxyCodeLine{121     std::string getOptimalOrder();}
+\DoxyCodeLine{122     UniTensor Launch(\textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&optimal = \textcolor{keyword}{false}, \textcolor{keyword}{const} std::string \&contract\_order = \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{123     boost::intrusive\_ptr<Gncon\_base> clone() \{}
+\DoxyCodeLine{124       RegularGncon *tmp = \textcolor{keyword}{new} RegularGncon();}
+\DoxyCodeLine{125       tmp-\/>name2pos = this-\/>name2pos;}
+\DoxyCodeLine{126       tmp-\/>CtTree = this-\/>CtTree;}
+\DoxyCodeLine{127       tmp-\/>names = this-\/>names;}
+\DoxyCodeLine{128       tmp-\/>iBondNums = this-\/>iBondNums;}
+\DoxyCodeLine{129       tmp-\/>label\_arr = this-\/>label\_arr;}
+\DoxyCodeLine{130       tmp-\/>TOUT\_labels = this-\/>TOUT\_labels;}
+\DoxyCodeLine{131       tmp-\/>TOUT\_iBondNum = this-\/>TOUT\_iBondNum;}
+\DoxyCodeLine{132       tmp-\/>ORDER\_tokens = this-\/>ORDER\_tokens;}
+\DoxyCodeLine{133       boost::intrusive\_ptr<Gncon\_base> out(tmp);}
+\DoxyCodeLine{134       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{135     \}}
+\DoxyCodeLine{136     \textcolor{keywordtype}{void} PrintNet(std::ostream \&os);}
+\DoxyCodeLine{137     \textcolor{keywordtype}{void} Savefile(\textcolor{keyword}{const} std::string \&fname);}
+\DoxyCodeLine{138     \string~RegularGncon()\{\};}
+\DoxyCodeLine{139   \};}
+\DoxyCodeLine{140 }
+\DoxyCodeLine{141   \textcolor{comment}{// Under dev!!}}
+\DoxyCodeLine{142   \textcolor{keyword}{class }FermionGncon : \textcolor{keyword}{public} Gncon\_base \{}
+\DoxyCodeLine{143    \textcolor{keyword}{protected}:}
+\DoxyCodeLine{144     \textcolor{comment}{// [Future] Swap gates.}}
+\DoxyCodeLine{145 }
+\DoxyCodeLine{146    \textcolor{keyword}{public}:}
+\DoxyCodeLine{147     FermionGncon() \{ this-\/>nwrktype\_id = GNType.Fermion; \};}
+\DoxyCodeLine{148     \textcolor{keywordtype}{void} Fromfile(\textcolor{keyword}{const} std::string \&fname)\{\};}
+\DoxyCodeLine{149     \textcolor{keywordtype}{void} FromString(\textcolor{keyword}{const} std::vector<std::string> \&contents)\{\};}
+\DoxyCodeLine{150     \textcolor{keywordtype}{void} PutUniTensor(\textcolor{keyword}{const} std::string \&name, \textcolor{keyword}{const} UniTensor \&utensor)\{\};}
+\DoxyCodeLine{151     \textcolor{keywordtype}{void} PutUniTensor(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} UniTensor \&utensor)\{\};}
+\DoxyCodeLine{152     \textcolor{keywordtype}{void} PutUniTensors(\textcolor{keyword}{const} std::vector<std::string> \&name,}
+\DoxyCodeLine{153                        \textcolor{keyword}{const} std::vector<UniTensor> \&utensors)\{\};}
+\DoxyCodeLine{154     \textcolor{keywordtype}{void} Contract\_plan(\textcolor{keyword}{const} std::vector<UniTensor> \&utensors, \textcolor{keyword}{const} std::string \&Tout,}
+\DoxyCodeLine{155                        \textcolor{keyword}{const} std::vector<std::string> \&alias = \{\},}
+\DoxyCodeLine{156                        \textcolor{keyword}{const} std::string \&contract\_order = \textcolor{stringliteral}{"{}"{}})\{\};}
+\DoxyCodeLine{157     \textcolor{keywordtype}{void} clear() \{}
+\DoxyCodeLine{158       this-\/>name2pos.clear();}
+\DoxyCodeLine{159       this-\/>CtTree.clear();}
+\DoxyCodeLine{160       this-\/>names.clear();}
+\DoxyCodeLine{161       this-\/>iBondNums.clear();}
+\DoxyCodeLine{162       this-\/>label\_arr.clear();}
+\DoxyCodeLine{163       this-\/>TOUT\_labels.clear();}
+\DoxyCodeLine{164       this-\/>TOUT\_iBondNum = 0;}
+\DoxyCodeLine{165       this-\/>ORDER\_tokens.clear();}
+\DoxyCodeLine{166     \}}
+\DoxyCodeLine{167     UniTensor Launch(\textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&optimal = \textcolor{keyword}{false}) \{ \textcolor{keywordflow}{return} UniTensor(); \};}
+\DoxyCodeLine{168     boost::intrusive\_ptr<Gncon\_base> clone() \{}
+\DoxyCodeLine{169       FermionGncon *tmp = \textcolor{keyword}{new} FermionGncon();}
+\DoxyCodeLine{170       tmp-\/>name2pos = this-\/>name2pos;}
+\DoxyCodeLine{171       tmp-\/>CtTree = this-\/>CtTree;}
+\DoxyCodeLine{172       tmp-\/>names = this-\/>names;}
+\DoxyCodeLine{173       tmp-\/>iBondNums = this-\/>iBondNums;}
+\DoxyCodeLine{174       tmp-\/>label\_arr = this-\/>label\_arr;}
+\DoxyCodeLine{175       tmp-\/>TOUT\_labels = this-\/>TOUT\_labels;}
+\DoxyCodeLine{176       tmp-\/>TOUT\_iBondNum = this-\/>TOUT\_iBondNum;}
+\DoxyCodeLine{177       tmp-\/>ORDER\_tokens = this-\/>ORDER\_tokens;}
+\DoxyCodeLine{178       boost::intrusive\_ptr<Gncon\_base> out(tmp);}
+\DoxyCodeLine{179       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{180     \}}
+\DoxyCodeLine{181     \textcolor{keywordtype}{void} PrintNet(std::ostream \&os)\{\};}
+\DoxyCodeLine{182     \textcolor{keywordtype}{void} Savefile(\textcolor{keyword}{const} std::string \&fname)\{\};}
+\DoxyCodeLine{183     \string~FermionGncon()\{\};}
+\DoxyCodeLine{184   \};}
+\DoxyCodeLine{185 }
+\DoxyCodeLine{187 }
+\DoxyCodeLine{188   \textcolor{comment}{/* @brief the Gncon object for easy build tensor Gncon.}}
+\DoxyCodeLine{189 \textcolor{comment}{}}
+\DoxyCodeLine{190 \textcolor{comment}{       The Gncon is an object that allow one to create a complex Gncon from a pre-\/defined}}
+\DoxyCodeLine{191 \textcolor{comment}{     Gncon file. By putting the Tensors into the Gncon, the user simply call “Gncon.Launch()”}}
+\DoxyCodeLine{192 \textcolor{comment}{     to get the out-\/come.}}
+\DoxyCodeLine{193 \textcolor{comment}{  */}}
+\DoxyCodeLine{194   \textcolor{keyword}{class }\mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}} \{}
+\DoxyCodeLine{195    \textcolor{keyword}{public}:}
+\DoxyCodeLine{197     boost::intrusive\_ptr<Gncon\_base> \_impl;}
+\DoxyCodeLine{198     \mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}}() : \_impl(\textcolor{keyword}{new} Gncon\_base())\{\};}
+\DoxyCodeLine{199     \mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}}(\textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}} \&rhs) \{ this-\/>\_impl = rhs.\_impl; \}}
+\DoxyCodeLine{200     \mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}} \&operator=(\textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}} \&rhs) \{}
+\DoxyCodeLine{201       this-\/>\_impl = rhs.\_impl;}
+\DoxyCodeLine{202       \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{203     \}}
+\DoxyCodeLine{205 }
+\DoxyCodeLine{253     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Gncon_a1edbe6357fc885dc741898dd0f85825a}{Fromfile}}(\textcolor{keyword}{const} std::string \&fname, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&Gncon\_type = GNType.Regular) \{}
+\DoxyCodeLine{254       \textcolor{keywordflow}{if} (Gncon\_type == GNType.Regular) \{}
+\DoxyCodeLine{255         boost::intrusive\_ptr<Gncon\_base> tmp(\textcolor{keyword}{new} RegularGncon());}
+\DoxyCodeLine{256         this-\/>\_impl = tmp;}
+\DoxyCodeLine{257       \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{258         cytnx\_error\_msg(\textcolor{keyword}{true}, \textcolor{stringliteral}{"{}[Developing] currently only support regular type Gncon.\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{259       \}}
+\DoxyCodeLine{260       this-\/>\_impl-\/>Fromfile(fname);}
+\DoxyCodeLine{261     \}}
+\DoxyCodeLine{262 }
+\DoxyCodeLine{290     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Gncon_ae992acb8b77264cfd321f9b62819fa86}{FromString}}(\textcolor{keyword}{const} std::vector<std::string> \&contents,}
+\DoxyCodeLine{291                     \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&Gncon\_type = GNType.Regular) \{}
+\DoxyCodeLine{292       \textcolor{keywordflow}{if} (Gncon\_type == GNType.Regular) \{}
+\DoxyCodeLine{293         boost::intrusive\_ptr<Gncon\_base> tmp(\textcolor{keyword}{new} RegularGncon());}
+\DoxyCodeLine{294         this-\/>\_impl = tmp;}
+\DoxyCodeLine{295       \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{296         cytnx\_error\_msg(\textcolor{keyword}{true}, \textcolor{stringliteral}{"{}[Developing] currently only support regular type Gncon.\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{297       \}}
+\DoxyCodeLine{298       this-\/>\_impl-\/>FromString(contents);}
+\DoxyCodeLine{299     \}}
+\DoxyCodeLine{300     \textcolor{comment}{// void Savefile(const std::string \&fname);}}
+\DoxyCodeLine{301 }
+\DoxyCodeLine{302     \textcolor{keyword}{static} \mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}} Contract(\textcolor{keyword}{const} std::vector<UniTensor> \&tensors, \textcolor{keyword}{const} std::string \&Tout,}
+\DoxyCodeLine{303                             \textcolor{keyword}{const} std::vector<std::string> \&alias = \{\},}
+\DoxyCodeLine{304                             \textcolor{keyword}{const} std::string \&contract\_order = \textcolor{stringliteral}{"{}"{}}) \{}
+\DoxyCodeLine{305       boost::intrusive\_ptr<Gncon\_base> tmp(\textcolor{keyword}{new} RegularGncon());}
+\DoxyCodeLine{306       Gncon out;}
+\DoxyCodeLine{307       out.\_impl = tmp;}
+\DoxyCodeLine{308       out.\_impl-\/>Contract\_plan(tensors, Tout, alias, contract\_order);}
+\DoxyCodeLine{309       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{310     \}}
+\DoxyCodeLine{311 }
+\DoxyCodeLine{312     Gncon(\textcolor{keyword}{const} std::string \&fname, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&Gncon\_type = GNType.Regular) \{}
+\DoxyCodeLine{313       this-\/>\mbox{\hyperlink{classcytnx_1_1Gncon_a1edbe6357fc885dc741898dd0f85825a}{Fromfile}}(fname, Gncon\_type);}
+\DoxyCodeLine{314     \}}
+\DoxyCodeLine{315 }
+\DoxyCodeLine{316     \textcolor{keywordtype}{void} PutUniTensor(\textcolor{keyword}{const} std::string \&name, \textcolor{keyword}{const} UniTensor \&utensor) \{}
+\DoxyCodeLine{317       this-\/>\_impl-\/>PutUniTensor(name, utensor);}
+\DoxyCodeLine{318     \}}
+\DoxyCodeLine{319     \textcolor{keywordtype}{void} PutUniTensor(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} UniTensor \&utensor) \{}
+\DoxyCodeLine{320       this-\/>\_impl-\/>PutUniTensor(idx, utensor);}
+\DoxyCodeLine{321     \}}
+\DoxyCodeLine{322     \textcolor{keywordtype}{void} PutUniTensors(\textcolor{keyword}{const} std::vector<std::string> \&name,}
+\DoxyCodeLine{323                        \textcolor{keyword}{const} std::vector<UniTensor> \&utensors) \{}
+\DoxyCodeLine{324       this-\/>\_impl-\/>PutUniTensors(name, utensors);}
+\DoxyCodeLine{325     \}}
+\DoxyCodeLine{326     std::string getOptimalOrder(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&Gncon\_type = GNType.Regular) \{}
+\DoxyCodeLine{327       \textcolor{keywordflow}{if} (Gncon\_type == GNType.Regular) \{}
+\DoxyCodeLine{328         \textcolor{keywordflow}{return} this-\/>\_impl-\/>getOptimalOrder();}
+\DoxyCodeLine{329       \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{330         cytnx\_error\_msg(\textcolor{keyword}{true}, \textcolor{stringliteral}{"{}[Developing] currently only support regular type Gncon.\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{331       \}}
+\DoxyCodeLine{332     \}}
+\DoxyCodeLine{333     UniTensor Launch(\textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&optimal, \textcolor{keyword}{const} std::string \&contract\_order = \textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{334                      \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&Gncon\_type = GNType.Regular) \{}
+\DoxyCodeLine{335       \textcolor{keywordflow}{if} (Gncon\_type == GNType.Regular) \{}
+\DoxyCodeLine{336         \textcolor{keywordflow}{return} this-\/>\_impl-\/>Launch(optimal);}
+\DoxyCodeLine{337       \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{338         cytnx\_error\_msg(\textcolor{keyword}{true}, \textcolor{stringliteral}{"{}[Developing] currently only support regular type Gncon.\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{339       \}}
+\DoxyCodeLine{340     \}}
+\DoxyCodeLine{341     \textcolor{keywordtype}{void} clear() \{}
+\DoxyCodeLine{342       \textcolor{comment}{// boost::intrusive\_ptr<Gncon\_base> tmp(new Gncon\_base());}}
+\DoxyCodeLine{343       this-\/>\_impl-\/>clear();}
+\DoxyCodeLine{344     \}}
+\DoxyCodeLine{345 }
+\DoxyCodeLine{346     Gncon clone() \{}
+\DoxyCodeLine{347       Gncon out;}
+\DoxyCodeLine{348       out.\_impl = this-\/>\_impl-\/>clone();}
+\DoxyCodeLine{349       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{350     \}}
+\DoxyCodeLine{351     \textcolor{keywordtype}{void} PrintNet() \{ this-\/>\_impl-\/>PrintNet(std::cout); \}}
+\DoxyCodeLine{352 }
+\DoxyCodeLine{353     \textcolor{keywordtype}{void} Savefile(\textcolor{keyword}{const} std::string \&fname) \{ this-\/>\_impl-\/>Savefile(fname); \}}
+\DoxyCodeLine{354   \};}
+\DoxyCodeLine{355 }
+\DoxyCodeLine{357   std::ostream \&operator<<(std::ostream \&os, \textcolor{keyword}{const} Gncon \&bin);}
+\DoxyCodeLine{359 \}  \textcolor{comment}{// namespace cytnx}}
+\DoxyCodeLine{360 }
+\DoxyCodeLine{361 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

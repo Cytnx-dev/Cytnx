@@ -1,0 +1,67 @@
+\hypertarget{classcytnx_1_1stat_1_1Histogram}{}\doxysection{cytnx\+::stat\+::Histogram Class Reference}
+\label{classcytnx_1_1stat_1_1Histogram}\index{cytnx::stat::Histogram@{cytnx::stat::Histogram}}
+
+
+1D, real value histogram  
+
+
+
+
+{\ttfamily \#include $<$stat.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcytnx_1_1stat_1_1Histogram_a352c96dc863dbe89ed3cd93d9578cf28}\label{classcytnx_1_1stat_1_1Histogram_a352c96dc863dbe89ed3cd93d9578cf28}} 
+{\bfseries Histogram} (const unsigned long long \&Nbins, const double \&min\+\_\+val, const double \&max\+\_\+val)
+\begin{DoxyCompactList}\small\item\em initialize a histogram \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classcytnx_1_1stat_1_1Histogram_a173e447e5bfa034919f2a309dbb4d64c}\label{classcytnx_1_1stat_1_1Histogram_a173e447e5bfa034919f2a309dbb4d64c}} 
+void {\bfseries clear\+\_\+vars} ()
+\item 
+\mbox{\Hypertarget{classcytnx_1_1stat_1_1Histogram_a9f985038f182b0db2c4debe789376cb0}\label{classcytnx_1_1stat_1_1Histogram_a9f985038f182b0db2c4debe789376cb0}} 
+{\footnotesize template$<$class T $>$ }\\void {\bfseries accumulate} (const std\+::vector$<$ T $>$ \&data)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1stat_1_1Histogram_a1ac25f9ad6559c1a47f26228488d5b0d}\label{classcytnx_1_1stat_1_1Histogram_a1ac25f9ad6559c1a47f26228488d5b0d}} 
+void {\bfseries normalize} ()
+\item 
+\mbox{\Hypertarget{classcytnx_1_1stat_1_1Histogram_a84b0d9a0a4ab1ccb4c748bc0d5d3c0be}\label{classcytnx_1_1stat_1_1Histogram_a84b0d9a0a4ab1ccb4c748bc0d5d3c0be}} 
+void {\bfseries print} () const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1stat_1_1Histogram_a2c3fe9e2c5b387f732bbc804a45ed6eb}\label{classcytnx_1_1stat_1_1Histogram_a2c3fe9e2c5b387f732bbc804a45ed6eb}} 
+const \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} \& {\bfseries get\+\_\+x} () const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1stat_1_1Histogram_add3f95b26cf332b121bd4aca1d5817a7}\label{classcytnx_1_1stat_1_1Histogram_add3f95b26cf332b121bd4aca1d5817a7}} 
+\mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} \& {\bfseries get\+\_\+x} ()
+\item 
+\mbox{\Hypertarget{classcytnx_1_1stat_1_1Histogram_aab05c06ddff1529b08a4ea7d20bbd58c}\label{classcytnx_1_1stat_1_1Histogram_aab05c06ddff1529b08a4ea7d20bbd58c}} 
+cytnx\+\_\+uint64 {\bfseries size} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcytnx_1_1stat_1_1Histogram_a65ae9f79a8ffd2366f54f40426178d7b}\label{classcytnx_1_1stat_1_1Histogram_a65ae9f79a8ffd2366f54f40426178d7b}} 
+double {\bfseries min}
+\item 
+\mbox{\Hypertarget{classcytnx_1_1stat_1_1Histogram_aad1b5e155e60d3bf9f08651b469f0d3e}\label{classcytnx_1_1stat_1_1Histogram_aad1b5e155e60d3bf9f08651b469f0d3e}} 
+double {\bfseries max}
+\item 
+\mbox{\Hypertarget{classcytnx_1_1stat_1_1Histogram_a58cd558514b65100b1e53f464b24c8b9}\label{classcytnx_1_1stat_1_1Histogram_a58cd558514b65100b1e53f464b24c8b9}} 
+uint64\+\_\+t {\bfseries bins}
+\item 
+\mbox{\Hypertarget{classcytnx_1_1stat_1_1Histogram_a1334f6143220e0c44c70264a227b7df9}\label{classcytnx_1_1stat_1_1Histogram_a1334f6143220e0c44c70264a227b7df9}} 
+\mbox{\hyperlink{classcytnx_1_1Storage}{cytnx\+::\+Storage}} {\bfseries vars}
+\item 
+\mbox{\Hypertarget{classcytnx_1_1stat_1_1Histogram_a029d05bf5a20fd87c421ba17c17f6c47}\label{classcytnx_1_1stat_1_1Histogram_a029d05bf5a20fd87c421ba17c17f6c47}} 
+\mbox{\hyperlink{classcytnx_1_1Storage}{cytnx\+::\+Storage}} {\bfseries x}
+\item 
+\mbox{\Hypertarget{classcytnx_1_1stat_1_1Histogram_a6b1840d8670ef908b1da95b97d50d4cc}\label{classcytnx_1_1stat_1_1Histogram_a6b1840d8670ef908b1da95b97d50d4cc}} 
+double {\bfseries total\+\_\+count}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+1D, real value histogram 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/stat.\+hpp\end{DoxyCompactItemize}

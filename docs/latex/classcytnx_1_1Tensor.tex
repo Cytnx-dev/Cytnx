@@ -1,0 +1,2532 @@
+\hypertarget{classcytnx_1_1Tensor}{}\doxysection{cytnx\+::Tensor Class Reference}
+\label{classcytnx_1_1Tensor}\index{cytnx::Tensor@{cytnx::Tensor}}
+
+
+an tensor (multi-\/dimensional array)  
+
+
+
+
+{\ttfamily \#include $<$Tensor.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classcytnx_1_1Tensor_ab355c158b0ba1abb20a344c092fb8942}{Save}} (const std\+::string \&fname) const
+\begin{DoxyCompactList}\small\item\em Save current \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} to file. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a7465b1ca730e16718c220dfca046412c}\label{classcytnx_1_1Tensor_a7465b1ca730e16718c220dfca046412c}} 
+void {\bfseries Save} (const char $\ast$fname) const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a55d945916b1e3771f100523a5e1de319}\label{classcytnx_1_1Tensor_a55d945916b1e3771f100523a5e1de319}} 
+void {\bfseries Tofile} (const std\+::string \&fname) const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a65f8d6a498df94116ed294c10033ac8c}\label{classcytnx_1_1Tensor_a65f8d6a498df94116ed294c10033ac8c}} 
+void {\bfseries Tofile} (const char $\ast$fname) const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_ad6ca11678a82d78dfa5bd4d62760f75c}\label{classcytnx_1_1Tensor_ad6ca11678a82d78dfa5bd4d62760f75c}} 
+void {\bfseries Tofile} (std\+::fstream \&f) const
+\item 
+void \mbox{\hyperlink{classcytnx_1_1Tensor_aee8c0febe1794bd79edc52f2caac9cc3}{Init}} (const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&\mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}}, const unsigned int \&\mbox{\hyperlink{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}{dtype}}=Type.\+Double, const int \&\mbox{\hyperlink{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}{device}}=-\/1, const bool \&init\+\_\+zero=true)
+\begin{DoxyCompactList}\small\item\em initialize a \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a1b1568fca101fb372411927b5c5ba9d4}\label{classcytnx_1_1Tensor_a1b1568fca101fb372411927b5c5ba9d4}} 
+{\bfseries Tensor} (const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&\mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}}, const unsigned int \&\mbox{\hyperlink{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}{dtype}}=Type.\+Double, const int \&\mbox{\hyperlink{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}{device}}=-\/1, const bool \&init\+\_\+zero=1)
+\item 
+unsigned int \mbox{\hyperlink{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}{dtype}} () const
+\begin{DoxyCompactList}\small\item\em the dtype-\/id of the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}{device}} () const
+\begin{DoxyCompactList}\small\item\em the device-\/id of the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{classcytnx_1_1Tensor_a9e09106c7529e8be90caa52e1541e498}{dtype\+\_\+str}} () const
+\begin{DoxyCompactList}\small\item\em the dtype (in string) of the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{classcytnx_1_1Tensor_a335f7625fa01784f49b2223238d0c14e}{device\+\_\+str}} () const
+\begin{DoxyCompactList}\small\item\em the device (in string) of the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \end{DoxyCompactList}\item 
+const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \& \mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}} () const
+\begin{DoxyCompactList}\small\item\em the shape of the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \end{DoxyCompactList}\item 
+cytnx\+\_\+uint64 \mbox{\hyperlink{classcytnx_1_1Tensor_aa3ee5ed793cacd43d3fadbd92d7920a4}{rank}} () const
+\begin{DoxyCompactList}\small\item\em the rank of the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_a5e2248e9babdb786167ed349df9084ae}{clone}} () const
+\begin{DoxyCompactList}\small\item\em return a clone of the current \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_acf7f697a9434f9bc98a7d00a555ee982}{to}} (const int \&\mbox{\hyperlink{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}{device}}) const
+\begin{DoxyCompactList}\small\item\em copy a tensor to new device \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classcytnx_1_1Tensor_a114a31fbb8bf4a90f150b6a67e42183a}{to\+\_\+}} (const int \&\mbox{\hyperlink{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}{device}})
+\begin{DoxyCompactList}\small\item\em move the current \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} to the device. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_aa66028524d53c79d62714b96cd274ccd}\label{classcytnx_1_1Tensor_aa66028524d53c79d62714b96cd274ccd}} 
+const bool \& {\bfseries is\+\_\+contiguous} () const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a4239ec84bd34f634a822eeff416f4d63}\label{classcytnx_1_1Tensor_a4239ec84bd34f634a822eeff416f4d63}} 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries permute\+\_\+} (const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&rnks)
+\item 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_adbdc402a8c4d6d738523a888bcf9c0c2}{permute}} (const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&rnks) const
+\begin{DoxyCompactList}\small\item\em perform tensor permute on the \mbox{\hyperlink{classcytnx_1_1Tensor}{cytnx\+::\+Tensor}} and return a new instance. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_a4d7da181303c588f2ab84bffda435525}{contiguous}} () const
+\begin{DoxyCompactList}\small\item\em Make the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} contiguous by coalescing the memory (storage). \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_a3d4342299e6951dae13b6136b89f1d53}{contiguous\+\_\+}} ()
+\begin{DoxyCompactList}\small\item\em Make the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} contiguous by coalescing the memory (storage), inplacely. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classcytnx_1_1Tensor_a3723449528b9a20dd46c32c9e042b8f0}{reshape\+\_\+}} (const std\+::vector$<$ cytnx\+\_\+int64 $>$ \&new\+\_\+shape)
+\begin{DoxyCompactList}\small\item\em reshape the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}, inplacely \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_a57aea99887adf41da14fd7578ef9bf13}{reshape}} (const std\+::vector$<$ cytnx\+\_\+int64 $>$ \&new\+\_\+shape) const
+\begin{DoxyCompactList}\small\item\em return a new \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} that is reshaped. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a15e7c245ee923c77e02209dc5cfe5198}\label{classcytnx_1_1Tensor_a15e7c245ee923c77e02209dc5cfe5198}} 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries reshape} (const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&new\+\_\+shape) const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a32e42ecf5755144b071de1be9d13c692}\label{classcytnx_1_1Tensor_a32e42ecf5755144b071de1be9d13c692}} 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries reshape} (const std\+::initializer\+\_\+list$<$ cytnx\+\_\+int64 $>$ \&new\+\_\+shape) const
+\item 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_a7b996d3281e7375b29a7cfe4273b299f}{astype}} (const int \&new\+\_\+type) const
+\begin{DoxyCompactList}\small\item\em return a new \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} that cast to different dtype. \end{DoxyCompactList}\item 
+{\footnotesize template$<$class T $>$ }\\T \& \mbox{\hyperlink{classcytnx_1_1Tensor_a55f6e4c4106c0964f23fb06ac63d75ec}{at}} (const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&locator)
+\begin{DoxyCompactList}\small\item\em \mbox{[}C++ only\mbox{]} get an element at specific location. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_af7a99f7f160be535a5ac7ac9bcdba730}\label{classcytnx_1_1Tensor_af7a99f7f160be535a5ac7ac9bcdba730}} 
+{\footnotesize template$<$class T $>$ }\\const T \& {\bfseries at} (const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&locator) const
+\item 
+{\footnotesize template$<$class T $>$ }\\T \& \mbox{\hyperlink{classcytnx_1_1Tensor_a59bb8b7cf3d142d49c51d694e58ace68}{item}} ()
+\begin{DoxyCompactList}\small\item\em get an from a rank-\/0 \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_ad7b928e4cb89d40cbd99aefab9aa0075}{get}} (const std\+::vector$<$ \mbox{\hyperlink{classcytnx_1_1Accessor}{cytnx\+::\+Accessor}} $>$ \&accessors) const
+\begin{DoxyCompactList}\small\item\em get elements using \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} (C++ API) / slices (python API) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classcytnx_1_1Tensor_a771f1f5b51f89abd8df4166e602214ac}{set}} (const std\+::vector$<$ \mbox{\hyperlink{classcytnx_1_1Accessor}{cytnx\+::\+Accessor}} $>$ \&accessors, const \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \&rhs)
+\begin{DoxyCompactList}\small\item\em set elements with the input \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} using \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} (C++ API) / slices (python API) \end{DoxyCompactList}\item 
+{\footnotesize template$<$class T $>$ }\\void \mbox{\hyperlink{classcytnx_1_1Tensor_ad93d654b978add6b2f0dfb9f91490209}{set}} (const std\+::vector$<$ \mbox{\hyperlink{classcytnx_1_1Accessor}{cytnx\+::\+Accessor}} $>$ \&accessors, const T \&rc)
+\begin{DoxyCompactList}\small\item\em set elements with the input constant using \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} (C++ API) / slices (python API) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} \& \mbox{\hyperlink{classcytnx_1_1Tensor_afaa4a4eba4bd98b371fc101fbcfef743}{storage}} () const
+\begin{DoxyCompactList}\small\item\em return the storage of current \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}. \end{DoxyCompactList}\item 
+{\footnotesize template$<$class T $>$ }\\void \mbox{\hyperlink{classcytnx_1_1Tensor_a0c7f2bac2a03be7d22769c7cb896afbe}{fill}} (const T \&val)
+\begin{DoxyCompactList}\small\item\em fill all the element of current \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} with the value. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_aeae314f040e27b581d73c82b33ab6a59}\label{classcytnx_1_1Tensor_aeae314f040e27b581d73c82b33ab6a59}} 
+bool {\bfseries equiv} (const \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \&rhs)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_ac863dbd316a4771a95810a2e9b922c4e}\label{classcytnx_1_1Tensor_ac863dbd316a4771a95810a2e9b922c4e}} 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries real} ()
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_accd77970630990baca3a18638b23fe95}\label{classcytnx_1_1Tensor_accd77970630990baca3a18638b23fe95}} 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries imag} ()
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a84d7c47ea4cdb206a8ad70b8b3783876}\label{classcytnx_1_1Tensor_a84d7c47ea4cdb206a8ad70b8b3783876}} 
+{\footnotesize template$<$class T $>$ }\\\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator+=} (const T \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a22b227a075c948ca2f8ac2aad8974190}\label{classcytnx_1_1Tensor_a22b227a075c948ca2f8ac2aad8974190}} 
+{\footnotesize template$<$class T $>$ }\\\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator-\/=} (const T \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a0409dea9e50793f689eba740638b86a1}\label{classcytnx_1_1Tensor_a0409dea9e50793f689eba740638b86a1}} 
+{\footnotesize template$<$class T $>$ }\\\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator$\ast$=} (const T \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a09164f6960b922ee005a6039a64a773b}\label{classcytnx_1_1Tensor_a09164f6960b922ee005a6039a64a773b}} 
+{\footnotesize template$<$class T $>$ }\\\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator/=} (const T \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_aafd7446e798d34427d4e6a9571861111}\label{classcytnx_1_1Tensor_aafd7446e798d34427d4e6a9571861111}} 
+{\footnotesize template$<$class T $>$ }\\\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries Add} (const T \&rhs)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a2744949ae1bbbef4a852b11153617b5d}\label{classcytnx_1_1Tensor_a2744949ae1bbbef4a852b11153617b5d}} 
+{\footnotesize template$<$class T $>$ }\\\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries Add\+\_\+} (const T \&rhs)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a4648eef7874bad42d6d7b15fb1598644}\label{classcytnx_1_1Tensor_a4648eef7874bad42d6d7b15fb1598644}} 
+{\footnotesize template$<$class T $>$ }\\\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries Sub} (const T \&rhs)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_aff0275bf4752791ebc51b3f02b456115}\label{classcytnx_1_1Tensor_aff0275bf4752791ebc51b3f02b456115}} 
+{\footnotesize template$<$class T $>$ }\\\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries Sub\+\_\+} (const T \&rhs)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a443885c8f02ab5352d81255e4650cf32}\label{classcytnx_1_1Tensor_a443885c8f02ab5352d81255e4650cf32}} 
+{\footnotesize template$<$class T $>$ }\\\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries Mul} (const T \&rhs)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a9eb8827f29f8932c24d8315017b7c7e2}\label{classcytnx_1_1Tensor_a9eb8827f29f8932c24d8315017b7c7e2}} 
+{\footnotesize template$<$class T $>$ }\\\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries Mul\+\_\+} (const T \&rhs)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_add04fc004ccab102743f3e392f6bb482}\label{classcytnx_1_1Tensor_add04fc004ccab102743f3e392f6bb482}} 
+{\footnotesize template$<$class T $>$ }\\\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries Div} (const T \&rhs)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a7e079fdaf9bb56c21e1300dbf08e7223}\label{classcytnx_1_1Tensor_a7e079fdaf9bb56c21e1300dbf08e7223}} 
+{\footnotesize template$<$class T $>$ }\\\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries Div\+\_\+} (const T \&rhs)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_aeee6153da17147b82857e342e2a35c52}\label{classcytnx_1_1Tensor_aeee6153da17147b82857e342e2a35c52}} 
+{\footnotesize template$<$class T $>$ }\\\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries Cpr} (const T \&rhs)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_ae41aecc16a039a59e2902a31e8eea243}\label{classcytnx_1_1Tensor_ae41aecc16a039a59e2902a31e8eea243}} 
+{\footnotesize template$<$class T $>$ }\\\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries Mod} (const T \&rhs)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a0bb7ebda69ea886804cec7d23249b5e9}\label{classcytnx_1_1Tensor_a0bb7ebda69ea886804cec7d23249b5e9}} 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries operator-\/} ()
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_ab6679015cd4b8d0c33207a28986a0b75}\label{classcytnx_1_1Tensor_ab6679015cd4b8d0c33207a28986a0b75}} 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries flatten} () const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_ab026b0d58ba0bfbaaa20d5b4ac420c2e}\label{classcytnx_1_1Tensor_ab026b0d58ba0bfbaaa20d5b4ac420c2e}} 
+void {\bfseries flatten\+\_\+} ()
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a68a91d1554a4550eac7d339240fa9d02}\label{classcytnx_1_1Tensor_a68a91d1554a4550eac7d339240fa9d02}} 
+void {\bfseries append} (const \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \&rhs)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a01b8ab0509a7685a84dfed745a7f1596}\label{classcytnx_1_1Tensor_a01b8ab0509a7685a84dfed745a7f1596}} 
+void {\bfseries append} (const \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} \&srhs)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a1fb350e321d7228a1970da4d3f4dfa31}\label{classcytnx_1_1Tensor_a1fb350e321d7228a1970da4d3f4dfa31}} 
+{\footnotesize template$<$class T $>$ }\\void {\bfseries append} (const T \&rhs)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a0eca35d876d22d96d1aef9f959a946fe}\label{classcytnx_1_1Tensor_a0eca35d876d22d96d1aef9f959a946fe}} 
+bool {\bfseries same\+\_\+data} (const \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \&rhs) const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_af286c5442012735856d4030806fd6573}\label{classcytnx_1_1Tensor_af286c5442012735856d4030806fd6573}} 
+std\+::vector$<$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} $>$ {\bfseries Svd} (const bool \&is\+\_\+U=true, const bool \&is\+\_\+vT=true) const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a5eaf4c8f99f9776e4461a1f676345ae5}\label{classcytnx_1_1Tensor_a5eaf4c8f99f9776e4461a1f676345ae5}} 
+std\+::vector$<$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} $>$ {\bfseries Eigh} (const bool \&is\+\_\+V=true, const bool \&row\+\_\+v=false) const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_af099f62bda6ff3b15f89d7d33f2786ba}\label{classcytnx_1_1Tensor_af099f62bda6ff3b15f89d7d33f2786ba}} 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries Inv\+M\+\_\+} ()
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a0cd186f9e001ee836ef4712eca40f049}\label{classcytnx_1_1Tensor_a0cd186f9e001ee836ef4712eca40f049}} 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries InvM} () const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a043e2b24d2765149fd8255936221d924}\label{classcytnx_1_1Tensor_a043e2b24d2765149fd8255936221d924}} 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries Inv\+\_\+} (const double \&clip)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a46740b4d5f24bfc3d3ce95b151dc6799}\label{classcytnx_1_1Tensor_a46740b4d5f24bfc3d3ce95b151dc6799}} 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries Inv} (const double \&clip) const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_ab87b5428c5fb510da02fd3bbe316bbfa}\label{classcytnx_1_1Tensor_ab87b5428c5fb510da02fd3bbe316bbfa}} 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries Conj\+\_\+} ()
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a89af177fad9c00c3d09d2c587de2d77a}\label{classcytnx_1_1Tensor_a89af177fad9c00c3d09d2c587de2d77a}} 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries Conj} () const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_aefdef16a685cea5b47b682a3c7837da2}\label{classcytnx_1_1Tensor_aefdef16a685cea5b47b682a3c7837da2}} 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries Exp\+\_\+} ()
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_aa85b2277ea048c00bef949fc2e7091db}\label{classcytnx_1_1Tensor_aa85b2277ea048c00bef949fc2e7091db}} 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries Exp} () const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a7889abcab99ca9800c0cbccbd6767819}\label{classcytnx_1_1Tensor_a7889abcab99ca9800c0cbccbd6767819}} 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries Norm} () const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_ac5bd2525bacc3713694a063074538e20}\label{classcytnx_1_1Tensor_ac5bd2525bacc3713694a063074538e20}} 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries Pow} (const cytnx\+\_\+double \&p) const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a977738a47390feeab721a599fc21ec28}\label{classcytnx_1_1Tensor_a977738a47390feeab721a599fc21ec28}} 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries Pow\+\_\+} (const cytnx\+\_\+double \&p)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a8d2f499d0c79e4c46909d2341c374723}\label{classcytnx_1_1Tensor_a8d2f499d0c79e4c46909d2341c374723}} 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries Trace} (const cytnx\+\_\+uint64 \&a=0, const cytnx\+\_\+uint64 \&b=1) const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a312a8b7b963199a98e59d9f6a97c32e6}\label{classcytnx_1_1Tensor_a312a8b7b963199a98e59d9f6a97c32e6}} 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries Abs} () const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_aa8e04d45e4c5b8e6f334e2be38433e07}\label{classcytnx_1_1Tensor_aa8e04d45e4c5b8e6f334e2be38433e07}} 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries Abs\+\_\+} ()
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_adb752367adea78b251e5a584276c1f40}\label{classcytnx_1_1Tensor_adb752367adea78b251e5a584276c1f40}} 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries Max} () const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_af540bb4dc6887bf29289722101899a57}\label{classcytnx_1_1Tensor_af540bb4dc6887bf29289722101899a57}} 
+\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries Min} () const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a2b8faf316fcdb12ace04abc254894e8b}\label{classcytnx_1_1Tensor_a2b8faf316fcdb12ace04abc254894e8b}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator+=} (const \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_ab12439bd65f734450b8c38a272cd49a3}\label{classcytnx_1_1Tensor_ab12439bd65f734450b8c38a272cd49a3}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator+=} (const cytnx\+\_\+complex128 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_ad46d7c655ac2c606e445221dd1c39199}\label{classcytnx_1_1Tensor_ad46d7c655ac2c606e445221dd1c39199}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator+=} (const cytnx\+\_\+complex64 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a5b282f7a37f7e49ab7121ebb3cb22cfe}\label{classcytnx_1_1Tensor_a5b282f7a37f7e49ab7121ebb3cb22cfe}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator+=} (const cytnx\+\_\+double \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_af00a0225cdd740c8760cb988fcffd6e4}\label{classcytnx_1_1Tensor_af00a0225cdd740c8760cb988fcffd6e4}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator+=} (const cytnx\+\_\+float \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_add9291af117caaa0e0d05eb1a0610262}\label{classcytnx_1_1Tensor_add9291af117caaa0e0d05eb1a0610262}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator+=} (const cytnx\+\_\+int64 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_aad0d3e44a7d4a57b92f32c501a4185cc}\label{classcytnx_1_1Tensor_aad0d3e44a7d4a57b92f32c501a4185cc}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator+=} (const cytnx\+\_\+uint64 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a1bba94b0cc3707c177f5155eb2e63868}\label{classcytnx_1_1Tensor_a1bba94b0cc3707c177f5155eb2e63868}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator+=} (const cytnx\+\_\+int32 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_ac2b761ca53212fc5f4e2d02d9f4760ea}\label{classcytnx_1_1Tensor_ac2b761ca53212fc5f4e2d02d9f4760ea}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator+=} (const cytnx\+\_\+uint32 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_af5dcbc5be9cae20ceca0efd3eee00ec0}\label{classcytnx_1_1Tensor_af5dcbc5be9cae20ceca0efd3eee00ec0}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator+=} (const cytnx\+\_\+int16 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_aacaa0e5e2e6e1b8df817eb245bfe9ac1}\label{classcytnx_1_1Tensor_aacaa0e5e2e6e1b8df817eb245bfe9ac1}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator+=} (const cytnx\+\_\+uint16 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a6c28ee27c111f59b2b0df5bbc41305e6}\label{classcytnx_1_1Tensor_a6c28ee27c111f59b2b0df5bbc41305e6}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator+=} (const cytnx\+\_\+bool \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a475ee664aa8c7a310b985c714b773153}\label{classcytnx_1_1Tensor_a475ee664aa8c7a310b985c714b773153}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator+=} (const \mbox{\hyperlink{classcytnx_1_1Scalar}{Scalar}} \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_aeec97774cd9a706b18275c01531aeb6c}\label{classcytnx_1_1Tensor_aeec97774cd9a706b18275c01531aeb6c}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator-\/=} (const \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a2b6a6c64c7c78f6e327109b19f73bd70}\label{classcytnx_1_1Tensor_a2b6a6c64c7c78f6e327109b19f73bd70}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator-\/=} (const cytnx\+\_\+complex128 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a2c06c92faaadcdf86ec3f1fa6a49d682}\label{classcytnx_1_1Tensor_a2c06c92faaadcdf86ec3f1fa6a49d682}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator-\/=} (const cytnx\+\_\+complex64 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_ad0774a00e3cd4fd16db96aab22f27d1d}\label{classcytnx_1_1Tensor_ad0774a00e3cd4fd16db96aab22f27d1d}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator-\/=} (const cytnx\+\_\+double \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_ad0ed1d38d02d1dab99dcd5b7de5253ef}\label{classcytnx_1_1Tensor_ad0ed1d38d02d1dab99dcd5b7de5253ef}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator-\/=} (const cytnx\+\_\+float \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a6e86d24c74f2b26a594c743beb2aee35}\label{classcytnx_1_1Tensor_a6e86d24c74f2b26a594c743beb2aee35}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator-\/=} (const cytnx\+\_\+int64 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a964287761cd657eeb69f543ab6f46cc1}\label{classcytnx_1_1Tensor_a964287761cd657eeb69f543ab6f46cc1}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator-\/=} (const cytnx\+\_\+uint64 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a0f5afb967b7523d625b96d93894281c2}\label{classcytnx_1_1Tensor_a0f5afb967b7523d625b96d93894281c2}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator-\/=} (const cytnx\+\_\+int32 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a16652a24a546859bed5e0dc7e135b98c}\label{classcytnx_1_1Tensor_a16652a24a546859bed5e0dc7e135b98c}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator-\/=} (const cytnx\+\_\+uint32 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a69f8e2bb3e453d55249f0ec4fa7fa9d2}\label{classcytnx_1_1Tensor_a69f8e2bb3e453d55249f0ec4fa7fa9d2}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator-\/=} (const cytnx\+\_\+int16 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a2e0093fdf3748efaeaaa4e605602ec90}\label{classcytnx_1_1Tensor_a2e0093fdf3748efaeaaa4e605602ec90}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator-\/=} (const cytnx\+\_\+uint16 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_ad7e99f6d83a7e8621cc1127ec7a66901}\label{classcytnx_1_1Tensor_ad7e99f6d83a7e8621cc1127ec7a66901}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator-\/=} (const cytnx\+\_\+bool \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a6161004fe27673d6eca2858df5324289}\label{classcytnx_1_1Tensor_a6161004fe27673d6eca2858df5324289}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator-\/=} (const \mbox{\hyperlink{classcytnx_1_1Scalar}{Scalar}} \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_aba46864b9e09a1bf4a97fea83e459b86}\label{classcytnx_1_1Tensor_aba46864b9e09a1bf4a97fea83e459b86}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator$\ast$=} (const \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_ac2114a8a99e86729eb0a50e451355ba8}\label{classcytnx_1_1Tensor_ac2114a8a99e86729eb0a50e451355ba8}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator$\ast$=} (const cytnx\+\_\+complex128 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a9d716adbd73ae6265b8b28900a27d284}\label{classcytnx_1_1Tensor_a9d716adbd73ae6265b8b28900a27d284}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator$\ast$=} (const cytnx\+\_\+complex64 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_ab2eb1d4e90922e13b98dd313059a0698}\label{classcytnx_1_1Tensor_ab2eb1d4e90922e13b98dd313059a0698}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator$\ast$=} (const cytnx\+\_\+double \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_ae860ace17e670b774aba874b8efcf9f6}\label{classcytnx_1_1Tensor_ae860ace17e670b774aba874b8efcf9f6}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator$\ast$=} (const cytnx\+\_\+float \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_abd8acfa6ebeebfdcbd13102ebe677d90}\label{classcytnx_1_1Tensor_abd8acfa6ebeebfdcbd13102ebe677d90}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator$\ast$=} (const cytnx\+\_\+int64 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_ae3173c86fef21ec9137a149211a64f31}\label{classcytnx_1_1Tensor_ae3173c86fef21ec9137a149211a64f31}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator$\ast$=} (const cytnx\+\_\+uint64 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a2652f5158ecab6b2843f030b69cfb4b7}\label{classcytnx_1_1Tensor_a2652f5158ecab6b2843f030b69cfb4b7}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator$\ast$=} (const cytnx\+\_\+int32 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_adf02bca2315d84489d601d4430a705bf}\label{classcytnx_1_1Tensor_adf02bca2315d84489d601d4430a705bf}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator$\ast$=} (const cytnx\+\_\+uint32 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a3b30c26ff85446eed5d865e6491bcc8a}\label{classcytnx_1_1Tensor_a3b30c26ff85446eed5d865e6491bcc8a}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator$\ast$=} (const cytnx\+\_\+int16 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_ad2c6f3e5625908c8ebb7d2a72f32a6f8}\label{classcytnx_1_1Tensor_ad2c6f3e5625908c8ebb7d2a72f32a6f8}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator$\ast$=} (const cytnx\+\_\+uint16 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_ab8591570364d4b41d875363bef709e34}\label{classcytnx_1_1Tensor_ab8591570364d4b41d875363bef709e34}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator$\ast$=} (const cytnx\+\_\+bool \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a2ed4731096f39b4bf84eaa548d4ba53b}\label{classcytnx_1_1Tensor_a2ed4731096f39b4bf84eaa548d4ba53b}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator$\ast$=} (const \mbox{\hyperlink{classcytnx_1_1Scalar}{Scalar}} \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a4e542f266b3e4e1d2ff47df445bc403c}\label{classcytnx_1_1Tensor_a4e542f266b3e4e1d2ff47df445bc403c}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator/=} (const \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_aa4130962f2f93b2e343c87d224d20bd9}\label{classcytnx_1_1Tensor_aa4130962f2f93b2e343c87d224d20bd9}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator/=} (const cytnx\+\_\+complex128 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a144c0887163bb2af2408fc5aa839651b}\label{classcytnx_1_1Tensor_a144c0887163bb2af2408fc5aa839651b}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator/=} (const cytnx\+\_\+complex64 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_ab829d78c91a6219cdcc6f0b405026dcd}\label{classcytnx_1_1Tensor_ab829d78c91a6219cdcc6f0b405026dcd}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator/=} (const cytnx\+\_\+double \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_abc01ca46711120855a25f3b717d46fc3}\label{classcytnx_1_1Tensor_abc01ca46711120855a25f3b717d46fc3}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator/=} (const cytnx\+\_\+float \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_af7caa66f558da956a0cefb832bd8fb23}\label{classcytnx_1_1Tensor_af7caa66f558da956a0cefb832bd8fb23}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator/=} (const cytnx\+\_\+int64 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_af80e3f554940b8415df02072a20553bc}\label{classcytnx_1_1Tensor_af80e3f554940b8415df02072a20553bc}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator/=} (const cytnx\+\_\+uint64 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a31046ece0a3114203125d330248cef17}\label{classcytnx_1_1Tensor_a31046ece0a3114203125d330248cef17}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator/=} (const cytnx\+\_\+int32 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a9837dbc551a0aa4e693e17aa2f318cba}\label{classcytnx_1_1Tensor_a9837dbc551a0aa4e693e17aa2f318cba}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator/=} (const cytnx\+\_\+uint32 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a8aad7a413db36167844659fcbee27ce1}\label{classcytnx_1_1Tensor_a8aad7a413db36167844659fcbee27ce1}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator/=} (const cytnx\+\_\+int16 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a115341b9b82729cdae991cb2001afe5a}\label{classcytnx_1_1Tensor_a115341b9b82729cdae991cb2001afe5a}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator/=} (const cytnx\+\_\+uint16 \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_ae36d337225893c6e6dbd1cc23908c866}\label{classcytnx_1_1Tensor_ae36d337225893c6e6dbd1cc23908c866}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator/=} (const cytnx\+\_\+bool \&rc)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a6d025a62ec655d68292db8ab0ab8f5d0}\label{classcytnx_1_1Tensor_a6d025a62ec655d68292db8ab0ab8f5d0}} 
+template$<$$>$ \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \& {\bfseries operator/=} (const \mbox{\hyperlink{classcytnx_1_1Scalar}{Scalar}} \&rc)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_a4100edea617039a2b9a0ee3ca2b2aa36}{Load}} (const std\+::string \&fname)
+\begin{DoxyCompactList}\small\item\em Load current \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} to file. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a2a11de9a3ecd1411ef9231c8092628ec}\label{classcytnx_1_1Tensor_a2a11de9a3ecd1411ef9231c8092628ec}} 
+static \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries Load} (const char $\ast$fname)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_afda200022018b04ca0a29dfb45b7f53c}\label{classcytnx_1_1Tensor_afda200022018b04ca0a29dfb45b7f53c}} 
+static \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries Fromfile} (const std\+::string \&fname, const unsigned int \&\mbox{\hyperlink{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}{dtype}}, const cytnx\+\_\+int64 \&count=-\/1)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a1af3441ab3d1bd45f5ead47eead6b81e}\label{classcytnx_1_1Tensor_a1af3441ab3d1bd45f5ead47eead6b81e}} 
+static \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries Fromfile} (const char $\ast$fname, const unsigned int \&\mbox{\hyperlink{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}{dtype}}, const cytnx\+\_\+int64 \&count=-\/1)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Tensor_afd3a86c7edd3af568060dfb6bfa5aecb}\label{classcytnx_1_1Tensor_afd3a86c7edd3af568060dfb6bfa5aecb}} 
+static \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries from\+\_\+storage} (const \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} \&in)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+an tensor (multi-\/dimensional array) 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a7b996d3281e7375b29a7cfe4273b299f}\label{classcytnx_1_1Tensor_a7b996d3281e7375b29a7cfe4273b299f}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!astype@{astype}}
+\index{astype@{astype}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{astype()}{astype()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} cytnx\+::\+Tensor\+::astype (\begin{DoxyParamCaption}\item[{const int \&}]{new\+\_\+type }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+return a new \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} that cast to different dtype. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+\_\+type} & the new dtype. It can be any type defined in cytnx\+::\+Type \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{[}\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}\mbox{]}
+\end{DoxyReturn}
+\hypertarget{classcytnx_1_1Tensor_autotoc_md199}{}\doxysubsubsection{Note\+:}\label{classcytnx_1_1Tensor_autotoc_md199}
+If the new\+\_\+type is the same as dtype of the current \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}, return self.\hypertarget{classcytnx_1_1Tensor_autotoc_md200}{}\doxysubsubsection{Example\+:}\label{classcytnx_1_1Tensor_autotoc_md200}
+\hypertarget{classcytnx_1_1Tensor_autotoc_md201}{}\doxyparagraph{c++ API\+:}\label{classcytnx_1_1Tensor_autotoc_md201}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "{}cytnx.hpp"{}}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }cytnx;}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{\textcolor{keywordtype}{int} main() \{}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} A = zeros(\{3, 4, 5\}, Type.Double);}
+\DoxyCodeLine{  cout << A;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} B = A.\mbox{\hyperlink{classcytnx_1_1Tensor_a7b996d3281e7375b29a7cfe4273b299f}{astype}}(Type.Uint64);}
+\DoxyCodeLine{  cout << B;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// the new type is the same as current dtype, return self.}}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} C = A.\mbox{\hyperlink{classcytnx_1_1Tensor_a7b996d3281e7375b29a7cfe4273b299f}{astype}}(Type.Double);}
+\DoxyCodeLine{  cout << is(C, A) << endl;  \textcolor{comment}{// this should be true.}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md202}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md202}
+
+\begin{DoxyVerbInclude}
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+
+
+Total elem: 60
+type  : Uint64
+cytnx device: CPU
+Shape : (3,4,5)
+[[[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]
+ [[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]
+ [[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]]
+
+1
+\end{DoxyVerbInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md203}{}\doxyparagraph{python API\+:}\label{classcytnx_1_1Tensor_autotoc_md203}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *}
+\DoxyCodeLine{}
+\DoxyCodeLine{A = zeros([3,4,5],dtype=Type.Double)}
+\DoxyCodeLine{print(A)}
+\DoxyCodeLine{}
+\DoxyCodeLine{B = A.astype(Type.Uint64)}
+\DoxyCodeLine{print(B)}
+\DoxyCodeLine{}
+\DoxyCodeLine{C = A.astype(Type.Double)}
+\DoxyCodeLine{print(C \textcolor{keywordflow}{is} A)}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md204}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md204}
+
+\begin{DoxyVerbInclude}
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+
+
+
+
+Total elem: 60
+type  : Uint64
+cytnx device: CPU
+Shape : (3,4,5)
+[[[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]
+ [[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]
+ [[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]]
+
+
+
+True
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Tensor_a55f6e4c4106c0964f23fb06ac63d75ec}\label{classcytnx_1_1Tensor_a55f6e4c4106c0964f23fb06ac63d75ec}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!at@{at}}
+\index{at@{at}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{at()}{at()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+T \& cytnx\+::\+Tensor\+::at (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&}]{locator }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\mbox{[}C++ only\mbox{]} get an element at specific location. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em locator} & the location of the element \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{[}ref\mbox{]}
+\end{DoxyReturn}
+\hypertarget{classcytnx_1_1Tensor_autotoc_md205}{}\doxysubsubsection{Note\+:}\label{classcytnx_1_1Tensor_autotoc_md205}
+
+\begin{DoxyEnumerate}
+\item This is for C++ API only!
+\item need template instantiation to resolve the type, which should be consist with the dtype of the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}. An error will be issued if the template type is inconsist with the current dtype of \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}.
+\item For python API, use \mbox{[}\mbox{]} directly to get element.
+\end{DoxyEnumerate}\hypertarget{classcytnx_1_1Tensor_autotoc_md206}{}\doxysubsubsection{Example\+:}\label{classcytnx_1_1Tensor_autotoc_md206}
+\hypertarget{classcytnx_1_1Tensor_autotoc_md207}{}\doxyparagraph{c++ API\+:}\label{classcytnx_1_1Tensor_autotoc_md207}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "{}cytnx.hpp"{}}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }cytnx;}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{\textcolor{keywordtype}{int} main() \{}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} A = arange(30, Type.Float).\mbox{\hyperlink{classcytnx_1_1Tensor_a57aea99887adf41da14fd7578ef9bf13}{reshape}}(2, 3, 5);}
+\DoxyCodeLine{  cout << A << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// note that type resolver should be consist with the dtype}}
+\DoxyCodeLine{  cout << A.\mbox{\hyperlink{classcytnx_1_1Tensor_a55f6e4c4106c0964f23fb06ac63d75ec}{at}}<cytnx\_float>(0, 0, 2) << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// the return is a ref., can be modify directly.}}
+\DoxyCodeLine{  A.\mbox{\hyperlink{classcytnx_1_1Tensor_a55f6e4c4106c0964f23fb06ac63d75ec}{at}}<cytnx\_float>(0, 0, 2) = 999;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  cout << A.\mbox{\hyperlink{classcytnx_1_1Tensor_a55f6e4c4106c0964f23fb06ac63d75ec}{at}}<cytnx\_float>(0, 0, 2) << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// [Note] there are two way to give argument:}}
+\DoxyCodeLine{  \textcolor{comment}{// Method 1: more like 'c++' way:}}
+\DoxyCodeLine{  \textcolor{comment}{//           (alternatively, you can also simply give a std::vector)}}
+\DoxyCodeLine{  A.\mbox{\hyperlink{classcytnx_1_1Tensor_a55f6e4c4106c0964f23fb06ac63d75ec}{at}}<cytnx\_float>(\{0, 0, 2\});  \textcolor{comment}{// note the braket\{\}}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// Method 2: more like 'python' way:}}
+\DoxyCodeLine{  A.\mbox{\hyperlink{classcytnx_1_1Tensor_a55f6e4c4106c0964f23fb06ac63d75ec}{at}}<cytnx\_float>(0, 0, 2);}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md208}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md208}
+
+\begin{DoxyVerbInclude}
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Tensor_a5e2248e9babdb786167ed349df9084ae}\label{classcytnx_1_1Tensor_a5e2248e9babdb786167ed349df9084ae}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!clone@{clone}}
+\index{clone@{clone}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{clone()}{clone()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} cytnx\+::\+Tensor\+::clone (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+return a clone of the current \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}. 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}\mbox{]}
+\end{DoxyReturn}
+description\+:~\newline
+ In C++ API, the behavior of assignment operator is designed to have same behavior as python,~\newline
+ to have a copy of the current tensor, we call clone to return a copy.\hypertarget{classcytnx_1_1Tensor_autotoc_md159}{}\doxysubsubsection{Example\+:}\label{classcytnx_1_1Tensor_autotoc_md159}
+\hypertarget{classcytnx_1_1Tensor_autotoc_md160}{}\doxyparagraph{c++ API\+:}\label{classcytnx_1_1Tensor_autotoc_md160}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "{}cytnx.hpp"{}}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }cytnx;}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{\textcolor{keywordtype}{int} main() \{}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} A(\{3, 4, 5\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} B = A;  \textcolor{comment}{// B shares same object with A}}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} C = A.\mbox{\hyperlink{classcytnx_1_1Tensor_a5e2248e9babdb786167ed349df9084ae}{clone}}();  \textcolor{comment}{// C is a copy of A}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// use is() to check if two variable shares same object}}
+\DoxyCodeLine{  cout << is(B, A) << endl;}
+\DoxyCodeLine{  cout << is(C, A) << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md161}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md161}
+
+\begin{DoxyVerbInclude}
+1
+0
+\end{DoxyVerbInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md162}{}\doxyparagraph{python API\+:}\label{classcytnx_1_1Tensor_autotoc_md162}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *}
+\DoxyCodeLine{}
+\DoxyCodeLine{A = Tensor([3,4,5])}
+\DoxyCodeLine{}
+\DoxyCodeLine{B = A}
+\DoxyCodeLine{C = A.clone()}
+\DoxyCodeLine{}
+\DoxyCodeLine{print(B \textcolor{keywordflow}{is} A)}
+\DoxyCodeLine{print(C \textcolor{keywordflow}{is} A)}
+\DoxyCodeLine{}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md163}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md163}
+
+\begin{DoxyVerbInclude}
+True
+False
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Tensor_a4d7da181303c588f2ab84bffda435525}\label{classcytnx_1_1Tensor_a4d7da181303c588f2ab84bffda435525}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!contiguous@{contiguous}}
+\index{contiguous@{contiguous}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{contiguous()}{contiguous()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} cytnx\+::\+Tensor\+::contiguous (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Make the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} contiguous by coalescing the memory (storage). 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}\mbox{]} a new \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} that is with contiguous memory (storage).
+\end{DoxyReturn}
+See also \mbox{\hyperlink{classcytnx_1_1Tensor_a3d4342299e6951dae13b6136b89f1d53}{Tensor\+::contiguous\+\_\+() }}\hypertarget{classcytnx_1_1Tensor_autotoc_md179}{}\doxysubsubsection{Example\+:}\label{classcytnx_1_1Tensor_autotoc_md179}
+\hypertarget{classcytnx_1_1Tensor_autotoc_md180}{}\doxyparagraph{c++ API\+:}\label{classcytnx_1_1Tensor_autotoc_md180}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "{}cytnx.hpp"{}}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }cytnx;}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{\textcolor{keywordtype}{int} main() \{}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} A(\{3, 4, 5\});}
+\DoxyCodeLine{  cout << A.\mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}}() << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} B = A.\mbox{\hyperlink{classcytnx_1_1Tensor_adbdc402a8c4d6d738523a888bcf9c0c2}{permute}}(\{0, 2, 1\});}
+\DoxyCodeLine{  cout << B.\mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}}() << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{//[Note] permute will not actually move the internal memory (storage) layout.}}
+\DoxyCodeLine{  \textcolor{comment}{//       this is called non-\/contiguous status.}}
+\DoxyCodeLine{  \textcolor{comment}{//       the memory layout will only move when Tensor.contiguous() is called.}}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} C = B.\mbox{\hyperlink{classcytnx_1_1Tensor_a4d7da181303c588f2ab84bffda435525}{contiguous}}();  \textcolor{comment}{// actual moving the memory}}
+\DoxyCodeLine{  cout << B.is\_contiguous() << endl;  \textcolor{comment}{// false.}}
+\DoxyCodeLine{  cout << C.is\_contiguous() << endl;  \textcolor{comment}{// true.}}
+\DoxyCodeLine{  cout << C.\mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}}() << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  cout << C.same\_data(B) << endl;  \textcolor{comment}{// false}}
+\DoxyCodeLine{  cout << B.same\_data(A) << endl;  \textcolor{comment}{// true}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md181}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md181}
+
+\begin{DoxyVerbInclude}
+Vector Print:
+Total Elements:3
+[3, 4, 5]
+
+Vector Print:
+Total Elements:3
+[3, 5, 4]
+
+0
+1
+Vector Print:
+Total Elements:3
+[3, 5, 4]
+
+0
+1
+\end{DoxyVerbInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md182}{}\doxyparagraph{python API\+:}\label{classcytnx_1_1Tensor_autotoc_md182}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *}
+\DoxyCodeLine{}
+\DoxyCodeLine{A = Tensor([3,4,5])}
+\DoxyCodeLine{print(A.shape())}
+\DoxyCodeLine{}
+\DoxyCodeLine{B = A.permute(0,2,1)}
+\DoxyCodeLine{print(B.shape())}
+\DoxyCodeLine{}
+\DoxyCodeLine{C = B.contiguous()}
+\DoxyCodeLine{print(B.is\_contiguous()) \textcolor{comment}{\#false}}
+\DoxyCodeLine{print(C.is\_contiguous()) \textcolor{comment}{\#true}}
+\DoxyCodeLine{print(C.shape())}
+\DoxyCodeLine{}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md183}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md183}
+
+\begin{DoxyVerbInclude}
+[3, 4, 5]
+[3, 5, 4]
+False
+True
+[3, 5, 4]
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Tensor_a3d4342299e6951dae13b6136b89f1d53}\label{classcytnx_1_1Tensor_a3d4342299e6951dae13b6136b89f1d53}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!contiguous\_@{contiguous\_}}
+\index{contiguous\_@{contiguous\_}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{contiguous\_()}{contiguous\_()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} cytnx\+::\+Tensor\+::contiguous\+\_\+ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Make the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} contiguous by coalescing the memory (storage), inplacely. 
+
+See also \mbox{\hyperlink{classcytnx_1_1Tensor_a4d7da181303c588f2ab84bffda435525}{Tensor\+::contiguous() }}\hypertarget{classcytnx_1_1Tensor_autotoc_md184}{}\doxysubsubsection{Example\+:}\label{classcytnx_1_1Tensor_autotoc_md184}
+\hypertarget{classcytnx_1_1Tensor_autotoc_md185}{}\doxyparagraph{c++ API\+:}\label{classcytnx_1_1Tensor_autotoc_md185}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "{}cytnx.hpp"{}}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }cytnx;}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{\textcolor{keywordtype}{int} main() \{}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} A(\{3, 4, 5\});}
+\DoxyCodeLine{  cout << A.\mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}}() << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} B = A.\mbox{\hyperlink{classcytnx_1_1Tensor_adbdc402a8c4d6d738523a888bcf9c0c2}{permute}}(\{0, 2, 1\});}
+\DoxyCodeLine{  cout << B.\mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}}() << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{//[Note] permute will not actually move the internal memory (storage) layout.}}
+\DoxyCodeLine{  \textcolor{comment}{//       this is called non-\/contiguous status.}}
+\DoxyCodeLine{  \textcolor{comment}{//       the memory layout will only move when Tensor.contiguous() is called.}}
+\DoxyCodeLine{  cout << B.is\_contiguous() << endl;  \textcolor{comment}{// false.}}
+\DoxyCodeLine{  B.\mbox{\hyperlink{classcytnx_1_1Tensor_a3d4342299e6951dae13b6136b89f1d53}{contiguous\_}}();  \textcolor{comment}{// actual moving the memory}}
+\DoxyCodeLine{  cout << B.is\_contiguous() << endl;  \textcolor{comment}{// true.}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md186}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md186}
+
+\begin{DoxyVerbInclude}
+Vector Print:
+Total Elements:3
+[3, 4, 5]
+
+Vector Print:
+Total Elements:3
+[3, 5, 4]
+
+0
+1
+\end{DoxyVerbInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md187}{}\doxyparagraph{python API\+:}\label{classcytnx_1_1Tensor_autotoc_md187}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *}
+\DoxyCodeLine{}
+\DoxyCodeLine{A = Tensor([3,4,5])}
+\DoxyCodeLine{print(A.shape())}
+\DoxyCodeLine{}
+\DoxyCodeLine{B = A.permute(0,2,1)}
+\DoxyCodeLine{print(B.shape())}
+\DoxyCodeLine{}
+\DoxyCodeLine{print(B.is\_contiguous()) \textcolor{comment}{\#false}}
+\DoxyCodeLine{B.contiguous\_()}
+\DoxyCodeLine{print(B.is\_contiguous()) \textcolor{comment}{\#true}}
+\DoxyCodeLine{    }
+\DoxyCodeLine{}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md188}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md188}
+
+\begin{DoxyVerbInclude}
+[3, 4, 5]
+[3, 5, 4]
+False
+True
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}\label{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!device@{device}}
+\index{device@{device}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{device()}{device()}}
+{\footnotesize\ttfamily int cytnx\+::\+Tensor\+::device (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+the device-\/id of the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}cytnx\+\_\+int64\mbox{]} the device\+\_\+id of the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a335f7625fa01784f49b2223238d0c14e}\label{classcytnx_1_1Tensor_a335f7625fa01784f49b2223238d0c14e}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!device\_str@{device\_str}}
+\index{device\_str@{device\_str}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{device\_str()}{device\_str()}}
+{\footnotesize\ttfamily std\+::string cytnx\+::\+Tensor\+::device\+\_\+str (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+the device (in string) of the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}std\+::string\mbox{]} the device of the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}\label{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!dtype@{dtype}}
+\index{dtype@{dtype}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{dtype()}{dtype()}}
+{\footnotesize\ttfamily unsigned int cytnx\+::\+Tensor\+::dtype (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+the dtype-\/id of the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}cytnx\+\_\+uint64\mbox{]} the dtype\+\_\+id of the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a9e09106c7529e8be90caa52e1541e498}\label{classcytnx_1_1Tensor_a9e09106c7529e8be90caa52e1541e498}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!dtype\_str@{dtype\_str}}
+\index{dtype\_str@{dtype\_str}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{dtype\_str()}{dtype\_str()}}
+{\footnotesize\ttfamily std\+::string cytnx\+::\+Tensor\+::dtype\+\_\+str (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+the dtype (in string) of the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}std\+::string\mbox{]} the dtype of the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a0c7f2bac2a03be7d22769c7cb896afbe}\label{classcytnx_1_1Tensor_a0c7f2bac2a03be7d22769c7cb896afbe}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!fill@{fill}}
+\index{fill@{fill}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{fill()}{fill()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+void cytnx\+::\+Tensor\+::fill (\begin{DoxyParamCaption}\item[{const T \&}]{val }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+fill all the element of current \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} with the value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em val} & the assigned value\\
+\hline
+\end{DoxyParams}
+\hypertarget{classcytnx_1_1Tensor_autotoc_md234}{}\doxysubsubsection{Example\+:}\label{classcytnx_1_1Tensor_autotoc_md234}
+\hypertarget{classcytnx_1_1Tensor_autotoc_md235}{}\doxyparagraph{c++ API\+:}\label{classcytnx_1_1Tensor_autotoc_md235}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "{}cytnx.hpp"{}}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }cytnx;}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{\textcolor{keywordtype}{int} main() \{}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} A = arange(60).\mbox{\hyperlink{classcytnx_1_1Tensor_a57aea99887adf41da14fd7578ef9bf13}{reshape}}(\{3, 4, 5\});}
+\DoxyCodeLine{  cout << A << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  A.\mbox{\hyperlink{classcytnx_1_1Tensor_a0c7f2bac2a03be7d22769c7cb896afbe}{fill}}(999);}
+\DoxyCodeLine{  cout << A << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md236}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md236}
+
+\begin{DoxyVerbInclude}
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 ]
+  [5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+  [1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 ]
+  [1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]]
+ [[2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 ]
+  [2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 ]
+  [3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 ]
+  [3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 ]]
+ [[4.00000e+01 4.10000e+01 4.20000e+01 4.30000e+01 4.40000e+01 ]
+  [4.50000e+01 4.60000e+01 4.70000e+01 4.80000e+01 4.90000e+01 ]
+  [5.00000e+01 5.10000e+01 5.20000e+01 5.30000e+01 5.40000e+01 ]
+  [5.50000e+01 5.60000e+01 5.70000e+01 5.80000e+01 5.90000e+01 ]]]
+
+
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]
+  [9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]
+  [9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]
+  [9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]]
+ [[9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]
+  [9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]
+  [9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]
+  [9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]]
+ [[9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]
+  [9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]
+  [9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]
+  [9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]]]
+
+
+\end{DoxyVerbInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md237}{}\doxyparagraph{python API}\label{classcytnx_1_1Tensor_autotoc_md237}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *}
+\DoxyCodeLine{}
+\DoxyCodeLine{A = arange(60).reshape(3,4,5)}
+\DoxyCodeLine{print(A)}
+\DoxyCodeLine{}
+\DoxyCodeLine{A.fill(999)}
+\DoxyCodeLine{print(A)}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md238}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md238}
+
+\begin{DoxyVerbInclude}
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 ]
+  [5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+  [1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 ]
+  [1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]]
+ [[2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 ]
+  [2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 ]
+  [3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 ]
+  [3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 ]]
+ [[4.00000e+01 4.10000e+01 4.20000e+01 4.30000e+01 4.40000e+01 ]
+  [4.50000e+01 4.60000e+01 4.70000e+01 4.80000e+01 4.90000e+01 ]
+  [5.00000e+01 5.10000e+01 5.20000e+01 5.30000e+01 5.40000e+01 ]
+  [5.50000e+01 5.60000e+01 5.70000e+01 5.80000e+01 5.90000e+01 ]]]
+
+
+
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]
+  [9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]
+  [9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]
+  [9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]]
+ [[9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]
+  [9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]
+  [9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]
+  [9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]]
+ [[9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]
+  [9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]
+  [9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]
+  [9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 9.99000e+02 ]]]
+
+
+
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Tensor_ad7b928e4cb89d40cbd99aefab9aa0075}\label{classcytnx_1_1Tensor_ad7b928e4cb89d40cbd99aefab9aa0075}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!get@{get}}
+\index{get@{get}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{get()}{get()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} cytnx\+::\+Tensor\+::get (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \mbox{\hyperlink{classcytnx_1_1Accessor}{cytnx\+::\+Accessor}} $>$ \&}]{accessors }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+get elements using \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} (C++ API) / slices (python API) 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}\mbox{]}
+\end{DoxyReturn}
+See also \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} for cordinate with \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} in C++ API.\hypertarget{classcytnx_1_1Tensor_autotoc_md215}{}\doxysubsubsection{Note\+:}\label{classcytnx_1_1Tensor_autotoc_md215}
+
+\begin{DoxyEnumerate}
+\item the return will be a new \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} instance, which not share memory with the current \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}.
+\end{DoxyEnumerate}\hypertarget{classcytnx_1_1Tensor_autotoc_md216}{}\doxysubsubsection{Equivalently\+:}\label{classcytnx_1_1Tensor_autotoc_md216}
+One can also using more intruisive way to get the slice using \mbox{[}\mbox{]} operator.\hypertarget{classcytnx_1_1Tensor_autotoc_md217}{}\doxysubsubsection{Example\+:}\label{classcytnx_1_1Tensor_autotoc_md217}
+\hypertarget{classcytnx_1_1Tensor_autotoc_md218}{}\doxyparagraph{c++ API\+:}\label{classcytnx_1_1Tensor_autotoc_md218}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "{}cytnx.hpp"{}}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }cytnx;}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{\textcolor{keywordtype}{int} main() \{}
+\DoxyCodeLine{  \textcolor{keyword}{typedef} \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} \mbox{\hyperlink{classcytnx_1_1Accessor}{ac}};}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{/*}}
+\DoxyCodeLine{\textcolor{comment}{      In C++ API, generally, there are two ways you can access Tensor.}}
+\DoxyCodeLine{\textcolor{comment}{      1. Using operator():}}
+\DoxyCodeLine{\textcolor{comment}{          This is more of 'python' way.}}
+\DoxyCodeLine{\textcolor{comment}{}}
+\DoxyCodeLine{\textcolor{comment}{      2. Using low-\/level API or operator[]:}}
+\DoxyCodeLine{\textcolor{comment}{          This is more of 'c++' way.}}
+\DoxyCodeLine{\textcolor{comment}{  */}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} A = arange(60).\mbox{\hyperlink{classcytnx_1_1Tensor_a57aea99887adf41da14fd7578ef9bf13}{reshape}}(\{3, 4, 5\});}
+\DoxyCodeLine{  cout << A << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// Method 1, Using operator():}}
+\DoxyCodeLine{  \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} B = A(2, \textcolor{stringliteral}{"{}:"{}}, \textcolor{stringliteral}{"{}2:5:1"{}});}
+\DoxyCodeLine{  cout << B << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{/* [Note]}}
+\DoxyCodeLine{\textcolor{comment}{      This is equivalent as:}}
+\DoxyCodeLine{\textcolor{comment}{      > Tensor B = A(2,ac::all(),ac::range(2,5,1));}}
+\DoxyCodeLine{\textcolor{comment}{}}
+\DoxyCodeLine{\textcolor{comment}{      See also cytnx::Accessor.}}
+\DoxyCodeLine{\textcolor{comment}{  */}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// Method 2, Using operator[] or low-\/level API get():}}
+\DoxyCodeLine{  \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} B2 = A[\{\mbox{\hyperlink{classcytnx_1_1Accessor}{ac}}(2), \mbox{\hyperlink{classcytnx_1_1Accessor_a71b8c4af7182a2c9144929bdef9ff4fd}{ac::all}}(), \mbox{\hyperlink{classcytnx_1_1Accessor_a7a5a508a58b71897c3dd162195aceaa9}{ac::range}}(2, 5, 1)\}];  \textcolor{comment}{// remember the \{\}braket}}
+\DoxyCodeLine{  cout << B2 << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{/* [Note]}}
+\DoxyCodeLine{\textcolor{comment}{      You can also use the low-\/level API get() as}}
+\DoxyCodeLine{\textcolor{comment}{      > Tensor B2 = A.get(\{ac(2),ac::all(),ac::range(2,5,1)\});}}
+\DoxyCodeLine{\textcolor{comment}{  */}}
+\DoxyCodeLine{  \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md219}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md219}
+
+\begin{DoxyVerbInclude}
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 ]
+  [5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+  [1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 ]
+  [1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]]
+ [[2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 ]
+  [2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 ]
+  [3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 ]
+  [3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 ]]
+ [[4.00000e+01 4.10000e+01 4.20000e+01 4.30000e+01 4.40000e+01 ]
+  [4.50000e+01 4.60000e+01 4.70000e+01 4.80000e+01 4.90000e+01 ]
+  [5.00000e+01 5.10000e+01 5.20000e+01 5.30000e+01 5.40000e+01 ]
+  [5.50000e+01 5.60000e+01 5.70000e+01 5.80000e+01 5.90000e+01 ]]]
+
+
+
+Total elem: 12
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,3)
+[[4.20000e+01 4.30000e+01 4.40000e+01 ]
+ [4.70000e+01 4.80000e+01 4.90000e+01 ]
+ [5.20000e+01 5.30000e+01 5.40000e+01 ]
+ [5.70000e+01 5.80000e+01 5.90000e+01 ]]
+
+
+
+Total elem: 12
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,3)
+[[4.20000e+01 4.30000e+01 4.40000e+01 ]
+ [4.70000e+01 4.80000e+01 4.90000e+01 ]
+ [5.20000e+01 5.30000e+01 5.40000e+01 ]
+ [5.70000e+01 5.80000e+01 5.90000e+01 ]]
+
+
+\end{DoxyVerbInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md220}{}\doxyparagraph{python API\+:}\label{classcytnx_1_1Tensor_autotoc_md220}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *}
+\DoxyCodeLine{}
+\DoxyCodeLine{A = arange(60).reshape(3,4,5)}
+\DoxyCodeLine{print(A)}
+\DoxyCodeLine{}
+\DoxyCodeLine{B = A[2,:,2:5:1]}
+\DoxyCodeLine{print(B)}
+\DoxyCodeLine{}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md221}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md221}
+
+\begin{DoxyVerbInclude}
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 ]
+  [5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+  [1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 ]
+  [1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]]
+ [[2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 ]
+  [2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 ]
+  [3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 ]
+  [3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 ]]
+ [[4.00000e+01 4.10000e+01 4.20000e+01 4.30000e+01 4.40000e+01 ]
+  [4.50000e+01 4.60000e+01 4.70000e+01 4.80000e+01 4.90000e+01 ]
+  [5.00000e+01 5.10000e+01 5.20000e+01 5.30000e+01 5.40000e+01 ]
+  [5.50000e+01 5.60000e+01 5.70000e+01 5.80000e+01 5.90000e+01 ]]]
+
+
+
+
+Total elem: 12
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,3)
+[[4.20000e+01 4.30000e+01 4.40000e+01 ]
+ [4.70000e+01 4.80000e+01 4.90000e+01 ]
+ [5.20000e+01 5.30000e+01 5.40000e+01 ]
+ [5.70000e+01 5.80000e+01 5.90000e+01 ]]
+
+
+
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Tensor_aee8c0febe1794bd79edc52f2caac9cc3}\label{classcytnx_1_1Tensor_aee8c0febe1794bd79edc52f2caac9cc3}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!Init@{Init}}
+\index{Init@{Init}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily void cytnx\+::\+Tensor\+::\+Init (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&}]{shape,  }\item[{const unsigned int \&}]{dtype = {\ttfamily Type.Double},  }\item[{const int \&}]{device = {\ttfamily -\/1},  }\item[{const bool \&}]{init\+\_\+zero = {\ttfamily true} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+initialize a \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} 
+
+
+\begin{DoxyParams}{Parameters}
+{\em shape} & the shape of tensor. \\
+\hline
+{\em dtype} & the dtype of tensor. This can be any of type defined in cytnx\+::\+Type \\
+\hline
+{\em device} & the device that tensor to be created. This can be cytnx\+::\+Device.\+cpu or cytnx\+::\+Device.\+cuda+$<$gpuid$>$\\
+\hline
+\end{DoxyParams}
+\mbox{[}Note\mbox{]}
+\begin{DoxyEnumerate}
+\item the content of \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} created will be un-\/initialize! See \mbox{\hyperlink{ab8a79a03fb0465f3eb2641017f3f1755}{zeros()}}, \mbox{\hyperlink{a83fb7bbe73368751a0d0f535d4a10a33}{ones() }} or \mbox{\hyperlink{a685cf4e94754373ae4f12622b168fb98}{arange() }} for generating an \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}.
+\end{DoxyEnumerate}\hypertarget{classcytnx_1_1Tensor_autotoc_md154}{}\doxysubsubsection{Example\+:}\label{classcytnx_1_1Tensor_autotoc_md154}
+\hypertarget{classcytnx_1_1Tensor_autotoc_md155}{}\doxyparagraph{c++ API\+:}\label{classcytnx_1_1Tensor_autotoc_md155}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "{}cytnx.hpp"{}}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }cytnx;}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{\textcolor{keywordtype}{int} main() \{}
+\DoxyCodeLine{  \textcolor{comment}{/*}}
+\DoxyCodeLine{\textcolor{comment}{      1. Create a Tensor with}}
+\DoxyCodeLine{\textcolor{comment}{      shape (3,4,5),}}
+\DoxyCodeLine{\textcolor{comment}{      dtype =Type.Double [default],}}
+\DoxyCodeLine{\textcolor{comment}{      device=Device.cpu [default]}}
+\DoxyCodeLine{\textcolor{comment}{  */}}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} A(\{3, 4, 5\});}
+\DoxyCodeLine{  cout << A << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{/*}}
+\DoxyCodeLine{\textcolor{comment}{      2. Create a Tensor with}}
+\DoxyCodeLine{\textcolor{comment}{      shape (3,4,5),}}
+\DoxyCodeLine{\textcolor{comment}{      dtype =Type.Uint64,}}
+\DoxyCodeLine{\textcolor{comment}{      device=Device.cpu [default],}}
+\DoxyCodeLine{\textcolor{comment}{      [Note] the dtype can be any one of the supported type.}}
+\DoxyCodeLine{\textcolor{comment}{  */}}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} B(\{3, 4, 5\}, Type.Uint64);}
+\DoxyCodeLine{  cout << B << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{/*}}
+\DoxyCodeLine{\textcolor{comment}{      3. Initialize a Tensor with}}
+\DoxyCodeLine{\textcolor{comment}{      shape (3,4,5),}}
+\DoxyCodeLine{\textcolor{comment}{      dtype =Type.Double,}}
+\DoxyCodeLine{\textcolor{comment}{      device=Device.cuda+0, (on gpu with gpu-\/id=0)}}
+\DoxyCodeLine{\textcolor{comment}{      [Note] the gpu device can be set with Device.cuda+<gpu-\/id>}}
+\DoxyCodeLine{\textcolor{comment}{  */}}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} C(\{3, 4, 5\}, Type.Double, Device.cuda + 0);}
+\DoxyCodeLine{  cout << C << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// 4. Create an empty Tensor, and init later}}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} D;}
+\DoxyCodeLine{  D.\mbox{\hyperlink{classcytnx_1_1Tensor_aee8c0febe1794bd79edc52f2caac9cc3}{Init}}(\{3, 4, 5\}, Type.Double, Device.cpu);}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md156}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md156}
+
+\begin{DoxyVerbInclude}
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+
+
+
+Total elem: 60
+type  : Uint64
+cytnx device: CPU
+Shape : (3,4,5)
+[[[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]
+ [[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]
+ [[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]]
+
+
+\end{DoxyVerbInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md157}{}\doxyparagraph{python API\+:}\label{classcytnx_1_1Tensor_autotoc_md157}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\#1. Create a Tensor with }}
+\DoxyCodeLine{\textcolor{comment}{\#  shape (3,4,5),}}
+\DoxyCodeLine{\textcolor{comment}{\#  dtype =Type.Double [default],}}
+\DoxyCodeLine{\textcolor{comment}{\#  device=Device.cpu [default]}}
+\DoxyCodeLine{A = Tensor([3,4,5])}
+\DoxyCodeLine{print(A)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\#2. Create a Tensor with }}
+\DoxyCodeLine{\textcolor{comment}{\#  shape (3,4,5),}}
+\DoxyCodeLine{\textcolor{comment}{\#  dtype =Type.Uint64,}}
+\DoxyCodeLine{\textcolor{comment}{\#  device=Device.cpu [default],}}
+\DoxyCodeLine{\textcolor{comment}{\#  [Note] the dtype can be any one of the supported type.}}
+\DoxyCodeLine{B = Tensor([3,4,5],dtype=Type.Uint64)}
+\DoxyCodeLine{print(B)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\#3. Initialize a Tensor with }}
+\DoxyCodeLine{\textcolor{comment}{\#  shape (3,4,5),}}
+\DoxyCodeLine{\textcolor{comment}{\#  dtype =Type.Double,}}
+\DoxyCodeLine{\textcolor{comment}{\#  device=Device.cuda+0, (on gpu with gpu-\/id=0)}}
+\DoxyCodeLine{\textcolor{comment}{\#  [Note] the gpu device can be set with Device.cuda+<gpu-\/id>}}
+\DoxyCodeLine{C = Tensor([3,4,5],dtype=Type.Double,device=Device.cuda+0);}
+\DoxyCodeLine{print(C)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\#4. Create an empty Tensor, and init later}}
+\DoxyCodeLine{D = Tensor()}
+\DoxyCodeLine{D.Init([3,4,5],dtype=Type.Double,device=Device.cpu);}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{ }
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md158}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md158}
+
+\begin{DoxyVerbInclude}
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+
+
+
+
+Total elem: 60
+type  : Uint64
+cytnx device: CPU
+Shape : (3,4,5)
+[[[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]
+ [[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]
+ [[                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]
+  [                  0                   0                   0                   0                   0 ]]]
+
+
+
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CUDA/GPU-id:0
+Shape : (3,4,5)
+[[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+
+
+
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Tensor_a59bb8b7cf3d142d49c51d694e58ace68}\label{classcytnx_1_1Tensor_a59bb8b7cf3d142d49c51d694e58ace68}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!item@{item}}
+\index{item@{item}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{item()}{item()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+T \& cytnx\+::\+Tensor\+::item (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+get an from a rank-\/0 \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}T\mbox{]}
+\end{DoxyReturn}
+\hypertarget{classcytnx_1_1Tensor_autotoc_md209}{}\doxysubsubsection{Note\+:}\label{classcytnx_1_1Tensor_autotoc_md209}
+
+\begin{DoxyEnumerate}
+\item This can only be called on a rank-\/0 \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} (scalar). For C++ API, a template instantiation of type is needed to resolve the type, which should be connsist with the dtype of the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}. An error will be issued if the template type if inconsist with the current dtype of \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}.
+\item Although the return is by reference in C++ part, the return in python is not.
+\item From 2., We recommend user to use at$<$\+T$>$ (C++ API) and \mbox{[}\mbox{]} (python API) to modify the value of the element to have consistant syntax across two languages.
+\end{DoxyEnumerate}\hypertarget{classcytnx_1_1Tensor_autotoc_md210}{}\doxysubsubsection{Example\+:}\label{classcytnx_1_1Tensor_autotoc_md210}
+\hypertarget{classcytnx_1_1Tensor_autotoc_md211}{}\doxyparagraph{c++ API\+:}\label{classcytnx_1_1Tensor_autotoc_md211}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "{}cytnx.hpp"{}}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }cytnx;}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{\textcolor{keywordtype}{int} main() \{}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} A = ones(1, Type.Uint64);}
+\DoxyCodeLine{  cout << A << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// note that type resolver should be consist with the dtype}}
+\DoxyCodeLine{  cout << A.\mbox{\hyperlink{classcytnx_1_1Tensor_a59bb8b7cf3d142d49c51d694e58ace68}{item}}<cytnx\_uint64>() << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md212}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md212}
+
+\begin{DoxyVerbInclude}
+
+Total elem: 1
+type  : Uint64
+cytnx device: CPU
+Shape : (1)
+[                  1 ]
+
+
+1
+\end{DoxyVerbInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md213}{}\doxyparagraph{python API\+:}\label{classcytnx_1_1Tensor_autotoc_md213}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *}
+\DoxyCodeLine{}
+\DoxyCodeLine{A = ones(1,Type.Uint64)}
+\DoxyCodeLine{print(A)}
+\DoxyCodeLine{}
+\DoxyCodeLine{print(A.item())}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md214}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md214}
+
+\begin{DoxyVerbInclude}
+
+Total elem: 1
+type  : Uint64
+cytnx device: CPU
+Shape : (1)
+[                  1 ]
+
+
+
+1
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Tensor_a4100edea617039a2b9a0ee3ca2b2aa36}\label{classcytnx_1_1Tensor_a4100edea617039a2b9a0ee3ca2b2aa36}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!Load@{Load}}
+\index{Load@{Load}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{Load()}{Load()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} cytnx\+::\+Tensor\+::\+Load (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{fname }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Load current \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} to file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fname} & file name\\
+\hline
+\end{DoxyParams}
+description\+: load the \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} from file with file path specify with input param \textquotesingle{}fname\textquotesingle{} \mbox{\Hypertarget{classcytnx_1_1Tensor_adbdc402a8c4d6d738523a888bcf9c0c2}\label{classcytnx_1_1Tensor_adbdc402a8c4d6d738523a888bcf9c0c2}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!permute@{permute}}
+\index{permute@{permute}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{permute()}{permute()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} cytnx\+::\+Tensor\+::permute (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \&}]{rnks }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+perform tensor permute on the \mbox{\hyperlink{classcytnx_1_1Tensor}{cytnx\+::\+Tensor}} and return a new instance. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rnks} & the permute indices, should have No. of elements equal to the rank of tensor. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{[}\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}\mbox{]} a permuted new \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}
+\end{DoxyReturn}
+\hypertarget{classcytnx_1_1Tensor_autotoc_md174}{}\doxysubsubsection{Example\+:}\label{classcytnx_1_1Tensor_autotoc_md174}
+\hypertarget{classcytnx_1_1Tensor_autotoc_md175}{}\doxyparagraph{c++ API\+:}\label{classcytnx_1_1Tensor_autotoc_md175}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "{}cytnx.hpp"{}}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }cytnx;}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{\textcolor{keywordtype}{int} main() \{}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} A(\{3, 4, 5\});}
+\DoxyCodeLine{  cout << A.\mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}}() << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} B = A.\mbox{\hyperlink{classcytnx_1_1Tensor_adbdc402a8c4d6d738523a888bcf9c0c2}{permute}}(\{0, 2, 1\});}
+\DoxyCodeLine{  cout << B.\mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}}() << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  cout << is(B, A) << endl;  \textcolor{comment}{// this should be false, different object.}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  cout << B.same\_data(A) << endl;  \textcolor{comment}{// this should be true, since no new pointer/memory is created.}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md176}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md176}
+
+\begin{DoxyVerbInclude}
+Vector Print:
+Total Elements:3
+[3, 4, 5]
+
+Vector Print:
+Total Elements:3
+[3, 5, 4]
+
+0
+1
+\end{DoxyVerbInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md177}{}\doxyparagraph{python API\+:}\label{classcytnx_1_1Tensor_autotoc_md177}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *}
+\DoxyCodeLine{}
+\DoxyCodeLine{A = Tensor([3,4,5])}
+\DoxyCodeLine{print(A.shape())}
+\DoxyCodeLine{}
+\DoxyCodeLine{B = A.permute(0,2,1)}
+\DoxyCodeLine{print(B.shape())}
+\DoxyCodeLine{}
+\DoxyCodeLine{print(B \textcolor{keywordflow}{is} A) \textcolor{comment}{\#False}}
+\DoxyCodeLine{}
+\DoxyCodeLine{print(B.same\_data(A)) \textcolor{comment}{\#True}}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md178}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md178}
+
+\begin{DoxyVerbInclude}
+[3, 4, 5]
+[3, 5, 4]
+False
+True
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Tensor_aa3ee5ed793cacd43d3fadbd92d7920a4}\label{classcytnx_1_1Tensor_aa3ee5ed793cacd43d3fadbd92d7920a4}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!rank@{rank}}
+\index{rank@{rank}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{rank()}{rank()}}
+{\footnotesize\ttfamily cytnx\+\_\+uint64 cytnx\+::\+Tensor\+::rank (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+the rank of the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}cytnx\+\_\+uint64\mbox{]} the rank of the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcytnx_1_1Tensor_a57aea99887adf41da14fd7578ef9bf13}\label{classcytnx_1_1Tensor_a57aea99887adf41da14fd7578ef9bf13}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!reshape@{reshape}}
+\index{reshape@{reshape}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{reshape()}{reshape()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} cytnx\+::\+Tensor\+::reshape (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ cytnx\+\_\+int64 $>$ \&}]{new\+\_\+shape }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+return a new \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} that is reshaped. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+\_\+shape} & the new shape of the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{[}\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}\mbox{]}
+\end{DoxyReturn}
+See also \mbox{\hyperlink{classcytnx_1_1Tensor_a3723449528b9a20dd46c32c9e042b8f0}{Tensor\+::reshape\+\_\+() }}\hypertarget{classcytnx_1_1Tensor_autotoc_md194}{}\doxysubsubsection{Example\+:}\label{classcytnx_1_1Tensor_autotoc_md194}
+\hypertarget{classcytnx_1_1Tensor_autotoc_md195}{}\doxyparagraph{c++ API\+:}\label{classcytnx_1_1Tensor_autotoc_md195}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "{}cytnx.hpp"{}}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }cytnx;}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{\textcolor{keywordtype}{int} main() \{}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} A = arange(60);}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// there are two ways you can give argument to reshape:}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// Method 1: more like 'C++' way:}}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} B = A.\mbox{\hyperlink{classcytnx_1_1Tensor_a57aea99887adf41da14fd7578ef9bf13}{reshape}}(\{5, 12\});  \textcolor{comment}{// note the braket\{\}}}
+\DoxyCodeLine{  cout << A << endl;}
+\DoxyCodeLine{  cout << B << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// Method 2: more like 'python' way:}}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} B2 = A.\mbox{\hyperlink{classcytnx_1_1Tensor_a57aea99887adf41da14fd7578ef9bf13}{reshape}}(5, 12);}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md196}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md196}
+
+\begin{DoxyVerbInclude}
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (60)
+[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 4.00000e+01 4.10000e+01 4.20000e+01 4.30000e+01 4.40000e+01 4.50000e+01 4.60000e+01 4.70000e+01 4.80000e+01 4.90000e+01 5.00000e+01 5.10000e+01 5.20000e+01 5.30000e+01 5.40000e+01 5.50000e+01 5.60000e+01 5.70000e+01 5.80000e+01 5.90000e+01 ]
+
+
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (5,12)
+[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]
+ [1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]
+ [2.40000e+01 2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 3.50000e+01 ]
+ [3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 4.00000e+01 4.10000e+01 4.20000e+01 4.30000e+01 4.40000e+01 4.50000e+01 4.60000e+01 4.70000e+01 ]
+ [4.80000e+01 4.90000e+01 5.00000e+01 5.10000e+01 5.20000e+01 5.30000e+01 5.40000e+01 5.50000e+01 5.60000e+01 5.70000e+01 5.80000e+01 5.90000e+01 ]]
+
+
+\end{DoxyVerbInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md197}{}\doxyparagraph{python API\+:}\label{classcytnx_1_1Tensor_autotoc_md197}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *}
+\DoxyCodeLine{}
+\DoxyCodeLine{A = arange(60)}
+\DoxyCodeLine{}
+\DoxyCodeLine{B = A.reshape(5,12)}
+\DoxyCodeLine{print(A)}
+\DoxyCodeLine{print(B)}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md198}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md198}
+
+\begin{DoxyVerbInclude}
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (60)
+[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 4.00000e+01 4.10000e+01 4.20000e+01 4.30000e+01 4.40000e+01 4.50000e+01 4.60000e+01 4.70000e+01 4.80000e+01 4.90000e+01 5.00000e+01 5.10000e+01 5.20000e+01 5.30000e+01 5.40000e+01 5.50000e+01 5.60000e+01 5.70000e+01 5.80000e+01 5.90000e+01 ]
+
+
+
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (5,12)
+[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]
+ [1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]
+ [2.40000e+01 2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 3.50000e+01 ]
+ [3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 4.00000e+01 4.10000e+01 4.20000e+01 4.30000e+01 4.40000e+01 4.50000e+01 4.60000e+01 4.70000e+01 ]
+ [4.80000e+01 4.90000e+01 5.00000e+01 5.10000e+01 5.20000e+01 5.30000e+01 5.40000e+01 5.50000e+01 5.60000e+01 5.70000e+01 5.80000e+01 5.90000e+01 ]]
+
+
+
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Tensor_a3723449528b9a20dd46c32c9e042b8f0}\label{classcytnx_1_1Tensor_a3723449528b9a20dd46c32c9e042b8f0}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!reshape\_@{reshape\_}}
+\index{reshape\_@{reshape\_}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{reshape\_()}{reshape\_()}}
+{\footnotesize\ttfamily void cytnx\+::\+Tensor\+::reshape\+\_\+ (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ cytnx\+\_\+int64 $>$ \&}]{new\+\_\+shape }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+reshape the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}, inplacely 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+\_\+shape} & the new shape of the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}.\\
+\hline
+\end{DoxyParams}
+See also \mbox{\hyperlink{classcytnx_1_1Tensor_a57aea99887adf41da14fd7578ef9bf13}{Tensor\+::reshape() }}\hypertarget{classcytnx_1_1Tensor_autotoc_md189}{}\doxysubsubsection{Example\+:}\label{classcytnx_1_1Tensor_autotoc_md189}
+\hypertarget{classcytnx_1_1Tensor_autotoc_md190}{}\doxyparagraph{c++ API\+:}\label{classcytnx_1_1Tensor_autotoc_md190}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "{}cytnx.hpp"{}}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }cytnx;}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{\textcolor{keywordtype}{int} main() \{}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} A = arange(60);}
+\DoxyCodeLine{  cout << A << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// there are two ways you can assign the argument:}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// Method 1: more like 'c++' way:}}
+\DoxyCodeLine{  A.\mbox{\hyperlink{classcytnx_1_1Tensor_a3723449528b9a20dd46c32c9e042b8f0}{reshape\_}}(\{5, 12\});  \textcolor{comment}{// note the braket\{\}}}
+\DoxyCodeLine{  cout << A << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// Method 2: more like 'python' way:}}
+\DoxyCodeLine{  A.\mbox{\hyperlink{classcytnx_1_1Tensor_a3723449528b9a20dd46c32c9e042b8f0}{reshape\_}}(5, 4, 3);}
+\DoxyCodeLine{  cout << A << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md191}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md191}
+
+\begin{DoxyVerbInclude}
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (60)
+[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 4.00000e+01 4.10000e+01 4.20000e+01 4.30000e+01 4.40000e+01 4.50000e+01 4.60000e+01 4.70000e+01 4.80000e+01 4.90000e+01 5.00000e+01 5.10000e+01 5.20000e+01 5.30000e+01 5.40000e+01 5.50000e+01 5.60000e+01 5.70000e+01 5.80000e+01 5.90000e+01 ]
+
+
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (5,12)
+[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]
+ [1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]
+ [2.40000e+01 2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 3.50000e+01 ]
+ [3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 4.00000e+01 4.10000e+01 4.20000e+01 4.30000e+01 4.40000e+01 4.50000e+01 4.60000e+01 4.70000e+01 ]
+ [4.80000e+01 4.90000e+01 5.00000e+01 5.10000e+01 5.20000e+01 5.30000e+01 5.40000e+01 5.50000e+01 5.60000e+01 5.70000e+01 5.80000e+01 5.90000e+01 ]]
+
+
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (5,4,3)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 ]
+  [3.00000e+00 4.00000e+00 5.00000e+00 ]
+  [6.00000e+00 7.00000e+00 8.00000e+00 ]
+  [9.00000e+00 1.00000e+01 1.10000e+01 ]]
+ [[1.20000e+01 1.30000e+01 1.40000e+01 ]
+  [1.50000e+01 1.60000e+01 1.70000e+01 ]
+  [1.80000e+01 1.90000e+01 2.00000e+01 ]
+  [2.10000e+01 2.20000e+01 2.30000e+01 ]]
+ [[2.40000e+01 2.50000e+01 2.60000e+01 ]
+  [2.70000e+01 2.80000e+01 2.90000e+01 ]
+  [3.00000e+01 3.10000e+01 3.20000e+01 ]
+  [3.30000e+01 3.40000e+01 3.50000e+01 ]]
+ [[3.60000e+01 3.70000e+01 3.80000e+01 ]
+  [3.90000e+01 4.00000e+01 4.10000e+01 ]
+  [4.20000e+01 4.30000e+01 4.40000e+01 ]
+  [4.50000e+01 4.60000e+01 4.70000e+01 ]]
+ [[4.80000e+01 4.90000e+01 5.00000e+01 ]
+  [5.10000e+01 5.20000e+01 5.30000e+01 ]
+  [5.40000e+01 5.50000e+01 5.60000e+01 ]
+  [5.70000e+01 5.80000e+01 5.90000e+01 ]]]
+
+
+\end{DoxyVerbInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md192}{}\doxyparagraph{python API\+:}\label{classcytnx_1_1Tensor_autotoc_md192}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *}
+\DoxyCodeLine{}
+\DoxyCodeLine{A = arange(60)}
+\DoxyCodeLine{print(A)}
+\DoxyCodeLine{A.reshape\_(5,12)}
+\DoxyCodeLine{print(A)}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md193}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md193}
+
+\begin{DoxyVerbInclude}
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (60)
+[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 4.00000e+01 4.10000e+01 4.20000e+01 4.30000e+01 4.40000e+01 4.50000e+01 4.60000e+01 4.70000e+01 4.80000e+01 4.90000e+01 5.00000e+01 5.10000e+01 5.20000e+01 5.30000e+01 5.40000e+01 5.50000e+01 5.60000e+01 5.70000e+01 5.80000e+01 5.90000e+01 ]
+
+
+
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (5,12)
+[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]
+ [1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]
+ [2.40000e+01 2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 3.50000e+01 ]
+ [3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 4.00000e+01 4.10000e+01 4.20000e+01 4.30000e+01 4.40000e+01 4.50000e+01 4.60000e+01 4.70000e+01 ]
+ [4.80000e+01 4.90000e+01 5.00000e+01 5.10000e+01 5.20000e+01 5.30000e+01 5.40000e+01 5.50000e+01 5.60000e+01 5.70000e+01 5.80000e+01 5.90000e+01 ]]
+
+
+
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Tensor_ab355c158b0ba1abb20a344c092fb8942}\label{classcytnx_1_1Tensor_ab355c158b0ba1abb20a344c092fb8942}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!Save@{Save}}
+\index{Save@{Save}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{Save()}{Save()}}
+{\footnotesize\ttfamily void cytnx\+::\+Tensor\+::\+Save (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{fname }\end{DoxyParamCaption}) const}
+
+
+
+Save current \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} to file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fname} & file name\\
+\hline
+\end{DoxyParams}
+description\+: save the \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} to file with file path specify with input param \textquotesingle{}fname\textquotesingle{} with postfix \char`\"{}.\+cytn\char`\"{} \mbox{\Hypertarget{classcytnx_1_1Tensor_ad93d654b978add6b2f0dfb9f91490209}\label{classcytnx_1_1Tensor_ad93d654b978add6b2f0dfb9f91490209}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!set@{set}}
+\index{set@{set}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{set()}{set()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+void cytnx\+::\+Tensor\+::set (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \mbox{\hyperlink{classcytnx_1_1Accessor}{cytnx\+::\+Accessor}} $>$ \&}]{accessors,  }\item[{const T \&}]{rc }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+set elements with the input constant using \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} (C++ API) / slices (python API) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em accessors} & the list(vector) of accessors. \\
+\hline
+{\em rc} & \mbox{[}Const\mbox{]}\\
+\hline
+\end{DoxyParams}
+See also \mbox{\hyperlink{classcytnx_1_1Tensor_a0c7f2bac2a03be7d22769c7cb896afbe}{Tensor\+::fill }} for filling all elements with assigned constant.\hypertarget{classcytnx_1_1Tensor_autotoc_md228}{}\doxysubsubsection{Example\+:}\label{classcytnx_1_1Tensor_autotoc_md228}
+\hypertarget{classcytnx_1_1Tensor_autotoc_md229}{}\doxyparagraph{c++ API\+:}\label{classcytnx_1_1Tensor_autotoc_md229}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "{}cytnx.hpp"{}}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }cytnx;}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{\textcolor{keywordtype}{int} main() \{}
+\DoxyCodeLine{  \textcolor{keyword}{typedef} \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} \mbox{\hyperlink{classcytnx_1_1Accessor}{ac}};}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// Let's define two Tensor.}}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} A = arange(60).\mbox{\hyperlink{classcytnx_1_1Tensor_a57aea99887adf41da14fd7578ef9bf13}{reshape}}(\{3, 4, 5\});}
+\DoxyCodeLine{  cout << A << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} B = zeros(\{4, 3\});}
+\DoxyCodeLine{  cout << B << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// I. To set part of A with Tesnor B, or constant:}}
+\DoxyCodeLine{  \textcolor{comment}{// [Method 1] Using direct assignment}}
+\DoxyCodeLine{  \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{  A(2, \textcolor{stringliteral}{"{}:"{}}, \textcolor{stringliteral}{"{}2:5:1"{}}) = B;}
+\DoxyCodeLine{  cout << A << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  A(2, \textcolor{stringliteral}{"{}:"{}}, \textcolor{stringliteral}{"{}2:5:1"{}}) = 999;}
+\DoxyCodeLine{  cout << A << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// note this is the same as}}
+\DoxyCodeLine{  \textcolor{comment}{// A(ac(2),ac::all(),ac::range(2,5,1)) = B;}}
+\DoxyCodeLine{  \textcolor{comment}{// A[\{ac(2),ac::all(),ac::range(2,5,1)\}] = B; // note that braket\{\}}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// [Method 2] Using low-\/level API set():}}
+\DoxyCodeLine{  \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{  A.\mbox{\hyperlink{classcytnx_1_1Tensor_a771f1f5b51f89abd8df4166e602214ac}{set}}(\{\mbox{\hyperlink{classcytnx_1_1Accessor}{ac}}(2), \mbox{\hyperlink{classcytnx_1_1Accessor_a71b8c4af7182a2c9144929bdef9ff4fd}{ac::all}}(), \mbox{\hyperlink{classcytnx_1_1Accessor_a7a5a508a58b71897c3dd162195aceaa9}{ac::range}}(2, 5, 1)\}, B);}
+\DoxyCodeLine{  cout << A << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  A.\mbox{\hyperlink{classcytnx_1_1Tensor_a771f1f5b51f89abd8df4166e602214ac}{set}}(\{\mbox{\hyperlink{classcytnx_1_1Accessor}{ac}}(2), \mbox{\hyperlink{classcytnx_1_1Accessor_a71b8c4af7182a2c9144929bdef9ff4fd}{ac::all}}(), \mbox{\hyperlink{classcytnx_1_1Accessor_a7a5a508a58b71897c3dd162195aceaa9}{ac::range}}(0, 2, 1)\}, 999);}
+\DoxyCodeLine{  cout << A << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md230}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md230}
+
+\begin{DoxyVerbInclude}
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 ]
+  [5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+  [1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 ]
+  [1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]]
+ [[2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 ]
+  [2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 ]
+  [3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 ]
+  [3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 ]]
+ [[4.00000e+01 4.10000e+01 4.20000e+01 4.30000e+01 4.40000e+01 ]
+  [4.50000e+01 4.60000e+01 4.70000e+01 4.80000e+01 4.90000e+01 ]
+  [5.00000e+01 5.10000e+01 5.20000e+01 5.30000e+01 5.40000e+01 ]
+  [5.50000e+01 5.60000e+01 5.70000e+01 5.80000e+01 5.90000e+01 ]]]
+
+
+
+Total elem: 12
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,3)
+[[0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 ]
+  [5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+  [1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 ]
+  [1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]]
+ [[2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 ]
+  [2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 ]
+  [3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 ]
+  [3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 ]]
+ [[4.00000e+01 4.10000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [4.50000e+01 4.60000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [5.00000e+01 5.10000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [5.50000e+01 5.60000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+
+
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 ]
+  [5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+  [1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 ]
+  [1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]]
+ [[2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 ]
+  [2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 ]
+  [3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 ]
+  [3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 ]]
+ [[4.00000e+01 4.10000e+01 9.99000e+02 9.99000e+02 9.99000e+02 ]
+  [4.50000e+01 4.60000e+01 9.99000e+02 9.99000e+02 9.99000e+02 ]
+  [5.00000e+01 5.10000e+01 9.99000e+02 9.99000e+02 9.99000e+02 ]
+  [5.50000e+01 5.60000e+01 9.99000e+02 9.99000e+02 9.99000e+02 ]]]
+
+
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 ]
+  [5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+  [1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 ]
+  [1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]]
+ [[2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 ]
+  [2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 ]
+  [3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 ]
+  [3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 ]]
+ [[4.00000e+01 4.10000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [4.50000e+01 4.60000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [5.00000e+01 5.10000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [5.50000e+01 5.60000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+
+
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 ]
+  [5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+  [1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 ]
+  [1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]]
+ [[2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 ]
+  [2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 ]
+  [3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 ]
+  [3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 ]]
+ [[9.99000e+02 9.99000e+02 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [9.99000e+02 9.99000e+02 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [9.99000e+02 9.99000e+02 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [9.99000e+02 9.99000e+02 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+
+
+\end{DoxyVerbInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md231}{}\doxyparagraph{python API\+:}\label{classcytnx_1_1Tensor_autotoc_md231}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *}
+\DoxyCodeLine{}
+\DoxyCodeLine{A = arange(60).reshape(3,4,5)}
+\DoxyCodeLine{print(A)}
+\DoxyCodeLine{}
+\DoxyCodeLine{B = zeros([4,3])}
+\DoxyCodeLine{print(B)}
+\DoxyCodeLine{}
+\DoxyCodeLine{A[2,:,2:5:1] = B}
+\DoxyCodeLine{print(A)}
+\DoxyCodeLine{}
+\DoxyCodeLine{A[0,:,0:2:1] = 999}
+\DoxyCodeLine{print(A)}
+\DoxyCodeLine{}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md232}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md232}
+
+\begin{DoxyVerbInclude}
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 ]
+  [5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+  [1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 ]
+  [1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]]
+ [[2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 ]
+  [2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 ]
+  [3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 ]
+  [3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 ]]
+ [[4.00000e+01 4.10000e+01 4.20000e+01 4.30000e+01 4.40000e+01 ]
+  [4.50000e+01 4.60000e+01 4.70000e+01 4.80000e+01 4.90000e+01 ]
+  [5.00000e+01 5.10000e+01 5.20000e+01 5.30000e+01 5.40000e+01 ]
+  [5.50000e+01 5.60000e+01 5.70000e+01 5.80000e+01 5.90000e+01 ]]]
+
+
+
+
+Total elem: 12
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,3)
+[[0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 ]
+  [5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+  [1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 ]
+  [1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]]
+ [[2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 ]
+  [2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 ]
+  [3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 ]
+  [3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 ]]
+ [[4.00000e+01 4.10000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [4.50000e+01 4.60000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [5.00000e+01 5.10000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [5.50000e+01 5.60000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+
+
+
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[9.99000e+02 9.99000e+02 2.00000e+00 3.00000e+00 4.00000e+00 ]
+  [9.99000e+02 9.99000e+02 7.00000e+00 8.00000e+00 9.00000e+00 ]
+  [9.99000e+02 9.99000e+02 1.20000e+01 1.30000e+01 1.40000e+01 ]
+  [9.99000e+02 9.99000e+02 1.70000e+01 1.80000e+01 1.90000e+01 ]]
+ [[2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 ]
+  [2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 ]
+  [3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 ]
+  [3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 ]]
+ [[4.00000e+01 4.10000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [4.50000e+01 4.60000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [5.00000e+01 5.10000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [5.50000e+01 5.60000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+
+
+
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Tensor_a771f1f5b51f89abd8df4166e602214ac}\label{classcytnx_1_1Tensor_a771f1f5b51f89abd8df4166e602214ac}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!set@{set}}
+\index{set@{set}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{set()}{set()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void cytnx\+::\+Tensor\+::set (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \mbox{\hyperlink{classcytnx_1_1Accessor}{cytnx\+::\+Accessor}} $>$ \&}]{accessors,  }\item[{const \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \&}]{rhs }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+set elements with the input \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} using \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} (C++ API) / slices (python API) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em accessors} & the list(vector) of accessors. \\
+\hline
+{\em rhs} & \mbox{[}\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}\mbox{]}\\
+\hline
+\end{DoxyParams}
+\hypertarget{classcytnx_1_1Tensor_autotoc_md222}{}\doxysubsubsection{Note\+:}\label{classcytnx_1_1Tensor_autotoc_md222}
+the shape of the input \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} should be the same as the shape that indicated using \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}}. The memory is not shared with the input \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}.\hypertarget{classcytnx_1_1Tensor_autotoc_md223}{}\doxysubsubsection{Example\+:}\label{classcytnx_1_1Tensor_autotoc_md223}
+\hypertarget{classcytnx_1_1Tensor_autotoc_md224}{}\doxyparagraph{c++ API\+:}\label{classcytnx_1_1Tensor_autotoc_md224}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "{}cytnx.hpp"{}}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }cytnx;}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{\textcolor{keywordtype}{int} main() \{}
+\DoxyCodeLine{  \textcolor{keyword}{typedef} \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} \mbox{\hyperlink{classcytnx_1_1Accessor}{ac}};}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// Let's define two Tensor.}}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} A = arange(60).\mbox{\hyperlink{classcytnx_1_1Tensor_a57aea99887adf41da14fd7578ef9bf13}{reshape}}(\{3, 4, 5\});}
+\DoxyCodeLine{  cout << A << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} B = zeros(\{4, 3\});}
+\DoxyCodeLine{  cout << B << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// I. To set part of A with Tesnor B, or constant:}}
+\DoxyCodeLine{  \textcolor{comment}{// [Method 1] Using direct assignment}}
+\DoxyCodeLine{  \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{  A(2, \textcolor{stringliteral}{"{}:"{}}, \textcolor{stringliteral}{"{}2:5:1"{}}) = B;}
+\DoxyCodeLine{  cout << A << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  A(2, \textcolor{stringliteral}{"{}:"{}}, \textcolor{stringliteral}{"{}2:5:1"{}}) = 999;}
+\DoxyCodeLine{  cout << A << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// note this is the same as}}
+\DoxyCodeLine{  \textcolor{comment}{// A(ac(2),ac::all(),ac::range(2,5,1)) = B;}}
+\DoxyCodeLine{  \textcolor{comment}{// A[\{ac(2),ac::all(),ac::range(2,5,1)\}] = B; // note that braket\{\}}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// [Method 2] Using low-\/level API set():}}
+\DoxyCodeLine{  \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{  A.\mbox{\hyperlink{classcytnx_1_1Tensor_a771f1f5b51f89abd8df4166e602214ac}{set}}(\{\mbox{\hyperlink{classcytnx_1_1Accessor}{ac}}(2), \mbox{\hyperlink{classcytnx_1_1Accessor_a71b8c4af7182a2c9144929bdef9ff4fd}{ac::all}}(), \mbox{\hyperlink{classcytnx_1_1Accessor_a7a5a508a58b71897c3dd162195aceaa9}{ac::range}}(2, 5, 1)\}, B);}
+\DoxyCodeLine{  cout << A << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  A.\mbox{\hyperlink{classcytnx_1_1Tensor_a771f1f5b51f89abd8df4166e602214ac}{set}}(\{\mbox{\hyperlink{classcytnx_1_1Accessor}{ac}}(2), \mbox{\hyperlink{classcytnx_1_1Accessor_a71b8c4af7182a2c9144929bdef9ff4fd}{ac::all}}(), \mbox{\hyperlink{classcytnx_1_1Accessor_a7a5a508a58b71897c3dd162195aceaa9}{ac::range}}(0, 2, 1)\}, 999);}
+\DoxyCodeLine{  cout << A << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md225}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md225}
+
+\begin{DoxyVerbInclude}
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 ]
+  [5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+  [1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 ]
+  [1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]]
+ [[2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 ]
+  [2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 ]
+  [3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 ]
+  [3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 ]]
+ [[4.00000e+01 4.10000e+01 4.20000e+01 4.30000e+01 4.40000e+01 ]
+  [4.50000e+01 4.60000e+01 4.70000e+01 4.80000e+01 4.90000e+01 ]
+  [5.00000e+01 5.10000e+01 5.20000e+01 5.30000e+01 5.40000e+01 ]
+  [5.50000e+01 5.60000e+01 5.70000e+01 5.80000e+01 5.90000e+01 ]]]
+
+
+
+Total elem: 12
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,3)
+[[0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 ]
+  [5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+  [1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 ]
+  [1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]]
+ [[2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 ]
+  [2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 ]
+  [3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 ]
+  [3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 ]]
+ [[4.00000e+01 4.10000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [4.50000e+01 4.60000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [5.00000e+01 5.10000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [5.50000e+01 5.60000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+
+
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 ]
+  [5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+  [1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 ]
+  [1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]]
+ [[2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 ]
+  [2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 ]
+  [3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 ]
+  [3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 ]]
+ [[4.00000e+01 4.10000e+01 9.99000e+02 9.99000e+02 9.99000e+02 ]
+  [4.50000e+01 4.60000e+01 9.99000e+02 9.99000e+02 9.99000e+02 ]
+  [5.00000e+01 5.10000e+01 9.99000e+02 9.99000e+02 9.99000e+02 ]
+  [5.50000e+01 5.60000e+01 9.99000e+02 9.99000e+02 9.99000e+02 ]]]
+
+
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 ]
+  [5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+  [1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 ]
+  [1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]]
+ [[2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 ]
+  [2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 ]
+  [3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 ]
+  [3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 ]]
+ [[4.00000e+01 4.10000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [4.50000e+01 4.60000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [5.00000e+01 5.10000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [5.50000e+01 5.60000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+
+
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 ]
+  [5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+  [1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 ]
+  [1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]]
+ [[2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 ]
+  [2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 ]
+  [3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 ]
+  [3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 ]]
+ [[9.99000e+02 9.99000e+02 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [9.99000e+02 9.99000e+02 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [9.99000e+02 9.99000e+02 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [9.99000e+02 9.99000e+02 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+
+
+\end{DoxyVerbInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md226}{}\doxyparagraph{python API\+:}\label{classcytnx_1_1Tensor_autotoc_md226}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *}
+\DoxyCodeLine{}
+\DoxyCodeLine{A = arange(60).reshape(3,4,5)}
+\DoxyCodeLine{print(A)}
+\DoxyCodeLine{}
+\DoxyCodeLine{B = zeros([4,3])}
+\DoxyCodeLine{print(B)}
+\DoxyCodeLine{}
+\DoxyCodeLine{A[2,:,2:5:1] = B}
+\DoxyCodeLine{print(A)}
+\DoxyCodeLine{}
+\DoxyCodeLine{A[0,:,0:2:1] = 999}
+\DoxyCodeLine{print(A)}
+\DoxyCodeLine{}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md227}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md227}
+
+\begin{DoxyVerbInclude}
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 ]
+  [5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+  [1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 ]
+  [1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]]
+ [[2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 ]
+  [2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 ]
+  [3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 ]
+  [3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 ]]
+ [[4.00000e+01 4.10000e+01 4.20000e+01 4.30000e+01 4.40000e+01 ]
+  [4.50000e+01 4.60000e+01 4.70000e+01 4.80000e+01 4.90000e+01 ]
+  [5.00000e+01 5.10000e+01 5.20000e+01 5.30000e+01 5.40000e+01 ]
+  [5.50000e+01 5.60000e+01 5.70000e+01 5.80000e+01 5.90000e+01 ]]]
+
+
+
+
+Total elem: 12
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4,3)
+[[0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 0.00000e+00 ]]
+
+
+
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 ]
+  [5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+  [1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 ]
+  [1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]]
+ [[2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 ]
+  [2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 ]
+  [3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 ]
+  [3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 ]]
+ [[4.00000e+01 4.10000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [4.50000e+01 4.60000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [5.00000e+01 5.10000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [5.50000e+01 5.60000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+
+
+
+
+Total elem: 60
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,4,5)
+[[[9.99000e+02 9.99000e+02 2.00000e+00 3.00000e+00 4.00000e+00 ]
+  [9.99000e+02 9.99000e+02 7.00000e+00 8.00000e+00 9.00000e+00 ]
+  [9.99000e+02 9.99000e+02 1.20000e+01 1.30000e+01 1.40000e+01 ]
+  [9.99000e+02 9.99000e+02 1.70000e+01 1.80000e+01 1.90000e+01 ]]
+ [[2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 2.40000e+01 ]
+  [2.50000e+01 2.60000e+01 2.70000e+01 2.80000e+01 2.90000e+01 ]
+  [3.00000e+01 3.10000e+01 3.20000e+01 3.30000e+01 3.40000e+01 ]
+  [3.50000e+01 3.60000e+01 3.70000e+01 3.80000e+01 3.90000e+01 ]]
+ [[4.00000e+01 4.10000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [4.50000e+01 4.60000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [5.00000e+01 5.10000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [5.50000e+01 5.60000e+01 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+
+
+
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}\label{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!shape@{shape}}
+\index{shape@{shape}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{shape()}{shape()}}
+{\footnotesize\ttfamily const std\+::vector$<$ cytnx\+\_\+uint64 $>$ \& cytnx\+::\+Tensor\+::shape (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+the shape of the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}std\+::vector$<$cytnx\+\_\+uint64$>$\mbox{]} the shape of the \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcytnx_1_1Tensor_afaa4a4eba4bd98b371fc101fbcfef743}\label{classcytnx_1_1Tensor_afaa4a4eba4bd98b371fc101fbcfef743}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!storage@{storage}}
+\index{storage@{storage}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{storage()}{storage()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} \& cytnx\+::\+Tensor\+::storage (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+return the storage of current \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}. 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}\mbox{\hyperlink{classcytnx_1_1Storage}{Storage}}\mbox{]}
+\end{DoxyReturn}
+\hypertarget{classcytnx_1_1Tensor_autotoc_md233}{}\doxysubsubsection{Note\+:}\label{classcytnx_1_1Tensor_autotoc_md233}
+
+\begin{DoxyEnumerate}
+\item The return storage shares the same instance of the storage of current \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}. Use \mbox{\hyperlink{classcytnx_1_1Storage_aed0530dd20f3fb352d45653ba46a3d50}{Storage.\+clone() }} to create a new instance of the returned \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}}. 
+\end{DoxyEnumerate}\mbox{\Hypertarget{classcytnx_1_1Tensor_acf7f697a9434f9bc98a7d00a555ee982}\label{classcytnx_1_1Tensor_acf7f697a9434f9bc98a7d00a555ee982}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!to@{to}}
+\index{to@{to}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{to()}{to()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} cytnx\+::\+Tensor\+::to (\begin{DoxyParamCaption}\item[{const int \&}]{device }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+copy a tensor to new device 
+
+
+\begin{DoxyParams}{Parameters}
+{\em device} & the device-\/id that is moving to. it can be any device defined in cytnx\+::\+Device \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{[}\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}\mbox{]}
+\end{DoxyReturn}
+description\+:~\newline
+ if the device-\/id is the same as current \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}\textquotesingle{}s device, then return self.~\newline
+ otherwise, return a copy of instance that located on the target device. ~\newline
+ see also\+: \mbox{\hyperlink{classcytnx_1_1Tensor_a114a31fbb8bf4a90f150b6a67e42183a}{Tensor.\+to\+\_\+ }} ~\newline
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md164}{}\doxysubsubsection{Example\+:}\label{classcytnx_1_1Tensor_autotoc_md164}
+\hypertarget{classcytnx_1_1Tensor_autotoc_md165}{}\doxyparagraph{c++ API\+:}\label{classcytnx_1_1Tensor_autotoc_md165}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "{}cytnx.hpp"{}}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }cytnx;}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{\textcolor{keywordtype}{int} main() \{}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} A(\{3, 4, 5\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// move the tensor to different device by creating a clone object}}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} B = A.\mbox{\hyperlink{classcytnx_1_1Tensor_acf7f697a9434f9bc98a7d00a555ee982}{to}}(Device.cuda + 0);}
+\DoxyCodeLine{  cout << B.\mbox{\hyperlink{classcytnx_1_1Tensor_a335f7625fa01784f49b2223238d0c14e}{device\_str}}() << endl;}
+\DoxyCodeLine{  cout << A.device\_str() << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md166}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md166}
+
+\begin{DoxyVerbInclude}
+\end{DoxyVerbInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md167}{}\doxyparagraph{python API\+:}\label{classcytnx_1_1Tensor_autotoc_md167}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *}
+\DoxyCodeLine{}
+\DoxyCodeLine{A = Tensor([3,4,5])}
+\DoxyCodeLine{B = A.to(Device.cuda+0);}
+\DoxyCodeLine{print(B.device\_str())}
+\DoxyCodeLine{print(A.device\_str())}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md168}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md168}
+
+\begin{DoxyVerbInclude}
+cytnx device: CUDA/GPU-id:0
+cytnx device: CPU
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Tensor_a114a31fbb8bf4a90f150b6a67e42183a}\label{classcytnx_1_1Tensor_a114a31fbb8bf4a90f150b6a67e42183a}} 
+\index{cytnx::Tensor@{cytnx::Tensor}!to\_@{to\_}}
+\index{to\_@{to\_}!cytnx::Tensor@{cytnx::Tensor}}
+\doxysubsubsection{\texorpdfstring{to\_()}{to\_()}}
+{\footnotesize\ttfamily void cytnx\+::\+Tensor\+::to\+\_\+ (\begin{DoxyParamCaption}\item[{const int \&}]{device }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+move the current \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} to the device. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em device} & the device-\/id that is moving to. it can be any device defined in cytnx\+::\+Device\\
+\hline
+\end{DoxyParams}
+description\+:~\newline
+ see also\+: \mbox{\hyperlink{classcytnx_1_1Tensor_acf7f697a9434f9bc98a7d00a555ee982}{Tensor.\+to }}~\newline
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md169}{}\doxysubsubsection{Example\+:}\label{classcytnx_1_1Tensor_autotoc_md169}
+\hypertarget{classcytnx_1_1Tensor_autotoc_md170}{}\doxyparagraph{c++ API\+:}\label{classcytnx_1_1Tensor_autotoc_md170}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "{}cytnx.hpp"{}}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }cytnx;}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{\textcolor{keywordtype}{int} main() \{}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} A(\{3, 4, 5\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// move the instance tensor to different device}}
+\DoxyCodeLine{  A.\mbox{\hyperlink{classcytnx_1_1Tensor_a114a31fbb8bf4a90f150b6a67e42183a}{to\_}}(Device.cuda + 0);}
+\DoxyCodeLine{  cout << A.device\_str() << endl;}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md171}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md171}
+
+\begin{DoxyVerbInclude}
+\end{DoxyVerbInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md172}{}\doxyparagraph{python API\+:}\label{classcytnx_1_1Tensor_autotoc_md172}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *}
+\DoxyCodeLine{}
+\DoxyCodeLine{A = Tensor([3,4,5])}
+\DoxyCodeLine{}
+\DoxyCodeLine{A.to\_(Device.cuda+0);}
+\DoxyCodeLine{print(A.device\_str())}
+\DoxyCodeLine{}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Tensor_autotoc_md173}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Tensor_autotoc_md173}
+
+\begin{DoxyVerbInclude}
+cytnx device: CUDA/GPU-id:0
+\end{DoxyVerbInclude}
+ 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/Tensor.\+hpp\item 
+src/Tensor.\+cpp\end{DoxyCompactItemize}

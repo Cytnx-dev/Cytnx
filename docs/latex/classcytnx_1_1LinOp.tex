@@ -1,0 +1,159 @@
+\hypertarget{classcytnx_1_1LinOp}{}\doxysection{cytnx\+::Lin\+Op Class Reference}
+\label{classcytnx_1_1LinOp}\index{cytnx::LinOp@{cytnx::LinOp}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classcytnx_1_1LinOp_a4c85814f56d28735575bb577d1d97afa}{Lin\+Op}} (const std\+::string \&type, const cytnx\+\_\+uint64 \&nx, const int \&dtype=Type.\+Double, const int \&device=Device.\+cpu)
+\begin{DoxyCompactList}\small\item\em Linear Operator class for iterative solvers. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classcytnx_1_1LinOp_adcdd3fb4a8e375e3225b11ea5e2c56ca}\label{classcytnx_1_1LinOp_adcdd3fb4a8e375e3225b11ea5e2c56ca}} 
+{\footnotesize template$<$class T $>$ }\\void {\bfseries set\+\_\+elem} (const cytnx\+\_\+uint64 \&i, const cytnx\+\_\+uint64 \&j, const T \&elem, const bool check\+\_\+exists=true)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1LinOp_afa706c8f70c20e993d8721b963a38b74}\label{classcytnx_1_1LinOp_afa706c8f70c20e993d8721b963a38b74}} 
+Tensor\+::\+Tproxy {\bfseries operator()} (const cytnx\+\_\+uint64 \&i, const cytnx\+\_\+uint64 \&j)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1LinOp_aeb31367ba356298976de92fef9e948cf}\label{classcytnx_1_1LinOp_aeb31367ba356298976de92fef9e948cf}} 
+void {\bfseries set\+\_\+device} (const int \&device)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1LinOp_af71ddba715715d03342a323c82b0eb7f}\label{classcytnx_1_1LinOp_af71ddba715715d03342a323c82b0eb7f}} 
+void {\bfseries set\+\_\+dtype} (const int \&dtype)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1LinOp_a46021c823974e5460d2be9e35dc0efea}\label{classcytnx_1_1LinOp_a46021c823974e5460d2be9e35dc0efea}} 
+int {\bfseries device} () const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1LinOp_a64aa0529d6f0d5fd4bb06b900a469a08}\label{classcytnx_1_1LinOp_a64aa0529d6f0d5fd4bb06b900a469a08}} 
+int {\bfseries dtype} () const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1LinOp_a7d5704336a5a9f786a582ba0a668b521}\label{classcytnx_1_1LinOp_a7d5704336a5a9f786a582ba0a668b521}} 
+cytnx\+\_\+uint64 {\bfseries nx} () const
+\item 
+\mbox{\Hypertarget{classcytnx_1_1LinOp_af3e9b2601404994b0ce40b4a148ab637}\label{classcytnx_1_1LinOp_af3e9b2601404994b0ce40b4a148ab637}} 
+void {\bfseries \+\_\+print} ()
+\item 
+\mbox{\Hypertarget{classcytnx_1_1LinOp_abd7cc9836466e3a652293356a4f00e14}\label{classcytnx_1_1LinOp_abd7cc9836466e3a652293356a4f00e14}} 
+virtual \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} {\bfseries matvec} (const \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \&Tin)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classcytnx_1_1LinOp_a4c85814f56d28735575bb577d1d97afa}\label{classcytnx_1_1LinOp_a4c85814f56d28735575bb577d1d97afa}} 
+\index{cytnx::LinOp@{cytnx::LinOp}!LinOp@{LinOp}}
+\index{LinOp@{LinOp}!cytnx::LinOp@{cytnx::LinOp}}
+\doxysubsubsection{\texorpdfstring{LinOp()}{LinOp()}}
+{\footnotesize\ttfamily cytnx\+::\+Lin\+Op\+::\+Lin\+Op (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{type,  }\item[{const cytnx\+\_\+uint64 \&}]{nx,  }\item[{const int \&}]{dtype = {\ttfamily Type.Double},  }\item[{const int \&}]{device = {\ttfamily Device.cpu} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Linear Operator class for iterative solvers. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em type} & the type of operator, currently it can only be \char`\"{}mv\char`\"{} (matvec) or \char`\"{}mv\+\_\+elem\char`\"{} (matvec with pre-\/store element) \\
+\hline
+{\em nx} & the last dimension of operator, this should be the dimension of the input vector when \char`\"{}mv\+\_\+elem\char`\"{} is used. \\
+\hline
+{\em dtype} & the Operator\textquotesingle{}s dtype. Note that this should match the input/output \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}\textquotesingle{}s dtype. \\
+\hline
+{\em device} & the Operator\textquotesingle{}s on device.\\
+\hline
+\end{DoxyParams}
+\hypertarget{classcytnx_1_1LinOp_autotoc_md80}{}\doxysubsubsection{Note\+:}\label{classcytnx_1_1LinOp_autotoc_md80}
+
+\begin{DoxyEnumerate}
+\item the device and dtype should be set. This should be the same as the input and output vectors. by default, we assume custom\+\_\+f take input and output vector to be on CPU and Double type.
+\end{DoxyEnumerate}\hypertarget{classcytnx_1_1LinOp_autotoc_md81}{}\doxysubsubsection{Details\+:}\label{classcytnx_1_1LinOp_autotoc_md81}
+The \mbox{\hyperlink{classcytnx_1_1LinOp}{Lin\+Op}} class is a class that defines a custom Linear operation acting on a \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} or \mbox{\hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor}}. To use, inherit this class and override the matvec function. See the following examples for how to use them.\hypertarget{classcytnx_1_1LinOp_autotoc_md82}{}\doxysubsubsection{Example\+:}\label{classcytnx_1_1LinOp_autotoc_md82}
+\hypertarget{classcytnx_1_1LinOp_autotoc_md83}{}\doxyparagraph{c++ API\+:}\label{classcytnx_1_1LinOp_autotoc_md83}
+
+\begin{DoxyCodeInclude}{0}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1LinOp_autotoc_md84}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1LinOp_autotoc_md84}
+
+\begin{DoxyVerbInclude}
+\end{DoxyVerbInclude}
+ \hypertarget{classcytnx_1_1LinOp_autotoc_md85}{}\doxyparagraph{python API\+:}\label{classcytnx_1_1LinOp_autotoc_md85}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{keyword}{from} cytnx \textcolor{keyword}{import} *}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\# LinOp class provides a base class that defines the operation on a vector.}}
+\DoxyCodeLine{\textcolor{comment}{\# This class or it's derived class are required }}
+\DoxyCodeLine{\textcolor{comment}{\# for using the cytnx's iterative solver such as Lanczos and Arnodi. }}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\#-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\textcolor{comment}{\# Suppose we want to define a custom linear operation }}
+\DoxyCodeLine{\textcolor{comment}{\# acting on input vector t (dim=4) that swap the first and last element }}
+\DoxyCodeLine{\textcolor{comment}{\# and add the 2nd and 3rd element with one. }}
+\DoxyCodeLine{}
+\DoxyCodeLine{t = arange(4)}
+\DoxyCodeLine{print(t)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\# Method 1, write a custom function, and assign into the LinOp class}}
+\DoxyCodeLine{\textcolor{comment}{\# -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\textcolor{comment}{\# [Note] the function should have the signature }}
+\DoxyCodeLine{\textcolor{comment}{\#        Tensor f(const Tensor\&) as in C++}}
+\DoxyCodeLine{\textcolor{keyword}{def }myfunc(v):}
+\DoxyCodeLine{    out = v.clone();}
+\DoxyCodeLine{    out[0], out[3] = v[3], v[0]; \textcolor{comment}{\#swap}}
+\DoxyCodeLine{    out[1]+=1 \textcolor{comment}{\#add 1}}
+\DoxyCodeLine{    out[2]+=1 \textcolor{comment}{\#add 1}}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{lop = LinOp(\textcolor{stringliteral}{"{}mv"{}},nx=4,dtype=Type.Double,device=Device.cpu,custom\_f=myfunc)}
+\DoxyCodeLine{print(lop.matvec(t)) }
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\# Method 2, write a custom class that inherit LinOp class.}}
+\DoxyCodeLine{\textcolor{comment}{\# -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\textcolor{comment}{\# [Note] Instead of writing a custom class, we overload the matvec() directly.}}
+\DoxyCodeLine{\textcolor{comment}{\#        Inheritance is handy if there are additional parameters/arguments }}
+\DoxyCodeLine{\textcolor{comment}{\#        needed for the custom operation.}}
+\DoxyCodeLine{\textcolor{keyword}{class }MyOp(LinOp):}
+\DoxyCodeLine{    AddConst = 1 \textcolor{comment}{\# let's make it a class member.}}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{keyword}{def }\_\_init\_\_(self,typ,nx,aconst):}
+\DoxyCodeLine{        }
+\DoxyCodeLine{        LinOp.\_\_init\_\_(self,typ,nx,Type.Double,Device.cpu) }
+\DoxyCodeLine{        self.AddConst = aconst}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{keyword}{def }matvec(self,v):}
+\DoxyCodeLine{        out = v.clone()}
+\DoxyCodeLine{        out[0],out[3] = v[3],v[0]}
+\DoxyCodeLine{        out[1]+=self.AddConst \textcolor{comment}{\#add the constant}}
+\DoxyCodeLine{        out[2]+=self.AddConst \textcolor{comment}{\#add the constant}}
+\DoxyCodeLine{        \textcolor{keywordflow}{return} out}
+\DoxyCodeLine{}
+\DoxyCodeLine{mylop = MyOp(\textcolor{stringliteral}{"{}mv"{}},nx=4,aconst=3) \textcolor{comment}{\# let's add 3 instead of one. }}
+\DoxyCodeLine{print(mylop.matvec(t)) }
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1LinOp_autotoc_md86}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1LinOp_autotoc_md86}
+
+\begin{DoxyVerbInclude}
+
+Total elem: 4
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (4)
+[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 ]
+
+
+
+\end{DoxyVerbInclude}
+ 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/Lin\+Op.\+hpp\item 
+src/Lin\+Op.\+cpp\end{DoxyCompactItemize}

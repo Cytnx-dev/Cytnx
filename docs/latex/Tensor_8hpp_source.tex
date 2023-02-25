@@ -1,0 +1,1127 @@
+\hypertarget{Tensor_8hpp_source}{}\doxysection{Tensor.\+hpp}
+\label{Tensor_8hpp_source}\index{include/Tensor.hpp@{include/Tensor.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_H\_Tensor\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_H\_Tensor\_}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include "{}Type.hpp"{}}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include "{}cytnx\_error.hpp"{}}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}Storage.hpp"{}}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include "{}Device.hpp"{}}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include "{}intrusive\_ptr\_base.hpp"{}}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include <fstream>}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include "{}utils/vec\_range.hpp"{}}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include "{}utils/dynamic\_arg\_resolver.hpp"{}}}
+\DoxyCodeLine{13 \textcolor{comment}{//\#include "{}linalg.hpp"{}}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include "{}Accessor.hpp"{}}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#include <utility>}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#include <initializer\_list>}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#include "{}Scalar.hpp"{}}}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21 \textcolor{keyword}{namespace }cytnx \{}
+\DoxyCodeLine{22 }
+\DoxyCodeLine{24   \textcolor{comment}{// real implementation}}
+\DoxyCodeLine{25   \textcolor{keyword}{class }Tensor\_impl : \textcolor{keyword}{public} intrusive\_ptr\_base<Tensor\_impl> \{}
+\DoxyCodeLine{26    \textcolor{keyword}{private}:}
+\DoxyCodeLine{27     \textcolor{comment}{// Interface:}}
+\DoxyCodeLine{28     Storage\_init\_interface \_\_SII;}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30     \textcolor{comment}{// Memory:}}
+\DoxyCodeLine{31     Storage \_storage;}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33     \textcolor{comment}{// tensor shape}}
+\DoxyCodeLine{34     std::vector<cytnx\_uint64> \_shape;}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36     \textcolor{comment}{// pseudo-\/perm info}}
+\DoxyCodeLine{37     std::vector<cytnx\_uint64> \_mapper;}
+\DoxyCodeLine{38     std::vector<cytnx\_uint64> \_invmapper;}
+\DoxyCodeLine{39     \textcolor{keywordtype}{bool} \_contiguous;}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41    \textcolor{keyword}{public}:}
+\DoxyCodeLine{42     \textcolor{keyword}{friend} \textcolor{keyword}{class }Tensor;}
+\DoxyCodeLine{43     boost::intrusive\_ptr<Tensor\_impl> \_clone\_meta\_only()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{44       boost::intrusive\_ptr<Tensor\_impl> out(\textcolor{keyword}{new} Tensor\_impl());}
+\DoxyCodeLine{45       out-\/>\_mapper = this-\/>\_mapper;}
+\DoxyCodeLine{46       out-\/>\_invmapper = this-\/>\_invmapper;}
+\DoxyCodeLine{47       out-\/>\_shape = this-\/>\_shape;}
+\DoxyCodeLine{48       out-\/>\_contiguous = this-\/>\_contiguous;}
+\DoxyCodeLine{49       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{50     \}}
+\DoxyCodeLine{51     Tensor\_impl() : \_contiguous(true)\{\};}
+\DoxyCodeLine{52 }
+\DoxyCodeLine{53     \textcolor{keywordtype}{void} Init(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&shape, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&dtype = Type.Double,}
+\DoxyCodeLine{54               \textcolor{keywordtype}{int} device = -\/1, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&init\_zero = \textcolor{keyword}{true});}
+\DoxyCodeLine{55     \textcolor{keywordtype}{void} Init(\textcolor{keyword}{const} Storage \&in);}
+\DoxyCodeLine{56     \textcolor{comment}{// void Init(const Storage \&in, const std::vector<cytnx\_uint64> \&shape,}}
+\DoxyCodeLine{57     \textcolor{comment}{// const unsigned int \&dtype, int device);}}
+\DoxyCodeLine{58     \textcolor{comment}{/*}}
+\DoxyCodeLine{59 \textcolor{comment}{    template<class T>}}
+\DoxyCodeLine{60 \textcolor{comment}{    void From\_vec(const T \&ndvec)\{}}
+\DoxyCodeLine{61 \textcolor{comment}{        cytnx\_error\_msg(std::string(typeid(T).name()).find("{}vector"{}) ==}}
+\DoxyCodeLine{62 \textcolor{comment}{    std::string::npos,"{}[ERROR][Tensor][From\_vec] the input argument should be a nd vector.\%s"{},"{}\(\backslash\)n"{});}}
+\DoxyCodeLine{63 \textcolor{comment}{        //dispatch the rank!:}}
+\DoxyCodeLine{64 \textcolor{comment}{}}
+\DoxyCodeLine{65 \textcolor{comment}{}}
+\DoxyCodeLine{66 \textcolor{comment}{}}
+\DoxyCodeLine{67 \textcolor{comment}{    \}}}
+\DoxyCodeLine{68 \textcolor{comment}{    */}}
+\DoxyCodeLine{69     \textcolor{comment}{// clone\&assignment constr., use intrusive\_ptr's}}
+\DoxyCodeLine{70     Tensor\_impl(\textcolor{keyword}{const} Tensor\_impl \&rhs);}
+\DoxyCodeLine{71     Tensor\_impl \&operator=(\textcolor{keyword}{const} Tensor\_impl \&rhs);  \textcolor{comment}{// add const}}
+\DoxyCodeLine{72 }
+\DoxyCodeLine{73     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} dtype()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_storage.dtype(); \}}
+\DoxyCodeLine{74     \textcolor{keywordtype}{int} device()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_storage.device(); \}}
+\DoxyCodeLine{75 }
+\DoxyCodeLine{76     std::string dtype\_str()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} Type.getname(this-\/>\_storage.dtype()); \}}
+\DoxyCodeLine{77     std::string device\_str()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} Device.getname(this-\/>\_storage.device()); \}}
+\DoxyCodeLine{78 }
+\DoxyCodeLine{79     \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&shape()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} \_shape; \}}
+\DoxyCodeLine{80 }
+\DoxyCodeLine{81     \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&is\_contiguous()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_contiguous; \}}
+\DoxyCodeLine{82 }
+\DoxyCodeLine{83     \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_mapper; \}}
+\DoxyCodeLine{84     \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_invmapper; \}}
+\DoxyCodeLine{85     Storage \&storage() \{ \textcolor{keywordflow}{return} \_storage; \}}
+\DoxyCodeLine{86 }
+\DoxyCodeLine{87     \textcolor{keyword}{const} Storage \&storage()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} \_storage; \}}
+\DoxyCodeLine{88 }
+\DoxyCodeLine{89     boost::intrusive\_ptr<Tensor\_impl> clone()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{90       boost::intrusive\_ptr<Tensor\_impl> out = this-\/>\_clone\_meta\_only();}
+\DoxyCodeLine{91       out-\/>\_storage = this-\/>\_storage.clone();}
+\DoxyCodeLine{92       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{93     \}}
+\DoxyCodeLine{94 }
+\DoxyCodeLine{95     \textcolor{keywordtype}{void} to\_(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device) \{ this-\/>\_storage.to\_(device); \}}
+\DoxyCodeLine{96     boost::intrusive\_ptr<Tensor\_impl> to(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device) \{}
+\DoxyCodeLine{97       \textcolor{keywordflow}{if} (this-\/>device() == device) \{}
+\DoxyCodeLine{98         \textcolor{comment}{// boost::intrusive\_ptr<Tensor\_impl> out(this);}}
+\DoxyCodeLine{99         \textcolor{keywordflow}{return} \textcolor{keyword}{this};}
+\DoxyCodeLine{100       \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{101         boost::intrusive\_ptr<Tensor\_impl> out = this-\/>\_clone\_meta\_only();}
+\DoxyCodeLine{102         out-\/>\_storage = this-\/>\_storage.to(device);}
+\DoxyCodeLine{103         \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{104       \}}
+\DoxyCodeLine{105     \}}
+\DoxyCodeLine{106 }
+\DoxyCodeLine{107     \textcolor{keywordtype}{void} permute\_(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&rnks);}
+\DoxyCodeLine{108 }
+\DoxyCodeLine{109     boost::intrusive\_ptr<Tensor\_impl> permute(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&rnks);}
+\DoxyCodeLine{110 }
+\DoxyCodeLine{111     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{112     T \&at(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&locator)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{113       cytnx\_error\_msg(locator.size() != this-\/>\_shape.size(), \textcolor{stringliteral}{"{}\%s"{}},}
+\DoxyCodeLine{114                       \textcolor{stringliteral}{"{}The input index does not match Tensor's rank."{}});}
+\DoxyCodeLine{115 }
+\DoxyCodeLine{116       cytnx\_uint64 RealRank, mtplyr;}
+\DoxyCodeLine{117       \textcolor{comment}{// std::vector<cytnx\_uint64> c\_shape(this-\/>\_shape.size());}}
+\DoxyCodeLine{118       \textcolor{comment}{// std::vector<cytnx\_uint64> c\_loc(this-\/>\_shape.size());}}
+\DoxyCodeLine{119       cytnx\_uint64 c\_shape, c\_loc;}
+\DoxyCodeLine{120 }
+\DoxyCodeLine{121       RealRank = 0;}
+\DoxyCodeLine{122       mtplyr = 1;}
+\DoxyCodeLine{123 }
+\DoxyCodeLine{124       \textcolor{keywordflow}{for} (cytnx\_int64 i = this-\/>\_shape.size() -\/ 1; i >= 0; i-\/-\/) \{}
+\DoxyCodeLine{125         \textcolor{keywordflow}{if} (locator[i] >= this-\/>\_shape[i]) \{}
+\DoxyCodeLine{126           cytnx\_error\_msg(\textcolor{keyword}{true}, \textcolor{stringliteral}{"{}\%s"{}}, \textcolor{stringliteral}{"{}Attempting to access out-\/of-\/bound index in Tensor."{}});}
+\DoxyCodeLine{127         \}}
+\DoxyCodeLine{128         \textcolor{comment}{// c\_shape[i] = this-\/>\_shape[this-\/>\_invmapper[i]];}}
+\DoxyCodeLine{129         \textcolor{comment}{// c\_loc[i] = locator[this-\/>\_invmapper[i]];}}
+\DoxyCodeLine{130         c\_shape = this-\/>\_shape[this-\/>\_invmapper[i]];}
+\DoxyCodeLine{131         c\_loc = locator[this-\/>\_invmapper[i]];}
+\DoxyCodeLine{132         RealRank += mtplyr * c\_loc;}
+\DoxyCodeLine{133         mtplyr *= c\_shape;}
+\DoxyCodeLine{134       \}}
+\DoxyCodeLine{135       \textcolor{keywordflow}{return} this-\/>\_storage.at<T>(RealRank);}
+\DoxyCodeLine{136     \}}
+\DoxyCodeLine{137 }
+\DoxyCodeLine{138     \textcolor{keyword}{const} Scalar::Sproxy at(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&locator)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{139       cytnx\_error\_msg(locator.size() != this-\/>\_shape.size(), \textcolor{stringliteral}{"{}\%s"{}},}
+\DoxyCodeLine{140                       \textcolor{stringliteral}{"{}The input index does not match Tensor's rank."{}});}
+\DoxyCodeLine{141 }
+\DoxyCodeLine{142       cytnx\_uint64 RealRank, mtplyr;}
+\DoxyCodeLine{143       \textcolor{comment}{// std::vector<cytnx\_uint64> c\_shape(this-\/>\_shape.size());}}
+\DoxyCodeLine{144       \textcolor{comment}{// std::vector<cytnx\_uint64> c\_loc(this-\/>\_shape.size());}}
+\DoxyCodeLine{145 }
+\DoxyCodeLine{146       cytnx\_uint64 c\_shape, c\_loc;}
+\DoxyCodeLine{147       RealRank = 0;}
+\DoxyCodeLine{148       mtplyr = 1;}
+\DoxyCodeLine{149 }
+\DoxyCodeLine{150       \textcolor{keywordflow}{for} (cytnx\_int64 i = this-\/>\_shape.size() -\/ 1; i >= 0; i-\/-\/) \{}
+\DoxyCodeLine{151         \textcolor{keywordflow}{if} (locator[i] >= this-\/>\_shape[i]) \{}
+\DoxyCodeLine{152           cytnx\_error\_msg(\textcolor{keyword}{true}, \textcolor{stringliteral}{"{}\%s"{}}, \textcolor{stringliteral}{"{}Attempting to access out-\/of-\/bound index in Tensor."{}});}
+\DoxyCodeLine{153         \}}
+\DoxyCodeLine{154         \textcolor{comment}{// c\_shape[i] = this-\/>\_shape[this-\/>\_invmapper[i]];}}
+\DoxyCodeLine{155         \textcolor{comment}{// c\_loc[i] = locator[this-\/>\_invmapper[i]];}}
+\DoxyCodeLine{156         c\_shape = this-\/>\_shape[this-\/>\_invmapper[i]];}
+\DoxyCodeLine{157         c\_loc = locator[this-\/>\_invmapper[i]];}
+\DoxyCodeLine{158         RealRank += mtplyr * c\_loc;}
+\DoxyCodeLine{159         mtplyr *= c\_shape;}
+\DoxyCodeLine{160       \}}
+\DoxyCodeLine{161       \textcolor{keywordflow}{return} this-\/>\_storage.at(RealRank);}
+\DoxyCodeLine{162     \}}
+\DoxyCodeLine{163 }
+\DoxyCodeLine{164     Scalar::Sproxy at(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&locator) \{}
+\DoxyCodeLine{165       cytnx\_error\_msg(locator.size() != this-\/>\_shape.size(), \textcolor{stringliteral}{"{}\%s"{}},}
+\DoxyCodeLine{166                       \textcolor{stringliteral}{"{}The input index does not match Tensor's rank."{}});}
+\DoxyCodeLine{167 }
+\DoxyCodeLine{168       cytnx\_uint64 RealRank, mtplyr;}
+\DoxyCodeLine{169       \textcolor{comment}{// std::vector<cytnx\_uint64> c\_shape(this-\/>\_shape.size());}}
+\DoxyCodeLine{170       \textcolor{comment}{// std::vector<cytnx\_uint64> c\_loc(this-\/>\_shape.size());}}
+\DoxyCodeLine{171       cytnx\_uint64 c\_shape, c\_loc;}
+\DoxyCodeLine{172 }
+\DoxyCodeLine{173       RealRank = 0;}
+\DoxyCodeLine{174       mtplyr = 1;}
+\DoxyCodeLine{175 }
+\DoxyCodeLine{176       \textcolor{keywordflow}{for} (cytnx\_int64 i = this-\/>\_shape.size() -\/ 1; i >= 0; i-\/-\/) \{}
+\DoxyCodeLine{177         \textcolor{keywordflow}{if} (locator[i] >= this-\/>\_shape[i]) \{}
+\DoxyCodeLine{178           cytnx\_error\_msg(\textcolor{keyword}{true}, \textcolor{stringliteral}{"{}\%s"{}}, \textcolor{stringliteral}{"{}Attempting to access out-\/of-\/bound index in Tensor."{}});}
+\DoxyCodeLine{179         \}}
+\DoxyCodeLine{180         \textcolor{comment}{// c\_shape[i] = this-\/>\_shape[this-\/>\_invmapper[i]];}}
+\DoxyCodeLine{181         \textcolor{comment}{// c\_loc[i] = locator[this-\/>\_invmapper[i]];}}
+\DoxyCodeLine{182         c\_shape = this-\/>\_shape[this-\/>\_invmapper[i]];}
+\DoxyCodeLine{183         c\_loc = locator[this-\/>\_invmapper[i]];}
+\DoxyCodeLine{184         RealRank += mtplyr * c\_loc;}
+\DoxyCodeLine{185         mtplyr *= c\_shape;}
+\DoxyCodeLine{186       \}}
+\DoxyCodeLine{187       \textcolor{keywordflow}{return} this-\/>\_storage.at(RealRank);}
+\DoxyCodeLine{188     \}}
+\DoxyCodeLine{189 }
+\DoxyCodeLine{190     boost::intrusive\_ptr<Tensor\_impl> get(\textcolor{keyword}{const} std::vector<cytnx::Accessor> \&accessors);}
+\DoxyCodeLine{191     boost::intrusive\_ptr<Tensor\_impl> get\_deprecated(\textcolor{keyword}{const} std::vector<cytnx::Accessor> \&accessors);}
+\DoxyCodeLine{192     \textcolor{keywordtype}{void} set(\textcolor{keyword}{const} std::vector<cytnx::Accessor> \&accessors,}
+\DoxyCodeLine{193              \textcolor{keyword}{const} boost::intrusive\_ptr<Tensor\_impl> \&rhs);}
+\DoxyCodeLine{194 }
+\DoxyCodeLine{195     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{196     \textcolor{keywordtype}{void} set(\textcolor{keyword}{const} std::vector<cytnx::Accessor> \&accessors, \textcolor{keyword}{const} T \&rc);}
+\DoxyCodeLine{197 }
+\DoxyCodeLine{198     \textcolor{keywordtype}{void} set(\textcolor{keyword}{const} std::vector<cytnx::Accessor> \&accessors, \textcolor{keyword}{const} Scalar::Sproxy \&rc);}
+\DoxyCodeLine{199 }
+\DoxyCodeLine{200     \textcolor{keyword}{template} <\textcolor{keyword}{class} Tx>}
+\DoxyCodeLine{201     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} Tx \&val) \{}
+\DoxyCodeLine{202       this-\/>storage().fill(val);}
+\DoxyCodeLine{203     \}}
+\DoxyCodeLine{204 }
+\DoxyCodeLine{205     boost::intrusive\_ptr<Tensor\_impl> contiguous() \{}
+\DoxyCodeLine{206       \textcolor{comment}{// return new instance if act on non-\/contiguous tensor}}
+\DoxyCodeLine{207       \textcolor{comment}{// return self if act on contiguous tensor}}
+\DoxyCodeLine{208       \textcolor{keywordflow}{if} (this-\/>\_contiguous) \{}
+\DoxyCodeLine{209         boost::intrusive\_ptr<Tensor\_impl> out(\textcolor{keyword}{this});}
+\DoxyCodeLine{210         \textcolor{comment}{// out-\/>\_storage = this-\/>\_storage;}}
+\DoxyCodeLine{211         \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{212       \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{213         boost::intrusive\_ptr<Tensor\_impl> out(\textcolor{keyword}{new} Tensor\_impl());}
+\DoxyCodeLine{214         std::vector<cytnx\_uint64> oldshape(this-\/>\_shape.size());}
+\DoxyCodeLine{215         \textcolor{keywordflow}{for} (cytnx\_uint64 i = 0; i < this-\/>\_shape.size(); i++) \{}
+\DoxyCodeLine{216           oldshape[i] = this-\/>\_shape[this-\/>\_invmapper[i]];}
+\DoxyCodeLine{217         \}}
+\DoxyCodeLine{218 }
+\DoxyCodeLine{219         out-\/>\_storage.\_impl =}
+\DoxyCodeLine{220           this-\/>\_storage.\_impl-\/>Move\_memory(oldshape, this-\/>\_mapper, this-\/>\_invmapper);}
+\DoxyCodeLine{221         \textcolor{comment}{// this-\/>\_storage.\_impl-\/>Move\_memory\_(oldshape, this-\/>\_mapper, this-\/>\_invmapper);}}
+\DoxyCodeLine{222         \textcolor{comment}{// out-\/>\_storage.\_impl = this-\/>\_storage.\_impl;}}
+\DoxyCodeLine{223         \textcolor{comment}{// std::cout << out-\/>\_storage << std::endl;}}
+\DoxyCodeLine{224         out-\/>\_invmapper = vec\_range(this-\/>\_invmapper.size());}
+\DoxyCodeLine{225         out-\/>\_mapper = out-\/>\_invmapper;}
+\DoxyCodeLine{226         out-\/>\_shape = this-\/>\_shape;}
+\DoxyCodeLine{227         out-\/>\_contiguous = \textcolor{keyword}{true};}
+\DoxyCodeLine{228         \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{229       \}}
+\DoxyCodeLine{230     \}}
+\DoxyCodeLine{231 }
+\DoxyCodeLine{232     \textcolor{keywordtype}{void} contiguous\_() \{}
+\DoxyCodeLine{233       \textcolor{comment}{// return new instance if act on non-\/contiguous tensor}}
+\DoxyCodeLine{234       \textcolor{comment}{// return self if act on contiguous tensor}}
+\DoxyCodeLine{235       \textcolor{keywordflow}{if} (!this-\/>\_contiguous) \{}
+\DoxyCodeLine{236         std::vector<cytnx\_uint64> oldshape(this-\/>\_shape.size());}
+\DoxyCodeLine{237         \textcolor{keywordflow}{for} (cytnx\_uint64 i = 0; i < this-\/>\_shape.size(); i++) \{}
+\DoxyCodeLine{238           oldshape[i] = this-\/>\_shape[this-\/>\_invmapper[i]];}
+\DoxyCodeLine{239         \}}
+\DoxyCodeLine{240 }
+\DoxyCodeLine{241         this-\/>\_storage.\_impl =}
+\DoxyCodeLine{242           this-\/>\_storage.\_impl-\/>Move\_memory(oldshape, this-\/>\_mapper, this-\/>\_invmapper);}
+\DoxyCodeLine{243         \textcolor{comment}{// this-\/>\_storage.\_impl-\/>Move\_memory\_(oldshape, this-\/>\_mapper, this-\/>\_invmapper);}}
+\DoxyCodeLine{244         this-\/>\_mapper = vec\_range(this-\/>\_invmapper.size());}
+\DoxyCodeLine{245         this-\/>\_invmapper = this-\/>\_mapper;}
+\DoxyCodeLine{246         this-\/>\_contiguous = \textcolor{keyword}{true};}
+\DoxyCodeLine{247       \}}
+\DoxyCodeLine{248     \}}
+\DoxyCodeLine{249 }
+\DoxyCodeLine{250     \textcolor{keywordtype}{void} reshape\_(\textcolor{keyword}{const} std::vector<cytnx\_int64> \&new\_shape) \{}
+\DoxyCodeLine{251       \textcolor{keywordflow}{if} (!this-\/>\_contiguous) \{}
+\DoxyCodeLine{252         this-\/>contiguous\_();}
+\DoxyCodeLine{253       \}}
+\DoxyCodeLine{254       std::vector<cytnx\_uint64> result\_shape(new\_shape.size());}
+\DoxyCodeLine{255       cytnx\_uint64 new\_N = 1;}
+\DoxyCodeLine{256       \textcolor{keywordtype}{bool} has\_undetermine = \textcolor{keyword}{false};}
+\DoxyCodeLine{257       \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} Udet\_id = 0;}
+\DoxyCodeLine{258       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < new\_shape.size(); i++) \{}
+\DoxyCodeLine{259         \textcolor{keywordflow}{if} (new\_shape[i] < 0) \{}
+\DoxyCodeLine{260           \textcolor{keywordflow}{if} (new\_shape[i] != -\/1)}
+\DoxyCodeLine{261             cytnx\_error\_msg(}
+\DoxyCodeLine{262               new\_shape[i] != -\/1, \textcolor{stringliteral}{"{}\%s"{}},}
+\DoxyCodeLine{263               \textcolor{stringliteral}{"{}[ERROR] reshape can only have dimension > 0 and one undetermine rank specify as -\/1"{}});}
+\DoxyCodeLine{264           \textcolor{keywordflow}{if} (has\_undetermine)}
+\DoxyCodeLine{265             cytnx\_error\_msg(}
+\DoxyCodeLine{266               new\_shape[i] != -\/1, \textcolor{stringliteral}{"{}\%s"{}},}
+\DoxyCodeLine{267               \textcolor{stringliteral}{"{}[ERROR] reshape can only have dimension > 0 and one undetermine rank specify as -\/1"{}});}
+\DoxyCodeLine{268           Udet\_id = i;}
+\DoxyCodeLine{269           has\_undetermine = \textcolor{keyword}{true};}
+\DoxyCodeLine{270         \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{271           new\_N *= new\_shape[i];}
+\DoxyCodeLine{272           result\_shape[i] = new\_shape[i];}
+\DoxyCodeLine{273         \}}
+\DoxyCodeLine{274       \}}
+\DoxyCodeLine{275 }
+\DoxyCodeLine{276       \textcolor{keywordflow}{if} (has\_undetermine) \{}
+\DoxyCodeLine{277         cytnx\_error\_msg(new\_N > this-\/>\_storage.size(), \textcolor{stringliteral}{"{}\%s"{}},}
+\DoxyCodeLine{278                         \textcolor{stringliteral}{"{}[ERROR] new shape exceed the total number of elements."{}});}
+\DoxyCodeLine{279         cytnx\_error\_msg(this-\/>\_storage.size() \% new\_N, \textcolor{stringliteral}{"{}\%s"{}},}
+\DoxyCodeLine{280                         \textcolor{stringliteral}{"{}[ERROR] unmatch size when reshape with undetermine dimension"{}});}
+\DoxyCodeLine{281         result\_shape[Udet\_id] = this-\/>\_storage.size() / new\_N;}
+\DoxyCodeLine{282       \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{283         cytnx\_error\_msg(new\_N != this-\/>\_storage.size(), \textcolor{stringliteral}{"{}\%s"{}},}
+\DoxyCodeLine{284                         \textcolor{stringliteral}{"{}[ERROR] new shape does not match the number of elements."{}});}
+\DoxyCodeLine{285       \}}
+\DoxyCodeLine{286 }
+\DoxyCodeLine{287       this-\/>\_shape = result\_shape;}
+\DoxyCodeLine{288       this-\/>\_mapper = vec\_range(result\_shape.size());}
+\DoxyCodeLine{289       this-\/>\_invmapper = this-\/>\_mapper;}
+\DoxyCodeLine{290     \}}
+\DoxyCodeLine{291 }
+\DoxyCodeLine{292     boost::intrusive\_ptr<Tensor\_impl> reshape(\textcolor{keyword}{const} std::vector<cytnx\_int64> \&new\_shape) \{}
+\DoxyCodeLine{293       boost::intrusive\_ptr<Tensor\_impl> out(\textcolor{keyword}{new} Tensor\_impl());}
+\DoxyCodeLine{294       \textcolor{keywordflow}{if} (this-\/>is\_contiguous()) \{}
+\DoxyCodeLine{295         out = this-\/>\_clone\_meta\_only();}
+\DoxyCodeLine{296         out-\/>\_storage = this-\/>\_storage;}
+\DoxyCodeLine{297       \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{298         out = this-\/>contiguous();}
+\DoxyCodeLine{299       \}}
+\DoxyCodeLine{300       \textcolor{comment}{// out = this-\/>clone();}}
+\DoxyCodeLine{301 }
+\DoxyCodeLine{302       out-\/>reshape\_(new\_shape);}
+\DoxyCodeLine{303       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{304     \}}
+\DoxyCodeLine{305 }
+\DoxyCodeLine{306     boost::intrusive\_ptr<Tensor\_impl> astype(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&new\_type) \{}
+\DoxyCodeLine{307       \textcolor{comment}{// boost::intrusive\_ptr<Tensor\_impl> out(new Tensor\_impl());}}
+\DoxyCodeLine{308       \textcolor{comment}{// out-\/>\_storage = this-\/>\_storage.astype(new\_type);}}
+\DoxyCodeLine{309       \textcolor{keywordflow}{if} (this-\/>dtype() == new\_type) \{}
+\DoxyCodeLine{310         \textcolor{keywordflow}{return} \textcolor{keyword}{this};}
+\DoxyCodeLine{311       \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{312         boost::intrusive\_ptr<Tensor\_impl> out = this-\/>\_clone\_meta\_only();}
+\DoxyCodeLine{313         out-\/>\_storage = this-\/>\_storage.astype(new\_type);}
+\DoxyCodeLine{314         \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{315       \}}
+\DoxyCodeLine{316     \}}
+\DoxyCodeLine{317   \};}
+\DoxyCodeLine{319 }
+\DoxyCodeLine{320   \textcolor{keyword}{class }Tensor;}
+\DoxyCodeLine{321 }
+\DoxyCodeLine{323   \textcolor{comment}{// [Note] these are fwd from linalg.hpp}}
+\DoxyCodeLine{324   \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{325   Tensor operator+(\textcolor{keyword}{const} Tensor \&lhs, \textcolor{keyword}{const} T \&rc);}
+\DoxyCodeLine{326   \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{327   Tensor operator-\/(\textcolor{keyword}{const} Tensor \&lhs, \textcolor{keyword}{const} T \&rhs);}
+\DoxyCodeLine{328   \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{329   Tensor operator*(\textcolor{keyword}{const} Tensor \&lhs, \textcolor{keyword}{const} T \&rhs);}
+\DoxyCodeLine{330   \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{331   Tensor operator/(\textcolor{keyword}{const} Tensor \&lhs, \textcolor{keyword}{const} T \&rhs);}
+\DoxyCodeLine{333 }
+\DoxyCodeLine{335   \textcolor{keyword}{class }\mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \{}
+\DoxyCodeLine{336    \textcolor{keyword}{private}:}
+\DoxyCodeLine{337    \textcolor{keyword}{public}:}
+\DoxyCodeLine{339     \textcolor{comment}{// this is a proxy class to allow get/set element using [] as python!}}
+\DoxyCodeLine{340     \textcolor{keyword}{struct }Tproxy \{}
+\DoxyCodeLine{341       boost::intrusive\_ptr<Tensor\_impl> \_insimpl;}
+\DoxyCodeLine{342       std::vector<cytnx::Accessor> \_accs;}
+\DoxyCodeLine{343       Tproxy(boost::intrusive\_ptr<Tensor\_impl> \_ptr, \textcolor{keyword}{const} std::vector<cytnx::Accessor> \&accs)}
+\DoxyCodeLine{344           : \_insimpl(std::move(\_ptr)), \_accs(accs) \{\}}
+\DoxyCodeLine{345 }
+\DoxyCodeLine{346       \textcolor{comment}{// when used to set elems:}}
+\DoxyCodeLine{347       \textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \&operator=(\textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \&rhs) \{}
+\DoxyCodeLine{348         this-\/>\_insimpl-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_a771f1f5b51f89abd8df4166e602214ac}{set}}(\_accs, rhs.\_impl);}
+\DoxyCodeLine{349         \textcolor{keywordflow}{return} rhs;}
+\DoxyCodeLine{350       \}}
+\DoxyCodeLine{351 }
+\DoxyCodeLine{352       \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{353       \textcolor{keyword}{const} T \&operator=(\textcolor{keyword}{const} T \&rc) \{}
+\DoxyCodeLine{354         this-\/>\_insimpl-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_a771f1f5b51f89abd8df4166e602214ac}{set}}(\_accs, rc);}
+\DoxyCodeLine{355         \textcolor{keywordflow}{return} rc;}
+\DoxyCodeLine{356       \}}
+\DoxyCodeLine{357       \textcolor{keyword}{const} Tproxy \&operator=(\textcolor{keyword}{const} Tproxy \&rc) \{}
+\DoxyCodeLine{358         \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} tmp = \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}(rc);}
+\DoxyCodeLine{359         this-\/>\_insimpl-\/>set(\_accs, tmp.\_impl);}
+\DoxyCodeLine{360         \textcolor{keywordflow}{return} rc;}
+\DoxyCodeLine{361       \}}
+\DoxyCodeLine{362 }
+\DoxyCodeLine{363       \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{364       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator+=(\textcolor{keyword}{const} T \&rc) \{}
+\DoxyCodeLine{365         \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} self;}
+\DoxyCodeLine{366         self.\_impl = \_insimpl-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_ad7b928e4cb89d40cbd99aefab9aa0075}{get}}(\_accs);}
+\DoxyCodeLine{367         self += rc;}
+\DoxyCodeLine{368         \_insimpl-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_a771f1f5b51f89abd8df4166e602214ac}{set}}(\_accs, self.\_impl);}
+\DoxyCodeLine{369         self.\_impl = this-\/>\_insimpl;}
+\DoxyCodeLine{370         \textcolor{keywordflow}{return} self;}
+\DoxyCodeLine{371       \}}
+\DoxyCodeLine{372       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator+=(\textcolor{keyword}{const} Tproxy \&rc);}
+\DoxyCodeLine{373 }
+\DoxyCodeLine{374       \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{375       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator-\/=(\textcolor{keyword}{const} T \&rc) \{}
+\DoxyCodeLine{376         \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} self;}
+\DoxyCodeLine{377         self.\_impl = \_insimpl-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_ad7b928e4cb89d40cbd99aefab9aa0075}{get}}(\_accs);}
+\DoxyCodeLine{378         self -\/= rc;}
+\DoxyCodeLine{379         \_insimpl-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_a771f1f5b51f89abd8df4166e602214ac}{set}}(\_accs, self.\_impl);}
+\DoxyCodeLine{380         self.\_impl = this-\/>\_insimpl;}
+\DoxyCodeLine{381         \textcolor{keywordflow}{return} self;}
+\DoxyCodeLine{382       \}}
+\DoxyCodeLine{383       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator-\/=(\textcolor{keyword}{const} Tproxy \&rc);}
+\DoxyCodeLine{384 }
+\DoxyCodeLine{385       \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{386       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator/=(\textcolor{keyword}{const} T \&rc) \{}
+\DoxyCodeLine{387         \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} self;}
+\DoxyCodeLine{388         self.\_impl = \_insimpl-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_ad7b928e4cb89d40cbd99aefab9aa0075}{get}}(\_accs);}
+\DoxyCodeLine{389         self /= rc;}
+\DoxyCodeLine{390         \_insimpl-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_a771f1f5b51f89abd8df4166e602214ac}{set}}(\_accs, self.\_impl);}
+\DoxyCodeLine{391         self.\_impl = this-\/>\_insimpl;}
+\DoxyCodeLine{392         \textcolor{keywordflow}{return} self;}
+\DoxyCodeLine{393       \}}
+\DoxyCodeLine{394       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator/=(\textcolor{keyword}{const} Tproxy \&rc);}
+\DoxyCodeLine{395 }
+\DoxyCodeLine{396       \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{397       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator*=(\textcolor{keyword}{const} T \&rc) \{}
+\DoxyCodeLine{398         \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} self;}
+\DoxyCodeLine{399         self.\_impl = \_insimpl-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_ad7b928e4cb89d40cbd99aefab9aa0075}{get}}(\_accs);}
+\DoxyCodeLine{400         self *= rc;}
+\DoxyCodeLine{401         \_insimpl-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_a771f1f5b51f89abd8df4166e602214ac}{set}}(\_accs, self.\_impl);}
+\DoxyCodeLine{402         self.\_impl = this-\/>\_insimpl;}
+\DoxyCodeLine{403         \textcolor{keywordflow}{return} self;}
+\DoxyCodeLine{404       \}}
+\DoxyCodeLine{405       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator*=(\textcolor{keyword}{const} Tproxy \&rc);}
+\DoxyCodeLine{406 }
+\DoxyCodeLine{407       \textcolor{comment}{// alias to resolve conflict with op ovld for rc=Tensor}}
+\DoxyCodeLine{408       \textcolor{comment}{/*}}
+\DoxyCodeLine{409 \textcolor{comment}{      template<class T>}}
+\DoxyCodeLine{410 \textcolor{comment}{      Tensor \_operatorADD(const T \&rc) const\{}}
+\DoxyCodeLine{411 \textcolor{comment}{          Tensor out;}}
+\DoxyCodeLine{412 \textcolor{comment}{          out.\_impl = \_insimpl-\/>get(\_accs);}}
+\DoxyCodeLine{413 \textcolor{comment}{          return out.Add(rc);}}
+\DoxyCodeLine{414 \textcolor{comment}{      \}}}
+\DoxyCodeLine{415 \textcolor{comment}{      */}}
+\DoxyCodeLine{416       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator+(\textcolor{keyword}{const} cytnx\_complex128 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorADD(rc);\};}}
+\DoxyCodeLine{417       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator+(\textcolor{keyword}{const} cytnx\_complex64 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorADD(rc);\};}}
+\DoxyCodeLine{418       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator+(\textcolor{keyword}{const} cytnx\_double \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorADD(rc);\};}}
+\DoxyCodeLine{419       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator+(\textcolor{keyword}{const} cytnx\_float \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorADD(rc);\};}}
+\DoxyCodeLine{420       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator+(\textcolor{keyword}{const} cytnx\_uint64 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorADD(rc);\};}}
+\DoxyCodeLine{421       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator+(\textcolor{keyword}{const} cytnx\_int64 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorADD(rc);\};}}
+\DoxyCodeLine{422       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator+(\textcolor{keyword}{const} cytnx\_uint32 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorADD(rc);\};}}
+\DoxyCodeLine{423       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator+(\textcolor{keyword}{const} cytnx\_int32 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorADD(rc);\};}}
+\DoxyCodeLine{424       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator+(\textcolor{keyword}{const} cytnx\_uint16 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorADD(rc);\};}}
+\DoxyCodeLine{425       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator+(\textcolor{keyword}{const} cytnx\_int16 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorADD(rc);\};}}
+\DoxyCodeLine{426       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator+(\textcolor{keyword}{const} cytnx\_bool \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorADD(rc);\};}}
+\DoxyCodeLine{427       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator+(\textcolor{keyword}{const} Tproxy \&rc) \textcolor{keyword}{const};}
+\DoxyCodeLine{428 }
+\DoxyCodeLine{429       \textcolor{comment}{/*}}
+\DoxyCodeLine{430 \textcolor{comment}{      template<class T>}}
+\DoxyCodeLine{431 \textcolor{comment}{      Tensor \_operatorSUB(const T \&rc) const\{}}
+\DoxyCodeLine{432 \textcolor{comment}{          Tensor out;}}
+\DoxyCodeLine{433 \textcolor{comment}{          out.\_impl = \_insimpl-\/>get(\_accs);}}
+\DoxyCodeLine{434 \textcolor{comment}{          return out.Sub(rc);}}
+\DoxyCodeLine{435 \textcolor{comment}{      \}}}
+\DoxyCodeLine{436 \textcolor{comment}{      */}}
+\DoxyCodeLine{437       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator-\/(\textcolor{keyword}{const} cytnx\_complex128 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorSUB(rc);\};}}
+\DoxyCodeLine{438       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator-\/(\textcolor{keyword}{const} cytnx\_complex64 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorSUB(rc);\};}}
+\DoxyCodeLine{439       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator-\/(\textcolor{keyword}{const} cytnx\_double \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorSUB(rc);\};}}
+\DoxyCodeLine{440       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator-\/(\textcolor{keyword}{const} cytnx\_float \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorSUB(rc);\};}}
+\DoxyCodeLine{441       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator-\/(\textcolor{keyword}{const} cytnx\_uint64 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorSUB(rc);\};}}
+\DoxyCodeLine{442       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator-\/(\textcolor{keyword}{const} cytnx\_int64 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorSUB(rc);\};}}
+\DoxyCodeLine{443       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator-\/(\textcolor{keyword}{const} cytnx\_uint32 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorSUB(rc);\};}}
+\DoxyCodeLine{444       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator-\/(\textcolor{keyword}{const} cytnx\_int32 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorSUB(rc);\};}}
+\DoxyCodeLine{445       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator-\/(\textcolor{keyword}{const} cytnx\_uint16 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorSUB(rc);\};}}
+\DoxyCodeLine{446       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator-\/(\textcolor{keyword}{const} cytnx\_int16 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorSUB(rc);\};}}
+\DoxyCodeLine{447       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator-\/(\textcolor{keyword}{const} cytnx\_bool \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorSUB(rc);\};}}
+\DoxyCodeLine{448       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator-\/(\textcolor{keyword}{const} Tproxy \&rc) \textcolor{keyword}{const};}
+\DoxyCodeLine{449 }
+\DoxyCodeLine{450       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator-\/() \textcolor{keyword}{const};}
+\DoxyCodeLine{451 }
+\DoxyCodeLine{452       \textcolor{comment}{/*}}
+\DoxyCodeLine{453 \textcolor{comment}{      template<class T>}}
+\DoxyCodeLine{454 \textcolor{comment}{      Tensor \_operatorMUL(const T \&rc) const\{}}
+\DoxyCodeLine{455 \textcolor{comment}{          Tensor out;}}
+\DoxyCodeLine{456 \textcolor{comment}{          out.\_impl = \_insimpl-\/>get(\_accs);}}
+\DoxyCodeLine{457 \textcolor{comment}{          return out.Mul(rc);}}
+\DoxyCodeLine{458 \textcolor{comment}{      \}}}
+\DoxyCodeLine{459 \textcolor{comment}{      */}}
+\DoxyCodeLine{460       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator*(\textcolor{keyword}{const} cytnx\_complex128 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorMUL(rc);\};}}
+\DoxyCodeLine{461       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator*(\textcolor{keyword}{const} cytnx\_complex64 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorMUL(rc);\};}}
+\DoxyCodeLine{462       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator*(\textcolor{keyword}{const} cytnx\_double \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorMUL(rc);\};}}
+\DoxyCodeLine{463       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator*(\textcolor{keyword}{const} cytnx\_float \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorMUL(rc);\};}}
+\DoxyCodeLine{464       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator*(\textcolor{keyword}{const} cytnx\_uint64 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorMUL(rc);\};}}
+\DoxyCodeLine{465       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator*(\textcolor{keyword}{const} cytnx\_int64 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorMUL(rc);\};}}
+\DoxyCodeLine{466       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator*(\textcolor{keyword}{const} cytnx\_uint32 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorMUL(rc);\};}}
+\DoxyCodeLine{467       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator*(\textcolor{keyword}{const} cytnx\_int32 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorMUL(rc);\};}}
+\DoxyCodeLine{468       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator*(\textcolor{keyword}{const} cytnx\_uint16 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorMUL(rc);\};}}
+\DoxyCodeLine{469       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator*(\textcolor{keyword}{const} cytnx\_int16 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorMUL(rc);\};}}
+\DoxyCodeLine{470       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator*(\textcolor{keyword}{const} cytnx\_bool \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorMUL(rc);\};}}
+\DoxyCodeLine{471       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator*(\textcolor{keyword}{const} Tproxy \&rc) \textcolor{keyword}{const};}
+\DoxyCodeLine{472 }
+\DoxyCodeLine{473       \textcolor{comment}{/*}}
+\DoxyCodeLine{474 \textcolor{comment}{      template<class T>}}
+\DoxyCodeLine{475 \textcolor{comment}{      Tensor \_operatorDIV(const T \&rc) const\{}}
+\DoxyCodeLine{476 \textcolor{comment}{          Tensor out;}}
+\DoxyCodeLine{477 \textcolor{comment}{          out.\_impl = \_insimpl-\/>get(\_accs);}}
+\DoxyCodeLine{478 \textcolor{comment}{          return out.Div(rc);}}
+\DoxyCodeLine{479 \textcolor{comment}{      \}}}
+\DoxyCodeLine{480 \textcolor{comment}{      */}}
+\DoxyCodeLine{481       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator/(\textcolor{keyword}{const} cytnx\_complex128 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorDIV(rc);\};}}
+\DoxyCodeLine{482       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator/(\textcolor{keyword}{const} cytnx\_complex64 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorDIV(rc);\};}}
+\DoxyCodeLine{483       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator/(\textcolor{keyword}{const} cytnx\_double \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorDIV(rc);\};}}
+\DoxyCodeLine{484       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator/(\textcolor{keyword}{const} cytnx\_float \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorDIV(rc);\};}}
+\DoxyCodeLine{485       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator/(\textcolor{keyword}{const} cytnx\_uint64 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorDIV(rc);\};}}
+\DoxyCodeLine{486       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator/(\textcolor{keyword}{const} cytnx\_int64 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorDIV(rc);\};}}
+\DoxyCodeLine{487       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator/(\textcolor{keyword}{const} cytnx\_uint32 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorDIV(rc);\};}}
+\DoxyCodeLine{488       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator/(\textcolor{keyword}{const} cytnx\_int32 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorDIV(rc);\};}}
+\DoxyCodeLine{489       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator/(\textcolor{keyword}{const} cytnx\_uint16 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorDIV(rc);\};}}
+\DoxyCodeLine{490       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator/(\textcolor{keyword}{const} cytnx\_int16 \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorDIV(rc);\};}}
+\DoxyCodeLine{491       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator/(\textcolor{keyword}{const} cytnx\_bool \&rc) \textcolor{keyword}{const};  \textcolor{comment}{//\{return this-\/>\_operatorDIV(rc);\};}}
+\DoxyCodeLine{492       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} operator/(\textcolor{keyword}{const} Tproxy \&rc) \textcolor{keyword}{const};}
+\DoxyCodeLine{493 }
+\DoxyCodeLine{494       \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{495       T item()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{496         \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} out;}
+\DoxyCodeLine{497         out.\_impl = \_insimpl-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_ad7b928e4cb89d40cbd99aefab9aa0075}{get}}(\_accs);}
+\DoxyCodeLine{498         \textcolor{keywordflow}{return} out.\mbox{\hyperlink{classcytnx_1_1Tensor_a59bb8b7cf3d142d49c51d694e58ace68}{item}}<T>();}
+\DoxyCodeLine{499       \}}
+\DoxyCodeLine{500 }
+\DoxyCodeLine{501       Scalar::Sproxy item()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{502         \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} out;}
+\DoxyCodeLine{503         out.\_impl = \_insimpl-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_ad7b928e4cb89d40cbd99aefab9aa0075}{get}}(\_accs);}
+\DoxyCodeLine{504         \textcolor{keywordflow}{return} out.\mbox{\hyperlink{classcytnx_1_1Tensor_a59bb8b7cf3d142d49c51d694e58ace68}{item}}();}
+\DoxyCodeLine{505       \}}
+\DoxyCodeLine{506 }
+\DoxyCodeLine{507       \textcolor{comment}{// when used to get elems:}}
+\DoxyCodeLine{508       \textcolor{keyword}{operator} \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{509         \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} out;}
+\DoxyCodeLine{510         out.\_impl = \_insimpl-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_ad7b928e4cb89d40cbd99aefab9aa0075}{get}}(\_accs);}
+\DoxyCodeLine{511         \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{512       \}}
+\DoxyCodeLine{513 }
+\DoxyCodeLine{514       \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} storage()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{515         \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} out;}
+\DoxyCodeLine{516         out.\_impl = \_insimpl-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_ad7b928e4cb89d40cbd99aefab9aa0075}{get}}(\_accs);}
+\DoxyCodeLine{517         \textcolor{keywordflow}{return} out.\mbox{\hyperlink{classcytnx_1_1Tensor_afaa4a4eba4bd98b371fc101fbcfef743}{storage}}();}
+\DoxyCodeLine{518       \}}
+\DoxyCodeLine{519 }
+\DoxyCodeLine{520     \};  \textcolor{comment}{// proxy class of Tensor.}}
+\DoxyCodeLine{521 }
+\DoxyCodeLine{523 }
+\DoxyCodeLine{525     \textcolor{comment}{// these two are using the python way!}}
+\DoxyCodeLine{526     \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{527     \textcolor{keyword}{template} <\textcolor{keyword}{class}... Ts>}
+\DoxyCodeLine{528     Tproxy operator()(\textcolor{keyword}{const} std::string \&e1, \textcolor{keyword}{const} Ts \&...elems) \{}
+\DoxyCodeLine{529       \textcolor{comment}{// std::cout << e1 << std::endl;}}
+\DoxyCodeLine{530       std::vector<cytnx::Accessor> tmp = Indices\_resolver(e1, elems...);}
+\DoxyCodeLine{531       \textcolor{keywordflow}{return} (*\textcolor{keyword}{this})[tmp];}
+\DoxyCodeLine{532     \}}
+\DoxyCodeLine{533     \textcolor{keyword}{template} <\textcolor{keyword}{class}... Ts>}
+\DoxyCodeLine{534     Tproxy operator()(\textcolor{keyword}{const} cytnx\_int64 \&e1, \textcolor{keyword}{const} Ts \&...elems) \{}
+\DoxyCodeLine{535       \textcolor{comment}{// std::cout << e1<< std::endl;}}
+\DoxyCodeLine{536       std::vector<cytnx::Accessor> tmp = Indices\_resolver(e1, elems...);}
+\DoxyCodeLine{537       \textcolor{keywordflow}{return} (*\textcolor{keyword}{this})[tmp];}
+\DoxyCodeLine{538     \}}
+\DoxyCodeLine{539     \textcolor{keyword}{template} <\textcolor{keyword}{class}... Ts>}
+\DoxyCodeLine{540     Tproxy operator()(\textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1Accessor}{cytnx::Accessor}} \&e1, \textcolor{keyword}{const} Ts \&...elems) \{}
+\DoxyCodeLine{541       \textcolor{comment}{// std::cout << e1 << std::endl;}}
+\DoxyCodeLine{542       std::vector<cytnx::Accessor> tmp = Indices\_resolver(e1, elems...);}
+\DoxyCodeLine{543       \textcolor{keywordflow}{return} (*\textcolor{keyword}{this})[tmp];}
+\DoxyCodeLine{544     \}}
+\DoxyCodeLine{545     \textcolor{keyword}{template} <\textcolor{keyword}{class}... Ts>}
+\DoxyCodeLine{546     \textcolor{keyword}{const} Tproxy operator()(\textcolor{keyword}{const} std::string \&e1, \textcolor{keyword}{const} Ts \&...elems)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{547       \textcolor{comment}{// std::cout << e1 << std::endl;}}
+\DoxyCodeLine{548       std::vector<cytnx::Accessor> tmp = Indices\_resolver(e1, elems...);}
+\DoxyCodeLine{549       \textcolor{keywordflow}{return} (*\textcolor{keyword}{this})[tmp];}
+\DoxyCodeLine{550     \}}
+\DoxyCodeLine{551     \textcolor{keyword}{template} <\textcolor{keyword}{class}... Ts>}
+\DoxyCodeLine{552     \textcolor{keyword}{const} Tproxy operator()(\textcolor{keyword}{const} cytnx\_int64 \&e1, \textcolor{keyword}{const} Ts \&...elems)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{553       std::vector<cytnx::Accessor> tmp = Indices\_resolver(e1, elems...);}
+\DoxyCodeLine{554       \textcolor{keywordflow}{return} (*\textcolor{keyword}{this})[tmp];}
+\DoxyCodeLine{555     \}}
+\DoxyCodeLine{556     \textcolor{keyword}{template} <\textcolor{keyword}{class}... Ts>}
+\DoxyCodeLine{557     \textcolor{keyword}{const} Tproxy operator()(\textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1Accessor}{cytnx::Accessor}} \&e1, \textcolor{keyword}{const} Ts \&...elems)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{558       std::vector<cytnx::Accessor> tmp = Indices\_resolver(e1, elems...);}
+\DoxyCodeLine{559       \textcolor{keywordflow}{return} (*\textcolor{keyword}{this})[tmp];}
+\DoxyCodeLine{560     \}}
+\DoxyCodeLine{561 }
+\DoxyCodeLine{562     \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{563 }
+\DoxyCodeLine{564     Tproxy operator[](\textcolor{keyword}{const} std::initializer\_list<cytnx::Accessor> \&accs) \{}
+\DoxyCodeLine{565       std::vector<cytnx::Accessor> tmp = accs;}
+\DoxyCodeLine{566       \textcolor{keywordflow}{return} (*\textcolor{keyword}{this})[tmp];}
+\DoxyCodeLine{567     \}}
+\DoxyCodeLine{568     Tproxy operator[](\textcolor{keyword}{const} std::vector<cytnx::Accessor> \&accs) \{}
+\DoxyCodeLine{569       \textcolor{keywordflow}{return} Tproxy(this-\/>\_impl, accs);}
+\DoxyCodeLine{570     \}}
+\DoxyCodeLine{571 }
+\DoxyCodeLine{572     \textcolor{keyword}{const} Tproxy operator[](\textcolor{keyword}{const} std::vector<cytnx::Accessor> \&accs)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{573       \textcolor{keywordflow}{return} Tproxy(this-\/>\_impl, accs);}
+\DoxyCodeLine{574     \}}
+\DoxyCodeLine{575     \textcolor{keyword}{const} Tproxy operator[](\textcolor{keyword}{const} std::initializer\_list<cytnx::Accessor> \&accs)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{576       std::vector<cytnx::Accessor> tmp = accs;}
+\DoxyCodeLine{577       \textcolor{keywordflow}{return} (*\textcolor{keyword}{this})[tmp];}
+\DoxyCodeLine{578     \}}
+\DoxyCodeLine{579 }
+\DoxyCodeLine{580     Tproxy operator[](\textcolor{keyword}{const} std::initializer\_list<cytnx\_int64> \&accs) \{}
+\DoxyCodeLine{581       std::vector<cytnx\_int64> tmp = accs;}
+\DoxyCodeLine{582       \textcolor{keywordflow}{return} (*\textcolor{keyword}{this})[tmp];}
+\DoxyCodeLine{583     \}}
+\DoxyCodeLine{584     Tproxy operator[](\textcolor{keyword}{const} std::vector<cytnx\_int64> \&accs) \{}
+\DoxyCodeLine{585       std::vector<cytnx::Accessor> acc\_in;}
+\DoxyCodeLine{586       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < accs.size(); i++) \{}
+\DoxyCodeLine{587         acc\_in.push\_back(\mbox{\hyperlink{classcytnx_1_1Accessor}{cytnx::Accessor}}(accs[i]));}
+\DoxyCodeLine{588       \}}
+\DoxyCodeLine{589       \textcolor{keywordflow}{return} Tproxy(this-\/>\_impl, acc\_in);}
+\DoxyCodeLine{590     \}}
+\DoxyCodeLine{591     \textcolor{keyword}{const} Tproxy operator[](\textcolor{keyword}{const} std::initializer\_list<cytnx\_int64> \&accs)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{592       std::vector<cytnx\_int64> tmp = accs;}
+\DoxyCodeLine{593       \textcolor{keywordflow}{return} (*\textcolor{keyword}{this})[tmp];}
+\DoxyCodeLine{594     \}}
+\DoxyCodeLine{595     \textcolor{keyword}{const} Tproxy operator[](\textcolor{keyword}{const} std::vector<cytnx\_int64> \&accs)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{596       std::vector<cytnx::Accessor> acc\_in;}
+\DoxyCodeLine{597       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < accs.size(); i++) \{}
+\DoxyCodeLine{598         acc\_in.push\_back(\mbox{\hyperlink{classcytnx_1_1Accessor}{cytnx::Accessor}}(accs[i]));}
+\DoxyCodeLine{599       \}}
+\DoxyCodeLine{600       \textcolor{keywordflow}{return} Tproxy(this-\/>\_impl, acc\_in);}
+\DoxyCodeLine{601     \}}
+\DoxyCodeLine{603     \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{604 }
+\DoxyCodeLine{606     \textcolor{keywordtype}{void} \_Save(std::fstream \&f) \textcolor{keyword}{const};}
+\DoxyCodeLine{607     \textcolor{keywordtype}{void} \_Load(std::fstream \&f);}
+\DoxyCodeLine{608 }
+\DoxyCodeLine{610 }
+\DoxyCodeLine{619     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Tensor_ab355c158b0ba1abb20a344c092fb8942}{Save}}(\textcolor{keyword}{const} std::string \&fname) \textcolor{keyword}{const};}
+\DoxyCodeLine{620     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Tensor_ab355c158b0ba1abb20a344c092fb8942}{Save}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *fname) \textcolor{keyword}{const};}
+\DoxyCodeLine{621     \textcolor{keywordtype}{void} Tofile(\textcolor{keyword}{const} std::string \&fname) \textcolor{keyword}{const};}
+\DoxyCodeLine{622     \textcolor{keywordtype}{void} Tofile(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *fname) \textcolor{keyword}{const};}
+\DoxyCodeLine{623     \textcolor{keywordtype}{void} Tofile(std::fstream \&f) \textcolor{keyword}{const};}
+\DoxyCodeLine{632     \textcolor{keyword}{static} \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_a4100edea617039a2b9a0ee3ca2b2aa36}{Load}}(\textcolor{keyword}{const} std::string \&fname);}
+\DoxyCodeLine{633     \textcolor{keyword}{static} \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_a4100edea617039a2b9a0ee3ca2b2aa36}{Load}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *fname);}
+\DoxyCodeLine{634     \textcolor{keyword}{static} \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} Fromfile(\textcolor{keyword}{const} std::string \&fname, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&\mbox{\hyperlink{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}{dtype}},}
+\DoxyCodeLine{635                            \textcolor{keyword}{const} cytnx\_int64 \&count = -\/1);}
+\DoxyCodeLine{636     \textcolor{keyword}{static} \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} Fromfile(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *fname, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&\mbox{\hyperlink{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}{dtype}},}
+\DoxyCodeLine{637                            \textcolor{keyword}{const} cytnx\_int64 \&count = -\/1);}
+\DoxyCodeLine{638 }
+\DoxyCodeLine{639     \textcolor{comment}{// static Tensor Frombinary(const std::string \&fname);}}
+\DoxyCodeLine{640 }
+\DoxyCodeLine{642     boost::intrusive\_ptr<Tensor\_impl> \_impl;}
+\DoxyCodeLine{643     \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}() : \_impl(\textcolor{keyword}{new} Tensor\_impl())\{\};}
+\DoxyCodeLine{644     \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}(\textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \&rhs) \{ \_impl = rhs.\_impl; \}}
+\DoxyCodeLine{645 }
+\DoxyCodeLine{646     \textcolor{comment}{/*}}
+\DoxyCodeLine{647 \textcolor{comment}{    template<class Tp>}}
+\DoxyCodeLine{648 \textcolor{comment}{    Tensor(const std::initializer\_list<Tp> \&rhs)\{}}
+\DoxyCodeLine{649 \textcolor{comment}{        Storage stmp = std::vector<Tp>(rhs);}}
+\DoxyCodeLine{650 \textcolor{comment}{        boost::intrusive\_ptr<Tensor\_impl> tmp(new Tensor\_impl());}}
+\DoxyCodeLine{651 \textcolor{comment}{        tmp-\/>Init(stmp);}}
+\DoxyCodeLine{652 \textcolor{comment}{        this-\/>\_impl = tmp;}}
+\DoxyCodeLine{653 \textcolor{comment}{    \}}}
+\DoxyCodeLine{654 \textcolor{comment}{    */}}
+\DoxyCodeLine{655 }
+\DoxyCodeLine{656     \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \&operator=(\textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \&rhs) \{}
+\DoxyCodeLine{657       \_impl = rhs.\_impl;}
+\DoxyCodeLine{658       \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{659     \}}
+\DoxyCodeLine{660 }
+\DoxyCodeLine{661     \textcolor{keywordtype}{void} operator=(\textcolor{keyword}{const} Tproxy \&rhsp) \{  \textcolor{comment}{// this is used to handle proxy assignment}}
+\DoxyCodeLine{662       this-\/>\_impl = rhsp.\_insimpl-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_ad7b928e4cb89d40cbd99aefab9aa0075}{get}}(rhsp.\_accs);}
+\DoxyCodeLine{663     \}}
+\DoxyCodeLine{665 }
+\DoxyCodeLine{667     \textcolor{comment}{// default device==Device.cpu (-\/1)}}
+\DoxyCodeLine{690 \textcolor{comment}{}    \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Tensor_aee8c0febe1794bd79edc52f2caac9cc3}{Init}}(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&\mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}}, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&\mbox{\hyperlink{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}{dtype}} = Type.Double,}
+\DoxyCodeLine{691               \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&\mbox{\hyperlink{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}{device}} = -\/1, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&init\_zero = \textcolor{keyword}{true}) \{}
+\DoxyCodeLine{692       boost::intrusive\_ptr<Tensor\_impl> tmp(\textcolor{keyword}{new} Tensor\_impl());}
+\DoxyCodeLine{693       this-\/>\_impl = tmp;}
+\DoxyCodeLine{694       this-\/>\_impl-\/>Init(\mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}}, \mbox{\hyperlink{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}{dtype}}, \mbox{\hyperlink{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}{device}}, init\_zero);}
+\DoxyCodeLine{695     \}}
+\DoxyCodeLine{696     \textcolor{comment}{// void Init(const Storage\& storage) \{}}
+\DoxyCodeLine{697     \textcolor{comment}{//   boost::intrusive\_ptr<Tensor\_impl> tmp(new Tensor\_impl());}}
+\DoxyCodeLine{698     \textcolor{comment}{//   this-\/>\_impl = tmp;}}
+\DoxyCodeLine{699     \textcolor{comment}{//   this-\/>\_impl-\/>Init(storage);}}
+\DoxyCodeLine{700     \textcolor{comment}{// \}}}
+\DoxyCodeLine{701     \textcolor{comment}{// void Init(const Storage\& storage, const std::vector<cytnx\_uint64> \&shape,}}
+\DoxyCodeLine{702     \textcolor{comment}{//   const unsigned int \&dtype = Type.Double, const int \&device = -\/1) \{}}
+\DoxyCodeLine{703     \textcolor{comment}{//   boost::intrusive\_ptr<Tensor\_impl> tmp(new Tensor\_impl());}}
+\DoxyCodeLine{704     \textcolor{comment}{//   this-\/>\_impl = tmp;}}
+\DoxyCodeLine{705     \textcolor{comment}{//   this-\/>\_impl-\/>Init(storage, shape, dtype, device);}}
+\DoxyCodeLine{706     \textcolor{comment}{// \}}}
+\DoxyCodeLine{707     \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}}(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&\mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}}, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&\mbox{\hyperlink{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}{dtype}} = Type.Double,}
+\DoxyCodeLine{708            \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&\mbox{\hyperlink{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}{device}} = -\/1, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&init\_zero = 1)}
+\DoxyCodeLine{709         : \_impl(new Tensor\_impl()) \{}
+\DoxyCodeLine{710       this-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_aee8c0febe1794bd79edc52f2caac9cc3}{Init}}(shape, \mbox{\hyperlink{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}{dtype}}, \mbox{\hyperlink{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}{device}}, init\_zero);}
+\DoxyCodeLine{711     \}}
+\DoxyCodeLine{712     \textcolor{comment}{// Tensor(const Storage\& storage)}}
+\DoxyCodeLine{713     \textcolor{comment}{//     : \_impl(new Tensor\_impl()) \{}}
+\DoxyCodeLine{714     \textcolor{comment}{//   this-\/>Init(storage);}}
+\DoxyCodeLine{715     \textcolor{comment}{// \}}}
+\DoxyCodeLine{716     \textcolor{comment}{// Tensor(const Storage\& storage, const std::vector<cytnx\_uint64> \&shape,}}
+\DoxyCodeLine{717     \textcolor{comment}{//   const unsigned int \&dtype = Type.Double, const int \&device = -\/1)}}
+\DoxyCodeLine{718     \textcolor{comment}{//     : \_impl(new Tensor\_impl()) \{}}
+\DoxyCodeLine{719     \textcolor{comment}{//   this-\/>Init(storage, shape, dtype, device);}}
+\DoxyCodeLine{720     \textcolor{comment}{// \}}}
+\DoxyCodeLine{722 \textcolor{comment}{}}
+\DoxyCodeLine{723     \textcolor{keyword}{static} Tensor from\_storage(\textcolor{keyword}{const} Storage \&in) \{}
+\DoxyCodeLine{724       Tensor out;}
+\DoxyCodeLine{725       boost::intrusive\_ptr<Tensor\_impl> tmp(\textcolor{keyword}{new} Tensor\_impl());}
+\DoxyCodeLine{726       out.\_impl = tmp;}
+\DoxyCodeLine{727       out.\_impl-\/>Init(in);}
+\DoxyCodeLine{728       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{729     \}}
+\DoxyCodeLine{730 }
+\DoxyCodeLine{736     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}{dtype}}()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_impl-\/>dtype(); \}}
+\DoxyCodeLine{737 }
+\DoxyCodeLine{743     \textcolor{keywordtype}{int} \mbox{\hyperlink{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}{device}}()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_impl-\/>device(); \}}
+\DoxyCodeLine{744 }
+\DoxyCodeLine{750     std::string \mbox{\hyperlink{classcytnx_1_1Tensor_a9e09106c7529e8be90caa52e1541e498}{dtype\_str}}()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_impl-\/>dtype\_str(); \}}
+\DoxyCodeLine{751 }
+\DoxyCodeLine{757     std::string \mbox{\hyperlink{classcytnx_1_1Tensor_a335f7625fa01784f49b2223238d0c14e}{device\_str}}()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_impl-\/>device\_str(); \}}
+\DoxyCodeLine{758 }
+\DoxyCodeLine{764     \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&\mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}}()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_impl-\/>shape(); \}}
+\DoxyCodeLine{765 }
+\DoxyCodeLine{770     cytnx\_uint64 \mbox{\hyperlink{classcytnx_1_1Tensor_aa3ee5ed793cacd43d3fadbd92d7920a4}{rank}}()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_impl-\/>shape().size(); \}}
+\DoxyCodeLine{771 }
+\DoxyCodeLine{790     \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_a5e2248e9babdb786167ed349df9084ae}{clone}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{791       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} out;}
+\DoxyCodeLine{792       out.\_impl = this-\/>\_impl-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_a5e2248e9babdb786167ed349df9084ae}{clone}}();}
+\DoxyCodeLine{793       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{794     \}}
+\DoxyCodeLine{795 }
+\DoxyCodeLine{816     \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_acf7f697a9434f9bc98a7d00a555ee982}{to}}(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&\mbox{\hyperlink{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}{device}})\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{817       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} out;}
+\DoxyCodeLine{818       out.\_impl = this-\/>\_impl-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_acf7f697a9434f9bc98a7d00a555ee982}{to}}(\mbox{\hyperlink{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}{device}});}
+\DoxyCodeLine{819       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{820     \}}
+\DoxyCodeLine{821 }
+\DoxyCodeLine{839     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Tensor_a114a31fbb8bf4a90f150b6a67e42183a}{to\_}}(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&\mbox{\hyperlink{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}{device}}) \{ this-\/>\_impl-\/>to\_(\mbox{\hyperlink{classcytnx_1_1Tensor_ac6d3310eb4defbdacf662dcd81d8fe09}{device}}); \}}
+\DoxyCodeLine{840 }
+\DoxyCodeLine{841     \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&is\_contiguous()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_impl-\/>is\_contiguous(); \}}
+\DoxyCodeLine{842 }
+\DoxyCodeLine{843     Tensor permute\_(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&rnks) \{}
+\DoxyCodeLine{844       this-\/>\_impl-\/>permute\_(rnks);}
+\DoxyCodeLine{845       \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{846     \}}
+\DoxyCodeLine{848     \textcolor{keyword}{template} <\textcolor{keyword}{class}... Ts>}
+\DoxyCodeLine{849     Tensor permute\_(\textcolor{keyword}{const} cytnx\_uint64 \&e1, \textcolor{keyword}{const} Ts \&...elems) \{}
+\DoxyCodeLine{850       std::vector<cytnx\_uint64> argv = dynamic\_arg\_uint64\_resolver(e1, elems...);}
+\DoxyCodeLine{851       this-\/>\_impl-\/>permute\_(argv);}
+\DoxyCodeLine{852       \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{853     \}}
+\DoxyCodeLine{855 }
+\DoxyCodeLine{871     \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_adbdc402a8c4d6d738523a888bcf9c0c2}{permute}}(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&rnks)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{872       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} out;}
+\DoxyCodeLine{873       out.\_impl = this-\/>\_impl-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_adbdc402a8c4d6d738523a888bcf9c0c2}{permute}}(rnks);}
+\DoxyCodeLine{874       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{875     \}}
+\DoxyCodeLine{877     \textcolor{keyword}{template} <\textcolor{keyword}{class}... Ts>}
+\DoxyCodeLine{878     \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_adbdc402a8c4d6d738523a888bcf9c0c2}{permute}}(\textcolor{keyword}{const} cytnx\_uint64 \&e1, \textcolor{keyword}{const} Ts \&...elems)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{879       std::vector<cytnx\_uint64> argv = dynamic\_arg\_uint64\_resolver(e1, elems...);}
+\DoxyCodeLine{880       \textcolor{keywordflow}{return} this-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_adbdc402a8c4d6d738523a888bcf9c0c2}{permute}}(argv);}
+\DoxyCodeLine{881     \}}
+\DoxyCodeLine{883 }
+\DoxyCodeLine{900     \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_a4d7da181303c588f2ab84bffda435525}{contiguous}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{901       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} out;}
+\DoxyCodeLine{902       out.\_impl = this-\/>\_impl-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_a4d7da181303c588f2ab84bffda435525}{contiguous}}();}
+\DoxyCodeLine{903       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{904     \}}
+\DoxyCodeLine{905 }
+\DoxyCodeLine{921     \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_a3d4342299e6951dae13b6136b89f1d53}{contiguous\_}}() \{}
+\DoxyCodeLine{922       this-\/>\_impl-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_a3d4342299e6951dae13b6136b89f1d53}{contiguous\_}}();}
+\DoxyCodeLine{923       \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{924     \}}
+\DoxyCodeLine{925 }
+\DoxyCodeLine{942     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Tensor_a3723449528b9a20dd46c32c9e042b8f0}{reshape\_}}(\textcolor{keyword}{const} std::vector<cytnx\_int64> \&new\_shape) \{ this-\/>\_impl-\/>reshape\_(new\_shape); \}}
+\DoxyCodeLine{944     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Tensor_a3723449528b9a20dd46c32c9e042b8f0}{reshape\_}}(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&new\_shape) \{}
+\DoxyCodeLine{945       std::vector<cytnx\_int64> \mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}}(new\_shape.begin(), new\_shape.end());}
+\DoxyCodeLine{946       this-\/>\_impl-\/>reshape\_(\mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}});}
+\DoxyCodeLine{947     \}}
+\DoxyCodeLine{948     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Tensor_a3723449528b9a20dd46c32c9e042b8f0}{reshape\_}}(\textcolor{keyword}{const} std::initializer\_list<cytnx\_int64> \&new\_shape) \{}
+\DoxyCodeLine{949       std::vector<cytnx\_int64> \mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}} = new\_shape;}
+\DoxyCodeLine{950       this-\/>\_impl-\/>reshape\_(\mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}});}
+\DoxyCodeLine{951     \}}
+\DoxyCodeLine{952     \textcolor{keyword}{template} <\textcolor{keyword}{class}... Ts>}
+\DoxyCodeLine{953     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Tensor_a3723449528b9a20dd46c32c9e042b8f0}{reshape\_}}(\textcolor{keyword}{const} cytnx\_int64 \&e1, \textcolor{keyword}{const} Ts... elems) \{}
+\DoxyCodeLine{954       std::vector<cytnx\_int64> \mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}} = dynamic\_arg\_int64\_resolver(e1, elems...);}
+\DoxyCodeLine{955       \textcolor{comment}{// std::cout << shape << std::endl;}}
+\DoxyCodeLine{956       this-\/>\_impl-\/>reshape\_(\mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}});}
+\DoxyCodeLine{957     \}}
+\DoxyCodeLine{959 }
+\DoxyCodeLine{977     \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_a57aea99887adf41da14fd7578ef9bf13}{reshape}}(\textcolor{keyword}{const} std::vector<cytnx\_int64> \&new\_shape)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{978       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} out;}
+\DoxyCodeLine{979       out.\_impl = this-\/>\_impl-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_a57aea99887adf41da14fd7578ef9bf13}{reshape}}(new\_shape);}
+\DoxyCodeLine{980       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{981     \}}
+\DoxyCodeLine{982 }
+\DoxyCodeLine{983     \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_a57aea99887adf41da14fd7578ef9bf13}{reshape}}(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&new\_shape)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{984       std::vector<cytnx\_int64> tmp(new\_shape.size());}
+\DoxyCodeLine{985       memcpy(\&tmp[0], \&new\_shape[0], \textcolor{keyword}{sizeof}(cytnx\_uint64) * new\_shape.size());}
+\DoxyCodeLine{986       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} out;}
+\DoxyCodeLine{987       out.\_impl = this-\/>\_impl-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_a57aea99887adf41da14fd7578ef9bf13}{reshape}}(tmp);}
+\DoxyCodeLine{988       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{989     \}}
+\DoxyCodeLine{990 }
+\DoxyCodeLine{991     Tensor \mbox{\hyperlink{classcytnx_1_1Tensor_a57aea99887adf41da14fd7578ef9bf13}{reshape}}(\textcolor{keyword}{const} std::initializer\_list<cytnx\_int64> \&new\_shape)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{992       \textcolor{keywordflow}{return} this-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_a57aea99887adf41da14fd7578ef9bf13}{reshape}}(std::vector<cytnx\_int64>(new\_shape));}
+\DoxyCodeLine{993     \}}
+\DoxyCodeLine{994 }
+\DoxyCodeLine{996     \textcolor{keyword}{template} <\textcolor{keyword}{class}... Ts>}
+\DoxyCodeLine{997     Tensor \mbox{\hyperlink{classcytnx_1_1Tensor_a57aea99887adf41da14fd7578ef9bf13}{reshape}}(\textcolor{keyword}{const} cytnx\_int64 \&e1, \textcolor{keyword}{const} Ts \&...elems)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{998       std::vector<cytnx\_int64> argv = dynamic\_arg\_int64\_resolver(e1, elems...);}
+\DoxyCodeLine{999       \textcolor{keywordflow}{return} this-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_a57aea99887adf41da14fd7578ef9bf13}{reshape}}(argv);}
+\DoxyCodeLine{1000     \}}
+\DoxyCodeLine{1002 }
+\DoxyCodeLine{1021     \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_a7b996d3281e7375b29a7cfe4273b299f}{astype}}(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&new\_type)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{1022       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} out;}
+\DoxyCodeLine{1023       out.\_impl = this-\/>\_impl-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_a7b996d3281e7375b29a7cfe4273b299f}{astype}}(new\_type);}
+\DoxyCodeLine{1024       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{1025     \}}
+\DoxyCodeLine{1026 }
+\DoxyCodeLine{1027     \textcolor{comment}{// Tensor diagonal()\{}}
+\DoxyCodeLine{1028     \textcolor{comment}{//     for(unsigned int i=0;i<this-\/>shape().size();i++)\{}}
+\DoxyCodeLine{1029     \textcolor{comment}{//         if(this-\/>shape()[i] != this-\/>shape()[0],"{}[ERROR] Tensor.diagonal() can only be called}}
+\DoxyCodeLine{1030     \textcolor{comment}{//         when the subject has equal dimension in each rank.\%s"{},"{}\(\backslash\)n"{});}}
+\DoxyCodeLine{1031     \textcolor{comment}{//     \}}}
+\DoxyCodeLine{1032     \textcolor{comment}{//}}
+\DoxyCodeLine{1033     \textcolor{comment}{// \}}}
+\DoxyCodeLine{1034 }
+\DoxyCodeLine{1053     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1054     T \&\mbox{\hyperlink{classcytnx_1_1Tensor_a55f6e4c4106c0964f23fb06ac63d75ec}{at}}(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&locator) \{}
+\DoxyCodeLine{1055       \textcolor{keywordflow}{return} this-\/>\_impl-\/>at<T>(locator);}
+\DoxyCodeLine{1056     \}}
+\DoxyCodeLine{1057     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1058     \textcolor{keyword}{const} T \&\mbox{\hyperlink{classcytnx_1_1Tensor_a55f6e4c4106c0964f23fb06ac63d75ec}{at}}(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&locator)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{1059       \textcolor{keywordflow}{return} this-\/>\_impl-\/>at<T>(locator);}
+\DoxyCodeLine{1060     \}}
+\DoxyCodeLine{1062     \textcolor{keyword}{template} <\textcolor{keyword}{class }T, \textcolor{keyword}{class}... Ts>}
+\DoxyCodeLine{1063     \textcolor{keyword}{const} T \&\mbox{\hyperlink{classcytnx_1_1Tensor_a55f6e4c4106c0964f23fb06ac63d75ec}{at}}(\textcolor{keyword}{const} cytnx\_uint64 \&e1, \textcolor{keyword}{const} Ts \&...elems)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{1064       std::vector<cytnx\_uint64> argv = dynamic\_arg\_uint64\_resolver(e1, elems...);}
+\DoxyCodeLine{1065       \textcolor{keywordflow}{return} this-\/>at<T>(argv);}
+\DoxyCodeLine{1066     \}}
+\DoxyCodeLine{1067     \textcolor{keyword}{template} <\textcolor{keyword}{class }T, \textcolor{keyword}{class}... Ts>}
+\DoxyCodeLine{1068     T \&\mbox{\hyperlink{classcytnx_1_1Tensor_a55f6e4c4106c0964f23fb06ac63d75ec}{at}}(\textcolor{keyword}{const} cytnx\_uint64 \&e1, \textcolor{keyword}{const} Ts \&...elems) \{}
+\DoxyCodeLine{1069       std::vector<cytnx\_uint64> argv = dynamic\_arg\_uint64\_resolver(e1, elems...);}
+\DoxyCodeLine{1070       \textcolor{keywordflow}{return} this-\/>at<T>(argv);}
+\DoxyCodeLine{1071     \}}
+\DoxyCodeLine{1072 }
+\DoxyCodeLine{1073     \textcolor{keyword}{const} Scalar::Sproxy \mbox{\hyperlink{classcytnx_1_1Tensor_a55f6e4c4106c0964f23fb06ac63d75ec}{at}}(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&locator)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{1074       \textcolor{keywordflow}{return} this-\/>\_impl-\/>at(locator);}
+\DoxyCodeLine{1075     \}}
+\DoxyCodeLine{1076 }
+\DoxyCodeLine{1077     Scalar::Sproxy \mbox{\hyperlink{classcytnx_1_1Tensor_a55f6e4c4106c0964f23fb06ac63d75ec}{at}}(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&locator) \{ \textcolor{keywordflow}{return} this-\/>\_impl-\/>at(locator); \}}
+\DoxyCodeLine{1079 }
+\DoxyCodeLine{1103     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1104     T \&\mbox{\hyperlink{classcytnx_1_1Tensor_a59bb8b7cf3d142d49c51d694e58ace68}{item}}() \{}
+\DoxyCodeLine{1105       cytnx\_error\_msg(this-\/>\_impl-\/>storage().size() != 1, \textcolor{stringliteral}{"{}[ERROR][Tensor.item<T>]\%s"{}},}
+\DoxyCodeLine{1106                       \textcolor{stringliteral}{"{}item can only be called from a Tensor with only one element\(\backslash\)n"{}});}
+\DoxyCodeLine{1107       \textcolor{keywordflow}{return} this-\/>\_impl-\/>storage().at<T>(0);}
+\DoxyCodeLine{1108     \}}
+\DoxyCodeLine{1109 }
+\DoxyCodeLine{1111     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1112     \textcolor{keyword}{const} T \&\mbox{\hyperlink{classcytnx_1_1Tensor_a59bb8b7cf3d142d49c51d694e58ace68}{item}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{1113       cytnx\_error\_msg(this-\/>\_impl-\/>storage().size() != 1, \textcolor{stringliteral}{"{}[ERROR][Tensor.item<T>]\%s"{}},}
+\DoxyCodeLine{1114                       \textcolor{stringliteral}{"{}item can only be called from a Tensor with only one element\(\backslash\)n"{}});}
+\DoxyCodeLine{1115       \textcolor{keywordflow}{return} this-\/>\_impl-\/>storage().at<T>(0);}
+\DoxyCodeLine{1116     \}}
+\DoxyCodeLine{1117 }
+\DoxyCodeLine{1118     \textcolor{keyword}{const} Scalar::Sproxy \mbox{\hyperlink{classcytnx_1_1Tensor_a59bb8b7cf3d142d49c51d694e58ace68}{item}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{1119       Scalar::Sproxy out(this-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_afaa4a4eba4bd98b371fc101fbcfef743}{storage}}().\_impl, 0);}
+\DoxyCodeLine{1120       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{1121     \}}
+\DoxyCodeLine{1122 }
+\DoxyCodeLine{1123     Scalar::Sproxy \mbox{\hyperlink{classcytnx_1_1Tensor_a59bb8b7cf3d142d49c51d694e58ace68}{item}}() \{}
+\DoxyCodeLine{1124       Scalar::Sproxy out(this-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_afaa4a4eba4bd98b371fc101fbcfef743}{storage}}().\_impl, 0);}
+\DoxyCodeLine{1125       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{1126     \}}
+\DoxyCodeLine{1127 }
+\DoxyCodeLine{1129 }
+\DoxyCodeLine{1153     \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \mbox{\hyperlink{classcytnx_1_1Tensor_ad7b928e4cb89d40cbd99aefab9aa0075}{get}}(\textcolor{keyword}{const} std::vector<cytnx::Accessor> \&accessors)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{1154       \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} out;}
+\DoxyCodeLine{1155       out.\_impl = this-\/>\_impl-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_ad7b928e4cb89d40cbd99aefab9aa0075}{get}}(accessors);}
+\DoxyCodeLine{1156       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{1157     \}}
+\DoxyCodeLine{1158 }
+\DoxyCodeLine{1159     \textcolor{comment}{/*}}
+\DoxyCodeLine{1160 \textcolor{comment}{    Tensor get\_v2(const std::vector<cytnx::Accessor> \&accessors) const\{}}
+\DoxyCodeLine{1161 \textcolor{comment}{        Tensor out;}}
+\DoxyCodeLine{1162 \textcolor{comment}{        out.\_impl = this-\/>\_impl-\/>get\_v2(accessors);}}
+\DoxyCodeLine{1163 \textcolor{comment}{        return out;}}
+\DoxyCodeLine{1164 \textcolor{comment}{    \}}}
+\DoxyCodeLine{1165 \textcolor{comment}{    */}}
+\DoxyCodeLine{1166 }
+\DoxyCodeLine{1187     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Tensor_a771f1f5b51f89abd8df4166e602214ac}{set}}(\textcolor{keyword}{const} std::vector<cytnx::Accessor> \&accessors, \textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \&rhs) \{}
+\DoxyCodeLine{1188       this-\/>\_impl-\/>set(accessors, rhs.\_impl);}
+\DoxyCodeLine{1189     \}}
+\DoxyCodeLine{1190 }
+\DoxyCodeLine{1209     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1210     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Tensor_ad93d654b978add6b2f0dfb9f91490209}{set}}(\textcolor{keyword}{const} std::vector<cytnx::Accessor> \&accessors, \textcolor{keyword}{const} T \&rc) \{}
+\DoxyCodeLine{1211       this-\/>\_impl-\/>set(accessors, rc);}
+\DoxyCodeLine{1212     \}}
+\DoxyCodeLine{1214     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1215     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Tensor_a771f1f5b51f89abd8df4166e602214ac}{set}}(\textcolor{keyword}{const} std::initializer\_list<cytnx::Accessor> \&accessors, \textcolor{keyword}{const} T \&rc) \{}
+\DoxyCodeLine{1216       std::vector<cytnx::Accessor> args = accessors;}
+\DoxyCodeLine{1217       this-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_a771f1f5b51f89abd8df4166e602214ac}{set}}(args, rc);}
+\DoxyCodeLine{1218     \}}
+\DoxyCodeLine{1220 }
+\DoxyCodeLine{1230     \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} \&\mbox{\hyperlink{classcytnx_1_1Tensor_afaa4a4eba4bd98b371fc101fbcfef743}{storage}}()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_impl-\/>storage(); \}}
+\DoxyCodeLine{1231 }
+\DoxyCodeLine{1247     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1248     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Tensor_a0c7f2bac2a03be7d22769c7cb896afbe}{fill}}(\textcolor{keyword}{const} T \&val) \{}
+\DoxyCodeLine{1249       this-\/>\_impl-\/>fill(val);}
+\DoxyCodeLine{1250     \}}
+\DoxyCodeLine{1251 }
+\DoxyCodeLine{1252     \textcolor{keywordtype}{bool} equiv(\textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1Tensor}{Tensor}} \&rhs) \{}
+\DoxyCodeLine{1253       \textcolor{keywordflow}{if} (this-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}}() != rhs.\mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}}()) \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{1254       \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{1255     \}}
+\DoxyCodeLine{1256 }
+\DoxyCodeLine{1257     Tensor real();}
+\DoxyCodeLine{1258     Tensor imag();}
+\DoxyCodeLine{1259 }
+\DoxyCodeLine{1260     \textcolor{comment}{// Arithmic:}}
+\DoxyCodeLine{1261     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1262     Tensor \&operator+=(\textcolor{keyword}{const} T \&rc);}
+\DoxyCodeLine{1263     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1264     Tensor \&operator-\/=(\textcolor{keyword}{const} T \&rc);}
+\DoxyCodeLine{1265     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1266     Tensor \&operator*=(\textcolor{keyword}{const} T \&rc);}
+\DoxyCodeLine{1267     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1268     Tensor \&operator/=(\textcolor{keyword}{const} T \&rc);}
+\DoxyCodeLine{1269 }
+\DoxyCodeLine{1270     \textcolor{comment}{// Tensor \&operator+=(const Tproxy \&rc);}}
+\DoxyCodeLine{1271     \textcolor{comment}{// Tensor \&operator-\/=(const Tproxy \&rc);}}
+\DoxyCodeLine{1272     \textcolor{comment}{// Tensor \&operator*=(const Tproxy \&rc);}}
+\DoxyCodeLine{1273     \textcolor{comment}{// Tensor \&operator/=(const Tproxy \&rc);}}
+\DoxyCodeLine{1274     \textcolor{comment}{/*}}
+\DoxyCodeLine{1275 \textcolor{comment}{    Tensor operator+(const Tproxy \&rc)\{}}
+\DoxyCodeLine{1276 \textcolor{comment}{         return *this + Tensor(rc);}}
+\DoxyCodeLine{1277 \textcolor{comment}{    \}}}
+\DoxyCodeLine{1278 \textcolor{comment}{    Tensor operator-\/(const Tproxy \&rc)\{}}
+\DoxyCodeLine{1279 \textcolor{comment}{         return *this -\/ Tensor(rc);}}
+\DoxyCodeLine{1280 \textcolor{comment}{    \}}}
+\DoxyCodeLine{1281 \textcolor{comment}{    Tensor operator*(const Tproxy \&rc)\{}}
+\DoxyCodeLine{1282 \textcolor{comment}{         return *this * Tensor(rc);}}
+\DoxyCodeLine{1283 \textcolor{comment}{    \}}}
+\DoxyCodeLine{1284 \textcolor{comment}{    Tensor operator/(const Tproxy \&rc)\{}}
+\DoxyCodeLine{1285 \textcolor{comment}{         return *this / Tensor(rc);}}
+\DoxyCodeLine{1286 \textcolor{comment}{    \}}}
+\DoxyCodeLine{1287 \textcolor{comment}{    */}}
+\DoxyCodeLine{1288 }
+\DoxyCodeLine{1289     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1290     Tensor Add(\textcolor{keyword}{const} T \&rhs) \{}
+\DoxyCodeLine{1291       \textcolor{keywordflow}{return} *\textcolor{keyword}{this} + rhs;}
+\DoxyCodeLine{1292     \}}
+\DoxyCodeLine{1293     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1294     Tensor \&Add\_(\textcolor{keyword}{const} T \&rhs) \{}
+\DoxyCodeLine{1295       \textcolor{keywordflow}{return} *\textcolor{keyword}{this} += rhs;}
+\DoxyCodeLine{1296     \}}
+\DoxyCodeLine{1297 }
+\DoxyCodeLine{1298     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1299     Tensor Sub(\textcolor{keyword}{const} T \&rhs) \{}
+\DoxyCodeLine{1300       \textcolor{keywordflow}{return} *\textcolor{keyword}{this} -\/ rhs;}
+\DoxyCodeLine{1301     \}}
+\DoxyCodeLine{1302     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1303     Tensor \&Sub\_(\textcolor{keyword}{const} T \&rhs) \{}
+\DoxyCodeLine{1304       \textcolor{keywordflow}{return} *\textcolor{keyword}{this} -\/= rhs;}
+\DoxyCodeLine{1305     \}}
+\DoxyCodeLine{1306 }
+\DoxyCodeLine{1307     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1308     Tensor Mul(\textcolor{keyword}{const} T \&rhs) \{}
+\DoxyCodeLine{1309       \textcolor{keywordflow}{return} *\textcolor{keyword}{this} * rhs;}
+\DoxyCodeLine{1310     \}}
+\DoxyCodeLine{1311     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1312     Tensor \&Mul\_(\textcolor{keyword}{const} T \&rhs) \{}
+\DoxyCodeLine{1313       \textcolor{keywordflow}{return} *\textcolor{keyword}{this} *= rhs;}
+\DoxyCodeLine{1314     \}}
+\DoxyCodeLine{1315 }
+\DoxyCodeLine{1316     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1317     Tensor Div(\textcolor{keyword}{const} T \&rhs) \{}
+\DoxyCodeLine{1318       \textcolor{keywordflow}{return} *\textcolor{keyword}{this} / rhs;}
+\DoxyCodeLine{1319     \}}
+\DoxyCodeLine{1320     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1321     Tensor \&Div\_(\textcolor{keyword}{const} T \&rhs) \{}
+\DoxyCodeLine{1322       \textcolor{keywordflow}{return} *\textcolor{keyword}{this} /= rhs;}
+\DoxyCodeLine{1323     \}}
+\DoxyCodeLine{1324 }
+\DoxyCodeLine{1325     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1326     Tensor Cpr(\textcolor{keyword}{const} T \&rhs) \{}
+\DoxyCodeLine{1327       \textcolor{keywordflow}{return} *\textcolor{keyword}{this} == rhs;}
+\DoxyCodeLine{1328     \}}
+\DoxyCodeLine{1329 }
+\DoxyCodeLine{1330     \textcolor{comment}{// template<class T>}}
+\DoxyCodeLine{1331     \textcolor{comment}{// Tensor\& Cpr\_(const T \&rhs)\{}}
+\DoxyCodeLine{1332     \textcolor{comment}{//}}
+\DoxyCodeLine{1333     \textcolor{comment}{//      return *this == rhs;}}
+\DoxyCodeLine{1334     \textcolor{comment}{// \}}}
+\DoxyCodeLine{1335 }
+\DoxyCodeLine{1336     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1337     Tensor Mod(\textcolor{keyword}{const} T \&rhs) \{}
+\DoxyCodeLine{1338       \textcolor{keywordflow}{return} *\textcolor{keyword}{this} \% rhs;}
+\DoxyCodeLine{1339     \}}
+\DoxyCodeLine{1340 }
+\DoxyCodeLine{1341     Tensor operator-\/() \{ \textcolor{keywordflow}{return} this-\/>Mul(-\/1.); \}}
+\DoxyCodeLine{1342 }
+\DoxyCodeLine{1343     Tensor flatten()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{1344       Tensor out = this-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_a5e2248e9babdb786167ed349df9084ae}{clone}}();}
+\DoxyCodeLine{1345       out.contiguous\_();}
+\DoxyCodeLine{1346       out.reshape\_(\{-\/1\});}
+\DoxyCodeLine{1347       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{1348     \}}
+\DoxyCodeLine{1349 }
+\DoxyCodeLine{1350     \textcolor{keywordtype}{void} flatten\_() \{}
+\DoxyCodeLine{1351       this-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_a3d4342299e6951dae13b6136b89f1d53}{contiguous\_}}();}
+\DoxyCodeLine{1352       this-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_a3723449528b9a20dd46c32c9e042b8f0}{reshape\_}}(\{-\/1\});}
+\DoxyCodeLine{1353     \}}
+\DoxyCodeLine{1354 }
+\DoxyCodeLine{1355     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} Tensor \&rhs) \{}
+\DoxyCodeLine{1356       \textcolor{comment}{// Tensor in;}}
+\DoxyCodeLine{1357       \textcolor{keywordflow}{if} (!this-\/>is\_contiguous()) this-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_a3d4342299e6951dae13b6136b89f1d53}{contiguous\_}}();}
+\DoxyCodeLine{1358 }
+\DoxyCodeLine{1359       \textcolor{comment}{// check Tensor in shape:}}
+\DoxyCodeLine{1360       cytnx\_error\_msg(rhs.shape().size() == 0 || this-\/>shape().size() == 0,}
+\DoxyCodeLine{1361                       \textcolor{stringliteral}{"{}[ERROR] try to append a null Tensor.\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{1362       cytnx\_error\_msg(rhs.shape().size() != (this-\/>shape().size() -\/ 1),}
+\DoxyCodeLine{1363                       \textcolor{stringliteral}{"{}[ERROR] try to append a Tensor with rank not match.\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{1364       cytnx\_uint64 Nelem = 1;}
+\DoxyCodeLine{1365       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} i = 0; i < rhs.shape().size(); i++) \{}
+\DoxyCodeLine{1366         cytnx\_error\_msg(rhs.shape()[i] != this-\/>shape()[i + 1],}
+\DoxyCodeLine{1367                         \textcolor{stringliteral}{"{}[ERROR] dimension mismatch @ rhs.rank: [\%d] this: [\%d] rhs: [\%d]\(\backslash\)n"{}}, i,}
+\DoxyCodeLine{1368                         this-\/>shape()[i + 1], rhs.shape()[i]);}
+\DoxyCodeLine{1369         Nelem *= rhs.shape()[i];}
+\DoxyCodeLine{1370       \}}
+\DoxyCodeLine{1371 }
+\DoxyCodeLine{1372       \textcolor{comment}{// check type:}}
+\DoxyCodeLine{1373       Tensor in;}
+\DoxyCodeLine{1374       \textcolor{keywordflow}{if} (rhs.dtype() != this-\/>dtype()) \{}
+\DoxyCodeLine{1375         in = rhs.astype(this-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}{dtype}}());}
+\DoxyCodeLine{1376         \textcolor{keywordflow}{if} (!in.is\_contiguous()) in.contiguous\_();}
+\DoxyCodeLine{1377       \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{1378         \textcolor{keywordflow}{if} (!in.is\_contiguous())}
+\DoxyCodeLine{1379           in = rhs.contiguous();}
+\DoxyCodeLine{1380         \textcolor{keywordflow}{else}}
+\DoxyCodeLine{1381           in = rhs;}
+\DoxyCodeLine{1382       \}}
+\DoxyCodeLine{1383       this-\/>\_impl-\/>\_shape[0] += 1;}
+\DoxyCodeLine{1384       cytnx\_uint64 oldsize = this-\/>\_impl-\/>\_storage.size();}
+\DoxyCodeLine{1385       this-\/>\_impl-\/>\_storage.resize(oldsize + Nelem);}
+\DoxyCodeLine{1386       memcpy(((\textcolor{keywordtype}{char} *)this-\/>\_impl-\/>\_storage.data()) +}
+\DoxyCodeLine{1387                oldsize * Type.typeSize(this-\/>dtype()) / \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{char}),}
+\DoxyCodeLine{1388              in.\_impl-\/>\_storage.data(), Type.typeSize(in.dtype()) * Nelem);}
+\DoxyCodeLine{1389     \}}
+\DoxyCodeLine{1390     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} Storage \&srhs) \{}
+\DoxyCodeLine{1391       \textcolor{keywordflow}{if} (!this-\/>is\_contiguous()) this-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_a3d4342299e6951dae13b6136b89f1d53}{contiguous\_}}();}
+\DoxyCodeLine{1392 }
+\DoxyCodeLine{1393       \textcolor{comment}{// check Tensor in shape:}}
+\DoxyCodeLine{1394       cytnx\_error\_msg(srhs.size() == 0 || this-\/>shape().size() == 0,}
+\DoxyCodeLine{1395                       \textcolor{stringliteral}{"{}[ERROR] try to append a null Tensor.\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{1396       cytnx\_error\_msg((this-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}}().size() -\/ 1) != 1,}
+\DoxyCodeLine{1397                       \textcolor{stringliteral}{"{}[ERROR] append a storage to Tensor can only accept rank-\/2 Tensor.\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{1398       cytnx\_error\_msg(this-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}}().back() != srhs.size(), \textcolor{stringliteral}{"{}[ERROR] Tensor dmension mismatch!\%s"{}},}
+\DoxyCodeLine{1399                       \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{1400 }
+\DoxyCodeLine{1401       \textcolor{comment}{// check type:}}
+\DoxyCodeLine{1402       Storage in;}
+\DoxyCodeLine{1403       \textcolor{keywordflow}{if} (srhs.dtype() != this-\/>dtype()) \{}
+\DoxyCodeLine{1404         in = srhs.astype(this-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_a4472af6f8e825a13440e832bf82fb627}{dtype}}());}
+\DoxyCodeLine{1405       \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{1406         in = srhs;}
+\DoxyCodeLine{1407       \}}
+\DoxyCodeLine{1408       this-\/>\_impl-\/>\_shape[0] += 1;}
+\DoxyCodeLine{1409       cytnx\_uint64 oldsize = this-\/>\_impl-\/>\_storage.size();}
+\DoxyCodeLine{1410       this-\/>\_impl-\/>\_storage.resize(oldsize + in.size());}
+\DoxyCodeLine{1411       memcpy(((\textcolor{keywordtype}{char} *)this-\/>\_impl-\/>\_storage.data()) +}
+\DoxyCodeLine{1412                oldsize * Type.typeSize(this-\/>dtype()) / \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{char}),}
+\DoxyCodeLine{1413              in.\_impl-\/>Mem, Type.typeSize(in.dtype()) * in.size());}
+\DoxyCodeLine{1414     \}}
+\DoxyCodeLine{1415     \textcolor{comment}{/*}}
+\DoxyCodeLine{1416 \textcolor{comment}{    void append(const Tensor \&rhs)\{}}
+\DoxyCodeLine{1417 \textcolor{comment}{        // convert to the same type.}}
+\DoxyCodeLine{1418 \textcolor{comment}{        Tensor in;}}
+\DoxyCodeLine{1419 \textcolor{comment}{        if(rhs.dtype() != this-\/>dtype())\{}}
+\DoxyCodeLine{1420 \textcolor{comment}{            in = rhs.astype(this-\/>dtype());}}
+\DoxyCodeLine{1421 \textcolor{comment}{        \}else\{}}
+\DoxyCodeLine{1422 \textcolor{comment}{            in = rhs;}}
+\DoxyCodeLine{1423 \textcolor{comment}{        \}}}
+\DoxyCodeLine{1424 \textcolor{comment}{}}
+\DoxyCodeLine{1425 \textcolor{comment}{        // 1) check rank}}
+\DoxyCodeLine{1426 \textcolor{comment}{        if(this-\/>shape().size()==1)\{}}
+\DoxyCodeLine{1427 \textcolor{comment}{            // check if rhs is a scalar tensor (only one element)}}
+\DoxyCodeLine{1428 \textcolor{comment}{            cytnx\_error\_msg(!(rhs.shape().size()==1 \&\& rhs.shape()[0]==1),"{}[ERROR] trying to append}}
+\DoxyCodeLine{1429 \textcolor{comment}{    a scalar into multidimentional Tensor is not allow.\(\backslash\)n Only rank-\/1 Tensor can accept scalar}}
+\DoxyCodeLine{1430 \textcolor{comment}{    append.\%s"{},"{}\(\backslash\)n"{}); this-\/>\_impl-\/>\_shape[0]+=1; this-\/>\_impl-\/>\_storage.append(0);}}
+\DoxyCodeLine{1431 \textcolor{comment}{}}
+\DoxyCodeLine{1432 \textcolor{comment}{        \}else\{}}
+\DoxyCodeLine{1433 \textcolor{comment}{            cytnx\_error\_msg(rhs.shape().size() != this-\/>shape().size()-\/1,"{}[ERROR] try to append a}}
+\DoxyCodeLine{1434 \textcolor{comment}{    Tensor with rank not match.\%s"{},"{}\(\backslash\)n"{});}}
+\DoxyCodeLine{1435 \textcolor{comment}{}}
+\DoxyCodeLine{1436 \textcolor{comment}{        \}}}
+\DoxyCodeLine{1437 \textcolor{comment}{        cytnx\_error\_msg(!this-\/>is\_contiguous(),"{}[ERROR] append require the Tensor to be contiguous.}}
+\DoxyCodeLine{1438 \textcolor{comment}{    suggestion: call contiguous() or contiguous\_() first."{},"{}\(\backslash\)n"{});}}
+\DoxyCodeLine{1439 \textcolor{comment}{    \}}}
+\DoxyCodeLine{1440 \textcolor{comment}{    */}}
+\DoxyCodeLine{1441     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1442     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} T \&rhs) \{}
+\DoxyCodeLine{1443       cytnx\_error\_msg(this-\/>\mbox{\hyperlink{classcytnx_1_1Tensor_af36ef858677f13dcda8512fd9b5ae475}{shape}}().size() != 1,}
+\DoxyCodeLine{1444                       \textcolor{stringliteral}{"{}[ERROR] trying to append a scalar into multidimentional Tensor is not "{}}}
+\DoxyCodeLine{1445                       \textcolor{stringliteral}{"{}allow.\(\backslash\)n Only rank-\/1 Tensor can accept scalar append.\%s"{}},}
+\DoxyCodeLine{1446                       \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{1447       cytnx\_error\_msg(!this-\/>is\_contiguous(),}
+\DoxyCodeLine{1448                       \textcolor{stringliteral}{"{}[ERROR] append require the Tensor to be contiguous. suggestion: call "{}}}
+\DoxyCodeLine{1449                       \textcolor{stringliteral}{"{}contiguous() or contiguous\_() first."{}},}
+\DoxyCodeLine{1450                       \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{1451       this-\/>\_impl-\/>\_shape[0] += 1;}
+\DoxyCodeLine{1452       this-\/>\_impl-\/>\_storage.append(rhs);}
+\DoxyCodeLine{1453     \}}
+\DoxyCodeLine{1454 }
+\DoxyCodeLine{1455     \textcolor{keywordtype}{bool} same\_data(\textcolor{keyword}{const} Tensor \&rhs) \textcolor{keyword}{const};}
+\DoxyCodeLine{1456 }
+\DoxyCodeLine{1457     \textcolor{comment}{// linalg:}}
+\DoxyCodeLine{1458     std::vector<Tensor> Svd(\textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&is\_U = \textcolor{keyword}{true}, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&is\_vT = \textcolor{keyword}{true}) \textcolor{keyword}{const};}
+\DoxyCodeLine{1459     std::vector<Tensor> Eigh(\textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&is\_V = \textcolor{keyword}{true}, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&row\_v = \textcolor{keyword}{false}) \textcolor{keyword}{const};}
+\DoxyCodeLine{1460     Tensor \&InvM\_();}
+\DoxyCodeLine{1461     Tensor InvM() \textcolor{keyword}{const};}
+\DoxyCodeLine{1462     Tensor \&Inv\_(\textcolor{keyword}{const} \textcolor{keywordtype}{double} \&clip);}
+\DoxyCodeLine{1463     Tensor Inv(\textcolor{keyword}{const} \textcolor{keywordtype}{double} \&clip) \textcolor{keyword}{const};}
+\DoxyCodeLine{1464 }
+\DoxyCodeLine{1465     Tensor \&Conj\_();}
+\DoxyCodeLine{1466     Tensor Conj() \textcolor{keyword}{const};}
+\DoxyCodeLine{1467     Tensor \&Exp\_();}
+\DoxyCodeLine{1468     Tensor Exp() \textcolor{keyword}{const};}
+\DoxyCodeLine{1469     Tensor Norm() \textcolor{keyword}{const};}
+\DoxyCodeLine{1470     Tensor Pow(\textcolor{keyword}{const} cytnx\_double \&p) \textcolor{keyword}{const};}
+\DoxyCodeLine{1471     Tensor \&Pow\_(\textcolor{keyword}{const} cytnx\_double \&p);}
+\DoxyCodeLine{1472     Tensor Trace(\textcolor{keyword}{const} cytnx\_uint64 \&a = 0, \textcolor{keyword}{const} cytnx\_uint64 \&b = 1) \textcolor{keyword}{const};}
+\DoxyCodeLine{1473     Tensor Abs() \textcolor{keyword}{const};}
+\DoxyCodeLine{1474     Tensor \&Abs\_();}
+\DoxyCodeLine{1475     Tensor Max() \textcolor{keyword}{const};}
+\DoxyCodeLine{1476     Tensor Min() \textcolor{keyword}{const};}
+\DoxyCodeLine{1477 }
+\DoxyCodeLine{1478   \};  \textcolor{comment}{// class Tensor}}
+\DoxyCodeLine{1479 }
+\DoxyCodeLine{1480   Tensor operator+(\textcolor{keyword}{const} Tensor \&lhs, \textcolor{keyword}{const} Tensor::Tproxy \&rhs);}
+\DoxyCodeLine{1481   Tensor operator-\/(\textcolor{keyword}{const} Tensor \&lhs, \textcolor{keyword}{const} Tensor::Tproxy \&rhs);}
+\DoxyCodeLine{1482   Tensor operator*(\textcolor{keyword}{const} Tensor \&lhs, \textcolor{keyword}{const} Tensor::Tproxy \&rhs);}
+\DoxyCodeLine{1483   Tensor operator/(\textcolor{keyword}{const} Tensor \&lhs, \textcolor{keyword}{const} Tensor::Tproxy \&rhs);}
+\DoxyCodeLine{1484 }
+\DoxyCodeLine{1485   Tensor operator+(\textcolor{keyword}{const} Tensor \&lhs, \textcolor{keyword}{const} Scalar::Sproxy \&rhs);}
+\DoxyCodeLine{1486   Tensor operator-\/(\textcolor{keyword}{const} Tensor \&lhs, \textcolor{keyword}{const} Scalar::Sproxy \&rhs);}
+\DoxyCodeLine{1487   Tensor operator*(\textcolor{keyword}{const} Tensor \&lhs, \textcolor{keyword}{const} Scalar::Sproxy \&rhs);}
+\DoxyCodeLine{1488   Tensor operator/(\textcolor{keyword}{const} Tensor \&lhs, \textcolor{keyword}{const} Scalar::Sproxy \&rhs);}
+\DoxyCodeLine{1489 }
+\DoxyCodeLine{1490   std::ostream \&operator<<(std::ostream \&os, \textcolor{keyword}{const} Tensor \&in);}
+\DoxyCodeLine{1491   std::ostream \&operator<<(std::ostream \&os, \textcolor{keyword}{const} Tensor::Tproxy \&in);}
+\DoxyCodeLine{1492   \textcolor{comment}{//\{ os << Tensor(in);\};}}
+\DoxyCodeLine{1493 \}  \textcolor{comment}{// namespace cytnx}}
+\DoxyCodeLine{1494 }
+\DoxyCodeLine{1495 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

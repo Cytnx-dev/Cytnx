@@ -1,0 +1,366 @@
+\hypertarget{Bond_8hpp_source}{}\doxysection{Bond.\+hpp}
+\label{Bond_8hpp_source}\index{include/Bond.hpp@{include/Bond.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_H\_Bond\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_H\_Bond\_}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include "{}Type.hpp"{}}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include "{}Symmetry.hpp"{}}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}cytnx\_error.hpp"{}}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include <initializer\_list>}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include <fstream>}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include <map>}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include <algorithm>}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include "{}intrusive\_ptr\_base.hpp"{}}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include "{}utils/vec\_clone.hpp"{}}}
+\DoxyCodeLine{14 \textcolor{keyword}{namespace }cytnx \{}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{17   \textcolor{keyword}{enum} bondType : \textcolor{keywordtype}{int} \{ BD\_KET = -\/1, BD\_BRA = 1, BD\_REG = 0, BD\_NONE = 0, BD\_IN = -\/1, BD\_OUT = 1 \};}
+\DoxyCodeLine{19   \textcolor{keyword}{class }Bond\_impl : \textcolor{keyword}{public} intrusive\_ptr\_base<Bond\_impl> \{}
+\DoxyCodeLine{20    \textcolor{keyword}{private}:}
+\DoxyCodeLine{21    \textcolor{keyword}{public}:}
+\DoxyCodeLine{22     \textcolor{keyword}{friend} \textcolor{keyword}{class }Bond;}
+\DoxyCodeLine{23     cytnx\_uint64 \_dim;}
+\DoxyCodeLine{24     bondType \_type;}
+\DoxyCodeLine{25     std::vector<cytnx\_uint64> \_degs;  \textcolor{comment}{// this only works for Qnum}}
+\DoxyCodeLine{26     \textcolor{comment}{/*}}
+\DoxyCodeLine{27 \textcolor{comment}{        [Note], \_degs has size only when the Bond is defined with Qnum, deg !!}}
+\DoxyCodeLine{28 \textcolor{comment}{                Use this size to check if the bond is type-\/2 (new type)}}
+\DoxyCodeLine{29 \textcolor{comment}{    */}}
+\DoxyCodeLine{30     std::vector<std::vector<cytnx\_int64>> \_qnums;  \textcolor{comment}{//(dim, \# of sym)}}
+\DoxyCodeLine{31     std::vector<Symmetry> \_syms;}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33     Bond\_impl() : \_dim(0), \_type(bondType::BD\_REG)\{\};}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{35     \textcolor{keywordtype}{void} \_rm\_qnum(\textcolor{keyword}{const} cytnx\_uint64 \&q\_index)\{}
+\DoxyCodeLine{36         \textcolor{comment}{// this will not check, so check it before using this internal function!!}}
+\DoxyCodeLine{37         this-\/>\_dim -\/= this-\/>\_degs[q\_index];}
+\DoxyCodeLine{38         this-\/>\_degs.erase(this-\/>\_degs.begin() + q\_index);}
+\DoxyCodeLine{39         this-\/>\_qnums.erase(this-\/>\_qnums.begin() + q\_index);}
+\DoxyCodeLine{40     \}}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42     \textcolor{keywordtype}{void} Init(\textcolor{keyword}{const} cytnx\_uint64 \&dim, \textcolor{keyword}{const} bondType \&bd\_type = bondType::BD\_REG,}
+\DoxyCodeLine{43               \textcolor{keyword}{const} std::vector<std::vector<cytnx\_int64>> \&in\_qnums = \{\},}
+\DoxyCodeLine{44               \textcolor{keyword}{const} std::vector<Symmetry> \&in\_syms = \{\});}
+\DoxyCodeLine{45 }
+\DoxyCodeLine{46     \textcolor{comment}{// new added}}
+\DoxyCodeLine{47     \textcolor{keywordtype}{void} Init(\textcolor{keyword}{const} bondType \&bd\_type, \textcolor{keyword}{const} std::vector<std::vector<cytnx\_int64>> \&in\_qnums,}
+\DoxyCodeLine{48               \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&degs, \textcolor{keyword}{const} std::vector<Symmetry> \&in\_syms = \{\});}
+\DoxyCodeLine{49 }
+\DoxyCodeLine{50     bondType type()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_type; \};}
+\DoxyCodeLine{51     \textcolor{keyword}{const} std::vector<std::vector<cytnx\_int64>> \&qnums()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_qnums; \}}
+\DoxyCodeLine{52     std::vector<std::vector<cytnx\_int64>> \&qnums() \{ \textcolor{keywordflow}{return} this-\/>\_qnums; \}}
+\DoxyCodeLine{53     \textcolor{keyword}{const} cytnx\_uint64 \&dim()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_dim; \}}
+\DoxyCodeLine{54     cytnx\_uint32 Nsym()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_syms.size(); \}}
+\DoxyCodeLine{55     \textcolor{keyword}{const} std::vector<Symmetry> \&syms()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_syms; \}}
+\DoxyCodeLine{56     std::vector<Symmetry> \&syms() \{ \textcolor{keywordflow}{return} this-\/>\_syms; \}}
+\DoxyCodeLine{57 }
+\DoxyCodeLine{58     \textcolor{comment}{// this is clone return.}}
+\DoxyCodeLine{59     std::vector<std::vector<cytnx\_int64>> qnums\_clone()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_qnums; \}}
+\DoxyCodeLine{60     std::vector<Symmetry> syms\_clone()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} vec\_clone(this-\/>\_syms); \}}
+\DoxyCodeLine{61 }
+\DoxyCodeLine{62     \textcolor{keywordtype}{bool} has\_duplicate\_qnums()\textcolor{keyword}{ const}\{}
+\DoxyCodeLine{63         \textcolor{keywordflow}{if}(this-\/>\_degs.size())\{}
+\DoxyCodeLine{64             \textcolor{keyword}{auto} tmp = this-\/>\_qnums;}
+\DoxyCodeLine{65             std::sort(tmp.begin(),tmp.end());}
+\DoxyCodeLine{66             \textcolor{keywordflow}{return} std::adjacent\_find(tmp.begin(), tmp.end()) != tmp.end();}
+\DoxyCodeLine{67         \}\textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{68             \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{69         \}}
+\DoxyCodeLine{70     \}}
+\DoxyCodeLine{71 }
+\DoxyCodeLine{72     \textcolor{keywordtype}{void} set\_type(\textcolor{keyword}{const} bondType \&new\_bondType) \{}
+\DoxyCodeLine{73       \textcolor{keywordflow}{if} ((this-\/>\_type != BD\_REG)) \{}
+\DoxyCodeLine{74         \textcolor{keywordflow}{if} (new\_bondType == BD\_REG) \{}
+\DoxyCodeLine{75           cytnx\_error\_msg(this-\/>\_qnums.size(),}
+\DoxyCodeLine{76                           \textcolor{stringliteral}{"{}[ERROR] cannot change type to BD\_REG for a symmetry bond.\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{77         \}}
+\DoxyCodeLine{78         \textcolor{keywordflow}{if} (std::abs(\textcolor{keywordtype}{int}(this-\/>\_type)) != std::abs(\textcolor{keywordtype}{int}(new\_bondType))) \{}
+\DoxyCodeLine{79           cytnx\_error\_msg(this-\/>\_qnums.size(),}
+\DoxyCodeLine{80                           \textcolor{stringliteral}{"{}[ERROR] cannot exchange BDtype between BD\_* <-\/> gBD\_* .\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{81         \}}
+\DoxyCodeLine{82       \}}
+\DoxyCodeLine{83 }
+\DoxyCodeLine{84       this-\/>\_type = new\_bondType;}
+\DoxyCodeLine{85     \}}
+\DoxyCodeLine{86 }
+\DoxyCodeLine{87     \textcolor{keywordtype}{void} clear\_type() \{}
+\DoxyCodeLine{88       \textcolor{keywordflow}{if} (this-\/>\_type != BD\_REG) \{}
+\DoxyCodeLine{89         cytnx\_error\_msg(this-\/>\_qnums.size(), \textcolor{stringliteral}{"{}[ERROR] cannot clear type for a symmetry bond.\%s"{}},}
+\DoxyCodeLine{90                         \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{91       \}}
+\DoxyCodeLine{92       this-\/>\_type = bondType::BD\_REG;}
+\DoxyCodeLine{93     \}}
+\DoxyCodeLine{94 }
+\DoxyCodeLine{95     boost::intrusive\_ptr<Bond\_impl> clone()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{96       boost::intrusive\_ptr<Bond\_impl> out(\textcolor{keyword}{new} Bond\_impl());}
+\DoxyCodeLine{97       out-\/>\_dim = this-\/>dim();}
+\DoxyCodeLine{98       out-\/>\_type = this-\/>type();}
+\DoxyCodeLine{99       out-\/>\_qnums = this-\/>qnums\_clone();}
+\DoxyCodeLine{100       out-\/>\_syms = this-\/>syms\_clone();  \textcolor{comment}{// return a clone of vec!}}
+\DoxyCodeLine{101       out-\/>\_degs = this-\/>\_degs;}
+\DoxyCodeLine{102       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{103     \}}
+\DoxyCodeLine{104 }
+\DoxyCodeLine{105     \textcolor{comment}{// [NOTE] for UniTensor iinternal, we might need to return the QNpool (unordered map for further}}
+\DoxyCodeLine{106     \textcolor{comment}{// info on block arrangement!)}}
+\DoxyCodeLine{107     \textcolor{keywordtype}{void} combineBond\_(\textcolor{keyword}{const} boost::intrusive\_ptr<Bond\_impl> \&bd\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&is\_grp = \textcolor{keyword}{true});}
+\DoxyCodeLine{108 }
+\DoxyCodeLine{109     boost::intrusive\_ptr<Bond\_impl> combineBond(\textcolor{keyword}{const} boost::intrusive\_ptr<Bond\_impl> \&bd\_in,}
+\DoxyCodeLine{110                                                 \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&is\_grp = \textcolor{keyword}{true}) \{}
+\DoxyCodeLine{111       boost::intrusive\_ptr<Bond\_impl> out = this-\/>clone();}
+\DoxyCodeLine{112       out-\/>combineBond\_(bd\_in, is\_grp);}
+\DoxyCodeLine{113       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{114     \}}
+\DoxyCodeLine{115 }
+\DoxyCodeLine{116     \textcolor{comment}{// return a sorted qnums by removing all duplicates, sorted from large to small.}}
+\DoxyCodeLine{117     std::vector<std::vector<cytnx\_int64>> getUniqueQnums(std::vector<cytnx\_uint64> \&counts,}
+\DoxyCodeLine{118                                                          \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&return\_counts);}
+\DoxyCodeLine{119     \textcolor{comment}{// checked [KHW] \string^\string^}}
+\DoxyCodeLine{120     \textcolor{comment}{// return the degeneracy of the specify qnum set.}}
+\DoxyCodeLine{121     cytnx\_uint64 getDegeneracy(\textcolor{keyword}{const} std::vector<cytnx\_int64> \&qnum, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&return\_indices,}
+\DoxyCodeLine{122                                std::vector<cytnx\_uint64> \&indices);}
+\DoxyCodeLine{123 }
+\DoxyCodeLine{124     \textcolor{comment}{// return the effective qnums when Bra-\/Ket mismatch.}}
+\DoxyCodeLine{125     std::vector<std::vector<cytnx\_int64>> calc\_reverse\_qnums();}
+\DoxyCodeLine{126 }
+\DoxyCodeLine{127 }
+\DoxyCodeLine{128     std::vector<cytnx\_uint64>\& getDegeneracies()\{ \textcolor{keywordflow}{return} this-\/>\_degs;\};}
+\DoxyCodeLine{129     \textcolor{keyword}{const} std::vector<cytnx\_uint64>\& getDegeneracies()\textcolor{keyword}{ const}\{\textcolor{keywordflow}{return} this-\/>\_degs;\};}
+\DoxyCodeLine{130 }
+\DoxyCodeLine{131     std::vector<cytnx\_uint64> group\_duplicates\_();}
+\DoxyCodeLine{132 }
+\DoxyCodeLine{133     boost::intrusive\_ptr<Bond\_impl> group\_duplicates(std::vector<cytnx\_uint64> \&mapper)\textcolor{keyword}{ const}\{}
+\DoxyCodeLine{134         boost::intrusive\_ptr<Bond\_impl> out = this-\/>clone();}
+\DoxyCodeLine{135         mapper = out-\/>group\_duplicates\_();}
+\DoxyCodeLine{136         \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{137     \}}
+\DoxyCodeLine{138 }
+\DoxyCodeLine{139     \textcolor{keywordtype}{void} force\_combineBond\_(\textcolor{keyword}{const} boost::intrusive\_ptr<Bond\_impl> \&bd\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&is\_grp);}
+\DoxyCodeLine{140 }
+\DoxyCodeLine{141 }
+\DoxyCodeLine{142 }
+\DoxyCodeLine{143   \};  \textcolor{comment}{// Bond\_impl}}
+\DoxyCodeLine{145 \textcolor{comment}{}}
+\DoxyCodeLine{147   \textcolor{keyword}{class }\mbox{\hyperlink{classcytnx_1_1Bond}{Bond}} \{}
+\DoxyCodeLine{148    \textcolor{keyword}{public}:}
+\DoxyCodeLine{150     boost::intrusive\_ptr<Bond\_impl> \_impl;}
+\DoxyCodeLine{151     \mbox{\hyperlink{classcytnx_1_1Bond}{Bond}}() : \_impl(\textcolor{keyword}{new} Bond\_impl())\{\};}
+\DoxyCodeLine{152     \mbox{\hyperlink{classcytnx_1_1Bond}{Bond}}(\textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1Bond}{Bond}} \&rhs) \{ this-\/>\_impl = rhs.\_impl; \}}
+\DoxyCodeLine{153     \mbox{\hyperlink{classcytnx_1_1Bond}{Bond}} \&operator=(\textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1Bond}{Bond}} \&rhs) \{}
+\DoxyCodeLine{154       this-\/>\_impl = rhs.\_impl;}
+\DoxyCodeLine{155       \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{156     \}}
+\DoxyCodeLine{158 }
+\DoxyCodeLine{159     \mbox{\hyperlink{classcytnx_1_1Bond}{Bond}}(\textcolor{keyword}{const} cytnx\_uint64 \&\mbox{\hyperlink{classcytnx_1_1Bond_aa072647e03a4c797479445bd41b9eacf}{dim}}, \textcolor{keyword}{const} bondType \&bd\_type = bondType::BD\_REG,}
+\DoxyCodeLine{160          \textcolor{keyword}{const} std::vector<std::vector<cytnx\_int64>> \&in\_qnums = \{\},}
+\DoxyCodeLine{161          \textcolor{keyword}{const} std::vector<Symmetry> \&in\_syms = \{\})}
+\DoxyCodeLine{162         : \_impl(\textcolor{keyword}{new} Bond\_impl()) \{}
+\DoxyCodeLine{163       this-\/>\_impl-\/>\mbox{\hyperlink{classcytnx_1_1Bond_a707a803fa98fb6a87b5f3c3b3000509f}{Init}}(\mbox{\hyperlink{classcytnx_1_1Bond_aa072647e03a4c797479445bd41b9eacf}{dim}}, bd\_type, in\_qnums, in\_syms);}
+\DoxyCodeLine{164     \}}
+\DoxyCodeLine{165 }
+\DoxyCodeLine{166     \mbox{\hyperlink{classcytnx_1_1Bond}{Bond}}(\textcolor{keyword}{const} bondType \&bd\_type, \textcolor{keyword}{const} std::vector<std::vector<cytnx\_int64>> \&in\_qnums,}
+\DoxyCodeLine{167          \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&degs, \textcolor{keyword}{const} std::vector<Symmetry> \&in\_syms = \{\})}
+\DoxyCodeLine{168         : \_impl(\textcolor{keyword}{new} Bond\_impl()) \{}
+\DoxyCodeLine{169       this-\/>\_impl-\/>\mbox{\hyperlink{classcytnx_1_1Bond_a707a803fa98fb6a87b5f3c3b3000509f}{Init}}(bd\_type, in\_qnums, degs, in\_syms);}
+\DoxyCodeLine{170     \}}
+\DoxyCodeLine{171 }
+\DoxyCodeLine{172 }
+\DoxyCodeLine{173     \mbox{\hyperlink{classcytnx_1_1Bond}{Bond}}(\textcolor{keyword}{const} bondType \&bd\_type, \textcolor{keyword}{const} std::initializer\_list<std::vector<cytnx\_int64>> \&in\_qnums,}
+\DoxyCodeLine{174          \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&degs, \textcolor{keyword}{const} std::vector<Symmetry> \&in\_syms = \{\})}
+\DoxyCodeLine{175         : \_impl(\textcolor{keyword}{new} Bond\_impl()) \{}
+\DoxyCodeLine{176       this-\/>\_impl-\/>\mbox{\hyperlink{classcytnx_1_1Bond_a707a803fa98fb6a87b5f3c3b3000509f}{Init}}(bd\_type, in\_qnums, degs, in\_syms);}
+\DoxyCodeLine{177     \}}
+\DoxyCodeLine{178 }
+\DoxyCodeLine{179     \textcolor{comment}{// this is needed for python binding!}}
+\DoxyCodeLine{180     \mbox{\hyperlink{classcytnx_1_1Bond}{Bond}}(\textcolor{keyword}{const} bondType \&bd\_type, \textcolor{keyword}{const} std::vector<cytnx::Qs> \&in\_qnums,}
+\DoxyCodeLine{181          \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&degs, \textcolor{keyword}{const} std::vector<Symmetry> \&in\_syms = \{\})}
+\DoxyCodeLine{182         : \_impl(\textcolor{keyword}{new} Bond\_impl()) \{}
+\DoxyCodeLine{183       vec2d<cytnx\_int64> \mbox{\hyperlink{classcytnx_1_1Bond_ab4f05193a012bd9a077374b5f305e898}{qnums}}(in\_qnums.begin(),in\_qnums.end()); }
+\DoxyCodeLine{184       this-\/>\_impl-\/>Init(bd\_type, \mbox{\hyperlink{classcytnx_1_1Bond_ab4f05193a012bd9a077374b5f305e898}{qnums}}, degs, in\_syms);}
+\DoxyCodeLine{185     \}}
+\DoxyCodeLine{186 }
+\DoxyCodeLine{187     }
+\DoxyCodeLine{188 }
+\DoxyCodeLine{189     \mbox{\hyperlink{classcytnx_1_1Bond}{Bond}}(\textcolor{keyword}{const} bondType \&bd\_type, \textcolor{keyword}{const} std::vector< std::pair<std::vector<cytnx\_int64>, cytnx\_uint64> > \&in\_qnums\_dims,}
+\DoxyCodeLine{190          \textcolor{keyword}{const} std::vector<Symmetry> \&in\_syms = \{\})}
+\DoxyCodeLine{191         : \_impl(\textcolor{keyword}{new} Bond\_impl()) \{}
+\DoxyCodeLine{192       this-\/>\mbox{\hyperlink{classcytnx_1_1Bond_a707a803fa98fb6a87b5f3c3b3000509f}{Init}}(bd\_type, in\_qnums\_dims, in\_syms);}
+\DoxyCodeLine{193     \}}
+\DoxyCodeLine{194 }
+\DoxyCodeLine{195 }
+\DoxyCodeLine{228     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Bond_a707a803fa98fb6a87b5f3c3b3000509f}{Init}}(\textcolor{keyword}{const} cytnx\_uint64 \&\mbox{\hyperlink{classcytnx_1_1Bond_aa072647e03a4c797479445bd41b9eacf}{dim}}, \textcolor{keyword}{const} bondType \&bd\_type = bondType::BD\_REG,}
+\DoxyCodeLine{229               \textcolor{keyword}{const} std::vector<std::vector<cytnx\_int64>> \&in\_qnums = \{\},}
+\DoxyCodeLine{230               \textcolor{keyword}{const} std::vector<Symmetry> \&in\_syms = \{\}) \{}
+\DoxyCodeLine{231       this-\/>\_impl-\/>Init(\mbox{\hyperlink{classcytnx_1_1Bond_aa072647e03a4c797479445bd41b9eacf}{dim}}, bd\_type, in\_qnums, in\_syms);}
+\DoxyCodeLine{232     \}}
+\DoxyCodeLine{233 }
+\DoxyCodeLine{259     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Bond_ae7a70f6506d6035ec022ab03099a915d}{Init}}(\textcolor{keyword}{const} bondType \&bd\_type, \textcolor{keyword}{const} std::vector<std::vector<cytnx\_int64>> \&in\_qnums,}
+\DoxyCodeLine{260               \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&degs, \textcolor{keyword}{const} std::vector<Symmetry> \&in\_syms = \{\}) \{}
+\DoxyCodeLine{261       this-\/>\_impl-\/>Init(bd\_type, in\_qnums, degs, in\_syms);}
+\DoxyCodeLine{262     \}}
+\DoxyCodeLine{263 }
+\DoxyCodeLine{264     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Bond_a707a803fa98fb6a87b5f3c3b3000509f}{Init}}(\textcolor{keyword}{const} bondType \&bd\_type, \textcolor{keyword}{const} std::vector< std::pair<std::vector<cytnx\_int64>, cytnx\_uint64> > \&in\_qnums\_dims,}
+\DoxyCodeLine{265          \textcolor{keyword}{const} std::vector<Symmetry> \&in\_syms = \{\})\{}
+\DoxyCodeLine{266       }
+\DoxyCodeLine{267       vec2d<cytnx\_int64> \mbox{\hyperlink{classcytnx_1_1Bond_ab4f05193a012bd9a077374b5f305e898}{qnums}}(in\_qnums\_dims.size());}
+\DoxyCodeLine{268       std::vector<cytnx\_uint64> degs(in\_qnums\_dims.size());}
+\DoxyCodeLine{269       \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i=0;i<in\_qnums\_dims.size();i++)\{}
+\DoxyCodeLine{270         \mbox{\hyperlink{classcytnx_1_1Bond_ab4f05193a012bd9a077374b5f305e898}{qnums}}[i] = in\_qnums\_dims[i].first;}
+\DoxyCodeLine{271         degs[i] = in\_qnums\_dims[i].second;}
+\DoxyCodeLine{272       \}}
+\DoxyCodeLine{273             }
+\DoxyCodeLine{274       this-\/>\_impl-\/>Init(bd\_type, \mbox{\hyperlink{classcytnx_1_1Bond_ab4f05193a012bd9a077374b5f305e898}{qnums}}, degs, in\_syms);}
+\DoxyCodeLine{275 }
+\DoxyCodeLine{276     \}}
+\DoxyCodeLine{277 }
+\DoxyCodeLine{278 }
+\DoxyCodeLine{279 }
+\DoxyCodeLine{280 }
+\DoxyCodeLine{286     bondType \mbox{\hyperlink{classcytnx_1_1Bond_a8517743cec9589ed551114ea7e55fbb1}{type}}()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_impl-\/>type(); \};}
+\DoxyCodeLine{287 }
+\DoxyCodeLine{289 }
+\DoxyCodeLine{295     \textcolor{keyword}{const} std::vector<std::vector<cytnx\_int64>> \&\mbox{\hyperlink{classcytnx_1_1Bond_ab4f05193a012bd9a077374b5f305e898}{qnums}}()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_impl-\/>qnums(); \};}
+\DoxyCodeLine{296     std::vector<std::vector<cytnx\_int64>> \&\mbox{\hyperlink{classcytnx_1_1Bond_ab4f05193a012bd9a077374b5f305e898}{qnums}}() \{ \textcolor{keywordflow}{return} this-\/>\_impl-\/>qnums(); \};}
+\DoxyCodeLine{298 }
+\DoxyCodeLine{304     std::vector<std::vector<cytnx\_int64>> \mbox{\hyperlink{classcytnx_1_1Bond_a491a89aa4434d4056dd3e5de7e70e1e7}{qnums\_clone}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{305       \textcolor{keywordflow}{return} this-\/>\_impl-\/>qnums\_clone();}
+\DoxyCodeLine{306     \};}
+\DoxyCodeLine{307 }
+\DoxyCodeLine{313     cytnx\_uint64 \mbox{\hyperlink{classcytnx_1_1Bond_aa072647e03a4c797479445bd41b9eacf}{dim}}()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_impl-\/>dim(); \};}
+\DoxyCodeLine{314 }
+\DoxyCodeLine{320     cytnx\_uint32 \mbox{\hyperlink{classcytnx_1_1Bond_acd46a218add6a88c1cc9035b06adb7b6}{Nsym}}()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_impl-\/>syms().size(); \};}
+\DoxyCodeLine{321 }
+\DoxyCodeLine{323 }
+\DoxyCodeLine{328     \textcolor{keyword}{const} std::vector<Symmetry> \&\mbox{\hyperlink{classcytnx_1_1Bond_a408221e843ca57b779f5a5717188a8a8}{syms}}()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_impl-\/>syms(); \};}
+\DoxyCodeLine{329     std::vector<Symmetry> \&\mbox{\hyperlink{classcytnx_1_1Bond_a408221e843ca57b779f5a5717188a8a8}{syms}}() \{ \textcolor{keywordflow}{return} this-\/>\_impl-\/>syms(); \};}
+\DoxyCodeLine{331 }
+\DoxyCodeLine{337     std::vector<Symmetry> \mbox{\hyperlink{classcytnx_1_1Bond_a95a33764b6adf5644e91578c908504ca}{syms\_clone}}()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_impl-\/>syms\_clone(); \};}
+\DoxyCodeLine{338 }
+\DoxyCodeLine{344     \mbox{\hyperlink{classcytnx_1_1Bond}{Bond}} \&\mbox{\hyperlink{classcytnx_1_1Bond_a01be559109c1c7ecaccd0916a2954239}{set\_type}}(\textcolor{keyword}{const} bondType \&new\_bondType) \{}
+\DoxyCodeLine{345       this-\/>\_impl-\/>\mbox{\hyperlink{classcytnx_1_1Bond_a01be559109c1c7ecaccd0916a2954239}{set\_type}}(new\_bondType);}
+\DoxyCodeLine{346       \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{347     \}}
+\DoxyCodeLine{348 }
+\DoxyCodeLine{357     \mbox{\hyperlink{classcytnx_1_1Bond}{Bond}} \mbox{\hyperlink{classcytnx_1_1Bond_a31c8ff7b0817c37e67a80a225f5bd758}{retype}}(\textcolor{keyword}{const} bondType \&new\_bondType) \{}
+\DoxyCodeLine{358       \textcolor{keyword}{auto} out = this-\/>\mbox{\hyperlink{classcytnx_1_1Bond_a8c4d6443ffe7c3f3ecd8c474fd9a18eb}{clone}}();}
+\DoxyCodeLine{359       out.set\_type(new\_bondType);}
+\DoxyCodeLine{360       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{361     \}}
+\DoxyCodeLine{362 }
+\DoxyCodeLine{367     \mbox{\hyperlink{classcytnx_1_1Bond}{Bond}} \mbox{\hyperlink{classcytnx_1_1Bond_a6f47360919864f12affe9fda49b03994}{redirect}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{368       \textcolor{keyword}{auto} out = this-\/>\mbox{\hyperlink{classcytnx_1_1Bond_a8c4d6443ffe7c3f3ecd8c474fd9a18eb}{clone}}();}
+\DoxyCodeLine{369       out.set\_type(bondType(\textcolor{keywordtype}{int}(out.type()) * -\/1));}
+\DoxyCodeLine{370       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{371     \}}
+\DoxyCodeLine{372     }
+\DoxyCodeLine{377     \mbox{\hyperlink{classcytnx_1_1Bond}{Bond}}\& \mbox{\hyperlink{classcytnx_1_1Bond_aa023d872df52de5594b963e109ab7723}{redirect\_}}()\{}
+\DoxyCodeLine{378         this-\/>\mbox{\hyperlink{classcytnx_1_1Bond_a01be559109c1c7ecaccd0916a2954239}{set\_type}}(bondType(\textcolor{keywordtype}{int}(this-\/>\mbox{\hyperlink{classcytnx_1_1Bond_a8517743cec9589ed551114ea7e55fbb1}{type}}()) * -\/1));}
+\DoxyCodeLine{379         \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{380     \}}
+\DoxyCodeLine{381 }
+\DoxyCodeLine{382 }
+\DoxyCodeLine{387     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Bond_a6272e30153df85944fc98bf5419dc1c8}{clear\_type}}() \{ this-\/>\_impl-\/>clear\_type(); \}}
+\DoxyCodeLine{388 }
+\DoxyCodeLine{403     \mbox{\hyperlink{classcytnx_1_1Bond}{Bond}} \mbox{\hyperlink{classcytnx_1_1Bond_a8c4d6443ffe7c3f3ecd8c474fd9a18eb}{clone}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{404       \mbox{\hyperlink{classcytnx_1_1Bond}{Bond}} out;}
+\DoxyCodeLine{405       out.\_impl = this-\/>\_impl-\/>\mbox{\hyperlink{classcytnx_1_1Bond_a8c4d6443ffe7c3f3ecd8c474fd9a18eb}{clone}}();}
+\DoxyCodeLine{406       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{407     \}}
+\DoxyCodeLine{408 }
+\DoxyCodeLine{423     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Bond_ab8645d03cf115b59e946f329f3bba122}{combineBond\_}}(\textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1Bond}{Bond}} \&bd\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&is\_grp = \textcolor{keyword}{true}) \{}
+\DoxyCodeLine{424       this-\/>\_impl-\/>combineBond\_(bd\_in.\_impl);}
+\DoxyCodeLine{425     \}}
+\DoxyCodeLine{426 }
+\DoxyCodeLine{442     \mbox{\hyperlink{classcytnx_1_1Bond}{Bond}} \mbox{\hyperlink{classcytnx_1_1Bond_a4714d9891e02b2aebf6756ec68c25e5c}{combineBond}}(\textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1Bond}{Bond}} \&bd\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&is\_grp = \textcolor{keyword}{true})\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{443       \mbox{\hyperlink{classcytnx_1_1Bond}{Bond}} out;}
+\DoxyCodeLine{444       out.\_impl = this-\/>\_impl-\/>\mbox{\hyperlink{classcytnx_1_1Bond_a4714d9891e02b2aebf6756ec68c25e5c}{combineBond}}(bd\_in.\_impl);}
+\DoxyCodeLine{445       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{446     \}}
+\DoxyCodeLine{447 }
+\DoxyCodeLine{463     \mbox{\hyperlink{classcytnx_1_1Bond}{Bond}} \mbox{\hyperlink{classcytnx_1_1Bond_a5282d90bef238154945707bffca76875}{combineBonds}}(\textcolor{keyword}{const} std::vector<Bond> \&bds, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&is\_grp = \textcolor{keyword}{true}) \{}
+\DoxyCodeLine{464       \mbox{\hyperlink{classcytnx_1_1Bond}{Bond}} out = this-\/>\mbox{\hyperlink{classcytnx_1_1Bond_a8c4d6443ffe7c3f3ecd8c474fd9a18eb}{clone}}();}
+\DoxyCodeLine{465       \textcolor{keywordflow}{for} (cytnx\_uint64 i = 0; i < bds.size(); i++) \{}
+\DoxyCodeLine{466         out.\mbox{\hyperlink{classcytnx_1_1Bond_ab8645d03cf115b59e946f329f3bba122}{combineBond\_}}(bds[i], is\_grp);}
+\DoxyCodeLine{467       \}}
+\DoxyCodeLine{468       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{469     \}}
+\DoxyCodeLine{470 }
+\DoxyCodeLine{485     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Bond_a38a40e58d24fb4d75597df25b7bf8918}{combineBonds\_}}(\textcolor{keyword}{const} std::vector<Bond> \&bds, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&is\_grp = \textcolor{keyword}{true}) \{}
+\DoxyCodeLine{486       \textcolor{keywordflow}{for} (cytnx\_uint64 i = 0; i < bds.size(); i++) \{}
+\DoxyCodeLine{487         this-\/>\mbox{\hyperlink{classcytnx_1_1Bond_ab8645d03cf115b59e946f329f3bba122}{combineBond\_}}(bds[i], is\_grp);}
+\DoxyCodeLine{488       \}}
+\DoxyCodeLine{489     \}}
+\DoxyCodeLine{490 }
+\DoxyCodeLine{496     std::vector<std::vector<cytnx\_int64>> \mbox{\hyperlink{classcytnx_1_1Bond_acf017e64c9629e0a03ee996a4375b06c}{getUniqueQnums}}(std::vector<cytnx\_uint64> \&counts) \{}
+\DoxyCodeLine{497       \textcolor{keywordflow}{return} this-\/>\_impl-\/>getUniqueQnums(counts, \textcolor{keyword}{true});}
+\DoxyCodeLine{498     \}}
+\DoxyCodeLine{499     std::vector<std::vector<cytnx\_int64>> getUniqueQnums() \{}
+\DoxyCodeLine{500       std::vector<cytnx\_uint64> tmp;}
+\DoxyCodeLine{501       \textcolor{keywordflow}{return} this-\/>\_impl-\/>getUniqueQnums(tmp, \textcolor{keyword}{false});}
+\DoxyCodeLine{502     \}}
+\DoxyCodeLine{503 }
+\DoxyCodeLine{513     cytnx\_uint64 \mbox{\hyperlink{classcytnx_1_1Bond_a121d5fb24f782cf66889771146af5da8}{getDegeneracy}}(\textcolor{keyword}{const} std::vector<cytnx\_int64> \&qnum)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{514       std::vector<cytnx\_uint64> tmp;}
+\DoxyCodeLine{515       \textcolor{keywordflow}{return} this-\/>\_impl-\/>getDegeneracy(qnum, \textcolor{keyword}{false}, tmp);}
+\DoxyCodeLine{516     \}}
+\DoxyCodeLine{517     cytnx\_uint64 \mbox{\hyperlink{classcytnx_1_1Bond_a121d5fb24f782cf66889771146af5da8}{getDegeneracy}}(\textcolor{keyword}{const} std::vector<cytnx\_int64> \&qnum,}
+\DoxyCodeLine{518                                std::vector<cytnx\_uint64> \&indices)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{519       indices.clear();}
+\DoxyCodeLine{520       \textcolor{keywordflow}{return} this-\/>\_impl-\/>getDegeneracy(qnum, \textcolor{keyword}{true}, indices);}
+\DoxyCodeLine{521     \}}
+\DoxyCodeLine{522 }
+\DoxyCodeLine{523     std::vector<cytnx\_uint64> \& getDegeneracies()\{}
+\DoxyCodeLine{524         \textcolor{keywordflow}{return} this-\/>\_impl-\/>getDegeneracies();}
+\DoxyCodeLine{525     \}}
+\DoxyCodeLine{526     \textcolor{keyword}{const} std::vector<cytnx\_uint64> \& getDegeneracies()\textcolor{keyword}{ const}\{}
+\DoxyCodeLine{527         \textcolor{keywordflow}{return} this-\/>\_impl-\/>getDegeneracies();}
+\DoxyCodeLine{528     \}}
+\DoxyCodeLine{529         }
+\DoxyCodeLine{530     \textcolor{comment}{// the map returns the new index from old index via}}
+\DoxyCodeLine{531     \textcolor{comment}{// new\_index = return<cytnx\_uint64>[old\_index]}}
+\DoxyCodeLine{532     std::vector<cytnx\_uint64> group\_duplicates\_()\{}
+\DoxyCodeLine{533         \textcolor{keywordflow}{return} this-\/>\_impl-\/>group\_duplicates\_();}
+\DoxyCodeLine{534     \}}
+\DoxyCodeLine{535 }
+\DoxyCodeLine{536     Bond group\_duplicates(std::vector<cytnx\_uint64> \&mapper)\textcolor{keyword}{ const}\{}
+\DoxyCodeLine{537         Bond out;}
+\DoxyCodeLine{538         out.\_impl = this-\/>\_impl-\/>group\_duplicates(mapper);}
+\DoxyCodeLine{539         \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{540     \}}
+\DoxyCodeLine{541 }
+\DoxyCodeLine{542     \textcolor{keywordtype}{bool} has\_duplicate\_qnums()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{543         \textcolor{keywordflow}{return} this-\/>\_impl-\/>has\_duplicate\_qnums();}
+\DoxyCodeLine{544     \}}
+\DoxyCodeLine{545 }
+\DoxyCodeLine{546     std::vector<std::vector<cytnx\_int64>> calc\_reverse\_qnums() \{}
+\DoxyCodeLine{547       \textcolor{keywordflow}{return} this-\/>\_impl-\/>calc\_reverse\_qnums();}
+\DoxyCodeLine{548     \}}
+\DoxyCodeLine{549 }
+\DoxyCodeLine{550     \textcolor{keywordtype}{void} Save(\textcolor{keyword}{const} std::string \&fname) \textcolor{keyword}{const};}
+\DoxyCodeLine{551     \textcolor{keywordtype}{void} Save(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *fname) \textcolor{keyword}{const};}
+\DoxyCodeLine{552     \textcolor{keyword}{static} \mbox{\hyperlink{classcytnx_1_1Bond}{cytnx::Bond}} Load(\textcolor{keyword}{const} std::string \&fname);}
+\DoxyCodeLine{553     \textcolor{keyword}{static} \mbox{\hyperlink{classcytnx_1_1Bond}{cytnx::Bond}} Load(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *fname);}
+\DoxyCodeLine{554 }
+\DoxyCodeLine{556     \textcolor{keywordtype}{void} \_Save(std::fstream \&f) \textcolor{keyword}{const};}
+\DoxyCodeLine{557     \textcolor{keywordtype}{void} \_Load(std::fstream \&f);}
+\DoxyCodeLine{559 }
+\DoxyCodeLine{560     \textcolor{keywordtype}{bool} operator==(\textcolor{keyword}{const} Bond \&rhs) \textcolor{keyword}{const};}
+\DoxyCodeLine{561     \textcolor{keywordtype}{bool} operator!=(\textcolor{keyword}{const} Bond \&rhs) \textcolor{keyword}{const};}
+\DoxyCodeLine{562 }
+\DoxyCodeLine{563     Bond operator*(\textcolor{keyword}{const} Bond \&rhs)\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\mbox{\hyperlink{classcytnx_1_1Bond_a4714d9891e02b2aebf6756ec68c25e5c}{combineBond}}(rhs); \}}
+\DoxyCodeLine{564 }
+\DoxyCodeLine{565     Bond \&operator*=(\textcolor{keyword}{const} Bond \&rhs) \{}
+\DoxyCodeLine{566       this-\/>\mbox{\hyperlink{classcytnx_1_1Bond_ab8645d03cf115b59e946f329f3bba122}{combineBond\_}}(rhs);}
+\DoxyCodeLine{567       \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{568     \}}
+\DoxyCodeLine{569   \};}
+\DoxyCodeLine{570 }
+\DoxyCodeLine{572   std::ostream \&operator<<(std::ostream \&os, \textcolor{keyword}{const} Bond \&bin);}
+\DoxyCodeLine{574 \}  \textcolor{comment}{// namespace cytnx}}
+\DoxyCodeLine{575 }
+\DoxyCodeLine{576 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}
