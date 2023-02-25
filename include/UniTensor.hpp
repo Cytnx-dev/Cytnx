@@ -2397,6 +2397,7 @@ namespace cytnx {
 
 
   };
+  /// @endcond
   //======================================================================
 
   ///@brief An Enhanced tensor specifically designed for physical Tensor network simulation
