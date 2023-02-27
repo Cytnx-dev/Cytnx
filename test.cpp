@@ -19,6 +19,12 @@ void pp(){
 
 int main(int argc, char *argv[]) {
 
+  Tensor t = zeros({5,1,4});
+  auto t2 = t(":5",":",":4");
+  print(t2);
+  print(t); 
+  return 0;
+
   auto iS = UniTensor(arange(120).reshape(2,3,4,5).astype(Type.ComplexDouble));
 
   cout << Scalar(9+9i);
