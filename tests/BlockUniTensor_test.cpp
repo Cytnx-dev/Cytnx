@@ -26,6 +26,10 @@ TEST_F(BlockUniTensorTest, relabels){
   EXPECT_EQ(BUT1.labels()[2],"cd");
   EXPECT_EQ(BUT1.labels()[3],"d");
   BUT1 = BUT1.relabels({1,-1,2,1000});
+  EXPECT_EQ(BUT1.labels()[0],"1");
+  EXPECT_EQ(BUT1.labels()[1],"-1");
+  EXPECT_EQ(BUT1.labels()[2],"2");
+  EXPECT_EQ(BUT1.labels()[3],"1000");
   EXPECT_THROW(BUT1.relabels({"a","a","b","c"}), std::logic_error);
   EXPECT_THROW(BUT1.relabels({1,1,0,-1}), std::logic_error);
   EXPECT_THROW(BUT1.relabels({"a"}), std::logic_error);
