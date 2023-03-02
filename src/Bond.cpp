@@ -167,7 +167,7 @@ namespace cytnx {
             } else {
               QNpool[tmpqnum].push_back(d);
             }
-            new_degs[d] = this->_degs[cytnx_uint64(d / bd_in->_qnums.size())] *
+            new_degs[d] += this->_degs[cytnx_uint64(d / bd_in->_qnums.size())] *
                           bd_in->_degs[d % bd_in->_qnums.size()];
           }
 
@@ -178,9 +178,9 @@ namespace cytnx {
           cytnx_uint64 cnt = 0;
           for (auto elem : QNpool) {
             this->_qnums[cnt] = elem.first;
-            cytnx_uint64 DD = 1;
+            cytnx_uint64 DD = 0;
             for (auto i : elem.second) {
-              DD *= new_degs[i];
+              DD += new_degs[i];
             }
             this->_degs[cnt] = DD;
             cnt++;
@@ -288,7 +288,7 @@ namespace cytnx {
             } else {
               QNpool[tmpqnum].push_back(d);
             }
-            new_degs[d] = this->_degs[cytnx_uint64(d / bd_in->_qnums.size())] *
+            new_degs[d] += this->_degs[cytnx_uint64(d / bd_in->_qnums.size())] *
                           bd_in->_degs[d % bd_in->_qnums.size()];
           }
 
@@ -299,9 +299,9 @@ namespace cytnx {
           cytnx_uint64 cnt = 0;
           for (auto elem : QNpool) {
             this->_qnums[cnt] = elem.first;
-            cytnx_uint64 DD = 1;
+            cytnx_uint64 DD = 0;
             for (auto i : elem.second) {
-              DD *= new_degs[i];
+              DD += new_degs[i];
             }
             this->_degs[cnt] = DD;
             cnt++;

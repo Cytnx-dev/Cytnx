@@ -19,6 +19,13 @@ void pp(){
 
 int main(int argc, char *argv[]) {
 
+  auto bd2 = Bond(BD_KET,{Qs(1)>>1,Qs(0)>>1,Qs(-1)>>1});
+  auto bd22 = bd2.combineBond(bd2);
+  print(bd22);
+  return 0;
+
+
+
   Tensor t = zeros({5,1,4});
   auto t2 = t(":5",":",":4");
   print(t2);
