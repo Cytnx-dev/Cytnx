@@ -1662,7 +1662,7 @@ namespace cytnx {
             for(int j=1;j<indicators.size();j++){
                 cb_stride[j] = this->_bonds[i+j].qnums().size();
                 if(force) tmp._impl->force_combineBond_(this->_bonds[i+j]._impl,false); // no grouping
-                else tmp.combineBond_(this->_bonds[i+j]); // no grouping
+                else tmp.combineBond_(this->_bonds[i+j],false); // no grouping
             }
             new_bonds.push_back(tmp);
             i += indicators.size()-1;
@@ -1680,7 +1680,10 @@ namespace cytnx {
     //reshape each blocks, and update_inner_to_outer_idx:
     //process stride:
     memcpy(&cb_stride[0],&cb_stride[1],sizeof(cytnx_uint64)*(cb_stride.size()-1));
-    cb_stride.back()=1;
+    // for(int i=cb_stride.size()-2;i>=0;i--){
+    //     cb_stride[i] = cb_stride[i+1];
+    // }
+    cb_stride.back()=1; 
     for(int i=cb_stride.size()-2;i>=0;i--){
         cb_stride[i]*=cb_stride[i+1];
     }
@@ -1699,6 +1702,9 @@ namespace cytnx {
         this->_blocks[b].reshape_(new_shape);
     }
 
+    // cout<<"AAAAAAAAAAAAAAAAAAAAAAA"<<this->get_qindices(2)<<endl;
+    // cout<<"AAAAAAAAAAAAAAAAAAAAAAA"<<this->bonds()<<endl;
+
     for(int b=0;b<this->_blocks.size();b++){
         this->_inner_to_outer_idx[b][idor] *= cb_stride[0]; 
         for(int i=idor+1;i<idor+indicators.size();i++){
@@ -1710,16 +1716,16 @@ namespace cytnx {
         this->_inner_to_outer_idx[b].resize(this->rank());
     } 
     //std::cout << this->_inner_to_outer_idx << std::endl;
-    
+
     //check rowrank:
     if(this->_rowrank >= this->rank()) this->_rowrank = this->rank();
 
     this->_is_braket_form = this->_update_braket();
 
+    // cout<<"BBBBBBBBBBBBBBBBBBBBBBB"<<this->get_qindices(2)<<endl;
+    // cout<<"BBBBBBBBBBBBBBBBBBBBBBB"<<this->bonds()<<endl;
     //regroup:
     this->group_basis_();
-
-
   }
  
 
