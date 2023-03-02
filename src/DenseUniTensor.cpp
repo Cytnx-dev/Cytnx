@@ -499,7 +499,7 @@ namespace cytnx {
   void DenseUniTensor::print_block(const cytnx_int64 &idx, const bool &full_info) const{
     std::ostream &os = std::cout;
     os << "-------- start of print ---------\n";
-    char *buffer = (char *)malloc(sizeof(char) * 1024);
+    char *buffer = (char *)malloc(sizeof(char) * 10240);
     sprintf(buffer, "Tensor name: %s\n", this->_name.c_str());
     os << std::string(buffer);
     if (this->_is_tag) sprintf(buffer, "braket_form : %s\n", this->_is_braket_form ? "True" : "False");
@@ -524,7 +524,7 @@ namespace cytnx {
   }
 
   void DenseUniTensor::print_diagram(const bool &bond_info) {
-    char *buffer = (char *)malloc(1024 * sizeof(char));
+    char *buffer = (char *)malloc(10240 * sizeof(char));
     unsigned int BUFFsize = 100;
 
     sprintf(buffer, "-----------------------%s", "\n");
@@ -1083,7 +1083,7 @@ namespace cytnx {
           cytnx_error_msg(this->_bonds[comm_idx1[i]].type() == rhs->_bonds[comm_idx2[i]].type(),
                           "[ERROR][DenseUniTensor][contract] cannot contract common label: <%s> @ "
                           "self bond#%d & rhs bond#%d, BRA-KET mismatch!%s",
-                          this->labels()[comm_idx1[i]], comm_idx1[i], comm_idx2[i], "\n");
+                          this->labels()[comm_idx1[i]].c_str(), comm_idx1[i], comm_idx2[i], "\n");
       }
 
       // process meta

@@ -279,7 +279,7 @@ namespace cytnx {
         }
 
         os<< (std::string(" ")*(3+Lmax+5)) << std::string("-")*(4+mL+mR+5) << endl;
-  } 
+  }
   void BlockUniTensor::print_block(const cytnx_int64 &idx, const bool &full_info)const{
         cytnx_error_msg((idx < 0) || (idx >= this->_blocks.size()),"[ERROR] index [%d] out of bound. should be >0 and < number of available blocks %d\n",idx,this->_blocks.size());
 
@@ -330,7 +330,7 @@ namespace cytnx {
     std::ostream &os = std::cout;
 
     os << "-------- start of print ---------\n";
-    char *buffer = (char *)malloc(sizeof(char) * 1024);
+    char *buffer = (char *)malloc(sizeof(char) * 10240);
     sprintf(buffer, "Tensor name: %s\n", this->_name.c_str());
     os << std::string(buffer);
     if (this->_is_tag) sprintf(buffer, "braket_form : %s\n", this->_is_braket_form ? "True" : "False");
@@ -377,7 +377,7 @@ namespace cytnx {
   }
 
   void BlockUniTensor::print_diagram(const bool &bond_info) {
-    char *buffer = (char *)malloc(1024 * sizeof(char));
+    char *buffer = (char *)malloc(10240 * sizeof(char));
     unsigned int BUFFsize = 100;
 
     sprintf(buffer, "-----------------------%s", "\n");
@@ -820,13 +820,13 @@ namespace cytnx {
         for (int i = 0; i < comm_labels.size(); i++) {
             if (User_debug){
               cytnx_error_msg(this->_bonds[comm_idx1[i]].qnums() != rhs->_bonds[comm_idx2[i]].qnums(),
-                              "[ERROR] contract bond @ label %d have qnum mismatch.\n", comm_labels[i]);
+                              "[ERROR] contract bond @ label %s have qnum mismatch.\n", comm_labels[i].c_str());
               cytnx_error_msg(this->_bonds[comm_idx1[i]].getDegeneracies() != rhs->_bonds[comm_idx2[i]].getDegeneracies(),
-                              "[ERROR] contract bond @ label %d have degeneracies mismatch.\n", comm_labels[i]);
+                              "[ERROR] contract bond @ label %s have degeneracies mismatch.\n", comm_labels[i].c_str());
             }
             cytnx_error_msg(this->_bonds[comm_idx1[i]].type() + rhs->_bonds[comm_idx2[i]].type(),
-                            "[ERROR] BRA can only contract with KET. invalid @ label: %d\n",
-                            comm_labels[i]);
+                            "[ERROR] BRA can only contract with KET. invalid @ label: %s\n",
+                            comm_labels[i].c_str());
         }
         
         // proc meta, labels:
