@@ -1,0 +1,539 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classcytnx_1_1Network" kind="class" language="C++" prot="public">
+    <compoundname>cytnx::Network</compoundname>
+    <includes refid="Network__misc_8hpp" local="no">Network_misc.hpp</includes>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classcytnx_1_1Network_1ab3cb72d14125bb2b0ea816d13f8b7b16" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def cytnx::Network::Diagram</definition>
+        <argsstring>(outname=None, figsize=[6 5], engine=&quot;circo&quot;)</argsstring>
+        <name>Diagram</name>
+        <qualifiedname>cytnx::Network::Diagram</qualifiedname>
+        <param>
+          <type>outname</type>
+          <defval>None</defval>
+        </param>
+        <param>
+          <type>figsize</type>
+          <defval>[6 5]</defval>
+        </param>
+        <param>
+          <type>engine</type>
+          <defval>&quot;circo&quot;</defval>
+        </param>
+        <briefdescription>
+<para>Draw a <ref refid="classcytnx_1_1Network" kindref="compound">Network</ref> diagram [PYTHON only]. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>outname</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The save path of the diagram. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>figsize</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The size of the figure </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>engine</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The engine that is used to generate diagram. (see graphviz for other options.) </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="python_doc/Network_misc.hpp" line="12" column="17"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Network_1a00bc1bf6b9291a0416d5c0fb5beaa284" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::Network::Fromfile</definition>
+        <argsstring>(const std::string &amp;fname, const int &amp;network_type=NtType.Regular)</argsstring>
+        <name>Fromfile</name>
+        <qualifiedname>cytnx::Network::Fromfile</qualifiedname>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>fname</declname>
+        </param>
+        <param>
+          <type>const int &amp;</type>
+          <declname>network_type</declname>
+          <defval>NtType.Regular</defval>
+        </param>
+        <briefdescription>
+<para>Construct <ref refid="classcytnx_1_1Network" kindref="compound">Network</ref> from network file. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>fname</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The network file path </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>network_type</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The type of network. This can be [NtType.Regular] or [NtType.Fermion.]. Currently, only Regular <ref refid="classcytnx_1_1Network" kindref="compound">Network</ref> is support!</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<heading level="2">note:</heading>
+</para>
+<para><orderedlist>
+<listitem><para>each network file cannot have more than 1024 lines.</para>
+</listitem></orderedlist>
+</para>
+<para><heading level="2">detail:</heading>
+</para>
+<para>Format of a network file:</para>
+<para><itemizedlist>
+<listitem><para>each line defines a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>, that takes the format &apos;[name] : [Labels]&apos;</para>
+</listitem><listitem><para>the name can be any alphabets A-Z, a-z</para>
+</listitem><listitem><para>There are two reserved name: &apos;TOUT&apos; and &apos;ORDER&apos; (all capital)</para>
+</listitem><listitem><para>One can use &apos;TOUT&apos; line to specify the output <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>&apos;s bond order using labels</para>
+</listitem><listitem><para>The &apos;ORDER&apos; line is used to specify the contraction order</para>
+</listitem></itemizedlist>
+</para>
+<para>About [Labels]:</para>
+<para><itemizedlist>
+<listitem><para>each label should seperate by a comma &quot;,&quot;</para>
+</listitem><listitem><para>one &apos;;&apos; is needed and used to seperate Rowrank and column rank</para>
+</listitem></itemizedlist>
+</para>
+<para>About [ORDER]:</para>
+<para><itemizedlist>
+<listitem><para>The contraction order, it can be specify using the standard mathmetical bracket ruls.</para>
+</listitem><listitem><para>Without specify this line, the default contraction order will be from the first line to the last line</para>
+</listitem></itemizedlist>
+</para>
+<para><heading level="2">example network file:</heading>
+</para>
+<para><programlisting filename="example/Network/example.net"><codeline><highlight class="normal">A:<sp/>0;1,2</highlight></codeline>
+<codeline><highlight class="normal">B:<sp/>0;3,4</highlight></codeline>
+<codeline><highlight class="normal">C:<sp/>5;1,6</highlight></codeline>
+<codeline><highlight class="normal">D:<sp/>5;7,8</highlight></codeline>
+<codeline><highlight class="normal">TOUT:<sp/>2,3,4;6,7,8</highlight></codeline>
+<codeline><highlight class="normal">ORDER:<sp/>(A,B),(C,D)</highlight></codeline>
+</programlisting></para>
+<para><heading level="2">example code for load the network file:</heading>
+</para>
+<para><heading level="3">c++ API:</heading>
+</para>
+<para><programlisting filename="example/Network/Fromfile.cpp"><codeline><highlight class="preprocessor">#include<sp/>&quot;<ref refid="cytnx_8hpp" kindref="compound">cytnx.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>argc,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>argv[])<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Network" kindref="compound">Network</ref><sp/>N;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>N.<ref refid="classcytnx_1_1Network_1a00bc1bf6b9291a0416d5c0fb5beaa284" kindref="member">Fromfile</ref>(</highlight><highlight class="stringliteral">&quot;example.net&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>N<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>==== Network ====
+[x] A : 0 ; 1 2 
+[x] B : 0 ; 3 4 
+[x] C : 5 ; 1 6 
+[x] D : 5 ; 7 8 
+TOUT : 2 3 4 ; 6 7 8 
+ORDER : (A,B),(C,D)
+=================
+
+</verbatim> <heading level="3">python API</heading>
+</para>
+<para><programlisting filename="example/Network/Fromfile.py"><codeline><highlight class="keyword">import</highlight><highlight class="normal"><sp/>cytnx</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">N<sp/>=<sp/><ref refid="classcytnx_1_1Network" kindref="compound">cytnx.Network</ref>(</highlight><highlight class="stringliteral">&quot;example.net&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline><highlight class="normal">print(N)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>==== Network ====
+[x] A : 0 ; 1 2 
+[x] B : 0 ; 3 4 
+[x] C : 5 ; 1 6 
+[x] D : 5 ; 7 8 
+TOUT : 2 3 4 ; 6 7 8 
+ORDER : (A,B),(C,D)
+=================
+
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Network.hpp" line="248" column="10" bodyfile="include/Network.hpp" bodystart="248" bodyend="256"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Network_1aa863a755e95a85411a15af58d1ac4057" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::Network::FromString</definition>
+        <argsstring>(const std::vector&lt; std::string &gt; &amp;contents, const int &amp;network_type=NtType.Regular)</argsstring>
+        <name>FromString</name>
+        <qualifiedname>cytnx::Network::FromString</qualifiedname>
+        <param>
+          <type>const std::vector&lt; std::string &gt; &amp;</type>
+          <declname>contents</declname>
+        </param>
+        <param>
+          <type>const int &amp;</type>
+          <declname>network_type</declname>
+          <defval>NtType.Regular</defval>
+        </param>
+        <briefdescription>
+<para>Construct <ref refid="classcytnx_1_1Network" kindref="compound">Network</ref> from a list of strings, where each string is the same as each line in network file. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>contents</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The network file descriptions </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>network_type</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The type of network. This can be [NtType.Regular] or [NtType.Fermion.]. Currently, only Regular <ref refid="classcytnx_1_1Network" kindref="compound">Network</ref> is support!</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<heading level="2">note:</heading>
+</para>
+<para><orderedlist>
+<listitem><para>contents cannot have more than 1024 lines/strings.</para>
+</listitem></orderedlist>
+</para>
+<para><heading level="2">detail:</heading>
+</para>
+<para>Format of each string follows the same policy as Fromfile.</para>
+<para><heading level="2">example code for load the network file:</heading>
+</para>
+<para><heading level="3">c++ API:</heading>
+</para>
+<para><programlisting filename="example/Network/FromString.cpp"><codeline><highlight class="preprocessor">#include<sp/>&quot;<ref refid="cytnx_8hpp" kindref="compound">cytnx.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>argc,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>argv[])<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Network" kindref="compound">Network</ref><sp/>N;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>N.<ref refid="classcytnx_1_1Network_1aa863a755e95a85411a15af58d1ac4057" kindref="member">FromString</ref>(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight><highlight class="stringliteral">&quot;A:<sp/>0;1,2&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;B:<sp/>0;3,4&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;C:<sp/>5;1,6&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;D:<sp/>5;7,8&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;TOUT:<sp/>2,3,4;6,7,8&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;ORDER:<sp/>(A,B),(C,D)&quot;</highlight><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>N<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>==== Network ====
+[x] A : 0 ; 1 2 
+[x] B : 0 ; 3 4 
+[x] C : 5 ; 1 6 
+[x] D : 5 ; 7 8 
+TOUT : 2 3 4 ; 6 7 8 
+ORDER : (A,B),(C,D)
+=================
+
+</verbatim> <heading level="3">python API</heading>
+</para>
+<para><programlisting filename="example/Network/FromString.py"><codeline><highlight class="keyword">import</highlight><highlight class="normal"><sp/>cytnx</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">N<sp/>=<sp/><ref refid="classcytnx_1_1Network" kindref="compound">cytnx.Network</ref>()</highlight></codeline>
+<codeline><highlight class="normal">N.FromString([</highlight><highlight class="stringliteral">&quot;A:<sp/>0;1,2&quot;</highlight><highlight class="normal">,\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;B:<sp/>0;3,4&quot;</highlight><highlight class="normal">,\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;C:<sp/>5;1,6&quot;</highlight><highlight class="normal">,\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;D:<sp/>5;7,8&quot;</highlight><highlight class="normal">,\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;TOUT:<sp/>2,3,4;6,7,8&quot;</highlight><highlight class="normal">,\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;ORDER:<sp/>(A,B),(C,D)&quot;</highlight><highlight class="normal">\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>])</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">print(N);</highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>==== Network ====
+[x] A : 0 ; 1 2 
+[x] B : 0 ; 3 4 
+[x] C : 5 ; 1 6 
+[x] D : 5 ; 7 8 
+TOUT : 2 3 4 ; 6 7 8 
+ORDER : (A,B),(C,D)
+=================
+
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Network.hpp" line="285" column="10" bodyfile="include/Network.hpp" bodystart="285" bodyend="294"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Network_1a0fc550caee8609366ccc37ef86011af9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>cytnx::Network::Network</definition>
+        <argsstring>(const std::string &amp;fname, const int &amp;network_type=NtType.Regular)</argsstring>
+        <name>Network</name>
+        <qualifiedname>cytnx::Network::Network</qualifiedname>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>fname</declname>
+        </param>
+        <param>
+          <type>const int &amp;</type>
+          <declname>network_type</declname>
+          <defval>NtType.Regular</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Network.hpp" line="307" column="5" bodyfile="include/Network.hpp" bodystart="307" bodyend="309"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Network_1a8826696e8b35e7e819cfd81a08dacf43" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::Network::PutUniTensor</definition>
+        <argsstring>(const std::string &amp;name, const UniTensor &amp;utensor)</argsstring>
+        <name>PutUniTensor</name>
+        <qualifiedname>cytnx::Network::PutUniTensor</qualifiedname>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>name</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
+          <declname>utensor</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Network.hpp" line="311" column="10" bodyfile="include/Network.hpp" bodystart="311" bodyend="313"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Network_1a2beb65e19bc0cfbd3e21ff46c6abc62b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::Network::PutUniTensor</definition>
+        <argsstring>(const cytnx_uint64 &amp;idx, const UniTensor &amp;utensor)</argsstring>
+        <name>PutUniTensor</name>
+        <qualifiedname>cytnx::Network::PutUniTensor</qualifiedname>
+        <param>
+          <type>const <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref> &amp;</type>
+          <declname>idx</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
+          <declname>utensor</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Network.hpp" line="314" column="10" bodyfile="include/Network.hpp" bodystart="314" bodyend="316"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Network_1abc19de742ef4d2505a56a20acd0ec668" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::Network::PutUniTensors</definition>
+        <argsstring>(const std::vector&lt; std::string &gt; &amp;name, const std::vector&lt; UniTensor &gt; &amp;utensors)</argsstring>
+        <name>PutUniTensors</name>
+        <qualifiedname>cytnx::Network::PutUniTensors</qualifiedname>
+        <param>
+          <type>const std::vector&lt; std::string &gt; &amp;</type>
+          <declname>name</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &gt; &amp;</type>
+          <declname>utensors</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Network.hpp" line="317" column="10" bodyfile="include/Network.hpp" bodystart="317" bodyend="320"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Network_1a24e34b95b458be854a36b0fbcf008b41" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::string</type>
+        <definition>std::string cytnx::Network::getOptimalOrder</definition>
+        <argsstring>(const int &amp;network_type=NtType.Regular)</argsstring>
+        <name>getOptimalOrder</name>
+        <qualifiedname>cytnx::Network::getOptimalOrder</qualifiedname>
+        <param>
+          <type>const int &amp;</type>
+          <declname>network_type</declname>
+          <defval>NtType.Regular</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Network.hpp" line="321" column="17" bodyfile="include/Network.hpp" bodystart="321" bodyend="327"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Network_1ab302e1d5b2acbe65f419670f7d1d4514" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
+        <definition>UniTensor cytnx::Network::Launch</definition>
+        <argsstring>(const bool &amp;optimal, const std::string &amp;contract_order=&quot;&quot;, const int &amp;network_type=NtType.Regular)</argsstring>
+        <name>Launch</name>
+        <qualifiedname>cytnx::Network::Launch</qualifiedname>
+        <param>
+          <type>const bool &amp;</type>
+          <declname>optimal</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>contract_order</declname>
+          <defval>&quot;&quot;</defval>
+        </param>
+        <param>
+          <type>const int &amp;</type>
+          <declname>network_type</declname>
+          <defval>NtType.Regular</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Network.hpp" line="328" column="15" bodyfile="include/Network.hpp" bodystart="328" bodyend="335"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Network_1ab46151cedd2ff6da6fd81d700cd1df5f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::Network::clear</definition>
+        <argsstring>()</argsstring>
+        <name>clear</name>
+        <qualifiedname>cytnx::Network::clear</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Network.hpp" line="336" column="10" bodyfile="include/Network.hpp" bodystart="336" bodyend="339"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Network_1a1235a67c0cbb357e34e99116bf7d20ea" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Network" kindref="compound">Network</ref></type>
+        <definition>Network cytnx::Network::clone</definition>
+        <argsstring>()</argsstring>
+        <name>clone</name>
+        <qualifiedname>cytnx::Network::clone</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Network.hpp" line="341" column="13" bodyfile="include/Network.hpp" bodystart="341" bodyend="345"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Network_1a2218d13ef5879f5d35d8b799d33703e7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::Network::PrintNet</definition>
+        <argsstring>()</argsstring>
+        <name>PrintNet</name>
+        <qualifiedname>cytnx::Network::PrintNet</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Network.hpp" line="346" column="10" bodyfile="include/Network.hpp" bodystart="346" bodyend="346"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Network_1affde6272cbdcd1bd101e61f37674be24" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::Network::Savefile</definition>
+        <argsstring>(const std::string &amp;fname)</argsstring>
+        <name>Savefile</name>
+        <qualifiedname>cytnx::Network::Savefile</qualifiedname>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>fname</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Network.hpp" line="348" column="10" bodyfile="include/Network.hpp" bodystart="348" bodyend="348"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="classcytnx_1_1Network_1a9a13bcd11d205c0848b25c68286c2431" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Network" kindref="compound">Network</ref></type>
+        <definition>static Network cytnx::Network::Contract</definition>
+        <argsstring>(const std::vector&lt; UniTensor &gt; &amp;tensors, const std::string &amp;Tout, const std::vector&lt; std::string &gt; &amp;alias={}, const std::string &amp;contract_order=&quot;&quot;)</argsstring>
+        <name>Contract</name>
+        <qualifiedname>cytnx::Network::Contract</qualifiedname>
+        <param>
+          <type>const std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &gt; &amp;</type>
+          <declname>tensors</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>Tout</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; std::string &gt; &amp;</type>
+          <declname>alias</declname>
+          <defval>{}</defval>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>contract_order</declname>
+          <defval>&quot;&quot;</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Network.hpp" line="297" column="20" bodyfile="include/Network.hpp" bodystart="297" bodyend="305"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="python_doc/Network_misc.hpp" line="3" column="5" bodyfile="python_doc/Network_misc.hpp" bodystart="3" bodyend="14"/>
+    <listofallmembers>
+      <member refid="classcytnx_1_1Network_1ab46151cedd2ff6da6fd81d700cd1df5f" prot="public" virt="non-virtual"><scope>cytnx::Network</scope><name>clear</name></member>
+      <member refid="classcytnx_1_1Network_1a1235a67c0cbb357e34e99116bf7d20ea" prot="public" virt="non-virtual"><scope>cytnx::Network</scope><name>clone</name></member>
+      <member refid="classcytnx_1_1Network_1a9a13bcd11d205c0848b25c68286c2431" prot="public" virt="non-virtual"><scope>cytnx::Network</scope><name>Contract</name></member>
+      <member refid="classcytnx_1_1Network_1ab3cb72d14125bb2b0ea816d13f8b7b16" prot="public" virt="non-virtual"><scope>cytnx::Network</scope><name>Diagram</name></member>
+      <member refid="classcytnx_1_1Network_1a00bc1bf6b9291a0416d5c0fb5beaa284" prot="public" virt="non-virtual"><scope>cytnx::Network</scope><name>Fromfile</name></member>
+      <member refid="classcytnx_1_1Network_1aa863a755e95a85411a15af58d1ac4057" prot="public" virt="non-virtual"><scope>cytnx::Network</scope><name>FromString</name></member>
+      <member refid="classcytnx_1_1Network_1a24e34b95b458be854a36b0fbcf008b41" prot="public" virt="non-virtual"><scope>cytnx::Network</scope><name>getOptimalOrder</name></member>
+      <member refid="classcytnx_1_1Network_1ab302e1d5b2acbe65f419670f7d1d4514" prot="public" virt="non-virtual"><scope>cytnx::Network</scope><name>Launch</name></member>
+      <member refid="classcytnx_1_1Network_1a0fc550caee8609366ccc37ef86011af9" prot="public" virt="non-virtual"><scope>cytnx::Network</scope><name>Network</name></member>
+      <member refid="classcytnx_1_1Network_1a2218d13ef5879f5d35d8b799d33703e7" prot="public" virt="non-virtual"><scope>cytnx::Network</scope><name>PrintNet</name></member>
+      <member refid="classcytnx_1_1Network_1a8826696e8b35e7e819cfd81a08dacf43" prot="public" virt="non-virtual"><scope>cytnx::Network</scope><name>PutUniTensor</name></member>
+      <member refid="classcytnx_1_1Network_1a2beb65e19bc0cfbd3e21ff46c6abc62b" prot="public" virt="non-virtual"><scope>cytnx::Network</scope><name>PutUniTensor</name></member>
+      <member refid="classcytnx_1_1Network_1abc19de742ef4d2505a56a20acd0ec668" prot="public" virt="non-virtual"><scope>cytnx::Network</scope><name>PutUniTensors</name></member>
+      <member refid="classcytnx_1_1Network_1affde6272cbdcd1bd101e61f37674be24" prot="public" virt="non-virtual"><scope>cytnx::Network</scope><name>Savefile</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

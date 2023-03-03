@@ -583,7 +583,7 @@ namespace cytnx {
     std::vector<cytnx_int64> new_shape;
     std::vector<cytnx_int32> remove_id;
     for (unsigned int i = 0; i < out->_shape.size(); i++) {
-      if (out->shape()[i] == 1)
+      if (out->shape()[i] == 1 && (acc[i].type() != Accessor::All))
         remove_id.push_back(this->_mapper[this->_invmapper[i]]);
       else
         new_shape.push_back(out->shape()[i]);

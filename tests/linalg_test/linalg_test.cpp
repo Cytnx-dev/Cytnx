@@ -2,23 +2,38 @@
 
 TEST_F(linalg_Test, BkUt_Svd_truncate1){
   std::vector<UniTensor> res = linalg::Svd_truncate(svd_T, 200, 0, true, true, true);
+  auto con_T = Contract(Contract(res[1], res[0]), res[2]);
   std::vector<double> vnm_S;
   for(int i = 0; i < res[0].shape()[0];i++)
-    vnm_S.push_back((float)(res[0].at({i,i}).real()));
+    vnm_S.push_back((double)(res[0].at({i,i}).real()));
   std::sort(vnm_S.begin(), vnm_S.end());
   for(int i = 0; i<vnm_S.size();i++)
     EXPECT_TRUE(abs(vnm_S[i]-(double)(svd_Sans.at({0,i}).real()))<1e-5);
+
 }
 
 TEST_F(linalg_Test, BkUt_Svd_truncate2){
   std::vector<UniTensor> res = linalg::Svd_truncate(svd_T, 200, 1e-1, true, true, true);
+  auto con_T = Contract(Contract(res[1], res[0]), res[2]);
   std::vector<double> vnm_S;
   for(int i = 0; i < res[0].shape()[0];i++)
-    vnm_S.push_back((float)(res[0].at({i,i}).real()));
+    vnm_S.push_back((double)(res[0].at({i,i}).real()));
   std::sort(vnm_S.begin(), vnm_S.end());
   for(int i = 0; i<vnm_S.size();i++)
     EXPECT_TRUE(vnm_S[i]>1e-1);
 }
+
+TEST_F(linalg_Test, BkUt_Svd_truncate3){
+  Bond I = Bond(BD_IN,{Qs(-5),Qs(-3),Qs(-1),Qs(1),Qs(3),Qs(5)},{1,4,10,9,5,1});
+  Bond J = Bond(BD_OUT,{Qs(1),Qs(-1)},{1,1});
+  Bond K = Bond(BD_OUT,{Qs(1),Qs(-1)},{1,1});
+  Bond L = Bond(BD_OUT,{Qs(-5),Qs(-3),Qs(-1),Qs(1),Qs(3),Qs(5)},{1,4,10,9,5,1});
+  UniTensor cyT = UniTensor({I,J,K,L},{"a","b","c","d"},2,Type.Double,Device.cpu,false);
+  cyT = cyT.Load(data_dir+"Svd_truncate/Svd_truncate2.cytnx");
+  std::vector<UniTensor> res =  linalg::Svd_truncate(cyT, 30, 0, true, true, true);
+  auto con_T = Contract(Contract(res[1], res[0]), res[2]);
+}
+
 
 TEST_F(linalg_Test, BkUt_Qr1){
     auto res = linalg::Qr(H);

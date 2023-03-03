@@ -1,0 +1,677 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="Symmetry_8hpp" kind="file" language="C++">
+    <compoundname>Symmetry.hpp</compoundname>
+    <includes refid="Type_8hpp" local="yes">Type.hpp</includes>
+    <includes refid="cytnx__error_8hpp" local="yes">cytnx_error.hpp</includes>
+    <includes refid="intrusive__ptr__base_8hpp" local="yes">intrusive_ptr_base.hpp</includes>
+    <includes local="no">string</includes>
+    <includes local="no">cstdio</includes>
+    <includes local="no">iostream</includes>
+    <includes local="no">ostream</includes>
+    <includes local="yes">utils/vec_clone.hpp</includes>
+    <includedby refid="Bond_8hpp" local="yes">include/Bond.hpp</includedby>
+    <includedby refid="UniTensor_8hpp" local="yes">include/UniTensor.hpp</includedby>
+    <includedby refid="cytnx_8hpp" local="yes">include/cytnx.hpp</includedby>
+    <includedby refid="Symmetry_8cpp" local="yes">src/Symmetry.cpp</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>include/Symmetry.hpp</label>
+        <link refid="Symmetry_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>Type.hpp</label>
+        <link refid="Type_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>cytnx_error.hpp</label>
+        <link refid="cytnx__error_8hpp"/>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+      </node>
+      <node id="18">
+        <label>intrusive_ptr_base.hpp</label>
+        <link refid="intrusive__ptr__base_8hpp"/>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="22">
+        <label>boost/checked_delete.hpp</label>
+      </node>
+      <node id="23">
+        <label>boost/detail/atomic_count.hpp</label>
+      </node>
+      <node id="21">
+        <label>boost/smart_ptr/intrusive_ptr.hpp</label>
+      </node>
+      <node id="20">
+        <label>cassert</label>
+      </node>
+      <node id="7">
+        <label>climits</label>
+      </node>
+      <node id="4">
+        <label>complex</label>
+      </node>
+      <node id="12">
+        <label>cstdio</label>
+      </node>
+      <node id="13">
+        <label>cstdlib</label>
+      </node>
+      <node id="14">
+        <label>cstring</label>
+      </node>
+      <node id="16">
+        <label>iostream</label>
+      </node>
+      <node id="19">
+        <label>ostream</label>
+      </node>
+      <node id="15">
+        <label>stdarg.h</label>
+      </node>
+      <node id="17">
+        <label>stdexcept</label>
+      </node>
+      <node id="6">
+        <label>stdint.h</label>
+      </node>
+      <node id="3">
+        <label>string</label>
+      </node>
+      <node id="10">
+        <label>typeindex</label>
+      </node>
+      <node id="8">
+        <label>typeinfo</label>
+      </node>
+      <node id="9">
+        <label>unordered_map</label>
+      </node>
+      <node id="24">
+        <label>utils/vec_clone.hpp</label>
+      </node>
+      <node id="5">
+        <label>vector</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="2">
+        <label>include/Bond.hpp</label>
+        <link refid="Bond_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>include/Gncon.hpp</label>
+        <link refid="Gncon_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>include/LinOp.hpp</label>
+        <link refid="LinOp_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="24">
+        <label>include/Network.hpp</label>
+        <link refid="Network_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+      </node>
+      <node id="27">
+        <label>include/Physics.hpp</label>
+        <link refid="Physics_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>include/Symmetry.hpp</label>
+        <link refid="Symmetry_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>include/UniTensor.hpp</label>
+        <link refid="UniTensor_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="28">
+        <label>include/contraction_tree.hpp</label>
+        <link refid="contraction__tree_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>include/cytnx.hpp</label>
+        <link refid="cytnx_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="12">
+        <label>include/linalg.hpp</label>
+        <link refid="linalg_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>include/ncon.hpp</label>
+        <link refid="ncon_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="30">
+        <label>include/random.hpp</label>
+        <link refid="random_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="31">
+        <label>include/search_tree.hpp</label>
+        <link refid="search__tree_8hpp"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+      </node>
+      <node id="33">
+        <label>include/tn_algo/DMRG.hpp</label>
+        <link refid="DMRG_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="34">
+        <label>include/tn_algo/MPO.hpp</label>
+        <link refid="MPO_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+      </node>
+      <node id="35">
+        <label>include/tn_algo/MPS.hpp</label>
+        <link refid="MPS_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+      </node>
+      <node id="13">
+        <label>src/BlockUniTensor.cpp</label>
+        <link refid="BlockUniTensor_8cpp"/>
+      </node>
+      <node id="36">
+        <label>src/Bond.cpp</label>
+        <link refid="Bond_8cpp"/>
+      </node>
+      <node id="14">
+        <label>src/DenseUniTensor.cpp</label>
+        <link refid="DenseUniTensor_8cpp"/>
+      </node>
+      <node id="25">
+        <label>src/FermionNetwork.cpp</label>
+        <link refid="FermionNetwork_8cpp"/>
+      </node>
+      <node id="15">
+        <label>src/Generator.cpp</label>
+        <link refid="Generator_8cpp"/>
+      </node>
+      <node id="8">
+        <label>src/Gncon.cpp</label>
+        <link refid="Gncon_8cpp"/>
+      </node>
+      <node id="9">
+        <label>src/Gncon_base.cpp</label>
+        <link refid="Gncon__base_8cpp"/>
+      </node>
+      <node id="23">
+        <label>src/LinOp.cpp</label>
+        <link refid="LinOp_8cpp"/>
+      </node>
+      <node id="16">
+        <label>src/Network.cpp</label>
+        <link refid="Network_8cpp"/>
+      </node>
+      <node id="17">
+        <label>src/Network_base.cpp</label>
+        <link refid="Network__base_8cpp"/>
+      </node>
+      <node id="18">
+        <label>src/Physics.cpp</label>
+        <link refid="Physics_8cpp"/>
+      </node>
+      <node id="10">
+        <label>src/RegularGncon.cpp</label>
+        <link refid="RegularGncon_8cpp"/>
+      </node>
+      <node id="26">
+        <label>src/RegularNetwork.cpp</label>
+        <link refid="RegularNetwork_8cpp"/>
+      </node>
+      <node id="19">
+        <label>src/SparseUniTensor.cpp</label>
+        <link refid="SparseUniTensor_8cpp"/>
+      </node>
+      <node id="37">
+        <label>src/Symmetry.cpp</label>
+        <link refid="Symmetry_8cpp"/>
+      </node>
+      <node id="20">
+        <label>src/Tensor.cpp</label>
+        <link refid="Tensor_8cpp"/>
+      </node>
+      <node id="21">
+        <label>src/UniTensor.cpp</label>
+        <link refid="UniTensor_8cpp"/>
+      </node>
+      <node id="22">
+        <label>src/UniTensor_base.cpp</label>
+        <link refid="UniTensor__base_8cpp"/>
+      </node>
+      <node id="29">
+        <label>src/contraction_tree.cpp</label>
+        <link refid="contraction__tree_8cpp"/>
+      </node>
+      <node id="7">
+        <label>src/ncon.cpp</label>
+        <link refid="ncon_8cpp"/>
+      </node>
+      <node id="32">
+        <label>src/search_tree.cpp</label>
+        <link refid="search__tree_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="classcytnx_1_1Qs" prot="public">cytnx::Qs</innerclass>
+    <innerclass refid="classcytnx_1_1Symmetry" prot="public">cytnx::Symmetry</innerclass>
+    <innernamespace refid="namespacecytnx">cytnx</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>_H_Symmetry</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_H_Symmetry</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="Type_8hpp" kindref="compound">Type.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="cytnx__error_8hpp" kindref="compound">cytnx_error.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="intrusive__ptr__base_8hpp" kindref="compound">intrusive_ptr_base.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cstdio&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;ostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;utils/vec_clone.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref><sp/>{</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">__sym<sp/>{</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/>__stype<sp/>{<sp/>U<sp/>=<sp/>-1,<sp/>Z<sp/>=<sp/>0<sp/>};</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/>};</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">SymmetryType_class<sp/>{</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/>enum<sp/>:<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Void<sp/>=<sp/>-99,</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>U<sp/>=<sp/>-1,</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Z<sp/>=<sp/>0,</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/>std::string<sp/>getname(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>&amp;stype);</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/>};</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/>SymmetryType_class<sp/><ref refid="namespacecytnx_1ae8b2b1a6be5f66828af0c051065bb642" kindref="member">SymType</ref>;</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>helper<sp/>class,<sp/>has<sp/>implicitly<sp/>conversion<sp/>to<sp/>vector&lt;int64&gt;!<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32" refid="classcytnx_1_1Qs" refkind="compound"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classcytnx_1_1Qs" kindref="compound">Qs</ref>{</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;cytnx_int64&gt;<sp/>tmpQs;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal">...<sp/>Ts&gt;</highlight></codeline>
+<codeline lineno="39" refid="classcytnx_1_1Qs_1a3f956a47670aa44026633ea9e2633e53" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classcytnx_1_1Qs_1a3f956a47670aa44026633ea9e2633e53" kindref="member">Qs</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref><sp/>&amp;e1,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Ts...<sp/>elems)<sp/>{</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>this-&gt;tmpQs<sp/>=<sp/>dynamic_arg_int64_resolver(e1,<sp/>elems...);</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43" refid="classcytnx_1_1Qs_1ac0109bb5f8c190e4107037bb384291b9" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classcytnx_1_1Qs_1ac0109bb5f8c190e4107037bb384291b9" kindref="member">Qs</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;cytnx_int64&gt;<sp/>&amp;qin){</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>this-&gt;tmpQs<sp/>=<sp/>qin;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>interprete<sp/>as<sp/>2d<sp/>vector<sp/>directly<sp/>implicitly<sp/>convert!</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48" refid="classcytnx_1_1Qs_1a675e53e190288b69181e18e2a1943b24" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">explicit</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">operator</highlight><highlight class="normal"><sp/>std::vector&lt;cytnx_int64&gt;()</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>this-&gt;tmpQs;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="52" refid="classcytnx_1_1Qs_1ae801e134abaa3aab35bb79f28d716d23" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::pair&lt;std::vector&lt;cytnx_int64&gt;,<sp/><ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref>&gt;<sp/><ref refid="classcytnx_1_1Qs_1ae801e134abaa3aab35bb79f28d716d23" kindref="member">operator&gt;&gt;</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref><sp/>&amp;dim){</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>make_pair(this-&gt;tmpQs,dim);</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/>};</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/></highlight></codeline>
+<codeline lineno="59"><highlight class="comment"><sp/><sp/>template&lt;class...<sp/>Ts&gt;</highlight></codeline>
+<codeline lineno="60"><highlight class="comment"><sp/><sp/>std::vector&lt;cytnx_int64&gt;<sp/>Qs(const<sp/>cytnx_int64<sp/>&amp;e1,<sp/>const<sp/>Ts<sp/>&amp;...elems){</highlight></codeline>
+<codeline lineno="61"><highlight class="comment"><sp/><sp/><sp/><sp/>std::vector&lt;cytnx_int64&gt;<sp/>argv<sp/>=<sp/>dynamic_arg_int64_resolver(e1,<sp/>elems...);</highlight></codeline>
+<codeline lineno="62"><highlight class="comment"><sp/><sp/><sp/><sp/>return<sp/>argv;</highlight></codeline>
+<codeline lineno="63"><highlight class="comment"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="64"><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Symmetry_base<sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/>intrusive_ptr_base&lt;Symmetry_base&gt;<sp/>{</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>stype_id;</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>n;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/>Symmetry_base()<sp/>:<sp/>stype_id(SymType.Void){};</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/>Symmetry_base(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>&amp;n)<sp/>:<sp/>stype_id(<ref refid="namespacecytnx_1ae8b2b1a6be5f66828af0c051065bb642" kindref="member">SymType</ref>.Void)<sp/>{<sp/>this-&gt;Init(n);<sp/>};</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/>Symmetry_base(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Symmetry_base<sp/>&amp;rhs);</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/>Symmetry_base<sp/>&amp;operator=(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Symmetry_base<sp/>&amp;rhs);</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;cytnx_int64&gt;<sp/>combine_rule(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;cytnx_int64&gt;<sp/>&amp;inL,</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;cytnx_int64&gt;<sp/>&amp;inR);</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref><sp/>combine_rule(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>cytnx_int64<sp/>&amp;inL,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>cytnx_int64<sp/>&amp;inR,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>&amp;is_reverse);</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref><sp/>reverse_rule(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>cytnx_int64<sp/>&amp;in);</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>Init(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>&amp;n){};</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/>boost::intrusive_ptr&lt;Symmetry_base&gt;<sp/>clone()<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">;<sp/>};</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>check_qnum(</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>cytnx_int64<sp/>&amp;in_qnum);<sp/><sp/></highlight><highlight class="comment">//<sp/>check<sp/>the<sp/>passed<sp/>in<sp/>qnums<sp/>satisfy<sp/>the<sp/>symmetry<sp/>requirement.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>check_qnums(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;cytnx_int64&gt;<sp/>&amp;in_qnums);</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>combine_rule_(std::vector&lt;cytnx_int64&gt;<sp/>&amp;out,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;cytnx_int64&gt;<sp/>&amp;inL,</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;cytnx_int64&gt;<sp/>&amp;inR);</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>combine_rule_(cytnx_int64<sp/>&amp;out,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>cytnx_int64<sp/>&amp;inL,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>cytnx_int64<sp/>&amp;inR,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>&amp;is_reverse);</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>reverse_rule_(cytnx_int64<sp/>&amp;out,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>cytnx_int64<sp/>&amp;in);</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>print_info()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>virtual<sp/>std::vector&lt;cytnx_int64&gt;&amp;<sp/>combine_rule(const<sp/>std::vector&lt;cytnx_int64&gt;<sp/>&amp;inL,<sp/>const</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>std::vector&lt;cytnx_int64&gt;<sp/>&amp;inR);</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/>};</highlight></codeline>
+<codeline lineno="96"></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">U1Symmetry<sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/>Symmetry_base<sp/>{</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/>U1Symmetry()<sp/>{<sp/>this-&gt;stype_id<sp/>=<sp/><ref refid="namespacecytnx_1ae8b2b1a6be5f66828af0c051065bb642" kindref="member">SymType</ref>.U;<sp/>};</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/>U1Symmetry(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>&amp;n)<sp/>{<sp/>this-&gt;Init(n);<sp/>};</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>Init(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>&amp;n)<sp/>{</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>this-&gt;stype_id<sp/>=<sp/><ref refid="namespacecytnx_1ae8b2b1a6be5f66828af0c051065bb642" kindref="member">SymType</ref>.U;</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>this-&gt;n<sp/>=<sp/>n;</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(n<sp/>!=<sp/>1)<sp/><ref refid="cytnx__error_8hpp_1aa2edc77cab5ba7d1561fd1ea6cfba9ac" kindref="member">cytnx_error_msg</ref>(1,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;[ERROR]<sp/>U1Symmetry<sp/>should<sp/>set<sp/>n<sp/>=<sp/>1&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/>boost::intrusive_ptr&lt;Symmetry_base&gt;<sp/>clone()<sp/>{</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>boost::intrusive_ptr&lt;Symmetry_base&gt;<sp/>out(</highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/>U1Symmetry(this-&gt;n));</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>out;</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>check_qnum(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>cytnx_int64<sp/>&amp;in_qnum);</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>check_qnums(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;cytnx_int64&gt;<sp/>&amp;in_qnums);</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>combine_rule_(std::vector&lt;cytnx_int64&gt;<sp/>&amp;out,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;cytnx_int64&gt;<sp/>&amp;inL,</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;cytnx_int64&gt;<sp/>&amp;inR);</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>combine_rule_(cytnx_int64<sp/>&amp;out,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>cytnx_int64<sp/>&amp;inL,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>cytnx_int64<sp/>&amp;inR,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>&amp;is_reverse);</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>reverse_rule_(cytnx_int64<sp/>&amp;out,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>cytnx_int64<sp/>&amp;in);</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>print_info()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/>};</highlight></codeline>
+<codeline lineno="120"></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">ZnSymmetry<sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/>Symmetry_base<sp/>{</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/>ZnSymmetry()<sp/>{<sp/>this-&gt;stype_id<sp/>=<sp/><ref refid="namespacecytnx_1ae8b2b1a6be5f66828af0c051065bb642" kindref="member">SymType</ref>.Z;<sp/>};</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/>ZnSymmetry(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>&amp;n)<sp/>{<sp/>this-&gt;Init(n);<sp/>};</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>Init(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>&amp;n)<sp/>{</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>this-&gt;stype_id<sp/>=<sp/><ref refid="namespacecytnx_1ae8b2b1a6be5f66828af0c051065bb642" kindref="member">SymType</ref>.Z;</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>this-&gt;n<sp/>=<sp/>n;</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(n<sp/>&lt;=<sp/>1)<sp/><ref refid="cytnx__error_8hpp_1aa2edc77cab5ba7d1561fd1ea6cfba9ac" kindref="member">cytnx_error_msg</ref>(1,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;[ERROR]<sp/>ZnSymmetry<sp/>can<sp/>only<sp/>have<sp/>n<sp/>&gt;<sp/>1&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/>boost::intrusive_ptr&lt;Symmetry_base&gt;<sp/>clone()<sp/>{</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>boost::intrusive_ptr&lt;Symmetry_base&gt;<sp/>out(</highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/>ZnSymmetry(this-&gt;n));</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>out;</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>check_qnum(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>cytnx_int64<sp/>&amp;in_qnum);</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>check_qnums(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;cytnx_int64&gt;<sp/>&amp;in_qnums);</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>combine_rule_(std::vector&lt;cytnx_int64&gt;<sp/>&amp;out,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;cytnx_int64&gt;<sp/>&amp;inL,</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;cytnx_int64&gt;<sp/>&amp;inR);</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>combine_rule_(cytnx_int64<sp/>&amp;out,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>cytnx_int64<sp/>&amp;inL,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>cytnx_int64<sp/>&amp;inR,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>&amp;is_reverse);</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>reverse_rule_(cytnx_int64<sp/>&amp;out,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>cytnx_int64<sp/>&amp;in);</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>print_info()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/>};</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"></highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//=====================================</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>this<sp/>is<sp/>API</highlight></codeline>
+<codeline lineno="148" refid="classcytnx_1_1Symmetry" refkind="compound"><highlight class="comment"></highlight><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref><sp/>{</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//[Note]<sp/>these<sp/>two<sp/>are<sp/>hide<sp/>from<sp/>user.</highlight></codeline>
+<codeline lineno="152"><highlight class="comment"></highlight><highlight class="normal"><sp/><sp/><sp/><sp/>boost::intrusive_ptr&lt;Symmetry_base&gt;<sp/>_impl;</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"></highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>&amp;<ref refid="classcytnx_1_1Symmetry_1a47a73a6248750acc221104e3079d652c" kindref="member">stype</ref><sp/>=<sp/>-1,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>&amp;<ref refid="classcytnx_1_1Symmetry_1a5d9e73259f21dc79f7086f8418afca8e" kindref="member">n</ref><sp/>=<sp/>0)<sp/>:<sp/>_impl(</highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/>Symmetry_base())<sp/>{</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>this-&gt;Init(<ref refid="classcytnx_1_1Symmetry_1a47a73a6248750acc221104e3079d652c" kindref="member">stype</ref>,<sp/><ref refid="classcytnx_1_1Symmetry_1a5d9e73259f21dc79f7086f8418afca8e" kindref="member">n</ref>);</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/>};<sp/><sp/></highlight><highlight class="comment">//<sp/>default<sp/>is<sp/>U1Symmetry</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"></highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>Init(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>&amp;<ref refid="classcytnx_1_1Symmetry_1a47a73a6248750acc221104e3079d652c" kindref="member">stype</ref><sp/>=<sp/>-1,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>&amp;<ref refid="classcytnx_1_1Symmetry_1a5d9e73259f21dc79f7086f8418afca8e" kindref="member">n</ref><sp/>=<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="classcytnx_1_1Symmetry_1a47a73a6248750acc221104e3079d652c" kindref="member">stype</ref><sp/>==<sp/><ref refid="namespacecytnx_1ae8b2b1a6be5f66828af0c051065bb642" kindref="member">SymType</ref>.U)<sp/>{</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>boost::intrusive_ptr&lt;Symmetry_base&gt;<sp/>tmp(</highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/>U1Symmetry(1));</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>this-&gt;_impl<sp/>=<sp/>tmp;</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="classcytnx_1_1Symmetry_1a47a73a6248750acc221104e3079d652c" kindref="member">stype</ref><sp/>==<sp/><ref refid="namespacecytnx_1ae8b2b1a6be5f66828af0c051065bb642" kindref="member">SymType</ref>.Z)<sp/>{</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>boost::intrusive_ptr&lt;Symmetry_base&gt;<sp/>tmp(</highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/>ZnSymmetry(<ref refid="classcytnx_1_1Symmetry_1a5d9e73259f21dc79f7086f8418afca8e" kindref="member">n</ref>));</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>this-&gt;_impl<sp/>=<sp/>tmp;</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="cytnx__error_8hpp_1aa2edc77cab5ba7d1561fd1ea6cfba9ac" kindref="member">cytnx_error_msg</ref>(1,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;[ERROR]<sp/>invalid<sp/>symmetry<sp/>type.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref><sp/>&amp;operator=(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref><sp/>&amp;rhs)<sp/>{</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>this-&gt;_impl<sp/>=<sp/>rhs._impl;</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>*</highlight><highlight class="keyword">this</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref><sp/>&amp;rhs)<sp/>{<sp/>this-&gt;_impl<sp/>=<sp/>rhs._impl;<sp/>}</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"></highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//[genenrators]</highlight></codeline>
+<codeline lineno="205" refid="classcytnx_1_1Symmetry_1a9218fd66fc9cca64cd3d792e0019592a" refkind="member"><highlight class="comment"></highlight><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref><sp/><ref refid="classcytnx_1_1Symmetry_1a9218fd66fc9cca64cd3d792e0019592a" kindref="member">U1</ref>()<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref>(<ref refid="namespacecytnx_1ae8b2b1a6be5f66828af0c051065bb642" kindref="member">SymType</ref>.U,<sp/>1);<sp/>}</highlight></codeline>
+<codeline lineno="206"><highlight class="normal"></highlight></codeline>
+<codeline lineno="236" refid="classcytnx_1_1Symmetry_1a066083aa705f8fc749b3bbb606f89359" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref><sp/><ref refid="classcytnx_1_1Symmetry_1a066083aa705f8fc749b3bbb606f89359" kindref="member">Zn</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>&amp;<ref refid="classcytnx_1_1Symmetry_1a5d9e73259f21dc79f7086f8418afca8e" kindref="member">n</ref>)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref>(<ref refid="namespacecytnx_1ae8b2b1a6be5f66828af0c051065bb642" kindref="member">SymType</ref>.Z,<sp/><ref refid="classcytnx_1_1Symmetry_1a5d9e73259f21dc79f7086f8418afca8e" kindref="member">n</ref>);<sp/>}</highlight></codeline>
+<codeline lineno="237"><highlight class="normal"></highlight></codeline>
+<codeline lineno="252" refid="classcytnx_1_1Symmetry_1a2b407bcad5cdad20edddffeeda6befe7" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref><sp/><ref refid="classcytnx_1_1Symmetry_1a2b407bcad5cdad20edddffeeda6befe7" kindref="member">clone</ref>()</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="253"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref><sp/>out;</highlight></codeline>
+<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>out._impl<sp/>=<sp/>this-&gt;_impl-&gt;<ref refid="classcytnx_1_1Symmetry_1a2b407bcad5cdad20edddffeeda6befe7" kindref="member">clone</ref>();</highlight></codeline>
+<codeline lineno="255"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>out;</highlight></codeline>
+<codeline lineno="256"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="257"><highlight class="normal"></highlight></codeline>
+<codeline lineno="264" refid="classcytnx_1_1Symmetry_1a47a73a6248750acc221104e3079d652c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Symmetry_1a47a73a6248750acc221104e3079d652c" kindref="member">stype</ref>()</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>this-&gt;_impl-&gt;stype_id;<sp/>}</highlight></codeline>
+<codeline lineno="265"><highlight class="normal"></highlight></codeline>
+<codeline lineno="275" refid="classcytnx_1_1Symmetry_1a5d9e73259f21dc79f7086f8418afca8e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>&amp;<ref refid="classcytnx_1_1Symmetry_1a5d9e73259f21dc79f7086f8418afca8e" kindref="member">n</ref>()</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>this-&gt;_impl-&gt;n;<sp/>}</highlight></codeline>
+<codeline lineno="276"><highlight class="normal"></highlight></codeline>
+<codeline lineno="283" refid="classcytnx_1_1Symmetry_1a0ba15e919a5693923e54c2c6f7d376c6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>std::string<sp/><ref refid="classcytnx_1_1Symmetry_1a0ba15e919a5693923e54c2c6f7d376c6" kindref="member">stype_str</ref>()</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="284"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacecytnx_1ae8b2b1a6be5f66828af0c051065bb642" kindref="member">SymType</ref>.getname(this-&gt;_impl-&gt;stype_id)<sp/>+<sp/>std::to_string(this-&gt;_impl-&gt;n);</highlight></codeline>
+<codeline lineno="285"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="286"><highlight class="normal"></highlight></codeline>
+<codeline lineno="293" refid="classcytnx_1_1Symmetry_1a066741cabfe04df9e9e2782f047188b0" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Symmetry_1a066741cabfe04df9e9e2782f047188b0" kindref="member">check_qnum</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref><sp/>&amp;qnum)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>this-&gt;_impl-&gt;check_qnum(qnum);<sp/>}</highlight></codeline>
+<codeline lineno="294"><highlight class="normal"></highlight></codeline>
+<codeline lineno="301" refid="classcytnx_1_1Symmetry_1a38c1572a027e289430434b56324e2ead" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Symmetry_1a38c1572a027e289430434b56324e2ead" kindref="member">check_qnums</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;cytnx_int64&gt;<sp/>&amp;qnums)<sp/>{</highlight></codeline>
+<codeline lineno="302"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>this-&gt;_impl-&gt;check_qnums(qnums);</highlight></codeline>
+<codeline lineno="303"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="304"><highlight class="normal"></highlight></codeline>
+<codeline lineno="312" refid="classcytnx_1_1Symmetry_1a0a31bbcdd3d98027dd31bce170879926" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;cytnx_int64&gt;<sp/><ref refid="classcytnx_1_1Symmetry_1a0a31bbcdd3d98027dd31bce170879926" kindref="member">combine_rule</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;cytnx_int64&gt;<sp/>&amp;inL,</highlight></codeline>
+<codeline lineno="313"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;cytnx_int64&gt;<sp/>&amp;inR)<sp/>{</highlight></codeline>
+<codeline lineno="314"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>this-&gt;_impl-&gt;combine_rule(inL,<sp/>inR);</highlight></codeline>
+<codeline lineno="315"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="316"><highlight class="normal"></highlight></codeline>
+<codeline lineno="325" refid="classcytnx_1_1Symmetry_1a7a2e6c3f679b5e6774f269b78c8239e8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Symmetry_1a7a2e6c3f679b5e6774f269b78c8239e8" kindref="member">combine_rule_</ref>(std::vector&lt;cytnx_int64&gt;<sp/>&amp;out,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;cytnx_int64&gt;<sp/>&amp;inL,</highlight></codeline>
+<codeline lineno="326"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;cytnx_int64&gt;<sp/>&amp;inR)<sp/>{</highlight></codeline>
+<codeline lineno="327"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>this-&gt;_impl-&gt;combine_rule_(out,<sp/>inL,<sp/>inR);</highlight></codeline>
+<codeline lineno="328"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="329"><highlight class="normal"></highlight></codeline>
+<codeline lineno="337" refid="classcytnx_1_1Symmetry_1a2aaefd177003560b4c12fbbefe30c3c3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref><sp/><ref refid="classcytnx_1_1Symmetry_1a2aaefd177003560b4c12fbbefe30c3c3" kindref="member">combine_rule</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref><sp/>&amp;inL,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref><sp/>&amp;inR,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>&amp;is_reverse<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">)</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="338"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>this-&gt;_impl-&gt;combine_rule(inL,<sp/>inR,<sp/>is_reverse);</highlight></codeline>
+<codeline lineno="339"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="340"><highlight class="normal"></highlight></codeline>
+<codeline lineno="349" refid="classcytnx_1_1Symmetry_1a8542d45b69268355f0b07dea280ba1e3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Symmetry_1a8542d45b69268355f0b07dea280ba1e3" kindref="member">combine_rule_</ref>(<ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref><sp/>&amp;out,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref><sp/>&amp;inL,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref><sp/>&amp;inR,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>&amp;is_reverse=</highlight><highlight class="keyword">false</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="350"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>this-&gt;_impl-&gt;combine_rule_(out,<sp/>inL,<sp/>inR,<sp/>is_reverse);</highlight></codeline>
+<codeline lineno="351"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="352"><highlight class="normal"></highlight></codeline>
+<codeline lineno="353" refid="classcytnx_1_1Symmetry_1ac7dfa6758b9dfb1963f19f0eec7cc4a3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Symmetry_1ac7dfa6758b9dfb1963f19f0eec7cc4a3" kindref="member">reverse_rule_</ref>(<ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref><sp/>&amp;out,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref><sp/>&amp;in)<sp/>{</highlight></codeline>
+<codeline lineno="354"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>this-&gt;_impl-&gt;reverse_rule_(out,<sp/>in);</highlight></codeline>
+<codeline lineno="355"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="356"><highlight class="normal"></highlight></codeline>
+<codeline lineno="357" refid="classcytnx_1_1Symmetry_1a9f856245a37472cb51c74cff0777d15e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref><sp/><ref refid="classcytnx_1_1Symmetry_1a9f856245a37472cb51c74cff0777d15e" kindref="member">reverse_rule</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref><sp/>&amp;in)</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>this-&gt;_impl-&gt;reverse_rule(in);<sp/>}</highlight></codeline>
+<codeline lineno="358"><highlight class="normal"></highlight></codeline>
+<codeline lineno="359"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Symmetry_1ae0aaa29d0445cfc85ffab300aa4a8174" kindref="member">Save</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;fname)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="360"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Symmetry_1ae0aaa29d0445cfc85ffab300aa4a8174" kindref="member">Save</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*fname)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="361"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref><sp/><ref refid="classcytnx_1_1Symmetry_1a43a66664194dd16288dc26abf5caf59c" kindref="member">Load</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;fname);</highlight></codeline>
+<codeline lineno="362"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref><sp/><ref refid="classcytnx_1_1Symmetry_1a43a66664194dd16288dc26abf5caf59c" kindref="member">Load</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*fname);</highlight></codeline>
+<codeline lineno="363"><highlight class="normal"></highlight></codeline>
+<codeline lineno="365"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>_Save(std::fstream<sp/>&amp;f)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="366"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>_Load(std::fstream<sp/>&amp;f);</highlight></codeline>
+<codeline lineno="368"><highlight class="normal"></highlight></codeline>
+<codeline lineno="369" refid="classcytnx_1_1Symmetry_1a8f32669cdcdbf2dc1dff1f588c025981" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Symmetry_1a8f32669cdcdbf2dc1dff1f588c025981" kindref="member">print_info</ref>()</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{<sp/>this-&gt;_impl-&gt;print_info();<sp/>}</highlight></codeline>
+<codeline lineno="370"><highlight class="normal"></highlight></codeline>
+<codeline lineno="371"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Symmetry_1a6726fdd96c12ddfa4b16adde9341aef0" kindref="member">operator==</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref><sp/>&amp;rhs)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="372"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Symmetry_1ad102f58e1226ec26ae9a3bc2d6c366d2" kindref="member">operator!=</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref><sp/>&amp;rhs)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="373"><highlight class="normal"><sp/><sp/>};</highlight></codeline>
+<codeline lineno="374"><highlight class="normal"></highlight></codeline>
+<codeline lineno="375" refid="namespacecytnx_1a661de64fc3049c7e954ea8acdf43e647" refkind="member"><highlight class="normal"><sp/><sp/>std::ostream<sp/>&amp;<ref refid="namespacecytnx_1a4aecfe97bd064be86b1e5877cce14203" kindref="member">operator&lt;&lt;</ref>(std::ostream<sp/>&amp;os,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref><sp/>&amp;in);</highlight></codeline>
+<codeline lineno="376"><highlight class="normal"></highlight></codeline>
+<codeline lineno="377"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cytnx</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="378"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="include/Symmetry.hpp"/>
+  </compounddef>
+</doxygen>

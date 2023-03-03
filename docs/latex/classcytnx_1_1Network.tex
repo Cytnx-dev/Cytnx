@@ -1,0 +1,268 @@
+\hypertarget{classcytnx_1_1Network}{}\doxysection{cytnx\+::Network Class Reference}
+\label{classcytnx_1_1Network}\index{cytnx::Network@{cytnx::Network}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{classcytnx_1_1Network_ab3cb72d14125bb2b0ea816d13f8b7b16}{Diagram}} (outname=None, figsize=\mbox{[}6 5\mbox{]}, engine=\char`\"{}circo\char`\"{})
+\begin{DoxyCompactList}\small\item\em Draw a \mbox{\hyperlink{classcytnx_1_1Network}{Network}} diagram \mbox{[}PYTHON only\mbox{]}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classcytnx_1_1Network_a00bc1bf6b9291a0416d5c0fb5beaa284}{Fromfile}} (const std\+::string \&fname, const int \&network\+\_\+type=Nt\+Type.\+Regular)
+\begin{DoxyCompactList}\small\item\em Construct \mbox{\hyperlink{classcytnx_1_1Network}{Network}} from network file. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classcytnx_1_1Network_aa863a755e95a85411a15af58d1ac4057}{From\+String}} (const std\+::vector$<$ std\+::string $>$ \&contents, const int \&network\+\_\+type=Nt\+Type.\+Regular)
+\begin{DoxyCompactList}\small\item\em Construct \mbox{\hyperlink{classcytnx_1_1Network}{Network}} from a list of strings, where each string is the same as each line in network file. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classcytnx_1_1Network_a0fc550caee8609366ccc37ef86011af9}\label{classcytnx_1_1Network_a0fc550caee8609366ccc37ef86011af9}} 
+{\bfseries Network} (const std\+::string \&fname, const int \&network\+\_\+type=Nt\+Type.\+Regular)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Network_a8826696e8b35e7e819cfd81a08dacf43}\label{classcytnx_1_1Network_a8826696e8b35e7e819cfd81a08dacf43}} 
+void {\bfseries Put\+Uni\+Tensor} (const std\+::string \&name, const \mbox{\hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor}} \&utensor)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Network_a2beb65e19bc0cfbd3e21ff46c6abc62b}\label{classcytnx_1_1Network_a2beb65e19bc0cfbd3e21ff46c6abc62b}} 
+void {\bfseries Put\+Uni\+Tensor} (const cytnx\+\_\+uint64 \&idx, const \mbox{\hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor}} \&utensor)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Network_abc19de742ef4d2505a56a20acd0ec668}\label{classcytnx_1_1Network_abc19de742ef4d2505a56a20acd0ec668}} 
+void {\bfseries Put\+Uni\+Tensors} (const std\+::vector$<$ std\+::string $>$ \&name, const std\+::vector$<$ \mbox{\hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor}} $>$ \&utensors)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Network_a24e34b95b458be854a36b0fbcf008b41}\label{classcytnx_1_1Network_a24e34b95b458be854a36b0fbcf008b41}} 
+std\+::string {\bfseries get\+Optimal\+Order} (const int \&network\+\_\+type=Nt\+Type.\+Regular)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Network_ab302e1d5b2acbe65f419670f7d1d4514}\label{classcytnx_1_1Network_ab302e1d5b2acbe65f419670f7d1d4514}} 
+\mbox{\hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor}} {\bfseries Launch} (const bool \&optimal, const std\+::string \&contract\+\_\+order=\char`\"{}\char`\"{}, const int \&network\+\_\+type=Nt\+Type.\+Regular)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Network_ab46151cedd2ff6da6fd81d700cd1df5f}\label{classcytnx_1_1Network_ab46151cedd2ff6da6fd81d700cd1df5f}} 
+void {\bfseries clear} ()
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Network_a1235a67c0cbb357e34e99116bf7d20ea}\label{classcytnx_1_1Network_a1235a67c0cbb357e34e99116bf7d20ea}} 
+\mbox{\hyperlink{classcytnx_1_1Network}{Network}} {\bfseries clone} ()
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Network_a2218d13ef5879f5d35d8b799d33703e7}\label{classcytnx_1_1Network_a2218d13ef5879f5d35d8b799d33703e7}} 
+void {\bfseries Print\+Net} ()
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Network_affde6272cbdcd1bd101e61f37674be24}\label{classcytnx_1_1Network_affde6272cbdcd1bd101e61f37674be24}} 
+void {\bfseries Savefile} (const std\+::string \&fname)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Network_a9a13bcd11d205c0848b25c68286c2431}\label{classcytnx_1_1Network_a9a13bcd11d205c0848b25c68286c2431}} 
+static \mbox{\hyperlink{classcytnx_1_1Network}{Network}} {\bfseries Contract} (const std\+::vector$<$ \mbox{\hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor}} $>$ \&tensors, const std\+::string \&Tout, const std\+::vector$<$ std\+::string $>$ \&alias=\{\}, const std\+::string \&contract\+\_\+order=\char`\"{}\char`\"{})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classcytnx_1_1Network_ab3cb72d14125bb2b0ea816d13f8b7b16}\label{classcytnx_1_1Network_ab3cb72d14125bb2b0ea816d13f8b7b16}} 
+\index{cytnx::Network@{cytnx::Network}!Diagram@{Diagram}}
+\index{Diagram@{Diagram}!cytnx::Network@{cytnx::Network}}
+\doxysubsubsection{\texorpdfstring{Diagram()}{Diagram()}}
+{\footnotesize\ttfamily def cytnx\+::\+Network\+::\+Diagram (\begin{DoxyParamCaption}\item[{outname}]{ = {\ttfamily None},  }\item[{figsize}]{ = {\ttfamily \mbox{[}6~5\mbox{]}},  }\item[{engine}]{ = {\ttfamily \char`\"{}circo\char`\"{}} }\end{DoxyParamCaption})}
+
+
+
+Draw a \mbox{\hyperlink{classcytnx_1_1Network}{Network}} diagram \mbox{[}PYTHON only\mbox{]}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em outname} & The save path of the diagram. \\
+\hline
+{\em figsize} & The size of the figure \\
+\hline
+{\em engine} & The engine that is used to generate diagram. (see graphviz for other options.) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classcytnx_1_1Network_a00bc1bf6b9291a0416d5c0fb5beaa284}\label{classcytnx_1_1Network_a00bc1bf6b9291a0416d5c0fb5beaa284}} 
+\index{cytnx::Network@{cytnx::Network}!Fromfile@{Fromfile}}
+\index{Fromfile@{Fromfile}!cytnx::Network@{cytnx::Network}}
+\doxysubsubsection{\texorpdfstring{Fromfile()}{Fromfile()}}
+{\footnotesize\ttfamily void cytnx\+::\+Network\+::\+Fromfile (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{fname,  }\item[{const int \&}]{network\+\_\+type = {\ttfamily NtType.Regular} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Construct \mbox{\hyperlink{classcytnx_1_1Network}{Network}} from network file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fname} & The network file path \\
+\hline
+{\em network\+\_\+type} & The type of network. This can be \mbox{[}Nt\+Type.\+Regular\mbox{]} or \mbox{[}Nt\+Type.\+Fermion.\mbox{]}. Currently, only Regular \mbox{\hyperlink{classcytnx_1_1Network}{Network}} is support!\\
+\hline
+\end{DoxyParams}
+\hypertarget{classcytnx_1_1Network_autotoc_md87}{}\doxysubsubsection{note\+:}\label{classcytnx_1_1Network_autotoc_md87}
+
+\begin{DoxyEnumerate}
+\item each network file cannot have more than 1024 lines.
+\end{DoxyEnumerate}\hypertarget{classcytnx_1_1Network_autotoc_md88}{}\doxysubsubsection{detail\+:}\label{classcytnx_1_1Network_autotoc_md88}
+Format of a network file\+:
+
+
+\begin{DoxyItemize}
+\item each line defines a \mbox{\hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor}}, that takes the format \textquotesingle{}\mbox{[}name\mbox{]} \+: \mbox{[}Labels\mbox{]}\textquotesingle{}
+\item the name can be any alphabets A-\/Z, a-\/z
+\item There are two reserved name\+: \textquotesingle{}TOUT\textquotesingle{} and \textquotesingle{}ORDER\textquotesingle{} (all capital)
+\item One can use \textquotesingle{}TOUT\textquotesingle{} line to specify the output \mbox{\hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor}}\textquotesingle{}s bond order using labels
+\item The \textquotesingle{}ORDER\textquotesingle{} line is used to specify the contraction order
+\end{DoxyItemize}
+
+About \mbox{[}Labels\mbox{]}\+:
+
+
+\begin{DoxyItemize}
+\item each label should seperate by a comma \char`\"{},\char`\"{}
+\item one \textquotesingle{};\textquotesingle{} is needed and used to seperate Rowrank and column rank
+\end{DoxyItemize}
+
+About \mbox{[}ORDER\mbox{]}\+:
+
+
+\begin{DoxyItemize}
+\item The contraction order, it can be specify using the standard mathmetical bracket ruls.
+\item Without specify this line, the default contraction order will be from the first line to the last line
+\end{DoxyItemize}\hypertarget{classcytnx_1_1Network_autotoc_md89}{}\doxysubsubsection{example network file\+:}\label{classcytnx_1_1Network_autotoc_md89}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{A: 0;1,2}
+\DoxyCodeLine{B: 0;3,4}
+\DoxyCodeLine{C: 5;1,6}
+\DoxyCodeLine{D: 5;7,8}
+\DoxyCodeLine{TOUT: 2,3,4;6,7,8}
+\DoxyCodeLine{ORDER: (A,B),(C,D)}
+
+\end{DoxyCodeInclude}
+\hypertarget{classcytnx_1_1Network_autotoc_md90}{}\doxysubsubsection{example code for load the network file\+:}\label{classcytnx_1_1Network_autotoc_md90}
+\hypertarget{classcytnx_1_1Network_autotoc_md91}{}\doxyparagraph{c++ API\+:}\label{classcytnx_1_1Network_autotoc_md91}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "{}cytnx.hpp"{}}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }cytnx;}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keywordtype}{int} main(\textcolor{keywordtype}{int} argc, \textcolor{keywordtype}{char}* argv[]) \{}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Network}{Network}} N;}
+\DoxyCodeLine{  N.\mbox{\hyperlink{classcytnx_1_1Network_a00bc1bf6b9291a0416d5c0fb5beaa284}{Fromfile}}(\textcolor{stringliteral}{"{}example.net"{}});}
+\DoxyCodeLine{  cout << N << endl;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Network_autotoc_md92}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Network_autotoc_md92}
+
+\begin{DoxyVerbInclude}
+==== Network ====
+[x] A : 0 ; 1 2 
+[x] B : 0 ; 3 4 
+[x] C : 5 ; 1 6 
+[x] D : 5 ; 7 8 
+TOUT : 2 3 4 ; 6 7 8 
+ORDER : (A,B),(C,D)
+=================
+
+\end{DoxyVerbInclude}
+ \hypertarget{classcytnx_1_1Network_autotoc_md93}{}\doxyparagraph{python API}\label{classcytnx_1_1Network_autotoc_md93}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{keyword}{import} cytnx}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{N = \mbox{\hyperlink{classcytnx_1_1Network}{cytnx.Network}}(\textcolor{stringliteral}{"{}example.net"{}})}
+\DoxyCodeLine{print(N)}
+\DoxyCodeLine{}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Network_autotoc_md94}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Network_autotoc_md94}
+
+\begin{DoxyVerbInclude}
+==== Network ====
+[x] A : 0 ; 1 2 
+[x] B : 0 ; 3 4 
+[x] C : 5 ; 1 6 
+[x] D : 5 ; 7 8 
+TOUT : 2 3 4 ; 6 7 8 
+ORDER : (A,B),(C,D)
+=================
+
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Network_aa863a755e95a85411a15af58d1ac4057}\label{classcytnx_1_1Network_aa863a755e95a85411a15af58d1ac4057}} 
+\index{cytnx::Network@{cytnx::Network}!FromString@{FromString}}
+\index{FromString@{FromString}!cytnx::Network@{cytnx::Network}}
+\doxysubsubsection{\texorpdfstring{FromString()}{FromString()}}
+{\footnotesize\ttfamily void cytnx\+::\+Network\+::\+From\+String (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::string $>$ \&}]{contents,  }\item[{const int \&}]{network\+\_\+type = {\ttfamily NtType.Regular} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Construct \mbox{\hyperlink{classcytnx_1_1Network}{Network}} from a list of strings, where each string is the same as each line in network file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em contents} & The network file descriptions \\
+\hline
+{\em network\+\_\+type} & The type of network. This can be \mbox{[}Nt\+Type.\+Regular\mbox{]} or \mbox{[}Nt\+Type.\+Fermion.\mbox{]}. Currently, only Regular \mbox{\hyperlink{classcytnx_1_1Network}{Network}} is support!\\
+\hline
+\end{DoxyParams}
+\hypertarget{classcytnx_1_1Network_autotoc_md95}{}\doxysubsubsection{note\+:}\label{classcytnx_1_1Network_autotoc_md95}
+
+\begin{DoxyEnumerate}
+\item contents cannot have more than 1024 lines/strings.
+\end{DoxyEnumerate}\hypertarget{classcytnx_1_1Network_autotoc_md96}{}\doxysubsubsection{detail\+:}\label{classcytnx_1_1Network_autotoc_md96}
+Format of each string follows the same policy as Fromfile.\hypertarget{classcytnx_1_1Network_autotoc_md97}{}\doxysubsubsection{example code for load the network file\+:}\label{classcytnx_1_1Network_autotoc_md97}
+\hypertarget{classcytnx_1_1Network_autotoc_md98}{}\doxyparagraph{c++ API\+:}\label{classcytnx_1_1Network_autotoc_md98}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "{}cytnx.hpp"{}}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }cytnx;}
+\DoxyCodeLine{\textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keywordtype}{int} main(\textcolor{keywordtype}{int} argc, \textcolor{keywordtype}{char}* argv[]) \{}
+\DoxyCodeLine{  \mbox{\hyperlink{classcytnx_1_1Network}{Network}} N;}
+\DoxyCodeLine{  N.\mbox{\hyperlink{classcytnx_1_1Network_aa863a755e95a85411a15af58d1ac4057}{FromString}}(}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}A: 0;1,2"{}}, \textcolor{stringliteral}{"{}B: 0;3,4"{}}, \textcolor{stringliteral}{"{}C: 5;1,6"{}}, \textcolor{stringliteral}{"{}D: 5;7,8"{}}, \textcolor{stringliteral}{"{}TOUT: 2,3,4;6,7,8"{}}, \textcolor{stringliteral}{"{}ORDER: (A,B),(C,D)"{}}\});}
+\DoxyCodeLine{  cout << N << endl;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Network_autotoc_md99}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Network_autotoc_md99}
+
+\begin{DoxyVerbInclude}
+==== Network ====
+[x] A : 0 ; 1 2 
+[x] B : 0 ; 3 4 
+[x] C : 5 ; 1 6 
+[x] D : 5 ; 7 8 
+TOUT : 2 3 4 ; 6 7 8 
+ORDER : (A,B),(C,D)
+=================
+
+\end{DoxyVerbInclude}
+ \hypertarget{classcytnx_1_1Network_autotoc_md100}{}\doxyparagraph{python API}\label{classcytnx_1_1Network_autotoc_md100}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{keyword}{import} cytnx}
+\DoxyCodeLine{}
+\DoxyCodeLine{N = \mbox{\hyperlink{classcytnx_1_1Network}{cytnx.Network}}()}
+\DoxyCodeLine{N.FromString([\textcolor{stringliteral}{"{}A: 0;1,2"{}},\(\backslash\)}
+\DoxyCodeLine{              \textcolor{stringliteral}{"{}B: 0;3,4"{}},\(\backslash\)}
+\DoxyCodeLine{              \textcolor{stringliteral}{"{}C: 5;1,6"{}},\(\backslash\)}
+\DoxyCodeLine{              \textcolor{stringliteral}{"{}D: 5;7,8"{}},\(\backslash\)}
+\DoxyCodeLine{              \textcolor{stringliteral}{"{}TOUT: 2,3,4;6,7,8"{}},\(\backslash\)}
+\DoxyCodeLine{              \textcolor{stringliteral}{"{}ORDER: (A,B),(C,D)"{}}\(\backslash\)}
+\DoxyCodeLine{             ])}
+\DoxyCodeLine{}
+\DoxyCodeLine{print(N);}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Network_autotoc_md101}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Network_autotoc_md101}
+
+\begin{DoxyVerbInclude}
+==== Network ====
+[x] A : 0 ; 1 2 
+[x] B : 0 ; 3 4 
+[x] C : 5 ; 1 6 
+[x] D : 5 ; 7 8 
+TOUT : 2 3 4 ; 6 7 8 
+ORDER : (A,B),(C,D)
+=================
+
+\end{DoxyVerbInclude}
+ 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+python\+\_\+doc/Network\+\_\+misc.\+hpp\item 
+include/Network.\+hpp\end{DoxyCompactItemize}

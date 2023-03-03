@@ -11,10 +11,42 @@
 #include <functional>
 
 namespace cytnx {
-  // class Tensor;    //fwd
-  // class UniTensor; //fwd
-  // class LinOp;     //fwd
+  
+  cytnx::UniTensor operator+(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
+  template <class T>
+  cytnx::UniTensor operator+(const T &lc, const cytnx::UniTensor &Rt);
+  template <class T>
+  cytnx::UniTensor operator+(const cytnx::UniTensor &Lt, const T &rc);
 
+  cytnx::UniTensor operator-(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
+  template <class T>
+  cytnx::UniTensor operator-(const T &lc, const cytnx::UniTensor &Rt);
+  template <class T>
+  cytnx::UniTensor operator-(const cytnx::UniTensor &Lt, const T &rc);
+
+  cytnx::UniTensor operator*(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
+  template <class T>
+  cytnx::UniTensor operator*(const T &lc, const cytnx::UniTensor &Rt);
+  template <class T>
+  cytnx::UniTensor operator*(const cytnx::UniTensor &Lt, const T &rc);
+
+  cytnx::UniTensor operator/(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
+  template <class T>
+  cytnx::UniTensor operator/(const T &lc, const cytnx::UniTensor &Rt);
+  template <class T>
+  cytnx::UniTensor operator/(const cytnx::UniTensor &Lt, const T &rc);
+
+  cytnx::UniTensor operator%(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
+  template <class T>
+  cytnx::UniTensor operator%(const T &lc, const cytnx::UniTensor &Rt);
+  template <class T>
+  cytnx::UniTensor operator%(const cytnx::UniTensor &Lt, const T &rc);
+
+  
+  /**
+  @namespace cytnx::linalg
+  @brief linear algebra related functions.
+  */
   namespace linalg {
 
     // Add:
@@ -121,48 +153,12 @@ namespace cytnx {
     */
     void Pow_(UniTensor &Tin, const double &p);
 
-  }  // namespace linalg
 
-  cytnx::UniTensor operator+(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
-  template <class T>
-  cytnx::UniTensor operator+(const T &lc, const cytnx::UniTensor &Rt);
-  template <class T>
-  cytnx::UniTensor operator+(const cytnx::UniTensor &Lt, const T &rc);
 
-  cytnx::UniTensor operator-(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
-  template <class T>
-  cytnx::UniTensor operator-(const T &lc, const cytnx::UniTensor &Rt);
-  template <class T>
-  cytnx::UniTensor operator-(const cytnx::UniTensor &Lt, const T &rc);
+    //====================================================================================
+    //  [Tensor] ====================================================================================
+    //====================================================================================
 
-  cytnx::UniTensor operator*(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
-  template <class T>
-  cytnx::UniTensor operator*(const T &lc, const cytnx::UniTensor &Rt);
-  template <class T>
-  cytnx::UniTensor operator*(const cytnx::UniTensor &Lt, const T &rc);
-
-  cytnx::UniTensor operator/(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
-  template <class T>
-  cytnx::UniTensor operator/(const T &lc, const cytnx::UniTensor &Rt);
-  template <class T>
-  cytnx::UniTensor operator/(const cytnx::UniTensor &Lt, const T &rc);
-
-  cytnx::UniTensor operator%(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
-  template <class T>
-  cytnx::UniTensor operator%(const T &lc, const cytnx::UniTensor &Rt);
-  template <class T>
-  cytnx::UniTensor operator%(const cytnx::UniTensor &Lt, const T &rc);
-}  // namespace cytnx
-
-//====================================================================================
-//====================================================================================
-//====================================================================================
-namespace cytnx {
-  /**
-  @namespace cytnx::linalg
-  @brief linear algebra related functions.
-  */
-  namespace linalg {
     Tensor Add(const Tensor &Lt, const Tensor &Rt);
     template <class T>
     Tensor Add(const T &lc, const Tensor &Rt);

@@ -1,0 +1,50 @@
+\hypertarget{Generator_8hpp_source}{}\doxysection{Generator.\+hpp}
+\label{Generator_8hpp_source}\index{include/Generator.hpp@{include/Generator.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_Generator\_H\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_Generator\_H\_}}
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include "{}Type.hpp"{}}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include "{}Device.hpp"{}}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include "{}cytnx\_error.hpp"{}}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}Tensor.hpp"{}}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <initializer\_list>}}
+\DoxyCodeLine{9 \textcolor{keyword}{namespace }cytnx \{}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{12 }
+\DoxyCodeLine{24   Tensor zeros(\textcolor{keyword}{const} cytnx\_uint64 \&Nelem, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&dtype = Type.Double,}
+\DoxyCodeLine{25                \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = Device.cpu);}
+\DoxyCodeLine{38   Tensor zeros(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&Nelem, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&dtype = Type.Double,}
+\DoxyCodeLine{39                \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = Device.cpu);}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{54   Tensor identity(\textcolor{keyword}{const} cytnx\_uint64 \&Dim, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&dtype = Type.Double,}
+\DoxyCodeLine{55                   \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = Device.cpu);}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{72   Tensor eye(\textcolor{keyword}{const} cytnx\_uint64 \&Dim, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&dtype = Type.Double,}
+\DoxyCodeLine{73              \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = Device.cpu);}
+\DoxyCodeLine{74 }
+\DoxyCodeLine{76 }
+\DoxyCodeLine{88   Tensor ones(\textcolor{keyword}{const} cytnx\_uint64 \&Nelem, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&dtype = Type.Double,}
+\DoxyCodeLine{89               \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = Device.cpu);}
+\DoxyCodeLine{102   Tensor ones(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&Nelem, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&dtype = Type.Double,}
+\DoxyCodeLine{103               \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = Device.cpu);}
+\DoxyCodeLine{105 }
+\DoxyCodeLine{107 }
+\DoxyCodeLine{115   Tensor arange(\textcolor{keyword}{const} cytnx\_int64 \&Nelem);}
+\DoxyCodeLine{130   Tensor arange(\textcolor{keyword}{const} cytnx\_double \&start, \textcolor{keyword}{const} cytnx\_double \&end, \textcolor{keyword}{const} cytnx\_double \&step = 1,}
+\DoxyCodeLine{131                 \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&dtype = Type.Double, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = Device.cpu);}
+\DoxyCodeLine{133 }
+\DoxyCodeLine{134   Tensor linspace(\textcolor{keyword}{const} cytnx\_double \&start, \textcolor{keyword}{const} cytnx\_double \&end, \textcolor{keyword}{const} cytnx\_uint64 \&Nelem,}
+\DoxyCodeLine{135                   \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&endpoint = \textcolor{keyword}{true}, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&dtype = Type.Double,}
+\DoxyCodeLine{136                   \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = Device.cpu);}
+\DoxyCodeLine{137 }
+\DoxyCodeLine{138   \textcolor{comment}{// Tensor rand(const std::vector<cytnx\_uint64> \&size);}}
+\DoxyCodeLine{139   \textcolor{comment}{// Tensor randn(const std::vector<cytnx\_uint64> \&size);}}
+\DoxyCodeLine{140   \textcolor{comment}{// Tensor normal(const cytnx\_double \&mean, cytnx\_double \&std);}}
+\DoxyCodeLine{141 }
+\DoxyCodeLine{142 \}  \textcolor{comment}{// namespace cytnx}}
+\DoxyCodeLine{143 }
+\DoxyCodeLine{144 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

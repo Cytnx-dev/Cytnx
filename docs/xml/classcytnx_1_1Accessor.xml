@@ -1,0 +1,581 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classcytnx_1_1Accessor" kind="class" language="C++" prot="public">
+    <compoundname>cytnx::Accessor</compoundname>
+    <includes refid="Accessor_8hpp" local="no">Accessor.hpp</includes>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classcytnx_1_1Accessor_1af34f12b7cd4114ac80192f8a0df99681" prot="private" static="no" mutable="no">
+        <type><ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref></type>
+        <definition>cytnx_int64 cytnx::Accessor::_type</definition>
+        <argsstring></argsstring>
+        <name>_type</name>
+        <qualifiedname>cytnx::Accessor::_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Accessor.hpp" line="18" column="17" bodyfile="include/Accessor.hpp" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classcytnx_1_1Accessor_1a9f6fa9087f09756e020355a05196d384" prot="public" static="no" const="no" explicit="yes" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>cytnx::Accessor::Accessor</definition>
+        <argsstring>(const cytnx_int64 &amp;loc)</argsstring>
+        <name>Accessor</name>
+        <qualifiedname>cytnx::Accessor::Accessor</qualifiedname>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>loc</declname>
+        </param>
+        <briefdescription>
+<para>access the specific index at the assigned rank in <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>loc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the specify index</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+See also <ref refid="classcytnx_1_1Tensor_1ad7b928e4cb89d40cbd99aefab9aa0075" kindref="member">cytnx::Tensor.get() </ref> for how to using them.</para>
+<para><heading level="2">Example:</heading>
+</para>
+<para><heading level="3">c++ API:</heading>
+</para>
+<para><programlisting filename="example/Accessor/example.cpp"><codeline><highlight class="preprocessor">#include<sp/>&quot;<ref refid="cytnx_8hpp" kindref="compound">cytnx.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>1.<sp/>handy<sp/>alias:</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Accessor" kindref="compound">Accessor</ref><sp/><ref refid="namespacecytnx_1ae5da4c8d3a63643c3bc40aa5dc5b4c35" kindref="member">ac</ref>;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>2.<sp/>Create<sp/>a<sp/>Tensor<sp/>with</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>shape<sp/>(3,4,5),</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>dtype<sp/>=Type.Double<sp/>[default],</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>device=Device.cpu<sp/>[default]</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref><sp/>A<sp/>=<sp/><ref refid="namespacecytnx_1a685cf4e94754373ae4f12622b168fb98" kindref="member">cytnx::arange</ref>(24);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>A.<ref refid="classcytnx_1_1Tensor_1a3723449528b9a20dd46c32c9e042b8f0" kindref="member">reshape_</ref>({2,<sp/>3,<sp/>4});</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>A<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>3.<sp/>Accessing<sp/>elements<sp/>using<sp/>accessor</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>This<sp/>is<sp/>similar<sp/>as<sp/>python<sp/>slices.</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>-&gt;<sp/>A[0,:,0:2:1]</highlight></codeline>
+<codeline><highlight class="comment"></highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref><sp/>B<sp/>=<sp/>A(0,<sp/><ref refid="classcytnx_1_1Accessor_1a71b8c4af7182a2c9144929bdef9ff4fd" kindref="member">ac::all</ref>(),<sp/><ref refid="classcytnx_1_1Accessor_1a7a5a508a58b71897c3dd162195aceaa9" kindref="member">ac::range</ref>(0,<sp/>2,<sp/>1));</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>B<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>[Note]<sp/>Conversion<sp/>from<sp/>python<sp/>slice<sp/>to<sp/>ac:</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[::x]<sp/><sp/><sp/>=<sp/>ac::step(x)</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[a::x]<sp/><sp/>=<sp/>ac::tilend(a,x)</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[a::]<sp/><sp/><sp/>=<sp/>ac::tilend(a)</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[:b:]<sp/><sp/><sp/>=<sp/>ac::range(0,b,1)</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[a:b:x]<sp/>=<sp/>ac::range(a,b,x)</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>
+Total elem: 24
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (2,3,4)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 ]
+  [4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 ]
+  [8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]]
+ [[1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 ]
+  [1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]
+  [2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]]]
+
+
+
+Total elem: 6
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,2)
+[[0.00000e+00 1.00000e+00 ]
+ [4.00000e+00 5.00000e+00 ]
+ [8.00000e+00 9.00000e+00 ]]
+
+
+</verbatim> <heading level="3">python API:</heading>
+</para>
+<para><programlisting filename="example/Accessor/example.py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>cytnx<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>*</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">A<sp/>=<sp/>arange(24);</highlight></codeline>
+<codeline><highlight class="normal">A.reshape_(2,3,4);</highlight></codeline>
+<codeline><highlight class="normal">print(A)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">B<sp/>=<sp/>A[0,:,0:2:1]</highlight></codeline>
+<codeline><highlight class="normal">print(B)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>
+Total elem: 24
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (2,3,4)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 ]
+  [4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 ]
+  [8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]]
+ [[1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 ]
+  [1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]
+  [2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]]]
+
+
+
+
+Total elem: 6
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,2)
+[[0.00000e+00 1.00000e+00 ]
+ [4.00000e+00 5.00000e+00 ]
+ [8.00000e+00 9.00000e+00 ]]
+
+
+
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Accessor.hpp" line="56" column="14" bodyfile="src/Accessor.cpp" bodystart="10" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Accessor_1a78c4b2a0565d79fb0852c785b937872c" prot="public" static="no" const="no" explicit="yes" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type></type>
+        <definition>cytnx::Accessor::Accessor</definition>
+        <argsstring>(const std::initializer_list&lt; T &gt; &amp;list)</argsstring>
+        <name>Accessor</name>
+        <qualifiedname>cytnx::Accessor::Accessor</qualifiedname>
+        <param>
+          <type>const std::initializer_list&lt; T &gt; &amp;</type>
+          <declname>list</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Accessor.hpp" line="61" column="14" bodyfile="include/Accessor.hpp" bodystart="61" bodyend="66"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Accessor_1ae83236323b25e5e3696f79ff5d764662" prot="public" static="no" const="no" explicit="yes" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type></type>
+        <definition>cytnx::Accessor::Accessor</definition>
+        <argsstring>(const std::vector&lt; T &gt; &amp;list)</argsstring>
+        <name>Accessor</name>
+        <qualifiedname>cytnx::Accessor::Accessor</qualifiedname>
+        <param>
+          <type>const std::vector&lt; T &gt; &amp;</type>
+          <declname>list</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Accessor.hpp" line="69" column="14" bodyfile="include/Accessor.hpp" bodystart="69" bodyend="72"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Accessor_1a8777a35162dcf47f9992295b58735743" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int cytnx::Accessor::type</definition>
+        <argsstring>() const</argsstring>
+        <name>type</name>
+        <qualifiedname>cytnx::Accessor::type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Accessor.hpp" line="88" column="9" bodyfile="include/Accessor.hpp" bodystart="88" bodyend="88"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="classcytnx_1_1Accessor_1a71b8c4af7182a2c9144929bdef9ff4fd" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Accessor" kindref="compound">Accessor</ref></type>
+        <definition>static Accessor cytnx::Accessor::all</definition>
+        <argsstring>()</argsstring>
+        <name>all</name>
+        <qualifiedname>cytnx::Accessor::all</qualifiedname>
+        <briefdescription>
+<para>access the whole rank, this is similar to [:] in python </para>
+        </briefdescription>
+        <detaileddescription>
+<para><heading level="2">Example:</heading>
+</para>
+<para><heading level="3">c++ API:</heading>
+</para>
+<para><programlisting filename="example/Accessor/example.cpp"><codeline><highlight class="preprocessor">#include<sp/>&quot;<ref refid="cytnx_8hpp" kindref="compound">cytnx.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>1.<sp/>handy<sp/>alias:</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Accessor" kindref="compound">Accessor</ref><sp/><ref refid="namespacecytnx_1ae5da4c8d3a63643c3bc40aa5dc5b4c35" kindref="member">ac</ref>;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>2.<sp/>Create<sp/>a<sp/>Tensor<sp/>with</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>shape<sp/>(3,4,5),</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>dtype<sp/>=Type.Double<sp/>[default],</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>device=Device.cpu<sp/>[default]</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref><sp/>A<sp/>=<sp/><ref refid="namespacecytnx_1a685cf4e94754373ae4f12622b168fb98" kindref="member">cytnx::arange</ref>(24);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>A.<ref refid="classcytnx_1_1Tensor_1a3723449528b9a20dd46c32c9e042b8f0" kindref="member">reshape_</ref>({2,<sp/>3,<sp/>4});</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>A<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>3.<sp/>Accessing<sp/>elements<sp/>using<sp/>accessor</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>This<sp/>is<sp/>similar<sp/>as<sp/>python<sp/>slices.</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>-&gt;<sp/>A[0,:,0:2:1]</highlight></codeline>
+<codeline><highlight class="comment"></highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref><sp/>B<sp/>=<sp/>A(0,<sp/><ref refid="classcytnx_1_1Accessor_1a71b8c4af7182a2c9144929bdef9ff4fd" kindref="member">ac::all</ref>(),<sp/><ref refid="classcytnx_1_1Accessor_1a7a5a508a58b71897c3dd162195aceaa9" kindref="member">ac::range</ref>(0,<sp/>2,<sp/>1));</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>B<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>[Note]<sp/>Conversion<sp/>from<sp/>python<sp/>slice<sp/>to<sp/>ac:</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[::x]<sp/><sp/><sp/>=<sp/>ac::step(x)</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[a::x]<sp/><sp/>=<sp/>ac::tilend(a,x)</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[a::]<sp/><sp/><sp/>=<sp/>ac::tilend(a)</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[:b:]<sp/><sp/><sp/>=<sp/>ac::range(0,b,1)</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[a:b:x]<sp/>=<sp/>ac::range(a,b,x)</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>
+Total elem: 24
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (2,3,4)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 ]
+  [4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 ]
+  [8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]]
+ [[1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 ]
+  [1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]
+  [2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]]]
+
+
+
+Total elem: 6
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,2)
+[[0.00000e+00 1.00000e+00 ]
+ [4.00000e+00 5.00000e+00 ]
+ [8.00000e+00 9.00000e+00 ]]
+
+
+</verbatim> <heading level="3">python API:</heading>
+</para>
+<para><programlisting filename="example/Accessor/example.py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>cytnx<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>*</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">A<sp/>=<sp/>arange(24);</highlight></codeline>
+<codeline><highlight class="normal">A.reshape_(2,3,4);</highlight></codeline>
+<codeline><highlight class="normal">print(A)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">B<sp/>=<sp/>A[0,:,0:2:1]</highlight></codeline>
+<codeline><highlight class="normal">print(B)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>
+Total elem: 24
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (2,3,4)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 ]
+  [4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 ]
+  [8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]]
+ [[1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 ]
+  [1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]
+  [2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]]]
+
+
+
+
+Total elem: 6
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,2)
+[[0.00000e+00 1.00000e+00 ]
+ [4.00000e+00 5.00000e+00 ]
+ [8.00000e+00 9.00000e+00 ]]
+
+
+
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Accessor.hpp" line="104" column="21" bodyfile="include/Accessor.hpp" bodystart="104" bodyend="104"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Accessor_1a7a5a508a58b71897c3dd162195aceaa9" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Accessor" kindref="compound">Accessor</ref></type>
+        <definition>static Accessor cytnx::Accessor::range</definition>
+        <argsstring>(const cytnx_int64 &amp;min, const cytnx_int64 &amp;max, const cytnx_int64 &amp;step=1)</argsstring>
+        <name>range</name>
+        <qualifiedname>cytnx::Accessor::range</qualifiedname>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>min</declname>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>max</declname>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>step</declname>
+          <defval>1</defval>
+        </param>
+        <briefdescription>
+<para>access the range at assigned rank, this is similar to min:max:step in python </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>min</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>max</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>step</parametername>
+</parameternamelist>
+<parameterdescription>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<heading level="2">Example:</heading>
+</para>
+<para><heading level="3">c++ API:</heading>
+</para>
+<para><programlisting filename="example/Accessor/example.cpp"><codeline><highlight class="preprocessor">#include<sp/>&quot;<ref refid="cytnx_8hpp" kindref="compound">cytnx.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>1.<sp/>handy<sp/>alias:</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Accessor" kindref="compound">Accessor</ref><sp/><ref refid="namespacecytnx_1ae5da4c8d3a63643c3bc40aa5dc5b4c35" kindref="member">ac</ref>;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>2.<sp/>Create<sp/>a<sp/>Tensor<sp/>with</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>shape<sp/>(3,4,5),</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>dtype<sp/>=Type.Double<sp/>[default],</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>device=Device.cpu<sp/>[default]</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref><sp/>A<sp/>=<sp/><ref refid="namespacecytnx_1a685cf4e94754373ae4f12622b168fb98" kindref="member">cytnx::arange</ref>(24);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>A.<ref refid="classcytnx_1_1Tensor_1a3723449528b9a20dd46c32c9e042b8f0" kindref="member">reshape_</ref>({2,<sp/>3,<sp/>4});</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>A<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>3.<sp/>Accessing<sp/>elements<sp/>using<sp/>accessor</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>This<sp/>is<sp/>similar<sp/>as<sp/>python<sp/>slices.</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>-&gt;<sp/>A[0,:,0:2:1]</highlight></codeline>
+<codeline><highlight class="comment"></highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref><sp/>B<sp/>=<sp/>A(0,<sp/><ref refid="classcytnx_1_1Accessor_1a71b8c4af7182a2c9144929bdef9ff4fd" kindref="member">ac::all</ref>(),<sp/><ref refid="classcytnx_1_1Accessor_1a7a5a508a58b71897c3dd162195aceaa9" kindref="member">ac::range</ref>(0,<sp/>2,<sp/>1));</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>B<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>[Note]<sp/>Conversion<sp/>from<sp/>python<sp/>slice<sp/>to<sp/>ac:</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[::x]<sp/><sp/><sp/>=<sp/>ac::step(x)</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[a::x]<sp/><sp/>=<sp/>ac::tilend(a,x)</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[a::]<sp/><sp/><sp/>=<sp/>ac::tilend(a)</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[:b:]<sp/><sp/><sp/>=<sp/>ac::range(0,b,1)</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[a:b:x]<sp/>=<sp/>ac::range(a,b,x)</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>
+Total elem: 24
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (2,3,4)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 ]
+  [4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 ]
+  [8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]]
+ [[1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 ]
+  [1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]
+  [2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]]]
+
+
+
+Total elem: 6
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,2)
+[[0.00000e+00 1.00000e+00 ]
+ [4.00000e+00 5.00000e+00 ]
+ [8.00000e+00 9.00000e+00 ]]
+
+
+</verbatim> <heading level="3">python API:</heading>
+</para>
+<para><programlisting filename="example/Accessor/example.py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>cytnx<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>*</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">A<sp/>=<sp/>arange(24);</highlight></codeline>
+<codeline><highlight class="normal">A.reshape_(2,3,4);</highlight></codeline>
+<codeline><highlight class="normal">print(A)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">B<sp/>=<sp/>A[0,:,0:2:1]</highlight></codeline>
+<codeline><highlight class="normal">print(B)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>
+Total elem: 24
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (2,3,4)
+[[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 ]
+  [4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 ]
+  [8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]]
+ [[1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 ]
+  [1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]
+  [2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]]]
+
+
+
+
+Total elem: 6
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (3,2)
+[[0.00000e+00 1.00000e+00 ]
+ [4.00000e+00 5.00000e+00 ]
+ [8.00000e+00 9.00000e+00 ]]
+
+
+
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Accessor.hpp" line="123" column="21" bodyfile="include/Accessor.hpp" bodystart="123" bodyend="126"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Accessor_1a23eb8386fd97d8b5d3d7ec7998a30dca" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Accessor" kindref="compound">Accessor</ref></type>
+        <definition>static Accessor cytnx::Accessor::tilend</definition>
+        <argsstring>(const cytnx_int64 &amp;min, const cytnx_int64 &amp;step=1)</argsstring>
+        <name>tilend</name>
+        <qualifiedname>cytnx::Accessor::tilend</qualifiedname>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>min</declname>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>step</declname>
+          <defval>1</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Accessor.hpp" line="128" column="21" bodyfile="include/Accessor.hpp" bodystart="128" bodyend="135"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Accessor_1a6b86335651e6d8c9da971e5337545178" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Accessor" kindref="compound">Accessor</ref></type>
+        <definition>static Accessor cytnx::Accessor::step</definition>
+        <argsstring>(const cytnx_int64 &amp;step)</argsstring>
+        <name>step</name>
+        <qualifiedname>cytnx::Accessor::step</qualifiedname>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>step</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Accessor.hpp" line="137" column="21" bodyfile="include/Accessor.hpp" bodystart="137" bodyend="144"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Accessor_1a7d0a4717c759186aa48daa0ac0dab5c4" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Accessor" kindref="compound">Accessor</ref></type>
+        <definition>static Accessor cytnx::Accessor::qns</definition>
+        <argsstring>(const std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt; &amp;qns)</argsstring>
+        <name>qns</name>
+        <qualifiedname>cytnx::Accessor::qns</qualifiedname>
+        <param>
+          <type>const std::vector&lt; std::vector&lt; <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &gt; &gt; &amp;</type>
+          <declname>qns</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Accessor.hpp" line="146" column="21" bodyfile="include/Accessor.hpp" bodystart="146" bodyend="153"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>object that mimic the python slice to access elements in C++ [this is for c++ API only]. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/Accessor.hpp" line="16" column="3" bodyfile="include/Accessor.hpp" bodystart="16" bodyend="163"/>
+    <listofallmembers>
+      <member refid="classcytnx_1_1Accessor_1af34f12b7cd4114ac80192f8a0df99681" prot="private" virt="non-virtual"><scope>cytnx::Accessor</scope><name>_type</name></member>
+      <member refid="classcytnx_1_1Accessor_1a9f6fa9087f09756e020355a05196d384" prot="public" virt="non-virtual"><scope>cytnx::Accessor</scope><name>Accessor</name></member>
+      <member refid="classcytnx_1_1Accessor_1a78c4b2a0565d79fb0852c785b937872c" prot="public" virt="non-virtual"><scope>cytnx::Accessor</scope><name>Accessor</name></member>
+      <member refid="classcytnx_1_1Accessor_1ae83236323b25e5e3696f79ff5d764662" prot="public" virt="non-virtual"><scope>cytnx::Accessor</scope><name>Accessor</name></member>
+      <member refid="classcytnx_1_1Accessor_1a71b8c4af7182a2c9144929bdef9ff4fd" prot="public" virt="non-virtual"><scope>cytnx::Accessor</scope><name>all</name></member>
+      <member refid="classcytnx_1_1Accessor_1a7d0a4717c759186aa48daa0ac0dab5c4" prot="public" virt="non-virtual"><scope>cytnx::Accessor</scope><name>qns</name></member>
+      <member refid="classcytnx_1_1Accessor_1a7a5a508a58b71897c3dd162195aceaa9" prot="public" virt="non-virtual"><scope>cytnx::Accessor</scope><name>range</name></member>
+      <member refid="classcytnx_1_1Accessor_1a6b86335651e6d8c9da971e5337545178" prot="public" virt="non-virtual"><scope>cytnx::Accessor</scope><name>step</name></member>
+      <member refid="classcytnx_1_1Accessor_1a23eb8386fd97d8b5d3d7ec7998a30dca" prot="public" virt="non-virtual"><scope>cytnx::Accessor</scope><name>tilend</name></member>
+      <member refid="classcytnx_1_1Accessor_1a8777a35162dcf47f9992295b58735743" prot="public" virt="non-virtual"><scope>cytnx::Accessor</scope><name>type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

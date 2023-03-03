@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="dir_b7606af6f25113c35319dac0b1b6f86b" kind="dir">
+    <compoundname>include/tn_algo</compoundname>
+    <innerfile refid="DMRG_8hpp">DMRG.hpp</innerfile>
+    <innerfile refid="MPO_8hpp">MPO.hpp</innerfile>
+    <innerfile refid="MPS_8hpp">MPS.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/tn_algo/"/>
+  </compounddef>
+</doxygen>

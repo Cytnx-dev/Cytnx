@@ -1,0 +1,1288 @@
+\hypertarget{Storage_8hpp_source}{}\doxysection{Storage.\+hpp}
+\label{Storage_8hpp_source}\index{include/Storage.hpp@{include/Storage.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_H\_Storage\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_H\_Storage\_}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <fstream>}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include <cstdlib>}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include <cstdio>}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <cstring>}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include <initializer\_list>}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include <typeinfo>}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include <complex>}}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include "{}Type.hpp"{}}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#include "{}Device.hpp"{}}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#include "{}intrusive\_ptr\_base.hpp"{}}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#include "{}cytnx\_error.hpp"{}}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#include "{}Scalar.hpp"{}}}
+\DoxyCodeLine{19 }
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#define STORAGE\_DEFT\_SZ 2}}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22 \textcolor{keyword}{namespace }cytnx \{}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{25   \textcolor{keyword}{class }Storage\_base : \textcolor{keyword}{public} intrusive\_ptr\_base<Storage\_base> \{}
+\DoxyCodeLine{26    \textcolor{keyword}{public}:}
+\DoxyCodeLine{27     \textcolor{keywordtype}{void} *Mem;}
+\DoxyCodeLine{28     \textcolor{comment}{// std::vector<unsigned int> shape;}}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} len;  \textcolor{comment}{// default 0}}
+\DoxyCodeLine{31     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} cap;  \textcolor{comment}{// default 0}}
+\DoxyCodeLine{32     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} dtype;  \textcolor{comment}{// default 0, Void}}
+\DoxyCodeLine{33     \textcolor{keywordtype}{int} device;  \textcolor{comment}{// default -\/1, on cpu}}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{35     Storage\_base() : cap(0), len(0), Mem(NULL), dtype(0), device(-\/1)\{\};}
+\DoxyCodeLine{36     \textcolor{comment}{// Storage\_base(const std::initializer\_list<unsigned int> \&init\_shape);}}
+\DoxyCodeLine{37     \textcolor{comment}{// Storage\_base(const std::vector<unsigned int> \&init\_shape);}}
+\DoxyCodeLine{38     Storage\_base(\textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&init\_zero=\textcolor{keyword}{true});}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40     Storage\_base(Storage\_base \&Rhs);}
+\DoxyCodeLine{41     Storage\_base \&operator=(Storage\_base \&Rhs);}
+\DoxyCodeLine{42     boost::intrusive\_ptr<Storage\_base> astype(\textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&dtype);}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44     \textcolor{comment}{// void Init(const std::initializer\_list<unsigned int> \&init\_shape);}}
+\DoxyCodeLine{45     std::string dtype\_str() \textcolor{keyword}{const};}
+\DoxyCodeLine{46     std::string device\_str() \textcolor{keyword}{const};}
+\DoxyCodeLine{47     \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&capacity()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>cap; \}}
+\DoxyCodeLine{48     \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&size()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>len; \}}
+\DoxyCodeLine{49     \string~Storage\_base();}
+\DoxyCodeLine{50 }
+\DoxyCodeLine{51     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{52     T \&at(\textcolor{keyword}{const} cytnx\_uint64 \&idx) \textcolor{keyword}{const};}
+\DoxyCodeLine{53 }
+\DoxyCodeLine{54     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{55     T \&back() \textcolor{keyword}{const};}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{58     T *data() \textcolor{keyword}{const};}
+\DoxyCodeLine{59 }
+\DoxyCodeLine{60     \textcolor{keywordtype}{void} *data()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>Mem; \}}
+\DoxyCodeLine{61 }
+\DoxyCodeLine{62     \textcolor{keywordtype}{void} \_cpy\_bool(\textcolor{keywordtype}{void} *ptr, \textcolor{keyword}{const} std::vector<cytnx\_bool> \&vin);}
+\DoxyCodeLine{63 }
+\DoxyCodeLine{64     \textcolor{keywordtype}{void} print();}
+\DoxyCodeLine{65     \textcolor{keywordtype}{void} print\_info();}
+\DoxyCodeLine{66     \textcolor{comment}{/*}}
+\DoxyCodeLine{67 \textcolor{comment}{        This function is design to check the type mismatch.}}
+\DoxyCodeLine{68 \textcolor{comment}{        Handy for developer to exclude the assign of double}}
+\DoxyCodeLine{69 \textcolor{comment}{        C pointer into a non-\/DoubleStorage.}}
+\DoxyCodeLine{70 \textcolor{comment}{}}
+\DoxyCodeLine{71 \textcolor{comment}{        For example:}}
+\DoxyCodeLine{72 \textcolor{comment}{        float *cptr = (float*)calloc(4,sizeof(float));}}
+\DoxyCodeLine{73 \textcolor{comment}{}}
+\DoxyCodeLine{74 \textcolor{comment}{        intrusive\_ptr<Storage> array(new DoubleStorage());}}
+\DoxyCodeLine{75 \textcolor{comment}{        array-\/>\_Init\_byptr((void*)cptr,4); // This is fatal, since we alloc cptr as float,}}
+\DoxyCodeLine{76 \textcolor{comment}{                                           // but apon free, DoubleStorage will free 2x}}
+\DoxyCodeLine{77 \textcolor{comment}{                                           // of memory!!!!}}
+\DoxyCodeLine{78 \textcolor{comment}{}}
+\DoxyCodeLine{79 \textcolor{comment}{        array-\/>\_Init\_byptr\_safe(cptr,4);   // This is design to avoid the above problem}}
+\DoxyCodeLine{80 \textcolor{comment}{                                           // by checking the type of input pointer with}}
+\DoxyCodeLine{81 \textcolor{comment}{                                           // the type of Storage before call \_Init\_byptr.}}
+\DoxyCodeLine{82 \textcolor{comment}{                                           // [Note] this will intorduce overhead!!.}}
+\DoxyCodeLine{83 \textcolor{comment}{}}
+\DoxyCodeLine{84 \textcolor{comment}{    */}}
+\DoxyCodeLine{85     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{86     \textcolor{keywordtype}{void} \_Init\_byptr\_safe(T *rawptr, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in) \{}
+\DoxyCodeLine{87       \textcolor{comment}{// check:}}
+\DoxyCodeLine{88       \textcolor{keywordflow}{if} (this-\/>dtype == Type.Float) \{}
+\DoxyCodeLine{89         cytnx\_error\_msg(\textcolor{keyword}{typeid}(T) != \textcolor{keyword}{typeid}(cytnx\_float), \textcolor{stringliteral}{"{}\%s"{}},}
+\DoxyCodeLine{90                         \textcolor{stringliteral}{"{}[ERROR \_Init\_byptr\_safe type not match]"{}});}
+\DoxyCodeLine{91       \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (this-\/>dtype == Type.Double) \{}
+\DoxyCodeLine{92         cytnx\_error\_msg(\textcolor{keyword}{typeid}(T) != \textcolor{keyword}{typeid}(cytnx\_double), \textcolor{stringliteral}{"{}\%s"{}},}
+\DoxyCodeLine{93                         \textcolor{stringliteral}{"{}[ERROR \_Init\_byptr\_safe type not match]"{}});}
+\DoxyCodeLine{94       \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (this-\/>dtype == Type.Uint64) \{}
+\DoxyCodeLine{95         cytnx\_error\_msg(\textcolor{keyword}{typeid}(T) != \textcolor{keyword}{typeid}(cytnx\_uint64), \textcolor{stringliteral}{"{}\%s"{}},}
+\DoxyCodeLine{96                         \textcolor{stringliteral}{"{}[ERROR \_Init\_byptr\_safe type not match]"{}});}
+\DoxyCodeLine{97       \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (this-\/>dtype == Type.Uint32) \{}
+\DoxyCodeLine{98         cytnx\_error\_msg(\textcolor{keyword}{typeid}(T) != \textcolor{keyword}{typeid}(cytnx\_uint32), \textcolor{stringliteral}{"{}\%s"{}},}
+\DoxyCodeLine{99                         \textcolor{stringliteral}{"{}[ERROR \_Init\_byptr\_safe type not match]"{}});}
+\DoxyCodeLine{100       \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (this-\/>dtype == Type.Int64) \{}
+\DoxyCodeLine{101         cytnx\_error\_msg(\textcolor{keyword}{typeid}(T) != \textcolor{keyword}{typeid}(cytnx\_int64), \textcolor{stringliteral}{"{}\%s"{}},}
+\DoxyCodeLine{102                         \textcolor{stringliteral}{"{}[ERROR \_Init\_byptr\_safe type not match]"{}});}
+\DoxyCodeLine{103       \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (this-\/>dtype == Type.Int32) \{}
+\DoxyCodeLine{104         cytnx\_error\_msg(\textcolor{keyword}{typeid}(T) != \textcolor{keyword}{typeid}(cytnx\_int32), \textcolor{stringliteral}{"{}\%s"{}},}
+\DoxyCodeLine{105                         \textcolor{stringliteral}{"{}[ERROR \_Init\_byptr\_safe type not match]"{}});}
+\DoxyCodeLine{106       \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (this-\/>dtype == Type.ComplexDouble) \{}
+\DoxyCodeLine{107         cytnx\_error\_msg(\textcolor{keyword}{typeid}(T) != \textcolor{keyword}{typeid}(cytnx\_complex128), \textcolor{stringliteral}{"{}\%s"{}},}
+\DoxyCodeLine{108                         \textcolor{stringliteral}{"{}[ERROR \_Init\_byptr\_safe type not match]"{}});}
+\DoxyCodeLine{109       \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (this-\/>dtype == Type.ComplexFloat) \{}
+\DoxyCodeLine{110         cytnx\_error\_msg(\textcolor{keyword}{typeid}(T) != \textcolor{keyword}{typeid}(cytnx\_complex64), \textcolor{stringliteral}{"{}\%s"{}},}
+\DoxyCodeLine{111                         \textcolor{stringliteral}{"{}[ERROR \_Init\_byptr\_safe type not match]"{}});}
+\DoxyCodeLine{112       \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (this-\/>dtype == Type.Int16) \{}
+\DoxyCodeLine{113         cytnx\_error\_msg(\textcolor{keyword}{typeid}(T) != \textcolor{keyword}{typeid}(cytnx\_int16), \textcolor{stringliteral}{"{}\%s"{}},}
+\DoxyCodeLine{114                         \textcolor{stringliteral}{"{}[ERROR \_Init\_byptr\_safe type not match]"{}});}
+\DoxyCodeLine{115       \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (this-\/>dtype == Type.Uint16) \{}
+\DoxyCodeLine{116         cytnx\_error\_msg(\textcolor{keyword}{typeid}(T) != \textcolor{keyword}{typeid}(cytnx\_uint16), \textcolor{stringliteral}{"{}\%s"{}},}
+\DoxyCodeLine{117                         \textcolor{stringliteral}{"{}[ERROR \_Init\_byptr\_safe type not match]"{}});}
+\DoxyCodeLine{118       \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (this-\/>dtype == Type.Bool) \{}
+\DoxyCodeLine{119         cytnx\_error\_msg(\textcolor{keyword}{typeid}(T) != \textcolor{keyword}{typeid}(cytnx\_bool), \textcolor{stringliteral}{"{}\%s"{}},}
+\DoxyCodeLine{120                         \textcolor{stringliteral}{"{}[ERROR \_Init\_byptr\_safe type not match]"{}});}
+\DoxyCodeLine{121       \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{122         cytnx\_error\_msg(1, \textcolor{stringliteral}{"{}[FATAL] ERROR\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{123       \}}
+\DoxyCodeLine{124 }
+\DoxyCodeLine{125       this-\/>\_Init\_byptr((\textcolor{keywordtype}{void} *)rawptr, len\_in);}
+\DoxyCodeLine{126     \}}
+\DoxyCodeLine{127 }
+\DoxyCodeLine{128     \textcolor{keywordtype}{void} GetElem\_byShape\_v2(boost::intrusive\_ptr<Storage\_base> \&out,}
+\DoxyCodeLine{129                             \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&shape,}
+\DoxyCodeLine{130                             \textcolor{keyword}{const} std::vector<std::vector<cytnx\_uint64>> \&locators,}
+\DoxyCodeLine{131                             \textcolor{keyword}{const} cytnx\_uint64 \&Nunit);}
+\DoxyCodeLine{132     \textcolor{keywordtype}{void} GetElem\_byShape(boost::intrusive\_ptr<Storage\_base> \&out,}
+\DoxyCodeLine{133                          \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&shape,}
+\DoxyCodeLine{134                          \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{135                          \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&len,}
+\DoxyCodeLine{136                          \textcolor{keyword}{const} std::vector<std::vector<cytnx\_uint64>> \&locators);}
+\DoxyCodeLine{137     \textcolor{keywordtype}{void} SetElem\_byShape(boost::intrusive\_ptr<Storage\_base> \&in,}
+\DoxyCodeLine{138                          \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&shape,}
+\DoxyCodeLine{139                          \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{140                          \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&len,}
+\DoxyCodeLine{141                          \textcolor{keyword}{const} std::vector<std::vector<cytnx\_uint64>> \&locators,}
+\DoxyCodeLine{142                          \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&is\_scalar);}
+\DoxyCodeLine{143     \textcolor{keywordtype}{void} SetElem\_byShape\_v2(boost::intrusive\_ptr<Storage\_base> \&in,}
+\DoxyCodeLine{144                             \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&shape,}
+\DoxyCodeLine{145                             \textcolor{keyword}{const} std::vector<std::vector<cytnx\_uint64>> \&locators,}
+\DoxyCodeLine{146                             \textcolor{keyword}{const} cytnx\_uint64 \&Nunit, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&is\_scalar);}
+\DoxyCodeLine{147     \textcolor{comment}{// these is the one that do the work, and customize with Storage\_base}}
+\DoxyCodeLine{148     \textcolor{comment}{// virtual void Init(const std::vector<unsigned int> \&init\_shape);}}
+\DoxyCodeLine{149     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} Init(\textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = -\/1, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&init\_zero = \textcolor{keyword}{true});}
+\DoxyCodeLine{150     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} \_Init\_byptr(\textcolor{keywordtype}{void} *rawptr, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = -\/1,}
+\DoxyCodeLine{151                              \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&iscap = \textcolor{keyword}{false}, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&cap\_in = 0);}
+\DoxyCodeLine{152 }
+\DoxyCodeLine{153     \textcolor{comment}{// this function will return a new storage with the same type as the one}}
+\DoxyCodeLine{154     \textcolor{comment}{// that initiate this function.}}
+\DoxyCodeLine{155     \textcolor{keyword}{virtual} boost::intrusive\_ptr<Storage\_base> \_create\_new\_sametype();}
+\DoxyCodeLine{156 }
+\DoxyCodeLine{157     \textcolor{comment}{// [future] this will move the memory to device / cpu}}
+\DoxyCodeLine{158     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} to\_(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device);}
+\DoxyCodeLine{159     \textcolor{keyword}{virtual} boost::intrusive\_ptr<Storage\_base> to(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device);}
+\DoxyCodeLine{160 }
+\DoxyCodeLine{161     \textcolor{keyword}{virtual} boost::intrusive\_ptr<Storage\_base> clone();}
+\DoxyCodeLine{162 }
+\DoxyCodeLine{163     \textcolor{comment}{// this will perform permute on the underlying memory.}}
+\DoxyCodeLine{164     \textcolor{keyword}{virtual} boost::intrusive\_ptr<Storage\_base> Move\_memory(}
+\DoxyCodeLine{165       \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&old\_shape, \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{166       \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper);}
+\DoxyCodeLine{167     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} Move\_memory\_(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&old\_shape,}
+\DoxyCodeLine{168                               \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{169                               \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper);}
+\DoxyCodeLine{170     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} PrintElem\_byShape(std::ostream \&os, \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&shape,}
+\DoxyCodeLine{171                                    \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper = \{\});}
+\DoxyCodeLine{172     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} print\_elems();}
+\DoxyCodeLine{173 }
+\DoxyCodeLine{174     \textcolor{keyword}{virtual} boost::intrusive\_ptr<Storage\_base> real();}
+\DoxyCodeLine{175     \textcolor{keyword}{virtual} boost::intrusive\_ptr<Storage\_base> imag();}
+\DoxyCodeLine{176 }
+\DoxyCodeLine{177     \textcolor{comment}{// generators:}}
+\DoxyCodeLine{178     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{179     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{180     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{181     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{182     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{183     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{184     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{185     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{186     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{187     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{188     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{189     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} set\_zeros();}
+\DoxyCodeLine{190     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} resize(\textcolor{keyword}{const} cytnx\_uint64 \&newsize);}
+\DoxyCodeLine{191 }
+\DoxyCodeLine{192     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} Scalar \&val);}
+\DoxyCodeLine{193     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{194     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{195     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{196     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{197     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{198     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{199     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{200     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{201     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{202     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{203     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{204 }
+\DoxyCodeLine{205     \textcolor{keyword}{virtual} Scalar get\_item(\textcolor{keyword}{const} cytnx\_uint64 \&in) \textcolor{keyword}{const};}
+\DoxyCodeLine{206 }
+\DoxyCodeLine{207     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} Scalar \&val);}
+\DoxyCodeLine{208     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{209     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{210     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{211     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{212     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{213     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{214     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{215     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{216     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{217     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{218     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{219   \};}
+\DoxyCodeLine{221 }
+\DoxyCodeLine{223   \textcolor{keyword}{class }FloatStorage : \textcolor{keyword}{public} Storage\_base \{}
+\DoxyCodeLine{224    \textcolor{keyword}{public}:}
+\DoxyCodeLine{225     FloatStorage() \{ this-\/>dtype = Type.Float; \};}
+\DoxyCodeLine{226     \textcolor{keywordtype}{void} Init(\textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = -\/1, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&init\_zero=\textcolor{keyword}{true});}
+\DoxyCodeLine{227     \textcolor{keywordtype}{void} \_Init\_byptr(\textcolor{keywordtype}{void} *rawptr, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = -\/1,}
+\DoxyCodeLine{228                      \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&iscap = \textcolor{keyword}{false}, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&cap\_in = 0);}
+\DoxyCodeLine{229     boost::intrusive\_ptr<Storage\_base> \_create\_new\_sametype();}
+\DoxyCodeLine{230     boost::intrusive\_ptr<Storage\_base> clone();}
+\DoxyCodeLine{231     boost::intrusive\_ptr<Storage\_base> Move\_memory(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&old\_shape,}
+\DoxyCodeLine{232                                                    \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{233                                                    \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper);}
+\DoxyCodeLine{234     \textcolor{keywordtype}{void} Move\_memory\_(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&old\_shape,}
+\DoxyCodeLine{235                       \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{236                       \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper);}
+\DoxyCodeLine{237     \textcolor{keywordtype}{void} to\_(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device);}
+\DoxyCodeLine{238     boost::intrusive\_ptr<Storage\_base> to(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device);}
+\DoxyCodeLine{239     \textcolor{keywordtype}{void} PrintElem\_byShape(std::ostream \&os, \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&shape,}
+\DoxyCodeLine{240                            \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper = \{\});}
+\DoxyCodeLine{241     \textcolor{keywordtype}{void} print\_elems();}
+\DoxyCodeLine{242 }
+\DoxyCodeLine{243     boost::intrusive\_ptr<Storage\_base> real();}
+\DoxyCodeLine{244     boost::intrusive\_ptr<Storage\_base> imag();}
+\DoxyCodeLine{245 }
+\DoxyCodeLine{246     \textcolor{comment}{// generators:}}
+\DoxyCodeLine{247     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{248     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{249     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{250     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{251     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{252     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{253     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{254     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{255     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{256     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{257     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{258     \textcolor{keywordtype}{void} set\_zeros();}
+\DoxyCodeLine{259     \textcolor{keywordtype}{void} resize(\textcolor{keyword}{const} cytnx\_uint64 \&newsize);}
+\DoxyCodeLine{260 }
+\DoxyCodeLine{261     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} Scalar \&val);}
+\DoxyCodeLine{262     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{263     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{264     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{265     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{266     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{267     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{268     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{269     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{270     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{271     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{272     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{273     Scalar get\_item(\textcolor{keyword}{const} cytnx\_uint64 \&in) \textcolor{keyword}{const};}
+\DoxyCodeLine{274 }
+\DoxyCodeLine{275     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} Scalar \&val);}
+\DoxyCodeLine{276     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{277     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{278     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{279     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{280     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{281     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{282     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{283     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{284     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{285     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{286     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{287   \};}
+\DoxyCodeLine{289 }
+\DoxyCodeLine{291   \textcolor{keyword}{class }DoubleStorage : \textcolor{keyword}{public} Storage\_base \{}
+\DoxyCodeLine{292    \textcolor{keyword}{public}:}
+\DoxyCodeLine{293     DoubleStorage() \{ this-\/>dtype = Type.Double; \};}
+\DoxyCodeLine{294     \textcolor{keywordtype}{void} Init(\textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = -\/1, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&init\_zero=\textcolor{keyword}{true});}
+\DoxyCodeLine{295     \textcolor{keywordtype}{void} \_Init\_byptr(\textcolor{keywordtype}{void} *rawptr, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = -\/1,}
+\DoxyCodeLine{296                      \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&iscap = \textcolor{keyword}{false}, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&cap\_in = 0);}
+\DoxyCodeLine{297     boost::intrusive\_ptr<Storage\_base> \_create\_new\_sametype();}
+\DoxyCodeLine{298     boost::intrusive\_ptr<Storage\_base> clone();}
+\DoxyCodeLine{299     boost::intrusive\_ptr<Storage\_base> Move\_memory(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&old\_shape,}
+\DoxyCodeLine{300                                                    \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{301                                                    \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper);}
+\DoxyCodeLine{302     \textcolor{keywordtype}{void} Move\_memory\_(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&old\_shape,}
+\DoxyCodeLine{303                       \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{304                       \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper);}
+\DoxyCodeLine{305     \textcolor{keywordtype}{void} to\_(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device);}
+\DoxyCodeLine{306     boost::intrusive\_ptr<Storage\_base> to(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device);}
+\DoxyCodeLine{307     \textcolor{keywordtype}{void} PrintElem\_byShape(std::ostream \&os, \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&shape,}
+\DoxyCodeLine{308                            \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper = \{\});}
+\DoxyCodeLine{309     \textcolor{keywordtype}{void} print\_elems();}
+\DoxyCodeLine{310 }
+\DoxyCodeLine{311     boost::intrusive\_ptr<Storage\_base> real();}
+\DoxyCodeLine{312     boost::intrusive\_ptr<Storage\_base> imag();}
+\DoxyCodeLine{313 }
+\DoxyCodeLine{314     \textcolor{comment}{// generators:}}
+\DoxyCodeLine{315     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{316     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{317     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{318     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{319     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{320     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{321     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{322     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{323     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{324     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{325     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{326     \textcolor{keywordtype}{void} set\_zeros();}
+\DoxyCodeLine{327     \textcolor{keywordtype}{void} resize(\textcolor{keyword}{const} cytnx\_uint64 \&newsize);}
+\DoxyCodeLine{328 }
+\DoxyCodeLine{329     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} Scalar \&val);}
+\DoxyCodeLine{330     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{331     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{332     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{333     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{334     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{335     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{336     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{337     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{338     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{339     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{340     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{341     Scalar get\_item(\textcolor{keyword}{const} cytnx\_uint64 \&in) \textcolor{keyword}{const};}
+\DoxyCodeLine{342 }
+\DoxyCodeLine{343     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} Scalar \&val);}
+\DoxyCodeLine{344     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{345     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{346     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{347     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{348     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{349     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{350     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{351     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{352     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{353     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{354     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{355   \};}
+\DoxyCodeLine{357 }
+\DoxyCodeLine{359   \textcolor{keyword}{class }ComplexDoubleStorage : \textcolor{keyword}{public} Storage\_base \{}
+\DoxyCodeLine{360    \textcolor{keyword}{public}:}
+\DoxyCodeLine{361     ComplexDoubleStorage() \{ this-\/>dtype = Type.ComplexDouble; \};}
+\DoxyCodeLine{362     \textcolor{keywordtype}{void} Init(\textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = -\/1, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&init\_zero = \textcolor{keyword}{true});}
+\DoxyCodeLine{363     \textcolor{keywordtype}{void} \_Init\_byptr(\textcolor{keywordtype}{void} *rawptr, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = -\/1,}
+\DoxyCodeLine{364                      \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&iscap = \textcolor{keyword}{false}, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&cap\_in = 0);}
+\DoxyCodeLine{365     boost::intrusive\_ptr<Storage\_base> \_create\_new\_sametype();}
+\DoxyCodeLine{366     boost::intrusive\_ptr<Storage\_base> clone();}
+\DoxyCodeLine{367     boost::intrusive\_ptr<Storage\_base> Move\_memory(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&old\_shape,}
+\DoxyCodeLine{368                                                    \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{369                                                    \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper);}
+\DoxyCodeLine{370     \textcolor{keywordtype}{void} Move\_memory\_(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&old\_shape,}
+\DoxyCodeLine{371                       \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{372                       \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper);}
+\DoxyCodeLine{373     \textcolor{keywordtype}{void} to\_(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device);}
+\DoxyCodeLine{374     boost::intrusive\_ptr<Storage\_base> to(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device);}
+\DoxyCodeLine{375     \textcolor{keywordtype}{void} PrintElem\_byShape(std::ostream \&os, \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&shape,}
+\DoxyCodeLine{376                            \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper = \{\});}
+\DoxyCodeLine{377     \textcolor{keywordtype}{void} print\_elems();}
+\DoxyCodeLine{378 }
+\DoxyCodeLine{379     boost::intrusive\_ptr<Storage\_base> real();}
+\DoxyCodeLine{380     boost::intrusive\_ptr<Storage\_base> imag();}
+\DoxyCodeLine{381 }
+\DoxyCodeLine{382     \textcolor{comment}{// generators:}}
+\DoxyCodeLine{383     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{384     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{385     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{386     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{387     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{388     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{389     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{390     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{391     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{392     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{393     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{394     \textcolor{keywordtype}{void} set\_zeros();}
+\DoxyCodeLine{395     \textcolor{keywordtype}{void} resize(\textcolor{keyword}{const} cytnx\_uint64 \&newsize);}
+\DoxyCodeLine{396 }
+\DoxyCodeLine{397     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} Scalar \&val);}
+\DoxyCodeLine{398     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{399     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{400     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{401     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{402     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{403     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{404     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{405     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{406     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{407     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{408     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{409     Scalar get\_item(\textcolor{keyword}{const} cytnx\_uint64 \&in) \textcolor{keyword}{const};}
+\DoxyCodeLine{410 }
+\DoxyCodeLine{411     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} Scalar \&val);}
+\DoxyCodeLine{412     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{413     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{414     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{415     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{416     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{417     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{418     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{419     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{420     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{421     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{422     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{423   \};}
+\DoxyCodeLine{425 }
+\DoxyCodeLine{427   \textcolor{keyword}{class }ComplexFloatStorage : \textcolor{keyword}{public} Storage\_base \{}
+\DoxyCodeLine{428    \textcolor{keyword}{public}:}
+\DoxyCodeLine{429     ComplexFloatStorage() \{ this-\/>dtype = Type.ComplexFloat; \};}
+\DoxyCodeLine{430     \textcolor{keywordtype}{void} Init(\textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = -\/1, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&init\_zero = \textcolor{keyword}{true});}
+\DoxyCodeLine{431     \textcolor{keywordtype}{void} \_Init\_byptr(\textcolor{keywordtype}{void} *rawptr, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = -\/1,}
+\DoxyCodeLine{432                      \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&iscap = \textcolor{keyword}{false}, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&cap\_in = 0);}
+\DoxyCodeLine{433     boost::intrusive\_ptr<Storage\_base> \_create\_new\_sametype();}
+\DoxyCodeLine{434     boost::intrusive\_ptr<Storage\_base> clone();}
+\DoxyCodeLine{435     boost::intrusive\_ptr<Storage\_base> Move\_memory(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&old\_shape,}
+\DoxyCodeLine{436                                                    \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{437                                                    \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper);}
+\DoxyCodeLine{438     \textcolor{keywordtype}{void} Move\_memory\_(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&old\_shape,}
+\DoxyCodeLine{439                       \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{440                       \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper);}
+\DoxyCodeLine{441     \textcolor{keywordtype}{void} to\_(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device);}
+\DoxyCodeLine{442     boost::intrusive\_ptr<Storage\_base> to(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device);}
+\DoxyCodeLine{443     \textcolor{keywordtype}{void} PrintElem\_byShape(std::ostream \&os, \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&shape,}
+\DoxyCodeLine{444                            \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper = \{\});}
+\DoxyCodeLine{445     \textcolor{keywordtype}{void} print\_elems();}
+\DoxyCodeLine{446 }
+\DoxyCodeLine{447     boost::intrusive\_ptr<Storage\_base> real();}
+\DoxyCodeLine{448     boost::intrusive\_ptr<Storage\_base> imag();}
+\DoxyCodeLine{449 }
+\DoxyCodeLine{450     \textcolor{comment}{// generators:}}
+\DoxyCodeLine{451     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{452     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{453     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{454     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{455     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{456     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{457     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{458     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{459     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{460     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{461     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{462     \textcolor{keywordtype}{void} set\_zeros();}
+\DoxyCodeLine{463     \textcolor{keywordtype}{void} resize(\textcolor{keyword}{const} cytnx\_uint64 \&newsize);}
+\DoxyCodeLine{464 }
+\DoxyCodeLine{465     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} Scalar \&val);}
+\DoxyCodeLine{466     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{467     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{468     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{469     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{470     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{471     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{472     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{473     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{474     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{475     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{476     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{477     Scalar get\_item(\textcolor{keyword}{const} cytnx\_uint64 \&in) \textcolor{keyword}{const};}
+\DoxyCodeLine{478 }
+\DoxyCodeLine{479     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} Scalar \&val);}
+\DoxyCodeLine{480     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{481     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{482     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{483     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{484     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{485     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{486     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{487     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{488     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{489     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{490     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{491   \};}
+\DoxyCodeLine{493 }
+\DoxyCodeLine{495   \textcolor{keyword}{class }Int64Storage : \textcolor{keyword}{public} Storage\_base \{}
+\DoxyCodeLine{496    \textcolor{keyword}{public}:}
+\DoxyCodeLine{497     Int64Storage() \{ this-\/>dtype = Type.Int64; \};}
+\DoxyCodeLine{498     \textcolor{keywordtype}{void} Init(\textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = -\/1, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&init\_zero = \textcolor{keyword}{true});}
+\DoxyCodeLine{499     \textcolor{keywordtype}{void} \_Init\_byptr(\textcolor{keywordtype}{void} *rawptr, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = -\/1,}
+\DoxyCodeLine{500                      \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&iscap = \textcolor{keyword}{false}, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&cap\_in = 0);}
+\DoxyCodeLine{501     boost::intrusive\_ptr<Storage\_base> \_create\_new\_sametype();}
+\DoxyCodeLine{502     boost::intrusive\_ptr<Storage\_base> clone();}
+\DoxyCodeLine{503     boost::intrusive\_ptr<Storage\_base> Move\_memory(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&old\_shape,}
+\DoxyCodeLine{504                                                    \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{505                                                    \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper);}
+\DoxyCodeLine{506     \textcolor{keywordtype}{void} Move\_memory\_(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&old\_shape,}
+\DoxyCodeLine{507                       \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{508                       \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper);}
+\DoxyCodeLine{509     \textcolor{keywordtype}{void} to\_(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device);}
+\DoxyCodeLine{510     boost::intrusive\_ptr<Storage\_base> to(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device);}
+\DoxyCodeLine{511     \textcolor{keywordtype}{void} PrintElem\_byShape(std::ostream \&os, \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&shape,}
+\DoxyCodeLine{512                            \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper = \{\});}
+\DoxyCodeLine{513     \textcolor{keywordtype}{void} print\_elems();}
+\DoxyCodeLine{514 }
+\DoxyCodeLine{515     boost::intrusive\_ptr<Storage\_base> real();}
+\DoxyCodeLine{516     boost::intrusive\_ptr<Storage\_base> imag();}
+\DoxyCodeLine{517 }
+\DoxyCodeLine{518     \textcolor{comment}{// generators:}}
+\DoxyCodeLine{519     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{520     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{521     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{522     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{523     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{524     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{525     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{526     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{527     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{528     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{529     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{530     \textcolor{keywordtype}{void} set\_zeros();}
+\DoxyCodeLine{531     \textcolor{keywordtype}{void} resize(\textcolor{keyword}{const} cytnx\_uint64 \&newsize);}
+\DoxyCodeLine{532 }
+\DoxyCodeLine{533     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} Scalar \&val);}
+\DoxyCodeLine{534     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{535     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{536     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{537     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{538     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{539     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{540     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{541     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{542     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{543     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{544     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{545     Scalar get\_item(\textcolor{keyword}{const} cytnx\_uint64 \&in) \textcolor{keyword}{const};}
+\DoxyCodeLine{546 }
+\DoxyCodeLine{547     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} Scalar \&val);}
+\DoxyCodeLine{548     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{549     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{550     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{551     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{552     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{553     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{554     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{555     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{556     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{557     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{558     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{559   \};}
+\DoxyCodeLine{561 }
+\DoxyCodeLine{563   \textcolor{keyword}{class }Uint64Storage : \textcolor{keyword}{public} Storage\_base \{}
+\DoxyCodeLine{564    \textcolor{keyword}{public}:}
+\DoxyCodeLine{565     Uint64Storage() \{ this-\/>dtype = Type.Uint64; \};}
+\DoxyCodeLine{566     \textcolor{keywordtype}{void} Init(\textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = -\/1, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&init\_zero = \textcolor{keyword}{true});}
+\DoxyCodeLine{567     \textcolor{keywordtype}{void} \_Init\_byptr(\textcolor{keywordtype}{void} *rawptr, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = -\/1,}
+\DoxyCodeLine{568                      \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&iscap = \textcolor{keyword}{false}, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&cap\_in = 0);}
+\DoxyCodeLine{569     boost::intrusive\_ptr<Storage\_base> \_create\_new\_sametype();}
+\DoxyCodeLine{570     boost::intrusive\_ptr<Storage\_base> clone();}
+\DoxyCodeLine{571     boost::intrusive\_ptr<Storage\_base> Move\_memory(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&old\_shape,}
+\DoxyCodeLine{572                                                    \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{573                                                    \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper);}
+\DoxyCodeLine{574     \textcolor{keywordtype}{void} Move\_memory\_(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&old\_shape,}
+\DoxyCodeLine{575                       \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{576                       \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper);}
+\DoxyCodeLine{577     \textcolor{keywordtype}{void} to\_(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device);}
+\DoxyCodeLine{578     boost::intrusive\_ptr<Storage\_base> to(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device);}
+\DoxyCodeLine{579     \textcolor{keywordtype}{void} PrintElem\_byShape(std::ostream \&os, \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&shape,}
+\DoxyCodeLine{580                            \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper = \{\});}
+\DoxyCodeLine{581     \textcolor{keywordtype}{void} print\_elems();}
+\DoxyCodeLine{582 }
+\DoxyCodeLine{583     boost::intrusive\_ptr<Storage\_base> real();}
+\DoxyCodeLine{584     boost::intrusive\_ptr<Storage\_base> imag();}
+\DoxyCodeLine{585 }
+\DoxyCodeLine{586     \textcolor{comment}{// generators:}}
+\DoxyCodeLine{587     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{588     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{589     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{590     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{591     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{592     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{593     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{594     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{595     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{596     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{597     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{598     \textcolor{keywordtype}{void} set\_zeros();}
+\DoxyCodeLine{599     \textcolor{keywordtype}{void} resize(\textcolor{keyword}{const} cytnx\_uint64 \&newsize);}
+\DoxyCodeLine{600 }
+\DoxyCodeLine{601     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} Scalar \&val);}
+\DoxyCodeLine{602     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{603     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{604     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{605     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{606     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{607     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{608     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{609     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{610     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{611     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{612     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{613     Scalar get\_item(\textcolor{keyword}{const} cytnx\_uint64 \&in) \textcolor{keyword}{const};}
+\DoxyCodeLine{614 }
+\DoxyCodeLine{615     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} Scalar \&val);}
+\DoxyCodeLine{616     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{617     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{618     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{619     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{620     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{621     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{622     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{623     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{624     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{625     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{626     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{627   \};}
+\DoxyCodeLine{630   \textcolor{keyword}{class }Int32Storage : \textcolor{keyword}{public} Storage\_base \{}
+\DoxyCodeLine{631    \textcolor{keyword}{public}:}
+\DoxyCodeLine{632     Int32Storage() \{ this-\/>dtype = Type.Int32; \};}
+\DoxyCodeLine{633     \textcolor{keywordtype}{void} Init(\textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = -\/1, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&init\_zero = \textcolor{keyword}{true});}
+\DoxyCodeLine{634     \textcolor{keywordtype}{void} \_Init\_byptr(\textcolor{keywordtype}{void} *rawptr, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = -\/1,}
+\DoxyCodeLine{635                      \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&iscap = \textcolor{keyword}{false}, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&cap\_in = 0);}
+\DoxyCodeLine{636     boost::intrusive\_ptr<Storage\_base> \_create\_new\_sametype();}
+\DoxyCodeLine{637     boost::intrusive\_ptr<Storage\_base> clone();}
+\DoxyCodeLine{638     boost::intrusive\_ptr<Storage\_base> Move\_memory(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&old\_shape,}
+\DoxyCodeLine{639                                                    \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{640                                                    \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper);}
+\DoxyCodeLine{641     \textcolor{keywordtype}{void} Move\_memory\_(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&old\_shape,}
+\DoxyCodeLine{642                       \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{643                       \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper);}
+\DoxyCodeLine{644     \textcolor{keywordtype}{void} to\_(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device);}
+\DoxyCodeLine{645     boost::intrusive\_ptr<Storage\_base> to(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device);}
+\DoxyCodeLine{646     \textcolor{keywordtype}{void} PrintElem\_byShape(std::ostream \&os, \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&shape,}
+\DoxyCodeLine{647                            \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper = \{\});}
+\DoxyCodeLine{648     \textcolor{keywordtype}{void} print\_elems();}
+\DoxyCodeLine{649 }
+\DoxyCodeLine{650     boost::intrusive\_ptr<Storage\_base> real();}
+\DoxyCodeLine{651     boost::intrusive\_ptr<Storage\_base> imag();}
+\DoxyCodeLine{652 }
+\DoxyCodeLine{653     \textcolor{comment}{// generators:}}
+\DoxyCodeLine{654     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{655     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{656     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{657     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{658     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{659     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{660     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{661     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{662     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{663     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{664     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{665     \textcolor{keywordtype}{void} set\_zeros();}
+\DoxyCodeLine{666     \textcolor{keywordtype}{void} resize(\textcolor{keyword}{const} cytnx\_uint64 \&newsize);}
+\DoxyCodeLine{667     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} Scalar \&val);}
+\DoxyCodeLine{668     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{669     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{670     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{671     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{672     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{673     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{674     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{675     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{676     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{677     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{678     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{679     Scalar get\_item(\textcolor{keyword}{const} cytnx\_uint64 \&in) \textcolor{keyword}{const};}
+\DoxyCodeLine{680 }
+\DoxyCodeLine{681     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} Scalar \&val);}
+\DoxyCodeLine{682     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{683     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{684     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{685     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{686     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{687     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{688     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{689     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{690     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{691     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{692     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{693   \};}
+\DoxyCodeLine{695 }
+\DoxyCodeLine{697   \textcolor{keyword}{class }Uint32Storage : \textcolor{keyword}{public} Storage\_base \{}
+\DoxyCodeLine{698    \textcolor{keyword}{public}:}
+\DoxyCodeLine{699     Uint32Storage() \{ this-\/>dtype = Type.Uint32; \};}
+\DoxyCodeLine{700     \textcolor{keywordtype}{void} Init(\textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = -\/1, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&init\_zero= \textcolor{keyword}{true});}
+\DoxyCodeLine{701     \textcolor{keywordtype}{void} \_Init\_byptr(\textcolor{keywordtype}{void} *rawptr, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = -\/1,}
+\DoxyCodeLine{702                      \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&iscap = \textcolor{keyword}{false}, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&cap\_in = 0);}
+\DoxyCodeLine{703     boost::intrusive\_ptr<Storage\_base> \_create\_new\_sametype();}
+\DoxyCodeLine{704     boost::intrusive\_ptr<Storage\_base> clone();}
+\DoxyCodeLine{705     boost::intrusive\_ptr<Storage\_base> Move\_memory(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&old\_shape,}
+\DoxyCodeLine{706                                                    \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{707                                                    \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper);}
+\DoxyCodeLine{708     \textcolor{keywordtype}{void} Move\_memory\_(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&old\_shape,}
+\DoxyCodeLine{709                       \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{710                       \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper);}
+\DoxyCodeLine{711     \textcolor{keywordtype}{void} to\_(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device);}
+\DoxyCodeLine{712     boost::intrusive\_ptr<Storage\_base> to(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device);}
+\DoxyCodeLine{713     \textcolor{keywordtype}{void} PrintElem\_byShape(std::ostream \&os, \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&shape,}
+\DoxyCodeLine{714                            \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper = \{\});}
+\DoxyCodeLine{715     \textcolor{keywordtype}{void} print\_elems();}
+\DoxyCodeLine{716 }
+\DoxyCodeLine{717     boost::intrusive\_ptr<Storage\_base> real();}
+\DoxyCodeLine{718     boost::intrusive\_ptr<Storage\_base> imag();}
+\DoxyCodeLine{719 }
+\DoxyCodeLine{720     \textcolor{comment}{// generators:}}
+\DoxyCodeLine{721     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{722     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{723     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{724     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{725     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{726     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{727     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{728     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{729     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{730     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{731     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{732     \textcolor{keywordtype}{void} set\_zeros();}
+\DoxyCodeLine{733     \textcolor{keywordtype}{void} resize(\textcolor{keyword}{const} cytnx\_uint64 \&newsize);}
+\DoxyCodeLine{734     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} Scalar \&val);}
+\DoxyCodeLine{735     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{736     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{737     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{738     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{739     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{740     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{741     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{742     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{743     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{744     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{745     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{746     Scalar get\_item(\textcolor{keyword}{const} cytnx\_uint64 \&in) \textcolor{keyword}{const};}
+\DoxyCodeLine{747 }
+\DoxyCodeLine{748     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} Scalar \&val);}
+\DoxyCodeLine{749     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{750     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{751     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{752     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{753     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{754     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{755     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{756     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{757     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{758     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{759     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{760   \};}
+\DoxyCodeLine{762 }
+\DoxyCodeLine{764   \textcolor{keyword}{class }Uint16Storage : \textcolor{keyword}{public} Storage\_base \{}
+\DoxyCodeLine{765    \textcolor{keyword}{public}:}
+\DoxyCodeLine{766     Uint16Storage() \{ this-\/>dtype = Type.Uint16; \};}
+\DoxyCodeLine{767     \textcolor{keywordtype}{void} Init(\textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = -\/1, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&init\_zero=\textcolor{keyword}{true});}
+\DoxyCodeLine{768     \textcolor{keywordtype}{void} \_Init\_byptr(\textcolor{keywordtype}{void} *rawptr, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = -\/1,}
+\DoxyCodeLine{769                      \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&iscap = \textcolor{keyword}{false}, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&cap\_in = 0);}
+\DoxyCodeLine{770     boost::intrusive\_ptr<Storage\_base> \_create\_new\_sametype();}
+\DoxyCodeLine{771     boost::intrusive\_ptr<Storage\_base> clone();}
+\DoxyCodeLine{772     boost::intrusive\_ptr<Storage\_base> Move\_memory(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&old\_shape,}
+\DoxyCodeLine{773                                                    \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{774                                                    \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper);}
+\DoxyCodeLine{775     \textcolor{keywordtype}{void} Move\_memory\_(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&old\_shape,}
+\DoxyCodeLine{776                       \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{777                       \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper);}
+\DoxyCodeLine{778     \textcolor{keywordtype}{void} to\_(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device);}
+\DoxyCodeLine{779     boost::intrusive\_ptr<Storage\_base> to(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device);}
+\DoxyCodeLine{780     \textcolor{keywordtype}{void} PrintElem\_byShape(std::ostream \&os, \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&shape,}
+\DoxyCodeLine{781                            \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper = \{\});}
+\DoxyCodeLine{782     \textcolor{keywordtype}{void} print\_elems();}
+\DoxyCodeLine{783 }
+\DoxyCodeLine{784     boost::intrusive\_ptr<Storage\_base> real();}
+\DoxyCodeLine{785     boost::intrusive\_ptr<Storage\_base> imag();}
+\DoxyCodeLine{786 }
+\DoxyCodeLine{787     \textcolor{comment}{// generators:}}
+\DoxyCodeLine{788     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{789     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{790     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{791     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{792     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{793     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{794     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{795     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{796     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{797     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{798     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{799     \textcolor{keywordtype}{void} set\_zeros();}
+\DoxyCodeLine{800     \textcolor{keywordtype}{void} resize(\textcolor{keyword}{const} cytnx\_uint64 \&newsize);}
+\DoxyCodeLine{801 }
+\DoxyCodeLine{802     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} Scalar \&val);}
+\DoxyCodeLine{803     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{804     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{805     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{806     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{807     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{808     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{809     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{810     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{811     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{812     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{813     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{814     Scalar get\_item(\textcolor{keyword}{const} cytnx\_uint64 \&in) \textcolor{keyword}{const};}
+\DoxyCodeLine{815 }
+\DoxyCodeLine{816     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} Scalar \&val);}
+\DoxyCodeLine{817     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{818     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{819     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{820     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{821     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{822     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{823     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{824     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{825     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{826     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{827     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{828   \};}
+\DoxyCodeLine{830 }
+\DoxyCodeLine{832   \textcolor{keyword}{class }Int16Storage : \textcolor{keyword}{public} Storage\_base \{}
+\DoxyCodeLine{833    \textcolor{keyword}{public}:}
+\DoxyCodeLine{834     Int16Storage() \{ this-\/>dtype = Type.Int16; \};}
+\DoxyCodeLine{835     \textcolor{keywordtype}{void} Init(\textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = -\/1, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&init\_zero=\textcolor{keyword}{true});}
+\DoxyCodeLine{836     \textcolor{keywordtype}{void} \_Init\_byptr(\textcolor{keywordtype}{void} *rawptr, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = -\/1,}
+\DoxyCodeLine{837                      \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&iscap = \textcolor{keyword}{false}, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&cap\_in = 0);}
+\DoxyCodeLine{838     boost::intrusive\_ptr<Storage\_base> \_create\_new\_sametype();}
+\DoxyCodeLine{839     boost::intrusive\_ptr<Storage\_base> clone();}
+\DoxyCodeLine{840     boost::intrusive\_ptr<Storage\_base> Move\_memory(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&old\_shape,}
+\DoxyCodeLine{841                                                    \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{842                                                    \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper);}
+\DoxyCodeLine{843     \textcolor{keywordtype}{void} Move\_memory\_(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&old\_shape,}
+\DoxyCodeLine{844                       \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{845                       \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper);}
+\DoxyCodeLine{846     \textcolor{keywordtype}{void} to\_(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device);}
+\DoxyCodeLine{847     boost::intrusive\_ptr<Storage\_base> to(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device);}
+\DoxyCodeLine{848     \textcolor{keywordtype}{void} PrintElem\_byShape(std::ostream \&os, \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&shape,}
+\DoxyCodeLine{849                            \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper = \{\});}
+\DoxyCodeLine{850     \textcolor{keywordtype}{void} print\_elems();}
+\DoxyCodeLine{851 }
+\DoxyCodeLine{852     boost::intrusive\_ptr<Storage\_base> real();}
+\DoxyCodeLine{853     boost::intrusive\_ptr<Storage\_base> imag();}
+\DoxyCodeLine{854 }
+\DoxyCodeLine{855     \textcolor{comment}{// generators:}}
+\DoxyCodeLine{856     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{857     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{858     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{859     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{860     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{861     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{862     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{863     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{864     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{865     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{866     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{867     \textcolor{keywordtype}{void} set\_zeros();}
+\DoxyCodeLine{868     \textcolor{keywordtype}{void} resize(\textcolor{keyword}{const} cytnx\_uint64 \&newsize);}
+\DoxyCodeLine{869     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} Scalar \&val);}
+\DoxyCodeLine{870     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{871     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{872     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{873     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{874     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{875     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{876     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{877     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{878     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{879     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{880     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{881     Scalar get\_item(\textcolor{keyword}{const} cytnx\_uint64 \&in) \textcolor{keyword}{const};}
+\DoxyCodeLine{882 }
+\DoxyCodeLine{883     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} Scalar \&val);}
+\DoxyCodeLine{884     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{885     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{886     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{887     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{888     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{889     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{890     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{891     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{892     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{893     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{894     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{895   \};}
+\DoxyCodeLine{897 }
+\DoxyCodeLine{899   \textcolor{keyword}{class }BoolStorage : \textcolor{keyword}{public} Storage\_base \{}
+\DoxyCodeLine{900    \textcolor{keyword}{public}:}
+\DoxyCodeLine{901     BoolStorage() \{ this-\/>dtype = Type.Bool; \};}
+\DoxyCodeLine{902     \textcolor{keywordtype}{void} Init(\textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = -\/1, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&init\_zero=\textcolor{keyword}{true});}
+\DoxyCodeLine{903     \textcolor{keywordtype}{void} \_Init\_byptr(\textcolor{keywordtype}{void} *rawptr, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&len\_in, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device = -\/1,}
+\DoxyCodeLine{904                      \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&iscap = \textcolor{keyword}{false}, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&cap\_in = 0);}
+\DoxyCodeLine{905     boost::intrusive\_ptr<Storage\_base> \_create\_new\_sametype();}
+\DoxyCodeLine{906     boost::intrusive\_ptr<Storage\_base> clone();}
+\DoxyCodeLine{907     boost::intrusive\_ptr<Storage\_base> Move\_memory(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&old\_shape,}
+\DoxyCodeLine{908                                                    \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{909                                                    \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper);}
+\DoxyCodeLine{910     \textcolor{keywordtype}{void} Move\_memory\_(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&old\_shape,}
+\DoxyCodeLine{911                       \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper,}
+\DoxyCodeLine{912                       \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&invmapper);}
+\DoxyCodeLine{913     \textcolor{keywordtype}{void} to\_(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device);}
+\DoxyCodeLine{914     boost::intrusive\_ptr<Storage\_base> to(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&device);}
+\DoxyCodeLine{915     \textcolor{keywordtype}{void} PrintElem\_byShape(std::ostream \&os, \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&shape,}
+\DoxyCodeLine{916                            \textcolor{keyword}{const} std::vector<cytnx\_uint64> \&mapper = \{\});}
+\DoxyCodeLine{917     \textcolor{keywordtype}{void} print\_elems();}
+\DoxyCodeLine{918 }
+\DoxyCodeLine{919     boost::intrusive\_ptr<Storage\_base> real();}
+\DoxyCodeLine{920     boost::intrusive\_ptr<Storage\_base> imag();}
+\DoxyCodeLine{921 }
+\DoxyCodeLine{922     \textcolor{comment}{// generators:}}
+\DoxyCodeLine{923     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{924     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{925     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{926     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{927     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{928     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{929     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{930     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{931     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{932     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{933     \textcolor{keywordtype}{void} fill(\textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{934     \textcolor{keywordtype}{void} set\_zeros();}
+\DoxyCodeLine{935     \textcolor{keywordtype}{void} resize(\textcolor{keyword}{const} cytnx\_uint64 \&newsize);}
+\DoxyCodeLine{936     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} Scalar \&val);}
+\DoxyCodeLine{937     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{938     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{939     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{940     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{941     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{942     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{943     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{944     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{945     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{946     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{947     \textcolor{keywordtype}{void} append(\textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{948     Scalar get\_item(\textcolor{keyword}{const} cytnx\_uint64 \&in) \textcolor{keyword}{const};}
+\DoxyCodeLine{949 }
+\DoxyCodeLine{950     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} Scalar \&val);}
+\DoxyCodeLine{951     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_complex128 \&val);}
+\DoxyCodeLine{952     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_complex64 \&val);}
+\DoxyCodeLine{953     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_double \&val);}
+\DoxyCodeLine{954     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_float \&val);}
+\DoxyCodeLine{955     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int64 \&val);}
+\DoxyCodeLine{956     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint64 \&val);}
+\DoxyCodeLine{957     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int32 \&val);}
+\DoxyCodeLine{958     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint32 \&val);}
+\DoxyCodeLine{959     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_int16 \&val);}
+\DoxyCodeLine{960     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_uint16 \&val);}
+\DoxyCodeLine{961     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} cytnx\_bool \&val);}
+\DoxyCodeLine{962   \};}
+\DoxyCodeLine{964 }
+\DoxyCodeLine{966   \textcolor{keyword}{typedef} boost::intrusive\_ptr<Storage\_base> (*pStorage\_init)();}
+\DoxyCodeLine{968   \textcolor{keyword}{inline} boost::intrusive\_ptr<Storage\_base> SIInit\_cd() \{}
+\DoxyCodeLine{969     boost::intrusive\_ptr<Storage\_base> out(\textcolor{keyword}{new} ComplexDoubleStorage());}
+\DoxyCodeLine{970     \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{971   \}}
+\DoxyCodeLine{972   \textcolor{keyword}{inline} boost::intrusive\_ptr<Storage\_base> SIInit\_cf() \{}
+\DoxyCodeLine{973     boost::intrusive\_ptr<Storage\_base> out(\textcolor{keyword}{new} ComplexFloatStorage());}
+\DoxyCodeLine{974     \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{975   \}}
+\DoxyCodeLine{976   \textcolor{keyword}{inline} boost::intrusive\_ptr<Storage\_base> SIInit\_d() \{}
+\DoxyCodeLine{977     boost::intrusive\_ptr<Storage\_base> out(\textcolor{keyword}{new} DoubleStorage());}
+\DoxyCodeLine{978     \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{979   \}}
+\DoxyCodeLine{980   \textcolor{keyword}{inline} boost::intrusive\_ptr<Storage\_base> SIInit\_f() \{}
+\DoxyCodeLine{981     boost::intrusive\_ptr<Storage\_base> out(\textcolor{keyword}{new} FloatStorage());}
+\DoxyCodeLine{982     \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{983   \}}
+\DoxyCodeLine{984   \textcolor{keyword}{inline} boost::intrusive\_ptr<Storage\_base> SIInit\_u64() \{}
+\DoxyCodeLine{985     boost::intrusive\_ptr<Storage\_base> out(\textcolor{keyword}{new} Uint64Storage());}
+\DoxyCodeLine{986     \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{987   \}}
+\DoxyCodeLine{988   \textcolor{keyword}{inline} boost::intrusive\_ptr<Storage\_base> SIInit\_i64() \{}
+\DoxyCodeLine{989     boost::intrusive\_ptr<Storage\_base> out(\textcolor{keyword}{new} Int64Storage());}
+\DoxyCodeLine{990     \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{991   \}}
+\DoxyCodeLine{992   \textcolor{keyword}{inline} boost::intrusive\_ptr<Storage\_base> SIInit\_u32() \{}
+\DoxyCodeLine{993     boost::intrusive\_ptr<Storage\_base> out(\textcolor{keyword}{new} Uint32Storage());}
+\DoxyCodeLine{994     \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{995   \}}
+\DoxyCodeLine{996   \textcolor{keyword}{inline} boost::intrusive\_ptr<Storage\_base> SIInit\_i32() \{}
+\DoxyCodeLine{997     boost::intrusive\_ptr<Storage\_base> out(\textcolor{keyword}{new} Int32Storage());}
+\DoxyCodeLine{998     \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{999   \}}
+\DoxyCodeLine{1000   \textcolor{keyword}{inline} boost::intrusive\_ptr<Storage\_base> SIInit\_u16() \{}
+\DoxyCodeLine{1001     boost::intrusive\_ptr<Storage\_base> out(\textcolor{keyword}{new} Uint16Storage());}
+\DoxyCodeLine{1002     \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{1003   \}}
+\DoxyCodeLine{1004   \textcolor{keyword}{inline} boost::intrusive\_ptr<Storage\_base> SIInit\_i16() \{}
+\DoxyCodeLine{1005     boost::intrusive\_ptr<Storage\_base> out(\textcolor{keyword}{new} Int16Storage());}
+\DoxyCodeLine{1006     \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{1007   \}}
+\DoxyCodeLine{1008   \textcolor{keyword}{inline} boost::intrusive\_ptr<Storage\_base> SIInit\_b() \{}
+\DoxyCodeLine{1009     boost::intrusive\_ptr<Storage\_base> out(\textcolor{keyword}{new} BoolStorage());}
+\DoxyCodeLine{1010     \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{1011   \}}
+\DoxyCodeLine{1013   \textcolor{keyword}{class }Storage\_init\_interface : \textcolor{keyword}{public} Type\_class \{}
+\DoxyCodeLine{1014    \textcolor{keyword}{public}:}
+\DoxyCodeLine{1015     \textcolor{comment}{// std::vector<pStorage\_init> USIInit;}}
+\DoxyCodeLine{1016     \textcolor{keyword}{inline} \textcolor{keyword}{static} pStorage\_init USIInit[N\_Type];}
+\DoxyCodeLine{1017     \textcolor{keyword}{constexpr} Storage\_init\_interface()\{}
+\DoxyCodeLine{1018       \textcolor{comment}{// USIInit.resize(N\_Type);}}
+\DoxyCodeLine{1019       USIInit[this-\/>Double] = SIInit\_d;}
+\DoxyCodeLine{1020       USIInit[this-\/>Float] = SIInit\_f;}
+\DoxyCodeLine{1021       USIInit[this-\/>ComplexDouble] = SIInit\_cd;}
+\DoxyCodeLine{1022       USIInit[this-\/>ComplexFloat] = SIInit\_cf;}
+\DoxyCodeLine{1023       USIInit[this-\/>Uint64] = SIInit\_u64;}
+\DoxyCodeLine{1024       USIInit[this-\/>Int64] = SIInit\_i64;}
+\DoxyCodeLine{1025       USIInit[this-\/>Uint32] = SIInit\_u32;}
+\DoxyCodeLine{1026       USIInit[this-\/>Int32] = SIInit\_i32;}
+\DoxyCodeLine{1027       USIInit[this-\/>Uint16] = SIInit\_u16;}
+\DoxyCodeLine{1028       USIInit[this-\/>Int16] = SIInit\_i16;}
+\DoxyCodeLine{1029       USIInit[this-\/>Bool] = SIInit\_b;}
+\DoxyCodeLine{1030     \}}
+\DoxyCodeLine{1031   \};}
+\DoxyCodeLine{1032   \textcolor{keyword}{extern} Storage\_init\_interface \_\_SII;}
+\DoxyCodeLine{1034 }
+\DoxyCodeLine{1036   \textcolor{keyword}{class }\mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} \{}
+\DoxyCodeLine{1037    \textcolor{keyword}{private}:}
+\DoxyCodeLine{1038     \textcolor{comment}{// Interface:}}
+\DoxyCodeLine{1039     \textcolor{comment}{// Storage\_init\_interface \_\_SII;}}
+\DoxyCodeLine{1040 }
+\DoxyCodeLine{1041    \textcolor{keyword}{public}:}
+\DoxyCodeLine{1043     boost::intrusive\_ptr<Storage\_base> \_impl;}
+\DoxyCodeLine{1045 }
+\DoxyCodeLine{1063     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Storage_a2b1417ecb023beeb06c0efe53da6e42e}{Init}}(\textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&\mbox{\hyperlink{classcytnx_1_1Storage_a8e250f87a0ddf93a31ada7b18ae36fa0}{size}}, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&\mbox{\hyperlink{classcytnx_1_1Storage_a51b99e00d854442b662c540c5a960831}{dtype}} = Type.Double,}
+\DoxyCodeLine{1064               \textcolor{keywordtype}{int} \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}} = -\/1, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&init\_zero = \textcolor{keyword}{true}) \{}
+\DoxyCodeLine{1065       cytnx\_error\_msg(\mbox{\hyperlink{classcytnx_1_1Storage_a51b99e00d854442b662c540c5a960831}{dtype}} >= N\_Type, \textcolor{stringliteral}{"{}\%s"{}}, \textcolor{stringliteral}{"{}[ERROR] invalid argument: dtype"{}});}
+\DoxyCodeLine{1066       this-\/>\_impl = \_\_SII.USIInit[\mbox{\hyperlink{classcytnx_1_1Storage_a51b99e00d854442b662c540c5a960831}{dtype}}]();}
+\DoxyCodeLine{1067       this-\/>\_impl-\/>Init(\mbox{\hyperlink{classcytnx_1_1Storage_a8e250f87a0ddf93a31ada7b18ae36fa0}{size}}, \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}},init\_zero);}
+\DoxyCodeLine{1068     \}}
+\DoxyCodeLine{1069     \textcolor{comment}{// void \_Init\_byptr(void *rawptr, const unsigned long long \&len\_in, const unsigned int \&dtype = Type.Double, const int \&device = -\/1,}}
+\DoxyCodeLine{1070     \textcolor{comment}{//                              const bool \&iscap = false, const unsigned long long \&cap\_in = 0)\{}}
+\DoxyCodeLine{1071     \textcolor{comment}{//   cytnx\_error\_msg(dtype >= N\_Type, "{}\%s"{}, "{}[ERROR] invalid argument: dtype"{});}}
+\DoxyCodeLine{1072     \textcolor{comment}{//   this-\/>\_impl = \_\_SII.USIInit[dtype]();}}
+\DoxyCodeLine{1073     \textcolor{comment}{//   this-\/>\_impl-\/>\_Init\_byptr(rawptr, len\_in, device, iscap, cap\_in);}}
+\DoxyCodeLine{1074     \textcolor{comment}{// \}}}
+\DoxyCodeLine{1075     \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}}(\textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&\mbox{\hyperlink{classcytnx_1_1Storage_a8e250f87a0ddf93a31ada7b18ae36fa0}{size}}, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&\mbox{\hyperlink{classcytnx_1_1Storage_a51b99e00d854442b662c540c5a960831}{dtype}} = Type.Double,}
+\DoxyCodeLine{1076             \textcolor{keywordtype}{int} \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}} = -\/1, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \&init\_zero=\textcolor{keyword}{true})}
+\DoxyCodeLine{1077         : \_impl(new Storage\_base()) \{}
+\DoxyCodeLine{1078       \mbox{\hyperlink{classcytnx_1_1Storage_a2b1417ecb023beeb06c0efe53da6e42e}{Init}}(\mbox{\hyperlink{classcytnx_1_1Storage_a8e250f87a0ddf93a31ada7b18ae36fa0}{size}}, \mbox{\hyperlink{classcytnx_1_1Storage_a51b99e00d854442b662c540c5a960831}{dtype}}, \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}},init\_zero);}
+\DoxyCodeLine{1079     \}}
+\DoxyCodeLine{1080     \textcolor{comment}{// Storage(void *rawptr, const unsigned long long \&len\_in, const unsigned int \&dtype = Type.Double, const int \&device = -\/1,}}
+\DoxyCodeLine{1081     \textcolor{comment}{//       const bool \&iscap = false, const unsigned long long \&cap\_in = 0)}}
+\DoxyCodeLine{1082     \textcolor{comment}{//       : \_impl(new Storage\_base())\{}}
+\DoxyCodeLine{1083     \textcolor{comment}{//   \_Init\_byptr(rawptr,len\_in,dtype,device,iscap,cap\_in);}}
+\DoxyCodeLine{1084     \textcolor{comment}{// \}}}
+\DoxyCodeLine{1085     Storage() : \_impl(new Storage\_base())\{\};}
+\DoxyCodeLine{1087     Storage(boost::intrusive\_ptr<Storage\_base> in\_impl) \{ this-\/>\_impl = in\_impl; \}}
+\DoxyCodeLine{1088     Storage(\textcolor{keyword}{const} Storage \&rhs) \{ this-\/>\_impl = rhs.\_impl; \}}
+\DoxyCodeLine{1089 }
+\DoxyCodeLine{1090     \textcolor{keyword}{template} <\textcolor{keyword}{class} Tp>}
+\DoxyCodeLine{1091     Storage(\textcolor{keyword}{const} std::vector<Tp> \&rhs) \{}
+\DoxyCodeLine{1092       this-\/>\_from\_vector(rhs, -\/1);}
+\DoxyCodeLine{1093     \}}
+\DoxyCodeLine{1094     \textcolor{keyword}{template} <\textcolor{keyword}{class} Tp>}
+\DoxyCodeLine{1095     Storage(\textcolor{keyword}{const} std::initializer\_list<Tp> \&rhs) \{}
+\DoxyCodeLine{1096       this-\/>\_from\_vector(std::vector<Tp>(rhs), -\/1);}
+\DoxyCodeLine{1097     \}}
+\DoxyCodeLine{1098 }
+\DoxyCodeLine{1099     Storage \&operator=(\textcolor{keyword}{const} Storage \&rhs) \{}
+\DoxyCodeLine{1100       this-\/>\_impl = rhs.\_impl;}
+\DoxyCodeLine{1101       \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{1102     \}}
+\DoxyCodeLine{1103 }
+\DoxyCodeLine{1105 }
+\DoxyCodeLine{1107     \textcolor{keywordtype}{void} \_Save(std::fstream \&f) \textcolor{keyword}{const};}
+\DoxyCodeLine{1108     \textcolor{keywordtype}{void} \_Load(std::fstream \&f);}
+\DoxyCodeLine{1109     \textcolor{keywordtype}{void} \_Loadbinary(std::fstream \&f, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&\mbox{\hyperlink{classcytnx_1_1Storage_a51b99e00d854442b662c540c5a960831}{dtype}}, \textcolor{keyword}{const} cytnx\_uint64 \&Nelem);}
+\DoxyCodeLine{1110     \textcolor{keywordtype}{void} \_Savebinary(std::fstream \&f) \textcolor{keyword}{const};}
+\DoxyCodeLine{1111 }
+\DoxyCodeLine{1113 }
+\DoxyCodeLine{1123     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Storage_a44545ab3fe3c0a7378869e5bdc9612ec}{Save}}(\textcolor{keyword}{const} std::string \&fname) \textcolor{keyword}{const};}
+\DoxyCodeLine{1124     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Storage_a44545ab3fe3c0a7378869e5bdc9612ec}{Save}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *fname) \textcolor{keyword}{const};}
+\DoxyCodeLine{1125     \textcolor{keywordtype}{void} Tofile(\textcolor{keyword}{const} std::string \&fname) \textcolor{keyword}{const};}
+\DoxyCodeLine{1126     \textcolor{keywordtype}{void} Tofile(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *fname) \textcolor{keyword}{const};}
+\DoxyCodeLine{1127     \textcolor{keywordtype}{void} Tofile(std::fstream \&f) \textcolor{keyword}{const};}
+\DoxyCodeLine{1128 }
+\DoxyCodeLine{1137     \textcolor{keyword}{static} Storage \mbox{\hyperlink{classcytnx_1_1Storage_a830f293f47a42ede8dbc57d3a3bff605}{Load}}(\textcolor{keyword}{const} std::string \&fname);}
+\DoxyCodeLine{1138     \textcolor{keyword}{static} Storage \mbox{\hyperlink{classcytnx_1_1Storage_a830f293f47a42ede8dbc57d3a3bff605}{Load}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *fname);}
+\DoxyCodeLine{1139     \textcolor{keyword}{static} Storage Fromfile(\textcolor{keyword}{const} std::string \&fname, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&\mbox{\hyperlink{classcytnx_1_1Storage_a51b99e00d854442b662c540c5a960831}{dtype}},}
+\DoxyCodeLine{1140                             \textcolor{keyword}{const} cytnx\_int64 \&count = -\/1);}
+\DoxyCodeLine{1141     \textcolor{keyword}{static} Storage Fromfile(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *fname, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&\mbox{\hyperlink{classcytnx_1_1Storage_a51b99e00d854442b662c540c5a960831}{dtype}},}
+\DoxyCodeLine{1142                             \textcolor{keyword}{const} cytnx\_int64 \&count = -\/1);}
+\DoxyCodeLine{1143 }
+\DoxyCodeLine{1165     \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} \mbox{\hyperlink{classcytnx_1_1Storage_a8310d8dbb70510272ded2e3d01be25f0}{astype}}(\textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&new\_type)\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_impl-\/>\mbox{\hyperlink{classcytnx_1_1Storage_a8310d8dbb70510272ded2e3d01be25f0}{astype}}(new\_type); \}}
+\DoxyCodeLine{1166 }
+\DoxyCodeLine{1172     \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \&\mbox{\hyperlink{classcytnx_1_1Storage_a51b99e00d854442b662c540c5a960831}{dtype}}()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_impl-\/>dtype; \}}
+\DoxyCodeLine{1173 }
+\DoxyCodeLine{1179     \textcolor{keyword}{const} std::string \mbox{\hyperlink{classcytnx_1_1Storage_ab6e9fb01ad4655701a2d54dc978eef17}{dtype\_str}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{1180       std::string out = this-\/>\_impl-\/>dtype\_str();}
+\DoxyCodeLine{1181       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{1182     \}}
+\DoxyCodeLine{1188     \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&\mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}}()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_impl-\/>device; \}}
+\DoxyCodeLine{1189 }
+\DoxyCodeLine{1195     \textcolor{keyword}{const} std::string \mbox{\hyperlink{classcytnx_1_1Storage_ae0d90d5275fa7e52a0a2dc10512ba71f}{device\_str}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{1196       std::string out = this-\/>\_impl-\/>device\_str();}
+\DoxyCodeLine{1197       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{1198     \}}
+\DoxyCodeLine{1199 }
+\DoxyCodeLine{1207     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1208     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Storage_a10ba92184b471cd8a3fa2bbeb3c290d7}{append}}(\textcolor{keyword}{const} T \&val) \{}
+\DoxyCodeLine{1209       \textcolor{keywordflow}{return} this-\/>\_impl-\/>append(val);}
+\DoxyCodeLine{1210     \}}
+\DoxyCodeLine{1211 }
+\DoxyCodeLine{1213     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>  \textcolor{comment}{// this is c++ only}}
+\DoxyCodeLine{1214     T \&at(\textcolor{keyword}{const} cytnx\_uint64 \&idx)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{1215       \textcolor{keywordflow}{return} this-\/>\_impl-\/>at<T>(idx);}
+\DoxyCodeLine{1216     \}}
+\DoxyCodeLine{1217 }
+\DoxyCodeLine{1218     \textcolor{keyword}{const} Scalar::Sproxy at(\textcolor{keyword}{const} cytnx\_uint64 \&idx)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{1219       Scalar::Sproxy out(this-\/>\_impl, idx);}
+\DoxyCodeLine{1220       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{1221     \}}
+\DoxyCodeLine{1222     Scalar::Sproxy at(\textcolor{keyword}{const} cytnx\_uint64 \&idx) \{}
+\DoxyCodeLine{1223       Scalar::Sproxy out(this-\/>\_impl, idx);}
+\DoxyCodeLine{1224       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{1225     \}}
+\DoxyCodeLine{1226 }
+\DoxyCodeLine{1227     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>  \textcolor{comment}{// this is c++ only}}
+\DoxyCodeLine{1228     T \&back()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{1229       \textcolor{keywordflow}{return} this-\/>\_impl-\/>back<T>();}
+\DoxyCodeLine{1230     \}}
+\DoxyCodeLine{1231 }
+\DoxyCodeLine{1232     \textcolor{keyword}{const} Scalar::Sproxy back()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{1233       Scalar::Sproxy out(this-\/>\_impl, this-\/>\mbox{\hyperlink{classcytnx_1_1Storage_a8e250f87a0ddf93a31ada7b18ae36fa0}{size}}() -\/ 1);}
+\DoxyCodeLine{1234       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{1235     \}}
+\DoxyCodeLine{1236     Scalar::Sproxy back() \{}
+\DoxyCodeLine{1237       Scalar::Sproxy out(this-\/>\_impl, this-\/>\mbox{\hyperlink{classcytnx_1_1Storage_a8e250f87a0ddf93a31ada7b18ae36fa0}{size}}() -\/ 1);}
+\DoxyCodeLine{1238       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{1239     \}}
+\DoxyCodeLine{1240 }
+\DoxyCodeLine{1241     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>  \textcolor{comment}{// this is c++ only}}
+\DoxyCodeLine{1242     T *data()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{1243       \textcolor{keywordflow}{return} this-\/>\_impl-\/>data<T>();}
+\DoxyCodeLine{1244     \}}
+\DoxyCodeLine{1245 }
+\DoxyCodeLine{1246     \textcolor{keywordtype}{void} *data()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_impl-\/>data(); \}}
+\DoxyCodeLine{1248 }
+\DoxyCodeLine{1254     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Storage_a2ff5a21f81e9b90a5e78e1ba1698351b}{resize}}(\textcolor{keyword}{const} cytnx\_uint64 \&newsize) \{ this-\/>\_impl-\/>resize(newsize); \}}
+\DoxyCodeLine{1255 }
+\DoxyCodeLine{1263     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Storage_a0bbf2cbefb5d0835bcb4f0d05e400870}{to\_}}(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&\mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}}) \{ this-\/>\_impl-\/>to\_(\mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}}); \}}
+\DoxyCodeLine{1264 }
+\DoxyCodeLine{1275     \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} \mbox{\hyperlink{classcytnx_1_1Storage_a2abfcaacf807934be5dd21c254fdb30e}{to}}(\textcolor{keyword}{const} \textcolor{keywordtype}{int} \&\mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}}) \{ \textcolor{keywordflow}{return} \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}}(this-\/>\_impl-\/>to(\mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}})); \}}
+\DoxyCodeLine{1291     \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} \mbox{\hyperlink{classcytnx_1_1Storage_aed0530dd20f3fb352d45653ba46a3d50}{clone}}()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}}(this-\/>\_impl-\/>clone()); \}}
+\DoxyCodeLine{1292 }
+\DoxyCodeLine{1298     \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&\mbox{\hyperlink{classcytnx_1_1Storage_a8e250f87a0ddf93a31ada7b18ae36fa0}{size}}()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_impl-\/>len; \}}
+\DoxyCodeLine{1299 }
+\DoxyCodeLine{1305     \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \&\mbox{\hyperlink{classcytnx_1_1Storage_a6d446d0f68d5eb9ea81f770d115a13ea}{capacity}}()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_impl-\/>cap; \}}
+\DoxyCodeLine{1306 }
+\DoxyCodeLine{1311     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Storage_a8f611d41dbd0e1438485df9c3cee12bc}{print\_info}}()\textcolor{keyword}{ const }\{ this-\/>\_impl-\/>print\_info(); \}}
+\DoxyCodeLine{1313     \textcolor{comment}{// this is a redundant function}}
+\DoxyCodeLine{1314     \textcolor{keywordtype}{void} print()\textcolor{keyword}{ const }\{ this-\/>\_impl-\/>print(); \}}
+\DoxyCodeLine{1316 }
+\DoxyCodeLine{1324     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Storage_a7e854529c99108b0acc3e5e2b185244b}{set\_zeros}}() \{ this-\/>\_impl-\/>set\_zeros(); \}}
+\DoxyCodeLine{1325 }
+\DoxyCodeLine{1343     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classcytnx_1_1Storage_ad304e00cf3d472ea0355af6b40c4529d}{operator==}}(\textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} \&rhs);}
+\DoxyCodeLine{1344     \textcolor{keywordtype}{bool} operator!=(\textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} \&rhs);}
+\DoxyCodeLine{1345 }
+\DoxyCodeLine{1353     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1354     \textcolor{keywordtype}{void} \mbox{\hyperlink{classcytnx_1_1Storage_a48f0424f051a4b3a821eb964be4cd5db}{fill}}(\textcolor{keyword}{const} T \&val) \{}
+\DoxyCodeLine{1355       this-\/>\_impl-\/>fill(val);}
+\DoxyCodeLine{1356     \}}
+\DoxyCodeLine{1357 }
+\DoxyCodeLine{1358     \textcolor{comment}{/*}}
+\DoxyCodeLine{1359 \textcolor{comment}{        @brief renew/create a Storage using c++ vector.}}
+\DoxyCodeLine{1360 \textcolor{comment}{        @param vin the C++ vector with supported types.}}
+\DoxyCodeLine{1361 \textcolor{comment}{}}
+\DoxyCodeLine{1362 \textcolor{comment}{        [Note]}}
+\DoxyCodeLine{1363 \textcolor{comment}{            This function is C++ only}}
+\DoxyCodeLine{1364 \textcolor{comment}{    */}}
+\DoxyCodeLine{1365     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1366     \textcolor{keyword}{static} \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} from\_vector(\textcolor{keyword}{const} std::vector<T> \&vin, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}} = -\/1) \{}
+\DoxyCodeLine{1367       \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} out;}
+\DoxyCodeLine{1368       out.\_from\_vector(vin, \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}});}
+\DoxyCodeLine{1369       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{1370     \}}
+\DoxyCodeLine{1371 }
+\DoxyCodeLine{1372     \textcolor{comment}{/*}}
+\DoxyCodeLine{1373 \textcolor{comment}{        @brief convert a Storage to C++ vector.}}
+\DoxyCodeLine{1374 \textcolor{comment}{}}
+\DoxyCodeLine{1375 \textcolor{comment}{        [Note]}}
+\DoxyCodeLine{1376 \textcolor{comment}{            This function is C++ only}}
+\DoxyCodeLine{1377 \textcolor{comment}{    */}}
+\DoxyCodeLine{1378     \textcolor{comment}{/*}}
+\DoxyCodeLine{1379 \textcolor{comment}{    template <class T>}}
+\DoxyCodeLine{1380 \textcolor{comment}{    std::vector<T> vector() \{}}
+\DoxyCodeLine{1381 \textcolor{comment}{      T tmp;}}
+\DoxyCodeLine{1382 \textcolor{comment}{      cytnx\_error\_msg(Type.cy\_typeid(tmp) != this-\/>dtype(),}}
+\DoxyCodeLine{1383 \textcolor{comment}{                      "{}[ERROR] the dtype of current Storage does not match assigned vector type.\%s"{},}}
+\DoxyCodeLine{1384 \textcolor{comment}{                      "{}\(\backslash\)n"{});}}
+\DoxyCodeLine{1385 \textcolor{comment}{}}
+\DoxyCodeLine{1386 \textcolor{comment}{      std::vector<T> out(this-\/>size());}}
+\DoxyCodeLine{1387 \textcolor{comment}{      Storage S;}}
+\DoxyCodeLine{1388 \textcolor{comment}{      if (this-\/>device() != Device.cpu) \{}}
+\DoxyCodeLine{1389 \textcolor{comment}{        S = this-\/>to(Device.cpu);}}
+\DoxyCodeLine{1390 \textcolor{comment}{        memcpy(\&out[0], S.data(), sizeof(T) * this-\/>size());}}
+\DoxyCodeLine{1391 \textcolor{comment}{      \} else \{}}
+\DoxyCodeLine{1392 \textcolor{comment}{        memcpy(\&out[0], this-\/>data(), sizeof(T) * this-\/>size());}}
+\DoxyCodeLine{1393 \textcolor{comment}{      \}}}
+\DoxyCodeLine{1394 \textcolor{comment}{}}
+\DoxyCodeLine{1395 \textcolor{comment}{      return out;}}
+\DoxyCodeLine{1396 \textcolor{comment}{    \}}}
+\DoxyCodeLine{1397 \textcolor{comment}{    */}}
+\DoxyCodeLine{1398     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1399     std::vector<T> vector();}
+\DoxyCodeLine{1400 }
+\DoxyCodeLine{1402 }
+\DoxyCodeLine{1403     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1404     \textcolor{keywordtype}{void} \_from\_vector(\textcolor{keyword}{const} std::vector<T> \&vin, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}} = -\/1) \{}
+\DoxyCodeLine{1405       \textcolor{comment}{// auto dispatch:}}
+\DoxyCodeLine{1406       \textcolor{comment}{// check:}}
+\DoxyCodeLine{1407       cytnx\_error\_msg(1, \textcolor{stringliteral}{"{}[FATAL] ERROR unsupport type\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{1408       \textcolor{comment}{// this-\/>\_impl-\/>Init(vin.size(),device);}}
+\DoxyCodeLine{1409       \textcolor{comment}{// memcpy(this-\/>\_impl-\/>Mem,\&vin[0],sizeof(T)*vin.size());}}
+\DoxyCodeLine{1410     \}}
+\DoxyCodeLine{1411 }
+\DoxyCodeLine{1412     \textcolor{keywordtype}{void} \_from\_vector(\textcolor{keyword}{const} std::vector<cytnx\_complex128> \&vin, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}} = -\/1) \{}
+\DoxyCodeLine{1413       this-\/>\_impl = \_\_SII.USIInit[Type.ComplexDouble]();}
+\DoxyCodeLine{1414       this-\/>\_impl-\/>Init(vin.size(), \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}});}
+\DoxyCodeLine{1415       memcpy(this-\/>\_impl-\/>Mem, \&vin[0], \textcolor{keyword}{sizeof}(cytnx\_complex128) * vin.size());}
+\DoxyCodeLine{1416     \}}
+\DoxyCodeLine{1417     \textcolor{keywordtype}{void} \_from\_vector(\textcolor{keyword}{const} std::vector<cytnx\_complex64> \&vin, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}} = -\/1) \{}
+\DoxyCodeLine{1418       this-\/>\_impl = \_\_SII.USIInit[Type.ComplexFloat]();}
+\DoxyCodeLine{1419       this-\/>\_impl-\/>Init(vin.size(), \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}});}
+\DoxyCodeLine{1420       memcpy(this-\/>\_impl-\/>Mem, \&vin[0], \textcolor{keyword}{sizeof}(cytnx\_complex64) * vin.size());}
+\DoxyCodeLine{1421     \}}
+\DoxyCodeLine{1422     \textcolor{keywordtype}{void} \_from\_vector(\textcolor{keyword}{const} std::vector<cytnx\_double> \&vin, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}} = -\/1) \{}
+\DoxyCodeLine{1423       this-\/>\_impl = \_\_SII.USIInit[Type.Double]();}
+\DoxyCodeLine{1424       this-\/>\_impl-\/>Init(vin.size(), \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}});}
+\DoxyCodeLine{1425       memcpy(this-\/>\_impl-\/>Mem, \&vin[0], \textcolor{keyword}{sizeof}(cytnx\_double) * vin.size());}
+\DoxyCodeLine{1426     \}}
+\DoxyCodeLine{1427     \textcolor{keywordtype}{void} \_from\_vector(\textcolor{keyword}{const} std::vector<cytnx\_float> \&vin, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}} = -\/1) \{}
+\DoxyCodeLine{1428       this-\/>\_impl = \_\_SII.USIInit[Type.Float]();}
+\DoxyCodeLine{1429       this-\/>\_impl-\/>Init(vin.size(), \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}});}
+\DoxyCodeLine{1430       memcpy(this-\/>\_impl-\/>Mem, \&vin[0], \textcolor{keyword}{sizeof}(cytnx\_float) * vin.size());}
+\DoxyCodeLine{1431     \}}
+\DoxyCodeLine{1432     \textcolor{keywordtype}{void} \_from\_vector(\textcolor{keyword}{const} std::vector<cytnx\_uint64> \&vin, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}} = -\/1) \{}
+\DoxyCodeLine{1433       this-\/>\_impl = \_\_SII.USIInit[Type.Uint64]();}
+\DoxyCodeLine{1434       this-\/>\_impl-\/>Init(vin.size(), \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}});}
+\DoxyCodeLine{1435       memcpy(this-\/>\_impl-\/>Mem, \&vin[0], \textcolor{keyword}{sizeof}(cytnx\_uint64) * vin.size());}
+\DoxyCodeLine{1436     \}}
+\DoxyCodeLine{1437     \textcolor{keywordtype}{void} \_from\_vector(\textcolor{keyword}{const} std::vector<cytnx\_int64> \&vin, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}} = -\/1) \{}
+\DoxyCodeLine{1438       this-\/>\_impl = \_\_SII.USIInit[Type.Int64]();}
+\DoxyCodeLine{1439       this-\/>\_impl-\/>Init(vin.size(), \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}});}
+\DoxyCodeLine{1440       memcpy(this-\/>\_impl-\/>Mem, \&vin[0], \textcolor{keyword}{sizeof}(cytnx\_int64) * vin.size());}
+\DoxyCodeLine{1441     \}}
+\DoxyCodeLine{1442     \textcolor{keywordtype}{void} \_from\_vector(\textcolor{keyword}{const} std::vector<cytnx\_uint32> \&vin, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}} = -\/1) \{}
+\DoxyCodeLine{1443       this-\/>\_impl = \_\_SII.USIInit[Type.Uint32]();}
+\DoxyCodeLine{1444       this-\/>\_impl-\/>Init(vin.size(), \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}});}
+\DoxyCodeLine{1445       memcpy(this-\/>\_impl-\/>Mem, \&vin[0], \textcolor{keyword}{sizeof}(cytnx\_uint32) * vin.size());}
+\DoxyCodeLine{1446     \}}
+\DoxyCodeLine{1447     \textcolor{keywordtype}{void} \_from\_vector(\textcolor{keyword}{const} std::vector<cytnx\_int32> \&vin, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}} = -\/1) \{}
+\DoxyCodeLine{1448       this-\/>\_impl = \_\_SII.USIInit[Type.Int32]();}
+\DoxyCodeLine{1449       this-\/>\_impl-\/>Init(vin.size(), \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}});}
+\DoxyCodeLine{1450       memcpy(this-\/>\_impl-\/>Mem, \&vin[0], \textcolor{keyword}{sizeof}(cytnx\_int32) * vin.size());}
+\DoxyCodeLine{1451     \}}
+\DoxyCodeLine{1452     \textcolor{keywordtype}{void} \_from\_vector(\textcolor{keyword}{const} std::vector<cytnx\_uint16> \&vin, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}} = -\/1) \{}
+\DoxyCodeLine{1453       this-\/>\_impl = \_\_SII.USIInit[Type.Uint16]();}
+\DoxyCodeLine{1454       this-\/>\_impl-\/>Init(vin.size(), \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}});}
+\DoxyCodeLine{1455       memcpy(this-\/>\_impl-\/>Mem, \&vin[0], \textcolor{keyword}{sizeof}(cytnx\_uint16) * vin.size());}
+\DoxyCodeLine{1456     \}}
+\DoxyCodeLine{1457     \textcolor{keywordtype}{void} \_from\_vector(\textcolor{keyword}{const} std::vector<cytnx\_int16> \&vin, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}} = -\/1) \{}
+\DoxyCodeLine{1458       this-\/>\_impl = \_\_SII.USIInit[Type.Int16]();}
+\DoxyCodeLine{1459       this-\/>\_impl-\/>Init(vin.size(), \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}});}
+\DoxyCodeLine{1460       memcpy(this-\/>\_impl-\/>Mem, \&vin[0], \textcolor{keyword}{sizeof}(cytnx\_int16) * vin.size());}
+\DoxyCodeLine{1461     \}}
+\DoxyCodeLine{1462     \textcolor{keywordtype}{void} \_from\_vector(\textcolor{keyword}{const} std::vector<cytnx\_bool> \&vin, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}} = -\/1) \{}
+\DoxyCodeLine{1463       this-\/>\_impl = \_\_SII.USIInit[Type.Bool]();}
+\DoxyCodeLine{1464       this-\/>\_impl-\/>Init(vin.size(), \mbox{\hyperlink{classcytnx_1_1Storage_a171c97269af96fa440c62438b03f0f43}{device}});}
+\DoxyCodeLine{1465       this-\/>\_impl-\/>\_cpy\_bool(this-\/>\_impl-\/>Mem, vin);}
+\DoxyCodeLine{1466       \textcolor{comment}{// memcpy(this-\/>\_impl-\/>Mem,vin.data(),sizeof(cytnx\_bool)*vin.size());}}
+\DoxyCodeLine{1467     \}}
+\DoxyCodeLine{1469 }
+\DoxyCodeLine{1485     \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} \mbox{\hyperlink{classcytnx_1_1Storage_a1c28604bf7751c817c44dc3286d6520f}{real}}()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}}(this-\/>\_impl-\/>real()); \};}
+\DoxyCodeLine{1501     \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}} \mbox{\hyperlink{classcytnx_1_1Storage_ad7557a7109f2764fe97049a348971b39}{imag}}()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} \mbox{\hyperlink{classcytnx_1_1Storage}{Storage}}(this-\/>\_impl-\/>imag()); \};}
+\DoxyCodeLine{1502 }
+\DoxyCodeLine{1503     \mbox{\hyperlink{classcytnx_1_1Scalar}{Scalar}} get\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx)\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_impl-\/>get\_item(idx); \};}
+\DoxyCodeLine{1504 }
+\DoxyCodeLine{1505     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1506     \textcolor{keywordtype}{void} set\_item(\textcolor{keyword}{const} cytnx\_uint64 \&idx, \textcolor{keyword}{const} T \&elem) \{}
+\DoxyCodeLine{1507       this-\/>\_impl-\/>set\_item(idx, elem);}
+\DoxyCodeLine{1508     \};}
+\DoxyCodeLine{1509 }
+\DoxyCodeLine{1510     Scalar::Sproxy operator()(\textcolor{keyword}{const} cytnx\_uint64 \&idx);}
+\DoxyCodeLine{1511   \};}
+\DoxyCodeLine{1512 }
+\DoxyCodeLine{1514   std::ostream \&operator<<(std::ostream \&os, \textcolor{keyword}{const} Storage \&in);}
+\DoxyCodeLine{1516 }
+\DoxyCodeLine{1517 \}  \textcolor{comment}{// namespace cytnx}}
+\DoxyCodeLine{1518 }
+\DoxyCodeLine{1519 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

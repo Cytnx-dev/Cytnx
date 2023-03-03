@@ -1,0 +1,882 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classcytnx_1_1Symmetry" kind="class" language="C++" prot="public">
+    <compoundname>cytnx::Symmetry</compoundname>
+    <includes refid="Symmetry_8hpp" local="no">Symmetry.hpp</includes>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a9218fd66fc9cca64cd3d792e0019592a" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref></type>
+        <definition>static Symmetry cytnx::Symmetry::U1</definition>
+        <argsstring>()</argsstring>
+        <name>U1</name>
+        <qualifiedname>cytnx::Symmetry::U1</qualifiedname>
+        <briefdescription>
+<para>create a U1 symmetry object </para>
+        </briefdescription>
+        <detaileddescription>
+<para><heading level="3">valid qnum value range:</heading>
+</para>
+<para><verbatim>\f$(-\infty , \infty)\f$
+</verbatim> <heading level="3">combine rule:</heading>
+</para>
+<para><verbatim>Q + Q
+</verbatim> <heading level="3">description:</heading>
+</para>
+<para>create a new U1 symmetry object that serive as a generator. The symmetry object is a property of <ref refid="classcytnx_1_1Bond" kindref="compound">Bond </ref>. It is used to identify the symmetry of the quantum number set, as well as providing the combining rule for the quantum number when Bonds are combined.</para>
+<para><heading level="2">Example:</heading>
+</para>
+<para><heading level="3">c++ API:</heading>
+</para>
+<para><programlisting filename="example/Symmetry/U1.cpp"><codeline><highlight class="preprocessor">#include<sp/>&quot;<ref refid="cytnx_8hpp" kindref="compound">cytnx.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>1.</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>create<sp/>a<sp/>U1<sp/>symmetry<sp/>object</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref><sp/>sym_u1<sp/>=<sp/><ref refid="classcytnx_1_1Symmetry_1a9218fd66fc9cca64cd3d792e0019592a" kindref="member">Symmetry::U1</ref>();</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>2.</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>using<sp/>with<sp/>Bond<sp/>to<sp/>define<sp/>a<sp/>bond<sp/>with<sp/>symmetry.</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_sym_u1_a<sp/>=<sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>(4,<sp/><ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" kindref="member">BD_KET</ref>,<sp/>{{0},<sp/>{-4},<sp/>{-2},<sp/>{3}},<sp/>{sym_u1});</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_sym_u1_b<sp/>=<sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>(4,<sp/><ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" kindref="member">BD_KET</ref>,<sp/>{{0},<sp/>{-4},<sp/>{-2},<sp/>{3}});<sp/><sp/></highlight><highlight class="comment">//<sp/>default<sp/>is<sp/>U1<sp/>symmetry</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_sym_u1_a<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_sym_u1_b<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>(bd_sym_u1_a<sp/>==<sp/>bd_sym_u1_b)<sp/>&lt;&lt;<sp/>endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>true</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_sym_u1_c<sp/>=<sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>(5,<sp/><ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" kindref="member">BD_KET</ref>,<sp/>{{-1},<sp/>{1},<sp/>{2},<sp/>{-2},<sp/>{0}});</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_sym_u1_c<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>3.</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>new<sp/>qnums<sp/>will<sp/>be<sp/>calculated<sp/>using<sp/>Symmetry::combine_rule.</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_sym_all<sp/>=<sp/>bd_sym_u1_a.<ref refid="classcytnx_1_1Bond_1a4714d9891e02b2aebf6756ec68c25e5c" kindref="member">combineBond</ref>(bd_sym_u1_c);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_sym_all<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>Dim = 4 |type: KET&gt;     
+ U1::  +0 -4 -2 +3
+
+Dim = 4 |type: KET&gt;     
+ U1::  +0 -4 -2 +3
+
+1
+Dim = 5 |type: KET&gt;     
+ U1::  -1 +1 +2 -2 +0
+
+Dim = 20 |type: KET&gt;     
+ U1::  -1 +1 +2 -2 +0 -5 -3 -2 -6 -4 -3 -1 +0 -4 -2 +2 +4 +5 +1 +3
+
+</verbatim> <heading level="3">python API:</heading>
+</para>
+<para><programlisting filename="example/Symmetry/U1.py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>cytnx<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>*</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">sym_u1<sp/>=<sp/>Symmetry.U1();</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">bd_sym_u1_a<sp/>=<sp/>Bond(4,BD_KET,[[0],[-4],[-2],[3]],[sym_u1])</highlight></codeline>
+<codeline><highlight class="normal">bd_sym_u1_b<sp/>=<sp/>Bond(4,BD_KET,[[0],[-4],[-2],[3]])<sp/></highlight><highlight class="comment">#default<sp/>is<sp/>U1<sp/>symmetry</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">print(bd_sym_u1_a)</highlight></codeline>
+<codeline><highlight class="normal">print(bd_sym_u1_b)</highlight></codeline>
+<codeline><highlight class="normal">print(bd_sym_u1_a<sp/>==<sp/>bd_sym_u1_b,flush=</highlight><highlight class="keyword">True</highlight><highlight class="normal">)<sp/></highlight><highlight class="comment">#true</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">bd_sym_u1_c<sp/>=<sp/>Bond(5,BD_KET,[[-1],[1],[2],[-2],[0]])</highlight></codeline>
+<codeline><highlight class="normal">print(bd_sym_u1_c)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">bd_sym_all<sp/>=<sp/>bd_sym_u1_a.combineBond(bd_sym_u1_c)</highlight></codeline>
+<codeline><highlight class="normal">print(bd_sym_all)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>Dim = 4 |type: KET&gt;     
+ U1::  +0 -4 -2 +3
+
+
+Dim = 4 |type: KET&gt;     
+ U1::  +0 -4 -2 +3
+
+
+True
+Dim = 5 |type: KET&gt;     
+ U1::  -1 +1 +2 -2 +0
+
+
+Dim = 20 |type: KET&gt;     
+ U1::  -1 +1 +2 -2 +0 -5 -3 -2 -6 -4 -3 -1 +0 -4 -2 +2 +4 +5 +1 +3
+
+
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="205" column="21" bodyfile="include/Symmetry.hpp" bodystart="205" bodyend="205"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a066083aa705f8fc749b3bbb606f89359" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref></type>
+        <definition>static Symmetry cytnx::Symmetry::Zn</definition>
+        <argsstring>(const int &amp;n)</argsstring>
+        <name>Zn</name>
+        <qualifiedname>cytnx::Symmetry::Zn</qualifiedname>
+        <param>
+          <type>const int &amp;</type>
+          <declname>n</declname>
+        </param>
+        <briefdescription>
+<para>create a Zn descrete symmetry object with <formula id="1">$n\in\mathbb{N}$</formula> </para>
+        </briefdescription>
+        <detaileddescription>
+<para><heading level="3">valid qnum value range:</heading>
+</para>
+<para><verbatim>\f$[0 , n)\f$
+</verbatim> <heading level="3">combine rule:</heading>
+</para>
+<para><verbatim>(Q + Q)%n
+</verbatim> <heading level="3">description:</heading>
+</para>
+<para>create a new Zn descrete symmetry object with integer <formula id="2">$ n $</formula> that serive as a generator. The symmetry object is a property of <ref refid="classcytnx_1_1Bond" kindref="compound">Bond </ref>. It is used to identify the symmetry of the quantum number set, as well as providing the combining rule for the quantum number when Bonds are combined.</para>
+<para><heading level="2">Example:</heading>
+</para>
+<para><heading level="3">c++ API:</heading>
+</para>
+<para><programlisting filename="example/Symmetry/Zn.cpp"><codeline><highlight class="preprocessor">#include<sp/>&quot;<ref refid="cytnx_8hpp" kindref="compound">cytnx.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>example<sp/>of<sp/>Z2<sp/>symmetry<sp/>object</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//------------------------------------</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/>1.<sp/>create<sp/>Z2<sp/>object</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref><sp/>sym_z2<sp/>=<sp/><ref refid="classcytnx_1_1Symmetry_1a066083aa705f8fc749b3bbb606f89359" kindref="member">Symmetry::Zn</ref>(2);</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>2.</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>using<sp/>with<sp/>Bond<sp/>to<sp/>define<sp/>a<sp/>bond<sp/>with<sp/>symmetry.</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>Note<sp/>that<sp/>the<sp/>qnums<sp/>should<sp/>obey<sp/>the<sp/>valid<sp/>value<sp/>range<sp/>of<sp/>the<sp/>correspond<sp/>symmetry.</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>with<sp/>Z2<sp/>=<sp/>[0,2)</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_sym_z2_A<sp/>=<sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>(4,<sp/><ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" kindref="member">BD_KET</ref>,<sp/>{{0},<sp/>{0},<sp/>{1},<sp/>{1}},<sp/>{sym_z2});</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_sym_z2_B<sp/>=<sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>(3,<sp/><ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" kindref="member">BD_KET</ref>,<sp/>{{0},<sp/>{1},<sp/>{1}},<sp/>{sym_z2});</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_sym_z2_A<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_sym_z2_B<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>3.</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>new<sp/>qnums<sp/>will<sp/>be<sp/>calculated<sp/>internally<sp/>using<sp/>Symmetry::combine_rule.</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_sym_z2all<sp/>=<sp/>bd_sym_z2_A.<ref refid="classcytnx_1_1Bond_1a4714d9891e02b2aebf6756ec68c25e5c" kindref="member">combineBond</ref>(bd_sym_z2_B);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_sym_z2all<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>example<sp/>of<sp/>Z4<sp/>symmetry<sp/>object</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//------------------------------------</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/>1.<sp/>create<sp/>Z4<sp/>object</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref><sp/>sym_z4<sp/>=<sp/><ref refid="classcytnx_1_1Symmetry_1a066083aa705f8fc749b3bbb606f89359" kindref="member">Symmetry::Zn</ref>(4);</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>2.</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>using<sp/>with<sp/>Bond<sp/>to<sp/>define<sp/>a<sp/>bond<sp/>with<sp/>symmetry.</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>Note<sp/>that<sp/>the<sp/>qnums<sp/>should<sp/>obey<sp/>the<sp/>valid<sp/>value<sp/>range<sp/>of<sp/>the<sp/>correspond<sp/>symmetry.</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>with<sp/>Z4<sp/>=<sp/>[0,4)</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_sym_z4_A<sp/>=<sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>(4,<sp/><ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" kindref="member">BD_KET</ref>,<sp/>{{0},<sp/>{3},<sp/>{1},<sp/>{2}},<sp/>{sym_z4});</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_sym_z4_B<sp/>=<sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>(3,<sp/><ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" kindref="member">BD_KET</ref>,<sp/>{{2},<sp/>{3},<sp/>{1}},<sp/>{sym_z4});</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_sym_z4_A<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_sym_z4_B<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>3.</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>new<sp/>qnums<sp/>will<sp/>be<sp/>calculated<sp/>internally<sp/>using<sp/>Symmetry::combine_rule.</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_sym_z4all<sp/>=<sp/>bd_sym_z4_A.<ref refid="classcytnx_1_1Bond_1a4714d9891e02b2aebf6756ec68c25e5c" kindref="member">combineBond</ref>(bd_sym_z4_B);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_sym_z4all<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>Dim = 4 |type: KET&gt;     
+ Z2::  +0 +0 +1 +1
+
+Dim = 3 |type: KET&gt;     
+ Z2::  +0 +1 +1
+
+Dim = 12 |type: KET&gt;     
+ Z2::  +0 +1 +1 +0 +1 +1 +1 +0 +0 +1 +0 +0
+
+Dim = 4 |type: KET&gt;     
+ Z4::  +0 +3 +1 +2
+
+Dim = 3 |type: KET&gt;     
+ Z4::  +2 +3 +1
+
+Dim = 12 |type: KET&gt;     
+ Z4::  +2 +3 +1 +1 +2 +0 +3 +0 +2 +0 +1 +3
+
+</verbatim> <heading level="3">python API:</heading>
+</para>
+<para><programlisting filename="example/Symmetry/Zn.py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>cytnx<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>*</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#example<sp/>of<sp/>Z2<sp/>symmetry<sp/>object<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#------------------------------------</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">sym_z2<sp/>=<sp/>Symmetry.Zn(2);</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">bd_sym_z2_A<sp/>=<sp/>Bond(4,BD_KET,[[0],[0],[1],[1]],[sym_z2])</highlight></codeline>
+<codeline><highlight class="normal">bd_sym_z2_B<sp/>=<sp/>Bond(3,BD_KET,[[0],[1],[1]],[sym_z2])</highlight></codeline>
+<codeline><highlight class="normal">print(bd_sym_z2_A)</highlight></codeline>
+<codeline><highlight class="normal">print(bd_sym_z2_B)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">bd_sym_z2all<sp/>=<sp/>bd_sym_z2_A.combineBond(bd_sym_z2_B)</highlight></codeline>
+<codeline><highlight class="normal">print(bd_sym_z2all)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#example<sp/>of<sp/>Z4<sp/>symmetry<sp/>object<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#------------------------------------</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">sym_z4<sp/>=<sp/>Symmetry.Zn(4)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">bd_sym_z4_A<sp/>=<sp/>Bond(4,BD_KET,[[0],[3],[1],[2]],[sym_z4])</highlight></codeline>
+<codeline><highlight class="normal">bd_sym_z4_B<sp/>=<sp/>Bond(3,BD_KET,[[2],[3],[1]],[sym_z4])</highlight></codeline>
+<codeline><highlight class="normal">print(bd_sym_z4_A)</highlight></codeline>
+<codeline><highlight class="normal">print(bd_sym_z4_B)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">bd_sym_z4all<sp/>=<sp/>bd_sym_z4_A.combineBond(bd_sym_z4_B)</highlight></codeline>
+<codeline><highlight class="normal">print(bd_sym_z4all)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>Dim = 4 |type: KET&gt;     
+ Z2::  +0 +0 +1 +1
+
+
+Dim = 3 |type: KET&gt;     
+ Z2::  +0 +1 +1
+
+
+Dim = 12 |type: KET&gt;     
+ Z2::  +0 +1 +1 +0 +1 +1 +1 +0 +0 +1 +0 +0
+
+
+Dim = 4 |type: KET&gt;     
+ Z4::  +0 +3 +1 +2
+
+
+Dim = 3 |type: KET&gt;     
+ Z4::  +2 +3 +1
+
+
+Dim = 12 |type: KET&gt;     
+ Z4::  +2 +3 +1 +1 +2 +0 +3 +0 +2 +0 +1 +3
+
+
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="236" column="21" bodyfile="include/Symmetry.hpp" bodystart="236" bodyend="236"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a43a66664194dd16288dc26abf5caf59c" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref></type>
+        <definition>cytnx::Symmetry cytnx::Symmetry::Load</definition>
+        <argsstring>(const std::string &amp;fname)</argsstring>
+        <name>Load</name>
+        <qualifiedname>cytnx::Symmetry::Load</qualifiedname>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>fname</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="361" column="21" bodyfile="src/Symmetry.cpp" bodystart="200" bodyend="210"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a357ab372fea2738c341e33404c472459" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref></type>
+        <definition>cytnx::Symmetry cytnx::Symmetry::Load</definition>
+        <argsstring>(const char *fname)</argsstring>
+        <name>Load</name>
+        <qualifiedname>cytnx::Symmetry::Load</qualifiedname>
+        <param>
+          <type>const char *</type>
+          <declname>fname</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="362" column="21" bodyfile="src/Symmetry.cpp" bodystart="212" bodyend="222"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a2b407bcad5cdad20edddffeeda6befe7" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref></type>
+        <definition>Symmetry cytnx::Symmetry::clone</definition>
+        <argsstring>() const</argsstring>
+        <name>clone</name>
+        <qualifiedname>cytnx::Symmetry::clone</qualifiedname>
+        <briefdescription>
+<para>return a clone instance of current <ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref> object. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>[<ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref>]</para>
+</simplesect>
+<heading level="2">Example:</heading>
+</para>
+<para><heading level="3">c++ API:</heading>
+</para>
+<para><programlisting filename="example/Symmetry/clone.cpp"><codeline><highlight class="preprocessor">#include<sp/>&quot;<ref refid="cytnx_8hpp" kindref="compound">cytnx.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>1.</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>create<sp/>symmetry<sp/>objects</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref><sp/>sym_A<sp/>=<sp/><ref refid="classcytnx_1_1Symmetry_1a9218fd66fc9cca64cd3d792e0019592a" kindref="member">Symmetry::U1</ref>();</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref><sp/>sym_C<sp/>=<sp/><ref refid="classcytnx_1_1Symmetry_1a9218fd66fc9cca64cd3d792e0019592a" kindref="member">Symmetry::U1</ref>();</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref><sp/>sym_D<sp/>=<sp/>sym_A;<sp/><sp/></highlight><highlight class="comment">//<sp/>same<sp/>instance.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>using<sp/>is()<sp/>to<sp/>check<sp/>if<sp/>they<sp/>are<sp/>the<sp/>same<sp/>instance.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>is(sym_D,<sp/>sym_A)<sp/>&lt;&lt;<sp/>endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>true.<sp/>same<sp/>instance</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>(sym_D<sp/>==<sp/>sym_A)<sp/>&lt;&lt;<sp/>endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>true,<sp/>same<sp/>content</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>is(sym_C,<sp/>sym_A)<sp/>&lt;&lt;<sp/>endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>false.<sp/>different<sp/>instance</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>(sym_C<sp/>==<sp/>sym_A)<sp/>&lt;&lt;<sp/>endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>true,<sp/>sane<sp/>content</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>1
+1
+0
+1
+</verbatim> <heading level="3">python API:</heading>
+</para>
+<para><programlisting filename="example/Symmetry/clone.py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>cytnx<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>*</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">sym_A<sp/>=<sp/>Symmetry.U1()</highlight></codeline>
+<codeline><highlight class="normal">sym_C<sp/>=<sp/>Symmetry.U1()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">sym_D<sp/>=<sp/>sym_A</highlight></codeline>
+<codeline><highlight class="normal">print(sym_D<sp/></highlight><highlight class="keywordflow">is</highlight><highlight class="normal"><sp/>sym_A)<sp/></highlight><highlight class="comment">#true</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">print(sym_D<sp/>==<sp/>sym_A)<sp/></highlight><highlight class="comment">#true</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">print(sym_C<sp/></highlight><highlight class="keywordflow">is</highlight><highlight class="normal"><sp/>sym_A)<sp/></highlight><highlight class="comment">#false</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">print(sym_C<sp/>==<sp/>sym_A)<sp/></highlight><highlight class="comment">#true</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>True
+True
+False
+True
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="252" column="14" bodyfile="include/Symmetry.hpp" bodystart="252" bodyend="256"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a47a73a6248750acc221104e3079d652c" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int cytnx::Symmetry::stype</definition>
+        <argsstring>() const</argsstring>
+        <name>stype</name>
+        <qualifiedname>cytnx::Symmetry::stype</qualifiedname>
+        <briefdescription>
+<para>return the symmetry type-id of current <ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref> object. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>[int] the symmetry type-id. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="264" column="9" bodyfile="include/Symmetry.hpp" bodystart="264" bodyend="264"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a5d9e73259f21dc79f7086f8418afca8e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>int &amp;</type>
+        <definition>int &amp; cytnx::Symmetry::n</definition>
+        <argsstring>() const</argsstring>
+        <name>n</name>
+        <qualifiedname>cytnx::Symmetry::n</qualifiedname>
+        <briefdescription>
+<para>return the descrete n of current <ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref> object. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>[int]</para>
+</simplesect>
+<heading level="3">[Note]</heading>
+</para>
+<para><orderedlist>
+<listitem><para>for U1, n=1 will be returned.</para>
+</listitem><listitem><para>for Zn, n is the descrete symmetry number. (ex: Z2, n=2) </para>
+</listitem></orderedlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="275" column="9" bodyfile="include/Symmetry.hpp" bodystart="275" bodyend="275"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a0ba15e919a5693923e54c2c6f7d376c6" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::string</type>
+        <definition>std::string cytnx::Symmetry::stype_str</definition>
+        <argsstring>() const</argsstring>
+        <name>stype_str</name>
+        <qualifiedname>cytnx::Symmetry::stype_str</qualifiedname>
+        <briefdescription>
+<para>return the symmetry type name of current <ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref> object. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>[std::string] the symmetry type name. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="283" column="17" bodyfile="include/Symmetry.hpp" bodystart="283" bodyend="285"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a066741cabfe04df9e9e2782f047188b0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool cytnx::Symmetry::check_qnum</definition>
+        <argsstring>(const cytnx_int64 &amp;qnum)</argsstring>
+        <name>check_qnum</name>
+        <qualifiedname>cytnx::Symmetry::check_qnum</qualifiedname>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>qnum</declname>
+        </param>
+        <briefdescription>
+<para>check the quantum number is within the valid value range of current <ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>qnum</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>a singule quantum number. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[bool] </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="293" column="10" bodyfile="include/Symmetry.hpp" bodystart="293" bodyend="293"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a38c1572a027e289430434b56324e2ead" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool cytnx::Symmetry::check_qnums</definition>
+        <argsstring>(const std::vector&lt; cytnx_int64 &gt; &amp;qnums)</argsstring>
+        <name>check_qnums</name>
+        <qualifiedname>cytnx::Symmetry::check_qnums</qualifiedname>
+        <param>
+          <type>const std::vector&lt; <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &gt; &amp;</type>
+          <declname>qnums</declname>
+        </param>
+        <briefdescription>
+<para>check all the quantum numbers are within the valid value range of current <ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>qnums</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the list of quantum numbers </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[bool] </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="301" column="10" bodyfile="include/Symmetry.hpp" bodystart="301" bodyend="303"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a0a31bbcdd3d98027dd31bce170879926" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::vector&lt; <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &gt;</type>
+        <definition>std::vector&lt; cytnx_int64 &gt; cytnx::Symmetry::combine_rule</definition>
+        <argsstring>(const std::vector&lt; cytnx_int64 &gt; &amp;inL, const std::vector&lt; cytnx_int64 &gt; &amp;inR)</argsstring>
+        <name>combine_rule</name>
+        <qualifiedname>cytnx::Symmetry::combine_rule</qualifiedname>
+        <param>
+          <type>const std::vector&lt; <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &gt; &amp;</type>
+          <declname>inL</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &gt; &amp;</type>
+          <declname>inR</declname>
+        </param>
+        <briefdescription>
+<para>apply combine rule of current symmetry to two quantum number lists. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>inL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the #1 quantum number list that is to be combined. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>inR</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the #2 quantum number list that is to be combined. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>the combined quantum numbers. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="312" column="17" bodyfile="include/Symmetry.hpp" bodystart="312" bodyend="315"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a7a2e6c3f679b5e6774f269b78c8239e8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::Symmetry::combine_rule_</definition>
+        <argsstring>(std::vector&lt; cytnx_int64 &gt; &amp;out, const std::vector&lt; cytnx_int64 &gt; &amp;inL, const std::vector&lt; cytnx_int64 &gt; &amp;inR)</argsstring>
+        <name>combine_rule_</name>
+        <qualifiedname>cytnx::Symmetry::combine_rule_</qualifiedname>
+        <param>
+          <type>std::vector&lt; <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &gt; &amp;</type>
+          <declname>out</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &gt; &amp;</type>
+          <declname>inL</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &gt; &amp;</type>
+          <declname>inR</declname>
+        </param>
+        <briefdescription>
+<para>apply combine rule of current symmetry to two quantum number lists, and store it into parameter </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>out.</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>out</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the output quantum number list. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>inL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the #1 quantum number list that is to be combined. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>inR</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the #2 quantum number list that is to be combined. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="325" column="10" bodyfile="include/Symmetry.hpp" bodystart="325" bodyend="328"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a2aaefd177003560b4c12fbbefe30c3c3" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref></type>
+        <definition>cytnx_int64 cytnx::Symmetry::combine_rule</definition>
+        <argsstring>(const cytnx_int64 &amp;inL, const cytnx_int64 &amp;inR, const bool &amp;is_reverse=false) const</argsstring>
+        <name>combine_rule</name>
+        <qualifiedname>cytnx::Symmetry::combine_rule</qualifiedname>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>inL</declname>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>inR</declname>
+        </param>
+        <param>
+          <type>const bool &amp;</type>
+          <declname>is_reverse</declname>
+          <defval>false</defval>
+        </param>
+        <briefdescription>
+<para>apply combine rule of current symmetry to two quantum numbers. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>inL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the #1 quantum number. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>inR</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the #2 quantum number. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>the combined quantum number. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="337" column="17" bodyfile="include/Symmetry.hpp" bodystart="337" bodyend="339"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a8542d45b69268355f0b07dea280ba1e3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::Symmetry::combine_rule_</definition>
+        <argsstring>(cytnx_int64 &amp;out, const cytnx_int64 &amp;inL, const cytnx_int64 &amp;inR, const bool &amp;is_reverse=false)</argsstring>
+        <name>combine_rule_</name>
+        <qualifiedname>cytnx::Symmetry::combine_rule_</qualifiedname>
+        <param>
+          <type><ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>out</declname>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>inL</declname>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>inR</declname>
+        </param>
+        <param>
+          <type>const bool &amp;</type>
+          <declname>is_reverse</declname>
+          <defval>false</defval>
+        </param>
+        <briefdescription>
+<para>apply combine rule of current symmetry to two quantum numbers, and store the combined quntun number into parameter </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>out.</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>out</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the output quantum number. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>inL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the #1 quantum number. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>inR</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the #2 quantum number. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="349" column="10" bodyfile="include/Symmetry.hpp" bodystart="349" bodyend="351"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1ac7dfa6758b9dfb1963f19f0eec7cc4a3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::Symmetry::reverse_rule_</definition>
+        <argsstring>(cytnx_int64 &amp;out, const cytnx_int64 &amp;in)</argsstring>
+        <name>reverse_rule_</name>
+        <qualifiedname>cytnx::Symmetry::reverse_rule_</qualifiedname>
+        <param>
+          <type><ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>out</declname>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>in</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="353" column="10" bodyfile="include/Symmetry.hpp" bodystart="353" bodyend="355"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a9f856245a37472cb51c74cff0777d15e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref></type>
+        <definition>cytnx_int64 cytnx::Symmetry::reverse_rule</definition>
+        <argsstring>(const cytnx_int64 &amp;in) const</argsstring>
+        <name>reverse_rule</name>
+        <qualifiedname>cytnx::Symmetry::reverse_rule</qualifiedname>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>in</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="357" column="17" bodyfile="include/Symmetry.hpp" bodystart="357" bodyend="357"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1ae0aaa29d0445cfc85ffab300aa4a8174" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::Symmetry::Save</definition>
+        <argsstring>(const std::string &amp;fname) const</argsstring>
+        <name>Save</name>
+        <qualifiedname>cytnx::Symmetry::Save</qualifiedname>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>fname</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="359" column="10" bodyfile="src/Symmetry.cpp" bodystart="180" bodyend="188"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a26e822590e88a8d865b6833bc0b3e368" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::Symmetry::Save</definition>
+        <argsstring>(const char *fname) const</argsstring>
+        <name>Save</name>
+        <qualifiedname>cytnx::Symmetry::Save</qualifiedname>
+        <param>
+          <type>const char *</type>
+          <declname>fname</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="360" column="10" bodyfile="src/Symmetry.cpp" bodystart="189" bodyend="198"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a8f32669cdcdbf2dc1dff1f588c025981" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::Symmetry::print_info</definition>
+        <argsstring>() const</argsstring>
+        <name>print_info</name>
+        <qualifiedname>cytnx::Symmetry::print_info</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="369" column="10" bodyfile="include/Symmetry.hpp" bodystart="369" bodyend="369"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a6726fdd96c12ddfa4b16adde9341aef0" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool cytnx::Symmetry::operator==</definition>
+        <argsstring>(const Symmetry &amp;rhs) const</argsstring>
+        <name>operator==</name>
+        <qualifiedname>cytnx::Symmetry::operator==</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref> &amp;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="371" column="10" bodyfile="src/Symmetry.cpp" bodystart="12" bodyend="14"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1ad102f58e1226ec26ae9a3bc2d6c366d2" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool cytnx::Symmetry::operator!=</definition>
+        <argsstring>(const Symmetry &amp;rhs) const</argsstring>
+        <name>operator!=</name>
+        <qualifiedname>cytnx::Symmetry::operator!=</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref> &amp;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="372" column="10" bodyfile="src/Symmetry.cpp" bodystart="15" bodyend="15"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>the symmetry object </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/Symmetry.hpp" line="148" column="3" bodyfile="include/Symmetry.hpp" bodystart="148" bodyend="373"/>
+    <listofallmembers>
+      <member refid="classcytnx_1_1Symmetry_1a066741cabfe04df9e9e2782f047188b0" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>check_qnum</name></member>
+      <member refid="classcytnx_1_1Symmetry_1a38c1572a027e289430434b56324e2ead" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>check_qnums</name></member>
+      <member refid="classcytnx_1_1Symmetry_1a2b407bcad5cdad20edddffeeda6befe7" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>clone</name></member>
+      <member refid="classcytnx_1_1Symmetry_1a0a31bbcdd3d98027dd31bce170879926" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>combine_rule</name></member>
+      <member refid="classcytnx_1_1Symmetry_1a2aaefd177003560b4c12fbbefe30c3c3" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>combine_rule</name></member>
+      <member refid="classcytnx_1_1Symmetry_1a7a2e6c3f679b5e6774f269b78c8239e8" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>combine_rule_</name></member>
+      <member refid="classcytnx_1_1Symmetry_1a8542d45b69268355f0b07dea280ba1e3" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>combine_rule_</name></member>
+      <member refid="classcytnx_1_1Symmetry_1a43a66664194dd16288dc26abf5caf59c" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>Load</name></member>
+      <member refid="classcytnx_1_1Symmetry_1a357ab372fea2738c341e33404c472459" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>Load</name></member>
+      <member refid="classcytnx_1_1Symmetry_1a5d9e73259f21dc79f7086f8418afca8e" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>n</name></member>
+      <member refid="classcytnx_1_1Symmetry_1ad102f58e1226ec26ae9a3bc2d6c366d2" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>operator!=</name></member>
+      <member refid="classcytnx_1_1Symmetry_1a6726fdd96c12ddfa4b16adde9341aef0" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>operator==</name></member>
+      <member refid="classcytnx_1_1Symmetry_1a8f32669cdcdbf2dc1dff1f588c025981" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>print_info</name></member>
+      <member refid="classcytnx_1_1Symmetry_1a9f856245a37472cb51c74cff0777d15e" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>reverse_rule</name></member>
+      <member refid="classcytnx_1_1Symmetry_1ac7dfa6758b9dfb1963f19f0eec7cc4a3" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>reverse_rule_</name></member>
+      <member refid="classcytnx_1_1Symmetry_1ae0aaa29d0445cfc85ffab300aa4a8174" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>Save</name></member>
+      <member refid="classcytnx_1_1Symmetry_1a26e822590e88a8d865b6833bc0b3e368" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>Save</name></member>
+      <member refid="classcytnx_1_1Symmetry_1a47a73a6248750acc221104e3079d652c" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>stype</name></member>
+      <member refid="classcytnx_1_1Symmetry_1a0ba15e919a5693923e54c2c6f7d376c6" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>stype_str</name></member>
+      <member refid="classcytnx_1_1Symmetry_1a9218fd66fc9cca64cd3d792e0019592a" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>U1</name></member>
+      <member refid="classcytnx_1_1Symmetry_1a066083aa705f8fc749b3bbb606f89359" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>Zn</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

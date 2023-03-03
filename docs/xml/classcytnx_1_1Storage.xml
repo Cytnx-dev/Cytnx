@@ -1,0 +1,1411 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classcytnx_1_1Storage" kind="class" language="C++" prot="public">
+    <compoundname>cytnx::Storage</compoundname>
+    <includes refid="Storage_8hpp" local="no">Storage.hpp</includes>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classcytnx_1_1Storage_1a2b1417ecb023beeb06c0efe53da6e42e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::Storage::Init</definition>
+        <argsstring>(const unsigned long long &amp;size, const unsigned int &amp;dtype=Type.Double, int device=-1, const bool &amp;init_zero=true)</argsstring>
+        <name>Init</name>
+        <qualifiedname>cytnx::Storage::Init</qualifiedname>
+        <param>
+          <type>const unsigned long long &amp;</type>
+          <declname>size</declname>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>dtype</declname>
+          <defval>Type.Double</defval>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>device</declname>
+          <defval>-1</defval>
+        </param>
+        <param>
+          <type>const bool &amp;</type>
+          <declname>init_zero</declname>
+          <defval>true</defval>
+        </param>
+        <briefdescription>
+<para>initialize a <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref> </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>size</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the number of elements for the <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>dtype</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the dtype of the <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref> instance. This can be any of type defined in <ref refid="namespacecytnx_1ac2c6c045a5fd258e21bd0786744839c2" kindref="member">cytnx::Type</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>device</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the device of the <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref> instance. This can be cytnx::Device.cpu or cytnx::Device.cuda+&lt;gpuid&gt;</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<heading level="2">Example:</heading>
+</para>
+<para><heading level="3">c++ API:</heading>
+</para>
+<para><programlisting filename="example/Storage/Init.cpp"><codeline><highlight class="preprocessor">#include<sp/>&quot;<ref refid="cytnx_8hpp" kindref="compound">cytnx.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>1.<sp/>Create<sp/>a<sp/>Storage<sp/>with</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>10<sp/>elements,</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>dtype<sp/>=Type.Double<sp/>[default],</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>device=Device.cpu<sp/>[default]</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref><sp/>A(10);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>A<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>2.<sp/>Create<sp/>a<sp/>Storage<sp/>with</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>10<sp/>elements,</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>dtype<sp/>=Type.Uint64,</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>device=Device.cpu<sp/>[default],</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>[Note]<sp/>the<sp/>dtype<sp/>can<sp/>be<sp/>any<sp/>one<sp/>of<sp/>the<sp/>supported<sp/>type.</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref><sp/>B(10,<sp/><ref refid="namespacecytnx_1ac2c6c045a5fd258e21bd0786744839c2" kindref="member">Type</ref>.Uint64);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>B<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>3.<sp/>Initialize<sp/>a<sp/>Storage<sp/>with</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>10<sp/>elements,</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>dtype<sp/>=Type.Double,</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>device=Device.cuda+0,<sp/>(on<sp/>gpu<sp/>with<sp/>gpu-id=0)</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>[Note]<sp/>the<sp/>gpu<sp/>device<sp/>can<sp/>be<sp/>set<sp/>with<sp/>Device.cuda+&lt;gpu-id&gt;</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref><sp/>C(10,<sp/><ref refid="namespacecytnx_1ac2c6c045a5fd258e21bd0786744839c2" kindref="member">Type</ref>.Double,<sp/><ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">Device</ref>.cuda<sp/>+<sp/>0);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>C<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>4.<sp/>Create<sp/>an<sp/>empty<sp/>Storage,<sp/>and<sp/>init<sp/>later</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref><sp/>D;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>D.<ref refid="classcytnx_1_1Storage_1a2b1417ecb023beeb06c0efe53da6e42e" kindref="member">Init</ref>(10,<sp/><ref refid="namespacecytnx_1ac2c6c045a5fd258e21bd0786744839c2" kindref="member">Type</ref>.Double,<sp/><ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">Device</ref>.cpu);</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>dtype : Double (Float64)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+
+dtype : Uint64
+device: cytnx device: CPU
+size  : 10
+[                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0  ]
+
+</verbatim> <heading level="3">python API:</heading>
+</para>
+<para><programlisting filename="example/Storage/Init.py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>cytnx<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>*</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">A<sp/>=<sp/>Storage(10);</highlight></codeline>
+<codeline><highlight class="normal">print(A)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">B<sp/>=<sp/>Storage(10,dtype=Type.Uint64)</highlight></codeline>
+<codeline><highlight class="normal">print(B)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">C<sp/>=<sp/>Storage(10,device=Device.cuda+0)</highlight></codeline>
+<codeline><highlight class="normal">print(C)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">D<sp/>=<sp/>Storage()</highlight></codeline>
+<codeline><highlight class="normal">D.Init(10,dtype=Type.Double,device=Device.cpu)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>dtype : Double (Float64)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+
+
+dtype : Uint64
+device: cytnx device: CPU
+size  : 10
+[                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0  ]
+
+
+dtype : Double (Float64)
+device: cytnx device: CUDA/GPU-id:0
+size  : 10
+[ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+
+
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1063" column="10" bodyfile="include/Storage.hpp" bodystart="1063" bodyend="1068"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1a128a16a901db45a6e9a0326d0b9076c9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>cytnx::Storage::Storage</definition>
+        <argsstring>(const unsigned long long &amp;size, const unsigned int &amp;dtype=Type.Double, int device=-1, const bool &amp;init_zero=true)</argsstring>
+        <name>Storage</name>
+        <qualifiedname>cytnx::Storage::Storage</qualifiedname>
+        <param>
+          <type>const unsigned long long &amp;</type>
+          <declname>size</declname>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>dtype</declname>
+          <defval>Type.Double</defval>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>device</declname>
+          <defval>-1</defval>
+        </param>
+        <param>
+          <type>const bool &amp;</type>
+          <declname>init_zero</declname>
+          <defval>true</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1075" column="5" bodyfile="include/Storage.hpp" bodystart="1075" bodyend="1079"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1a49037d5a58e68e63998817fba38de5e2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>cytnx::Storage::Storage</definition>
+        <argsstring>()</argsstring>
+        <name>Storage</name>
+        <qualifiedname>cytnx::Storage::Storage</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1085" column="5" bodyfile="include/Storage.hpp" bodystart="1085" bodyend="1085"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1a44545ab3fe3c0a7378869e5bdc9612ec" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::Storage::Save</definition>
+        <argsstring>(const std::string &amp;fname) const</argsstring>
+        <name>Save</name>
+        <qualifiedname>cytnx::Storage::Save</qualifiedname>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>fname</declname>
+        </param>
+        <briefdescription>
+<para>Save current <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref> to file. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>fname</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>file name</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+description: save the <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref> to file with file path specify with input param &apos;fname&apos; with postfix &quot;.cyst&quot; </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1123" column="10" bodyfile="src/Storage.cpp" bodystart="87" bodyend="95"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1aefa9bc3b6bfd1ba1ae26375fc913a92c" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::Storage::Save</definition>
+        <argsstring>(const char *fname) const</argsstring>
+        <name>Save</name>
+        <qualifiedname>cytnx::Storage::Save</qualifiedname>
+        <param>
+          <type>const char *</type>
+          <declname>fname</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1124" column="10" bodyfile="src/Storage.cpp" bodystart="96" bodyend="105"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1a4a5ad77dbf2330c46b1c48ebb41a1b89" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::Storage::Tofile</definition>
+        <argsstring>(const std::string &amp;fname) const</argsstring>
+        <name>Tofile</name>
+        <qualifiedname>cytnx::Storage::Tofile</qualifiedname>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>fname</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1125" column="10" bodyfile="src/Storage.cpp" bodystart="106" bodyend="114"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1a8f8c3e79173fc269c16ad35173ecbdea" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::Storage::Tofile</definition>
+        <argsstring>(const char *fname) const</argsstring>
+        <name>Tofile</name>
+        <qualifiedname>cytnx::Storage::Tofile</qualifiedname>
+        <param>
+          <type>const char *</type>
+          <declname>fname</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1126" column="10" bodyfile="src/Storage.cpp" bodystart="115" bodyend="124"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1acd32a76bfb1b9889540e5236273331c6" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::Storage::Tofile</definition>
+        <argsstring>(std::fstream &amp;f) const</argsstring>
+        <name>Tofile</name>
+        <qualifiedname>cytnx::Storage::Tofile</qualifiedname>
+        <param>
+          <type>std::fstream &amp;</type>
+          <declname>f</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1127" column="10"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1a8310d8dbb70510272ded2e3d01be25f0" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref></type>
+        <definition>Storage cytnx::Storage::astype</definition>
+        <argsstring>(const unsigned int &amp;new_type) const</argsstring>
+        <name>astype</name>
+        <qualifiedname>cytnx::Storage::astype</qualifiedname>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>new_type</declname>
+        </param>
+        <briefdescription>
+<para>cast the type of current <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref> </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>new_type</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the new type of the <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref> instance. This can be any of type defined in <ref refid="namespacecytnx_1ac2c6c045a5fd258e21bd0786744839c2" kindref="member">cytnx::Type</ref></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+description:<orderedlist>
+<listitem><para>if the new_type is the same as the dtype of current <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref>, then return self; otherwise, return a new instance that has the same content as current <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref> with dtype=new_type</para>
+</listitem><listitem><para>the return Stoarge will be on the same device as the current <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref>.</para>
+</listitem></orderedlist>
+</para>
+<para><heading level="2">Example:</heading>
+</para>
+<para><heading level="3">c++ API:</heading>
+</para>
+<para><programlisting filename="example/Storage/astype.cpp"><codeline><highlight class="preprocessor">#include<sp/>&quot;<ref refid="cytnx_8hpp" kindref="compound">cytnx.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>1.<sp/>Create<sp/>a<sp/>Storage<sp/>with</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>dtype<sp/>=Type.Double<sp/>[default],</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref><sp/>A(10);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>A.dtype_str()<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>the<sp/>type<sp/>is<sp/>the<sp/>same<sp/>as<sp/>A&apos;s<sp/>type,<sp/>so<sp/>B<sp/>shares<sp/>the<sp/>same<sp/>object<sp/>with<sp/>A</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref><sp/>B<sp/>=<sp/>A.<ref refid="classcytnx_1_1Storage_1a8310d8dbb70510272ded2e3d01be25f0" kindref="member">astype</ref>(<ref refid="namespacecytnx_1ac2c6c045a5fd258e21bd0786744839c2" kindref="member">Type</ref>.Double);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>B.<ref refid="classcytnx_1_1Storage_1ab6e9fb01ad4655701a2d54dc978eef17" kindref="member">dtype_str</ref>()<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>is(B,<sp/>A)<sp/>&lt;&lt;<sp/>endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>true</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>cast<sp/>A<sp/>from<sp/>Type.Double<sp/>to<sp/>Type.Float</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref><sp/>C<sp/>=<sp/>A.<ref refid="classcytnx_1_1Storage_1a8310d8dbb70510272ded2e3d01be25f0" kindref="member">astype</ref>(<ref refid="namespacecytnx_1ac2c6c045a5fd258e21bd0786744839c2" kindref="member">Type</ref>.Float);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>C.<ref refid="classcytnx_1_1Storage_1ab6e9fb01ad4655701a2d54dc978eef17" kindref="member">dtype_str</ref>()<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>is(C,<sp/>A)<sp/>&lt;&lt;<sp/>endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>false</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref><sp/>D(10,<sp/><ref refid="namespacecytnx_1ac2c6c045a5fd258e21bd0786744839c2" kindref="member">Type</ref>.Double,<sp/><ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">Device</ref>.cuda<sp/>+<sp/>0);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>D<sp/>is<sp/>on<sp/>GPU,<sp/>so<sp/>E<sp/>is<sp/>also<sp/>on<sp/>GPU</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref><sp/>E<sp/>=<sp/>D.<ref refid="classcytnx_1_1Storage_1a8310d8dbb70510272ded2e3d01be25f0" kindref="member">astype</ref>(<ref refid="namespacecytnx_1ac2c6c045a5fd258e21bd0786744839c2" kindref="member">Type</ref>.Float);</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>E.<ref refid="classcytnx_1_1Storage_1ae0d90d5275fa7e52a0a2dc10512ba71f" kindref="member">device_str</ref>()<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>Double (Float64)
+Double (Float64)
+1
+Float (Float32)
+0
+</verbatim> <heading level="3">python API:</heading>
+</para>
+<para><programlisting filename="example/Storage/astype.py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>cytnx<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>*</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">A<sp/>=<sp/>Storage(10)</highlight></codeline>
+<codeline><highlight class="normal">print(A.dtype_str())</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">B<sp/>=<sp/>A.astype(Type.Double)</highlight></codeline>
+<codeline><highlight class="normal">print(B.dtype_str())</highlight></codeline>
+<codeline><highlight class="normal">print(B<sp/></highlight><highlight class="keywordflow">is</highlight><highlight class="normal"><sp/>A)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">C<sp/>=<sp/>A.astype(Type.Float)</highlight></codeline>
+<codeline><highlight class="normal">print(C.dtype_str())</highlight></codeline>
+<codeline><highlight class="normal">print(C<sp/></highlight><highlight class="keywordflow">is</highlight><highlight class="normal"><sp/>A)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">D<sp/>=<sp/>Storage(10,device=Device.cuda+0);</highlight></codeline>
+<codeline><highlight class="normal">E<sp/>=<sp/>D.astype(Type.Float)</highlight></codeline>
+<codeline><highlight class="normal">print(E.device_str())</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>Double (Float64)
+Double (Float64)
+True
+Float (Float32)
+False
+cytnx device: CUDA/GPU-id:0
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1165" column="13" bodyfile="include/Storage.hpp" bodystart="1165" bodyend="1165"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1a51b99e00d854442b662c540c5a960831" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const unsigned int &amp;</type>
+        <definition>const unsigned int &amp; cytnx::Storage::dtype</definition>
+        <argsstring>() const</argsstring>
+        <name>dtype</name>
+        <qualifiedname>cytnx::Storage::dtype</qualifiedname>
+        <briefdescription>
+<para>the dtype-id of current <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref> </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>[cytnx_uint64] the dtype-id. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1172" column="24" bodyfile="include/Storage.hpp" bodystart="1172" bodyend="1172"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1ab6e9fb01ad4655701a2d54dc978eef17" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const std::string</type>
+        <definition>const std::string cytnx::Storage::dtype_str</definition>
+        <argsstring>() const</argsstring>
+        <name>dtype_str</name>
+        <qualifiedname>cytnx::Storage::dtype_str</qualifiedname>
+        <briefdescription>
+<para>the dtype (std::string) of current <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref> </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>[std::string] dtype name </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1179" column="23" bodyfile="include/Storage.hpp" bodystart="1179" bodyend="1182"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1a171c97269af96fa440c62438b03f0f43" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const int &amp;</type>
+        <definition>const int &amp; cytnx::Storage::device</definition>
+        <argsstring>() const</argsstring>
+        <name>device</name>
+        <qualifiedname>cytnx::Storage::device</qualifiedname>
+        <briefdescription>
+<para>the device-id of current <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref> </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>[cytnx_int64] the device-id. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1188" column="15" bodyfile="include/Storage.hpp" bodystart="1188" bodyend="1188"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1ae0d90d5275fa7e52a0a2dc10512ba71f" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const std::string</type>
+        <definition>const std::string cytnx::Storage::device_str</definition>
+        <argsstring>() const</argsstring>
+        <name>device_str</name>
+        <qualifiedname>cytnx::Storage::device_str</qualifiedname>
+        <briefdescription>
+<para>the device (std::string) of current <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref> </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>[std::string] device name </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1195" column="23" bodyfile="include/Storage.hpp" bodystart="1195" bodyend="1198"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1a10ba92184b471cd8a3fa2bbeb3c290d7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void cytnx::Storage::append</definition>
+        <argsstring>(const T &amp;val)</argsstring>
+        <name>append</name>
+        <qualifiedname>cytnx::Storage::append</qualifiedname>
+        <param>
+          <type>const T &amp;</type>
+          <declname>val</declname>
+        </param>
+        <briefdescription>
+<para>append a value </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>val</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the value to append. it can be any type defined in <ref refid="namespacecytnx_1ac2c6c045a5fd258e21bd0786744839c2" kindref="member">cytnx::Type</ref></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+[Note]<orderedlist>
+<listitem><para>cannot append a complex value into a real <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref>. </para>
+</listitem></orderedlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1208" column="10" bodyfile="include/Storage.hpp" bodystart="1208" bodyend="1210"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1a2ff5a21f81e9b90a5e78e1ba1698351b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::Storage::resize</definition>
+        <argsstring>(const cytnx_uint64 &amp;newsize)</argsstring>
+        <name>resize</name>
+        <qualifiedname>cytnx::Storage::resize</qualifiedname>
+        <param>
+          <type>const <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref> &amp;</type>
+          <declname>newsize</declname>
+        </param>
+        <briefdescription>
+<para>resize the current <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>newsize.</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1254" column="10" bodyfile="include/Storage.hpp" bodystart="1254" bodyend="1254"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1a0bbf2cbefb5d0835bcb4f0d05e400870" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::Storage::to_</definition>
+        <argsstring>(const int &amp;device)</argsstring>
+        <name>to_</name>
+        <qualifiedname>cytnx::Storage::to_</qualifiedname>
+        <param>
+          <type>const int &amp;</type>
+          <declname>device</declname>
+        </param>
+        <briefdescription>
+<para>move the current <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref> to different deivce. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>device</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the device-id. It can be any device defined in <ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">cytnx::Device </ref></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+see also <ref refid="classcytnx_1_1Storage_1a2abfcaacf807934be5dd21c254fdb30e" kindref="member">Storage.to() </ref> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1263" column="10" bodyfile="include/Storage.hpp" bodystart="1263" bodyend="1263"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1a2abfcaacf807934be5dd21c254fdb30e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref></type>
+        <definition>Storage cytnx::Storage::to</definition>
+        <argsstring>(const int &amp;device)</argsstring>
+        <name>to</name>
+        <qualifiedname>cytnx::Storage::to</qualifiedname>
+        <param>
+          <type>const int &amp;</type>
+          <declname>device</declname>
+        </param>
+        <briefdescription>
+<para>move a new <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref> with same content as current <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref> on different deivce. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>device</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the device-id. It can be any device defined in <ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">cytnx::Device </ref></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+[Note] if the<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>device</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>is the same as the current <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref>&apos;s device, return self.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+see also <ref refid="classcytnx_1_1Storage_1a0bbf2cbefb5d0835bcb4f0d05e400870" kindref="member">Storage.to_() </ref> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1275" column="13" bodyfile="include/Storage.hpp" bodystart="1275" bodyend="1275"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1aed0530dd20f3fb352d45653ba46a3d50" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref></type>
+        <definition>Storage cytnx::Storage::clone</definition>
+        <argsstring>() const</argsstring>
+        <name>clone</name>
+        <qualifiedname>cytnx::Storage::clone</qualifiedname>
+        <briefdescription>
+<para>return a copy of current storage. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>[<ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref>]</para>
+</simplesect>
+<heading level="2">Example:</heading>
+</para>
+<para><heading level="3">c++ API:</heading>
+</para>
+<para><programlisting filename="example/Storage/clone.cpp"><codeline><highlight class="preprocessor">#include<sp/>&quot;<ref refid="cytnx_8hpp" kindref="compound">cytnx.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref><sp/>A(15);</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref><sp/>B<sp/>=<sp/>A;<sp/><sp/></highlight><highlight class="comment">//<sp/>B<sp/>shares<sp/>same<sp/>object<sp/>with<sp/>A</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref><sp/>C<sp/>=<sp/>A.<ref refid="classcytnx_1_1Storage_1aed0530dd20f3fb352d45653ba46a3d50" kindref="member">clone</ref>();<sp/><sp/></highlight><highlight class="comment">//<sp/>C<sp/>is<sp/>a<sp/>copy<sp/>of<sp/>A</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>use<sp/>is()<sp/>to<sp/>check<sp/>if<sp/>two<sp/>variable<sp/>shares<sp/>same<sp/>object</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>is(B,<sp/>A)<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>is(C,<sp/>A)<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>1
+0
+</verbatim> <heading level="3">python API:</heading>
+</para>
+<para><programlisting filename="example/Storage/clone.py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>cytnx<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>*</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">A<sp/>=<sp/>Storage(15)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">B<sp/>=<sp/>A</highlight></codeline>
+<codeline><highlight class="normal">C<sp/>=<sp/>A.clone()</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">print(B<sp/></highlight><highlight class="keywordflow">is</highlight><highlight class="normal"><sp/>A)</highlight></codeline>
+<codeline><highlight class="normal">print(C<sp/></highlight><highlight class="keywordflow">is</highlight><highlight class="normal"><sp/>A)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>True
+False
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1291" column="13" bodyfile="include/Storage.hpp" bodystart="1291" bodyend="1291"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1a8e250f87a0ddf93a31ada7b18ae36fa0" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const unsigned long long &amp;</type>
+        <definition>const unsigned long long &amp; cytnx::Storage::size</definition>
+        <argsstring>() const</argsstring>
+        <name>size</name>
+        <qualifiedname>cytnx::Storage::size</qualifiedname>
+        <briefdescription>
+<para>the size ( no. of elements ) in the <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref> </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>[cytnx_uint64] </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1298" column="30" bodyfile="include/Storage.hpp" bodystart="1298" bodyend="1298"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1a6d446d0f68d5eb9ea81f770d115a13ea" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const unsigned long long &amp;</type>
+        <definition>const unsigned long long &amp; cytnx::Storage::capacity</definition>
+        <argsstring>() const</argsstring>
+        <name>capacity</name>
+        <qualifiedname>cytnx::Storage::capacity</qualifiedname>
+        <briefdescription>
+<para>the capacity ( no. of real elements in memory) in the <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref> </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>[cytnx_uint64] </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1305" column="30" bodyfile="include/Storage.hpp" bodystart="1305" bodyend="1305"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1a8f611d41dbd0e1438485df9c3cee12bc" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::Storage::print_info</definition>
+        <argsstring>() const</argsstring>
+        <name>print_info</name>
+        <qualifiedname>cytnx::Storage::print_info</qualifiedname>
+        <briefdescription>
+<para>print the info of the <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref>, including the device, dtype and size. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1311" column="10" bodyfile="include/Storage.hpp" bodystart="1311" bodyend="1311"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1a7e854529c99108b0acc3e5e2b185244b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::Storage::set_zeros</definition>
+        <argsstring>()</argsstring>
+        <name>set_zeros</name>
+        <qualifiedname>cytnx::Storage::set_zeros</qualifiedname>
+        <briefdescription>
+<para>set all the elements to zero. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>[Note] although it is also possible to use Storage.fill(0) to set all the elements to zero, using set_zeros will have significant faster performance. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1324" column="10" bodyfile="include/Storage.hpp" bodystart="1324" bodyend="1324"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1ad304e00cf3d472ea0355af6b40c4529d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool cytnx::Storage::operator==</definition>
+        <argsstring>(const Storage &amp;rhs)</argsstring>
+        <name>operator==</name>
+        <qualifiedname>cytnx::Storage::operator==</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref> &amp;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+<para>compare two <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref> </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref></parametername>
+</parameternamelist>
+<parameterdescription>
+<para>another <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref> to compare to</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+[Note] the == operator will compare the content between two storages. use cytnx::is() for checking two variables share the same instance.</para>
+<para><heading level="2">Example:</heading>
+</para>
+<para><heading level="3">c++ API:</heading>
+</para>
+<para><programlisting filename="example/Storage/eq.cpp"><codeline><highlight class="preprocessor">#include<sp/>&quot;<ref refid="cytnx_8hpp" kindref="compound">cytnx.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>1.<sp/>Create<sp/>a<sp/>Storage<sp/>with</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>dtype<sp/>=Type.Double<sp/>[default],</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref><sp/>A(10);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>A.dtype_str()<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref><sp/>B<sp/>=<sp/>A;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref><sp/>C<sp/>=<sp/>A.<ref refid="classcytnx_1_1Storage_1aed0530dd20f3fb352d45653ba46a3d50" kindref="member">clone</ref>();</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>(B<sp/>==<sp/>A)<sp/>&lt;&lt;<sp/>endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>true<sp/>(share<sp/>same<sp/>instance)</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>is(B,<sp/>A)<sp/>&lt;&lt;<sp/>endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>true<sp/>(share<sp/>same<sp/>instance)</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>(C<sp/>==<sp/>A)<sp/>&lt;&lt;<sp/>endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>true<sp/>(the<sp/>same<sp/>content.)</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>is(C,<sp/>A)<sp/>&lt;&lt;<sp/>endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>false<sp/>(not<sp/>share<sp/>same<sp/>instance)</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>Double (Float64)
+1
+1
+1
+0
+</verbatim> <heading level="3">python API:</heading>
+</para>
+<para><programlisting filename="example/Storage/eq.py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>cytnx<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>*</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">A<sp/>=<sp/>Storage(10)</highlight></codeline>
+<codeline><highlight class="normal">print(A.dtype_str())</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">B<sp/>=<sp/>A</highlight></codeline>
+<codeline><highlight class="normal">C<sp/>=<sp/>A.clone()</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">print(B<sp/>==<sp/>A)<sp/></highlight><highlight class="comment">#<sp/>true<sp/>(share<sp/>same<sp/>instance)</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">print(B<sp/></highlight><highlight class="keywordflow">is</highlight><highlight class="normal"><sp/>A)<sp/></highlight><highlight class="comment">#<sp/>true<sp/>(share<sp/>same<sp/>instance)</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">print(C<sp/>==<sp/>A)<sp/><sp/></highlight><highlight class="comment">#<sp/>true<sp/>(the<sp/>same<sp/>content.)</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">print(C<sp/></highlight><highlight class="keywordflow">is</highlight><highlight class="normal"><sp/>A)<sp/><sp/></highlight><highlight class="comment">#<sp/>false<sp/>(not<sp/>share<sp/>same<sp/>instance)</highlight><highlight class="normal"></highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>Double (Float64)
+True
+True
+True
+False
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1343" column="10" bodyfile="src/Storage.cpp" bodystart="19" bodyend="84"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1aa2e4e571ba4e22cee738893ffa4c64d3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool cytnx::Storage::operator!=</definition>
+        <argsstring>(const Storage &amp;rhs)</argsstring>
+        <name>operator!=</name>
+        <qualifiedname>cytnx::Storage::operator!=</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref> &amp;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1344" column="10" bodyfile="src/Storage.cpp" bodystart="85" bodyend="85"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1a48f0424f051a4b3a821eb964be4cd5db" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void cytnx::Storage::fill</definition>
+        <argsstring>(const T &amp;val)</argsstring>
+        <name>fill</name>
+        <qualifiedname>cytnx::Storage::fill</qualifiedname>
+        <param>
+          <type>const T &amp;</type>
+          <declname>val</declname>
+        </param>
+        <briefdescription>
+<para>set all the elements to the assigned value val </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>val</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the value to set on all the elements. it can be any type defined in <ref refid="namespacecytnx_1ac2c6c045a5fd258e21bd0786744839c2" kindref="member">cytnx::Type</ref></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+[Note]<orderedlist>
+<listitem><para>cannot assign a complex value into a real <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref>. </para>
+</listitem></orderedlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1354" column="10" bodyfile="include/Storage.hpp" bodystart="1354" bodyend="1356"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1a24aa65e5f9ea4f1739e905954490837e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type>std::vector&lt; T &gt;</type>
+        <definition>std::vector&lt; T &gt; cytnx::Storage::vector</definition>
+        <argsstring>()</argsstring>
+        <name>vector</name>
+        <qualifiedname>cytnx::Storage::vector</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1399" column="17" bodyfile="src/Storage.cpp" bodystart="323" bodyend="339"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1a1c28604bf7751c817c44dc3286d6520f" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref></type>
+        <definition>Storage cytnx::Storage::real</definition>
+        <argsstring>() const</argsstring>
+        <name>real</name>
+        <qualifiedname>cytnx::Storage::real</qualifiedname>
+        <briefdescription>
+<para>Get the real part form a Complex type <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>[Note] Cannot be called from a real type <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref>.</para>
+<para><heading level="2">Example:</heading>
+</para>
+<para><heading level="3">c++ API:</heading>
+</para>
+<para><programlisting filename="example/Storage/real.cpp"><codeline><highlight class="preprocessor">#include<sp/>&quot;<ref refid="cytnx_8hpp" kindref="compound">cytnx.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>Get<sp/>the<sp/>real<sp/>part<sp/>from<sp/>a<sp/>complex128<sp/>(ComplexDouble)<sp/>Storage</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref><sp/>S1(10,<sp/><ref refid="namespacecytnx_1ac2c6c045a5fd258e21bd0786744839c2" kindref="member">Type</ref>.ComplexDouble);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>S1.size();<sp/>i++)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>S1.at&lt;<ref refid="namespacecytnx_1a401ce1c8c4599b9a1a860e9e225e6b9e" kindref="member">cytnx_complex128</ref>&gt;(i)<sp/>=<sp/><ref refid="namespacecytnx_1a401ce1c8c4599b9a1a860e9e225e6b9e" kindref="member">cytnx_complex128</ref>(i,<sp/>i<sp/>+<sp/>1);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>S1<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref><sp/>S1r<sp/>=<sp/>S1.<ref refid="classcytnx_1_1Storage_1a1c28604bf7751c817c44dc3286d6520f" kindref="member">real</ref>();</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>S1r<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>Get<sp/>the<sp/>real<sp/>part<sp/>from<sp/>a<sp/>complex64<sp/>(ComplexFloat)<sp/>Storage</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref><sp/>S2(10,<sp/><ref refid="namespacecytnx_1ac2c6c045a5fd258e21bd0786744839c2" kindref="member">Type</ref>.ComplexFloat);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>S1.size();<sp/>i++)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>S2.at&lt;<ref refid="namespacecytnx_1a63d2515ecaa35660c85571236e61fec7" kindref="member">cytnx_complex64</ref>&gt;(i)<sp/>=<sp/><ref refid="namespacecytnx_1a63d2515ecaa35660c85571236e61fec7" kindref="member">cytnx_complex64</ref>(i,<sp/>i<sp/>+<sp/>2);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>S2<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref><sp/>S2r<sp/>=<sp/>S2.<ref refid="classcytnx_1_1Storage_1a1c28604bf7751c817c44dc3286d6520f" kindref="member">real</ref>();</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>S2r<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>dtype : Complex Double (Complex Float64)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00+1.00000e+00j 1.00000e+00+2.00000e+00j 2.00000e+00+3.00000e+00j 3.00000e+00+4.00000e+00j 4.00000e+00+5.00000e+00j 5.00000e+00+6.00000e+00j 6.00000e+00+7.00000e+00j 7.00000e+00+8.00000e+00j 8.00000e+00+9.00000e+00j 9.00000e+00+1.00000e+01j  ]
+
+dtype : Double (Float64)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+
+dtype : Complex Float (Complex Float32)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00+2.00000e+00j 1.00000e+00+3.00000e+00j 2.00000e+00+4.00000e+00j 3.00000e+00+5.00000e+00j 4.00000e+00+6.00000e+00j 5.00000e+00+7.00000e+00j 6.00000e+00+8.00000e+00j 7.00000e+00+9.00000e+00j 8.00000e+00+1.00000e+01j 9.00000e+00+1.10000e+01j  ]
+
+dtype : Float (Float32)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+
+</verbatim> <heading level="3">python API:</heading>
+</para>
+<para><programlisting filename="example/Storage/real.py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>cytnx<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>*</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">S1<sp/>=<sp/>Storage(10,Type.ComplexDouble)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>i<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>range(10):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>S1[i]<sp/>=<sp/>i<sp/>+<sp/>1j*(i+1)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">S1r<sp/>=<sp/>S1.real()</highlight></codeline>
+<codeline><highlight class="normal">print(S1)</highlight></codeline>
+<codeline><highlight class="normal">print(S1r)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">S2<sp/>=<sp/>Storage(10,Type.ComplexFloat)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>i<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>range(10):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>S2[i]<sp/>=<sp/>i<sp/>+<sp/>1j*(i+1)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">S2r<sp/>=<sp/>S2.real()</highlight></codeline>
+<codeline><highlight class="normal">print(S2)</highlight></codeline>
+<codeline><highlight class="normal">print(S2r)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>dtype : Complex Double (Complex Float64)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00+1.00000e+00j 1.00000e+00+2.00000e+00j 2.00000e+00+3.00000e+00j 3.00000e+00+4.00000e+00j 4.00000e+00+5.00000e+00j 5.00000e+00+6.00000e+00j 6.00000e+00+7.00000e+00j 7.00000e+00+8.00000e+00j 8.00000e+00+9.00000e+00j 9.00000e+00+1.00000e+01j  ]
+
+
+dtype : Double (Float64)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+
+
+dtype : Complex Float (Complex Float32)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00+1.00000e+00j 1.00000e+00+2.00000e+00j 2.00000e+00+3.00000e+00j 3.00000e+00+4.00000e+00j 4.00000e+00+5.00000e+00j 5.00000e+00+6.00000e+00j 6.00000e+00+7.00000e+00j 7.00000e+00+8.00000e+00j 8.00000e+00+9.00000e+00j 9.00000e+00+1.00000e+01j  ]
+
+
+dtype : Float (Float32)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
+
+
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1485" column="13" bodyfile="include/Storage.hpp" bodystart="1485" bodyend="1485"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1ad7557a7109f2764fe97049a348971b39" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref></type>
+        <definition>Storage cytnx::Storage::imag</definition>
+        <argsstring>() const</argsstring>
+        <name>imag</name>
+        <qualifiedname>cytnx::Storage::imag</qualifiedname>
+        <briefdescription>
+<para>Get the imaginary part form a Complex type <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>[Note] Cannot be called from a real type <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref>.</para>
+<para><heading level="2">Example:</heading>
+</para>
+<para><heading level="3">c++ API:</heading>
+</para>
+<para><programlisting filename="example/Storage/imag.cpp"><codeline><highlight class="preprocessor">#include<sp/>&quot;<ref refid="cytnx_8hpp" kindref="compound">cytnx.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>Get<sp/>the<sp/>imag<sp/>part<sp/>from<sp/>a<sp/>complex128<sp/>(ComplexDouble)<sp/>Storage</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref><sp/>S1(10,<sp/><ref refid="namespacecytnx_1ac2c6c045a5fd258e21bd0786744839c2" kindref="member">Type</ref>.ComplexDouble);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>S1.size();<sp/>i++)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>S1.at&lt;<ref refid="namespacecytnx_1a401ce1c8c4599b9a1a860e9e225e6b9e" kindref="member">cytnx_complex128</ref>&gt;(i)<sp/>=<sp/><ref refid="namespacecytnx_1a401ce1c8c4599b9a1a860e9e225e6b9e" kindref="member">cytnx_complex128</ref>(i,<sp/>i<sp/>+<sp/>1);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>S1<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref><sp/>S1r<sp/>=<sp/>S1.<ref refid="classcytnx_1_1Storage_1ad7557a7109f2764fe97049a348971b39" kindref="member">imag</ref>();</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>S1r<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>Get<sp/>the<sp/>imag<sp/>part<sp/>from<sp/>a<sp/>complex64<sp/>(ComplexFloat)<sp/>Storage</highlight></codeline>
+<codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref><sp/>S2(10,<sp/><ref refid="namespacecytnx_1ac2c6c045a5fd258e21bd0786744839c2" kindref="member">Type</ref>.ComplexFloat);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>S1.size();<sp/>i++)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>S2.at&lt;<ref refid="namespacecytnx_1a63d2515ecaa35660c85571236e61fec7" kindref="member">cytnx_complex64</ref>&gt;(i)<sp/>=<sp/><ref refid="namespacecytnx_1a63d2515ecaa35660c85571236e61fec7" kindref="member">cytnx_complex64</ref>(i,<sp/>i<sp/>+<sp/>2);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>S2<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref><sp/>S2r<sp/>=<sp/>S2.<ref refid="classcytnx_1_1Storage_1ad7557a7109f2764fe97049a348971b39" kindref="member">imag</ref>();</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>S2r<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>dtype : Complex Double (Complex Float64)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00+1.00000e+00j 1.00000e+00+2.00000e+00j 2.00000e+00+3.00000e+00j 3.00000e+00+4.00000e+00j 4.00000e+00+5.00000e+00j 5.00000e+00+6.00000e+00j 6.00000e+00+7.00000e+00j 7.00000e+00+8.00000e+00j 8.00000e+00+9.00000e+00j 9.00000e+00+1.00000e+01j  ]
+
+dtype : Double (Float64)
+device: cytnx device: CPU
+size  : 10
+[ 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 ]
+
+dtype : Complex Float (Complex Float32)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00+2.00000e+00j 1.00000e+00+3.00000e+00j 2.00000e+00+4.00000e+00j 3.00000e+00+5.00000e+00j 4.00000e+00+6.00000e+00j 5.00000e+00+7.00000e+00j 6.00000e+00+8.00000e+00j 7.00000e+00+9.00000e+00j 8.00000e+00+1.00000e+01j 9.00000e+00+1.10000e+01j  ]
+
+dtype : Float (Float32)
+device: cytnx device: CPU
+size  : 10
+[ 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]
+
+</verbatim> <heading level="3">python API:</heading>
+</para>
+<para><programlisting filename="example/Storage/imag.py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>cytnx<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>*</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">S1<sp/>=<sp/>Storage(10,Type.ComplexDouble)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>i<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>range(10):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>S1[i]<sp/>=<sp/>i<sp/>+<sp/>1j*(i+1)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">S1r<sp/>=<sp/>S1.imag()</highlight></codeline>
+<codeline><highlight class="normal">print(S1)</highlight></codeline>
+<codeline><highlight class="normal">print(S1r)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">S2<sp/>=<sp/>Storage(10,Type.ComplexFloat)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>i<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>range(10):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>S2[i]<sp/>=<sp/>i<sp/>+<sp/>1j*(i+1)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">S2r<sp/>=<sp/>S2.imag()</highlight></codeline>
+<codeline><highlight class="normal">print(S2)</highlight></codeline>
+<codeline><highlight class="normal">print(S2r)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+</programlisting> <heading level="4">output&gt;</heading>
+</para>
+<para><verbatim>dtype : Complex Double (Complex Float64)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00+1.00000e+00j 1.00000e+00+2.00000e+00j 2.00000e+00+3.00000e+00j 3.00000e+00+4.00000e+00j 4.00000e+00+5.00000e+00j 5.00000e+00+6.00000e+00j 6.00000e+00+7.00000e+00j 7.00000e+00+8.00000e+00j 8.00000e+00+9.00000e+00j 9.00000e+00+1.00000e+01j  ]
+
+
+dtype : Double (Float64)
+device: cytnx device: CPU
+size  : 10
+[ 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 ]
+
+
+dtype : Complex Float (Complex Float32)
+device: cytnx device: CPU
+size  : 10
+[ 0.00000e+00+1.00000e+00j 1.00000e+00+2.00000e+00j 2.00000e+00+3.00000e+00j 3.00000e+00+4.00000e+00j 4.00000e+00+5.00000e+00j 5.00000e+00+6.00000e+00j 6.00000e+00+7.00000e+00j 7.00000e+00+8.00000e+00j 8.00000e+00+9.00000e+00j 9.00000e+00+1.00000e+01j  ]
+
+
+dtype : Float (Float32)
+device: cytnx device: CPU
+size  : 10
+[ 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 ]
+
+
+</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1501" column="13" bodyfile="include/Storage.hpp" bodystart="1501" bodyend="1501"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1ad583a657f357cf1e9c0a1067f6dd8d47" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Scalar" kindref="compound">Scalar</ref></type>
+        <definition>Scalar cytnx::Storage::get_item</definition>
+        <argsstring>(const cytnx_uint64 &amp;idx) const</argsstring>
+        <name>get_item</name>
+        <qualifiedname>cytnx::Storage::get_item</qualifiedname>
+        <param>
+          <type>const <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref> &amp;</type>
+          <declname>idx</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1503" column="12" bodyfile="include/Storage.hpp" bodystart="1503" bodyend="1503"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1a5324da7126e905091f1e6dfa355888aa" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void cytnx::Storage::set_item</definition>
+        <argsstring>(const cytnx_uint64 &amp;idx, const T &amp;elem)</argsstring>
+        <name>set_item</name>
+        <qualifiedname>cytnx::Storage::set_item</qualifiedname>
+        <param>
+          <type>const <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref> &amp;</type>
+          <declname>idx</declname>
+        </param>
+        <param>
+          <type>const T &amp;</type>
+          <declname>elem</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1506" column="10" bodyfile="include/Storage.hpp" bodystart="1506" bodyend="1508"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1abfabe912f8d0b33eba8ca210c7fca910" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>Scalar::Sproxy</type>
+        <definition>Scalar::Sproxy cytnx::Storage::operator()</definition>
+        <argsstring>(const cytnx_uint64 &amp;idx)</argsstring>
+        <name>operator()</name>
+        <qualifiedname>cytnx::Storage::operator()</qualifiedname>
+        <param>
+          <type>const <ref refid="namespacecytnx_1a9a7ab808c7cbef775461ccc31eaabeb4" kindref="member">cytnx_uint64</ref> &amp;</type>
+          <declname>idx</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1510" column="20" bodyfile="src/Storage.cpp" bodystart="317" bodyend="320"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1a3a04d665077403b507c84dc301359c5c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+        </templateparamlist>
+        <type>std::vector&lt; <ref refid="namespacecytnx_1a33aeeaf2c3d5b78b26cc6440916acbf2" kindref="member">cytnx_bool</ref> &gt;</type>
+        <definition>template std::vector&lt; cytnx_int16 &gt; cytnx::Storage::vector&lt; cytnx_int16 &gt;</definition>
+        <argsstring>()</argsstring>
+        <name>vector</name>
+        <qualifiedname>cytnx::Storage::vector</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/Storage.cpp" line="323" column="15" bodyfile="src/Storage.cpp" bodystart="342" bodyend="361"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="classcytnx_1_1Storage_1a830f293f47a42ede8dbc57d3a3bff605" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref></type>
+        <definition>Storage cytnx::Storage::Load</definition>
+        <argsstring>(const std::string &amp;fname)</argsstring>
+        <name>Load</name>
+        <qualifiedname>cytnx::Storage::Load</qualifiedname>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>fname</declname>
+        </param>
+        <briefdescription>
+<para>Load current <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref> from file. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>fname</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>file name</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+description: load the <ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref> from file with file path specify with input param &apos;fname&apos;. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1137" column="20" bodyfile="src/Storage.cpp" bodystart="230" bodyend="240"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1ace206b1c452015d7c43a389d55f5ea86" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref></type>
+        <definition>Storage cytnx::Storage::Load</definition>
+        <argsstring>(const char *fname)</argsstring>
+        <name>Load</name>
+        <qualifiedname>cytnx::Storage::Load</qualifiedname>
+        <param>
+          <type>const char *</type>
+          <declname>fname</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1138" column="20" bodyfile="src/Storage.cpp" bodystart="241" bodyend="251"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1aae11c5cc673616aa2fde4e203be4d6bc" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref></type>
+        <definition>Storage cytnx::Storage::Fromfile</definition>
+        <argsstring>(const std::string &amp;fname, const unsigned int &amp;dtype, const cytnx_int64 &amp;count=-1)</argsstring>
+        <name>Fromfile</name>
+        <qualifiedname>cytnx::Storage::Fromfile</qualifiedname>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>fname</declname>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>dtype</declname>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>count</declname>
+          <defval>-1</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1139" column="20" bodyfile="src/Storage.cpp" bodystart="189" bodyend="229"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1ae25a7b0e0f1a37c1f919fcc8f71e3ec0" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref></type>
+        <definition>Storage cytnx::Storage::Fromfile</definition>
+        <argsstring>(const char *fname, const unsigned int &amp;dtype, const cytnx_int64 &amp;count=-1)</argsstring>
+        <name>Fromfile</name>
+        <qualifiedname>cytnx::Storage::Fromfile</qualifiedname>
+        <param>
+          <type>const char *</type>
+          <declname>fname</declname>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>dtype</declname>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecytnx_1aa7b7ff4d6d244994d35853a6ce547587" kindref="member">cytnx_int64</ref> &amp;</type>
+          <declname>count</declname>
+          <defval>-1</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1141" column="20" bodyfile="src/Storage.cpp" bodystart="185" bodyend="188"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Storage_1a92f5d8c9eea09dd899c8eea1c125d94b" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1Storage" kindref="compound">Storage</ref></type>
+        <definition>static Storage cytnx::Storage::from_vector</definition>
+        <argsstring>(const std::vector&lt; T &gt; &amp;vin, const int device=-1)</argsstring>
+        <name>from_vector</name>
+        <qualifiedname>cytnx::Storage::from_vector</qualifiedname>
+        <param>
+          <type>const std::vector&lt; T &gt; &amp;</type>
+          <declname>vin</declname>
+        </param>
+        <param>
+          <type>const int</type>
+          <declname>device</declname>
+          <defval>-1</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Storage.hpp" line="1366" column="20" bodyfile="include/Storage.hpp" bodystart="1366" bodyend="1370"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>an memeory storage with multi-type/multi-device support </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/Storage.hpp" line="1036" column="3" bodyfile="include/Storage.hpp" bodystart="1036" bodyend="1511"/>
+    <listofallmembers>
+      <member refid="classcytnx_1_1Storage_1a10ba92184b471cd8a3fa2bbeb3c290d7" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>append</name></member>
+      <member refid="classcytnx_1_1Storage_1a8310d8dbb70510272ded2e3d01be25f0" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>astype</name></member>
+      <member refid="classcytnx_1_1Storage_1a6d446d0f68d5eb9ea81f770d115a13ea" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>capacity</name></member>
+      <member refid="classcytnx_1_1Storage_1aed0530dd20f3fb352d45653ba46a3d50" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>clone</name></member>
+      <member refid="classcytnx_1_1Storage_1a171c97269af96fa440c62438b03f0f43" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>device</name></member>
+      <member refid="classcytnx_1_1Storage_1ae0d90d5275fa7e52a0a2dc10512ba71f" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>device_str</name></member>
+      <member refid="classcytnx_1_1Storage_1a51b99e00d854442b662c540c5a960831" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>dtype</name></member>
+      <member refid="classcytnx_1_1Storage_1ab6e9fb01ad4655701a2d54dc978eef17" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>dtype_str</name></member>
+      <member refid="classcytnx_1_1Storage_1a48f0424f051a4b3a821eb964be4cd5db" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>fill</name></member>
+      <member refid="classcytnx_1_1Storage_1a92f5d8c9eea09dd899c8eea1c125d94b" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>from_vector</name></member>
+      <member refid="classcytnx_1_1Storage_1aae11c5cc673616aa2fde4e203be4d6bc" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>Fromfile</name></member>
+      <member refid="classcytnx_1_1Storage_1ae25a7b0e0f1a37c1f919fcc8f71e3ec0" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>Fromfile</name></member>
+      <member refid="classcytnx_1_1Storage_1ad583a657f357cf1e9c0a1067f6dd8d47" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>get_item</name></member>
+      <member refid="classcytnx_1_1Storage_1ad7557a7109f2764fe97049a348971b39" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>imag</name></member>
+      <member refid="classcytnx_1_1Storage_1a2b1417ecb023beeb06c0efe53da6e42e" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>Init</name></member>
+      <member refid="classcytnx_1_1Storage_1a830f293f47a42ede8dbc57d3a3bff605" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>Load</name></member>
+      <member refid="classcytnx_1_1Storage_1ace206b1c452015d7c43a389d55f5ea86" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>Load</name></member>
+      <member refid="classcytnx_1_1Storage_1aa2e4e571ba4e22cee738893ffa4c64d3" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>operator!=</name></member>
+      <member refid="classcytnx_1_1Storage_1abfabe912f8d0b33eba8ca210c7fca910" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>operator()</name></member>
+      <member refid="classcytnx_1_1Storage_1ad304e00cf3d472ea0355af6b40c4529d" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>operator==</name></member>
+      <member refid="classcytnx_1_1Storage_1a8f611d41dbd0e1438485df9c3cee12bc" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>print_info</name></member>
+      <member refid="classcytnx_1_1Storage_1a1c28604bf7751c817c44dc3286d6520f" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>real</name></member>
+      <member refid="classcytnx_1_1Storage_1a2ff5a21f81e9b90a5e78e1ba1698351b" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>resize</name></member>
+      <member refid="classcytnx_1_1Storage_1a44545ab3fe3c0a7378869e5bdc9612ec" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>Save</name></member>
+      <member refid="classcytnx_1_1Storage_1aefa9bc3b6bfd1ba1ae26375fc913a92c" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>Save</name></member>
+      <member refid="classcytnx_1_1Storage_1a5324da7126e905091f1e6dfa355888aa" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>set_item</name></member>
+      <member refid="classcytnx_1_1Storage_1a7e854529c99108b0acc3e5e2b185244b" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>set_zeros</name></member>
+      <member refid="classcytnx_1_1Storage_1a8e250f87a0ddf93a31ada7b18ae36fa0" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>size</name></member>
+      <member refid="classcytnx_1_1Storage_1a128a16a901db45a6e9a0326d0b9076c9" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>Storage</name></member>
+      <member refid="classcytnx_1_1Storage_1a49037d5a58e68e63998817fba38de5e2" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>Storage</name></member>
+      <member refid="classcytnx_1_1Storage_1a2abfcaacf807934be5dd21c254fdb30e" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>to</name></member>
+      <member refid="classcytnx_1_1Storage_1a0bbf2cbefb5d0835bcb4f0d05e400870" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>to_</name></member>
+      <member refid="classcytnx_1_1Storage_1a4a5ad77dbf2330c46b1c48ebb41a1b89" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>Tofile</name></member>
+      <member refid="classcytnx_1_1Storage_1a8f8c3e79173fc269c16ad35173ecbdea" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>Tofile</name></member>
+      <member refid="classcytnx_1_1Storage_1acd32a76bfb1b9889540e5236273331c6" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>Tofile</name></member>
+      <member refid="classcytnx_1_1Storage_1a24aa65e5f9ea4f1739e905954490837e" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>vector</name></member>
+      <member refid="classcytnx_1_1Storage_1a3a04d665077403b507c84dc301359c5c" prot="public" virt="non-virtual"><scope>cytnx::Storage</scope><name>vector</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

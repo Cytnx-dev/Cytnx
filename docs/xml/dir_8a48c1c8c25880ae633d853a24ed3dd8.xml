@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="dir_8a48c1c8c25880ae633d853a24ed3dd8" kind="dir">
+    <compoundname>python_doc</compoundname>
+    <innerfile refid="Network__misc_8hpp">Network_misc.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="python_doc/"/>
+  </compounddef>
+</doxygen>

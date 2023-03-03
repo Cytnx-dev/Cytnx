@@ -102,10 +102,10 @@ void bond_binding(py::module &m){
     .def("clone", &Bond::clone)
     .def("__copy__", &Bond::clone)
     .def("__deepcopy__", &Bond::clone)
-    .def("combineBond", &Bond::combineBond)
-    .def("combineBond_", &Bond::combineBond_)
-    .def("combineBonds", &Bond::combineBonds)
-    .def("combineBonds_", &Bond::combineBonds_)
+    .def("combineBond", &Bond::combineBond,py::arg("bd"),py::arg("is_grp")=true)
+    .def("combineBond_", &Bond::combineBond_,py::arg("bd"),py::arg("is_grp")=true)
+    .def("combineBonds", &Bond::combineBonds,py::arg("bds"),py::arg("is_grp")=true)
+    .def("combineBonds_", &Bond::combineBonds_,py::arg("bds"),py::arg("is_grp")=true)
     .def("getDegeneracies", [](Bond &self){
                                 return self.getDegeneracies();
                             })

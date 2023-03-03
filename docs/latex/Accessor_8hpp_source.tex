@@ -1,0 +1,142 @@
+\hypertarget{Accessor_8hpp_source}{}\doxysection{Accessor.\+hpp}
+\label{Accessor_8hpp_source}\index{include/Accessor.hpp@{include/Accessor.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_\_Accessor\_H\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_\_Accessor\_H\_}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include "{}Type.hpp"{}}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include "{}cytnx\_error.hpp"{}}}
+\DoxyCodeLine{6 \textcolor{comment}{//\#include "{}Tensor.hpp"{}}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <cstring>}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include <initializer\_list>}}
+\DoxyCodeLine{12 \textcolor{keyword}{namespace }cytnx \{}
+\DoxyCodeLine{16   \textcolor{keyword}{class }\mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} \{}
+\DoxyCodeLine{17    \textcolor{keyword}{private}:}
+\DoxyCodeLine{18     cytnx\_int64 \_type;}
+\DoxyCodeLine{19 }
+\DoxyCodeLine{20    \textcolor{keyword}{public}:}
+\DoxyCodeLine{22     cytnx\_int64 \_min\{\}, \_max\{\}, \_step\{\};}
+\DoxyCodeLine{23     cytnx\_int64 loc\{\};}
+\DoxyCodeLine{24     std::vector<cytnx\_int64> idx\_list;}
+\DoxyCodeLine{25 }
+\DoxyCodeLine{26     std::vector<std::vector<cytnx\_int64>> qns\_list;}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28     \textcolor{comment}{// if type is singl, \_min/\_max/\_step     are not used}}
+\DoxyCodeLine{29     \textcolor{comment}{// if type is all  , \_min/\_max/\_step/loc are not used}}
+\DoxyCodeLine{30     \textcolor{comment}{// if type is range, loc              are not used.}}
+\DoxyCodeLine{31     \textcolor{comment}{// if type is tilend, loc/\_max are not used.}}
+\DoxyCodeLine{32     \textcolor{comment}{// if type is Qns, only qns\_list are used.}}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34     enum : cytnx\_int64 \{ none, Singl, All, Range, Tilend, Step, Tn, list, Qns \};}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36     \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}}() : \_type(Accessor::none)\{\};}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{39     \textcolor{comment}{// single constructor}}
+\DoxyCodeLine{56 \textcolor{comment}{}    \textcolor{keyword}{explicit} \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}}(\textcolor{keyword}{const} cytnx\_int64 \&loc);}
+\DoxyCodeLine{57     \textcolor{comment}{// explicit Accessor(const Tensor \&tn);// construct from Tensor, should be 1d with dtype}}
+\DoxyCodeLine{58     \textcolor{comment}{// integer.}}
+\DoxyCodeLine{59 }
+\DoxyCodeLine{60     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{61     \textcolor{keyword}{explicit} \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}}(\textcolor{keyword}{const} std::initializer\_list<T> \&list) \{}
+\DoxyCodeLine{62       std::vector<T> tmp = list;}
+\DoxyCodeLine{63       this-\/>\_type = this-\/>list;}
+\DoxyCodeLine{64       this-\/>idx\_list = std::vector<cytnx\_int64>(tmp.begin(), tmp.end());}
+\DoxyCodeLine{65       \textcolor{comment}{// std::cout << "{}VV"{} << this-\/>idx\_list.size() << std::endl;}}
+\DoxyCodeLine{66     \};  \textcolor{comment}{// construct from vector/list, should be 1d with dtype integer.}}
+\DoxyCodeLine{67 }
+\DoxyCodeLine{68     \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{69     \textcolor{keyword}{explicit} \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}}(\textcolor{keyword}{const} std::vector<T> \&list) \{}
+\DoxyCodeLine{70       this-\/>\_type = this-\/>list;}
+\DoxyCodeLine{71       this-\/>idx\_list = std::vector<cytnx\_int64>(list.begin(), list.end());}
+\DoxyCodeLine{72     \};  \textcolor{comment}{// construct from vector/list, should be 1d with dtype integer.}}
+\DoxyCodeLine{73 }
+\DoxyCodeLine{75 }
+\DoxyCodeLine{76     \textcolor{comment}{// all constr. ( use string to dispatch )}}
+\DoxyCodeLine{77     \textcolor{keyword}{explicit} \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}}(\textcolor{keyword}{const} std::string \&str);}
+\DoxyCodeLine{78 }
+\DoxyCodeLine{79     \textcolor{comment}{// range constr.}}
+\DoxyCodeLine{80     \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}}(\textcolor{keyword}{const} cytnx\_int64 \&min, \textcolor{keyword}{const} cytnx\_int64 \&max, \textcolor{keyword}{const} cytnx\_int64 \&step);}
+\DoxyCodeLine{81 }
+\DoxyCodeLine{82     \textcolor{comment}{// copy constructor:}}
+\DoxyCodeLine{83     \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}}(\textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} \&rhs);}
+\DoxyCodeLine{84     \textcolor{comment}{// copy assignment:}}
+\DoxyCodeLine{85     \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} \&operator=(\textcolor{keyword}{const} \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} \&rhs);}
+\DoxyCodeLine{87 }
+\DoxyCodeLine{88     \textcolor{keywordtype}{int} type()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} this-\/>\_type; \}}
+\DoxyCodeLine{89 }
+\DoxyCodeLine{90     \textcolor{comment}{// handy generator function :}}
+\DoxyCodeLine{104 \textcolor{comment}{}    \textcolor{keyword}{static} \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} \mbox{\hyperlink{classcytnx_1_1Accessor_a71b8c4af7182a2c9144929bdef9ff4fd}{all}}() \{ \textcolor{keywordflow}{return} \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}}(std::string(\textcolor{stringliteral}{"{}:"{}})); \};}
+\DoxyCodeLine{105 }
+\DoxyCodeLine{123     \textcolor{keyword}{static} \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} \mbox{\hyperlink{classcytnx_1_1Accessor_a7a5a508a58b71897c3dd162195aceaa9}{range}}(\textcolor{keyword}{const} cytnx\_int64 \&min, \textcolor{keyword}{const} cytnx\_int64 \&max,}
+\DoxyCodeLine{124                           \textcolor{keyword}{const} cytnx\_int64 \&step = 1) \{}
+\DoxyCodeLine{125       \textcolor{keywordflow}{return} \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}}(min, max, step);}
+\DoxyCodeLine{126     \};}
+\DoxyCodeLine{127 }
+\DoxyCodeLine{128     \textcolor{keyword}{static} \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} tilend(\textcolor{keyword}{const} cytnx\_int64 \&min, \textcolor{keyword}{const} cytnx\_int64 \&step = 1) \{}
+\DoxyCodeLine{129       cytnx\_error\_msg(step == 0, \textcolor{stringliteral}{"{}[ERROR] cannot have \_step=0 for tilend\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{130       \mbox{\hyperlink{classcytnx_1_1Accessor}{Accessor}} out;}
+\DoxyCodeLine{131       out.\_type = Accessor::Tilend;}
+\DoxyCodeLine{132       out.\_min = min;}
+\DoxyCodeLine{133       out.\_step = step;}
+\DoxyCodeLine{134       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{135     \};}
+\DoxyCodeLine{136 }
+\DoxyCodeLine{137     \textcolor{keyword}{static} Accessor step(\textcolor{keyword}{const} cytnx\_int64 \&step) \{}
+\DoxyCodeLine{138       cytnx\_error\_msg(step == 0, \textcolor{stringliteral}{"{}[ERROR] cannot have \_step=0 for \_step\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{139       Accessor out;}
+\DoxyCodeLine{140       out.\_type = Accessor::Step;}
+\DoxyCodeLine{141       \textcolor{comment}{// out.\_min = 0;}}
+\DoxyCodeLine{142       out.\_step = step;}
+\DoxyCodeLine{143       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{144     \};}
+\DoxyCodeLine{145 }
+\DoxyCodeLine{146     \textcolor{keyword}{static} \mbox{\hyperlink{classcytnx_1_1Accessor_a9f6fa9087f09756e020355a05196d384}{Accessor}} qns(\textcolor{keyword}{const} std::vector<std::vector<cytnx\_int64>> \&qns) \{}
+\DoxyCodeLine{147       cytnx\_error\_msg(qns.size() == 0, \textcolor{stringliteral}{"{}[ERROR] cannot have empty qnums.\%s"{}}, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{148       \mbox{\hyperlink{classcytnx_1_1Accessor_a9f6fa9087f09756e020355a05196d384}{Accessor}} out;}
+\DoxyCodeLine{149 }
+\DoxyCodeLine{150       out.\_type = Accessor::Qns;}
+\DoxyCodeLine{151       out.qns\_list = qns;}
+\DoxyCodeLine{152       \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{153     \}}
+\DoxyCodeLine{154 }
+\DoxyCodeLine{156     \textcolor{comment}{// get the real len from dim}}
+\DoxyCodeLine{157     \textcolor{comment}{// if type is all, pos will be null, and len == dim}}
+\DoxyCodeLine{158     \textcolor{comment}{// if type is range, pos will be the locator, and len == len(pos)}}
+\DoxyCodeLine{159     \textcolor{comment}{// if type is singl, pos will be pos, and len == 0}}
+\DoxyCodeLine{160     \textcolor{keywordtype}{void} get\_len\_pos(\textcolor{keyword}{const} cytnx\_uint64 \&dim, cytnx\_uint64 \&len,}
+\DoxyCodeLine{161                      std::vector<cytnx\_uint64> \&pos) \textcolor{keyword}{const};}
+\DoxyCodeLine{163   \};  \textcolor{comment}{// class Accessor}}
+\DoxyCodeLine{164 }
+\DoxyCodeLine{166   \textcolor{comment}{// layout:}}
+\DoxyCodeLine{167   std::ostream \&operator<<(std::ostream \&os, \textcolor{keyword}{const} Accessor \&in);}
+\DoxyCodeLine{168 }
+\DoxyCodeLine{169   \textcolor{comment}{// elements resolver}}
+\DoxyCodeLine{170   \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{171   \textcolor{keywordtype}{void} \_resolve\_elems(std::vector<cytnx::Accessor> \&cool, \textcolor{keyword}{const} T \&a) \{}
+\DoxyCodeLine{172     cool.push\_back(\mbox{\hyperlink{classcytnx_1_1Accessor}{cytnx::Accessor}}(a));}
+\DoxyCodeLine{173   \}}
+\DoxyCodeLine{174 }
+\DoxyCodeLine{175   \textcolor{keyword}{template} <\textcolor{keyword}{class }T, \textcolor{keyword}{class}... Ts>}
+\DoxyCodeLine{176   \textcolor{keywordtype}{void} \_resolve\_elems(std::vector<cytnx::Accessor> \&cool, \textcolor{keyword}{const} T \&a, \textcolor{keyword}{const} Ts \&...args) \{}
+\DoxyCodeLine{177     cool.push\_back(\mbox{\hyperlink{classcytnx_1_1Accessor}{cytnx::Accessor}}(a));}
+\DoxyCodeLine{178     \_resolve\_elems(cool, args...);}
+\DoxyCodeLine{179   \}}
+\DoxyCodeLine{180 }
+\DoxyCodeLine{181   \textcolor{keyword}{template} <\textcolor{keyword}{class }T, \textcolor{keyword}{class}... Ts>}
+\DoxyCodeLine{182   std::vector<cytnx::Accessor> Indices\_resolver(\textcolor{keyword}{const} T \&a, \textcolor{keyword}{const} Ts \&...args) \{}
+\DoxyCodeLine{183     \textcolor{comment}{// std::cout << a << std::endl;;}}
+\DoxyCodeLine{184     std::vector<cytnx::Accessor> idxs;}
+\DoxyCodeLine{185     \_resolve\_elems(idxs, a, args...);}
+\DoxyCodeLine{186     \textcolor{comment}{// cout << idxs << endl;}}
+\DoxyCodeLine{187     \textcolor{keywordflow}{return} idxs;}
+\DoxyCodeLine{188   \}}
+\DoxyCodeLine{190 }
+\DoxyCodeLine{191 \}  \textcolor{comment}{// namespace cytnx}}
+\DoxyCodeLine{192 }
+\DoxyCodeLine{193 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,23 @@
+\hypertarget{ncon_8hpp_source}{}\doxysection{ncon.\+hpp}
+\label{ncon_8hpp_source}\index{include/ncon.hpp@{include/ncon.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_ncon\_H\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_ncon\_H\_}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include "{}cytnx.hpp"{}}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include <stack>}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{keyword}{namespace }cytnx \{}
+\DoxyCodeLine{10   UniTensor ncon(\textcolor{keyword}{const} std::vector<UniTensor> \&tensor\_list\_in,}
+\DoxyCodeLine{11                  \textcolor{keyword}{const} std::vector<std::vector<cytnx\_int64>> \&connect\_list\_in,}
+\DoxyCodeLine{12                  \textcolor{keyword}{const} \textcolor{keywordtype}{bool} check\_network = \textcolor{keyword}{false}, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} optimize = \textcolor{keyword}{false},}
+\DoxyCodeLine{13                  std::vector<cytnx\_int64> cont\_order = std::vector<cytnx\_int64>(),}
+\DoxyCodeLine{14                  \textcolor{keyword}{const} std::vector<std::string> \&out\_labels = std::vector<std::string>());}
+\DoxyCodeLine{15 \}  \textcolor{comment}{// namespace cytnx}}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

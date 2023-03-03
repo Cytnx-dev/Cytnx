@@ -1,0 +1,516 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="Device_8hpp" kind="file" language="C++">
+    <compoundname>Device.hpp</compoundname>
+    <includes local="no">vector</includes>
+    <includes local="no">string</includes>
+    <includedby refid="Generator_8hpp" local="yes">include/Generator.hpp</includedby>
+    <includedby refid="Physics_8hpp" local="yes">include/Physics.hpp</includedby>
+    <includedby refid="Storage_8hpp" local="yes">include/Storage.hpp</includedby>
+    <includedby refid="Tensor_8hpp" local="yes">include/Tensor.hpp</includedby>
+    <includedby refid="UniTensor_8hpp" local="yes">include/UniTensor.hpp</includedby>
+    <includedby refid="cytnx_8hpp" local="yes">include/cytnx.hpp</includedby>
+    <includedby refid="random_8hpp" local="yes">include/random.hpp</includedby>
+    <includedby refid="DMRG_8hpp" local="yes">include/tn_algo/DMRG.hpp</includedby>
+    <includedby refid="MPO_8hpp" local="yes">include/tn_algo/MPO.hpp</includedby>
+    <includedby refid="MPS_8hpp" local="yes">include/tn_algo/MPS.hpp</includedby>
+    <includedby refid="Device_8cpp" local="yes">src/Device.cpp</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>include/Device.hpp</label>
+        <link refid="Device_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>string</label>
+      </node>
+      <node id="2">
+        <label>vector</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="1">
+        <label>include/Device.hpp</label>
+        <link refid="Device_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="54" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>include/Generator.hpp</label>
+        <link refid="Generator_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="24">
+        <label>include/Gncon.hpp</label>
+        <link refid="Gncon_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+      </node>
+      <node id="14">
+        <label>include/LinOp.hpp</label>
+        <link refid="LinOp_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="27">
+        <label>include/Network.hpp</label>
+        <link refid="Network_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>include/Physics.hpp</label>
+        <link refid="Physics_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="12">
+        <label>include/Storage.hpp</label>
+        <link refid="Storage_8hpp"/>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="40" relation="include">
+        </childnode>
+        <childnode refid="41" relation="include">
+        </childnode>
+        <childnode refid="42" relation="include">
+        </childnode>
+        <childnode refid="43" relation="include">
+        </childnode>
+        <childnode refid="44" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="45" relation="include">
+        </childnode>
+        <childnode refid="46" relation="include">
+        </childnode>
+        <childnode refid="47" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="48" relation="include">
+        </childnode>
+        <childnode refid="49" relation="include">
+        </childnode>
+        <childnode refid="50" relation="include">
+        </childnode>
+        <childnode refid="51" relation="include">
+        </childnode>
+        <childnode refid="52" relation="include">
+        </childnode>
+        <childnode refid="53" relation="include">
+        </childnode>
+      </node>
+      <node id="13">
+        <label>include/Tensor.hpp</label>
+        <link refid="Tensor_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+      </node>
+      <node id="23">
+        <label>include/UniTensor.hpp</label>
+        <link refid="UniTensor_8hpp"/>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+      </node>
+      <node id="38">
+        <label>include/algo.hpp</label>
+        <link refid="algo_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="30">
+        <label>include/contraction_tree.hpp</label>
+        <link refid="contraction__tree_8hpp"/>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>include/cytnx.hpp</label>
+        <link refid="cytnx_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="15">
+        <label>include/linalg.hpp</label>
+        <link refid="linalg_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>include/ncon.hpp</label>
+        <link refid="ncon_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="32">
+        <label>include/random.hpp</label>
+        <link refid="random_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="33">
+        <label>include/search_tree.hpp</label>
+        <link refid="search__tree_8hpp"/>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+      </node>
+      <node id="39">
+        <label>include/stat.hpp</label>
+        <link refid="stat_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="35">
+        <label>include/tn_algo/DMRG.hpp</label>
+        <link refid="DMRG_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="36">
+        <label>include/tn_algo/MPO.hpp</label>
+        <link refid="MPO_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+      </node>
+      <node id="37">
+        <label>include/tn_algo/MPS.hpp</label>
+        <link refid="MPS_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>src/BlockUniTensor.cpp</label>
+        <link refid="BlockUniTensor_8cpp"/>
+      </node>
+      <node id="40">
+        <label>src/BoolStorage.cpp</label>
+        <link refid="BoolStorage_8cpp"/>
+      </node>
+      <node id="41">
+        <label>src/ComplexDoubleStorage.cpp</label>
+        <link refid="ComplexDoubleStorage_8cpp"/>
+      </node>
+      <node id="42">
+        <label>src/ComplexFloatStorage.cpp</label>
+        <link refid="ComplexFloatStorage_8cpp"/>
+      </node>
+      <node id="7">
+        <label>src/DenseUniTensor.cpp</label>
+        <link refid="DenseUniTensor_8cpp"/>
+      </node>
+      <node id="54">
+        <label>src/Device.cpp</label>
+        <link refid="Device_8cpp"/>
+      </node>
+      <node id="43">
+        <label>src/DoubleStorage.cpp</label>
+        <link refid="DoubleStorage_8cpp"/>
+      </node>
+      <node id="28">
+        <label>src/FermionNetwork.cpp</label>
+        <link refid="FermionNetwork_8cpp"/>
+      </node>
+      <node id="44">
+        <label>src/FloatStorage.cpp</label>
+        <link refid="FloatStorage_8cpp"/>
+      </node>
+      <node id="8">
+        <label>src/Generator.cpp</label>
+        <link refid="Generator_8cpp"/>
+      </node>
+      <node id="25">
+        <label>src/Gncon.cpp</label>
+        <link refid="Gncon_8cpp"/>
+      </node>
+      <node id="16">
+        <label>src/Gncon_base.cpp</label>
+        <link refid="Gncon__base_8cpp"/>
+      </node>
+      <node id="45">
+        <label>src/Int16Storage.cpp</label>
+        <link refid="Int16Storage_8cpp"/>
+      </node>
+      <node id="46">
+        <label>src/Int32Storage.cpp</label>
+        <link refid="Int32Storage_8cpp"/>
+      </node>
+      <node id="47">
+        <label>src/Int64Storage.cpp</label>
+        <link refid="Int64Storage_8cpp"/>
+      </node>
+      <node id="22">
+        <label>src/LinOp.cpp</label>
+        <link refid="LinOp_8cpp"/>
+      </node>
+      <node id="17">
+        <label>src/Network.cpp</label>
+        <link refid="Network_8cpp"/>
+      </node>
+      <node id="18">
+        <label>src/Network_base.cpp</label>
+        <link refid="Network__base_8cpp"/>
+      </node>
+      <node id="9">
+        <label>src/Physics.cpp</label>
+        <link refid="Physics_8cpp"/>
+      </node>
+      <node id="26">
+        <label>src/RegularGncon.cpp</label>
+        <link refid="RegularGncon_8cpp"/>
+      </node>
+      <node id="29">
+        <label>src/RegularNetwork.cpp</label>
+        <link refid="RegularNetwork_8cpp"/>
+      </node>
+      <node id="48">
+        <label>src/Scalar.cpp</label>
+        <link refid="Scalar_8cpp"/>
+      </node>
+      <node id="10">
+        <label>src/SparseUniTensor.cpp</label>
+        <link refid="SparseUniTensor_8cpp"/>
+      </node>
+      <node id="49">
+        <label>src/Storage.cpp</label>
+        <link refid="Storage_8cpp"/>
+      </node>
+      <node id="50">
+        <label>src/Storage_base.cpp</label>
+        <link refid="Storage__base_8cpp"/>
+      </node>
+      <node id="19">
+        <label>src/Tensor.cpp</label>
+        <link refid="Tensor_8cpp"/>
+      </node>
+      <node id="51">
+        <label>src/Uint16Storage.cpp</label>
+        <link refid="Uint16Storage_8cpp"/>
+      </node>
+      <node id="52">
+        <label>src/Uint32Storage.cpp</label>
+        <link refid="Uint32Storage_8cpp"/>
+      </node>
+      <node id="53">
+        <label>src/Uint64Storage.cpp</label>
+        <link refid="Uint64Storage_8cpp"/>
+      </node>
+      <node id="20">
+        <label>src/UniTensor.cpp</label>
+        <link refid="UniTensor_8cpp"/>
+      </node>
+      <node id="21">
+        <label>src/UniTensor_base.cpp</label>
+        <link refid="UniTensor__base_8cpp"/>
+      </node>
+      <node id="31">
+        <label>src/contraction_tree.cpp</label>
+        <link refid="contraction__tree_8cpp"/>
+      </node>
+      <node id="5">
+        <label>src/ncon.cpp</label>
+        <link refid="ncon_8cpp"/>
+      </node>
+      <node id="34">
+        <label>src/search_tree.cpp</label>
+        <link refid="search__tree_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innernamespace refid="namespacecytnx">cytnx</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>_H_Device_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_H_Device_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;vector&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref><sp/>{</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">__device<sp/>{</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/>__pybind_device<sp/>{<sp/>cpu<sp/>=<sp/>-1,<sp/>cuda<sp/>=<sp/>0<sp/>};</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/>};</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Device_class<sp/>{</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/>enum<sp/>:<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>{<sp/>cpu<sp/>=<sp/>-1,<sp/>cuda<sp/>=<sp/>0<sp/>};</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>Ngpus;</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>Ncpus;</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;std::vector&lt;bool&gt;&gt;<sp/>CanAccessPeer;</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/>Device_class();</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>Print_Property();</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/>std::string<sp/>getname(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>&amp;device_id);</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/>~Device_class();</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>void<sp/>cudaDeviceSynchronize();</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/>};</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/>Device_class<sp/><ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">Device</ref>;</highlight></codeline>
+<codeline lineno="28"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cytnx</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="include/Device.hpp"/>
+  </compounddef>
+</doxygen>

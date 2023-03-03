@@ -279,7 +279,7 @@ namespace cytnx {
         }
 
         os<< (std::string(" ")*(3+Lmax+5)) << std::string("-")*(4+mL+mR+5) << endl;
-  } 
+  }
   void BlockUniTensor::print_block(const cytnx_int64 &idx, const bool &full_info)const{
         cytnx_error_msg((idx < 0) || (idx >= this->_blocks.size()),"[ERROR] index [%d] out of bound. should be >0 and < number of available blocks %d\n",idx,this->_blocks.size());
 
@@ -330,7 +330,7 @@ namespace cytnx {
     std::ostream &os = std::cout;
 
     os << "-------- start of print ---------\n";
-    char *buffer = (char *)malloc(sizeof(char) * 1024);
+    char *buffer = (char *)malloc(sizeof(char) * 10240);
     sprintf(buffer, "Tensor name: %s\n", this->_name.c_str());
     os << std::string(buffer);
     if (this->_is_tag) sprintf(buffer, "braket_form : %s\n", this->_is_braket_form ? "True" : "False");
@@ -377,7 +377,7 @@ namespace cytnx {
   }
 
   void BlockUniTensor::print_diagram(const bool &bond_info) {
-    char *buffer = (char *)malloc(1024 * sizeof(char));
+    char *buffer = (char *)malloc(10240 * sizeof(char));
     unsigned int BUFFsize = 100;
 
     sprintf(buffer, "-----------------------%s", "\n");
@@ -820,13 +820,13 @@ namespace cytnx {
         for (int i = 0; i < comm_labels.size(); i++) {
             if (User_debug){
               cytnx_error_msg(this->_bonds[comm_idx1[i]].qnums() != rhs->_bonds[comm_idx2[i]].qnums(),
-                              "[ERROR] contract bond @ label %d have qnum mismatch.\n", comm_labels[i]);
+                              "[ERROR] contract bond @ label %s have qnum mismatch.\n", comm_labels[i].c_str());
               cytnx_error_msg(this->_bonds[comm_idx1[i]].getDegeneracies() != rhs->_bonds[comm_idx2[i]].getDegeneracies(),
-                              "[ERROR] contract bond @ label %d have degeneracies mismatch.\n", comm_labels[i]);
+                              "[ERROR] contract bond @ label %s have degeneracies mismatch.\n", comm_labels[i].c_str());
             }
             cytnx_error_msg(this->_bonds[comm_idx1[i]].type() + rhs->_bonds[comm_idx2[i]].type(),
-                            "[ERROR] BRA can only contract with KET. invalid @ label: %d\n",
-                            comm_labels[i]);
+                            "[ERROR] BRA can only contract with KET. invalid @ label: %s\n",
+                            comm_labels[i].c_str());
         }
         
         // proc meta, labels:
@@ -1662,7 +1662,7 @@ namespace cytnx {
             for(int j=1;j<indicators.size();j++){
                 cb_stride[j] = this->_bonds[i+j].qnums().size();
                 if(force) tmp._impl->force_combineBond_(this->_bonds[i+j]._impl,false); // no grouping
-                else tmp.combineBond_(this->_bonds[i+j]); // no grouping
+                else tmp.combineBond_(this->_bonds[i+j],false); // no grouping
             }
             new_bonds.push_back(tmp);
             i += indicators.size()-1;
@@ -1680,7 +1680,10 @@ namespace cytnx {
     //reshape each blocks, and update_inner_to_outer_idx:
     //process stride:
     memcpy(&cb_stride[0],&cb_stride[1],sizeof(cytnx_uint64)*(cb_stride.size()-1));
-    cb_stride.back()=1;
+    // for(int i=cb_stride.size()-2;i>=0;i--){
+    //     cb_stride[i] = cb_stride[i+1];
+    // }
+    cb_stride.back()=1; 
     for(int i=cb_stride.size()-2;i>=0;i--){
         cb_stride[i]*=cb_stride[i+1];
     }
@@ -1699,6 +1702,9 @@ namespace cytnx {
         this->_blocks[b].reshape_(new_shape);
     }
 
+    // cout<<"AAAAAAAAAAAAAAAAAAAAAAA"<<this->get_qindices(2)<<endl;
+    // cout<<"AAAAAAAAAAAAAAAAAAAAAAA"<<this->bonds()<<endl;
+
     for(int b=0;b<this->_blocks.size();b++){
         this->_inner_to_outer_idx[b][idor] *= cb_stride[0]; 
         for(int i=idor+1;i<idor+indicators.size();i++){
@@ -1710,16 +1716,16 @@ namespace cytnx {
         this->_inner_to_outer_idx[b].resize(this->rank());
     } 
     //std::cout << this->_inner_to_outer_idx << std::endl;
-    
+
     //check rowrank:
     if(this->_rowrank >= this->rank()) this->_rowrank = this->rank();
 
     this->_is_braket_form = this->_update_braket();
 
+    // cout<<"BBBBBBBBBBBBBBBBBBBBBBB"<<this->get_qindices(2)<<endl;
+    // cout<<"BBBBBBBBBBBBBBBBBBBBBBB"<<this->bonds()<<endl;
     //regroup:
     this->group_basis_();
-
-
   }
  
 

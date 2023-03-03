@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="namespacesp" kind="namespace" language="Python">
+    <compoundname>sp</compoundname>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="namespacesp_1a28254a57bcb1ef4a92692a6ac2d5e7ae" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>sp.f</definition>
+        <argsstring></argsstring>
+        <name>f</name>
+        <qualifiedname>sp.f</qualifiedname>
+        <initializer>=  open(&quot;UniTensor.hpp&quot;,&quot;r&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/sp.py" line="4" column="1" bodyfile="include/sp.py" bodystart="4" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacesp_1a919c6abbf547ece9e966dd0341837ed3" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>sp.tmp</definition>
+        <argsstring></argsstring>
+        <name>tmp</name>
+        <qualifiedname>sp.tmp</qualifiedname>
+        <initializer>=  line.strip().split(&quot;(&quot;)[0]</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/sp.py" line="8" column="1" bodyfile="include/sp.py" bodystart="8" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/sp.py" line="1" column="1"/>
+  </compounddef>
+</doxygen>

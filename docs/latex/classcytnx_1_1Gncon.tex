@@ -1,0 +1,165 @@
+\hypertarget{classcytnx_1_1Gncon}{}\doxysection{cytnx\+::Gncon Class Reference}
+\label{classcytnx_1_1Gncon}\index{cytnx::Gncon@{cytnx::Gncon}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classcytnx_1_1Gncon_a1edbe6357fc885dc741898dd0f85825a}{Fromfile}} (const std\+::string \&fname, const int \&Gncon\+\_\+type=GNType.\+Regular)
+\begin{DoxyCompactList}\small\item\em Construct \mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}} from \mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}} file. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classcytnx_1_1Gncon_ae992acb8b77264cfd321f9b62819fa86}{From\+String}} (const std\+::vector$<$ std\+::string $>$ \&contents, const int \&Gncon\+\_\+type=GNType.\+Regular)
+\begin{DoxyCompactList}\small\item\em Construct \mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}} from a list of strings, where each string is the same as each line in \mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}} file. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classcytnx_1_1Gncon_a11a519faac8a2c8812982cd56fb0b9ad}\label{classcytnx_1_1Gncon_a11a519faac8a2c8812982cd56fb0b9ad}} 
+{\bfseries Gncon} (const std\+::string \&fname, const int \&Gncon\+\_\+type=GNType.\+Regular)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Gncon_aebe7edd6154c1355bafe31200f8b5ef3}\label{classcytnx_1_1Gncon_aebe7edd6154c1355bafe31200f8b5ef3}} 
+void {\bfseries Put\+Uni\+Tensor} (const std\+::string \&name, const \mbox{\hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor}} \&utensor)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Gncon_aeebe14a7c80f78b8ee3cdecfa330002e}\label{classcytnx_1_1Gncon_aeebe14a7c80f78b8ee3cdecfa330002e}} 
+void {\bfseries Put\+Uni\+Tensor} (const cytnx\+\_\+uint64 \&idx, const \mbox{\hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor}} \&utensor)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Gncon_a632b205da7e362819485dabab267b0e9}\label{classcytnx_1_1Gncon_a632b205da7e362819485dabab267b0e9}} 
+void {\bfseries Put\+Uni\+Tensors} (const std\+::vector$<$ std\+::string $>$ \&name, const std\+::vector$<$ \mbox{\hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor}} $>$ \&utensors)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Gncon_a86dd9782446c79e371e9d351bf1db235}\label{classcytnx_1_1Gncon_a86dd9782446c79e371e9d351bf1db235}} 
+std\+::string {\bfseries get\+Optimal\+Order} (const int \&Gncon\+\_\+type=GNType.\+Regular)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Gncon_af09a8396d351c080a20db07c947dd9d0}\label{classcytnx_1_1Gncon_af09a8396d351c080a20db07c947dd9d0}} 
+\mbox{\hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor}} {\bfseries Launch} (const bool \&optimal, const std\+::string \&contract\+\_\+order=\char`\"{}\char`\"{}, const int \&Gncon\+\_\+type=GNType.\+Regular)
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Gncon_a5467b52fdbdbcce08eac42bf75ff2afa}\label{classcytnx_1_1Gncon_a5467b52fdbdbcce08eac42bf75ff2afa}} 
+void {\bfseries clear} ()
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Gncon_a26ddc41c593b98e8423bb7d4b1f9b551}\label{classcytnx_1_1Gncon_a26ddc41c593b98e8423bb7d4b1f9b551}} 
+\mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}} {\bfseries clone} ()
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Gncon_a3bd858141e4bf61196ad84394db8d9a6}\label{classcytnx_1_1Gncon_a3bd858141e4bf61196ad84394db8d9a6}} 
+void {\bfseries Print\+Net} ()
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Gncon_a9cbd49b2812985febef51c4ca4b60f8e}\label{classcytnx_1_1Gncon_a9cbd49b2812985febef51c4ca4b60f8e}} 
+void {\bfseries Savefile} (const std\+::string \&fname)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcytnx_1_1Gncon_a32765f6792474fb8e52936c892f9aaa0}\label{classcytnx_1_1Gncon_a32765f6792474fb8e52936c892f9aaa0}} 
+static \mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}} {\bfseries Contract} (const std\+::vector$<$ \mbox{\hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor}} $>$ \&tensors, const std\+::string \&Tout, const std\+::vector$<$ std\+::string $>$ \&alias=\{\}, const std\+::string \&contract\+\_\+order=\char`\"{}\char`\"{})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classcytnx_1_1Gncon_a1edbe6357fc885dc741898dd0f85825a}\label{classcytnx_1_1Gncon_a1edbe6357fc885dc741898dd0f85825a}} 
+\index{cytnx::Gncon@{cytnx::Gncon}!Fromfile@{Fromfile}}
+\index{Fromfile@{Fromfile}!cytnx::Gncon@{cytnx::Gncon}}
+\doxysubsubsection{\texorpdfstring{Fromfile()}{Fromfile()}}
+{\footnotesize\ttfamily void cytnx\+::\+Gncon\+::\+Fromfile (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{fname,  }\item[{const int \&}]{Gncon\+\_\+type = {\ttfamily GNType.Regular} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Construct \mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}} from \mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}} file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fname} & The \mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}} file path \\
+\hline
+{\em Gncon\+\_\+type} & The type of \mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}}. This can be \mbox{[}GNType.\+Regular\mbox{]} or \mbox{[}GNType.\+Fermion.\mbox{]}. Currently, only Regular \mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}} is support!\\
+\hline
+\end{DoxyParams}
+\hypertarget{classcytnx_1_1Gncon_autotoc_md65}{}\doxysubsubsection{note\+:}\label{classcytnx_1_1Gncon_autotoc_md65}
+
+\begin{DoxyEnumerate}
+\item each \mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}} file cannot have more than 1024 lines.
+\end{DoxyEnumerate}\hypertarget{classcytnx_1_1Gncon_autotoc_md66}{}\doxysubsubsection{detail\+:}\label{classcytnx_1_1Gncon_autotoc_md66}
+Format of a \mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}} file\+:
+
+
+\begin{DoxyItemize}
+\item each line defines a \mbox{\hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor}}, that takes the format \textquotesingle{}\mbox{[}name\mbox{]} \+: \mbox{[}Labels\mbox{]}\textquotesingle{}
+\item the name can be any alphabets A-\/Z, a-\/z
+\item There are two reserved name\+: \textquotesingle{}TOUT\textquotesingle{} and \textquotesingle{}ORDER\textquotesingle{} (all capital)
+\item One can use \textquotesingle{}TOUT\textquotesingle{} line to specify the output \mbox{\hyperlink{classcytnx_1_1UniTensor}{Uni\+Tensor}}\textquotesingle{}s bond order using labels
+\item The \textquotesingle{}ORDER\textquotesingle{} line is used to specify the contraction order
+\end{DoxyItemize}
+
+About \mbox{[}Labels\mbox{]}\+:
+
+
+\begin{DoxyItemize}
+\item each label should seperate by a comma \char`\"{},\char`\"{}
+\item one \textquotesingle{};\textquotesingle{} is needed and used to seperate Rowrank and column rank
+\end{DoxyItemize}
+
+About \mbox{[}ORDER\mbox{]}\+:
+
+
+\begin{DoxyItemize}
+\item The contraction order, it can be specify using the standard mathmetical bracket ruls.
+\item Without specify this line, the default contraction order will be from the first line to the last line
+\end{DoxyItemize}\hypertarget{classcytnx_1_1Gncon_autotoc_md67}{}\doxysubsubsection{example Gncon file\+:}\label{classcytnx_1_1Gncon_autotoc_md67}
+
+\begin{DoxyCodeInclude}{0}
+
+\end{DoxyCodeInclude}
+\hypertarget{classcytnx_1_1Gncon_autotoc_md68}{}\doxysubsubsection{example code for load the Gncon file\+:}\label{classcytnx_1_1Gncon_autotoc_md68}
+\hypertarget{classcytnx_1_1Gncon_autotoc_md69}{}\doxyparagraph{c++ API\+:}\label{classcytnx_1_1Gncon_autotoc_md69}
+
+\begin{DoxyCodeInclude}{0}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Gncon_autotoc_md70}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Gncon_autotoc_md70}
+
+\begin{DoxyVerbInclude}
+\end{DoxyVerbInclude}
+ \hypertarget{classcytnx_1_1Gncon_autotoc_md71}{}\doxyparagraph{python API}\label{classcytnx_1_1Gncon_autotoc_md71}
+
+\begin{DoxyCodeInclude}{0}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Gncon_autotoc_md72}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Gncon_autotoc_md72}
+
+\begin{DoxyVerbInclude}
+\end{DoxyVerbInclude}
+ \mbox{\Hypertarget{classcytnx_1_1Gncon_ae992acb8b77264cfd321f9b62819fa86}\label{classcytnx_1_1Gncon_ae992acb8b77264cfd321f9b62819fa86}} 
+\index{cytnx::Gncon@{cytnx::Gncon}!FromString@{FromString}}
+\index{FromString@{FromString}!cytnx::Gncon@{cytnx::Gncon}}
+\doxysubsubsection{\texorpdfstring{FromString()}{FromString()}}
+{\footnotesize\ttfamily void cytnx\+::\+Gncon\+::\+From\+String (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::string $>$ \&}]{contents,  }\item[{const int \&}]{Gncon\+\_\+type = {\ttfamily GNType.Regular} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Construct \mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}} from a list of strings, where each string is the same as each line in \mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}} file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em contents} & The \mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}} file descriptions \\
+\hline
+{\em Gncon\+\_\+type} & The type of \mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}}. This can be \mbox{[}GNType.\+Regular\mbox{]} or \mbox{[}GNType.\+Fermion.\mbox{]}. Currently, only Regular \mbox{\hyperlink{classcytnx_1_1Gncon}{Gncon}} is support!\\
+\hline
+\end{DoxyParams}
+\hypertarget{classcytnx_1_1Gncon_autotoc_md73}{}\doxysubsubsection{note\+:}\label{classcytnx_1_1Gncon_autotoc_md73}
+
+\begin{DoxyEnumerate}
+\item contents cannot have more than 1024 lines/strings.
+\end{DoxyEnumerate}\hypertarget{classcytnx_1_1Gncon_autotoc_md74}{}\doxysubsubsection{detail\+:}\label{classcytnx_1_1Gncon_autotoc_md74}
+Format of each string follows the same policy as Fromfile.\hypertarget{classcytnx_1_1Gncon_autotoc_md75}{}\doxysubsubsection{example code for load the Gncon file\+:}\label{classcytnx_1_1Gncon_autotoc_md75}
+\hypertarget{classcytnx_1_1Gncon_autotoc_md76}{}\doxyparagraph{c++ API\+:}\label{classcytnx_1_1Gncon_autotoc_md76}
+
+\begin{DoxyCodeInclude}{0}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Gncon_autotoc_md77}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Gncon_autotoc_md77}
+
+\begin{DoxyVerbInclude}
+\end{DoxyVerbInclude}
+ \hypertarget{classcytnx_1_1Gncon_autotoc_md78}{}\doxyparagraph{python API}\label{classcytnx_1_1Gncon_autotoc_md78}
+
+\begin{DoxyCodeInclude}{0}
+
+\end{DoxyCodeInclude}
+ \hypertarget{classcytnx_1_1Gncon_autotoc_md79}{}\doxysubparagraph{output$>$}\label{classcytnx_1_1Gncon_autotoc_md79}
+
+\begin{DoxyVerbInclude}
+\end{DoxyVerbInclude}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/Gncon.\+hpp\end{DoxyCompactItemize}

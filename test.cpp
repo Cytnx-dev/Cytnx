@@ -19,6 +19,30 @@ void pp(){
 
 int main(int argc, char *argv[]) {
 
+  auto bd2 = Bond(BD_KET,{Qs(1)>>1,Qs(0)>>1,Qs(-1)>>1});
+  auto bd22 = bd2.combineBond(bd2);
+  print(bd22);
+  return 0;
+
+
+
+  Tensor t = zeros({5,1,4});
+  auto t2 = t(":5",":",":4");
+  print(t2);
+  print(t); 
+  return 0;
+
+  auto iS = UniTensor(arange(120).reshape(2,3,4,5).astype(Type.ComplexDouble));
+
+  cout << Scalar(9+9i);
+  cout << iS;
+
+  auto oS = iS.Add(9+9i);
+  cout << oS;
+
+  return 0;
+
+
   Bond B1 = Bond(BD_IN,{Qs(0),Qs(1)},{3,4});
   Bond B2 = Bond(BD_IN,{Qs(0),Qs(1)},{5,6});
   Bond B3 = Bond(BD_OUT,{Qs(0),Qs(1)},{2,3});

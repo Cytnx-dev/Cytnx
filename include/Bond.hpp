@@ -421,7 +421,7 @@ namespace cytnx {
     \verbinclude example/Bond/combineBondinplace.py.out
     */
     void combineBond_(const Bond &bd_in, const bool &is_grp = true) {
-      this->_impl->combineBond_(bd_in._impl);
+      this->_impl->combineBond_(bd_in._impl, is_grp);
     }
 
     /**

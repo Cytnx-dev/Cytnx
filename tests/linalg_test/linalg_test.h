@@ -6,11 +6,11 @@
 
 using namespace cytnx;
 
-std::string data_dir = "../../tests/test_data_base/linalg/";
+
 
 class linalg_Test : public ::testing::Test {
  public:
-  
+  std::string data_dir = "../../tests/test_data_base/linalg/";
   // ==================== svd_truncate ===================
   Bond svd_I = Bond(BD_OUT,{Qs(1),Qs(-1)},{1,1});
   Bond svd_J = Bond(BD_IN,{Qs(5),Qs(3),Qs(1),Qs(-1),Qs(-3),Qs(-5),Qs(-7)},{6,22,57,68,38,8,1});
@@ -42,7 +42,10 @@ class linalg_Test : public ::testing::Test {
  protected:
   void SetUp() override {
     //================ svd truncate =======================
+
     svd_T = svd_T.Load(data_dir+"Svd_truncate/Svd_truncate1.cytnx");
+    svd_T.permute_({1,0,3,2});
+    svd_T.contiguous_();
     svd_T.set_rowrank(2);
     svd_Sans = Tensor::Load(data_dir+"Svd_truncate/S_truncate1.cytn"); 
     svd_Sans = algo::Sort(svd_Sans);

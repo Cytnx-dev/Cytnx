@@ -25,6 +25,7 @@ namespace cytnx {
     this->_is_tag = false;
     cytnx_uint32 N_ket = 0;
     if (bonds.size() != 0) this->_is_tag = (bonds[0].type() != bondType::BD_REG);
+    
     for (cytnx_uint64 i = 0; i < bonds.size(); i++) {
       // check
       cytnx_error_msg(bonds[i].qnums().size() != 0, "%s",
@@ -41,14 +42,26 @@ namespace cytnx {
       }
       cytnx_error_msg(bonds[i].dim() == 0, "%s", "[ERROR] All bonds must have dimension >=1");
     }
+    //cout << N_ket << endl;
+    //cout << is_diag << endl;
+    //cout << this->_is_tag << endl; 
 
     // check rowrank
     if (this->_is_tag) {
-      if (rowrank < 0) {
+      if(is_diag){
+        //cout << "NKET = " << N_ket << endl;
+        cytnx_error_msg(N_ket != 1,"[ERROR][DenseUniTensor] is_diag = true with tagged UniTensor must have one IN (KET) bond  and one OUT (BRA) bond.%s","\n");
+      }
+      if (rowrank == -1) {
         this->_rowrank = N_ket;
-      } else {
-        cytnx_error_msg(rowrank > bonds.size(),
-                        "[ERROR] rowrank cannot exceed total rank of Tensor.%s", "\n");
+      }else{
+        if(is_diag){
+            cytnx_error_msg(rowrank != 1,
+                      "[ERROR][DenseUniTensor] rowrank must be = 1 when is_diag = true.%s", "\n");
+        }else{
+            cytnx_error_msg((rowrank < 0) || (rowrank > bonds.size()),
+                        "[ERROR] rowrank is invalid or cannot exceed total rank of Tensor.%s", "\n");
+        }
         this->_rowrank = rowrank;
       }
     } else {
@@ -59,12 +72,17 @@ namespace cytnx {
         if(rowrank==-1){
             this->_rowrank=1;
         }else{
-            cytnx_error_msg(
-              rowrank < 0,
-              "[ERROR] initialize a non-symmetry, un-tagged tensor should assign a >=0 rowrank.%s",
-              "\n");
-            cytnx_error_msg(rowrank > bonds.size(),
-                            "[ERROR] rowrank cannot exceed total rank of Tensor.%s", "\n");
+            if(is_diag){
+                cytnx_error_msg(rowrank != 1,
+                      "[ERROR][DenseUniTensor] rowrank must be = 1 when is_diag = true.%s", "\n");
+            }else{
+                cytnx_error_msg(
+                  rowrank < 0,
+                  "[ERROR] initialize a non-symmetry, un-tagged tensor should assign a >=0 rowrank.%s",
+                  "\n");
+                cytnx_error_msg(rowrank > bonds.size(),
+                                "[ERROR] rowrank cannot exceed total rank of Tensor.%s", "\n");
+            }
             this->_rowrank = rowrank;
         }
       }
@@ -481,7 +499,7 @@ namespace cytnx {
   void DenseUniTensor::print_block(const cytnx_int64 &idx, const bool &full_info) const{
     std::ostream &os = std::cout;
     os << "-------- start of print ---------\n";
-    char *buffer = (char *)malloc(sizeof(char) * 1024);
+    char *buffer = (char *)malloc(sizeof(char) * 10240);
     sprintf(buffer, "Tensor name: %s\n", this->_name.c_str());
     os << std::string(buffer);
     if (this->_is_tag) sprintf(buffer, "braket_form : %s\n", this->_is_braket_form ? "True" : "False");
@@ -506,7 +524,7 @@ namespace cytnx {
   }
 
   void DenseUniTensor::print_diagram(const bool &bond_info) {
-    char *buffer = (char *)malloc(1024 * sizeof(char));
+    char *buffer = (char *)malloc(10240 * sizeof(char));
     unsigned int BUFFsize = 100;
 
     sprintf(buffer, "-----------------------%s", "\n");
@@ -1065,7 +1083,7 @@ namespace cytnx {
           cytnx_error_msg(this->_bonds[comm_idx1[i]].type() == rhs->_bonds[comm_idx2[i]].type(),
                           "[ERROR][DenseUniTensor][contract] cannot contract common label: <%s> @ "
                           "self bond#%d & rhs bond#%d, BRA-KET mismatch!%s",
-                          this->labels()[comm_idx1[i]], comm_idx1[i], comm_idx2[i], "\n");
+                          this->labels()[comm_idx1[i]].c_str(), comm_idx1[i], comm_idx2[i], "\n");
       }
 
       // process meta
@@ -1282,19 +1300,21 @@ namespace cytnx {
   }
 
   void DenseUniTensor::Transpose_() {
-    std::vector<cytnx_int64> new_permute =
-      vec_concatenate(vec_range<cytnx_int64>(this->rowrank(), this->rank()),
-                      vec_range<cytnx_int64>(0, this->rowrank()));
-    this->permute_(new_permute);
-    if (this->is_tag()) {
-      this->_rowrank = this->rank() - this->_rowrank;
+    if (this->is_tag()){
+      //this->_rowrank = this->rank() - this->_rowrank;
       for (int i = 0; i < this->rank(); i++) {
         this->_bonds[i].set_type((this->_bonds[i].type() == BD_KET) ? BD_BRA : BD_KET);
       }
       this->_is_braket_form = this->_update_braket();
-    } else {
-      this->_rowrank = this->rank() - this->_rowrank;
+
+    }else{
+        std::vector<cytnx_int64> new_permute =
+        vec_concatenate(vec_range<cytnx_int64>(this->rowrank(), this->rank()),
+                        vec_range<cytnx_int64>(0, this->rowrank()));
+        this->permute_(new_permute);
+        this->_rowrank = this->rank() - this->_rowrank;
     }
+
   }
 
   void DenseUniTensor::_save_dispatch(std::fstream &f) const { this->_block._Save(f); }
@@ -1427,6 +1447,7 @@ namespace cytnx {
     this->_block += rhs->get_block_();
   }
   void DenseUniTensor::Add_(const Scalar &rhs) {
+    //cout << rhs << endl;
     // cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor
     // L.%s","\n");
     this->_block += rhs;

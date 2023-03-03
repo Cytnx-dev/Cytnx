@@ -1,6 +1,7 @@
 #include "DenseUniTensor_test.h"
 using namespace std;
 using namespace cytnx;
+using namespace std::complex_literals;
 TEST_F(DenseUniTensorTest, Trace) {
   auto tmp = dense4trtensor.Trace(0,3);
   for(size_t j=1;j<=4;j++)
@@ -149,7 +150,7 @@ TEST_F(DenseUniTensorTest, Dagger){
 //   EXPECT_THROW(utarcomplex3456.truncate_(2,0), std::logic_error);
 // }
 
-TEST_F(DenseUniTensorTest, Init){
+TEST_F(DenseUniTensorTest, Init_tagged){
     //different types
     EXPECT_NO_THROW(dut.Init({phy,phy.redirect(),aux},{"a", "b", "c"},1,Type.Float,Device.cpu,false,false));
     EXPECT_NO_THROW(dut.Init({phy,phy.redirect(),aux},{"a", "b", "c"},1,Type.Double,Device.cpu,false,false));
@@ -177,6 +178,7 @@ TEST_F(DenseUniTensorTest, Init){
     EXPECT_ANY_THROW(dut.Init({phy,phy.redirect()},{"a", "b"},2,Type.Float,Device.cpu,true,false));
 
     // is_diag = true, but no outward bond
+    //cout << phy << endl;
     EXPECT_ANY_THROW(dut.Init({phy,phy},{"a", "b"},1,Type.Float,Device.cpu,true,false));
 }
 
@@ -381,8 +383,11 @@ TEST_F(DenseUniTensorTest, contract3) {
 }
 
 TEST_F(DenseUniTensorTest, Add){
-    using namespace std::complex_literals;
-    auto out = utarcomplex3456.Add(9+9i);
+    auto cnst = Scalar(std::complex<double>(9,9));
+    auto out = utarcomplex3456.Add(cnst);
+    //cout << Scalar(std::complex<double>(9,9)) << endl;
+    //cout << out;
+    //cout << utarcomplex3456;
     for(size_t i=1;i<=3;i++)for(size_t j=1;j<=4;j++)
       for(size_t k=1;k<=5;k++)for(size_t l=1;l<=6;l++)
         if(out.at({i-1,j-1,k-1,l-1}).exists()){
@@ -390,7 +395,7 @@ TEST_F(DenseUniTensorTest, Add){
           EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).imag()), double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).imag())+9);
         }
     auto tmp = utarcomplex3456.clone();
-    utarcomplex3456.Add_(9+9i);
+    utarcomplex3456.Add_(cnst);
     for(size_t i=1;i<=3;i++)for(size_t j=1;j<=4;j++)
       for(size_t k=1;k<=5;k++)for(size_t l=1;l<=6;l++)
         if(utarcomplex3456.at({i-1,j-1,k-1,l-1}).exists()){
@@ -418,8 +423,8 @@ TEST_F(DenseUniTensorTest, Add){
 }
 
 TEST_F(DenseUniTensorTest, Sub){
-    using namespace std::complex_literals;
-    auto out = utarcomplex3456.Sub(9+9i);
+    auto cnst = Scalar(std::complex<double>(9,9));
+    auto out = utarcomplex3456.Sub(cnst);
     for(size_t i=1;i<=3;i++)for(size_t j=1;j<=4;j++)
       for(size_t k=1;k<=5;k++)for(size_t l=1;l<=6;l++)
         if(out.at({i-1,j-1,k-1,l-1}).exists()){
@@ -427,7 +432,7 @@ TEST_F(DenseUniTensorTest, Sub){
           EXPECT_DOUBLE_EQ(double(out.at({i-1,j-1,k-1,l-1}).imag()), double(utarcomplex3456.at({i-1,j-1,k-1,l-1}).imag())-9);
         }
     auto tmp = utarcomplex3456.clone();
-    utarcomplex3456.Sub_(9+9i);
+    utarcomplex3456.Sub_(cnst);
     for(size_t i=1;i<=3;i++)for(size_t j=1;j<=4;j++)
       for(size_t k=1;k<=5;k++)for(size_t l=1;l<=6;l++)
         if(utarcomplex3456.at({i-1,j-1,k-1,l-1}).exists()){

@@ -1,0 +1,107 @@
+\hypertarget{contraction__tree_8hpp_source}{}\doxysection{contraction\+\_\+tree.\+hpp}
+\label{contraction__tree_8hpp_source}\index{include/contraction\_tree.hpp@{include/contraction\_tree.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_H\_contraction\_tree\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_H\_contraction\_tree\_}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include "{}Type.hpp"{}}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include "{}UniTensor.hpp"{}}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}cytnx\_error.hpp"{}}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include "{}utils/utils.hpp"{}}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include <map>}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{11 }
+\DoxyCodeLine{12 \textcolor{keyword}{namespace }cytnx \{}
+\DoxyCodeLine{14   \textcolor{keyword}{class }Node \{}
+\DoxyCodeLine{15    \textcolor{keyword}{public}:}
+\DoxyCodeLine{16     UniTensor utensor;  \textcolor{comment}{// don't worry about copy, because everything are references in cytnx!}}
+\DoxyCodeLine{17     \textcolor{keywordtype}{bool} is\_assigned;}
+\DoxyCodeLine{18     Node *left;}
+\DoxyCodeLine{19     Node *right;}
+\DoxyCodeLine{20     std::string name;}
+\DoxyCodeLine{21     Node *root;}
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23     Node() : is\_assigned(false), left(nullptr), right(nullptr), root(nullptr)\{\};}
+\DoxyCodeLine{24     Node(\textcolor{keyword}{const} Node \&rhs) \{}
+\DoxyCodeLine{25       this-\/>left = rhs.left;}
+\DoxyCodeLine{26       this-\/>right = rhs.right;}
+\DoxyCodeLine{27       this-\/>root = rhs.root;}
+\DoxyCodeLine{28       this-\/>utensor = rhs.utensor;}
+\DoxyCodeLine{29       this-\/>is\_assigned = rhs.is\_assigned;}
+\DoxyCodeLine{30     \}}
+\DoxyCodeLine{31     Node \&operator==(\textcolor{keyword}{const} Node \&rhs) \{}
+\DoxyCodeLine{32       this-\/>left = rhs.left;}
+\DoxyCodeLine{33       this-\/>right = rhs.right;}
+\DoxyCodeLine{34       this-\/>root = rhs.root;}
+\DoxyCodeLine{35       this-\/>utensor = rhs.utensor;}
+\DoxyCodeLine{36       this-\/>is\_assigned = rhs.is\_assigned;}
+\DoxyCodeLine{37       \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{38     \}}
+\DoxyCodeLine{39     Node(Node *in\_left, Node *in\_right, \textcolor{keyword}{const} UniTensor \&in\_uten = UniTensor())}
+\DoxyCodeLine{40         : is\_assigned(false), left(nullptr), right(nullptr), root(nullptr) \{}
+\DoxyCodeLine{41       this-\/>left = in\_left;}
+\DoxyCodeLine{42       this-\/>right = in\_right;}
+\DoxyCodeLine{43       in\_left-\/>root = \textcolor{keyword}{this};}
+\DoxyCodeLine{44       in\_right-\/>root = \textcolor{keyword}{this};}
+\DoxyCodeLine{45       \textcolor{keywordflow}{if} (in\_uten.uten\_type() != UTenType.Void) this-\/>utensor = in\_uten;}
+\DoxyCodeLine{46     \}}
+\DoxyCodeLine{47     \textcolor{keywordtype}{void} assign\_utensor(\textcolor{keyword}{const} UniTensor \&in\_uten) \{}
+\DoxyCodeLine{48       this-\/>utensor = in\_uten;}
+\DoxyCodeLine{49       this-\/>is\_assigned = \textcolor{keyword}{true};}
+\DoxyCodeLine{50     \}}
+\DoxyCodeLine{51     \textcolor{keywordtype}{void} clear\_utensor() \{}
+\DoxyCodeLine{52       this-\/>is\_assigned = \textcolor{keyword}{false};}
+\DoxyCodeLine{53       this-\/>utensor = UniTensor();}
+\DoxyCodeLine{54     \}}
+\DoxyCodeLine{55   \};}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57   \textcolor{keyword}{class }ContractionTree \{}
+\DoxyCodeLine{58    \textcolor{keyword}{public}:}
+\DoxyCodeLine{59     std::vector<Node> nodes\_container;  \textcolor{comment}{// this contains intermediate layer.}}
+\DoxyCodeLine{60     std::vector<Node> base\_nodes;  \textcolor{comment}{// this is the button layer.}}
+\DoxyCodeLine{61 }
+\DoxyCodeLine{62     ContractionTree()\{\};}
+\DoxyCodeLine{63     ContractionTree(\textcolor{keyword}{const} ContractionTree \&rhs) \{}
+\DoxyCodeLine{64       this-\/>nodes\_container = rhs.nodes\_container;}
+\DoxyCodeLine{65       this-\/>base\_nodes = rhs.base\_nodes;}
+\DoxyCodeLine{66     \}}
+\DoxyCodeLine{67     ContractionTree \&operator==(\textcolor{keyword}{const} ContractionTree \&rhs) \{}
+\DoxyCodeLine{68       this-\/>nodes\_container = rhs.nodes\_container;}
+\DoxyCodeLine{69       this-\/>base\_nodes = rhs.base\_nodes;}
+\DoxyCodeLine{70       \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{71     \}}
+\DoxyCodeLine{72 }
+\DoxyCodeLine{73     \textcolor{comment}{// clear all the elements in the whole tree.}}
+\DoxyCodeLine{74     \textcolor{keywordtype}{void} clear() \{}
+\DoxyCodeLine{75       nodes\_container.clear();}
+\DoxyCodeLine{76       base\_nodes.clear();}
+\DoxyCodeLine{77       \textcolor{comment}{// nodes\_container.reserve(1024);}}
+\DoxyCodeLine{78     \}}
+\DoxyCodeLine{79     \textcolor{comment}{// clear all the intermediate layer, leave all the base\_nodes intact.}}
+\DoxyCodeLine{80     \textcolor{comment}{// and reset the root pointer on the base ondes}}
+\DoxyCodeLine{81     \textcolor{keywordtype}{void} reset\_contraction\_order() \{}
+\DoxyCodeLine{82       nodes\_container.clear();}
+\DoxyCodeLine{83       \textcolor{keywordflow}{for} (cytnx\_uint64 i = 0; i < base\_nodes.size(); i++) \{}
+\DoxyCodeLine{84         base\_nodes[i].root = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{85       \}}
+\DoxyCodeLine{86       \textcolor{comment}{// nodes\_container.reserve(1024);}}
+\DoxyCodeLine{87     \}}
+\DoxyCodeLine{88     \textcolor{keywordtype}{void} reset\_nodes() \{}
+\DoxyCodeLine{89       \textcolor{comment}{// reset all nodes but keep the skeleton}}
+\DoxyCodeLine{90       \textcolor{keywordflow}{for} (cytnx\_uint64 i = 0; i < this-\/>nodes\_container.size(); i++) \{}
+\DoxyCodeLine{91         this-\/>nodes\_container[i].clear\_utensor();}
+\DoxyCodeLine{92       \}}
+\DoxyCodeLine{93       \textcolor{keywordflow}{for} (cytnx\_uint64 i = 0; i < this-\/>base\_nodes.size(); i++) \{}
+\DoxyCodeLine{94         this-\/>base\_nodes[i].clear\_utensor();}
+\DoxyCodeLine{95       \}}
+\DoxyCodeLine{96     \}}
+\DoxyCodeLine{97     \textcolor{keywordtype}{void} build\_default\_contraction\_tree();}
+\DoxyCodeLine{98     \textcolor{keywordtype}{void} build\_contraction\_tree\_by\_tokens(\textcolor{keyword}{const} std::map<std::string, cytnx\_uint64> \&name2pos,}
+\DoxyCodeLine{99                                           \textcolor{keyword}{const} std::vector<std::string> \&tokens);}
+\DoxyCodeLine{100   \};}
+\DoxyCodeLine{102 \}  \textcolor{comment}{// namespace cytnx}}
+\DoxyCodeLine{103 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}
