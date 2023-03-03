@@ -9,11 +9,99 @@ using namespace TestTools;
 namespace SvdTest {
 
 bool CheckResult(const std::string& case_name);
+bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
+bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
 bool SingularValsCorrect(const UniTensor& res, const UniTensor& ans);
 std::string data_root = "../../tests/test_data_base/";
 std::string src_data_root = data_root + "common/";
 std::string ans_data_root = data_root + "linalg/Svd/";
 //normal test
+
+/*=====test info=====
+describe:Test Dense diagonal tensor.
+input:
+  T:Dense diagonal complex real type UniTensor.
+  is_U:true
+  is_VT:true
+====================*/
+TEST(Svd, dense_diag_test) {
+  int size = 5;
+  std::vector<Bond> bonds = {Bond(size), Bond(size)};
+  int rowrank = 1;
+  bool is_diag = true;
+  auto labels = std::vector<std::string>();
+  auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double,
+                     cytnx::Device.cpu, is_diag);
+  random::Make_uniform(T, 0, 10, 0);
+  std::cout << T << std::endl;
+  std::vector<UniTensor> svds = linalg::Svd(T);
+  auto S = svds[0];
+  auto U = svds[1];
+  auto Vt = svds[2];
+}
+
+/*=====test info=====
+describe:Test Symmetric diagonal tensor.
+input:
+  T:Dense diagonal complex real type UniTensor.
+  is_U:true
+  is_VT:true
+====================*/
+TEST(Svd, sym_diag_test) {
+  std::vector<std::vector<cytnx_int64>> qnums = { 
+    {0}, {1}, {0}, {1}, {2} 
+  };  
+  std::vector<cytnx_uint64> degs = {1, 2, 3, 4, 5}; 
+  auto syms = std::vector<Symmetry>(qnums[0].size(), Symmetry(SymType.U));
+  auto bond_ket = Bond(BD_KET, qnums, degs, syms);
+  auto bond_bra = Bond(BD_BRA, qnums, degs, syms);
+  std::vector<Bond> bonds = {bond_ket, bond_bra};
+  cytnx_int64 row_rank = 1; 
+  bool is_diag = true;
+  std::vector<std::string> labels = {}; 
+  auto UT = UniTensor(bonds, labels, row_rank, Type.Double, Device.cpu, is_diag);
+  random::Make_uniform(UT, 0, 10, 0);
+  std::vector<UniTensor> svds = linalg::Svd(UT);
+}
+
+/*=====test info=====
+describe:Test dense UniTensor only one element.
+input:
+  T:Dense UniTensor only one element.
+  is_U:true
+  is_VT:true
+====================*/
+TEST(Svd, dense_one_elem) {
+  int size = 1;
+  std::vector<Bond> bonds = {Bond(size), Bond(size), Bond(size)};
+  int rowrank = 1;
+  bool is_diag = false;
+  auto labels = std::vector<std::string>();
+  auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double,
+                     cytnx::Device.cpu, is_diag);
+  random::Make_uniform(T, -10, 0, 0);
+  std::vector<UniTensor> svds = linalg::Svd(T);
+  EXPECT_TRUE(CheckLabels(T, svds));
+  EXPECT_TRUE(ReComposeCheck(T, svds));
+  EXPECT_EQ(svds[0].at<double>({0}), std::abs(T.at<double>({0, 0, 0})));
+}
+
+/*=====test info=====
+describe:Test Dense UniTensor.
+input:
+  T:Dense UniTensor with real or complex real type.
+  is_U:true
+  is_VT:true
+====================*/
+TEST(Svd, dense_nondiag_test) {
+  std::vector<std::string> case_list = {
+    "dense_nondiag_C128",
+    "dense_nondiag_F64"
+  };
+  for (const auto& case_name : case_list) {
+    EXPECT_TRUE(CheckResult(case_name));
+  }
+}
 
 /*=====test info=====
 describe:Test U1 symmetry tensor.
@@ -181,6 +269,18 @@ TEST(Svd, err_bool_type_UT) {
   bool need_U, need_VT;
   EXPECT_THROW({
     std::vector<UniTensor> svds = linalg::Svd(src_T, need_U = true, need_VT = true);
+  }, std::logic_error);
+}
+
+/*=====test info=====
+describe:eror test, Test input Void type UniTensor.
+input:
+  T:Void UniTensor.
+====================*/
+TEST(Svd, Void_UTenType_UT) {
+  auto Ut = UniTensor();
+  EXPECT_THROW({
+    std::vector<UniTensor> svds = linalg::Svd(Ut);
   }, std::logic_error);
 }
 

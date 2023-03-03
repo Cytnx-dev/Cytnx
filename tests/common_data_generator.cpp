@@ -54,6 +54,21 @@ std::string GetDTypeFileName(unsigned int dtype) {
   }
 }
 
+TEST(CommonDataGen, Dense_gen_nonDiag) {
+  std::vector<cytnx::Bond> bonds = { cytnx::Bond(5), cytnx::Bond(6), cytnx::Bond(3) };
+  cytnx::cytnx_int64 row_rank = 1;
+  std::vector<std::string> labels = {};
+  bool is_diag;
+  for (auto dtype : dtype_list1) {
+    auto UT = cytnx::UniTensor(bonds, labels, row_rank, dtype,
+                               cytnx::Device.cpu, is_diag = false);
+    InitUniTensorUniform(UT);
+    std::string file_name = dataRoot + "dense_nondiag_" + GetDTypeFileName(dtype);
+    UT.Save(file_name);
+  }
+}
+
+
 TEST(CommonDataGen, U1_sym_gen) {
   //construct bonds
   std::vector<std::vector<cytnx_int64>> qnums1 = {
