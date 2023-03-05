@@ -417,35 +417,39 @@ namespace cytnx {
                                                const bool &is_U, const bool &is_vT,
                                                const bool &return_err){
 
-           cytnx_uint64 keep_dim = keepdim;
+       cytnx_uint64 keep_dim = keepdim;
 
-           outCyT = linalg::Svd(Tin, is_U,is_vT); 
+       outCyT = linalg::Svd(Tin, is_U,is_vT); 
 
-           // process truncate:
-           Tensor Sall = outCyT[0].get_block_(0);
-           for(int i=1;i<outCyT[0].Nblocks();i++){
-                Sall = algo::Concatenate(Sall,outCyT[0].get_block_(i));
-           } 
-           Sall = algo::Sort(Sall);
-            
-          Scalar Smin;
-          if(keep_dim < Sall.shape()[0]){
+       // process truncate:
+       // 1) concate all s vals from all blk
+       Tensor Sall = outCyT[0].get_block_(0);
+       for(int i=1;i<outCyT[0].Nblocks();i++){
+            Sall = algo::Concatenate(Sall,outCyT[0].get_block_(i));
+       } 
+       Sall = algo::Sort(Sall);
+
+       // 2) get the minimum base on the args input.
+       Scalar Smin;
+       if(keep_dim < Sall.shape()[0]){
+         Smin = Sall.storage()(Sall.shape()[0] - keep_dim);
+         while( (Smin < err) ){
+            keep_dim -=1;
+            if(keep_dim==0) break;
             Smin = Sall.storage()(Sall.shape()[0] - keep_dim);
-            while( (Smin < err) ){
-                keep_dim -=1;
-                if(keep_dim==0) break;
-                Smin = Sall.storage()(Sall.shape()[0] - keep_dim);
-            }
-            
-          }else{
-            keep_dim = Sall.shape()[0];
-            Smin = Sall.storage()(0);
-            while( (Smin < err) ){
-                keep_dim -=1;
-                if(keep_dim==0) break;
-                Smin = Sall.storage()(Sall.shape()[0] - keep_dim);
-            }
-          }
+         }
+        
+       }else{
+         keep_dim = Sall.shape()[0];
+         Smin = Sall.storage()(0);
+         while( (Smin < err) ){
+            keep_dim -=1;
+            if(keep_dim==0) break;
+            Smin = Sall.storage()(Sall.shape()[0] - keep_dim);
+         }
+       }
+
+          
 
           //traversal each block and truncate!
           UniTensor &S = outCyT[0];
@@ -453,6 +457,7 @@ namespace cytnx {
           std::vector<cytnx_int64> keep_dims; keep_dims.reserve(S.Nblocks());
           std::vector<cytnx_int64> new_qid; new_qid.reserve(S.Nblocks());
           
+          std::vector<std::vector<cytnx_uint64> > new_itoi; // assume S block is in same order as qnum:
           std::vector<cytnx_uint64> to_be_remove;
 
           cytnx_uint64 tot_dim = 0;       
@@ -473,6 +478,7 @@ namespace cytnx {
 
                 }else{
                     new_qid.push_back(new_dims.size());
+                    new_itoi.push_back({new_dims.size(),new_dims.size()});
                     new_dims.push_back(kdim);
                     tot_dim += kdim;
                     if(kdim != S.get_blocks_()[b].shape()[0])
@@ -482,7 +488,8 @@ namespace cytnx {
           }
 
           //remove:
-          vec_erase_(S.get_itoi(),to_be_remove);
+          //vec_erase_(S.get_itoi(),to_be_remove);
+          S.get_itoi() = new_itoi;
           vec_erase_(S.get_blocks_(),to_be_remove);
           vec_erase_(S.bonds()[0].qnums(), to_be_remove);
           S.bonds()[0]._impl->_degs = new_dims; 
