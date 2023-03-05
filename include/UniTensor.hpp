@@ -3025,6 +3025,12 @@ namespace cytnx {
       std::vector<cytnx_int64> tmp = qnum;
       return get_block(tmp, force);
     }
+    
+    Tensor get_block(const std::vector<cytnx_uint64> &qnum, const bool &force = false) const {
+      std::vector<cytnx_int64> iqnum(qnum.begin(),qnum.end());
+      return this->_impl->get_block(iqnum, force);
+    }
+
     //================================
     // this only work for non-symm tensor. return a shared view of block
     const Tensor &get_block_(const cytnx_uint64 &idx = 0) const {
@@ -3042,6 +3048,10 @@ namespace cytnx {
       std::vector<cytnx_int64> tmp = qnum;
       return get_block_(tmp, force);
     }
+    Tensor &get_block_(const std::vector<cytnx_uint64> &qnum, const bool &force = false){
+        std::vector<cytnx_int64> iqnum(qnum.begin(),qnum.end());
+        return get_block_(iqnum,force);
+    }
     //================================
 
     // this only work for non-symm tensor. return a shared view of block
@@ -3054,6 +3064,11 @@ namespace cytnx {
       std::vector<cytnx_int64> tmp = qnum;
       return this->_impl->get_block_(tmp, force);
     }
+    const Tensor &get_block_(const std::vector<cytnx_uint64> &qnum, const bool &force = false) const{
+        std::vector<cytnx_int64> iqnum(qnum.begin(),qnum.end());
+        return get_block_(iqnum,force);
+    }
+
     //================================
     // this return a shared view of blocks for non-symm tensor.
     // for symmetry tensor, it call contiguous first and return a shared view of blocks. [dev]

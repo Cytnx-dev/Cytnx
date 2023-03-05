@@ -513,7 +513,12 @@ void unitensor_binding(py::module &m){
         return self.get_block(qnum, force);
       },
       py::arg("qnum"), py::arg("force") = false)
-
+    .def(
+      "get_block",
+      [](const UniTensor &self, const std::vector<cytnx_uint64> &qnum, const bool &force) {
+        return self.get_block(qnum, force);
+      },
+      py::arg("qnum"), py::arg("force") = false)
     .def(
       "get_block_",
       [](const UniTensor &self, const std::vector<cytnx_int64> &qnum, const bool &force) {
@@ -523,6 +528,18 @@ void unitensor_binding(py::module &m){
     .def(
       "get_block_",
       [](UniTensor &self, const std::vector<cytnx_int64> &qnum, const bool &force) {
+        return self.get_block_(qnum, force);
+      },
+      py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block_",
+      [](const UniTensor &self, const std::vector<cytnx_uint64> &qnum, const bool &force) {
+        return self.get_block_(qnum, force);
+      },
+      py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block_",
+      [](UniTensor &self, const std::vector<cytnx_uint64> &qnum, const bool &force) {
         return self.get_block_(qnum, force);
       },
       py::arg("qnum"), py::arg("force") = false)
