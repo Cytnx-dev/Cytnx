@@ -441,7 +441,7 @@ namespace cytnx {
     */
     Bond combineBond(const Bond &bd_in, const bool &is_grp = true) const {
       Bond out;
-      out._impl = this->_impl->combineBond(bd_in._impl);
+      out._impl = this->_impl->combineBond(bd_in._impl, is_grp);
       return out;
     }
 
