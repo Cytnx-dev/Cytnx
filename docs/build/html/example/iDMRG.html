@@ -21,7 +21,6 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../_static/sphinxbootstrap4.js"></script>
@@ -182,10 +181,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">7.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../guide/cyx.html">8. Cytnx extensions</a><ul>
@@ -195,9 +191,9 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Bond.html">8.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#create-the-bonds">8.2.2. Create the Bonds</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/UniTensor.html">8.3. UniTensor</a><ul>
@@ -256,7 +252,7 @@
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">API Documentations</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">API Documentations</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/kaihsin/Cytnx">Github</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing">5-mins Blitz intro slide</a></li>
 </ul>
@@ -484,10 +480,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">7.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../guide/cyx.html">8. Cytnx extensions</a><ul>
@@ -497,9 +490,9 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Bond.html">8.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#create-the-bonds">8.2.2. Create the Bonds</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/UniTensor.html">8.3. UniTensor</a><ul>
@@ -558,7 +551,7 @@
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">API Documentations</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">API Documentations</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/kaihsin/Cytnx">Github</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing">5-mins Blitz intro slide</a></li>
 </ul>
@@ -684,7 +677,7 @@ I &amp; S^z_j&amp; H_x S^x_j \\
 <span class="linenos">21</span>        <span class="k">return</span> <span class="n">H_psi</span>
 <span class="linenos">22</span>
 <span class="linenos">23</span><span class="k">def</span> <span class="nf">eig_Lanczos</span><span class="p">(</span><span class="n">psivec</span><span class="p">,</span> <span class="n">functArgs</span><span class="p">,</span> <span class="n">Cvgcrit</span><span class="o">=</span><span class="mf">1.0e-15</span><span class="p">,</span><span class="n">maxit</span><span class="o">=</span><span class="mi">100000</span><span class="p">):</span>
-<span class="linenos">24</span><span class="w">    </span><span class="sd">&quot;&quot;&quot; Lanczos method for finding smallest algebraic eigenvector of linear \</span>
+<span class="linenos">24</span>    <span class="sd">&quot;&quot;&quot; Lanczos method for finding smallest algebraic eigenvector of linear \</span>
 <span class="linenos">25</span><span class="sd">    operator defined as a function&quot;&quot;&quot;</span>
 <span class="linenos">26</span>    <span class="c1">#print(eig_Lanczos)</span>
 <span class="linenos">27</span>
@@ -868,13 +861,12 @@ then we can simply follows the procedures mentioned in the iTEBD example, we hav
 <span class="linenos">8</span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ground state E&quot;</span><span class="p">,</span><span class="n">E</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="docutils container" id="id2">
-<div class="citation" id="id3" role="doc-biblioentry">
+<p id="id2"><div class="citation" id="id3" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">PVM12</a><span class="fn-bracket">]</span></span>
 <p>Ho N. Phien, Guifré Vidal, and Ian P. McCulloch. Infinite boundary conditions for matrix product state calculations. <em>Phys. Rev. B</em>, 86:245107, Dec 2012. URL: <a class="reference external" href="https://link.aps.org/doi/10.1103/PhysRevB.86.245107">https://link.aps.org/doi/10.1103/PhysRevB.86.245107</a>, <a class="reference external" href="https://doi.org/10.1103/PhysRevB.86.245107">doi:10.1103/PhysRevB.86.245107</a>.</p>
 </div>
 </div>
-</div>
+</p>
 </section>
 </section>
 
@@ -889,7 +881,7 @@ then we can simply follows the procedures mentioned in the iTEBD example, we hav
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.3.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

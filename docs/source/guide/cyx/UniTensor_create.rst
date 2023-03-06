@@ -15,17 +15,13 @@ Generally, there are two types of UniTensor: **un-tagged** and **tagged** UniTen
 +-----------+-----------------+-----------------------------------+
 |           |     non-sym     |  with Symmetry(block-diagonalize) |
 +-----------+-----------------+-----------------------------------+
-| tagged    |     **O**       |        [developing]               |
+| tagged    |     **O**       |              **O**                |
 +-----------+-----------------+-----------------------------------+
-| untagged  |     **O**       |        [developing]               |
+| untagged  |     **O**       |              **X**                |
 +-----------+-----------------+-----------------------------------+
 
-* Currently the UniTensor with symmetry is under developing. 
-
-    
    
 In the following, we will introduce how to construct a UniTensor. 
-
 
 
 Construct from Tensor 
@@ -183,7 +179,7 @@ Now let's construct the rank-3 UniTensor with the same shape as the above exampl
     import cytnx as cy
     from cytnx import Bond as bd
 
-    uT2 = cy.UniTensor([bd(2),bd(3),bd(4)],labels=[100,101,102],rowrank=1).set_name("uT2 scratch")
+    uT2 = cy.UniTensor([bd(2),bd(3),bd(4)],labels=["a","b","c"],rowrank=1).set_name("uT2 scratch")
     uT2.print_diagram()
     print(uT2)
 
@@ -199,9 +195,9 @@ Output >>
     on device   : cytnx device: CPU
                 -------------      
                /             \     
-       100 ____| 2         3 |____ 101
+         a ____| 2         3 |____ b
                |             |     
-               |           4 |____ 102
+               |           4 |____ c
                \             /     
                 -------------  
 
@@ -234,11 +230,11 @@ To change the labels associate to bond(s), we can use **UniTensor.set_label(inde
 .. code-block:: python 
     :linenos:
 
-    uT.set_label(1,-9)
+    uT.set_label(1,"xx")
     uT.print_diagram()
 
 
-    uT.set_labels([-8,-10,-999])
+    uT.set_labels(["i","j","k"])
     uT.print_diagram()
 
 Output >>
@@ -252,9 +248,9 @@ Output >>
     on device   : cytnx device: CPU
                 -------------      
                /             \     
-         0 ____| 2         3 |____ -9 
+         a ____| 2         3 |____ xx
                |             |     
-               |           4 |____ 2  
+               |           4 |____ c 
                \             /     
                 -------------   
 
@@ -266,14 +262,60 @@ Output >>
     on device   : cytnx device: CPU
                 -------------      
                /             \     
-        -8 ____| 2         3 |____ -10
+         i ____| 2         3 |____ j
                |             |     
-               |           4 |____ -999
+               |           4 |____ k
                \             /     
                 -------------   
 
 
+Create UniTensor with different labels that share data
+*********************************************************
 
+In some contraction scenario where we want to create a UniTensor with modified label(s) on each leg(s) but we don't want to create a copy of the actual data (which doubled memory usage). Then one can use function **relabel(s)**. This returns a new UniTensor with different meta (in this case labels are different), but the actual memory block(s) are still refering to the old one. For example:
+
+
+.. code-block:: python
+    :linenos:
+
+    
+    uT_new = uT.relabel("a","xx")
+    uT.print_diagram()
+    uT_new.print_diagram()
+
+    print(uT_new.same_data(uT))
+
+
+
+.. code-block:: text
+
+    -----------------------
+    tensor Name : 
+    tensor Rank : 3
+    block_form  : false
+    is_diag     : False
+    on device   : cytnx device: CPU
+              ---------     
+             /         \    
+       a ____| 2     3 |____ b
+             |         |    
+             |       4 |____ c
+             \         /    
+              ---------     
+    -----------------------
+    tensor Name : 
+    tensor Rank : 3
+    block_form  : false
+    is_diag     : False
+    on device   : cytnx device: CPU
+               ---------     
+              /         \    
+       xx ____| 2     3 |____ b
+              |         |    
+              |       4 |____ c
+              \         /    
+               ---------     
+    True
 
 
 

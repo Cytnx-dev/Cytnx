@@ -21,8 +21,6 @@
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -182,10 +180,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../cyx.html">8. Cytnx extensions</a><ul class="current">
@@ -195,9 +190,9 @@
 </ul>
 </li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">8.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#symmetry-object">8.2.1. Symmetry object</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#create-the-bonds">8.2.2. Create the Bonds</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#combine-bonds">8.2.3. Combine Bonds</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="UniTensor.html">8.3. UniTensor</a><ul>
@@ -256,7 +251,7 @@
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">API Documentations</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">API Documentations</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/kaihsin/Cytnx">Github</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing">5-mins Blitz intro slide</a></li>
 </ul>
@@ -486,10 +481,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../cyx.html">8. Cytnx extensions</a><ul class="current">
@@ -499,9 +491,9 @@
 </ul>
 </li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">8.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#symmetry-object">8.2.1. Symmetry object</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#create-the-bonds">8.2.2. Create the Bonds</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#combine-bonds">8.2.3. Combine Bonds</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="UniTensor.html">8.3. UniTensor</a><ul>
@@ -560,7 +552,7 @@
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">API Documentations</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">API Documentations</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/kaihsin/Cytnx">Github</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing">5-mins Blitz intro slide</a></li>
 </ul>
@@ -606,19 +598,17 @@
   <section id="bond">
 <h1><span class="section-number">8.2. </span>Bond<a class="headerlink" href="#bond" title="Permalink to this heading">¶</a></h1>
 <p>A <strong>Bond</strong> is an object that represent the legs of a tensor. It carries informations such as direction, dimension and quantum numbers (if with Symmetry).</p>
-<p>There are in general two types of Bonds: <strong>directional</strong> and <strong>undirectional</strong> depending on whether the bond has direction (pointing inward to or outward from the tensor body) or not. The inward Bond is also defined as <strong>Ket</strong> type, and the outward Bond is defined as <strong>Bra</strong> type, which represent the <em>Braket</em> notation in the quantum mechanic:</p>
+<p>There are in general two types of Bonds: <strong>directional</strong> and <strong>undirectional</strong> depending on whether the bond has direction (pointing inward to or outward from the tensor body) or not. The inward Bond is also defined as <strong>Ket</strong>/<strong>In</strong> type, and the outward Bond is defined as <strong>Bra</strong>/<strong>Out</strong> type, which represent the <em>Braket</em> notation in the quantum mechanic:</p>
 <a class="reference internal image-reference" href="../../_images/bond.png"><img alt="../../_images/bond.png" class="align-center" src="../../_images/bond.png" style="width: 400px;" /></a>
-<p>Let’s introduce the complete API for constructing a Bond:</p>
+<p>Let’s introduce the complete API for constructing a simple Bond (with or without direction)</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="Bond">
-<span class="sig-name descname"><span class="pre">Bond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bd_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_qnums</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_syms</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Bond" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">Bond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bd_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Bond" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dim</strong> (<em>int</em>) – The dimension of the bond.</p></li>
-<li><p><strong>bd_type</strong> (<em>bondType</em>) – The type (direction) of the bond, can be BD.REG–undirectional, BD.Ket–inward, BD.Bra–outward.</p></li>
-<li><p><strong>in_qnums</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>int</em><em>]</em><em>]</em>) – A size of <em>dim</em> List, each element is a List specifiy the quantum numbers for each dimension, the quantum numbers in this List correspond to the symmetries given in the next argument.</p></li>
-<li><p><strong>in_syms</strong> (<em>List</em><em>[</em><em>Symmetry</em><em>]</em>) – A list of Symmetry objects, specifying the symmetries of the bond.</p></li>
+<li><p><strong>bd_type</strong> (<em>bondType</em>) – The type (direction) of the bond, can be BD_REG–undirectional, BD_KET–inward (same as BD_IN), BD.BRA–outward (same as BD_OUT)</p></li>
 </ul>
 </dd>
 </dl>
@@ -639,11 +629,11 @@
 <ul class="simple">
 <li><p>In c++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">Symmetry</span><span class="w"> </span><span class="n">sym_u1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Symmetry</span><span class="o">::</span><span class="n">U1</span><span class="p">();</span>
-<span class="linenos">2</span><span class="n">Symmetry</span><span class="w"> </span><span class="n">sym_z2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Symmetry</span><span class="o">::</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">Symmetry</span><span class="w"> </span><span class="n">sym_u1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Symmetry</span><span class="o">::</span><span class="n">U1</span><span class="p">();</span><span class="w"></span>
+<span class="linenos">2</span><span class="n">Symmetry</span><span class="w"> </span><span class="n">sym_z2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Symmetry</span><span class="o">::</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span><span class="w"></span>
 <span class="linenos">3</span>
-<span class="linenos">4</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">sym_u1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">5</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">sym_z2</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">4</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">sym_u1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">5</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">sym_z2</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Output &gt;&gt;</p>
@@ -663,76 +653,125 @@ reverse rule : Q*(-1)
 </pre></div>
 </div>
 </section>
-<section id="create-the-bonds">
-<h2><span class="section-number">8.2.2. </span>Create the Bonds<a class="headerlink" href="#create-the-bonds" title="Permalink to this heading">¶</a></h2>
-<p>Follow the API introduced above, here we show a example creating two U1 bonds, with quantum number <span class="math notranslate nohighlight">\(0,-4,-2,3\)</span></p>
+<section id="create-bond-with-qnums">
+<h2><span class="section-number">8.2.2. </span>Create Bond with Qnums<a class="headerlink" href="#create-bond-with-qnums" title="Permalink to this heading">¶</a></h2>
+<p>When system has some symmetry, the Bond can carry quantum numbers. To construct a Bond with symmetry and associate quantum numbers, the following API can be use:</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">Bond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bd_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qnums_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">degeneracies</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sym_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bd_type</strong> (<em>bondType</em>) – The type (direction) of the bond, this can ONLY be BD_KET–inward (BD_IN) or BD_BRA–outward (BD_OUT) when carry quantum numbers.</p></li>
+<li><p><strong>qnums_list</strong> (<em>list</em>) – The quantum number list</p></li>
+<li><p><strong>degeneracies</strong> (<em>list</em>) – The degeneracies(dimensions) of each qnums.</p></li>
+<li><p><strong>sym_list</strong> (<em>list</em>) – The list symmetries objects that defines  the type of each qnums.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p>The two arguments <em>qnums_list</em> and <em>degeneracies</em> can be combined into single one, for example:</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">bd_sym_u1_a</span> <span class="o">=</span> <span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">BD_KET</span><span class="p">,[[</span><span class="mi">0</span><span class="p">],[</span><span class="o">-</span><span class="mi">4</span><span class="p">],[</span><span class="o">-</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">]],[</span><span class="n">sym_u1</span><span class="p">])</span>
-<span class="linenos">2</span><span class="n">bd_sym_u1_b</span> <span class="o">=</span> <span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">BD_KET</span><span class="p">,[[</span><span class="mi">0</span><span class="p">],[</span><span class="o">-</span><span class="mi">4</span><span class="p">],[</span><span class="o">-</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">]])</span> <span class="c1">#default is U1 symmetry</span>
-<span class="linenos">3</span><span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_u1_a</span><span class="p">)</span>
-<span class="linenos">4</span><span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_u1_b</span><span class="p">)</span>
-<span class="linenos">5</span><span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_u1_a</span> <span class="o">==</span> <span class="n">bd_sym_u1_b</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1"># This creates an KET (IN) Bond with quantum number 0,-4,-2,3 with degs 3,4,3,2 respectively.</span>
+<span class="linenos">2</span><span class="n">bd_sym_u1_a</span> <span class="o">=</span> <span class="n">Bond</span><span class="p">(</span><span class="n">BD_KET</span><span class="p">,[</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">],[</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
+<span class="linenos">3</span>
+<span class="linenos">4</span><span class="c1"># equivalent:</span>
+<span class="linenos">5</span><span class="n">bd_sym_u1_a</span> <span class="o">=</span> <span class="n">Bond</span><span class="p">(</span><span class="n">BD_IN</span><span class="p">,[</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">),</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span><span class="p">)],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
+<span class="linenos">6</span>
+<span class="linenos">7</span><span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_u1_a</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>In c++:</p></li>
+<li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">Bond</span><span class="w"> </span><span class="n">bd_sym_u1_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">BD_KET</span><span class="p">,{{</span><span class="mi">0</span><span class="p">},{</span><span class="mi">-4</span><span class="p">},{</span><span class="mi">-2</span><span class="p">},{</span><span class="mi">3</span><span class="p">}},{</span><span class="n">sym_u1</span><span class="p">});</span>
-<span class="linenos">2</span><span class="n">Bond</span><span class="w"> </span><span class="n">bd_sym_u1_b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">BD_KET</span><span class="p">,{{</span><span class="mi">0</span><span class="p">},{</span><span class="mi">-4</span><span class="p">},{</span><span class="mi">-2</span><span class="p">},{</span><span class="mi">3</span><span class="p">}});</span><span class="w"> </span><span class="c1">// default is U1 symmetry</span>
-<span class="linenos">3</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">bd_sym_u1_a</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">4</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">bd_sym_u1_b</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">5</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="p">(</span><span class="n">bd_sym_u1_a</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">bd_sym_u1_b</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">Bond</span><span class="w"> </span><span class="n">bd_sym_u1_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_KET</span><span class="p">,{</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-4</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">},{</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">U1</span><span class="p">()});</span><span class="w"></span>
+<span class="linenos">2</span>
+<span class="linenos">3</span><span class="n">Bond</span><span class="w"> </span><span class="n">bd_sym_u1_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_IN</span><span class="p">,{</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-4</span><span class="p">),</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-2</span><span class="p">),</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span><span class="p">)},{</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">U1</span><span class="p">()});</span><span class="w"></span>
+<span class="linenos">4</span>
+<span class="linenos">5</span><span class="n">print</span><span class="p">(</span><span class="n">bd_sym_u1_a</span><span class="p">);</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Output &gt;&gt;</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Dim = 4 |type: KET&gt;
-U1::  +0 -4 -2 +3
-
-
-Dim = 4 |type: KET&gt;
-U1::  +0 -4 -2 +3
-
-
-True
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Dim = 12 |type: KET&gt;
+ U1::   +0  -4  -2  +3
+Deg&gt;&gt;    3   4   3   2
 </pre></div>
 </div>
-<p>Let’s create another U1 bond <strong>bd_sym_u1_c</strong>, and conbine it with <strong>bd_sym_u1_a</strong>:</p>
+<p>In some cases, we might want to include multiple symmetries in the system. For example: U1 x Z2, which can be achieve by adding additional quantum numbers inside <em>Qs()</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1"># This creates an KET (IN) Bond with U1xZ2 with quantum number (0,0),(-4,1),(-2,0),(3,1) with degs 3,4,3,2 respectively.</span>
+<span class="linenos">2</span><span class="n">bd_sym_u1z2_a</span> <span class="o">=</span> <span class="n">Bond</span><span class="p">(</span><span class="n">BD_KET</span><span class="p">,[</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span> <span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span>\
+<span class="linenos">3</span>                             <span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span>\
+<span class="linenos">4</span>                             <span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span>\
+<span class="linenos">5</span>                             <span class="n">Qs</span><span class="p">(</span><span class="mi">3</span> <span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">],[</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">(),</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">)])</span>
+<span class="linenos">6</span>
+<span class="linenos">7</span><span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_u1z2_a</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>In C++:</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">bd_sym_u1z2_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_KET</span><span class="p">,{</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="w"> </span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="w"></span>
+<span class="linenos">2</span><span class="w">                                 </span><span class="n">Qs</span><span class="p">(</span><span class="mi">-4</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span><span class="w"></span>
+<span class="linenos">3</span><span class="w">                                 </span><span class="n">Qs</span><span class="p">(</span><span class="mi">-2</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="w"></span>
+<span class="linenos">4</span><span class="w">                                 </span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span><span class="w"> </span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">},{</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">U1</span><span class="p">(),</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">)});</span><span class="w"></span>
+<span class="linenos">5</span>
+<span class="linenos">6</span><span class="n">print</span><span class="p">(</span><span class="n">bd_sym_u1z2_a</span><span class="p">);</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Dim = 12 |type: KET&gt;
+ U1::   +0  -4  -2  +3
+ Z2::   +0  +1  +0  +1
+Deg&gt;&gt;    3   4   3   2
+</pre></div>
+</div>
+</section>
+<section id="combine-bonds">
+<h2><span class="section-number">8.2.3. </span>Combine Bonds<a class="headerlink" href="#combine-bonds" title="Permalink to this heading">¶</a></h2>
+<blockquote>
+<div><p>Now lets see how to combine two different Bonds. Let’s create another U1 bond <strong>bd_sym_u1_c</strong>, and conbine it with <strong>bd_sym_u1_a</strong>:</p>
+</div></blockquote>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">bd_sym_u1_c</span> <span class="o">=</span> <span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">BD_KET</span><span class="p">,[[</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="o">-</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">]])</span>
-<span class="linenos">2</span><span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_u1_a</span><span class="p">)</span>
-<span class="linenos">3</span><span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_u1_c</span><span class="p">)</span>
-<span class="linenos">4</span>
-<span class="linenos">5</span><span class="n">bd_sym_all</span> <span class="o">=</span> <span class="n">bd_sym_u1_a</span><span class="o">.</span><span class="n">combineBond</span><span class="p">(</span><span class="n">bd_sym_u1_c</span><span class="p">)</span>
-<span class="linenos">6</span><span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_all</span><span class="p">)</span>
-</pre></div>
-</div>
-<ul class="simple">
-<li><p>In c++:</p></li>
-</ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">Bond</span><span class="w"> </span><span class="n">bd_sym_u1_c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">BD_KET</span><span class="p">,{{</span><span class="mi">-1</span><span class="p">},{</span><span class="mi">1</span><span class="p">},{</span><span class="mi">2</span><span class="p">},{</span><span class="mi">-2</span><span class="p">},{</span><span class="mi">0</span><span class="p">}});</span>
-<span class="linenos">2</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">bd_sym_u1_a</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">3</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">bd_sym_u1_c</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">4</span>
-<span class="linenos">5</span><span class="n">Bond</span><span class="w"> </span><span class="n">bd_sym_all</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bd_sym_u1_a</span><span class="p">.</span><span class="n">combineBond</span><span class="p">(</span><span class="n">bd_sym_u1_c</span><span class="p">);</span>
-<span class="linenos">6</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">bd_sym_all</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">bd_sym_u1_c</span> <span class="o">=</span> <span class="n">Bond</span><span class="p">(</span><span class="n">BD_KET</span><span class="p">,[</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">,</span><span class="n">Qs</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">Qs</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">5</span><span class="p">,</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">6</span><span class="p">])</span>
+<span class="linenos">2</span><span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_u1_c</span><span class="p">)</span>
+<span class="linenos">3</span>
+<span class="linenos">4</span><span class="n">bd_sym_all</span> <span class="o">=</span> <span class="n">bd_sym_u1_a</span><span class="o">.</span><span class="n">combineBond</span><span class="p">(</span><span class="n">bd_sym_u1_c</span><span class="p">)</span>
+<span class="linenos">5</span><span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_all</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Output &gt;&gt;</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Dim = 4 |type: KET&gt;
-U1::  +0 -4 -2 +3
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Dim = 20 |type: KET&gt;
+U1::   -1  +1  +2  -2  +0
+Deg&gt;&gt;    2   3   4   5   6
 
-Dim = 5 |type: KET&gt;
-U1::  -1 +1 +2 -2 +0
 
-Dim = 20 |type: KET&gt;
-U1::  -1 +1 +2 -2 +0 -5 -3 -2 -6 -4 -3 -1 +0 -4 -2 +2 +4 +5 +1 +3
+Dim = 240 |type: KET&gt;
+ U1::   -6  -5  -4  -3  -2  -1  +0  +1  +2  +3  +4  +5
+Deg&gt;&gt;   20   8  39  18  49  15  30  19  16  12   6   8
 </pre></div>
 </div>
-<p>Here we can observe the quantum numbers of <strong>bd_sym_u1_a</strong> combine with <strong>bd_sym_u1_c</strong> and generated 20 quantum numbers, respecting the combine rule (addition) of U1 symmetry.</p>
+<p>Here we can observe the quantum numbers of <strong>bd_sym_u1_a</strong> combine with <strong>bd_sym_u1_c</strong> and generated 12 quantum numbers, respecting the combine rule (addition) of U1 symmetry.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The Bonds need to be in the same direction to be combined. As physical interpretation, one cannot combine a ket state with a bra state!</p>
+</div>
+<p>combineBond by default will group any same quantum number together. Generally, the quantum number of merging two Bonds should be similar to Kron, and sometimes user might want to keep the order instead. In such scenario, one can set additioanll argument <strong>is_grp = False</strong>:</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">bd_sym_all</span> <span class="o">=</span> <span class="n">bd_sym_u1_a</span><span class="o">.</span><span class="n">combineBond</span><span class="p">(</span><span class="n">bd_sym_u1_c</span><span class="p">,</span><span class="n">is_grp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos">2</span><span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_all</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Dim = 240 |type: KET&gt;
+ U1::   -1  +1  +2  -2  +0  -5  -3  -2  -6  -4  -3  -1  +0  -4  -2  +2  +4  +5  +1  +3
+Deg&gt;&gt;    6   9  12  15  18   8  12  16  20  24   6   9  12  15  18   4   6   8  10  12
+</pre></div>
+</div>
 <div class="toctree-wrapper compound">
 </div>
 </section>
@@ -749,7 +788,7 @@ U1::  -1 +1 +2 -2 +0 -5 -3 -2 -6 -4 -3 -1 +0 -4 -2 +2 +4 +5 +1 +3
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.3.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

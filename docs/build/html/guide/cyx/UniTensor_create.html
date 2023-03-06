@@ -21,7 +21,6 @@
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -181,10 +180,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../cyx.html">8. Cytnx extensions</a><ul class="current">
@@ -194,9 +190,9 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Bond.html">8.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#create-the-bonds">8.2.2. Create the Bonds</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
 </ul>
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="UniTensor.html">8.3. UniTensor</a><ul class="current">
@@ -255,7 +251,7 @@
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">API Documentations</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">API Documentations</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/kaihsin/Cytnx">Github</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing">5-mins Blitz intro slide</a></li>
 </ul>
@@ -487,10 +483,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../cyx.html">8. Cytnx extensions</a><ul class="current">
@@ -500,9 +493,9 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Bond.html">8.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#create-the-bonds">8.2.2. Create the Bonds</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
 </ul>
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="UniTensor.html">8.3. UniTensor</a><ul class="current">
@@ -561,7 +554,7 @@
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">API Documentations</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">API Documentations</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/kaihsin/Cytnx">Github</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing">5-mins Blitz intro slide</a></li>
 </ul>
@@ -617,17 +610,14 @@
 </tr>
 <tr class="row-even"><td><p>tagged</p></td>
 <td><p><strong>O</strong></p></td>
-<td><p>[developing]</p></td>
+<td><p><strong>O</strong></p></td>
 </tr>
 <tr class="row-odd"><td><p>untagged</p></td>
 <td><p><strong>O</strong></p></td>
-<td><p>[developing]</p></td>
+<td><p><strong>X</strong></p></td>
 </tr>
 </tbody>
 </table>
-<ul class="simple">
-<li><p>Currently the UniTensor with symmetry is under developing.</p></li>
-</ul>
 <p>In the following, we will introduce how to construct a UniTensor.</p>
 <section id="construct-from-tensor">
 <h2><span class="section-number">8.3.1.1. </span>Construct from Tensor<a class="headerlink" href="#construct-from-tensor" title="Permalink to this heading">¶</a></h2>
@@ -762,7 +752,7 @@ Shape : (2,3,4)
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">import</span> <span class="nn">cytnx</span> <span class="k">as</span> <span class="nn">cy</span>
 <span class="linenos">2</span><span class="kn">from</span> <span class="nn">cytnx</span> <span class="kn">import</span> <span class="n">Bond</span> <span class="k">as</span> <span class="n">bd</span>
 <span class="linenos">3</span>
-<span class="linenos">4</span><span class="n">uT2</span> <span class="o">=</span> <span class="n">cy</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bd</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">bd</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">bd</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span><span class="mi">101</span><span class="p">,</span><span class="mi">102</span><span class="p">],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;uT2 scratch&quot;</span><span class="p">)</span>
+<span class="linenos">4</span><span class="n">uT2</span> <span class="o">=</span> <span class="n">cy</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bd</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">bd</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">bd</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="s2">&quot;c&quot;</span><span class="p">],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;uT2 scratch&quot;</span><span class="p">)</span>
 <span class="linenos">5</span><span class="n">uT2</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
 <span class="linenos">6</span><span class="nb">print</span><span class="p">(</span><span class="n">uT2</span><span class="p">)</span>
 </pre></div>
@@ -776,9 +766,9 @@ is_diag     : False
 on device   : cytnx device: CPU
             -------------
            /             \
-   100 ____| 2         3 |____ 101
+     a ____| 2         3 |____ b
            |             |
-           |           4 |____ 102
+           |           4 |____ c
            \             /
             -------------
 
@@ -806,11 +796,11 @@ Shape : (2,3,4)
 <section id="change-labels">
 <h2><span class="section-number">8.3.1.3. </span>Change labels<a class="headerlink" href="#change-labels" title="Permalink to this heading">¶</a></h2>
 <p>To change the labels associate to bond(s), we can use <strong>UniTensor.set_label(index, new_label)</strong> or <strong>UniTensor.set_labels(new_labels)</strong>. Note that the label should be integer, and cannot have duplicate labels <em>within</em> a same UniTensor:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">uT</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">9</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">uT</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;xx&quot;</span><span class="p">)</span>
 <span class="linenos">2</span><span class="n">uT</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
 <span class="linenos">3</span>
 <span class="linenos">4</span>
-<span class="linenos">5</span><span class="n">uT</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">999</span><span class="p">])</span>
+<span class="linenos">5</span><span class="n">uT</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="s2">&quot;i&quot;</span><span class="p">,</span><span class="s2">&quot;j&quot;</span><span class="p">,</span><span class="s2">&quot;k&quot;</span><span class="p">])</span>
 <span class="linenos">6</span><span class="n">uT</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -822,9 +812,9 @@ is_diag     : False
 on device   : cytnx device: CPU
             -------------
            /             \
-     0 ____| 2         3 |____ -9
+     a ____| 2         3 |____ xx
            |             |
-           |           4 |____ 2
+           |           4 |____ c
            \             /
             -------------
 
@@ -836,11 +826,51 @@ is_diag     : False
 on device   : cytnx device: CPU
             -------------
            /             \
-    -8 ____| 2         3 |____ -10
+     i ____| 2         3 |____ j
            |             |
-           |           4 |____ -999
+           |           4 |____ k
            \             /
             -------------
+</pre></div>
+</div>
+</section>
+<section id="create-unitensor-with-different-labels-that-share-data">
+<h2><span class="section-number">8.3.1.4. </span>Create UniTensor with different labels that share data<a class="headerlink" href="#create-unitensor-with-different-labels-that-share-data" title="Permalink to this heading">¶</a></h2>
+<p>In some contraction scenario where we want to create a UniTensor with modified label(s) on each leg(s) but we don’t want to create a copy of the actual data (which doubled memory usage). Then one can use function <strong>relabel(s)</strong>. This returns a new UniTensor with different meta (in this case labels are different), but the actual memory block(s) are still refering to the old one. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">uT_new</span> <span class="o">=</span> <span class="n">uT</span><span class="o">.</span><span class="n">relabel</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="s2">&quot;xx&quot;</span><span class="p">)</span>
+<span class="linenos">2</span><span class="n">uT</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="linenos">3</span><span class="n">uT_new</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="linenos">4</span>
+<span class="linenos">5</span><span class="nb">print</span><span class="p">(</span><span class="n">uT_new</span><span class="o">.</span><span class="n">same_data</span><span class="p">(</span><span class="n">uT</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-----------------------
+tensor Name :
+tensor Rank : 3
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+          ---------
+         /         \
+   a ____| 2     3 |____ b
+         |         |
+         |       4 |____ c
+         \         /
+          ---------
+-----------------------
+tensor Name :
+tensor Rank : 3
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+           ---------
+          /         \
+   xx ____| 2     3 |____ b
+          |         |
+          |       4 |____ c
+          \         /
+           ---------
+True
 </pre></div>
 </div>
 <div class="toctree-wrapper compound">
@@ -859,7 +889,7 @@ on device   : cytnx device: CPU
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.3.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

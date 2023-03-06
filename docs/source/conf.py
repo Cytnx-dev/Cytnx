@@ -40,8 +40,7 @@ _version = 'v0.7.6'
 # ones.
 # https://sublime-and-sphinx-guide.readthedocs.io/en/latest/references.html
 extensions = ['sphinxcontrib.bibtex',\
-              'sphinx.ext.autosectionlabel',\
-              'breathe']
+              'sphinx.ext.autosectionlabel']
 bibtex_bibfiles = ["example/ref.dmrg.bib",\
                    "example/ref.hotrg.bib",\
                    "example/ref.itebd.bib",\
