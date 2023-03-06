@@ -161,7 +161,7 @@ FLAG="${FLAG} -DUSE_ICPC=OFF "
 
 echo ${FLAG}
 # rm -rf build
-# mkdir build
+ mkdir build
 cd build
 cmake ../ ${FLAG}
 make -j`nproc`
