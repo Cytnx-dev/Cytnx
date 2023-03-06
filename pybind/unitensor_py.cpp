@@ -429,6 +429,7 @@ void unitensor_binding(py::module &m){
     .def("is_diag", &UniTensor::is_diag)
     .def("is_tag", &UniTensor::is_tag)
     .def("is_braket_form", &UniTensor::is_braket_form)
+    .def("same_data", &UniTensor::same_data)
     .def("labels", &UniTensor::labels)
     .def("bonds", [](UniTensor &self) { return self.bonds(); })
     .def("shape", &UniTensor::shape)
