@@ -2,25 +2,26 @@
 
 TEST_F(linalg_Test, BkUt_Svd_truncate1){
   std::vector<UniTensor> res = linalg::Svd_truncate(svd_T, 200, 0, true, true, true);
-  auto con_T = Contract(Contract(res[1], res[0]), res[2]);
   std::vector<double> vnm_S;
   for(int i = 0; i < res[0].shape()[0];i++)
     vnm_S.push_back((double)(res[0].at({i,i}).real()));
   std::sort(vnm_S.begin(), vnm_S.end());
   for(int i = 0; i<vnm_S.size();i++)
     EXPECT_TRUE(abs(vnm_S[i]-(double)(svd_Sans.at({0,i}).real()))<1e-5);
-
+  auto con_T1 = Contract(Contract(res[2], res[0]), res[1]);
+  auto con_T2 = Contract(Contract(res[1], res[0]), res[2]);
 }
 
 TEST_F(linalg_Test, BkUt_Svd_truncate2){
   std::vector<UniTensor> res = linalg::Svd_truncate(svd_T, 200, 1e-1, true, true, true);
-  auto con_T = Contract(Contract(res[1], res[0]), res[2]);
   std::vector<double> vnm_S;
   for(int i = 0; i < res[0].shape()[0];i++)
     vnm_S.push_back((double)(res[0].at({i,i}).real()));
   std::sort(vnm_S.begin(), vnm_S.end());
   for(int i = 0; i<vnm_S.size();i++)
     EXPECT_TRUE(vnm_S[i]>1e-1);
+  auto con_T1 = Contract(Contract(res[2], res[0]), res[1]);
+  auto con_T2 = Contract(Contract(res[1], res[0]), res[2]);
 }
 
 TEST_F(linalg_Test, BkUt_Svd_truncate3){
@@ -31,7 +32,20 @@ TEST_F(linalg_Test, BkUt_Svd_truncate3){
   UniTensor cyT = UniTensor({I,J,K,L},{"a","b","c","d"},2,Type.Double,Device.cpu,false);
   cyT = cyT.Load(data_dir+"Svd_truncate/Svd_truncate2.cytnx");
   std::vector<UniTensor> res =  linalg::Svd_truncate(cyT, 30, 0, true, true, true);
-  auto con_T = Contract(Contract(res[1], res[0]), res[2]);
+  auto con_T1 = Contract(Contract(res[2], res[0]), res[1]);
+  auto con_T2 = Contract(Contract(res[1], res[0]), res[2]);
+}
+
+TEST_F(linalg_Test, BkUt_Svd_truncate4){
+  Bond I = Bond(BD_IN,{Qs(-4),Qs(-2),Qs(0),Qs(2),Qs(4)},{2,7,10,8,3});
+  Bond J = Bond(BD_OUT,{Qs(1),Qs(-1)},{1,1});
+  Bond K = Bond(BD_OUT,{Qs(1),Qs(-1)},{1,1});
+  Bond L = Bond(BD_OUT,{Qs(-4),Qs(-2),Qs(0),Qs(2),Qs(4),Qs(6)},{1,5,10,9,4,1});
+  UniTensor cyT = UniTensor({I,J,K,L},{"a","b","c","d"},2,Type.Double,Device.cpu,false);
+  cyT = cyT.Load(data_dir+"Svd_truncate/Svd_truncate3.cytnx");
+  std::vector<UniTensor> res =  linalg::Svd_truncate(cyT, 30, 0, true, true, true);
+  auto con_T1 = Contract(Contract(res[2], res[0]), res[1]);
+  auto con_T2 = Contract(Contract(res[1], res[0]), res[2]);
 }
 
 
