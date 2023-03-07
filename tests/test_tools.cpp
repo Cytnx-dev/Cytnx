@@ -8,6 +8,26 @@ using namespace testing;
 
 namespace TestTools {
 
+void TestFailMsg::AppendMsg(const std::string& fail_msg, 
+                            const std::string& func_name, const int line) {
+  std::string full_msg;
+  full_msg += fail_msg;
+  full_msg += ("Please check the function " + func_name + " and see the line " + 
+      std::to_string(line) + ".\n");
+  AppendMsg(full_msg);
+}
+
+std::string TestFailMsg::TraceFailMsgs() {
+  std::string trace_msg;
+  trace_msg = "Test case: " + test_case + "\n Trace message:\n";
+  std::string spaces;
+  while(!fail_msgs.empty()) {
+    spaces += "  ";
+    trace_msg += (spaces + fail_msgs.back());
+	fail_msgs.pop_back();
+  }
+  return trace_msg;
+}
 
 bool AreNearlyEqStorage(const Storage& stor1, const Storage& stor2, 
                        const cytnx_double tol) {

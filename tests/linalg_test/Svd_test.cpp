@@ -8,6 +8,8 @@ using namespace TestTools;
 
 namespace SvdTest {
 
+static TestFailMsg fail_msg;
+
 bool CheckResult(const std::string& case_name);
 bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
 bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
@@ -72,6 +74,8 @@ input:
   is_VT:true
 ====================*/
 TEST(Svd, dense_one_elem) {
+  std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
+  fail_msg.Init(test_case_name);
   int size = 1;
   std::vector<Bond> bonds = {Bond(size), Bond(size), Bond(size)};
   int rowrank = 1;
@@ -81,9 +85,10 @@ TEST(Svd, dense_one_elem) {
                      cytnx::Device.cpu, is_diag);
   random::Make_uniform(T, -10, 0, 0);
   std::vector<UniTensor> svds = linalg::Svd(T);
-  EXPECT_TRUE(CheckLabels(T, svds));
-  EXPECT_TRUE(ReComposeCheck(T, svds));
-  EXPECT_EQ(svds[0].at<double>({0}), std::abs(T.at<double>({0, 0, 0})));
+  EXPECT_TRUE(CheckLabels(T, svds)) << fail_msg.TraceFailMsgs();
+  EXPECT_TRUE(ReComposeCheck(T, svds)) << fail_msg.TraceFailMsgs();
+  EXPECT_EQ(svds[0].at<double>({0}), std::abs(T.at<double>({0, 0, 0}))) 
+      << "Singular value is wrong." << " line:" << __LINE__ << std::endl;
 }
 
 /*=====test info=====
@@ -99,7 +104,9 @@ TEST(Svd, dense_nondiag_test) {
     "dense_nondiag_F64"
   };
   for (const auto& case_name : case_list) {
-    EXPECT_TRUE(CheckResult(case_name));
+    std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
+    fail_msg.Init(test_case_name + ", " + case_name);
+    EXPECT_TRUE(CheckResult(case_name)) << fail_msg.TraceFailMsgs();
   }
 }
 
@@ -116,7 +123,9 @@ TEST(Svd, U1_sym_test) {
     "sym_UT_U1_F64"
   };
   for (const auto& case_name : case_list) {
-    EXPECT_TRUE(CheckResult(case_name));
+    std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
+    fail_msg.Init(test_case_name + ", " + case_name);
+    EXPECT_TRUE(CheckResult(case_name)) << fail_msg.TraceFailMsgs();
   }
 }
 
@@ -133,7 +142,9 @@ TEST(Svd, Z2_sym_test) {
     "sym_UT_Z2_F64"
   };
   for (const auto& case_name : case_list) {
-    EXPECT_TRUE(CheckResult(case_name));
+    std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
+    fail_msg.Init(test_case_name + ", " + case_name);
+    EXPECT_TRUE(CheckResult(case_name)) << fail_msg.TraceFailMsgs();
   }
 }
 
@@ -150,7 +161,9 @@ TEST(Svd, Z3_sym_test) {
     "sym_UT_Z3_F64"
   };
   for (const auto& case_name : case_list) {
-    EXPECT_TRUE(CheckResult(case_name));
+    std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
+    fail_msg.Init(test_case_name + ", " + case_name);
+    EXPECT_TRUE(CheckResult(case_name)) << fail_msg.TraceFailMsgs();
   }
 }
 
@@ -175,7 +188,9 @@ TEST(Svd, U1xZ2_sym_test) {
     "sym_UT_U1xZ2_U16"
   };
   for (const auto& case_name : case_list) {
-    EXPECT_TRUE(CheckResult(case_name));
+    std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
+    fail_msg.Init(test_case_name + ", " + case_name);
+    EXPECT_TRUE(CheckResult(case_name)) << fail_msg.TraceFailMsgs();
   }
 }
 
@@ -188,7 +203,9 @@ input:
 ====================*/
 TEST(Svd, U1_zeros_test) {
   std::string case_name = "sym_UT_U1_zeros_F64";
-  EXPECT_TRUE(CheckResult(case_name));
+  std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
+  fail_msg.Init(test_case_name + ", " + case_name);
+  EXPECT_TRUE(CheckResult(case_name)) << fail_msg.TraceFailMsgs();
 }
 
 /*=====test info=====
@@ -200,7 +217,9 @@ input:
 ====================*/
 TEST(Svd, U1_one_elem_test) {
   std::string case_name = "sym_UT_U1_one_elem_F64";
-  EXPECT_TRUE(CheckResult(case_name));
+  std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
+  fail_msg.Init(test_case_name + ", " + case_name);
+  EXPECT_TRUE(CheckResult(case_name)) << fail_msg.TraceFailMsgs();
 }
 
 /*=====test info=====
@@ -217,23 +236,32 @@ TEST(Svd, none_isU_isVT) {
   UniTensor src_T = UniTensor::Load(src_file_name);
   //get S, U, VT
   std::vector<UniTensor> svdsUV = linalg::Svd(src_T, need_U = true, need_VT = true);
-  EXPECT_EQ(svdsUV.size(), 3);
+  EXPECT_EQ(svdsUV.size(), 3) << "The number of the output of svd not correct. Line:"
+      << __LINE__ << std::endl;
 
   //get only S, U
   std::vector<UniTensor> svdsU = linalg::Svd(src_T, need_U = true, need_VT = false);
-  EXPECT_EQ(svdsU.size(), 2);
-  EXPECT_TRUE(AreEqUniTensor(svdsU[0], svdsUV[0]));
-  EXPECT_TRUE(AreEqUniTensor(svdsU[1], svdsUV[1]));
+  EXPECT_EQ(svdsU.size(), 2) << "The number of the output of svd not correct. Line:"
+      << __LINE__ << std::endl;
+  EXPECT_TRUE(AreEqUniTensor(svdsU[0], svdsUV[0])) << "In the svd, output 'S' not"
+      " correct. Line: " << __LINE__ << std::endl;
+  EXPECT_TRUE(AreEqUniTensor(svdsU[1], svdsUV[1])) << "In the svd, output 'U' not"
+      " correct. Line: " << __LINE__ << std::endl;
 
   //get only S, VT
   std::vector<UniTensor> svdsV = linalg::Svd(src_T, need_U = false, need_VT = true);
-  EXPECT_EQ(svdsV.size(), 2);
-  EXPECT_TRUE(AreEqUniTensor(svdsV[0], svdsUV[0]));
-  EXPECT_TRUE(AreEqUniTensor(svdsV[1], svdsUV[2]));
+  EXPECT_EQ(svdsV.size(), 2) << "The number of the output of svd not correct. Line:"
+      << __LINE__ << std::endl;
+  EXPECT_TRUE(AreEqUniTensor(svdsV[0], svdsUV[0])) << "In the svd, output 'S' not"
+      " correct. Line: " << __LINE__ << std::endl;
+  EXPECT_TRUE(AreEqUniTensor(svdsV[1], svdsUV[2])) << "In the svd, output 'VT' not"
+      " correct. Line: " << __LINE__ << std::endl;
 
   //get only S
   std::vector<UniTensor> svdsS = linalg::Svd(src_T, need_U = false, need_VT = false);
-  EXPECT_EQ(svdsS.size(), 1);
+  EXPECT_EQ(svdsS.size(), 1) << "The number of the output of svd not correct. Line:"
+      << __LINE__ << std::endl;
+
   const double tol = 1.0e-10; 
   //Since if no is_U and is_vT, we may call Lapack for different arguments to 
   //  say we don't need U and VT, so we have tolerance here.
@@ -269,7 +297,8 @@ TEST(Svd, err_bool_type_UT) {
   bool need_U, need_VT;
   EXPECT_THROW({
     std::vector<UniTensor> svds = linalg::Svd(src_T, need_U = true, need_VT = true);
-  }, std::logic_error);
+  }, std::logic_error) << "Should throw error when input bool type unitensor but not."
+      " Line:" << __LINE__ << std::endl;
 }
 
 /*=====test info=====
@@ -281,7 +310,8 @@ TEST(Svd, Void_UTenType_UT) {
   auto Ut = UniTensor();
   EXPECT_THROW({
     std::vector<UniTensor> svds = linalg::Svd(Ut);
-  }, std::logic_error);
+  }, std::logic_error) << "Should throw error when input void type unitensor but not."
+      " Line:" << __LINE__ << std::endl;
 }
 
 bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
@@ -310,18 +340,32 @@ bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
   const std::vector<std::string>& u_labels = Tout[1].labels(); 
   const std::vector<std::string>& v_labels = Tout[2].labels(); 
   //check S
-  if (s_labels[0] != "_aux_L") return false;
-  if (s_labels[1] != "_aux_R") return false;
+  if (s_labels[0] != "_aux_L") {
+    fail_msg.AppendMsg("The label of the left leg in 'S' is wrong. ",
+                       __func__, __LINE__);
+    return false;
+  }
+  if (s_labels[1] != "_aux_R") {
+    fail_msg.AppendMsg("The label of the left leg in 'S' is wrong. ",
+                       __func__, __LINE__);
+    return false;
+  }
   //check U
   for (size_t i = 0; i < u_labels.size() - 1; ++i) { //exclude U final lags label
-    if (u_labels[i] != in_labels[i])
+    if (u_labels[i] != in_labels[i]) {
+      fail_msg.AppendMsg("The label of 'U' is wrong. ",
+                         __func__, __LINE__);
       return false;
+	}
   }
   //check V
   for (size_t i = 1; i < v_labels.size(); ++i) { //exclude VT first lags label
     auto in_indx = u_labels.size() - 2 + i;
-    if (v_labels[i] != in_labels[in_indx])
+    if (v_labels[i] != in_labels[in_indx]) {
+      fail_msg.AppendMsg("The label of 'V' is wrong. ",
+                         __func__, __LINE__);
       return false;
+	}
   }
   return true;
 }
@@ -367,16 +411,23 @@ bool CheckResult(const std::string& case_name) {
   std::vector<UniTensor> svds = linalg::Svd(src_T, need_U = true, need_VT = true);
 
   //check labels
-  if (!(CheckLabels(src_T, svds)))
+  if (!(CheckLabels(src_T, svds))) {
+    fail_msg.AppendMsg("The output labels are wrong. ", __func__, __LINE__);
     return false;
+  }
 
   //check answer 
-  if (!(SingularValsCorrect(svds[0], ans_T)))
+  if (!(SingularValsCorrect(svds[0], ans_T))) {
+    fail_msg.AppendMsg("The singular values are wong.. ", __func__, __LINE__);
     return false;
+  }
 
   //check recomplse [M - USV*]
-  if (!ReComposeCheck(src_T, svds))
+  if (!ReComposeCheck(src_T, svds)) {
+    fail_msg.AppendMsg("The result is wrong after recomposing. "
+                           "That's mean T not equal USV* ", __func__, __LINE__);
     return false;
+  }
 
   return true;
 }

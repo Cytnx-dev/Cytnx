@@ -11,6 +11,25 @@ using namespace cytnx;
 
 namespace TestTools {
 
+// test error message trace
+class TestFailMsg {
+ private:
+  std::string test_case;
+  std::vector<std::string> fail_msgs;
+ public:
+  //TestFailMsg();
+  void Init(const std::string& _test_case) {
+    test_case = _test_case;
+    fail_msgs.clear();
+  }
+  void AppendMsg(const std::string& fail_msg, const std::string& func_name, 
+                 const int line);
+  void AppendMsg(const std::string& fail_msg) {
+    fail_msgs.push_back(fail_msg);
+  }
+  std::string TraceFailMsgs();
+};
+
 static std::vector<unsigned int> dtype_list = {
   //Type.Void,
   Type.ComplexDouble,
