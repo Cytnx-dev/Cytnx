@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
-    <title>8.3.4. Manipulate UniTensor &#8212; Cytnx  documentation</title>
+    <title>8.3.5. Manipulate UniTensor &#8212; Cytnx  documentation</title>
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic.css" />
@@ -26,7 +26,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="8.4. Network" href="Network.html" />
-    <link rel="prev" title="8.3.3. Accessing the block(s)" href="UniTensor_getblk.html" /> 
+    <link rel="prev" title="8.3.4. Accessing the block(s)" href="UniTensor_getblk.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -198,8 +198,9 @@
 <li class="toctree-l3 current"><a class="reference internal" href="UniTensor.html">8.3. UniTensor</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">8.3.1. Create UniTensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">8.3.3. Accessing the block(s)</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">8.3.4. Manipulate UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">8.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">8.3.5. Manipulate UniTensor</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Network.html">8.4. Network</a><ul>
@@ -322,12 +323,12 @@
                          accesskey="U"
                          class="active"
                        ><span class="section-number">8.3. </span>UniTensor</a></li>
-            <li class="breadcrumb-item active"><span class="section-number">8.3.4. </span>Manipulate UniTensor</li>
+            <li class="breadcrumb-item active"><span class="section-number">8.3.5. </span>Manipulate UniTensor</li>
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-               <a href="UniTensor_getblk.html" title="Previous Chapter: 8.3.3. Accessing the block(s)" class="btn btn-primary" role="botton" accesskey="P">
-                   &laquo; 8.3.3. Access...
+               <a href="UniTensor_getblk.html" title="Previous Chapter: 8.3.4. Accessing the block(s)" class="btn btn-primary" role="botton" accesskey="P">
+                   &laquo; 8.3.4. Access...
                </a>
                <a href="Network.html" title="Next Chapter: 8.4. Network" class="btn btn-primary" role="botton" accesskey="N">
                    8.4. Network &raquo;
@@ -501,8 +502,9 @@
 <li class="toctree-l3 current"><a class="reference internal" href="UniTensor.html">8.3. UniTensor</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">8.3.1. Create UniTensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">8.3.3. Accessing the block(s)</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">8.3.4. Manipulate UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">8.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">8.3.5. Manipulate UniTensor</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Network.html">8.4. Network</a><ul>
@@ -569,7 +571,7 @@
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="UniTensor_getblk.html"
-                          title="previous chapter"><span class="section-number">8.3.3. </span>Accessing the block(s)</a></p>
+                          title="previous chapter"><span class="section-number">8.3.4. </span>Accessing the block(s)</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
@@ -598,18 +600,18 @@
           <div class="body">
             
   <section id="manipulate-unitensor">
-<h1><span class="section-number">8.3.4. </span>Manipulate UniTensor<a class="headerlink" href="#manipulate-unitensor" title="Permalink to this heading">¶</a></h1>
+<h1><span class="section-number">8.3.5. </span>Manipulate UniTensor<a class="headerlink" href="#manipulate-unitensor" title="Permalink to this heading">¶</a></h1>
 <p>Having introduced the detail of initialization and structure of three types (un-tagged, tagged and tagged with symmetry) of UniTensor,
 in this section we present several general and useful hints on dealing with UniTensors.</p>
 <section id="permutation-reshape-arithmetic">
-<h2><span class="section-number">8.3.4.1. </span>Permutation, Reshape, Arithmetic …<a class="headerlink" href="#permutation-reshape-arithmetic" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">8.3.5.1. </span>Permutation, Reshape, Arithmetic …<a class="headerlink" href="#permutation-reshape-arithmetic" title="Permalink to this heading">¶</a></h2>
 <p>Basic operations like permutation, reshape and arithmetic for un-tagged type UniTensor can be done exacly the same as Tensors,
 refer to the section 2.2. Manipulate Tensor and 2.4. Tensor arithmetic.</p>
 <p>For the manipulations on elements, we just remember to first access to the blocks (which are just tensors objects) and then access the elements as
 we have learned in 2.3. Access elements.</p>
 </section>
 <section id="unitensor-contraction">
-<h2><span class="section-number">8.3.4.2. </span>UniTensor contraction<a class="headerlink" href="#unitensor-contraction" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">8.3.5.2. </span>UniTensor contraction<a class="headerlink" href="#unitensor-contraction" title="Permalink to this heading">¶</a></h2>
 <p>For the contraction of two UniTensor, we have the function <strong>cytnx.Contract()</strong> to do the job, what it does is simply contract
 the common labels of two UniTensors. Here is a example:</p>
 <ul class="simple">
@@ -741,7 +743,7 @@ preserving their labels, that’s the reason why we use <strong>.relabels</stron
 <p>For the contraction task on multiple Unitensors, refer to 7.4. Network.</p>
 </section>
 <section id="rowrank">
-<h2><span class="section-number">8.3.4.3. </span>Rowrank<a class="headerlink" href="#rowrank" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">8.3.5.3. </span>Rowrank<a class="headerlink" href="#rowrank" title="Permalink to this heading">¶</a></h2>
 <p>Another property that we may want to maintain in UniTensor is its rowrank, it simply tells us
 how the legs of the a UniTensor is splited into two halves, namely one part belongs to the rowspace
 and the other the column space. Most of the linear algebra algorithms takes the matrix as the input, we thus use the rowrank

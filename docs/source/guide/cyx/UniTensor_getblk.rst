@@ -7,7 +7,7 @@ UniTensor without symmetries
 *****************************
 
 For the UniTensor without symmetries, we expect the UniTensor is just an Tensor with bonds labeled by ids,
-in this case, the **.get_block()**  or **.get_block()_** will return the Tensor object of the UniTensor for us to manipulate.
+in this case, the **.get_block()**  or **.get_block_()** will return the Tensor object of the UniTensor for us to manipulate.
 
 * In python:
 
@@ -15,7 +15,7 @@ in this case, the **.get_block()**  or **.get_block()_** will return the Tensor 
     :linenos:
 
     # Create an UniTensor from Tensor
-    T = cytnx.UniTensor(cytnx.ones([3,3]), rowrank=1)
+    T = cytnx.UniTensor(cytnx.ones([3,3]))
     print(T.get_block())
 
 Output >> 
@@ -33,83 +33,115 @@ Output >>
 UniTensor with symmetries
 *****************************
 
-As an example for symmetry UniTensor, we consider the two-sites local Hamitonian **H** appeared in iTEBD algorithm when U(1) symmetry is exploited.
-We create the U(1) symmetric **H** and use **.get_blocks_qnums()** to check the infomation of its blocks (associate qunatum number labels).
+**Getting all blocks:**
 
-* In python:
+
+Let's use the same example of U1 symmetry UniTensor we introduce earlier in previous section to demostrate how to get block(s) from a block structured UniTensor:
+
+.. image:: image/u1_tdex.png
+    :width: 500
+    :align: center
+
 
 .. code-block:: python
     :linenos:
 
-    bdi = cytnx.Bond(2,cytnx.BD_KET,[[1],[-1]])
-    bdo = bdi.clone().set_type(cytnx.BD_BRA)
-    H = cytnx.UniTensor([bdi,bdi,bdo,bdo], labels=[2,3,0,1], rowrank=2)
-    print(H.get_blocks_qnums())
+    bond_c = cytnx.Bond(cytnx.BD_IN, [Qs(1)>>1, Qs(-1)>>1],[cytnx.Symmetry.U1()])
+    bond_d = cytnx.Bond(cytnx.BD_IN, [Qs(1)>>1, Qs(-1)>>1],[cytnx.Symmetry.U1()])
+    bond_e = cytnx.Bond(cytnx.BD_OUT, [Qs(2)>>1, Qs(0)>>2, Qs(-2)>>1],[cytnx.Symmetry.U1()])
+    Td = cytnx.UniTensor([bond_c, bond_d, bond_e])
+    Td.set_name("Td")
 
-
-Output >> 
-
-.. code-block:: text
-
-    Vector Print:
-    Total Elements:3
-    [Vector Print:
-    Total Elements:1
-    [-2]
-    , Vector Print:
-    Total Elements:1
-    [0]
-    , Vector Print:
-    Total Elements:1
-    [2]
-    ]
-
-In this case we have **3 blocks**, labeled by **3 set of quantum numbers [-2], [0], [2]** (which are also represented as vectors), since only U(1)
-symmetry are used, each label contains only 1 quantum number.
-
-We can further use **.get_blocks_()** or **.get_blocks()** to get all the blocks in a vector/list of an symmetric UniTensor
+To access all the valid blocks from a UniTensor with block structure ( with symmetry), one can use **get_blocks()** or **get_blocks_()**. This will return a *list* (or *vector* in C++) of blocks (where each block is a **cytnx.Tensor** object) In the current order stored in UniTensor.
 
 
 * In python:
 
 .. code-block:: python
     :linenos:
-
-    print(H.get_blocks_())
-
+    
+    Blks = Td.get_blocks_()
+    print(len(Blks))
+    print(Blks)
 
 Output >> 
 
 .. code-block:: text
+    
+    4
 
     Total elem: 1
     type  : Double (Float64)
     cytnx device: CPU
-    Shape : (1,1)
-    [[0.00000e+00 ]]
+    Shape : (1,1,1)
+    [[[0.00000e+00 ]]]
 
 
 
-    Total elem: 4
+    Total elem: 2
     type  : Double (Float64)
     cytnx device: CPU
-    Shape : (2,2)
-    [[0.00000e+00 0.00000e+00 ]
-    [0.00000e+00 0.00000e+00 ]]
+    Shape : (1,1,2)
+    [[[0.00000e+00 0.00000e+00 ]]]
+
+
+
+    Total elem: 2
+    type  : Double (Float64)
+    cytnx device: CPU
+    Shape : (1,1,2)
+    [[[0.00000e+00 0.00000e+00 ]]]
 
 
 
     Total elem: 1
     type  : Double (Float64)
     cytnx device: CPU
-    Shape : (1,1)
-    [[0.00000e+00 ]]
+    Shape : (1,1,1)
+    [[[0.00000e+00 ]]]
 
 
-    [, , ]
+    [, , , ]
 
-To get a block with desired quantum numbers, we use **.get_block_()** or **.get_block()**, with the argument to be the quantum number label.
-Note again that the blocks are nothing but the normal **Tensor** object, so we can manipulate it as we did to the Tensors,
+
+
+.. Note::
+
+    Again, just like other functions, with underscore means that its inplace, so shared view (reference) will be return. Without underscore the return will be the *copy* of all blocks! 
+
+
+**Getting specific block:**
+
+
+To get a block in a UniTensor, one can use **.get_block_()** or **.get_block()**.
+Currently there are two ways to get a specific block, depending on which kind of argument is provided.
+
+1. Getting it directly by the index of their current order stored in UniTensor. 
+
+.. code-block:: python
+    :linenos:
+
+    B1 = Td.get_block_(1)
+    print(B1)
+
+
+.. code-block:: text
+
+    Total elem: 2
+    type  : Double (Float64)
+    cytnx device: CPU
+    Shape : (1,1,2)
+    [[[0.00000e+00 0.00000e+00 ]]]
+
+
+
+2. Getting it by their Qn indices. 
+
+
+
+.. Note::
+
+    Note again that the blocks are nothing but the normal **Tensor** object, so we can manipulate it as we did to the Tensors,
 here we demostrate the usage of **.get_block_()**, since the return should be the reference, we can directly assign/modify the content of these blocks.
 
 * In python:
