@@ -30,7 +30,7 @@ TEST_F(linalg_Test, BkUt_Svd_truncate3){
   Bond K = Bond(BD_OUT,{Qs(1),Qs(-1)},{1,1});
   Bond L = Bond(BD_OUT,{Qs(-5),Qs(-3),Qs(-1),Qs(1),Qs(3),Qs(5)},{1,4,10,9,5,1});
   UniTensor cyT = UniTensor({I,J,K,L},{"a","b","c","d"},2,Type.Double,Device.cpu,false);
-  cyT = cyT.Load(data_dir+"Svd_truncate/Svd_truncate2.cytnx");
+  auto cyT2 = UniTensor::Load(data_dir+"Svd_truncate/Svd_truncate2.cytnx");
   std::vector<UniTensor> res =  linalg::Svd_truncate(cyT, 30, 0, true, true, true);
   auto con_T1 = Contract(Contract(res[2], res[0]), res[1]);
   auto con_T2 = Contract(Contract(res[1], res[0]), res[2]);

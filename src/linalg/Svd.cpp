@@ -548,6 +548,8 @@ namespace cytnx {
       cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1,
                       "[Svd][ERROR] Svd for UniTensor should have rank>1 and rowrank>0%s",
                       "\n");
+
+      cytnx_error_msg(Tin.is_diag(),"[Svd][ERROR] Svd for diagonal UniTensor is trivial and currently not support. Use other manipulation.%s","\n");
       
       std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {

@@ -36,10 +36,9 @@ TEST(Svd, dense_diag_test) {
                      cytnx::Device.cpu, is_diag);
   random::Make_uniform(T, 0, 10, 0);
   std::cout << T << std::endl;
-  std::vector<UniTensor> svds = linalg::Svd(T);
-  auto S = svds[0];
-  auto U = svds[1];
-  auto Vt = svds[2];
+  EXPECT_THROW({
+    std::vector<UniTensor> svds = linalg::Svd(T);
+  }, std::logic_error);
 }
 
 /*=====test info=====
@@ -63,7 +62,9 @@ TEST(Svd, sym_diag_test) {
   std::vector<std::string> labels = {}; 
   auto UT = UniTensor(bonds, labels, row_rank, Type.Double, Device.cpu, is_diag);
   random::Make_uniform(UT, 0, 10, 0);
-  std::vector<UniTensor> svds = linalg::Svd(UT);
+  EXPECT_THROW({
+    std::vector<UniTensor> svds = linalg::Svd(UT);
+  }, std::logic_error);
 }
 
 /*=====test info=====
