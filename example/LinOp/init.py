@@ -1,3 +1,7 @@
+import sys
+from pathlib import Path
+home = str(Path.home())
+sys.path.append(home + '/Cytnx_lib')
 from cytnx import *
 
 
@@ -28,8 +32,12 @@ def myfunc(v):
 ## at init, we need to specify 
 ## the dtype and device of the input and output vectors of custom function "myfunc".
 ## Here, it's double type and on cpu. 
-lop = LinOp("mv",nx=4,dtype=Type.Double,device=Device.cpu,custom_f=myfunc)
-print(lop.matvec(t)) ## use .matvec(t) to get the output.
+
+# Do not use LinOp constructor directly in python, the custom_f argument is not supported.
+# Instead, create your own class that inherit LinOp class, and overload the matvec() function.
+ 
+# lop = LinOp("mv",nx=4,dtype=Type.Double,device=Device.cpu,custom_f=myfunc)
+# print(lop.matvec(t)) ## use .matvec(t) to get the output.
 
 
 # Method 2, write a custom class that inherit LinOp class.
