@@ -20,54 +20,6 @@ std::string ans_data_root = data_root + "linalg/Svd/";
 //normal test
 
 /*=====test info=====
-describe:Test Dense diagonal tensor.
-input:
-  T:Dense diagonal complex real type UniTensor.
-  is_U:true
-  is_VT:true
-====================*/
-TEST(Svd, dense_diag_test) {
-  int size = 5;
-  std::vector<Bond> bonds = {Bond(size), Bond(size)};
-  int rowrank = 1;
-  bool is_diag = true;
-  auto labels = std::vector<std::string>();
-  auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double,
-                     cytnx::Device.cpu, is_diag);
-  random::Make_uniform(T, 0, 10, 0);
-  std::cout << T << std::endl;
-  EXPECT_THROW({
-    std::vector<UniTensor> svds = linalg::Svd(T);
-  }, std::logic_error);
-}
-
-/*=====test info=====
-describe:Test Symmetric diagonal tensor.
-input:
-  T:Dense diagonal complex real type UniTensor.
-  is_U:true
-  is_VT:true
-====================*/
-TEST(Svd, sym_diag_test) {
-  std::vector<std::vector<cytnx_int64>> qnums = { 
-    {0}, {1}, {0}, {1}, {2} 
-  };  
-  std::vector<cytnx_uint64> degs = {1, 2, 3, 4, 5}; 
-  auto syms = std::vector<Symmetry>(qnums[0].size(), Symmetry(SymType.U));
-  auto bond_ket = Bond(BD_KET, qnums, degs, syms);
-  auto bond_bra = Bond(BD_BRA, qnums, degs, syms);
-  std::vector<Bond> bonds = {bond_ket, bond_bra};
-  cytnx_int64 row_rank = 1; 
-  bool is_diag = true;
-  std::vector<std::string> labels = {}; 
-  auto UT = UniTensor(bonds, labels, row_rank, Type.Double, Device.cpu, is_diag);
-  random::Make_uniform(UT, 0, 10, 0);
-  EXPECT_THROW({
-    std::vector<UniTensor> svds = linalg::Svd(UT);
-  }, std::logic_error);
-}
-
-/*=====test info=====
 describe:Test dense UniTensor only one element.
 input:
   T:Dense UniTensor only one element.
@@ -272,7 +224,55 @@ TEST(Svd, none_isU_isVT) {
 //error test
 
 /*=====test info=====
-describe:eror test, Test input the symmetric UniTensor with dtype is bool type.
+describe:error test, Test Dense diagonal tensor.
+input:
+  T:Dense diagonal complex real type UniTensor.
+  is_U:true
+  is_VT:true
+====================*/
+TEST(Svd, err_dense_diag_test) {
+  int size = 5;
+  std::vector<Bond> bonds = {Bond(size), Bond(size)};
+  int rowrank = 1;
+  bool is_diag = true;
+  auto labels = std::vector<std::string>();
+  auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double,
+                     cytnx::Device.cpu, is_diag);
+  random::Make_uniform(T, 0, 10, 0);
+  std::cout << T << std::endl;
+  EXPECT_THROW({
+    std::vector<UniTensor> svds = linalg::Svd(T);
+  }, std::logic_error);
+}
+
+/*=====test info=====
+describe:error test. Test Symmetric diagonal tensor.
+input:
+  T:Symmetric diagonal complex real type UniTensor.
+  is_U:true
+  is_VT:true
+====================*/
+TEST(Svd, err_sym_diag_test) {
+  std::vector<std::vector<cytnx_int64>> qnums = { 
+    {0}, {1}, {0}, {1}, {2} 
+  };  
+  std::vector<cytnx_uint64> degs = {1, 2, 3, 4, 5}; 
+  auto syms = std::vector<Symmetry>(qnums[0].size(), Symmetry(SymType.U));
+  auto bond_ket = Bond(BD_KET, qnums, degs, syms);
+  auto bond_bra = Bond(BD_BRA, qnums, degs, syms);
+  std::vector<Bond> bonds = {bond_ket, bond_bra};
+  cytnx_int64 row_rank = 1; 
+  bool is_diag = true;
+  std::vector<std::string> labels = {}; 
+  auto UT = UniTensor(bonds, labels, row_rank, Type.Double, Device.cpu, is_diag);
+  random::Make_uniform(UT, 0, 10, 0);
+  EXPECT_THROW({
+    std::vector<UniTensor> svds = linalg::Svd(UT);
+  }, std::logic_error);
+}
+
+/*=====test info=====
+describe:eror test. Test input the symmetric UniTensor with dtype is bool type.
 input:
   T:bool type symmetric UniTensor.
   is_U:true
@@ -303,11 +303,11 @@ TEST(Svd, err_bool_type_UT) {
 }
 
 /*=====test info=====
-describe:eror test, Test input Void type UniTensor.
+describe:eror test. Test input Void type UniTensor.
 input:
   T:Void UniTensor.
 ====================*/
-TEST(Svd, Void_UTenType_UT) {
+TEST(Svd, err_Void_UTenType_UT) {
   auto Ut = UniTensor();
   EXPECT_THROW({
     std::vector<UniTensor> svds = linalg::Svd(Ut);
