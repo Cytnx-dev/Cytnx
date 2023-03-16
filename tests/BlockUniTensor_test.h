@@ -97,17 +97,21 @@ class BlockUniTensorTest : public ::testing::Test {
   // UniTensor UT_permute_3 = UniTensor({C3B3.redirect(), C3B3});
   // UniTensor UT_permute_ans3 = UniTensor({C3B3, C3B3.redirect()});
 
+  Bond Bdiag = Bond(BD_IN, {Qs(-1), Qs(1), Qs(1), Qs(-1), Qs(2)}, {3, 2, 1, 1, 5});
+  UniTensor UT_diag = UniTensor({Bdiag,Bdiag.redirect()}, std::vector<std::string>({"0","1"}), 1, Type.ComplexDouble, Device.cpu, true);
+  UniTensor UT_diag_cplx = UniTensor({Bdiag,Bdiag.redirect()}, std::vector<std::string>({"0","1"}), 1, Type.ComplexDouble, Device.cpu, true);
+
  protected:
   void SetUp() override {
-    BUT4 = BUT4.Load("OriginalBUT.cytnx");
-    BUT4_2 = BUT4_2.Load("OriginalBUT2.cytnx");
-    BUconjT4 = BUconjT4.Load("BUconjT.cytnx");
-    BUtrT4 = BUtrT4.Load("BUtrT.cytnx");
-    BUTpT2 = BUTpT2.Load("BUTpT2.cytnx");
-    BUTsT2 = BUTsT2.Load("BUTsT2.cytnx");
-    BUTm9 = BUTm9.Load("BUTm9.cytnx");
-    BUTd9 = BUTd9.Load("BUTd9.cytnx");
-    BUTdT2 = BUTdT2.Load("BUTdT2.cytnx");
+    BUT4 = UniTensor::Load("OriginalBUT.cytnx");
+    BUT4_2 = UniTensor::Load("OriginalBUT2.cytnx");
+    BUconjT4 = UniTensor::Load("BUconjT.cytnx");
+    BUtrT4 = UniTensor::Load("BUtrT.cytnx");
+    BUTpT2 = UniTensor::Load("BUTpT2.cytnx");
+    BUTsT2 = UniTensor::Load("BUTsT2.cytnx");
+    BUTm9 = UniTensor::Load("BUTm9.cytnx");
+    BUTd9 = UniTensor::Load("BUTd9.cytnx");
+    BUTdT2 = UniTensor::Load("BUTdT2.cytnx");
 
     BUT6.at({0,0}) = 1;
     BUT6.at({1,1}) = 2;
@@ -120,23 +124,33 @@ class BlockUniTensorTest : public ::testing::Test {
     t1b = Tensor::Load("put_block_t1b.cytn");
     t2 = Tensor::Load("put_block_t2.cytn");
 
-    UT_pB_ans = UT_pB_ans.Load("put_block_ans.cytnx");
-    UT_contract_L1 = UT_contract_L1.Load("contract_L1.cytnx");
-    UT_contract_R1 = UT_contract_R1.Load("contract_R1.cytnx");
-    UT_contract_ans1 =  UT_contract_ans1.Load("contract_ans1.cytnx");
-    UT_contract_L2 = UT_contract_L2.Load("contract_L2.cytnx");
-    UT_contract_R2 = UT_contract_R2.Load("contract_R2.cytnx");
-    UT_contract_ans2 =  UT_contract_ans2.Load("contract_ans2.cytnx");
-    UT_contract_L3 = UT_contract_L3.Load("contract_L3.cytnx");
-    UT_contract_R3 = UT_contract_R3.Load("contract_R3.cytnx");
-    UT_contract_ans3 =  UT_contract_ans3.Load("contract_ans3.cytnx");
+    UT_pB_ans = UniTensor::Load("put_block_ans.cytnx");
+    UT_contract_L1 = UniTensor::Load("contract_L1.cytnx");
+    UT_contract_R1 = UniTensor::Load("contract_R1.cytnx");
+    UT_contract_ans1 =  UniTensor::Load("contract_ans1.cytnx");
+    UT_contract_L2 = UniTensor::Load("contract_L2.cytnx");
+    UT_contract_R2 = UniTensor::Load("contract_R2.cytnx");
+    UT_contract_ans2 =  UniTensor::Load("contract_ans2.cytnx");
+    UT_contract_L3 = UniTensor::Load("contract_L3.cytnx");
+    UT_contract_R3 = UniTensor::Load("contract_R3.cytnx");
+    UT_contract_ans3 =  UniTensor::Load("contract_ans3.cytnx");
     
-    UT_permute_1 = UT_permute_1.Load("permute_T1.cytnx");
-    UT_permute_ans1 = UT_permute_ans1.Load("permute_ans1.cytnx");
-    UT_permute_2 = UT_permute_2.Load("permute_T2.cytnx");
-    UT_permute_ans2 = UT_permute_ans2.Load("permute_ans2.cytnx");
+    UT_permute_1 = UniTensor::Load("permute_T1.cytnx");
+    UT_permute_ans1 = UniTensor::Load("permute_ans1.cytnx");
+    UT_permute_2 = UniTensor::Load("permute_T2.cytnx");
+    UT_permute_ans2 = UniTensor::Load("permute_ans2.cytnx");
     // UT_permute_3 = UT_permute_3.Load("permute_T3.cytnx");
     // UT_permute_ans3 = UT_permute_ans3.Load("permute_ans3.cytnx");
+
+    for(size_t i=0;i<UT_diag.bonds()[0].qnums().size();i++){
+      cytnx_uint64 deg = UT_diag.bonds()[0]._impl->_degs[i];
+      UT_diag.get_block_(i).fill(i+1);
+    }
+    using namespace std::complex_literals;
+    for(size_t i=0;i<UT_diag_cplx.bonds()[0].qnums().size();i++){
+      cytnx_uint64 deg = UT_diag_cplx.bonds()[0]._impl->_degs[i];
+      UT_diag_cplx.get_block_(i).fill(std::complex<double>{i+1, i+1});
+    }
   }
   void TearDown() override {}
 };

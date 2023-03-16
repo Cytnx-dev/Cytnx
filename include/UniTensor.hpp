@@ -2909,13 +2909,13 @@ namespace cytnx {
     void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1) {
       this->_impl->permute_(mapper, rowrank);
     }
-    void permute_( const std::initializer_list<char*> &mapper, const cytnx_int64 &rowrank= -1){
-        std::vector<char*> mprs = mapper;
-        std::vector<std::string> vs(mprs.size());
-        transform(mprs.begin(),mprs.end(),vs.begin(),[](char * x) -> std::string { return std::string(x); });
+    // void permute_( const std::initializer_list<char*> &mapper, const cytnx_int64 &rowrank= -1){
+    //     std::vector<char*> mprs = mapper;
+    //     std::vector<std::string> vs(mprs.size());
+    //     transform(mprs.begin(),mprs.end(),vs.begin(),[](char * x) -> std::string { return std::string(x); });
 
-        this->permute_(vs,rowrank);
-    }
+    //     this->permute_(vs,rowrank);
+    // }
 
     //void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) {
     //  this->_impl->permute_(mapper, rowrank);
@@ -3368,9 +3368,33 @@ namespace cytnx {
       this->at(locator) = rc;
     }
 
+    /*
+    @brief: save a UniTensor to file
+    @param fname: the file name
+    @remark: The stored file will be ended in .cytnx
+    */
     void Save(const std::string &fname) const;
+    /*
+    @brief: save a UniTensor to file
+    @param fname: the file name
+    @remark: The stored file will be ended in .cytnx
+    */
     void Save(const char *fname) const;
+    /*
+    @brief: load a UniTensor from file
+    @param fname: the file name
+    @return: the loaded UniTensor
+    @remark: This is static function, if called through UniTensor object, 
+    it will return a new UniTensor object instead of modifying the current one.
+    */
     static UniTensor Load(const std::string &fname);
+    /*
+    @brief: load a UniTensor from file
+    @param fname: the file name
+    @return: the loaded UniTensor
+    @remark: This is static function, if called through UniTensor object, 
+    it will return a new UniTensor object instead of modifying the current one.
+    */
     static UniTensor Load(const char *fname);
     /**
      * @brief

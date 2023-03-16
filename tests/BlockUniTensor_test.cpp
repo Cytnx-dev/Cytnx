@@ -3,8 +3,8 @@
 TEST_F(BlockUniTensorTest, Trace) {
   // std::cout<<BUT4<<std::endl;
   auto tmp = BUT4.Trace(0,3);
-  std::cout<<BUtrT4<<std::endl;
-  std::cout<<tmp<<std::endl;
+  // std::cout<<BUtrT4<<std::endl;
+  // std::cout<<tmp<<std::endl;
   for(size_t j=1;j<=11;j++)
       for(size_t k=1;k<=3;k++)
         if(BUtrT4.at({j-1,k-1}).exists()){
@@ -12,11 +12,28 @@ TEST_F(BlockUniTensorTest, Trace) {
           EXPECT_DOUBLE_EQ(double(tmp.at({j-1,k-1}).real()),double(BUtrT4.at({j-1,k-1}).real()));
           EXPECT_DOUBLE_EQ(double(tmp.at({j-1,k-1}).imag()),double(BUtrT4.at({j-1,k-1}).imag()));
         }
-  // EXPECT_NO_THROW(BUT1.Trace(0,3));
-  // EXPECT_THROW(BUT1.Trace(),std::logic_error);
-  // EXPECT_THROW(BUT1.Trace(0,1),std::logic_error);
-  // EXPECT_THROW(BUT1.Trace(-1,2),std::logic_error);
-  // EXPECT_THROW(BUT1.Trace(-1,5),std::logic_error);
+  // std::cout<<tmp<<std::endl;
+  tmp = UT_diag.Trace(0,1);
+  cytnx_double ans = 0;
+  for(size_t i=0;i<UT_diag.bonds()[0].qnums().size();i++){
+      cytnx_uint64 deg = UT_diag.bonds()[0]._impl->_degs[i];
+      for(int j=0;j<deg;j++) ans += i+1;
+  }
+  EXPECT_DOUBLE_EQ(double(tmp.at({0}).real()),double(ans));
+  EXPECT_DOUBLE_EQ(double(tmp.at({0}).imag()),double(0));
+
+
+  EXPECT_NO_THROW(BUT1.Trace(0,3));
+  EXPECT_THROW(BUT1.Trace(),std::logic_error);
+  EXPECT_THROW(BUT1.Trace(0,1),std::logic_error);
+  EXPECT_THROW(BUT1.Trace(-1,2),std::logic_error);
+  EXPECT_THROW(BUT1.Trace(-1,5),std::logic_error);
+
+  EXPECT_NO_THROW(BUT1.Trace("0","3"));
+  EXPECT_THROW(BUT1.Trace(),std::logic_error);
+  EXPECT_THROW(BUT1.Trace("0","1"),std::logic_error);
+  EXPECT_THROW(BUT1.Trace("-1","2"),std::logic_error);
+  EXPECT_THROW(BUT1.Trace("-1","5"),std::logic_error);
 }
 
 TEST_F(BlockUniTensorTest, relabels){
@@ -75,6 +92,15 @@ TEST_F(BlockUniTensorTest, Norm){
   // std::cout<<BUT4<<std::endl;
   // EXPECT_TRUE(Scalar(BUT4.Norm().at({0})-10.02330912178208).abs()<1e-5);
   EXPECT_DOUBLE_EQ(double(BUT4.Norm().at({0}).real()),10.36019459497064);
+
+  cytnx_double tmp = double(UT_diag.Norm().at({0}).real());
+  cytnx_double ans = 0;
+  for(size_t i=0;i<UT_diag.bonds()[0].qnums().size();i++){
+      cytnx_uint64 deg = UT_diag.bonds()[0]._impl->_degs[i];
+      for(int j=0;j<deg;j++) ans += (i+1)*(i+1);
+  }
+  ans = sqrt(ans);
+  EXPECT_DOUBLE_EQ(ans,tmp);
 }
 
 TEST_F(BlockUniTensorTest, Conj){
@@ -95,6 +121,15 @@ TEST_F(BlockUniTensorTest, Conj){
           EXPECT_DOUBLE_EQ(double(BUT4.at({i-1,j-1,k-1,l-1}).real()),double(tmp.at({i-1,j-1,k-1,l-1}).real()));
           EXPECT_DOUBLE_EQ(double(BUT4.at({i-1,j-1,k-1,l-1}).imag()),-double(tmp.at({i-1,j-1,k-1,l-1}).imag()));
         }
+
+  tmp = UT_diag_cplx.Conj();
+  for(size_t i=0;i<UT_diag.bonds()[0].qnums().size();i++){
+    cytnx_uint64 deg = UT_diag.bonds()[0]._impl->_degs[i];
+    for(size_t j=0;j<deg;j++){
+      EXPECT_DOUBLE_EQ(double(tmp.get_block_(i).at({j}).real()),double(UT_diag_cplx.get_block_(i).at({j}).real()));
+      EXPECT_DOUBLE_EQ(double(tmp.get_block_(i).at({j}).imag()),-double(UT_diag_cplx.get_block_(i).at({j}).imag()));
+    }
+  }
 }
 
 TEST_F(BlockUniTensorTest, Transpose){
@@ -165,6 +200,15 @@ TEST_F(BlockUniTensorTest, Dagger){
           EXPECT_DOUBLE_EQ(double(BUT4.at({i-1,j-1,k-1,l-1}).real()),double(tmp.at({i-1,j-1,k-1,l-1}).real()));
           EXPECT_DOUBLE_EQ(double(BUT4.at({i-1,j-1,k-1,l-1}).imag()),-double(tmp.at({i-1,j-1,k-1,l-1}).imag()));
         }
+
+  tmp = UT_diag_cplx.Dagger();
+  for(size_t i=0;i<UT_diag_cplx.bonds()[0].qnums().size();i++){
+    cytnx_uint64 deg = UT_diag_cplx.bonds()[0]._impl->_degs[i];
+    for(size_t j=0;j<deg;j++){
+      EXPECT_DOUBLE_EQ(double(tmp.get_block_(i).at({j}).real()),double(UT_diag_cplx.get_block_(i).at({j}).real()));
+      EXPECT_DOUBLE_EQ(double(tmp.get_block_(i).at({j}).imag()),-double(UT_diag_cplx.get_block_(i).at({j}).imag()));
+    }
+  }
 }
 
 TEST_F(BlockUniTensorTest, truncate){
@@ -200,6 +244,18 @@ TEST_F(BlockUniTensorTest, elem_exist){
             BUT4.bonds()[2].qnums()[qind[2]][0]-
             BUT4.bonds()[3].qnums()[qind[3]][0],0);
           }
+
+  size_t offset = 0;
+  for(size_t i=0;i<UT_diag_cplx.bonds()[0].qnums().size();i++){
+    cytnx_uint64 deg = UT_diag_cplx.bonds()[0]._impl->_degs[i];
+    for(size_t j=0;j<deg;j++){
+      EXPECT_TRUE(UT_diag_cplx.elem_exists({offset+j,offset+j}));
+      EXPECT_DOUBLE_EQ(double(UT_diag_cplx.at({offset+j,offset+j}).real()),double(i+1));
+      EXPECT_DOUBLE_EQ(double(UT_diag_cplx.at({offset+j,offset+j}).imag()),double(i+1));
+    }
+    offset+=deg;
+  }
+
   EXPECT_THROW(BUT4.elem_exists({100,0,0,0}),std::logic_error);
   EXPECT_THROW(BUT4.elem_exists({1,0,0,0,0}),std::logic_error);
   EXPECT_THROW(BUT4.elem_exists({0,0,0}),std::logic_error);
