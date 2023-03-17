@@ -157,14 +157,40 @@ namespace cytnx {
     static unsigned int cy_typeid(const cytnx_bool &rc){ return Type_class::Bool; }
 
     unsigned int type_promote(const unsigned int &typeL, const unsigned int &typeR);
-
   };
   /// @endcond
 
   int type_promote(const int &typeL, const int &typeR);
 
+  /**
+   * @brief data type
+   *
+   * @details This is the variable about the data type of the UniTensor, Tensor, ... .\n
+   *     You can use it as following:
+   *     \code
+   *     int type = Type.Double;
+   *     \endcode
+   *
+   *     The supported enumerations are as following:
+   *
+   *  enumeration  |  description
+   * --------------|--------------------
+   *  Void         |  the data type is void (nothing)
+   *  ComplexDouble|  complex double type with 128 bits
+   *  ComplexFloat |  complex float type with 64 bits
+   *  Double       |  double float type with 64 bits
+   *  Float        |  single float type with 32 bits
+   *  Int64        |  long long integer type with 64 bits
+   *  Uint64       |  unsigned long long integer type with 64 bits
+   *  Int32        |  integer type with 32 bits
+   *  Uint32       |  unsigned integer type with 32 bits
+   *  Int16        |  short integer type with 16 bits
+   *  Uint16       |  undigned short integer with 16 bits
+   *  Bool         |  boolean type
+   */
   extern Type_class Type; // move to cytnx.hpp and guarded
   //static const Type_class Type = Type_class();
+
   extern int __blasINTsize__;
 
   extern bool User_debug;
