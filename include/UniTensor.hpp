@@ -34,8 +34,24 @@ namespace cytnx {
     };
     std::string getname(const int &ut_type);
   };
-  extern UniTensorType_class UTenType;
   /// @endcond
+  /**
+   * @brief UniTensor type.
+   * @details It is about the type of the UniTensor.\n
+   *     The supported enumerations are as following:
+   *
+   *  enumeration  |  description
+   * --------------|--------------------
+   *  Void         |  -1, void UniTensor
+   *  Dense        |  0, dense UniTensor
+   *  Sparse       |  1, sparse UniTensor (deprecated)
+   *  Block        |  2, block UniTensor
+   *
+   *  @warning the type \em Sparse is deprecated. Use \em Block instead.
+   *  @see UniTensor::uten_type(), UniTensor::uten_type_str()
+   */
+
+  extern UniTensorType_class UTenType;
 
   /// @cond
   // class DenseUniTensor;
@@ -2425,9 +2441,9 @@ namespace cytnx {
     /**
     @brief Construct a UniTensor from a cytnx::Tensor.
     @param[in] in_tensor a cytnx::Tensor
-    @param[in] is_diag if the current UniTensor is a diagonal Tensor. 
-	                   This will requires input of Tensor to be 1D.
-    @param[in] rowrank the rowrank of the outcome UniTensor.
+    @param[in] is_diag Whther the current UniTensor is a diagonal Tensor. 
+	                   This will requires that the input of \p in_tensor to be 1D.
+    @param[in] rowrank the rowrank of the outcome UniTensor
 
     @note
         1. The constructed UniTensor will have same rank as the input Tensor, with default labels,
@@ -2621,7 +2637,7 @@ namespace cytnx {
     /**
     @brief Set the name of the UniTensor.
 	@details You can use this function to give a name for the UniTensor.
-    @param in Input the name you want to set for the UniTensor. It should be a string.
+    @param[in] in Input the name you want to set for the UniTensor. It should be a string.
 	@return UniTensor
     */
     UniTensor &set_name(const std::string &in) {
@@ -2630,29 +2646,22 @@ namespace cytnx {
     }
     /**
     @deprecated
-	It is recommanded to use @ref set_label(const cytnx_int64 &idx, const std::string &new_label)
-    @brief set a new label for bond at the assigned index.
-    @param idx the index of the bond.
-    @param new_label the new label that is assign to the bond.
-	@param by_label
-
+	This function is deprecated. Please use \n 
+	@ref set_label(const cytnx_int64 &idx, const std::string &new_label)\n instead.
     @note
         the new assign label cannot be the same as the label of any other bonds in the UniTensor.
         ( cannot have duplicate labels )
-
     */
     UniTensor &set_label(const cytnx_int64 &idx, const cytnx_int64 &new_label,
                          const bool &by_label) {
       this->_impl->set_label(idx, new_label, by_label);
       return *this;
     }
+
     /**
     @deprecated
-	It is recommanded to use @ref set_label(const cytnx_int64 &idx, const std::string &new_label)
-    @brief set a new label for bond at the assigned index.
-    @param idx the index of the bond.
-    @param new_label the new label that is assign to the bond.
-
+	This function is deprecated. Please use \n 
+	@ref set_label(const cytnx_int64 &idx, const std::string &new_label)\n instead
     @note
         the new assign label cannot be the same as the label of any other bonds in the UniTensor.
         ( cannot have duplicate labels )
@@ -2664,13 +2673,11 @@ namespace cytnx {
     }
     /**
     @brief Set a new label for bond at the assigned index.
-    @param idx the index of the bond.
-    @param new_label the new label that is assign to the bond.
-
+    @param[in] idx the index of the bond.
+    @param[in] new_label the new label that is assign to the bond.
     @note
         the new assign label cannot be the same as the label of any other bonds in the UniTensor.
         ( cannot have duplicate labels )
-
     */
     UniTensor &set_label(const cytnx_int64 &idx, const std::string &new_label) {
       this->_impl->set_label(idx, new_label);
@@ -2687,12 +2694,11 @@ namespace cytnx {
 
     /**
     @brief set a new label for bond to replace one of the current label.
-    @param old_label the current label of the bond.
-    @param new_label the new label that is assign to the bond.
+    @param[in] old_label the current label of the bond.
+    @param[in] new_label the new label that is assign to the bond.
     @note
         the new assign label cannot be the same as the label of any other bonds in the UniTensor.
         ( cannot have duplicate labels )
-
     */
     UniTensor &set_label(const std::string &old_label, const std::string &new_label) {
       this->_impl->set_label(old_label, new_label);
@@ -2743,28 +2749,20 @@ namespace cytnx {
 
     /**
     @deprecated
-	  It is recommanded to use \ref
-      set_labels(const std::vector<std::string> &new_labels)
-
-    @brief set new labels for all the bonds.
-    @param new_labels the new labels for each bond.
-
-    @note
-        the new assign labels cannot have duplicate element(s), and should have the same size as the
-    rank of UniTensor.
-
+	  This is deprecated function. Please use \ref
+      set_labels(const std::vector<std::string> &new_labels)\n
+	  instead
     */
     UniTensor &set_labels(const std::vector<cytnx_int64> &new_labels) {
       this->_impl->set_labels(new_labels);
       return *this;
     }
     /**
-    @brief set new labels for all the bonds.
-    @param new_labels the new labels for each bond.
+    @brief Set new labels for all the bonds.
+    @param[in] new_labels the new labels for each bond.
     @note
-        The new assign labels cannot have duplicate element(s), and should have the same size as the
-    rank of UniTensor.
-
+        The new assign labels cannot have duplicate element(s), and should have the 
+		same size as the rank of UniTensor.
     */
     UniTensor &set_labels(const std::vector<std::string> &new_labels) {
       this->_impl->set_labels(new_labels);
@@ -2815,7 +2813,7 @@ namespace cytnx {
       return tmp->_block.item();
     }
     /**
-    @brief Return the number of the blocks.
+    @brief Return the blocks' number.
     @return cytnx_uint64
     */
     cytnx_uint64 Nblocks() const { return this->_impl->Nblocks(); }
@@ -2840,9 +2838,10 @@ namespace cytnx {
     unsigned int dtype() const { return this->_impl->dtype(); }
 
     /**
-    @brief Return the UniTensor type of the UniTensor.
+    @brief Return the UniTensor type (cytnx::UTenType) of the UniTensor.
 	@details The function return the UniTensor type of the UniTensor. 
     @return int
+	@see uten_type_str()
     */
     int uten_type() const { return this->_impl->uten_type(); }
 
@@ -2874,7 +2873,7 @@ namespace cytnx {
     std::string device_str() const { return this->_impl->device_str(); }
 
     /**
-    @brief Return the UniTensor type of the UniTensor in 'string' form.
+    @brief Return the UniTensor type (cytnx::UTenType) of the UniTensor in 'string' form.
     @return std::string
 	@see uten_type()
     */
@@ -2935,7 +2934,9 @@ namespace cytnx {
 
     /**
     @brief move the current UniTensor to the assigned device (inplace).
-	@param device the device-id that is moving to. It can by any device defined in cytnx::Device.
+	@param[in] device the device-id(@ref cytnx::Device) that is moving to. It can by 
+	    any device defined in cytnx::Device.
+	@see to_(const int &device)
     */
     void to_(const int &device) { this->_impl->to_(device); }
 
@@ -2943,9 +2944,10 @@ namespace cytnx {
     @brief move the current UniTensor to the assigned device.
 	@warning if the device-id is the same as current Tensor's device, then return self.
 	  otherwise, return a copy of instance that located on the target device. 
-	@param device the device-id that is moving to. It can by any device defined in cytnx::Device.
+	@param[in] device the device-id(@ref cytnx::Device) that is moving to. It can by 
+	any device defined in cytnx::Device.
 	@return UniTensor
-	@see to
+	@see to(const int &device)
     */
     UniTensor to(const int &device) const {
       UniTensor out;
@@ -2964,10 +2966,9 @@ namespace cytnx {
     }
 
     /**
-     * @deprecate
+     * @deprecated
 	 * It is recommanded to use \ref 
-         relabels(const std::vector<std::string> &new_labels)
-     *
+         relabels(const std::vector<std::string> &new_labels) const
      */
     UniTensor relabels(const std::vector<cytnx_int64> &new_labels) const {
       UniTensor out;
@@ -3014,8 +3015,8 @@ namespace cytnx {
 
     /**
     @brief rebable the lags in the UniTensor by given index.
-	@param inx a given index
-	@param new_label the new label of the UniTensor in the index \p inx
+	@param[in] inx a given index
+	@param[in] new_label the new label of the UniTensor in the index \p inx
      */
     UniTensor relabel(const cytnx_int64 &inx, const std::string &new_label) const {
       UniTensor out;
@@ -3025,8 +3026,8 @@ namespace cytnx {
 
     /**
     @brief rebable the lags in the UniTensor by a given label.
-	@param old_label original label you want to replace
-	@param new_label the new label 
+	@param[in] old_label original label you want to replace
+	@param[in] new_label the new label 
      */
     UniTensor relabel(const std::string &old_label, const std::string &new_label) const {
       UniTensor out;
@@ -3036,9 +3037,9 @@ namespace cytnx {
 
     /**
     @brief Return a new UniTensor that cast to different data type.
-	@param new_type the new data type. It an be any type defined in cytnx::Type.
+	@param[in] new_type the new data type. It an be any type defined in cytnx::Type.
 	@return UniTensor
-	@note If the \p new_type is same as dtype of the original UniTensor, return self.
+	@attention If the \p new_type is same as dtype of the original UniTensor, return self.
      */
     UniTensor astype(const unsigned int &dtype) const {
       UniTensor out;
@@ -3052,11 +3053,13 @@ namespace cytnx {
 
     /**
      * @brief permute the lags of the UniTensor
-     * @param mapper
-     * @param rowrank
-     * @param by_label
+     * @param[in] mapper the mapper of the permutation
+     * @param[in] rowrank the new rowrank after the permutation
+     * @param[in] by_label Whether permute the lags by label. It can only be used if labels 
+	 *     are integer form, which will be deprecated soon.
      * @return UniTensor
-	 * @note bylabel will be deprecated! 
+	 *
+	 * @warning \p by_label will be deprecated! 
      */
     UniTensor permute(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1,
                       const bool &by_label=false) {
@@ -3072,8 +3075,8 @@ namespace cytnx {
 	//
     /**
      * @brief permute the lags of the UniTensor by labels
-     * @param mapper new labels
-     * @param rowrank the row rank
+     * @param[in] mapper the mapper by babels
+     * @param[in] rowrank the row rank
      * @return UniTensor
      */
     UniTensor permute(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1) {
@@ -3093,15 +3096,13 @@ namespace cytnx {
         return this->permute(vs,rowrank);
     }
 
-    
-
     /**
     @brief permute the lags of the UniTensor, inplacely.
     @deprecated It is recommended to use \ref
       permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
-    @param mapper the new labels.
-    @param rowrank the row rank.
-    @param by_label permute by label or index.
+    @param[in] mapper the mapper by labels
+    @param[in] rowrank the row rank after the permutation
+    @param[in] by_label permute by label or index.
 	@note bylabel will be deprecated! 
     */
     void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1,
@@ -3111,9 +3112,8 @@ namespace cytnx {
 
     /**
     @brief permute the lags of the UniTensor, inplacely.
-    @param mapper the new labels.
-    @param rowrank the row rank.
-	@note bylabel will be deprecated! 
+    @param[in] mapper the mapper by labels
+    @param[in] rowrank the row rank after the permutation
 	@see permute(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
     */
     void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1) {
@@ -3149,21 +3149,21 @@ namespace cytnx {
     void contiguous_() { this->_impl = this->_impl->contiguous_(); }
 
     /**
-    @brief Print the diagram of the UniTensor.
-	@param bond_info whether need to print the information of the bonds of the UniTensor.
+    @brief Plot the diagram of the UniTensor.
+	@param[in] bond_info whether need to print the information of the bonds of the UniTensor.
     */
     void print_diagram(const bool &bond_info = false) { this->_impl->print_diagram(bond_info); }
 
     /**
-    @brief Print all of the blocks of the UniTensor.
-	@param full_info whether need to print the full information of the blocks
+    @brief Print all of the blocks in the UniTensor.
+	@param[in] full_info whether need to print the full information of the blocks
     */
     void print_blocks(const bool &full_info=true) const{ this->_impl->print_blocks(full_info); }
 
     /**
     @brief Given a index and print out the corresponding block of the UniTensor.
-	@param idx the input index
-	@param full_info whether need to print the full information of the block
+	@param[in] idx the input index
+	@param[in] full_info whether need to print the full information of the block
     */
     void print_block(const cytnx_int64 &idx, const bool &full_info=true) const{this->_impl->print_block(idx,full_info);}
 
@@ -3180,7 +3180,7 @@ namespace cytnx {
  
     /**
     @brief Get an element at specific location.
-	@param locator the location of the element we want to access.
+	@param[in] locator the location of the element we want to access.
 	@note this API is only for C++.
     */
     template <class T>
@@ -3206,7 +3206,7 @@ namespace cytnx {
 
     /**
     @brief Get an element at specific location.
-	@param locator the location of the element we want to access.
+	@param[in] locator the location of the element we want to access.
 	@note this API is only for C++.
     */
     template <class T>
@@ -3263,43 +3263,83 @@ namespace cytnx {
     // return a clone of block
     /**
     @brief Get the block of the UniTensor for a given index.
-	@param idx the index of the block we want to get
+	@param[in] idx the index of the block we want to get
 	@return Tensor
     */
     Tensor get_block(const cytnx_uint64 &idx = 0) const { return this->_impl->get_block(idx); };
     //================================
     // return a clone of block
+    /**
+    @brief Get the block of the UniTensor for the given quantun number.
+	@param[in] qnum input the quantum number
+	@param[in] force If force is true, it will return the tensor anyway (Even the 
+	    corresponding block is empty, it will return void type tensor if \p force is 
+		set as true. Otherwise, it will trow the exception.)
+	@return Tensor
+    */
     Tensor get_block(const std::vector<cytnx_int64> &qnum, const bool &force = false) const {
       return this->_impl->get_block(qnum, force);
     }
+
+    /**
+	 * @see 
+     * Tensor get_block(const std::vector<cytnx_int64> &qnum, const bool &force)
+    */
     Tensor get_block(const std::initializer_list<cytnx_int64> &qnum,
                      const bool &force = false) const {
       std::vector<cytnx_int64> tmp = qnum;
       return get_block(tmp, force);
     }
     
+    /**
+	 * @see 
+     * Tensor get_block(const std::vector<cytnx_int64> &qnum, const bool &force)
+    */
     Tensor get_block(const std::vector<cytnx_uint64> &qnum, const bool &force = false) const {
       std::vector<cytnx_int64> iqnum(qnum.begin(),qnum.end());
       return this->_impl->get_block(iqnum, force);
     }
 
-    //================================
-    // this only work for non-symm tensor. return a shared view of block
+    /**
+    @brief Get the shared view of block for the given index.
+	@param[in] idx input the index you want to get the corresponding block
+	@return const Tensor&
+	@note This function only works for non-symmetric UniTensor.
+    */
     const Tensor &get_block_(const cytnx_uint64 &idx = 0) const {
       return this->_impl->get_block_(idx);
     }
-    //================================
-    // this only work for non-symm tensor. return a shared view of block
+
+    /**
+    @see const Tensor &get_block_(const cytnx_uint64 &idx) const
+	@note This function only works for non-symmetric UniTensor.
+    */
     Tensor &get_block_(const cytnx_uint64 &idx = 0) { return this->_impl->get_block_(idx); }
-    //================================
-    // this only work for non-symm tensor. return a shared view of block
+
+    /**
+    @brief Get the shared view of block for the given quantum number.
+	@param[in] qnum input the quantum number you want to get the corresponding block
+	@param[in] force If force is true, it will return the tensor anyway (Even the 
+	    corresponding block is empty, it will return void type tensor if \p force is 
+		set as true. Otherwise, it will trow the exception.)
+	@return Tensor&
+	@note This function only works for non-symmetric UniTensor.
+    */
     Tensor &get_block_(const std::vector<cytnx_int64> &qnum, const bool &force = false) {
       return this->_impl->get_block_(qnum, force);
     }
+
+    /**
+    @see Tensor &get_block_(const std::vector<cytnx_int64> &qnum, const bool &force)
+    */
     Tensor &get_block_(const std::initializer_list<cytnx_int64> &qnum, const bool &force = false) {
       std::vector<cytnx_int64> tmp = qnum;
       return get_block_(tmp, force);
     }
+
+    /**
+    @see Tensor &get_block_(const std::vector<cytnx_int64> &qnum, const bool &force)
+    */
     Tensor &get_block_(const std::vector<cytnx_uint64> &qnum, const bool &force = false){
         std::vector<cytnx_int64> iqnum(qnum.begin(),qnum.end());
         return get_block_(iqnum,force);
@@ -3307,45 +3347,93 @@ namespace cytnx {
     //================================
 
     // this only work for non-symm tensor. return a shared view of block
+    /**
+    @see Tensor &get_block_(const std::vector<cytnx_int64> &qnum, const bool &force)
+    */
     const Tensor &get_block_(const std::vector<cytnx_int64> &qnum,
                              const bool &force = false) const {
       return this->_impl->get_block_(qnum, force);
     }
+
+    /**
+    @see Tensor &get_block_(const std::vector<cytnx_int64> &qnum, const bool &force)
+    */
     const Tensor &get_block_(const std::initializer_list<cytnx_int64> &qnum,
                              const bool &force = false) const {
       std::vector<cytnx_int64> tmp = qnum;
       return this->_impl->get_block_(tmp, force);
     }
+
+    /**
+    @see Tensor &get_block_(const std::vector<cytnx_int64> &qnum, const bool &force)
+    */
     const Tensor &get_block_(const std::vector<cytnx_uint64> &qnum, const bool &force = false) const{
         std::vector<cytnx_int64> iqnum(qnum.begin(),qnum.end());
         return get_block_(iqnum,force);
     }
 
     //================================
-    // this return a shared view of blocks for non-symm tensor.
-    // for symmetry tensor, it call contiguous first and return a shared view of blocks. [dev]
+    /**
+    @brief Get all the blocks of the UniTensor.
+	@details get_blocks will return the blocks of the UniTensor. Furthermore, \n
+   	1. For symmetric UniTensor, it will call @ref contiguous() and then return the shared 
+	   view of blocks.
+	2. For non-symmetric UniTensor, it will return the shared view of blocks.
+	@return std::vector<Tensor>
+    */
+	//[dev]
     std::vector<Tensor> get_blocks() const { return this->_impl->get_blocks(); }
-    // this return a shared view of blocks for non-symm tensor.
-    // for symmetry tensor, it call contiguous first and return a shared view of blocks. [dev]
+
+    /**
+    @brief Get all the blocks of the UniTensor, inplacely.
+	@see get_blocks()
+	@param[in] silent whether need to print out the warning messages.
+    */
+	//[dev]
     const std::vector<Tensor> &get_blocks_(const bool &silent = false) const {
       return this->_impl->get_blocks_(silent);
     }
-    // for symmetry tensor, it call contiguous first and return a shared view of blocks. [dev]
+
+    /**
+	@see get_blocks()_
+    */
+	//[dev]
     std::vector<Tensor> &get_blocks_(const bool &silent = false) {
       return this->_impl->get_blocks_(silent);
     }
 
-    // the put block will have shared view with the internal block, i.e. non-clone.
+    /**
+    @brief Put the block into the UniTensor with given index.
+	@param[in] in the block you want to put into UniTensor
+	@param[in] in the index of the UniTensor you want to put the block \p in in.
+	@note the put block will have shared view with the internal block, i.e. non-clone.
+    */
     void put_block(const Tensor &in, const cytnx_uint64 &idx = 0) {
       this->_impl->put_block(in, idx);
     }
-    // the put block will have shared view with the internal block, i.e. non-clone.
+
+    /**
+    @brief Put the block into the UniTensor with given quantum number.
+	@param[in] in the block you want to put into UniTensor
+	@param[in] in the quantum number of the UniTensor you want to put the block \p in in.
+	@note the put block will have shared view with the internal block, i.e. non-clone.
+    */
     void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum, const bool &force) {
       this->_impl->put_block(in, qnum, force);
     }
-    // the put block will have shared view with the internal block, i.e. non-clone.
+
+    /**
+    @brief Put the block into the UniTensor with given index, inplacely.
+	@note the put block will have shared view with the internal block, i.e. non-clone.
+	@see put_block(const Tensor &in, const cytnx_uint64 &idx)
+	*/
     void put_block_(Tensor &in, const cytnx_uint64 &idx = 0) { this->_impl->put_block_(in, idx); }
-    // the put block will have shared view with the internal block, i.e. non-clone.
+
+    /**
+    @brief Put the block into the UniTensor with given quantum number, inplacely.
+	@note the put block will have shared view with the internal block, i.e. non-clone.
+	@see put_block(const Tensor &in, const cytnx_uint64 &idx)
+	*/
     void put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum, const bool &force) {
       this->_impl->put_block_(in, qnum, force);
     }
@@ -3357,14 +3445,26 @@ namespace cytnx {
     void set(const std::vector<Accessor> &accessors, const Tensor &rhs) {
       this->_impl->set(accessors, rhs);
     }
+
+    /**
+    @brief Reshape the UniTensor.
+	@param[in] new_shape the new shape you want to reshape to.
+	@param[in] rowrank the rowrank of the UniTensor after you reshape it.
+	*/
     UniTensor reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank = 0) {
       UniTensor out;
       out._impl = this->_impl->reshape(new_shape, rowrank);
       return out;
     }
+
+    /**
+    @brief Reshape the UniTensor, inplacely.
+	@see reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank)
+	*/
     void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank = 0) {
       this->_impl->reshape_(new_shape, rowrank);
     }
+
     UniTensor to_dense() {
       UniTensor out;
       out._impl = this->_impl->to_dense();
@@ -3372,24 +3472,36 @@ namespace cytnx {
     }
     void to_dense_() { this->_impl->to_dense_(); }
     /**
-     * @brief
-     *
-     * @deprecated
-     *
-     * @param indicators
-     * @param permute_back
-     * @param by_label
+     * @deprecated This function is deprecated. Please use \n
+     *   combineBonds(const std::vector<std::string> &indicators, const bool &force) \n
+	 *   instead.
      */
     void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
                       const bool &by_label) {
       this->_impl->combineBonds(indicators, force, by_label);
     }
+
+    /**
+    @brief Combine the sevral bonds of the UniTensor.
+	@param[in] indicators the labels of the lags you want to combine.
+	@param[in] force
+	@pre 
+	    1. The size of \p indicators need to >= 2.
+	    2. The UniTensor cannot be diagonal form (that means is_diag is true.)
+	*/
     void combineBonds(const std::vector<std::string> &indicators, const bool &force = false) {
       this->_impl->combineBonds(indicators, force);
     }
+
+    /**
+     * @deprecated This function is deprecated. Please use \n
+     *   combineBonds(const std::vector<std::string> &indicators, const bool &force) \n
+	 *   instead.
+     */
     void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force = false) {
       this->_impl->combineBonds(indicators, force);
     }
+
     UniTensor contract(const UniTensor &inR, const bool &mv_elem_self = false,
                        const bool &mv_elem_rhs = false) const {
       UniTensor out;
