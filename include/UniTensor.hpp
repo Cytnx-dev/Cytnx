@@ -2882,7 +2882,7 @@ namespace cytnx {
     /**
     @brief To tell whether the UniTensor is contiguous.
     @return bool
-	@see contiguous() _contiguous()
+	@see contiguous(), _contiguous()
     */
     bool is_contiguous() const { return this->_impl->is_contiguous(); }
 
@@ -3465,12 +3465,29 @@ namespace cytnx {
       this->_impl->reshape_(new_shape, rowrank);
     }
 
+    /**
+    @brief Convert the UniTensor to non-diagonal form.
+	@details to_dense() convert the UniTensor from diagonal form to non-diagonal structure. 
+	    That means input the UniTensor with \p is_diag = true to \p is_diag = false.
+	@pre 
+	    1. The UniTensor need to be Dense UniTensor, that means this function is only 
+		    support for UTenType.Dense.
+	    2. The UniTensor need to be diagonal form (that means is_diag is true.)
+	@return UniTensor
+	@see to_dense_(), is_diag()
+	*/
     UniTensor to_dense() {
       UniTensor out;
       out._impl = this->_impl->to_dense();
       return out;
     }
+
+    /**
+    @brief Convert the UniTensor to non-diagonal form, inplacely.
+	@see to_dense(), is_diag()
+	*/
     void to_dense_() { this->_impl->to_dense_(); }
+
     /**
      * @deprecated This function is deprecated. Please use \n
      *   combineBonds(const std::vector<std::string> &indicators, const bool &force) \n
@@ -3502,15 +3519,48 @@ namespace cytnx {
       this->_impl->combineBonds(indicators, force);
     }
 
+    /**
+    @brief Contract the UniTensor with common labels.
+	@details This function contract the UniTensor lags with common labels. 
+	@param[in] inR The UniTensor you want to contract with.
+	@param[in] mv_elem_self
+	@param[in] mv_elem_rhs
+	@pre 
+	    1. Two UniTensor need to have same UniTensor type, namely, same UTenType. 
+		    You cannot contract symmetric to non-symmetric UniTensor.
+	    2. You cannot contract tagged UniTensor and untagged UniTensor.
+		3. For Dense diagonal UniTensor, the type of Bond (bra-ket) should match.
+		4. For symmetric UniTensor (UTenType.Block), Symmetry, degeneracy, 
+		    quantum numbers and Bond type should be consistent.
+	@return UniTensor
+	@see uten_type(), \n
+	    linalg::Tensordot(const Tensor &Tl, const Tensor &Tr, 
+	        	          const std::vector<cytnx_uint64> &idxl,
+                          const std::vector<cytnx_uint64> &idxr, const bool &cacheL,
+                          const bool &cacheR);
+	*/
     UniTensor contract(const UniTensor &inR, const bool &mv_elem_self = false,
                        const bool &mv_elem_rhs = false) const {
       UniTensor out;
       out._impl = this->_impl->contract(inR._impl, mv_elem_self, mv_elem_rhs);
       return out;
     }
+
+    /**
+    @brief Get the total quantum number of the UniTensor.
+	@param[in] physical
+	@pre 
+        The UniTensor need to be symmetric type, that is UTenType.Block.
+	@return std::vector<Bond>
+	@note This API just have not support.
+	*/
     std::vector<Bond> getTotalQnums(const bool physical = false) const {
       return this->_impl->getTotalQnums(physical);
     }
+
+    /**
+	@note This API just have not support.
+	*/
     std::vector<std::vector<cytnx_int64>> get_blocks_qnums() const {
       return this->_impl->get_blocks_qnums();
     }
@@ -3522,53 +3572,268 @@ namespace cytnx {
       return this->_impl->same_data(rhs._impl);
     }
 
+    /**
+    @brief The addition function of the UniTensor.
+	@details This is addition function of the UniTensor. Given the UniTensor
+	    \f$ UT_2\f$ as the argument, it will return 
+		\f[
+		  UT_{self} = UT_{self} + UT_2
+		\f] 
+		Perform element-wise addition of two UniTensor.
+	@param[in] rhs The UniTensor you want to add by.
+	@return UniTensor&
+	@pre 
+        The two UniTensor need to have same structure.
+	@note Compare to Add(const UniTensor&)const, this is an inplace function.
+	@see Add_(const Scalar&), Add(const UniTensor&)const, Add(const Scalar&)const , 
+	operator+=(const UniTensor&), operator+=(const Scalar&), \ref operator+
+	*/
     UniTensor &Add_(const UniTensor &rhs) {
       this->_impl->Add_(rhs._impl);
       return *this;
     }
 
+    /**
+    @brief The multiplcation function of the UniTensor.
+	@details This is multiplcation function of the UniTensor. Given the UniTensor
+	    \f$ UT_2\f$ as the argument, it will return 
+		\f[
+		  UT_{self} = UT_{self} \times UT_2
+		\f] 
+		Perform element-wise multiplication of two UniTensor.
+	@param[in] rhs The UniTensor you want to multiplcate by.
+	@return UniTensor&
+	@pre 
+        The two UniTensor need to have same structure.
+	@note Compare to Mul(const UniTensor&)const, this is an inplace function.
+	@see Mul_(const Scalar&), Mul(const UniTensor&)const, Mul(const Scalar&)const , 
+	operator*=(const UniTensor&), operator*=(const Scalar&), \ref operator*
+	*/
     UniTensor &Mul_(const UniTensor &rhs) {
       this->_impl->Mul_(rhs._impl);
       return *this;
     }
 
+    /**
+    @brief The subtraction function of the UniTensor.
+	@details This is subtraction function of the UniTensor. Given the UniTensor
+	    \f$ UT_2\f$ as the argument, it will return 
+		\f[
+		  UT_{self} = UT_{self} - UT_2
+		\f] 
+		Perform element-wise subtraction of two UniTensor.
+	@param[in] rhs the subtrahend
+	@return UniTensor&
+	@pre 
+        The two UniTensor need to have same structure.
+	@note Compare to Sub(const UniTensor&)const, this is an inplace function.
+	@see Sub_(const Scalar&), Sub(const UniTensor&)const, Sub(const Scalar&)const , 
+	operator-=(const UniTensor&), operator-=(const Scalar&), \ref operator-
+	*/
     UniTensor &Sub_(const UniTensor &rhs) {
       this->_impl->Sub_(rhs._impl);
       return *this;
     }
 
+    /**
+    @brief The division function of the UniTensor.
+	@details This is division function of the UniTensor. Given the UniTensor
+	    \f$ UT_2\f$ as the argument, it will return 
+		\f[
+		  UT_{self} = UT_{self} / UT_2
+		\f] 
+		Perform element-wise division of two UniTensor.
+	@param[in] rhs the divisor 
+	@return UniTensor&
+	@pre 
+        The two UniTensor need to have same structure.
+	@note Compare to Div(const UniTensor&)const, this is an inplace function.
+	@see Div_(const Scalar&), Div(const UniTensor&)const, Div(const Scalar&)const , 
+	operator/=(const UniTensor&), operator/=(const Scalar&), \ref operator/
+	*/
     UniTensor &Div_(const UniTensor &rhs) {
       this->_impl->Div_(rhs._impl);
       return *this;
     }
 
+    /**
+    @brief The addition function for a given scalar.
+	@details Given the Scalar \p rhs, it will perform the addition for each element 
+	    in UniTensor with this Scalar \p rhs.
+	@param[in] rhs a Scalar you want to add in the UniTensor.
+	@return UniTensor&
+	@note Compare to Add(const Scalar&)const, this is an inplace function.
+	@see Add_(const UniTensor&), Add(const UniTensor&)const, Add(const Scalar&)const , 
+	operator+=(const UniTensor&), operator+=(const Scalar&), \ref operator+
+	*/
     UniTensor &Add_(const Scalar &rhs) {
       this->_impl->Add_(rhs);
       return *this;
     }
 
+    /**
+    @brief The multiplication function for a given scalar.
+	@details Given the scalar \p rhs, it will perform the multiplication for each element 
+	    in UniTensor with this scalar \p rhs.
+	@param[in] rhs a scalar you want to multiplicate in the UniTensor.
+	@return UniTensor&
+	@note Compare to Mul(const Scalar&)const, this is an inplace function.
+	@see Mul_(const UniTensor&), Mul(const UniTensor&)const, Mul(const Scalar&)const , 
+	operator*=(const UniTensor&), operator*=(const Scalar&), \ref operator*
+	*/
     UniTensor &Mul_(const Scalar &rhs) {
       this->_impl->Mul_(rhs);
       return *this;
     }
 
+    /**
+    @brief The subtraction function for a given scalar.
+	@details Given the scalar \p rhs, it will perform the subtraction for each element 
+	    in UniTensor with this scalar \p rhs.
+	@param[in] rhs a scalar you want to subtract in the UniTensor.
+	@return UniTensor&
+	@note Compare to Sub(const Scalar&)const, this is an inplace function.
+	@see Sub_(const UniTensor&), Sub(const UniTensor&)const, Sub(const Scalar&)const , 
+	operator-=(const UniTensor&), operator-=(const Scalar&), \ref operator-
+	*/
     UniTensor &Sub_(const Scalar &rhs) {
       this->_impl->Sub_(rhs);
       return *this;
     }
 
+    /**
+    @brief The division function for a given scalar.
+	@details Given the scalar \p rhs, it will perform the division for each element 
+	    in UniTensor with this scalar \p rhs.
+	@param[in] rhs a scalar you want to divide in the UniTensor.
+	@return UniTensor&
+	@note Compare to Sub(const Scalar&)const, this is an inplace function.
+	@see Div_(const UniTensor&), Div(const UniTensor&)const, Div(const Scalar&)const , 
+	operator/=(const UniTensor&), operator/=(const Scalar&), \ref operator/
+	*/
     UniTensor &Div_(const Scalar &rhs) {
       this->_impl->Div_(rhs);
       return *this;
     }
 
+    /**
+    @brief The addition function of the UniTensor.
+	@details This is addition function of the UniTensor. Given the UniTensor
+	    \f$ UT_2\f$ as the argument, it will return a new UniTensor
+		\f[
+		  UT = UT_{self} + UT_2
+		\f] 
+		Perform element-wise addition of two UniTensor.
+	@param[in] rhs The UniTensor you want to add by.
+	@return UniTensor
+	@pre 
+        The two UniTensor need to have same structure.
+	@note Compare to Add_(const UniTensor&), this function will create a new UniTensor.
+	@see Add_(const UniTensor&), Add_(const Scalar&), Add(const Scalar&)const , 
+	operator+=(const UniTensor&), operator+=(const Scalar&), \ref operator+
+	*/
     UniTensor Add(const UniTensor &rhs) const;
+
+    /**
+    @brief The addition function for a given scalar.
+	@details Given the scalar \p rhs, it will perform the addition for each element 
+	    in UniTensor with this scalar \p rhs.
+	@param[in] rhs a scalar you want to add in the UniTensor.
+	@return UniTensor&
+	@note Compare to Add_(const Scalar&), this function will create a new UniTensor.
+	@see Add_(const Scalar&), Add_(const UniTensor&), Add(const UniTensor&)const, 
+	operator+=(const UniTensor&), operator+=(const Scalar&), \ref operator+
+	*/
     UniTensor Add(const Scalar &rhs) const;
+
+    /**
+    @brief The multiplication function of the UniTensor.
+	@details This is multiplication function of the UniTensor. Given the UniTensor
+	    \f$ UT_2\f$ as the argument, it will return a new UniTensor
+		\f[
+		  UT = UT_{self} \times UT_2
+		\f] 
+		Perform element-wise multiplcation of two UniTensor.
+	@param[in] rhs The UniTensor you want to multiplicate by.
+	@return UniTensor
+	@pre 
+        The two UniTensor need to have same structure.
+	@note Compare to Mul_(const UniTensor&), this function will create a new UniTensor.
+	@see Mul_(const UniTensor&), Mul_(const Scalar&), Mul(const Scalar&)const , 
+	operator*=(const UniTensor&), operator*=(const Scalar&), \ref operator*
+	*/
     UniTensor Mul(const UniTensor &rhs) const;
+
+    /**
+    @brief The multiplication function for a given scalar.
+	@details Given the scalar \p rhs, it will perform the multiplication for each element 
+	    in UniTensor with this scalar \p rhs.
+	@param[in] rhs a scalar you want to multiply in the UniTensor.
+	@return UniTensor&
+	@note Compare to Mul_(const Scalar&), this function will create a new UniTensor.
+	@see Mul_(const Scalar&), Mul_(const UniTensor&), Mul(const UniTensor&)const, 
+	operator*=(const UniTensor&), operator*=(const Scalar&), \ref operator*
+	*/
     UniTensor Mul(const Scalar &rhs) const;
+
+    /**
+    @brief The division function of the UniTensor.
+	@details This is division function of the UniTensor. Given the UniTensor
+	    \f$ UT_2\f$ as the argument, it will return a new UniTensor
+		\f[
+		  UT = UT_{self} / UT_2
+		\f] 
+		Perform element-wise division of two UniTensor.
+	@param[in] rhs The UniTensor you want to divided by.
+	@return UniTensor
+	@pre 
+        The two UniTensor need to have same structure.
+	@note Compare to Div_(const UniTensor&), this function will create a new UniTensor.
+	@see Div_(const UniTensor&), Div_(const Scalar&), Div(const Scalar&)const , 
+	operator/=(const UniTensor&), operator/=(const Scalar&), \ref operator/
+	*/
     UniTensor Div(const UniTensor &rhs) const;
+
+    /**
+    @brief The division function for a given scalar.
+	@details Given the scalar \p rhs, it will perform the division for each element 
+	    in UniTensor with this scalar \p rhs.
+	@param[in] rhs a scalar you want to divide in the UniTensor.
+	@return UniTensor&
+	@note Compare to Div_(const Scalar&), this function will create a new UniTensor.
+	@see Div_(const Scalar&), Div_(const UniTensor&), Div(const UniTensor&)const, 
+	operator/=(const UniTensor&), operator/=(const Scalar&), \ref operator/
+	*/
     UniTensor Div(const Scalar &rhs) const;
+
+    /**
+    @brief The subtraction function of the UniTensor.
+	@details This is subtraction function of the UniTensor. Given the UniTensor
+	    \f$ UT_2\f$ as the argument, it will return a new UniTensor
+		\f[
+		  UT = UT_{self} - UT_2
+		\f] 
+		Perform element-wise subtraction of two UniTensor.
+	@param[in] rhs the subtrahend
+	@return UniTensor
+	@pre 
+        The two UniTensor need to have same structure.
+	@note Compare to Sub_(const UniTensor&), this function will create a new UniTensor.
+	@see Sub_(const UniTensor&), Sub_(const Scalar&), Sub(const Scalar&)const , 
+	operator-=(const UniTensor&), operator-=(const Scalar&), \ref operator-
+	*/
     UniTensor Sub(const UniTensor &rhs) const;
+
+    /**
+    @brief The subtraction function for a given scalar.
+	@details Given the scalar \p rhs, it will perform the subtraction for each element 
+	    in UniTensor with this scalar \p rhs.
+	@param[in] rhs the subtrahend
+	@return UniTensor&
+	@note Compare to Sub_(const Scalar&), this function will create a new UniTensor.
+	@see Sub_(const Scalar&), Sub_(const UniTensor&), Sub(const UniTensor&)const, 
+	operator-=(const UniTensor&), operator-=(const Scalar&), \ref operator-
+	*/
     UniTensor Sub(const Scalar &rhs) const;
 
     Tensor Norm() const { return this->_impl->Norm(); };
@@ -3868,7 +4133,7 @@ namespace cytnx {
   @return
       [UniTensor]
 
-  See also \link cytnx::UniTensor::contract UniTensor.contract \endlink
+  @see cytnx::UniTensor::contract
 
   */
   UniTensor Contract(const UniTensor &inL, const UniTensor &inR, const bool &cacheL = false,
