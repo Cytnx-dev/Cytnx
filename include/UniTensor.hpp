@@ -2882,7 +2882,7 @@ namespace cytnx {
     /**
     @brief To tell whether the UniTensor is contiguous.
     @return bool
-	@see contiguous(), _contiguous()
+	@see contiguous(), contiguous_()
     */
     bool is_contiguous() const { return this->_impl->is_contiguous(); }
 
@@ -3283,7 +3283,7 @@ namespace cytnx {
 
     /**
 	 * @see 
-     * Tensor get_block(const std::vector<cytnx_int64> &qnum, const bool &force)
+     * get_block(const std::vector<cytnx_int64> &qnum, const bool &force)const
     */
     Tensor get_block(const std::initializer_list<cytnx_int64> &qnum,
                      const bool &force = false) const {
@@ -3293,7 +3293,7 @@ namespace cytnx {
     
     /**
 	 * @see 
-     * Tensor get_block(const std::vector<cytnx_int64> &qnum, const bool &force)
+     * get_block(const std::vector<cytnx_int64> &qnum, const bool &force)const
     */
     Tensor get_block(const std::vector<cytnx_uint64> &qnum, const bool &force = false) const {
       std::vector<cytnx_int64> iqnum(qnum.begin(),qnum.end());
@@ -3311,7 +3311,7 @@ namespace cytnx {
     }
 
     /**
-    @see const Tensor &get_block_(const cytnx_uint64 &idx) const
+    @see get_block_(const cytnx_uint64 &idx) const
 	@note This function only works for non-symmetric UniTensor.
     */
     Tensor &get_block_(const cytnx_uint64 &idx = 0) { return this->_impl->get_block_(idx); }
@@ -3330,7 +3330,7 @@ namespace cytnx {
     }
 
     /**
-    @see Tensor &get_block_(const std::vector<cytnx_int64> &qnum, const bool &force)
+    @see get_block_(const std::vector<cytnx_int64> &qnum, const bool &force)
     */
     Tensor &get_block_(const std::initializer_list<cytnx_int64> &qnum, const bool &force = false) {
       std::vector<cytnx_int64> tmp = qnum;
@@ -3338,7 +3338,7 @@ namespace cytnx {
     }
 
     /**
-    @see Tensor &get_block_(const std::vector<cytnx_int64> &qnum, const bool &force)
+    @see get_block_(const std::vector<cytnx_int64> &qnum, const bool &force)
     */
     Tensor &get_block_(const std::vector<cytnx_uint64> &qnum, const bool &force = false){
         std::vector<cytnx_int64> iqnum(qnum.begin(),qnum.end());
@@ -3348,7 +3348,7 @@ namespace cytnx {
 
     // this only work for non-symm tensor. return a shared view of block
     /**
-    @see Tensor &get_block_(const std::vector<cytnx_int64> &qnum, const bool &force)
+    @see get_block_(const std::vector<cytnx_int64> &qnum, const bool &force)
     */
     const Tensor &get_block_(const std::vector<cytnx_int64> &qnum,
                              const bool &force = false) const {
@@ -3356,7 +3356,7 @@ namespace cytnx {
     }
 
     /**
-    @see Tensor &get_block_(const std::vector<cytnx_int64> &qnum, const bool &force)
+    @see get_block_(const std::vector<cytnx_int64> &qnum, const bool &force)
     */
     const Tensor &get_block_(const std::initializer_list<cytnx_int64> &qnum,
                              const bool &force = false) const {
@@ -3365,7 +3365,7 @@ namespace cytnx {
     }
 
     /**
-    @see Tensor &get_block_(const std::vector<cytnx_int64> &qnum, const bool &force)
+    @see get_block_(const std::vector<cytnx_int64> &qnum, const bool &force)
     */
     const Tensor &get_block_(const std::vector<cytnx_uint64> &qnum, const bool &force = false) const{
         std::vector<cytnx_int64> iqnum(qnum.begin(),qnum.end());
@@ -3739,7 +3739,7 @@ namespace cytnx {
 	@details Given the scalar \p rhs, it will perform the addition for each element 
 	    in UniTensor with this scalar \p rhs.
 	@param[in] rhs a scalar you want to add in the UniTensor.
-	@return UniTensor&
+	@return UniTensor
 	@note Compare to Add_(const Scalar&), this function will create a new UniTensor.
 	@see Add_(const Scalar&), Add_(const UniTensor&), Add(const UniTensor&)const, 
 	operator+=(const UniTensor&), operator+=(const Scalar&), \ref operator+
@@ -3769,7 +3769,7 @@ namespace cytnx {
 	@details Given the scalar \p rhs, it will perform the multiplication for each element 
 	    in UniTensor with this scalar \p rhs.
 	@param[in] rhs a scalar you want to multiply in the UniTensor.
-	@return UniTensor&
+	@return UniTensor
 	@note Compare to Mul_(const Scalar&), this function will create a new UniTensor.
 	@see Mul_(const Scalar&), Mul_(const UniTensor&), Mul(const UniTensor&)const, 
 	operator*=(const UniTensor&), operator*=(const Scalar&), \ref operator*
@@ -3784,7 +3784,7 @@ namespace cytnx {
 		  UT = UT_{self} / UT_2
 		\f] 
 		Perform element-wise division of two UniTensor.
-	@param[in] rhs The UniTensor you want to divided by.
+	@param[in] rhs the divisor
 	@return UniTensor
 	@pre 
         The two UniTensor need to have same structure.
@@ -3799,7 +3799,7 @@ namespace cytnx {
 	@details Given the scalar \p rhs, it will perform the division for each element 
 	    in UniTensor with this scalar \p rhs.
 	@param[in] rhs a scalar you want to divide in the UniTensor.
-	@return UniTensor&
+	@return UniTensor
 	@note Compare to Div_(const Scalar&), this function will create a new UniTensor.
 	@see Div_(const Scalar&), Div_(const UniTensor&), Div(const UniTensor&)const, 
 	operator/=(const UniTensor&), operator/=(const Scalar&), \ref operator/
@@ -3829,92 +3829,260 @@ namespace cytnx {
 	@details Given the scalar \p rhs, it will perform the subtraction for each element 
 	    in UniTensor with this scalar \p rhs.
 	@param[in] rhs the subtrahend
-	@return UniTensor&
+	@return UniTensor
 	@note Compare to Sub_(const Scalar&), this function will create a new UniTensor.
 	@see Sub_(const Scalar&), Sub_(const UniTensor&), Sub(const UniTensor&)const, 
 	operator-=(const UniTensor&), operator-=(const Scalar&), \ref operator-
 	*/
     UniTensor Sub(const Scalar &rhs) const;
 
+    /**
+    @brief Return the norm of the UniTensor.
+	@details Norm() return the 2-norm of the UniTensor \f$UT\f$. Namely, it return
+	\f[
+	||UT||_2
+	\f]
+	@return Tensor
+	*/
     Tensor Norm() const { return this->_impl->Norm(); };
 
+    /**
+    @brief The addition assignment operator of the UniTensor.
+	@details This is addition assignment operator of the UniTensor. It will perform 
+	    element-wise addition and return 
+		\f[
+		UT += UT_R
+		\f]
+	@param[in] rhs The UniTensor you want to add by.
+	@return UniTensor&
+	@pre 
+        The two UniTensor need to have same structure.
+	@see 
+	operator+=(const Scalar&), \ref operator+, Add_(const UniTensor&), 
+	Add_(const Scalar&), Add(const UniTensor&),	Add(const Scalar&)const
+	*/
     UniTensor &operator+=(const UniTensor &rhs) {
       this->Add_(rhs);
       return *this;
     }
+
+    /**
+    @brief The subtraction assignment operator of the UniTensor.
+	@details This is subtraction assignment operator of the UniTensor. It will perform 
+	    element-wise subtraction and return 
+		\f[
+		UT -= UT_R
+		\f]
+	@param[in] rhs the subtrahend
+	@return UniTensor&
+	@pre 
+        The two UniTensor need to have same structure.
+	@see 
+	operator-=(const Scalar&), \ref operator-, Sub_(const UniTensor&), 
+	Sub_(const Scalar&), Sub(const UniTensor&),	Sub(const Scalar&)const
+	*/
     UniTensor &operator-=(const UniTensor &rhs) {
       this->Sub_(rhs);
       return *this;
     }
+
+    /**
+    @brief The division assignment operator of the UniTensor.
+	@details This is division assignment operator of the UniTensor. It will perform 
+	    element-wise division and return 
+		\f[
+		UT /= UT_R
+		\f]
+	@param[in] rhs the divisor
+	@return UniTensor&
+	@pre 
+        The two UniTensor need to have same structure.
+	@see 
+	operator/=(const Scalar&), \ref operator/, Div_(const UniTensor&), 
+	Div_(const Scalar&), Div(const UniTensor&),	Div(const Scalar&)const
+	*/
     UniTensor &operator/=(const UniTensor &rhs) {
       this->Div_(rhs);
       return *this;
     }
+
+    /**
+    @brief The multiplication assignment operator of the UniTensor.
+	@details This is multiplication assignment operator of the UniTensor. It will perform 
+	    element-wise multiplication and return 
+		\f[
+		UT *= UT_R
+		\f]
+	@param[in] rhs The UniTensor you want to multilicate by.
+	@return UniTensor&
+	@pre 
+        The two UniTensor need to have same structure.
+	@see 
+	operator*=(const Scalar&), \ref operator*, Mul_(const UniTensor&), 
+	Mul_(const Scalar&), Mul(const UniTensor&),	Mul(const Scalar&)const
+	*/
     UniTensor &operator*=(const UniTensor &rhs) {
       this->Mul_(rhs);
       return *this;
     }
+
+    /**
+    @brief The addition assignment operator for a given scalar.
+	@details Given the scalar \p rhs, it will perform the addition for each element 
+	    in UniTensor with this scalar \p rhs.
+	@param[in] rhs a scalar you want to add in the UniTensor.
+	@return UniTensor&
+	@see 
+	operator+=(const UniTensor&), \ref operator+, Add_(const UniTensor&), 
+	Add_(const Scalar&), Add(const UniTensor&),	Add(const Scalar&)const
+	*/
     UniTensor &operator+=(const Scalar &rhs) {
       this->Add_(rhs);
       return *this;
     }
+
+    /**
+    @brief The subtraction assignment operator for a given scalar.
+	@details Given the scalar \p rhs, it will perform the subtraction for each element 
+	    in UniTensor with this scalar \p rhs.
+	@param[in] rhs the subtrahend
+	@return UniTensor&
+	@see 
+	operator-=(const UniTensor&), \ref operator-, Sub_(const UniTensor&), 
+	Sub_(const Scalar&), Sub(const UniTensor&),	Sub(const Scalar&)const
+	*/
     UniTensor &operator-=(const Scalar &rhs) {
       this->Sub_(rhs);
       return *this;
     }
+
+    /**
+    @brief The division assignment operator for a given scalar.
+	@details Given the scalar \p rhs, it will perform the division for each element 
+	    in UniTensor with this scalar \p rhs.
+	@param[in] rhs the divisor
+	@return UniTensor&
+	@see 
+	operator/=(const UniTensor&), \ref operator/, Div_(const UniTensor&), 
+	Div_(const Scalar&), Div(const UniTensor&),	Div(const Scalar&)const
+	*/
     UniTensor &operator/=(const Scalar &rhs) {
       this->Div_(rhs);
       return *this;
     }
+
+    /**
+    @brief The multiplication assignment operator for a given scalar.
+	@details Given the scalar \p rhs, it will perform the multiplication for each element 
+	    in UniTensor with this scalar \p rhs.
+	@param[in] rhs a scalar you want to multiply in the UniTensor.
+	@return UniTensor&
+	@see 
+	operator*=(const Scalar&), \ref operator*, Mul_(const UniTensor&), 
+	Mul_(const Scalar&), Mul(const UniTensor&),	Mul(const Scalar&)const
+	*/
     UniTensor &operator*=(const Scalar &rhs) {
       this->Mul_(rhs);
       return *this;
     }
 
+    /**
+    @brief Apply complex conjugate on each entry of the UniTensor.
+	@details Conj() apply complex conjugate on each entry of the UniTensor.
+	@return UniTensor
+    @note Compare to Conj_(), this fucntion will create a new object UniTensor.
+	@see Conj_()
+	*/
     UniTensor Conj() {
       UniTensor out;
       out._impl = this->_impl->Conj();
       return out;
     }
 
+    /**
+    @brief Apply complex conjugate on each entry of the UniTensor.
+	@details Conj_() apply complex conjugate on each entry of the UniTensor, inplacely.
+	@return UniTensor
+    @note Compare to Conj(), this fucntion is inplace function.
+	@see Conj()
+	*/
     UniTensor &Conj_() {
       this->_impl->Conj_();
       return *this;
     }
 
+    /**
+    @brief Take the transpose of the UniTensor.
+	@return UniTensor
+    @note Compare to Transpose_(), this fucntion will return new UniTensor object.
+	@see Transpose_()
+	*/
     UniTensor Transpose() const {
       UniTensor out;
       out._impl = this->_impl->Transpose();
       return out;
     }
+
+    /**
+    @brief Take the transpose of the UniTensor, inplacely.
+	@return UniTensor
+    @note Compare to Transpose(), this fucntion is inplace function.
+	@see Transpose()
+	*/
     UniTensor &Transpose_() {
       this->_impl->Transpose_();
       return *this;
     }
 
+    /**
+    @brief Take the partial trance to the UniTensor.
+	@details Take the partial trace to the UniTensor with the give two labels.
+	@param[in] a label 1
+	@param[in] b label 2
+	@return UniTensor
+    @note Compare to Trace_(), this fucntion will return a new UniTensor object.
+	@see Trace_()
+	*/
     UniTensor Trace(const std::string &a, const std::string &b) const {
       UniTensor out;
       out._impl = this->_impl->Trace(a, b);
       return out;
     }
+
+    /**
+    @brief Take the partial trance to the UniTensor.
+	@details Take the partial trace to the UniTensor with the give two labels.
+	@param[in] a label 1
+	@param[in] b label 2
+	@return UniTensor
+    @note Compare to Trace_(), this fucntion will return a new UniTensor object.
+	@see Trace_()
+	*/
     UniTensor Trace(const cytnx_int64 &a = 0, const cytnx_int64 &b = 1) const {
       UniTensor out;
       out._impl = this->_impl->Trace(a, b);
       return out;
     }
+
     /**
-     * @brief
-     *
      * @deprecated
-     *
-     * @param a
-     * @param b
-     * @param by_label
+	 * This is deprecated function, please use \n
+     * Trace(const std::string &a, const std::string &b) const\n
+	 * instead.
      */
     UniTensor Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label) const {
       return Trace(a, b, by_label);
     }
 
+    /**
+    @brief Take the partial trance to the UniTensor, inplacely.
+	@details Take the partial trace to the UniTensor with the give two labels.
+	@param[in] a label 1
+	@param[in] b label 2
+	@return UniTensor&
+    @note Compare to Trace(), this is an inplace function.
+	@see Trace()
+	*/
     UniTensor &Trace_(const std::string &a, const std::string &b) {
       this->_impl->Trace_(a, b);
       if(this->uten_type()==UTenType.Block){
@@ -3927,6 +4095,16 @@ namespace cytnx {
       }
       return *this;
     }
+
+    /**
+    @brief Take the partial trance to the UniTensor, inplacely.
+	@details Take the partial trace to the UniTensor with the give two labels.
+	@param[in] a label 1
+	@param[in] b label 2
+	@return UniTensor&
+    @note Compare to Trace(), this is an inplace function.
+	@see Trace()
+	*/
     UniTensor &Trace_(const cytnx_int64 &a = 0, const cytnx_int64 &b = 1) {
       this->_impl->Trace_(a, b);
       if(this->uten_type()==UTenType.Block){
@@ -3939,14 +4117,12 @@ namespace cytnx {
       }
       return *this;
     }
+
     /**
-     * @brief
-     *
      * @deprecated
-     *
-     * @param a
-     * @param b
-     * @param by_label
+	 * This function is deprecated, please use \n
+     * &Trace_(const std::string &a, const std::string &b)\n
+	 * instread.
      */
     UniTensor &Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label) {
       this->_impl->Trace_(a, b, by_label);
@@ -3961,12 +4137,24 @@ namespace cytnx {
       return *this;
     }
 
+    /**
+    @brief Take the conjugate transpose to the UniTensor.
+	@return UniTensor
+    @note Compare to Dagger_(), this function will create a new UniTensor ojbect.
+	@see Dagger_()
+	*/
     UniTensor Dagger() const {
       UniTensor out;
       out._impl = this->_impl->Dagger();
       return out;
     }
 
+    /**
+    @brief Take the conjugate transpose to the UniTensor, inplacely.
+	@return UniTensor&
+    @note Compare to Dagger(), this is an inplace function.
+	@see Dagger()
+	*/
     UniTensor &Dagger_() {
       this->_impl->Dagger_();
       return *this;
@@ -3977,20 +4165,45 @@ namespace cytnx {
       return *this;
     }
 
+    /**
+    @brief Power function.
+	@details Take power \p p on all the elements in the UniTensor.
+	@param p power
+	@return UniTensor
+    @note Compare to Pow_(), this function will create a new UniTensor ojbect.
+	@see Pow_()
+	*/
     UniTensor Pow(const double &p) const;
+
+    /**
+    @brief Power function.
+	@details Take power \p p on all the elements in the UniTensor, inplacely.
+	@param p power
+	@return UniTensor&
+    @note Compare to Pow(), this function is an inplacely function.
+	@see Pow()
+	*/
     UniTensor &Pow_(const double &p);
 
     bool elem_exists(const std::vector<cytnx_uint64> &locator) const {
       return this->_impl->elem_exists(locator);
     }
 
-    // [C++: Deprecated soon, use at]
+    /**
+     * @deprecated
+	 * This function is deprecated, please use at() instread.
+	 * @note C++: Deprecated soon, use at()
+     */
     template <class T>
     T get_elem(const std::vector<cytnx_uint64> &locator) const {
       return this->at<T>(locator);
     }
 
-    // [C++: Deprecated soon, use at]
+    /**
+     * @deprecated
+	 * This function is deprecated, please use at() instread.
+	 * @note C++: Deprecated soon, use at()
+     */
     template <class T2>
     void set_elem(const std::vector<cytnx_uint64> &locator, const T2 &rc) {
       // cytnx_error_msg(true,"[ERROR] invalid type%s","\n");
@@ -4003,12 +4216,14 @@ namespace cytnx {
     @post The stored file will be ended in .cytnx
     */
     void Save(const std::string &fname) const;
+
     /**
     @brief save a UniTensor to file
     @param[in] fname: the file name
     @post The stored file will be ended in .cytnx
     */
     void Save(const char *fname) const;
+
     /**
     @brief load a UniTensor from file
     @param[in] fname the file name
@@ -4017,14 +4232,16 @@ namespace cytnx {
     it will return a new UniTensor object instead of modifying the current one.
     */
     static UniTensor Load(const std::string &fname);
+
     /**
     @brief load a UniTensor from file
     @param fname: the file name
     @return the loaded UniTensor
     @warning This is static function, if called through UniTensor object, 
-    it will return a new UniTensor object instead of modifying the current one.
+        it will return a new UniTensor object instead of modifying the current one.
     */
     static UniTensor Load(const char *fname);
+
     /**
      * @brief
      *
