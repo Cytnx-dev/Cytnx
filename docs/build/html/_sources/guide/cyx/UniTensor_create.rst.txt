@@ -152,7 +152,7 @@ Next, let's introduce the complete API for construct a UniTensor:
 .. py:function:: UniTensor(bonds, labels, rowrank, dtype, device, is_diag)
      
     :param List[cytnx.Bond] bonds: The list of bonds 
-    :param List[int] labels: The list of labels associate to each bond 
+    :param List[string] labels: The list of labels associate to each bond 
     :param int rowrank: the rowrank when flatten into matrix. 
     :param cytnx.Type dtype: the dtype of the block(s). 
     :param cytnx.Device device: the device where the block(s) are hold. 
@@ -161,12 +161,12 @@ Next, let's introduce the complete API for construct a UniTensor:
 The first argument **bonds** is a list of bond object, which is similar to the *shape* of **cytnx.Tensor** where the elements in *shape* indicates the dimension of the rank. Here, each rank is represent by a **cytnx.Bond** object. In general, **cytnx.Bond** contains three things:
 
 1. The dimension of the bond. 
-2. The direction of the bond (it can be bondType.REG--undirectional, bondType.Ket--inward, bondType.Bra--outward) 
+2. The direction of the bond (it can be BD_REG--undirectional, BD_KET (BD_IN)--inward, BD_BRA (BD_OUT)--outward) 
 3. The symmetry and the associate quantum numbers. 
 
 For more details, see **Bond** section. Here, for simplicity, we will use only the dimension property of a Bond. 
 
-Now let's construct the rank-3 UniTensor with the same shape as the above example, and assign those three bonds with labels (100,101,102) and also set name to be "uT2"
+Now let's construct the rank-3 UniTensor with the same shape as the above example, and assign those three bonds with labels (a,b,c) and also set name to be "uT2"
 
 .. image:: image/ut2.png
     :width: 300
@@ -225,7 +225,33 @@ Output >>
 
 Change labels
 ************** 
-To change the labels associate to bond(s), we can use **UniTensor.set_label(index, new_label)** or **UniTensor.set_labels(new_labels)**. Note that the label should be integer, and cannot have duplicate labels *within* a same UniTensor:
+
+Since in Cytnx tensor's leg with same label will be contracted, sometimes we need to change the labels for given bond(s).
+
+To change label associate to a certain leg of a tensor, one can use:
+
+.. py:function:: UniTensor.set_label(index, new_label)
+
+    :param [int] index: the index of the bond in current UniTensor  
+    :param [string] new_label: the new label that you want to change to
+
+
+Alternatively, if we don't know the index of the target bond in the current order, we can also specify with old label:
+
+.. py:function:: UniTensor.set_label(old_label, new_label)
+
+    :param [string] old_label: the current label of the bond. 
+    :param [string] new_label: the new label that you want to change to
+
+
+If we wish to change labels of all the legs, one can use:
+
+.. py:function:: UniTensor.set_labels( new_labels)
+
+    :param List[string] new_labels: a list of new labels 
+
+
+Note that one cannot have duplicate labels *within* a same UniTensor!
 
 .. code-block:: python 
     :linenos:

@@ -687,12 +687,23 @@ Shape : (1,1,1)
 <p class="admonition-title">Note</p>
 <p>Again, just like other functions, with underscore means that its inplace, so shared view (reference) will be return. Without underscore the return will be the <em>copy</em> of all blocks!</p>
 </div>
-<p><strong>Getting specific block:</strong></p>
-<p>To get a block in a UniTensor, one can use <strong>.get_block_()</strong> or <strong>.get_block()</strong>.
-Currently there are two ways to get a specific block, depending on which kind of argument is provided.</p>
+</section>
+<section id="getting-a-given-block">
+<h2><span class="section-number">8.3.4.3. </span>Getting a given block<a class="headerlink" href="#getting-a-given-block" title="Permalink to this heading">¶</a></h2>
+<p>There are two ways to get a certain block from a UniTensor.</p>
 <ol class="arabic simple">
-<li><p>Getting it directly by the index of their current order stored in UniTensor.</p></li>
+<li><p>getting a block by their index in the current order</p></li>
 </ol>
+<dl class="py function">
+<dt class="sig sig-object py" id="UniTensor.get_block">
+<span class="sig-prename descclassname"><span class="pre">UniTensor.</span></span><span class="sig-name descname"><span class="pre">get_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UniTensor.get_block" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>[</em><em>int</em><em>]</em>) – the index of the blocks in current UniTensor</p>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">B1</span> <span class="o">=</span> <span class="n">Td</span><span class="o">.</span><span class="n">get_block_</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="linenos">2</span><span class="nb">print</span><span class="p">(</span><span class="n">B1</span><span class="p">)</span>
 </pre></div>
@@ -705,13 +716,24 @@ Shape : (1,1,2)
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li><p>Getting it by their Qn indices.</p></li>
+<li><p>getting a block by their Qn-indices</p></li>
 </ol>
+<dl class="py function">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-prename descclassname"><span class="pre">UniTensor.</span></span><span class="sig-name descname"><span class="pre">get_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qindices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>qindices</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – a list of integer specify the indices of qnums on each axis/leg.</p>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Note again that the blocks are nothing but the normal <strong>Tensor</strong> object, so we can manipulate it as we did to the Tensors,</p>
+<p>get_block_() with underscore indicate a reference view of that block!</p>
+<p>Note again that the blocks are nothing but the normal <strong>Tensor</strong> object, so we can manipulate it as we did to the Tensors, here we demostrate the usage of <strong>.get_block_()</strong>, since the return should be the reference, we can directly assign/modify the content of these blocks.</p>
 </div>
-<p>here we demostrate the usage of <strong>.get_block_()</strong>, since the return should be the reference, we can directly assign/modify the content of these blocks.</p>
+<p>[NEED MODIFY!!]</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>

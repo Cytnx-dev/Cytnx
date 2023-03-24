@@ -154,7 +154,4 @@ We note that in this UniTensor, there are only **4** valid blocks** that carries
 
 
 
-
-
-
 .. toctree::

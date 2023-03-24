@@ -198,8 +198,9 @@
 <li class="toctree-l3 current"><a class="reference internal" href="UniTensor.html">8.3. UniTensor</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">8.3.1. Create UniTensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">8.3.3. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">8.3.4. Manipulate UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">8.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Network.html">8.4. Network</a><ul>
@@ -501,8 +502,9 @@
 <li class="toctree-l3 current"><a class="reference internal" href="UniTensor.html">8.3. UniTensor</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">8.3.1. Create UniTensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">8.3.3. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">8.3.4. Manipulate UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">8.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Network.html">8.4. Network</a><ul>
@@ -730,7 +732,7 @@ Shape : (2,3,4)
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>bonds</strong> (<em>List</em><em>[</em><em>cytnx.Bond</em><em>]</em>) – The list of bonds</p></li>
-<li><p><strong>labels</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – The list of labels associate to each bond</p></li>
+<li><p><strong>labels</strong> (<em>List</em><em>[</em><em>string</em><em>]</em>) – The list of labels associate to each bond</p></li>
 <li><p><strong>rowrank</strong> (<em>int</em>) – the rowrank when flatten into matrix.</p></li>
 <li><p><strong>dtype</strong> (<em>cytnx.Type</em>) – the dtype of the block(s).</p></li>
 <li><p><strong>device</strong> (<em>cytnx.Device</em>) – the device where the block(s) are hold.</p></li>
@@ -743,11 +745,11 @@ Shape : (2,3,4)
 <p>The first argument <strong>bonds</strong> is a list of bond object, which is similar to the <em>shape</em> of <strong>cytnx.Tensor</strong> where the elements in <em>shape</em> indicates the dimension of the rank. Here, each rank is represent by a <strong>cytnx.Bond</strong> object. In general, <strong>cytnx.Bond</strong> contains three things:</p>
 <ol class="arabic simple">
 <li><p>The dimension of the bond.</p></li>
-<li><p>The direction of the bond (it can be bondType.REG–undirectional, bondType.Ket–inward, bondType.Bra–outward)</p></li>
+<li><p>The direction of the bond (it can be BD_REG–undirectional, BD_KET (BD_IN)–inward, BD_BRA (BD_OUT)–outward)</p></li>
 <li><p>The symmetry and the associate quantum numbers.</p></li>
 </ol>
 <p>For more details, see <strong>Bond</strong> section. Here, for simplicity, we will use only the dimension property of a Bond.</p>
-<p>Now let’s construct the rank-3 UniTensor with the same shape as the above example, and assign those three bonds with labels (100,101,102) and also set name to be “uT2”</p>
+<p>Now let’s construct the rank-3 UniTensor with the same shape as the above example, and assign those three bonds with labels (a,b,c) and also set name to be “uT2”</p>
 <a class="reference internal image-reference" href="../../_images/ut2.png"><img alt="../../_images/ut2.png" class="align-center" src="../../_images/ut2.png" style="width: 300px;" /></a>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">import</span> <span class="nn">cytnx</span> <span class="k">as</span> <span class="nn">cy</span>
 <span class="linenos">2</span><span class="kn">from</span> <span class="nn">cytnx</span> <span class="kn">import</span> <span class="n">Bond</span> <span class="k">as</span> <span class="n">bd</span>
@@ -795,7 +797,47 @@ Shape : (2,3,4)
 </section>
 <section id="change-labels">
 <h2><span class="section-number">8.3.1.3. </span>Change labels<a class="headerlink" href="#change-labels" title="Permalink to this heading">¶</a></h2>
-<p>To change the labels associate to bond(s), we can use <strong>UniTensor.set_label(index, new_label)</strong> or <strong>UniTensor.set_labels(new_labels)</strong>. Note that the label should be integer, and cannot have duplicate labels <em>within</em> a same UniTensor:</p>
+<p>Since in Cytnx tensor’s leg with same label will be contracted, sometimes we need to change the labels for given bond(s).</p>
+<p>To change label associate to a certain leg of a tensor, one can use:</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="UniTensor.set_label">
+<span class="sig-prename descclassname"><span class="pre">UniTensor.</span></span><span class="sig-name descname"><span class="pre">set_label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_label</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UniTensor.set_label" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> (<em>[</em><em>int</em><em>]</em>) – the index of the bond in current UniTensor</p></li>
+<li><p><strong>new_label</strong> (<em>[</em><em>string</em><em>]</em>) – the new label that you want to change to</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p>Alternatively, if we don’t know the index of the target bond in the current order, we can also specify with old label:</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-prename descclassname"><span class="pre">UniTensor.</span></span><span class="sig-name descname"><span class="pre">set_label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_label</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>old_label</strong> (<em>[</em><em>string</em><em>]</em>) – the current label of the bond.</p></li>
+<li><p><strong>new_label</strong> (<em>[</em><em>string</em><em>]</em>) – the new label that you want to change to</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p>If we wish to change labels of all the legs, one can use:</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="UniTensor.set_labels">
+<span class="sig-prename descclassname"><span class="pre">UniTensor.</span></span><span class="sig-name descname"><span class="pre">set_labels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_labels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UniTensor.set_labels" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>new_labels</strong> (<em>List</em><em>[</em><em>string</em><em>]</em>) – a list of new labels</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>Note that one cannot have duplicate labels <em>within</em> a same UniTensor!</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">uT</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;xx&quot;</span><span class="p">)</span>
 <span class="linenos">2</span><span class="n">uT</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
 <span class="linenos">3</span>

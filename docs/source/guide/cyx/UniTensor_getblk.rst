@@ -110,13 +110,17 @@ Output >>
     Again, just like other functions, with underscore means that its inplace, so shared view (reference) will be return. Without underscore the return will be the *copy* of all blocks! 
 
 
-**Getting specific block:**
+Getting a given block
+**********************************
 
+There are two ways to get a certain block from a UniTensor. 
 
-To get a block in a UniTensor, one can use **.get_block_()** or **.get_block()**.
-Currently there are two ways to get a specific block, depending on which kind of argument is provided.
+1. getting a block by their index in the current order
 
-1. Getting it directly by the index of their current order stored in UniTensor. 
+.. py:function:: UniTensor.get_block(index)
+
+    :param [int] index: the index of the blocks in current UniTensor
+
 
 .. code-block:: python
     :linenos:
@@ -134,15 +138,20 @@ Currently there are two ways to get a specific block, depending on which kind of
     [[[0.00000e+00 0.00000e+00 ]]]
 
 
+2. getting a block by their Qn-indices
 
-2. Getting it by their Qn indices. 
+.. py:function:: UniTensor.get_block(qindices)
+
+    :param List[int] qindices: a list of integer specify the indices of qnums on each axis/leg. 
 
 
+.. Note:: 
+    
+    get_block_() with underscore indicate a reference view of that block! 
 
-.. Note::
+    Note again that the blocks are nothing but the normal **Tensor** object, so we can manipulate it as we did to the Tensors, here we demostrate the usage of **.get_block_()**, since the return should be the reference, we can directly assign/modify the content of these blocks.
 
-    Note again that the blocks are nothing but the normal **Tensor** object, so we can manipulate it as we did to the Tensors,
-here we demostrate the usage of **.get_block_()**, since the return should be the reference, we can directly assign/modify the content of these blocks.
+[NEED MODIFY!!]
 
 * In python:
 
