@@ -3,10 +3,10 @@
 TEST_F(linalg_Test, BkUt_Svd_truncate1){
   std::vector<UniTensor> res = linalg::Svd_truncate(svd_T, 200, 0, true, true, true);
   std::vector<double> vnm_S;
-  for(int i = 0; i < res[0].shape()[0];i++)
+  for(size_t i = 0; i < res[0].shape()[0];i++)
     vnm_S.push_back((double)(res[0].at({i,i}).real()));
   std::sort(vnm_S.begin(), vnm_S.end());
-  for(int i = 0; i<vnm_S.size();i++)
+  for(size_t i = 0; i<vnm_S.size();i++)
     EXPECT_TRUE(abs(vnm_S[i]-(double)(svd_Sans.at({0,i}).real()))<1e-5);
   auto con_T1 = Contract(Contract(res[2], res[0]), res[1]);
   auto con_T2 = Contract(Contract(res[1], res[0]), res[2]);
@@ -15,10 +15,10 @@ TEST_F(linalg_Test, BkUt_Svd_truncate1){
 TEST_F(linalg_Test, BkUt_Svd_truncate2){
   std::vector<UniTensor> res = linalg::Svd_truncate(svd_T, 200, 1e-1, true, true, true);
   std::vector<double> vnm_S;
-  for(int i = 0; i < res[0].shape()[0];i++)
+  for(size_t i = 0; i < res[0].shape()[0];i++)
     vnm_S.push_back((double)(res[0].at({i,i}).real()));
   std::sort(vnm_S.begin(), vnm_S.end());
-  for(int i = 0; i<vnm_S.size();i++)
+  for(size_t i = 0; i<vnm_S.size();i++)
     EXPECT_TRUE(vnm_S[i]>1e-1);
   auto con_T1 = Contract(Contract(res[2], res[0]), res[1]);
   auto con_T2 = Contract(Contract(res[1], res[0]), res[2]);
@@ -42,7 +42,7 @@ TEST_F(linalg_Test, BkUt_Svd_truncate4){
   Bond K = Bond(BD_OUT,{Qs(1),Qs(-1)},{1,1});
   Bond L = Bond(BD_OUT,{Qs(-4),Qs(-2),Qs(0),Qs(2),Qs(4),Qs(6)},{1,5,10,9,4,1});
   UniTensor cyT = UniTensor({I,J,K,L},{"a","b","c","d"},2,Type.Double,Device.cpu,false);
-  cyT = cyT.Load(data_dir+"Svd_truncate/Svd_truncate3.cytnx");
+  cyT = UniTensor::Load(data_dir+"Svd_truncate/Svd_truncate3.cytnx");
   std::vector<UniTensor> res =  linalg::Svd_truncate(cyT, 30, 0, true, true, true);
   auto con_T1 = Contract(Contract(res[2], res[0]), res[1]);
   auto con_T2 = Contract(Contract(res[1], res[0]), res[2]);
@@ -53,8 +53,8 @@ TEST_F(linalg_Test, BkUt_Qr1){
     auto res = linalg::Qr(H);
     auto Q = res[0];
     auto R = res[1];
-    for(int i = 0;i<27;i++)
-      for(int j = 0; j<27;j++){
+    for(size_t i = 0;i<27;i++)
+      for(size_t j = 0; j<27;j++){
           if(R.elem_exists({i,j})){
             EXPECT_TRUE(abs((double)(R.at({i,j}).real())-(double)(Qr_Rans.at({i,j}).real())) < 1E-12);
             //EXPECT_EQ((double)(R.at({i,j}).real()),(double)(Qr_Rans.at({i,j}).real()));
@@ -68,8 +68,8 @@ TEST_F(linalg_Test, BkUt_Qr1){
 
 TEST_F(linalg_Test, BkUt_expH){
     auto res = linalg::ExpH(H);
-    for(int i = 0;i<27;i++)
-      for(int j = 0; j<27;j++){
+    for(size_t i = 0;i<27;i++)
+      for(size_t j = 0; j<27;j++){
           if(res.elem_exists({i,j})){
             EXPECT_TRUE(abs((double)(res.at({i,j}).real())-(double)(expH_ans.at({i,j}).real())) < 1E-8);
             //EXPECT_EQ((double)(R.at({i,j}).real()),(double)(Qr_Rans.at({i,j}).real()));
@@ -79,8 +79,8 @@ TEST_F(linalg_Test, BkUt_expH){
 
 TEST_F(linalg_Test, BkUt_expM){
     auto res = linalg::ExpM(H);
-    for(int i = 0;i<27;i++)
-      for(int j = 0; j<27;j++){
+    for(size_t i = 0;i<27;i++)
+      for(size_t j = 0; j<27;j++){
           if(res.elem_exists({i,j})){
             EXPECT_TRUE(abs((double)(res.at({i,j}).real())-(double)(expH_ans.at({i,j}).real())) < 1E-8);
             //EXPECT_EQ((double)(R.at({i,j}).real()),(double)(Qr_Rans.at({i,j}).real()));
@@ -91,8 +91,8 @@ TEST_F(linalg_Test, BkUt_expM){
 TEST_F(linalg_Test, DenseUt_Pow){
     UniTensor Ht = UniTensor(A);
     auto res = linalg::Pow(Ht,3);
-    for(int i = 0;i<9;i++)
-      for(int j = 0; j<9;j++){
+    for(size_t i = 0;i<9;i++)
+      for(size_t j = 0; j<9;j++){
           //if(res.elem_exists({i,j})){
             EXPECT_TRUE(abs((double)(res.at({i,j}).real())-(double)(Pow_ans.at({i,j}).real())) < 1E-8);
             //EXPECT_EQ((double)(R.at({i,j}).real()),(double)(Qr_Rans.at({i,j}).real()));
@@ -103,8 +103,8 @@ TEST_F(linalg_Test, DenseUt_Pow){
 TEST_F(linalg_Test, DenseUt_Pow_){
     UniTensor Ht = UniTensor(A);
     linalg::Pow_(Ht,3);
-    for(int i = 0;i<9;i++)
-      for(int j = 0; j<9;j++){
+    for(size_t i = 0;i<9;i++)
+      for(size_t j = 0; j<9;j++){
           //if(Ht.elem_exists({i,j})){
             EXPECT_TRUE(abs((double)(Ht.at({i,j}).real())-(double)(Pow_ans.at({i,j}).real())) < 1E-8);
             //EXPECT_EQ((double)(R.at({i,j}).real()),(double)(Qr_Rans.at({i,j}).real()));
@@ -116,8 +116,8 @@ TEST_F(linalg_Test, DenseUt_Pow_){
 TEST_F(linalg_Test, DenseUt_Mod){
     UniTensor At = UniTensor(A);
     auto res = linalg::Mod(100*At, 3);
-    for(int i = 0;i<9;i++)
-      for(int j = 0; j<9;j++){
+    for(size_t i = 0;i<9;i++)
+      for(size_t j = 0; j<9;j++){
           //if(Ht.elem_exists({i,j})){
             EXPECT_TRUE(abs((double)(res.at({i,j}).real())-(double)(Mod_ans.at({i,j}).real())) < 1E-8);
             //EXPECT_EQ((double)(R.at({i,j}).real()),(double)(Qr_Rans.at({i,j}).real()));
@@ -130,8 +130,8 @@ TEST_F(linalg_Test, DenseUt_Mod_UtUt){
     UniTensor At = UniTensor(A);
     UniTensor Bt = UniTensor(B);
     auto res = linalg::Mod(100*At, Bt);
-    for(int i = 0;i<9;i++)
-      for(int j = 0; j<9;j++){
+    for(size_t i = 0;i<9;i++)
+      for(size_t j = 0; j<9;j++){
           //if(Ht.elem_exists({i,j})){
             EXPECT_TRUE(abs((double)(res.at({i,j}).real())-(double)(ModUtUt_ans.at({i,j}).real())) < 1E-8);
             //EXPECT_EQ((double)(R.at({i,j}).real()),(double)(Qr_Rans.at({i,j}).real()));
