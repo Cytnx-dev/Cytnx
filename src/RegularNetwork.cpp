@@ -161,7 +161,7 @@ namespace cytnx {
       lbls.push_back(tmp);
     }
 
-    // TN_iBondNum = lbls.size();
+    TN_iBondNum = lbls.size();
 
     cytnx_error_msg(lbls.size() == 0, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
                     "Invalid TN line. no label present in this line, which is invalid.%s", "\n");

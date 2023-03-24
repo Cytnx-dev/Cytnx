@@ -25,7 +25,7 @@ dt = 0.1
 ## SzSz + S+S- + h.c. 
 bdi = cytnx.Bond(cytnx.BD_KET,[[1],[-1]], [1,1]);
 bdo = bdi.clone().set_type(cytnx.BD_BRA);
-H = cytnx.UniTensor([bdi.combineBond(bdi,True),bdo.combineBond(bdo,True)],labels=[1,0]);
+H = cytnx.UniTensor([bdi,bdi,bdo,bdo],labels=[2,3,1,0]);
 # H = cytnx.UniTensor([bdi,bdi,bdo,bdo],labels=[2,3,0,1]);
 
 # H.print_diagram()
@@ -43,11 +43,12 @@ H = cytnx.UniTensor([bdi.combineBond(bdi,True),bdo.combineBond(bdo,True)],labels
 # T0[0,0] = T0[1,1] = -1;
 # T0[0,1] = T0[1,0] = 1;
 # H.get_block_([-2])[0] = 1;
-H.get_block_([0,0])[0,0] = 1;
-T0 = H.get_block_([1,1])
-T0[0,0] = T0[1,1] = -1;
-T0[0,1] = T0[1,0] = 1;
-H.get_block_([2,2])[0,0] = 1;
+H.get_block_([0,0,0,0])[0,0,0,0] = 1;
+H.get_block_([0,1,0,1])[0,0,0,0] = -1;
+H.get_block_([1,0,1,0])[0,0,0,0] = -1;
+H.get_block_([0,1,1,0])[0,0,0,0] = 1;
+H.get_block_([1,0,0,1])[0,0,0,0] = 1;
+H.get_block_([1,1,1,1])[0,0,0,0] = 1;
 
 ## create gate:
 eH = cytnx.linalg.ExpH(H,-dt)
@@ -96,7 +97,7 @@ for i in range(10000):
 
     ## contract all
     X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
-    lb.set_label(1,new_label='-1')
+    lb.set_label(lb.get_index('-5'),new_label='-1')
     X = cytnx.Contract(lb,X)
 
     ## X =
@@ -104,13 +105,6 @@ for i in range(10000):
     #            |    |     
     #  (-4) --lb-A-la-B-lb-- (-5) 
     #
-    X.combineBonds(["0","1"],False)
-    X.print_diagram()
-    X.print_blocks()
-    H.print_diagram()
-    H.print_blocks()
-    # X.set_labels(["-4","0","-5"])
-    
     ## calculate local energy:
     ## <psi|psi>
     Xt = X.Dagger()
@@ -118,7 +112,7 @@ for i in range(10000):
 
     ## <psi|H|psi>
     XH = cytnx.Contract(X,H)
-    XH.set_labels([-4,-5,0,1])
+    XH.set_labels(['-4','-5','0','1'])
     XHX = cytnx.Contract(Xt,XH).item()
     
     E = XHX/XNorm
@@ -133,7 +127,7 @@ for i in range(10000):
 
     ## Time evolution the MPS
     XeH = cytnx.Contract(X,eH)
-    XeH.permute_([-4,2,3,-5],by_label=True)
+    XeH.permute_(['-4','2','3','-5'])
     
     ## Do Svd + truncate
     ## 
@@ -164,8 +158,8 @@ for i in range(10000):
     #       --lb-A'-la-B'-lb-- 
     #
     # again, but A' and B' are updated 
-    A.set_labels([-1,0,-2]); A.set_rowrank(1);
-    B.set_labels([-3,1,-4]); B.set_rowrank(1);
+    A.set_labels(['-1','0','-2']); A.set_rowrank(1);
+    B.set_labels(['-3','1','-4']); B.set_rowrank(1);
 
     lb_inv = lb.clone()
     for b in range(len(lb_inv.get_blocks_())):
