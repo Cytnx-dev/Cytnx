@@ -15,11 +15,11 @@ int main(int argc, char *argv[]) {
   double dt = 0.1;
 
   //> Create onsite-Op
-  Tensor Sz = cytnx::zeros({2, 2});
+  Tensor Sz = cytnx::zeros(2*2).reshape({2,2});
   Sz.at<double>({0, 0}) = 1;
   Sz.at<double>({1, 1}) = -1;
 
-  Tensor Sx = cytnx::zeros({2, 2});
+  Tensor Sx = cytnx::zeros(2*2).reshape({2,2});
   Sx.at<double>({0, 1}) = Sx.at<double>({1, 0}) = Hx;
   Tensor I = Sz.clone();
   I.at<double>({1, 1}) = 1;
@@ -31,16 +31,18 @@ int main(int argc, char *argv[]) {
   Tensor ZZterm = cytnx::linalg::Kron(Sz, Sz);
   Tensor tH = Hx * TFterm + J * ZZterm;
 
+  cout<<"tH::::::"<<tH<<endl;
+
   Tensor teH = cytnx::linalg::ExpH(tH, -dt);
   teH.reshape_({2, 2, 2, 2});
   cout << teH;
   tH.reshape_({2, 2, 2, 2});
 
-  UniTensor eH = UniTensor(teH, 2);
+  UniTensor eH = UniTensor(teH, false, 2);
   eH.print_diagram();
   cout << eH;
 
-  UniTensor H = UniTensor(tH, 2);
+  UniTensor H = UniTensor(tH, false, 2);
   H.print_diagram();
 
   //> Create MPS:
@@ -48,37 +50,31 @@ int main(int argc, char *argv[]) {
   //     |    |
   //   --A-la-B-lb--
   //
-  UniTensor A = UniTensor({cyx::Bond(chi), cyx::Bond(2), cyx::Bond(chi)}, {-1, 0, -2}, 1);
-  UniTensor B = UniTensor(A.bonds(), {-3, 1, -4}, 1);
+  UniTensor A = UniTensor({cytnx::Bond(chi), cytnx::Bond(2), cytnx::Bond(chi)}, vector<string>({"-1", "0", "-2"}), 1);
+  UniTensor B = UniTensor(A.bonds(), vector<string>({"-3", "1", "-4"}), 1);
 
   cytnx::random::Make_normal(B.get_block_(), 0, 0.2);
   cytnx::random::Make_normal(A.get_block_(), 0, 0.2);
 
-  A.print_diagram();
-  B.print_diagram();
-
   UniTensor la =
-    UniTensor({cyx::Bond(chi), cyx::Bond(chi)}, {-2, -3}, 1, Type.Double, Device.cpu, true);
+    UniTensor({cytnx::Bond(chi), cytnx::Bond(chi)}, vector<string>({"-2", "-3"}), 1, Type.Double, Device.cpu, true);
   UniTensor lb =
-    UniTensor({cyx::Bond(chi), cyx::Bond(chi)}, {-4, -5}, 1, Type.Double, Device.cpu, true);
+    UniTensor({cytnx::Bond(chi), cytnx::Bond(chi)}, vector<string>({"-4", "-5"}), 1, Type.Double, Device.cpu, true);
   la.put_block(cytnx::ones(chi));
   lb.put_block(cytnx::ones(chi));
-
-  la.print_diagram();
-  lb.print_diagram();
   //> Evov:
   double Elast = 0;
 
   for (unsigned int i = 0; i < 10000; i++) {
-    A.set_labels({-1, 0, -2});
-    B.set_labels({-3, 1, -4});
-    la.set_labels({-2, -3});
-    lb.set_labels({-4, -5});
+    A.set_labels({"-1", "0", "-2"});
+    B.set_labels({"-3", "1", "-4"});
+    la.set_labels({"-2", "-3"});
+    lb.set_labels({"-4", "-5"});
 
     // contract all
-    UniTensor X = cyx::Contract(cyx::Contract(A, la), cyx::Contract(B, lb));
-    lb.set_label(1, -1);
-    X = cyx::Contract(lb, X);
+    UniTensor X = cytnx::Contract(cytnx::Contract(A, la), cytnx::Contract(B, lb));
+    lb.set_label(lb.get_index("-5"), "-1");
+    X = cytnx::Contract(lb, X);
 
     // X =
     //           (0)  (1)
@@ -89,11 +85,15 @@ int main(int argc, char *argv[]) {
 
     //> calculate norm and energy for this step
     // Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element
-    double XNorm = cyx::Contract(X, Xt).item<double>();
-    UniTensor XH = cyx::Contract(X, H);
+    double XNorm = cytnx::Contract(X, Xt).item<double>();
+    UniTensor XH = cytnx::Contract(X, H);
 
-    XH.set_labels({-4, -5, 0, 1});
-    double XHX = cyx::Contract(Xt, XH).item<double>();
+    // X.print_diagram();
+    // H.print_diagram();
+    // XH.print_diagram();
+
+    XH.set_labels({"-4", "-5", "0", "1"});
+    double XHX = cytnx::Contract(Xt, XH).item<double>();
     double E = XHX / XNorm;
 
     //> check if converged.
@@ -101,12 +101,12 @@ int main(int argc, char *argv[]) {
       cout << "[Converged!]" << endl;
       break;
     }
-    cout << "Step: " << i << "Enr: " << Elast << endl;
+    cout << "Step: " << i << " Enr: " << Elast << endl;
     Elast = E;
 
     //> Time evolution the MPS
-    UniTensor XeH = cyx::Contract(X, eH);
-    XeH.permute_({-4, 2, 3, -5}, -1, true);
+    UniTensor XeH = cytnx::Contract(X, eH);
+    XeH.permute_({"-4", "2", "3", "-5"});
 
     //> Do Svd + truncate
     //
@@ -114,8 +114,8 @@ int main(int argc, char *argv[]) {
     //         |     |          =>         |         +   (-6)--s--(-7)  +         |
     //  (-4) --= XeH =-- (-5)        (-4)--U--(-6)                          (-7)--Vt--(-5)
     //
-    XeH.set_Rowrank(2);
-    vector<UniTensor> out = cyx::xlinalg::Svd_truncate(XeH, chi);
+    XeH.set_rowrank(2);
+    vector<UniTensor> out = cytnx::linalg::Svd_truncate(XeH, chi);
     la = out[0];
     A = out[1];
     B = out[2];
@@ -128,14 +128,14 @@ int main(int argc, char *argv[]) {
     //       --lb-A'-la-B'-lb--
     //
     // again, but A' and B' are updated
-    A.set_labels({-1, 0, -2});
-    A.set_Rowrank(1);
-    B.set_labels({-3, 1, -4});
-    B.set_Rowrank(1);
+    A.set_labels({"-1", "0", "-2"});
+    A.set_rowrank(1);
+    B.set_labels({"-3", "1", "-4"});
+    B.set_rowrank(1);
 
     UniTensor lb_inv = 1. / lb;
-    A = cyx::Contract(lb_inv, A);
-    B = cyx::Contract(B, lb_inv);
+    A = cytnx::Contract(lb_inv, A);
+    B = cytnx::Contract(B, lb_inv);
 
     //> translation symm, exchange A and B site
     UniTensor tmp = A;

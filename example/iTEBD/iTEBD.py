@@ -33,6 +33,7 @@ ZZterm = cytnx.linalg.Kron(Sz,Sz)
 
 H = Hx*TFterm + J*ZZterm 
 del TFterm, ZZterm
+print(H)
 
 eH = cytnx.linalg.ExpH(H,-dt) ## or equivantly ExpH(-dt*H)
 eH.reshape_(2,2,2,2)
@@ -81,7 +82,7 @@ for i in range(10000):
 
     ## contract all
     X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
-    lb_l = lb.relabel(1,X.labels()[0])
+    lb_l = lb.relabel(lb.get_index('e'),X.labels()[0])
     X = cytnx.Contract(lb_l,X)
 
 
@@ -90,7 +91,7 @@ for i in range(10000):
     #            |    |     
     #  (d) --lb-A-la-B-lb-- (e) 
     #
-    X.print_diagram()
+    # X.print_diagram()
     Xt = X.clone()
 
 
@@ -105,7 +106,7 @@ for i in range(10000):
     XHX = XHX.item() ## rank-0
     E = XHX/XNorm
 
-    print(E)
+    # print(E)
     ## check if converged.
     if(np.abs(E-Elast) < CvgCrit):
         print("[Converged!]")
@@ -117,7 +118,7 @@ for i in range(10000):
     ## Time evolution the MPS
     XeH = cytnx.Contract(X,eH)
     XeH.permute_(['d','2','3','e'])
-    XeH.print_diagram()
+    # XeH.print_diagram()
 
     ## Do Svd + truncate
     ## 
@@ -143,7 +144,7 @@ for i in range(10000):
     #
     # again, but A' and B' are updated 
     lb_inv = 1./lb
-    lb_inv.print_diagram();
+    # lb_inv.print_diagram();
     lb_inv.set_labels([B.labels()[2],A.labels()[0]])
    
     A = cytnx.Contract(lb_inv,A)
