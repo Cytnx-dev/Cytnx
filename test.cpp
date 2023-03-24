@@ -19,6 +19,28 @@ void pp(){
 
 int main(int argc, char *argv[]) {
 
+  int size = 5;
+  std::vector<Bond> bonds = {Bond(size), Bond(size)};
+  int rowrank = 1;
+  bool is_diag = true;
+  auto labels = std::vector<std::string>();
+  auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double,
+                     cytnx::Device.cpu, is_diag);
+  random::Make_uniform(T, 0, 10, 0);
+  std::cout << T << std::endl;
+  std::vector<UniTensor> svds = linalg::Svd(T);
+  auto S = svds[0];
+  auto U = svds[1];
+  auto Vt = svds[2];
+
+  return 0;
+
+  Bond bd_sym_u1_a = Bond(BD_KET,{Qs(0)>>3,Qs(-4)>>4,Qs(-2)>>3,Qs(3)>>2},{Symmetry::U1()});
+  auto bd_sym_u1_c = Bond(BD_KET,{Qs(-1)>>2,Qs(1)>>3,Qs(2)>>4,Qs(-2)>>5,Qs(0)>>6});
+
+  print(bd_sym_u1_a.combineBond(bd_sym_u1_c,false));
+  return 0;
+
   auto bd2 = Bond(BD_KET,{Qs(1)>>1,Qs(0)>>1,Qs(-1)>>1});
   auto bd22 = bd2.combineBond(bd2);
   print(bd22);
@@ -313,15 +335,6 @@ int main(int argc, char *argv[]) {
   */
 
 
-  auto S = UniTensor(arange(200).reshape(4,5,2,5));
-
-  S.print_diagram();
-  S.print_blocks();
-
-  S.combineBonds({3,1});
-
-  S.print_diagram();
-  S.print_blocks();
 
 
   std::vector<int> tmptt = {0,1,2,3,4,5,6,7};

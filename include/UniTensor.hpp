@@ -4071,7 +4071,11 @@ namespace cytnx {
 	 * instead.
      */
     UniTensor Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label) const {
-      return Trace(a, b, by_label);
+      if(by_label){
+        return Trace(std::to_string(a),std::to_string(b));
+      }else{
+        return Trace(a, b);
+      }
     }
 
     /**
