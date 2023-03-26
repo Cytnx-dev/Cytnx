@@ -4216,15 +4216,15 @@ namespace cytnx {
 
     /**
     @brief save a UniTensor to file
-    @param[in] fname: the file name
-    @post The stored file will be ended in .cytnx
+    @param[in] fname the file name (exclude the file extension).
+    @post The file extension will be extended as '.cytnx'
     */
     void Save(const std::string &fname) const;
 
     /**
     @brief save a UniTensor to file
-    @param[in] fname: the file name
-    @post The stored file will be ended in .cytnx
+    @param[in] fname the file name (exclude the file extension).
+    @post The file extension will be extended as '.cytnx'
     */
     void Save(const char *fname) const;
 
