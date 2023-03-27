@@ -77,7 +77,7 @@ namespace cytnx {
             if (is_Ls) Ls.push_back(tsvdout[0]);
           }
           out.back().set_label(out.back().rank() - 1,
-                               to_string(stoi(out.back().labels().back()) - i));
+                               out.back().labels().back() + "_" + to_string(i));
           perm.clear();
           if (i == mode.size() - 1) {
             for (int j = mode[i] + in.rank() - tot; j < in.rank(); j++) perm.push_back(j);

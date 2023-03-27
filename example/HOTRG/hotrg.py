@@ -1,3 +1,7 @@
+import sys
+from pathlib import Path
+home = str(Path.home())
+sys.path.append(home + '/Cytnx_lib')
 import cytnx 
 from  cytnx import linalg as cLA
 import numpy as np
@@ -66,14 +70,14 @@ for i in range(Maxiter):
     #         3           6
     #
     cT2 = cT.clone()
-    cT2.set_labels([2,4,5,6])
+    cT2.set_labels(['2','4','5','6'])
     cT = cytnx.Contract(cT,cT2)
 
     ## Now, let's check the dimension growth onto a point where truncation is needed:
     if(cT.shape()[1]*cT.shape()[3]>chi):
         # * if combined bond dimension > chi then:
         # 1) Do Hosvd get only U and D, with it's Ls matrices. 
-        cT.permute_([1,4,3,6,0,5],by_label=True)
+        cT.permute_(['1','4','3','6','0','5'])
         U,D,Lu,Ld=cytnx.linalg.Hosvd(cT,[2,2],is_core=False,is_Ls=True)
 
         # 2) Using Ls matrix to determine if U is used to truncate or D is used to truncate
@@ -106,8 +110,8 @@ for i in range(Maxiter):
         cT = cytnx.Contract(cT,U)
 
         ## set back to the original shape:
-        cT.set_labels([1,3,0,2])
-        cT.permute_([0,1,2,3],by_label=True)
+        cT.set_labels(['1','3','0','2'])
+        cT.permute_(['0','1','2','3'])
         cT.set_rowrank(2)
 
     else: 
@@ -122,7 +126,7 @@ for i in range(Maxiter):
         #
         # [Note] here "d" is used to indicate the original bond dimension of each rank, 
         #        in general, they could be different for each bond
-        cT.permute_([0,1,4,5,3,6],by_label=True)
+        cT.permute_(['0','1','4','5','3','6'])
         cT.contiguous_()
         cT.reshape_(cT.shape()[0],cT.shape()[1]*cT.shape()[2],cT.shape()[3],cT.shape()[4]*cT.shape()[5])
         cT.set_rowrank(2)
@@ -145,14 +149,14 @@ for i in range(Maxiter):
     #
     #
     cT2 = cT.clone()
-    cT2.set_labels([6,3,4,5])
+    cT2.set_labels(['6','3','4','5'])
     cT = cytnx.Contract(cT,cT2)
     
     ## check the dimension growth onto a point where truncation is needed:
     if(cT.shape()[2]*cT.shape()[4]>chi):
         # * if combined bond dimension > chi then:
         # 1) Do Hosvd get only L and R, with it's Ls matrices. 
-        cT.permute_([2,4,0,6,1,5],by_label=True)
+        cT.permute_(['2','4','0','6','1','5'])
         L,R,Ll,Lr=cytnx.linalg.Hosvd(cT,[2,2],is_core=False,is_Ls=True)
 
         # 2) Using Ls matrix to determine if L is used to truncate or R is used to truncate
@@ -181,8 +185,8 @@ for i in range(Maxiter):
         cT = cytnx.Contract(cT,L)
 
         ## set back to the original shape:
-        cT.set_labels([1,3,2,0])
-        cT.permute_([0,1,2,3],by_label=True)
+        cT.set_labels(['1','3','2','0'])
+        cT.permute_(['0','1','2','3'])
         cT.set_rowrank(2)
     else:
         # * if combined bond dimension <= chi then we just combined the bond, and return it's original form
@@ -199,7 +203,7 @@ for i in range(Maxiter):
         #
         # [Note] here "d" is used to indicate the original bond dimension of each rank, 
         #        in general, they could be different for each bond
-        cT.permute_([0,6,1,2,4,5],by_label=True)
+        cT.permute_(['0','6','1','2','4','5'])
         cT.contiguous_()
         cT.reshape_(cT.shape()[0]*cT.shape()[1],cT.shape()[2],cT.shape()[3]*cT.shape()[4],cT.shape()[5])
         cT.set_rowrank(2)
