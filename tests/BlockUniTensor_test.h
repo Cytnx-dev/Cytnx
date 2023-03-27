@@ -8,6 +8,9 @@ using namespace cytnx;
 
 class BlockUniTensorTest : public ::testing::Test {
  public:
+
+  std::string data_dir = "../../tests/test_data_base/common/BlockUniTensor/";
+
   Bond B1 = Bond(BD_IN, {Qs(0)>>1, Qs(1)>>2});
   Bond B2 = Bond(BD_IN, {Qs(0), Qs(1)}, {3, 4});
   Bond B3 = Bond(BD_OUT, {Qs(0)>>2, Qs(1)>>3});
@@ -103,15 +106,15 @@ class BlockUniTensorTest : public ::testing::Test {
 
  protected:
   void SetUp() override {
-    BUT4 = UniTensor::Load("OriginalBUT.cytnx");
-    BUT4_2 = UniTensor::Load("OriginalBUT2.cytnx");
-    BUconjT4 = UniTensor::Load("BUconjT.cytnx");
-    BUtrT4 = UniTensor::Load("BUtrT.cytnx");
-    BUTpT2 = UniTensor::Load("BUTpT2.cytnx");
-    BUTsT2 = UniTensor::Load("BUTsT2.cytnx");
-    BUTm9 = UniTensor::Load("BUTm9.cytnx");
-    BUTd9 = UniTensor::Load("BUTd9.cytnx");
-    BUTdT2 = UniTensor::Load("BUTdT2.cytnx");
+    BUT4 = UniTensor::Load(data_dir+"OriginalBUT.cytnx");
+    BUT4_2 = UniTensor::Load(data_dir+"OriginalBUT2.cytnx");
+    BUconjT4 = UniTensor::Load(data_dir+"BUconjT.cytnx");
+    BUtrT4 = UniTensor::Load(data_dir+"BUtrT.cytnx");
+    BUTpT2 = UniTensor::Load(data_dir+"BUTpT2.cytnx");
+    BUTsT2 = UniTensor::Load(data_dir+"BUTsT2.cytnx");
+    BUTm9 = UniTensor::Load(data_dir+"BUTm9.cytnx");
+    BUTd9 = UniTensor::Load(data_dir+"BUTd9.cytnx");
+    BUTdT2 = UniTensor::Load(data_dir+"BUTdT2.cytnx");
 
     BUT6.at({0,0}) = 1;
     BUT6.at({1,1}) = 2;
@@ -119,28 +122,28 @@ class BlockUniTensorTest : public ::testing::Test {
     BUT6.at({1,2}) = 4;
     BUT6.at({2,2}) = 5;
 
-    t0 = Tensor::Load("put_block_t0.cytn");
-    t1a = Tensor::Load("put_block_t1a.cytn");
-    t1b = Tensor::Load("put_block_t1b.cytn");
-    t2 = Tensor::Load("put_block_t2.cytn");
+    t0 = Tensor::Load(data_dir+"put_block_t0.cytn");
+    t1a = Tensor::Load(data_dir+"put_block_t1a.cytn");
+    t1b = Tensor::Load(data_dir+"put_block_t1b.cytn");
+    t2 = Tensor::Load(data_dir+"put_block_t2.cytn");
 
-    UT_pB_ans = UniTensor::Load("put_block_ans.cytnx");
-    UT_contract_L1 = UniTensor::Load("contract_L1.cytnx");
-    UT_contract_R1 = UniTensor::Load("contract_R1.cytnx");
-    UT_contract_ans1 =  UniTensor::Load("contract_ans1.cytnx");
-    UT_contract_L2 = UniTensor::Load("contract_L2.cytnx");
-    UT_contract_R2 = UniTensor::Load("contract_R2.cytnx");
-    UT_contract_ans2 =  UniTensor::Load("contract_ans2.cytnx");
-    UT_contract_L3 = UniTensor::Load("contract_L3.cytnx");
-    UT_contract_R3 = UniTensor::Load("contract_R3.cytnx");
-    UT_contract_ans3 =  UniTensor::Load("contract_ans3.cytnx");
+    UT_pB_ans = UniTensor::Load(data_dir+"put_block_ans.cytnx");
+    UT_contract_L1 = UniTensor::Load(data_dir+"contract_L1.cytnx");
+    UT_contract_R1 = UniTensor::Load(data_dir+"contract_R1.cytnx");
+    UT_contract_ans1 =  UniTensor::Load(data_dir+"contract_ans1.cytnx");
+    UT_contract_L2 = UniTensor::Load(data_dir+"contract_L2.cytnx");
+    UT_contract_R2 = UniTensor::Load(data_dir+"contract_R2.cytnx");
+    UT_contract_ans2 =  UniTensor::Load(data_dir+"contract_ans2.cytnx");
+    UT_contract_L3 = UniTensor::Load(data_dir+"contract_L3.cytnx");
+    UT_contract_R3 = UniTensor::Load(data_dir+"contract_R3.cytnx");
+    UT_contract_ans3 =  UniTensor::Load(data_dir+"contract_ans3.cytnx");
     
-    UT_permute_1 = UniTensor::Load("permute_T1.cytnx");
-    UT_permute_ans1 = UniTensor::Load("permute_ans1.cytnx");
-    UT_permute_2 = UniTensor::Load("permute_T2.cytnx");
-    UT_permute_ans2 = UniTensor::Load("permute_ans2.cytnx");
-    // UT_permute_3 = UT_permute_3.Load("permute_T3.cytnx");
-    // UT_permute_ans3 = UT_permute_ans3.Load("permute_ans3.cytnx");
+    UT_permute_1 = UniTensor::Load(data_dir+"permute_T1.cytnx");
+    UT_permute_ans1 = UniTensor::Load(data_dir+"permute_ans1.cytnx");
+    UT_permute_2 = UniTensor::Load(data_dir+"permute_T2.cytnx");
+    UT_permute_ans2 = UniTensor::Load(data_dir+"permute_ans2.cytnx");
+    // UT_permute_3 = UT_permute_3.Load(data_dir+"permute_T3.cytnx");
+    // UT_permute_ans3 = UT_permute_ans3.Load(data_dir+"permute_ans3.cytnx");
 
     for(size_t i=0;i<UT_diag.bonds()[0].qnums().size();i++){
       cytnx_uint64 deg = UT_diag.bonds()[0]._impl->_degs[i];
