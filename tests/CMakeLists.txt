@@ -9,6 +9,8 @@ add_executable(
   ncon_test.cpp
   BlockUniTensor_test.cpp
   DenseUniTensor_test.cpp
+  Accessor_test.cpp
+  Tensor_test.cpp
   utils_test/vec_concatenate.cpp
   utils_test/vec_unique.cpp
   utils/getNconParameter.cpp
