@@ -1014,19 +1014,22 @@ namespace cytnx {
    public:
     // std::vector<pStorage_init> USIInit;
     inline static pStorage_init USIInit[N_Type];
-    constexpr Storage_init_interface(){
-      // USIInit.resize(N_Type);
-      USIInit[this->Double] = SIInit_d;
-      USIInit[this->Float] = SIInit_f;
-      USIInit[this->ComplexDouble] = SIInit_cd;
-      USIInit[this->ComplexFloat] = SIInit_cf;
-      USIInit[this->Uint64] = SIInit_u64;
-      USIInit[this->Int64] = SIInit_i64;
-      USIInit[this->Uint32] = SIInit_u32;
-      USIInit[this->Int32] = SIInit_i32;
-      USIInit[this->Uint16] = SIInit_u16;
-      USIInit[this->Int16] = SIInit_i16;
-      USIInit[this->Bool] = SIInit_b;
+    inline static bool inited = false;
+    Storage_init_interface(){
+      if(!inited){
+        USIInit[this->Double] = SIInit_d;
+        USIInit[this->Float] = SIInit_f;
+        USIInit[this->ComplexDouble] = SIInit_cd;
+        USIInit[this->ComplexFloat] = SIInit_cf;
+        USIInit[this->Uint64] = SIInit_u64;
+        USIInit[this->Int64] = SIInit_i64;
+        USIInit[this->Uint32] = SIInit_u32;
+        USIInit[this->Int32] = SIInit_i32;
+        USIInit[this->Uint16] = SIInit_u16;
+        USIInit[this->Int16] = SIInit_i16;
+        USIInit[this->Bool] = SIInit_b;
+        inited = true;
+      }
     }
   };
   extern Storage_init_interface __SII;

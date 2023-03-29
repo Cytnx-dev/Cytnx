@@ -62,7 +62,7 @@ FLAG="${FLAG} -DBUILD_PYTHON=ON"
 # [Note] set to "=on" for using hptt library to accelrate tensor transpose.
 #        for "=off" case one can skip 5-a) and  5-b)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_HPTT=ON"
+FLAG="${FLAG} -DUSE_HPTT=ON "
 #-----------------------------------
 # 5-a) HPTT fine tune (DEFAULT =off)
 # [Note] set to "=on" to enable fine tune for the native hardware.
@@ -110,8 +110,9 @@ FLAG="${FLAG} -DMAGMA_ROOT=${MAGMA_ROOT} "
 # [Note] set to "=off" will make permutation on GPU into using cutt library.
 # [Note] CUTENSOR_ROOT is required to given, either from enviroment variable in bashrc
 #        or given in the following line using -DCUTENSOR_ROOT
-CUTENSOR_ROOT=/usr/local/libcutensor-1.6.2.3
-FLAG="${FLAG} -DUSE_CUTENSOR=OFF "
+# CUTENSOR_ROOT=/usr/local/libcutensor-1.6.2.3
+CUTENSOR_ROOT=${HOME}/CUTENSOR
+FLAG="${FLAG} -DUSE_CUTENSOR=ON "
 FLAG="${FLAG} -DCUTENSOR_ROOT=${CUTENSOR_ROOT} "
 #-----------------------------------
 # 6-e) CuQuantum (DEFALT = on)
@@ -147,7 +148,7 @@ FLAG="${FLAG} -DUSE_OMP=OFF "
 #=========================================================
 # [Note] Wheather to run cytnx tests (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG} -DRUN_TESTS=ON "
+FLAG="${FLAG} -DRUN_TESTS=OFF "
 #-----------------------------------
 
 

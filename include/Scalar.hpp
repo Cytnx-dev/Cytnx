@@ -409,7 +409,9 @@ namespace cytnx {
   ///@cond
   class Scalar_init_interface : public Type_class {
    public:
-    std::vector<pScalar_init> UScIInit;
+    // std::vector<pScalar_init> UScIInit;
+    inline static pScalar_init UScIInit[N_Type];
+    inline static bool inited = false;
     Scalar_init_interface();
   };
   extern Scalar_init_interface __ScII;
