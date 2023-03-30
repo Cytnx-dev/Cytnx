@@ -1,14 +1,14 @@
-Advanced Install Cytnx
+Advanced Install of Cytnx
 ============================
 
 Build/Install Cytnx from source
 *********************************
-For advanced user who wish to build cytnx from source, we provides the cmake install. 
+For advanced user who wish to build cytnx from source, we provide cmake install. 
 
 
 Depedencies
 -------------------
-Cytnx required the following minimum dependencies:
+Cytnx requires the following minimum dependencies:
     
 * cmake >=3.14
 * git 
@@ -47,7 +47,7 @@ In addition, you might want to install the following optional dependencies if yo
 * graphviz
 * numpy 
 
-There are two methods that you can set-up all the dependencies before starting build process: 
+There are two methods how you can set-up all the dependencies before starting the build process: 
 
 1. Using conda to install dependencies 
 2. Directly install dependencies one-by-one via system package manager 
@@ -55,17 +55,17 @@ There are two methods that you can set-up all the dependencies before starting b
 .. Note::
     
     We recommend using conda to handle all the dependencies (including compiling tools). 
-    Which is the simplest way to do as conda automatically resolve all the path of each dependencies, allowing cmake to automatically capture those.  
+    This is the simplest way as conda automatically resolves the whole path of each dependency, allowing cmake to automatically capture those.  
 
     How it works?
         
-        >> the conda-forge channel includes not only the python package but also other pre-compiled libraries/compilers. 
+        >> The conda-forge channel includes not only the python package but also other pre-compiled libraries/compilers. 
 
 
 
-**option A. Using anaconda/conda to install deps:**
+**Option A. Using anaconda/conda to install deps:**
 
-1. Install anaconda/miniconda, setting the virtual enviroments
+1. Install anaconda/miniconda, setting the virtual environments
 
 * For Linux/WSL:
 
@@ -89,7 +89,7 @@ There are two methods that you can set-up all the dependencies before starting b
 .. Note::
     
     1. The python=3.8 indicates the python version you want to use. Generally, cytnx is tested with 3.7/3.8/3.9. You can replace this with the version you want to use. 
-    2. the last line is to update all the libraries such that they are all dependent on conda-forge channel. 
+    2. The last line is updating all the libraries such that they are all dependent on the conda-forge channel. 
 
 
 2. Install the following dependencies:
@@ -101,43 +101,43 @@ There are two methods that you can set-up all the dependencies before starting b
 
 .. Note:: 
 
-    This installation includes the compilers/linalg libraries provided by conda-forge, so the installation of compiler on system side is not required. 
+    This installation includes the compilers/linalg libraries provided by conda-forge, so the installation of compilers on system side is not required. 
 
 .. Hint::
 
     Trouble shooting:
 
-        1. make sure **conda-forge** channel has the top priority
-        2. make sure libblas=mkl (you can check using *conda list | grep libblas*) 
+        1. Make sure **conda-forge** channel has the top priority
+        2. Make sure libblas=mkl (you can check using *conda list | grep libblas*) 
 
 
-4. in addition, if you want to have gpu support (compile with -DUSE_CUDA=on), then additional packages need to install:
+4. In addition, if you want to have GPU support (compile with -DUSE_CUDA=on), then additional packages need to be installed:
 
 .. code-block:: shell
 
     $conda install cudatoolkit cudatoolkit-dev 
 
 
-**option B. Install deps via system package manager**
+**Option B. Install deps via system package manager**
 
-You can also choose to install deps directly from the system package manager, but one need to carefully resolve the dependency path for cmake to capture them succesfully. 
+You can also choose to install deps directly from the system package manager, but one needs to carefully resolve the dependency path for cmake to capture them successfully. 
 
 
 .. warning::
 
-    For MacOS, standard brew install openblas will not work since it lack lapacke.h wrapper support. 
+    For MacOS, standard brew install openblas will not work since it lacks lapacke.h wrapper support. 
 
     If you are using MacOS, please install intel mkl (free) instead. 
 
-    For python API, we recommend install of python using anaconda or miniconda
+    For the python API, we recommend installing python using anaconda or miniconda.
 
 
  
 Compiling process 
 -------------------
-Once you installed all the dependencies, it's time to start building cytnx source code. 
+Once you installed all the dependencies, it is time to start building the cytnx source code. 
 
-Starting from v0.7.6a, cytnx provide a shell script **Install.sh**, which contains all the cmake arguments check list. To install, un-comments and put the custom parameters on the corresponding lines, and simply execute this script:
+Starting from v0.7.6a, cytnx provides a shell script **Install.sh**, which contains all the cmake arguments check list. To install, un-comment and put custom parameters on the corresponding lines, and simply execute this script:
 
 .. code-block:: shell
 
@@ -149,25 +149,25 @@ Starting from v0.7.6a, cytnx provide a shell script **Install.sh**, which contai
 Please see the following steps for the standard cmake compiling process and all the compiling options:
 
 
-1. create a build directory:
+1. Create a build directory:
 
 .. code-block:: shell
 
     $make build
     $cd build
 
-2. use cmake to auto matically generate compiling files:
+2. Use cmake to automatically generate compiling files:
 
 .. code-block:: shell
 
     $cmake [option] <cytnx repo directory>
 
-The following are the avaliable compiling option flags that you can specify in **[option]**:
+The following are the available compiling option flags that you can specify in **[option]**:
 
 +------------------------+-------------------+------------------------------------+
 |       options          | default           |          description               |
 +------------------------+-------------------+------------------------------------+
-| -DCMAME_INSTALL_PREFIX | /usr/local/cytnx  | Install desination of the library  |
+| -DCMAME_INSTALL_PREFIX | /usr/local/cytnx  | Install destination of the library |
 +------------------------+-------------------+------------------------------------+
 | -DBUILD_PYTHON         |   ON              | Compile and install python API     |
 +------------------------+-------------------+------------------------------------+
@@ -200,11 +200,11 @@ Additional options for HPTT if -DUSE_HPTT=on:
 +-------------------------+-------------------+------------------------------------+
 
 
-3. compile the code:
+3. Compile the code:
     
     $make 
 
-4. install to the target location:
+4. Install to the target location:
 
     $make install 
 
@@ -212,10 +212,10 @@ Additional options for HPTT if -DUSE_HPTT=on:
 
 Using python API after self-build install
 -------------------------------------------
-To use python API after self-build, one need to add the path where you install cytnx before import it. 
-The simplest way (and the most flexible way) to do that is to add it into sys.path right at the beginning of your code. 
+To use the python API after self-build, you need to add the path where you installed cytnx before importing it. 
+The simplest (and most flexible) way to do that is to add it into sys.path right at the beginning of your code. 
 
-In the following, we will use **CYTNX_ROOT** (capital letters) to represent the path where you install the cytnx. You should replace it with the path where cytnx is installed. 
+In the following, we will use **CYTNX_ROOT** (capital letters) to represent the path where you installed cytnx. You should replace it with the path where cytnx is installed. 
 
 .. code-block:: python 
     :linenos:
@@ -240,7 +240,7 @@ In the following, we will use **CYTNX_ROOT** (capital letters) to represent the 
 
 Using C++ API after self-build install
 ------------------------------------------
-In the case cytnx is installed locally from binary build, not from anaconda, one can use the following lines to extract the linking and compiling varialbes:
+In the case that cytnx is installed locally from binary build, not from anaconda, one can use the following lines to extract the linking and compiling variables:
 
 .. code-block:: shell
 

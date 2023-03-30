@@ -29,11 +29,11 @@ If cytnx is not compiled with OpenMP avaliable, the Device.Ncpus will always ret
 
 .. Note::
 
-    For the parallel with OpenMP, by default mkl use all the available threads. 
+    For parallel computing with OpenMP, by default mkl uses all the available threads. 
     However, any cytnx internal function that utilizes OpenMP may or may not automatically use all threads, depending on your current environment configuration. 
 
 
-If OpenMP is enable and you want to set restriction on how many threads you want your program to use, this can be done by simply changing the environment variable before you execute your program. For example, the following line will make mkl as well as cytnx internal functions using 16 threads in all places where they are parallellizable. 
+If OpenMP is enabled and you want to set a restriction on how many threads you want your program to use, this can be done by simply changing an environment variable before you execute your program. For example, the following line will make mkl as well as cytnx internal functions use 16 threads in all places where they are parallelizable. 
 
 .. code-block:: console
     
@@ -48,7 +48,7 @@ If OpenMP is enable and you want to set restriction on how many threads you want
 
 Number of GPUs
 ********************
-To check how many gpus can be used in your current program by cytnx, you can use **Device.Ngpus**. 
+To check how many GPUs can be used in your current program by cytnx, you can use **Device.Ngpus**. 
 
 * In C++
 
@@ -64,7 +64,7 @@ To check how many gpus can be used in your current program by cytnx, you can use
     print(cytnx.Device.Ngpus)
 
 
-If cytnx is not compiled with CUDA avaliable, the Device.Ngpus will always return 0.
+If cytnx is not compiled with CUDA available, the Device.Ngpus will always return 0.
 
 
 .. Warning::
@@ -74,7 +74,7 @@ If cytnx is not compiled with CUDA avaliable, the Device.Ngpus will always retur
 
 GPU status
 *********************
-For system with multi-gpu, cytnx ultilize peer-access feature to transfer data between GPUs when they are avaliable. The **Device.Print_Property()** will list the avaliablility between GPUs.
+For systems with multi-gpu, cytnx utilizes the peer-access feature to transfer data between GPUs when they are available. The **Device.Print_Property()** will list the availability of GPUs.
 
 
 .. code-block:: python 
@@ -84,7 +84,7 @@ For system with multi-gpu, cytnx ultilize peer-access feature to transfer data b
 
 * Output example: 
 
-1. executed on a node with 4 GPUs installed with peer-access avaliable between gpu-id=0 <-> gpu-id=2:
+1. Executed on a node with 4 GPUs installed with peer-access available between gpu-id=0 <-> gpu-id=2:
 
 .. code-block:: text
     
@@ -99,7 +99,7 @@ For system with multi-gpu, cytnx ultilize peer-access feature to transfer data b
     --------------------
 
     
-2. executed when cytnx is not compiled with CUDA:
+2. Executed when cytnx is not compiled with CUDA:
 
 .. code-block:: text
 

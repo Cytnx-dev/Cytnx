@@ -21,6 +21,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../_static/sphinxbootstrap4.js"></script>
@@ -43,7 +44,7 @@
                   <a class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
                   <ul class="dropdown-menu">
                   <ul>
-<li class="toctree-l1"><a class="reference internal" href="../Intro.html">Introdoction</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../Intro.html">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../Intro.html#features">Features</a></li>
 </ul>
 </li>
@@ -59,7 +60,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../adv_install.html">Advanced Install Cytnx</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../adv_install.html">Advanced Install of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../adv_install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../adv_install.html#depedencies">Depedencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../adv_install.html#compiling-process">Compiling process</a></li>
@@ -181,7 +182,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">7.2. Lanczos solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../guide/cyx.html">8. Cytnx extensions</a><ul>
@@ -191,6 +195,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Bond.html">8.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
@@ -199,8 +204,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/UniTensor.html">8.3. UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_create.html">8.3.1. Create UniTensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">8.3.3. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_manip.html">8.3.4. Manipulate UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">8.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Network.html">8.4. Network</a><ul>
@@ -342,7 +348,7 @@
             
               <div class="sidebartoctree">
                 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../Intro.html">Introdoction</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../Intro.html">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../Intro.html#features">Features</a></li>
 </ul>
 </li>
@@ -358,7 +364,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../adv_install.html">Advanced Install Cytnx</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../adv_install.html">Advanced Install of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../adv_install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../adv_install.html#depedencies">Depedencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../adv_install.html#compiling-process">Compiling process</a></li>
@@ -480,7 +486,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">7.2. Lanczos solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../guide/cyx.html">8. Cytnx extensions</a><ul>
@@ -490,6 +499,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Bond.html">8.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
@@ -498,8 +508,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/UniTensor.html">8.3. UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_create.html">8.3.1. Create UniTensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">8.3.3. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_manip.html">8.3.4. Manipulate UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">8.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Network.html">8.4. Network</a><ul>
@@ -1087,7 +1098,8 @@ set_rowrank(1) is only for the convenience of calling Svd/Svd_truncate in the ne
 </div>
 <p>For the 20 sites system, the result is:</p>
 <a class="reference internal image-reference" href="../_images/dmrg_res.png"><img alt="../_images/dmrg_res.png" class="align-center" src="../_images/dmrg_res.png" style="width: 450px;" /></a>
-<p id="id3"><div class="citation" id="id4" role="doc-biblioentry">
+<div class="docutils container" id="id3">
+<div class="citation" id="id4" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">Sch11</a><span class="fn-bracket">]</span></span>
 <p>Ulrich Schollwöck. The density-matrix renormalization group in the age of matrix product states. <em>Annals of Physics</em>, 326(1):96–192, 2011. January 2011 Special Issue. URL: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0003491610001752">https://www.sciencedirect.com/science/article/pii/S0003491610001752</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1016/j.aop.2010.09.012">doi:https://doi.org/10.1016/j.aop.2010.09.012</a>.</p>
 </div>
@@ -1096,7 +1108,7 @@ set_rowrank(1) is only for the convenience of calling Svd/Svd_truncate in the ne
 <p>Steven R. White. Density matrix formulation for quantum renormalization groups. <em>Phys. Rev. Lett.</em>, 69:2863–2866, Nov 1992. URL: <a class="reference external" href="https://link.aps.org/doi/10.1103/PhysRevLett.69.2863">https://link.aps.org/doi/10.1103/PhysRevLett.69.2863</a>, <a class="reference external" href="https://doi.org/10.1103/PhysRevLett.69.2863">doi:10.1103/PhysRevLett.69.2863</a>.</p>
 </div>
 </div>
-</p>
+</div>
 </section>
 </section>
 
@@ -1111,7 +1123,7 @@ set_rowrank(1) is only for the convenience of calling Svd/Svd_truncate in the ne
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.3.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

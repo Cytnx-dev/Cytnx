@@ -9,7 +9,7 @@ To use the library, simply include/import cytnx.
 
     import cytnx
 
-* In C++, using include header
+* In C++, using the include header
 
 .. code-block:: c++
     :linenos:
@@ -20,7 +20,7 @@ To use the library, simply include/import cytnx.
 .. Note::
     In C++, there is a namespace **cytnx**. 
 
-There are equivalence of alias between python module and c++ namespace, for example if we want to alias cytnx as cy, 
+Aliases in python modules and C++ namespaces can be used equivalently, for example if we want to alias cytnx as cy, 
 
 In python :
 
@@ -29,7 +29,7 @@ In python :
 
     import cytnx as cy
 
-This is equivalent in C++ as:
+This is equivalent in C++ to:
 
 .. code-block:: c++
     :linenos:

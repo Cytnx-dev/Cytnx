@@ -1,17 +1,17 @@
 Install & Usage of Cytnx
 ============================
-To install cytnx, we recommend user to use anaconda/miniconda to install. However, advanced user can also build from soruce if nessasary. 
+To install cytnx, we recommend user to use anaconda/miniconda to install. However, advanced users can also build from source if necessary. 
 Note that both python API and C++ API will be installed together regardless of which method you use. 
 
 
 Conda install
 ********************
-Following we show how to install cytnx from conda.
+In the following we show how to install cytnx from conda.
 
 1. Install :anaconda:`Anaconda3 <>` / :miniconda:`Miniconda3 <>`.
     
     
-2. create a virtual enviroment:
+2. Create a virtual environment:
 
 * For linux/WSL:
 
@@ -23,7 +23,7 @@ Following we show how to install cytnx from conda.
 
 .. Note::
 
-    1. We do not support native Windows package at this stage. if you are using Windows OS, please use WSL. 
+    1. We do not support native Windows packages at this stage. If you are using Windows OS, please use WSL. 
     2. [0.7.6+] Currently, supporting python versions are updated to linux: 3.7/3.8/3.9; MacOS-osx64 3.7/3.8. You can change python=* argument to the version you want.  
 
 
@@ -40,9 +40,9 @@ Following we show how to install cytnx from conda.
     * See :virtualenv:`This page <>` for how to use virtual enviroment in conda. 
     
 
-3. activate enviroment and conda install cytnx:
+3. Activate environment and conda install cytnx:
     
-    Once you create a virtual enviroment, we need to activate enviroment before start using it. 
+    Once you create a virtual environment, we need to activate the environment before starting to use it. 
 
 .. code-block:: shell
 
@@ -54,7 +54,7 @@ Following we show how to install cytnx from conda.
 
 .. note::
 
-    * to install the GPU (CUDA) support version, use:
+    * To install the GPU (CUDA) support version, use:
 
     $conda install -c kaihsinwu cytnx_cuda 
 
@@ -64,7 +64,7 @@ Once it is installed, we are all set, and ready to start using cytnx.
 
 Using python API after Conda install
 ---------------------------------------
-After install cytnx, using python API is very straight forward, simply import cytnx via:
+After installing cytnx, using python API is very straight forward, simply import cytnx via:
 
 .. code-block:: python 
     :linenos:
@@ -87,9 +87,9 @@ After install cytnx, using python API is very straight forward, simply import cy
 Using C++ API after Conda install
 ---------------------------------------
 The most important feature is that Cytnx installation also provides C++ API. 
-Since there are fundamental differents between C++ and python where C++ require compiling and linking of the code, while python as an interprete language does not require both steps.
+There are fundamental differences between C++ and python, where C++ requires compiling and linking of the code, while python as an interpreted language does not require both steps.
 
-Cytnx provides a simple way for user to easily compiling their C++ code. In cytnx package, we provides three pre-set variables:
+Cytnx provides a simple way for users to easily compile their C++ code. In the cytnx package, we provide three pre-set variables:
 
 .. code-block:: python 
     :linenos:
@@ -102,10 +102,10 @@ Cytnx provides a simple way for user to easily compiling their C++ code. In cytn
 
 * The first one **cytnx.__cpp_include__** gives you the cytnx header files directory path.
 * The second one **cytnx.__cpp_lib__** gives you the cytnx library file directory path. 
-* The thrid one **cytnx.__cpp_linkflags__** gives you the essential linking flags that are required when you link your own programs that using cytnx. 
-* The fourth one **cytnx.__cpp_flags__** gives you the essential compiling flags that are required when you link your own programs that using cytnx. 
+* The third one **cytnx.__cpp_linkflags__** gives you the essential linking flags that are required when you link your own programs that using cytnx. 
+* The fourth one **cytnx.__cpp_flags__** gives you the essential compiling flags that are required when you link your own programs that use cytnx. 
 
-Let's see the same simple example as aformentioned in python API. Here, we want to compile the **test.cpp** that using cytnx:
+Let's see the same simple example as aforementioned in python API. Here, we want to compile the **test.cpp** that uses cytnx:
 
 * test.cpp
 
@@ -123,7 +123,7 @@ Let's see the same simple example as aformentioned in python API. Here, we want 
     }
 
 
-Now, to compile and linking the above **test.cpp** to produce an executable **test**, we can simply use the following bash script:
+Now, to compile and link the above **test.cpp** which produces an executable **test**, we can simply use the following bash script:
 
 .. code-block:: shell
     :linenos:
@@ -136,7 +136,7 @@ Now, to compile and linking the above **test.cpp** to produce an executable **te
     g++ -I${CYTNX_INC} ${CYTNX_CXXFLAGS} test.cpp ${CYTNX_LIB} ${CYTNX_LINK} -o test
 
 
-The first four lines are the python inline execution to get the three attributes and store them into **CYTNX_INC**, **CYTNX_LIB**, **CYTNX_LINK** and **CYTNX_CXXFLAGS** variables. The last line is the standard simple compiling of the C++ code **test.cpp**. After execute these steps, we can then run this program with the executable **test**. 
+The first four lines are the python inline execution to get the three attributes and store them into **CYTNX_INC**, **CYTNX_LIB**, **CYTNX_LINK** and **CYTNX_CXXFLAGS** variables. The last line is the standard simple compiling of the C++ code **test.cpp**. After executing these steps, we can then run this program with the executable **test**. 
 
 
 .. code-block:: shell
@@ -155,7 +155,7 @@ The first four lines are the python inline execution to get the three attributes
     [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
 
 
-For user who what to use cmake/make to integrate cytnx into more complicated project, one can use the following lines to extract the essential to the cmake variables:
+For users who what to use cmake/make to integrate cytnx into more complicated projects, one can use the following lines to extract the essential to the cmake variables:
 
 .. code-block:: shell
 

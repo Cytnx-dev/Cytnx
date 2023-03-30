@@ -1,9 +1,9 @@
 Function Naming convention
 ============================
-Generally, the function naming scheme in Cytnx follows the rule:
+Generally, the function naming scheme in Cytnx follows the rules:
 
 
-1. If the function is **acting on objects** (taking object as arguments), they will start with first Letter being **capical**. Example such as linalg function, contract etc...
+1. If the function is **acting on objects** (taking object as arguments), they will start with the first letter being **capical**. Examples are the linalg functions, Contract etc...
 
     .. code-block:: python
         
@@ -14,7 +14,7 @@ Generally, the function naming scheme in Cytnx follows the rule:
         Contract(A,B)
 
 
-2. If a function is a **member function**, or a **generating function** (such as zeros(), ones() ...), then they usually start with **lower** letter, for example:
+2. If a function is a **member function**, or a **generating function** (such as zeros(), ones() ...), then they usually start with a **lower** case letter, for example:
 
     .. code-block:: python
 
@@ -24,7 +24,7 @@ Generally, the function naming scheme in Cytnx follows the rule:
         B = A.contiguous()
 
 
-3. **Objects** in Cytnx always start with **capical** Letter, for example:
+3. **Objects** in Cytnx always start with **capical** letters, for example:
 
     .. code-block:: python
 
@@ -34,7 +34,7 @@ Generally, the function naming scheme in Cytnx follows the rule:
         C = UniTensor()
 
 
-4. Functions end with **underscore** means the *input* will be changed. If it is a member function, it is inplace operation
+4. Functions end with **underscore** indicate that the *input* will be changed. For member functions, this is an inplace operation
 
 
     .. code-block:: python

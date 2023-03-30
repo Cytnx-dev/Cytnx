@@ -21,6 +21,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -42,7 +43,7 @@
                   <a class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
                   <ul class="dropdown-menu">
                   <ul>
-<li class="toctree-l1"><a class="reference internal" href="../Intro.html">Introdoction</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../Intro.html">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../Intro.html#features">Features</a></li>
 </ul>
 </li>
@@ -58,7 +59,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../adv_install.html">Advanced Install Cytnx</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../adv_install.html">Advanced Install of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../adv_install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../adv_install.html#depedencies">Depedencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../adv_install.html#compiling-process">Compiling process</a></li>
@@ -180,7 +181,10 @@
 <li class="toctree-l4"><a class="reference internal" href="itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="itersol/Lanczos.html">7.2. Lanczos solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cyx.html">8. Cytnx extensions</a><ul>
@@ -190,6 +194,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="cyx/Bond.html">8.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="cyx/Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="cyx/Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
 <li class="toctree-l4"><a class="reference internal" href="cyx/Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
@@ -198,8 +203,9 @@
 <li class="toctree-l3"><a class="reference internal" href="cyx/UniTensor.html">8.3. UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="cyx/UniTensor_create.html">8.3.1. Create UniTensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="cyx/UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="cyx/UniTensor_getblk.html">8.3.3. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="cyx/UniTensor_manip.html">8.3.4. Manipulate UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cyx/UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cyx/UniTensor_getblk.html">8.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cyx/UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="cyx/Network.html">8.4. Network</a><ul>
@@ -341,7 +347,7 @@
             
               <div class="sidebartoctree">
                 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../Intro.html">Introdoction</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../Intro.html">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../Intro.html#features">Features</a></li>
 </ul>
 </li>
@@ -357,7 +363,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../adv_install.html">Advanced Install Cytnx</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../adv_install.html">Advanced Install of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../adv_install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../adv_install.html#depedencies">Depedencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../adv_install.html#compiling-process">Compiling process</a></li>
@@ -479,7 +485,10 @@
 <li class="toctree-l4"><a class="reference internal" href="itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="itersol/Lanczos.html">7.2. Lanczos solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cyx.html">8. Cytnx extensions</a><ul>
@@ -489,6 +498,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="cyx/Bond.html">8.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="cyx/Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="cyx/Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
 <li class="toctree-l4"><a class="reference internal" href="cyx/Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
@@ -497,8 +507,9 @@
 <li class="toctree-l3"><a class="reference internal" href="cyx/UniTensor.html">8.3. UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="cyx/UniTensor_create.html">8.3.1. Create UniTensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="cyx/UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="cyx/UniTensor_getblk.html">8.3.3. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="cyx/UniTensor_manip.html">8.3.4. Manipulate UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cyx/UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cyx/UniTensor_getblk.html">8.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cyx/UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="cyx/Network.html">8.4. Network</a><ul>
@@ -602,7 +613,7 @@
 <ul class="simple">
 <li><p>In C++</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">Device</span><span class="p">.</span><span class="n">Ncpus</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">Device</span><span class="p">.</span><span class="n">Ncpus</span><span class="p">;</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -614,10 +625,10 @@
 <p>If cytnx is not compiled with OpenMP avaliable, the Device.Ncpus will always return 1.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>For the parallel with OpenMP, by default mkl use all the available threads.
+<p>For parallel computing with OpenMP, by default mkl uses all the available threads.
 However, any cytnx internal function that utilizes OpenMP may or may not automatically use all threads, depending on your current environment configuration.</p>
 </div>
-<p>If OpenMP is enable and you want to set restriction on how many threads you want your program to use, this can be done by simply changing the environment variable before you execute your program. For example, the following line will make mkl as well as cytnx internal functions using 16 threads in all places where they are parallellizable.</p>
+<p>If OpenMP is enabled and you want to set a restriction on how many threads you want your program to use, this can be done by simply changing an environment variable before you execute your program. For example, the following line will make mkl as well as cytnx internal functions use 16 threads in all places where they are parallelizable.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">export OMP_NUM_THREADS=16</span>
 </pre></div>
 </div>
@@ -628,11 +639,11 @@ However, any cytnx internal function that utilizes OpenMP may or may not automat
 </section>
 <section id="number-of-gpus">
 <h2><span class="section-number">2.2. </span>Number of GPUs<a class="headerlink" href="#number-of-gpus" title="Permalink to this heading">¶</a></h2>
-<p>To check how many gpus can be used in your current program by cytnx, you can use <strong>Device.Ngpus</strong>.</p>
+<p>To check how many GPUs can be used in your current program by cytnx, you can use <strong>Device.Ngpus</strong>.</p>
 <ul class="simple">
 <li><p>In C++</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">Device</span><span class="p">.</span><span class="n">Ngpus</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">Device</span><span class="p">.</span><span class="n">Ngpus</span><span class="p">;</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -641,7 +652,7 @@ However, any cytnx internal function that utilizes OpenMP may or may not automat
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">Ngpus</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>If cytnx is not compiled with CUDA avaliable, the Device.Ngpus will always return 0.</p>
+<p>If cytnx is not compiled with CUDA available, the Device.Ngpus will always return 0.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Do not change this value manually!</p>
@@ -649,7 +660,7 @@ However, any cytnx internal function that utilizes OpenMP may or may not automat
 </section>
 <section id="gpu-status">
 <h2><span class="section-number">2.3. </span>GPU status<a class="headerlink" href="#gpu-status" title="Permalink to this heading">¶</a></h2>
-<p>For system with multi-gpu, cytnx ultilize peer-access feature to transfer data between GPUs when they are avaliable. The <strong>Device.Print_Property()</strong> will list the avaliablility between GPUs.</p>
+<p>For systems with multi-gpu, cytnx utilizes the peer-access feature to transfer data between GPUs when they are available. The <strong>Device.Print_Property()</strong> will list the availability of GPUs.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cytnx</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">Print_Property</span><span class="p">();</span>
 </pre></div>
 </div>
@@ -657,7 +668,7 @@ However, any cytnx internal function that utilizes OpenMP may or may not automat
 <li><p>Output example:</p></li>
 </ul>
 <ol class="arabic simple">
-<li><p>executed on a node with 4 GPUs installed with peer-access avaliable between gpu-id=0 &lt;-&gt; gpu-id=2:</p></li>
+<li><p>Executed on a node with 4 GPUs installed with peer-access available between gpu-id=0 &lt;-&gt; gpu-id=2:</p></li>
 </ol>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>=== CUDA support ===
 \: Peer PCIE Access\:
@@ -671,7 +682,7 @@ However, any cytnx internal function that utilizes OpenMP may or may not automat
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li><p>executed when cytnx is not compiled with CUDA:</p></li>
+<li><p>Executed when cytnx is not compiled with CUDA:</p></li>
 </ol>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>=== No CUDA support ===
 </pre></div>
@@ -690,7 +701,7 @@ However, any cytnx internal function that utilizes OpenMP may or may not automat
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.3.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

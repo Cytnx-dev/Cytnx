@@ -8,7 +8,7 @@
 
 Cytnx user guide and examples
 =================================
-    Cytnx is a library design for Quantum physics simulation using GPUs and CPUs.
+    Cytnx is a library designed for Quantum physics simulations using GPUs and CPUs.
 
 .. toctree::
    :maxdepth: 1

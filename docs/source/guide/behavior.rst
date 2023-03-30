@@ -3,9 +3,9 @@ Objects behavior
 
 Everything is reference
 ************************
-To provide a direct translate between C++ API and python, as well as reduce the redundant memory allocation, all the objects (except Accessor and LinOp) in Cytnx especially in C++ side, are **references** just like in python. 
+To provide a direct translation between the C++ API and python, as well as to reduce the redundant memory allocation, all the objects (except Accessor and LinOp) in cytnx are **references**, also in C++, just like in python. 
 
-Let's look at the following example. Consider the **Tensor** object in Cytnx
+Let's look at the following example. Consider the **Tensor** object in cytnx
 
 * In python:
 
@@ -37,12 +37,12 @@ Output >>
 
 .. Note::
     
-    In python , this is very straight forward. We implement the *is* clause to cytnx C++ API, so that C++ and python can have exactly the same behavior. You can use **is()** to check if two objects are the same. 
+    In python, this is very straight forward. We implement the *is* clause in the cytnx C++ API, such that C++ and python can have exactly the same behavior. You can use **is()** to check if two objects are the same. 
 
 
 clone
 *********
-In the case where a copy of object is needed, you can use **clone()** to get a copy of objects. 
+In the case where a copy of an object is needed, you can use **clone()**. 
 
 * In python:
 
@@ -80,7 +80,7 @@ Output>>
 
 .. Note::
 
-    Here, we use **Tensor** as example, but in general all the objects in Cytnx (except Accessor and LinOp) also follows the same behavior, and you can use **is** and **clone** as well. 
+    Here, we use **Tensor** as an example, but in general all the objects in cytnx (except Accessor and LinOp) also follow the same behavior, and you can use **is** and **clone** as well. 
 
 
 .. toctree::

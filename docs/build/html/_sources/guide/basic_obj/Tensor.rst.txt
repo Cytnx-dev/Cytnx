@@ -1,7 +1,7 @@
 Tensor
 ==========
-Tensor is the basic building block of Cytnx. 
-In fact, the API of Tensor in cytnx is very similar to :torch-tn:`torch.tensor <>` (so as numpy.array, since they are also similar to each other)
+Tensor is the basic building block of cytnx. 
+In fact, the API of Tensor in cytnx is very similar to :torch-tn:`torch.tensor <>` (and to numpy.array, since they are also similar to each other).
 
 
 Let's take a look on how to use it:

@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
-    <title>Advanced Install Cytnx &#8212; Cytnx  documentation</title>
+    <title>Advanced Install of Cytnx &#8212; Cytnx  documentation</title>
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css" />
@@ -21,6 +21,7 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -42,7 +43,7 @@
                   <a class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
                   <ul class="dropdown-menu">
                   <ul>
-<li class="toctree-l1"><a class="reference internal" href="Intro.html">Introdoction</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="Intro.html">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="Intro.html#features">Features</a></li>
 </ul>
 </li>
@@ -58,7 +59,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Advanced Install Cytnx</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Advanced Install of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#depedencies">Depedencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#compiling-process">Compiling process</a></li>
@@ -180,7 +181,10 @@
 <li class="toctree-l4"><a class="reference internal" href="guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="guide/itersol/Lanczos.html">7.2. Lanczos solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide/itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="guide/cyx.html">8. Cytnx extensions</a><ul>
@@ -190,6 +194,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide/cyx/Bond.html">8.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
@@ -198,8 +203,9 @@
 <li class="toctree-l3"><a class="reference internal" href="guide/cyx/UniTensor.html">8.3. UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_create.html">8.3.1. Create UniTensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_getblk.html">8.3.3. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_manip.html">8.3.4. Manipulate UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_getblk.html">8.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide/cyx/Network.html">8.4. Network</a><ul>
@@ -313,7 +319,7 @@
     <div class="related d-flex justify-content-between bg-light flex-wrap" role="navigation" aria-label="related navigation">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="index.html">Cytnx  documentation</a></li>
-            <li class="breadcrumb-item active">Advanced Install Cytnx</li>
+            <li class="breadcrumb-item active">Advanced Install of Cytnx</li>
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
@@ -336,7 +342,7 @@
             
               <div class="sidebartoctree">
                 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Intro.html">Introdoction</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="Intro.html">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="Intro.html#features">Features</a></li>
 </ul>
 </li>
@@ -352,7 +358,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Advanced Install Cytnx</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Advanced Install of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#depedencies">Depedencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#compiling-process">Compiling process</a></li>
@@ -474,7 +480,10 @@
 <li class="toctree-l4"><a class="reference internal" href="guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="guide/itersol/Lanczos.html">7.2. Lanczos solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide/itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="guide/cyx.html">8. Cytnx extensions</a><ul>
@@ -484,6 +493,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide/cyx/Bond.html">8.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
@@ -492,8 +502,9 @@
 <li class="toctree-l3"><a class="reference internal" href="guide/cyx/UniTensor.html">8.3. UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_create.html">8.3.1. Create UniTensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_getblk.html">8.3.3. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_manip.html">8.3.4. Manipulate UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_getblk.html">8.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide/cyx/Network.html">8.4. Network</a><ul>
@@ -588,14 +599,14 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <section id="advanced-install-cytnx">
-<h1>Advanced Install Cytnx<a class="headerlink" href="#advanced-install-cytnx" title="Permalink to this heading">¶</a></h1>
+  <section id="advanced-install-of-cytnx">
+<h1>Advanced Install of Cytnx<a class="headerlink" href="#advanced-install-of-cytnx" title="Permalink to this heading">¶</a></h1>
 <section id="build-install-cytnx-from-source">
 <h2>Build/Install Cytnx from source<a class="headerlink" href="#build-install-cytnx-from-source" title="Permalink to this heading">¶</a></h2>
-<p>For advanced user who wish to build cytnx from source, we provides the cmake install.</p>
+<p>For advanced user who wish to build cytnx from source, we provide cmake install.</p>
 <section id="depedencies">
 <h3>Depedencies<a class="headerlink" href="#depedencies" title="Permalink to this heading">¶</a></h3>
-<p>Cytnx required the following minimum dependencies:</p>
+<p>Cytnx requires the following minimum dependencies:</p>
 <ul class="simple">
 <li><p>cmake &gt;=3.14</p></li>
 <li><p>git</p></li>
@@ -632,7 +643,7 @@
 <li><p>graphviz</p></li>
 <li><p>numpy</p></li>
 </ul>
-<p>There are two methods that you can set-up all the dependencies before starting build process:</p>
+<p>There are two methods how you can set-up all the dependencies before starting the build process:</p>
 <ol class="arabic simple">
 <li><p>Using conda to install dependencies</p></li>
 <li><p>Directly install dependencies one-by-one via system package manager</p></li>
@@ -640,99 +651,99 @@
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>We recommend using conda to handle all the dependencies (including compiling tools).
-Which is the simplest way to do as conda automatically resolve all the path of each dependencies, allowing cmake to automatically capture those.</p>
+This is the simplest way as conda automatically resolves the whole path of each dependency, allowing cmake to automatically capture those.</p>
 <p>How it works?</p>
 <blockquote>
-<div><p>&gt;&gt; the conda-forge channel includes not only the python package but also other pre-compiled libraries/compilers.</p>
+<div><p>&gt;&gt; The conda-forge channel includes not only the python package but also other pre-compiled libraries/compilers.</p>
 </div></blockquote>
 </div>
-<p><strong>option A. Using anaconda/conda to install deps:</strong></p>
+<p><strong>Option A. Using anaconda/conda to install deps:</strong></p>
 <ol class="arabic simple">
-<li><p>Install anaconda/miniconda, setting the virtual enviroments</p></li>
+<li><p>Install anaconda/miniconda, setting the virtual environments</p></li>
 </ol>
 <ul class="simple">
 <li><p>For Linux/WSL:</p></li>
 </ul>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span> config --add channels conda-forge
-<span class="nv">$conda</span> create --name cytnx <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8 <span class="nv">_openmp_mutex</span><span class="o">=</span>*<span class="o">=</span>*_llvm
-<span class="nv">$conda</span> activate cytnx
-<span class="nv">$conda</span> upgrade --all
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>config<span class="w"> </span>--add<span class="w"> </span>channels<span class="w"> </span>conda-forge
+<span class="nv">$conda</span><span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>cytnx<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8<span class="w"> </span><span class="nv">_openmp_mutex</span><span class="o">=</span>*<span class="o">=</span>*_llvm
+<span class="nv">$conda</span><span class="w"> </span>activate<span class="w"> </span>cytnx
+<span class="nv">$conda</span><span class="w"> </span>upgrade<span class="w"> </span>--all
 </pre></div>
 </div>
 <ul class="simple">
 <li><p>For MacOS:</p></li>
 </ul>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span> config --add channels conda-forge
-<span class="nv">$conda</span> create --name cytnx <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8 llvm-openmp
-<span class="nv">$conda</span> activate cytnx
-<span class="nv">$conda</span> upgrade --all
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>config<span class="w"> </span>--add<span class="w"> </span>channels<span class="w"> </span>conda-forge
+<span class="nv">$conda</span><span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>cytnx<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8<span class="w"> </span>llvm-openmp
+<span class="nv">$conda</span><span class="w"> </span>activate<span class="w"> </span>cytnx
+<span class="nv">$conda</span><span class="w"> </span>upgrade<span class="w"> </span>--all
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ol class="arabic simple">
 <li><p>The python=3.8 indicates the python version you want to use. Generally, cytnx is tested with 3.7/3.8/3.9. You can replace this with the version you want to use.</p></li>
-<li><p>the last line is to update all the libraries such that they are all dependent on conda-forge channel.</p></li>
+<li><p>The last line is updating all the libraries such that they are all dependent on the conda-forge channel.</p></li>
 </ol>
 </div>
 <ol class="arabic simple" start="2">
 <li><p>Install the following dependencies:</p></li>
 </ol>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span> install cmake make boost libboost git compilers numpy mkl mkl-include mkl-service pybind11 <span class="nv">libblas</span><span class="o">=</span>*<span class="o">=</span>*mkl
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>install<span class="w"> </span>cmake<span class="w"> </span>make<span class="w"> </span>boost<span class="w"> </span>libboost<span class="w"> </span>git<span class="w"> </span>compilers<span class="w"> </span>numpy<span class="w"> </span>mkl<span class="w"> </span>mkl-include<span class="w"> </span>mkl-service<span class="w"> </span>pybind11<span class="w"> </span><span class="nv">libblas</span><span class="o">=</span>*<span class="o">=</span>*mkl
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This installation includes the compilers/linalg libraries provided by conda-forge, so the installation of compiler on system side is not required.</p>
+<p>This installation includes the compilers/linalg libraries provided by conda-forge, so the installation of compilers on system side is not required.</p>
 </div>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <p>Trouble shooting:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li><p>make sure <strong>conda-forge</strong> channel has the top priority</p></li>
-<li><p>make sure libblas=mkl (you can check using <em>conda list | grep libblas</em>)</p></li>
+<li><p>Make sure <strong>conda-forge</strong> channel has the top priority</p></li>
+<li><p>Make sure libblas=mkl (you can check using <em>conda list | grep libblas</em>)</p></li>
 </ol>
 </div></blockquote>
 </div>
 <ol class="arabic simple" start="4">
-<li><p>in addition, if you want to have gpu support (compile with -DUSE_CUDA=on), then additional packages need to install:</p></li>
+<li><p>In addition, if you want to have GPU support (compile with -DUSE_CUDA=on), then additional packages need to be installed:</p></li>
 </ol>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span> install cudatoolkit cudatoolkit-dev
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>install<span class="w"> </span>cudatoolkit<span class="w"> </span>cudatoolkit-dev
 </pre></div>
 </div>
-<p><strong>option B. Install deps via system package manager</strong></p>
-<p>You can also choose to install deps directly from the system package manager, but one need to carefully resolve the dependency path for cmake to capture them succesfully.</p>
+<p><strong>Option B. Install deps via system package manager</strong></p>
+<p>You can also choose to install deps directly from the system package manager, but one needs to carefully resolve the dependency path for cmake to capture them successfully.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>For MacOS, standard brew install openblas will not work since it lack lapacke.h wrapper support.</p>
+<p>For MacOS, standard brew install openblas will not work since it lacks lapacke.h wrapper support.</p>
 <p>If you are using MacOS, please install intel mkl (free) instead.</p>
-<p>For python API, we recommend install of python using anaconda or miniconda</p>
+<p>For the python API, we recommend installing python using anaconda or miniconda.</p>
 </div>
 </section>
 <section id="compiling-process">
 <h3>Compiling process<a class="headerlink" href="#compiling-process" title="Permalink to this heading">¶</a></h3>
-<p>Once you installed all the dependencies, it’s time to start building cytnx source code.</p>
-<p>Starting from v0.7.6a, cytnx provide a shell script <strong>Install.sh</strong>, which contains all the cmake arguments check list. To install, un-comments and put the custom parameters on the corresponding lines, and simply execute this script:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$sh</span> Install.sh
+<p>Once you installed all the dependencies, it is time to start building the cytnx source code.</p>
+<p>Starting from v0.7.6a, cytnx provides a shell script <strong>Install.sh</strong>, which contains all the cmake arguments check list. To install, un-comment and put custom parameters on the corresponding lines, and simply execute this script:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$sh</span><span class="w"> </span>Install.sh
 </pre></div>
 </div>
 <p><strong>Arguments/options for cmake install</strong></p>
 <p>Please see the following steps for the standard cmake compiling process and all the compiling options:</p>
 <ol class="arabic simple">
-<li><p>create a build directory:</p></li>
+<li><p>Create a build directory:</p></li>
 </ol>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$make</span> build
-<span class="nv">$cd</span> build
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$make</span><span class="w"> </span>build
+<span class="nv">$cd</span><span class="w"> </span>build
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li><p>use cmake to auto matically generate compiling files:</p></li>
+<li><p>Use cmake to automatically generate compiling files:</p></li>
 </ol>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$cmake</span> <span class="o">[</span>option<span class="o">]</span> &lt;cytnx repo directory&gt;
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$cmake</span><span class="w"> </span><span class="o">[</span>option<span class="o">]</span><span class="w"> </span>&lt;cytnx<span class="w"> </span>repo<span class="w"> </span>directory&gt;
 </pre></div>
 </div>
-<p>The following are the avaliable compiling option flags that you can specify in <strong>[option]</strong>:</p>
+<p>The following are the available compiling option flags that you can specify in <strong>[option]</strong>:</p>
 <table class="docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p>options</p></td>
@@ -741,7 +752,7 @@ Which is the simplest way to do as conda automatically resolve all the path of e
 </tr>
 <tr class="row-even"><td><p>-DCMAME_INSTALL_PREFIX</p></td>
 <td><p>/usr/local/cytnx</p></td>
-<td><p>Install desination of the library</p></td>
+<td><p>Install destination of the library</p></td>
 </tr>
 <tr class="row-odd"><td><p>-DBUILD_PYTHON</p></td>
 <td><p>ON</p></td>
@@ -798,12 +809,12 @@ hptt</p></td>
 </tbody>
 </table>
 <ol class="arabic" start="3">
-<li><p>compile the code:</p>
+<li><p>Compile the code:</p>
 <blockquote>
 <div><p>$make</p>
 </div></blockquote>
 </li>
-<li><p>install to the target location:</p>
+<li><p>Install to the target location:</p>
 <blockquote>
 <div><p>$make install</p>
 </div></blockquote>
@@ -812,9 +823,9 @@ hptt</p></td>
 </section>
 <section id="using-python-api-after-self-build-install">
 <h3>Using python API after self-build install<a class="headerlink" href="#using-python-api-after-self-build-install" title="Permalink to this heading">¶</a></h3>
-<p>To use python API after self-build, one need to add the path where you install cytnx before import it.
-The simplest way (and the most flexible way) to do that is to add it into sys.path right at the beginning of your code.</p>
-<p>In the following, we will use <strong>CYTNX_ROOT</strong> (capital letters) to represent the path where you install the cytnx. You should replace it with the path where cytnx is installed.</p>
+<p>To use the python API after self-build, you need to add the path where you installed cytnx before importing it.
+The simplest (and most flexible) way to do that is to add it into sys.path right at the beginning of your code.</p>
+<p>In the following, we will use <strong>CYTNX_ROOT</strong> (capital letters) to represent the path where you installed cytnx. You should replace it with the path where cytnx is installed.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">import</span> <span class="nn">sys</span>
 <span class="linenos">2</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">CYTNX_ROOT</span><span class="p">)</span>
 <span class="linenos">3</span><span class="kn">import</span> <span class="nn">cytnx</span>
@@ -836,11 +847,11 @@ Shape : (4)
 </section>
 <section id="using-c-api-after-self-build-install">
 <h3>Using C++ API after self-build install<a class="headerlink" href="#using-c-api-after-self-build-install" title="Permalink to this heading">¶</a></h3>
-<p>In the case cytnx is installed locally from binary build, not from anaconda, one can use the following lines to extract the linking and compiling varialbes:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>CYTNX_INC :<span class="o">=</span> <span class="k">$(</span>shell python -c <span class="s2">&quot;exec(\&quot;import sys\nsys.path.append(\&#39;</span><span class="k">$(</span>CYTNX_ROOT<span class="k">)</span><span class="s2">\&#39;)\nimport cytnx\nprint(cytnx.__cpp_include__)\&quot;)&quot;</span><span class="k">)</span>
-CYTNX_LDFLAGS :<span class="o">=</span> <span class="k">$(</span>shell python -c <span class="s2">&quot;exec(\&quot;import sys\nsys.path.append(\&#39;</span><span class="k">$(</span>CYTNX_ROOT<span class="k">)</span><span class="s2">\&#39;)\nimport cytnx\nprint(cytnx.__cpp_linkflags__)\&quot;)&quot;</span><span class="k">)</span>
-CYTNX_LIB :<span class="o">=</span> <span class="k">$(</span>shell python -c <span class="s2">&quot;exec(\&quot;import sys\nsys.path.append(\&#39;</span><span class="k">$(</span>CYTNX_ROOT<span class="k">)</span><span class="s2">\&#39;)\nimport cytnx\nprint(cytnx.__cpp_lib__)\&quot;)&quot;</span><span class="k">)</span>/libcytnx.a
-CYTNX_CXXFLAGS :<span class="o">=</span> <span class="k">$(</span>shell python -c <span class="s2">&quot;exec(\&quot;import sys\nsys.path.append(\&#39;</span><span class="k">$(</span>CYTNX_ROOT<span class="k">)</span><span class="s2">\&#39;)\nimport cytnx\nprint(cytnx.__cpp_flags__)\&quot;)&quot;</span><span class="k">)</span>
+<p>In the case that cytnx is installed locally from binary build, not from anaconda, one can use the following lines to extract the linking and compiling variables:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>CYTNX_INC<span class="w"> </span>:<span class="o">=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import sys\nsys.path.append(\&#39;</span><span class="k">$(</span>CYTNX_ROOT<span class="k">)</span><span class="s2">\&#39;)\nimport cytnx\nprint(cytnx.__cpp_include__)\&quot;)&quot;</span><span class="k">)</span>
+CYTNX_LDFLAGS<span class="w"> </span>:<span class="o">=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import sys\nsys.path.append(\&#39;</span><span class="k">$(</span>CYTNX_ROOT<span class="k">)</span><span class="s2">\&#39;)\nimport cytnx\nprint(cytnx.__cpp_linkflags__)\&quot;)&quot;</span><span class="k">)</span>
+CYTNX_LIB<span class="w"> </span>:<span class="o">=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import sys\nsys.path.append(\&#39;</span><span class="k">$(</span>CYTNX_ROOT<span class="k">)</span><span class="s2">\&#39;)\nimport cytnx\nprint(cytnx.__cpp_lib__)\&quot;)&quot;</span><span class="k">)</span>/libcytnx.a
+CYTNX_CXXFLAGS<span class="w"> </span>:<span class="o">=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import sys\nsys.path.append(\&#39;</span><span class="k">$(</span>CYTNX_ROOT<span class="k">)</span><span class="s2">\&#39;)\nimport cytnx\nprint(cytnx.__cpp_flags__)\&quot;)&quot;</span><span class="k">)</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -864,7 +875,7 @@ CYTNX_CXXFLAGS :<span class="o">=</span> <span class="k">$(</span>shell python -
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.3.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>
