@@ -981,6 +981,7 @@ namespace cytnx {
     return out;
   }
 
+  ///@cond
   // +=
   template <>
   Tensor &Tensor::operator+=<Tensor>(const Tensor &rc) {
@@ -1283,6 +1284,7 @@ namespace cytnx {
   Tensor &Tensor::operator/=<Scalar::Sproxy>(const Scalar::Sproxy &rc) {
     return this->operator/=(Scalar(rc));
   }
+  ///@endcond
 
   std::vector<Tensor> Tensor::Svd(const bool &is_U, const bool &is_vT) const {
     return linalg::Svd(*this, is_U, is_vT);
